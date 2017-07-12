@@ -1,0 +1,9 @@
+
+data LogExprB = And LogExprB LogExprB | Or LogExprB LogExprB | Not LogExprB
+
+data LogExpr = And LogExpr LogExpr | Or LogExpr LogExpr | Not LogExpr | Implies LogExpr LogExpr
+
+compile :: LogExpr -> LogExprB
+
+
+
