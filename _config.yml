@@ -31,7 +31,7 @@ exclude:
   - Gemfile
   - Gemfile.lock
 plugins:
-  - jekyll-seo-tag
+#  - jekyll-seo-tag
 
 defaults:
 - scope:
