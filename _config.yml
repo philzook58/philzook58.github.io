@@ -30,7 +30,7 @@ gems:
 exclude:
   - Gemfile
   - Gemfile.lock
-plugins:
+#plugins_dir:
 #  - jekyll-seo-tag
 
 defaults:
