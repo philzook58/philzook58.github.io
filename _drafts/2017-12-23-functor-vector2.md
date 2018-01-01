@@ -5,8 +5,6 @@ date:   2017-12-21 19:27:12 -0400
 categories: haskell quantum linear
 ---
 
-
-
 There is an interesting interplay between category theory, logic, computer science, topology, and physics. 
 
 Woah. That's heavy, man.
@@ -14,51 +12,46 @@ Woah. That's heavy, man.
 The canonical thought provoker for this is the Rosetta Stone paper by Baez and Stay <sup>[1](#rosettastone)</sup>.
 I suppose this entire article is in my meager way emulating the spirit of the Rosetta Stone, making the section on typed lambda calculus more concrete in Haskell.
 
-Vectors are a ubiquitous notion in science and engineering and mastery of them pays off. Vectors are the mathemetical language necessary to describe quantum mechanics.
+Vectors are a ubiquitous notion in science and engineering and mastery of them pays off. Vectors are the mathematical language necessary to describe quantum mechanics.
 
-## Baby Bear, Momma Bear, and Papa Bear Vectors
+Vectors are almost entirely synonymous with arrays for numerical purposes. 
 
-The way I see it, there are three broad classes of numerical vectors, classified basically by their size. One can talk about the asymptotic size of vector spaces in terms of some natural parameter, similarly to how one classifies the complexity of algorithms. The baby vectors are , the medium are polynomial $O(n^c)$ in some sense of a natural parameter n, and the big vectors are .
-
-There are baby vectors, the 2,3, and 4 dimensional vectors that are intensely useful for geometry and physics, vectors of a constant size $O(1)$. These are the vectors of displacement or rotations, forces and momentums. These kinds of vectors are pretty intuitive (they are little arrows we can draw), have great visualizations, and very interesting specialized techniques like Geometric Algebra or quaternions.
-
-The next level up are the medium vectors, polynomial in size $O(n^d)$. The vectors represent fields in the physics sense of the word like displacement fields or the electromagnetc field. They have a couple numbers for every point in a discretized space, or they might be the vectors of some data you have collected and which you want to perform a least squares fit on. So $n$ is the number of lattice points in one direction and $d$ is the dimensionality for example. These are the vectors you use when you are doing finite element simulations for simulating the flexing of a plane wing or fluid flow around a dog and are the vectors for which the typical applications of numerical linear algebra lie.
-
-
-The BIG vectors are the vectors that represent many-body quantum mechanics, quantum field theory or similarly the probability distributions of many correlated variables. These mondo vectors grow exponentially $O(2^n)$ in the problem size, where n may be the number of particles for example. The Kronecker product is of paramount importance here, giving you a method to docompose these vectors in terms of simpler pieces. These vectors 
-
-
-The kinds of vectors that I leave out of my classification are truly infinitely sized vectors. Legit non-discretized infinite function spaces live here for example. These vectors basically have to be treated by discretization or symbolic means and are outside the domain of discussion here (although I would be ecstatic if we found a proper abstraction in Haskell that includes these as well).
-
-
-Vectors are almost entirely synonymous with arrays for numerical purposes. This is unfortunate and mind closing, similar to saying that programming is only assembly language. It is indeed true that a vector expressed in an array form will be the fastest on actual computer hardware, but for a sophisticated application the inherent complication requires powerful abstractions in order for mere mortals to be able to grapple with the problem.
+This is unfortunate and mind closing, similar to saying that programming is only assembly language. It is indeed true that a vector expressed in an array form will be the fastest on actual computer hardware, but for a sophisticated application the inherent complication requires powerful abstractions in order for mere mortals to be able to grapple with the problem.
 
 WARNING: This article is NOT about using high performance vectors of this type. For that I forward you to the libraries vector, hmatrix, accelerate, and repa.
 
-The array based vector is the maximum performance (for dense vectors) with the least expressivity. You really have to twist your mind into their terms, always using integers as your basis.
-
-For baby vectors, it often doesn't matter what you do. Computers are so goddamn fast.
-For crunching millions of baby vectors, sure optimize the hell out of it. Go into assembly if you want.
-
-For medium vectors, arrays are basically the best choice.
-
-For BIG vectors though, living in Kron-land, you have the elbow room for elegance, in fact you NEED it. The vectors here can get so big that naive array based approaches will take the lifetime of the universe to compute a dot product.
-
-There are a number of alternative representations of vectors on a computer.
+I am giving myself the leeway to not worry about performance until much later in the series and frankly it is not my primary concern.
 
 
+Given that I am explicitly ignoring performance, fully demonstrating that I am an out of touch functional programmer that doesn't work on anything real, why should you still give a shit what I have to say?
+
+1. Vectors make for great examples for Haskell and category theory topics. It may be illuminating to read on.
+2. For BIG vectors though, living in Kron-land, you have the elbow room for elegance, in fact you NEED it. The vectors here can get so big that naive array based approaches will take the lifetime of the universe to compute a dot product.
+3. I think it's all kind of neat. Maybe you will too.
+
+So that said, let's go on a journey that touches almost every Haskell concept I know about. Wheee!!!!
+
+Please contact me with any suggestions. This article will forever be a work in progress.
 
 
-Functors are a container-like pattern used often in Haskell. This article will examine three perspectives on how to encode vector-like structure in Haskell: As Functors on the basis, as functors on the scalars, and as functors on vectors themselves.
+## Baby Bear, Momma Bear, and Papa Bear Vectors
 
-This article is a message in a bottle. I hope to receive feedback and suggestions on how to take the ideas enclosed further.
+I'd like to sketch an important classification between different vector spaces.
 
-So let's go on a journey that touches almost every Haskell concept I know about. Wheee!!!!
+The way I see it, there are three broad classes of numerical vectors, classified basically by their size. One can talk about the asymptotic size of vector spaces in terms of some natural parameter, similarly to how one classifies the complexity of algorithms. 
 
+There are baby vectors, vectors of a constant size $O(1)$. These are the 2,3, and 4 dimensional vectors that are intensely useful for geometry and physics and the first ones you usually learn. These are the vectors of displacement or rotations, forces and momentums. These kinds of vectors are pretty intuitive (they are little arrows we can draw), have great visualizations, and very interesting specialized techniques like Geometric Algebra or quaternions.
 
+The next level up are the medium vectors, polynomial in size $O(n^d)$. The vectors represent classical fields in the physics sense of the word, like displacement fields or the electromagnetc field. They have a couple numbers for every point in a discretized space. So $n$ is the number of lattice points in one direction and $d$ is the dimensionality for example. These are the vectors you use when you are doing finite element simulations for simulating the flexing of a plane wing or fluid flow around a dog and are the vectors for which the typical applications of numerical linear algebra lie. Another exmaple of vectors of this size is noisy collected data that you want to perform a least squares fit on. Basically, almost everything in commonplace engineering and science falls into this category that isn't a use of baby vectors.
+
+The BIG vectors are the vectors that represent many-body quantum mechanics, quantum field theory or similarly the probability distributions of many correlated variables. These Mondo vectors grow exponentially $O(2^n)$ in the problem size, where n may be the number of particles or number of random variables. The Kronecker product is of paramount importance here, giving you a method to docompose these vectors in terms of simpler, smaller pieces. 
+
+The ultimate goal of this series is to ascend a sequence of abstraction to get a good handle on these BIG vectors and a focus on the Kronecker product.
 
 
 ## Vectors as Functors on the Basis Type and the Linear Monad
+
+Functors are a container-like pattern used often in Haskell. This article will examine three perspectives on how to encode vector-like structure in Haskell: As Functors on the basis, as functors on the scalars, and as functors on vectors themselves.
 
 For simplistic purposes, a simple to use Haskell representation of a vector is a keyed list, which is often used when when doesn't want to deal with the extra mental overhead of a full HashMap dictionary.
 
@@ -71,10 +64,12 @@ I consistently feel a pull to abstract further from this type, but it is so conv
 We can easily define vector addition and scalar multiplication for this data type.
 ```haskell
 vadd = ++
-smult s v = fmap (\(b,n) -> (b, s * n)) v
+smult s = LVec . fmap \(b,n) -> (b, s * n) . runLVec
 ```
 
-There are two choices for what we want this type to be a functor in, and either are useful, however the choice we make at this time is a functor in the basis type. What we have then is the Free Vector space over the basis.
+It is a touch goofy that we don't collect terms of the same basis element under addition. This would happen automatically if we were to use HashMaps.
+
+There are two choices for what we want this type to be a functor in, and either are useful, however the choice we make at this time is a functor in the basis type. What we have then is the Free Vector space over the basis. By Free, I mean that every basis element is linearly independent. 
 
 ``` haskell
 instance Functor (LVec n) where
@@ -85,18 +80,11 @@ The Functor instance allows us to fmap functions on the basis to linear extensio
 
 ### Shadows of the monoidal categories to come
 
-It is cute to note that the direct product and direct sum vector are easy to express for this type. The new basis for the direct product is the product type of the old basis types and the basis for the direct sum is the sum type of the old basis types.
+It is cute to note that the direct product and direct sum vector are easy to express for this type and infact for any type parametized on it's basis. The new basis for the direct product is the product type of the old basis types and the basis for the direct sum is the sum type of the old basis types.
 
 ``` haskell
 directProd :: forall a b. (LVec a f, LVec b f) -> LVec (a,b) f
 directSum :: forall a b. (LVec a f, LVec b f) -> LVec (Either a b) f
-```
- 
-There is also an encoding of the numbers themselves
-
-``` haskell
-vectifyNum :: f -> LVec () f
-unVectify:: LVec () f -> f
 ```
 
 
@@ -132,12 +120,26 @@ An alternative specification of the monad involes defining ```join :: m (m a) ->
 ## Function Vectors, Functors over the Numbers
 
 What is a vector? One operational definition is that it is a thing that you give a basis element and it gives back the component of the vector in this element, in other words a function
+
 ``` haskell
 type FunVec basis number = Num number => basis -> number
 ```
+
 As functional programmers, this is great news. Vectors are basically functions. We have so many elegant combinators for functions.
 
-To say that a vector is basically (->) basis is to say that vectors are Represetnable functors with the Representation type given by the basis.
+The arrow (->) is also known as the Reader functor in Haskell terminology. The common definition is not as a functor in it's arguments (it is a contravariant one actually), but as a functor in its result type. This is the perspective of vectors we will pursue from now on, vectors are functors in their contained numbers.
+
+### Direct Sum and Product
+
+There are a number of common Haskell combinators that we can use 
+
+```haskell
+directsum :: Vec a c -> Vec b c -> Vec (Either a b) c
+directsum = either
+
+directproduct :: (Num c) => Vec a c -> Vec b c -> Vec (a, b) c
+directproduct u v = \(x, y) -> (u x) * (v y) 
+```
 
 ### Dual Vectors
 
@@ -148,14 +150,24 @@ type Dual v number = v -> number
 ```
 
 This is an interesting higher-order function given that vectors are functions.
-It converts the basis from contravariant to covaraint position. Check out this Phil Freeman talk for more. Every time you cross into the arguments of a higher order function, you flip between contravariant and covariant. Or more mechanically, every time you cross a ) and then an -> going from right to left you flip.
-Contravariant functors consume their arguments while covariant functors in some sense produce them. In this case the dual vector will produce basis elements to hand to the vector and then manipulate the produced coefficients linearly.
+It converts the basis from contravariant to covariant position. Check out this Phil Freeman talk for more. Every time you cross into the arguments of a higher order function, you flip between contravariant and covariant. Or more mechanically, every time you cross a ) and then an -> going from right to left you flip.
+Contravariant functors consume their arguments while covariant functors in some sense produce or hold them. In this case the dual vector will produce basis elements to hand to the vector and then manipulate the produced coefficients linearly.
 
-It's interesting that the dual of the dual converts back to contravaraint position. 
+It's interesting that the dual of the dual converts back to contravariant position. 
+
+and in fact there is a natural sense in which the ```Dual Dual ~ Id```
+
+```forall t. ((a -> t) -> t) -> n ~ a -> n```
+
+This is an example of the use of the Yoneda Lemma which states that 
+```forall t. (a -> t) -> f t ~ f a```, in this case ```f = Id```.
+
+Taking the Dual twice brings us back to a Covariant Functor, so it is not insane that 
+
 
 We see here a tantalizing connection between the covariant and contravariant notion in Functors and the same words used in vector context.
 
-There is a sensible manner in which the Dual Dual v is isomorphic to v itself.
+There is a sensible manner in which the Dual Dual v is isomorphic to v itself in a manner that is not dependant on the basis or the field.
 
 
 The dualizing operator IS the metric.
@@ -167,8 +179,31 @@ v -> (v -> number)
 For finite enumerable types there is a straightforward natural metric
 For quasi-infinite types like a float, we need to specify an integration routine. This is the metric. Dual vectors have the integration routine already built into them.
 
+### Foldable
+(Enum a, Bounded a) => Foldable (a -> a -> f)
+	fold f = fold $ fmap (\x -> f x x) enumerate
+
+trace = fold
+
+(Enum a, Bounded a) => Foldable (a->f) -> (a->f) -> f
+	fold a b = fold $ fmap (\x -> (a x) * (b x)) enumerate
+
+### Linear Operators
+The most straightforward implementation of a linear operator is just as a plain function from vectors to vectors.
+```haskell
+type LinOp a b c = Vec a c -> Vec b c
+```
+Compared to the Linear monad, it is disappointing that this does not enforce linearity in the slightest, but it is very simple.
 
 ## Category Theory & Vectors
+
+### Other Vectors can be transformed to Functions.
+What about vectors data types that aren't literally function types? Well there is a way to transform back and forth between these vectors and functions.
+You can write a function that returns that result of indexing into a vector.
+\i -> v !! i = (!!) v
+and given a finite basis, you can probe all the values and fill the vector out.
+
+To say that a vector is basically (->) basis is to say that vectors are Representable functors with the Representation type given by the basis. This is a Haskell typeclass that corresponds to an equivlanet concept in category theory.
 
 A Category is a set of objects and morphisms. One perspective is that Category theory is a simple formalized theory of functions. You get many of the important properties of functions without looking deeply into their implementation. Functions can be composed if one's codomain matches the other's domain. Certain ways of composing functions may be 
 
@@ -197,7 +232,7 @@ parametric type variables are basically a systematic way of treating pointers. H
 Natural transformations are mappings between functors. 
 Natural transformations are functions of the form 
 ```type Nat f g = forall a. f a -> g a```
-From the container persepctive, these are functions that can only rearrange the container structure and not touch the contained objects. They can copy or discard objects.
+From the container perspective, these are functions that can only rearrange the container structure and not touch the contained objects. They can copy or discard objects.
 Like smushing a ```Tree a``` into a ```List a``` for example.
 If you ever see a bare type parameter not in a functor, mentally add an ```Identity``` to the front of it.
 
@@ -215,6 +250,22 @@ There is an interesting idea that perhaps Rep should be called Ln (The natural l
 Product types have sum types as their representation type. Just like the log of a product is the sum of the logs of the factors. $\ln(abc) = \ln(a) + \ln(b) + \ln(c)$.  
 
 Vectors are basically Product types holding many numbers.
+
+A finite type has a natural means
+
+To state that the dual vector is representable is to give a way to convert a covariant to  contravariant functor
+
+```haskell
+tabulate :: (Rep f -> a) -> f a
+index :: f a -> Rep f -> a
+```
+
+In this case ```f a = ((Rep f) -> a) -> a```
+
+```tabulate``` is the upper indexed metric $g^{ij}$ and ```index``` is the lower indexed metric $g_{ij}$
+
+We are truly living in sin from a Haskell perspective. This is a fully indexed formulation of taking the inner product. 
+
 
 ## The Kronecker Product
 From the perspective of the basis, this densification operation is actually a natural transformation. For any basis we can densify the product of two vectors into 
@@ -329,11 +380,7 @@ fmap . fmap . fmap
 
 
 
-Swapping the order of lines is implemented by sequenceA :: t (s a) -> s (t a).
 
-Swapping is pretty easy since all of them are implemented by product vectors.
-Things get funky though when the are index by non sum types. i.e. trees. i.e. anyons.
-How do you enumerate the number of indices? Nabc. Counting is non-trivial. Use default 
 
 ### Recovering Ordinary Vectors with Unit ()
 
@@ -402,6 +449,14 @@ type IndB' a = Ind Bool (Scalar Float a)
 ### Lifting Piponi's LinOps
 
 Ind a b -> Ind a (Scalar b)
+
+### Traversable and Swap
+
+Swapping the order of lines is implemented by sequenceA :: t (s a) -> s (t a).
+
+Swapping is pretty easy since all of them are implemented by product vectors.
+Things get funky though when the are index by non sum types. i.e. trees. i.e. anyons.
+How do you enumerate the number of indices? Nabc. Counting is non-trivial. Use default 
 
 ### Functor Oriented Programming
 
