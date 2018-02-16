@@ -279,6 +279,9 @@ Another important improvement I think is to use sharing by only referencing by i
 
 See you next time, hot dog.
 
+My other blog has a place to comment or reach out to me on the Twitsphere:
+[http://www.philipzucker.com/functor-vector-part-2-function-vectors/](http://www.philipzucker.com/functor-vector-part-2-function-vectors/)
+
 ## Footnotes
 
 
