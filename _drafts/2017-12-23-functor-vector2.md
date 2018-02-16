@@ -188,6 +188,9 @@ trace = fold
 (Enum a, Bounded a) => Foldable (a->f) -> (a->f) -> f
 	fold a b = fold $ fmap (\x -> (a x) * (b x)) enumerate
 
+	Foldable (a->f, a->f)  where
+	
+
 ### Linear Operators
 The most straightforward implementation of a linear operator is just as a plain function from vectors to vectors.
 ```haskell

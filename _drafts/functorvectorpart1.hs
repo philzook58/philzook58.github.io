@@ -1,4 +1,5 @@
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE ExistentialQuantification #-}
 
 newtype LVec number basis = LVec {runLVec :: [(number,basis)]}
 
@@ -24,4 +25,20 @@ instance (Num n) => Applicative (LVec n) where
 instance (Num n) => Monad (LVec n) where
    return e1 = LVec [(1, e1)]
    x >>= f =  LVec $ concatMap (\(n,b)-> runLVec (smult n (f b))) $ runLVec x
+
+type Test = forall a. [a]
+
+head' :: (forall a. a) -> ()
+head' _ = ()
+
+--delayed :: forall a. (a -> Int, a)
+delayed = (const 3, undefined)
+
+data Delayed b = forall a. Delayed (a -> b) a
+
+doit :: (forall a. (a -> b, a)) -> b
+doit (x,y) = x y
+
+doit' :: Delayed b -> b
+doit' (Delayed f x) = f x
 

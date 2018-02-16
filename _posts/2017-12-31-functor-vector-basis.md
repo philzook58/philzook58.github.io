@@ -121,6 +121,8 @@ An alternative specification of the monad involves defining ```join :: m (m a) -
 Next Time:
 Function Vectors: Vectors as functors over the number
 
+Please leave comments [here](http://www.philipzucker.com/functor-vector-part-1-functors-basis/) 
+
 ## Footnotes
 
 <a name="rosettastone">1</a>: [https://arxiv.org/abs/0903.0340](https://arxiv.org/abs/0903.0340)
