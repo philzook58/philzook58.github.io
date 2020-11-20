@@ -1,0 +1,2 @@
+I"o<p>Similarly to how Gaussian elimination putting linear equations into LU form solves most linear algebra problems one might care about, Buchberger’s algorithm for finding a <a href="http://www.scholarpedia.org/article/Groebner_basis">Grobner basis</a> of a system of multivariate polynomial equations solves most questions you might ask. Some fun applications</p>
+:ET

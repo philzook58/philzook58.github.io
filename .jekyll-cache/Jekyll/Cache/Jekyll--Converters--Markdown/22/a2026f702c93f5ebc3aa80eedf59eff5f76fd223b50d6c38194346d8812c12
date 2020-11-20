@@ -1,0 +1,26 @@
+I"6<p>So I’ve been poking around trying to find all the simulation packages. I’ve got a virtual machine burning a hole in my pocket. Should’ve sprung for more ram. Let’s fill it with garbage.</p>
+
+<p>How is a compilation ever successful. It seems beyond belief.</p>
+
+<p>gmsh</p>
+
+<p>code_aster - solid mechanics solving</p>
+
+<p>moose - Sandia National Lab</p>
+
+<p>Cubic</p>
+
+<p>elmer</p>
+
+<p>salome</p>
+
+<p>openfoam- fluid mechanics stuff</p>
+
+<p>A very interesting alternative is simscale, which now integrates with onshape. Simscale is sort of a web based wrapper for some opensource (I think code_aster, openfoam, and salome at least) stuff, but I am a big fan of convenience. Writing up the files and compiling this code is not entirely trivial.</p>
+
+<p>So you pick your model from onshape or from an external file, mesh it with some mesh generator. AutomaticTetrahedral is from salome. SnappyHexMesh is from openfoam.</p>
+
+<p>Then you need to set the simulation type and boundary conditions for faces. You need to hold some fixed, place loads on others.</p>
+
+<p>Then you run. To visualize the solution you place filters. The Warp filter is a good one for bending. It warps the model in the direction of the displacement. It might be recommended while this part is in beta to download the paraview file and use paraview.</p>
+:ET

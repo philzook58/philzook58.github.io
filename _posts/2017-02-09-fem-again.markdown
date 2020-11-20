@@ -1,0 +1,152 @@
+---
+author: philzook58
+comments: true
+date: 2017-02-09 22:47:27+00:00
+layout: post
+link: https://www.philipzucker.com/fem-again/
+slug: fem-again
+title: FEM again
+wordpress_id: 605
+---
+
+
+ 	
+  * Sfepy
+
+ 	
+  * Fenics
+
+ 	
+  * BEM++
+
+ 	
+  * OpenFoam
+
+ 	
+  * Elmer
+
+ 	
+  * Moose
+
+ 	
+  * Code-Aster
+
+ 	
+  * Gerris
+
+ 	
+  * ASL
+
+ 	
+  * meshpy
+
+ 	
+  * SolidPython
+
+ 	
+  * Salome
+
+ 	
+  * FreeCad
+
+ 	
+  * KiCad
+
+ 	
+  * Qucs
+
+ 	
+  * Skidl
+
+
+I kind of cribbed from the wikipedia CAE listing
+
+I think it would be cool to integrate all of these better. Simulate full EM equations.
+
+Fenics uses Docker now? My how the world turns.
+
+So that's nice. Docker for Mac got slick as hell.
+
+docker ps -a lists all guys
+
+docker run -it --rm ubuntu
+
+docker info
+
+-v shares folders
+
+They wrote stuff to this all for you
+
+Sfepy also seems nice though. I hope that two seemingly equal options doesn't cripple me.
+
+I had to reinstall mayavi and vtk in order to get it working. I was just ripping at my distros. Hope that doesn't bite me later.
+
+
+
+Installed openfoam docker image
+
+https://www.youtube.com/watch?v=KznljrgWSvo&t;=246s
+
+$FOAM_TUTORIALS is a variable with tutorial location
+
+cp -R elbow ~/OpenFOAM/elbow
+
+The 0 directory is the starting time drectory
+
+has a file with the name of fields
+
+pressure and velocity in this case
+
+fluentMeshToFoam
+
+paraview
+
+icoFoam runs simulation
+
+
+
+
+
+Salome:
+
+https://www.youtube.com/watch?v=1zQbU-E4k1U
+
+switch to geometry mode.
+
+STEP files preferred?
+
+Create new entity
+
+select surfaces that you want special
+
+go into mesh mode
+
+msh -> create mesh
+
+Netgen?
+
+Hypothesis sets paramters
+
+Warning triangle right click compute mesh
+
+create group
+
+face
+
+group on geometry
+
+select wall from before
+
+right click and export unv file
+
+ideasUNVToFoam convertst this to an openfoam file
+
+
+
+
+
+
+
+
+
+

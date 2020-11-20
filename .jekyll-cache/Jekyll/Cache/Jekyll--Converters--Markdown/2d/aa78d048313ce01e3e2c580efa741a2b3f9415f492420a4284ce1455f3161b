@@ -1,0 +1,46 @@
+I"1<p>So I tried tying my esp8266 to the 2$ nano i just received in the mail. Was getting nothing for a while. Needed an external power supply to work. Too bad.</p>
+
+<p><a href="http://rancidbacon.com/files/kiwicon8/ESP8266_WiFi_Module_Quick_Start_Guide_v_1.0.4.pdf">http://rancidbacon.com/files/kiwicon8/ESP8266_WiFi_Module_Quick_Start_Guide_v_1.0.4.pdf</a></p>
+
+<p>useful link</p>
+
+<p>Set serial monitor to both NL &amp; CR line returns and 9600 baud to get it to respond to AT with OK.</p>
+
+<p>firmware version</p>
+
+<p>AT+GMR
+0018000902-AI03</p>
+
+<p>AT+CWMODE=3</p>
+
+<p>sets it into some mode? Necessary for the next step to work</p>
+
+<p>CW stands for?</p>
+
+<p>List Access Points</p>
+
+<p>AT+CWLAP lists local access points</p>
+
+<p>Join access point</p>
+
+<p>AT+CWJAP=”local access point”,” password”</p>
+
+<p>I’ve noticed that the esp is available from my computer</p>
+
+<p>AT+CIFSR tells me the IP addresses</p>
+
+<p>I belive one is its ip as a client and one as an access point.</p>
+
+<p>I do not have a great success rate with commands. The serial is getting garbled</p>
+
+<p>Gonna try loading up that custom firmware</p>
+
+<p>https://github.com/tommie/esptool</p>
+
+<p>Looks like there is a python script to load the firmware</p>
+
+<p>https://github.com/nodemcu/nodemcu-firmware.</p>
+
+<p>Or Maybe I’m done for today.</p>
+
+:ET

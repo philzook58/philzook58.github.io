@@ -1,0 +1,29 @@
+I"�<p>http://kmkeen.com/rtl-demod-guide/</p>
+
+<p>Check out Socat. Let’s you pipe a file quickly over tcp and then grab it with netcat. Makes sense.</p>
+
+<p>https://github.com/simonyiszk/minidemod</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rtl_sdr -s 240000 -f 89500000 -g 20 - | tcc -lm -run minidemod-wfm.c \
+    | sox -t raw -r 240000 -e unsigned -b 8 -c 1 - -t raw - rate 48000 \
+    | mplayer -quiet -rawaudio samplesize=1:channels=1:rate=48000 -demuxer rawaudio -
+</code></pre></div></div>
+
+<p>Sox is a sound processing swiss army knife. Intriguing. Use it like image magick. Can quickly resample sound. That’s what the rate 48000 does. -r specifies that rtl-sdr is outputting 240000 samples per second. -b is that they are byte samples. -c 1 is one channel (as compared to stereo)</p>
+
+<p>spectrogram is an interesting option. It can produce a spectrogram of the signal. Could use this as a waterfall plot.</p>
+
+<p>synth is also interesting. Can be used to make waveforms.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sox −r 8000 −n output.wav synth 3 sine 300−3300
+</code></pre></div></div>
+
+<p>3 second sweep of a sine wave. 300Hz-3300Hz</p>
+
+<p>http://sox.sourceforge.net/sox.html</p>
+
+<p>http://sox.sourceforge.net/sox.html</p>
+
+<p>http://sox.sourceforge.net/sox.html</p>
+
+:ET

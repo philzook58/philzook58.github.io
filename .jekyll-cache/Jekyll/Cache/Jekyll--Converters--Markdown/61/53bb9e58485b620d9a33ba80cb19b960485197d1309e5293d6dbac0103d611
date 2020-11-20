@@ -1,0 +1,68 @@
+I"�	<p>I tried the Lubuntu and Raspbian distros, maybe another one would work out of the box. i’ve heard rumblings that an openelec distro might work with wifi? Also I’ve heard that 8188eu chipsets will work out of the box. Can’t confirm either.</p>
+
+<p>http://www.armbian.com/orange-pi-pc/</p>
+
+<p>used the legacy jessie server 3.4.112 build here.  unpacked it using keka.</p>
+
+<p>installed on sd card using dd. https://www.raspberrypi.org/documentation/installation/installing-images/mac.md</p>
+
+<p>Made the wifi drivers as described here</p>
+
+<p>http://forum.armbian.com/index.php/topic/749-orange-pi-pc-wireless-module-8192cu/</p>
+
+<p>make scripts failed</p>
+
+<p>After making the scripts I mostly followed the github itself instructions.</p>
+
+<p>https://github.com/pvaret/rtl8192cu-fixes</p>
+
+<p>I had to edit the kernel files to comment stuff out like discussed here</p>
+
+<p>http://forum.armbian.com/index.php/topic/1121-unable-to-build-kernel-scripts/</p>
+
+<p>Seemed to work.</p>
+
+<p>(Putting the wifi dongle in the lower usb port might be important? I’ve heard reports of that)</p>
+
+<p>iwlist scan wlan0</p>
+
+<p>finds the local router</p>
+
+<p>My Edimax RTL8188CUS adapter does appear to be close to working now. I am connected to the router</p>
+
+<p>made a /etc/wpa_supplicant/wpa_supplicant file</p>
+
+<p>with</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>network={
+        ssid="myssid"
+        psk="my_very_secret_passphrase"
+}
+</code></pre></div></div>
+
+<p>changed the /etc/network/interfaces file to have</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auto wlan0
+iface wlan0 inet dhcp
+    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+</code></pre></div></div>
+
+<p>Can’t ping external ips. TBD if everything is actually fixed.</p>
+
+<p>Edit:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>route add default gw 192.168.0.1 wlan0
+</code></pre></div></div>
+
+<p>http://www.cyberciti.biz/faq/linux-setup-default-gateway-with-route-command/</p>
+
+<p>Gateway was misconfigured</p>
+
+<p>Also added</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>allow-hotplug wlan0
+</code></pre></div></div>
+
+<p>To the /etc/network/interfaces. I think until I did this it didn’t find the wifi until you logged on with ethernet</p>
+
+:ET

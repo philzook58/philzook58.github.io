@@ -1,0 +1,37 @@
+I"�<p>I’m not finding the intructions hyper easy. I bet sudo apt-get install opencv would work pretty well, but i want some latest features (aruco support in the contrib?)</p>
+
+<p>This is useful</p>
+
+<p><a href="http://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html#gsc.tab=0">http://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html#gsc.tab=0</a></p>
+
+<p>okay git clone  both the contrib</p>
+
+<p>https://github.com/opencv/opencv_contrib</p>
+
+<p>and the main project directory</p>
+
+<p>i have a fresh installation of ubuntu</p>
+
+<p>First I had a error in the cmake process</p>
+
+<p>sudo apt-get build-dep opencv</p>
+
+<p>I had an error about no sources. Had to uncomment the dep-src lines in /etc/apt/sources.list file. The ran sudo apt-get update. Now it installs a ton</p>
+
+<p><a href="http://askubuntu.com/questions/496549/error-you-must-put-some-source-uris-in-your-sources-list">http://askubuntu.com/questions/496549/error-you-must-put-some-source-uris-in-your-sources-list</a></p>
+
+<p>Running this in the created build directory. Have to adjust the path to modules to suit what you’ve done</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules ..
+
+
+
+
+make -j7
+</code></pre></div></div>
+
+<p>sudo make install</p>
+
+<p>seems to have installed python bindings. Good.</p>
+
+:ET

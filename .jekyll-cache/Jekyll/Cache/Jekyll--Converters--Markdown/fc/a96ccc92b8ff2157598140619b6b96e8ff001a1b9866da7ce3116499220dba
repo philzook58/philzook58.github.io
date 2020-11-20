@@ -1,0 +1,74 @@
+I"’<p>So to write Verilog code you need to write a testbench.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Code your testbench here
+// or browse Examples
+module tb();
+  reg clk, reset;
+  wire speaker;
+  music dut (.clk(clk), .speaker(speaker),.reset(reset));
+  
+  initial
+  begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, dut);
+    reset = 1'b1;
+    clk = 1'b0;
+    #20
+    reset = 1'b0;
+	#140;
+    $finish;
+  end
+
+  always
+      #10 clk = ~clk;
+endmodule
+</code></pre></div></div>
+
+<p>The #10 type things are delays.</p>
+
+<p>The dumpfile thing is needed by edaplayground</p>
+
+<p>The reset logic was necessary or else the submodule had unspecified values</p>
+
+<p>Make sure to check the open EPWave box on the side</p>
+
+<p>Everything needs to be wrapped in a module endmodule.</p>
+
+<p>The .clk is specifying the parameter. the clk inside the parentheses is the reg Iâ€™m passing it.</p>
+
+<p>I set reset high. Wait, then turn it low.</p>
+
+<p>To end the simulation you need the $finish command.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Code your design here
+module music(clk, speaker,reset);
+input clk, reset;
+output speaker;
+
+// Binary counter, 3-bits wide
+  reg [2:0] counter;
+always @(posedge clk) 
+  begin
+    if(reset==1'b1)
+      begin
+        counter &lt;=0;
+      end
+    else
+  		counter &lt;= counter+1;
+  end
+// Use the most significant bit (MSB) of the counter to drive the speaker
+  assign speaker = counter[2];
+endmodule
+</code></pre></div></div>
+
+<p>specify how this module can connect to the outside world</p>
+
+<p>&lt;= is some kind of sequential assignment. It tends to be what is used in these posedge type blocks.</p>
+
+<p>= is used to form aliases using the assign command</p>
+
+<p>If else stuff is fairly self explanatory</p>
+
+<p>begin end are the equivalent of {} in other languages</p>
+
+:ET

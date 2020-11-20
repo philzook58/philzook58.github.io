@@ -1,0 +1,17 @@
+I".<p>I’ve dreamed radio dreams for many years.</p>
+
+<p>I think I’m closer than ever to being able to goof around in the RF.</p>
+
+<p>Previously I’ve taken a too low level approach, trying to build my own oscillators and amplifiers. Certainly doable, but not the easiest, and not actually the thing I’m most interested in.</p>
+
+<p>The revelation came when I saw <a href="http://ocw.mit.edu/resources/res-ll-003-build-a-small-radar-system-capable-of-sensing-range-doppler-and-synthetic-aperture-radar-imaging-january-iap-2011/">this</a> mit radar building guide. They’re using little blocks that I understand from microcircuits. I think that’s one of the easier ways into the high frequency regime.</p>
+
+<p>So I went a huntin on ebay and bought anything that sounded reasonable. VCO, mixer, LNA. One tripping point was that I had no way to measure anything. My oscilloscope only goes up to 100Mhz.</p>
+
+<p>So I bought a frequency Counter and Power Meter for real cheap.</p>
+
+<p>The frequency counter works. Try wiggling between high and low mode and turning the filter off. It picked up my 2Mhz function generator signal and also the signal off the VCO I bought, which goes from 90Mhz to 190Mhz ish.</p>
+
+<p>With the pin connector on the left the top is control, the two middle are ground and the bottom is power</p>
+
+:ET

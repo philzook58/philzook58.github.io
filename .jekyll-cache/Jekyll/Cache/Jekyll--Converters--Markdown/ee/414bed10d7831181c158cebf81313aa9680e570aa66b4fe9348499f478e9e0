@@ -1,0 +1,205 @@
+I"�.<p>Ordinary Haskell functions form a cartesian closed category. Category means you can compose functions. Cartesian basically means you can construct and deconstruct tuples and Closed means that you have first class functions you can pass around.</p>
+
+<p><a href="http://philzucker2.nfshost.com/wp-content/uploads/2018/08/Drawing-1.jpeg"><img src="http://philzucker2.nfshost.com/wp-content/uploads/2018/08/Drawing-1.jpeg" alt="" /></a></p>
+
+<p><a href="http://conal.net/papers/compiling-to-categories/">Conal Elliott’s Compiling to Categories</a> is a paradigm for reinterpreting ordinary functions as the equivalent in other categories. At an abstract level, I think you could describe it as a mechanism to build certain natural law abiding Functors from Hask to other categories. It’s another way to write things once and have them run many ways, like polymorphism or generic programming. The ordinary function syntax is human friendly compared to writing raw categorical definitions, which look roughly like point-free programming (no named variables). In addition, by embedding it as a compiler pass within GHC, he gets to leverage existing GHC optimizations as optimizations for other categories. Interesting alternative categories include the category of graphs, circuits, and automatically differentiable functions. You can find his implementation<a href="https://github.com/conal/concat"> here</a></p>
+
+<p>I’ve felt hesitance at using a GHC plugin plus I kind of want to do it in a way I understand, so I’ve done different versions of this using relatively normal Haskell (no template haskell, no core passes, but a butt ton of hackery).</p>
+
+<p>The<a href="http://www.philipzucker.com/shit-compiling-categories-using-type-level-programming-haskell/"> first</a> used explicit tags. Give them to the function and see where they come out. That is one way to probe a simple tuple rearrangement function.</p>
+
+<p>The <a href="http://www.philipzucker.com/approximating-compiling-categories-using-typelevel-haskell-take-2/">second</a> version worked almost entirely at the typelevel. It worked on the observation that a completely polymorphic tuple type signature completely specifies the implementation. You don’t have to look at the term level at all. It unified the polymorphic values in the input with a typelevel number indexed Tag type. Then it searched through the input type tree to find the piece it needed. I did end up passing stuff in to the term level because I could use this mechanism to embed categorical literals. The typeclass hackery I used to achieve this all was heinous.</p>
+
+<p>I realized today another way related to both that is much simpler and fairly direct. It has some pleasing aesthetic properties and some bad ones. The typeclass hackery is much reduced and the whole thing fits on a screen, so I’m pleased.</p>
+
+<p>Here are the basic categorical definitions. FreeCat is useful for inspection in GHCi of what comes out of toCCC.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{-# LANGUAGE GADTs, StandaloneDeriving, NoImplicitPrelude, FlexibleInstances  #-}
+
+module Cat where
+import Control.Category
+import Prelude hiding ((.), id)
+
+
+class Category k =&gt; Monoidal k where
+    parC :: k a c -&gt; k b d -&gt; k (a,b) (c,d)
+
+
+class Monoidal k =&gt; Cartesian k where
+    fstC :: k (a,b) a 
+    sndC :: k (a,b) b 
+    dupC :: k a (a,a) 
+
+fanC f g = (parC f g) . dupC
+
+idC :: Category k =&gt; k a a
+idC = id
+
+data FreeCat a b where
+    Comp :: FreeCat b c -&gt; FreeCat a b -&gt; FreeCat a c
+    Id :: FreeCat a a
+    Fst :: FreeCat (a,b) a
+    Snd :: FreeCat (a,b) b
+    Dup :: FreeCat a (a,a)
+    Par :: FreeCat a b -&gt; FreeCat c d -&gt; FreeCat (a,c) (b,d)
+    Add :: FreeCat (a,a) a
+    Mul :: FreeCat (a,a) a
+
+deriving instance Show (FreeCat a b)
+
+instance Category FreeCat where
+    (.) = Comp
+    id = Id
+
+instance Monoidal FreeCat where
+    parC = Par
+
+instance Cartesian FreeCat where
+    fstC = Fst
+    sndC = Snd
+    dupC = Dup
+
+instance Monoidal (-&gt;) where
+    parC f g = \(x,y) -&gt; (f x, g y)  
+
+instance Cartesian (-&gt;) where
+    fstC (x,y) = x
+    sndC (x,y) = y
+    dupC x = (x,x)
+
+class Cartesian k =&gt; NumCat k where
+    mulC :: Num a =&gt; k (a,a) a
+    negateC :: Num a =&gt; k a a
+    addC :: Num a =&gt; k (a,a) a
+    subC :: Num a =&gt; k (a,a) a
+    absC :: Num a =&gt; k a a
+
+instance NumCat (-&gt;) where
+    mulC = uncurry (*)
+    negateC = negate
+    addC = uncurry (+)
+    subC = uncurry (-)
+    absC = abs
+
+instance NumCat FreeCat where
+    mulC = Mul
+    negateC = error "TODO"
+    addC = Add
+    subC = error "TODO"
+    absC = error "TODO"
+
+instance (NumCat k, Num a) =&gt; Num (k z a) where
+    f + g = addC . (fanC f g)
+    f * g = mulC . (fanC f g)
+    negate f = negateC . f
+    f - g = subC . (fanC f g)
+    abs f = absC . f 
+    signum = error "TODO"
+    fromInteger = error "TODO"
+</code></pre></div></div>
+
+<p>And here is the basic toCCC implementation</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{-# LANGUAGE DataKinds, 
+    AllowAmbiguousTypes, 
+    TypeFamilies, 
+    TypeOperators, 
+    MultiParamTypeClasses, 
+    FunctionalDependencies, 
+    PolyKinds, 
+    FlexibleInstances, 
+    UndecidableInstances,
+    TypeApplications,
+    NoImplicitPrelude,
+    ScopedTypeVariables #-}
+module CCC (
+     toCCC )where
+
+import Control.Category
+import Prelude hiding ((.), id)
+import Cat
+
+
+class IsTup a b | a -&gt; b
+instance {-# INCOHERENT #-} (c ~ 'True) =&gt; IsTup (a,b) c
+instance {-# INCOHERENT #-} (b ~ 'False) =&gt; IsTup a b
+
+
+class BuildInput tup (flag :: Bool) path where
+    buildInput :: path -&gt; tup
+
+instance (Cartesian k,
+          IsTup a fa,
+          IsTup b fb,
+          BuildInput a fa (k x a'), 
+          BuildInput b fb (k x b'),
+          ((k x (a',b')) ~ cat)) =&gt;  BuildInput (a,b) 'True cat where
+    buildInput path = (buildInput @a @fa patha, buildInput @b @fb pathb) where
+                 patha = fstC . path
+                 pathb = sndC . path
+
+instance (Category k, a ~ k a' b') =&gt; BuildInput a  'False (k a' b') where
+    buildInput path = path
+
+
+class FanOutput out (flag :: Bool) cat | out flag -&gt; cat where
+    fanOutput :: out -&gt; cat
+
+instance (Cartesian k,
+         IsTup a fa,
+         IsTup b fb,
+         FanOutput a fa (k x a'),
+         FanOutput b fb (k x b'),
+         k x (a', b') ~ cat
+         )
+          =&gt; FanOutput (a, b) 'True cat where
+    fanOutput (x,y) = fanC (fanOutput @a @fa x) (fanOutput @b @fb y)
+
+instance (Category k, kab ~ k a b) =&gt; FanOutput kab 'False (k a b) where
+    fanOutput f = f 
+
+toCCC :: forall k a b a' b' fa fb x. (IsTup a fa, IsTup b fb, Cartesian k, BuildInput a fa (k a' a'), FanOutput b fb (k a' b')) =&gt; (a -&gt; b) -&gt; k a' b'
+toCCC f = fanOutput @b @fb output where
+                                      input = buildInput @a @fa (idC @k @a')
+                                      output = f input
+</code></pre></div></div>
+
+<p>Here is some example usage</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>example2 = toCCC @FreeCat (\(x,y)-&gt;(y,x))
+
+-- You need to give the type signature unfortunately if you want polymorphism in k. k is too ambiguous otherwise and makes GHC sad.
+example3 :: Cartesian k =&gt; k _ _
+example3 = toCCC (\(z,y)-&gt;(z,z))
+
+example4 = toCCC @FreeCat (\((x,y),z) -&gt; x)
+
+example5 = toCCC @FreeCat (\(x,y) -&gt; x + y)
+
+example6 = toCCC @FreeCat (\(x,y) -&gt; y + (x * y))
+
+example7 :: Cartesian k =&gt; k _ _
+example7 = toCCC (\(x,(y,z)) -&gt; (x,(y,z)))
+</code></pre></div></div>
+
+<p>What we do is generate a tuple to give to your function. The function is assumed to be polymorphic again but now not necessarily totally polymorphic (this is important because Num typeclass usage will unify variables). Once we hit a leaf of the input tuple, we place the categorical morphism that would extract that piece from the input. For example for the input type <code class="language-plaintext highlighter-rouge">(a,(b,c))</code> we pass it the value <code class="language-plaintext highlighter-rouge">(fstC ,(fstC . sndC, sndC . sndC ))</code>. Detecting when we are at a leaf again requires somehow detecting a polymorphic location, which is a weird thing to do. We use the Incoherent IsTup instance from <a href="http://www.philipzucker.com/approximating-compiling-categories-using-typelevel-haskell-take-2/">last time</a> to do this. It is close to being safe, because we immediately unify the polymorphic variable with a categorial type, so if something goes awry, a type error should result. We could make it more ironclad by unifying immediately to something that contains the extractor and a user inaccessible type.</p>
+
+<p>We apply the function to this input. Now the output is a tuple tree of morphisms. We recursively traverse down this tree with a <code class="language-plaintext highlighter-rouge">fanC</code> for every tuple. This all barely requires any typelevel hackery. The typelevel stuff that is there is just so that I can traverse down tuple trees basically.</p>
+
+<p>One benefit is that we can now use some ordinary typeclasses. We can make a simple implementation of Num for (k z a) like how we would make it for (z -&gt; a). This let’s us use the regular <code class="language-plaintext highlighter-rouge">(+)</code> and <code class="language-plaintext highlighter-rouge">(*)</code> operators for example.</p>
+
+<p>What is not good is the performance. As it is, the implementation takes many global duplication of the input to create all the <code class="language-plaintext highlighter-rouge">fanC</code>s. In many categories, this is very wasteful.This may be a fixable problem, either via passing in more sophisticated objects that just the bare extraction morphisms to to input (CPS-ified? Path Lists?) or via the GHC rewrite rules mechanism. I have started to attempt that, but have not been successful in getting any of my rewrite rules to fire yet, because I have no idea what I’m doing. If anyone could give me some advice, I’d be much obliged. You can check that out <a href="https://github.com/philzook58/not-bad-ccc/blob/18757b272508fafd4ab2dc396b234fb2551f83f4/src/CCC.hs">here</a>. For more on rewrite rules, check out the <a href="https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/glasgow_exts.html#rewrite-rules">GHC user manual</a> and this excellent tutorial by Mark Karpov <a href="https://www.stackbuilders.com/tutorials/haskell/ghc-optimization-and-fusion/">here</a>.</p>
+
+<p>Another possibility is to convert to FreeCat, write regular Haskell function optimization passes over the FreeCat AST and then interpret it. This adds interpretation overhead, which may or may not be acceptable depending on your use case. It would probably not be appropriate for automatically differentiable functions, but may be for outputting circuits or graphs.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>interp (Comp f g) = (interp f) . (interp g)
+interp FstC = fstC
+interp Dup = dupC
+interp (Par f g) = parC (interp f) (interp g)
+-- etc
+</code></pre></div></div>
+
+<p>Another problem is dealing with boolean operations. The booleans operators and comparison operators are not sufficiently polymorphic in the Prelude. We could define new operators that work as drop in replacements in the original context, but I don’t really have the ability to overload the originals. It is tough because if we do things like this, it feels like we’re really kind of building a DSL more than we are compiling to categories. We need to write our functions with the DSL in mind and can’t just import and use some function that had no idea about the compiling to categories stuff.</p>
+
+<p>I should probably just be using Conal’s concat project. This is all a little silly.</p>
+:ET

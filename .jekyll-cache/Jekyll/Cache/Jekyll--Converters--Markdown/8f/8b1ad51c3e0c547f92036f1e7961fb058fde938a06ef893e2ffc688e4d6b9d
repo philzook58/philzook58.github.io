@@ -1,0 +1,52 @@
+I"�<p>Let’s solve the free particle</p>
+
+<p>I guess</p>
+
+<p>Newton’s Law $latex F = ma$</p>
+
+<p>$latex d^2 x / dt^2=0$</p>
+
+<p>Hence $latex x = x_0 + vt$</p>
+
+<p>At least that works. Not sure I derived it particularly. Or proved it unique.</p>
+
+<p>Whatever. Lagrangian version</p>
+
+<p>$latex L = T-V = \frac{1}{2}mv^2$</p>
+
+<p>Euler Lagrange Equations</p>
+
+<p>$latex \frac{d}{dt} \partial L / \partial \dot{q} = \partial_q L$</p>
+
+<p>How do you get that? By varying the action with fixed endpoints it’s the one that minimizes the path.</p>
+
+<p>$latex S = \int L dt = \int \partial/\partial\dot{q} L \delta \dot{q} + \partial_q L \delta q$</p>
+
+<p>Nice.</p>
+
+<p>$latex H = \frac{p^2}{2m}$</p>
+
+<p>$latex \dot{p}=-\partial_x H=0$</p>
+
+<p>$latex p = Const$</p>
+
+<p>$latex \dot{x}=\partial_p H=\frac{p}{m}$</p>
+
+<p>Okay. What about the quantum version?</p>
+
+<p>Well $latex p = \frac{\hbar}{i}\partial_x$</p>
+
+<p>How do I know that? In particular it’s hard to remember where the i goes. Well, I memorized it at some point. It follows that</p>
+
+<p>$latex [x,p]=-\hbar/i$</p>
+
+<p>But what is</p>
+
+<p>$latex i \partial_t \psi = -\frac{\hbar^2}{2m}\nabla^2 \psi$</p>
+
+<p>$latex E\psi = $</p>
+
+<p>Whatever. I’m bored.</p>
+
+<p>Maybe I’ll do the path integral some other day</p>
+:ET

@@ -1,0 +1,93 @@
+I"�<p>Geometrical optics is a pretty interesting topic. It really is almost pure geometry/math rather than physics.</p>
+
+<p><a href="https://en.wikipedia.org/wiki/Huygens%E2%80%93Fresnel_principle">Huygens principle  </a> says that we can compute the propagation of a wave by considering the wavelets produced by each point on the wavefront separately.</p>
+
+<p>In physical optics, this corresponds to the linear superposition of the waves produced at each point by a propagator function $latex \int dx’ G(x,x’)$. In geometrical optics, which was Huygens original intent I think (these old school guys were VERY geometrical), this is the curious operation of taking the geometrical envelope of the little waves produced by each point.</p>
+
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Refraction_-_Huygens-Fresnel_principle.svg/1920px-Refraction_-_Huygens-Fresnel_principle.svg.png" alt="" />The gist of Huygens principles. Ripped from wikipedia</p>
+
+<p><a href="https://en.wikipedia.org/wiki/Envelope_(mathematics)">https://en.wikipedia.org/wiki/Envelope_(mathematics)</a> The envelope is an operation on a family of curves. You can approximate it by a finite difference procedure. Take two subsequent curves close together in the family, find their intersection. Keep doing that and the join up all the intersections. This is roughly the approach I took in this post <a href="http://www.philipzucker.com/elm-eikonal-sol-lewitt/">http://www.philipzucker.com/elm-eikonal-sol-lewitt/</a></p>
+
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/EnvelopeAnim.gif" alt="" />Taking the envelope of a family of lines. Ripped from wikipedia</p>
+
+<p>You can describe a geometrical wavefront implicitly with an equations $latex \phi(x,y) = 0$.  Maybe the wavefront is a circle, or a line, or some wacky shape.</p>
+
+<p>The wavelet produced by the point x,y after a time t is described implicitly by $latex d(\vec{x},\vec{x’})^2 - t^2 = (x-x’)^2 + (y-y’)^2 - t^2 = 0$.</p>
+
+<p>This described a family of curves, the circles produced by the different points of the original wavefront. If you take the envelope of this family you get the new wavefront at time t.</p>
+
+<p>How do we do this? <a href="https://en.wikipedia.org/wiki/Gr%C3%B6bner_basis">Grobner bases</a> is one way if we make $latex \phi$ a polynomial equation. For today’s purposes, Grobner bases are a method for solving multivariate polynomial equations. Kind of surprising that such a thing even exists. It’s actually a guaranteed terminating algorithm with horrific asymptotic complexity. Sympy has an implementation. For more on Grobner bases, the links here are useful <a href="http://www.philipzucker.com/dump-of-nonlinear-algebra-algebraic-geometry-notes-good-links-though/">http://www.philipzucker.com/dump-of-nonlinear-algebra-algebraic-geometry-notes-good-links-though/</a>. Especially check out the Cox Little O’Shea books</p>
+
+<p>The algorithm churns on a set of multivariate polynomials and spits out a new set that is equivalent in the sense that the new set is equal to zero if and only if the original set was. However, now (if you ask for the appropriate term ordering) the polynomials are organized in such a way that they have an increasing number of variables in them. So you solve the 1-variable equation (easy), and substitute into the 2 variable equation. Then that is a 1-variable equation, which you solve (easy) and then you substitute into the three variable equation, and so on. It’s analogous to gaussian elimination.</p>
+
+<p>So check this out</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;from sympy import *
+
+
+x1, y1, x2, y2, dx, dy = symbols('x1, y1, x2, y2, dx, dy')
+
+def dist(x,y,d):
+    return x**2 + y**2 - d**2
+
+e1 = dist(x1,y1,2) # the original circle of radius 2
+e2 = dist(x1-x2 ,y1 - y2 , 1) # the parametrized wavefront after time 1
+
+
+# The two envelope conditions.
+e3 = diff(e1,x1)*dx + diff(e1,y1)*1
+e4 = diff(e2,x1)*dx + diff(e2,y1)*1
+
+
+envelope = groebner([e1,e2,e3,e4], y1, x1, dx, dy, x2, y2, order='lex')[-1]
+plot_implicit(e1, show=False)
+plot_implicit(envelope, show = True)&lt;/code&gt;
+</code></pre></div></div>
+
+<p>The envelope conditions can be found by introducing two new differential variables dx, and dy. They are constrained to lie tangent to the point on the original circle by the differential equation e3, and then we require that the two subsequent members of the curve family intersect by the equation e4. Hence we get the envelope. Ask for the Grobner basis with that variable ordering gives us an implicit equations for x2, y2 with no mention of the rest if we just look at the last equation of the Grobner basis.</p>
+
+<p>I set arbitrarily dy = 1 because the overall scale of them does not matter, only the direction. If you don’t do this, the final equation is scaled homogenously in dy.</p>
+
+<p>This does indeed show the two new wavefronts at radius 1 and radius 3.</p>
+
+<p><img src="http://philzucker2.nfshost.com/wp-content/uploads/2019/10/orginal_circle-1-1024x768.png" alt="" />Original circle radius = 2</p>
+
+<p>x1<strong>2 + y1</strong>2 - 4  = 0</p>
+
+<p><img src="http://philzucker2.nfshost.com/wp-content/uploads/2019/10/evolved_circles-1024x768.png" alt="" />Evolved circles found via grobner basis.</p>
+
+<p>(x2<strong>2 + y2</strong>2 - 9)*(x2<strong>2 + y2</strong>2 - 1)  = 0</p>
+
+<p>Here’s a different one of a parabola using e1 = y1 - x1 + x1**2</p>
+
+<p><img src="http://philzucker2.nfshost.com/wp-content/uploads/2019/10/out2-1024x768.png" alt="" />Original curve y1 - x1 + x1**2 = 0</p>
+
+<p><img src="http://philzucker2.nfshost.com/wp-content/uploads/2019/10/out2png-1024x768.png" alt="" />After 1 time step.</p>
+
+<p>16<em>x2<strong>6 - 48*x2</strong>5 + 16</em>x2<strong>4<em>y2**2 + 32</em>x2</strong>4<em>y2 + 4</em>x2<strong>4 - 32<em>x2**3</em>y2</strong>2 - 64<em>x2<strong>3*y2 + 72*x2</strong>3 + 32</em>x2<strong>2<em>y2**3 + 48</em>x2</strong>2<em>y2 - 40</em>x2<strong>2 - 32<em>x2</em>y2</strong>3 + 16<em>x2</em>y2<strong>2 - 16<em>x2</em>y2 - 4<em>x2 + 16</em>y2</strong>4 + 32<em>y2<strong>3 - 20*y2</strong>2 - 36</em>y2 - 11 = 0</p>
+
+<p>The weird lumpiness here is plot_implicit’s inability to cope,  not the actually curve shape Those funky prongs are from a singularity that forms as the wavefront folds over itself.</p>
+
+<p>I tried using a cubic curve x**3 and the grobner basis algorithm seems to crash my computer. :( Perhaps this is unsurprising. <a href="https://en.wikipedia.org/wiki/Elliptic_curve">https://en.wikipedia.org/wiki/Elliptic_curve</a> ?</p>
+
+<p>I don’t know how to get the wavefront to go in only 1 direction? As is, it is propagating into the past and the future. Would this require inequalities? Sum of squares optimization perhaps?</p>
+
+<p>Edit:</p>
+
+<p>It’s been suggested on reddit that I’d have better luck using other packages, like Macaulay2, MAGMA, or Singular. Good point</p>
+
+<p>Also it was suggested I use the Dixon resultant, for which there is an implementation in sympy, albeit hidden. Something to investigate</p>
+
+<p><a href="https://github.com/sympy/sympy/blob/master/sympy/polys/multivariate_resultants.py">https://github.com/sympy/sympy/blob/master/sympy/polys/multivariate_resultants.py</a></p>
+
+<p><a href="https://nikoleta-v3.github.io/blog/2018/06/05/resultant-theory.html">https://nikoleta-v3.github.io/blog/2018/06/05/resultant-theory.html</a></p>
+
+<p>Another interesting angle might be to try to go numerical with a homotopy continuation method with phcpy</p>
+
+<p><a href="http://homepages.math.uic.edu/~jan/phcpy_doc_html/welcome.html">http://homepages.math.uic.edu/~jan/phcpy_doc_html/welcome.html</a></p>
+
+<p><a href="https://www.semion.io/doc/solving-polynomial-systems-with-phcpy">https://www.semion.io/doc/solving-polynomial-systems-with-phcpy</a></p>
+
+<p>or pybertini <a href="https://ofloveandhate-pybertini.readthedocs.io/en/feature-readthedocs_integration/intro.html">https://ofloveandhate-pybertini.readthedocs.io/en/feature-readthedocs_integration/intro.html</a></p>
+
+:ET

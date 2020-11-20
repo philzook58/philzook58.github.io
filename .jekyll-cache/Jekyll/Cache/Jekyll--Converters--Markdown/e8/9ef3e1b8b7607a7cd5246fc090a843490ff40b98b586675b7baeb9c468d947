@@ -1,0 +1,101 @@
+I"/<p><a href="https://developer.movidius.com/getting-started">https://developer.movidius.com/getting-started</a></p>
+
+<p>Installed VirtualBox and ubuntu 16.04 on my macbook (welcome to the dangerzone). Nice and fresh. sudo apt-get update and upgrade. I ran into problems eventually that are not cleared up on the forum. Switched to using a native 16.04 installation. The setup ran without a hitch. Beautiful.</p>
+
+<p>Get the latest SDK</p>
+
+<p>https://ncs-forum-uploads.s3.amazonaws.com/ncsdk/MvNC_SDK_01_07_07/MvNC_SDK_1.07.07.tgz</p>
+
+<p>following these instructions</p>
+
+<p>https://developer.movidius.com/getting-started/software-setup</p>
+
+<p>I had to restart the terminal before running setup.sh for ncapi. It added something to my bashrc I think. Ok. Actually that is mentioned in the manual. Nice.</p>
+
+<p>Now to test. In the bin folder</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make example00
+</code></pre></div></div>
+
+<p>also example 01-03</p>
+
+<p>They all seem to run. Excellent.</p>
+
+<p>Looks like ~100ms for one inference for whatever that is worth</p>
+
+<p>“example00 compiles lenet8 prototxt to a binary graph, example01 profiles GooLeNet, example03 validates lenet8 using a simple inbuilt image.”</p>
+
+<p>https://developer.movidius.com/getting-started/run-inferencing-on-ncs-using-the-api</p>
+
+<p>Go to ncapi/c_examples</p>
+
+<p>make</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./ncs-fullcheck -l2 -c1 ../networks/AlexNet ../images/cat.jpg
+</code></pre></div></div>
+
+<p>options for ncs-fullcheck are inference count and loglevel</p>
+
+<p>go to py_examples</p>
+
+<p>stream_infer</p>
+
+<p>It really likes oxygen mask.</p>
+
+<p>But was successful on sunglasses and a coffee mug. Although it did oscillate a little.</p>
+
+<p>The README is interesting in the stream_infer</p>
+
+<p>Stat.txt holds the average rgb and std dev values.</p>
+
+<p>I wonder if I could run two sticks?</p>
+
+<p>A lot of the stuff is gstreamer related</p>
+
+<p>The movidius beef seems to be</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import mvnc.mvncapi as fx
+ncs_names = fx.EnumerateDevices()
+dev = fx.Device(ncs_names[0])
+dev.OpenDevice()
+gGraph = dev.AllocateGraph(get_graph_from_disk())
+
+gGraph.LoadTensor(preprocessed_image_buf ,"frame %s" % frame_number)
+
+inference_result, user_data = gGraph.GetResult()
+
+ gGraph.DeallocateGraph()
+ dev.CloseDevice()
+</code></pre></div></div>
+
+<p>You just load the tensor and then get it back.</p>
+
+<p>There is some recommended preprocessing of the image and grabbing the label files and stuff but that is all standard python. Change the mean and std dev to match the netowrk. Also convert to a float16 array. Resize to 227x227</p>
+
+<p>I’ve never used gstreamer. I wonder if there is a problem using the standard opencv stuff. Doesn’t seem like there should be.</p>
+
+<p>In the last couple days, they released instructions on how to run on a raspberry pi.</p>
+
+<p>object localization would be very useful for us.</p>
+
+<p>Get the script for the faster r-cnn</p>
+
+<p>https://github.com/rbgirshick/py-faster-rcnn/blob/master/data/scripts/fetch_faster_rcnn_models.sh</p>
+
+<p>copy contents</p>
+
+<p>chmod +x that script and run it</p>
+
+<p>To take a new network and make it run</p>
+
+<p>you run the  mvNCCompile on the prototxt ( which describes the shape of the network and other things) and the caffemodel weightfile</p>
+
+<p>for example</p>
+
+<p>python3 ./mvNCCompile.pyc ./data/lenet8.prototxt -w ./data/lenet8.caffemodel -s 12 -o ./lenet8_graph</p>
+
+<p>then you can profile and check it’s correctness. It is unclear at this point how easy it will be to take stock networks and get them to run.</p>
+
+<p>https://huangying-zhan.github.io/2016/09/22/detection-faster-rcnn.html</p>
+
+:ET

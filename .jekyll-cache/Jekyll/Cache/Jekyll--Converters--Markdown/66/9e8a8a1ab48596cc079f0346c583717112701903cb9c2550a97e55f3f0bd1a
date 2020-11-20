@@ -1,0 +1,26 @@
+I"–<p>Download an ubuntu install distro</p>
+
+<p>Download Virtualbox</p>
+
+<p>Make a new virtual machine. Linux 64-bit probably</p>
+
+<p>Under storage go the the cd and click on it. Select the installation disk.</p>
+
+<p>Decide to erase and install, itâ€™s fine.</p>
+
+<p>Insert the guest additions cd using the menu bar under devices. Install them. Now it should go full screen when you click the little green button on macs. You can slide all your fingers to switch workspaces.</p>
+
+<p>TO be able to access shared folders</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo adduser USERNAME vboxsf
+</code></pre></div></div>
+
+<p>Also, checking 3d acceleration under Settings &gt; Display and giving it all the video ram you can seems to make it run much zippier.</p>
+
+<p>I also gave it 3gb of ram because i had a little extra to spare. Seems to like it.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install lxde
+</code></pre></div></div>
+
+<p>Can use a more lightweight desktop environment by selecting that little emblem at the login screen.</p>
+:ET

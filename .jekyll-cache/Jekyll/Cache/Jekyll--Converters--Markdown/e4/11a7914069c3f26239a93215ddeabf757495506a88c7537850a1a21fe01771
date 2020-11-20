@@ -1,0 +1,45 @@
+I"�<p>So I got my new beaglebone black in the mail today and decided to take it for a spin.</p>
+
+<p>Go to getting started, install the drivers. Make sure you can write a blinking lights program.</p>
+
+<p>Plug in the beaglebone to an ethernet port somewhere</p>
+
+<p>Pull up your terminal</p>
+
+<p>ssh 192.168.7.2</p>
+
+<p>sudo apt-get install xboxdrv</p>
+
+<p>in your cloud9 IDE terminal run this command</p>
+
+<p>npm install node-xbox-drv</p>
+
+<p>Very similar to arduino</p>
+
+<p>Can just use a node library to attach to the controller</p>
+
+<p>https://github.com/Jabbath/node-xboxdrv</p>
+
+<p>Make a new file and put this in it
+`
+var xbox = require(‘node-xboxdrv’);
+var controller = new xbox(“045e”,”028e”,{});
+var b = require(‘bonescript’);`</p>
+
+<p>b.pinMode(“USR0”, b.OUTPUT);
+b.pinMode(“USR1”, b.OUTPUT);
+b.pinMode(“USR2”, b.OUTPUT);
+b.pinMode(“USR3”, b.OUTPUT);</p>
+
+<p>controller.on(‘a’,toggle);</p>
+
+<p>var state = b.LOW;
+controller.on(‘leftY’,function(data){console.log(data);})
+controller.on(‘leftY’,function(data){console.log(data);})</p>
+
+<p>function toggle() {
+if(state == b.LOW) state = b.HIGH;
+else state = b.LOW;
+b.digitalWrite(“USR3”, state);
+}</p>
+:ET

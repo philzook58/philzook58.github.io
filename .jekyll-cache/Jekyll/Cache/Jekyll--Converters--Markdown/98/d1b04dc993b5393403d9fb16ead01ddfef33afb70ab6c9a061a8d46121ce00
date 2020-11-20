@@ -1,0 +1,49 @@
+I"T<p>the jupyer jekyll plugin supposedly won’t work on github pages</p>
+
+<p>https://briancaffey.github.io/2016/03/14/ipynb-with-jekyll.html</p>
+
+<p>jupyter nbconvert –to markdown jekyll_test.ipynb</p>
+
+<p>To get latex (including the $ tags) to work on the minima layout I added</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;link rel="stylesheet" href="/assets/main.css"&gt;
+  &lt;link rel="alternate" type="application/rss+xml" title="Dinkin&amp;#39; Around with Phil" href="/feed.xml"&gt;
+  
+  &lt;script type="text/x-mathjax-config"&gt;
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+&lt;/script&gt;
+&lt;script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"&gt;
+&lt;/script&gt;
+&lt;/head&gt;
+</code></pre></div></div>
+
+<p>into an _includes/head.html</p>
+
+<p>I added a pynb  directory and added the following into my _config file? Not sure this was necessary.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>defaults:
+- scope:
+    path: "pynb"
+  values:
+    image: true
+</code></pre></div></div>
+
+<p>replace all</p>
+
+<p>fermions_part_1_files</p>
+
+<p>with</p>
+
+<p>/pynb/fermions_part_1_files</p>
+
+<p>in the markdown file.</p>
+
+<p>could also add syntax highlighting but maybe this is good enough.</p>
+:ET

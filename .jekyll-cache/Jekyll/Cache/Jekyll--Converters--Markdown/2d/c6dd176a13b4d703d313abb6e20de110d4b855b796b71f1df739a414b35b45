@@ -1,0 +1,86 @@
+I"�<h4 id="intro">Intro</h4>
+
+<p>Topology is the study of geometry minus the wiggles. More specifically topology studies continuous maps.</p>
+
+<p>Topology separates into a number of sub fields.</p>
+
+<ul>
+  <li>
+    <p>General Topology - Studies the set theoretic properties and definitions of topology</p>
+  </li>
+  <li>
+    <p>Algebraic Topology - Studies</p>
+  </li>
+</ul>
+
+<p>The piece of topology that is most relevant to physics (partially because it is the most computational) is the notion of the notion of the topological invariant. Topological invariants are numbers that can be computed. If they disagree for two objects, then the two objects are not topologically equivalent. The reverse is not true.</p>
+
+<p>An example of a topological invariant is the winding number of a closed curve around a point in 2d. This can also be interpreted as a classification of mappings from circles to circles.</p>
+
+<p>Another example is the Euler number. The Euler number kind of counts the number of holes in a surface. It is defined as $latex \chi = V-E+F $, the number of vertices minus edges plus the number of faces in a tessellation of a surface. If one considers the Euler number of possibly disconnected surfaces or edges or vertices, the Euler number does a decent job of counting the number of objects.</p>
+
+<p>Nick Read has published a <a href="http://boulderschool.yale.edu/sites/default/files/files/pt_article_published.pdf">review article</a> in Physics Today. Physics Todays is a pretty excellent introduction to modern topics if you can find an article on that topic.</p>
+
+<p>Topological Matter has one or more of the following</p>
+
+<ol>
+  <li>
+    <p>An energy gap above the ground state</p>
+  </li>
+  <li>
+    <p>A number of degenerate ground states that depends on the topology of the surface on which they live (Torus vs Sphere).</p>
+  </li>
+  <li>
+    <p>Anyonic Quasiparticles.</p>
+  </li>
+  <li>
+    <p>Quantized Response functions (quantized Hall conductance for example)</p>
+  </li>
+  <li>
+    <p>Unavoidable Edge Modes</p>
+  </li>
+</ol>
+
+<h4 id="connections">Connections</h4>
+
+<p>Two objects that are far apart need to be brought together in order to be compared. A <a href="https://en.wikipedia.org/wiki/Connection_(mathematics)">Connection</a> is a specification on how to transport something around in space. This connection is defined differentially. Given a tiny displacement $latex dx$, what is the tiny change $dO$ in the corresponding object.</p>
+
+<p>There are three examples of connections of different flavor.</p>
+
+<p>The first is the connection defining parallel transport of vectors in a curved geometry.</p>
+
+<p>The game goes like so: Suppose you want to transport a little arrow in the surface of a sphere  to a new point on a sphere. You want a procedure to keep the arrow in the surface of the sphere. The simplest procedure is to project the arrow back into the sphere after moving it a tiny bit $latex dx$. Move, project. Move, project. This procedure keeps the arrow in the surface of the sphere the whole way. This procedure is the connection for parallel transporting the arrow on the sphere. (This procedure defines what it means for two arrows to be parallel at nearby points).</p>
+
+<p>When one actually does this however, a curious thing results. The arrow upon returning to the original point after a closed loop, may have been rotated relative to the original arrow. Different paths of transport result in different amounts of turning. This turning is a result of the curvature of the sphere and the parallel transport procedure is a method by which to probe the curvature.</p>
+
+<p>Rather that integrating the connection along the entire closed route, there is an alternative but equivalent way of doing the accounting. Consider a tiny loop or area $latex dA$. This loop causes a correspondingly tiny rotation $latex d\theta $. Because the rotation gets cancelled from traverse the same path in opposite directions, the sum of all the tiny loop rotations in an area will equal the rotation calculated for the bounding edge of that area. This is <a href="https://en.wikipedia.org/wiki/Stokes'_theorem">Stokes theorem</a> about the curl if that helps.</p>
+
+<p>Another connection is that of the electromagnetic <a href="https://en.wikipedia.org/wiki/Magnetic_potential#Magnetic_vector_potential">vector potential</a> $latex A$. The vector potential specifies how to transport quantum amplitudes and compare them at different positions. This is the <a href="https://en.wikipedia.org/wiki/Aharonov%E2%80%93Bohm_effect">Aharonov-Bohm effect</a>. When a particle travels through the vector potential it gets an extra phase $latex \Delta \phi = q/\hbar \int A\cdot dx$.</p>
+
+<p>A final connection is that connected to <a href="https://en.wikipedia.org/wiki/Berry_connection_and_curvature">Berry Phase</a>. Instead of talking about transport in physical geometrical space, Berry phase refers to transport in parameter space. This is analogous to the transition from cartesian coordinates in Newtonian mechanics to that of generalized coordinates in Lagrangian mechanics, which may not have a simple geometrical interpretation necessarily.</p>
+
+<p>Berry phase can be interpreted as being similar to the extra phase that an oscillator might receive upon a cyclic change in its parameters for example slowly changing the length and mass of a pendulum. This seems like a small effect and it typically is a drop in the bucket compared to all the ordinary dynamic phase accumulated $latex \int \omega(t)dt$ but it nevertheless exists and actually has a lot of conceptual importance.</p>
+
+<p>A particularly important example of Berry phase is that of the spin-1/2. This occurs when you rotate the magnetic field that the spin is in for example.</p>
+
+<p>$latex u=\begin{array}{c}\cos (\theta/2)\ \sin (\theta/2) e^{i \phi}\end{array}$</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>$latex A=i&lt;u</td>
+      <td>\partial</td>
+      <td>u&gt;=(0, - sin^2(\theta/2) )$</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>$latex \int A_\phi d\phi = -2\pi sin^2(\theta/2) =-\Omega/2$</p>
+
+<p>$\Omega=\int \sin(\theta) d\theta \phi $ plus use some half angle identities.</p>
+
+<p>In summary, the Berry phase is half of the solid angle $latex \Omega$ enclosed by the path.</p>
+
+<p>Next Time: Discretizing the Schrodinger Equation</p>
+
+:ET

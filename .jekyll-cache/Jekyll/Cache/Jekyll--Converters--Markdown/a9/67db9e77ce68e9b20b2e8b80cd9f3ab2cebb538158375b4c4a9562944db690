@@ -1,0 +1,173 @@
+I"�<p>Haskell has lots of fancy weird corners, but you want to get rippin’ and runnin’</p>
+
+<p>The Haskell phrase book is a new useful thingy. Nice and terse.</p>
+
+<p><a href="https://typeclasses.com/phrasebook">https://typeclasses.com/phrasebook</a></p>
+
+<p>This one is also quite good <a href="https://lotz84.github.io/haskellbyexample/">https://lotz84.github.io/haskellbyexample/</a></p>
+
+<p>I also like what FP complete is up to. Solid set of useful stuff, although a bit more emphasis towards their solutions than is common <a href="https://haskell.fpcomplete.com/learn">https://haskell.fpcomplete.com/learn</a></p>
+
+<p>I was fiddling with making some examples for my friends a while ago, but I think the above do a similar better job.</p>
+
+<p><a href="https://github.com/philzook58/basic-ass-shit">https://github.com/philzook58/basic-ass-shit</a></p>
+
+<p>Highlights include:</p>
+
+<p>Makin a json request</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;-# LANGUAGE OverloadedStrings, DeriveGeneric #-}
+module JsonRequest where
+
+import Data.Aeson
+import Network.Wreq
+import GHC.Generics
+import Control.Lens
+
+data ToDo  = ToDo {
+    userId :: Int,
+    id :: Int,
+    title :: String,
+    completed :: Bool
+  } deriving (Generic, Show)
+instance ToJSON ToDo
+
+
+instance FromJSON ToDo
+
+my_url = "https://jsonplaceholder.typicode.com/todos/1"
+
+main = do r &lt;- get my_url
+          print $ ((decode $ r ^. responseBody) :: Maybe ToDo) -- ((decode $ r ^. responseBody) :: Maybe ToDo)&lt;/code&gt;
+</code></pre></div></div>
+
+<p>Showing a plot of a sine function</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;module Plot where
+
+import Graphics.Rendering.Chart.Easy
+import Graphics.Rendering.Chart.Backend.Cairo -- Chart-cairo
+import Graphics.Image as I -- hip
+
+-- https://github.com/timbod7/haskell-chart/wiki/example-1
+filename = "example1_big.png"
+
+main = do 
+        toFile def filename $ plot (line "a sine" [[ (x :: Double, sin x) | x &lt;- [0, 0.1 .. 2 * pi]]])
+        plotimg &lt;- readImageRGB VU filename -- yeah,I want the plot to pop up
+        displayImage plotimg
+        print "Press Enter to Quit"
+        getLine&lt;/code&gt;
+</code></pre></div></div>
+
+<p>Doing a least squares fit of some randomly created data</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;module LeastSquares where
+
+import Numeric.LinearAlgebra
+
+n = 20
+x = linspace n (-3,7::Double)
+y0 = 3 * x
+
+main = do
+        noise &lt;- randn 1 n
+        let y = (flatten noise) + y0
+        let sampleMatrix = (asColumn x) ||| (konst 1 (n,1))
+        let sol = (sampleMatrix &lt;\&gt; y) 
+        print $ "Best fit is y = " ++ show (sol ! 0) ++ " * x + " ++ (show (sol ! 1))&lt;/code&gt;
+</code></pre></div></div>
+
+<h4 id="not-too-complicated-stuff-to-get-you-excited-about-haskell">Not too complicated stuff to get you excited about Haskell:</h4>
+
+<p>I love Power Serious. <a href="https://www.cs.dartmouth.edu/~doug/powser.html">https://www.cs.dartmouth.edu/~doug/powser.html</a> Infinite power series using the power of laziness in something like 20 lines</p>
+
+<p><a href="https://blog.plover.com/prog/haskell/monad-search.html">https://blog.plover.com/prog/haskell/monad-search.html</a> Using the list monad to solve SEND+MORE=MONEY puzzle.</p>
+
+<p><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.42.8903&amp;rep=rep1&amp;type=pdf">http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.42.8903&amp;rep=rep1&amp;type=pdf</a> Jerzy Karczmarczuk doing automatic differentiation in Haskell before it was cool. Check out Conal Elliott’s stuff after.</p>
+
+<p>Very simple symbolic differentiation example. When I saw this in SICP for the first time, I crapped my pants.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;data Expr = X | Plus Expr Expr | Times Expr Expr | Const Double
+deriv :: Expr -&gt; Expr
+deriv X = Const 1
+deriv (Const _) = Const 0
+deriv (Plus x y) = Plus (deriv x) (deriv y)
+deriv (Times x y) = (Times (deriv x) y) `Plus` (Times x (deriv y))&lt;/code&gt;
+</code></pre></div></div>
+
+<p><a href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf</a> Why functional Programming Matters by John Hughes</p>
+
+<p><a href="https://www.cs.cmu.edu/~crary/819-f09/Backus78.pdf">https://www.cs.cmu.edu/~crary/819-f09/Backus78.pdf</a> John Backus emphasizing escaping the imperative mindset in his 1978 Turing Award speech. A call to arms of functional programming</p>
+
+<p><a href="https://www.cs.tufts.edu/~nr/cs257/archive/richard-bird/sudoku.pdf">https://www.cs.tufts.edu/~nr/cs257/archive/richard-bird/sudoku.pdf</a> Richard Bird defining sudoku solutions and then using equation reasoning to build a more efficient solver</p>
+
+<p><a href="https://wiki.haskell.org/Research_papers/Functional_pearls">https://wiki.haskell.org/Research_papers/Functional_pearls</a> - Functional Pearls</p>
+
+<h4 id="heres-how-i-find-useful-haskell-packages">Here’s how I find useful Haskell packages:</h4>
+
+<p>I google. I go to hackage (if I’m in a subpage, click on “contents” in the upper right hand corner). Click on a category that seems reasonable (like “web” or something) and then sort by Downloads (DL). This at least tells me what is popular-ish. I look for tutorials if I can find them. Sometimes there is a very useful getting started snippet in the main subfile itself. Some packages are overwhelming, others aren’t.</p>
+
+<p>The Real World Haskell book is kind of intimidating although a lovely resource.</p>
+
+<p>The wiki has a pretty rockin set of tutorials. Has some kind soul been improving it?</p>
+
+<p><a href="https://wiki.haskell.org/Category:Tutorials">https://wiki.haskell.org/Category:Tutorials</a></p>
+
+<p>I forgot learn you a Haskell has a chapter on basic io</p>
+
+<p><a href="http://learnyouahaskell.com/input-and-output">http://learnyouahaskell.com/input-and-output</a></p>
+
+<h4 id="learn-more">Learn more</h4>
+
+<p>When you’re ready to sit down with Haskell more, the best intro is currently the <a href="http://haskellbook.com/">Haskell Book</a></p>
+
+<p>You may also be interested in <a href="https://www.edx.org/course/introduction-functional-programming-delftx-fp101x-0">https://www.edx.org/course/introduction-functional-programming-delftx-fp101x-0</a> this MOOC</p>
+
+<p><a href="https://github.com/data61/fp-course">https://github.com/data61/fp-course</a> or this Data61 course</p>
+
+<p>Then there is a <em>fun</em> infinitude of things to learn after that.</p>
+
+<hr />
+
+<p>More ideas for simple examples?</p>
+
+<p>This post is intentionally terse.</p>
+
+<p>IO is total infective poison.</p>
+
+<p>standard output io</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;main = do
+      x &lt;- getStrLn
+      putStrLn "Hello"
+      print [1,2,3]
+      print (Just 19022.32)
+      print x
+
+&lt;/code&gt;
+</code></pre></div></div>
+
+<p>mutation &amp; loops. You probably don’t want these. They are not idiomatic Haskell, and you may be losing out on some of the best lessons Haskell has to offer.</p>
+
+<p>file IO</p>
+
+<p>web requests</p>
+
+<p><a href="http://www.serpentine.com/wreq/tutorial.html">http://www.serpentine.com/wreq/tutorial.html</a></p>
+
+<p>web serving - scotty</p>
+
+<p>image processing</p>
+
+<p>basic data structures</p>
+
+<p>command line arguments</p>
+
+<p>plotting</p>
+
+<p>Parallelism and Concurrency</p>
+
+<p><a href="https://nokomprendo.frama.io/tuto_fonctionnel/posts/tuto_fonctionnel_25/2018-08-25-en-README.html">https://nokomprendo.frama.io/tuto_fonctionnel/posts/tuto_fonctionnel_25/2018-08-25-en-README.html</a></p>
+
+:ET

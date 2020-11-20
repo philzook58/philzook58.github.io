@@ -1,0 +1,28 @@
+I"¡<p>I was listening to this guy on this podcast Programming Throwdown and really liked the cut of his jib. So I sought out the talks he mentioned</p>
+
+<p>https://www.youtube.com/watch?v=TA9DBG8x-ys</p>
+
+<p>Links to stuff mentioned</p>
+
+<p>https://github.com/Engelberg/ycover</p>
+
+<p>Rolling Stones - bindings to Java Sata solver Sat4j</p>
+
+<p>https://github.com/Engelberg/rolling-stones</p>
+
+<p>https://www.youtube.com/watch?v=d76e4hV1iJY</p>
+
+<p>Tarantella - Dancing Links</p>
+
+<p>https://github.com/Engelberg/tarantella</p>
+
+<p>Loco - Choco Â  - CSP solver in java</p>
+
+<p>https://www.youtube.com/watch?v=AEhULv4ruL4</p>
+
+<p>SMT vs CSP?</p>
+
+<p>https://cstheory.stackexchange.com/questions/29406/constraint-satisfaction-problem-csp-vs-satisfiability-modulo-theory-smt-wi</p>
+
+<p>I guess the difference is the community as perspective. CSP tends to be from AI. SMT comes from formalizing and proving correctness of programs.</p>
+:ET

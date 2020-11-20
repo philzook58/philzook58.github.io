@@ -1,0 +1,133 @@
+I"�(<p>There is great value in meditating upon the simplest possible example of a thing you can come up with. In this case one can apply defunctionalization techniques that are often applied to lambda calculus to simpler arithmetic calculations.</p>
+
+<p>Functional programming is cool and useful, but it isn’t clear how to implement the features they provide on hardware that is controlled by assembly code. Achieving this is a fairly large topic. One step on the way is the concept of an abstract machine.</p>
+
+<p>Abstract machines make more explicit how to evaluate a program by defining a step relationship taking a state of the machine to another state. I think this may be closer to how hardware is built because hardware is physical system. Physical systems are often characterizable by their space of states and the transitions or time evolution of them. That’s Newtonian mechanics in a nutshell.</p>
+
+<p>There is a methodology by which to connect the definitions of abstract machines to interpreters of lambda calculus.</p>
+
+<ul>
+  <li>Convert to continuation passing style to make the evaluation order explicit</li>
+  <li>Defunctionalize these continuations</li>
+</ul>
+
+<p>However, the lambda calculus is a non trivial beast and really only a member of a spectrum of different programming language features. Here is an incomplete set of features that you can mix and match:</p>
+
+<ul>
+  <li>Arithmetic expressions</li>
+  <li>Boolean expressions</li>
+  <li>let bindings</li>
+  <li>Printing/Output</li>
+  <li>Reading/Input</li>
+  <li>Mutation, References</li>
+  <li>For/While loops</li>
+  <li>Named Global Procedures</li>
+  <li>Recursion</li>
+  <li>Lambda terms / Higher Order Functions</li>
+  <li>Call/CC</li>
+  <li>error throw try catch</li>
+  <li>Algebraic Data Types</li>
+  <li>Pattern matching</li>
+</ul>
+
+<p>In my opinion, the simplest of any of these is arithmetic expressions and with only this you can already meaningfully explore this evaluator to abstract machine translation.</p>
+
+<p>First we need a data type for arithmetic</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;data AExpr = Lit Int | Add AExpr AExpr deriving (Eq, Show)&lt;/code&gt;
+</code></pre></div></div>
+
+<p>Pretty basic. We could easily add multiplication and other operators and it doesn’t change much conceptually except make things larger. Then we can define a simple interpreter.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;type Value = Int
+
+eval :: AExpr -&gt; Value
+eval (Add x y) = (eval x) + (eval y)
+eval (Lit i) = i&lt;/code&gt;
+</code></pre></div></div>
+
+<p>The first step of our transformation is to put everything in continuation passing style (cps). The way this is done is to add an extra parameter <code class="language-plaintext highlighter-rouge">k</code> to every function call.  When we want to return a result from a function, we now call <code class="language-plaintext highlighter-rouge">k</code> with that instead. You can kind of think of it as a goofy <code class="language-plaintext highlighter-rouge">return</code> statement. <code class="language-plaintext highlighter-rouge">eval'</code> is equivalent to <code class="language-plaintext highlighter-rouge">eval</code> above.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;evalk :: AExpr -&gt; (Value -&gt; Value) -&gt; Value
+evalk (Add x y) k = evalk x (\vx -&gt; (evalk y $ \vy -&gt; k (vx + vy)))
+evalk (Lit i) k = k i
+
+eval' :: AExpr -&gt; Value
+eval' e = evalk e id&lt;/code&gt;
+</code></pre></div></div>
+
+<p>Now we defunctionalize this continuation. We note that higher order continuation parameters take only a finite number of possible shapes if <code class="language-plaintext highlighter-rouge">evalk</code> is only accessed via the above code. <code class="language-plaintext highlighter-rouge">k</code> can either be <code class="language-plaintext highlighter-rouge">id</code>, <code class="language-plaintext highlighter-rouge">(\vx -&gt; (evalk y $ \vy -&gt; k (vx + vy)))</code> , or <code class="language-plaintext highlighter-rouge">\vy -&gt; k (vx + vy)</code>. We give each of these code shapes a constructor in a data type. The constructor needs to hold any values closed over (free variables in the expression). <code class="language-plaintext highlighter-rouge">id</code> needs to remember nothing, <code class="language-plaintext highlighter-rouge">\vx -&gt; (evalk y $ \vy -&gt; k (vx + vy))</code> needs to remember <code class="language-plaintext highlighter-rouge">y</code> and <code class="language-plaintext highlighter-rouge">k</code>, and <code class="language-plaintext highlighter-rouge">\vy -&gt; k (vx + vy)</code> needs to remember <code class="language-plaintext highlighter-rouge">vx</code> and <code class="language-plaintext highlighter-rouge">k</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;data AHole = IdDone | AddL AExpr AHole | AddR Value AHole &lt;/code&gt;
+</code></pre></div></div>
+
+<p>What functions <em>are</em> is a thing that can be applied to it’s arguments. We can use <code class="language-plaintext highlighter-rouge">AHole</code> exactly as before by defining an <code class="language-plaintext highlighter-rouge">apply</code> function.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;apply :: AHole -&gt; Value -&gt; Value 
+apply IdDone      v = v
+apply (AddL e k)  v = evald e (AddR v k)
+apply (AddR v' k) v = apply k (v' + v) &lt;/code&gt;
+</code></pre></div></div>
+
+<p>And using this we can convert <code class="language-plaintext highlighter-rouge">evalk</code> into a new form by replacing the continuations with their defunctionalized data type.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;evald :: AExpr -&gt; AHole -&gt; Value
+evald (Add x y) k = evald x (AddL y k)
+evald (Lit i) k = apply k i
+
+eval'' e = evald e IdDone&lt;/code&gt;
+</code></pre></div></div>
+
+<p>We can make this into more of a machine by inlining <code class="language-plaintext highlighter-rouge">apply</code> into <code class="language-plaintext highlighter-rouge">evald</code> and breaking up the tail recursion into individual steps. Now we have a step relation on a state consisting of continuation data <code class="language-plaintext highlighter-rouge">AHole</code> and program information <code class="language-plaintext highlighter-rouge">AExpr</code>. Every step makes progress towards evaluating the expression. If you squint a little, this machine is basically an <a href="http://learnyouahaskell.com/functionally-solving-problems">RPN machine</a> for evaluating arithmetic.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;data Machine = Machine {  prog :: AExpr  , kont :: AHole}
+
+step :: Machine -&gt; Either Value Machine
+step (Machine (Add x y) k) = Right $ Machine x (AddL y k)
+step (Machine (Lit i) (AddL e k)) = Right $ Machine e (AddR i k)
+step (Machine (Lit i) (AddR v k)) = Right $ Machine (Lit (i + v)) k
+step (Machine (Lit i) (IdDone)) = Left i
+
+init_machine e = Machine e IdDone
+
+-- https://hackage.haskell.org/package/extra-1.7.4/docs/src/Control.Monad.Extra.html#loop
+loop :: (a -&gt; Either b a) -&gt; a -&gt; b
+loop act x = case act x of
+    Right x -&gt; loop act x
+    Left v -&gt; v
+
+eval'''' e = loop step (init_machine e)&lt;/code&gt;
+</code></pre></div></div>
+
+<p>Pretty neat right?</p>
+
+<p><img src="https://www.philipzucker.com/wp-content/uploads/2020/08/face.gif" alt="" />Artwork Courtesy of <a href="https://davidtersegno.wordpress.com/">David</a></p>
+
+<p>Now the next simplest steps in my opinion would be to add Booleans, Let expressions, and Print statements. Then after grokking that, I would attempt the CEK and Krivine Machines for lambda calculus.</p>
+
+<p><img src="https://www.philipzucker.com/wp-content/uploads/2020/08/ec171a6b-08ee-4000-8c74-11b658435937-1024x640.png" alt="" />Artwork Courtesy of <a href="https://davidtersegno.wordpress.com/">David</a></p>
+
+<h3 id="links">Links</h3>
+
+<p>Defunctionalizing arithmetic can be found in <a href="https://www.brics.dk/RS/01/23/BRICS-RS-01-23.pdf">https://www.brics.dk/RS/01/23/BRICS-RS-01-23.pdf</a> - Defunctionalization at Work - Danvy and Nielson</p>
+
+<p><a href="https://homepages.inf.ed.ac.uk/wadler/papers/papers-we-love/reynolds-definitional-interpreters-1998.pdf">https://homepages.inf.ed.ac.uk/wadler/papers/papers-we-love/reynolds-definitional-interpreters-1998.pdf</a> Definitional Interpreters for Higher Order Programming Languages - Reynolds 1972. The grand daddy paper of defunctionalization</p>
+
+<p><a href="https://tidsskrift.dk/brics/article/download/21784/19215">https://tidsskrift.dk/brics/article/download/21784/19215</a> - A Journey from Interpreters to Compilers and Virtual Machines - Mads Sig Ager, Dariusz Biernacki, Olivier Danvy,<br />
+Jan Midtgaard</p>
+
+<p><a href="http://www.pathsensitive.com/2019/07/the-best-refactoring-youve-never-heard.html">http://www.pathsensitive.com/2019/07/the-best-refactoring-youve-never-heard.html</a> Best Refactoring You’ve never Heard of by Jimmy Koppel.</p>
+
+<p>Xavier Leroy abstract machine slides <a href="https://xavierleroy.org/mpri/2-4/">https://xavierleroy.org/mpri/2-4/</a></p>
+
+<p><a href="https://caml.inria.fr/pub/papers/xleroy-zinc.pdf">https://caml.inria.fr/pub/papers/xleroy-zinc.pdf</a> - Leroy’s description of the Zinc Machine</p>
+
+<p>CEK machine - Matt Might <a href="http://matt.might.net/articles/cek-machines/">http://matt.might.net/articles/cek-machines/</a></p>
+
+<p><a href="https://github.com/rain-1/continuations-study-group/wiki/Reading-List">https://github.com/rain-1/continuations-study-group/wiki/Reading-List</a></p>
+
+<p><a href="https://semantic-domain.blogspot.com/2020/02/thought-experiment-introductory.html">https://semantic-domain.blogspot.com/2020/02/thought-experiment-introductory.html</a> Neel Krishnaswami’s hypothetical compiler course.</p>
+
+<p><a href="http://www.cs.nott.ac.uk/~pszgmh/ccc.pdf">http://www.cs.nott.ac.uk/~pszgmh/ccc.pdf</a> Calculating Correct Compilers - Bahr and Hutton</p>
+
+:ET

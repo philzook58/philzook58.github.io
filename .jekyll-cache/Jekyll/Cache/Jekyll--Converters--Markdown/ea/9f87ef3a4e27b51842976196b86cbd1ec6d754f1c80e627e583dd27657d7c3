@@ -1,0 +1,61 @@
+I"<p>So I saw</p>
+
+<p>http://learnyouahaskell.com/for-a-few-monads-more#state</p>
+
+<p>where he uses a stack as an example of a state monad.</p>
+
+<p>I get the Maybe monad I think and some others, but the State monad is one more level of abstraction that confuses me still. When I try to reason about it, I fail to see the point sometimes. Pure state to state functions are immediately composable. To also have a return value and return state usually doesn’t seem necessary.</p>
+
+<p>The actual monad is the full state transforming and value returning function. This is very abstract.</p>
+
+<p>Most functions you’ll be writing will return a function that takes state and outputs (val, state) pair. It’s weird.</p>
+
+<p>Though I’d try doing it in python. It is sticky. Maybe I need to churn through it a bit more. The fact that I need to keep putting those toss away functions in there seems strange. Perhaps I need a bit more think. Although the do notation does expand out to that often I think.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># This is horrific
+
+#currying would help correspondence to haskell. Then push(a,stack): would be the same as push(a): return lambda stack
+def push(a):
+	return lambda stack: (None, [a] + stack)
+
+
+pop = lambda stack:  (stack[0], stack[1:])
+def myreturn(x):
+	return lambda stack: (x, stack)
+
+def runStackFunc(statefulstackfunc):
+	return statefulstackfunc([])
+
+#state -&gt; (val ,state)
+def bind(statemanip, regtostatemanip):       #  return val  #state
+	return lambda state: regtostatemanip(statemanip(state)[0])(statemanip(state)[1])
+
+#Do notation is also pretty clutch. You need to toss the value a lot
+
+print runStackFunc(bind(bind(bind(push(1), lambda _ : push(2)), lambda __ :pop), push))
+# associativity?  The value tossing lambdas need to be switched outside of the binds. That seems weird
+print runStackFunc(bind(push(1), lambda _ :bind( push(2), lambda __: bind(pop, push))))
+
+print runStackFunc(bind(bind(push(1), lambda _: push(2)), lambda __: bind(pop, push)))
+</code></pre></div></div>
+
+<p>It is neato how the associativity kind of works.</p>
+
+<p>Edit:</p>
+
+<p>I later realized I had forgotten » aka then</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'''
+def then(statemanip, dontneednothin):
+	return lambda state: (dontneednothin(statemanip(state)[1]))
+'''
+#More general 
+def then(statemanip, dontneednothin):
+	return bind(statemanip, lambda _: dontneednothin)
+
+print runStackFunc(bind(then(then(push(1), push(2)), pop), push))
+</code></pre></div></div>
+
+<p>Pretty straightforward. Just added in the throwaway lambda into a function. Can do this manually or by referring back to bind (which is better since then basically just has the logic of bind in it).</p>
+
+:ET

@@ -1,0 +1,72 @@
+---
+author: philzook58
+comments: true
+date: 2015-11-22 21:25:11+00:00
+layout: post
+link: https://www.philipzucker.com/opencv/
+slug: opencv
+title: OpenCV
+wordpress_id: 243
+---
+
+We're trying to detect a green laser and having problems. One problem is that the laser is so goddamn bright that it is saturating the camera. Maybe that be nice except that the ligthbulbs in the background are doing that too.
+
+Some useful little mini programs:
+
+Capture and image and save it.
+
+    
+    import cv2
+    import numpy as np
+    import time
+    
+    cap = cv2.VideoCapture(0)
+    time.sleep(1)
+    print cap.get()
+    _, frame = cap.read()
+    
+    cv2.imwrite('myimage.png',frame)
+
+
+
+
+This let's us poke around on an image and print out the data corresponding to a point.
+
+    
+    import cv2
+    import numpy as np
+    import time
+    
+    cap = cv2.VideoCapture(0)
+    time.sleep(1)
+    
+    _, frame = cap.read()
+    
+    def checkStuff(event,x,y,flags,param):
+        print "yo"
+        print event
+        if event == cv2.EVENT_LBUTTONDBLCLK:
+            print frame[x,y,:]
+        if event == 0:
+            print frame[y,x,:]
+    cv2.namedWindow('frame')
+    cv2.imshow('frame',frame)
+    
+    cv2.setMouseCallback('frame',checkStuff)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
+The HSV decomposotion from the tutorials is ok, but  not cutting the mustard.
+
+Maybe something more autocorrelationy?
+
+So I get the python side, and I was giving the C side a go.
+
+Apparently the recommended way is to use Cmake to make your projects. I don't like it.
+
+[http://docs.opencv.org/2.4/doc/tutorials/introduction/linux_gcc_cmake/linux_gcc_cmake.html#linux-gcc-usage](http://docs.opencv.org/2.4/doc/tutorials/introduction/linux_gcc_cmake/linux_gcc_cmake.html#linux-gcc-usage)
+
+Kind of fell off the bandwagon on this one. Would be better to actually get something working in python before going onto this.
+
+

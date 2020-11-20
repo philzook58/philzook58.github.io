@@ -1,0 +1,139 @@
+I"�<p>Publishing these draft notes because it has some useful info in it and trying to reboot the project. It’s very ambitious. We’ll see where we get with it.</p>
+
+<p><a href="https://github.com/philzook58/nand2coq">https://github.com/philzook58/nand2coq</a></p>
+
+<p>Old Stuff (Last Edited 6/23/18):</p>
+
+<p>So my friends and I are starting the nand2tetris course. I feel like I have some amount of familiarity with the topics involved, so I’d like to put it into challenge mode for me.</p>
+
+<p>Week 1 is about basic combinatorial logic gate constructions and sort of the ideas of an HDL.</p>
+
+<p>I was trying to keep up in Verilog and failing. The verilog syntax is a little bit more verbose.</p>
+
+<p>Still not so bad.</p>
+
+<p>The easiest thing to use was assign statements.  The difference between = and &lt;= in verilog is still a little opaque to me</p>
+
+<p>I compiled them and ran them using Icarus verilog (iverilog and the vpp the output file).</p>
+
+<p>I started using MyHDL but I’m not sure I saw why it was going to be easier? But the MyHdl docs did help me understand a bit why verilog is the way it is.</p>
+
+<p>Here is a big list of interesting projects:</p>
+
+<p>MyHDL - A python hardware description language. Can output VHDL and Verilog. based around python generators and some decorators.</p>
+
+<p>Icarus Verilog - http://iverilog.wikia.com/wiki/Main_Page. iverilog Compiles verilog into a assembly format which can be run with vvp command.</p>
+
+<p>example</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>iverilog myor.v not.v
+
+vpp a.out
+</code></pre></div></div>
+
+<p>Verilator - Compiles Verilog to C for simulation</p>
+
+<p>GTKWave - A Waveform viewer</p>
+
+<p>IceStick - A cheap 20$ ish fpga usb board that can be programmed easily</p>
+
+<p>IceStorm http://www.clifford.at/icestorm/ - An OpenSource toolchain for compiling to and programming ice40 fpga chips</p>
+
+<p>IceStudio - a graphical block editor. Last I checked it was still a little clunky</p>
+
+<p>EdaPlayground - online web app for writing code and giving to  simulators</p>
+
+<p>Formal tools:</p>
+
+<p>yosys-smtbmc</p>
+
+<p>symbiyosys</p>
+
+<p>http://www.clifford.at/papers/2016/yosys-smtbmc/</p>
+
+<p>http://zipcpu.com/blog/2017/10/19/formal-intro.html</p>
+
+<p>icestick floorplan - https://knielsen.github.io/ice40_viewer/ice40_viewer.html</p>
+
+<p>ZipCPU</p>
+
+<p>open source fpga twitter https://twitter.com/ico_tc?lang=en</p>
+
+<p>https://opencores.org/</p>
+
+<p>https://hackaday.com/2015/08/19/learning-verilog-on-a-25-fpga-part-i/</p>
+
+<p>Upduino - interesting set of boards. Cheap.</p>
+
+<p>http://gnarlygrey.atspace.cc/development-platform.html#upduino</p>
+
+<p>Questionable: Clash?</p>
+
+<p>installing icestick on the mac</p>
+
+<p>https://github.com/ddm/icetools</p>
+
+<p>https://github.com/Homebrew/homebrew-core/issues/9229</p>
+
+<p>Had to pip uninstall enum34. Weird.</p>
+
+<p>Verilog</p>
+
+<p>Start with module statement</p>
+
+<p>end lines with semicolons.</p>
+
+<p>You need to name instantiated elements</p>
+
+<p>yosys -p “synth_ice40 -top not1 -blif not.blif” not.v</p>
+
+<p><a href="https://mcmayer.net/first-steps-with-the-icestorm-toolchain/">https://mcmayer.net/first-steps-with-the-icestorm-toolchain/</a></p>
+
+<p>../icetools/arachne-pnr/bin/arachne-pnr  -d 1k -P tq144 -o not.asc -p not.pcf not.blif</p>
+
+<p>https://gist.github.com/wbotelhos/46c37807c834ccb5bb406e426adfe347</p>
+
+<p>../icetools/icestorm/icepack/icepack not.asc not.bin</p>
+
+<p>iceprog not.bin</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code class="language-bash"&gt;sudo kextunload -b com.FTDI.driver.FTDIUSBSerialDriver  &lt;/code&gt;
+</code></pre></div></div>
+
+<p>The ftdi isn’t working</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module alu(
+	  input [15:0] x
+	, input [15:0] y
+	, output [15:0] out
+	, input zx // zero x
+	, input zy // zero y
+	, input nx // negate result on x
+	, input ny // """
+	, input f // Plus is 1 or and if 0
+	, input no // negate result?
+	, output zr // is it exactly zero
+	, output ng // is out &lt; 0
+	);
+
+wire [15:0] zerox;
+wire [15:0] zeroy;
+wire [15:0] notx;
+wire [15:0] noty;
+wire [15:0] andplus;
+
+assign zerox = zx ? 0 : x;
+assign notx = nx ? ~zerox : zerox;
+assign zeroy = zy ? 0 : y;
+assign noty = ny ? ~zeroy : zeroy;
+assign andplus = f ? x + y : x &amp; y;
+assign out = no ? ~andplus : andplus; 
+
+assign zr = out == 0;
+assign ng = out[15] == 1; // check sign bit
+
+
+endmodule
+</code></pre></div></div>
+
+:ET

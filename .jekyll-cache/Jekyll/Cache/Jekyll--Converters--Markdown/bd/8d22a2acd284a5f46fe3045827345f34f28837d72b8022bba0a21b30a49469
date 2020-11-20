@@ -1,0 +1,88 @@
+I"#<p>I’ve been puttering around with some ideas about how linear algebra could work in Haskell.</p>
+
+<p>So I decided to check out what has been done. hmatrix binds to the gnu scientific libraries and lapack.</p>
+
+<p>There is also htensor and repa which I need to check out.</p>
+
+<p>This is the hello word of scientific programs. I could write this is numpy, scipy, matplotlib FAST. But I’m super used to those. Maybe not a fair comparison.</p>
+
+<p>I build a circulant function for the 1d periodic Laplace equation matrix. I did not find good constructors that would elegantly construct the thing so I make a circulant routine using the fft. That’s ok I guess.</p>
+
+<p>I got the eigenvalues and eigenvectors with eigSH.</p>
+
+<p>Then I plot it out to an external svg file using Cairo. I do not like the mental overhead of a monad.But I guess you can just copy and paste and ignore all that.</p>
+
+<p>The Plt.line function takes a label and a list of (x,y) tuples</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>runghc hello_laplace.hs
+
+
+
+
+
+-- runghc Laplace.hs
+
+import Numeric.GSL.Fourier
+import Numeric.LinearAlgebra
+import Data.Complex
+
+-- Some of the namespace crashes with the algebra stuff.
+import qualified Graphics.Rendering.Chart.Easy as Plt
+import Graphics.Rendering.Chart.Backend.Diagrams(toFile)
+
+fftRow m = fromRows $ (map fft) $ toRows m
+fftCol m = fromColumns $ (map fft) $ toColumns m
+
+
+ifftRow :: Matrix (Complex Double) -&gt; Matrix (Complex Double)
+ifftRow m = fromRows $ (map ifft) $ toRows m
+ifftCol m = fromColumns $ (map ifft) $ toColumns m
+
+
+circulant :: Vector (Complex Double) -&gt; Matrix (Complex Double)
+circulant v = ifftCol $ fftRow $ diag $ fft v
+
+{-
+-- nevermind
+rotate :: Int -&gt; [a] -&gt; [a]
+rotate _ [] = []
+rotate n xs = zipWith const (drop n (cycle xs)) xs
+-}
+
+
+
+
+num = 20
+
+c = assoc num 0 [(0,-2),(1,1),(num-1,1)] :: Vector C
+kmat = circulant c
+
+sol = eigSH (trustSym kmat)
+-- doesn't check hermiticty
+--sol = eigSH' kmat
+eigvals = fst sol
+
+-- a plotting function
+signal :: [Int] -&gt; [(Double,Double)]
+signal xs = [ (fromIntegral x, realPart $ (c ! x)  )| x &lt;- xs ]
+
+
+pltVec label v = (Plt.line label [zip [0..] (toList v)])
+
+main = toFile Plt.def "example1_big.svg" $ do
+      Plt.plot (Plt.line "Matrix Row" [signal [0..(num-1)]])
+      Plt.plot (pltVec "eigenvalues" eigvals)
+</code></pre></div></div>
+
+<p>Ok. Actually on reflection it’s not bad. Scratching my head around the circulant matrix constructor took some time. And so did installing stuff. I did also keep slamming into type mismatches. and it didn’t like eigSH’ which I don’t get.</p>
+
+<p>Maybe Haskell for Mac would work well here? I did buy a copy.</p>
+
+<p>Maybe Julia would be better? I think Julia has lots of functional and pythony things.</p>
+
+<p>I should refactor the fftRow stuff into a higher order combinator that maps into rows and columns</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mapRow f m = fromRows $ (map f) $ toRows m
+</code></pre></div></div>
+
+:ET

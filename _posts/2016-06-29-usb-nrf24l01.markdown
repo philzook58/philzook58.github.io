@@ -1,0 +1,74 @@
+---
+author: philzook58
+comments: true
+date: 2016-06-29 14:27:51+00:00
+layout: post
+link: https://www.philipzucker.com/usb-nrf24l01/
+slug: usb-nrf24l01
+title: USB nrf24L01
+wordpress_id: 435
+---
+
+I bought a cheap USB stick to nrf24l01 adapter on aliexpress.
+
+An alternative is to use a arduino nano or something with the [https://github.com/TMRh20/RF24](https://github.com/TMRh20/RF24)
+
+Would be much more flexible too.
+
+However the convenience of just being able to pop in the little man is nice.
+
+They module plugs in pointing away from the usb port. Red and Blue LEDs turn on.
+
+Documentation is very poor. But apparently takes AT commands
+
+I found this on a french ebay site.
+
+[http://www.ebay.fr/itm/NRF24L01-USB-adapter-adaptateur-USB-2-4Ghz-pour-NRF24L01-UART-2-4G-NRF24L01-/272081225026](http://www.ebay.fr/itm/NRF24L01-USB-adapter-adaptateur-USB-2-4Ghz-pour-NRF24L01-UART-2-4G-NRF24L01-/272081225026)
+
+Seems to be accurate. The actual seller I got it from suggested AT+ADD to set address which does not work
+
+
+<blockquote>AT Commands
+Baudrate : AT+BAUD=n where n =  1-6 (1:4800,2:9600,3:14400,4:19200,5:38400,6:115200) (default 9600Kbps)
+NRF Rate : AT+RATE=n where n =  1-3 (1:250K, 2:1M, 3:2M ) (default 2Mbps)
+Local Address : AT+RXA=0Xnn,0Xnn,0Xnn,0Xnn,0Xnn where nn are the local receiving address (default 0xff,0xff,0xff,0xff,0xff)
+Target Address  : AT+TXA=0Xnn,0Xnn,0Xnn,0Xnn,0Xnn where nn are the target address
+Operating Freq. : AT+FREQ=2.nnnG where nnn = 400 / 525 (default 2.400G)
+Checksum mode : AT+CRC=n where n = 8 /16 (default : 16 bit)
+System info : AT?</blockquote>
+
+
+AT? gets
+
+    
+    ϵͳ��Ϣ��
+    �����ʣ�9600
+    Ŀ��Է���ַ�� 0xFF,0xFF,0xFF,0xFF,0xFF
+    ���ؽ��յ�ַ0��0xFF,0xFF,0xFF,0xFF,0xFF
+    ����Ƶ�ʣ�2.400GHz
+    У�鷽ʽ��16λCRCУ��
+    ���书�ʣ�0dBm
+    ���д������ʣ�2Mbps
+    �������Ŵ����棺����
+    
+
+
+Probably that is Chinese. But we can get some guesses. What each of those means. The second address is RX, the first is TX. I checked by changing them with AT+RXA= commands
+
+It has an STC chip on it STC11L04E. They've included source that does not accept AT commands, so is there a way to reprogram the chip? after looking at the datasheet seems plausible, but not worth the energy.
+
+And the usb to serial chip is the ubiquitous CH340.
+
+Put it on two computers. Or on the same comp.
+
+In two windows type
+
+screen /dev/cu.wchblah blah blah 9600
+
+where the blah blah blah can be found using ls/dev and finding the full device name
+
+Typing in just pipes it right over to the other man (9600baud). Pretty good.
+
+Edit: Check out Pete's post below for more info. Apparently there are version differences between boards
+
+

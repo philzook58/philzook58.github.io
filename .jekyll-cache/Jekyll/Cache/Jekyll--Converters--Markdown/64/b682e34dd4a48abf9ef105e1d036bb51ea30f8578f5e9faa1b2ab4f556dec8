@@ -1,0 +1,45 @@
+I"�<p>Coming back from a couple weeks off of not reading about them, I find myself mystified once again.</p>
+
+<p>I think they are a way to chain extra data through functions.</p>
+
+<p>And you need them to make basic ghc programs? That sucks.</p>
+
+<p>getArgs gets the command line arguments in a list of strings</p>
+
+<p>getLine takes a string from the program</p>
+
+<p>read converts strings into integers that can be added</p>
+
+<p>foldr1 is a variant on foldr that takes the first element as the first accumulator value</p>
+
+<p>putStrLn</p>
+
+<p>putting stuff on seperate lines in a do block implies »</p>
+
+<blockquote>
+  <blockquote>
+    <p>= is implied by &lt;- notation</p>
+  </blockquote>
+</blockquote>
+
+<p>Both are bind operations but a little different?</p>
+
+<p>It all kind of does what you think it should from looking at it, but the monadic backend is deeply puzzling (look at the type definitions). I watched a youtube video of Brian something explaining how monads are a natural way of achieving function composition for functions that don’t take in and output the same type, but I can’t really recall how that made so much sense. Monads are slippery</p>
+
+<p><code class="language-plaintext highlighter-rouge">save this is a file hello.hs and run</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">ghc hello.hs</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">./hello</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">
+module Main where
+import System.Environment
+main :: IO ()
+main = do
+args &lt;- getArgs
+num &lt;- getLine
+putStrLn ("Hello, " ++ show (foldr1 (+) (map read args)))
+putStrLn num
+</code></p>
+:ET

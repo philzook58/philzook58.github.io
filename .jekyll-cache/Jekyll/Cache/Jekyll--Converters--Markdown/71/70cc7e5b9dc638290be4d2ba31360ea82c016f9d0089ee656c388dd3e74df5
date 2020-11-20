@@ -1,0 +1,149 @@
+I"f<p>gstreamer is tinker toys for putting together media applications. Very reminiscent of gnuradio although it doesn’t have a nice gui editor. You smash together a bunch of blocks</p>
+
+<p>It keeps coming up so I am looking into it more.</p>
+
+<p>https://gstreamer.freedesktop.org/documentation/installing/on-linux.html</p>
+
+<p>sudo apt install libgstreamer1.0-dev</p>
+
+<p>copy example</p>
+
+<p>https://gstreamer.freedesktop.org/documentation/tutorials/basic/hello-world.html#</p>
+
+<p>gcc hello_gstream.c <code class="language-plaintext highlighter-rouge">pkg-config --cflags --libs gstreamer-1.0</code></p>
+
+<p>v4l2src is the webcam source of the /dev/video0 device</p>
+
+<p><del>apt-get install gstreamer0.10-ffmpeg</del></p>
+
+<p><del>gst-launch-1.0 -v &lt;/del&gt;
+<del> v4l2src &lt;/del&gt;
+<del> ! qtdemux &lt;/del&gt;
+<del> ! h264parse &lt;/del&gt;
+<del> ! ffdec_h264 &lt;/del&gt;
+<del> ! ffmpegcolorspace &lt;/del&gt;
+<del> ! x264enc &lt;/del&gt;
+<del> ! rtph264pay &lt;/del&gt;
+<del> ! udpsink host=127.0.0.1 port=5000</del></del></del></del></del></del></del></del></del></p>
+
+<p>helpful idiom</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>gst-inspect</td>
+      <td>grep “h264”</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>This let me view my webcam</p>
+
+<p>gst-launch-1.0 -v v4l2src device=/dev/video0 ! video/x-raw,framerate=30/1,width=1280,height=720 ! xvimagesink</p>
+
+<p>The video/x-raw is a “cap”, a capability, kind of defining the type of video flowing through. It isn’t a conversion step as I understand it. It is telling the graph which of the possible types of video available you’ve picked (your webcam can just be told to give you different stuff).</p>
+
+<p>Ugh. The gstreamer elements are super useful, but where is an organized list of them. The manual just has a big dump. Most of these are probably not useful.</p>
+
+<p>https://gstreamer.freedesktop.org/documentation/plugins.html</p>
+
+<p>videoconvert sounds like a good one</p>
+
+<p>There are some fun opencv and opengl ones. Like face detection or wacky effects. Handdetect is a curious one</p>
+
+<p>fakesrc for testing</p>
+
+<p>special sinks for os x -  <a href="https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-good-plugins/html/gst-plugins-good-plugins-osxvideosink.html">osxvideosink</a></p>
+
+<p>playbin for playing from a uri</p>
+
+<p><a href="https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-ugly-plugins/html/gst-plugins-ugly-plugins-x264enc.html">x264enc</a> - encodes into h264</p>
+
+<p>uvch264 - gets a h264 stream right from the webcam</p>
+
+<p>http://oz9aec.net/software/gstreamer/using-the-logitech-c920-webcam-with-gstreamer-12</p>
+
+<p>Or you can just change the parameter to v4l2src to output h264. Ok this is not working on my webcam. I get</p>
+
+<p>ERROR: from element /GstPipeline:pipeline0/GstV4l2Src:v4l2src0: Internal data flow error.</p>
+
+<p>instead</p>
+
+<p>gst-launch-1.0 -v v4l2src device=/dev/video0 ! video/x-raw,framerate=30/1,width=640,height=480 ! x264enc tune=zerolatency !  h264parse ! avdec_h264 ! xvimagesink</p>
+
+<p>encodes h264 and then decodes it. May want to change that zerolatency to another setting option. Maybe?</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rc&lt;span class="gtkdoc opt"&gt;-&lt;/span&gt;lookahead&lt;span class="gtkdoc opt"&gt;=&lt;/span&gt;&lt;span class="number"&gt;5&lt;/span&gt;
+</code></pre></div></div>
+
+<p>https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-ugly-plugins/html/gst-plugins-ugly-plugins-x264enc.html</p>
+
+<p>okay continuing ahead with the streaming. I can’t get h264 to stream. It gives a ERROR: from element /GstPipeline:pipeline0/GstVideoTestSrc:videotestsrc0: Internal data flow error. when combined with the stock example code</p>
+
+<p>GARBAGE. DO NOT USE.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gst-launch-1.0 rtpbin name=rtpbin \
+v4l2src device=/dev/video0 ! video/x-raw,framerate=30/1,width=640,height=480 ! queue ! x264enc tune=zerolatency ! rtph264pay ! rtpbin.recv_rtp_sink_0 \
+rtpbin.send_rtp_src_0 ! udpsink port=5000                            \
+rtpbin.send_rtcp_src_0 ! udpsink port=5001 sync=false async=false    \
+udpsrc port=5005 ! rtpbin.recv_rtcp_sink_0
+</code></pre></div></div>
+
+<p>https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-good-plugins/html/gst-plugins-good-plugins-rtpbin.html</p>
+
+<p>However. using h263 it does work. Needed to change ffenc to avenc from their example and ffdec to avdec</p>
+
+<p>Sending</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gst-launch-1.0 rtpbin name=rtpbin \
+        v4l2src ! videoconvert ! avenc_h263 ! rtph263ppay ! rtpbin.send_rtp_sink_0 \
+                  rtpbin.send_rtp_src_0 ! udpsink port=5000                            \
+                  rtpbin.send_rtcp_src_0 ! udpsink port=5001 sync=false async=false    \
+                  udpsrc port=5005 ! rtpbin.recv_rtcp_sink_0
+</code></pre></div></div>
+
+<p>receiving</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gst-launch-1.0 -v rtpbin name=rtpbin \
+udpsrc caps="application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)H263-1998" \
+port=5000 ! rtpbin.recv_rtp_sink_0 \
+rtpbin. ! rtph263pdepay ! avdec_h263 ! xvimagesink \
+udpsrc port=5001 ! rtpbin.recv_rtcp_sink_0 \
+rtpbin.send_rtcp_src_0 ! udpsink port=5005 sync=false async=false
+</code></pre></div></div>
+
+<p>for receiving on my macbook</p>
+
+<p>gst-launch-1.0 -v rtpbin name=rtpbin \</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>udpsrc caps="application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)H263-1998" \
+
+port=5000 ! rtpbin.recv_rtp_sink_0 \
+
+rtpbin. ! rtph263pdepay ! avdec_h263 ! videoconvert ! osxvideosink \
+
+udpsrc port=5001 ! rtpbin.recv_rtcp_sink_0 \
+
+rtpbin.send_rtcp_src_0 ! udpsink host=192.168.1.12 port=5005 sync=false async=false
+</code></pre></div></div>
+
+<p>you need to specify a host for the udpsinks to get the video on another computer.</p>
+
+<p>I would estimate the latency at 1/4 second maybe. Much better than other things I’ve tried.</p>
+
+<p>okay default latency on rtpbin is 200ms.</p>
+
+<p>on receiving side set latency=0 as an option to rtpbin (not totally sure if transmitting side should have it too.)</p>
+
+<p>I wonder how bad that will fail in the event of packet loss? It’s probably not a good setting for some circumstances, but for a non-critical application on a LAN it seems pretty good.</p>
+
+<p>I think the latency might have crept up a bit over a minute. Not too bad though.</p>
+
+<p>https://github.com/GStreamer/gst-rtsp-server</p>
+
+<p>Update 3/12/19:</p>
+
+<p>Mark has some interesting notes on using gstreamer to streaming. He reported a better latency.</p>
+
+<p>http://markmaz.com/mambo_notes/</p>
+:ET

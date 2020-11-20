@@ -1,0 +1,44 @@
+I"	<p><a href="http://www.aliexpress.com/item/High-Speed-AD-DA-Module-Matching-FPGA-Black-Gold-Development-Board/2053961415.html">http://www.aliexpress.com/item/High-Speed-AD-DA-Module-Matching-FPGA-Black-Gold-Development-Board/2053961415.html</a></p>
+
+<p>I bought this bad boy. Seems cool. Thought maybe I could brute force my way into AM radio land with it.</p>
+
+<p>Also a good project for fpga. Microcontrollers are going to be too slow.</p>
+
+<p>A noticeable problem is the missing of the pinout</p>
+
+<p><a href="http://www.wayengineer.com/blackgold-high-speed-adda-module-for-fpga-development-board-p-2753.html#.VlYh2d-rQfE">http://www.wayengineer.com/blackgold-high-speed-adda-module-for-fpga-development-board-p-2753.html#.VlYh2d-rQfE</a></p>
+
+<p><a href="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/ADDA-pinout.jpg"><img src="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/ADDA-pinout-241x300.jpg" alt="AD:DA pinout" /></a></p>
+
+<p>This appears to be the same product and I can at least confirm that this pinout does work for the DA side of things.</p>
+
+<p>I wrote a quick test program to service it with a ramp function with an arduino. Good idea to sanity check before diving into the deeper waters of fpga.</p>
+
+<p><a href="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/IMG_0142.jpg"><img src="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/IMG_0142-300x225.jpg" alt="IMG_0142" /></a></p>
+
+<p><a href="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/IMG_0143-2.jpg"><img src="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/IMG_0143-2-300x225.jpg" alt="IMG_0143 2" /></a>Ripping through the arduino code with no delay makes a ramp at 53.2Hz. Pathetic, but working.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#define CLKPIN 2 
+//Lowest bit pin on 6, highest bit on 13
+
+void setup(){
+  pinMode(CLKPIN, OUTPUT);
+  digitalWrite(CLKPIN, HIGH);
+  
+  for(int i = 0; i&lt; 8; i++){
+    pinMode(13-i, OUTPUT);
+  }
+}
+byte count = 0;
+
+void loop(){
+  count++; 
+  digitalWrite(CLKPIN, LOW);
+  for(int i = 0; i &lt; 8; i++){
+    digitalWrite(6+i, count &amp; (1 &lt;&lt; i));
+  }
+  digitalWrite(CLKPIN, HIGH);
+}
+</code></pre></div></div>
+
+:ET

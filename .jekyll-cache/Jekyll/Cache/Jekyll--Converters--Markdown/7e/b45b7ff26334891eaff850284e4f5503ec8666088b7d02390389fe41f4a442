@@ -1,0 +1,47 @@
+I"7<p>This is kind of garbage, but it does work.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from sympy import *
+a = Symbol('a', commutative=False)
+adag = Symbol('adag', commutative=False)
+ket = Symbol('|0&gt;', commutative=False)
+bra = Symbol('&lt;0|', commutative=False)
+
+expr = bra * a * a * a * adag  * adag * adag * ket
+print expr
+rules = [(a * adag, adag * a + 1), (a * ket, 0), (bra*adag, 0), (bra * ket, 1)]
+expr22 =  expr.subs(rules).expand()
+
+for i in range(10):
+    expr22 = expr22.expand()
+    expr22 = expr22.subs(rules)
+print expr22
+</code></pre></div></div>
+
+<p>Need to loop over it because the substitution rules aren’t smart enough to distribute the commutators themselves.</p>
+
+<p>Still, seems to work. Kind of a hack, but seems to work.</p>
+
+<p>Here’s the same thing built out of not much. Not elegantly done particularly</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def evalexpr(expr):
+    if expr == []:
+        return 1
+    if expr[-1]=='a':
+        return 0
+    elif expr[0]=='adag':
+        return 0
+    else:
+        for i in range(len(expr)-1):
+            if expr[i]=='a' and expr[i+1]=='adag':
+                head = expr[0:i]
+                if i+2 &lt; len(expr):
+                    tail = expr[i+2:]
+                else:
+                    tail = []
+                return evalexpr(head+tail) + evalexpr(head+['adag','a']+tail)
+                break
+
+print evalexpr(['a','a','a', 'adag', 'adag','adag'])
+</code></pre></div></div>
+
+:ET

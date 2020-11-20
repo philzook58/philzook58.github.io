@@ -1,0 +1,100 @@
+I"/<p>I implemented an ordered pair type in Idris. Took me a while.</p>
+
+<p>https://github.com/idris-lang/Idris-dev/blob/master/libs/prelude/Prelude/Nat.idr</p>
+
+<p>Already has an inequality type. That may have been better to use.</p>
+
+<p>Exploration and guesswork was necessary. How the heck do I get a hotkey for holes in atom?</p>
+
+<p>The first couple Opairs are ordinary pairs. Just exploring the syntax.</p>
+
+<p>I switched out of InEq which explicitly stores the number it is talking about to better match the equality type.</p>
+
+<p>The Inequality type acts something like a mix of Nat and Equality.</p>
+
+<p>My head hurts and I’m dehydrated.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data OPair1 a = SimplePair1 a a
+
+data OPair2 : Type -&gt; Type where
+  SimplePair2 : a -&gt; a -&gt; OPair2 a
+
+data OPair3 : Type -&gt; Type where
+  SimplePair3 : (Ord a) =&gt; a -&gt; a -&gt; OPair3 a
+
+data InEq : Nat -&gt; Nat -&gt; Type where
+  Refly : (t:Nat) -&gt; InEq t t
+  Succy : InEq a b -&gt; InEq a (S b)
+
+data InEq' : Nat -&gt; Nat -&gt; Type where
+  Refly' : InEq' t t
+  Succy' : InEq' a b -&gt; InEq' a (S b)
+
+data InEq'' : Nat -&gt; Nat -&gt; Type where
+  Refly'' : InEq'' Z t
+  Succy'' : InEq'' a b -&gt; InEq'' (S a) (S b)
+
+
+data OPair4 : Type where
+  SPair : (t : Nat) -&gt; (s : Nat) -&gt; (InEq t s) -&gt; OPair4
+
+data OPair5 : Type where
+  SPair5 : (t : Nat) -&gt; (s : Nat) -&gt; (InEq' t s) -&gt; OPair5
+
+-- a useful lemma
+convert4 : InEq' s t -&gt; InEq' (S s) (S t)
+convert4 Refly' = Refly'
+convert4 (Succy' x) = Succy' (convert4 x)
+
+addpair : OPair5 -&gt; OPair5 -&gt; OPair5
+addpair (SPair5 s s Refly') (SPair5 k k Refly') = SPair5 (s+k) (s+k) Refly'
+addpair (SPair5 Z Z Refly') (SPair5 t b p) = (SPair5 t b p)
+addpair (SPair5 (S x) (S x) Refly') (SPair5 t b p) = addpair (SPair5 x x Refly') (SPair5 (S t) (S b) (convert4 p))
+addpair (SPair5 x (S y) (Succy' z)) (SPair5 t b p) = addpair (SPair5 x y z) (SPair5 t (S b) (Succy' p))
+--addpair (SPair5 t (S b) (Succy' x)) (SPair5 k s y) = addpair (SPair5 t b x) (SPair5 k (S s) (Succy' y))
+
+
+
+
+convert : (t : Nat) -&gt; (s : Nat) -&gt; InEq' t (s + t)
+convert t Z = Refly'
+convert t (S k) = Succy' (convert t k)
+
+convert2 : (s : Nat) -&gt; InEq' 0 (plus s 0)
+convert2 s = convert Z s
+
+--convert3 : InEq' 0 (plus s 0) -&gt; InEq' 0 s
+--convert3 p = replace ?sda ?sdf
+
+convert3 : (s : Nat) -&gt; InEq' 0 s
+convert3 s = replace (plusZeroRightNeutral s) (convert2 s)
+
+
+incrementpair : OPair5 -&gt; OPair5
+incrementpair (SPair5 x y z) = SPair5 (S x) (S y) (convert4 z)
+
+sortpair : (Nat,Nat) -&gt; OPair5
+sortpair (Z, Z) = SPair5 Z Z Refly'
+sortpair (Z, y) = SPair5 Z y (convert3 y)
+sortpair (y, Z) = sortpair (Z, y)
+sortpair (S x, S y) = incrementpair (sortpair (x,y))
+--sortpair (S x, S y) = addpair (SPair5 1 1 Refly') (sortpair (x,y))
+
+
+
+--addpair (SPair5 x x Refly') (SPair5 x2 y2 p) = (SPair5 (x2+x) (y2+x) p)
+--addpair (SPair5 x (S y) (Succy' p1)) (SPair5 x2 y2 p) = addpair (SPair5 x y p1) (SPair5 x2 (S y2) (Succy' p1))
+
+{-
+natToInEq : Nat -&gt; InEq' Z t
+natToInEq Z = Refly'
+notToIneq (S x) = Succy' (natToInEq x)
+
+maybeOPair : Nat -&gt; Nat -&gt; Maybe OPair5
+maybeOPair a b = if (a &lt;= b) then Just (SPair5 a b (natToInEq (b-a)))else Nothing
+-- sortpair is a better maybepair. maybepair could be implemented
+
+-}
+</code></pre></div></div>
+
+:ET

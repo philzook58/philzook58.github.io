@@ -1,0 +1,44 @@
+I"�<p>FPGA are at the locus of converging interests.</p>
+
+<ol>
+  <li>
+    <p>OS, assembly and the roots</p>
+  </li>
+  <li>
+    <p>Software define radio</p>
+  </li>
+  <li>
+    <p>Camera stuff, opencv, computer vision</p>
+  </li>
+  <li>
+    <p>Haskell, Programming languages and Clash. Functional programming hardware. Forth.</p>
+  </li>
+  <li>
+    <p>Electronics (Sonar? etc?). Getting a CNC soon for circuit board cutting. Can a crytsal oscillator be used as an ultrasound transducer?</p>
+  </li>
+  <li>
+    <p>Some physics-y inspired questions about boolean logic looking frustrated fields. Kagome lattice of clocked not gates (or unclocked)? Topological excitations? Edge modes?</p>
+  </li>
+</ol>
+
+<p>FPGA is on the periphery of all of these topics.</p>
+
+<p>I’ve started going through Bruce land’s Cornell Fpga videos. Really good. Seems like the guy knows his stuff.</p>
+
+<p>I bought a super mega cheapo fpga in the past and spent days getting the legacy tool chain running. I think I’ve done this twice on two separate computers.</p>
+
+<p>I did the same for the Lattice icestick on my macbook.</p>
+
+<p>These may have been huge mistakes sapping my enthusiasm. Because at that point I just had no desire left to explore.</p>
+
+<p>I’ve been stalled out, waiting a year for my snickerdoodle. Tempted to buy another zynq board.</p>
+
+<p>I booted up my cheapo board again and got some blinking and did a NIOS tutorial. At the end though, the board doesn’t have enough oomph to run a NIOS program. Maybe I can finesse it, or I’ve done something really stupid, but I’ve seen suggestions of 50 M4K blocks of memory and my board has only 26.</p>
+
+<p>So, I just bought a couple of boards on aliexpress. They are closer to real dev boards with some actual peripheries like built in vga, ps2, some ram, buttons, displays, and with newer chipsets than the cyclone II.</p>
+
+<p>I also bought a 200khz 8-channel ADC. 40khz Sonar?</p>
+
+<p>I bought a fast ADC DAC on aliexpress and an ethernet PHY a while ago thinking I could rig it up. The same board is now in the example images attached the the Spartan 6 Fpga! That means that hopefully it will all just plug and play. That’s awesome! I was pretty suspicious of my electrical jury rigging at those frequencies.</p>
+
+:ET

@@ -1,0 +1,51 @@
+I"<p>A simplistic picture of the Landauer-Buttiker picture says that the states in a 1-d ish system are quantized. Either your reservoir is filling that pipe or it doesn’t depending on hour energy levels line up. That’s how you get quantized conductance. (alternatively, to current is proportional to the velocity of electrons times the density of electrons, which is inversely proportional to velocity in 1-d. the two factors cancel out.)</p>
+
+<p>Band structures and 1-d systems and Chern insulators all occur in classical wave systems, however an important piece of the story in the quantum case is the Pauli-exclusion principle. You just plain don’t have that classically. Also the wavefunction is normalized since it has a probability interpretation. You don’t have that classically either.</p>
+
+<p>But, here’s a thought: Instead of looking at energy or momentum flow (which is more or less the immediate analog of electrical current flow), instead consider information flow in the sense of the Shannon-Hartley theorem.</p>
+
+<p>I must profess, that while I love and I think others love talking about information theory, I think applying it in physics mainly produces bullshit.</p>
+
+<p>The Shannon Hartley theorem gives a way to estimate the maximum bit/s you can transmit through a channel.</p>
+
+<p>The Shannon-Hartley makes sense. There are common physical limitations to channels.</p>
+
+<ol>
+  <li>
+    <p> You have finite power or ability to make signal amplitude. Any system you make has a finite voltage it can go up to.</p>
+  </li>
+  <li>
+    <p> You can’t detect  detect arbitrarily weak signals. There will be thermal noise or even quantum noise stopping you at some point. You can’t control everything.</p>
+  </li>
+  <li>
+    <p>You only have a certain bandwidth of sensitivity and production. Designs do not work arbitrarily fast.</p>
+  </li>
+</ol>
+
+<p>Well, by the related Shannon sampling theorem a band limited signal is the same as a sampled signal, sampled at roughly the same frequency as the bandwidth. In a sense, a band limited signal can’t change all that fast. You could come up with a similar bound by limiting the time derivative to stay below some value.</p>
+
+<p>Then each sample only holds a finite number of bits. The noise level N chunks up the finite signal range S into a number of chunks S/N. This is ~ ln(S/N) bits.</p>
+
+<p>Hence you have roughly BW * ln(S/N) bits per second being sent.</p>
+
+<p>A slow wave has high spatial information density. But it also travels slow. In 1-d these cancel each other out just like in the quantum case.</p>
+
+<p>You can only send information through the channels that can actually propagate, i.e. in the band.</p>
+
+<p>The S/N quantization plays a role somewhat like the Pauli exclusion principle. Every channel can only be filled up with S/N bits like every channel can only be filled with 1 electron. I don’t think the antisymmetry aspect of fermions is very relevant in this case.</p>
+
+<p>The analog of current would be the difference in information rates between left to right and right to left. Worrying about a pretty silly extreme, Landauer’s principle, this information has to be dissipated out somewhere or stored. Information has to be preserved at this extreme, like electrical charge</p>
+
+<p>The conductance would be the derivative of information flow to bandwidth $latex \dot S=G\Delta \omega$? And G=ln(1+S/N)?</p>
+
+<p>Perhaps also, if you had thermal reservoirs at the two ends and you were communicating by raising and lowering the temperatures slightly? That would be somewhat analogous to the chemical potential reservoirs.</p>
+
+<p>This isn’t a perfect analogy, but it’s not bad. I can’t imagine why such considerations would be relevant to anyone.</p>
+
+<p>Hmm. Perhaps this is an instance of quantized entropy flow conductance? . Now I’m really talking bullcrap. There is a universal quantum of heat conductance. Maybe this is an approach to that?</p>
+
+<p>https://en.wikipedia.org/wiki/Thermal_conductance_quantum</p>
+
+<p>http://www.nature.com/nature/journal/v404/n6781/full/404974a0.html</p>
+
+:ET

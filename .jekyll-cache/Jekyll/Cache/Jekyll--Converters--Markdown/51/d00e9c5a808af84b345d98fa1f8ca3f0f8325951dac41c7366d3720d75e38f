@@ -1,0 +1,81 @@
+I"c<p>I downloaded docker and set it up using their script.</p>
+
+<p>fenicsproject notebook testbook</p>
+
+<p>creates a notebook</p>
+
+<p>Then</p>
+
+<p>fenicsproject start testbook.</p>
+
+<p>Starts a jupyter server.</p>
+
+<p>You need to use python 2. Fenics is not installed for python 3 as far as I can tell.</p>
+
+<p>I took the first example out of the tutorial book</p>
+
+<p>You need</p>
+
+<p>%matplotlib inline</p>
+
+<p>in order to see the plots.</p>
+
+<p>I installed solidpython which is a pythony version of openscad.</p>
+
+<p>https://github.com/SolidCode/SolidPython</p>
+
+<p>So you can output a scad file, but then you need to run openscad to convert it further.</p>
+
+<p>brew install Caskroom/cask/openscad</p>
+
+<p>puts it into an app folder and not in the path of the terminal</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import os
+
+os.system('/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD -o test.stl test.scad')
+</code></pre></div></div>
+
+<p>pip install numpy-stl</p>
+
+<p>https://pypi.python.org/pypi/numpy-stl</p>
+
+<p>ooh</p>
+
+<p>%matplotlib notebook</p>
+
+<p>makes an interactive plot. nice.</p>
+
+<p>gmsh is necessary. Perhaps a better tool chain would just use gmsh and ignore the scad stuff.</p>
+
+<p>http://femwiki.wikidot.com/fenics-intro:generating-meshes-and-fenics</p>
+
+<p>https://github.com/FluidityProject/fluidity/wiki/Gmsh-tutorial</p>
+
+<p>you can take a mesh from gmsh</p>
+
+<p>gmsh</p>
+
+<p>first click add points. add them in in by pressing e.</p>
+
+<p>thenadd line</p>
+
+<p>the add plane surface.</p>
+
+<p>add physical group to start labelling boundaries.</p>
+
+<p>click 2d under mesh.</p>
+
+<p>refine it a couple times maybe then save the .msh</p>
+
+<p>dolfin-convert untitled.msh test.xml</p>
+
+<p>This is an answer as to how to grab these xml files</p>
+
+<p>https://answers.launchpad.net/dolfin/+question/224015</p>
+
+<p>So here’s a start</p>
+
+<p><a href="https://github.com/philzook58/python/blob/master/python/fenics/dolfin-convert.ipynb">https://github.com/philzook58/python/blob/master/python/fenics/dolfin-convert.ipynb</a></p>
+
+<p>This is not the cleanest workflow.</p>
+:ET

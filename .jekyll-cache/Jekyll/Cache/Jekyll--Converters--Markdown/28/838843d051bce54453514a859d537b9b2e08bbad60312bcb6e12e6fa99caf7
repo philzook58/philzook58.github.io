@@ -1,0 +1,77 @@
+I"�<p>So we bought the Prusa i3 with the aluminum frame from folgertech about two weeks ago. Was tempted first to get a Chinese version off of aliexpress, but I’ve heard tales of long shipping times, plus possibly some kind of importing fee. WOuldn’t have saved much money anyhow. Definitely the way to go. It shipped pretty fast. Got it in about 3 days or so. Noice.</p>
+
+<p>Box was surprisingly heavy and small.</p>
+
+<p>There were some small problems, but nothing super major</p>
+
+<p>The thermoresistor leads were overcrimped. The bot is totally unresponsive if it is freaking out about the thermoresistors (including motor control. Odd.) They should measure ~100k if they’re correct. We tried resoldering them, but too brittle. Hopefully getting a replacement from folgertech.</p>
+
+<p>A little confusion about what the extra molex connector was for. For attaching to the thermistor</p>
+
+<p>Missing 20mm screws</p>
+
+<p>The 3d printed mounting piece for the extruder had its holes with poor spacing. We dremelled out some material in order to get both screws through.</p>
+
+<p>The triple screw mounting of the Z-axis motor mounts torques the linear guide rails. We found just using the two upper screws to be better and leaving the third that goes into the vertical beam out.</p>
+
+<p>We had a couple things that we changed in the firmware Configuration.h file  in order to get it working.</p>
+
+<p>Our motors were only going one way until we disabled the max endstops. I guess it must have been registering nonexistant endstops as being hit.</p>
+
+<p>#define X_HOME_DIR -1</p>
+
+<p>#define INVERT_E0_DIR true</p>
+
+<p>#define DISABLE_MAX_ENDSTOPS</p>
+
+<p>There are no teeth in the stage belt connector (There probably should be some?)</p>
+
+<p>Two of our motor drivers did not work. We were tearing our hair out over why the extruder motor wasn’t turning until we popped another one in.</p>
+
+<p>Also a brief moment of panic when the entire board would not respond, but removing motor driver that had blown brought everything back up.</p>
+
+<p>We also bought a lcd screen. I recommend it. Pretty nice.</p>
+
+<p>Used repetier and slic3r on mac and grabbed some models from thingiverse.</p>
+
+<p>I think the nozzle is 4mm, based on the folgertech website selling the extruder unit with 4mm attached. Not super sure how I’m gonna measure that.</p>
+
+<p>http://reprap.org/wiki/Calibration</p>
+
+<p>Maximum layer height of .4*.8 = .32</p>
+
+<p>extrusion width &lt;= .4</p>
+
+<p>#define DEFAULT_AXIS_STEPS_PER_UNIT   {80,80,3840,90}</p>
+
+<p>http://reprap.org/wiki/Triffid_Hunter’s_Calibration_Guide</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// NEMA 17 motor with T2 belt and 20-tooth pulley:
+(200 * 16) / (2 * 20) = 80.0
+</code></pre></div></div>
+
+<p>I wonder how much stretching will change this?</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// NEMA 17 with standard pitch M5 threaded rod:
+(200 * 16) / 0.8 = 4000
+</code></pre></div></div>
+
+<p>Hmm. 3840 in the stock firmware vs 4000 in Triffid’s guide?</p>
+
+<p>“Personally I go for layer height of 0.2mm, and extrusion width of 0.5mm regardless of which nozzle I’m using.”</p>
+
+<p>Tried 200C extruder temp</p>
+
+<p>With painter tape on unheated bed. Seemed to be working until thermistor fix snapped</p>
+
+<p>Triffid suggests printing at decremental temps</p>
+
+<p>Also 65C bed for PLA.</p>
+
+<p>Gotta try that.</p>
+
+<p>So close.</p>
+
+<p>So very close now.</p>
+
+:ET

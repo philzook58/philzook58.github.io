@@ -1,0 +1,36 @@
+I"é<p>https://www.youtube.com/watch?v=nv4MEliij14</p>
+
+<p>https://www.learn2crack.com/2016/03/setup-opencv-sdk-android-studio.html</p>
+
+<p>A summary of the video</p>
+
+<p>Get the SDK from opencv.org</p>
+
+<p>Make new project with regular settings</p>
+
+<p>new &gt; import module</p>
+
+<p>select java folder in sdk folder</p>
+
+<p>got an erro</p>
+
+<p>had to install android-sdk by clickign isntall missing platforms</p>
+
+<p>copy all stuff from native &gt; libs into a JNILibs folder by dragging and dropping</p>
+
+<p>Changed the SDK version to after 21 to remove camera2 error</p>
+
+<p>android.usedeprecatedNDK</p>
+
+<p>I was having an NDK error</p>
+
+<p>Go to tools &gt; SDK manager and download cmake lldb and ndk</p>
+
+<p>https://developer.android.com/ndk/guides/index.html</p>
+
+<p>still have errors.</p>
+
+<p>http://stackoverflow.com/questions/27453085/execution-failed-for-task-appcompiledebugndk-failed-to-run-this-command-ndk</p>
+
+<p>Have to go into files as far as I can tell. This gradle isnâ€™t around</p>
+:ET

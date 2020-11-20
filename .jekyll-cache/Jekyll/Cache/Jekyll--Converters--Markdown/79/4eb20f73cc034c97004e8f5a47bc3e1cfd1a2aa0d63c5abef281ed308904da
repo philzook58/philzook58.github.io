@@ -1,0 +1,120 @@
+I"R<p>I found out about Elxir Nerve on the Functional Geekery podcast. Seems right up my alley.</p>
+
+<p>It builds a minimal linux image with erlang running. Runs on the raspberry pis and beaglebone.</p>
+
+<p>Erlang and elixir does intrigue me a lot, but I haven’t gotten over the hump yet.</p>
+
+<p>Summary of experience so far: Kind of painful. Docs aren’t great. Being an elixir newbie hurts. Strong suspicion that going outside the prebuilt stuff is gonna be tough.</p>
+
+<p>https://hexdocs.pm/nerves/installation.html#linux</p>
+
+<p>Installation</p>
+
+<p>Getting Started</p>
+
+<p>https://hexdocs.pm/nerves/getting-started.html#content</p>
+
+<p>mix nerves.new hello_nerves</p>
+
+<p>need to export the target variable. Why is this  not part of the config file. There probably is a reason.</p>
+
+<p>export MIX_TARGET=rpi0</p>
+
+<p>Building the firmware</p>
+
+<p>mix firmware</p>
+
+<p>writing to sd card</p>
+
+<p>mix firmware.burn</p>
+
+<p>says I need to install fwup</p>
+
+<p>makes sense. Not in apt-get. Downloaded the deb file and installed</p>
+
+<p><a href="https://github.com/fhunleth/fwup">https://github.com/fhunleth/fwup</a></p>
+
+<p>Booted up. Shows things on hdmi. Cool</p>
+
+<p>went to</p>
+
+<p>https://github.com/nerves-project/nerves_examples/tree/master/hello_wifi</p>
+
+<p>run the following before building to set wifi stuff</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;span class="pl-k"&gt;export&lt;/span&gt; NERVES_WIFI_SSID=my_accesspoint_name
+&lt;span class="pl-k"&gt;export&lt;/span&gt; NERVES_WIFI_PSK=secret
+</code></pre></div></div>
+
+<p>mix deps.get</p>
+
+<p>mix firmware</p>
+
+<p>mix firmware.burn</p>
+
+<p>Hmm. Can’t get it to work. i have Erlang 20 and It wants 19. Upon further inspection, this example is completely deprecated. Sigh.</p>
+
+<p>Alright.</p>
+
+<p>mix nerse.new wifi_test</p>
+
+<p>https://github.com/nerves-project/nerves_examples/blob/master/hello_network/mix.exs</p>
+
+<p>https://github.com/nerves-project/nerves_network</p>
+
+<p>https://hexdocs.pm/nerves_network/Nerves.Network.html</p>
+
+<p>add in the nerves_network dependency into mix.exs</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Specify target specific dependencies
+def deps("host"), do: []
+def deps(target) do
+[ system(target),
+{:bootloader, "~&gt; 0.1"},
+{:nerves_runtime, "~&gt; 0.4"},
+{:nerves_network, "~&gt; 0.3"},
+]
+end
+</code></pre></div></div>
+
+<p>added</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config &lt;span class="pl-c1"&gt;:nerves_network&lt;/span&gt;,
+  &lt;span class="pl-c1"&gt;regulatory_domain:&lt;/span&gt; &lt;span class="pl-s"&gt;&lt;span class="pl-pds"&gt;"&lt;/span&gt;US&lt;span class="pl-pds"&gt;"&lt;/span&gt;&lt;/span&gt;
+</code></pre></div></div>
+
+<p>at the end of the config file</p>
+
+<p>Alright. I admit temporary defeat. The pi zero is an awful thing.</p>
+
+<p>Hmmm!</p>
+
+<p>If you plug the usb port of the pi zero into your computer it shows up as a serial device</p>
+
+<p>in my case /dev/ttyACM0</p>
+
+<p>you can open that up with screen or the arduino serial monitor</p>
+
+<p>baud 115200</p>
+
+<p>And you have access to an elixir console.</p>
+
+<p>Interesting.</p>
+
+<p>I was able to get linklocal ethernet connection working. You have to setup nerves_network usb0 to use method :linklocal.</p>
+
+<p>I used nerves_init_gadget</p>
+
+<p>https://github.com/fhunleth/nerves_init_gadget</p>
+
+<p>In addition on unbutu you have you go into the netowrk settings and change the ipv4 dropdown in the options to linklocal only. Then the pi is available at nerves.local</p>
+
+<p>The edimax wifi dongle does not work by default</p>
+
+<p>https://www.grappendorf.net/tutorials/nerves-pizero-edimax.html</p>
+
+<p>hmm buildroot https://buildroot.org/</p>
+
+<p>This is intriguing. It is a build tool for getting linux on embedded systems</p>
+
+:ET

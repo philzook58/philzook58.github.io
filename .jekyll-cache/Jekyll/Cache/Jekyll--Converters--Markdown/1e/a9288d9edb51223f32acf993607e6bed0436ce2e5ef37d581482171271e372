@@ -1,0 +1,37 @@
+I"<p>For the Brown hackathon, we made a multiplayer browser video game called Enceladus using node, raw javascript, socket.io, and matter.js as a physics engine.</p>
+
+<p>https://github.com/ishmandoo/enceladus</p>
+
+<p>I think we’ll keep working on it, so I’ll post more when it isn’t a pile of Hackathon garbage.</p>
+
+<p>Here are some scattered, totally worthless to anyone else notes as I started exploring the documentation of Matter.js:</p>
+
+<p>Engine.update updates by dt</p>
+
+<p>Bodies - factory methods for creating new bodies</p>
+
+<p>Bounds - Axis aligned bounding box = min and max x and y values</p>
+
+<p>Body. whatever lets you set almost anything about a body.</p>
+
+<p>set to static can be useful</p>
+
+<p>bodies hold velocity prev velocity other things. I bet you mostly should not update these values manually.</p>
+
+<p>Common - useful random crap. Random picks random values. chaining seems useful? clone. topological sort. sign function.</p>
+
+<p>Constraint - fix distance between two points. No rotation contraints?</p>
+
+<p>SAT - seperating axis theorem - convex shapes -</p>
+
+<p>http://www.dyn4j.org/2010/01/sat/</p>
+
+<p>Engine - clear resets</p>
+
+<p>Grid</p>
+
+<p>broad phase collision detection?</p>
+
+<p>http://buildnewgames.com/broad-phase-collision-detection/</p>
+
+:ET

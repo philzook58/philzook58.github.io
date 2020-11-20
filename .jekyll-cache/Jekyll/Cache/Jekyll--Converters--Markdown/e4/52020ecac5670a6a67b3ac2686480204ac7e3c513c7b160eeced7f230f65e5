@@ -1,0 +1,221 @@
+I"@&<p>So I’ve  been trying to try and approximate Conal Elliott’s <a href="http://conal.net/papers/compiling-to-categories/">compiling to categories </a>in bog standard Haskell and I think I’ve got an interesting chunk.</p>
+
+<p>His approach in using a GHC plugin is better for a couple reasons. One really important thing is that he gets to piggy back on GHC optimizations for the lambdas. I have only implemented a very bad evaluation strategy. Perhaps we could recognize shared subexpressions and stuff, but it is more work. I seem somewhat restricted in what I can do and sometimes type inference needs some help. Not great. However, GHC plugins definitely bring their own difficulties.</p>
+
+<p>What I’ve got I think still has roots in my thinking from this previous <a href="http://www.philipzucker.com/garbage-can-compiling-categories-inspectable-lambdas/">post</a></p>
+
+<p>There are a couple insights that power this implementation</p>
+
+<ol>
+  <li>
+    <p>A fully polymorphic tuple to tuple converter function is uniquely defined by it’s type. For example, swap :: (a,b) -&gt; (b,a), id:: a -&gt; a, fst :: (a,b) -&gt;a, snd::(a,b)-&gt;b are all unique functions due to the restrictions of polymorphism. Thus typelevel programming can build the implementation from the type.</p>
+  </li>
+  <li>
+    <p>Getting a typeclass definition to notice polymorphism is hard though. I haven’t figured out how to do it, if it is even possible. We get around it by explicitly newtyping every pattern match on a polymorphic variable like so (V x, V y) -&gt; (y,x). Two extra characters per variable. Not too shabby.</p>
+  </li>
+  <li>
+    <p>You can abuse the type unification system as a substitution mechanism. Similar to HOAS, you can make a lambda interpreter at the type level that uses polymorphism as way of generating labels for variables. This is probably related to Oleg Kiselyov’s type level lambda calculus, but his kind of confuses me <a href="http://okmij.org/ftp/Computation/lambda-calc.html#haskell-type-level">http://okmij.org/ftp/Computation/lambda-calc.html#haskell-type-level</a></p>
+  </li>
+  <li>
+    <p>You can inject a categorical literal morphism using a wrapping type to be extracted later using an apply operator and type App f a. An infix ($$) makes it feel better.</p>
+  </li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Eval e r | e -&gt; r
+
+data App f b
+newtype V a = V a
+type Lit a = V a
+type Lam a b = a -&gt; b -- Let's borrow arrow for Lambda
+
+instance (Eval b d, a ~ c) =&gt; Eval (App (a -&gt; b) c) d
+instance (Eval b c) =&gt; Eval (a -&gt; b) (a -&gt; c) -- Evaluate inside the body or stop?
+instance Eval (Lit a) (Lit a)
+</code></pre></div></div>
+
+<p>So here is the rough structure of what the typelevel programming is doing</p>
+
+<p>You can do a depth first traversal of the input tuple structure, when you hit V, unify the interior type with a Nat labelled Leaf. At the same time, you can build up the actual value of the structure so that you can apply the lambda to it and get the output which will hold a tree that has morphism literals you want.</p>
+
+<p>Then inspect the output type of the lambda which now has Nat labels, and traverse the labelled tree again to find the appropriate sequence of fst and snd to extract what you need. If you run into an application App, you can pull the literal out now and continue traversing down.</p>
+
+<p>At the moment I’ve only tested with the (-&gt;) Category, which is a bit like demonstrating a teleporter by deconstructing a guy and putting back in the same place, but I think it will work with others. We’ll see. I see no reason why not.</p>
+
+<p>At the moment, I’m having trouble getting GHC to not freakout unless you explicitly state what category you’re working in, or explicitly state that you’re polymorphic in the Category k.</p>
+
+<p>Some future work thoughts: My typelevel code is complete awful spaghetti written like I’m a spastic trapped animal. It needs some pruning. I think all those uses of Proxy can be cleaned up by using TypeApplications. I need to implement some more categories. Should I conform to the <a href="http://hackage.haskell.org/package/constrained-categories">Constrained-Categories</a> package? Could I use some kind of hash consing to find shared structures? Could Generic or Generic1 help us autoplace V or locate polymorphism? Maybe a little Template Haskell spice to inject V?</p>
+
+<p>Here’s the most relevant bits, with my WIP git repository <a href="https://github.com/philzook58/shit-ccc">here</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{-# LANGUAGE FunctionalDependencies, 
+FlexibleInstances, GADTs, DataKinds, TypeOperators, KindSignatures, PolyKinds,
+FlexibleContexts, UndecidableInstances, ScopedTypeVariables, NoImplicitPrelude #-}
+module Main where
+
+import Lib
+import GHC.TypeLits
+import Data.Proxy
+import Prelude hiding (id, fst, snd, (.))
+main :: IO ()
+main = someFunc
+
+
+-- We will use these wrappers to know when we've hit polymorphism
+
+newtype V a = V a
+
+
+
+data Z
+data S a
+
+
+data Leaf n a = Leaf
+data Node n a b = Node a b
+
+ccc' :: Top a b c k =&gt; Proxy k -&gt; a -&gt; k b c
+ccc' _ f = ccc f
+
+class Tag a b c d mono | a b mono -&gt; d c where
+    val :: Proxy a -&gt; Proxy b -&gt; Proxy mono -&gt; a
+instance (Tag a n n'' r1 a', 
+    Tag b n'' n' r2 b', (a', b') ~ q) =&gt; Tag (a, b) n n' (Node n'' r1 r2) q where
+    val _ _ _ = (val (Proxy :: Proxy a) (Proxy :: Proxy n) (Proxy :: Proxy a'), val (Proxy :: Proxy b) (Proxy :: Proxy n'') (Proxy :: Proxy b'))
+instance (a ~ Leaf n a') =&gt; Tag (V a) n (S n) (Leaf n a') a' where
+    val _ _ _ = V Leaf
+
+class CartesianCategory k =&gt; Top a b c k | a b -&gt; c where
+   ccc :: a -&gt; k b c
+instance (Tag a Z n labels c,
+         Build labels b c d k,
+         CartesianCategory k)
+    =&gt; Top (a-&gt;b) c d k where
+        ccc f = build (Proxy :: Proxy labels) (Proxy :: Proxy b) res where
+                res = f (val (Proxy :: Proxy a) (Proxy :: Proxy Z) (Proxy :: Proxy c))
+
+
+fan f g = (par f g) . dup
+
+-- Once you've labelled, traverse the output type and extract those pieces
+-- and put them together
+class CartesianCategory k =&gt; Build labels b c d k | labels b -&gt; c d where
+    build :: Proxy labels -&gt; Proxy b -&gt; b -&gt; k c d
+instance (Build labels b i o1 k, Build labels c i o2 k) =&gt; Build labels (b,c) i (o1,o2) k where
+    build pl pbc (x,y) = fan (build pl (Proxy :: Proxy b) x) (build pl (Proxy :: Proxy c) y)
+instance (Extract labels n a b, CartesianCategory k) =&gt; Build labels (Leaf n c) a b k where
+    build pl pb _ = extract pl (Proxy :: Proxy n)
+instance (Build labels c a b k, CartesianCategory k) =&gt; Build labels (App (k b d) c) a d k where
+    build pl pb (App f x) = f . (build pl (Proxy :: Proxy c) x)
+
+
+class StripN a b | a -&gt; b 
+instance (StripN a a', StripN b b') =&gt; StripN (Node n a b) (a',b')
+instance StripN (Leaf n a) a
+
+-- Builds the extractor function
+class Extract a n d r | a n -&gt; d r where
+    extract :: CartesianCategory k =&gt; Proxy a -&gt; Proxy n -&gt; k d r
+instance (LT n n' gt, -- which one is greater
+          StripN (Node n' a b) ab,
+          FstSnd gt ab r1, -- get value level rep of this
+          ITE gt a b c, -- Select to go down branch
+          Extract c n r1 r) -- recurse
+            =&gt; Extract (Node n' a b) n ab r where
+    extract _ p = (extract (Proxy :: Proxy c) p) . (fstsnd (Proxy :: Proxy gt))
+instance Extract (Leaf n a) n a a where
+    extract _ _ = id
+
+
+
+
+arrccc :: (Top a b c (-&gt;)) =&gt; a -&gt; b -&gt; c
+arrccc = ccc' (Proxy :: Proxy (-&gt;))
+
+-- applying the category let's us imply arrow
+example6 = ccc (\(V x) -&gt; x) 'a'
+
+
+
+--example7 :: CartesianCategory k =&gt; k _ _
+example7 = arrccc (\(V x, V y) -&gt; x)  -- ('a','b')
+
+example8 = arrccc (\(V x, V y) -&gt; y) --  ('a','b')
+example9 = arrccc (\(V x, V y) -&gt; (y,x)) --  ('a','b')
+example10 = arrccc (\((V x,V z), V y) -&gt; (y,x)) -- ((1,'b'),'c')
+swappo = arrccc $ \((V x,V z), V y) -&gt; (x,(z,y))
+
+
+
+class FstSnd a d r | a d -&gt; r where
+    fstsnd :: CartesianCategory k =&gt; Proxy a -&gt; k d r 
+
+instance FstSnd 'True (a,b) a where
+    fstsnd _ = fst
+
+instance FstSnd 'False (a,b) b where
+    fstsnd _ = snd
+
+
+
+class Fst a b | a -&gt; b
+instance Fst (a,b) a
+
+class Snd a b | a -&gt; b
+instance Snd (a,b) b
+
+class ITE a b c d | a b c -&gt; d
+instance ITE 'True a b a
+instance ITE 'False a b b
+
+class GT a b c | a b -&gt; c
+instance GT a b d =&gt; GT (S a) (S b) d
+instance GT Z (S a) 'False
+instance GT (S a) Z 'True
+instance GT Z Z 'False
+
+class LT a b c | a b -&gt; c
+instance LT a b d =&gt; LT (S a) (S b) d
+instance LT Z (S a) 'True
+instance LT (S a) Z 'False
+instance LT Z Z 'False
+
+
+-- For external function application
+data App f a = App f a
+
+f $$ x = App f x
+
+plus :: (Int, Int) -&gt; Int
+plus (x,y) = x + y
+plus' (x,y) = x + y
+
+inc :: Int -&gt; Int
+inc = (+ 1)
+--example11 = ccc (\(x,y) -&gt; App plus (x,y))
+
+example11 = arrccc (\(V x) -&gt; App inc x) --  $ (1 :: Int)
+example12 = arrccc (\(V x,V y) -&gt; plus $$ (x,y))
+example13 = arrccc (\(V x,V y) -&gt; inc $$ (plus $$ (x,y)))
+example14 :: Num a =&gt; (a,a) -&gt; a -- Without this annotation it inferred Integer? Monomorphization?
+example14 = ccc (\(V x,V y) -&gt; plus' $$ (x,y))
+
+
+
+class CartesianCategory k where
+    (.) :: k b c -&gt; k a b -&gt; k a c
+    id :: k a a
+    fst :: k (a,b) a
+    snd :: k (a,b) b
+    dup :: k a (a,a)
+    par :: k a c -&gt; k b d -&gt; k (a,b) (c,d)
+
+instance CartesianCategory (-&gt;) where
+    id = \x -&gt; x
+    fst (x,y) = x
+    snd (x,y) = y
+    dup x =(x,x)
+    f . g = \x -&gt; f (g x)
+    par f g = \(x,y) -&gt; (f x, g y)  
+</code></pre></div></div>
+
+:ET

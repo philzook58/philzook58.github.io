@@ -1,0 +1,37 @@
+I"R<p>Problems involving outer products of vector variables can be relaxed into semidefinite programs. That’s a general trick. Then the low rank bit from SVD is an approixmate solution for the vector</p>
+
+<p>https://en.wikipedia.org/wiki/Matrix_completion</p>
+
+<p>convex relaxation for distributed optimal control</p>
+
+<p>http://ieeexplore.ieee.org/document/7464306/</p>
+
+<p>graph matching in relation to Image correspondence</p>
+
+<p>Permutation matrices have sum of rows and columns must be 1 constraint, is one relaxation.</p>
+
+<p>quickMatch. Actually, not convex programming but was the root of the chain of references I ‘m digging through</p>
+
+<p>http://openaccess.thecvf.com/content_ICCV_2017/papers/Tron_Fast_Multi-Image_Matching_ICCV_2017_paper.pdf</p>
+
+<p>https://dl.acm.org/citation.cfm?id=2600314</p>
+
+<p>matchALS</p>
+
+<p>www.cis.upenn.edu/~kostas/mypub.dir/xiaowei15iccv.pdf</p>
+
+<p>https://arxiv.org/abs/1402.1473</p>
+
+<p>https://vision.in.tum.de/research/convex_relaxation_methods</p>
+
+<p>Finding MaxCut approximation of a graph is a classic one</p>
+
+<p>Quantum Semidefinite programming course</p>
+
+<p>Density matrices have a semidefinite constrina (non negative probabilities)</p>
+
+<p>https://cs.uwaterloo.ca/~watrous/CS867.Winter2017/</p>
+
+<p>Sum of Squares is a semidefinite program that can guarantee that lyapunov functions actually work</p>
+
+:ET

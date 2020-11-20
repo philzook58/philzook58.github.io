@@ -1,0 +1,88 @@
+I"<p>I recently bought a high speed AD/DA unit which seems like it could probably only be serviced by an fpga, so I thought I’d give it another go.</p>
+
+<p>I have this board</p>
+
+<p><a href="http://www.amazon.com/RioRand-EP2C5T144-Altera-Cyclone-Development/dp/B00LEMKR92/ref=sr_1_2?ie=UTF8&amp;qid=1446530204&amp;sr=8-2&amp;keywords=fpga">http://www.amazon.com/RioRand-EP2C5T144-Altera-Cyclone-Development/dp/B00LEMKR92/ref=sr_1_2?ie=UTF8&amp;qid=1446530204&amp;sr=8-2&amp;keywords=fpga</a></p>
+
+<p>and a <a href="http://www.amazon.com/Geeetech-Altera-Blaster-ALTERA-programmer/dp/B00E9JAC7O/ref=sr_1_8?ie=UTF8&amp;qid=1446530247&amp;sr=8-8&amp;keywords=altera">http://www.amazon.com/Geeetech-Altera-Blaster-ALTERA-programmer/dp/B00E9JAC7O/ref=sr_1_8?ie=UTF8&amp;qid=1446530247&amp;sr=8-8&amp;keywords=altera</a></p>
+
+<p>To program it</p>
+
+<p>I power it by jumpering the labelled 3v3 to an arduino’s 3v3 power. It’s just the easiest way for me. A random power supply will porbably work too. Looks like it has an onboard regulator</p>
+
+<p>Unfortunately my working Quartus II is on long gone computer</p>
+
+<p>After a couple days I figured out that I downloaded the wrong version. Make sure to get the web edition</p>
+
+<p><a href="http://dl.altera.com/13.0sp1/?edition=web&amp;direct_download=1&amp;version_number=13.0sp1&amp;description=Quartus+II+Software+%28includes+Nios+II+EDS%29&amp;platform=linux&amp;filesize=1753569283&amp;download_method=download&amp;direct_file=QuartusSetupWeb-13.0.1.232.run#tabs-2">http://dl.altera.com/13.0sp1/?edition=web&amp;direct_download=1&amp;version_number=13.0sp1&amp;description=Quartus+II+Software+%28includes+Nios+II+EDS%29&amp;platform=linux&amp;filesize=1753569283&amp;download_method=download&amp;direct_file=QuartusSetupWeb-13.0.1.232.run#tabs-2</a></p>
+
+<p>Get the main Quartus file and the cyclone II support</p>
+
+<p>Quartus II kept crashing found this fix</p>
+
+<p><a href="https://www.altera.com/support/support-resources/knowledge-base/solutions/rd12102013_780.html">https://www.altera.com/support/support-resources/knowledge-base/solutions/rd12102013_780.html</a></p>
+
+<p>quartus: error while loading shared libraries: libSM.so.6: cannot open shared object file: No such file or directory</p>
+
+<p>sudo apt-get install libsm6:i386</p>
+
+<p>In the new project wizard pick a new and for the device pick</p>
+
+<p>Device Cyclone II</p>
+
+<p>EP2C5T1448N</p>
+
+<p>Couldn’t find that exact part number in the list. Picked EP2C5T144C8</p>
+
+<p>Seems close.</p>
+
+<p>So we have to do pin assignment. The clock is a special pin, so that’s how you pull it in. There are leds on board</p>
+
+<p>Three LEDs are connected to pins 3, 7 and 9, and a push-button is connected to pin 144.</p>
+
+<p>I took called the node clock and used PIN_17 which desribes itself as one of the clocks.</p>
+
+<p>I picked counter_out[25] as PIN_9 since it gives a reasonable blink rate. (the clock pin should be 50Mhz)</p>
+
+<p><a href="http://www.leonheller.com/FPGA/FPGA.html">http://www.leonheller.com/FPGA/FPGA.html</a></p>
+
+<p>Click new file vhdl. Made a simple counter.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// This is an example of a simple 32 bit up-counter called simple_counter.v
+// It has a single clock input and a 32-bit output port
+module simple_counter (input clock , output reg [31:0] counter_out);
+always @ (posedge clock)// on positive clock edge
+begin
+ counter_out &lt;= #1 counter_out + 1;// increment counter
+end
+endmodule// end of module counter
+</code></pre></div></div>
+
+<p>Got an error about needing a Top Level Design entity</p>
+
+<p>Went into Assignments &gt; Settings to set the top level design entity. I guess this is like defining the entry point of the program. Used simple_counter as top level.</p>
+
+<p>The “My First FPGA” tutorial has too much bullshit in it from the get go.</p>
+
+<p>Compiled</p>
+
+<p>Tools &gt; Programmer</p>
+
+<p>Hardware Setup - picked USB Blaster</p>
+
+<p>JTAG.</p>
+
+<p>Having porblems. Just says failed.</p>
+
+<p>Picked .sof files in output_files</p>
+
+<p>Error (209053): Unexpected error in JTAG server – error code 89</p>
+
+<p>Apparently some kind of permissions problem in linux for the usb blaster</p>
+
+<p><a href="http://rocketboards.org/foswiki/view/Documentation/UsingUSBBlasterUnderLinux">http://rocketboards.org/foswiki/view/Documentation/UsingUSBBlasterUnderLinux</a></p>
+
+<p>Holy shit. It is working.</p>
+
+<p>It assigned counter_out[0] to PIN_24. And I read a 25Mhz signal. That makes sense. Every cycle of the 50Mhz clock the pin is flopped and that divides the frequency by 2.</p>
+:ET

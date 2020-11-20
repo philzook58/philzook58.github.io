@@ -1,0 +1,883 @@
+I"Qc<p>I went to the opening workshops of CAV 2019 in New York this year (on my own dime mind you!) after getting back from joining Ben on the long trail for a bit. The tutorials on Rosette and Liquid Haskell were really fun. Very interesting technology. Also got some good ramen and mochi pudding, so it’s all good. Big Gay Ice Cream was dece.</p>
+
+<h2 id="day-1-workshops">Day 1 workshops</h2>
+
+<p>Calin Belta <a href="http://sites.bu.edu/hyness/calin/">http://sites.bu.edu/hyness/calin/</a>.Has a new book. Control of Temporal logic systems. Automata. Optimized. Partition space into abstraction. Bisimulation <a href="https://www.springer.com/gp/book/9783319507620">https://www.springer.com/gp/book/9783319507620</a></p>
+
+<p>Control Lyapunov Function (CLF) - guarantees you are going where you want to go</p>
+
+<p>Control Barrier Function - Somehow controls regions you don’t want to go to.</p>
+
+<p>Lyapunov function based trajectory optimization. You somehow have (Ames 2014) <a href="http://ames.gatech.edu/CLF_QP_ACC_final.pdf">http://ames.gatech.edu/CLF_QP_ACC_final.pdf</a> Is this it?</p>
+
+<p>Differential flatness , input output linearization</p>
+
+<p>Sadradiini worked there.</p>
+
+<p>Temproal logic with</p>
+
+<h4 id="rise-of-temporal-logic">Rise of Temporal Logic</h4>
+
+<p>Linear Temporal Logic vs CTL</p>
+
+<p>Fixpoint logic,</p>
+
+<p>Buchi automata - visit accepting state infinite times</p>
+
+<p>equivalency to first order logic</p>
+
+<p>monadic logic, propositions only take 1 agrument. Decidable. Lowenheim. Quantifier elimination. Bounded Mondel property</p>
+
+<p>Languages: ForSpec, SVA, LDL, PSL, Sugar</p>
+
+<p>Monadic second order logic (MSO).</p>
+
+<p>method of tableau</p>
+
+<h4 id="sadraddini">Sadraddini</h4>
+
+<p>Polytopic regions. Can push forward the dynmaics around a trajectory and the polytope that you lie in. RRT/LQR polytopic tree. pick random poitn. Run.</p>
+
+<p>Evauating branching heuristics</p>
+
+<p>branch and prune icp. dreal.</p>
+
+<p>branch and prune. Take set. Propagate constraints until none fire.</p>
+
+<p>branching heuristics on variables</p>
+
+<p>largest first, smearing, lookahead. Try different options see who has the most pruning. Non clear that helped that muhc</p>
+
+<p>QF_NRA. dreal benchmarks.  flyspeck, control, robotics, SMT-lib</p>
+
+<p><a href="http://capd.sourceforge.net/capdDynSys/docs/html/index.html">http://capd.sourceforge.net/capdDynSys/docs/html/index.html</a></p>
+
+<h4 id="rosette">Rosette</h4>
+
+<p>commands: saolver adied programming</p>
+
+<p>verify - find an input on which the assertions fail. exists x. not safe</p>
+
+<p>debug - Minimal unsat core if you give an unsat query. x=42/\ safe(s,P(x))$ we know thia is unsat because of previous step</p>
+
+<p>solve - exists v si.t safe(v)</p>
+
+<p>synthesis - exists e forall x safe(x,P(x))</p>
+
+<p>define-symbolic, assert, verify, debug, solve, sythesis</p>
+
+<p>Rosette. Alloy is also connected to her. Z Method. Is related to relational logic?</p>
+
+<p><a href="https://homes.cs.washington.edu/~emina/media/cav19-tutorial/index.html">https://homes.cs.washington.edu/~emina/media/cav19-tutorial/index.html</a></p>
+
+<p><a href="http://emina.github.io/rosette/">http://emina.github.io/rosette/</a></p>
+
+<p>Building solver aided programming tool.</p>
+
+<p>symbolic compiler. reduce program all possible paths to a constraint</p>
+
+<p>Cling - symbolic execution engine for llvm</p>
+
+<p>implement intepreter in rosette</p>
+
+<p>Symbolic virtual machine</p>
+
+<p>layering of languages. DSL. library (shallow) embedding. interpreter (deep) embedding.</p>
+
+<p>deep embedding for sythesis.</p>
+
+<p>I can extract coq to rosette?</p>
+
+<p>how does it work?</p>
+
+<p>reverse and filter keeping only positive queries.</p>
+
+<p>symbolic execution vs bounded model checking</p>
+
+<p>symbolic checks every possible branch of the program. Cost is expoentntial</p>
+
+<p>CBMC.</p>
+
+<p>type driven state merging. Merge instances of primitiv types. (like BMC), value types structurally ()</p>
+
+<p>instance Merge Int, Bool, Real – collect up SMT context</p>
+
+<p>vs. Traversable f =&gt; Merge (f c) - do using Traversable</p>
+
+<p>symbolic union a set of guarded values with diskoint guard.</p>
+
+<p>merging union. at most one of any shape. bounded by number of possible shapes.</p>
+
+<p>puts some branching in rosette and some branch (on primitives) in SMT.</p>
+
+<p>symbolic propfiling. Repair the encdoing.</p>
+
+<p>tools people have built.</p>
+
+<p>veify radiation</p>
+
+<p>strategy generation. That’s interesting. builds good rewrite rules.</p>
+
+<p>serval.</p>
+
+<p>certikso komodo keystone. fintie programss</p>
+
+<p>IS rosette going to be useful for my work? coooooould be</p>
+
+<h3 id="liquid-haskell">Liquid Haskell</h3>
+
+<p><a href="https://ranjitjhala.github.io/">https://ranjitjhala.github.io/</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;{-# LANGUAGE GADTs, DataKinds, PolyKinds #-}
+{-@ LIQUID "--reflection" @-}
+{-@ LIQUID "--short-names" @-}
+{-@ LIQUID "--ple" @-}
+
+{-@ type TRUE = {v: Bool | v = True }@-}
+{-@  type NonEmpty a = {v : [a] | len v &gt; 0}  @-}
+{-@ head :: NonEmpty a -&gt; a @-}
+head (x : _) = x
+
+{-@ measure f :: Int -&gt; Int @-}
+f x = 2 * x
+
+{-@ true :: TRUE @-}
+true = True
+
+
+-- impl x y = x ==&gt; y
+-- {-@ congruence :: Int -&gt; Int -&gt; TRUE @-}
+-- congruence x y = (x == y) ==&gt; (f x == f y)
+-- {-@ (==&gt;) :: {x : Bool |} -&gt; {y : Bool |} -&gt; {z : Bool | z = x ==&gt; y} @-}
+-- x ==&gt; y = (not x) || y
+
+-- aws automated reaosning group
+{-
+nullaway uber. 
+sadowski google static anaylis
+infer faecobook
+
+give programmer early 
+
+
+refinement types
+
+why and how to use
+how to implement refinement types
+
+mostly like floyd hoare logic
+
+types + predicates = refinement type
+
+t := {x:b | p} erefinemed b
+      x : t -&gt; t -- refined function type
+linear arithemtic
+
+congruence axioms
+
+
+emit a bunch of verification conditions (VC)
+p1 =&gt; p2 =&gt; p3 ... 
+
+SMT can tell if VC is alwasy true
+
+
+-}
+
+{-@ type Zero = {v : Int | v == 0} @-}
+{-@ zero :: Zero @-}
+zero = (0 :: Int) -- why?
+
+
+{-@ type NAT = {v: Int | v &gt;= 0} @-}
+{-@ nats :: [Nat]  @-}
+nats = [0,1,1,1] :: [Int]
+
+{-
+
+subtype
+
+in an environemnt Gamma, t1 is a subtype of t2
+x are vairables are in scope.
+/\x |- {v | q} &lt;= {v | r}
+
+True  =&gt; 
+
+
+-}
+
+
+{-@ plus :: x : Int -&gt; y : Int -&gt; {v : Int | v = x + y} @-}
+plus :: Int -&gt; Int -&gt; Int
+plus x y = x + y
+
+-- measure. uninterpeteyd function called measure.
+-- {-@ measure vlen :: Vector a -&gt; Int @-}
+
+-- {-@ at :: vec :Vector a -&gt; {i : Nat | i &lt; vlen vec} -&gt;  @-}
+
+-- {-@  size :: vec : Vector a -&gt; {n : Nat | n == vlen vec} @-}
+
+{-
+horn contrints infer 
+
+Collections and Higher and order fucntions
+
+reduce :: (a -&gt; b -&gt; a) -&gt; a -&gt; [b] -&gt; a
+type a is an invaraint that holds on initial acc and indictively on f
+Huh. That is true.
+
+
+-- Huh. I could prove sum formulas this way.
+
+sum'' = vec = let is = range 0 (size vec)
+              add = \tot i -&gt; ot + at vec i
+
+
+              properties of data structures
+
+
+size of of a list
+allow uninterpetyed functions inside refinements
+
+{ measre length}
+
+LISTNE a = {v : [a] | 0 &lt; length v}
+
+
+measure yields refined constructions
+
+[] :: {v : [a] | legnth v = 0}
+
+
+              --}
+
+
+              {-
+              
+              Q: measure?
+              Q : environment?
+              Q : where is standard libraru?
+              
+              no foralls anywhere? All in decidable fragment
+
+
+              p : ([a],[a]) | (fst p) + (snd p) == lenght xs
+              measures fst and snd
+
+
+              interpeter
+
+              impossible :: {v : String | false} -&gt; a
+
+imperative language
+
+interpolation
+
+
+/inlcude folder has prelude
+
+basic values
+{v : Int | lo &lt;= v &amp;&amp; v &lt; hi }
+
+
+invaraint properties of structures
+
+encoe invraints in constructor
+
+data OrdPair = OP {opX :: Int, opY :: Int}
+
+{-@ data OrdPair = OP {opX :: Int, opY :: {v : Int | opX &lt; v}@-}
+
+
+class Liquid Int
+class Liquid Bool
+class Liquid ... Real?
+
+{-@   @-}
+
+Liquid Relations?
+{  }
+
+data OList 
+{-@data OList a LB = Empt | :&lt; {oHd :: {v : a | LB = v}   oTl :: OList a oHd }   @-}
+
+
+{-@   {oHd :: a, oTl :: OList {v : a | oHd &lt; v}   }@-}
+              
+GADTs?
+-}
+data MyList a where
+    Nil :: MyList a
+    {-@ Cons :: v : a -&gt; MyList {x : a | x &lt; v} -&gt;  MyList a @-}
+    Cons :: a -&gt; MyList a -&gt; MyList a
+
+test :: MyList Int
+test = Cons 2 (Cons 1 Nil)
+
+{-
+
+abstracting the invaraint from the data structure
+parametrzie by relations
+
+data [a]&lt;rel :: a -&gt; a -&gt; Bool&gt; where
+    = []
+    | (:) {hd :: }
+
+    rel != is unique list
+
+{\x y -&gt; x &gt;= y}
+type level lambdas!? .... uh.... maybe.
+
+reflecting singletons into liquid?
+
+termination metrics
+
+/ [length xs + len ys] -- merge sort
+
+{-@ Half a s = }@-}
+
+Oncey ou have temrination proofs you have proofs of correctness
+
+Propositions as Types
+
+Plus commutes is trivial
+{n = n + n}
+
+-}
+
+
+{-@ easyProof :: {True} @-}
+easyProof = ()
+
+-- hot damn. I mean this is in it's legerdomain. But prettttty sweet.
+{-@ commute :: x : Int -&gt; y : Int -&gt; {x + y = y + x} @-}
+commute :: Int -&gt; Int -&gt; ()
+commute x y = ()
+
+{-@ reflect mysum @-}
+{-@ mysum :: Nat -&gt; Nat @-}
+mysum :: Int -&gt; Int
+mysum 0 = 0 -- if n &lt;= 0 then 0 else  2 * n + (mysum (n - 1))
+mysum n = 2 * n + (mysum (n - 1))
+
+-- what is going on here? why do I need _?
+{-@ mysumpf :: _ -&gt; {mysum 0 = 0 } @-}
+-- mysumpf :: Proof
+mysumpf _ = let x = mysum 0 in x
+
+{-@ mysumpf' :: {mysum 3 = 12 } @-}
+-- mysumpf :: Proof
+mysumpf' = ()
+
+{-@ reflect fastsum @-}
+{-@ fastsum :: Nat -&gt; Nat @-}
+fastsum :: Int -&gt; Int
+fastsum n = n * (n + 1)
+
+type Proof = ()
+{-
+{-@ pfsum :: x : Nat -&gt; {fastsum x = mysum x} @-}
+pfsum :: Int -&gt; Proof
+pfsum 0 = () -- let _ = fastsum 0 in let _ = mysum 0 in ()
+pfsum n = pfsum (n-1)  
+-}
+
+{-@ pfsum :: x : Nat -&gt; {fastsum x = mysum x} @-}
+pfsum :: Int -&gt; Proof
+pfsum 0 = () -- let _ = fastsum 0 in let _ = mysum 0 in ()
+pfsum n = pfsum (n-1)  
+
+{-
+
+reflection
+
+reflect takes the prcondition of sum and dumps it as the poscondition
+
+sum3 _ = let s0 =sum 0
+             s1  = sum 1
+             s2  = sum 3 -- all are going to be in scope.
+z3 will connect the dots.
+
+
+
+using proof combinatos from Proof Combinators
+long chains of claculations
+
+reflection of singletons
+
+data SS s where
+    {-@ SZero :: {v : Int | v = 0} -&gt; SS 'Zero @-} 
+    SZero :: Int -&gt; SS 'Zero 
+    {-@ SZero :: {v : Int | v = 0} -&gt; SS 'S a @-} 
+    SZero :: Int -&gt; SS 'Zero 
+
+
+
+
+
+    proof by induction
+    sum n = n * (n + 1)/2
+
+    2 * sum n  = n * (n + 1)
+
+
+point free liquid types
+
+(.) :: (a -&gt; b) -&gt; (a -&gt; )
+? Can I abstract over predicates like this?
+({v:a | p} -&gt; {s:}) -&gt; 
+
+
+
+Vectors
+
+cauchy schwartz
+
+
+
+-}
+
+data V2 a = V2 a a 
+
+{-@ reflect dot @-} 
+dot (V2 x y) (V2 x' y') = x * x' + y * y'
+
+{-@ reflect vplus @-}
+vplus (V2 x y) (V2 x' y') = V2 (x + x') (y + y')
+
+{-@ reflect smul @-}
+smul s (V2 x' y') = V2 (s * x') (s * y')
+{-
+{-@ cauchy :: x : V2 Int -&gt; y : V2 Int -&gt; {(dot x y) * (dot x y) &lt;= (dot x x) * (dot y y) } @-}
+cauchy :: V2 Int -&gt; V2 Int -&gt; Proof
+cauchy x y = let q = dotpos (vplus x y) in let r = dotpos (vplus x (smul (-1 :: Int) y)) in (\_ _ -&gt; ()) q r
+-}
+
+-- {-@ square :: Int -&gt; Nat @-} -- basiclly the same thing
+{-@ reflect square @-}
+square :: Int -&gt; Int
+square x = x * x
+
+
+
+{-@ sqpos :: x: Int -&gt; {square x &gt;= 0} @-}
+sqpos :: Int -&gt; ()
+sqpos x = ()
+
+{-@ dotpos :: x: V2 Int -&gt; {dot x x &gt;= 0} @-}
+dotpos :: V2 Int -&gt; ()
+dotpos x = ()
+
+{-@ dotsym :: x: V2 Int -&gt; y : V2 Int -&gt; {dot x y = dot y x} @-}
+dotsym :: V2 Int -&gt; V2 Int -&gt;  ()
+dotsym x y = ()
+
+{-@ vpluscomm :: x: V2 Int -&gt; y : V2 Int -&gt; {vplus x y = vplus y x} @-}
+vpluscomm :: V2 Int -&gt; V2 Int -&gt;  ()
+vpluscomm x y = ()
+
+{-@ dotlin :: x: V2 Int -&gt; y : V2 Int -&gt; z : V2 Int -&gt; {dot (vplus x y) z = dot x z + dot y z} @-}
+dotlin :: V2 Int -&gt; V2 Int -&gt;  V2 Int -&gt;  ()
+dotlin x y z = ()
+
+
+
+
+
+{-
+
+What else is interesting to prove?
+
+verify stuff about ODEs?
+
+fold [1 .. t] where t = 10
+
+could give little spiel about how dynamical systems are like imperative programming
+
+
+
+get some rationals.
+
+profunctor
+p a b
+a -&gt; b are refined functions
+
+
+I should learn how to abstract over typeclasses. Verified typeclasses?
+
+SMT has built in rationals prob?
+-}
+
+data Rat = Rat Int Int 
+
+{-@ reflect rplus @-}
+rplus :: Rat -&gt; Rat -&gt; Rat
+rplus (Rat x y) (Rat x' y') = Rat (x*y' + x'*y) (y * y')
+
+
+
+{-@ reflect rmul @-}
+rmul :: Rat -&gt; Rat -&gt; Rat
+rmul (Rat x y) (Rat x' y') = Rat (x*x') (y * y')
+
+
+
+
+
+data Nat' = S Nat' | Z
+
+{-@ measure nlen @-}
+{-@ nlen :: Nat' -&gt; Nat @-}
+nlen :: Nat' -&gt; Int
+nlen Z = 0
+nlen (S x) = 1 + (nlen x) 
+{-
+-- failing?
+-- crash: SMTLIB2 respSat = Error "line 31 column 169: unknown sort 'Main.SNat'"
+data SNat a where
+    SZ :: SNat 'Z
+    SS :: SNat x -&gt; SNat ('S x)
+-}
+
+{-@ reflect conv @-}
+{-@ conv :: x : Nat -&gt; {v : Nat' | nlen v = x} @-}
+conv :: Int -&gt; Nat'
+conv 0 = Z
+conv x = S (conv (x-1))
+
+-- It's an isomorphism
+
+{-@ pfconv :: x : Nat -&gt; {nlen (conv x) = x} @-}
+pfconv :: Int -&gt; Proof
+pfconv 0 = ()
+pfconv x = pfconv (x - 1)
+
+{-@ pfconv' :: x : Nat' -&gt; {conv (nlen x) = x} @-}
+pfconv' :: Nat' -&gt; Proof
+pfconv' Z = ()
+pfconv' (S x) = pfconv' x
+
+{-@ reflect plus' @-}
+plus' :: Nat' -&gt; Nat' -&gt; Nat'
+plus' Z x = x
+plus' (S x) y = S (plus' x y)
+
+{-@ plusz' :: x : Nat' -&gt; {plus' x Z = plus' Z x}  @-}
+plusz' :: Nat' -&gt; Proof
+plusz' Z = ()
+plusz' (S x) = plusz' x
+
+
+{-@ pluscomm' :: x : Nat' -&gt; y : Nat' -&gt; {plus' x y = plus' y x} / [nlen x, nlen y] @-}
+pluscomm' :: Nat' -&gt; Nat' -&gt; Proof
+pluscomm' Z y = plusz' y
+pluscomm' (S x) (S y) = const (pluscomm' (S x) y) $ const (pluscomm' x (S y)) $  pluscomm' x y
+    -- const () $ const (plus' (S x) (S y)) $ const (plus' x (S y)) (plus' x y)
+    
+    -- const (pluscomm' (S x) y) $ const (pluscomm' x (S y)) $  pluscomm' x y
+ -- flip const is proof combinator .==   
+    {-let q = pluscomm' x (S y) in
+                        let w = pluscomm' (S x) y in 
+                        let r = pluscomm' x y in (\b n m -&gt; ()) q w r -- ? Was this necessary? -}
+pluscomm' x Z = plusz' x
+
+
+
+
+-- {-@ data Iso = @-}
+data Iso a b = Iso { to :: a -&gt; b, from :: b -&gt; a, p1 :: Proof, p2 :: Proof}
+
+
+{-
+
+We also have type level lambdas.
+refinement polymorphism
+
+LH is somewhat like singletons in the sense there is a manual reflection step.
+In singletons the manual reflection is in the Sing type
+in LH it is kind of all over the place. (+) has a type. Where is it defined?
+
+
+How does it know that the Haskell function + is the same as the SMT solver function?
+
+Coq and Agda and Idris type checking is powered quite a bit by an internal unification engine
+explicit annotation may lessen the burden somewhat
+
+SMT solvers as a unification engine
+structure unification vs uninterpeted functions.
+f a ~ Int is not a valid Haskell constraint. Maybe with the unmatchable arrow it is?
+In a funny sense, there is a difference between  Just and (+ 1). 
+One being a constructor means we can match out of it
+Just :: a -&gt;&gt; b
+(+ 1) :: Int -&gt; Int
+
+-}
+
+-- test' :: (f a ~ Int) =&gt; ()
+-- test' = ()&lt;/code&gt;
+</code></pre></div></div>
+
+<p>Liquid Haskell - What is?</p>
+
+<p>another thing we could do is galois connections between refinements. Pos, Zero, Neg &lt;-&gt; Int</p>
+
+<p>Liquid Haskell uses SMT solvers to resolve it’s type checking requirements.</p>
+
+<p>Agda et al also work very much via unification. Unification is a broad term but it’s true.</p>
+
+<p>It also has a horn clause solver for inference. Every language needs some kind of inference or you’d go insane. Also it is piggybacking on haskell</p>
+
+<p>It’s not as magical as I thought? Like seeing the magicians trick. It really does understand haskell code. Like it isn’t interpretting it. When it knows facts about how (+) works, that is because the refined type was put in by hand in the prelude connecting it to SMT facts. What is imported by liquid haskell?</p>
+
+<p>The typing environment is clutch. You need to realize what variables are in scope and what their types are, because that is all the SMT can use to push through type checking requirements.</p>
+
+<p>Installing the stack build worked for me. It takes a while . I couldn’t get cabal install to work, because I am not l33t.</p>
+
+<p>Uninterpeted functions. Unmatchability?</p>
+
+<p>It wouldn’t be haskell without a bunch of compiler directives. It is somewhat difficult to find in a single cohesive place what all the syntax, and directives are from liquid haskell. Poking around it best.</p>
+
+<ul>
+  <li>ple</li>
+  <li>reflection</li>
+  <li>no-termination</li>
+  <li>higherorder - what is this?</li>
+</ul>
+
+<p><a href="https://github.com/ucsd-progsys/230-wi19-web">https://github.com/ucsd-progsys/230-wi19-web</a> course notes</p>
+
+<p><a href="https://github.com/ucsd-progsys/liquid-sf">https://github.com/ucsd-progsys/liquid-sf</a> some of software foundations</p>
+
+<p><a href="https://nikivazou.github.io/publications.html">https://nikivazou.github.io/publications.html</a> niki vazou’s pubs. Check out refinement reflection</p>
+
+<p><a href="https://nikivazou.github.io/static/Haskell17/law-abiding-instances.pdf">https://nikivazou.github.io/static/Haskell17/law-abiding-instances.pdf</a> draft work? Shows stuff about typeclasses. This is a haskell 2017 paper though</p>
+
+<p><a href="https://arxiv.org/pdf/1701.03320">https://arxiv.org/pdf/1701.03320</a> intro to liquid haskell. Interesting to a see a different author’s take</p>
+
+<p><a href="http://goto.ucsd.edu/~nvazou/presentations/">http://goto.ucsd.edu/~nvazou/presentations/</a> presentations. They are fairly similar to one another.</p>
+
+<p>Liquid haskell gives us the ability to put types on stuff that wasn’t possible before.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Linearity :: f :: {a -&gt; b</td>
+      <td>f (s ^* a) == s ^* (f a) }</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Pullback. {(a,b)</td>
+      <td>f a == g b}</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Equalizer</p>
+
+<p>Many things in categoruy theory rely on the exists unique. Do we have functiona extensionality in Liquid haskell?</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>product : {(a,b)</td>
+      <td>f q = x, g q = y,  =&gt;   }</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Pushing the boundaries on what liquid haskell can do sounds fun.</p>
+
+<p>Equalizer. The eqaulizer seems prominents in sheaves. Pre-sheaves are basically functors. Sheaves require extra conditions. Restriction maps have to work? Open covers seem important</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>type Equalizer f g a b = {(e :: a , eq :: a -&gt; b)</td>
+      <td>f (eq e) = g (eq e) }</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>I think both the type a and eq are special. e is like an explcit parametrization.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>type Eq f g a = {e :: a</td>
+      <td>f e = g e} I think this is more in the spirit. Use f and g both as measures.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>presheaf is functor. But then sheaf is functor that</p>
+
+<p>(a, Eq (F a) (G a)). typelevel equalizer? All types a that F and G agree on.</p>
+
+<p>https://ncatlab.org/nlab/show/equalizer</p>
+
+<p>https://blog.functorial.com/posts/2012-02-19-What-If-Haskell-Had-Equalizers.html</p>
+
+<p>Records are sheaves - Jon Sterling. Records have subtyping. This gives you a toplogy feeling thing.</p>
+
+<p>https://www.slideshare.net/jonsterling/galois-tech-talk-vinyl-records-in-haskell-and-type-theory</p>
+
+<p>What about purescript records?</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>{foo</td>
+      <td>a} {bar</td>
+      <td>a} -&gt; intersection = {foo bar</td>
+      <td>b} can inhabit either</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>union is <br />
+or do you want closed records? union is union of fields. intersection is intersection of fields.</p>
+
+<p>In this case a cover would be a set of records with possibly overlapping fields whose combined labels cover the whle space we want to talk about. consistency condition of sheaf/equalizer is that overlapping records fields have to match. I guess { q.foo = r.foo  } ?There is a way to combine all the stuff up. This is exactly what Ghrist was getting at with tables. Tables with shared columns.</p>
+
+<p>data R1 = R1 {foo :: Int, bar :: Int}</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>{ (r1 :: R1, r2 :: R2)</td>
+      <td>(foo r1) = (foo r2) } – we manitain duplicates across records.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>{. }</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>if you have a “cover” {foo bar</td>
+      <td>} {bar fred} {gary larry} whose in</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><a href="https://www.sciencedirect.com/science/article/pii/S1571066108005264">https://www.sciencedirect.com/science/article/pii/S1571066108005264</a></p>
+
+<p>Sheaves. As a model of concurrency? Gaguen paper.</p>
+
+<p>sheaves as constraint satisfcation? sheafifcation. Constraint solving as a way of fusing the local constraints to be globally consistent.</p>
+
+<p>sheaves as records</p>
+
+<p>sheaves as data fusion</p>
+
+<p><a href="http://www.cs.bham.ac.uk/~mhe/papers/barbados.pdf">http://www.cs.bham.ac.uk/~mhe/papers/barbados.pdf</a></p>
+
+<p>Escardo. Compact data types are those finitely searchable</p>
+
+<p>Continuous funcitons are ~computable? Productive?</p>
+
+<p><a href="http://www.paultaylor.eu/">http://www.paultaylor.eu/</a></p>
+
+<p><a href="http://www.paultaylor.eu/ASD/foufct/">http://www.paultaylor.eu/ASD/foufct/</a></p>
+
+<p><a href="http://www.paultaylor.eu/~pt/prafm/">http://www.paultaylor.eu/~pt/prafm/</a></p>
+
+<p>typed recursion theory toplogy</p>
+
+<p>typed computatabiltity theory</p>
+
+<p>Topological notions in computation. Dictionary of terms realted decidable, searchable, semi decidablee</p>
+
+<p><a href="http://cs.ioc.ee/ewscs/2012/escardo/slides.pdf">cs.ioc.ee/ewscs/2012/escardo/slides.pdf</a></p>
+
+<p><a href="https://en.wikipedia.org/wiki/Computable_topology">https://en.wikipedia.org/wiki/Computable_topology</a></p>
+
+<p>Through NDArray overloading, a significant fragment of numpy code is probably verifiable.</p>
+
+<p>Start with functional arithmetic programs.</p>
+
+<p>Need to inspect function annotations to know how to build input type.</p>
+
+<p>@verify() tag</p>
+
+<p>Use (Writer a) style monad.</p>
+
+<p>If statements are branching. We are again approaching inspecting functions via probing. But what if we lazily probe. At every <strong>bool</strong> point, we run a z3 program to determine if there is an avaiable bool left possible (we don’t need to inspect dead code regions. Also would be cool to mention it is a dead region). Curious. We’re reflecting via Z3.</p>
+
+<p>Loops present a problem. Fixed loops are fine. but what about loops that depend on the execution? for i in range(n). I guess again we can hack it…? Maybe. range only takes an integer. we don’t have overload access.</p>
+
+<p>Maybe we need to go into a full eval loop. utterly deconstructing the function and evaluating it statelemnt by statement.</p>
+
+<p>(compare :: a -&gt; a -&gt; Comparison). We could select a choice based on if there is a new one avaialable. Requires access to external store. We lose the thread. How can we know a choice was made? How can we know what the choice was? Did it ask var1 or var2? We can probably do it in python via access to a global store. But in haskell?</p>
+
+<p>while loops take invariant annotations.</p>
+
+<p>It would be cool to have a program that takes</p>
+
+<p>pre conditions. Post ocnditions, but then also a Parameter keyword to declare const variables as deriveable.  exists parameter. forall x precondition x =&gt; post condition.</p>
+
+<p>Parameter could be of a type to take a dsl of reasonable computations. Perhaps with complexity predicates. and then interpretting the parameter defines the computation.</p>
+
+<p>Or simpler case is parameter is an integer. a magic number.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;
+
+@pre(lambda x: None)
+@post(lambda r: r &gt;= 0)
+def square(x):
+	return x**2
+
+@verify(pre, post) # Easier. because now we can also verify the individual function. Call Z3 at function definition time.
+def pre(f,cond):
+   if(VERIFCAIOTN_ON)
+   return fnew
+   def fnew(x):
+        if(VERIFICATION_ON):
+	   		if(x == VerificationEnv):
+	   			newenv = x.copy
+	            new.add_pre(cond(x.var))
+	            newVar = Z3.variable()
+	            newenv.add(newVar == f(x.var))
+
+
+
+	        else:
+	        	return f(x)
+
+
+
+def post(f, cond):
+   def fnew(x):
+    if x == VerifcationEnv:
+        Z3.findmodel(not cond(x.var), x.env)
+        if can't find one:
+           we're good.
+           x.env.append(cond(x.var))
+           return x
+        else:
+           assert(False, model, function name, function postcondition code.)
+
+
+#overloading assignment. isn't a problem.
+class VerifyArray():
+   #numpy Z3 shim.
+
+#termination requires measure decreasing at every recursive call.
+#arbaitrary loops? How to deal with those?
+#maybe a hierarchy of envs to make it easier on z3. Like it doesn't need to give the whole program history if the local use is good enough.
+
+
+
+class VerificationEnv():
+    self.var = []
+    self.pre = []
+    self.post = []&lt;/code&gt;
+</code></pre></div></div>
+
+:ET

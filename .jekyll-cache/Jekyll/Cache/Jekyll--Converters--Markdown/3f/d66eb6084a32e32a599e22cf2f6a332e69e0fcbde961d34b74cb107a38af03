@@ -1,0 +1,62 @@
+I"�<p>So making a live usb of ubuntu seems to restrict you to 4gb space. I don’t want that. I want the full space of my 64gb usb3 flash drive available.</p>
+
+<p>This is harder than it seems it might be.</p>
+
+<p>This was very useful</p>
+
+<p><a href="http://askubuntu.com/questions/525845/how-to-finally-get-ubuntu-to-boot-on-a-mac-from-external-usb-storage">http://askubuntu.com/questions/525845/how-to-finally-get-ubuntu-to-boot-on-a-mac-from-external-usb-storage</a></p>
+
+<p>Didn’t do the gdisk stuff?</p>
+
+<p>I have a running ubuntu desktop to piggyback off of.</p>
+
+<p>First I made an install usb drive on a lesser 8gb usb drive using create startup disk ubuntu utility</p>
+
+<p>Choose “something else” in installation menu once plugged in and booted off my mac. (hold option key on startup to pick usb drive)</p>
+
+<p>Then I installed  on the bigger blank usb drive by selecting it as the root partition. Picked ext4.  Used some space for swap. also I should have made an efi partition at this step but I did it later</p>
+
+<p>made efi later using gparted. create a 200mb fat32 partition. Then set flag as boot. That is an efi partition I guess</p>
+
+<p><a href="http://unix.stackexchange.com/questions/174495/creating-efi-bootable-gpt-partition-with-gdisk-on-previous-mbr-gpt-damaged">http://unix.stackexchange.com/questions/174495/creating-efi-bootable-gpt-partition-with-gdisk-on-previous-mbr-gpt-damaged</a></p>
+
+<p>downloaded refind binary. ran ./refind-install –usefault=/dev/sdb3 which was the efi partition I made.</p>
+
+<p>Turn on macbook holding down option key</p>
+
+<p>efi is there</p>
+
+<p>picked the ubuntu icon on the right that mentioned my flash drive. There is another one. Not sure what that is?</p>
+
+<p>Boots into ubuntu!</p>
+
+<p>Okay. so that’s good</p>
+
+<p>My mac now default boots into grub? This panicked me for a moment, since I thought I did nothing to my hard drive. I suppose the ubuntu installer must have done something. Maybe this is what those deleting a MBR  with gdisk instructions are about. It’s fine this way it is for me. Now I need to hold option if I want to boot into Mac. This is acceptable.</p>
+
+<p>In ubuntu, My tilde key is mapping to &lt;&gt;. That’s weird</p>
+
+<p>http://askubuntu.com/questions/530325/tilde-key-on-mac-air-with-ubuntu</p>
+
+<p>To get the facetime camera working i had to follow these very scary instructions</p>
+
+<p>https://github.com/patjak/bcwc_pcie/wiki/Get-Started</p>
+
+<p>Installed sudo apt-get checkinstall to run a line</p>
+
+<p>Had to</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>modprobe -r facetimehd
+
+modprobe -r bdc_pci
+
+ modprobe  facetimehd
+
+modprobe  bdc_pci
+</code></pre></div></div>
+
+<p>as suggested near the bottom in order to find the webcam in cheese.</p>
+
+<p>The color balance appears to be messed up. Futzing around with the hue settings you can get something that almost looks right. And conversion to black and white is fine. So That’s good enough for a lot of my purposes.</p>
+
+:ET

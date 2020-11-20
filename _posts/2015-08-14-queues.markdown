@@ -1,0 +1,16 @@
+---
+author: philzook58
+comments: true
+date: 2015-08-14 20:21:14+00:00
+layout: post
+link: https://www.philipzucker.com/queues/
+slug: queues
+title: Queues
+wordpress_id: 104
+---
+
+Yeah. Queues.
+
+They're a thing. Look into it if you care.
+
+

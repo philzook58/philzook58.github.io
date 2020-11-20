@@ -1,0 +1,27 @@
+I"T<p><a href="http://courses.csail.mit.edu/6.S080/lectures/">http://courses.csail.mit.edu/6.S080/lectures/</a></p>
+
+<p>I’m starting by trying to make a simple scissor linkage. The challenge is the rotating joint</p>
+
+<p><a href="https://cad.onshape.com/documents/3059e980b4da0ff99d88ea44/w/4c2b782c058966f3b9c1536a/e/aa1873edd5c2e8f11c7c89a3">https://cad.onshape.com/documents/3059e980b4da0ff99d88ea44/w/4c2b782c058966f3b9c1536a/e/aa1873edd5c2e8f11c7c89a3</a></p>
+
+<p>I decrease the radius of the peg by 0.5mm compared to the hole. This gave me a nice fit. Slides smoothly, doesn’t pop out.</p>
+
+<p>Hmm Only for the center hole though. The other’s are much too loose.</p>
+
+<p>took about 1:10 to print 8</p>
+
+<p>took about 12 mins to print 1</p>
+
+<p>0.3 is definitely too big</p>
+
+<p>0.4 is nice and tight. But it isn’t good enough. The thing still wants to get out of the hinge.</p>
+
+<p>Back to the drawing board. A three piece design? Or just make the pegs and holes longer?</p>
+
+<p>Update: I extended the holes so the diameter equals the length. It works GORGEOUS.</p>
+
+<p><a href="http://www.cs.columbia.edu/cg/deployable/deployable.pdf">http://www.cs.columbia.edu/cg/deployable/deployable.pdf</a></p>
+
+<p>I printed a circular version. You just need to angle the bars of the scissor by 2 *pi/N where N is the number of sides of the polygon you want.</p>
+
+:ET

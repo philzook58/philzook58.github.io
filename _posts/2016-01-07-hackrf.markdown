@@ -1,0 +1,42 @@
+---
+author: philzook58
+comments: true
+date: 2016-01-07 18:39:50+00:00
+layout: post
+link: https://www.philipzucker.com/hackrf/
+slug: hackrf
+title: Hackrf
+wordpress_id: 360
+---
+
+Got a hackrf. Sqeet.
+
+    
+    hackrf_transfer -c 127 -f 100000000
+
+
+
+
+    
+    hackrf_transfer -r /dev/null -s 20000000
+
+
+Made  quick little fm transmitter.
+
+Only goes a couple feet, so should be okay wherever you do it.
+
+Also doing it on our ham freqeuncies, so doubly so
+
+[![fm_transmit.grc](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/12/fm_transmit.grc_-e1451969173854-300x213.png)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/12/fm_transmit.grc_.png)
+
+Audio source comes in from the microphone
+
+Gotta resample
+
+Should resample before fm-mod?
+
+When I did, the signal looked better, but deviation from central frequency was way too high. Could low pass, but probably not the way to go
+
+More to come probably
+
+

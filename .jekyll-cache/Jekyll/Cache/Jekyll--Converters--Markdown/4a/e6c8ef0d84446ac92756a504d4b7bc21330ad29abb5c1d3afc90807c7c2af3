@@ -1,0 +1,28 @@
+I"<p><a href="http://repraprip.blogspot.com/2011/05/inkscape-to-openscad-dxf-tutorial.html">http://repraprip.blogspot.com/2011/05/inkscape-to-openscad-dxf-tutorial.html</a></p>
+
+<p>Need to save as a dxf</p>
+
+<p>In Inkscape convert to path</p>
+
+<p>Then select all nodes and click convert to line and add nodes.</p>
+
+<p>Put it near to 0,0 corner so you can see it.</p>
+
+<p>Save</p>
+
+<p>Put the files in the same place as the scad file</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>difference() {
+scale([1,1,-1]){
+	import("PoopButton.stl");
+}
+	translate([-16, -5, 5]) {
+scale([.6, .6, .6]){
+		linear_extrude(height = 100, center = true, convexity = 10)
+		import("testtext.dxf");
+}
+	}
+}
+</code></pre></div></div>
+
+:ET

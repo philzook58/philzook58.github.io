@@ -1,0 +1,391 @@
+I"ON<p>For those looking for more on automatic differentiation in Haskell:</p>
+
+<p>Ed Kmett’s ad package</p>
+
+<p><a href="http://hackage.haskell.org/package/ad">http://hackage.haskell.org/package/ad</a></p>
+
+<p>Conal Elliott is making the rounds with a new take on AD (GOOD STUFF).</p>
+
+<p><a href="http://conal.net/papers/essence-of-ad/">http://conal.net/papers/essence-of-ad/</a></p>
+
+<p>Justin Le has been making excellent posts and has another library he’s working on.</p>
+
+<p><a href="https://blog.jle.im/entry/introducing-the-backprop-library.html">https://blog.jle.im/entry/introducing-the-backprop-library.html</a></p>
+
+<p>And here we go:</p>
+
+<p>Reverse mode automatic differentiation is kind of like a <a href="http://hackage.haskell.org/package/lens">lens</a>. Here is the type for a non-fancy lens</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type Lens s t a b = s -&gt; (a, b -&gt; t)
+</code></pre></div></div>
+
+<p>When you compose two lenses, you compose the getters (s -&gt; a) and you compose the partially applied setter (b -&gt; t) in the reverse direction.</p>
+
+<p>We can define a type for a reverse mode differentiable function</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type AD x dx y dy = x -&gt; (y, dy -&gt; dx)
+</code></pre></div></div>
+
+<p>When you compose two differentiable functions you compose the functions and you flip compose the Jacobian transpose (dy -&gt; dx). It is this flip composition which gives reverse mode it’s name. The dependence of the Jacobian on the base point x corresponds to the dependence of the setter on the original object</p>
+
+<p>The implementation of composition for Lens and AD are identical.</p>
+
+<p>Both of these things are described by the same box diagram (cribbed from the profunctor optics paper <a href="http://www.cs.ox.ac.uk/people/jeremy.gibbons/publications/poptics.pdf">www.cs.ox.ac.uk/people/jeremy.gibbons/publications/poptics.pdf </a>).</p>
+
+<p><a href="http://philzucker2.nfshost.com/wp-content/uploads/2018/04/Drawing-2.png"><img src="http://philzucker2.nfshost.com/wp-content/uploads/2018/04/Drawing-2.png" alt="" /></a></p>
+
+<p>This is a very simple way of implementing a reserve mode automatic differentiation using only non exotic features of a functional programming language. Since it is so bare bones and functional, is this a good way to achieve the vision gorgeous post by Christoper Olah?  <a href="http://colah.github.io/posts/2015-09-NN-Types-FP/">http://colah.github.io/posts/2015-09-NN-Types-FP/</a>  I do not know.</p>
+
+<p>Now, to be clear, these ARE NOT lenses. Please, I don’t want to cloud the water, do not call these lenses. They’re pseudolenses or something. A very important part of what makes a lens a lens is that it obeys the lens laws, in which the getter and setter behave as one would expect. Our “setter” is a functional representation of the Jacobian transpose and our getter is the function itself. These do not obey lens laws in general.</p>
+
+<h6 id="chain-rule-and-jacobian">Chain Rule AND Jacobian</h6>
+
+<p>What is reverse mode differentiation? One’s thinking is muddled by defaulting to the Calc I perspective of one dimensional functions. Thinking is also muddled by  the general conception that the gradient is a vector. This is slightly sloppy talk and can lead to confusion. It definitely has confused me.</p>
+
+<p>The right setting for intuition is $latex R^n \rightarrow R^m$ functions</p>
+
+<p>If one looks at a multidimensional to multidimensional function like this, you can form a matrix of partial derivatives known as the Jacobian. In the scalar to scalar case this is a $latex 1\times 1$ matrix, which we can think of as just a number. In the multi to scalar case this is a $latex 1\times n$ matrix which we somewhat fuzzily can think of as a vector.</p>
+
+<p>The chain rule is a beautiful thing. It is what makes differentiation so elegant and tractable.</p>
+
+<p>For many-to-many functions, if you compose them you matrix multiply their Jacobians.</p>
+
+<p>Just to throw in some category theory spice (who can resist), the chain rule is a functor between the category of differentiable functions and the category of vector spaces where composition is given by Jacobian multiplication. This is probably wholly unhelpful.</p>
+
+<blockquote>
+
+&gt; 
+&gt; The chain rule says that the derivative operator is a functor.
+&gt; 
+&gt; 
+— Functor Fact (@FunctorFact) [September 13, 2018](https://twitter.com/FunctorFact/status/1040237281435680768?ref_src=twsrc%5Etfw)</blockquote>
+
+<p>The cost of multiplication for an $latex a \times b$ matrix A and an $latex b \times c$ matrix B is $latex O(abc) $. If we have 3 matrices ABC, we can associate to the left or right. (AB)C vs A(BC) choosing which product to form first. These two associations have different cost, abc * acd for left association or abd * bcd for right association. We want to use the smallest dimension over and over. For functions that are ultimately many to scalar functions, that means we want to multiply starting at the right.</p>
+
+<p>For a clearer explanation of the importance of the association, maybe this will help <a href="https://en.wikipedia.org/wiki/Matrix_chain_multiplication">https://en.wikipedia.org/wiki/Matrix_chain_multiplication</a></p>
+
+<h6 id="functional-representations-of-matrices">Functional representations of matrices</h6>
+
+<p>A Matrix data type typically gives you full inspection of the elements. If you partially apply the matrix vector product function (!* :: Matrix -&gt; Vector -&gt; Vector) to a matrix m, you get a vector to vector function (!* m) :: Vector -&gt; Vector. In the sense that a matrix is data representing a linear map, this type looks gorgeous. It is so evocative of purpose.</p>
+
+<p>If all you want to do is multiply matrices or perform matrix vector products this is not a bad way to go. A function in Haskell is a thing that exposes only a single interface, the ability to be applied. Very often, the loss of Gaussian elimination or eigenvalue decompositions is quite painfully felt. For simple automatic differentiation, it isn’t so bad though.</p>
+
+<p>You can inefficiently reconstitute a matrix from it’s functional form by applying it to a basis of vectors.</p>
+
+<p>One weakness of the functional form is that the type does not constrain the function to actually act linearly on the vectors.</p>
+
+<p>One big advantage of the functional form is that you can intermix different matrix types (sparse, low-rank, dense) with no friction, just so long as they all have some way of being applied to the same kind of vector. You can also use functions like (id :: a -&gt; a) as the identity matrix, which are not built from any underlying matrix type at all.</p>
+
+<p>To match the lens, we need to represent the Jacobian transpose as the function (dy -&gt; dx) mapping differentials in the output space to differentials in the input space.</p>
+
+<h6 id="the-lens-trick">The Lens Trick</h6>
+
+<p>A lens is the combination of a getter (a function that grabs a piece out of a larger object) and a setter (a function that takes the object and a new piece and returns the object with that piece replaced).</p>
+
+<p>The common form of lens used in Haskell doesn’t look like the above. It looks like this.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type Lens s t a b = forall f. Functor f =&gt; (a -&gt; f b) -&gt; (s -&gt; f t)
+</code></pre></div></div>
+
+<p>This form has exactly the same content as the previous form (A non obvious fact. See the Profunctor Optics paper above. Magic neato polymorphism stuff), with the added functionality of being able to compose using the regular Haskell (.) operator.</p>
+
+<p>I think a good case can be made to NOT use the lens trick (do as I say, not as I do). It obfuscates sharing and<del> obfuscates your code to the compiler (I assume the compiler optimizations have less understanding of polymorphic functor types than it does of tuples and functions), meaning the compiler has less opportunity to help you out. But it is also pretty cool. So… I dunno. </del> Edit:</p>
+
+<p>/u/<a href="https://www.reddit.com/user/mstksg">mstksg</a> points out that compilers actually LOVE the van Laarhoven representation (the lens trick) because when f is finally specialized it is a newtype wrappers which have no runtime cost. Then the compiler can just chew the thing apart.</p>
+
+<p><a href="https://www.reddit.com/r/haskell/comments/9oc9dq/reverse_mode_differentiation_is_kind_of_like_a/">https://www.reddit.com/r/haskell/comments/9oc9dq/reverse_mode_differentiation_is_kind_of_like_a/</a></p>
+
+<p>One thing that is extra scary about the fancy form is that it makes it less clear how much data is likely to be shared between the forward and backward pass. Another alternative to the lens that shows this is the following.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type AD x dx y dy = (x -&gt; y, x -&gt; dy -&gt; dx)
+</code></pre></div></div>
+
+<p>This form is again the same in end result. However it cannot share computation and therefore isn’t the same performance wise. One nontrivial function that took me some head scratching is how to convert from the fancy lens directly to the regular lens without destroying sharing. I think this does it</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unfancy :: Lens' a b -&gt; (a -&gt; (b, b -&gt; a))
+unfancy l = getCompose . l (\b -&gt; Compose (b, id))
+</code></pre></div></div>
+
+<h6 id="some-code">Some code</h6>
+
+<p>I have some small exploration of the concept in this git <a href="https://github.com/philzook58/ad-lens">https://github.com/philzook58/ad-lens</a></p>
+
+<p>Again, really check out Conal Elliott’s <a href="http://conal.net/papers/essence-of-ad/">AD paper</a> and enjoy the many, many apostrophes to follow.</p>
+
+<p>Some basic definitions and transformations between fancy and non fancy lenses. Extracting the gradient is similar to the set function. Gradient assumes a many to one function and it applies it to 1.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Data.Functor.Identity
+import Data.Functor.Const
+import Data.Functor.Compose
+
+type Lens' a b = forall f. Functor f =&gt; (b -&gt; f b) -&gt; a -&gt; f a
+
+lens'' :: (a -&gt; (b, b -&gt; a)) -&gt; Lens' a b
+lens'' h g x = fmap j fb where
+    (b, j) = h x
+    fb = g b
+
+over :: Lens' a b -&gt; ((b -&gt; b) -&gt; a -&gt; a)
+over l f = runIdentity . l (Identity . f)
+
+set :: Lens' a b -&gt; a -&gt; b -&gt; a
+set l = flip (\x -&gt; (over l (const x)))
+
+view :: Lens' a b -&gt; a -&gt; b
+view l = getConst . l Const
+
+unlens'' :: Lens' a b -&gt; (a -&gt; (b, b -&gt; a))
+unlens'' l = getCompose . l (\b -&gt; Compose (b, id))
+
+constlens :: Lens' (a,b) c -&gt; b -&gt; Lens' a c
+constlens l b = lens'' $ \a -&gt; let (c, df) = f (a,b) in
+                             (c, fst . df) where 
+                                           f = unlens'' l
+
+
+grad :: Num b =&gt; Lens' a b -&gt; a -&gt; a
+grad l = (flip (set l)) 1
+</code></pre></div></div>
+
+<p>Basic 1D functions and arrow/categorical combinators</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-- add and dup are dual!
+
+add' :: Num a =&gt; Lens' (a,a) a 
+add' = lens'' $ \(x,y) -&gt; (x + y, \ds -&gt; (ds, ds))
+
+dup' :: Num a =&gt; Lens' a (a,a)
+dup' = lens'' $ \x -&gt; ((x,x), \(dx,dy) -&gt; dx + dy)
+
+sub' :: Num a =&gt; Lens' (a,a) a 
+sub' = lens'' $ \(x,y) -&gt; (x - y, \ds -&gt; (ds, -ds))
+
+mul' :: Num a =&gt; Lens' (a,a) a 
+mul' = lens'' $ \(x,y) -&gt; (x * y, \dz -&gt; (dz * y, x * dz))
+
+recip' :: Fractional a =&gt; Lens' a a 
+recip' = lens'' $ \x-&gt; (recip x, \ds -&gt; - ds / (x * x))
+
+div' :: Fractional a =&gt; Lens' (a,a) a 
+div' = lens'' $ (\(x,y) -&gt; (x / y, \d -&gt; (d/y,-x*d/(y * y))))
+
+sin' :: Floating a =&gt; Lens' a a
+sin' = lens'' $ \x -&gt; (sin x, \dx -&gt; dx * (cos x))
+
+cos' :: Floating a =&gt; Lens' a a
+cos' = lens'' $ \x -&gt; (cos x, \dx -&gt; -dx * (sin x))
+
+pow' :: Num a =&gt; Integer -&gt; Lens' a a
+pow' n = lens'' $ \x -&gt; (x ^ n, \dx -&gt; (fromInteger n) * dx * x ^ (n-1)) 
+
+--cmul :: Num a =&gt; a -&gt; Lens' a a
+--cmul c = lens (* c) (\x -&gt; \dx -&gt; c * dx)
+
+exp' :: Floating a =&gt; Lens' a a
+exp' = lens'' $ \x -&gt; let ex = exp x in
+                      (ex, \dx -&gt; dx * ex)
+
+fst' :: Num b =&gt; Lens' (a,b) a
+fst' = lens'' (\(a,b) -&gt; (a, \ds -&gt; (ds, 0)))
+
+snd' :: Num a =&gt; Lens' (a,b) b
+snd' = lens'' (\(a,b) -&gt; (b, \ds -&gt; (0, ds)))
+
+swap' :: Lens' (a,b) (b,a)
+swap' = lens'' (\(a,b) -&gt; ((b,a), \(db,da) -&gt; (da, db)))
+
+assoc' :: Lens' ((a,b),c) (a,(b,c))
+assoc' = lens'' $ \((a,b),c) -&gt; ((a,(b,c)), \(da,(db,dc)) -&gt; ((da,db),dc))
+
+par' :: Lens' a b -&gt; Lens' c d -&gt; Lens' (a,c) (b,d)
+par' l1 l2 = lens'' f3 where
+    f1 = unlens'' l1
+    f2 = unlens'' l2
+    f3 (a,c) = ((b,d), df1 *** df2) where
+        (b,df1) = f1 a
+        (d,df2) = f2 c
+
+fan' :: Num a =&gt; Lens' a b -&gt; Lens' a c -&gt; Lens' a (b,c)
+fan' l1 l2 = lens'' f3 where
+    f1 = unlens'' l1
+    f2 = unlens'' l2
+    f3 a = ((b,c), \(db,dc) -&gt; df1 db + df2 dc) where
+        (b,df1) = f1 a
+        (c,df2) = f2 a
+
+first' :: Lens' a b -&gt; Lens' (a, c) (b, c)
+first' l = par' l id
+
+second' :: Lens' a b -&gt; Lens' (c, a) (c, b)
+second' l = par' id l
+
+relu' :: (Ord a, Num a) =&gt; Lens' a a
+relu' = lens'' $ \x -&gt; (frelu x, brelu x) where
+        frelu x | x &gt; 0 = x
+                | otherwise = 0
+        brelu x dy | x &gt; 0 = dy
+                   | otherwise = 0
+</code></pre></div></div>
+
+<p>Some List based stuff.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Data.List (sort)
+import Control.Applicative (ZipList (..))
+
+-- replicate and sum are dual!
+
+sum' :: Num a =&gt; Lens' [a] a
+sum' = lens'' $ \xs -&gt; (sum xs, \dy -&gt; replicate (length xs) dy)
+
+replicate' :: Num a =&gt; Int -&gt; Lens' a [a]
+replicate' n = lens'' $ \x -&gt; (replicate n x, sum)
+
+repeat' :: Num a =&gt; Lens' a [a]
+repeat' = lens'' $ \x -&gt; (repeat x, sum)
+
+map' :: Lens' a b -&gt; Lens' [a] [b]
+map' l = lens'' $ \xs -&gt; let (bs, fs) = unzip . map (unlens'' l) $ xs in 
+                       (bs, getZipList . ((ZipList fs) &lt;*&gt;) . ZipList)
+
+zip' :: Lens' ([a], [b]) [(a,b)]
+zip' = lens'' $ \(as,bs) -&gt; (zip as bs, unzip)
+
+unzip' :: Lens' [(a,b)] ([a], [b])
+unzip' = lens'' $ \xs -&gt; (unzip xs, uncurry zip)
+
+maximum' :: (Num a, Ord a) =&gt; Lens' [a] a
+maximum' = lens'' $ \(x:xs) -&gt; let (best, bestind, lenxs) = argmaxixum x 0 1 xs in
+                               (best, \dy -&gt; onehot bestind lenxs dy) where
+    argmaxixum best bestind len [] = (best, bestind, len) 
+    argmaxixum best bestind curind (x:xs) = if x &gt; best then argmaxixum x curind (curind + 1) xs else argmaxixum best bestind (curind + 1) xs  
+    onehot n m x | m == 0 = []
+                 | n == m = x : (onehot n (m-1) x) 
+                 | otherwise = 0 : (onehot n (m-1) x)
+
+sort' :: Ord a =&gt; Lens' [a] [a]
+sort' = lens'' $ \xs -&gt; let (sxs, indices) = unzip . sort $ zip xs [0 ..] in
+                        (sxs, desort indices) where
+                          desort indices = snd . unzip . sort . zip indices
+</code></pre></div></div>
+
+<p>And some functionality from HMatrix</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Numeric.LinearAlgebra
+import Numeric.LinearAlgebra.Devel (zipVectorWith)
+import Numeric.ADLens.Lens
+-- import Data.Vector as V
+
+dot' :: (Container Vector t, Numeric t) =&gt; Lens' (Vector t, Vector t) t
+dot' = lens'' $ \(v1,v2) -&gt; (v1 &lt;.&gt; v2, \ds -&gt; (scale ds v2, scale ds v1))
+
+mdot' :: (Product t, Numeric t) =&gt; Lens' (Matrix t, Vector t) (Vector t)
+mdot' = lens'' $ \(a,v) -&gt; (a #&gt; v, \dv -&gt; (outer dv v, dv &lt;# a))
+
+add' :: Additive c =&gt; Lens' (c, c) c
+add' = lens'' $ \(v1,v2) -&gt; (add v1 v2, \dv -&gt; (dv, dv))
+
+-- I need konst I think?
+sumElements' :: (Container Vector t, Numeric t) =&gt; Lens' (Vector t) t
+sumElements' = lens'' $ \v -&gt; (sumElements v, \ds -&gt; scalar ds)
+
+reshape' :: Container Vector t =&gt; Int -&gt; Lens' (Vector t) (Matrix t)
+reshape' n = lens'' $ \v -&gt; (reshape n v,  \dm -&gt; flatten dm)
+
+-- conjugate transpose not trace
+tr'' ::  (Transposable m mt, Transposable mt m) =&gt; Lens' m mt
+tr'' = lens'' $ \x -&gt; (tr x, \dt -&gt; tr dt)
+
+
+flatten' :: (Num t, Container Vector t) =&gt; Lens' (Matrix t) (Vector t)
+flatten' = lens'' $ \m -&gt; let s = fst $ size m in  
+                          (flatten m,  \dm -&gt; reshape s dm)
+
+
+norm_2' :: (Container c R, Normed (c R), Linear R c) =&gt; Lens' (c R) R
+norm_2' = lens'' $ \v -&gt; let nv = norm_2 v in (nv, \dnv -&gt; scale (2 * dnv / nv) v )
+
+
+
+cmap' :: (Element b, Container Vector e) =&gt; (Lens' e b) -&gt; Lens' (Vector e) (Vector b)
+cmap' l = lens'' $ \c -&gt; (cmap f c, \dc -&gt; zipVectorWith f' c dc) where
+        f = view l
+        f' = set l
+ 
+{-
+maxElement' :: Container c e =&gt; Lens' (c e) e
+maxElement' = lens'' $ \v -&gt; let i = maxIndex v in (v ! i, dv -&gt; scalar 0)
+-}
+
+det' :: Field t =&gt; Lens' (Matrix t) t
+det' = lens'' $ \m -&gt; let (minv, (lndet, phase)) = invlndet m in
+                    let detm = phase * exp detm in
+                    (detm, \ds -&gt; (scale (ds * detm) minv))
+
+diag' :: (Num a, Element a) =&gt; Lens' (Vector a) (Matrix a)
+diag' = lens'' $ \v -&gt; (diag v, takeDiag)
+
+takeDiag' :: (Num a, Element a) =&gt; Lens' (Matrix a) (Vector a) 
+takeDiag' = lens'' $ \m -&gt; (takeDiag m, diag)
+</code></pre></div></div>
+
+<p>In practice, I don’t think this is a very ergonomic approach without something like Conal Elliott’s<a href="https://github.com/conal/concat"> Compiling to Categories</a> plugin. You have to program in a point-free arrow style (inspired very directly by Conal’s above AD paper) which is pretty nasty IMO. The neural network code here is inscrutable. It is only a three layer neural network.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Numeric.ADLens.Lens
+import Numeric.ADLens.Basic
+import Numeric.ADLens.List
+import Numeric.ADLens.HMatrix
+
+
+import Numeric.LinearAlgebra
+
+type L1 = Matrix Double
+type L2 = Matrix Double
+type L3 = Matrix Double
+
+
+
+type Input = Vector Double
+type Output = Vector Double
+type Weights = (L1,(L2,(L3,())))
+
+class TupleSum a where
+	tupsum :: a -&gt; a -&gt; a
+instance TupleSum () where
+	tupsum _ _ = ()
+instance (Num a, TupleSum b) =&gt; TupleSum (a,b) where
+	tupsum (a,x) (b,y) = (a + b, tupsum x y)
+
+-- A dense relu neural network example
+swaplayer :: Lens' ((Matrix t, b), Vector t) (b, (Matrix t, Vector t))
+swaplayer = first' swap' . assoc' 
+
+mmultlayer :: Numeric t =&gt; Lens' (b, (Matrix t, Vector t)) (b, Vector t)
+mmultlayer = second' mdot'
+
+relulayer :: Lens' (b, Vector Double) (b, Vector Double)
+relulayer = second' $ cmap' relu'
+
+uselayer :: Lens' ((Matrix Double, b), Vector Double) (b, Vector Double)
+uselayer = swaplayer . mmultlayer . relulayer
+
+runNetwork :: Lens' (Weights, Input) ((), Output)
+runNetwork =  uselayer . uselayer . uselayer
+
+main :: IO ()
+main = do
+   putStrLn "Starting Tests"
+   print $ grad (pow' 2) 1
+   print $ grad (pow' 4) 1
+   print $ grad (map' (pow' 2) . sum') $ [1 .. 5]
+   print $ grad (map' (pow' 4) . sum') $ [1 .. 5]
+   print $ map (\x -&gt; 4 * x ^ 3 )  [1 .. 5]
+   l1 &lt;- randn 3 4
+   l2 &lt;- randn 2 3
+   l3 &lt;- randn 1 2
+   let weights = (l1,(l2,(l3,())))
+   print $ view runNetwork (weights, vector [1,2,3,4])
+   putStrLn "The neural network gradients"
+   print $ set runNetwork (weights, vector [1,2,3,4]) ((), vector [1])
+</code></pre></div></div>
+
+:ET

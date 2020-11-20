@@ -1,0 +1,40 @@
+I"<p>Edit: Check this out <a href="https://mmhaskell.com/blog/2019/7/1/gloss-review">https://mmhaskell.com/blog/2019/7/1/gloss-review</a> !</p>
+
+<p>Gloss is a super simple binding to drawing 2d stuff in a window for haskell</p>
+
+<p><a href="https://hackage.haskell.org/package/gloss">https://hackage.haskell.org/package/gloss</a></p>
+
+<p>Given how relatively bewildering Hello World feels in Haskell, it’s surprising how easy it is to get an animated window going. I think that may be because of expectations. You expect Hello world to be really easy and have no confusion and yet there is an inexplicable IO monad-what? , whereas you expect drawing to involve a bunch of inexplicable boiler plate bullshit.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module Main where
+
+import Graphics.Gloss
+
+main :: IO ()
+main = simulate (InWindow "Nice Window" (200, 200) (10, 10)) 
+       white 30 
+       (0,0) 
+       (\(theta,dtheta) -&gt; Line [(0,0), (40 * cos theta, 40 * sin theta)]) 
+       (\_ dt (theta, dtheta) -&gt; (theta + dt * dtheta,dtheta - dt * (cos theta)))
+</code></pre></div></div>
+
+<p>This simulates a pendulum. Drawing it as a line.</p>
+
+<p>simulate takes a pile of arguments</p>
+
+<p>first thing describes a window, with title text, size and screen position I think?</p>
+
+<p>then background color</p>
+
+<p>frames per second</p>
+
+<p>initial state (0 angle 0 angular velocity)</p>
+
+<p>a drawing function from state to a picture, which is a gloss type of lines and crap</p>
+
+<p>and a state update function taking a time step dt and current state.</p>
+
+<p>I feel like there is room for a completely introductory tutorial to Haskell using gloss. It’s so rewarding to see stuff splash up on the screen.</p>
+
+<p>MAYBE I’LL DO IT. or maybe not.</p>
+:ET

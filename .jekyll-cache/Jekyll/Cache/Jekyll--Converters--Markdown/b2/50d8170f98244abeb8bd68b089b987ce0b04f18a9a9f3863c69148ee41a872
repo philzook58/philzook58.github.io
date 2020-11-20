@@ -1,0 +1,41 @@
+I"O<p>So we want to be able to pause prints to put stuff in them.</p>
+
+<p>The way to do it is to export gcode from slic3r. Go into repetier’s gcode editor tab.</p>
+
+<p>Then you can drag the layer slider until you’re where you want a pause.</p>
+
+<p>Show layer range is a nice setting</p>
+
+<p>Click on the button that says last layer to bring yourself to the part of the code</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>G1 X97.250 Y100.000 E108.68348
+G1 Z22.200 F7800.000
+</code></pre></div></div>
+
+<p>The Z instruction moves up to the next layer.</p>
+
+<p>Insert this little hunk of code inside</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>G1 X97.250 Y100.000 E108.68348
+
+M117 Do Yo Thang
+G1 X0 Y0&amp;nbsp;
+M0
+G1 X97.251 Y99.986
+
+G1 Z22.200 F7800.000
+</code></pre></div></div>
+
+<p>G1 X0 Y0 sends the head to 0,0 to get it out of the way</p>
+
+<p>M117 Sends a messsage</p>
+
+<p>M0 waits for user response for our prusa i3 with marlin firmware (button press)</p>
+
+<p>The last line returns it to its previous position. Make sure to replace those numbers with the actual numbers you see.</p>
+
+<p><a href="http://reprap.org/wiki/G-code">http://reprap.org/wiki/G-code</a></p>
+
+<p>M226 did not seem to work. Nor did repetier style @pause</p>
+
+:ET

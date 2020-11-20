@@ -1,0 +1,30 @@
+I"�<p>What is a Green’s Function?</p>
+
+<p>While that doesn’t sound like an esoteric question to me anymore, it must to a new initiate.</p>
+
+<p>First off, I think you can achieve immense clarity by understanding that everything that is called a Green’s function is not exactly the same thing. For problem solving and calculating, the similarity of all the things called Green’s functions is helpful, since knowledge of one situation let’s you understand how to manipulate the solution in another.
+They do all have a similar flavor.</p>
+
+<p>Conceptually, however, the Green’s function is a many faced god. And for that purpose, it is best to emphasize the <em>differences</em> between these very conceptually different cases.</p>
+
+<p>To start off, for some slight concreteness, let’s list some problems that will have solutions in the form of something called a Green’s function.</p>
+
+<ol>
+  <li>
+    <p>You have some weird potato shaped charge and hunks of metal. What is the electric potential everywhere?</p>
+  </li>
+  <li>
+    <p>You have a ball getting randomly kicked around. Given it starts at home plate, what is the probability it gets to first?</p>
+  </li>
+  <li>
+    <p>You have a single quantum particle</p>
+  </li>
+  <li>
+    <p>You have a rumbling tumultuous ocean or rubber sheet. How does the height at one place correlate with the height at another?</p>
+  </li>
+  <li>
+    <p>You have a quantum field. God help you.</p>
+  </li>
+</ol>
+
+:ET

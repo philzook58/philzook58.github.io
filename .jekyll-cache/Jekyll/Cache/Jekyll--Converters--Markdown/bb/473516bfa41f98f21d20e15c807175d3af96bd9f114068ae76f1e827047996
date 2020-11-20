@@ -1,0 +1,75 @@
+I"�<p>Bought one of these discovery boards for 15$ from digikey. I like the built in stuff, like the 9axis mems device. I don’t enjoy wiring up little boards particularly and it makes every project so ephemeral.</p>
+
+<p>http://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-eval-tools/stm32-mcu-eval-tools/stm32-mcu-discovery-kits/32f411ediscovery.html</p>
+
+<p>I am concerned that I should have gotten the older board.</p>
+
+<p>User manual has pin connectors</p>
+
+<p>http://www.st.com/content/ccc/resource/technical/document/user_manual/e9/d2/00/5e/15/46/44/0e/DM00148985.pdf/files/DM00148985.pdf/jcr:content/translations/en.DM00148985.pdf</p>
+
+<p>It’s in platform.io as</p>
+
+<p>disco_f411ve</p>
+
+<p>Huh it only supports STM32Cube? I kind of wanted to try libOpenCM3</p>
+
+<p>start a project with</p>
+
+<p>platformio init –board disco_f411ve</p>
+
+<p>platformio run</p>
+
+<p>The examples are invaluable</p>
+
+<p>https://github.com/platformio/platform-ststm32/tree/develop/examples</p>
+
+<p>ok. There is a blink for the Hardware abstraction layer (HAL) and Low level (LL)</p>
+
+<p>Hmm. Neither blink examples work off the bat. SYS_CLOCK is undefined for Low level</p>
+
+<p>and board not supported in the HAL.</p>
+
+<p>Alright let’s try libopencm3</p>
+
+<p>https://github.com/libopencm3/libopencm3-examples</p>
+
+<p>make in top directory first</p>
+
+<p>follow directions to init submodule</p>
+
+<p>alirght I guess I need to download the arm toolchain</p>
+
+<p>https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads</p>
+
+<p>I put them on my path</p>
+
+<p>export PATH=~/Downloads/gcc-arm-none-eabi-7-2017-q4-major/bin:$PATH</p>
+
+<p>Then ran make</p>
+
+<p>also need to apt install gawk</p>
+
+<p>editted the Makefile of miniblink</p>
+
+<p>https://github.com/libopencm3/libopencm3/blob/master/ld/devices.data</p>
+
+<p>stm32f411re stm32f4 ROM=512K RAM=128K</p>
+
+<p>that’s the right config even though re is wrong</p>
+
+<p>Okay was getting weird error</p>
+
+<p>sudo make flash V=1</p>
+
+<p>the V=1 gives verbose</p>
+
+<p>I may have had to apt install openocd?</p>
+
+<p>Need to run under sudo. Go fig.</p>
+
+<p>Alright got some blinking! WOOO</p>
+
+<p>Ah I see. PD12 is PortD12. Makes sense.</p>
+
+:ET

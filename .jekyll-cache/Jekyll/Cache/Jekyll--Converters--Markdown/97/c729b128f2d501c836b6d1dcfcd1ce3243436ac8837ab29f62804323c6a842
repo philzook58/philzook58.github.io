@@ -1,0 +1,19 @@
+I"�<p>So I finally got the orange pi running.It hasn’t been hard, it just has not been a priority.</p>
+
+<p>I bought one months ago when I saw it on hackaday for 15$. Took a month or so to arrive. Then I realized it has kind of a weird power adapter port (not powered by usb like the raspbery ) so I bought one of those and that took a bit.</p>
+
+<p>I went to a sketchy chinese website and downloaded the image for the “orange pi pc” Lubuntu.</p>
+
+<p>I don’t know why I picked lubuntu now, but seems like a reasonable choice.</p>
+
+<p>Clicked on the image on my ubuntu box and brought up a disk image program that let me install on the orange pi.</p>
+
+<p>Popped the sd card in that bad boy. Booted right up. Can ssh into it with user orangepi, password orangepi.</p>
+
+<p>Updated all the crap.</p>
+
+<p>Installed nodejs and npm using apt-get install and symlinked (sudo ln -s )node to nodejs.</p>
+
+<p>It all seems fine. Pretty Neat.</p>
+
+:ET

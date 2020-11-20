@@ -1,0 +1,222 @@
+I")<p>I wrote a while back how you can make a pretty nice DSL for reverse mode differentiation based on the same type as Lens. I’d heard some interesting rumblings on the internet around these ideas and so was revisiting them.</p>
+
+<p>http://www.philipzucker.com/reverse-mode-differentiation-is-kind-of-like-a-lens-ii/</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;type Lens s t a b = s -&gt; (a, b -&gt; t)
+type AD x dx y dy = x -&gt; (y, dy -&gt; dx)&lt;/code&gt;
+</code></pre></div></div>
+
+<p>Composition is defined identically for reverse mode just as it is for lens.</p>
+
+<p><img src="http://philzucker2.nfshost.com/wp-content/uploads/2018/04/Drawing-2.png" alt="" />The forward computation shares info with the backwards differential propagation, which corresponds to a transposed Jacobian</p>
+
+<p>After chewing on it a while, I realized this really isn’t that exotic. How it works is that you store the reverse mode computation graph, and all necessary saved data from the forward pass in the closure of the <code class="language-plaintext highlighter-rouge">(dy -&gt; dx)</code>. I also have a suspicion that if you defunctionalized this construction, you’d get the Wengert tape formulation of reverse mode ad.</p>
+
+<p>Second, Lens is just a nice structure for bidirectional computation, with one forward pass  and one backward pass which may or may not be getting/setting. There are other examples for using it like this.</p>
+
+<p>https://twitter.com/<em>julesh</em>/status/1189016088614526977?s=20</p>
+
+<p>It is also pretty similar to the standard “dual number” form <code class="language-plaintext highlighter-rouge">type FAD x dx y dy = (x,dx)-&gt;(y,dy)</code> for forward mode AD. We can bring the two closer by a CPS/Yoneda transformation and then some rearrangement.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;     x -&gt; (y, dy -&gt; dx) 
+==&gt;  x -&gt; (y, forall s. (dx -&gt; s) -&gt; (dy -&gt; s))
+==&gt;  forall s. (x, dx -&gt; s) -&gt; (y, dx -&gt; s) &lt;/code&gt;
+</code></pre></div></div>
+
+<p>and meet it in the middle with</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;(x,dx) -&gt; (y,dy)
+==&gt; forall s. (x, s -&gt; dx) -&gt; (y, s -&gt; dy)&lt;/code&gt;
+</code></pre></div></div>
+
+<p>I ended the previous post somewhat unsatisfied by how ungainly writing that neural network example was, and I called for Conal Elliot’s compiling to categories plugin as a possible solution. The trouble is piping the weights all over the place. This piping is very frustrating in point-free form, especially when you know it’d be so trivial pointful. While the inputs and outputs of layers of the network compose nicely (you no longer need to know about the internal computations), the weights do not. As we get more and more layers, we get more and more weights. The weights are in some sense not as compositional as the inputs and outputs of the layers, or compose in a different way that you need to maintain access to.</p>
+
+<p>I thought of a very slight conceptual twist that may help.</p>
+
+<p>The idea is we keep the weights out to the side in their own little type parameter slots. Then we define composition such that it composes input/outputs while tupling the weights. Basically we throw the repetitive complexity appearing in piping the weights around into the definition of composition itself.</p>
+
+<p>These operations are easily seen as 2 dimensional diagrams.</p>
+
+<p><img src="http://philzucker2.nfshost.com/wp-content/uploads/2019/10/My-Drawing-1.sketchpad-1024x409.png" alt="" />Three layers composed, exposing the weights from all layers</p>
+
+<p><img src="http://philzucker2.nfshost.com/wp-content/uploads/2019/10/My-Drawing-2.sketchpad.png" alt="" />The 2-D arrow things can be built out of the 1-d arrows of the original basic AD lens by bending the weights up and down. Ultimately they are describing the same thing</p>
+
+<p>Here’s the core reverse lens ad combinators</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;import Control.Arrow ((***))
+
+type Lens'' a b = a -&gt; (b, b -&gt; a)
+
+comp :: (b -&gt; (c, (c -&gt; b))) -&gt; (a -&gt; (b, (b -&gt; a))) -&gt; (a -&gt; (c, (c -&gt; a)))
+comp f g x = let (b, dg) = g x in
+             let (c, df) = f b in
+             (c, dg . df)
+
+id' :: Lens'' a a
+id' x = (x, id) 
+
+relu' :: (Ord a, Num a) =&gt; Lens'' a a
+relu' = \x -&gt; (frelu x, brelu x) where
+        frelu x | x &gt; 0 = x
+                | otherwise = 0
+        brelu x dy | x &gt; 0 = dy
+                   | otherwise = 0
+
+add' :: Num a =&gt; Lens'' (a,a) a 
+add' = \(x,y) -&gt; (x + y, \ds -&gt; (ds, ds))
+
+dup' :: Num a =&gt; Lens'' a (a,a)
+dup' = \x -&gt; ((x,x), \(dx,dy) -&gt; dx + dy)
+
+sub' :: Num a =&gt; Lens'' (a,a) a 
+sub' = \(x,y) -&gt; (x - y, \ds -&gt; (ds, -ds))
+
+mul' :: Num a =&gt; Lens'' (a,a) a 
+mul' = \(x,y) -&gt; (x * y, \dz -&gt; (dz * y, x * dz))
+
+recip' :: Fractional a =&gt; Lens'' a a 
+recip' = \x-&gt; (recip x, \ds -&gt; - ds / (x * x))
+
+div' :: Fractional a =&gt; Lens'' (a,a) a 
+div' = (\(x,y) -&gt; (x / y, \d -&gt; (d/y,-x*d/(y * y))))
+
+sin' :: Floating a =&gt; Lens'' a a
+sin' = \x -&gt; (sin x, \dx -&gt; dx * (cos x))
+
+cos' :: Floating a =&gt; Lens'' a a
+cos' = \x -&gt; (cos x, \dx -&gt; -dx * (sin x))
+
+pow' :: Num a =&gt; Integer -&gt; Lens'' a a
+pow' n = \x -&gt; (x ^ n, \dx -&gt; (fromInteger n) * dx * x ^ (n-1)) 
+
+--cmul :: Num a =&gt; a -&gt; Lens' a a
+--cmul c = lens (* c) (\x -&gt; \dx -&gt; c * dx)
+
+exp' :: Floating a =&gt; Lens'' a a
+exp' = \x -&gt; let ex = exp x in
+                      (ex, \dx -&gt; dx * ex)
+
+fst' :: Num b =&gt; Lens'' (a,b) a
+fst' = (\(a,b) -&gt; (a, \ds -&gt; (ds, 0)))
+
+snd' :: Num a =&gt; Lens'' (a,b) b
+snd' = (\(a,b) -&gt; (b, \ds -&gt; (0, ds)))
+
+-- some monoidal combinators
+swap' :: Lens'' (a,b) (b,a)
+swap' = (\(a,b) -&gt; ((b,a), \(db,da) -&gt; (da, db)))
+
+assoc' :: Lens'' ((a,b),c) (a,(b,c))
+assoc' = \((a,b),c) -&gt; ((a,(b,c)), \(da,(db,dc)) -&gt; ((da,db),dc))
+
+assoc'' :: Lens'' (a,(b,c)) ((a,b),c)
+assoc'' = \(a,(b,c)) -&gt; (((a,b),c), \((da,db),dc)-&gt;  (da,(db,dc)))
+
+par' :: Lens'' a b -&gt; Lens'' c d -&gt; Lens'' (a,c) (b,d)
+par' l1 l2 = l3 where
+    l3 (a,c) = let (b , j1) = l1 a in
+               let (d, j2) = l2 c in
+               ((b,d) , j1 *** j2) 
+first' :: Lens'' a b -&gt; Lens'' (a, c) (b, c)
+first' l = par' l id'
+
+second' :: Lens'' a b -&gt; Lens'' (c, a) (c, b)
+second' l = par' id' l
+
+labsorb :: Lens'' ((),a) a
+labsorb (_,a) = (a, \a' -&gt; ((),a'))
+
+labsorb' :: Lens'' a ((),a)
+labsorb' a = (((),a), \(_,a') -&gt; a')
+
+rabsorb :: Lens'' (a,()) a
+rabsorb = comp labsorb swap'&lt;/code&gt;
+</code></pre></div></div>
+
+<p>And here are the two dimensional combinators. I tried to write them point-free in terms of the combinators above to demonstrate that there is no monkey business going on. We</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;type WAD' w w' a b = Lens'' (w,a) (w',b)
+type WAD'' w a b = WAD' w () a b -- terminate the weights for a closed network
+{- For any monoidal category we can construct this composition? -}
+-- horizontal composition
+hcompose :: forall w w' w'' w''' a b c. WAD' w' w'' b c -&gt; WAD' w w''' a b -&gt; WAD' (w',w) (w'',w''') a c
+hcompose f g = comp f' g' where 
+               f' :: Lens'' ((w',r),b) ((w'',r),c)
+               f' = (first' swap') `comp` assoc'' `comp` (par' id' f) `comp` assoc' `comp`  (first' swap') 
+               g' :: Lens'' ((r,w),a) ((r,w'''),b)
+               g' = assoc'' `comp` (par' id' g) `comp` assoc' 
+
+
+
+rotate :: WAD' w w' a b -&gt; WAD' a b w w'                                      
+rotate f = swap' `comp` f `comp` swap'
+
+-- vertical composition of weights
+vcompose :: WAD' w'  w'' c d -&gt; WAD' w w' a b -&gt; WAD' w w'' (c, a) (d, b)
+vcompose f g = rotate (hcompose (rotate f)  (rotate g) )                             
+
+-- a double par.
+diagpar :: forall w w' a b w'' w''' c d. WAD' w  w' a b -&gt; WAD' w'' w''' c d 
+           -&gt; WAD' (w,w'') (w',w''') (a, c) (b, d)
+diagpar f g = t' `comp` (par' f g) `comp` t where
+                t :: Lens'' ((w,w''),(a,c)) ((w,a), (w'',c)) -- yikes. just rearrangements.
+                t =  assoc'' `comp` (second' ((second' swap') `comp` assoc' `comp` swap')) `comp` assoc'
+                t' :: Lens'' ((w',b), (w''',d)) ((w',w'''),(b,d)) -- the tranpose of t
+                t' =  assoc'' `comp` (second'  ( swap'  `comp` assoc'' `comp` (second' swap')))  `comp` assoc'
+
+id''' :: WAD' () () a a
+id''' = id'
+
+
+
+
+
+
+-- rotate:: WAD' w a a w
+-- rotate = swap'
+
+liftIO :: Lens'' a b -&gt; WAD' w w a b
+liftIO = second'
+
+liftW :: Lens'' w w' -&gt; WAD' w w' a a
+liftW = first'
+
+
+wassoc' = liftW assoc' 
+wassoc'' = liftW assoc'' 
+
+labsorb'' :: WAD' ((),w) w a a
+labsorb'' = first' labsorb
+
+labsorb''' :: WAD' w ((),w) a a
+labsorb''' = first' labsorb'
+
+wswap' :: WAD' (w,w') (w',w) a a
+wswap' = first' swap'
+-- and so on we can lift all combinators&lt;/code&gt;
+</code></pre></div></div>
+
+<p>I wonder if this is actually nice?</p>
+
+<p>I asked around and it seems like this idea may be what davidad is talking about when he refers to dioptics</p>
+
+<p><a href="http://events.cs.bham.ac.uk/syco/strings3-syco5/slides/dalrymple.pdf">http://events.cs.bham.ac.uk/syco/strings3-syco5/slides/dalrymple.pdf</a></p>
+
+<p>Perhaps this will initiate a convo.</p>
+
+<p>Edit: He confirms that what I’m doing appears to be a dioptic. Also he gave a better link <a href="http://events.cs.bham.ac.uk/syco/strings3-syco5/papers/dalrymple.pdf">http://events.cs.bham.ac.uk/syco/strings3-syco5/papers/dalrymple.pdf</a></p>
+
+<p>He is up to some interesting diagrams</p>
+
+<p>https://twitter.com/davidad/status/1179760373030801408?s=20</p>
+
+<h3 id="bits-and-bobbles">Bits and Bobbles</h3>
+
+<ul>
+  <li>Does this actually work or help make things any better?</li>
+  <li>Recurrent neural nets flip my intended role of weights and inputs.</li>
+  <li>Do conv-nets naturally require higher dimensional diagrams?</li>
+  <li>This weighty style seems like a good fit for my gauss seidel and iterative LQR solvers. A big problem I hit there was getting all the information to the outside, which is a similar issue to getting the weights around in a neural net.</li>
+</ul>
+
+:ET

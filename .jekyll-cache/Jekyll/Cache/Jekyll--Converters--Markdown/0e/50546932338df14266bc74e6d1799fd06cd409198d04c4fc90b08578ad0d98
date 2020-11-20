@@ -1,0 +1,20 @@
+I"`<p>Bought one last month and it came in the mail.</p>
+
+<p>Some Notes</p>
+
+<p>Set it up with the particle app on your phone</p>
+
+<p>curl https://api.particle.io/v1/devices/210040000340000009370006/ledToggle -d access_token=ef7c43146253453545ea635435e316445775474 -d “command=on”</p>
+
+<p>The -d in curl commands allow you to send multiple post data.</p>
+
+<p>I recommend not using curl and downloading the command line interface</p>
+
+<p>npm install -g particle-cli</p>
+
+<p>particle login</p>
+
+<p>particle call my_device_name led on</p>
+
+<p>Got to annoy people with beeps over the internet. Pretty good.</p>
+:ET

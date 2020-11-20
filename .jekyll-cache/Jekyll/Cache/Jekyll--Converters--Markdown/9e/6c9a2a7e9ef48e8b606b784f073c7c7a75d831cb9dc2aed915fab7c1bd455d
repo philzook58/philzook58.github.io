@@ -1,0 +1,20 @@
+I"<p>I’m watching these lectures</p>
+
+<p>https://www.youtube.com/watch?v=G3rWz2LgzZY</p>
+
+<p>I am skeptical that this is useful, but it does seem interesting. Also, since their intent is for practical use, it won’t be so high falutin’</p>
+
+<p>Lec 1. Sensor fusion and cross correlating sensors seems to be the idea. Tracking multiple objects. CoSheafs are something? More meat to come</p>
+
+<p>Lec2. edges and faces are sources to be checked for consistency</p>
+
+<p>Flag complexes or clique complex - every set of edges that could have a face has a face</p>
+
+<p>star - all the higher dimensional simplices that contain that object</p>
+
+<p>alexandrov topology - open sets are unions of stars</p>
+
+<p>Nerve - open cover of X. for every set U in cover is vertex. for every intersection that is nonempy, there is a simplex. Leray Theorem</p>
+
+<p>Lec3. Sheaves. you can associate a diagram of inclusion with your simplices. if every simplex has some space associated with it, then you can put functions on these inclusions. Then</p>
+:ET

@@ -1,0 +1,146 @@
+I"�<p><a href="http://conal.net/papers/compiling-to-categories/">http://conal.net/papers/compiling-to-categories/</a></p>
+
+<p>I haven’t thoroughly read this (in fact barely at all) and yet I have some thoughts.</p>
+
+<p>Conal Elliott is up to some good shit. Maybe ignore me and just checkout the links.</p>
+
+<p>Simply Typed Lambda Calculus (STLC)</p>
+
+<p>Hask is a category of haskell types with functions as arrows between them, but there is a lot going on in Haskell. Polymorphism for example, which is often modeled as some kind of Natural Transformation of EndoFunctors from Hask to Hask (but I don’t think this covers every possible use of polymorphism. Maybe it does).</p>
+
+<p>It is commonly mentioned that STLC is the more direct mapping. STLC is kind of a subset of haskell with no polymorphism or with the polymorphism stripped out (Every time you use a polymorphic function just monomorphize it. This blows up the number of functions floating around).</p>
+
+<p>STLC is a Cartesian Closed Category (CCC), which means it is always possible to create pairs between any two types and functions between any two types.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>data STLCType a = Prim a</td>
+      <td>Pair (STLCType a) (STLCType a)</td>
+      <td>Arr (STLCType a) (STLCType a)</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td>data STLCTerm a = Lam Var STLCTerm</td>
+      <td>App STLCTerm</td>
+      <td>Var Var</td>
+      <td>Prim a</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>data Var = Var String STLCType</p>
+
+<p>which maybe be extendible with a bunch of primitive operations and types (primitives might include addition, integers, bits, bit operations, etc.). It isn’t clear to me where it is most elegant to put type annotations. Maybe it is best to keep them separate and compare them.</p>
+
+<p>Apparently it is possible to compile this in a point free form</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>data CatTerm a = Comp STLCTerm STLCTerm</td>
+      <td>App STLCTerm STLCTerm</td>
+      <td>Prim a</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>or maybe</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>data CatTerm a = App STLCTerm STLCTerm</td>
+      <td>Prim a</td>
+      <td>Comp</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Dealing with the labeling of variables correctly is a real pain in the ass, so this is a win from the compiler standpoint. It is a pain to manually write functions using this style.</p>
+
+<p>The compiling to categories project I think is using Haskell as the language and GHC to do the parsing and some other stuff, but then grabbing Core (the GHC intermediate language) and converting it into the Category form. I don’t see why you couldn’t use an STLC DSL and do the same. It would be less ergonomic to the user but also much less complicated. I wonder. I’ve written interpreters for STLC and they are very simple.</p>
+
+<p>Circuits form a CCC. Basic Prim type is a wire with a Boolean value on it. Pairs of these make a bus. Composition is just attaching wires between subunits. PrimOps might include Ands and Ors and Nands and multiplexers and such. Or maybe you want to work at the level where 32-bit integers are primitives and addition and subtraction and other arithmetic functions are primops.</p>
+
+<p>The Arrow type is more questionable. Can you really do higher order functions in fixed circuitry? In principle, yes. Since every prim type is finite and enumerable, arrows are also finitely enumerable. You could use a varying lookup table for example as the incoming data. This is an exponential blowup though. Maybe you ought to be working in the category where arrows are types of functions that are compactly encodable and runnable. You don’t want really stupidly massive circuits anyhow. Some kind of complexity theory restriction. For example, maybe you want all functions encodable in a tight BDD. You really need to shape of the BDD to be fixed. Maybe BDD whose width is bounded by some polynomial of the depth? If you don’t need the full width, maybe you could leave sections dead. Just spitballin’</p>
+
+<p>Or in many cases I assume the higher order functions will come applied at compile time, in which case you can just substitute the given circuit in to the locations it is needed or share it somehow (probably needs a clock to time multiplex its use) at the multiple locations it is needed to save space.</p>
+
+<p>Also of extreme interest:</p>
+
+<p><a href="http://conal.net/papers/generic-parallel-functional/">http://conal.net/papers/generic-parallel-functional/</a></p>
+
+<p>He’s using this compiling to categories perspective with the intent to layout parallel circuits.</p>
+
+<p>He uses Generic DataTypes with are very functory, which implies type parameters which tempts one into polymorphism. But I think again he is using polymorphism as a scheme which upon compilation gets turned into a bunch of different legit types. Maybe you’d want</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>data STLCType f a = Prim (f a)</td>
+      <td>Pair (STLCType f a) (STLCType f a)</td>
+      <td>Arr (STLCType f a) (STLCType f a)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>You could do well to make way more lightweight operator synonyms for this lambda calculus</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Lam String LC</td>
+      <td>App LC LC</td>
+      <td>Var String</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>(–&gt;) = Lam</p>
+
+<p>or</p>
+
+<p>(\) = Lam</p>
+
+<p>and some synonyms for common variables</p>
+
+<p>x = “x”</p>
+
+<p>y = “y”</p>
+
+<p>etc</p>
+
+<p>($$) = App</p>
+
+<p>to dereference</p>
+
+<p>(**) = Var  - bind this very close. Trying to look kind of like pointer derferencing?</p>
+
+<p>maybe also add pattern matching into the language</p>
+
+<p>(Pat) =</p>
+
+<p>And some kind of autocurrying</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Curry [Var]</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Maybe use Vec instead of list for compile time size.</p>
+
+<p>I guess this is gonna be funky and having the actual lambda syntax compile is super cool and nice. But it is also nice to have a userland haskell concept of this stuff without weird plugins. A OverloadLambda extension would be cool. I don’t know how it would work. Type directed inference of which kind of lambda to use? Is that possible?</p>
+
+<p>Also, could one piggyback on the haskell type system to make the well typing lighter weight a la the well-typed interpeter. Maybe using GADTs. http://docs.idris-lang.org/en/latest/tutorial/interp.html</p>
+
+<p>It does seem unlikely that one could use raw lambdas in a good way</p>
+
+:ET

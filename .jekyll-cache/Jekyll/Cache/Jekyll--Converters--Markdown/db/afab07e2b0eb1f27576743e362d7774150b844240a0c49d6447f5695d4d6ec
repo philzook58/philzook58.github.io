@@ -1,0 +1,20 @@
+I" <p><img src="http://bestanimations.com/Animals/Birds/Eagles/animated-eagle-gif-8.gif" alt="" /></p>
+
+<p>So we made a drone</p>
+
+<p>Got <a href="http://www.aliexpress.com/item/Carbon-Fiber-Mini-QAV250-C250-Quadcopter-Motor-12A-Esc-Flight-Control-Prop/32270859376.html">a kit off of ali express.</a> Had most bits: a frame, cc3d flight computer, motors, ESC (electronic speed controllers), and power distirbution control. I got a turnigy battery off of amazon. 2200mAh, 20-30C which means a peak current of ~60A (multiply the two numbers). Each ESC says 12A, so we’re okay? Also a charging unit from hobby king and a turnigy 9x controller and receiver unit. We also got a bunch of crap for FPV( first person video) which hasn’t all come yet.</p>
+
+<p>So we pieced together the frame from pics floating around.</p>
+
+<p>FIguring out which prop is which is tough. We did it wrong. Got no lift. Then flipped em around.</p>
+
+<p>Silver capped motors rotate ccw. Need to solder wires accordingly.</p>
+
+<p>Downloaded the openpilot software to configure. Stuff. Went through wizards. Treated us right.</p>
+
+<p>When we first launched the thing flipped immediately on takeoff. We put in the cc3d unit sideways and upside down so we used the attitude adjustment to switch around until the flightdata screen actually reflected what we were doing.</p>
+
+<p>Then Success!!!</p>
+
+<p><a href="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0210.jpg"><img src="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0210-300x225.jpg" alt="IMG_0210" /></a> <a href="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0212.jpg"><img src="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0212-300x225.jpg" alt="IMG_0212" /></a> <a href="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0211.jpg"><img src="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0211-300x225.jpg" alt="IMG_0211" /></a> <a href="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0209.jpg"><img src="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0209-300x225.jpg" alt="IMG_0209" /></a> <a href="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0208.jpg"><img src="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0208-300x225.jpg" alt="IMG_0208" /></a> <a href="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0207.jpg"><img src="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0207-300x225.jpg" alt="IMG_0207" /></a> <a href="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0206.jpg"><img src="http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/IMG_0206-300x225.jpg" alt="IMG_0206" /></a></p>
+:ET
