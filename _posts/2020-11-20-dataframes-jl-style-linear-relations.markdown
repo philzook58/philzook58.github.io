@@ -183,7 +183,7 @@ end
 
 
 
-Because each individual vector in the span obeys the constraint equations, we can numerically convert between them by calling the Julia function `[nullspace](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/#LinearAlgebra.nullspace)`. There is a pleasing symmetry between the two conversion directions.
+Because each individual vector in the span obeys the constraint equations, we can numerically convert between them by calling the Julia function [`nullspace`](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/#LinearAlgebra.nullspace). There is a pleasing symmetry between the two conversion directions.
 
 
 
