@@ -17,7 +17,7 @@ That is what you need for the fft
 
 When you change the vector size, you need to change the window size parameter in the fft too or else you get an error.
 
-[![delay_test.grc](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/01/delay_test.grc_-300x240.png)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/01/delay_test.grc_.png)
+[![delay_test.grc](/assets/delay_test.grc_-300x240.png)](/assets/delay_test.grc_.png)
 
 
 

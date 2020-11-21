@@ -15,7 +15,7 @@ It's a hot glued arrangement of servos and home depot painter sticks (they're fr
 
 
 
-![](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/12/Tue-Dec-22-2015-150737-GMT-0500-EST.png)
+![](/assets/Tue-Dec-22-2015-150737-GMT-0500-EST.png)
 
 We used python and numpy to solve for the needed angles as a function of the end position. We were having trouble with getting angles that are in the -np.pi/2 to np.pi/2 range until the suggestion of using [0,np.pi/2] as the initial position. In hindsight, a more robust method would be to make a loop attempting a set of reasonable starting positions, and accept them if they were attainable. Or to attempt a random set of initial conditions. Your choice. For only 2 variables, the computer will just chew that problem up. If you had 10 actuators, maybe you'd have more problems.
 
@@ -211,9 +211,8 @@ Comma separated angles for each motor in radians.
     
     
     
+<iframe width="560" height="315" src="https://www.youtube.com/embed/54QrgpVRJD4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-
-[embed]https://youtu.be/54QrgpVRJD4[/embed]
 
 
 

@@ -1,0 +1,46 @@
+---
+author: philzook58
+comments: true
+date: 2017-11-02 21:59:22+00:00
+layout: post
+link: https://www.philipzucker.com/?p=913
+published: false
+slug: PyBullet
+title: PyBullet
+wordpress_id: 913
+---
+
+pybullet is an interesting 3d pysics simulator that a lot of robot and reinfrcement learning guys are using
+
+It has bindings in python.
+
+The docs
+
+https://docs.google.com/document/d/10sXEhzFRSnvFcl3XxNGhnD4N2SedqwdAvK3dsihxVUA/edit#
+
+sudo pip3 install pybullet
+
+There is also a github. There is an examples folder
+
+    
+    import pybullet as p
+    import pybullet_data
+    physicsClient = p.connect(p.GUI)#or p.DIRECT for non-graphical version
+    p.setAdditionalSearchPath(pybullet_data.getDataPath()) #used by loadURDF
+    p.setGravity(0,0,-10)
+    planeId = p.loadURDF("plane.urdf")
+    cubeStartPos = [0,0,1]
+    cubeStartOrientation = p.getQuaternionFromEuler([0,0,0])
+    boxId = p.loadURDF("r2d2.urdf",cubeStartPos, cubeStartOrientation)
+    p.stepSimulation()
+    cubePos, cubeOrn = p.getBasePositionAndOrientation(boxId)
+    print(cubePos,cubeOrn)
+    p.disconnect()
+    
+
+
+The starting example
+
+There is a bunch of talk about how to run the simulation on a sepearte machine from a client. Perhaps this is for distributed simulation? Or perhaps for bringing the computation off a weaker onboard ocmputer?
+
+

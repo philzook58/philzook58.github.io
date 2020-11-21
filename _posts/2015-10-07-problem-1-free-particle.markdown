@@ -13,51 +13,51 @@ Let's solve the free particle
 
 I guess
 
-Newton's Law $latex F = ma$
+Newton's Law $ F = ma$
 
-$latex d^2 x / dt^2=0$
+$ d^2 x / dt^2=0$
 
-Hence $latex x = x_0 + vt$
+Hence $ x = x_0 + vt$
 
 At least that works. Not sure I derived it particularly. Or proved it unique.
 
 Whatever. Lagrangian version
 
-$latex L = T-V = \frac{1}{2}mv^2$
+$ L = T-V = \frac{1}{2}mv^2$
 
 Euler Lagrange Equations
 
-$latex \frac{d}{dt} \partial L / \partial \dot{q} = \partial_q L$
+$ \frac{d}{dt} \partial L / \partial \dot{q} = \partial_q L$
 
 How do you get that? By varying the action with fixed endpoints it's the one that minimizes the path.
 
-$latex S = \int L dt = \int \partial/\partial\dot{q} L \delta \dot{q} + \partial_q L \delta q$
+$ S = \int L dt = \int \partial/\partial\dot{q} L \delta \dot{q} + \partial_q L \delta q$
 
 Nice.
 
-$latex H = \frac{p^2}{2m}$
+$ H = \frac{p^2}{2m}$
 
-$latex \dot{p}=-\partial_x H=0$
+$ \dot{p}=-\partial_x H=0$
 
-$latex p = Const$
+$ p = Const$
 
-$latex \dot{x}=\partial_p H=\frac{p}{m}$
+$ \dot{x}=\partial_p H=\frac{p}{m}$
 
 Okay. What about the quantum version?
 
-Well $latex p = \frac{\hbar}{i}\partial_x$
+Well $ p = \frac{\hbar}{i}\partial_x$
 
 How do I know that? In particular it's hard to remember where the i goes. Well, I memorized it at some point. It follows that
 
-$latex [x,p]=-\hbar/i$
+$ [x,p]=-\hbar/i$
 
 
 
 But what is
 
-$latex i \partial_t \psi = -\frac{\hbar^2}{2m}\nabla^2 \psi$
+$ i \partial_t \psi = -\frac{\hbar^2}{2m}\nabla^2 \psi$
 
-$latex E\psi = $
+$ E\psi = $
 
 Whatever. I'm bored.
 

@@ -1,0 +1,13 @@
+---
+author: philzook58
+comments: true
+date: 2019-02-18 23:01:57+00:00
+layout: post
+link: https://www.philipzucker.com/?p=1548
+published: false
+slug: Archive
+title: Archive
+wordpress_id: 1548
+---
+
+[display-posts posts_per_page="1000" order="DESC"]

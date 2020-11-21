@@ -32,7 +32,7 @@ tags:
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/05/IMG_3675-e1557077476919-768x1024.jpg)A Doge
+![](/assets/IMG_3675-e1557077476919-768x1024.jpg)A Doge
 
 
 
@@ -60,23 +60,23 @@ We already had a lot of motors and stuff lying around. Declan bought a lot of st
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/IMG_0634-e1550460314632-768x1024.jpg)
+![](/assets/IMG_0634-e1550460314632-768x1024.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/IMG_2563-1-1024x768.jpg)
+![](/assets/IMG_2563-1-1024x768.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/IMG_3169-e1550460089557-769x1024.jpg)
+![](/assets/IMG_3169-e1550460089557-scaled.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/IMG_8133-1024x768.jpg)
+![](/assets/IMG_8133-1024x768.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/IMG_2022-e1550460294609-768x1024.jpg)
+![](/assets/IMG_2022-e1550460294609-768x1024.jpg)
 
 
 
@@ -208,8 +208,13 @@ The following code was needed to zero repetier and the RAMPS at the touch off po
 
 
     
-    <code>G92 X0 Y0 Z0
-    @isathome</code>
+    
+```
+
+G92 X0 Y0 Z0
+@isathome
+```
+
 
 
 
@@ -252,16 +257,19 @@ All in all, a very satisfying project. Hope we build something cool with it.
 
 
 
+<video controls="controls">
+  <source type="video/mp4" src="/assets/mpcnc.mp4"></source>
+  <p>Your browser does not support the video element.</p>
+</video>
+
+![](/assets/mpcnc.mp4)
+
+
+![](/assets/IMG_1694-e1557077512596-768x1024.jpg)
 
 
 
-
-
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/05/IMG_1694-e1557077512596-768x1024.jpg)
-
-
-
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/05/IMG_6235-e1557077498103-768x1024.jpg)A horsie
+![](/assets/IMG_6235-e1557077498103-768x1024.jpg)A horsie
 
 
 

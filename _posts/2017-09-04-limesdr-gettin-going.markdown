@@ -115,7 +115,7 @@ ok. At first gqrx wouldn't load but after fiddling with the sampling and bandwid
 
 So I have not gotten gqrx to actually receive signals with limesdr, but gnuradio appears to be working to some degree. This graph plays audio on 101.5 although very crappily. I hope it just needs filtering (I think I should be low passing those resamplers. Also I probably shouldn't be receiving on the middle of the band where the DC spike is). I doubled the resampler because a single resampler through an error for too much decimation. Is this standard procedure?
 
-![simple_lime_fm-grc](http://www.philipzucker.com/wp-content/uploads/2017/09/simple_lime_fm.grc_.png)
+![simple_lime_fm-grc](/assets/simple_lime_fm.grc_.png)
 
 Useful gnuradio tutorials
 

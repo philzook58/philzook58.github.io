@@ -72,7 +72,7 @@ It was a disappointment of the previous post that I could only treat resistor-li
 
 
 
-When you transform into Fourier space, systems of linear differential equations become systems of polynomial equations $latex \frac{d}{dx} \rightarrow i \omega$. From this perspective, [modules ](https://en.wikipedia.org/wiki/Module_(mathematics))seem like the appropriate abstraction rather vector spaces. Modules are basically vector spaces where one doesn't assume the operation of scalar division, in other words the scalar are rings rather than fields. Polynomials are rings, not fields. In order to treat the new systems, I still need to be able to do linear algebraic-ish operations like nullspaces, except where the entries of the matrix are polynomials rather than floats.
+When you transform into Fourier space, systems of linear differential equations become systems of polynomial equations $ \frac{d}{dx} \rightarrow i \omega$. From this perspective, [modules ](https://en.wikipedia.org/wiki/Module_(mathematics))seem like the appropriate abstraction rather vector spaces. Modules are basically vector spaces where one doesn't assume the operation of scalar division, in other words the scalar are rings rather than fields. Polynomials are rings, not fields. In order to treat the new systems, I still need to be able to do linear algebraic-ish operations like nullspaces, except where the entries of the matrix are polynomials rather than floats.
 
 
 
@@ -96,106 +96,111 @@ Computer algebra packages offer syzygy computations. Julia has bindings to Singu
 
 
     
-    <code>using Singular
     
-    import Nemo
-    
-    using LinearAlgebra # : I
-    
-    CC = Nemo.ComplexField(64)
-    P, (s,) = PolynomialRing(CC, ["s"])
-    i = Nemo.onei(CC) # P(i) ? The imaginary number
-    
-    #helpers to deal with Singular.jl
-    eye(m) = P.(Matrix{Int64}(I, m, m)) # There is almost certainly a better way of doing this. Actually dispatching Matrix?
-    zayro(m,n) = P.(zeros(Int64,m,n)) #new zeros method?
-    mat1(m::Int64) = fill(P(m), (1,1) )
-    mat1(m::Float64) = fill(P(m), (1,1) )
-    mat1(m::spoly{Singular.n_unknown{Nemo.acb}}) = fill(m, (1,1))
-    
-    # Objects are the dimensionality of the vector space
-    struct DynOb
-        m::Int
-    end
-    
-    # Linear relations represented 
-    struct DynMorph
-      input::Array{spoly{Singular.n_unknown{Nemo.acb}},2}
-      output::Array{spoly{Singular.n_unknown{Nemo.acb}},2}
-    end
-    
-    dom(x::DynMorph) = DynOb(size(x.input)[2])
-    codom(x::DynMorph) = DynOb(size(x.output)[2])
-    id(X::DynOb) = DynMorph(eye(X.m), -eye(X.m))
-    
-    # add together inputs
-    plus(X::DynOb) = DynMorph( [eye(X.m) eye(X.m)] , - eye(X.m) )
-    
-    
-    mcopy(X::DynOb) = Dyn( [eye(X.m) ; eye(X.m)] , -eye(2*X.m) ) # copy input
-    
-    delete(A::DynOb) = DynMorph( fill(P.(0),(0,A.m)) , fill(P.(0),(0,0)) )   
-    create(A::DynOb) = DynMorph( fill(P.(0),(0,0)) , fill(P.(0),(0,A.m)) )
-    dagger(x::DynMorph) = DynMorph(x.output, x.input)
-    
-    # cup and cap operators
-    dunit(A::DynOb) = compose(create(A), mcopy(A))
-    dcounit(A::DynOb) = compose(mmerge(A), delete(A))
-    
-    
-    scale(M) = DynMorph( mat1(M),mat1(-1))
-    diff =  scale(i*s) # differentiation = multiplying by i omega
-    integ = dagger(diff)
-    #cupboy = DynMorph( [mat1(1) mat1(-1)] , fill(P.(0),(1,0)) )
-    #capboy = transpose(cupboy)
-    
-    #terminal
-    
-    # relational operations
-    # The meet
-    # Inclusion
-    
-    # I think this is a nullspace calculation?
-    # almost all the code is trying to work around Singular's interface to one i can understand
-    function quasinullspace(A)
-       rows, cols = size(A)
-       vs = Array(gens(Singular.FreeModule(P, rows)))
-       q = [sum(A[:,i] .* vs) for i in 1:cols]
-       M = Singular.Module(P,q...)
-       S = Singular.Matrix(syz(M)) # syz is the only meat of the computation
-       return Base.transpose([S[i,j] for j=1:Singular.ncols(S), i=1:Singular.nrows(S) ])
-    end
-    
-    function compose(x::DynMorph,y::DynMorph) 
-        nx, xi = size(x.input)
-        nx1, xo = size(x.output)
-        @assert nx1 == nx
-        ny, yi = size(y.input)
-        ny1, yo = size(y.output)
-        @assert ny1 == ny
-        A = [ x.input                x.output P.(zeros(Int64,nx,yo)) ;
-              P.(zeros(Int64,ny,xi)) y.input  y.output    ]
-        B = quasinullspace(A)
-        projB = [B[1:xi       ,:] ;
-                 B[xi+yi+1:end,:] ]
-        C = Base.transpose(quasinullspace(Base.transpose(projB)))
-        return DynMorph( C[:, 1:xi] ,C[:,xi+1:end] )
-    end
-    
-    # basically the direct sum. The monoidal product of linear relations
-    function otimes( x::DynMorph, y::DynMorph) 
-        nx, xi = size(x.input)
-        nx1, xo = size(x.output)
-        @assert nx1 == nx
-        ny, yi = size(y.input)
-        ny1, yo = size(y.output)
-        @assert ny1 == ny
-        return DynMorph( [ x.input                P.(zeros(Int64,nx,yi));
-                           P.(zeros(Int64,ny,xi)) y.input               ],
-                          [x.output                P.(zeros(Int64,nx,yo));
-                           P.(zeros(Int64,ny,xo))  y.output               ])
-        
-    end</code>
+```
+
+using Singular
+
+import Nemo
+
+using LinearAlgebra # : I
+
+CC = Nemo.ComplexField(64)
+P, (s,) = PolynomialRing(CC, ["s"])
+i = Nemo.onei(CC) # P(i) ? The imaginary number
+
+#helpers to deal with Singular.jl
+eye(m) = P.(Matrix{Int64}(I, m, m)) # There is almost certainly a better way of doing this. Actually dispatching Matrix?
+zayro(m,n) = P.(zeros(Int64,m,n)) #new zeros method?
+mat1(m::Int64) = fill(P(m), (1,1) )
+mat1(m::Float64) = fill(P(m), (1,1) )
+mat1(m::spoly{Singular.n_unknown{Nemo.acb}}) = fill(m, (1,1))
+
+# Objects are the dimensionality of the vector space
+struct DynOb
+    m::Int
+end
+
+# Linear relations represented 
+struct DynMorph
+  input::Array{spoly{Singular.n_unknown{Nemo.acb}},2}
+  output::Array{spoly{Singular.n_unknown{Nemo.acb}},2}
+end
+
+dom(x::DynMorph) = DynOb(size(x.input)[2])
+codom(x::DynMorph) = DynOb(size(x.output)[2])
+id(X::DynOb) = DynMorph(eye(X.m), -eye(X.m))
+
+# add together inputs
+plus(X::DynOb) = DynMorph( [eye(X.m) eye(X.m)] , - eye(X.m) )
+
+
+mcopy(X::DynOb) = Dyn( [eye(X.m) ; eye(X.m)] , -eye(2*X.m) ) # copy input
+
+delete(A::DynOb) = DynMorph( fill(P.(0),(0,A.m)) , fill(P.(0),(0,0)) )   
+create(A::DynOb) = DynMorph( fill(P.(0),(0,0)) , fill(P.(0),(0,A.m)) )
+dagger(x::DynMorph) = DynMorph(x.output, x.input)
+
+# cup and cap operators
+dunit(A::DynOb) = compose(create(A), mcopy(A))
+dcounit(A::DynOb) = compose(mmerge(A), delete(A))
+
+
+scale(M) = DynMorph( mat1(M),mat1(-1))
+diff =  scale(i*s) # differentiation = multiplying by i omega
+integ = dagger(diff)
+#cupboy = DynMorph( [mat1(1) mat1(-1)] , fill(P.(0),(1,0)) )
+#capboy = transpose(cupboy)
+
+#terminal
+
+# relational operations
+# The meet
+# Inclusion
+
+# I think this is a nullspace calculation?
+# almost all the code is trying to work around Singular's interface to one i can understand
+function quasinullspace(A)
+   rows, cols = size(A)
+   vs = Array(gens(Singular.FreeModule(P, rows)))
+   q = [sum(A[:,i] .* vs) for i in 1:cols]
+   M = Singular.Module(P,q...)
+   S = Singular.Matrix(syz(M)) # syz is the only meat of the computation
+   return Base.transpose([S[i,j] for j=1:Singular.ncols(S), i=1:Singular.nrows(S) ])
+end
+
+function compose(x::DynMorph,y::DynMorph) 
+    nx, xi = size(x.input)
+    nx1, xo = size(x.output)
+    @assert nx1 == nx
+    ny, yi = size(y.input)
+    ny1, yo = size(y.output)
+    @assert ny1 == ny
+    A = [ x.input                x.output P.(zeros(Int64,nx,yo)) ;
+          P.(zeros(Int64,ny,xi)) y.input  y.output    ]
+    B = quasinullspace(A)
+    projB = [B[1:xi       ,:] ;
+             B[xi+yi+1:end,:] ]
+    C = Base.transpose(quasinullspace(Base.transpose(projB)))
+    return DynMorph( C[:, 1:xi] ,C[:,xi+1:end] )
+end
+
+# basically the direct sum. The monoidal product of linear relations
+function otimes( x::DynMorph, y::DynMorph) 
+    nx, xi = size(x.input)
+    nx1, xo = size(x.output)
+    @assert nx1 == nx
+    ny, yi = size(y.input)
+    ny1, yo = size(y.output)
+    @assert ny1 == ny
+    return DynMorph( [ x.input                P.(zeros(Int64,nx,yi));
+                       P.(zeros(Int64,ny,xi)) y.input               ],
+                      [x.output                P.(zeros(Int64,nx,yo));
+                       P.(zeros(Int64,ny,xo))  y.output               ])
+
+end
+```
+
 
 
 
@@ -227,7 +232,7 @@ I need to figure out Catlab's diagram drawing abilities enough to show some circ
 
 
 
-![](https://www.philipzucker.com/wp-content/uploads/2020/08/Screenshot-from-2020-08-02-23-05-12.png)
+![](/assets/Screenshot-from-2020-08-02-23-05-12.png)
 
 
 
@@ -259,7 +264,7 @@ There is a really fascinating paper by Jan Willems where he digs into a beautifu
 
 
 
-Is all this module stuff stupid? Should I just use rational polynomials and be done with it? Sympy? $latex \frac{d^2}{dx^2}y = 0$ and  $latex \frac{d}{dx}y = 0$ are different equations, describing different behaviors. Am I even capturing that though? Is my syzygy powered composition even right? It seemed to work on a couple small examples and I think it makes sense. I dunno. Open to comments.
+Is all this module stuff stupid? Should I just use rational polynomials and be done with it? Sympy? $ \frac{d^2}{dx^2}y = 0$ and  $ \frac{d}{dx}y = 0$ are different equations, describing different behaviors. Am I even capturing that though? Is my syzygy powered composition even right? It seemed to work on a couple small examples and I think it makes sense. I dunno. Open to comments.
 
 
 

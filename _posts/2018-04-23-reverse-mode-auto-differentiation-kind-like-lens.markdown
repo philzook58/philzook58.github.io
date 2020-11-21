@@ -20,9 +20,9 @@ Auto-differentiation is writing a function that also computes the derivative alo
 
 One way to do this is to use a "dual number". Functions now take a tuple of values and derivatives.
 
-The Jacobean of a function from $latex R^n \rightarrow R^m$ is a m by n matrix. The chain rule basically says that you need to compose the matrices via multiplication when you compose the value functions.  This is the composition of the linear maps.
+The Jacobean of a function from $ R^n \rightarrow R^m$ is a m by n matrix. The chain rule basically says that you need to compose the matrices via multiplication when you compose the value functions.  This is the composition of the linear maps.
 
-Conceptually, you initialize the process with a NxN identity matrix corresponding to the fact that $latex \partial x_i/\partial x_j=\delta_{ij}$
+Conceptually, you initialize the process with a NxN identity matrix corresponding to the fact that $ \partial x_i/\partial x_j=\delta_{ij}$
 
     
     type DFun = (Vector Double, Matrix Double) -> (Vector Double, Matrix Double)
@@ -57,13 +57,13 @@ A couple points:
 
 What we've shown so far is Forward Mode.
 
-When you multiply matrices you are free to associate them in any direction you like. (D(C(BA))) is the association we're using right now. But you are free to left associate them. ((DC)B)A). You can write this is right associated form using the transpose $latex ((DC)B)A)^T = (A^T(B^T(C^TD^T))) $
+When you multiply matrices you are free to associate them in any direction you like. (D(C(BA))) is the association we're using right now. But you are free to left associate them. ((DC)B)A). You can write this is right associated form using the transpose $ ((DC)B)A)^T = (A^T(B^T(C^TD^T))) $
 
 This form is reverse mode auto differentiation. Its advantage is the number of computations you have to do and the intermediate values you have to hold. If one is going from many variables to a small result, this is preferable.
 
 It is actually exactly the same in implementation except you reverse the order of composition of the derivatives. We forward compose value functions and reverse compose derivative functions (matrices).
 
-[![drawing-2](http://philzucker2.nfshost.com/wp-content/uploads/2018/04/Drawing-2.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/04/Drawing-2.png)
+[![drawing-2](/assets/Drawing-2.png)](/assets/Drawing-2.png)
 
     
     newtype RDMonad a = (a , a -> a)

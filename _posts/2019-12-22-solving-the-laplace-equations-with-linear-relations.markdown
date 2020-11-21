@@ -27,7 +27,7 @@ The [Laplace equation](https://en.wikipedia.org/wiki/Laplace%27s_equation) is ub
 
 
 
-$latex \nabla^2 \phi = 0 = \partial_x^2 \phi + \partial_y^2 \phi = 0
+$ \nabla^2 \phi = 0 = \partial_x^2 \phi + \partial_y^2 \phi = 0 $
 
 
 
@@ -51,7 +51,7 @@ There are a couple reasons for that.
 
 
 
-  * It results from minimizing the squared gradient of a field $latex |\nabla \phi |^2$ which can make sense from an energy minimization perspective.
+  * It results from minimizing the squared gradient of a field $ \|\nabla \phi \|^2$ which can make sense from an energy minimization perspective.
   * Similarly it results from the combination of a flow conservation law and a linear constitutive relation connecting flow and field (such as Ohm's law, Fick's law, or Hooke's law).
   * It also gets used even if not particularly appropriate because we know how to mathematically deal with it, for example in image processing.
 
@@ -70,7 +70,7 @@ There are a couple of questions we may want to ask about a Laplace equation syst
 
   * Given the field on the boundary, determine the field in the interior (Dirchlet problem)
   * Given the normal derivative of the field on the boundary determine the field in the interior (Neumann problem)
-  * Given sources in the interior and 0 boundary condition, determine the field. The Laplace equation is called the [Poisson equation](https://en.wikipedia.org/wiki/Poisson%27s_equation) when you allow a source term on the right hand side. $latex \nabla^2 \phi = \rho$.
+  * Given sources in the interior and 0 boundary condition, determine the field. The Laplace equation is called the [Poisson equation](https://en.wikipedia.org/wiki/Poisson%27s_equation) when you allow a source term on the right hand side. $ \nabla^2 \phi = \rho$.
   * Given the field at the boundary, determine the derivative at the boundary. Dirichlet-to-Neumann map or [Poincare-Steklov](https://en.wikipedia.org/wiki/Poincar%C3%A9%E2%80%93Steklov_operator) operator.
 
 
@@ -110,7 +110,7 @@ To make this more concrete, let us take the example of electrical circuits like 
 
 
 
-$latex -\nabla \phi = E$ Electric field is gradient of potential
+$ -\nabla \phi = E$ Electric field is gradient of potential
 
 
 
@@ -118,7 +118,7 @@ $latex -\nabla \phi = E$ Electric field is gradient of potential
 
 
 
-$latex E = \rho j$ continuum ohm's law
+$ E = \rho j$ continuum ohm's law
 
 
 
@@ -126,7 +126,7 @@ $latex E = \rho j$ continuum ohm's law
 
 
 
-$latex \nabla\cdot j = 0$ current conservation
+$ \nabla\cdot j = 0$ current conservation
 
 
 
@@ -148,7 +148,7 @@ So we can reuse our categorical circuit combinators to build a finite difference
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/10/My-Drawing-2.sketchpad.png)Just showing how you can bend a 4-wire monoidal box into a 2-d diagram. Ignore the labels.
+![](/assets/My-Drawing-2.sketchpad.png)Just showing how you can bend a 4-wire monoidal box into a 2-d diagram. Ignore the labels.
 
 
 
@@ -160,7 +160,49 @@ This can be implemented in Haskell doing the following. Neato.
 
 
 
-[gist https://gist.github.com/philzook58/d61531a29e74dd7434b97ce2fb8220f1]
+
+```haskell
+-- https://gist.github.com/philzook58/d61531a29e74dd7434b97ce2fb8220f1#file-laplace-hs
+type HLinRel2D u d l r = HLinRel (Either u l) (Either d r)
+
+
+{-
+A stencil  of 2d resistors for tiling
+
+
+          u
+          /
+          \
+          /
+         |
+l -/\/\/----/\/\/\-  r
+         |
+         /
+         \
+         /
+         |
+         d
+
+
+        -}
+stencil :: HLinRel2D IV IV IV IV
+stencil = (hpar r10 r10) <<< short <<< (hpar r10 r10) where r10 = resistor 10
+
+horicomp :: forall w w' w'' w''' a b c. (BEnum w, BEnum w', BEnum a, BEnum w''', BEnum b, BEnum w'', BEnum c ) => HLinRel2D w' w'' b c -> HLinRel2D w w''' a b -> HLinRel2D (Either w' w) (Either w'' w''') a c
+horicomp f g = hcompose f' g' where 
+               f' :: HLinRel (Either (Either w' w''') b) (Either (Either w'' w''') c)
+               f' = (first hswap) <<< hassoc' <<< (hpar hid f) <<< hassoc <<<  (first hswap) 
+               g' :: HLinRel (Either (Either w' w) a) (Either (Either w' w''') b)
+               g' = hassoc' <<< (hpar hid g) <<< hassoc
+
+
+rotate :: (BEnum w, BEnum w', BEnum a, BEnum b) => HLinRel2D w w' a b -> HLinRel2D a b w w'                                      
+rotate f = hswap <<< f <<< hswap
+
+vertcomp :: (BEnum w, BEnum w', BEnum a, BEnum d, BEnum b, BEnum w'', BEnum c ) => HLinRel2D w'  w'' c d -> HLinRel2D w w' a b -> HLinRel2D w w'' (Either c a) (Either d b)
+vertcomp f g = rotate (horicomp (rotate f)  (rotate g) ) 
+```
+
 
 
 
@@ -179,7 +221,7 @@ This can be implemented in Haskell doing the following. Neato.
   * Continuous circuit models - [https://en.wikipedia.org/wiki/Distributed-element_model](https://en.wikipedia.org/wiki/Distributed-element_model) Telegrapher's equation is classic example.
   * Cody mentioned that I could actually build circuits and measure categorical identities in a sense. That's kind of cool. Or I could draw conductive ink on carbon paper and actually make my string diagrams into circuits? That is also brain tickling
   * Network circuits
-  * I really want to get coefficients that aren't just doubles. allowing rational functions of a frequency $latex \omega$ would allow analysis of capacitor/inductor circuits, but also tight binding model systems for fun things like topological insulators and the Haldane model [http://www.philipzucker.com/topologically-non-trivial-circuit-making-haldane-model-gyrator/](http://www.philipzucker.com/topologically-non-trivial-circuit-making-haldane-model-gyrator/) . I may need to leave Haskell. I'm not seeing quite the functionality I need. Use Sympy? [https://arxiv.org/abs/1605.02532](https://arxiv.org/abs/1605.02532) HLinear. Flint bindings for haskell? Looks unmaintained. Could also use a grobner basis package as dynamite for a mouse.
+  * I really want to get coefficients that aren't just doubles. allowing rational functions of a frequency $ \omega$ would allow analysis of capacitor/inductor circuits, but also tight binding model systems for fun things like topological insulators and the Haldane model [http://www.philipzucker.com/topologically-non-trivial-circuit-making-haldane-model-gyrator/](http://www.philipzucker.com/topologically-non-trivial-circuit-making-haldane-model-gyrator/) . I may need to leave Haskell. I'm not seeing quite the functionality I need. Use Sympy? [https://arxiv.org/abs/1605.02532](https://arxiv.org/abs/1605.02532) HLinear. Flint bindings for haskell? Looks unmaintained. Could also use a grobner basis package as dynamite for a mouse.
   * This is relevant for the boundary element method. Some really cool other stuff relevant here. [http://people.maths.ox.ac.uk/martinsson/2014_CBMS/](http://people.maths.ox.ac.uk/martinsson/2014_CBMS/)
 
 

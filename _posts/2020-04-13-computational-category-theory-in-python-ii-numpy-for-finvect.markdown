@@ -95,7 +95,7 @@ It frankly _boggles my mind_ that these implementations aren't available somewhe
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2020/04/philraving-1024x553.png)                                                                               
+![](/assets/philraving-1024x553.png)                                                                               
 
 
 
@@ -125,7 +125,38 @@ The objects in the category [FinVect](https://ncatlab.org/nlab/show/FinVect) are
 
 
 
-[gist https://gist.github.com/philzook58/269dcb47aefc6b1dffe51860ae52d1e7#file-class-py]
+
+```python
+import numpy as np
+import scipy
+import scipy.linalg
+# https://docs.scipy.org/doc/numpy/user/basics.subclassing.html
+class FinVect(np.ndarray):
+    def __new__(cls, input_array, info=None):
+        # Input array is an already formed ndarray instance
+        # We first cast to be our class type
+        
+        obj = np.asarray(input_array).view(cls)
+        assert(len(obj.shape) == 2) # should be matrix
+        # add the new attribute to the created instance
+        # Finally, we must return the newly created object:
+        return obj
+    @property
+    def dom(self):
+        ''' returns the domain of the morphism. This is the number of columns of the matrix'''
+        return self.shape[1]
+    @property
+    def cod(self):
+        ''' returns the codomain of the morphism. This is the numer of rows of the matrix'''
+        return self.shape[0]
+    def idd(n):
+        ''' The identity morphism is the identity matrix. Isn't that nice? '''
+        return FinVect(np.eye(n))
+    def compose(f,g):
+        ''' Morphism composition is matrix multiplication. Isn't that nice?'''
+        return f @ g
+```
+
 
 
 
@@ -147,7 +178,7 @@ One does not typically speak of the elements of a set, or subsets of a set in ca
 
 
 
-This actually makes a lot of sense from the perspective of numerical linear algebra. Matrices are concrete representations of linear maps. But also sometimes we use them as data structures for collections of vectors. When one wants to describe a vector subspace concretely, you can describe it either as the range of a matrix or the nullspace of a matrix. This is indeed describing a subset in terms of a mapping. In the case of the range, we are describing the subspace as all possible linear combinations of the columns $latex \lambda_1 c_1 + \lambda_2 c_2 + ... $ . It is a matrix mapping from the space of_ parameters_ $latex \lambda$ to the subspace (1 dimension for each generator vector / column). In the case of the nullspace it is a matrix mapping from the subspace to the space of _constraints_ (1 dimension for each equation / row).
+This actually makes a lot of sense from the perspective of numerical linear algebra. Matrices are concrete representations of linear maps. But also sometimes we use them as data structures for collections of vectors. When one wants to describe a vector subspace concretely, you can describe it either as the range of a matrix or the nullspace of a matrix. This is indeed describing a subset in terms of a mapping. In the case of the range, we are describing the subspace as all possible linear combinations of the columns $ \lambda_1 c_1 + \lambda_2 c_2 + ... $ . It is a matrix mapping from the space of_ parameters_ $ \lambda$ to the subspace (1 dimension for each generator vector / column). In the case of the nullspace it is a matrix mapping from the subspace to the space of _constraints_ (1 dimension for each equation / row).
 
 
 
@@ -161,13 +192,26 @@ The injectivity or surjectivity of a matrix is easily detectable as a question a
 
 
 
-[gist https://gist.github.com/philzook58/269dcb47aefc6b1dffe51860ae52d1e7#file-monic-py]
+
+```python
+    def monic(self):
+        ''' Is mapping injective. 
+            In other words, maps every incoming vector to distinct outgoing vector.
+            In other words, are the columns independent. 
+            In other words, does `self @ g == self @ f`  imply  `g == f` forall g,f 
+            https://en.wikipedia.org/wiki/Monomorphism '''
+        return np.linalg.matrix_rank(self) == self.dom
+    def epic(self):
+        ''' is mapping surjective? '''
+        return np.linalg.matrix_rank(self) == self.cod
+```
 
 
 
 
 
-Some categorical constructions are very simple structural transformation that correspond to merely stacking matrices, shuffling elements, or taking transposes. The product and coproduct are examples of this. The product is an operation that takes in 2 objects and returns a new object, two projections $latex \pi_1$ $latex \pi_2$ and a function implementing the universal property that constructs $latex f$ from $latex f_1 f_2$. 
+
+Some categorical constructions are very simple structural transformation that correspond to merely stacking matrices, shuffling elements, or taking transposes. The product and coproduct are examples of this. The product is an operation that takes in 2 objects and returns a new object, two projections $ \pi_1$ $ \pi_2$ and a function implementing the universal property that constructs $ f$ from $ f_1 f_2$. 
 
 
 
@@ -181,7 +225,7 @@ Some categorical constructions are very simple structural transformation that co
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2020/04/560px-CategoricalProduct-03.png)The diagram for a product
+![](/assets/560px-CategoricalProduct-03.png)The diagram for a product
 
 
 
@@ -195,7 +239,26 @@ Here is the corresponding python program. The matrix e (called f in the diagram.
 
 
 
-[gist https://gist.github.com/philzook58/269dcb47aefc6b1dffe51860ae52d1e7#file-product-py]
+
+```python
+    def product(a,b):
+        ''' The product takes in two object (dimensions) a,b and outputs a new dimension d , two projection morphsisms
+            and a universal morphism.
+            The "product" dimension is the sum of the individual dimensions (funky, huh?)
+        '''
+        d = a + b # new object
+        p1 = FinVect(np.hstack( [np.eye(a)      , np.zeros((a,b))]  ))
+        p2 = FinVect(np.hstack( [np.zeros((b,a)), np.eye(b)      ]  ))
+        def univ(f,g):
+            assert(f.dom == g.dom) # look at diagram. The domains of f and g must match
+            e = np.vstack(f,g) 
+            # postconditions. True by construction.
+            assert( np.allclose(p1 @ e , f )) # triangle condition 1
+            assert( np.allclose(p2 @ e , g ) ) # triangle condition 2
+            return e
+        return d, p1, p2, univ
+```
+
 
 
 
@@ -215,7 +278,17 @@ The initial and terminal objects are 0 dimensional vector spaces. Again, these a
 
 
 
-[gist https://gist.github.com/philzook58/269dcb47aefc6b1dffe51860ae52d1e7#file-terminal-py]
+
+```python
+    def terminal():
+        ''' terminal object has unique morphism to it '''
+        return 0, lambda x : FinVect(np.ones((0, x)))
+    def initial():
+        ''' the initial object has a unique morphism from it
+        The initial and final object are the same in FinVect'''
+        return 0, lambda x :  FinVect(np.ones((x, 0)))
+```
+
 
 
 
@@ -229,7 +302,7 @@ Where the real meat and potatoes lives is in the pullback, pushout, equalizer, a
 
 
 
-Vector subspaces can be described as the range of the matrix or the nullspace of a matrix. These representations are dual to each other in some sense. $latex RN=0$. Converting from one representation to the other is a nontrivial operation.
+Vector subspaces can be described as the range of the matrix or the nullspace of a matrix. These representations are dual to each other in some sense. $ RN=0$. Converting from one representation to the other is a nontrivial operation.
 
 
 
@@ -253,17 +326,45 @@ The actual heart of the computation lies in the [scipy routine](https://docs.sci
 
 
 
-Let's talk about how to implement the pullback. The input is the two morphisms f and g. The output is an object P, two projections p1 p2, and a universal property function that given q1 q2 constructs u. This all seems very similar to the product. The extra feature is that the squares are required to commute, which corresponds to the equation $latex f p_1 = g p_2 $ and is checked in assert statements in the code. This is the equation that is being solved. Computationally this is done by embedding this equation into a nullspace calculation $latex \begin{bmatrix} F & -G \end{bmatrix} \begin{bmatrix} x  \\ y \end{bmatrix} = 0$. The universal morphism is calculated by projecting q1 and q2 onto the calculated orthogonal basis for the nullspace. Because q1 and q2 are required to be in a commuting square with f and g by hypothesis, their columns live in the nullspace of the FG stacked matrix. There is extra discussion with James and Evan and some nice derivations as mentioned before [here](https://github.com/epatters/Catlab.jl/issues/87#issuecomment-596166224)
+Let's talk about how to implement the pullback. The input is the two morphisms f and g. The output is an object P, two projections p1 p2, and a universal property function that given q1 q2 constructs u. This all seems very similar to the product. The extra feature is that the squares are required to commute, which corresponds to the equation $ f p_1 = g p_2 $ and is checked in assert statements in the code. This is the equation that is being solved. Computationally this is done by embedding this equation into a nullspace calculation $ \begin{bmatrix} F & -G \end{bmatrix} \begin{bmatrix} x  \\ y \end{bmatrix} = 0$. The universal morphism is calculated by projecting q1 and q2 onto the calculated orthogonal basis for the nullspace. Because q1 and q2 are required to be in a commuting square with f and g by hypothesis, their columns live in the nullspace of the FG stacked matrix. There is extra discussion with James and Evan and some nice derivations as mentioned before [here](https://github.com/epatters/Catlab.jl/issues/87#issuecomment-596166224)
 
 
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2020/04/Categorical_pullback_expanded.png)
+![](/assets/Categorical_pullback_expanded.png)
 
 
 
-[gist https://gist.github.com/philzook58/269dcb47aefc6b1dffe51860ae52d1e7#file-pullback-py]
+
+```python
+    def pullback(f,g):
+        assert( f.cod == g.cod  ) # Most have common codomain
+        # horizontally stack the two operations. 
+        
+        null = scipy.linalg.null_space( np.hstack([f,-g]) )
+        d = null.shape[1] # dimension object of corner of pullback
+        p1 = FinVect(null[:f.dom, :])
+        p2 = FinVect(null[f.dom:, :])
+        
+        def univ(q1,q2):
+            # preconditions
+            assert(q1.dom == q2.dom )
+            assert( np.allclose(f @ q1 , g @ q2 ) ) # given a new square. This means u,v have to inject into the nullspace
+            
+            u = null.T @ np.vstack([q1,q2])  # calculate universal morphism == p1 @ u + p2 @ v
+            
+            # postcondition
+            assert( np.allclose(p1 @ u, q1 )) # verify triangle 1
+            assert( np.allclose(p2 @ u, q2 ) )  # verify triangle 2
+            
+            return u    
+        
+        # postcondition
+        assert( np.allclose(  f @ p1,  g @ p2 )  ) # These projections form a commutative square.
+        return  d, p1, p2, univ  
+```
+
 
 
 
@@ -301,7 +402,7 @@ I am acutely aware that I haven't shown any of this being _used_. So I've only s
 
 
 
-One important thing is we really need to extend this to affine maps rather than linear maps (affine maps allow an offset $latex y = Ax + b$. This is important for applications. The canonical linear algebra problem is $latex Ax=b$ which we haven't yet shown how to represent. 
+One important thing is we really need to extend this to affine maps rather than linear maps (affine maps allow an offset $ y = Ax + b$. This is important for applications. The canonical linear algebra problem is $ Ax=b$ which we haven't yet shown how to represent. 
 
 
 
@@ -474,7 +575,7 @@ I think there a couple conceptual points of disconnect between the purely mathem
 
 
 
-First off, the numerical world is by and large focused on full rank square matrices. The canonical problem is solving the matrix equation $latex Ax=b$ for the unknown vector x. If the matrix isn't full rank or square, we find some way to make it square and full rank.
+First off, the numerical world is by and large focused on full rank square matrices. The canonical problem is solving the matrix equation $ Ax=b$ for the unknown vector x. If the matrix isn't full rank or square, we find some way to make it square and full rank.
 
 
 
@@ -546,15 +647,20 @@ The kronecker product is another useful piece of FinVect. It is a second monoida
 
 
     
-    <code>    def par(f,g):
-            ''' One choice of monoidal product is the direct sum '''
-            r, c = f.shape
-            rg, cg = g.shape
-            return Vect(np.block( [ [f       ,           np.zeros((r,cg))]  ,
-                                    [np.zeros((rg,c))  , g              ]]  ))
-        def par2(f,g):
-            '''  another choice is the kroncker product'''
-            return np.kron(f,g)</code>
+    
+```
+
+    def par(f,g):
+        ''' One choice of monoidal product is the direct sum '''
+        r, c = f.shape
+        rg, cg = g.shape
+        return Vect(np.block( [ [f       ,           np.zeros((r,cg))]  ,
+                                [np.zeros((rg,c))  , g              ]]  ))
+    def par2(f,g):
+        '''  another choice is the kroncker product'''
+        return np.kron(f,g)
+```
+
 
 
 

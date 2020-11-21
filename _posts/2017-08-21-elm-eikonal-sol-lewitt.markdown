@@ -23,7 +23,7 @@ So I hacked together a demo in elm. Elm is a Haskell-ish language for the web.
 
 
 
-![](http://2.bp.blogspot.com/-m51gLYwv_ek/U_s-VGVmq-I/AAAAAAAABmo/cl7hJUjPgZA/s1600/P8080223.jpg)
+![](/assets/P8080223.jpg)
 
 
 
@@ -37,7 +37,7 @@ Alternative methods which might work better include the Fast Marching Method or 
 
 I also had to resample the function to get only the maximum y value for each x value in order to duplicate the LeWitt effect.
 
-[![sol](http://www.philipzucker.com/wp-content/uploads/2017/08/sol-300x300.png)](http://www.philipzucker.com/wp-content/uploads/2017/08/sol.png)
+[![sol](/assets/sol-300x300.png)](/assets/sol.png)
 
 These are the helper functions with lots of junk in there
 

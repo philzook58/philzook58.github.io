@@ -11,7 +11,7 @@ wordpress_id: 464
 
 We're building a simple laser scanner. Camera attached to a board, with line laser hot glued to a servo on same board.
 
-![](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/06/Thu-Jun-23-2016-182606-GMT-0400-EDT.png)
+![](/assets/Thu-Jun-23-2016-182606-GMT-0400-EDT.png)
 
 The line laser will scan. This laser line defines a plane. a pixel on the camera corresponds to a ray originating from the camera. Where the ray hits the plane is the 3d location of the scanned point.
 
@@ -19,7 +19,7 @@ Projective geometry is mighty useful here. To take a point to homogenous coordin
 
 Points with 0 in the fourth coordinate are directions aka points on the plane at infinity (that's a funky projective geometry concept, but very cool).
 
-Planes are also defined by 4 coordinates. The first 3 coordinates are the normal vector of the plane. $latex a \cdot x = c $. The fourth coordinate is that value of c, the offset from the origin. We can also find the plane given 3 points that lie on it. This is what I do here. What we are using is the fact that a determinant of a matrix with two copies of the same row will be zero. Then we're using the expansion of a determinant in term of its minors, probably the formula they first teach you in school for determinants. Because of these facts, this minor vector will dot to zero for all the points on that plane.
+Planes are also defined by 4 coordinates. The first 3 coordinates are the normal vector of the plane. $ a \cdot x = c $. The fourth coordinate is that value of c, the offset from the origin. We can also find the plane given 3 points that lie on it. This is what I do here. What we are using is the fact that a determinant of a matrix with two copies of the same row will be zero. Then we're using the expansion of a determinant in term of its minors, probably the formula they first teach you in school for determinants. Because of these facts, this minor vector will dot to zero for all the points on that plane.
 
 Then finally we're finding the intersection of the ray with the plane. The line is described as a line sum of two homogenous points on the line. we just need to find the coefficients in the sum. You can see by dotting the result onto the plane vector that the result is zero.
 

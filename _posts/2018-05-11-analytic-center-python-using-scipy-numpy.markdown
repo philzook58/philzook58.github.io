@@ -9,7 +9,7 @@ title: Analytic Center in Python using Scipy and Numpy
 wordpress_id: 1066
 ---
 
-The analytic center for a set of inequalities $latex \phi(x)<0$ is the minimizing position of $latex \sum -\ln (-\phi(x)) $. In particular it is often used with linear inequalities. It gives a reasonable and easily computable for convex constraint function center of the region. The hessian at that point can give you a reasonable ellipse that approximates the region too (both interior and exterior approximation).
+The analytic center for a set of inequalities $ \phi(x)<0$ is the minimizing position of $ \sum -\ln (-\phi(x)) $. In particular it is often used with linear inequalities. It gives a reasonable and easily computable for convex constraint function center of the region. The hessian at that point can give you a reasonable ellipse that approximates the region too (both interior and exterior approximation).
 
 I wrote a program for linear inequalities. It is not particularly robust. First I get a feasible point using the LP solver in scipy. Then I give the appropriate gradients and Hessians to a newton conjugate gradient solver in scipy. It does return a reasonable center, but I had to fiddle with some epsilons to avoid logarithms exploding and to avoid the hessian being so big it overwhelms the gradient. Possibly a couple burn in steps of gradient descent might help, or getting a feasible point that isn't optimal since the optimal points being on the boundary is a huge problem. If the newton solver comes back with only 1 or 2 iterations, it probably failed.
 

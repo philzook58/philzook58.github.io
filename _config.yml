@@ -13,20 +13,36 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Dinkin' Around with Phil
+title: Hey There Buddo!
+tagline: A Blog by Philip Zucker
 email: philzook58@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
- A blog site for my tighter articles. For the looser stuff check out http://www.philipzucker.com
+  Hot Leaves in a Cold Worlds. 
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https:/www.philipzucker.com" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: sandmouth
 github_username:  philzook58
+
+logo: /assets/logo.png
+twitter:
+  username: sandmouth
+  card: summary
+
+social:
+  name: Philip Zucker
+  links:
+    - https://twitter.com/sandmouth
+    - https://www.facebook.com/philip.zucker.77
+    - https://www.linkedin.com/in/philip-zucker-4520ba90
+    - https://github.com/philzook58
 
 # Build settings
 markdown: kramdown
 theme: minima
-gems:
+plugins:
   - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
 exclude:
   - Gemfile
   - Gemfile.lock

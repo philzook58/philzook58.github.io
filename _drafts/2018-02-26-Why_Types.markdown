@@ -1,0 +1,61 @@
+---
+author: philzook58
+comments: true
+date: 2018-02-26 19:22:11+00:00
+layout: post
+link: https://www.philipzucker.com/?p=994
+published: false
+slug: Why Types
+title: Why Types
+wordpress_id: 994
+---
+
+Hearken back to assembly. All was bits. Everything was a machine integer. The only difference between an integer and float in unstated programmer intent.
+
+Thence come Fortran.
+
+The trouble with buffer overflow attacks is that the programmer has no method by which to inform the compiler of her intent of the finite size of the buffer, hence the compiler cannot easily aid the programmer by informing her when that intent has been violated.
+
+Types are things. Bertrand Russell. Eggs aren't rocket ships.
+
+Functional Programming:
+
+Purity: Turn mutation off by default. You can only create new things, never destroy the old.
+
+Untyped: Lisp, Parameterically typed: Haskell ML, F# , Dependent : Coq, Idris, Agda
+
+
+
+The compiler is your friend and dragon to be vanquished. Types are a language to talk to the compiler. This language can be a restrictive language like a configuration file or a very expressive language. The more expressive the language is, the more intent one can communicate to the compiler. It tends to be the case that increased  expressivity comes at the cost of greater difficulty of use, like how English is significantly more difficult to learn and use than barking or grunting. There are noticeable points in the space of type systems that are Pareto maximal with respect to ease of use and expressivity. A Type system with parametric polymorphism, like Haskell, is one such point. The type system of Haskell and other languages like it is one such point.
+
+Types allow the compiler to perform optimizations.
+
+Types can be used in a very sophisticated way (computing primes in C++ templates for example)
+
+Typelevel programming or type-directed programming: automatic generation of code
+
+See Conor McBride
+
+https://www.quora.com/Why-do-programming-languages-use-type-systems
+
+Types vs Macros
+
+Everyday benefits:
+
+Finding stupid mistakes. Neither you nor I are gods. Sometimes I put my pants on backwards. Eggs aren't rocket ships.
+
+Refactoring -- changing a data type. The compiler rockets you around to everywhere that no longer makes sense. I can tell you that it is pure joy compared to doing the same in python.
+
+Types as documentation. You should write documentation. But if you don't the type helps understand intent. It is a useful summary of what a functions needs and gives you
+
+Keep it DRY: Autogeneration Servant, purescript bridge, purescript servant. WHy not just use macros or a code generator?
+
+Types as a design methodology. A type signature plus a name is often enough the sketch . Writing a function twice, first the type signature, then the implementation is a useful exercise. Actually writing everything twice might be good practice, but few are . Reminds me of the guy who cooked an egg and through it out.
+
+Types as an abstraction mechanism:
+
+https://haskell-servant.github.io/
+
+
+
+

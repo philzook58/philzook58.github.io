@@ -120,4 +120,4 @@ At the moment, the solve is not fast enough for real time control with CBC (~ 2s
     
 
 
-[![](http://philzucker2.nfshost.com/wp-content/uploads/2018/12/mip_pend.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/12/mip_pend.png)Blue is angle, orange is the applied torque. The torque is running up against the limits I placed on it.
+[![](/assets/mip_pend.png)](/assets/mip_pend.png)Blue is angle, orange is the applied torque. The torque is running up against the limits I placed on it.

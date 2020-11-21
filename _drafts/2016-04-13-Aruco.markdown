@@ -1,0 +1,51 @@
+---
+author: philzook58
+comments: true
+date: 2016-04-13 03:11:30+00:00
+layout: post
+link: https://www.philipzucker.com/?p=428
+published: false
+slug: Aruco
+title: Aruco
+wordpress_id: 428
+---
+
+ran calibration on my macbook pro camera.
+
+Took a couple photos of the recommended checkerboard
+
+found calibrate.py in the opencv source code
+
+commented out the following line
+
+#from common import splitfn
+
+because I don't have common whatever that is.
+
+Only needed with -debug argument
+
+run the program like so
+
+python calibrate.py images/*.jpg
+
+got the result
+
+RMS: 0.412602023891
+camera matrix:
+[[ 1.53838143e+03 0.00000000e+00 5.69458466e+02]
+[ 0.00000000e+00 1.42300426e+03 3.07700811e+02]
+[ 0.00000000e+00 0.00000000e+00 1.00000000e+00]]
+distortion coefficients: [ -1.72492955e+00 2.92563022e+01 1.81932739e-01 -6.04694307e-03
+-2.60917081e+02]
+
+
+
+Now I installed aruco by downloading the source and compiling it
+
+https://github.com/puconghan/Preparation-of-Augmented-Reality-with-OpenCV-and-Aruco
+
+also installed python-aruco
+
+https://github.com/fehlfarbe/python-aruco
+
+

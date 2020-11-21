@@ -28,21 +28,21 @@ There is a way of phrasing Q learning as a linear programming problem
 
 The linear programming approach relaxes the Bellman equations.
 
-$latex Q(s_t,a_t)=r_t + \gamma \max_a Q(s_{t+1},a)$
+$ Q(s_t,a_t)=r_t + \gamma \max_a Q(s_{t+1},a)$
 
 to
 
-$latex \forall a. Q(s_t,a_t) \ge r_t +\gamma Q(s_{t+1},a)$
+$ \forall a. Q(s_t,a_t) \ge r_t +\gamma Q(s_{t+1},a)$
 
 We can approach this forall in a couple ways, one of which is just sampling actions somehow. To make the constraint tight in places you minimize a weighting of Q
 
-$latex \min \sum w_i * Q(s_i,a_i) $
+$ \min \sum w_i * Q(s_i,a_i) $
 
 If Q is written as a linear combination of basis functions
 
-$latex Q(s,a)=\sum \alpha_i f_i(s,a)$
+$ Q(s,a)=\sum \alpha_i f_i(s,a)$
 
-The all of this put together is a linear program in the variables $latex \alpha_i$.
+The all of this put together is a linear program in the variables $ \alpha_i$.
 
 
 
@@ -54,7 +54,7 @@ Unfortunately, it still took a couple hours of hyper parameter tuning and fiddli
 
 I made a lot of guesswork for what seemed reasonable
 
-I parametrized the dependence of Q on `a` by a quadratic so that it is easy to maximize analytically. That is what the polyfit stuff is about. Maximum of $latex ax^2+bx+c$ is at $latex -b/2a$. I really should be checking the sign of the a coefficient. I am just assuming it is positive. Naughty boy.
+I parametrized the dependence of Q on `a` by a quadratic so that it is easy to maximize analytically. That is what the polyfit stuff is about. Maximum of $ ax^2+bx+c$ is at $ -b/2a$. I really should be checking the sign of the a coefficient. I am just assuming it is positive. Naughty boy.
 
 m assuming that it
 

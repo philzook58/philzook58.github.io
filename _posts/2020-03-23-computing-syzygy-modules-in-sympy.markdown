@@ -166,7 +166,7 @@ I found this Maple documentation helpful in this regard (although formatted horr
 
 
 
-We want to track a matrix A that writes the Groebner basis vector G to the original vector of polynomials F. $latex G = AF$. We do it by attaching the each generator f of F a fresh marker variable f + m. Then the coefficients on m in the extended Groebner basis correspond to the matrix A. Think about it.
+We want to track a matrix A that writes the Groebner basis vector G to the original vector of polynomials F. $ G = AF$. We do it by attaching the each generator f of F a fresh marker variable f + m. Then the coefficients on m in the extended Groebner basis correspond to the matrix A. Think about it.
 
 
 
@@ -174,7 +174,7 @@ We want to track a matrix A that writes the Groebner basis vector G to the origi
 
 
 
-The other direction matrix can be found via the reduction algorithm with respect to the Grobner basis  $latex F = BG$ . This is pretty straightforward given that sympy implemented reduction for us.
+The other direction matrix can be found via the reduction algorithm with respect to the Grobner basis  $ F = BG$ . This is pretty straightforward given that sympy implemented reduction for us.
 
 
 
@@ -207,7 +207,7 @@ Finding the syzygies of a set of generators is the analog of finding a nullspace
 
 
 
-The ability to find a nullspace gives you a lot of juice. One can phrase many problems, including solving a $latex Ax=b$ system of equations as a nullspace finding problem. 
+The ability to find a nullspace gives you a lot of juice. One can phrase many problems, including solving a $ Ax=b$ system of equations as a nullspace finding problem. 
 
 
 
@@ -221,7 +221,67 @@ Proposition 3.3 of Using Algebra tells us how to calculate the generators of a s
 
 
 
-[gist https://gist.github.com/philzook58/95b6b6ef97c4b2047d9833b7993fa1ef#file-syzygy-py]
+
+```
+import sympy as sy
+
+def spoly(f,g,*gens):
+    ltf = sy.LT(f,gens)
+    ltg = sy.LT(g,gens)
+    lcm = sy.lcm(ltf,ltg)
+    s = lcm / ltf * f - lcm / ltg * g
+    return s
+
+#grobner tracking. Maintaining the relation of the grobner basis to the original
+def extended_groebner(F, *gens):
+    n = len(F)
+    markers =  [sy.Dummy() for i in range(n)]
+    Fext = [ f + a for a, f in zip(markers, F)]
+    gen_ext = list(gens) + markers
+    Gext = sy.groebner(Fext, gen_ext)
+    A = [[g.coeff(m) for m in markers ] for g in Gext]
+    G = [ sy.simplify(g - sum( [ m * aa  for m,aa in zip(markers, a)  ] )) for a,g in zip(A,Gext) ] #remove dummy parts
+    assert( sy.simplify(sy.Matrix(G) -  sy.Matrix(A) * sy.Matrix(F)).is_zero )
+    # maybe assert buchberger criterion
+    return G, A
+    
+    
+def reduce_basis(F,G,*gens):
+    B,rems = list(zip(*[sy.reduced(f,G, gens) for f in F]))
+    print(B)
+    print(rems)
+    assert( all([r == 0 for r in rems] )) # assuming G is a grobner basis
+    assert( sy.simplify(sy.Matrix(F) - sy.Matrix(B) * sy.Matrix(G)).is_zero   )
+    return B
+
+# generators for the syzygies of G. Schreyer's Theorem. Cox Little Oshea Theorem 3.2 chapter 5
+def syzygy(G,*gens): # assuming G is groebner basis
+    n = len(G)
+    basis = []
+    I = sy.eye(n)
+    for i, gi in enumerate(G):
+        for j, gj in enumerate(G): 
+            if i < j:
+                s = spoly(gi,gj,*gens)
+                print(s)
+                a,r = sy.reduced( s , G, gens )
+                assert(r == 0) # should be groebner basis
+                lti = sy.LT(gi,gens)
+                ltj = sy.LT(gj,gens)
+                lcm = sy.lcm(lti,ltj)
+                ei = I[:,i] 
+                ej = I[:,j]
+                basis.append(lcm / lti * ei - lcm / ltj * ej - sy.Matrix(a))
+                assert( sy.simplify(sy.Matrix(G).T * basis[-1]).is_zero)  # should all null out on G
+    return basis
+
+x,y,z,s = sy.symbols("x y z s")
+F = [x+y+z, x*y+y*z+z*x, x*y*z-1]
+G, A = extended_groebner(F, x,y,z)
+B = reduce_basis(F,G,x,y,z)
+Gsyz = syzygy(G)
+```
+
 
 
 
@@ -249,7 +309,17 @@ I'm still trying to figure out how to do calculations on modules proper. I think
 
 
 
-[gist https://gist.github.com/philzook58/95b6b6ef97c4b2047d9833b7993fa1ef#file-matrix-py]
+
+```
+def matrix_to_eqs(m):
+   nrows, ncols = m.shape
+   gens = [sy.Dummy() for i in range(ncols)]
+   eqs = m @ sy.Matrix(gens)
+   return eqs, gens
+def eqs_to_matrix(eqns, gens):
+    return sy.Matrix( [[ eq.coeff(g) for g in gens] for eq in eqns])
+```
+
 
 
 

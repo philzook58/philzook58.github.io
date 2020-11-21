@@ -1,0 +1,19 @@
+---
+author: philzook58
+comments: true
+date: 2015-11-11 05:38:41+00:00
+layout: post
+link: https://www.philipzucker.com/?p=250
+published: false
+slug: NodeMCU
+title: NodeMCU
+wordpress_id: 250
+---
+
+Bought myself a NodeMCU on aliexpress. Wiring up the esp8266 is a pain, hopefully this makes it much easier.
+
+
+
+[https://github.com/esp8266/Arduino](https://github.com/esp8266/Arduino)
+
+I'm impressed by the installation process. Just go into the arduino preferences and it does the work for you

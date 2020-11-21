@@ -75,7 +75,7 @@ Somehow SOS/SDP was used for bounds here. I had an impulse that the problem feel
 
 
 
-One way the problem can be formulated is by finding or proving there is no solution to the following set of equations constraining the centers $latex x_i$ of the spheres. Set the central sphere at (0,0,0,...) . Make the radii 1. Then$latex \forall i. |x_i|^2 = 2^2 $ and $latex \forall i j.  |x_i - x_j|^2 \ge 2^2 $
+One way the problem can be formulated is by finding or proving there is no solution to the following set of equations constraining the centers $ x_i$ of the spheres. Set the central sphere at (0,0,0,...) . Make the radii 1. Then$ \forall i. \|x_i\|^2 = 2^2 $ and $ \forall i j.  \|x_i - x_j\|^2 \ge 2^2 $
 
 
 
@@ -99,7 +99,7 @@ So I had 1 idea on how to approach this via a convex relaxation
 
 
 
-Make a vector $latex x = \begin{bmatrix} x_0 & y _0 & x_1 & y _1 & x_2 & y _2 & ... \end{bmatrix}$ Take the outer product of this vector $latex x^T x = X$ Then we can write the above equations as linear equalities and inequalities on X. If we forget that we need X to be the outer product of x (the relaxation step), this becomes a semidefinite program. Fingers crossed, maybe the solution comes back as a rank 1 matrix. Other fingers crossed, maybe the solution comes back and says it's infeasible. In either case, we have solved our original problem.
+Make a vector $ x = \begin{bmatrix} x_0 & y _0 & x_1 & y _1 & x_2 & y _2 & ... \end{bmatrix}$ Take the outer product of this vector $ x^T x = X$ Then we can write the above equations as linear equalities and inequalities on X. If we forget that we need X to be the outer product of x (the relaxation step), this becomes a semidefinite program. Fingers crossed, maybe the solution comes back as a rank 1 matrix. Other fingers crossed, maybe the solution comes back and says it's infeasible. In either case, we have solved our original problem.
 
 
 
@@ -107,47 +107,52 @@ Make a vector $latex x = \begin{bmatrix} x_0 & y _0 & x_1 & y _1 & x_2 & y _2 & 
 
 
     
-    <code>import numpy as np
-    import cvxpy as cvx
     
-    
-    d = 2
-    n = 6
-    N = d * n 
-    x = cvx.Variable((N+1,N+1), symmetric=True)
-    c = []
-    c += [x >> 0]
-    c += [x[0,0] == 1]
-    # x^2 + y^2 + z^2 + ... == 2^2 constraint
-    x1 = x[1:,1:]
-    for i in range(n):
+```python
+
+import numpy as np
+import cvxpy as cvx
+
+
+d = 2
+n = 6
+N = d * n 
+x = cvx.Variable((N+1,N+1), symmetric=True)
+c = []
+c += [x >> 0]
+c += [x[0,0] == 1]
+# x^2 + y^2 + z^2 + ... == 2^2 constraint
+x1 = x[1:,1:]
+for i in range(n):
+    q = 0
+    for j in range(d):
+        q += x1[d*i + j, d*i + j]
+    c += [q == 4] #[ x1[2*i + 1, 2*i + 1] + x[2*i + 2, 2*i + 2] == 4]
+
+#c += [x1[0,0] == 2, x1[1,1] >= 0]
+#c += [x1[2,2] >= 2]
+
+# (x - x) + (y - y) >= 4
+for i in range(n):    
+    for k in range(i):
         q = 0
         for j in range(d):
-            q += x1[d*i + j, d*i + j]
-        c += [q == 4] #[ x1[2*i + 1, 2*i + 1] + x[2*i + 2, 2*i + 2] == 4]
-    
-    #c += [x1[0,0] == 2, x1[1,1] >= 0]
-    #c += [x1[2,2] >= 2]
-    
-    # (x - x) + (y - y) >= 4
-    for i in range(n):    
-        for k in range(i):
-            q = 0
-            for j in range(d):
-                q += x1[d*i + j, d*i + j] + x1[d*k + j, d*k + j] - 2 * x1[d*i + j, d*k + j] # xk ^ 2 - 2 * xk * xi 
-            c += [q >= 4]
-    print(c)
-    obj = cvx.Maximize(cvx.trace(np.random.rand(N+1,N+1) @ x ))
-    prob = cvx.Problem(obj, c)
-    print(prob.solve(verbose=True))
-    u, s, vh = np.linalg.svd(x.value)
-    print(s)
-    
-    import matplotlib.pyplot as plt
-    xy = vh[0,1:].reshape(-1,2)
-    print(xy)
-    plt.scatter(xy[0], xy[1] )
-    plt.show()</code>
+            q += x1[d*i + j, d*i + j] + x1[d*k + j, d*k + j] - 2 * x1[d*i + j, d*k + j] # xk ^ 2 - 2 * xk * xi 
+        c += [q >= 4]
+print(c)
+obj = cvx.Maximize(cvx.trace(np.random.rand(N+1,N+1) @ x ))
+prob = cvx.Problem(obj, c)
+print(prob.solve(verbose=True))
+u, s, vh = np.linalg.svd(x.value)
+print(s)
+
+import matplotlib.pyplot as plt
+xy = vh[0,1:].reshape(-1,2)
+print(xy)
+plt.scatter(xy[0], xy[1] )
+plt.show()
+```
+
 
 
 
@@ -179,26 +184,31 @@ It solves for 5 and below. Z3 grinds to a halt on N=6 and above. It ran for days
 
 
     
-    <code>from z3 import *
-    import numpy as np
     
-    d = 2 # dimensions
-    n = 6 # number oif spheres
-    
-    x = np.array([ [ Real("x_%d_%d" % (i,j))     for j in range(d) ] for i in range(n)])
-    print(x)
-    
-    c = []
-    ds = np.sum(x**2, axis=1)
-    c += [ d2 == 4 for d2 in ds] # centers at distance 2 from origin
-    
-    
-    ds = np.sum( (x.reshape((-1,1,d)) - x.reshape((1,-1,d)))**2, axis = 2)
-    
-    c += [ ds[i,j]  >= 4  for i in range(n) for j in range(i)] # spheres greater than dist 2 apart
-    c += [x[0,0] == 2]
-    print(c)
-    print(solve(c))</code>
+```python
+
+from z3 import *
+import numpy as np
+
+d = 2 # dimensions
+n = 6 # number oif spheres
+
+x = np.array([ [ Real("x_%d_%d" % (i,j))     for j in range(d) ] for i in range(n)])
+print(x)
+
+c = []
+ds = np.sum(x**2, axis=1)
+c += [ d2 == 4 for d2 in ds] # centers at distance 2 from origin
+
+
+ds = np.sum( (x.reshape((-1,1,d)) - x.reshape((1,-1,d)))**2, axis = 2)
+
+c += [ ds[i,j]  >= 4  for i in range(n) for j in range(i)] # spheres greater than dist 2 apart
+c += [x[0,0] == 2]
+print(c)
+print(solve(c))
+```
+
 
 
 
@@ -222,111 +232,116 @@ I have a small set of helper functions for combining sympy and cvxpy for sum of 
 
 
     
-    <code>import cvxpy as cvx
-    from sympy import *
-    import random
+    
+```python
+
+import cvxpy as cvx
+from sympy import *
+import random
+'''
+The idea is to use raw cvxpy and sympy as much as possible for maximum flexibility.
+
+Construct a sum of squares polynomial using sospoly. This returns a variable dictionary mapping sympy variables to cvxpy variables.
+You are free to the do polynomial operations (differentiation, integration, algerba) in pure sympy
+When you want to express an equality constraint, use poly_eq(), which takes the vardict and returns a list of cvxpy constraints.
+Once the problem is solved, use poly_value to get back the solution polynomials.
+
+That some polynomial is sum of squares can be expressed as the equality with a fresh polynomial that is explicility sum of sqaures.
+
+With the approach, we get the full unbridled power of sympy (including grobner bases!)
+
+I prefer manually controlling the vardict to having it auto controlled by a class, just as a I prefer manually controlling my constraint sets
+Classes suck.
+'''
+
+
+def cvxify(expr, cvxdict): # replaces sympy variables with cvx variables in sympy expr
+     return lambdify(tuple(cvxdict.keys()), expr)(*cvxdict.values()) 
+
+def sospoly(terms, name=None):
+    ''' returns sum of squares polynomial using terms, and vardict mapping to cvxpy variables '''
+    if name == None:
+        name = str(random.getrandbits(32))
+    N = len(terms)
+    xn = Matrix(terms)
+    Q = MatrixSymbol(name, N,N)
+    p = (xn.T * Matrix(Q) * xn)[0]
+    Qcvx = cvx.Variable((N,N), PSD=True)
+    vardict = {Q : Qcvx} 
+    return p, vardict
+
+
+
+def polyvar(terms,name=None):
+    ''' builds sumpy expression and vardict for an unknown linear combination of the terms '''
+    if name == None:
+        name = str(random.getrandbits(32))
+    N = len(terms)
+    xn = Matrix(terms)
+    Q = MatrixSymbol(name, N, 1)
+    p = (xn.T * Matrix(Q))[0]
+    Qcvx = cvx.Variable((N,1))
+    vardict = {Q : Qcvx} 
+    return p, vardict
+
+def scalarvar(name=None):
+    return polyvar([1], name)
+
+def worker(x ):
+    (expr,vardict) = x
+    return cvxify(expr, vardict) == 0
+def poly_eq(p1, p2 , vardict):
+    ''' returns a list of cvxpy constraints '''
+    dp = p1 - p2
+    polyvars = list(dp.free_symbols - set(vardict.keys()))
+    print("hey")
+    p, opt = poly_from_expr(dp, gens = polyvars, domain = polys.domains.EX) #This is brutalizing me
+    print(opt)
+    print("buddo")
+    return [ cvxify(expr, vardict) == 0 for expr in p.coeffs()]
     '''
-    The idea is to use raw cvxpy and sympy as much as possible for maximum flexibility.
-    
-    Construct a sum of squares polynomial using sospoly. This returns a variable dictionary mapping sympy variables to cvxpy variables.
-    You are free to the do polynomial operations (differentiation, integration, algerba) in pure sympy
-    When you want to express an equality constraint, use poly_eq(), which takes the vardict and returns a list of cvxpy constraints.
-    Once the problem is solved, use poly_value to get back the solution polynomials.
-    
-    That some polynomial is sum of squares can be expressed as the equality with a fresh polynomial that is explicility sum of sqaures.
-    
-    With the approach, we get the full unbridled power of sympy (including grobner bases!)
-    
-    I prefer manually controlling the vardict to having it auto controlled by a class, just as a I prefer manually controlling my constraint sets
-    Classes suck.
+    import multiprocessing
+    import itertools
+    pool = multiprocessing.Pool()
+
+    return pool.imap_unordered(worker, zip(p.coeffs(),  itertools.repeat(vardict)))
     '''
-    
-    
-    def cvxify(expr, cvxdict): # replaces sympy variables with cvx variables in sympy expr
-         return lambdify(tuple(cvxdict.keys()), expr)(*cvxdict.values()) 
-    
-    def sospoly(terms, name=None):
-        ''' returns sum of squares polynomial using terms, and vardict mapping to cvxpy variables '''
-        if name == None:
-            name = str(random.getrandbits(32))
-        N = len(terms)
-        xn = Matrix(terms)
-        Q = MatrixSymbol(name, N,N)
-        p = (xn.T * Matrix(Q) * xn)[0]
-        Qcvx = cvx.Variable((N,N), PSD=True)
-        vardict = {Q : Qcvx} 
-        return p, vardict
-    
-    
-    
-    def polyvar(terms,name=None):
-        ''' builds sumpy expression and vardict for an unknown linear combination of the terms '''
-        if name == None:
-            name = str(random.getrandbits(32))
-        N = len(terms)
-        xn = Matrix(terms)
-        Q = MatrixSymbol(name, N, 1)
-        p = (xn.T * Matrix(Q))[0]
-        Qcvx = cvx.Variable((N,1))
-        vardict = {Q : Qcvx} 
-        return p, vardict
-    
-    def scalarvar(name=None):
-        return polyvar([1], name)
-    
-    def worker(x ):
-        (expr,vardict) = x
-        return cvxify(expr, vardict) == 0
-    def poly_eq(p1, p2 , vardict):
-        ''' returns a list of cvxpy constraints '''
-        dp = p1 - p2
-        polyvars = list(dp.free_symbols - set(vardict.keys()))
-        print("hey")
-        p, opt = poly_from_expr(dp, gens = polyvars, domain = polys.domains.EX) #This is brutalizing me
-        print(opt)
-        print("buddo")
-        return [ cvxify(expr, vardict) == 0 for expr in p.coeffs()]
-        '''
-        import multiprocessing
-        import itertools
-        pool = multiprocessing.Pool()
-    
-        return pool.imap_unordered(worker, zip(p.coeffs(),  itertools.repeat(vardict)))
-        '''
-        
-    def vardict_value(vardict):
-        ''' evaluate numerical values of vardict '''
-        return {k : v.value for (k, v) in vardict.items()}
-    
-    def poly_value(p1, vardict):
-        ''' evaluate polynomial expressions with vardict'''
-        return cvxify(p1, vardict_value(vardict))
-    
-    if __name__ == "__main__":
-        x = symbols('x')
-        terms = [1, x, x**2]
-        #p, cdict = polyvar(terms)
-        p, cdict = sospoly(terms)
-        c = poly_eq(p, (1 + x)**2 , cdict)
-        print(c)
-        prob = cvx.Problem(cvx.Minimize(1), c)
-        prob.solve()
-    
-        print(factor(poly_value(p, cdict)))
-    
-        # global poly minimization
-        vdict = {}
-        t, d = polyvar([1], name='t')
-        vdict.update(d)
-    
-        p, d = sospoly([1,x,x**2], name='p')
-        vdict.update(d)
-        constraints = poly_eq(7 + x**2 - t, p, vdict)
-        obj = cvx.Maximize( cvxify(t,vdict) )
-        prob = cvx.Problem(obj, constraints)
-        prob.solve()
-        print(poly_value(t,vdict))
-    </code>
+
+def vardict_value(vardict):
+    ''' evaluate numerical values of vardict '''
+    return {k : v.value for (k, v) in vardict.items()}
+
+def poly_value(p1, vardict):
+    ''' evaluate polynomial expressions with vardict'''
+    return cvxify(p1, vardict_value(vardict))
+
+if __name__ == "__main__":
+    x = symbols('x')
+    terms = [1, x, x**2]
+    #p, cdict = polyvar(terms)
+    p, cdict = sospoly(terms)
+    c = poly_eq(p, (1 + x)**2 , cdict)
+    print(c)
+    prob = cvx.Problem(cvx.Minimize(1), c)
+    prob.solve()
+
+    print(factor(poly_value(p, cdict)))
+
+    # global poly minimization
+    vdict = {}
+    t, d = polyvar([1], name='t')
+    vdict.update(d)
+
+    p, d = sospoly([1,x,x**2], name='p')
+    vdict.update(d)
+    constraints = poly_eq(7 + x**2 - t, p, vdict)
+    obj = cvx.Maximize( cvxify(t,vdict) )
+    prob = cvx.Problem(obj, constraints)
+    prob.solve()
+    print(poly_value(t,vdict))
+
+```
+
 
 
 
@@ -342,52 +357,57 @@ and here is the attempted positivstellensatz.
 
 
     
-    <code>import sos
-    import cvxpy as cvx
-    from sympy import *
-    import numpy as np
     
-    d = 2
-    N = 7
-    
-    # a grid of a vector field. indices = (xposition, yposition, vector component)
-    '''xs = [ [symbols("x_%d_%d" % (i,j)) for j in range(d)] for i in range(N) ]
-    gens = [x for l in xs for x in l ]
-    xs = np.array([[poly(x,gens=gens, domain=polys.domains.EX) for x in l] for l in xs])
-    '''
-    xs = np.array([ [symbols("x_%d_%d" % (i,j)) for j in range(d)] for i in range(N) ])
-    
-    c1 = np.sum( xs * xs, axis=1) - 1
-    c2 = np.sum((xs.reshape(-1,1,d) - xs.reshape(1,-1,d))**2 , axis=2) - 1
-    
-    print(c1)
-    print(c2)
-    terms0 = [1]
-    terms1 = terms0 + list(xs.flatten())
-    terms2 = [ terms1[i]*terms1[j] for j in range(N+1) for i in range(j+1)]
-    #print(terms1)
-    #print(terms2)
-    vdict = {}
-    psatz = 0
-    for c in c1:
-        lam, d = sos.polyvar(terms2)
+```python
+
+import sos
+import cvxpy as cvx
+from sympy import *
+import numpy as np
+
+d = 2
+N = 7
+
+# a grid of a vector field. indices = (xposition, yposition, vector component)
+'''xs = [ [symbols("x_%d_%d" % (i,j)) for j in range(d)] for i in range(N) ]
+gens = [x for l in xs for x in l ]
+xs = np.array([[poly(x,gens=gens, domain=polys.domains.EX) for x in l] for l in xs])
+'''
+xs = np.array([ [symbols("x_%d_%d" % (i,j)) for j in range(d)] for i in range(N) ])
+
+c1 = np.sum( xs * xs, axis=1) - 1
+c2 = np.sum((xs.reshape(-1,1,d) - xs.reshape(1,-1,d))**2 , axis=2) - 1
+
+print(c1)
+print(c2)
+terms0 = [1]
+terms1 = terms0 + list(xs.flatten())
+terms2 = [ terms1[i]*terms1[j] for j in range(N+1) for i in range(j+1)]
+#print(terms1)
+#print(terms2)
+vdict = {}
+psatz = 0
+for c in c1:
+    lam, d = sos.polyvar(terms2)
+    vdict.update(d)
+    psatz += lam*c
+for i in range(N):
+    for j in range(i):
+        c = c2[i,j]
+        lam, d = sos.sospoly(terms2)
         vdict.update(d)
         psatz += lam*c
-    for i in range(N):
-        for j in range(i):
-            c = c2[i,j]
-            lam, d = sos.sospoly(terms2)
-            vdict.update(d)
-            psatz += lam*c
-    #print(type(psatz))
-    print("build constraints")
-    constraints = sos.poly_eq(psatz, -1, vdict)
-    #print("Constraints: ", len(constraints))
-    obj = cvx.Minimize(1) #sum([cvx.sum(v) for v in vdict.values()]))
-    print("build prob")
-    prob = cvx.Problem(obj, constraints)
-    print("solve")
-    prob.solve(verbose=True, solver= cvx.SCS)</code>
+#print(type(psatz))
+print("build constraints")
+constraints = sos.poly_eq(psatz, -1, vdict)
+#print("Constraints: ", len(constraints))
+obj = cvx.Minimize(1) #sum([cvx.sum(v) for v in vdict.values()]))
+print("build prob")
+prob = cvx.Problem(obj, constraints)
+print("solve")
+prob.solve(verbose=True, solver= cvx.SCS)
+```
+
 
 
 
@@ -411,42 +431,47 @@ I also tried doing it in Julia, since sympy was killing me. Julia already has a 
 
 
     
-    <code>using JuMP
-    using SumOfSquares
-    using DynamicPolynomials
-    using SCS
-    N = 10
-    d = 2
-    @polyvar x[1:N,1:d]
-    X = monomials(reshape(x,d*N), 0:2)
-    X1 = monomials(reshape(x,d*N), 0:4)
     
-    model = SOSModel(with_optimizer(SCS.Optimizer))
-    
-    acc = nothing
-    for t in sum(x .* x, dims=2)
-        #print(t)
-        p = @variable(model, [1:1], Poly(X1))
-        #print(p)
-        if acc != nothing
-            acc += p * (t - 1)
-        else
-            acc = p * (t - 1)
-        end
+```julia
+
+using JuMP
+using SumOfSquares
+using DynamicPolynomials
+using SCS
+N = 10
+d = 2
+@polyvar x[1:N,1:d]
+X = monomials(reshape(x,d*N), 0:2)
+X1 = monomials(reshape(x,d*N), 0:4)
+
+model = SOSModel(with_optimizer(SCS.Optimizer))
+
+acc = nothing
+for t in sum(x .* x, dims=2)
+    #print(t)
+    p = @variable(model, [1:1], Poly(X1))
+    #print(p)
+    if acc != nothing
+        acc += p * (t - 1)
+    else
+        acc = p * (t - 1)
     end
-    
-    for i in range(1,stop=N)
-        for j in range(1,stop=i-1)
-            d  = x[i,:] - x[j,:]
-            p = @variable(model, [1:1], SOSPoly(X))
-            acc += p * (sum(d .* d) - 1)
-        end
+end
+
+for i in range(1,stop=N)
+    for j in range(1,stop=i-1)
+        d  = x[i,:] - x[j,:]
+        p = @variable(model, [1:1], SOSPoly(X))
+        acc += p * (sum(d .* d) - 1)
     end
-    
-    #print(acc)
-    print(typeof(acc))
-    @constraint(model, acc[1] == -1 )
-    optimize!(model)</code>
+end
+
+#print(acc)
+print(typeof(acc))
+@constraint(model, acc[1] == -1 )
+optimize!(model)
+```
+
 
 
 

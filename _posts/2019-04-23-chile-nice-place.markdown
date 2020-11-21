@@ -82,55 +82,55 @@ SUCH MEMORIES
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_0444-4-e1555993403725-1024x769.jpg)
+![](/assets/IMG_0444-4-e1555993403725-1024x769.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_9679-4-e1555993387774-1024x769.jpg)tough day
+![](/assets/IMG_9679-4-e1555993387774-1024x769.jpg)tough day
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_8527-e1555993442189-1024x769.jpg)
+![](/assets/IMG_8527-e1555993442189-1024x769.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_1764-3-e1555993353610-768x1024.jpg)
+![](/assets/IMG_1764-3-e1555993353610-768x1024.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_7440-e1555993370877-768x1024.jpg)
+![](/assets/IMG_7440-e1555993370877-768x1024.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_0142-6-e1555993334947-1024x768.jpg)
+![](/assets/IMG_0142-6-e1555993334947-1024x768.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_3589-1024x768.jpg)
+![](/assets/IMG_3589-1024x768.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_2952-2-1024x768.jpg)
+![](/assets/IMG_2952-2-1024x768.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_9684-e1555993312978-768x1024.jpg)
+![](/assets/IMG_9684-e1555993312978-768x1024.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_2720-1024x768.jpg)
+![](/assets/IMG_2720-1024x768.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_4603-e1555993426496-768x1024.jpg)
+![](/assets/IMG_4603-e1555993426496-768x1024.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_3951-e1555993291976-768x1024.jpg)
+![](/assets/IMG_3951-e1555993291976-768x1024.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_9328-1024x768.jpg)
+![](/assets/IMG_9328-1024x768.jpg)
 
 
 
@@ -148,7 +148,7 @@ Wait, where are all my BOBBY PICS!?!
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_7527-e1555994146864-768x1024.jpg)
+![](/assets/IMG_7527-e1555994146864-768x1024.jpg)
 
 
 
@@ -160,7 +160,7 @@ o there u r u cutie
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_7338-e1555994108664-768x1024.jpg)
+![](/assets/IMG_7338-e1555994108664-768x1024.jpg)
 
 
 
@@ -172,17 +172,17 @@ overwhelmed
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_1051-e1555994128200-768x1024.jpg)
+![](/assets/IMG_1051-e1555994128200-768x1024.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_7973-1024x768.jpg)A strange place named Andre's
+![](/assets/IMG_7973-1024x768.jpg)A strange place named Andre's
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_6585-e1555994195748-1024x768.jpg)boys
+![](/assets/IMG_6585-e1555994195748-1024x768.jpg)boys
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/04/IMG_6417-1024x768.jpg)beth
+![](/assets/IMG_6417-1024x768.jpg)beth
 

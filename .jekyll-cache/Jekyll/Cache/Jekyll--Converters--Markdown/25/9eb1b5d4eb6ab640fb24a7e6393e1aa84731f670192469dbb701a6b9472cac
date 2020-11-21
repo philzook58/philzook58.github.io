@@ -1,0 +1,62 @@
+I"Þ'<p>I though of another fun use case of mixed integer programming the other day. The quantization part of a digital to analog converter is difficult to analyze by the techniques taught in a standard signals course (linear analysis, spectral techniques, convolution that sort of thing). The way it is usually done is via assuming the <a href="https://en.wikipedia.org/wiki/Quantization_(signal_processing)">quantization error is a kind of randomized additive noise</a>.</p>
+
+<p>Mixed Integer programming  does have the ability to directly encode some questions about this quantization though. We can directly encode the integer rounding relations by putting the constraint that the quantized signal is exactly +-1/2 a quantization interval away from the original signal. Then we can run further analysis on the signals and compare them. For example, I wrote down a quick cosine transform. Then I ask for the worst case signal that leads to the most error on the quantized transform versus the transform of the unquantized signal. My measure of worst case performance was the sum of the difference of the two transforms. I chose this because it is tractable as a mixed integer linear program. Not all reasonable metrics one might want will be easily encodable in a mixed integer framework it seems. Some of them are maximizing over a convex function, which is naughty. (for example trying to maximize the L2 error $ \sum|x-y|^2$ )</p>
+
+<p>In a variant of this, it is also possible to directly encode the digital signal process in terms of logic gate construction and compare that to the intended analog transform, although this will be a great deal more computational expensive.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">import</span> <span class="nn">cvxpy</span> <span class="k">as</span> <span class="n">cvx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">integer</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">z</span> <span class="o">/</span> <span class="n">d</span> <span class="c1"># quantized signal. ~31 values between -1 and 1
+</span>
+<span class="n">constraints</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">constraints</span> <span class="o">+=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">,</span>  <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># roudning constraint. z = round(127*x)
+</span><span class="n">constraints</span> <span class="o">+=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">&lt;=</span> <span class="n">d</span><span class="o">*</span><span class="n">x</span> <span class="o">-</span> <span class="n">z</span><span class="p">,</span> <span class="n">d</span><span class="o">*</span><span class="n">x</span> <span class="o">-</span> <span class="n">z</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">]</span> 
+<span class="c1"># an oppurtnitu for the FFT technique of Vanderbei
+</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">kron</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)).</span><span class="n">reshape</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">N</span><span class="p">))</span>
+<span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">cos</span><span class="p">(</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">n</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span>
+<span class="n">kx</span> <span class="o">=</span> <span class="n">U</span> <span class="o">@</span> <span class="n">x</span>  
+<span class="n">ky</span> <span class="o">=</span> <span class="n">U</span> <span class="o">@</span> <span class="n">y</span>
+
+<span class="c1">#hmmmm. Yes. Unfrotunately  I am asking a hard question?
+# finding the minimum distortion signal is easy. finding the maximum distortion appears to be hard.
+#This is not a convex objective : objective = cvx.Maximize(cvx.sum_squares(kx - ky))
+# however, the following linearization does give us a maximally bad signal in a sense.
+</span><span class="n">objective</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Maximize</span><span class="p">(</span><span class="n">cvx</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">kx</span> <span class="o">-</span> <span class="n">ky</span><span class="p">))</span>
+
+<span class="n">prob</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Problem</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">constraints</span><span class="p">)</span>
+<span class="n">prob</span><span class="p">.</span><span class="n">solve</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Original Signal"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"analog signal"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"quantized signal"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Error of Transform"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kx</span><span class="p">.</span><span class="n">value</span> <span class="o">-</span> <span class="n">ky</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Cosine transform"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kx</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"original signal"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ky</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"quantized signal"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/quant1.png" alt="" /></p>
+
+<p><img src="/assets/quant2.png" alt="" /></p>
+
+<p><img src="/assets/quant3.png" alt="" /></p>
+
+<p>This is interesting as a relatively straightforward technique for the analysis of quantization errors.</p>
+
+<p>This also might be an interesting place to use the techniques of Vanderbei  <a href="https://vanderbei.princeton.edu/tex/ffOpt/ffOptMPCrev4.pdf">https://vanderbei.princeton.edu/tex/ffOpt/ffOptMPCrev4.pdf</a> .  He does a neato trick where he partially embeds the FFT algorithm into  an optimization problem by adding auxiliary variables. Despite the  expense of adding these variables, it greatly increases the sparsity of  the constraint matrices, which will probably be a win. I wonder if one  might do something similar with a Fast Multipole Method , Barnes Hut, or Wavelet transform? Seems likely. Would be neat, although Iâ€™m not sure what for. I was thinking of simulating the coulomb gas. That seems like a natural choice. Oooh. I should do that.</p>
+
+:ET

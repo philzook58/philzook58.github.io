@@ -1,0 +1,173 @@
+I"�g<p><em>Parts 1 and 2 are found <a href="http://www.philipzucker.com/computational-category-theory-in-python-i-dictionaries-for-finset/">here</a> and <a href="http://www.philipzucker.com/computational-category-theory-in-python-ii-numpy-for-finvect/">here</a></em></p>
+
+<p>From one perspective, categories are just another algebraic structure, like <a href="https://en.wikipedia.org/wiki/Group_(mathematics)">groups</a>, <a href="https://en.wikipedia.org/wiki/Monoid">monoids</a> and <a href="https://en.wikipedia.org/wiki/Ring_(mathematics)">rings</a>. They are these abstract things that have some abstract equational axioms and operations.  They are the next stop on our magnificent category journey.</p>
+
+<p><img src="/assets/monoidjourney-640x1024.png" alt="" /></p>
+
+<p>A monoid is a thing that has an associative operation with a unit. Addition and 0 make numbers a monoid. Multiplication and 1 are a separate monoid for numbers. Concatenation and empty lists make lists a monoid. Union and empty set make sets a monoid. We can encode this in python like so:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PlusIntMonoid</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">mplus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">b</span>
+    <span class="k">def</span> <span class="nf">mzero</span><span class="p">():</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+<span class="k">class</span> <span class="nc">TimesIntMonoid</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">mplus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="n">b</span>
+    <span class="k">def</span> <span class="nf">mzero</span><span class="p">():</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+<span class="k">class</span> <span class="nc">ListMonoid</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">mplus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">b</span>
+    <span class="k">def</span> <span class="nf">mzero</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+<span class="k">class</span> <span class="nc">UnionMonoid</span><span class="p">(</span><span class="nb">set</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">mplus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">union</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">mzero</span><span class="p">():</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+
+<span class="n">ListMonoid</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]).</span><span class="n">mplus</span><span class="p">(</span><span class="n">ListMonoid</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span> <span class="c1"># [1,2,1,2]
+</span><span class="n">UnionMonoid</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">}).</span><span class="n">mplus</span><span class="p">(</span><span class="n">UnionMonoid</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">}))</span> <span class="c1"># {1,2,4}
+</span><span class="n">TimesIntMonoid</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="n">mplus</span><span class="p">(</span><span class="n">TimesIntMonoid</span><span class="p">.</span><span class="n">mzero</span><span class="p">())</span> <span class="c1"># 3
+</span></code></pre></div></div>
+
+<p>What does this have to do with categories? Well, if some thing is a category, it obeys the axioms that define what it means to be a category. It has morphisms and objects. The morphisms compose if head meets tail on an object. There are always identity morphism.</p>
+
+<p>The morphisms in a category with 1 object automatically obey the monoid axioms. In this case, the category axioms imply the monoid axioms. Everything composes because there is only one object. It’s a kind of degenerate case where we are not using the partiality of the composition operator. There is automatically a unit for composition because the identity morphism is a unit. Composition is already required to be associative. Boom. The thing is a monoid.</p>
+
+<p>Continuing with our representation from <a href="http://www.philipzucker.com/computational-category-theory-in-python-i-dictionaries-for-finset/">previous</a> <a href="http://www.philipzucker.com/computational-category-theory-in-python-ii-numpy-for-finvect/">posts</a>, we make a python class for each category. An instance of this class is a morphism in this category. If you ask for the domain or codomain of any morphism, you always get back <code class="language-plaintext highlighter-rouge">()</code> because it is a single object category. Compare these classes with the above classes.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PlusIntCat</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">b</span>
+    <span class="k">def</span> <span class="nf">idd</span><span class="p">():</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">dom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">()</span> <span class="c1"># always return (), the only object
+</span>    <span class="k">def</span> <span class="nf">cod</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">TimesIntCat</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="n">b</span>
+    <span class="k">def</span> <span class="nf">idd</span><span class="p">():</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">dom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">()</span>
+    <span class="k">def</span> <span class="nf">cod</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">ListCat</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">b</span>
+    <span class="k">def</span> <span class="nf">idd</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">[]</span>
+    <span class="k">def</span> <span class="nf">dom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">()</span>
+    <span class="k">def</span> <span class="nf">cod</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">UnionSetCat</span><span class="p">(</span><span class="nb">set</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">union</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">idd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">dom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">()</span>
+    <span class="k">def</span> <span class="nf">cod</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">()</span>
+    
+<span class="n">PlusIntCat</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="n">compose</span><span class="p">(</span><span class="n">PlusIntCat</span><span class="p">.</span><span class="n">idd</span><span class="p">())</span> <span class="c1"># 3
+</span></code></pre></div></div>
+
+<p>Some monoids are also groups if there is a natural inverse operation. The integers are a group under addition where the negative gives you the inverse. Some aren’t though. The natural numbers (0,1,2…) aren’t a group under addition though.</p>
+
+<p>Similarly groups can be thought of as a category with one object, with the additional requirement that every morphism is invertible, that there is always a $ f^{-1}$ such that  $  f \circ f^{-1} = id$.</p>
+
+<p>Sympy <a href="https://docs.sympy.org/latest/modules/combinatorics/index.html">has groups</a> in it. We can make a wrapper of that functionality that looks like a categorical interface. To match our pattern of using python classes to represent categories, it is convenient to do the <a href="https://www.python-course.eu/python3_classes_and_type.php">slightly uncommon</a> thing of making a class definition generator function <code class="language-plaintext highlighter-rouge">fp_group_cat</code>. Every time you call this function, it makes a different class and a different category. I have only here wrapped the finitely presented group functionality, but there are also free groups, permutation groups, and named groups available in sympy.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sympy.combinatorics.free_groups</span> <span class="kn">import</span> <span class="n">free_group</span><span class="p">,</span> <span class="n">vfree_group</span><span class="p">,</span> <span class="n">xfree_group</span>
+<span class="kn">from</span> <span class="nn">sympy.combinatorics.fp_groups</span> <span class="kn">import</span> <span class="n">FpGroup</span><span class="p">,</span> <span class="n">CosetTable</span><span class="p">,</span> <span class="n">coset_enumeration_r</span>
+
+
+<span class="k">def</span> <span class="nf">fp_group_cat</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">catname</span><span class="p">):</span>
+    <span class="c1"># A Category generator that turns a finitely presented group into categorical python class
+</span>    <span class="n">Cat</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">catname</span><span class="p">,</span> <span class="p">(),</span> <span class="nb">vars</span><span class="p">(</span><span class="n">G</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">cat_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">a</span>
+    <span class="n">Cat</span><span class="p">.</span><span class="n">__init__</span> <span class="o">=</span> <span class="n">cat_init</span>
+    <span class="n">Cat</span><span class="p">.</span><span class="n">compose</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span><span class="n">b</span> <span class="p">:</span> <span class="n">G</span><span class="p">.</span><span class="nb">reduce</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">f</span> <span class="o">*</span> <span class="n">b</span><span class="p">.</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">Cat</span><span class="p">.</span><span class="n">dom</span> <span class="o">=</span> <span class="k">lambda</span> <span class="p">:</span> <span class="p">()</span>
+    <span class="n">Cat</span><span class="p">.</span><span class="n">cod</span> <span class="o">=</span> <span class="k">lambda</span> <span class="p">:</span> <span class="p">()</span>
+    <span class="n">Cat</span><span class="p">.</span><span class="n">idd</span> <span class="o">=</span> <span class="k">lambda</span> <span class="p">:</span> <span class="n">Cat</span><span class="p">(</span><span class="n">G</span><span class="p">.</span><span class="n">identity</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Cat</span>
+
+<span class="n">F</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">free_group</span><span class="p">(</span><span class="s">"a, b"</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">FpGroup</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="p">[</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="o">**</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="p">)</span><span class="o">**</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">MyCat</span> <span class="o">=</span> <span class="n">fp_group_cat</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s">"MyCat"</span><span class="p">)</span>
+<span class="n">MyCat</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">a</span><span class="p">).</span><span class="n">compose</span><span class="p">(</span><span class="n">MyCat</span><span class="p">.</span><span class="n">idd</span><span class="p">())</span>
+<span class="n">MyCat</span><span class="p">.</span><span class="n">dom</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h4 id="many-objects-at-most-one-arrow-per-pair-preorders">Many objects, at most one arrow per pair: Preorders</h4>
+
+<p>We can simplify the power of a category in a different direction. Instead of having only 1 object, we’ll have few arrows.</p>
+
+<p>A category with many objects but at most a single morphism between a pair of them obeys the axioms of a <a href="https://en.wikipedia.org/wiki/Preorder">preorder</a>. In categorical terminology this is sometimes called a <a href="https://en.wikipedia.org/wiki/Posetal_category">thin category</a> Any actual order like like $ \le$ on numbers is also a preorder, but preorders have slightly weaker requirements. Here is a categorical representation of the ordering on integers (although really the same implementation will work for any python type that implements &lt;= and == )</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">IntOrderCat</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dom</span><span class="p">,</span> <span class="n">cod</span><span class="p">):</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">dom</span> <span class="o">&lt;=</span> <span class="n">cod</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">cod</span> <span class="o">=</span> <span class="n">cod</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">dom</span> <span class="o">=</span> <span class="n">dom</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">f</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="k">def</span> <span class="nf">idd</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">IntOrderCat</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">):</span>
+        <span class="k">assert</span><span class="p">(</span> <span class="n">f</span><span class="p">.</span><span class="n">dom</span> <span class="o">==</span> <span class="n">g</span><span class="p">.</span><span class="n">cod</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">IntOrderCat</span><span class="p">(</span> <span class="n">g</span><span class="p">.</span><span class="n">dom</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">cod</span> <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">f"[</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">dom</span><span class="si">}</span><span class="s"> &lt;= </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">cod</span><span class="si">}</span><span class="s">]"</span>
+    
+<span class="c1"># our convention for the order of composition feels counterintuitive here.
+</span><span class="n">IntOrderCat</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">).</span><span class="n">compose</span><span class="p">(</span><span class="n">IntOrderCat</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span> <span class="c1"># [2 &lt;= 5]
+</span><span class="n">IntOrderCat</span><span class="p">.</span><span class="n">idd</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># [3 &lt;= 3]
+</span></code></pre></div></div>
+
+<p>An example of a partial order is the subset relationship, which we can represent using python sets. This is an important but perhaps confusing example. Haven’t we already defined FinSet? Yes, but these are different categories. In FinSet, morphisms are functions. In SubSetCat a morphisms is the subset relationship (of which there can either be one or not one). They just plain are not the same thing even though there are sets in the mix for both. The situation is made even more confusing by the fact that the subset relationship can be talked about indirectly inside FinSet using monic morphisms, which have as their image the subset of interest.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SubSetCat</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dom</span><span class="p">,</span><span class="n">cod</span><span class="p">):</span>
+        <span class="k">assert</span><span class="p">(</span> <span class="n">dom</span><span class="p">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">cod</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">cod</span> <span class="o">=</span> <span class="n">cod</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">dom</span> <span class="o">=</span> <span class="n">dom</span>
+    <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">):</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">dom</span> <span class="o">==</span> <span class="n">g</span><span class="p">.</span><span class="n">cod</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SubSetCat</span><span class="p">(</span><span class="n">g</span><span class="p">.</span><span class="n">dom</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">cod</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">idd</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">SubSetCat</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">f"[</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">dom</span><span class="si">}</span><span class="s"> &lt;= </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">cod</span><span class="si">}</span><span class="s">]"</span>
+
+<span class="n">SubSetCat</span><span class="p">(</span>  <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">}</span> <span class="p">,</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">}</span> <span class="p">).</span><span class="n">compose</span><span class="p">(</span><span class="n">SubSetCat</span><span class="p">(</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">}</span> <span class="p">,</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">}</span> <span class="p">))</span> <span class="c1"># [{1, 2} &lt;= {1, 2, 3, 7}]
+</span></code></pre></div></div>
+
+<p>Preorders are related to directed acyclic graphs (DAG), the directed graphs that have no loops.  If you give me a DAG, there is a preorder that is generated by that DAG.  Exercise for the reader (AKA I’m lazy): Can you turn a Networkx DAG into a category?</p>
+
+<h3 id="thoughts">Thoughts</h3>
+
+<p>This is nice and all just to explain categories in terms of some perhaps more familiar concepts. It feels a little ho-hum to me. We are not getting really any benefit from the concept of a category from this post. However, the examples of monoids, groups and preorders are always something you should think about when presented when a new categorical concept, because it probably reduces to something more familiar in this case. In addition, mappings to/from these simple objects to more complicated categories can be very interesting.</p>
+
+<p>The methods of computational group theory are intriguing. It seems like some of them should extend to category theory. See this book by RFC Walters for example <a href="https://www.cambridge.org/core/books/categories-and-computer-science/203EBBEE29BEADB035C9DD80191E67B1">https://www.cambridge.org/core/books/categories-and-computer-science/203EBBEE29BEADB035C9DD80191E67B1</a> A very interesting book in other ways too. (Thanks to Evan Patterson for the tip)</p>
+
+<p>Next time I think we’ll talk about finite categories and the finite Yoneda lemma.</p>
+
+<p>Artwork courtesy of <a href="https://davidtersegno.wordpress.com/">David</a></p>
+
+<p>Edit: Hacker News discussion: <a href="https://news.ycombinator.com/item?id=23058551">https://news.ycombinator.com/item?id=23058551</a></p>
+
+:ET

@@ -13,7 +13,7 @@ tags:
 
 The self-energy used to be weird to me. But now it makes sense after I found out about the Schur complement. It can make sense even to have the decaying part of the self-energy, making an effectively non-unitary evolution of your single particle wavefunction, if there is a huge space for it to leak into, or if you approximate the Schur complement.
 
-But how do you get the effective superconducting term from Schur complements? $latex a^\dagger a^\dagger $? And how do you get the ground state to be a superposition of different particle number states?
+But how do you get the effective superconducting term from Schur complements? $ a^\dagger a^\dagger $? And how do you get the ground state to be a superposition of different particle number states?
 
 The story that made sense to me about superconductivity is that if the 2 particle density matrix factorizes well, then that factor is the pairing wavefunction. I don't know how that can fit into my current approach. Some systematic way of factoring the interaction term? That would be nice for plasmons and such, but also is alarming because it becomes clear that you're never going to get out more for the computation than you put in. Maybe that is a truism.
 

@@ -24,25 +24,26 @@ Hask is a category of haskell types with functions as arrows between them, but t
 It is commonly mentioned that STLC is the more direct mapping. STLC is kind of a subset of haskell with no polymorphism or with the polymorphism stripped out (Every time you use a polymorphic function just monomorphize it. This blows up the number of functions floating around).
 
 STLC is a Cartesian Closed Category (CCC), which means it is always possible to create pairs between any two types and functions between any two types.
-
+```
 data STLCType a = Prim a | Pair (STLCType a) (STLCType a) | Arr (STLCType a) (STLCType a)
 
 data STLCTerm a = Lam Var STLCTerm | App STLCTerm | Var Var | Prim a
 
 data Var = Var String STLCType
+```
 
 
 
 which maybe be extendible with a bunch of primitive operations and types (primitives might include addition, integers, bits, bit operations, etc.). It isn't clear to me where it is most elegant to put type annotations. Maybe it is best to keep them separate and compare them.
 
 Apparently it is possible to compile this in a point free form
-
+```
 data CatTerm a = Comp STLCTerm STLCTerm | App STLCTerm STLCTerm | Prim a
-
+```
 or maybe
-
+```
 data CatTerm a = App STLCTerm STLCTerm | Prim a| Comp
-
+```
 Dealing with the labeling of variables correctly is a real pain in the ass, so this is a win from the compiler standpoint. It is a pain to manually write functions using this style.
 
 The compiling to categories project I think is using Haskell as the language and GHC to do the parsing and some other stuff, but then grabbing Core (the GHC intermediate language) and converting it into the Category form. I don't see why you couldn't use an STLC DSL and do the same. It would be less ergonomic to the user but also much less complicated. I wonder. I've written interpreters for STLC and they are very simple.
@@ -60,45 +61,45 @@ Also of extreme interest:
 He's using this compiling to categories perspective with the intent to layout parallel circuits.
 
 He uses Generic DataTypes with are very functory, which implies type parameters which tempts one into polymorphism. But I think again he is using polymorphism as a scheme which upon compilation gets turned into a bunch of different legit types. Maybe you'd want
-
+```
 data STLCType f a = Prim (f a) | Pair (STLCType f a) (STLCType f a) | Arr (STLCType f a) (STLCType f a)
-
+```
 
 
 You could do well to make way more lightweight operator synonyms for this lambda calculus
-
+```
 Lam String LC | App LC LC | Var String
 
 (-->) = Lam
-
+```
 or
-
+```
 (\\) = Lam
-
+```
 and some synonyms for common variables
-
+```
 x = "x"
 
 y = "y"
-
+```
 etc
 
 
-
+```
 ($$) = App
-
+```
 to dereference
-
+```
 (**) = Var  - bind this very close. Trying to look kind of like pointer derferencing?
-
+```
 maybe also add pattern matching into the language
-
+```
 (Pat) =
-
+```
 And some kind of autocurrying
-
+```
 Curry [Var] |
-
+```
 Maybe use Vec instead of list for compile time size.
 
 I guess this is gonna be funky and having the actual lambda syntax compile is super cool and nice. But it is also nice to have a userland haskell concept of this stuff without weird plugins. A OverloadLambda extension would be cool. I don't know how it would work. Type directed inference of which kind of lambda to use? Is that possible?

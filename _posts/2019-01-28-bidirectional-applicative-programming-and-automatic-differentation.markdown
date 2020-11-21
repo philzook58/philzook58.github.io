@@ -66,11 +66,16 @@ This is interesting to me for another reason. Their `lift2` and `unlift2` functi
 
 
     
-    <code>lift2 :: Lens (a,b) c -> (forall s. Num s => (Lens s a, Lens s b) -> Lens s c)
-    lift2 l (x,y) = lift l (fan x y)
     
-    unlift2 :: (Num a, Num b) => (forall s. Num s => (Lens s a, Lens s b) -> Lens s c) -> Lens (a,b) c
-    unlift2 f = f (fst', snd')</code>
+```
+
+lift2 :: Lens (a,b) c -> (forall s. Num s => (Lens s a, Lens s b) -> Lens s c)
+lift2 l (x,y) = lift l (fan x y)
+
+unlift2 :: (Num a, Num b) => (forall s. Num s => (Lens s a, Lens s b) -> Lens s c) -> Lens (a,b) c
+unlift2 f = f (fst', snd')
+```
+
 
 
 
@@ -86,8 +91,13 @@ One can use the function `b -> a` in many of the situations one can use `a` in. 
 
 
     
-    <code>t1 :: Num a => Lens (a,a) a
-    t1 = unlift2 $ \(x,y) -> x + y*y + y * 7</code>
+    
+```
+
+t1 :: Num a => Lens (a,a) a
+t1 = unlift2 $ \(x,y) -> x + y*y + y * 7
+```
+
 
 
 

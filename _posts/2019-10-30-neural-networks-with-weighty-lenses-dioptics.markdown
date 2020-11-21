@@ -29,7 +29,7 @@ I wrote a while back how you can make a pretty nice DSL for reverse mode differe
 
 
 
-http://www.philipzucker.com/reverse-mode-differentiation-is-kind-of-like-a-lens-ii/
+[http://www.philipzucker.com/reverse-mode-differentiation-is-kind-of-like-a-lens-ii/](http://www.philipzucker.com/reverse-mode-differentiation-is-kind-of-like-a-lens-ii/)
 
 
 
@@ -38,8 +38,13 @@ http://www.philipzucker.com/reverse-mode-differentiation-is-kind-of-like-a-lens-
 
 
     
-    <code>type Lens s t a b = s -> (a, b -> t)
-    type AD x dx y dy = x -> (y, dy -> dx)</code>
+    
+```
+
+type Lens s t a b = s -> (a, b -> t)
+type AD x dx y dy = x -> (y, dy -> dx)
+```
+
 
 
 
@@ -53,7 +58,7 @@ Composition is defined identically for reverse mode just as it is for lens.
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2018/04/Drawing-2.png)The forward computation shares info with the backwards differential propagation, which corresponds to a transposed Jacobian
+![](/assets/Drawing-2.png)The forward computation shares info with the backwards differential propagation, which corresponds to a transposed Jacobian
 
 
 
@@ -76,7 +81,7 @@ Second, Lens is just a nice structure for bidirectional computation, with one fo
 
 
 
-https://twitter.com/_julesh_/status/1189016088614526977?s=20
+[https://twitter.com/_julesh_/status/1189016088614526977?s=20](https://twitter.com/_julesh_/status/1189016088614526977?s=20)
 
 
 
@@ -93,9 +98,14 @@ It is also pretty similar to the standard "dual number" form `type FAD x dx y dy
 
 
     
-    <code>     x -> (y, dy -> dx) 
-    ==>  x -> (y, forall s. (dx -> s) -> (dy -> s))
-    ==>  forall s. (x, dx -> s) -> (y, dx -> s) </code>
+    
+```
+
+     x -> (y, dy -> dx) 
+==>  x -> (y, forall s. (dx -> s) -> (dy -> s))
+==>  forall s. (x, dx -> s) -> (y, dx -> s) 
+```
+
 
 
 
@@ -111,8 +121,13 @@ and meet it in the middle with
 
 
     
-    <code>(x,dx) -> (y,dy)
-    ==> forall s. (x, s -> dx) -> (y, s -> dy)</code>
+    
+```
+
+(x,dx) -> (y,dy)
+==> forall s. (x, s -> dx) -> (y, s -> dy)
+```
+
 
 
 
@@ -156,11 +171,11 @@ These operations are easily seen as 2 dimensional diagrams.
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/10/My-Drawing-1.sketchpad-1024x409.png)Three layers composed, exposing the weights from all layers
+![](/assets/My-Drawing-1.sketchpad-1024x409.png)Three layers composed, exposing the weights from all layers
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/10/My-Drawing-2.sketchpad.png)The 2-D arrow things can be built out of the 1-d arrows of the original basic AD lens by bending the weights up and down. Ultimately they are describing the same thing
+![](/assets/My-Drawing-2.sketchpad.png)The 2-D arrow things can be built out of the 1-d arrows of the original basic AD lens by bending the weights up and down. Ultimately they are describing the same thing
 
 
 
@@ -174,94 +189,99 @@ Here's the core reverse lens ad combinators
 
 
     
-    <code>import Control.Arrow ((***))
     
-    type Lens'' a b = a -> (b, b -> a)
-    
-    comp :: (b -> (c, (c -> b))) -> (a -> (b, (b -> a))) -> (a -> (c, (c -> a)))
-    comp f g x = let (b, dg) = g x in
-                 let (c, df) = f b in
-                 (c, dg . df)
-    
-    id' :: Lens'' a a
-    id' x = (x, id) 
-    
-    relu' :: (Ord a, Num a) => Lens'' a a
-    relu' = \x -> (frelu x, brelu x) where
-            frelu x | x > 0 = x
-                    | otherwise = 0
-            brelu x dy | x > 0 = dy
-                       | otherwise = 0
-    
-    add' :: Num a => Lens'' (a,a) a 
-    add' = \(x,y) -> (x + y, \ds -> (ds, ds))
-    
-    dup' :: Num a => Lens'' a (a,a)
-    dup' = \x -> ((x,x), \(dx,dy) -> dx + dy)
-    
-    sub' :: Num a => Lens'' (a,a) a 
-    sub' = \(x,y) -> (x - y, \ds -> (ds, -ds))
-    
-    mul' :: Num a => Lens'' (a,a) a 
-    mul' = \(x,y) -> (x * y, \dz -> (dz * y, x * dz))
-    
-    recip' :: Fractional a => Lens'' a a 
-    recip' = \x-> (recip x, \ds -> - ds / (x * x))
-    
-    div' :: Fractional a => Lens'' (a,a) a 
-    div' = (\(x,y) -> (x / y, \d -> (d/y,-x*d/(y * y))))
-    
-    sin' :: Floating a => Lens'' a a
-    sin' = \x -> (sin x, \dx -> dx * (cos x))
-    
-    cos' :: Floating a => Lens'' a a
-    cos' = \x -> (cos x, \dx -> -dx * (sin x))
-    
-    pow' :: Num a => Integer -> Lens'' a a
-    pow' n = \x -> (x ^ n, \dx -> (fromInteger n) * dx * x ^ (n-1)) 
-    
-    --cmul :: Num a => a -> Lens' a a
-    --cmul c = lens (* c) (\x -> \dx -> c * dx)
-    
-    exp' :: Floating a => Lens'' a a
-    exp' = \x -> let ex = exp x in
-                          (ex, \dx -> dx * ex)
-    
-    fst' :: Num b => Lens'' (a,b) a
-    fst' = (\(a,b) -> (a, \ds -> (ds, 0)))
-    
-    snd' :: Num a => Lens'' (a,b) b
-    snd' = (\(a,b) -> (b, \ds -> (0, ds)))
-    
-    -- some monoidal combinators
-    swap' :: Lens'' (a,b) (b,a)
-    swap' = (\(a,b) -> ((b,a), \(db,da) -> (da, db)))
-    
-    assoc' :: Lens'' ((a,b),c) (a,(b,c))
-    assoc' = \((a,b),c) -> ((a,(b,c)), \(da,(db,dc)) -> ((da,db),dc))
-    
-    assoc'' :: Lens'' (a,(b,c)) ((a,b),c)
-    assoc'' = \(a,(b,c)) -> (((a,b),c), \((da,db),dc)->  (da,(db,dc)))
-    
-    par' :: Lens'' a b -> Lens'' c d -> Lens'' (a,c) (b,d)
-    par' l1 l2 = l3 where
-        l3 (a,c) = let (b , j1) = l1 a in
-                   let (d, j2) = l2 c in
-                   ((b,d) , j1 *** j2) 
-    first' :: Lens'' a b -> Lens'' (a, c) (b, c)
-    first' l = par' l id'
-    
-    second' :: Lens'' a b -> Lens'' (c, a) (c, b)
-    second' l = par' id' l
-    
-    labsorb :: Lens'' ((),a) a
-    labsorb (_,a) = (a, \a' -> ((),a'))
-    
-    labsorb' :: Lens'' a ((),a)
-    labsorb' a = (((),a), \(_,a') -> a')
-    
-    rabsorb :: Lens'' (a,()) a
-    rabsorb = comp labsorb swap'</code>
+```haskell
+
+import Control.Arrow ((***))
+
+type Lens'' a b = a -> (b, b -> a)
+
+comp :: (b -> (c, (c -> b))) -> (a -> (b, (b -> a))) -> (a -> (c, (c -> a)))
+comp f g x = let (b, dg) = g x in
+             let (c, df) = f b in
+             (c, dg . df)
+
+id' :: Lens'' a a
+id' x = (x, id) 
+
+relu' :: (Ord a, Num a) => Lens'' a a
+relu' = \x -> (frelu x, brelu x) where
+        frelu x | x > 0 = x
+                | otherwise = 0
+        brelu x dy | x > 0 = dy
+                   | otherwise = 0
+
+add' :: Num a => Lens'' (a,a) a 
+add' = \(x,y) -> (x + y, \ds -> (ds, ds))
+
+dup' :: Num a => Lens'' a (a,a)
+dup' = \x -> ((x,x), \(dx,dy) -> dx + dy)
+
+sub' :: Num a => Lens'' (a,a) a 
+sub' = \(x,y) -> (x - y, \ds -> (ds, -ds))
+
+mul' :: Num a => Lens'' (a,a) a 
+mul' = \(x,y) -> (x * y, \dz -> (dz * y, x * dz))
+
+recip' :: Fractional a => Lens'' a a 
+recip' = \x-> (recip x, \ds -> - ds / (x * x))
+
+div' :: Fractional a => Lens'' (a,a) a 
+div' = (\(x,y) -> (x / y, \d -> (d/y,-x*d/(y * y))))
+
+sin' :: Floating a => Lens'' a a
+sin' = \x -> (sin x, \dx -> dx * (cos x))
+
+cos' :: Floating a => Lens'' a a
+cos' = \x -> (cos x, \dx -> -dx * (sin x))
+
+pow' :: Num a => Integer -> Lens'' a a
+pow' n = \x -> (x ^ n, \dx -> (fromInteger n) * dx * x ^ (n-1)) 
+
+--cmul :: Num a => a -> Lens' a a
+--cmul c = lens (* c) (\x -> \dx -> c * dx)
+
+exp' :: Floating a => Lens'' a a
+exp' = \x -> let ex = exp x in
+                      (ex, \dx -> dx * ex)
+
+fst' :: Num b => Lens'' (a,b) a
+fst' = (\(a,b) -> (a, \ds -> (ds, 0)))
+
+snd' :: Num a => Lens'' (a,b) b
+snd' = (\(a,b) -> (b, \ds -> (0, ds)))
+
+-- some monoidal combinators
+swap' :: Lens'' (a,b) (b,a)
+swap' = (\(a,b) -> ((b,a), \(db,da) -> (da, db)))
+
+assoc' :: Lens'' ((a,b),c) (a,(b,c))
+assoc' = \((a,b),c) -> ((a,(b,c)), \(da,(db,dc)) -> ((da,db),dc))
+
+assoc'' :: Lens'' (a,(b,c)) ((a,b),c)
+assoc'' = \(a,(b,c)) -> (((a,b),c), \((da,db),dc)->  (da,(db,dc)))
+
+par' :: Lens'' a b -> Lens'' c d -> Lens'' (a,c) (b,d)
+par' l1 l2 = l3 where
+    l3 (a,c) = let (b , j1) = l1 a in
+               let (d, j2) = l2 c in
+               ((b,d) , j1 *** j2) 
+first' :: Lens'' a b -> Lens'' (a, c) (b, c)
+first' l = par' l id'
+
+second' :: Lens'' a b -> Lens'' (c, a) (c, b)
+second' l = par' id' l
+
+labsorb :: Lens'' ((),a) a
+labsorb (_,a) = (a, \a' -> ((),a'))
+
+labsorb' :: Lens'' a ((),a)
+labsorb' a = (((),a), \(_,a') -> a')
+
+rabsorb :: Lens'' (a,()) a
+rabsorb = comp labsorb swap'
+```
+
 
 
 
@@ -277,65 +297,70 @@ And here are the two dimensional combinators. I tried to write them point-free i
 
 
     
-    <code>type WAD' w w' a b = Lens'' (w,a) (w',b)
-    type WAD'' w a b = WAD' w () a b -- terminate the weights for a closed network
-    {- For any monoidal category we can construct this composition? -}
-    -- horizontal composition
-    hcompose :: forall w w' w'' w''' a b c. WAD' w' w'' b c -> WAD' w w''' a b -> WAD' (w',w) (w'',w''') a c
-    hcompose f g = comp f' g' where 
-                   f' :: Lens'' ((w',r),b) ((w'',r),c)
-                   f' = (first' swap') `comp` assoc'' `comp` (par' id' f) `comp` assoc' `comp`  (first' swap') 
-                   g' :: Lens'' ((r,w),a) ((r,w'''),b)
-                   g' = assoc'' `comp` (par' id' g) `comp` assoc' 
     
-    
-    
-    rotate :: WAD' w w' a b -> WAD' a b w w'                                      
-    rotate f = swap' `comp` f `comp` swap'
-    
-    -- vertical composition of weights
-    vcompose :: WAD' w'  w'' c d -> WAD' w w' a b -> WAD' w w'' (c, a) (d, b)
-    vcompose f g = rotate (hcompose (rotate f)  (rotate g) )                             
-    
-    -- a double par.
-    diagpar :: forall w w' a b w'' w''' c d. WAD' w  w' a b -> WAD' w'' w''' c d 
-               -> WAD' (w,w'') (w',w''') (a, c) (b, d)
-    diagpar f g = t' `comp` (par' f g) `comp` t where
-                    t :: Lens'' ((w,w''),(a,c)) ((w,a), (w'',c)) -- yikes. just rearrangements.
-                    t =  assoc'' `comp` (second' ((second' swap') `comp` assoc' `comp` swap')) `comp` assoc'
-                    t' :: Lens'' ((w',b), (w''',d)) ((w',w'''),(b,d)) -- the tranpose of t
-                    t' =  assoc'' `comp` (second'  ( swap'  `comp` assoc'' `comp` (second' swap')))  `comp` assoc'
-    
-    id''' :: WAD' () () a a
-    id''' = id'
-    
-    
-    
-    
-    
-    
-    -- rotate:: WAD' w a a w
-    -- rotate = swap'
-    
-    liftIO :: Lens'' a b -> WAD' w w a b
-    liftIO = second'
-    
-    liftW :: Lens'' w w' -> WAD' w w' a a
-    liftW = first'
-    
-    
-    wassoc' = liftW assoc' 
-    wassoc'' = liftW assoc'' 
-    
-    labsorb'' :: WAD' ((),w) w a a
-    labsorb'' = first' labsorb
-    
-    labsorb''' :: WAD' w ((),w) a a
-    labsorb''' = first' labsorb'
-    
-    wswap' :: WAD' (w,w') (w',w) a a
-    wswap' = first' swap'
-    -- and so on we can lift all combinators</code>
+```haskell
+
+type WAD' w w' a b = Lens'' (w,a) (w',b)
+type WAD'' w a b = WAD' w () a b -- terminate the weights for a closed network
+{- For any monoidal category we can construct this composition? -}
+-- horizontal composition
+hcompose :: forall w w' w'' w''' a b c. WAD' w' w'' b c -> WAD' w w''' a b -> WAD' (w',w) (w'',w''') a c
+hcompose f g = comp f' g' where 
+               f' :: Lens'' ((w',r),b) ((w'',r),c)
+               f' = (first' swap') `comp` assoc'' `comp` (par' id' f) `comp` assoc' `comp`  (first' swap') 
+               g' :: Lens'' ((r,w),a) ((r,w'''),b)
+               g' = assoc'' `comp` (par' id' g) `comp` assoc' 
+
+
+
+rotate :: WAD' w w' a b -> WAD' a b w w'                                      
+rotate f = swap' `comp` f `comp` swap'
+
+-- vertical composition of weights
+vcompose :: WAD' w'  w'' c d -> WAD' w w' a b -> WAD' w w'' (c, a) (d, b)
+vcompose f g = rotate (hcompose (rotate f)  (rotate g) )                             
+
+-- a double par.
+diagpar :: forall w w' a b w'' w''' c d. WAD' w  w' a b -> WAD' w'' w''' c d 
+           -> WAD' (w,w'') (w',w''') (a, c) (b, d)
+diagpar f g = t' `comp` (par' f g) `comp` t where
+                t :: Lens'' ((w,w''),(a,c)) ((w,a), (w'',c)) -- yikes. just rearrangements.
+                t =  assoc'' `comp` (second' ((second' swap') `comp` assoc' `comp` swap')) `comp` assoc'
+                t' :: Lens'' ((w',b), (w''',d)) ((w',w'''),(b,d)) -- the tranpose of t
+                t' =  assoc'' `comp` (second'  ( swap'  `comp` assoc'' `comp` (second' swap')))  `comp` assoc'
+
+id''' :: WAD' () () a a
+id''' = id'
+
+
+
+
+
+
+-- rotate:: WAD' w a a w
+-- rotate = swap'
+
+liftIO :: Lens'' a b -> WAD' w w a b
+liftIO = second'
+
+liftW :: Lens'' w w' -> WAD' w w' a a
+liftW = first'
+
+
+wassoc' = liftW assoc' 
+wassoc'' = liftW assoc'' 
+
+labsorb'' :: WAD' ((),w) w a a
+labsorb'' = first' labsorb
+
+labsorb''' :: WAD' w ((),w) a a
+labsorb''' = first' labsorb'
+
+wswap' :: WAD' (w,w') (w',w) a a
+wswap' = first' swap'
+-- and so on we can lift all combinators
+```
+
 
 
 
@@ -392,7 +417,7 @@ He is up to some interesting diagrams
 
 
 
-https://twitter.com/davidad/status/1179760373030801408?s=20
+[https://twitter.com/davidad/status/1179760373030801408?s=20](https://twitter.com/davidad/status/1179760373030801408?s=20)
 
 
 

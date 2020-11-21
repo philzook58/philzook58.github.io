@@ -106,8 +106,13 @@ Interval arithmetic is very much like forward mode differentiation. In forward m
 
 
     
-    <code>type ForwardMode x dx y dy = (x,dx) -> (y,dy)
-    type IntervalFun x delx y dely = (x,delx) -> (y, dely)</code>
+    
+```
+
+type ForwardMode x dx y dy = (x,dx) -> (y,dy)
+type IntervalFun x delx y dely = (x,delx) -> (y, dely)
+```
+
 
 
 
@@ -131,7 +136,12 @@ But reverse mode differentiation is often where it is at. This is the algorithm 
 
 
     
-    <code>type Lens s t a b = s -> (a, b -> t)</code>
+    
+```
+
+type Lens s t a b = s -> (a, b -> t)
+```
+
 
 
 
@@ -155,7 +165,11 @@ By analogy one might try
 
 
     
-    <code>type RealF x delta y epsilon = Lens x delta y epsilon = x -> (y, epsilon -> delta)</code>
+    
+```
+
+type RealF x delta y epsilon = Lens x delta y epsilon = x -> (y, epsilon -> delta)
+```
 
 
 
@@ -163,7 +177,8 @@ By analogy one might try
 
 
 
-There is something pleasing here compared to interval arithmetic in that the output epsilon drives the input delta.  The second function is kind of a Skolemized $latex \delta(\epsilon)$ from the definition of continuity.
+
+There is something pleasing here compared to interval arithmetic in that the output epsilon drives the input delta.  The second function is kind of a Skolemized $ \delta(\epsilon)$ from the definition of continuity.
 
 
 
@@ -187,7 +202,12 @@ So it seems to me that actually a better definition is
 
 
     
-    <code>type RealF x delta y epsilon = Lens epsilon y delta x  = epsilon -> (delta, x -> y)</code>
+    
+```
+
+type RealF x delta y epsilon = Lens epsilon y delta x  = epsilon -> (delta, x -> y)
+```
+
 
 
 
@@ -235,7 +255,7 @@ We can play the same monoidal category games with these lenses as ever. We can u
 
 
 
-This might be a nice type for use in a theorem prover. The Lens type combined with the appropriate properties that the intervals go to zero and stay consistent for arbitrary epsilon seems like enough? { Realf |  something something something}
+This might be a nice type for use in a theorem prover. The Lens type combined with the appropriate properties that the intervals go to zero and stay consistent for arbitrary epsilon seems like enough? { Realf \|  something something something}
 
 
 

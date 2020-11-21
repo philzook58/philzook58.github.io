@@ -1,0 +1,333 @@
+I"|�<p><a href="http://www.philipzucker.com/a-short-skinny-on-relations-towards-the-algebra-of-programming/">Last time</a>,  I tried to give a primer of relations and relational algebra using the Haskell type <code class="language-plaintext highlighter-rouge">type Rel a b = [(a,b)]</code>. In this post we’re going to look at these ideas from a slightly different angle. Instead of encoding relations using value level sets, we’ll encode relations in the type system.  The <a href="https://github.com/scmu/aopa">Algebra of Programming Agda repo</a> and the papers quoted therein are very relevant, so if you’re comfortable wading into those waters, give them a look. You can find my repo for <a href="https://github.com/philzook58/rel/blob/master/src/ProRel.hs">fiddling here</a></p>
+
+<p>At this point, depending on what you’ve seen before, you’re either thinking “Yeah, sure. That’s a thing.” or you’re thinking “How and why the hell would you do such a ridiculous thing.”</p>
+
+<p>Most of this post will be about how, so let’s address why first:</p>
+
+<ol>
+  <li>Examining relations in this style illuminates some constructions that appear around the Haskell ecosystem, particularly some peculiar fellows in the <a href="http://hackage.haskell.org/package/profunctors-5.4">profunctor package</a>.</li>
+  <li>More syntactic approach to relations allows discussion of larger/infinite domains. The finite enumerations of the previous post is nice for simplicity, but it seems you can’t get far that way.</li>
+  <li>Mostly because we can - It’s a fun game. Maybe a useful one? TBD.</li>
+</ol>
+
+<p>With that out of the way, let’s go on to how.</p>
+
+<h3 id="translating-functions-to-relation-gadts">Translating Functions to Relation GADTs</h3>
+
+<p>We will be using some Haskell extensions in this post, at the very least GADTs and DataKinds. For an introduction to GADTs and DataKinds, check out this <a href="https://www.parsonsmatt.org/2017/04/26/basic_type_level_programming_in_haskell.html">blog post</a>. DataKinds is an extension that reflects every data constructor of data types to a type constructor.  Because there are values <code class="language-plaintext highlighter-rouge">True</code> and <code class="language-plaintext highlighter-rouge">False</code> there are corresponding types created<code class="language-plaintext highlighter-rouge">'True</code> and <code class="language-plaintext highlighter-rouge">'False</code>. GADTs is an extension of the type definition mechanism of standard Haskell. They allow you to declare refined types for the constructors of your data and they infer those refined type when you pattern match out of the data as well, such that the whole process is kind of information preserving.</p>
+
+<p>We will use the GADT extension to define relational datatypes with the kind</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="o">*</span>
+</code></pre></div></div>
+
+<p>. That way it has a slot <code class="language-plaintext highlighter-rouge">a</code> for the “input” and <code class="language-plaintext highlighter-rouge">b</code> for the “output” of the relation.  What will goes in these type slots will be DataKind lifted types like <code class="language-plaintext highlighter-rouge">'True</code>, not ordinary Haskell types like <code class="language-plaintext highlighter-rouge">Int</code>. This is a divergence from from the uses of similar kinds you see in Category, Profunctor, or Arrow. We’re doing a more typelevel flavored thing than you’ll see in those libraries. What we’re doing is clearly a close brother of the <a href="http://hackage.haskell.org/package/singletons">singleton</a> approach to dependently typed programming in Haskell.</p>
+
+<p>Some examples are in order for what I mean. Here are two simple boolean functions, <code class="language-plaintext highlighter-rouge">not</code> and <code class="language-plaintext highlighter-rouge">and</code> defined in ordinary Haskell functions, and their equivalent GADT relation data type.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">not</span> <span class="kt">True</span> <span class="o">=</span> <span class="kt">False</span>
+<span class="n">not</span> <span class="kt">False</span> <span class="o">=</span> <span class="kt">True</span>
+
+<span class="kr">data</span> <span class="kt">Not</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">NotTF</span> <span class="o">::</span> <span class="kt">Not</span> <span class="kt">'True</span> <span class="kt">'False</span>
+    <span class="kt">NotFT</span> <span class="o">::</span> <span class="kt">Not</span> <span class="kt">'False</span> <span class="kt">'True</span>
+
+<span class="n">and</span> <span class="kt">True</span> <span class="kt">True</span> <span class="o">=</span> <span class="kt">True</span>
+<span class="n">and</span> <span class="kt">False</span> <span class="kr">_</span> <span class="o">=</span> <span class="kt">False</span>
+<span class="n">and</span> <span class="kr">_</span> <span class="kt">False</span> <span class="o">=</span> <span class="kt">False</span>
+
+<span class="kr">data</span> <span class="kt">And</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">AndTT</span> <span class="o">::</span> <span class="kt">And</span> <span class="n">'</span><span class="p">(</span> <span class="kt">'True</span><span class="p">,</span> <span class="kt">'True</span><span class="p">)</span> <span class="kt">'True</span>
+    <span class="kt">AndFU</span> <span class="o">::</span> <span class="kt">And</span> <span class="n">'</span><span class="p">(</span> <span class="kt">'False</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="kt">'False</span>
+    <span class="kt">AndUF</span> <span class="o">::</span> <span class="kt">And</span> <span class="n">'</span><span class="p">(</span> <span class="n">a</span><span class="p">,</span> <span class="kt">'False</span><span class="p">)</span> <span class="kt">'False</span>
+</code></pre></div></div>
+
+<p>You can already start to see how mechanical the correspondence between the ordinary function definition and our new fancy relation type. A function is often defined via cases. Each case corresponds to a new constructor of the relation and each pattern that occurs in that case is the pattern that appears in the GADT. Multiple arguments to the relations are encoded by uncurrying everything by default.</p>
+
+<p>Any function calls that occur on the right hand side of a function definition becomes fields in the constructor of our relation. This includes recursive calls and external function calls. Here are some examples with a Peano style natural number data type.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">data</span> <span class="kt">Nat</span> <span class="o">=</span> <span class="kt">S</span> <span class="kt">Nat</span> <span class="o">|</span> <span class="kt">Z</span>
+
+<span class="n">plus</span> <span class="kt">Z</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+<span class="n">plus</span> <span class="p">(</span><span class="kt">S</span> <span class="n">x</span><span class="p">)</span> <span class="n">y</span> <span class="o">=</span> <span class="kt">S</span> <span class="p">(</span><span class="n">plus</span> <span class="n">x</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">Plus</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">PZ</span> <span class="o">::</span> <span class="kt">Plus</span> <span class="n">'</span><span class="p">(</span> <span class="kt">'Z</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="n">a</span>
+    <span class="kt">PS</span> <span class="o">::</span> <span class="kt">Plus</span> <span class="n">'</span><span class="p">(</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="kt">Plus</span> <span class="n">'</span><span class="p">(</span> <span class="kt">'S</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="n">c</span> 
+
+</code></pre></div></div>
+
+<p>We can also define things that aren’t functions. Relations are a larger class of things than functions are, which is part of their utility. Here is a “less than equal”  relation <code class="language-plaintext highlighter-rouge">LTE</code>.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">data</span> <span class="kt">LTE</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">LTERefl</span> <span class="o">::</span> <span class="kt">LTE</span> <span class="n">n</span> <span class="n">n</span>
+    <span class="kt">LTESucc</span> <span class="o">::</span> <span class="kt">LTE</span> <span class="n">n</span> <span class="n">m</span> <span class="o">-&gt;</span> <span class="kt">LTE</span> <span class="n">n</span> <span class="p">(</span><span class="kt">'S</span> <span class="n">m</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>You can show that elements are in a particular relation by finding a value of that relational type. Is <code class="language-plaintext highlighter-rouge">([4,7], 11)</code> in the relation <code class="language-plaintext highlighter-rouge">Plus</code>? Yes, and I can show it with with the value <code class="language-plaintext highlighter-rouge">PS (PS (PS (PS PZ))) :: Plus (4,7) 11</code> .  This is very much the Curry-Howard correspondence. The type <code class="language-plaintext highlighter-rouge">R a b</code> corresponds to the proposition/question is $ (a,b) \in R$ .</p>
+
+<h3 id="the-fun-stuff--relational-combinators">The Fun Stuff : Relational Combinators</h3>
+
+<p>While you need to build some primitive relations using new data type definitions, others can be built using relational combinators.   If you avoid defining too many primitive relations like the above and build them out of combinators, you expose a rich high level manipulation algebra. Otherwise you are stuck in the pattern matching dreck. We are traveling down the same road we did in the <a href="http://www.philipzucker.com/a-short-skinny-on-relations-towards-the-algebra-of-programming/">previous post</a>, so look there for less confusing explanations of the relational underpinnings of these constructions, or better yet some of the references below.</p>
+
+<p>Higher order relational operators take in a type parameters of kind</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="o">*</span>
+</code></pre></div></div>
+
+<p>and produce new types of a similar kind. The types appearing in these combinators is the AST of our relational algebra language.</p>
+
+<p>The first two combinators of interest is the composition operator and the identity relation.  An element $ (a,c) $ is in $ R \cdot Q $ if there exists a $ b$ such that $ (a,b) \in R$ and $ (b,c) \in Q$. The fairly direct translation of this into a type is</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="cm">{- rcompose :: Rel b c -&gt; Rel a b -&gt; Rel a c  -}</span>
+
+<span class="kr">data</span> <span class="kt">RCompose</span> <span class="n">k1</span> <span class="n">k2</span> <span class="n">a</span> <span class="n">c</span> <span class="kr">where</span>
+   <span class="kt">RCompose</span> <span class="o">::</span> <span class="n">k1</span> <span class="n">b</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="n">k2</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">RCompose</span> <span class="n">k1</span> <span class="n">k2</span> <span class="n">a</span> <span class="n">c</span>
+
+<span class="kr">type</span> <span class="n">k</span> <span class="o">&lt;&lt;&lt;</span> <span class="n">k'</span> <span class="o">=</span> <span class="kt">RCompose</span> <span class="n">k</span> <span class="n">k'</span> 
+<span class="kr">type</span> <span class="n">k</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">k'</span> <span class="o">=</span> <span class="kt">RCompose</span> <span class="n">k'</span> <span class="n">k</span>
+</code></pre></div></div>
+
+<p>The type of the composition is the same as that of <a href="https://hackage.haskell.org/package/profunctors-5.2.1/docs/Data-Profunctor-Composition.html">Profunctor composition</a> found in the profunctors package.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">type</span> <span class="kt">RCompose</span> <span class="o">=</span> <span class="kt">Procompose</span>
+</code></pre></div></div>
+
+<p>Alongside a composition operator, it is a knee jerk to look for an identity relation and we do have one</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">data</span> <span class="kt">Id</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+   <span class="kt">Refl</span> <span class="o">::</span> <span class="kt">Id</span> <span class="n">a</span> <span class="n">a</span>
+
+
+<span class="c1">-- monomorphic identity. Leave this out?</span>
+<span class="kr">data</span> <span class="kt">IdBool</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+  <span class="kt">ReflTrue</span> <span class="o">::</span> <span class="kt">IdBool</span> <span class="kt">'True</span> <span class="kt">'True</span>
+  <span class="kt">ReflFalse</span> <span class="o">::</span> <span class="kt">IdBool</span> <span class="kt">'False</span> <span class="kt">'False</span>
+</code></pre></div></div>
+
+<p>This is also a familiar friend. The identity relation in this language is the <a href="http://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Type-Equality.html">Equality type.</a></p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">-- identity function is the same as Equality</span>
+<span class="kr">type</span> <span class="kt">Id</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">Id</span> <span class="p">(</span><span class="n">a</span> <span class="o">:~:</span> <span class="n">b</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We can build an algebra for handling product and sum types by defining the appropriate relational combinators. These are very similar to the combinators in the Control.Arrow package.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">-- Product types</span>
+
+<span class="kr">data</span> <span class="kt">Fan</span> <span class="n">k</span> <span class="n">k'</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">Fan</span> <span class="o">::</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">k'</span> <span class="n">a</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="kt">Fan</span> <span class="n">k</span> <span class="n">k'</span> <span class="n">a</span> <span class="n">'</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+
+<span class="kr">type</span> <span class="n">k</span> <span class="o">&amp;&amp;&amp;</span> <span class="n">k'</span> <span class="o">=</span> <span class="kt">Fan</span> <span class="n">k</span> <span class="n">k'</span>
+
+<span class="kr">data</span> <span class="kt">Fst</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">Prj1</span> <span class="o">::</span> <span class="kt">Fst</span> <span class="n">'</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="n">a</span>
+
+<span class="kr">data</span> <span class="kt">Snd</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">Prj2</span> <span class="o">::</span> <span class="kt">Snd</span> <span class="n">'</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="n">b</span>
+
+<span class="c1">-- Sum type</span>
+
+<span class="kr">data</span> <span class="kt">Split</span> <span class="n">k</span> <span class="n">k'</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">CaseLeft</span> <span class="o">::</span> <span class="n">k</span> <span class="n">a</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="kt">Split</span> <span class="n">k</span> <span class="n">k'</span> <span class="p">(</span><span class="kt">'Left</span> <span class="n">a</span><span class="p">)</span> <span class="n">c</span>
+    <span class="kt">CaseRight</span> <span class="o">::</span> <span class="n">k'</span> <span class="n">b</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="kt">Split</span> <span class="n">k</span> <span class="n">k'</span> <span class="p">(</span><span class="kt">'Right</span> <span class="n">b</span><span class="p">)</span> <span class="n">c</span>
+
+<span class="kr">type</span> <span class="n">k</span> <span class="o">|||</span> <span class="n">k'</span> <span class="o">=</span> <span class="kt">Split</span> <span class="n">k</span> <span class="n">k'</span>
+
+<span class="kr">data</span> <span class="kt">Inj1</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">Inj1</span> <span class="o">::</span> <span class="kt">Inj1</span> <span class="n">a</span> <span class="p">(</span><span class="kt">'Left</span> <span class="n">a</span><span class="p">)</span>
+<span class="kr">data</span> <span class="kt">Inj2</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">Inj2</span> <span class="o">::</span> <span class="kt">Inj2</span> <span class="n">a</span> <span class="p">(</span><span class="kt">'Right</span> <span class="n">a</span><span class="p">)</span>
+
+<span class="c1">-- some derived combinators</span>
+<span class="kr">type</span> <span class="kt">Par</span> <span class="n">f</span> <span class="n">g</span> <span class="o">=</span> <span class="kt">Fan</span> <span class="p">(</span><span class="n">f</span> <span class="o">&lt;&lt;&lt;</span> <span class="kt">Fst</span><span class="p">)</span> <span class="p">(</span><span class="n">g</span> <span class="o">&lt;&lt;&lt;</span> <span class="kt">Snd</span><span class="p">)</span>
+<span class="kr">type</span> <span class="kt">Dup</span>  <span class="o">=</span> <span class="kt">Fan</span> <span class="kt">Id</span> <span class="kt">Id</span>
+<span class="kr">type</span> <span class="kt">Swap</span> <span class="o">=</span> <span class="kt">Fan</span> <span class="kt">Snd</span> <span class="kt">Fst</span>
+
+</code></pre></div></div>
+
+<p>The converse of relations is very interesting operation and is the point where relations really differ from functions. Inverting a function is tough. Conversing a relation always works. This data type has no analog in profunctor to my knowledge and probably shouldn’t.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">data</span> <span class="kt">RConverse</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">RConverse</span> <span class="o">::</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">RConverse</span> <span class="n">k</span> <span class="n">b</span> <span class="n">a</span>
+<span class="c1">-- Shorter synonym</span>
+<span class="kr">type</span> <span class="kt">RCon</span> <span class="o">=</span> <span class="kt">RConverse</span>
+</code></pre></div></div>
+
+<p>Relations do not have a notion of currying. The closest thing they have is</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">data</span> <span class="kt">Trans</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">Trans</span> <span class="o">::</span> <span class="n">k</span> <span class="n">'</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="kt">Trans</span> <span class="n">k</span> <span class="n">a</span> <span class="n">'</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="lattice-operators">Lattice Operators</h3>
+
+<p>For my purposes, lattices are descriptions of sets that trade away descriptive power for efficiency. So most operations you’d perform on sets have an analog in the lattice structure, but it isn’t a perfect matching and you’re forced into approximation. It is nice to have the way you perform these approximation be principled, so that you can know at the end of your analysis whether you’ve actually really shown anything or not about the actual sets in question.</p>
+
+<p><img src="/assets/lattice-1024x769.jpg" alt="" />? No. No… Yes? Oh. OH! IT IS!</p>
+
+<p>The top relation holds all values. This is represented by making no conditions on the type parameters. They are completely phantom.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">newtype</span> <span class="kt">Top</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">Top</span> <span class="nb">()</span>
+</code></pre></div></div>
+
+<p>Bottom is a relation with no inhabitants.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">newtype</span> <span class="kt">Bottom</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">Bottom</span> <span class="kt">Void</span>
+</code></pre></div></div>
+
+<p>The meet is basically the intersection of the relations, the join is basically the union.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">newtype</span> <span class="kt">RMeet</span> <span class="n">k</span> <span class="n">k'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">RMeet</span> <span class="p">(</span><span class="n">k</span> <span class="n">a</span> <span class="n">b</span><span class="p">,</span> <span class="n">k'</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span>
+<span class="kr">type</span> <span class="n">k</span> <span class="o">/\</span> <span class="n">k'</span> <span class="o">=</span> <span class="kt">RMeet</span> <span class="n">k</span> <span class="n">k'</span>  
+
+<span class="kr">newtype</span> <span class="kt">RJoin</span> <span class="n">k</span> <span class="n">k'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">RJoin</span> <span class="p">(</span><span class="kt">Either</span> <span class="p">(</span><span class="n">k</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span> <span class="p">(</span><span class="n">k'</span> <span class="n">a</span> <span class="n">b</span><span class="p">))</span>
+<span class="kr">type</span> <span class="n">k</span> <span class="o">\/</span> <span class="n">k'</span> <span class="o">=</span> <span class="kt">RJoin</span> <span class="n">k</span> <span class="n">k'</span> 
+</code></pre></div></div>
+
+<p>A Lattice has an order on it. This order is given by relational inclusion. This is the same as the  :-&gt; combinator can be found in the <a href="http://hackage.haskell.org/package/profunctors-5.4/docs/Data-Profunctor.html#t::-45--62-">profunctors package</a>.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">type</span> <span class="p">(</span><span class="o">:-&gt;</span><span class="p">)</span> <span class="n">p</span> <span class="n">q</span> <span class="o">=</span> <span class="n">forall</span> <span class="n">a</span> <span class="n">b</span><span class="o">.</span> <span class="n">p</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">q</span> <span class="n">a</span> <span class="n">b</span>
+<span class="kr">type</span> <span class="kt">RSub</span> <span class="n">p</span> <span class="n">q</span> <span class="o">=</span> <span class="n">p</span> <span class="o">:-&gt;</span> <span class="n">q</span>
+</code></pre></div></div>
+
+<p>Relational equality can be written as back and forth inclusion, a natural isomorphism between the relations. There is also an interesting indirect form.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">data</span> <span class="kt">REq</span> <span class="n">k</span> <span class="n">k'</span> <span class="o">=</span> <span class="kt">REq</span> <span class="p">{</span><span class="n">to'</span> <span class="o">::</span> <span class="n">k</span> <span class="o">:-&gt;</span> <span class="n">k'</span><span class="p">,</span> <span class="n">from'</span> <span class="o">::</span> <span class="n">k'</span> <span class="o">:-&gt;</span> <span class="n">k</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="relational-division">Relational Division</h4>
+
+<p>If we consider the equation <code class="language-plaintext highlighter-rouge">(r &lt;&lt;&lt; p) :-&gt; q</code> with <code class="language-plaintext highlighter-rouge">p</code> and <code class="language-plaintext highlighter-rouge">q</code> given, in what sense is there a solution for <code class="language-plaintext highlighter-rouge">r</code>? By analogy, this looks rather like <code class="language-plaintext highlighter-rouge">r*p = q</code>, so we’re asking a kind of division question.  Well, unfortunately, this equation may not necessarily have a solution (neither do linear algebraic equations for that matter), but we can ask for the best under approximation instead. This is the operation of relational division. It also appears in the profunctor package as the <a href="http://hackage.haskell.org/package/profunctors-5.4/docs/Data-Profunctor-Ran.html">right Kan Extension</a>. You’ll also find the universal property of the right division under the name <code class="language-plaintext highlighter-rouge">curryRan</code> and <code class="language-plaintext highlighter-rouge">uncurryRan</code> in that module.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">newtype</span> <span class="kt">Ran</span> <span class="n">p</span> <span class="n">q</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">Ran</span> <span class="p">{</span> <span class="n">runRan</span> <span class="o">::</span> <span class="n">forall</span> <span class="n">x</span><span class="o">.</span> <span class="n">p</span> <span class="n">x</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">q</span> <span class="n">x</span> <span class="n">b</span> <span class="p">}</span>
+<span class="kr">type</span> <span class="kt">RDiv</span> <span class="o">=</span> <span class="kt">Ran</span>
+</code></pre></div></div>
+
+<p>One formulation of Galois connections can be found in the <a href="http://hackage.haskell.org/package/profunctors-5.4/docs/Data-Profunctor-Adjunction.html">adjunctions </a> file. <a href="https://www.sciencedirect.com/science/article/pii/S1567832612000525">Galois Connections are very slick</a>, but I’m running out of steam, so let’s leave that one for another day.</p>
+
+<h3 id="properties-and-proofs">Properties and Proofs</h3>
+
+<p>We can prove many properties about these relational operations. Here a a random smattering that we showed using quickcheck last time.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">prop_ridleft</span> <span class="o">::</span>  <span class="p">(</span><span class="n">k</span> <span class="o">&lt;&lt;&lt;</span> <span class="kt">Id</span><span class="p">)</span> <span class="o">:-&gt;</span> <span class="n">k</span>
+<span class="n">prop_ridleft</span> <span class="p">(</span><span class="kt">RCompose</span> <span class="n">k</span> <span class="kt">IdRefl</span><span class="p">)</span> <span class="o">=</span> <span class="n">k</span>
+
+<span class="n">prop_ridright</span> <span class="o">::</span>  <span class="p">(</span><span class="kt">Id</span> <span class="o">&lt;&lt;&lt;</span> <span class="n">k</span><span class="p">)</span> <span class="o">:-&gt;</span> <span class="n">k</span>
+<span class="n">prop_ridright</span> <span class="p">(</span><span class="kt">RCompose</span> <span class="kt">IdRefl</span> <span class="n">k</span><span class="p">)</span> <span class="o">=</span> <span class="n">k</span>
+
+<span class="n">prop_meet</span> <span class="o">::</span> <span class="n">p</span> <span class="o">/\</span> <span class="n">q</span> <span class="o">:-&gt;</span> <span class="n">p</span>
+<span class="n">prop_meet</span> <span class="p">(</span><span class="kt">RMeet</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">))</span> <span class="o">=</span> <span class="n">p</span>
+
+<span class="n">prop_join</span> <span class="o">::</span> <span class="n">p</span> <span class="o">:-&gt;</span> <span class="n">p</span> <span class="o">\/</span> <span class="n">q</span>
+<span class="n">prop_join</span> <span class="n">p</span> <span class="o">=</span> <span class="kt">RJoin</span> <span class="p">(</span><span class="kt">Left</span> <span class="n">p</span><span class="p">)</span>
+
+<span class="n">meet_assoc</span> <span class="o">::</span> <span class="kt">RMeet</span> <span class="n">k</span> <span class="p">(</span><span class="kt">RMeet</span> <span class="n">k'</span> <span class="n">k''</span><span class="p">)</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">RMeet</span> <span class="p">(</span><span class="kt">RMeet</span> <span class="n">k</span> <span class="n">k'</span><span class="p">)</span> <span class="n">k''</span> <span class="n">a</span> <span class="n">b</span>
+<span class="n">meet_assoc</span> <span class="p">(</span><span class="kt">RMeet</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="kt">RMeet</span> <span class="p">(</span><span class="n">k'</span><span class="p">,</span><span class="n">k''</span><span class="p">))))</span> <span class="o">=</span> <span class="kt">RMeet</span> <span class="p">(</span><span class="kt">RMeet</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">k'</span><span class="p">),</span> <span class="n">k''</span><span class="p">)</span>
+
+<span class="n">prop_top</span> <span class="o">::</span> <span class="n">k</span> <span class="o">:-&gt;</span> <span class="kt">Top</span>
+<span class="n">prop_top</span> <span class="kr">_</span> <span class="o">=</span> <span class="n">top</span>
+
+<span class="n">prop_bottom</span> <span class="o">::</span> <span class="kt">Bottom</span> <span class="o">:-&gt;</span> <span class="n">k</span>
+<span class="n">prop_bottom</span> <span class="p">(</span><span class="kt">Bottom</span> <span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">absurd</span> <span class="n">x</span>
+
+<span class="n">bottom_compose</span> <span class="o">::</span> <span class="kt">REq</span> <span class="p">(</span><span class="n">k</span> <span class="o">&lt;&lt;&lt;</span> <span class="kt">Bottom</span><span class="p">)</span> <span class="kt">Bottom</span>
+<span class="n">bottom_compose</span> <span class="o">=</span> <span class="kt">REq</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="kt">RCompose</span> <span class="n">k</span> <span class="p">(</span><span class="kt">Bottom</span> <span class="n">b</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">absurd</span> <span class="n">b</span><span class="p">)</span> <span class="n">prop_bottom</span>
+
+<span class="kr">data</span> <span class="kt">Iso</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">Iso</span> <span class="p">{</span><span class="n">to</span> <span class="o">::</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span><span class="p">,</span> <span class="n">from</span> <span class="o">::</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">a</span><span class="p">}</span>
+<span class="kr">type</span> <span class="n">a</span> <span class="o">&lt;-&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">Iso</span> <span class="n">a</span> <span class="n">b</span>
+
+<span class="n">meet_universal</span> <span class="o">::</span> <span class="p">(</span><span class="n">p</span> <span class="o">::-&gt;</span> <span class="kt">RMeet</span> <span class="n">k</span> <span class="n">k'</span><span class="p">)</span> <span class="o">&lt;-&gt;</span> <span class="p">(</span><span class="n">p</span> <span class="o">::-&gt;</span> <span class="n">k</span><span class="p">,</span> <span class="n">p</span> <span class="o">::-&gt;</span> <span class="n">k'</span><span class="p">)</span>
+<span class="n">meet_universal</span> <span class="o">=</span> <span class="kt">Iso</span> <span class="n">to</span> <span class="n">from</span> <span class="kr">where</span>
+    <span class="n">to</span> <span class="p">(</span><span class="kt">RSub</span> <span class="n">f</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="kt">RSub</span> <span class="o">$</span> <span class="nf">\</span><span class="n">p</span> <span class="o">-&gt;</span> <span class="kr">case</span> <span class="n">f</span> <span class="n">p</span> <span class="kr">of</span> <span class="kt">RMeet</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">k'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">k</span>  <span class="p">,</span> <span class="kt">RSub</span> <span class="o">$</span> <span class="nf">\</span><span class="n">p</span> <span class="o">-&gt;</span> <span class="kr">case</span> <span class="n">f</span> <span class="n">p</span> <span class="kr">of</span> <span class="kt">RMeet</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">k'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">k'</span><span class="p">)</span>
+    <span class="n">from</span> <span class="p">(</span><span class="kt">RSub</span> <span class="n">f</span><span class="p">,</span><span class="kt">RSub</span> <span class="n">g</span><span class="p">)</span> <span class="o">=</span> <span class="kt">RSub</span> <span class="o">$</span> <span class="nf">\</span><span class="n">p</span> <span class="o">-&gt;</span> <span class="kt">RMeet</span> <span class="p">(</span><span class="n">f</span> <span class="n">p</span><span class="p">,</span> <span class="n">g</span> <span class="n">p</span><span class="p">)</span> 
+
+<span class="n">prop_con</span> <span class="o">::</span> <span class="kt">RCon</span> <span class="p">(</span><span class="kt">RCon</span> <span class="n">k</span><span class="p">)</span> <span class="o">:-&gt;</span> <span class="n">k</span>
+<span class="n">prop_con</span> <span class="p">(</span><span class="kt">RConverse</span> <span class="p">(</span><span class="kt">RConverse</span> <span class="n">k</span><span class="p">))</span> <span class="o">=</span> <span class="n">k</span>
+</code></pre></div></div>
+
+<h3 id="odds-and-ends">Odds and Ends</h3>
+
+<ul>
+  <li>Recursion Schemes - Recursion schemes are a methodology to talk about recursion in a point free style and where the rubber meets the road in the algebra of programming. <a href="https://blog.sumtypeofway.com/an-introduction-to-recursion-schemes/">Here</a> is an excellent series of articles about them. Here is a sample of how I think they go:</li>
+</ul>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">data</span> <span class="kt">MapMaybe</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">MapJust</span> <span class="o">::</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">MapMaybe</span> <span class="n">k</span> <span class="p">(</span><span class="kt">'Just</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="kt">'Just</span> <span class="n">b</span><span class="p">)</span>
+    <span class="kt">MapNothing</span> <span class="o">::</span> <span class="kt">MapMaybe</span> <span class="n">k</span> <span class="kt">'Nothing</span> <span class="kt">'Nothing</span>
+
+<span class="kr">data</span> <span class="kt">Cata</span> <span class="n">map</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">Cata</span> <span class="o">::</span> <span class="n">k</span> <span class="n">fa</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">map</span> <span class="p">(</span><span class="kt">Cata</span> <span class="n">map</span> <span class="n">k</span><span class="p">)</span> <span class="n">x</span> <span class="n">fa</span>  <span class="o">-&gt;</span> <span class="kt">Cata</span> <span class="n">map</span> <span class="n">k</span> <span class="p">(</span><span class="kt">'Fix</span> <span class="n">x</span><span class="p">)</span> 
+</code></pre></div></div>
+
+<ul>
+  <li>Higher Order Relations?</li>
+  <li>Examples of use. Check out the<a href="https://github.com/scmu/aopa/tree/master/Examples"> examples folder in the AoP Agda repo</a>. These are probably translatable into Haskell.</li>
+  <li>Interfacing with Singletons. Singletonized functions are a specialized case or relations. Something like?</li>
+</ul>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">newtype</span> <span class="kt">SFun</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">SFun</span> <span class="p">(</span><span class="kt">Sing</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Sing</span> <span class="n">b</span><span class="p">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li>A comment to help avoid confusion. What we’ve done here feels confusingly similar to profunctor, but it is in fact distinct I think. <a href="https://bartoszmilewski.com/2016/07/25/profunctors-as-relations/">Profunctors are described as a categorical generalization of relations</a> <a href="https://bartoszmilewski.com/2016/07/25/profunctors-as-relations/">,</a> but to be honest, I kind of don’t get it. Despite many of our constructions appearing in the profunctor package, the profunctor typeclass itself appears to not play a role in our formulation. There just isn’t a good way to dimap under our relations as written, unless you construct free profunctors. Converse at the least is a wrench in the works.</li>
+  <li>Star and graphs. Transition relations are a powerful methodology. A transition relation is in some respects the analog of a square matrix. We can iteratively compose it with itself.</li>
+</ul>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">-- Check out "term rewriting and all that"</span>
+<span class="c1">-- This is also the reflection without remorse data type</span>
+<span class="c1">-- TSequence http://okmij.org/ftp/Haskell/zseq.pdf</span>
+<span class="c1">-- this is also a free instance of Category</span>
+<span class="kr">data</span> <span class="kt">Star</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">Done</span> <span class="o">::</span> <span class="kt">Star</span> <span class="n">k</span> <span class="n">a</span> <span class="n">a</span>
+    <span class="kt">Roll</span> <span class="o">::</span> <span class="n">k</span> <span class="n">b</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="kt">Star</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">Star</span> <span class="n">k</span> <span class="n">a</span> <span class="n">c</span>
+
+<span class="kr">data</span> <span class="kt">KPlus</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">PDone</span> <span class="o">::</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">KPlus</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span>
+    <span class="kt">PRoll</span> <span class="o">::</span> <span class="n">k</span> <span class="n">b</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="kt">KPlus</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">KPlus</span> <span class="n">k</span> <span class="n">a</span> <span class="n">c</span>
+
+<span class="kr">type</span> <span class="kt">SymClos</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">RJoin</span> <span class="n">k</span> <span class="p">(</span><span class="kt">RCon</span> <span class="n">k</span><span class="p">)</span> <span class="n">a</span> <span class="n">b</span>
+<span class="kr">type</span> <span class="kt">RefClos</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">RJoin</span> <span class="n">k</span> <span class="kt">Id</span> <span class="n">a</span> <span class="n">b</span>
+<span class="cm">{- n-fold composition -}</span>
+<span class="c1">-- similar to Fin.</span>
+<span class="c1">-- This is also the Vec n is to list and this is to reflection without remorse. Kind of interesting</span>
+<span class="kr">data</span> <span class="kt">NFold</span> <span class="n">n</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+    <span class="kt">One</span> <span class="o">::</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">NFold</span> <span class="p">(</span><span class="kt">'S</span> <span class="n">n</span><span class="p">)</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span>
+    <span class="kt">More</span> <span class="o">::</span> <span class="n">k</span> <span class="n">b</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="kt">NFold</span> <span class="n">n</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">NFold</span> <span class="p">(</span><span class="kt">'S</span> <span class="n">n</span><span class="p">)</span> <span class="n">k</span> <span class="n">a</span> <span class="n">b</span>
+</code></pre></div></div>
+
+<h3 id="references">References</h3>
+
+<ul>
+  <li>Program Design by Calculation - JN Oliveira</li>
+  <li>Bird and de Moor</li>
+  <li>Term Rewriting and all that</li>
+  <li>Software Abstractions</li>
+  <li><a href="https://softwarefoundations.cis.upenn.edu/lf-current/Rel.html">https://softwarefoundations.cis.upenn.edu/lf-current/Rel.html</a></li>
+  <li><a href="https://softwarefoundations.cis.upenn.edu/lf-current/Imp.html#lab335">https://softwarefoundations.cis.upenn.edu/lf-current/Imp.html#lab335</a></li>
+  <li><a href="https://github.com/scmu/aopa">https://github.com/scmu/aopa</a></li>
+</ul>
+
+:ET

@@ -91,23 +91,28 @@ Because of time invested and natural disposition, I understand things much bette
 
 
     
-    <code>@theory Category{Ob,Hom} begin
-      @op begin
-        (→) := Hom
-        (⋅) := compose
-      end
     
-      Ob::TYPE
-      Hom(dom::Ob, codom::Ob)::TYPE
-    
-      id(A::Ob)::(A → A)
-      compose(f::(A → B), g::(B → C))::(A → C) ⊣ (A::Ob, B::Ob, C::Ob)
-    
-      (f ⋅ g) ⋅ h == f ⋅ (g ⋅ h) ⊣ (A::Ob, B::Ob, C::Ob, D::Ob,
-                                    f::(A → B), g::(B → C), h::(C → D))
-      f ⋅ id(B) == f ⊣ (A::Ob, B::Ob, f::(A → B))
-      id(A) ⋅ f == f ⊣ (A::Ob, B::Ob, f::(A → B))
-    end</code>
+```
+
+@theory Category{Ob,Hom} begin
+  @op begin
+    (→) := Hom
+    (⋅) := compose
+  end
+
+  Ob::TYPE
+  Hom(dom::Ob, codom::Ob)::TYPE
+
+  id(A::Ob)::(A → A)
+  compose(f::(A → B), g::(B → C))::(A → C) ⊣ (A::Ob, B::Ob, C::Ob)
+
+  (f ⋅ g) ⋅ h == f ⋅ (g ⋅ h) ⊣ (A::Ob, B::Ob, C::Ob, D::Ob,
+                                f::(A → B), g::(B → C), h::(C → D))
+  f ⋅ id(B) == f ⊣ (A::Ob, B::Ob, f::(A → B))
+  id(A) ⋅ f == f ⊣ (A::Ob, B::Ob, f::(A → B))
+end
+```
+
 
 
 
@@ -147,105 +152,110 @@ I've cut some stuff out of the dump because it's so huge. I've placed the full d
 
 
     
-    <code>>>> dump(theory(Category))
     
-    Catlab.GAT.Theory
-      types: Array{Catlab.GAT.TypeConstructor}((2,))
-        1: Catlab.GAT.TypeConstructor
-          name: Symbol Ob
-          params: Array{Symbol}((0,))
-          context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
-            slots: Array{Int32}((16,)) Int32[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            keys: Array{Symbol}((0,))
-            vals: Array{Union{Expr, Symbol}}((0,))
-            ndel: Int64 0
-            dirty: Bool false
-          doc: String " Object in a category "
-        2: ... More stuff
-      terms: Array{Catlab.GAT.TermConstructor}((2,))
-        1: Catlab.GAT.TermConstructor
-          name: Symbol id
-          params: Array{Symbol}((1,))
-            1: Symbol A
-          typ: Expr
-            head: Symbol call
-            args: Array{Any}((3,))
-              1: Symbol Hom
-              2: Symbol A
-              3: Symbol A
-          context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
-            slots: Array{Int32}((16,)) Int32[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            keys: Array{Symbol}((1,))
-              1: Symbol A
-            vals: Array{Union{Expr, Symbol}}((1,))
-              1: Symbol Ob
-            ndel: Int64 0
-            dirty: Bool true
-          doc: Nothing nothing
-        2: ... More stuff
-      axioms: Array{Catlab.GAT.AxiomConstructor}((3,))
-        1: Catlab.GAT.AxiomConstructor
-          name: Symbol ==
-          left: Expr
-            head: Symbol call
-            args: Array{Any}((3,))
-              1: Symbol compose
-              2: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol compose
-                  2: Symbol f
-                  3: Symbol g
-              3: Symbol h
-          right: Expr
+```
+
+>>> dump(theory(Category))
+
+Catlab.GAT.Theory
+  types: Array{Catlab.GAT.TypeConstructor}((2,))
+    1: Catlab.GAT.TypeConstructor
+      name: Symbol Ob
+      params: Array{Symbol}((0,))
+      context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
+        slots: Array{Int32}((16,)) Int32[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        keys: Array{Symbol}((0,))
+        vals: Array{Union{Expr, Symbol}}((0,))
+        ndel: Int64 0
+        dirty: Bool false
+      doc: String " Object in a category "
+    2: ... More stuff
+  terms: Array{Catlab.GAT.TermConstructor}((2,))
+    1: Catlab.GAT.TermConstructor
+      name: Symbol id
+      params: Array{Symbol}((1,))
+        1: Symbol A
+      typ: Expr
+        head: Symbol call
+        args: Array{Any}((3,))
+          1: Symbol Hom
+          2: Symbol A
+          3: Symbol A
+      context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
+        slots: Array{Int32}((16,)) Int32[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        keys: Array{Symbol}((1,))
+          1: Symbol A
+        vals: Array{Union{Expr, Symbol}}((1,))
+          1: Symbol Ob
+        ndel: Int64 0
+        dirty: Bool true
+      doc: Nothing nothing
+    2: ... More stuff
+  axioms: Array{Catlab.GAT.AxiomConstructor}((3,))
+    1: Catlab.GAT.AxiomConstructor
+      name: Symbol ==
+      left: Expr
+        head: Symbol call
+        args: Array{Any}((3,))
+          1: Symbol compose
+          2: Expr
             head: Symbol call
             args: Array{Any}((3,))
               1: Symbol compose
               2: Symbol f
-              3: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol compose
-                  2: Symbol g
-                  3: Symbol h
-          context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
-            slots: Array{Int32}((16,)) Int32[5, 0, 0, 0, 1, 0, 4, 0, 2, 7, 0, 6, 0, 0, 0, 3]
-            keys: Array{Symbol}((7,))
-              1: Symbol A
+              3: Symbol g
+          3: Symbol h
+      right: Expr
+        head: Symbol call
+        args: Array{Any}((3,))
+          1: Symbol compose
+          2: Symbol f
+          3: Expr
+            head: Symbol call
+            args: Array{Any}((3,))
+              1: Symbol compose
+              2: Symbol g
+              3: Symbol h
+      context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
+        slots: Array{Int32}((16,)) Int32[5, 0, 0, 0, 1, 0, 4, 0, 2, 7, 0, 6, 0, 0, 0, 3]
+        keys: Array{Symbol}((7,))
+          1: Symbol A
+          2: Symbol B
+          3: Symbol C
+          4: Symbol D
+          5: Symbol f
+          6: Symbol g
+          7: Symbol h
+        vals: Array{Union{Expr, Symbol}}((7,))
+          1: Symbol Ob
+          2: Symbol Ob
+          3: Symbol Ob
+          4: Symbol Ob
+          5: Expr
+            head: Symbol call
+            args: Array{Any}((3,))
+              1: Symbol Hom
+              2: Symbol A
+              3: Symbol B
+          6: Expr
+            head: Symbol call
+            args: Array{Any}((3,))
+              1: Symbol Hom
               2: Symbol B
               3: Symbol C
-              4: Symbol D
-              5: Symbol f
-              6: Symbol g
-              7: Symbol h
-            vals: Array{Union{Expr, Symbol}}((7,))
-              1: Symbol Ob
-              2: Symbol Ob
-              3: Symbol Ob
-              4: Symbol Ob
-              5: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol Hom
-                  2: Symbol A
-                  3: Symbol B
-              6: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol Hom
-                  2: Symbol B
-                  3: Symbol C
-              7: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol Hom
-                  2: Symbol C
-                  3: Symbol D
-            ndel: Int64 0
-            dirty: Bool true
-          doc: Nothing nothing
-        2: ... More stuff
-      aliases: ... Stuff</code>
+          7: Expr
+            head: Symbol call
+            args: Array{Any}((3,))
+              1: Symbol Hom
+              2: Symbol C
+              3: Symbol D
+        ndel: Int64 0
+        dirty: Bool true
+      doc: Nothing nothing
+    2: ... More stuff
+  aliases: ... Stuff
+```
+
 
 
 
@@ -261,17 +271,21 @@ This infrastructure is not necessarily for category theory alone despite being i
 
 
     
-    <code>@theory Group(G) begin
     
-      G::TYPE
-    
-      id()::G
-      mul(f::G, g::G)::G
-      inv(x::G)::G
-    
-      mul(mul(f, g), h) == mul(f,  mul(g , h)) ⊣ ( f::G, g::G, h::G)
-       # and so on
-    end</code>
+```
+
+@theory Group(G) begin
+
+  G::TYPE
+
+  id()::G
+  mul(f::G, g::G)::G
+  inv(x::G)::G
+
+  mul(mul(f, g), h) == mul(f,  mul(g , h)) ⊣ ( f::G, g::G, h::G)
+   # and so on
+end
+```
 
 
 
@@ -279,7 +293,8 @@ This infrastructure is not necessarily for category theory alone despite being i
 
 
 
-Back to the first order logic translation. If you think about it, the turnstile ⊣ separating the context appearing in the Catlab theory definition is basically an implication. The definition `id(A)::Hom(A,A) ⊣ (A::Ob)` can be read like so: for all A, given A has type `Ob` it implies that `id(A)` has type `Hom(A,A)`. We can write this in first order logic using a predicate for the typing relation. $latex \forall A,  type(A,Ob) \implies type(id(A), Hom(A,A))$. 
+
+Back to the first order logic translation. If you think about it, the turnstile ⊣ separating the context appearing in the Catlab theory definition is basically an implication. The definition `id(A)::Hom(A,A) ⊣ (A::Ob)` can be read like so: for all A, given A has type `Ob` it implies that `id(A)` has type `Hom(A,A)`. We can write this in first order logic using a predicate for the typing relation. $ \forall A,  type(A,Ob) \implies type(id(A), Hom(A,A))$. 
 
 
 
@@ -383,7 +398,12 @@ All of the keys in the context dictionary are the quantified variables in an dec
 
 
     
-    <code>varmap = Dict(map(kv -> kv[1] => Symbol("Var$(kv[1])")  , collect(myterm.context )))</code>
+    
+```
+
+varmap = Dict(map(kv -> kv[1] => Symbol("Var$(kv[1])")  , collect(myterm.context )))
+```
+
 
 
 
@@ -399,8 +419,13 @@ And then we can use this map to prefixify other expressions.
 
 
     
-    <code>prefixify(x::Symbol, varmap) = haskey(varmap,x) ?  varmap[x] : Symbol( "const$x")
-    prefixify(x::Expr, varmap) = Expr(x.head, map(y -> prefixify(y, varmap),  x.args)... )</code>
+    
+```
+
+prefixify(x::Symbol, varmap) = haskey(varmap,x) ?  varmap[x] : Symbol( "const$x")
+prefixify(x::Expr, varmap) = Expr(x.head, map(y -> prefixify(y, varmap),  x.args)... )
+```
+
 
 
 
@@ -416,23 +441,28 @@ Given these, it has just some string interpolation hackery to port a catlab typi
 
 
     
-    <code>function build_typo(terms)
-        map(myterm ->  begin
-                    varmap = Dict(map(kv -> kv[1] => Symbol("Var$(kv[1])")  , collect(myterm.context )))
-                    prefix_context = Dict(map(kv -> kv[1] => prefixify(kv[2] , varmap) , collect(myterm.context )))
-                    context_terms = map( kv -> "typo($(varmap[kv[1]]), $(kv[2]))", collect(prefix_context))
-                    conc = "typo( const$(myterm.name)($(join(map(p -> prefixify(p,varmap) , myterm.params), ", "))) , $(prefixify(myterm.typ, varmap)) )"
-                    if length(myterm.context) > 0
-                        "
-                        ![$(join(values(varmap),","))]: 
-                            ($conc <=
-                                ($(join( context_terms , " &\n\t"))))"
-                    else # special case for empty context
-                        "$conc"
+    
+```
+
+function build_typo(terms)
+    map(myterm ->  begin
+                varmap = Dict(map(kv -> kv[1] => Symbol("Var$(kv[1])")  , collect(myterm.context )))
+                prefix_context = Dict(map(kv -> kv[1] => prefixify(kv[2] , varmap) , collect(myterm.context )))
+                context_terms = map( kv -> "typo($(varmap[kv[1]]), $(kv[2]))", collect(prefix_context))
+                conc = "typo( const$(myterm.name)($(join(map(p -> prefixify(p,varmap) , myterm.params), ", "))) , $(prefixify(myterm.typ, varmap)) )"
+                if length(myterm.context) > 0
+                    "
+                    ![$(join(values(varmap),","))]: 
+                        ($conc <=
+                            ($(join( context_terms , " &\n\t"))))"
+                else # special case for empty context
+                    "$conc"
+                end
                     end
-                        end
-        , terms)
-    end</code>
+    , terms)
+end
+```
+
 
 
 
@@ -448,7 +478,12 @@ You can spit out the axioms for a theory like so
 
 
     
-    <code>query = join(map(t -> "fof( axiom$(t[1]) , axiom, $(t[2]) ).", enumerate(build_typo(theory(CartesianCategory).terms))), "\n")</code>
+    
+```
+
+query = join(map(t -> "fof( axiom$(t[1]) , axiom, $(t[2]) ).", enumerate(build_typo(theory(CartesianCategory).terms))), "\n")
+```
+
 
 
 
@@ -456,70 +491,75 @@ You can spit out the axioms for a theory like so
 
 
     
-    <code>fof( axiom1 , axiom, 
-    ![VarA]: 
-        (typo( constid(VarA) , constHom(VarA, VarA) ) <=
-            (typo(VarA, constOb))) ).
-    fof( axiom2 , axiom, 
-    ![Varf,VarA,VarB,Varg,VarC]: 
-        (typo( constcompose(Varf, Varg) , constHom(VarA, VarC) ) <=
-            (typo(Varf, constHom(VarA, VarB)) &
-    	typo(VarA, constOb) &
-    	typo(VarB, constOb) &
-    	typo(Varg, constHom(VarB, VarC)) &
-    	typo(VarC, constOb))) ).
-    fof( axiom3 , axiom, 
-    ![VarA,VarB]: 
-        (typo( constotimes(VarA, VarB) , constOb ) <=
-            (typo(VarA, constOb) &
-    	typo(VarB, constOb))) ).
-    fof( axiom4 , axiom, 
-    ![Varf,VarA,VarD,VarB,Varg,VarC]: 
-        (typo( constotimes(Varf, Varg) , constHom(constotimes(VarA, VarC), constotimes(VarB, VarD)) ) <=
-            (typo(Varf, constHom(VarA, VarB)) &
-    	typo(VarA, constOb) &
-    	typo(VarD, constOb) &
-    	typo(VarB, constOb) &
-    	typo(Varg, constHom(VarC, VarD)) &
-    	typo(VarC, constOb))) ).
-    fof( axiom5 , axiom, typo( constmunit() , constOb ) ).
-    fof( axiom6 , axiom, 
-    ![VarA,VarB]: 
-        (typo( constbraid(VarA, VarB) , constHom(constotimes(VarA, VarB), constotimes(VarB, VarA)) ) <=
-            (typo(VarA, constOb) &
-    	typo(VarB, constOb))) ).
-    fof( axiom7 , axiom, 
-    ![VarA]: 
-        (typo( constmcopy(VarA) , constHom(VarA, constotimes(VarA, VarA)) ) <=
-            (typo(VarA, constOb))) ).
-    fof( axiom8 , axiom, 
-    ![VarA]: 
-        (typo( constdelete(VarA) , constHom(VarA, constmunit()) ) <=
-            (typo(VarA, constOb))) ).
-    fof( axiom9 , axiom, 
-    ![Varf,VarA,VarB,Varg,VarC]: 
-        (typo( constpair(Varf, Varg) , constHom(VarA, constotimes(VarB, VarC)) ) <=
-            (typo(Varf, constHom(VarA, VarB)) &
-    	typo(VarA, constOb) &
-    	typo(VarB, constOb) &
-    	typo(Varg, constHom(VarA, VarC)) &
-    	typo(VarC, constOb))) ).
-    fof( axiom10 , axiom, 
-    ![VarA,VarB]: 
-        (typo( constproj1(VarA, VarB) , constHom(constotimes(VarA, VarB), VarA) ) <=
-            (typo(VarA, constOb) &
-    	typo(VarB, constOb))) ).
-    fof( axiom11 , axiom, 
-    ![VarA,VarB]: 
-        (typo( constproj2(VarA, VarB) , constHom(constotimes(VarA, VarB), VarB) ) <=
-            (typo(VarA, constOb) &
-    	typo(VarB, constOb))) ).
     
-    % example synthesis queries
-    %fof(q , conjecture, ?[F]: (typo( F, constHom(a , a) )  <=  ( typo(a, constOb)  )   ) ).
-    %fof(q , conjecture, ?[F]: (typo( F, constHom( constotimes(a,b) , constotimes(b,a)) )  <=  ( typo(a, constOb) & typo(b,constOb) )   ) ).
-    %fof(q , conjecture, ?[F]: (typo( F, constHom( constotimes(a,constotimes(b,constotimes(c,d))) , d) )  <=  ( typo(a, constOb) & typo(b,constOb) & typo(c,constOb) & typo(d,constOb) )   ) ). % this one hurts already without some axiom pruning
-    </code>
+```
+
+fof( axiom1 , axiom, 
+![VarA]: 
+    (typo( constid(VarA) , constHom(VarA, VarA) ) <=
+        (typo(VarA, constOb))) ).
+fof( axiom2 , axiom, 
+![Varf,VarA,VarB,Varg,VarC]: 
+    (typo( constcompose(Varf, Varg) , constHom(VarA, VarC) ) <=
+        (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb) &
+	typo(Varg, constHom(VarB, VarC)) &
+	typo(VarC, constOb))) ).
+fof( axiom3 , axiom, 
+![VarA,VarB]: 
+    (typo( constotimes(VarA, VarB) , constOb ) <=
+        (typo(VarA, constOb) &
+	typo(VarB, constOb))) ).
+fof( axiom4 , axiom, 
+![Varf,VarA,VarD,VarB,Varg,VarC]: 
+    (typo( constotimes(Varf, Varg) , constHom(constotimes(VarA, VarC), constotimes(VarB, VarD)) ) <=
+        (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarD, constOb) &
+	typo(VarB, constOb) &
+	typo(Varg, constHom(VarC, VarD)) &
+	typo(VarC, constOb))) ).
+fof( axiom5 , axiom, typo( constmunit() , constOb ) ).
+fof( axiom6 , axiom, 
+![VarA,VarB]: 
+    (typo( constbraid(VarA, VarB) , constHom(constotimes(VarA, VarB), constotimes(VarB, VarA)) ) <=
+        (typo(VarA, constOb) &
+	typo(VarB, constOb))) ).
+fof( axiom7 , axiom, 
+![VarA]: 
+    (typo( constmcopy(VarA) , constHom(VarA, constotimes(VarA, VarA)) ) <=
+        (typo(VarA, constOb))) ).
+fof( axiom8 , axiom, 
+![VarA]: 
+    (typo( constdelete(VarA) , constHom(VarA, constmunit()) ) <=
+        (typo(VarA, constOb))) ).
+fof( axiom9 , axiom, 
+![Varf,VarA,VarB,Varg,VarC]: 
+    (typo( constpair(Varf, Varg) , constHom(VarA, constotimes(VarB, VarC)) ) <=
+        (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb) &
+	typo(Varg, constHom(VarA, VarC)) &
+	typo(VarC, constOb))) ).
+fof( axiom10 , axiom, 
+![VarA,VarB]: 
+    (typo( constproj1(VarA, VarB) , constHom(constotimes(VarA, VarB), VarA) ) <=
+        (typo(VarA, constOb) &
+	typo(VarB, constOb))) ).
+fof( axiom11 , axiom, 
+![VarA,VarB]: 
+    (typo( constproj2(VarA, VarB) , constHom(constotimes(VarA, VarB), VarB) ) <=
+        (typo(VarA, constOb) &
+	typo(VarB, constOb))) ).
+
+% example synthesis queries
+%fof(q , conjecture, ?[F]: (typo( F, constHom(a , a) )  <=  ( typo(a, constOb)  )   ) ).
+%fof(q , conjecture, ?[F]: (typo( F, constHom( constotimes(a,b) , constotimes(b,a)) )  <=  ( typo(a, constOb) & typo(b,constOb) )   ) ).
+%fof(q , conjecture, ?[F]: (typo( F, constHom( constotimes(a,constotimes(b,constotimes(c,d))) , d) )  <=  ( typo(a, constOb) & typo(b,constOb) & typo(c,constOb) & typo(d,constOb) )   ) ). % this one hurts already without some axiom pruning
+
+```
+
 
 
 
@@ -535,19 +575,24 @@ For dealing with the equations of the theory, I believe we can just ignore the t
 
 
     
-    <code>function build_eqs(axioms)
-            map(axiom -> begin
-                @assert axiom.name == :(==)
-                varmap = Dict(map(kv -> kv[1] => Symbol("Var$(kv[1])")  , collect(axiom.context )))
-                l = prefixify(axiom.left, varmap)
-                r = prefixify(axiom.right, varmap)
-                "![$(join(values(varmap), ", "))]: $l = $r" 
-                end,
-            axioms)
-    end
     
-    t = join( map( t -> "fof( axiom$(t[1]), axiom, $(t[2]))."  , enumerate(build_eqs(theory(CartesianCategory).axioms))), "\n")
-    print(t)</code>
+```
+
+function build_eqs(axioms)
+        map(axiom -> begin
+            @assert axiom.name == :(==)
+            varmap = Dict(map(kv -> kv[1] => Symbol("Var$(kv[1])")  , collect(axiom.context )))
+            l = prefixify(axiom.left, varmap)
+            r = prefixify(axiom.right, varmap)
+            "![$(join(values(varmap), ", "))]: $l = $r" 
+            end,
+        axioms)
+end
+
+t = join( map( t -> "fof( axiom$(t[1]), axiom, $(t[2]))."  , enumerate(build_eqs(theory(CartesianCategory).axioms))), "\n")
+print(t)
+```
+
 
 
 
@@ -555,18 +600,23 @@ For dealing with the equations of the theory, I believe we can just ignore the t
 
 
     
-    <code>fof( axiom1, axiom, ![Varf, VarA, VarD, VarB, Varh, Varg, VarC]: constcompose(constcompose(Varf, Varg), Varh) = constcompose(Varf, constcompose(Varg, Varh))).
-    fof( axiom2, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constid(VarB)) = Varf).
-    fof( axiom3, axiom, ![Varf, VarA, VarB]: constcompose(constid(VarA), Varf) = Varf).
-    fof( axiom4, axiom, ![Varf, VarA, VarB, Varg, VarC]: constpair(Varf, Varg) = constcompose(constmcopy(VarC), constotimes(Varf, Varg))).
-    fof( axiom5, axiom, ![VarA, VarB]: constproj1(VarA, VarB) = constotimes(constid(VarA), constdelete(VarB))).
-    fof( axiom6, axiom, ![VarA, VarB]: constproj2(VarA, VarB) = constotimes(constdelete(VarA), constid(VarB))).
-    fof( axiom7, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constmcopy(VarB)) = constcompose(constmcopy(VarA), constotimes(Varf, Varf))).
-    fof( axiom8, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constdelete(VarB)) = constdelete(VarA)).
     
-    % silly example query
-    fof( q, conjecture, ![Varf, Varh, Varg, Varj ]: constcompose(constcompose(constcompose(Varf, Varg), Varh), Varj) = constcompose(Varf, constcompose(Varg, constcompose(Varh,Varj)) )).
-    </code>
+```
+
+fof( axiom1, axiom, ![Varf, VarA, VarD, VarB, Varh, Varg, VarC]: constcompose(constcompose(Varf, Varg), Varh) = constcompose(Varf, constcompose(Varg, Varh))).
+fof( axiom2, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constid(VarB)) = Varf).
+fof( axiom3, axiom, ![Varf, VarA, VarB]: constcompose(constid(VarA), Varf) = Varf).
+fof( axiom4, axiom, ![Varf, VarA, VarB, Varg, VarC]: constpair(Varf, Varg) = constcompose(constmcopy(VarC), constotimes(Varf, Varg))).
+fof( axiom5, axiom, ![VarA, VarB]: constproj1(VarA, VarB) = constotimes(constid(VarA), constdelete(VarB))).
+fof( axiom6, axiom, ![VarA, VarB]: constproj2(VarA, VarB) = constotimes(constdelete(VarA), constid(VarB))).
+fof( axiom7, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constmcopy(VarB)) = constcompose(constmcopy(VarA), constotimes(Varf, Varf))).
+fof( axiom8, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constdelete(VarB)) = constdelete(VarA)).
+
+% silly example query
+fof( q, conjecture, ![Varf, Varh, Varg, Varj ]: constcompose(constcompose(constcompose(Varf, Varg), Varh), Varj) = constcompose(Varf, constcompose(Varg, constcompose(Varh,Varj)) )).
+
+```
+
 
 
 
@@ -614,28 +664,33 @@ Here's an example I wrote by hand in in minikaren
 
 
     
-    <code>(define (typo f t)
-    (conde
-      [(fresh (a) (== f 'id) (== t `(hom ,a ,a))) ]
-      [(== f 'f) (== t '(hom a c))]
-      [(fresh (a b) (== f 'snd) (== t `(hom ( ,a ,b) ,b)))]
-      [(fresh (a b) (== f 'fst) (== t `(hom ( ,a ,b) ,a)))]
-      [(fresh (g h a b c) (== f `(comp ,g ,h))
-                           (== t `(hom ,a ,c)) 
-                           (typo g `(hom ,a ,b ))
-                           (typo h `(hom ,b ,c)))]
-      [ (fresh (g h a b c) (== f `(fan ,g ,h))
-                           (== t `(hom ,a (,b ,c))) 
-                           (typo g `(hom ,a ,b ))
-                           (typo h `(hom ,a ,c)))  ]
-      )
-      )
     
-    ;queries
-    ; could lose the hom
-    ;(run 3 (q) (typo  q '(hom (a b) a)))
-    ;(run 3 (q) (typo  q '(hom ((a b) c) a)))
-    (run 3 (q) (typo  q '(hom (a b) (b a))))</code>
+```
+
+(define (typo f t)
+(conde
+  [(fresh (a) (== f 'id) (== t `(hom ,a ,a))) ]
+  [(== f 'f) (== t '(hom a c))]
+  [(fresh (a b) (== f 'snd) (== t `(hom ( ,a ,b) ,b)))]
+  [(fresh (a b) (== f 'fst) (== t `(hom ( ,a ,b) ,a)))]
+  [(fresh (g h a b c) (== f `(comp ,g ,h))
+                       (== t `(hom ,a ,c)) 
+                       (typo g `(hom ,a ,b ))
+                       (typo h `(hom ,b ,c)))]
+  [ (fresh (g h a b c) (== f `(fan ,g ,h))
+                       (== t `(hom ,a (,b ,c))) 
+                       (typo g `(hom ,a ,b ))
+                       (typo h `(hom ,a ,c)))  ]
+  )
+  )
+
+;queries
+; could lose the hom
+;(run 3 (q) (typo  q '(hom (a b) a)))
+;(run 3 (q) (typo  q '(hom ((a b) c) a)))
+(run 3 (q) (typo  q '(hom (a b) (b a))))
+```
+
 
 
 
@@ -651,15 +706,20 @@ And here is a similar thing written in my Julia minikanren. I had to depth limit
 
 
     
-    <code>function typo(f, t, n)
-        fresh2( (a,b) -> (f ≅ :fst) ∧ (t  ≅ :(Hom(tup($a,$b),$a)))) ∨
-        fresh2( (a,b) -> (f ≅ :snd) ∧ (t  ≅ :(Hom(tup($a,$b),$b)))) ∨
-        freshn( 6, (g,h,a,b,c,n2) -> (n ≅ :(succ($n2))) ∧ (f ≅ :(comp($g, $h)))  ∧ (t  ≅ :(Hom($a,$c))) ∧ @Zzz(typo(g, :(Hom($a,$b)), n2))  ∧ @Zzz(typo(h, :(Hom($b,$c)), n2))) ∨
-        fresh(a -> (f ≅ :(id($a))) ∧ (t  ≅ :(Hom($a,$a))))
-    end
     
-    
-    run(1, f ->  typo( f  , :(Hom(tup(a,tup(b,tup(c,d))),d)), nat(5)))</code>
+```
+
+function typo(f, t, n)
+    fresh2( (a,b) -> (f ≅ :fst) ∧ (t  ≅ :(Hom(tup($a,$b),$a)))) ∨
+    fresh2( (a,b) -> (f ≅ :snd) ∧ (t  ≅ :(Hom(tup($a,$b),$b)))) ∨
+    freshn( 6, (g,h,a,b,c,n2) -> (n ≅ :(succ($n2))) ∧ (f ≅ :(comp($g, $h)))  ∧ (t  ≅ :(Hom($a,$c))) ∧ @Zzz(typo(g, :(Hom($a,$b)), n2))  ∧ @Zzz(typo(h, :(Hom($b,$c)), n2))) ∨
+    fresh(a -> (f ≅ :(id($a))) ∧ (t  ≅ :(Hom($a,$a))))
+end
+
+
+run(1, f ->  typo( f  , :(Hom(tup(a,tup(b,tup(c,d))),d)), nat(5)))
+```
+
 
 
 
@@ -733,248 +793,253 @@ GAP.jl [https://github.com/oscar-system/GAP.jl](https://github.com/oscar-system/
 
 
     
-    <code>>>> dump(theory(Category))
     
-    Catlab.GAT.Theory
-      types: Array{Catlab.GAT.TypeConstructor}((2,))
-        1: Catlab.GAT.TypeConstructor
-          name: Symbol Ob
-          params: Array{Symbol}((0,))
-          context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
-            slots: Array{Int32}((16,)) Int32[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            keys: Array{Symbol}((0,))
-            vals: Array{Union{Expr, Symbol}}((0,))
-            ndel: Int64 0
-            dirty: Bool false
-          doc: String " Object in a category "
-        2: Catlab.GAT.TypeConstructor
-          name: Symbol Hom
-          params: Array{Symbol}((2,))
-            1: Symbol dom
-            2: Symbol codom
-          context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
-            slots: Array{Int32}((16,)) Int32[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0]
-            keys: Array{Symbol}((2,))
-              1: Symbol dom
-              2: Symbol codom
-            vals: Array{Union{Expr, Symbol}}((2,))
-              1: Symbol Ob
-              2: Symbol Ob
-            ndel: Int64 0
-            dirty: Bool true
-          doc: String " Morphism in a category "
-      terms: Array{Catlab.GAT.TermConstructor}((2,))
-        1: Catlab.GAT.TermConstructor
-          name: Symbol id
-          params: Array{Symbol}((1,))
-            1: Symbol A
-          typ: Expr
-            head: Symbol call
-            args: Array{Any}((3,))
-              1: Symbol Hom
-              2: Symbol A
-              3: Symbol A
-          context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
-            slots: Array{Int32}((16,)) Int32[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            keys: Array{Symbol}((1,))
-              1: Symbol A
-            vals: Array{Union{Expr, Symbol}}((1,))
-              1: Symbol Ob
-            ndel: Int64 0
-            dirty: Bool true
-          doc: Nothing nothing
-        2: Catlab.GAT.TermConstructor
-          name: Symbol compose
-          params: Array{Symbol}((2,))
-            1: Symbol f
-            2: Symbol g
-          typ: Expr
-            head: Symbol call
-            args: Array{Any}((3,))
-              1: Symbol Hom
-              2: Symbol A
-              3: Symbol C
-          context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
-            slots: Array{Int32}((16,)) Int32[4, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 5, 0, 0, 0, 3]
-            keys: Array{Symbol}((5,))
-              1: Symbol A
-              2: Symbol B
-              3: Symbol C
-              4: Symbol f
-              5: Symbol g
-            vals: Array{Union{Expr, Symbol}}((5,))
-              1: Symbol Ob
-              2: Symbol Ob
-              3: Symbol Ob
-              4: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol Hom
-                  2: Symbol A
-                  3: Symbol B
-              5: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol Hom
-                  2: Symbol B
-                  3: Symbol C
-            ndel: Int64 0
-            dirty: Bool true
-          doc: Nothing nothing
-      axioms: Array{Catlab.GAT.AxiomConstructor}((3,))
-        1: Catlab.GAT.AxiomConstructor
-          name: Symbol ==
-          left: Expr
-            head: Symbol call
-            args: Array{Any}((3,))
-              1: Symbol compose
-              2: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol compose
-                  2: Symbol f
-                  3: Symbol g
-              3: Symbol h
-          right: Expr
-            head: Symbol call
-            args: Array{Any}((3,))
-              1: Symbol compose
-              2: Symbol f
-              3: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol compose
-                  2: Symbol g
-                  3: Symbol h
-          context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
-            slots: Array{Int32}((16,)) Int32[5, 0, 0, 0, 1, 0, 4, 0, 2, 7, 0, 6, 0, 0, 0, 3]
-            keys: Array{Symbol}((7,))
-              1: Symbol A
-              2: Symbol B
-              3: Symbol C
-              4: Symbol D
-              5: Symbol f
-              6: Symbol g
-              7: Symbol h
-            vals: Array{Union{Expr, Symbol}}((7,))
-              1: Symbol Ob
-              2: Symbol Ob
-              3: Symbol Ob
-              4: Symbol Ob
-              5: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol Hom
-                  2: Symbol A
-                  3: Symbol B
-              6: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol Hom
-                  2: Symbol B
-                  3: Symbol C
-              7: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol Hom
-                  2: Symbol C
-                  3: Symbol D
-            ndel: Int64 0
-            dirty: Bool true
-          doc: Nothing nothing
-        2: Catlab.GAT.AxiomConstructor
-          name: Symbol ==
-          left: Expr
-            head: Symbol call
-            args: Array{Any}((3,))
-              1: Symbol compose
-              2: Symbol f
-              3: Expr
-                head: Symbol call
-                args: Array{Any}((2,))
-                  1: Symbol id
-                  2: Symbol B
-          right: Symbol f
-          context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
-            slots: Array{Int32}((16,)) Int32[3, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0]
-            keys: Array{Symbol}((3,))
-              1: Symbol A
-              2: Symbol B
-              3: Symbol f
-            vals: Array{Union{Expr, Symbol}}((3,))
-              1: Symbol Ob
-              2: Symbol Ob
-              3: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol Hom
-                  2: Symbol A
-                  3: Symbol B
-            ndel: Int64 0
-            dirty: Bool true
-          doc: Nothing nothing
-        3: Catlab.GAT.AxiomConstructor
-          name: Symbol ==
-          left: Expr
-            head: Symbol call
-            args: Array{Any}((3,))
-              1: Symbol compose
-              2: Expr
-                head: Symbol call
-                args: Array{Any}((2,))
-                  1: Symbol id
-                  2: Symbol A
-              3: Symbol f
-          right: Symbol f
-          context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
-            slots: Array{Int32}((16,)) Int32[3, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0]
-            keys: Array{Symbol}((3,))
-              1: Symbol A
-              2: Symbol B
-              3: Symbol f
-            vals: Array{Union{Expr, Symbol}}((3,))
-              1: Symbol Ob
-              2: Symbol Ob
-              3: Expr
-                head: Symbol call
-                args: Array{Any}((3,))
-                  1: Symbol Hom
-                  2: Symbol A
-                  3: Symbol B
-            ndel: Int64 0
-            dirty: Bool true
-          doc: Nothing nothing
-      aliases: Dict{Symbol,Symbol}
-        slots: Array{UInt8}((16,)) UInt8[0x01, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-        keys: Array{Symbol}((16,))
-          1: Symbol ⋅
-          2: #undef
-          3: #undef
-          4: #undef
-          5: #undef
-          ...
-          12: #undef
-          13: #undef
-          14: #undef
-          15: #undef
-          16: #undef
-        vals: Array{Symbol}((16,))
-          1: Symbol compose
-          2: #undef
-          3: #undef
-          4: #undef
-          5: #undef
-          ...
-          12: #undef
-          13: #undef
-          14: #undef
-          15: #undef
-          16: #undef
+```
+
+>>> dump(theory(Category))
+
+Catlab.GAT.Theory
+  types: Array{Catlab.GAT.TypeConstructor}((2,))
+    1: Catlab.GAT.TypeConstructor
+      name: Symbol Ob
+      params: Array{Symbol}((0,))
+      context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
+        slots: Array{Int32}((16,)) Int32[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        keys: Array{Symbol}((0,))
+        vals: Array{Union{Expr, Symbol}}((0,))
         ndel: Int64 0
-        count: Int64 2
-        age: UInt64 0x0000000000000002
-        idxfloor: Int64 1
-        maxprobe: Int64 0</code>
+        dirty: Bool false
+      doc: String " Object in a category "
+    2: Catlab.GAT.TypeConstructor
+      name: Symbol Hom
+      params: Array{Symbol}((2,))
+        1: Symbol dom
+        2: Symbol codom
+      context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
+        slots: Array{Int32}((16,)) Int32[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0]
+        keys: Array{Symbol}((2,))
+          1: Symbol dom
+          2: Symbol codom
+        vals: Array{Union{Expr, Symbol}}((2,))
+          1: Symbol Ob
+          2: Symbol Ob
+        ndel: Int64 0
+        dirty: Bool true
+      doc: String " Morphism in a category "
+  terms: Array{Catlab.GAT.TermConstructor}((2,))
+    1: Catlab.GAT.TermConstructor
+      name: Symbol id
+      params: Array{Symbol}((1,))
+        1: Symbol A
+      typ: Expr
+        head: Symbol call
+        args: Array{Any}((3,))
+          1: Symbol Hom
+          2: Symbol A
+          3: Symbol A
+      context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
+        slots: Array{Int32}((16,)) Int32[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        keys: Array{Symbol}((1,))
+          1: Symbol A
+        vals: Array{Union{Expr, Symbol}}((1,))
+          1: Symbol Ob
+        ndel: Int64 0
+        dirty: Bool true
+      doc: Nothing nothing
+    2: Catlab.GAT.TermConstructor
+      name: Symbol compose
+      params: Array{Symbol}((2,))
+        1: Symbol f
+        2: Symbol g
+      typ: Expr
+        head: Symbol call
+        args: Array{Any}((3,))
+          1: Symbol Hom
+          2: Symbol A
+          3: Symbol C
+      context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
+        slots: Array{Int32}((16,)) Int32[4, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 5, 0, 0, 0, 3]
+        keys: Array{Symbol}((5,))
+          1: Symbol A
+          2: Symbol B
+          3: Symbol C
+          4: Symbol f
+          5: Symbol g
+        vals: Array{Union{Expr, Symbol}}((5,))
+          1: Symbol Ob
+          2: Symbol Ob
+          3: Symbol Ob
+          4: Expr
+            head: Symbol call
+            args: Array{Any}((3,))
+              1: Symbol Hom
+              2: Symbol A
+              3: Symbol B
+          5: Expr
+            head: Symbol call
+            args: Array{Any}((3,))
+              1: Symbol Hom
+              2: Symbol B
+              3: Symbol C
+        ndel: Int64 0
+        dirty: Bool true
+      doc: Nothing nothing
+  axioms: Array{Catlab.GAT.AxiomConstructor}((3,))
+    1: Catlab.GAT.AxiomConstructor
+      name: Symbol ==
+      left: Expr
+        head: Symbol call
+        args: Array{Any}((3,))
+          1: Symbol compose
+          2: Expr
+            head: Symbol call
+            args: Array{Any}((3,))
+              1: Symbol compose
+              2: Symbol f
+              3: Symbol g
+          3: Symbol h
+      right: Expr
+        head: Symbol call
+        args: Array{Any}((3,))
+          1: Symbol compose
+          2: Symbol f
+          3: Expr
+            head: Symbol call
+            args: Array{Any}((3,))
+              1: Symbol compose
+              2: Symbol g
+              3: Symbol h
+      context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
+        slots: Array{Int32}((16,)) Int32[5, 0, 0, 0, 1, 0, 4, 0, 2, 7, 0, 6, 0, 0, 0, 3]
+        keys: Array{Symbol}((7,))
+          1: Symbol A
+          2: Symbol B
+          3: Symbol C
+          4: Symbol D
+          5: Symbol f
+          6: Symbol g
+          7: Symbol h
+        vals: Array{Union{Expr, Symbol}}((7,))
+          1: Symbol Ob
+          2: Symbol Ob
+          3: Symbol Ob
+          4: Symbol Ob
+          5: Expr
+            head: Symbol call
+            args: Array{Any}((3,))
+              1: Symbol Hom
+              2: Symbol A
+              3: Symbol B
+          6: Expr
+            head: Symbol call
+            args: Array{Any}((3,))
+              1: Symbol Hom
+              2: Symbol B
+              3: Symbol C
+          7: Expr
+            head: Symbol call
+            args: Array{Any}((3,))
+              1: Symbol Hom
+              2: Symbol C
+              3: Symbol D
+        ndel: Int64 0
+        dirty: Bool true
+      doc: Nothing nothing
+    2: Catlab.GAT.AxiomConstructor
+      name: Symbol ==
+      left: Expr
+        head: Symbol call
+        args: Array{Any}((3,))
+          1: Symbol compose
+          2: Symbol f
+          3: Expr
+            head: Symbol call
+            args: Array{Any}((2,))
+              1: Symbol id
+              2: Symbol B
+      right: Symbol f
+      context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
+        slots: Array{Int32}((16,)) Int32[3, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0]
+        keys: Array{Symbol}((3,))
+          1: Symbol A
+          2: Symbol B
+          3: Symbol f
+        vals: Array{Union{Expr, Symbol}}((3,))
+          1: Symbol Ob
+          2: Symbol Ob
+          3: Expr
+            head: Symbol call
+            args: Array{Any}((3,))
+              1: Symbol Hom
+              2: Symbol A
+              3: Symbol B
+        ndel: Int64 0
+        dirty: Bool true
+      doc: Nothing nothing
+    3: Catlab.GAT.AxiomConstructor
+      name: Symbol ==
+      left: Expr
+        head: Symbol call
+        args: Array{Any}((3,))
+          1: Symbol compose
+          2: Expr
+            head: Symbol call
+            args: Array{Any}((2,))
+              1: Symbol id
+              2: Symbol A
+          3: Symbol f
+      right: Symbol f
+      context: OrderedCollections.OrderedDict{Symbol,Union{Expr, Symbol}}
+        slots: Array{Int32}((16,)) Int32[3, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0]
+        keys: Array{Symbol}((3,))
+          1: Symbol A
+          2: Symbol B
+          3: Symbol f
+        vals: Array{Union{Expr, Symbol}}((3,))
+          1: Symbol Ob
+          2: Symbol Ob
+          3: Expr
+            head: Symbol call
+            args: Array{Any}((3,))
+              1: Symbol Hom
+              2: Symbol A
+              3: Symbol B
+        ndel: Int64 0
+        dirty: Bool true
+      doc: Nothing nothing
+  aliases: Dict{Symbol,Symbol}
+    slots: Array{UInt8}((16,)) UInt8[0x01, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+    keys: Array{Symbol}((16,))
+      1: Symbol ⋅
+      2: #undef
+      3: #undef
+      4: #undef
+      5: #undef
+      ...
+      12: #undef
+      13: #undef
+      14: #undef
+      15: #undef
+      16: #undef
+    vals: Array{Symbol}((16,))
+      1: Symbol compose
+      2: #undef
+      3: #undef
+      4: #undef
+      5: #undef
+      ...
+      12: #undef
+      13: #undef
+      14: #undef
+      15: #undef
+      16: #undef
+    ndel: Int64 0
+    count: Int64 2
+    age: UInt64 0x0000000000000002
+    idxfloor: Int64 1
+    maxprobe: Int64 0
+```
+
 
 
 

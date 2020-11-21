@@ -1,0 +1,2 @@
+I"e<p>DataFrames.jl is a Julia library to store, retrieve and manipulate tabular data. It is the analog of Pandas for python or related tools in R.  It implements an interface that is a mish-mash of numpy-like slicing and SQL-like queries and can be used as  lightweight flexible relational database. It has proven to be a popular and intuitive interface.</p>
+:ET

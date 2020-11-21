@@ -35,7 +35,7 @@ The pitch diameter is how far that point will be from the center of the gear. Th
 
 The diametral pitch is the number of teeth divided by the pitch diameter. What horrible terminology. It must have units of inverse inches typically. P * D  = N
 
-The circular pitch p is the distance between the same point on each tooth . $latex p P = \pi$
+The circular pitch p is the distance between the same point on each tooth . $ p P = \pi$
 
 At the height of the pitch circle there is just as much tooth as tooth gap.
 
@@ -53,7 +53,7 @@ the root diameter is Pitch Diameter - 2/P =
 
 For a rack, it's much easier to work with p
 
-Top of tooth is 1/P = p / $latex \pi$
+Top of tooth is 1/P = p / $ \pi$
 
 the root diameter is Pitch Diameter - 1/P =
 

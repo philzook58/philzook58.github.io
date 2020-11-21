@@ -26,25 +26,25 @@ Having said that, here we go.
 
 The simplex method gets more press, and certainly has it's advantages, but the interior point method makes much more sense to me. What follows is the basic implementation described in Stephen Boyd's course and book [http://web.stanford.edu/~boyd/cvxbook/](http://web.stanford.edu/~boyd/cvxbook/)
 
-In the basic interior point method, you can achieve your inequality constraints $latex \phi(x) \ge 0$ by using a logarithmic potential to punish getting close to them $latex -\gamma \ln (\phi(x))$ where $latex \gamma$ is a parameter we'll talk about in a bit. From my perspective, the logarithm is a somewhat arbitrary choice. I believe some properties of the logarithmic potential is necessary for some convergence guarantees.
+In the basic interior point method, you can achieve your inequality constraints $ \phi(x) \ge 0$ by using a logarithmic potential to punish getting close to them $ -\gamma \ln (\phi(x))$ where $ \gamma$ is a parameter we'll talk about in a bit. From my perspective, the logarithm is a somewhat arbitrary choice. I believe some properties of the logarithmic potential is necessary for some convergence guarantees.
 
 The basic unconstrained newton step takes a locally quadratic approximation to the function you're trying to optimize and finds the minimum of that. This basically comes down to taking a step that is the inverse hessian applied to the gradient.
 
-$latex \min_{dx} f(x_0+dx) \approx f(x_0) + \nabla f(x_0)dx + \frac{1}{2} dx^T H dx$
+$ \min_{dx} f(x_0+dx) \approx f(x_0) + \nabla f(x_0)dx + \frac{1}{2} dx^T H dx$
 
-$latex (H)_{ij} = \partial_{ij}f(x_0)$
+$ (H)_{ij} = \partial_{ij}f(x_0)$
 
-$latex \nabla f(x_0) +H dx = 0 \rightarrow dx =- H^{-1}\nabla f$
+$ \nabla f(x_0) +H dx = 0 \rightarrow dx =- H^{-1}\nabla f$
 
 We can maintain a linear constraint on the variable x during this newton step. Instead of setting the gradient to zero, we set it so that it is perpendicular to the constraint plane using the Lagrange multiplier procedure.
 
-$latex \nabla f(x_0) +H dx = -A^T \lambda \rightarrow Hdx + A^T \lambda = - \nabla f$
+$ \nabla f(x_0) +H dx = -A^T \lambda \rightarrow Hdx + A^T \lambda = - \nabla f$
 
-$latex A(x_0 + dx) = b$
+$ A(x_0 + dx) = b$
 
 This is a block linear system
 
-$latex \begin{bmatrix}
+$ \begin{bmatrix}
 
 H & A^T \\
 
@@ -66,43 +66,43 @@ dx \\ \lambda
 
 $
 
-Despite the logarithm potential, there is no guarantee that the newton step would not take us outside the allowed region. This is why we need a line search on top of the newton step. We scale the newton dx to $latex \alpha dx$. Because the function we're optimizing is convex and the region we're in is convex, there is some step length in that newton direction that will work. So if we keep decreasing the overall step size, we'll eventually find something acceptable.
+Despite the logarithm potential, there is no guarantee that the newton step would not take us outside the allowed region. This is why we need a line search on top of the newton step. We scale the newton dx to $ \alpha dx$. Because the function we're optimizing is convex and the region we're in is convex, there is some step length in that newton direction that will work. So if we keep decreasing the overall step size, we'll eventually find something acceptable.
 
-As part of the interior point method, once it has converged we decrease the parameter $latex \gamma$ applied to the logarithm potential. This will allow the inequality constraints to satisfied tighter and tighter with smaller gamma.
+As part of the interior point method, once it has converged we decrease the parameter $ \gamma$ applied to the logarithm potential. This will allow the inequality constraints to satisfied tighter and tighter with smaller gamma.
 
 The standard form of an LP is
 
-$latex \min c^T x $
+$ \min c^T x $
 
-$latex A x = b$
+$ A x = b$
 
-$latex x \ge 0$
+$ x \ge 0$
 
 This doesn't feel like the form you'd want. One way you can construct this is by adding slack variables and splitting regular variables into a positive and negative piece
 
-$latex x = x_+ - x_- $
+$ x = x_+ - x_- $
 
-$latex Ax \ge b \rightarrow Ax +s = b, s \ge 0$
+$ Ax \ge b \rightarrow Ax +s = b, s \ge 0$
 
 
 
 The interior point formulation of this is
 
-$latex \min c^T x- \gamma \sum_i \ln(x_i)$
+$ \min c^T x- \gamma \sum_i \ln(x_i)$
 
-$latex Ax = b$
+$ Ax = b$
 
 The Hessian and gradient are quite simple here
 
-$latex \nabla f = -\frac{\gamma}{x_i}$
+$ \nabla f = -\frac{\gamma}{x_i}$
 
-$latex (H)_{ij} = \delta_{ij} \frac{\gamma}{x_i^2}$
+$ (H)_{ij} = \delta_{ij} \frac{\gamma}{x_i^2}$
 
 The optimum conditions for this are
 
-$latex \nabla (c^T x - \gamma \ln(x))= c - \gamma \frac{1}{x} = 0$
+$ \nabla (c^T x - \gamma \ln(x))= c - \gamma \frac{1}{x} = 0$
 
-$latex Ax=b$
+$ Ax=b$
 
 
 
@@ -248,4 +248,4 @@ Mixed integer programs build their own heuristics.
 
 Fourier Motzkin and resolution are similar methods. In Fourier motzkin, you eliminate variables in linear inequalities by using algebra to bring that variable by itself on one side of the inequality and then matching up all the <= to all the uses of >= of that variable. There are packages that compute these things. See CDD or Polyhedra.jl
 
-Resolution takes boolean formula. You can eliminate a variable q from a CNF formula by taking all the negated instances $latex \not q$ and combining them with all positive instances.
+Resolution takes boolean formula. You can eliminate a variable q from a CNF formula by taking all the negated instances $ \not q$ and combining them with all positive instances.

@@ -23,6 +23,6 @@ This may be useful?
 
 This is a bird
 
-[caption id="" align="alignnone" width="2560"]![BIRD BIRD BIRD](https://upload.wikimedia.org/wikipedia/commons/6/61/Minla_strigula_-_Doi_Inthanon.jpg) BIRD[/caption]
+[caption id="" align="alignnone" width="2560"]![BIRD BIRD BIRD](/assets/Minla_strigula_-_Doi_Inthanon.jpg) BIRD[/caption]
 
 

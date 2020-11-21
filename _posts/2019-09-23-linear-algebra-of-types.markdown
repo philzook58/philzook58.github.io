@@ -78,48 +78,53 @@ The simplest implementation to show how this could go can be made using the naiv
 
 
     
-    <code>type a :*: b = (a,b)
-    type a :+: b = Either a b
     
-    type family Dot v v' where
-        Dot '[x] '[y] = x :*: y 
-        Dot (x : xs) (y : ys) = (x :*: y) :+: (Dot xs ys)
-    
-    type family MVMult m v where
-        MVMult '[r] v = '[Dot r v]
-        MVMult (r : rs) v = (Dot r v) : (MVMult rs v)
-    
-    type family VMMult m v where
-        VMMult v '[c] = '[Dot v c]
-        VMMult v (c : cs) = (Dot v c) : (VMMult v cs)
-    
-    type family MMMult' m m' where
-        MMMult' '[r] cs = '[VMMult r cs]
-        MMMult' (r : rs) cs = (VMMult r cs) : (MMMult' rs cs)
-    
-    type family MMMult m m' where
-        MMMult m m' = MMMult' m (Transpose m')
-    
-    type family Transpose m where
-        Transpose ((r1 : rs') : rs) = (r1 : (Heads rs)) : (Conss rs' (Transpose (Tails rs)))
-        Transpose '[] = '[]
-    
-    -- some mapped helper functions
-    -- verrrrrry ugly. Eh. Get 'er dun
-    type family Heads v where
-        Heads ((v : vs) : xs) = v : (Heads xs)
-        Heads '[] = '[]
-    type family Tails v where
-        Tails ((v : vs) : xs) = vs : (Tails xs)
-        Tails '[] = '[]
-    type family Conss v vs where
-        Conss (x : xs) (y : ys) = (x : y) : (Conss xs ys)
-        Conss '[] '[] = '[]
-    
-    type family Index v i where
-        Index (x : xs) 0 = x
-        Index (x : xs) n = Index xs (n-1)
-    </code>
+```haskell
+
+type a :*: b = (a,b)
+type a :+: b = Either a b
+
+type family Dot v v' where
+    Dot '[x] '[y] = x :*: y 
+    Dot (x : xs) (y : ys) = (x :*: y) :+: (Dot xs ys)
+
+type family MVMult m v where
+    MVMult '[r] v = '[Dot r v]
+    MVMult (r : rs) v = (Dot r v) : (MVMult rs v)
+
+type family VMMult m v where
+    VMMult v '[c] = '[Dot v c]
+    VMMult v (c : cs) = (Dot v c) : (VMMult v cs)
+
+type family MMMult' m m' where
+    MMMult' '[r] cs = '[VMMult r cs]
+    MMMult' (r : rs) cs = (VMMult r cs) : (MMMult' rs cs)
+
+type family MMMult m m' where
+    MMMult m m' = MMMult' m (Transpose m')
+
+type family Transpose m where
+    Transpose ((r1 : rs') : rs) = (r1 : (Heads rs)) : (Conss rs' (Transpose (Tails rs)))
+    Transpose '[] = '[]
+
+-- some mapped helper functions
+-- verrrrrry ugly. Eh. Get 'er dun
+type family Heads v where
+    Heads ((v : vs) : xs) = v : (Heads xs)
+    Heads '[] = '[]
+type family Tails v where
+    Tails ((v : vs) : xs) = vs : (Tails xs)
+    Tails '[] = '[]
+type family Conss v vs where
+    Conss (x : xs) (y : ys) = (x : y) : (Conss xs ys)
+    Conss '[] '[] = '[]
+
+type family Index v i where
+    Index (x : xs) 0 = x
+    Index (x : xs) n = Index xs (n-1)
+
+```
+
 
 
 
@@ -151,7 +156,7 @@ Ok. That's kind of neat, but why do it? Well, one way to seek an answer to that 
 
 
 
-One thing they can do is describe transition systems. You can write down a matrix whose entire $latex a_{ij}$ describes something about the transition from state $latex  i$ to state $latex j$. For example the entry could be:
+One thing they can do is describe transition systems. You can write down a matrix whose entire $ a_{ij}$ describes something about the transition from state $  i$ to state $ j$. For example the entry could be:
 
 
 
@@ -159,11 +164,11 @@ One thing they can do is describe transition systems. You can write down a matri
 
 
 
-  * The cost of getting from $latex i$ to $latex j$ (min-plus gives shortest path),
-  * The count of ways to get from $latex i$ to $latex j$ (combinatorics of paths)
-  * The connectivity of the system from $latex i$ to $latex j$ using boolean values and the and-or semiring
-  * The probability of transition from $latex i$ to $latex j$
-  * The quantum amplitude of going from $latex i$ to $latex j$ if we're feeling saucy.
+  * The cost of getting from $ i$ to $ j$ (min-plus gives shortest path),
+  * The count of ways to get from $ i$ to $ j$ (combinatorics of paths)
+  * The connectivity of the system from $ i$ to $ j$ using boolean values and the and-or semiring
+  * The probability of transition from $ i$ to $ j$
+  * The quantum amplitude of going from $ i$ to $ j$ if we're feeling saucy.
 
 
 
@@ -178,7 +183,7 @@ If we form a matrix describing a single time step, then multiplying this matrix 
 
 
 
-Lifting this notion to types, we can build a type exactly representing all the possible paths from state $latex i$ to $latex j$.
+Lifting this notion to types, we can build a type exactly representing all the possible paths from state $ i$ to $ j$.
 
 
 
@@ -195,9 +200,14 @@ Concretely, consider the following humorously bleak transition system: You are g
 
 
     
-    <code>data Commute = Drive
-    data Home = Sleep | Eat
-    data Work = TPSReport | Bitch | Moan</code>
+    
+```haskell
+
+data Commute = Drive
+data Home = Sleep | Eat
+data Work = TPSReport | Bitch | Moan
+```
+
 
 
 
@@ -212,7 +222,7 @@ This is described by the following transition diagram
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/09/My-Drawing-1-1024x674.png)Stapler.
+![](/assets/My-Drawing-1-1024x674.png)Stapler.
 
 
 
@@ -226,9 +236,14 @@ The transitions are described by the following matrix.type:
 
 
     
-    <code>type T = '[ '[Home    ,  Commute ],  
-                '[Commute ,  Work    ]]
-    </code>
+    
+```haskell
+
+type T = '[ '[Home    ,  Commute ],  
+            '[Commute ,  Work    ]]
+
+```
+
 
 
 
@@ -244,7 +259,12 @@ What is the data type that describe all possible 4-hour day? You'll find the app
 
 
     
-    <code>type FourHour = MMMult T (MMMult T (MMMult T T))</code>
+    
+```haskell
+
+type FourHour = MMMult T (MMMult T (MMMult T T))
+```
+
 
 
 
@@ -268,8 +288,13 @@ Here are two data types that describe an indefinite numbers of transition steps.
 
 
     
-    <code>data HomeChoice = StayHome Home HomeChoice | GoWork Commute WorkChoice
-    data WorkChoice = StayWork Work WorkChoice | GoHome Commute HomeChoice</code>
+    
+```haskell
+
+data HomeChoice = StayHome Home HomeChoice | GoWork Commute WorkChoice
+data WorkChoice = StayWork Work WorkChoice | GoHome Commute HomeChoice
+```
+
 
 
 
@@ -285,11 +310,16 @@ Another style would hold the current state as a type parameter in the type using
 
 
     
-    <code>data Path state where   
-       StayWork :: Work -> Path Work -> Path Work
-       CommuteHome :: Commute -> Path Home ->  Path Work
-       StayHome :: Home -> Path Home -> Path Home
-       CommuteWork :: Commute -> Path Work ->  Path Home</code>
+    
+```haskell
+
+data Path state where   
+   StayWork :: Work -> Path Work -> Path Work
+   CommuteHome :: Commute -> Path Home ->  Path Work
+   StayHome :: Home -> Path Home -> Path Home
+   CommuteWork :: Commute -> Path Work ->  Path Home
+```
+
 
 
 
@@ -345,9 +375,14 @@ This is connected to the above algebra of types picture by considering the index
 
 
     
-    <code>type Vec b r = [(b, a)]
-    -- Example 2D vector space type
-    type V2D = Vec Bool Double</code>
+    
+```haskell
+
+type Vec b r = [(b, a)]
+-- Example 2D vector space type
+type V2D = Vec Bool Double
+```
+
 
 
 
@@ -372,7 +407,7 @@ Going down this road (plus a couple layers of mathematical sophistication) leads
 
 
 
-http://www.philipzucker.com/a-touch-of-topological-quantum-computation-in-haskell-pt-i/
+[http://www.philipzucker.com/a-touch-of-topological-quantum-computation-in-haskell-pt-i/](http://www.philipzucker.com/a-touch-of-topological-quantum-computation-in-haskell-pt-i/)
 
 
 

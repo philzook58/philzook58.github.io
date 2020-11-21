@@ -1,0 +1,349 @@
+I"�<p><a href="https://en.wikipedia.org/wiki/Kissing_number">https://en.wikipedia.org/wiki/Kissing_number</a></p>
+
+<p>Cody brought up the other day the kissing number problem.Kissing numbers are the number of equal sized spheres you can pack around another one in d dimensions. It’s fairly self evident that the number is 2 for 1-d and 6 for 2d but 3d isn’t so obvious and in fact puzzled great mathematicians for a while. He was musing that it was interesting that he kissing numbers for some dimensions are not currently known, despite the fact that the first order theory of the real numbers is decidable <a href="https://en.wikipedia.org/wiki/Decidability_of_first-order_theories_of_the_real_numbers">https://en.wikipedia.org/wiki/Decidability_of_first-order_theories_of_the_real_numbers</a></p>
+
+<p>I suggested on knee jerk that Sum of Squares  might be useful here. I see inequalities and polynomials and then it is the only game in town that I know anything about.</p>
+
+<p>Apparently that knee jerk was not completely wrong</p>
+
+<p>https://windowsontheory.org/2016/08/27/proofs-beliefs-and-algorithms-through-the-lens-of-sum-of-squares/</p>
+
+<p><a href="https://arxiv.org/pdf/math/0608426.pdf">https://arxiv.org/pdf/math/0608426.pdf</a></p>
+
+<p>Somehow SOS/SDP was used for bounds here. I had an impulse that the problem feels SOS-y but I do not understand their derivation.</p>
+
+<p>One way the problem can be formulated is by finding or proving there is no solution to the following set of equations constraining the centers $ x_i$ of the spheres. Set the central sphere at (0,0,0,…) . Make the radii 1. Then$ \forall i. |x_i|^2 = 2^2 $ and $ \forall i j.  |x_i - x_j|^2 \ge 2^2 $</p>
+
+<p>I tried a couple different things and have basically failed. I hope maybe I’ll someday have a follow up post where I do better.</p>
+
+<p>So I had 1 idea on how to approach this via a convex relaxation</p>
+
+<p>Make a vector $ x = \begin{bmatrix} x_0 &amp; y _0 &amp; x_1 &amp; y _1 &amp; x_2 &amp; y _2 &amp; … \end{bmatrix}$ Take the outer product of this vector $ x^T x = X$ Then we can write the above equations as linear equalities and inequalities on X. If we forget that we need X to be the outer product of x (the relaxation step), this becomes a semidefinite program. Fingers crossed, maybe the solution comes back as a rank 1 matrix. Other fingers crossed, maybe the solution comes back and says it’s infeasible. In either case, we have solved our original problem.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">cvxpy</span> <span class="k">as</span> <span class="n">cvx</span>
+
+
+<span class="n">d</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">N</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">n</span> 
+<span class="n">x</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Variable</span><span class="p">((</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">symmetric</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">c</span> <span class="o">+=</span> <span class="p">[</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">c</span> <span class="o">+=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="c1"># x^2 + y^2 + z^2 + ... == 2^2 constraint
+</span><span class="n">x1</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+        <span class="n">q</span> <span class="o">+=</span> <span class="n">x1</span><span class="p">[</span><span class="n">d</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span> <span class="n">d</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">+=</span> <span class="p">[</span><span class="n">q</span> <span class="o">==</span> <span class="mi">4</span><span class="p">]</span> <span class="c1">#[ x1[2*i + 1, 2*i + 1] + x[2*i + 2, 2*i + 2] == 4]
+</span>
+<span class="c1">#c += [x1[0,0] == 2, x1[1,1] &gt;= 0]
+#c += [x1[2,2] &gt;= 2]
+</span>
+<span class="c1"># (x - x) + (y - y) &gt;= 4
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>    
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+            <span class="n">q</span> <span class="o">+=</span> <span class="n">x1</span><span class="p">[</span><span class="n">d</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span> <span class="n">d</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">x1</span><span class="p">[</span><span class="n">d</span><span class="o">*</span><span class="n">k</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span> <span class="n">d</span><span class="o">*</span><span class="n">k</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x1</span><span class="p">[</span><span class="n">d</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span> <span class="n">d</span><span class="o">*</span><span class="n">k</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="c1"># xk ^ 2 - 2 * xk * xi 
+</span>        <span class="n">c</span> <span class="o">+=</span> <span class="p">[</span><span class="n">q</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Maximize</span><span class="p">(</span><span class="n">cvx</span><span class="p">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">@</span> <span class="n">x</span> <span class="p">))</span>
+<span class="n">prob</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Problem</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">prob</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+<span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vh</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">svd</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="n">xy</span> <span class="o">=</span> <span class="n">vh</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">:].</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xy</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Didn’t work though. Sigh. It’s conceivable we might do better if we start packing higher powers into x?</p>
+
+<p>Ok Round 2. Let’s just ask z3 and see what it does. I’d trust z3 with my baby’s soft spot.</p>
+
+<p>It solves for 5 and below. Z3 grinds to a halt on N=6 and above. It ran for days doin nothing on my desktop.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">from</span> <span class="nn">z3</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># dimensions
+</span><span class="n">n</span> <span class="o">=</span> <span class="mi">6</span> <span class="c1"># number oif spheres
+</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span> <span class="p">[</span> <span class="n">Real</span><span class="p">(</span><span class="s">"x_%d_%d"</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">))</span>     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">+=</span> <span class="p">[</span> <span class="n">d2</span> <span class="o">==</span> <span class="mi">4</span> <span class="k">for</span> <span class="n">d2</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">]</span> <span class="c1"># centers at distance 2 from origin
+</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span> <span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">d</span><span class="p">))</span> <span class="o">-</span> <span class="n">x</span><span class="p">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">d</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">c</span> <span class="o">+=</span> <span class="p">[</span> <span class="n">ds</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>  <span class="o">&gt;=</span> <span class="mi">4</span>  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="c1"># spheres greater than dist 2 apart
+</span><span class="n">c</span> <span class="o">+=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">solve</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Ok. A different tact. Try to use a <a href="https://en.wikipedia.org/wiki/Positivstellensatz">positivstellensatz</a> proof. If you have a bunch of polynomial inequalities and equalities if you sum polynomial multiples of these constraints, with the inequalities having sum of square multiples, in such a way to = -1, it shows that there is no real solution to them. We have the distance from origin as equality constraint and distance from each other as an inequality constraint. I intuitively think of the positivstellensatz as deriving an impossibility from false assumptions. You  can’t add a bunch of 0 and positive numbers are get a negative number, hence there is no real solution.</p>
+
+<p>I have a small set of helper functions for combining sympy and cvxpy for sum of squares optimization. I keep it here along with some other cute little constructs <a href="https://github.com/philzook58/cvxpy-helpers">https://github.com/philzook58/cvxpy-helpers</a></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">import</span> <span class="nn">cvxpy</span> <span class="k">as</span> <span class="n">cvx</span>
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="s">'''
+The idea is to use raw cvxpy and sympy as much as possible for maximum flexibility.
+
+Construct a sum of squares polynomial using sospoly. This returns a variable dictionary mapping sympy variables to cvxpy variables.
+You are free to the do polynomial operations (differentiation, integration, algerba) in pure sympy
+When you want to express an equality constraint, use poly_eq(), which takes the vardict and returns a list of cvxpy constraints.
+Once the problem is solved, use poly_value to get back the solution polynomials.
+
+That some polynomial is sum of squares can be expressed as the equality with a fresh polynomial that is explicility sum of sqaures.
+
+With the approach, we get the full unbridled power of sympy (including grobner bases!)
+
+I prefer manually controlling the vardict to having it auto controlled by a class, just as a I prefer manually controlling my constraint sets
+Classes suck.
+'''</span>
+
+
+<span class="k">def</span> <span class="nf">cvxify</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">cvxdict</span><span class="p">):</span> <span class="c1"># replaces sympy variables with cvx variables in sympy expr
+</span>     <span class="k">return</span> <span class="n">lambdify</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">cvxdict</span><span class="p">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">expr</span><span class="p">)(</span><span class="o">*</span><span class="n">cvxdict</span><span class="p">.</span><span class="n">values</span><span class="p">())</span> 
+
+<span class="k">def</span> <span class="nf">sospoly</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="s">''' returns sum of squares polynomial using terms, and vardict mapping to cvxpy variables '''</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+    <span class="n">xn</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">MatrixSymbol</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">xn</span><span class="p">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span> <span class="o">*</span> <span class="n">xn</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">Qcvx</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Variable</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">N</span><span class="p">),</span> <span class="n">PSD</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">vardict</span> <span class="o">=</span> <span class="p">{</span><span class="n">Q</span> <span class="p">:</span> <span class="n">Qcvx</span><span class="p">}</span> 
+    <span class="k">return</span> <span class="n">p</span><span class="p">,</span> <span class="n">vardict</span>
+
+
+
+<span class="k">def</span> <span class="nf">polyvar</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="s">''' builds sumpy expression and vardict for an unknown linear combination of the terms '''</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+    <span class="n">xn</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">MatrixSymbol</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">xn</span><span class="p">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">Q</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">Qcvx</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Variable</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">vardict</span> <span class="o">=</span> <span class="p">{</span><span class="n">Q</span> <span class="p">:</span> <span class="n">Qcvx</span><span class="p">}</span> 
+    <span class="k">return</span> <span class="n">p</span><span class="p">,</span> <span class="n">vardict</span>
+
+<span class="k">def</span> <span class="nf">scalarvar</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">polyvar</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="n">name</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">worker</span><span class="p">(</span><span class="n">x</span> <span class="p">):</span>
+    <span class="p">(</span><span class="n">expr</span><span class="p">,</span><span class="n">vardict</span><span class="p">)</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="k">return</span> <span class="n">cvxify</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">vardict</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="k">def</span> <span class="nf">poly_eq</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="p">,</span> <span class="n">vardict</span><span class="p">):</span>
+    <span class="s">''' returns a list of cvxpy constraints '''</span>
+    <span class="n">dp</span> <span class="o">=</span> <span class="n">p1</span> <span class="o">-</span> <span class="n">p2</span>
+    <span class="n">polyvars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dp</span><span class="p">.</span><span class="n">free_symbols</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">vardict</span><span class="p">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"hey"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">poly_from_expr</span><span class="p">(</span><span class="n">dp</span><span class="p">,</span> <span class="n">gens</span> <span class="o">=</span> <span class="n">polyvars</span><span class="p">,</span> <span class="n">domain</span> <span class="o">=</span> <span class="n">polys</span><span class="p">.</span><span class="n">domains</span><span class="p">.</span><span class="n">EX</span><span class="p">)</span> <span class="c1">#This is brutalizing me
+</span>    <span class="k">print</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"buddo"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span> <span class="n">cvxify</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">vardict</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">p</span><span class="p">.</span><span class="n">coeffs</span><span class="p">()]</span>
+    <span class="s">'''
+    import multiprocessing
+    import itertools
+    pool = multiprocessing.Pool()
+
+    return pool.imap_unordered(worker, zip(p.coeffs(),  itertools.repeat(vardict)))
+    '''</span>
+
+<span class="k">def</span> <span class="nf">vardict_value</span><span class="p">(</span><span class="n">vardict</span><span class="p">):</span>
+    <span class="s">''' evaluate numerical values of vardict '''</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="n">v</span><span class="p">.</span><span class="n">value</span> <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">vardict</span><span class="p">.</span><span class="n">items</span><span class="p">()}</span>
+
+<span class="k">def</span> <span class="nf">poly_value</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">vardict</span><span class="p">):</span>
+    <span class="s">''' evaluate polynomial expressions with vardict'''</span>
+    <span class="k">return</span> <span class="n">cvxify</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">vardict_value</span><span class="p">(</span><span class="n">vardict</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span>
+    <span class="n">terms</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1">#p, cdict = polyvar(terms)
+</span>    <span class="n">p</span><span class="p">,</span> <span class="n">cdict</span> <span class="o">=</span> <span class="n">sospoly</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">poly_eq</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">,</span> <span class="n">cdict</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="n">prob</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Problem</span><span class="p">(</span><span class="n">cvx</span><span class="p">.</span><span class="n">Minimize</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">c</span><span class="p">)</span>
+    <span class="n">prob</span><span class="p">.</span><span class="n">solve</span><span class="p">()</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">factor</span><span class="p">(</span><span class="n">poly_value</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">cdict</span><span class="p">)))</span>
+
+    <span class="c1"># global poly minimization
+</span>    <span class="n">vdict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">t</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">polyvar</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s">'t'</span><span class="p">)</span>
+    <span class="n">vdict</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="n">p</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">sospoly</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s">'p'</span><span class="p">)</span>
+    <span class="n">vdict</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="n">constraints</span> <span class="o">=</span> <span class="n">poly_eq</span><span class="p">(</span><span class="mi">7</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">t</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">vdict</span><span class="p">)</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Maximize</span><span class="p">(</span> <span class="n">cvxify</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">vdict</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">prob</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Problem</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">constraints</span><span class="p">)</span>
+    <span class="n">prob</span><span class="p">.</span><span class="n">solve</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">poly_value</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">vdict</span><span class="p">))</span>
+
+</code></pre></div></div>
+
+<p>and here is the attempted positivstellensatz.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">import</span> <span class="nn">sos</span>
+<span class="kn">import</span> <span class="nn">cvxpy</span> <span class="k">as</span> <span class="n">cvx</span>
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">7</span>
+
+<span class="c1"># a grid of a vector field. indices = (xposition, yposition, vector component)
+</span><span class="s">'''xs = [ [symbols("x_%d_%d" % (i,j)) for j in range(d)] for i in range(N) ]
+gens = [x for l in xs for x in l ]
+xs = np.array([[poly(x,gens=gens, domain=polys.domains.EX) for x in l] for l in xs])
+'''</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span> <span class="p">[</span><span class="n">symbols</span><span class="p">(</span><span class="s">"x_%d_%d"</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="p">])</span>
+
+<span class="n">c1</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span> <span class="n">xs</span> <span class="o">*</span> <span class="n">xs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">c2</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">((</span><span class="n">xs</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">d</span><span class="p">)</span> <span class="o">-</span> <span class="n">xs</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">d</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+<span class="n">terms0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">terms1</span> <span class="o">=</span> <span class="n">terms0</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">xs</span><span class="p">.</span><span class="n">flatten</span><span class="p">())</span>
+<span class="n">terms2</span> <span class="o">=</span> <span class="p">[</span> <span class="n">terms1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">terms1</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+<span class="c1">#print(terms1)
+#print(terms2)
+</span><span class="n">vdict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">psatz</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">c1</span><span class="p">:</span>
+    <span class="n">lam</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">sos</span><span class="p">.</span><span class="n">polyvar</span><span class="p">(</span><span class="n">terms2</span><span class="p">)</span>
+    <span class="n">vdict</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="n">psatz</span> <span class="o">+=</span> <span class="n">lam</span><span class="o">*</span><span class="n">c</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">c2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">lam</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">sos</span><span class="p">.</span><span class="n">sospoly</span><span class="p">(</span><span class="n">terms2</span><span class="p">)</span>
+        <span class="n">vdict</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">psatz</span> <span class="o">+=</span> <span class="n">lam</span><span class="o">*</span><span class="n">c</span>
+<span class="c1">#print(type(psatz))
+</span><span class="k">print</span><span class="p">(</span><span class="s">"build constraints"</span><span class="p">)</span>
+<span class="n">constraints</span> <span class="o">=</span> <span class="n">sos</span><span class="p">.</span><span class="n">poly_eq</span><span class="p">(</span><span class="n">psatz</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vdict</span><span class="p">)</span>
+<span class="c1">#print("Constraints: ", len(constraints))
+</span><span class="n">obj</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Minimize</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#sum([cvx.sum(v) for v in vdict.values()]))
+</span><span class="k">print</span><span class="p">(</span><span class="s">"build prob"</span><span class="p">)</span>
+<span class="n">prob</span> <span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">Problem</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">constraints</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"solve"</span><span class="p">)</span>
+<span class="n">prob</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span> <span class="n">cvx</span><span class="p">.</span><span class="n">SCS</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>It worked in 1-d, but did not work in 2d. At order 3 polynomials N=7, I maxed out my ram.</p>
+
+<p>I also tried doing it in Julia, since sympy was killing me. Julia already has a SOS package</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">using</span> <span class="n">JuMP</span>
+<span class="k">using</span> <span class="n">SumOfSquares</span>
+<span class="k">using</span> <span class="n">DynamicPolynomials</span>
+<span class="k">using</span> <span class="n">SCS</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="nd">@polyvar</span> <span class="n">x</span><span class="x">[</span><span class="mi">1</span><span class="o">:</span><span class="n">N</span><span class="x">,</span><span class="mi">1</span><span class="o">:</span><span class="n">d</span><span class="x">]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">monomials</span><span class="x">(</span><span class="n">reshape</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">d</span><span class="o">*</span><span class="n">N</span><span class="x">),</span> <span class="mi">0</span><span class="o">:</span><span class="mi">2</span><span class="x">)</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="n">monomials</span><span class="x">(</span><span class="n">reshape</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">d</span><span class="o">*</span><span class="n">N</span><span class="x">),</span> <span class="mi">0</span><span class="o">:</span><span class="mi">4</span><span class="x">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">SOSModel</span><span class="x">(</span><span class="n">with_optimizer</span><span class="x">(</span><span class="n">SCS</span><span class="o">.</span><span class="n">Optimizer</span><span class="x">))</span>
+
+<span class="n">acc</span> <span class="o">=</span> <span class="nb">nothing</span>
+<span class="k">for</span> <span class="n">t</span> <span class="k">in</span> <span class="n">sum</span><span class="x">(</span><span class="n">x</span> <span class="o">.*</span> <span class="n">x</span><span class="x">,</span> <span class="n">dims</span><span class="o">=</span><span class="mi">2</span><span class="x">)</span>
+    <span class="c">#print(t)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="nd">@variable</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="x">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span><span class="x">],</span> <span class="n">Poly</span><span class="x">(</span><span class="n">X1</span><span class="x">))</span>
+    <span class="c">#print(p)</span>
+    <span class="k">if</span> <span class="n">acc</span> <span class="o">!=</span> <span class="nb">nothing</span>
+        <span class="n">acc</span> <span class="o">+=</span> <span class="n">p</span> <span class="o">*</span> <span class="x">(</span><span class="n">t</span> <span class="o">-</span> <span class="mi">1</span><span class="x">)</span>
+    <span class="k">else</span>
+        <span class="n">acc</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="x">(</span><span class="n">t</span> <span class="o">-</span> <span class="mi">1</span><span class="x">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">range</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span><span class="n">stop</span><span class="o">=</span><span class="n">N</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="n">range</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span><span class="n">stop</span><span class="o">=</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="x">)</span>
+        <span class="n">d</span>  <span class="o">=</span> <span class="n">x</span><span class="x">[</span><span class="n">i</span><span class="x">,</span><span class="o">:</span><span class="x">]</span> <span class="o">-</span> <span class="n">x</span><span class="x">[</span><span class="n">j</span><span class="x">,</span><span class="o">:</span><span class="x">]</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="nd">@variable</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="x">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span><span class="x">],</span> <span class="n">SOSPoly</span><span class="x">(</span><span class="n">X</span><span class="x">))</span>
+        <span class="n">acc</span> <span class="o">+=</span> <span class="n">p</span> <span class="o">*</span> <span class="x">(</span><span class="n">sum</span><span class="x">(</span><span class="n">d</span> <span class="o">.*</span> <span class="n">d</span><span class="x">)</span> <span class="o">-</span> <span class="mi">1</span><span class="x">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c">#print(acc)</span>
+<span class="n">print</span><span class="x">(</span><span class="n">typeof</span><span class="x">(</span><span class="n">acc</span><span class="x">))</span>
+<span class="nd">@constraint</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">acc</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="x">)</span>
+<span class="n">optimize!</span><span class="x">(</span><span class="n">model</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>It was faster to encode, but it’s using the same solver (SCS), so basically the same thing.</p>
+
+<p>I should probably be reducing the system with respect to equality constraints since they’re already in a Groebner basis. I know that can be really important for reducing the size of your problem</p>
+
+<p>I dunno.</p>
+
+<p>Blah blah blah blah A bunch of unedited trash</p>
+
+<p><a href="https://github.com/peterwittek/ncpol2sdpa">https://github.com/peterwittek/ncpol2sdpa</a> Peter Wittek has probably died in an avalanche? That is very sad.</p>
+
+<p>These notes</p>
+
+<p><a href="https://web.stanford.edu/class/ee364b/lectures/sos_slides.pdf">https://web.stanford.edu/class/ee364b/lectures/sos_slides.pdf</a></p>
+
+<p>Positivstullensatz.</p>
+
+<p>kissing number</p>
+
+<p>Review of sum of squares</p>
+
+<p>minimimum sample as LP. ridiculous problem<br />
+min t<br />
+st. f(x_i) - t &gt;= 0</p>
+
+<p>dual -&gt; one dual variable per sample point<br />
+The only dual that will be non zero is that actually selecting the minimum.</p>
+
+<p>Hm. Yeah, that’s a decent analogy.</p>
+
+<p>How does the dual even have a chance of knowing about poly airhtmetic?<br />
+It must be during the SOS conversion prcoess. In building the SOS constraints,<br />
+we build a finite, limittted version of polynomial multiplication<br />
+x as a matrix. x is a shift matrix.<br />
+In prpducing the characterstic polynomial, x is a shift matrix, with the last line using the polynomial<br />
+known to be zero to <br />
+eigenvectors of this matrix are zeros of the poly.</p>
+
+<p>SOS does not really on polynomials persay. It relies on closure of the suqaring operaiton</p>
+
+<p>maybe set one sphere just at x=0 y = 2. That breaks some symmettry</p>
+
+<p>set next sphere in plane something. random plane through origin?</p>
+
+<p>order y components - breaks some of permutation symmettry.</p>
+
+<p>no, why not order in a random direction. That seems better for symmettry breaking</p>
+
+:ET

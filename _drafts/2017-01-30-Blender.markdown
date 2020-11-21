@@ -1,0 +1,25 @@
+---
+author: philzook58
+comments: true
+date: 2017-01-30 13:51:49+00:00
+layout: post
+link: https://www.philipzucker.com/?p=628
+published: false
+slug: Blender
+title: Blender
+wordpress_id: 628
+---
+
+Some neat stuff in the python api in the corner
+
+ctrl + left mouse lasso selects
+
+C and B are dfferent select modes
+
+edit mode vs object mode
+
+properties with M
+
+F adds new edges or faces. Also in the creation menu.
+
+

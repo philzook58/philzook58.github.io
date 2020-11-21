@@ -17,7 +17,7 @@ tags:
 
 Last time [we built the basic pieces we need](http://www.philipzucker.com/a-touch-of-topological-quantum-computation-in-haskell-pt-i/) to describe anyons in Haskell. Anyon models describe interesting physical systems where a set of particles (Tau and Id in our case) have certain splitting rules and peculiar quantum properties. The existence of anyons in a system are the core physics necessary to support topological quantum computation. In topological quantum computing, quantum gates are applied by braiding the anyons and measurements performed by fusing anyons together and seeing what particle comes out. Applying gates in this way has inherent error correcting properties.
 
-The tree of particle production with particle labelled leaves picks a basis (think the collection $latex \{\hat{x}, \hat{y}, \hat{z}\}$ ) for the anyon quantum vector space. An individual basis vector (think $latex \hat{x}$ ) from this basis is specified by labelling the internal edges of the tree. We built a Haskell data type for a basic free vector space and functions for the basic R-moves for braiding two anyons and reassociating the tree into a new basis with F-moves. In addition, you can move around your focus within the tree by using the function `lmap` and `rmap`. The github repo with that and what follows below is [here](https://github.com/philzook58/fib-anyon).
+The tree of particle production with particle labelled leaves picks a basis (think the collection $ \{\hat{x}, \hat{y}, \hat{z}\}$ ) for the anyon quantum vector space. An individual basis vector (think $ \hat{x}$ ) from this basis is specified by labelling the internal edges of the tree. We built a Haskell data type for a basic free vector space and functions for the basic R-moves for braiding two anyons and reassociating the tree into a new basis with F-moves. In addition, you can move around your focus within the tree by using the function `lmap` and `rmap`. The github repo with that and what follows below is [here](https://github.com/philzook58/fib-anyon).
 
 
 #### Pain Points
@@ -35,7 +35,7 @@ To try and bridge this gap, we need to build functions that work in some reasona
 
 Our first useful operation is `pullLeftLeaf`. This operation will rearrange the tree using F-moves to get the leftmost leaf associated all the way to the root. The leftmost leaf will then have the root as a parent.
 
-[![](http://philzucker2.nfshost.com/wp-content/uploads/2019/01/48a4a399-dd9e-4e7e-b6d5-7660a0e948ea.png)](http://philzucker2.nfshost.com/wp-content/uploads/2019/01/48a4a399-dd9e-4e7e-b6d5-7660a0e948ea.png)
+[![](/assets/48a4a399-dd9e-4e7e-b6d5-7660a0e948ea.png)](/assets/48a4a399-dd9e-4e7e-b6d5-7660a0e948ea.png)
 
 Because the tree structure is in the `FibTree a b` data type, we need the tuple tree type of the pulled tree. This is a slightly non-trivial type computation.
 
@@ -79,7 +79,7 @@ One common way of dealing with larger trees is to pick a canonical basis of full
 
 By recursively applying `pullLeftLeaf`, we can fully right associate any tree.
 
-[![](http://philzucker2.nfshost.com/wp-content/uploads/2018/12/d44b3b38-bc0a-474e-9657-cac542862fea.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/12/d44b3b38-bc0a-474e-9657-cac542862fea.png)
+[![](/assets/d44b3b38-bc0a-474e-9657-cac542862fea.png)](/assets/d44b3b38-bc0a-474e-9657-cac542862fea.png)
 
     
     class RightAssoc a b | a -> b where
@@ -106,7 +106,7 @@ Now we have the means to convert any structure to it's right associated canonica
 
 The B-move applies one F-move so that the two neighboring leaves share a parent, uses the regular braiding R-move, then applies the inverse F-move to return back to the canonical basis. Similarly, `bmove'` is the same thing except applies the under braiding` braid'` rather that the over braiding `braid`.
 
-[![](http://philzucker2.nfshost.com/wp-content/uploads/2018/12/b-move.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/12/b-move.png)
+[![](/assets/b-move.png)](/assets/b-move.png)
 
 (Image Source : [Preskill's notes](http://www.theory.caltech.edu/~preskill/ph219/topological.pdf))
 
@@ -170,7 +170,7 @@ As a first piece, we need a type level function to count the number of leaves in
 
 Next, we make a typeclass for mapping into the least common ancestor position.
 
-[![](http://philzucker2.nfshost.com/wp-content/uploads/2019/01/48a4a399-dd9e-4e7e-b6d5-7660a0e948ea-1.png)](http://philzucker2.nfshost.com/wp-content/uploads/2019/01/48a4a399-dd9e-4e7e-b6d5-7660a0e948ea-1.png)
+[![](/assets/48a4a399-dd9e-4e7e-b6d5-7660a0e948ea-1.png)](/assets/48a4a399-dd9e-4e7e-b6d5-7660a0e948ea-1.png)
 
     
     lcamap ::  forall n s t a b e gte .
@@ -274,7 +274,7 @@ Note that rmapN is 0-indexed but nmap is 1-indexed. This is somewhat horrifying,
 
 Here is a more extended example showing how to fuse some particles.
 
-[![](http://philzucker2.nfshost.com/wp-content/uploads/2019/01/8acaa5b6-50cc-4208-89da-414b21867064-1.png)](http://philzucker2.nfshost.com/wp-content/uploads/2019/01/8acaa5b6-50cc-4208-89da-414b21867064-1.png)
+[![](/assets/8acaa5b6-50cc-4208-89da-414b21867064-1.png)](/assets/8acaa5b6-50cc-4208-89da-414b21867064-1.png)
 
     
     ttt = TTT TLeaf TLeaf

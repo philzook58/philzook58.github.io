@@ -13,7 +13,7 @@ I've been toying with a slightly interesting twist on band theory.
 
 If we put a chain on a circle, the usual band with nearest neighbor tunneling is
 
-$latex E(k)=t \cos (k)$
+$ E(k)=t \cos (k)$
 
 Next nearest neighbor tunneling makes terms in the dispersion like cos(2k) that are more oscillatory.
 

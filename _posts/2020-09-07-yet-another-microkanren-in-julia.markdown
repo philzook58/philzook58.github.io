@@ -66,8 +66,13 @@ Logic programming consists of basically two pieces, search and unification. The 
 
 
     
-    <code>interleave [] ys = ys
-    interleave (x:xs)  = x : interleave ys xs </code>
+    
+```julia
+
+interleave [] ys = ys
+interleave (x:xs)  = x : interleave ys xs 
+```
+
 
 
 
@@ -107,49 +112,54 @@ I diverged from microKanren in a couple ways. I wanted to not use a list based s
 
 
     
-    <code>struct Var 
-        x::Symbol
-    end
     
-    function walk(s,u) 
-        while isa(u,Var) && haskey(s,u)
-                u = get(s,u)
-        end
-        return u
+```julia
+
+struct Var 
+    x::Symbol
+end
+
+function walk(s,u) 
+    while isa(u,Var) && haskey(s,u)
+            u = get(s,u)
     end
-    
-    function unify(u,v,s) # basically transcribed from the microkanren paper
-        u = walk(s,u)
-        v = walk(s,v)
-        if isa(u,Var) && isa(v,Var) && u === v # do nothing if same
-            return s
-        elseif isa(u,Var)
-            return assoc(s,u,v)
-        elseif isa(v,Var)
-            return assoc(s,v,u)
-        elseif isa(u, Expr) && isa(v,Expr)
-            # Only function call expressions are implemented at the moment 
-            @assert u.head === :call && v.head === :call 
-            if u.args[1] === v.args[1] && length(u.args) == length(v.args) #heads match
-                for (u,v) in zip( u.args[2:end] , v.args[2:end] )  # unify subpieces
-                    s = unify(u,v,s)
-                    if s === nothing
-                        return nothing
-                    end
+    return u
+end
+
+function unify(u,v,s) # basically transcribed from the microkanren paper
+    u = walk(s,u)
+    v = walk(s,v)
+    if isa(u,Var) && isa(v,Var) && u === v # do nothing if same
+        return s
+    elseif isa(u,Var)
+        return assoc(s,u,v)
+    elseif isa(v,Var)
+        return assoc(s,v,u)
+    elseif isa(u, Expr) && isa(v,Expr)
+        # Only function call expressions are implemented at the moment 
+        @assert u.head === :call && v.head === :call 
+        if u.args[1] === v.args[1] && length(u.args) == length(v.args) #heads match
+            for (u,v) in zip( u.args[2:end] , v.args[2:end] )  # unify subpieces
+                s = unify(u,v,s)
+                if s === nothing
+                    return nothing
                 end
-                return s
-            else # heads don't match or different arity
-                return nothing 
             end
-        else # catchall for Symbols, Integers, etc
-            if u === v
-                return s
-            else
-                return nothing
-            end
+            return s
+        else # heads don't match or different arity
+            return nothing 
+        end
+    else # catchall for Symbols, Integers, etc
+        if u === v
+            return s
+        else
+            return nothing
         end
     end
-    </code>
+end
+
+```
+
 
 
 
@@ -165,12 +175,17 @@ I decided to use the `gensym` facility of Julia to produce new variables. That w
 
 
     
-    <code>
-    fresh(f) = f(Var(gensym()))
-    fresh2(f) = f(Var(gensym()), Var(gensym()))
-    fresh3(f) = f(Var(gensym()), Var(gensym()), Var(gensym()))
-    freshn(n, f) = f([Var(gensym()) for i in 1:n ]...) # fishy lookin, but works. Not so obvious the evaluation order here.
-    </code>
+    
+```julia
+
+
+fresh(f) = f(Var(gensym()))
+fresh2(f) = f(Var(gensym()), Var(gensym()))
+fresh3(f) = f(Var(gensym()), Var(gensym()), Var(gensym()))
+freshn(n, f) = f([Var(gensym()) for i in 1:n ]...) # fishy lookin, but works. Not so obvious the evaluation order here.
+
+```
+
 
 
 
@@ -186,16 +201,21 @@ Kanren is based around composing goals with disjunction and conjunction. A goal 
 
 
     
-    <code># unification goal
-    eqwal(u,v) = s -> begin   
-                         s = unify(u,v,s)
-                         (s == nothing) ? () : (s,)
-                      end
     
-    # concatenate them
-    disj(g1,g2) = s -> Iterators.flatten(  (g1(s)  , g2(s)) ) 
-    # bind = "flatmap". flatten ~ join
-    conj(g1,g2) = s -> Iterators.flatten( map( g2 ,  g1(s) ))</code>
+```julia
+
+# unification goal
+eqwal(u,v) = s -> begin   
+                     s = unify(u,v,s)
+                     (s == nothing) ? () : (s,)
+                  end
+
+# concatenate them
+disj(g1,g2) = s -> Iterators.flatten(  (g1(s)  , g2(s)) ) 
+# bind = "flatmap". flatten ~ join
+conj(g1,g2) = s -> Iterators.flatten( map( g2 ,  g1(s) ))
+```
+
 
 
 
@@ -211,38 +231,43 @@ However, the next level throws thunks in the mix. I think I got it to work with 
 
 
     
-    <code># Where do these get forced. Not obvious. Do they get forced when flattened? 
-    mutable struct Thunk #{I}
-       it # Union{I,Function}
-    end
     
-    function pull(x) # Runs the trampoline
-        while isa(x,Function)
-            x = x()
-        end
-        x
+```julia
+
+# Where do these get forced. Not obvious. Do they get forced when flattened? 
+mutable struct Thunk #{I}
+   it # Union{I,Function}
+end
+
+function pull(x) # Runs the trampoline
+    while isa(x,Function)
+        x = x()
     end
-    
-    function Base.length(x::Thunk) 
-        x.it = pull(x.it)
-        Base.length(x.it)
-    end
-    
-    function Base.iterate(x::Thunk) 
-        x.it = pull(x.it)
-        Base.iterate(x.it)
-    end
-    
-    function Base.iterate(x::Thunk, state) 
-        x.it = pull(x.it) # Should we assume forced?
-        Base.iterate(x.it, state)
-    end
-    
-    # does this have to be a macro? Yes. For evaluation order. We want g 
-    # evaluating after Zzz is called, not before
-    macro Zzz(g) 
-        return :(s -> Thunk(() -> $(esc(g))(s)))
-    end</code>
+    x
+end
+
+function Base.length(x::Thunk) 
+    x.it = pull(x.it)
+    Base.length(x.it)
+end
+
+function Base.iterate(x::Thunk) 
+    x.it = pull(x.it)
+    Base.iterate(x.it)
+end
+
+function Base.iterate(x::Thunk, state) 
+    x.it = pull(x.it) # Should we assume forced?
+    Base.iterate(x.it, state)
+end
+
+# does this have to be a macro? Yes. For evaluation order. We want g 
+# evaluating after Zzz is called, not before
+macro Zzz(g) 
+    return :(s -> Thunk(() -> $(esc(g))(s)))
+end
+```
+
 
 
 
@@ -258,17 +283,22 @@ Then the fancier conjunction and disjunction are defined like so. I think conjun
 
 
     
-    <code>disj(g1,g2) = s -> begin
-         s1 = g1(s)
-         s2 = g2(s)
-         if isa(s1,Thunk)  && isa(s1.it, Function) #s1.forced == false  
-            Iterators.flatten(  (s2  , s1) )
-         else
-            Iterators.flatten(  (s1  , s2) )
-         end
-    end
     
-    conj(g1,g2) = s -> Iterators.flatten( map( g2 ,  g1(s) )) # eta expansion</code>
+```julia
+
+disj(g1,g2) = s -> begin
+     s1 = g1(s)
+     s2 = g2(s)
+     if isa(s1,Thunk)  && isa(s1.it, Function) #s1.forced == false  
+        Iterators.flatten(  (s2  , s1) )
+     else
+        Iterators.flatten(  (s1  , s2) )
+     end
+end
+
+conj(g1,g2) = s -> Iterators.flatten( map( g2 ,  g1(s) )) # eta expansion
+```
+
 
 
 
@@ -284,10 +314,15 @@ Nice operator forms of these expressions. It's a bummer that operator precedence
 
 
     
-    <code>
-    ∧ = conj # \wedge
-    ∨ = disj # \vee
-    ≅ = eqwal #\cong</code>
+    
+```julia
+
+
+∧ = conj # \wedge
+∨ = disj # \vee
+≅ = eqwal #\cong
+```
+
 
 
 
@@ -303,31 +338,36 @@ I skipped using the association list representation of substitutions (Although A
 
 
     
-    <code>
-    using FunctionalCollections
-    function call_empty(n::Int64, c) # gets back the iterator
-        collect(Iterators.take(c( @Persistent Dict() ), n))
-    end
     
-    function run(n, f)
-        q = Var(gensym())
-        res = call_empty(n, f(q))
-        return map(s -> walk_star(q,s), res)    
-    end
-    
-    # walk_star uses the substition to normalize an expression
-    function walk_star(v,s)
-            v = walk(s,v)
-            if isa(v,Var)
-                return v
-            elseif isa(v,Expr)
-                @assert v.head == :call
-                return Expr(v.head ,vcat( v.args[1], 
-                            map(v -> walk_star(v,s), v.args[2:end]))...)
-            else
-                return v
-            end
-    end</code>
+```julia
+
+
+using FunctionalCollections
+function call_empty(n::Int64, c) # gets back the iterator
+    collect(Iterators.take(c( @Persistent Dict() ), n))
+end
+
+function run(n, f)
+    q = Var(gensym())
+    res = call_empty(n, f(q))
+    return map(s -> walk_star(q,s), res)    
+end
+
+# walk_star uses the substition to normalize an expression
+function walk_star(v,s)
+        v = walk(s,v)
+        if isa(v,Var)
+            return v
+        elseif isa(v,Expr)
+            @assert v.head == :call
+            return Expr(v.head ,vcat( v.args[1], 
+                        map(v -> walk_star(v,s), v.args[2:end]))...)
+        else
+            return v
+        end
+end
+```
+
 
 
 
@@ -343,23 +383,28 @@ Here's we define an append relation and an addition relation. They can be used i
 
 
     
-    <code>function nat(n) # helper to build peano numbers
-        s = :zero
-        for i in 1:n
-            s = :(succ($s))
-        end
-        return s
-    end
     
-    function pluso(x,y,z)
-          (( x ≅ :zero ) ∧ (y ≅ z) ) ∨
-          fresh2( (n,m) -> (x ≅ :(succ($n))) ∧ (z ≅ :(succ($m))) ∧ @Zzz(pluso( n, y, m)))
+```julia
+
+function nat(n) # helper to build peano numbers
+    s = :zero
+    for i in 1:n
+        s = :(succ($s))
     end
-    
-    function appendo(x,y,z)
-        (x ≅ :nil) ∧ (y ≅ z) ∨
-        fresh3( (hd, xs ,zs) ->  (x ≅ :(cons($hd,$xs)) )  ∧ (z ≅ :(cons($hd, $zs)))  ∧ @Zzz( appendo( xs,y,zs )))
-    end</code>
+    return s
+end
+
+function pluso(x,y,z)
+      (( x ≅ :zero ) ∧ (y ≅ z) ) ∨
+      fresh2( (n,m) -> (x ≅ :(succ($n))) ∧ (z ≅ :(succ($m))) ∧ @Zzz(pluso( n, y, m)))
+end
+
+function appendo(x,y,z)
+    (x ≅ :nil) ∧ (y ≅ z) ∨
+    fresh3( (hd, xs ,zs) ->  (x ≅ :(cons($hd,$xs)) )  ∧ (z ≅ :(cons($hd, $zs)))  ∧ @Zzz( appendo( xs,y,zs )))
+end
+```
+
 
 
 
@@ -375,35 +420,40 @@ Here we actually run them and see results to queries.
 
 
     
-    <code># add 2 and 2. Only one answer
-    >>> run(5, z -> pluso(nat(2), nat(2), z))
-    1-element Array{Expr,1}:
-     :(succ(succ(succ(succ(zero)))))
     
-    >>> run(5, z -> fresh2( (x,y) -> (z ≅ :( tup($x , $y))) ∧ pluso(x, :(succ(zero)), y)))
-    5-element Array{Expr,1}:
-     :(tup(zero, succ(zero)))
-     :(tup(succ(zero), succ(succ(zero))))
-     :(tup(succ(succ(zero)), succ(succ(succ(zero)))))
-     :(tup(succ(succ(succ(zero))), succ(succ(succ(succ(zero))))))
-     :(tup(succ(succ(succ(succ(zero)))), succ(succ(succ(succ(succ(zero)))))))
-    
-    >>> run(3, q ->  appendo(   :(cons(3,nil)), :(cons(4,nil)), q )  )
-    1-element Array{Expr,1}:
-     :(cons(3, cons(4, nil)))
-    
-    # subtractive append
-    >>> run(3, q ->  appendo(   q, :(cons(4,nil)), :(cons(3, cons(4, nil))) )  )
-    1-element Array{Expr,1}:
-     :(cons(3, nil))
-    
-    # generate partitions
-    >>> run(10, q -> fresh2( (x,y) ->  (q ≅ :(tup($x,$y))) ∧ appendo( x, y, :(cons(3,cons(4,nil)))  )))
-    3-element Array{Expr,1}:
-     :(tup(nil, cons(3, cons(4, nil))))
-     :(tup(cons(3, nil), cons(4, nil)))
-     :(tup(cons(3, cons(4, nil)), nil))
-    </code>
+```julia
+
+# add 2 and 2. Only one answer
+>>> run(5, z -> pluso(nat(2), nat(2), z))
+1-element Array{Expr,1}:
+ :(succ(succ(succ(succ(zero)))))
+
+>>> run(5, z -> fresh2( (x,y) -> (z ≅ :( tup($x , $y))) ∧ pluso(x, :(succ(zero)), y)))
+5-element Array{Expr,1}:
+ :(tup(zero, succ(zero)))
+ :(tup(succ(zero), succ(succ(zero))))
+ :(tup(succ(succ(zero)), succ(succ(succ(zero)))))
+ :(tup(succ(succ(succ(zero))), succ(succ(succ(succ(zero))))))
+ :(tup(succ(succ(succ(succ(zero)))), succ(succ(succ(succ(succ(zero)))))))
+
+>>> run(3, q ->  appendo(   :(cons(3,nil)), :(cons(4,nil)), q )  )
+1-element Array{Expr,1}:
+ :(cons(3, cons(4, nil)))
+
+# subtractive append
+>>> run(3, q ->  appendo(   q, :(cons(4,nil)), :(cons(3, cons(4, nil))) )  )
+1-element Array{Expr,1}:
+ :(cons(3, nil))
+
+# generate partitions
+>>> run(10, q -> fresh2( (x,y) ->  (q ≅ :(tup($x,$y))) ∧ appendo( x, y, :(cons(3,cons(4,nil)))  )))
+3-element Array{Expr,1}:
+ :(tup(nil, cons(3, cons(4, nil))))
+ :(tup(cons(3, nil), cons(4, nil)))
+ :(tup(cons(3, cons(4, nil)), nil))
+
+```
+
 
 
 

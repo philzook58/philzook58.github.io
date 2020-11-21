@@ -1,0 +1,59 @@
+---
+author: philzook58
+comments: true
+date: 2019-03-10 00:42:18+00:00
+layout: post
+link: https://www.philipzucker.com/?p=1042
+published: false
+slug: CNC PCB
+title: CNC PCB
+wordpress_id: 1042
+---
+
+https://www.youtube.com/watch?v=_ak0IJUMBFg
+
+http://flatcam.org/
+
+Autoleveller:
+
+http://www.autoleveller.co.uk/
+
+Autolevelling sounds really smart.
+
+Double sided tape maybe for mounting?
+
+https://github.com/chilipeppr/serial-port-json-server
+
+Downloaded the binary and use the chilipeppr website
+
+Sometimes we have communication problems with little yellow clocks
+
+hitting grbl soft reset helps
+
+We're using the autolevelling tool
+
+Connect the bit to Analog Pin 5 and the board to ground
+
+Works pretty impressive
+
+https://www.inventables.com/projects/pcb-milling-on-x-carve#instructions
+
+Sometimes we have to do a soft reset to get jogging to work
+
+We had to change the units in flatcam
+
+we had prepend S1000 to set the speed in flatcam. Clicking apply autolevel to gcode seems to make the speed disappear in the gcdoe though? We send S1000 manually before starting.
+
+S1000 sets the spindle speed
+
+M3 turns spindle on
+
+M5 turns off
+
+We used 0.05mm cut
+
+Tried lowering by 0.02mm
+
+The autolevelling does not super appear to be working?
+
+Poor fixturing, try other autoleveller, Mirroring, Confusion between cnc and

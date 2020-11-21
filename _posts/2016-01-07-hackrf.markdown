@@ -27,7 +27,7 @@ Only goes a couple feet, so should be okay wherever you do it.
 
 Also doing it on our ham freqeuncies, so doubly so
 
-[![fm_transmit.grc](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/12/fm_transmit.grc_-e1451969173854-300x213.png)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/12/fm_transmit.grc_.png)
+[![fm_transmit.grc](/assets/fm_transmit.grc_-e1451969173854-300x213.png)](/assets/fm_transmit.grc_.png)
 
 Audio source comes in from the microphone
 

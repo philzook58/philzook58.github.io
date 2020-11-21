@@ -142,40 +142,45 @@ Here is a simple harmonic oscillator example using the more raw casadi interface
 
 
     
-    <code>from casadi import *
-    import matplotlib.pyplot as plt
     
-    g = 9.8
-    N = 100
-    
-    x = SX.sym('x',N)
-    v = SX.sym('v', N)
-    u = SX.sym('u', N-1)
-    #theta = SX('theta', N)
-    #thdot = SX('thetadot', N)
-    
-    dt = 0.1
-    constraints = [x[0]-1, v[0]] # expressions that must be zero
-    for i in range(N-1):
-        constraints += [x[i+1] - (x[i] + dt * v[i]) ]
-        constraints += [v[i+1] - (v[i] - dt * x[i+1] + u[i] * dt)]
-    
-    cost = sum([x[i]*x[i] for i in range(N)]) + sum([u[i]*u[i] for i in range(N-1)])
-    
-    nlp = {'x':vertcat(x,v,u), 'f':cost, 'g':vertcat(*constraints)}
-    S = nlpsol('S', 'ipopt', nlp)
-    r = S(lbg=0, ubg=0) # can also give initial solutiuon hint, some other things
-    x_opt = r['x']
-    x = x_opt[:N]
-    v = x_opt[N:2*N]
-    u = x_opt[2*N:]
-    #u_opt = r['u']
-    print('x_opt: ', x_opt)
-    print(S)
-    plt.plot(x)
-    plt.plot(u)
-    plt.plot(v)
-    plt.show()</code>
+```
+
+from casadi import *
+import matplotlib.pyplot as plt
+
+g = 9.8
+N = 100
+
+x = SX.sym('x',N)
+v = SX.sym('v', N)
+u = SX.sym('u', N-1)
+#theta = SX('theta', N)
+#thdot = SX('thetadot', N)
+
+dt = 0.1
+constraints = [x[0]-1, v[0]] # expressions that must be zero
+for i in range(N-1):
+    constraints += [x[i+1] - (x[i] + dt * v[i]) ]
+    constraints += [v[i+1] - (v[i] - dt * x[i+1] + u[i] * dt)]
+
+cost = sum([x[i]*x[i] for i in range(N)]) + sum([u[i]*u[i] for i in range(N-1)])
+
+nlp = {'x':vertcat(x,v,u), 'f':cost, 'g':vertcat(*constraints)}
+S = nlpsol('S', 'ipopt', nlp)
+r = S(lbg=0, ubg=0) # can also give initial solutiuon hint, some other things
+x_opt = r['x']
+x = x_opt[:N]
+v = x_opt[N:2*N]
+u = x_opt[2*N:]
+#u_opt = r['u']
+print('x_opt: ', x_opt)
+print(S)
+plt.plot(x)
+plt.plot(u)
+plt.plot(v)
+plt.show()
+```
+
 
 
 
@@ -191,60 +196,65 @@ Let's use the opti interface, which is pretty slick. Here is a basic cartpole [h
 
 
     
-    <code>from casadi import *
-    import matplotlib.pyplot as plt
     
-    g = 9.8
-    N = 100
-    # https://web.casadi.org/blog/opti/
-    
-    
-    
-    opti = casadi.Opti()
-    
-    x = opti.variable(N)
-    v = opti.variable(N)
-    theta = opti.variable(N)
-    dtheta = opti.variable(N)
-    u = opti.variable(N-1)
-    
-    
-    opti.subject_to( u <= 1) 
-    opti.subject_to( -1 <= u) 
-    opti.subject_to( x <= 2) 
-    opti.subject_to( -2 <= x) 
-    opti.subject_to(x[0] == 0)
-    opti.subject_to(v[0] == 0)
-    opti.subject_to(theta[0] == 0)
-    opti.subject_to(dtheta[0] == 0)
-    
-    dt = 0.05
-    for i in range(N-1):
-        opti.subject_to( x[i+1] == x[i] + dt * (v[i]))
-        opti.subject_to( v[i+1] == v[i] + dt * (x[i+1] + u[i]))
-        opti.subject_to( theta[i+1] == theta[i] + dt * (dtheta[i]))
-        opti.subject_to( dtheta[i+1] == dtheta[i] + dt * (u[i] * cos(theta[i+1]) - sin(theta[i+1]) ))
-    
-    opti.minimize( sum1(sin(theta)))
-    
-    opti.solver("ipopt") #,p_opts, s_opts)
-    sol = opti.solve()
-    print(sol.value(x))
-    plt.plot(sol.value(x), label="x")
-    plt.plot(sol.value(u), label="u")
-    plt.plot(sol.value(theta), label="theta")
-    plt.legend()
-    plt.show()
-    '''
-    p = opti.parameter()
-    opti.set_value(p, 3)
-    '''</code>
+```
+
+from casadi import *
+import matplotlib.pyplot as plt
+
+g = 9.8
+N = 100
+# https://web.casadi.org/blog/opti/
+
+
+
+opti = casadi.Opti()
+
+x = opti.variable(N)
+v = opti.variable(N)
+theta = opti.variable(N)
+dtheta = opti.variable(N)
+u = opti.variable(N-1)
+
+
+opti.subject_to( u <= 1) 
+opti.subject_to( -1 <= u) 
+opti.subject_to( x <= 2) 
+opti.subject_to( -2 <= x) 
+opti.subject_to(x[0] == 0)
+opti.subject_to(v[0] == 0)
+opti.subject_to(theta[0] == 0)
+opti.subject_to(dtheta[0] == 0)
+
+dt = 0.05
+for i in range(N-1):
+    opti.subject_to( x[i+1] == x[i] + dt * (v[i]))
+    opti.subject_to( v[i+1] == v[i] + dt * (x[i+1] + u[i]))
+    opti.subject_to( theta[i+1] == theta[i] + dt * (dtheta[i]))
+    opti.subject_to( dtheta[i+1] == dtheta[i] + dt * (u[i] * cos(theta[i+1]) - sin(theta[i+1]) ))
+
+opti.minimize( sum1(sin(theta)))
+
+opti.solver("ipopt") #,p_opts, s_opts)
+sol = opti.solve()
+print(sol.value(x))
+plt.plot(sol.value(x), label="x")
+plt.plot(sol.value(u), label="u")
+plt.plot(sol.value(theta), label="theta")
+plt.legend()
+plt.show()
+'''
+p = opti.parameter()
+opti.set_value(p, 3)
+'''
+```
 
 
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/03/cartpole-1.png)
+
+![](/assets/cartpole-1.png)
 
 
 

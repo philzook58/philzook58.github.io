@@ -155,7 +155,97 @@ I'm launching you into the a deep end here if you have never seen category theor
 
 
 
-[gist https://gist.github.com/philzook58/b50720436e45a134bab2976c4c04b46e#file-finset-py]
+
+```python
+from collections import Counter
+class FinSet():
+    def init(self, dom ,cod , f):
+        '''  In order to specify a morphism, we need to give a python set that is the domain, a python set 
+        that is the codomain, and a dictionary f that encodes a function between these two sets.
+        We could by assumption just use f.keys() implicitly as the domain, however the codomain is not inferable from just f.
+        In other categories that domain might not be either, so we chose to require both symmettrically.
+        '''
+        assert( dom == set(f.keys())) # f has value for everything in domain
+        assert( all( [y in cod for y in f.value()] )) # f has only values in codomain
+        self.cod = cod
+        self.dom = dom
+        self.f = f
+    def __getitem__(self,i):
+        # a convenient overloading.
+        return self.f[i]
+    def compose(f,g):
+        ''' Composition is function composition. Dictionary comprehension syntax for the win! '''
+        return FinSet( g.dom, f.cod,  { x : f[g[x]]  for x in g.dom })
+    def idd(dom):
+        '''  The identity morphism on an object dom. A function mapping every x to itself'''
+        return FinSet(dom, dom, { x : x for x in dom})
+    def __equal__(f,g):
+        assert(f.dom == g.dom) # I choose to say the question of equality only makes sense if the arrows are parallel.
+        assert(f.cod == g.cod) # ie. they have the same object at head and tail
+        return f.f == g.f
+    def terminal(dom):
+        ''' The terminal object is an object such that for any other object, there is a unique morphism 
+        to the terminal object
+        This function returns the object itself {()}  and the universal morphism from dom to that object'''
+        return {()} , FinSet(dom, {()} ,  {x : () for x in dom} )
+    def initial(cod):
+        ''' The initial object is an object such that for any other object, there is a unique morphsm 
+        from the initial object to that object.
+        It is the dual of the terminal object.
+        In FinSet, the initial object is the empty set set({}). The mapping is then an empty dictionary dict({})'''
+        return set({}) , FinSet(set({}), cod, dict({}))
+    def monic(self):
+        ''' Returns bool of whether mapping is injective. 
+            In other words, maps every incoming element to unique outgoing element.
+            In other words, does `self @ g == self @ f`  imply  `g == f` forall g,f 
+            https://en.wikipedia.org/wiki/Monomorphism
+            Counter class counters occurences'''
+        codomain_vals = self.f.values()
+        counts = Counter(codomain_vals).values() # https://docs.python.org/3/library/collections.html#collections.Counter
+        return all([count == 1 for count in counts]) # no elements map to same element
+    def epic(self):
+        ''' is mapping surjective? In other words does the image of the map f cover the entire codomain '''
+        codomain_vals = self.f.keys() 
+        return set(codomain_vals) == self.cod # cover the codomain
+    def product(a,b): # takes a sepcific product
+        ab = { (x,y) for x in a for y in b } 
+        p1 = FinSet( ab, a, { (x,y) : x for (x,y) in ab } )
+        p2 = FinSet( ab, b, { (x,y) : y for (x,y) in ab } )
+        return ab, p1, p2 , lambda f,g: FinSet( f.dom, ab, { x : (f[x],g[x]) for x in f.dom  } ) # assert f.dom == g.dom, f.cod == a, g.cod == b
+    def coproduct(a,b):
+        ab = { (0,x) for x in a  }.union({ (1,y) for y in b  })
+        i1 = FinSet( a, ab, { x : (0,x)  for x in a } )
+        i2 = FinSet( b, ab, { y : (1,y)  for y in b } )
+        def fanin(f,g):
+            return { (tag,x) : (f[x] if tag == 0 else g[x]) for (tag,x) in ab }
+        return ab, i1, i2, fanin
+    def equalizer(f,g):
+        ''' The equalizer is a construction that allows one to talk about the solution to an equation in a categorical manner
+        An equation is f(x) = g(x). It has two mappings f and g that we want to somehow be the same. The solution to this equation
+        should be a subset of the shared domain of f and g. Subsets are described from within FinSet by maps that map into the
+        subset. 
+        '''
+        assert(f.dom == g.dom)
+        assert(f.cod == g.cod)
+        e = { x for x in f.dom if f[x] == g[x] }
+        return e, FinSet(e, f.dom, {x : x for x in e})
+    def pullback(f,g): # solutions to f(x) = g(y)
+        assert(f.cod == g.cod)
+        e = {(x,y) for x in f.dom for y in g.dom if f[x] == g[y]} # subset of (f.dom, g.dom) that solves equation
+        p1 = FinSet( e, f.dom, { (x,y) : x for (x,y) in e } ) # projection 1
+        p2 = FinSet( e, g.dom, { (x,y) : y for (x,y) in e } ) # projection 2
+        
+        def univ(q1,q2):
+            ''' Universal property: Given any other commuting square of f @ q1 == g @ q2, there is a unique morphism
+            that injects into e such that certain triangles commute. It's best to look at the diagram'''
+            assert(q1.cod == p1.cod) # q1 points to the head of p1
+            assert(q2.cod == p2.cod) # q2 points to the head of p2
+            assert(q1.dom == q2.dom) # tails of q1 and q2 are the same
+            assert(f @ q1 == g @ q2) # commuting square condition
+            return FinSet( q1.dom, e ,  { z : ( q1[z] , q2[z] )    for z in q1.dom  }  )
+        return e, p1, p2, univ  
+```
+
 
 
 

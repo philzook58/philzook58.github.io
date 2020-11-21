@@ -1,0 +1,95 @@
+---
+author: philzook58
+comments: true
+date: 2017-11-01 15:05:36+00:00
+layout: post
+link: https://www.philipzucker.com/?p=909
+published: false
+slug: Servant
+title: Servant
+wordpress_id: 909
+---
+
+API specified with happy birds :> replacing '/'
+
+yellbirds seperate different endpoints :<|>
+
+the same combinator is used to combine handlers
+
+handlers are in a handler monad. For simple use this means you just need to wrap it in a return.
+
+stack new project-name servant
+
+stack build
+
+stack exec hlint
+
+stack exec simple-calc-exe
+
+pulp init
+
+pulp run
+
+pulp repl
+
+pulp browserify --to ./static/app.js
+
+https://github.com/purescript-contrib/pulp
+
+
+
+
+
+stack install servant-purescript
+
+hoooo boy. This is some cryptic stuff with no documentation.
+
+looking at pure script bridge first might help
+
+
+
+Proxy values are a way to pass in type parameters to functions basically. It is polykinded so it can be used with all types of all kinds. You add explicit type annotations. This can also be used to control what some type internal to the implementation is used. It selects which type class.
+
+Proxy is somewhat reminiscent of Refl, which is another confusing concept. The value is worthless, in fact there is only one. But the type information is carries is useful. I guess it is a way to explicitly pass in the type (not at runtime still, but at compile time). It gives you a way to reuse
+
+https://kseo.github.io/posts/2017-01-15-data-proxy.html
+
+https://www.schoolofhaskell.com/user/thoughtpolice/using-reflection
+
+Kmett has some insane packages on this stuff. How does he do it!?
+
+Reflection is a way to pump dictionaries into being typeclass dictionaries? And vice versa? You can pump the dictionary out into an explicit dictionary
+
+https://www.youtube.com/watch?v=hIZxTQP1ifo&t;=8s
+
+
+
+Wow. This is a really crucial run through of what servant is doing. You need to compute the type of the handlers from the type of th API. That's a job for type families. There is also apparently a paper on it.
+
+https://arow.info/blog/posts/2015-07-10-servant-intro.html
+
+https://www.well-typed.com/blog/2015/11/implementing-a-minimal-version-of-haskell-servant/
+
+
+
+http://www.parsonsmatt.org/2017/04/26/basic_type_level_programming_in_haskell.html
+
+You can pull type level strings back to values
+
+
+
+https://github.com/parsonsmatt/servant-persistent
+
+
+
+The examples in the docs, which includes servant-persistent
+
+http://haskell-servant.readthedocs.io/en/stable/examples.html
+
+
+
+Intriguing. Where can I find a directory of servant info?
+
+https://hackage.haskell.org/package/servant-JuicyPixels
+
+

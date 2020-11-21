@@ -59,7 +59,12 @@ sudo apt-get update
 
 
     
-    <code><span class="pln">sudo apt</span><span class="pun">-</span><span class="pln">get build</span><span class="pun">-</span><span class="pln">dep matplotlib</span></code>
+    
+```
+
+<span class="pln">sudo apt</span><span class="pun">-</span><span class="pln">get build</span><span class="pun">-</span><span class="pln">dep matplotlib</span>
+```
+
 
 
 

@@ -1,0 +1,178 @@
+I"K;<p>Haskell has lots of fancy weird corners, but you want to get rippin’ and runnin’</p>
+
+<p>The Haskell phrase book is a new useful thingy. Nice and terse.</p>
+
+<p><a href="https://typeclasses.com/phrasebook">https://typeclasses.com/phrasebook</a></p>
+
+<p>This one is also quite good <a href="https://lotz84.github.io/haskellbyexample/">https://lotz84.github.io/haskellbyexample/</a></p>
+
+<p>I also like what FP complete is up to. Solid set of useful stuff, although a bit more emphasis towards their solutions than is common <a href="https://haskell.fpcomplete.com/learn">https://haskell.fpcomplete.com/learn</a></p>
+
+<p>I was fiddling with making some examples for my friends a while ago, but I think the above do a similar better job.</p>
+
+<p><a href="https://github.com/philzook58/basic-ass-shit">https://github.com/philzook58/basic-ass-shit</a></p>
+
+<p>Highlights include:</p>
+
+<p>Makin a json request</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">-#</span> <span class="kt">LANGUAGE</span> <span class="kt">OverloadedStrings</span><span class="p">,</span> <span class="kt">DeriveGeneric</span> <span class="o">#-</span><span class="p">}</span>
+<span class="kr">module</span> <span class="nn">JsonRequest</span> <span class="kr">where</span>
+
+<span class="kr">import</span> <span class="nn">Data.Aeson</span>
+<span class="kr">import</span> <span class="nn">Network.Wreq</span>
+<span class="kr">import</span> <span class="nn">GHC.Generics</span>
+<span class="kr">import</span> <span class="nn">Control.Lens</span>
+
+<span class="kr">data</span> <span class="kt">ToDo</span>  <span class="o">=</span> <span class="kt">ToDo</span> <span class="p">{</span>
+    <span class="n">userId</span> <span class="o">::</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="n">id</span> <span class="o">::</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="n">title</span> <span class="o">::</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="n">completed</span> <span class="o">::</span> <span class="kt">Bool</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Generic</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+<span class="kr">instance</span> <span class="kt">ToJSON</span> <span class="kt">ToDo</span>
+
+
+<span class="kr">instance</span> <span class="kt">FromJSON</span> <span class="kt">ToDo</span>
+
+<span class="n">my_url</span> <span class="o">=</span> <span class="s">"https://jsonplaceholder.typicode.com/todos/1"</span>
+
+<span class="n">main</span> <span class="o">=</span> <span class="kr">do</span> <span class="n">r</span> <span class="o">&lt;-</span> <span class="n">get</span> <span class="n">my_url</span>
+          <span class="n">print</span> <span class="o">$</span> <span class="p">((</span><span class="n">decode</span> <span class="o">$</span> <span class="n">r</span> <span class="o">^.</span> <span class="n">responseBody</span><span class="p">)</span> <span class="o">::</span> <span class="kt">Maybe</span> <span class="kt">ToDo</span><span class="p">)</span> <span class="c1">-- ((decode $ r ^. responseBody) :: Maybe ToDo)</span>
+</code></pre></div></div>
+
+<p>Showing a plot of a sine function</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">module</span> <span class="nn">Plot</span> <span class="kr">where</span>
+
+<span class="kr">import</span> <span class="nn">Graphics.Rendering.Chart.Easy</span>
+<span class="kr">import</span> <span class="nn">Graphics.Rendering.Chart.Backend.Cairo</span> <span class="c1">-- Chart-cairo</span>
+<span class="kr">import</span> <span class="nn">Graphics.Image</span> <span class="k">as</span> <span class="n">I</span> <span class="c1">-- hip</span>
+
+<span class="c1">-- https://github.com/timbod7/haskell-chart/wiki/example-1</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s">"example1_big.png"</span>
+
+<span class="n">main</span> <span class="o">=</span> <span class="kr">do</span> 
+        <span class="n">toFile</span> <span class="n">def</span> <span class="n">filename</span> <span class="o">$</span> <span class="n">plot</span> <span class="p">(</span><span class="n">line</span> <span class="s">"a sine"</span> <span class="p">[[</span> <span class="p">(</span><span class="n">x</span> <span class="o">::</span> <span class="kt">Double</span><span class="p">,</span> <span class="n">sin</span> <span class="n">x</span><span class="p">)</span> <span class="o">|</span> <span class="n">x</span> <span class="o">&lt;-</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span> <span class="o">..</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span><span class="p">]]])</span>
+        <span class="n">plotimg</span> <span class="o">&lt;-</span> <span class="n">readImageRGB</span> <span class="kt">VU</span> <span class="n">filename</span> <span class="c1">-- yeah,I want the plot to pop up</span>
+        <span class="n">displayImage</span> <span class="n">plotimg</span>
+        <span class="n">print</span> <span class="s">"Press Enter to Quit"</span>
+        <span class="n">getLine</span>
+</code></pre></div></div>
+
+<p>Doing a least squares fit of some randomly created data</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">module</span> <span class="nn">LeastSquares</span> <span class="kr">where</span>
+
+<span class="kr">import</span> <span class="nn">Numeric.LinearAlgebra</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">linspace</span> <span class="n">n</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="o">::</span><span class="kt">Double</span><span class="p">)</span>
+<span class="n">y0</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span>
+
+<span class="n">main</span> <span class="o">=</span> <span class="kr">do</span>
+        <span class="n">noise</span> <span class="o">&lt;-</span> <span class="n">randn</span> <span class="mi">1</span> <span class="n">n</span>
+        <span class="kr">let</span> <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">flatten</span> <span class="n">noise</span><span class="p">)</span> <span class="o">+</span> <span class="n">y0</span>
+        <span class="kr">let</span> <span class="n">sampleMatrix</span> <span class="o">=</span> <span class="p">(</span><span class="n">asColumn</span> <span class="n">x</span><span class="p">)</span> <span class="o">|||</span> <span class="p">(</span><span class="n">konst</span> <span class="mi">1</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+        <span class="kr">let</span> <span class="n">sol</span> <span class="o">=</span> <span class="p">(</span><span class="n">sampleMatrix</span> <span class="o">&lt;\&gt;</span> <span class="n">y</span><span class="p">)</span> 
+        <span class="n">print</span> <span class="o">$</span> <span class="s">"Best fit is y = "</span> <span class="o">++</span> <span class="n">show</span> <span class="p">(</span><span class="n">sol</span> <span class="o">!</span> <span class="mi">0</span><span class="p">)</span> <span class="o">++</span> <span class="s">" * x + "</span> <span class="o">++</span> <span class="p">(</span><span class="n">show</span> <span class="p">(</span><span class="n">sol</span> <span class="o">!</span> <span class="mi">1</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h4 id="not-too-complicated-stuff-to-get-you-excited-about-haskell">Not too complicated stuff to get you excited about Haskell:</h4>
+
+<p>I love Power Serious. <a href="https://www.cs.dartmouth.edu/~doug/powser.html">https://www.cs.dartmouth.edu/~doug/powser.html</a> Infinite power series using the power of laziness in something like 20 lines</p>
+
+<p><a href="https://blog.plover.com/prog/haskell/monad-search.html">https://blog.plover.com/prog/haskell/monad-search.html</a> Using the list monad to solve SEND+MORE=MONEY puzzle.</p>
+
+<p><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.42.8903&amp;rep=rep1&amp;type=pdf">http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.42.8903&amp;rep=rep1&amp;type=pdf</a> Jerzy Karczmarczuk doing automatic differentiation in Haskell before it was cool. Check out Conal Elliott’s stuff after.</p>
+
+<p>Very simple symbolic differentiation example. When I saw this in SICP for the first time, I crapped my pants.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">data</span> <span class="kt">Expr</span> <span class="o">=</span> <span class="kt">X</span> <span class="o">|</span> <span class="kt">Plus</span> <span class="kt">Expr</span> <span class="kt">Expr</span> <span class="o">|</span> <span class="kt">Times</span> <span class="kt">Expr</span> <span class="kt">Expr</span> <span class="o">|</span> <span class="kt">Const</span> <span class="kt">Double</span>
+<span class="n">deriv</span> <span class="o">::</span> <span class="kt">Expr</span> <span class="o">-&gt;</span> <span class="kt">Expr</span>
+<span class="n">deriv</span> <span class="kt">X</span> <span class="o">=</span> <span class="kt">Const</span> <span class="mi">1</span>
+<span class="n">deriv</span> <span class="p">(</span><span class="kt">Const</span> <span class="kr">_</span><span class="p">)</span> <span class="o">=</span> <span class="kt">Const</span> <span class="mi">0</span>
+<span class="n">deriv</span> <span class="p">(</span><span class="kt">Plus</span> <span class="n">x</span> <span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="kt">Plus</span> <span class="p">(</span><span class="n">deriv</span> <span class="n">x</span><span class="p">)</span> <span class="p">(</span><span class="n">deriv</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">deriv</span> <span class="p">(</span><span class="kt">Times</span> <span class="n">x</span> <span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="kt">Times</span> <span class="p">(</span><span class="n">deriv</span> <span class="n">x</span><span class="p">)</span> <span class="n">y</span><span class="p">)</span> <span class="p">`</span><span class="kt">Plus</span><span class="p">`</span> <span class="p">(</span><span class="kt">Times</span> <span class="n">x</span> <span class="p">(</span><span class="n">deriv</span> <span class="n">y</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p><a href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf</a> Why functional Programming Matters by John Hughes</p>
+
+<p><a href="https://www.cs.cmu.edu/~crary/819-f09/Backus78.pdf">https://www.cs.cmu.edu/~crary/819-f09/Backus78.pdf</a> John Backus emphasizing escaping the imperative mindset in his 1978 Turing Award speech. A call to arms of functional programming</p>
+
+<p><a href="https://www.cs.tufts.edu/~nr/cs257/archive/richard-bird/sudoku.pdf">https://www.cs.tufts.edu/~nr/cs257/archive/richard-bird/sudoku.pdf</a> Richard Bird defining sudoku solutions and then using equation reasoning to build a more efficient solver</p>
+
+<p><a href="https://wiki.haskell.org/Research_papers/Functional_pearls">https://wiki.haskell.org/Research_papers/Functional_pearls</a> - Functional Pearls</p>
+
+<h4 id="heres-how-i-find-useful-haskell-packages">Here’s how I find useful Haskell packages:</h4>
+
+<p>I google. I go to hackage (if I’m in a subpage, click on “contents” in the upper right hand corner). Click on a category that seems reasonable (like “web” or something) and then sort by Downloads (DL). This at least tells me what is popular-ish. I look for tutorials if I can find them. Sometimes there is a very useful getting started snippet in the main subfile itself. Some packages are overwhelming, others aren’t.</p>
+
+<p>The Real World Haskell book is kind of intimidating although a lovely resource.</p>
+
+<p>The wiki has a pretty rockin set of tutorials. Has some kind soul been improving it?</p>
+
+<p><a href="https://wiki.haskell.org/Category:Tutorials">https://wiki.haskell.org/Category:Tutorials</a></p>
+
+<p>I forgot learn you a Haskell has a chapter on basic io</p>
+
+<p><a href="http://learnyouahaskell.com/input-and-output">http://learnyouahaskell.com/input-and-output</a></p>
+
+<h4 id="learn-more">Learn more</h4>
+
+<p>When you’re ready to sit down with Haskell more, the best intro is currently the <a href="http://haskellbook.com/">Haskell Book</a></p>
+
+<p>You may also be interested in <a href="https://www.edx.org/course/introduction-functional-programming-delftx-fp101x-0">https://www.edx.org/course/introduction-functional-programming-delftx-fp101x-0</a> this MOOC</p>
+
+<p><a href="https://github.com/data61/fp-course">https://github.com/data61/fp-course</a> or this Data61 course</p>
+
+<p>Then there is a <em>fun</em> infinitude of things to learn after that.</p>
+
+<hr />
+
+<p>More ideas for simple examples?</p>
+
+<p>This post is intentionally terse.</p>
+
+<p>IO is total infective poison.</p>
+
+<p>standard output io</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">main</span> <span class="o">=</span> <span class="kr">do</span>
+      <span class="n">x</span> <span class="o">&lt;-</span> <span class="n">getStrLn</span>
+      <span class="n">putStrLn</span> <span class="s">"Hello"</span>
+      <span class="n">print</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+      <span class="n">print</span> <span class="p">(</span><span class="kt">Just</span> <span class="mf">19022.32</span><span class="p">)</span>
+      <span class="n">print</span> <span class="n">x</span>
+
+
+</code></pre></div></div>
+
+<p>mutation &amp; loops. You probably don’t want these. They are not idiomatic Haskell, and you may be losing out on some of the best lessons Haskell has to offer.</p>
+
+<p>file IO</p>
+
+<p>web requests</p>
+
+<p><a href="http://www.serpentine.com/wreq/tutorial.html">http://www.serpentine.com/wreq/tutorial.html</a></p>
+
+<p>web serving - scotty</p>
+
+<p>image processing</p>
+
+<p>basic data structures</p>
+
+<p>command line arguments</p>
+
+<p>plotting</p>
+
+<p>Parallelism and Concurrency</p>
+
+<p><a href="https://nokomprendo.frama.io/tuto_fonctionnel/posts/tuto_fonctionnel_25/2018-08-25-en-README.html">https://nokomprendo.frama.io/tuto_fonctionnel/posts/tuto_fonctionnel_25/2018-08-25-en-README.html</a></p>
+
+:ET

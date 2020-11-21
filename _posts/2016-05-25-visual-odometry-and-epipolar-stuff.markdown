@@ -21,17 +21,17 @@ Useful stuff
 
 So if we translate and rotate 3d vectors we have
 
-$latex x' = Rx+t$
+$ x' = Rx+t$
 
 If we take the cross product we have the equation
 
-$latex t\times t=0$
+$ t\times t=0$
 
-$latex t \times x' = t \times R x$
+$ t \times x' = t \times R x$
 
 Since whatever comes out of a cross product is perpendicular to what went in
 
-$latex x' \cdot (t \times x') = 0 = x' \cdot t \times Rx$
+$ x' \cdot (t \times x') = 0 = x' \cdot t \times Rx$
 
 Now we can just interpret these 3d vectors as 2d projective plane vectors from two different camera viewpoints (homogenous coordinates).
 
@@ -41,23 +41,23 @@ Ok.
 
 Then how do you get the R and t back from point correspondence? A cross product can be represented as a skew symmetric matrix (it's a linear process that takes a vector to another vector).
 
-$latex t\times = [t]_x$
+$ t\times = [t]_x$
 
 The cross product kills 1 vector, so this vector has eigenvalue 0 for this matrix.
 
 And it flips two other vectors with some minus signs. In an orthogonal basis with t as one element, it would look something like
 
-$latex \begin{matrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{matrix}$
+$ \begin{matrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{matrix}$
 
-So when we take the SVD of E, it will have 2 equal eigenvalues and 1 zero eigenvalue. $latex E = USV^T$
+So when we take the SVD of E, it will have 2 equal eigenvalues and 1 zero eigenvalue. $ E = USV^T$
 
-The matrix $latex V^T$ transforms from the x frame to the t frame.
+The matrix $ V^T$ transforms from the x frame to the t frame.
 
 The matrix U transforms from the t frame to the x' frame.
 
 We can just unflip the two vectors switched up by the cross product in the t basis(The matrix that does this is called W) and compose U and V to reconstitute R.
 
-Then we can find $latex [t]_x=ER^{-1}$
+Then we can find $ [t]_x=ER^{-1}$
 
 Note that the t you find is unknown up to scale. You can only find the direction of translation, not how far.
 

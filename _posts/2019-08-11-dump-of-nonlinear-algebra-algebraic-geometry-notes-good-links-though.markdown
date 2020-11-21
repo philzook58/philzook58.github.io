@@ -204,7 +204,7 @@ Nonlinear algebra can also be approach via linear algebra surprisingly. Resultan
 
 
 
-Similarly you can encode root finding into a linear algebra problem. A matrix has the same eigenvalues as it's characterstic polynomial $latex det(A - \lambda) $ has roots, so that already shows that it is plausible to go from linear algebra to a polynomial root finding problem. But also you can encode multiplying a polynomial by x has a linear operation on the coefficients. In this way we can .
+Similarly you can encode root finding into a linear algebra problem. A matrix has the same eigenvalues as it's characterstic polynomial $ det(A - \lambda) $ has roots, so that already shows that it is plausible to go from linear algebra to a polynomial root finding problem. But also you can encode multiplying a polynomial by x has a linear operation on the coefficients. In this way we can .
 
 
 
@@ -1268,7 +1268,7 @@ Pick a random point. Then apply Newton's method. Do this over and over. If you f
 
 
 
-2. Perturbation theory / Holonomy continuation. Start with a polynomial with the same number of total roots that you know how to factor. x^N - 1 = 0 seems like an easy choice. Given $latex f(x)+\lambda g(x)=0$, $latex \partial g dx \lambda + \partial f dx +g(x){d\lambda}= 0$ . $latex \frac{dx}{d\lambda} = \frac{-g(x)}{\lambda \partial g + \partial f}$. You can use this ODE to track the roots. At every step use Newton's method to cleanup the result. Problems can still arise. Do roots collapse? Do they smack into each other? Do they run off to infinity?
+2. Perturbation theory / Holonomy continuation. Start with a polynomial with the same number of total roots that you know how to factor. x^N - 1 = 0 seems like an easy choice. Given $ f(x)+\lambda g(x)=0$, $ \partial g dx \lambda + \partial f dx +g(x){d\lambda}= 0$ . $ \frac{dx}{d\lambda} = \frac{-g(x)}{\lambda \partial g + \partial f}$. You can use this ODE to track the roots. At every step use Newton's method to cleanup the result. Problems can still arise. Do roots collapse? Do they smack into each other? Do they run off to infinity?
 
 
 

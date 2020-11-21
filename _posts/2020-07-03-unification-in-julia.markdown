@@ -59,15 +59,20 @@ To describe terms I made a simple data types for variables modelled of those in 
 
 
     
-    <code>#variables
-    struct Sym
-        name::Symbol
-    end
     
-    struct Term
-        f::Symbol
-        arguments::Array{Any} # Array{Union{Term,Sym}} faster/better?
-    end</code>
+```
+
+#variables
+struct Sym
+    name::Symbol
+end
+
+struct Term
+    f::Symbol
+    arguments::Array{Any} # Array{Union{Term,Sym}} faster/better?
+end
+```
+
 
 
 
@@ -91,50 +96,55 @@ I used the multiple dispatch as [a kind of pattern matching](https://discourse.j
 
 
     
-    <code>occur_check(x::Sym,y::Term,s) = any(occur_check(x, a, s) for a in y.arguments)
     
-    function occur_check(x::Sym,y::Sym,s)
-        if x == y
-            return s
-        elseif haskey(s,y)
-            return occur_check(x, s[y], s)
-        else
-            return nothing
-        end  
-    end
-    
-    
-    function unify(x::Sym, y::Union{Sym,Term}, s) 
-       if x == y
-            return s
-       elseif haskey(s,x)
-            return unify(s[x], y, s)
-       elseif haskey(s,y) # This is the norvig twist
-            return unify(x, s[y], s)
-       elseif occur_check(x,y,s)
-            return nothing
-       else
-            s[x] = y
-            return s
-       end
-    end
-    
-    unify(x::Term, y::Sym, s) = unify(y,x,s)
-    
-    function unify(x :: Term, y :: Term, s)
-        if x.f == y.f && length(x.arguments) == length(y.arguments)
-            for (x1, y1) in zip(x.arguments, y.arguments)
-                if unify(x1,y1,s) == nothing
-                    return nothing
-                end
+```
+
+occur_check(x::Sym,y::Term,s) = any(occur_check(x, a, s) for a in y.arguments)
+
+function occur_check(x::Sym,y::Sym,s)
+    if x == y
+        return s
+    elseif haskey(s,y)
+        return occur_check(x, s[y], s)
+    else
+        return nothing
+    end  
+end
+
+
+function unify(x::Sym, y::Union{Sym,Term}, s) 
+   if x == y
+        return s
+   elseif haskey(s,x)
+        return unify(s[x], y, s)
+   elseif haskey(s,y) # This is the norvig twist
+        return unify(x, s[y], s)
+   elseif occur_check(x,y,s)
+        return nothing
+   else
+        s[x] = y
+        return s
+   end
+end
+
+unify(x::Term, y::Sym, s) = unify(y,x,s)
+
+function unify(x :: Term, y :: Term, s)
+    if x.f == y.f && length(x.arguments) == length(y.arguments)
+        for (x1, y1) in zip(x.arguments, y.arguments)
+            if unify(x1,y1,s) == nothing
+                return nothing
             end
-            return s
-        else
-            return nothing
         end
+        return s
+    else
+        return nothing
     end
-    
-    unify(x,y) = unify(x,y,Dict())</code>
+end
+
+unify(x,y) = unify(x,y,Dict())
+```
+
 
 
 
@@ -150,26 +160,31 @@ I also made a small macro function for converting simple julia expressions to my
 
 
     
-    <code>function string2term(x)
-        if x isa Symbol
-            name = String(x)
-            if isuppercase(name[1])
-               return Sym( x)
-            else
-               return Term( x, []  )
-            end
-        elseif x isa Expr
-            @assert(x.head == :call)
-            arguments = [string2term(y) for y in x.args[2:end] ]
-            return Term( x.args[1], arguments )
-        end
-    end
-    macro string2term(x)
-        return :( $(string2term(x)) )
-    end
     
-    print(unify( @string2term(p(X,g(a), f(a, f(a)))) , @string2term(p(f(a), g(Y), f(Y, Z)))))
-    # Dict{Any,Any}(Sym(:X) => Term(:f, Any[Term(:a, Any[])]),Sym(:Y) => Term(:a, Any[]),Sym(:Z) => Term(:f, Any[Term(:a, Any[])]))</code>
+```
+
+function string2term(x)
+    if x isa Symbol
+        name = String(x)
+        if isuppercase(name[1])
+           return Sym( x)
+        else
+           return Term( x, []  )
+        end
+    elseif x isa Expr
+        @assert(x.head == :call)
+        arguments = [string2term(y) for y in x.args[2:end] ]
+        return Term( x.args[1], arguments )
+    end
+end
+macro string2term(x)
+    return :( $(string2term(x)) )
+end
+
+print(unify( @string2term(p(X,g(a), f(a, f(a)))) , @string2term(p(f(a), g(Y), f(Y, Z)))))
+# Dict{Any,Any}(Sym(:X) => Term(:f, Any[Term(:a, Any[])]),Sym(:Y) => Term(:a, Any[]),Sym(:Z) => Term(:f, Any[Term(:a, Any[])]))
+```
+
 
 
 

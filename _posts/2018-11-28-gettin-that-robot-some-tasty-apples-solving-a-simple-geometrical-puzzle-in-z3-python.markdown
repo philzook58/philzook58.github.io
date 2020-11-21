@@ -106,7 +106,7 @@ It is fairly easy to directly translate this into a Z3 model.
     plt.show()
 
 
-[![](http://philzucker2.nfshost.com/wp-content/uploads/2018/11/apple_bot.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/11/apple_bot.png)
+[![](/assets/apple_bot.png)](/assets/apple_bot.png)
 
 A couple comments:
 
@@ -116,7 +116,7 @@ However, If the robot is on the projective plane, it is possible with 3 lines. I
 
 The problem only seems somewhat difficult to computerize because of the seemingly infinite nature of geometry. If we only consider the lines that touch at least two points, all possible robot paths becomes extremely enumerable. Is there a proof that we only need these lines?
 
-Another interesting approach might be to note that the points are described by the set of equations $latex x*(x-1)*(x-2)=0$ and $latex y*(y-1)*(y-2)=0$. I think we could then possibly use methods of nonlinear algebra (Groebner bases) to find the lines. Roughly an ideal containment question? Don't have this one fully thought out yet. I think z3 might be doing something like this behind the scenes.
+Another interesting approach might be to note that the points are described by the set of equations $$ x*(x-1)*(x-2)=0 $$ and $$ y*(y-1)*(y-2)=0$$ . I think we could then possibly use methods of nonlinear algebra (Groebner bases) to find the lines. Roughly an ideal containment question? Don't have this one fully thought out yet. I think z3 might be doing something like this behind the scenes.
 
 
 

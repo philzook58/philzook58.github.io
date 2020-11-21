@@ -1,0 +1,396 @@
+I"�	<p>Oooh this is a fun one.</p>
+
+<p>I’ve talked before about relation algebra and I think it is pretty neat. <a href="http://www.philipzucker.com/a-short-skinny-on-relations-towards-the-algebra-of-programming/">http://www.philipzucker.com/a-short-skinny-on-relations-towards-the-algebra-of-programming/</a>. In that blog post, I used finite relations. In principle, they are simple to work with. We can perform relation algebra operations like composition, meet, and join by brute force enumeration.</p>
+
+<p>Unfortunately, brute force may not always be an option. First off, the finite relations grow so enormous as to be make this infeasible. Secondly, it is not insane to talk about relations or regions with an infinite number of elements, such as some continuous blob in 2D space. In that case, we can’t even in principle enumerate all the points in the region. What are we to do? We need to develop some kind of finite parametrization of regions to manipulate. This parametrization basically can’t possibly be complete in some sense, and we may choose more or less powerful systems of description for computational reasons.</p>
+
+<p>In this post, we are going to be talking about linear or affine subspaces of a continuous space. These subspaces are hyperplanes. Linear subspaces have to go through the origin, while affine spaces can have an offset from the origin.</p>
+
+<p>In the previous post, I mentioned that the finite relations formed a lattice, with operations meet and join. These operations were the same as set intersection and union so the introduction of the extra terminology meet and join felt a bit unwarranted. Now the meet and join aren’t union and intersection anymore. We have chosen to not have the capability to represent the union of two vectors, instead we can only represent the smallest subspace that contains them both, which is the union closed under vector addition. For example, the join of a line and point will be the plane that goes through both.</p>
+
+<p>Linear/Affine stuff is great because it is so computational. Most questions you cant to ask are answerable by readily available numerical linear algebra packages. In this case, we’ll use the Haskell package <a href="http://hackage.haskell.org/package/hmatrix">HMatrix</a>, which is something like a numpy/scipy equivalent for Haskell. We’re going to use type-level indices to denote the sizes and partitioning of these spaces so we’ll need some helper functions.</p>
+
+<p><img src="http://philzucker2.nfshost.com/wp-content/uploads/2019/11/magic_matrix-640x1024.jpeg" alt="" />Matrices are my patronum. They make everything good. Artwork courtesy of David</p>
+
+<p>In case I miss any extensions, make typos, etc, you can find a complete compiling version here <a href="https://github.com/philzook58/ConvexCat/blob/master/src/LinRel.hs">https://github.com/philzook58/ConvexCat/blob/master/src/LinRel.hs</a></p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">type</span> <span class="kt">BEnum</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="kt">Enum</span> <span class="n">a</span><span class="p">,</span> <span class="kt">Bounded</span> <span class="n">a</span><span class="p">)</span> 
+
+<span class="c1">-- cardinality. `size` was already taken by HMatrix :(</span>
+<span class="n">card</span> <span class="o">::</span> <span class="n">forall</span> <span class="n">a</span><span class="o">.</span> <span class="p">(</span><span class="kt">BEnum</span> <span class="n">a</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">Int</span>
+<span class="n">card</span> <span class="o">=</span> <span class="p">(</span><span class="n">fromEnum</span> <span class="p">(</span><span class="n">maxBound</span> <span class="o">@</span><span class="n">a</span><span class="p">))</span> <span class="o">-</span> <span class="p">(</span><span class="n">fromEnum</span> <span class="p">(</span><span class="n">minBound</span> <span class="o">@</span><span class="n">a</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<p>In analogy with sets of tuples for defining finite relations, we partition the components of the linear spaces to be “input” and “output” indices/variables $ \begin{bmatrix} x_1 &amp; x_2 &amp; x_3 &amp; … &amp; y_1 &amp; y_2 &amp; y_3 &amp; … \end{bmatrix}$. This partition is somewhat arbitrary and easily moved around, but the weakening of strict notions of input and output as compared to functions is the source of the greater descriptive power of relations.</p>
+
+<p>Relations are extensions of functions, so linear relations are an extension of linear maps. A linear map has the form $ y = Ax$. A linear relation has the form $ Ax + By = 0$. An affine map has the form $ y = Ax + b$ and an affine relation has the form $ Ax + By = b$.</p>
+
+<p>There are at least two useful concrete representation for subspaces.</p>
+
+<ol>
+  <li>We can write a matrix $ A$ and vector $ b$ down that corresponds to affine constraints. $ Ax = b$. The subspace described is the nullspace of $ A$ plus a solution of the equation. The rows of A are orthogonal to the space.</li>
+  <li>We can hold onto generators of subspace. $ x = A’ l+b$ where l parametrizes the subspace. In other words, the subspace is generated by / is the span of the columns of $ A’$. It is the range of $ A’$.</li>
+</ol>
+
+<p>We’ll call these two representations the H-Rep and V-Rep, borrowing terminology from similar representations in polytopes (describing a polytope by the inequalities that define it’s faces or as the convex combination of it’s vertices). <a href="https://inf.ethz.ch/personal/fukudak/lect/pclect/notes2015/PolyComp2015.pdf">https://inf.ethz.ch/personal/fukudak/lect/pclect/notes2015/PolyComp2015.pdf</a> These two representations are dual in many respects.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">-- HLinRel holds A x = b constraint</span>
+<span class="kr">data</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="kt">Matrix</span> <span class="kt">Double</span><span class="p">)</span> <span class="p">(</span><span class="kt">Vector</span> <span class="kt">Double</span><span class="p">)</span> <span class="kr">deriving</span> <span class="kt">Show</span>
+
+<span class="c1">-- x = A l + b. Generator constraint. </span>
+<span class="kr">data</span> <span class="kt">VLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">VLinRel</span> <span class="p">(</span><span class="kt">Matrix</span> <span class="kt">Double</span><span class="p">)</span> <span class="p">(</span><span class="kt">Vector</span> <span class="kt">Double</span><span class="p">)</span> <span class="kr">deriving</span> <span class="kt">Show</span>
+</code></pre></div></div>
+
+<p>It is useful to have both reps and interconversion routines, because different operations are easy in the two representations. Any operations defined on one can be defined on the other by sandwiching between these conversion functions. Hence, we basically only need to define operations for one of the reps (if we don’t care too much about efficiency loss which, fair warning, is out the window for today). The bulk of computation will actually be performed by these interconversion routines. The HMatrix function <code class="language-plaintext highlighter-rouge">nullspace</code> performs an SVD under the hood and gathers up the space with 0 singular values.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">-- if A x = b then x is in the nullspace + a vector b' solves the equation</span>
+<span class="n">h2v</span> <span class="o">::</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">VLinRel</span> <span class="n">a</span> <span class="n">b</span>
+<span class="n">h2v</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span> <span class="o">=</span> <span class="kt">VLinRel</span> <span class="n">a'</span> <span class="n">b'</span> <span class="kr">where</span>
+        <span class="n">b'</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&lt;\&gt;</span> <span class="n">b</span> <span class="c1">-- least squares solution</span>
+        <span class="n">a'</span> <span class="o">=</span> <span class="n">nullspace</span> <span class="n">a</span>
+
+<span class="c1">-- if x = A l + b, then A' . x = A' A l + A' b = A' b because A' A = 0</span>
+<span class="n">v2h</span> <span class="o">::</span> <span class="kt">VLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span>
+<span class="n">v2h</span> <span class="p">(</span><span class="kt">VLinRel</span> <span class="n">a'</span> <span class="n">b'</span><span class="p">)</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="kr">where</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">#&gt;</span> <span class="n">b'</span> <span class="c1">-- matrix multiply</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">tr</span> <span class="o">$</span> <span class="n">nullspace</span> <span class="p">(</span><span class="n">tr</span> <span class="n">a'</span><span class="p">)</span> <span class="c1">-- orthogonal space to range of a.</span>
+<span class="c1">-- tr is transpose and not trace? A little bit odd, HMatrix.</span>
+</code></pre></div></div>
+
+<p>These linear relations form a category. I’m not using the Category typeclass because I need BEnum constraints hanging around. The identity relations is $ x = y$ aka $ Ix - Iy = 0$.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">hid</span> <span class="o">::</span> <span class="n">forall</span> <span class="n">a</span><span class="o">.</span> <span class="kt">BEnum</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">a</span>
+<span class="n">hid</span> <span class="o">=</span>  <span class="kt">HLinRel</span> <span class="p">(</span><span class="n">i</span> <span class="o">|||</span> <span class="p">(</span><span class="o">-</span> <span class="n">i</span><span class="p">))</span> <span class="p">(</span><span class="n">vzero</span> <span class="n">s</span><span class="p">)</span> <span class="kr">where</span> 
+                            <span class="n">s</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">a</span>
+                            <span class="n">i</span> <span class="o">=</span> <span class="n">ident</span> <span class="n">s</span>
+</code></pre></div></div>
+
+<p>Composing relations is done by combining the constraints of the two relations and then projecting out the interior variables. Taking the conjunction of constraints is easiest in the H-Rep, where we just need to vertically stack the individual constraints. Projection easily done in the V-rep, where you just need to drop the appropriate section of the generator vectors. So we implement this operation by flipping between the two.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">hcompose</span> <span class="o">::</span> <span class="n">forall</span> <span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="o">.</span> <span class="p">(</span><span class="kt">BEnum</span> <span class="n">a</span><span class="p">,</span> <span class="kt">BEnum</span> <span class="n">b</span><span class="p">,</span> <span class="kt">BEnum</span> <span class="n">c</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">HLinRel</span> <span class="n">b</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">c</span>
+<span class="n">hcompose</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">m</span> <span class="n">b</span><span class="p">)</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">m'</span> <span class="n">b'</span><span class="p">)</span> <span class="o">=</span> <span class="kr">let</span> <span class="n">a''</span> <span class="o">=</span> <span class="n">fromBlocks</span> <span class="p">[[</span>       <span class="n">ma'</span><span class="p">,</span>           <span class="n">mb'</span> <span class="p">,</span>    <span class="mi">0</span>       <span class="p">],</span>
+                                                               <span class="p">[</span>         <span class="mi">0</span> <span class="p">,</span>    <span class="n">mb</span><span class="p">,</span>        <span class="n">mc</span>          <span class="p">]]</span> <span class="kr">in</span>
+                                         <span class="kr">let</span> <span class="n">b''</span> <span class="o">=</span> <span class="n">vjoin</span> <span class="p">[</span><span class="n">b'</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span> <span class="kr">in</span> 
+                                         <span class="kr">let</span> <span class="p">(</span><span class="kt">VLinRel</span> <span class="n">q</span> <span class="n">p</span><span class="p">)</span> <span class="o">=</span> <span class="n">h2v</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">a''</span> <span class="n">b''</span><span class="p">)</span> <span class="kr">in</span> <span class="c1">-- kind of a misuse</span>
+                                         <span class="kr">let</span> <span class="n">q'</span> <span class="o">=</span> <span class="p">(</span><span class="n">takeRows</span> <span class="n">ca</span> <span class="n">q</span><span class="p">)</span>  <span class="c1">-- drop rows belonging to @b</span>
+                                                       <span class="o">===</span> 
+                                                  <span class="p">(</span><span class="n">dropRows</span> <span class="p">(</span><span class="n">ca</span> <span class="o">+</span> <span class="n">cb</span><span class="p">)</span> <span class="n">q</span><span class="p">)</span> <span class="kr">in</span>
+                                         <span class="kr">let</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">]</span> <span class="o">=</span>  <span class="n">takesV</span> <span class="p">[</span><span class="n">ca</span><span class="p">,</span><span class="n">cb</span><span class="p">,</span><span class="n">cc</span><span class="p">]</span> <span class="n">p</span> <span class="kr">in</span>
+                                         <span class="kr">let</span> <span class="n">p'</span><span class="o">=</span>  <span class="n">vjoin</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">z</span><span class="p">]</span> <span class="kr">in</span> <span class="c1">-- rebuild without rows for @b</span>
+                                         <span class="n">v2h</span> <span class="p">(</span><span class="kt">VLinRel</span> <span class="n">q'</span> <span class="n">p'</span><span class="p">)</span> <span class="c1">-- reconstruct HLinRel</span>
+                                       <span class="kr">where</span> 
+                                           <span class="n">ca</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">a</span>
+                                           <span class="n">cb</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">b</span> 
+                                           <span class="n">cc</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">c</span>
+                                           <span class="n">sb</span> <span class="o">=</span> <span class="n">size</span> <span class="n">b</span> <span class="c1">-- number of constraints in first relation</span>
+                                           <span class="n">sb'</span> <span class="o">=</span> <span class="n">size</span> <span class="n">b'</span> <span class="c1">-- number of constraints in second relation</span>
+                                           <span class="n">ma'</span> <span class="o">=</span> <span class="n">takeColumns</span> <span class="n">ca</span> <span class="n">m'</span>
+                                           <span class="n">mb'</span> <span class="o">=</span> <span class="n">dropColumns</span> <span class="n">ca</span> <span class="n">m'</span>
+                                           <span class="n">mb</span> <span class="o">=</span> <span class="n">takeColumns</span> <span class="n">cb</span> <span class="n">m</span>
+                                           <span class="n">mc</span> <span class="o">=</span> <span class="n">dropColumns</span> <span class="n">cb</span> <span class="n">m</span>
+
+<span class="p">(</span><span class="o">&lt;&lt;&lt;</span><span class="p">)</span> <span class="o">::</span> <span class="n">forall</span> <span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="o">.</span> <span class="p">(</span><span class="kt">BEnum</span> <span class="n">a</span><span class="p">,</span> <span class="kt">BEnum</span> <span class="n">b</span><span class="p">,</span> <span class="kt">BEnum</span> <span class="n">c</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">HLinRel</span> <span class="n">b</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">c</span>
+<span class="p">(</span><span class="o">&lt;&lt;&lt;</span><span class="p">)</span> <span class="o">=</span> <span class="n">hcompose</span>
+</code></pre></div></div>
+
+<p>We can implement the general cadre of relation operators, meet, join, converse. I feel the converse is the most relational thing of all. It makes inverting a function nearly a no-op.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">hjoin</span> <span class="o">::</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span>
+<span class="n">hjoin</span> <span class="n">v</span> <span class="n">w</span> <span class="o">=</span> <span class="n">v2h</span> <span class="o">$</span> <span class="n">vjoin'</span> <span class="p">(</span><span class="n">h2v</span> <span class="n">v</span><span class="p">)</span> <span class="p">(</span><span class="n">h2v</span> <span class="n">w</span><span class="p">)</span>
+
+<span class="c1">-- hmatrix took vjoin from me :(</span>
+<span class="c1">-- joining means combining generators and adding a new generator</span>
+<span class="c1">-- Closed under affine combination l * x1 + (1 - l) * x2 </span>
+<span class="n">vjoin'</span> <span class="o">::</span> <span class="kt">VLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">VLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">VLinRel</span> <span class="n">a</span> <span class="n">b</span>
+<span class="n">vjoin'</span> <span class="p">(</span><span class="kt">VLinRel</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span> <span class="p">(</span><span class="kt">VLinRel</span> <span class="n">a'</span> <span class="n">b'</span><span class="p">)</span> <span class="o">=</span> <span class="kt">VLinRel</span> <span class="p">(</span><span class="n">a</span> <span class="o">|||</span> <span class="n">a'</span> <span class="o">|||</span> <span class="p">(</span><span class="n">asColumn</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">b'</span><span class="p">)))</span> <span class="n">b</span>
+
+<span class="c1">-- no constraints, everything</span>
+<span class="c1">-- trivially true</span>
+<span class="n">htop</span> <span class="o">::</span> <span class="n">forall</span> <span class="n">a</span> <span class="n">b</span><span class="o">.</span> <span class="p">(</span><span class="kt">BEnum</span> <span class="n">a</span><span class="p">,</span> <span class="kt">BEnum</span> <span class="n">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> 
+<span class="n">htop</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="n">vzero</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">ca</span> <span class="o">+</span> <span class="n">cb</span><span class="p">))</span> <span class="p">(</span><span class="n">konst</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">)</span> <span class="kr">where</span> 
+                                      <span class="n">ca</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">a</span>
+                                      <span class="n">cb</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">b</span> 
+
+<span class="c1">-- hbottom?</span>
+
+<span class="n">hconverse</span> <span class="o">::</span> <span class="n">forall</span> <span class="n">a</span> <span class="n">b</span><span class="o">.</span> <span class="p">(</span><span class="kt">BEnum</span> <span class="n">a</span><span class="p">,</span> <span class="kt">BEnum</span> <span class="n">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="n">b</span> <span class="n">a</span> 
+<span class="n">hconverse</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span> <span class="p">(</span><span class="n">dropColumns</span> <span class="n">ca</span> <span class="n">a</span><span class="p">)</span> <span class="o">|||</span>  <span class="p">(</span><span class="n">takeColumns</span> <span class="n">ca</span> <span class="n">a</span><span class="p">))</span> <span class="n">b</span> <span class="kr">where</span> 
+    <span class="n">ca</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">a</span>
+    <span class="n">cb</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">b</span>  
+
+
+</code></pre></div></div>
+
+<p>Relational inclusion is the question of subspace inclusion. It is fairly easy to check if a VRep is in an HRep (just see plug the generators into the constraints and see if they obey them) and by using the conversion functions we can define it for arbitrary combos of H and V.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+<span class="c1">-- forall l. A' ( A l + b) == b'</span>
+<span class="c1">-- is this numerically ok? I'm open to suggestions.</span>
+<span class="n">vhsub</span> <span class="o">::</span> <span class="kt">VLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+<span class="n">vhsub</span> <span class="p">(</span><span class="kt">VLinRel</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">a'</span> <span class="n">b'</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">naa'</span> <span class="o">&lt;=</span>  <span class="mf">1e-10</span> <span class="o">*</span> <span class="p">(</span><span class="n">norm_2</span> <span class="n">a'</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">norm_2</span> <span class="n">a</span><span class="p">)</span>  <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">norm_2</span> <span class="p">((</span><span class="n">a'</span> <span class="o">#&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="n">b'</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="mf">1e-10</span> <span class="o">*</span> <span class="p">(</span><span class="n">norm_2</span> <span class="n">b'</span><span class="p">)</span>  <span class="p">)</span> <span class="kr">where</span>
+          <span class="n">naa'</span> <span class="o">=</span> <span class="n">norm_2</span> <span class="p">(</span><span class="n">a'</span> <span class="o">&lt;&gt;</span> <span class="n">a</span><span class="p">)</span>
+
+<span class="n">hsub</span> <span class="o">::</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+<span class="n">hsub</span> <span class="n">h1</span> <span class="n">h2</span> <span class="o">=</span> <span class="n">vhsub</span> <span class="p">(</span><span class="n">h2v</span> <span class="n">h1</span><span class="p">)</span> <span class="n">h2</span>
+
+<span class="n">heq</span> <span class="o">::</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+<span class="n">heq</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">hsub</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">hsub</span> <span class="n">b</span> <span class="n">a</span><span class="p">)</span>
+
+
+<span class="kr">instance</span> <span class="kt">Ord</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span> <span class="kr">where</span>
+  <span class="p">(</span><span class="o">&lt;=</span><span class="p">)</span> <span class="o">=</span> <span class="n">hsub</span>
+  <span class="p">(</span><span class="o">&gt;=</span><span class="p">)</span> <span class="o">=</span> <span class="n">flip</span> <span class="n">hsub</span> 
+
+<span class="kr">instance</span> <span class="kt">Eq</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span> <span class="kr">where</span>
+  <span class="p">(</span><span class="o">==</span><span class="p">)</span> <span class="o">=</span> <span class="n">heq</span>
+</code></pre></div></div>
+
+<p>It is useful the use the direct sum of the spaces as a monoidal product.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">hpar</span> <span class="o">::</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="n">c</span> <span class="n">d</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="kt">Either</span> <span class="n">a</span> <span class="n">c</span><span class="p">)</span> <span class="p">(</span><span class="kt">Either</span> <span class="n">b</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">hpar</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">mab</span> <span class="n">v</span><span class="p">)</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">mcd</span> <span class="n">v'</span><span class="p">)</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="n">fromBlocks</span> <span class="p">[</span> <span class="p">[</span><span class="n">mab</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span> <span class="p">,</span> <span class="n">mcd</span><span class="p">]])</span> <span class="p">(</span><span class="n">vjoin</span> <span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">v'</span><span class="p">])</span> <span class="kr">where</span>
+
+<span class="n">hleft</span> <span class="o">::</span> <span class="n">forall</span> <span class="n">a</span> <span class="n">b</span><span class="o">.</span> <span class="p">(</span><span class="kt">BEnum</span> <span class="n">a</span><span class="p">,</span> <span class="kt">BEnum</span> <span class="n">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="p">(</span><span class="kt">Either</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">hleft</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span> <span class="n">i</span> <span class="o">|||</span> <span class="p">(</span><span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">|||</span> <span class="p">(</span><span class="n">konst</span> <span class="mi">0</span> <span class="p">(</span><span class="n">ca</span><span class="p">,</span><span class="n">cb</span><span class="p">)))</span> <span class="p">(</span><span class="n">konst</span> <span class="mi">0</span> <span class="n">ca</span><span class="p">)</span> <span class="kr">where</span> 
+    <span class="n">ca</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">a</span>
+    <span class="n">cb</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">b</span>  
+    <span class="n">i</span> <span class="o">=</span> <span class="n">ident</span> <span class="n">ca</span>
+
+<span class="n">hright</span> <span class="o">::</span> <span class="n">forall</span> <span class="n">a</span> <span class="n">b</span><span class="o">.</span> <span class="p">(</span><span class="kt">BEnum</span> <span class="n">a</span><span class="p">,</span> <span class="kt">BEnum</span> <span class="n">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">HLinRel</span> <span class="n">b</span> <span class="p">(</span><span class="kt">Either</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">hright</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span> <span class="n">i</span> <span class="o">|||</span> <span class="p">(</span><span class="n">konst</span> <span class="mi">0</span> <span class="p">(</span><span class="n">cb</span><span class="p">,</span><span class="n">ca</span><span class="p">))</span> <span class="o">|||</span> <span class="p">(</span><span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="p">)</span> <span class="p">(</span><span class="n">konst</span> <span class="mi">0</span> <span class="n">cb</span><span class="p">)</span> <span class="kr">where</span> 
+    <span class="n">ca</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">a</span>
+    <span class="n">cb</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">b</span>  
+    <span class="n">i</span> <span class="o">=</span> <span class="n">ident</span> <span class="n">cb</span>
+
+<span class="n">htrans</span> <span class="o">::</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="p">(</span><span class="kt">Either</span> <span class="n">b</span> <span class="n">c</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="kt">Either</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span> <span class="n">c</span> 
+<span class="n">htrans</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">m</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="n">m</span> <span class="n">v</span>
+
+<span class="n">hswap</span> <span class="o">::</span> <span class="n">forall</span> <span class="n">a</span> <span class="n">b</span><span class="o">.</span> <span class="p">(</span><span class="kt">BEnum</span> <span class="n">a</span><span class="p">,</span> <span class="kt">BEnum</span> <span class="n">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="kt">Either</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span> <span class="p">(</span><span class="kt">Either</span> <span class="n">b</span> <span class="n">a</span><span class="p">)</span>
+<span class="n">hswap</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="n">fromBlocks</span> <span class="p">[[</span><span class="n">ia</span> <span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span> <span class="p">,</span><span class="o">-</span><span class="n">ia</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span><span class="o">-</span><span class="n">ib</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span> <span class="p">(</span><span class="n">konst</span> <span class="mi">0</span> <span class="p">(</span><span class="n">ca</span> <span class="o">+</span> <span class="n">cb</span><span class="p">))</span> <span class="kr">where</span> 
+        <span class="n">ca</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">a</span>
+        <span class="n">cb</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">b</span>  
+        <span class="n">ia</span> <span class="o">=</span> <span class="n">ident</span> <span class="n">ca</span>
+        <span class="n">ib</span> <span class="o">=</span> <span class="n">ident</span> <span class="n">cb</span>
+
+
+<span class="n">hsum</span> <span class="o">::</span> <span class="n">forall</span> <span class="n">a</span><span class="o">.</span> <span class="kt">BEnum</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="kt">Either</span> <span class="n">a</span> <span class="n">a</span><span class="p">)</span> <span class="n">a</span>
+<span class="n">hsum</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span> <span class="n">i</span> <span class="o">|||</span> <span class="n">i</span> <span class="o">|||</span> <span class="o">-</span> <span class="n">i</span> <span class="p">)</span> <span class="p">(</span><span class="n">konst</span> <span class="mi">0</span> <span class="n">ca</span><span class="p">)</span>  <span class="kr">where</span> 
+        <span class="n">ca</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">a</span> 
+        <span class="n">i</span><span class="o">=</span> <span class="n">ident</span> <span class="n">ca</span>
+
+<span class="n">hdup</span> <span class="o">::</span> <span class="n">forall</span> <span class="n">a</span><span class="o">.</span> <span class="kt">BEnum</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="p">(</span><span class="kt">Either</span> <span class="n">a</span> <span class="n">a</span><span class="p">)</span>
+<span class="n">hdup</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="n">fromBlocks</span> <span class="p">[[</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span> <span class="p">],</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">i</span><span class="p">]])</span> <span class="p">(</span><span class="n">konst</span> <span class="mi">0</span> <span class="p">(</span><span class="n">ca</span> <span class="o">+</span> <span class="n">ca</span><span class="p">))</span>  <span class="kr">where</span> 
+        <span class="n">ca</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">a</span> 
+        <span class="n">i</span><span class="o">=</span> <span class="n">ident</span> <span class="n">ca</span>
+
+<span class="n">hdump</span> <span class="o">::</span> <span class="kt">HLinRel</span> <span class="n">a</span> <span class="kt">Void</span>
+<span class="n">hdump</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="mi">0</span> <span class="mi">0</span>
+
+<span class="n">hlabsorb</span> <span class="o">::</span><span class="n">forall</span> <span class="n">a</span><span class="o">.</span> <span class="kt">BEnum</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">Void</span> <span class="n">a</span><span class="p">)</span> <span class="n">a</span>
+<span class="n">hlabsorb</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="n">m</span> <span class="n">v</span> <span class="kr">where</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">m</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="n">hid</span> <span class="o">@</span><span class="n">a</span> 
+</code></pre></div></div>
+
+<p>A side note: <code class="language-plaintext highlighter-rouge">Void</code> causes some consternation. <code class="language-plaintext highlighter-rouge">Void</code> is the type with no elements and is the index type of a 0 dimensional space. It is the unit object of the monoidal product. Unfortunately by an accident of the standard Haskell definitions, actual <code class="language-plaintext highlighter-rouge">Void</code> is not a <code class="language-plaintext highlighter-rouge">BEnum</code>. So, I did a disgusting hack. Let us not discuss it more.</p>
+
+<h3 id="circuits">Circuits</h3>
+
+<p>Baez and Fong have an<a href="https://arxiv.org/abs/1504.05625"> interesting paper</a> where they describe building circuits using a categorical graphical calculus. We have the pieces to go about something similar. What we have here is a precise way in which circuit diagrams can be though of as string diagrams in a monoidal category of linear relations.</p>
+
+<p>An idealized wire has two quantities associated with it, the current flowing through it and the voltage it is at.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">-- a 2d space at every wire or current and voltage.</span>
+<span class="kr">data</span> <span class="kt">IV</span> <span class="o">=</span> <span class="kt">I</span> <span class="o">|</span> <span class="kt">V</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Show</span><span class="p">,</span> <span class="kt">Enum</span><span class="p">,</span> <span class="kt">Bounded</span><span class="p">,</span> <span class="kt">Eq</span><span class="p">,</span> <span class="kt">Ord</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/My-Drawing-3.sketchpad.png" alt="" /></p>
+
+<p>When we connect wires, the currents must be conserved and the voltages must be equal. <code class="language-plaintext highlighter-rouge">hid</code> and <code class="language-plaintext highlighter-rouge">hcompose</code> from above still achieve that. Composing two independent circuits in parallel is achieve by <code class="language-plaintext highlighter-rouge">hpar</code>.</p>
+
+<p><img src="/assets/My-Drawing-5.sketchpad.png" alt="" />Independent resistors in parallel.</p>
+
+<p>We will want some basic tinker toys to work with.</p>
+
+<p>A resistor in series has the same current at both ends and a voltage drop proportional to the current</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">resistor</span> <span class="o">::</span> <span class="kt">Double</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="kt">IV</span> <span class="kt">IV</span>
+<span class="n">resistor</span> <span class="n">r</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span> <span class="p">(</span><span class="mi">2</span><span class="o">&gt;&lt;</span><span class="mi">4</span><span class="p">)</span>  <span class="p">[</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>
+                                 <span class="n">r</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="p">(</span><span class="n">konst</span> <span class="mi">0</span> <span class="mi">2</span><span class="p">)</span> 
+</code></pre></div></div>
+
+<p><img src="/assets/My-Drawing-4.sketchpad.png" alt="" /></p>
+
+<p>Composing two resistors in parallel adds the resistance. <code class="language-plaintext highlighter-rouge">(resistor r1) &lt;&lt;&lt; (resistor r2) == resistor (r1 + r2))</code></p>
+
+<p><img src="/assets/My-Drawing-6.sketchpad-1024x616.png" alt="" /></p>
+
+<p>A bridging resistor allows current to flow between the two branches</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">bridge</span> <span class="o">::</span> <span class="kt">Double</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">IV</span> <span class="kt">IV</span><span class="p">)</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">IV</span> <span class="kt">IV</span><span class="p">)</span>
+<span class="n">bridge</span> <span class="n">r</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span>  <span class="p">(</span><span class="mi">4</span><span class="o">&gt;&lt;</span><span class="mi">8</span><span class="p">)</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="c1">-- current conservation</span>
+                               <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="c1">--voltage maintained left</span>
+                               <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="c1">-- voltage maintained right</span>
+                               <span class="n">r</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">r</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>  <span class="p">])</span> <span class="p">(</span><span class="n">konst</span> <span class="mi">0</span> <span class="mi">4</span><span class="p">)</span>  
+
+</code></pre></div></div>
+
+<p><img src="/assets/My-Drawing-7.sketchpad.png" alt="" />A bridging resistor</p>
+
+<p>Composing two bridge circuits is putting the bridge resistors in parallel. The conductance $ G=\frac{1}{R}$ of resistors in parallel adds. <code class="language-plaintext highlighter-rouge">hcompose (bridge r1) (bridge r2) == bridge 1 / (1/r1 + 1/r2)</code>.</p>
+
+<p><img src="/assets/My-Drawing-8.sketchpad-1024x531.png" alt="" />parallel resistors compose</p>
+
+<p>An open circuit allows no current to flow and ends a wire. <code class="language-plaintext highlighter-rouge">open ~ resistor infinity</code></p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">open</span> <span class="o">::</span> <span class="kt">HLinRel</span> <span class="kt">IV</span> <span class="kt">Void</span>
+<span class="n">open</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="n">fromList</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span> <span class="p">(</span><span class="n">konst</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>At branching points, the voltage is maintained, but the current splits.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">cmerge</span> <span class="o">::</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">IV</span> <span class="kt">IV</span><span class="p">)</span> <span class="kt">IV</span>
+<span class="n">cmerge</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="n">fromList</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span> <span class="p">,</span><span class="o">-</span><span class="mi">1</span>  <span class="p">],</span>
+                           <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>  <span class="p">(</span><span class="n">konst</span> <span class="mi">0</span> <span class="mi">3</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>This <code class="language-plaintext highlighter-rouge">cmerge</code> combinator could also be built using a <code class="language-plaintext highlighter-rouge">short == bridge 0</code> , composing a branch with <code class="language-plaintext highlighter-rouge">open</code>, and then absorbing the <code class="language-plaintext highlighter-rouge">Void</code> away.</p>
+
+<p>We can bend wires up or down by using a composition of <code class="language-plaintext highlighter-rouge">cmerge</code> and <code class="language-plaintext highlighter-rouge">open</code>.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">cap</span> <span class="o">::</span> <span class="kt">HLinRel</span>  <span class="p">(</span><span class="kt">Either</span> <span class="kt">IV</span> <span class="kt">IV</span><span class="p">)</span> <span class="kt">Void</span>
+<span class="n">cap</span>  <span class="o">=</span> <span class="n">hcompose</span> <span class="n">open</span> <span class="n">cmerge</span>
+
+<span class="n">cup</span> <span class="o">::</span> <span class="kt">HLinRel</span> <span class="kt">Void</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">IV</span> <span class="kt">IV</span><span class="p">)</span>
+<span class="n">cup</span> <span class="o">=</span> <span class="n">hconverse</span> <span class="n">cap</span>
+
+<span class="n">ground</span> <span class="o">::</span> <span class="kt">HLinRel</span> <span class="kt">IV</span> <span class="kt">Void</span>
+<span class="n">ground</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span> <span class="p">(</span><span class="mi">1</span><span class="o">&gt;&lt;</span><span class="mi">2</span><span class="p">)</span> <span class="p">[</span> <span class="mi">0</span> <span class="p">,</span> <span class="mi">1</span> <span class="p">])</span> <span class="p">(</span><span class="n">vzero</span> <span class="mi">1</span><span class="p">)</span> 
+</code></pre></div></div>
+
+<p>Voltage and current sources enforce current and voltage to be certain values</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">vsource</span> <span class="o">::</span> <span class="kt">Double</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="kt">IV</span> <span class="kt">IV</span>
+<span class="n">vsource</span> <span class="n">v</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span> <span class="p">(</span><span class="mi">2</span><span class="o">&gt;&lt;</span><span class="mi">4</span><span class="p">)</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>
+                               <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="p">(</span><span class="n">fromList</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">v</span><span class="p">])</span>  
+
+<span class="n">isource</span> <span class="o">::</span> <span class="kt">Double</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="kt">IV</span> <span class="kt">IV</span>
+<span class="n">isource</span> <span class="n">i</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="n">fromList</span> <span class="p">[</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>   <span class="mi">0</span><span class="p">],</span> <span class="c1">-- current conservation</span>
+                                <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">]])</span> <span class="p">(</span><span class="n">fromList</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">])</span>  
+</code></pre></div></div>
+
+<p>Measurements of circuits proceed by probes.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">type</span> <span class="kt">VProbe</span> <span class="o">=</span> <span class="nb">()</span>
+<span class="n">vprobe</span> <span class="o">::</span> <span class="kt">HLinRel</span> <span class="kt">IV</span> <span class="kt">VProbe</span>
+<span class="n">vprobe</span> <span class="o">=</span> <span class="kt">HLinRel</span> <span class="p">(</span> <span class="p">(</span><span class="mi">2</span><span class="o">&gt;&lt;</span><span class="mi">3</span><span class="p">)</span>  <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
+                            <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="p">(</span><span class="n">konst</span> <span class="mi">0</span> <span class="mi">2</span><span class="p">)</span>  
+</code></pre></div></div>
+
+<p>Inductors and capacitors could be included easily, but would require the entries of the HMatrix values to be polynomials in the frequency $ \omega$, which it does not support (but it could!). We’ll leave those off for another day.</p>
+
+<p>We actually can determine that the rules suggested above are being followed by computation.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">r20</span> <span class="o">::</span> <span class="kt">HLinRel</span> <span class="kt">IV</span> <span class="kt">IV</span>
+<span class="n">r20</span> <span class="o">=</span> <span class="n">resistor</span> <span class="mi">20</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="o">=</span> <span class="kr">do</span>
+            <span class="n">print</span> <span class="p">(</span><span class="n">r20</span> <span class="o">==</span> <span class="p">(</span><span class="n">hid</span> <span class="o">&lt;&lt;&lt;</span> <span class="n">r20</span><span class="p">))</span>
+            <span class="n">print</span> <span class="p">(</span><span class="n">r20</span> <span class="o">==</span> <span class="n">r20</span> <span class="o">&lt;&lt;&lt;</span> <span class="n">hid</span><span class="p">)</span>
+            <span class="n">print</span> <span class="p">(</span><span class="n">r20</span> <span class="o">==</span> <span class="p">(</span><span class="n">hmeet</span> <span class="n">r20</span> <span class="n">r20</span><span class="p">))</span>
+            <span class="n">print</span> <span class="o">$</span> <span class="n">resistor</span> <span class="mi">50</span> <span class="o">==</span> <span class="n">r20</span> <span class="o">&lt;&lt;&lt;</span> <span class="p">(</span><span class="n">resistor</span> <span class="mi">30</span><span class="p">)</span>
+            <span class="n">print</span> <span class="o">$</span> <span class="p">(</span><span class="n">bridge</span> <span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;&lt;</span> <span class="p">(</span><span class="n">bridge</span> <span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">bridge</span> <span class="mi">5</span><span class="p">)</span>
+            <span class="n">print</span> <span class="o">$</span> <span class="n">v2h</span> <span class="p">(</span><span class="n">h2v</span> <span class="n">r20</span><span class="p">)</span> <span class="o">==</span> <span class="n">r20</span>
+            <span class="n">print</span> <span class="o">$</span> <span class="n">r20</span> <span class="o">&lt;=</span> <span class="n">htop</span>
+            <span class="n">print</span> <span class="o">$</span> <span class="n">hconverse</span> <span class="p">(</span><span class="n">hconverse</span> <span class="n">r20</span><span class="p">)</span> <span class="o">==</span> <span class="n">r20</span>
+            <span class="n">print</span> <span class="o">$</span> <span class="p">(</span><span class="n">open</span> <span class="o">&lt;&lt;&lt;</span> <span class="n">r20</span><span class="p">)</span> <span class="o">==</span> <span class="n">open</span>
+</code></pre></div></div>
+
+<h3 id="bits-and-bobbles">Bits and Bobbles</h3>
+
+<ul>
+  <li>Homogenous systems are usually a bit more elegant to deal with, although a bit more unfamiliar and abstract.</li>
+  <li>Could make a pandas like interface for linear relations that uses numpy/scipy.sparse for the computation. All the swapping and associating is kind of fun to design, not so much to use. Labelled n-way relations are nice for users.</li>
+  <li>Implicit/Lazy evaluation. We should let the good solvers do the work when possible. We implemented our operations eagerly. We don’t have to. By allowing hidden variables inside our relations, we can avoid the expensive linear operations until it is useful to actually compute on them.</li>
+  <li>Relational division = quotient spaces?</li>
+  <li>DSL. One of the beauties of the pointfree/categorical approach is that you avoid the need for binding forms. This makes for a very easily manipulated DSL. The transformations feel like those of ordinary algebra and you don’t have to worry about the subtleties of index renaming or substitution under binders.</li>
+  <li>Sparse is probably really good. We have lots of identity matrices and simple rearrangements. It is very wasteful to use dense operations on these.</li>
+  <li>Schur complement <a href="https://en.wikipedia.org/wiki/Schur_complement">https://en.wikipedia.org/wiki/Schur_complement</a> are the name in the game for projecting out pieces of linear problems. We have some overlap.</li>
+  <li>Linear relations -&gt; Polyhedral relations -&gt; Convex Relations. Linear is super computable, polyhedral can blow up. Rearrange a DSL to abuse Linear programming as much as possible for queries.</li>
+  <li>Network circuits. There is an interesting subclass of circuits that is designed to be pretty composable.</li>
+</ul>
+
+<p><a href="https://en.wikipedia.org/wiki/Two-port_network">https://en.wikipedia.org/wiki/Two-port_network</a> Two port networks are a very useful subclass of electrical circuits. They model transmission lines fairly well, and easily composable for filter construction.</p>
+
+<p>It is standard to describe these networks by giving a linear function between two variables and the other two variables. Depending on your choice of which variables depend on which, these are called the z-parameters, y-parameters, h-parameters, scattering parameters, abcd parameters.  There are tables of formula for converting from one form to the others. The different parameters hold different use cases for composition and combining in parallel or series. From the perspective of linear relations this all seems rather silly. The necessity for so many descriptions and the confusing relationship between them comes from the unnecessary and overly rigid requirement of have a linear function-like relationship rather than just a general relation, which depending of the circuit may not even be available (there are degenerate configurations where two of the variables do not imply the values of the other two). A function relationship is always a lie (although a sometimes useful one), as there is always back-reaction of new connections.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">-- voltage divider</span>
+<span class="n">divider</span> <span class="o">::</span> <span class="kt">Double</span> <span class="o">-&gt;</span> <span class="kt">Double</span> <span class="o">-&gt;</span> <span class="kt">HLinRel</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">IV</span> <span class="kt">IV</span><span class="p">)</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">IV</span> <span class="kt">IV</span><span class="p">)</span>
+<span class="n">divider</span> <span class="n">r1</span> <span class="n">r2</span> <span class="o">=</span> <span class="n">hcompose</span> <span class="p">(</span><span class="n">bridge</span> <span class="n">r2</span><span class="p">)</span> <span class="p">(</span><span class="n">hpar</span> <span class="p">(</span><span class="n">resistor</span> <span class="n">r1</span><span class="p">)</span> <span class="n">hid</span><span class="p">)</span> 
+</code></pre></div></div>
+
+<p>The relation model also makes clearer how to build lumped models out of continuous ones.  <a href="https://en.wikipedia.org/wiki/Lumped-element_model">https://en.wikipedia.org/wiki/Lumped-element_model</a></p>
+
+<p><a href="https://en.wikipedia.org/wiki/Transmission_line">https://en.wikipedia.org/wiki/Transmission_line</a> <a href="https://en.wikipedia.org/wiki/Distributed-element_model">https://en.wikipedia.org/wiki/Distributed-element_model</a></p>
+
+<p>null</p>
+<ul>
+  <li>Because the type indices have no connection to the actual data types (they are phantom) it is a wise idea to use smart constructors that check that the sizes of the matrices makes sense.</li>
+</ul>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+<span class="c1">-- smart constructors</span>
+<span class="n">hLinRel</span> <span class="o">::</span> <span class="n">forall</span> <span class="n">a</span> <span class="n">b</span><span class="o">.</span> <span class="p">(</span><span class="kt">BEnum</span> <span class="n">a</span><span class="p">,</span> <span class="kt">BEnum</span> <span class="n">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">Matrix</span> <span class="kt">Double</span> <span class="o">-&gt;</span> <span class="kt">Vector</span> <span class="kt">Double</span> <span class="o">-&gt;</span> <span class="kt">Maybe</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">a</span> <span class="n">b</span><span class="p">)</span> 
+<span class="n">hLinRel</span> <span class="n">m</span> <span class="n">v</span> <span class="o">|</span> <span class="n">cols</span> <span class="n">m</span> <span class="o">==</span> <span class="p">(</span><span class="n">ca</span> <span class="o">+</span> <span class="n">cb</span><span class="p">)</span> <span class="o">&amp;&amp;</span>  <span class="p">(</span><span class="n">size</span> <span class="n">v</span> <span class="o">==</span> <span class="n">rows</span> <span class="n">m</span><span class="p">)</span>  <span class="o">=</span> <span class="kt">Just</span> <span class="p">(</span><span class="kt">HLinRel</span> <span class="n">m</span> <span class="n">v</span><span class="p">)</span>
+            <span class="o">|</span>  <span class="n">otherwise</span> <span class="o">=</span> <span class="kt">Nothing</span>  <span class="kr">where</span> 
+                 <span class="n">ca</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">a</span>
+                 <span class="n">cb</span> <span class="o">=</span> <span class="n">card</span> <span class="o">@</span><span class="n">b</span>  
+
+</code></pre></div></div>
+
+<ul>
+  <li>Nonlinear circuits. Grobner Bases and polynomial relations?</li>
+  <li>Quadratic optimization under linear constraints. Can’t get it to come out right yet. Clutch for Kalman filters. Nice for many formulations like least power, least action, minimum energy principles. Edit: I did more in this direction here <a href="http://www.philipzucker.com/categorical-lqr-control-with-linear-relations/">http://www.philipzucker.com/categorical-lqr-control-with-linear-relations/</a></li>
+  <li>Quadratic Operators -&gt; Convex operators.  See last chapter of Rockafellar.</li>
+  <li>Duality of controllers and filters. It is well known (I think) that for ever controller algorithm there is a filter algorithm that is basically the same thing.
+    <ul>
+      <li>LQR - Kalman</li>
+      <li>Viterbi filter - Value function table</li>
+      <li>particle filter - Monte Carlo control</li>
+      <li>Extended Kalman - iLQR-ish? Use local approximation of dynamics</li>
+      <li>unscented kalman - ?</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="refs">Refs</h4>
+
+<ul>
+  <li><a href="https://golem.ph.utexas.edu/category/2015/04/categories_in_control.html">https://golem.ph.utexas.edu/category/2015/04/categories_in_control.html</a></li>
+  <li><a href="https://johncarlosbaez.wordpress.com/2015/04/28/a-compositional-framework-for-passive-linear-networks/">https://johncarlosbaez.wordpress.com/2015/04/28/a-compositional-framework-for-passive-linear-networks/</a></li>
+  <li><a href="https://graphicallinearalgebra.net/2015/12/26/27-linear-relations/">https://graphicallinearalgebra.net/2015/12/26/27-linear-relations/</a></li>
+  <li><a href="https://arxiv.org/abs/1611.07591">https://arxiv.org/abs/1611.07591</a></li>
+  <li><a href="https://arxiv.org/abs/1504.05625">https://arxiv.org/abs/1504.05625</a></li>
+  <li>Edit: Very relevant and interesting <a href="https://www.ioc.ee/~pawel/papers/affinePaper.pdf">https://www.ioc.ee/~pawel/papers/affinePaper.pdf</a></li>
+</ul>
+
+:ET

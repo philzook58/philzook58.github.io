@@ -1,0 +1,389 @@
+I"_(<p>Reverse mode automatic differentiation is kind of like a <a href="http://hackage.haskell.org/package/lens">lens</a>. Here is the type for a non-fancy lens</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">type</span> <span class="kt">Lens</span> <span class="n">s</span> <span class="n">t</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>When you compose two lenses, you compose the getters (s -&gt; a) and you compose the partially applied setter (b -&gt; t) in the reverse direction.</p>
+
+<p>We can define a type for a reverse mode differentiable function</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">type</span> <span class="kt">AD</span> <span class="n">x</span> <span class="n">dx</span> <span class="n">y</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dy</span> <span class="o">-&gt;</span> <span class="n">dx</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>When you compose two differentiable functions you compose the functions and you flip compose the Jacobian transpose (dy -&gt; dx). It is this flip composition which gives reverse mode it’s name. The dependence of the Jacobian on the base point x corresponds to the dependence of the setter on the original object</p>
+
+<p>The implementation of composition for Lens and AD are identical.</p>
+
+<p>Both of these things are described by the same box diagram (cribbed from the profunctor optics paper <a href="http://www.cs.ox.ac.uk/people/jeremy.gibbons/publications/poptics.pdf">www.cs.ox.ac.uk/people/jeremy.gibbons/publications/poptics.pdf </a>).</p>
+
+<p><a href="/assets/Drawing-2.png"><img src="/assets/Drawing-2.png" alt="" /></a></p>
+
+<p>This is a very simple way of implementing a reserve mode automatic differentiation using only non exotic features of a functional programming language. Since it is so bare bones and functional, is this a good way to achieve the vision gorgeous post by Christoper Olah?  <a href="http://colah.github.io/posts/2015-09-NN-Types-FP/">http://colah.github.io/posts/2015-09-NN-Types-FP/</a>  I do not know.</p>
+
+<p>Now, to be clear, these ARE NOT lenses. Please, I don’t want to cloud the water, do not call these lenses. They’re pseudolenses or something. A very important part of what makes a lens a lens is that it obeys the lens laws, in which the getter and setter behave as one would expect. Our “setter” is a functional representation of the Jacobian transpose and our getter is the function itself. These do not obey lens laws in general.</p>
+
+<h3 id="chain-rule-and-jacobians">Chain Rule and Jacobians</h3>
+
+<p>What is reverse mode differentiation? One’s thinking is muddled by defaulting to the Calc I perspective of one dimensional functions. Thinking is also muddled by  the general conception that the gradient is a vector. This is slightly sloppy talk and can lead to confusion. It definitely has confused me.</p>
+
+<p>The right setting for intuition is $ R^n \rightarrow R^m$ functions</p>
+
+<p>If one looks at a multidimensional to multidimensional function like this, you can form a matrix of partial derivatives known as the Jacobian. In the scalar to scalar case this is a $ 1\times 1$ matrix, which we can think of as just a number. In the multi to scalar case this is a $ 1\times n$ matrix which we somewhat fuzzily can think of as a vector.</p>
+
+<p>The chain rule is a beautiful thing. It is what makes differentiation so elegant and tractable.</p>
+
+<p>For many-to-many functions, if you compose them you matrix multiply their Jacobians.</p>
+
+<p>Just to throw in some category theory spice (who can resist), the chain rule is a functor between the category of differentiable functions and the category of vector spaces where composition is given by Jacobian multiplication. This is probably wholly unhelpful.</p>
+
+<blockquote>
+
+  <p>The chain rule says that the derivative operator is a functor.</p>
+
+  <p>— <a href="https://twitter.com/FunctorFact/status/1040237281435680768?ref_src=twsrc%5Etfw">Functor Fact (@FunctorFact) September 13, 2018</a></p>
+</blockquote>
+
+<p>The cost of multiplication for an $ a \times b$ matrix A and an $ b \times c$ matrix B is $ O(abc) $. If we have 3 matrices ABC, we can associate to the left or right. (AB)C vs A(BC) choosing which product to form first. These two associations have different cost, abc * acd for left association or abd * bcd for right association. We want to use the smallest dimension over and over. For functions that are ultimately many to scalar functions, that means we want to multiply starting at the right.</p>
+
+<p>For a clearer explanation of the importance of the association, maybe this will help <a href="https://en.wikipedia.org/wiki/Matrix_chain_multiplication">https://en.wikipedia.org/wiki/Matrix_chain_multiplication</a></p>
+
+<h3 id="functional-representations-of-matrices">Functional representations of matrices</h3>
+
+<p>A Matrix data type typically gives you full inspection of the elements. If you partially apply the matrix vector product function (!* :: Matrix -&gt; Vector -&gt; Vector) to a matrix m, you get a vector to vector function (!* m) :: Vector -&gt; Vector. In the sense that a matrix is data representing a linear map, this type looks gorgeous. It is so evocative of purpose.</p>
+
+<p>If all you want to do is multiply matrices or perform matrix vector products this is not a bad way to go. A function in Haskell is a thing that exposes only a single interface, the ability to be applied. Very often, the loss of Gaussian elimination or eigenvalue decompositions is quite painfully felt. For simple automatic differentiation, it isn’t so bad though.</p>
+
+<p>You can inefficiently reconstitute a matrix from it’s functional form by applying it to a basis of vectors.</p>
+
+<p>One weakness of the functional form is that the type does not constrain the function to actually act linearly on the vectors.</p>
+
+<p>One big advantage of the functional form is that you can intermix different matrix types (sparse, low-rank, dense) with no friction, just so long as they all have some way of being applied to the same kind of vector. You can also use functions like (id :: a -&gt; a) as the identity matrix, which are not built from any underlying matrix type at all.</p>
+
+<p>To match the lens, we need to represent the Jacobian transpose as the function (dy -&gt; dx) mapping differentials in the output space to differentials in the input space.</p>
+
+<h3 id="the-lens-trick">The Lens Trick</h3>
+
+<p>A lens is the combination of a getter (a function that grabs a piece out of a larger object) and a setter (a function that takes the object and a new piece and returns the object with that piece replaced).</p>
+
+<p>The common form of lens used in Haskell doesn’t look like the above. It looks like this.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">type</span> <span class="kt">Lens</span> <span class="n">s</span> <span class="n">t</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="n">forall</span> <span class="n">f</span><span class="o">.</span> <span class="kt">Functor</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">s</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">t</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>This form has exactly the same content as the previous form (A non obvious fact. See the Profunctor Optics paper above. Magic neato polymorphism stuff), with the added functionality of being able to compose using the regular Haskell (.) operator.</p>
+
+<p>I think a good case can be made to NOT use the lens trick (do as I say, not as I do). It obfuscates sharing and<del> obfuscates your code to the compiler (I assume the compiler optimizations have less understanding of polymorphic functor types than it does of tuples and functions), meaning the compiler has less opportunity to help you out. But it is also pretty cool. So… I dunno. </del> Edit:</p>
+
+<p>/u/<a href="https://www.reddit.com/user/mstksg">mstksg</a> points out that compilers actually LOVE the van Laarhoven representation (the lens trick) because when f is finally specialized it is a newtype wrappers which have no runtime cost. Then the compiler can just chew the thing apart.</p>
+
+<p><a href="https://www.reddit.com/r/haskell/comments/9oc9dq/reverse_mode_differentiation_is_kind_of_like_a/">https://www.reddit.com/r/haskell/comments/9oc9dq/reverse_mode_differentiation_is_kind_of_like_a/</a></p>
+
+<p>One thing that is extra scary about the fancy form is that it makes it less clear how much data is likely to be shared between the forward and backward pass. Another alternative to the lens that shows this is the following.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">type</span> <span class="kt">AD</span> <span class="n">x</span> <span class="n">dx</span> <span class="n">y</span> <span class="n">dy</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">dy</span> <span class="o">-&gt;</span> <span class="n">dx</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>This form is again the same in end result. However it cannot share computation and therefore isn’t the same performance wise. One nontrivial function that took me some head scratching is how to convert from the fancy lens directly to the regular lens without destroying sharing. I think this does it</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">unfancy</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">a</span><span class="p">))</span>
+<span class="n">unfancy</span> <span class="n">l</span> <span class="o">=</span> <span class="n">getCompose</span> <span class="o">.</span> <span class="n">l</span> <span class="p">(</span><span class="nf">\</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">Compose</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">id</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h3 id="some-code">Some code</h3>
+
+<p>I have some small exploration of the concept in this git <a href="https://github.com/philzook58/ad-lens">https://github.com/philzook58/ad-lens</a></p>
+
+<p>Again, really check out Conal Elliott’s <a href="http://conal.net/papers/essence-of-ad/">AD paper</a> and enjoy the many, many apostrophes to follow.</p>
+
+<p>Some basic definitions and transformations between fancy and non fancy lenses. Extracting the gradient is similar to the set function. Gradient assumes a many to one function and it applies it to 1.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">import</span> <span class="nn">Data.Functor.Identity</span>
+<span class="kr">import</span> <span class="nn">Data.Functor.Const</span>
+<span class="kr">import</span> <span class="nn">Data.Functor.Compose</span>
+
+<span class="kr">type</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span> <span class="n">forall</span> <span class="n">f</span><span class="o">.</span> <span class="kt">Functor</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">a</span>
+
+<span class="n">lens''</span> <span class="o">::</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">a</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">b</span>
+<span class="n">lens''</span> <span class="n">h</span> <span class="n">g</span> <span class="n">x</span> <span class="o">=</span> <span class="n">fmap</span> <span class="n">j</span> <span class="n">fb</span> <span class="kr">where</span>
+    <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">h</span> <span class="n">x</span>
+    <span class="n">fb</span> <span class="o">=</span> <span class="n">g</span> <span class="n">b</span>
+
+<span class="n">over</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="p">((</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span><span class="p">)</span>
+<span class="n">over</span> <span class="n">l</span> <span class="n">f</span> <span class="o">=</span> <span class="n">runIdentity</span> <span class="o">.</span> <span class="n">l</span> <span class="p">(</span><span class="kt">Identity</span> <span class="o">.</span> <span class="n">f</span><span class="p">)</span>
+
+<span class="n">set</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">a</span>
+<span class="n">set</span> <span class="n">l</span> <span class="o">=</span> <span class="n">flip</span> <span class="p">(</span><span class="nf">\</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">over</span> <span class="n">l</span> <span class="p">(</span><span class="n">const</span> <span class="n">x</span><span class="p">)))</span>
+
+<span class="n">view</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span>
+<span class="n">view</span> <span class="n">l</span> <span class="o">=</span> <span class="n">getConst</span> <span class="o">.</span> <span class="n">l</span> <span class="kt">Const</span>
+
+<span class="n">unlens''</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">a</span><span class="p">))</span>
+<span class="n">unlens''</span> <span class="n">l</span> <span class="o">=</span> <span class="n">getCompose</span> <span class="o">.</span> <span class="n">l</span> <span class="p">(</span><span class="nf">\</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">Compose</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">id</span><span class="p">))</span>
+
+<span class="n">constlens</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">c</span>
+<span class="n">constlens</span> <span class="n">l</span> <span class="n">b</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kr">let</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span> <span class="o">=</span> <span class="n">f</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="kr">in</span>
+                                <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fst</span> <span class="o">.</span> <span class="n">df</span><span class="p">)</span> <span class="kr">where</span> 
+                                            <span class="n">f</span> <span class="o">=</span> <span class="n">unlens''</span> <span class="n">l</span>
+
+
+<span class="n">grad</span> <span class="o">::</span> <span class="kt">Num</span> <span class="n">b</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span>
+<span class="n">grad</span> <span class="n">l</span> <span class="o">=</span> <span class="p">(</span><span class="n">flip</span> <span class="p">(</span><span class="n">set</span> <span class="n">l</span><span class="p">))</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<p>Basic 1D functions and arrow/categorical combinators</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- add and dup are dual!</span>
+
+<span class="n">add'</span> <span class="o">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">a</span><span class="p">)</span> <span class="n">a</span> 
+<span class="n">add'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="nf">\</span><span class="n">ds</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">ds</span><span class="p">))</span>
+
+<span class="n">dup'</span> <span class="o">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">a</span><span class="p">)</span>
+<span class="n">dup'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="p">),</span> <span class="nf">\</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dx</span> <span class="o">+</span> <span class="n">dy</span><span class="p">)</span>
+
+<span class="n">sub'</span> <span class="o">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">a</span><span class="p">)</span> <span class="n">a</span> 
+<span class="n">sub'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">,</span> <span class="nf">\</span><span class="n">ds</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="o">-</span><span class="n">ds</span><span class="p">))</span>
+
+<span class="n">mul'</span> <span class="o">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">a</span><span class="p">)</span> <span class="n">a</span> 
+<span class="n">mul'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="nf">\</span><span class="n">dz</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">dz</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">*</span> <span class="n">dz</span><span class="p">))</span>
+
+<span class="n">recip'</span> <span class="o">::</span> <span class="kt">Fractional</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">a</span> 
+<span class="n">recip'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">x</span><span class="o">-&gt;</span> <span class="p">(</span><span class="n">recip</span> <span class="n">x</span><span class="p">,</span> <span class="nf">\</span><span class="n">ds</span> <span class="o">-&gt;</span> <span class="o">-</span> <span class="n">ds</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">))</span>
+
+<span class="n">div'</span> <span class="o">::</span> <span class="kt">Fractional</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">a</span><span class="p">)</span> <span class="n">a</span> 
+<span class="n">div'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">y</span><span class="p">,</span> <span class="nf">\</span><span class="n">d</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">d</span><span class="o">/</span><span class="n">y</span><span class="p">,</span><span class="o">-</span><span class="n">x</span><span class="o">*</span><span class="n">d</span><span class="o">/</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">y</span><span class="p">))))</span>
+
+<span class="n">sin'</span> <span class="o">::</span> <span class="kt">Floating</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">a</span>
+<span class="n">sin'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">sin</span> <span class="n">x</span><span class="p">,</span> <span class="nf">\</span><span class="n">dx</span> <span class="o">-&gt;</span> <span class="n">dx</span> <span class="o">*</span> <span class="p">(</span><span class="n">cos</span> <span class="n">x</span><span class="p">))</span>
+
+<span class="n">cos'</span> <span class="o">::</span> <span class="kt">Floating</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">a</span>
+<span class="n">cos'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">cos</span> <span class="n">x</span><span class="p">,</span> <span class="nf">\</span><span class="n">dx</span> <span class="o">-&gt;</span> <span class="o">-</span><span class="n">dx</span> <span class="o">*</span> <span class="p">(</span><span class="n">sin</span> <span class="n">x</span><span class="p">))</span>
+
+<span class="n">pow'</span> <span class="o">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Integer</span> <span class="o">-&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">a</span>
+<span class="n">pow'</span> <span class="n">n</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">x</span> <span class="o">^</span> <span class="n">n</span><span class="p">,</span> <span class="nf">\</span><span class="n">dx</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">fromInteger</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">x</span> <span class="o">^</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> 
+
+<span class="c1">--cmul :: Num a =&gt; a -&gt; Lens' a a</span>
+<span class="c1">--cmul c = lens (* c) (\x -&gt; \dx -&gt; c * dx)</span>
+
+<span class="n">exp'</span> <span class="o">::</span> <span class="kt">Floating</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">a</span>
+<span class="n">exp'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="kr">let</span> <span class="n">ex</span> <span class="o">=</span> <span class="n">exp</span> <span class="n">x</span> <span class="kr">in</span>
+                        <span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="nf">\</span><span class="n">dx</span> <span class="o">-&gt;</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">ex</span><span class="p">)</span>
+
+<span class="n">fst'</span> <span class="o">::</span> <span class="kt">Num</span> <span class="n">b</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="n">a</span>
+<span class="n">fst'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nf">\</span><span class="n">ds</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+
+<span class="n">snd'</span> <span class="o">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="n">b</span>
+<span class="n">snd'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="nf">\</span><span class="n">ds</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ds</span><span class="p">)))</span>
+
+<span class="n">swap'</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">a</span><span class="p">)</span>
+<span class="n">swap'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">((</span><span class="n">b</span><span class="p">,</span><span class="n">a</span><span class="p">),</span> <span class="nf">\</span><span class="p">(</span><span class="n">db</span><span class="p">,</span><span class="n">da</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">da</span><span class="p">,</span> <span class="n">db</span><span class="p">)))</span>
+
+<span class="n">assoc'</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="p">((</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span><span class="n">c</span><span class="p">)</span> <span class="p">(</span><span class="n">a</span><span class="p">,(</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">))</span>
+<span class="n">assoc'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="p">((</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span><span class="n">c</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">((</span><span class="n">a</span><span class="p">,(</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)),</span> <span class="nf">\</span><span class="p">(</span><span class="n">da</span><span class="p">,(</span><span class="n">db</span><span class="p">,</span><span class="n">dc</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="p">((</span><span class="n">da</span><span class="p">,</span><span class="n">db</span><span class="p">),</span><span class="n">dc</span><span class="p">))</span>
+
+<span class="n">par'</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">Lens'</span> <span class="n">c</span> <span class="n">d</span> <span class="o">-&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">c</span><span class="p">)</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+<span class="n">par'</span> <span class="n">l1</span> <span class="n">l2</span> <span class="o">=</span> <span class="n">lens''</span> <span class="n">f3</span> <span class="kr">where</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">unlens''</span> <span class="n">l1</span>
+    <span class="n">f2</span> <span class="o">=</span> <span class="n">unlens''</span> <span class="n">l2</span>
+    <span class="n">f3</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">c</span><span class="p">)</span> <span class="o">=</span> <span class="p">((</span><span class="n">b</span><span class="p">,</span><span class="n">d</span><span class="p">),</span> <span class="n">df1</span> <span class="o">***</span> <span class="n">df2</span><span class="p">)</span> <span class="kr">where</span>
+        <span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">df1</span><span class="p">)</span> <span class="o">=</span> <span class="n">f1</span> <span class="n">a</span>
+        <span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">df2</span><span class="p">)</span> <span class="o">=</span> <span class="n">f2</span> <span class="n">c</span>
+
+<span class="n">fan'</span> <span class="o">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+<span class="n">fan'</span> <span class="n">l1</span> <span class="n">l2</span> <span class="o">=</span> <span class="n">lens''</span> <span class="n">f3</span> <span class="kr">where</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">unlens''</span> <span class="n">l1</span>
+    <span class="n">f2</span> <span class="o">=</span> <span class="n">unlens''</span> <span class="n">l2</span>
+    <span class="n">f3</span> <span class="n">a</span> <span class="o">=</span> <span class="p">((</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">),</span> <span class="nf">\</span><span class="p">(</span><span class="n">db</span><span class="p">,</span><span class="n">dc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">df1</span> <span class="n">db</span> <span class="o">+</span> <span class="n">df2</span> <span class="n">dc</span><span class="p">)</span> <span class="kr">where</span>
+        <span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">df1</span><span class="p">)</span> <span class="o">=</span> <span class="n">f1</span> <span class="n">a</span>
+        <span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">df2</span><span class="p">)</span> <span class="o">=</span> <span class="n">f2</span> <span class="n">a</span>
+
+<span class="n">first'</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+<span class="n">first'</span> <span class="n">l</span> <span class="o">=</span> <span class="n">par'</span> <span class="n">l</span> <span class="n">id</span>
+
+<span class="n">second'</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">second'</span> <span class="n">l</span> <span class="o">=</span> <span class="n">par'</span> <span class="n">id</span> <span class="n">l</span>
+
+<span class="n">relu'</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Ord</span> <span class="n">a</span><span class="p">,</span> <span class="kt">Num</span> <span class="n">a</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">a</span>
+<span class="n">relu'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">frelu</span> <span class="n">x</span><span class="p">,</span> <span class="n">brelu</span> <span class="n">x</span><span class="p">)</span> <span class="kr">where</span>
+        <span class="n">frelu</span> <span class="n">x</span> <span class="o">|</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">=</span> <span class="n">x</span>
+                <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">brelu</span> <span class="n">x</span> <span class="n">dy</span> <span class="o">|</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">=</span> <span class="n">dy</span>
+                    <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="mi">0</span>
+</code></pre></div></div>
+
+<p>Some List based stuff.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">import</span> <span class="nn">Data.List</span> <span class="p">(</span><span class="nf">sort</span><span class="p">)</span>
+<span class="kr">import</span> <span class="nn">Control.Applicative</span> <span class="p">(</span><span class="kt">ZipList</span> <span class="p">(</span><span class="o">..</span><span class="p">))</span>
+
+<span class="c1">-- replicate and sum are dual!</span>
+
+<span class="n">sum'</span> <span class="o">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="n">a</span>
+<span class="n">sum'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">xs</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">sum</span> <span class="n">xs</span><span class="p">,</span> <span class="nf">\</span><span class="n">dy</span> <span class="o">-&gt;</span> <span class="n">replicate</span> <span class="p">(</span><span class="n">length</span> <span class="n">xs</span><span class="p">)</span> <span class="n">dy</span><span class="p">)</span>
+
+<span class="n">replicate'</span> <span class="o">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="n">replicate'</span> <span class="n">n</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">replicate</span> <span class="n">n</span> <span class="n">x</span><span class="p">,</span> <span class="n">sum</span><span class="p">)</span>
+
+<span class="n">repeat'</span> <span class="o">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="n">repeat'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">repeat</span> <span class="n">x</span><span class="p">,</span> <span class="n">sum</span><span class="p">)</span>
+
+<span class="n">map'</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">Lens'</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="p">[</span><span class="n">b</span><span class="p">]</span>
+<span class="n">map'</span> <span class="n">l</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">xs</span> <span class="o">-&gt;</span> <span class="kr">let</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span> <span class="o">=</span> <span class="n">unzip</span> <span class="o">.</span> <span class="n">map</span> <span class="p">(</span><span class="n">unlens''</span> <span class="n">l</span><span class="p">)</span> <span class="o">$</span> <span class="n">xs</span> <span class="kr">in</span> 
+                        <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">getZipList</span> <span class="o">.</span> <span class="p">((</span><span class="kt">ZipList</span> <span class="n">fs</span><span class="p">)</span> <span class="o">&lt;*&gt;</span><span class="p">)</span> <span class="o">.</span> <span class="kt">ZipList</span><span class="p">)</span>
+
+<span class="n">zip'</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="p">([</span><span class="n">a</span><span class="p">],</span> <span class="p">[</span><span class="n">b</span><span class="p">])</span> <span class="p">[(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)]</span>
+<span class="n">zip'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="n">as</span><span class="p">,</span><span class="n">bs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">zip</span> <span class="n">as</span> <span class="n">bs</span><span class="p">,</span> <span class="n">unzip</span><span class="p">)</span>
+
+<span class="n">unzip'</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="p">[(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)]</span> <span class="p">([</span><span class="n">a</span><span class="p">],</span> <span class="p">[</span><span class="n">b</span><span class="p">])</span>
+<span class="n">unzip'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">xs</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">unzip</span> <span class="n">xs</span><span class="p">,</span> <span class="n">uncurry</span> <span class="n">zip</span><span class="p">)</span>
+
+<span class="n">maximum'</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Num</span> <span class="n">a</span><span class="p">,</span> <span class="kt">Ord</span> <span class="n">a</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="n">a</span>
+<span class="n">maximum'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="n">x</span><span class="o">:</span><span class="n">xs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kr">let</span> <span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">bestind</span><span class="p">,</span> <span class="n">lenxs</span><span class="p">)</span> <span class="o">=</span> <span class="n">argmaxixum</span> <span class="n">x</span> <span class="mi">0</span> <span class="mi">1</span> <span class="n">xs</span> <span class="kr">in</span>
+                                <span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="nf">\</span><span class="n">dy</span> <span class="o">-&gt;</span> <span class="n">onehot</span> <span class="n">bestind</span> <span class="n">lenxs</span> <span class="n">dy</span><span class="p">)</span> <span class="kr">where</span>
+    <span class="n">argmaxixum</span> <span class="n">best</span> <span class="n">bestind</span> <span class="n">len</span> <span class="kt">[]</span> <span class="o">=</span> <span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">bestind</span><span class="p">,</span> <span class="n">len</span><span class="p">)</span> 
+    <span class="n">argmaxixum</span> <span class="n">best</span> <span class="n">bestind</span> <span class="n">curind</span> <span class="p">(</span><span class="n">x</span><span class="o">:</span><span class="n">xs</span><span class="p">)</span> <span class="o">=</span> <span class="kr">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">best</span> <span class="kr">then</span> <span class="n">argmaxixum</span> <span class="n">x</span> <span class="n">curind</span> <span class="p">(</span><span class="n">curind</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="n">xs</span> <span class="kr">else</span> <span class="n">argmaxixum</span> <span class="n">best</span> <span class="n">bestind</span> <span class="p">(</span><span class="n">curind</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="n">xs</span>  
+    <span class="n">onehot</span> <span class="n">n</span> <span class="n">m</span> <span class="n">x</span> <span class="o">|</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">=</span> <span class="kt">[]</span>
+                    <span class="o">|</span> <span class="n">n</span> <span class="o">==</span> <span class="n">m</span> <span class="o">=</span> <span class="n">x</span> <span class="o">:</span> <span class="p">(</span><span class="n">onehot</span> <span class="n">n</span> <span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">x</span><span class="p">)</span> 
+                    <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">:</span> <span class="p">(</span><span class="n">onehot</span> <span class="n">n</span> <span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="n">sort'</span> <span class="o">::</span> <span class="kt">Ord</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="n">sort'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">xs</span> <span class="o">-&gt;</span> <span class="kr">let</span> <span class="p">(</span><span class="n">sxs</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span> <span class="o">=</span> <span class="n">unzip</span> <span class="o">.</span> <span class="n">sort</span> <span class="o">$</span> <span class="n">zip</span> <span class="n">xs</span> <span class="p">[</span><span class="mi">0</span> <span class="o">..</span><span class="p">]</span> <span class="kr">in</span>
+                        <span class="p">(</span><span class="n">sxs</span><span class="p">,</span> <span class="n">desort</span> <span class="n">indices</span><span class="p">)</span> <span class="kr">where</span>
+                            <span class="n">desort</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">snd</span> <span class="o">.</span> <span class="n">unzip</span> <span class="o">.</span> <span class="n">sort</span> <span class="o">.</span> <span class="n">zip</span> <span class="n">indices</span>
+</code></pre></div></div>
+
+<p>And some functionality from HMatrix</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">import</span> <span class="nn">Numeric.LinearAlgebra</span>
+<span class="kr">import</span> <span class="nn">Numeric.LinearAlgebra.Devel</span> <span class="p">(</span><span class="nf">zipVectorWith</span><span class="p">)</span>
+<span class="kr">import</span> <span class="nn">Numeric.ADLens.Lens</span>
+<span class="c1">-- import Data.Vector as V</span>
+
+<span class="n">dot'</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Container</span> <span class="kt">Vector</span> <span class="n">t</span><span class="p">,</span> <span class="kt">Numeric</span> <span class="n">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="kt">Vector</span> <span class="n">t</span><span class="p">,</span> <span class="kt">Vector</span> <span class="n">t</span><span class="p">)</span> <span class="n">t</span>
+<span class="n">dot'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span><span class="n">v2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">v1</span> <span class="o">&lt;.&gt;</span> <span class="n">v2</span><span class="p">,</span> <span class="nf">\</span><span class="n">ds</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">scale</span> <span class="n">ds</span> <span class="n">v2</span><span class="p">,</span> <span class="n">scale</span> <span class="n">ds</span> <span class="n">v1</span><span class="p">))</span>
+
+<span class="n">mdot'</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Product</span> <span class="n">t</span><span class="p">,</span> <span class="kt">Numeric</span> <span class="n">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="kt">Matrix</span> <span class="n">t</span><span class="p">,</span> <span class="kt">Vector</span> <span class="n">t</span><span class="p">)</span> <span class="p">(</span><span class="kt">Vector</span> <span class="n">t</span><span class="p">)</span>
+<span class="n">mdot'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">#&gt;</span> <span class="n">v</span><span class="p">,</span> <span class="nf">\</span><span class="n">dv</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">outer</span> <span class="n">dv</span> <span class="n">v</span><span class="p">,</span> <span class="n">dv</span> <span class="o">&lt;#</span> <span class="n">a</span><span class="p">))</span>
+
+<span class="n">add'</span> <span class="o">::</span> <span class="kt">Additive</span> <span class="n">c</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="n">c</span>
+<span class="n">add'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span><span class="n">v2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">add</span> <span class="n">v1</span> <span class="n">v2</span><span class="p">,</span> <span class="nf">\</span><span class="n">dv</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">dv</span><span class="p">,</span> <span class="n">dv</span><span class="p">))</span>
+
+<span class="c1">-- I need konst I think?</span>
+<span class="n">sumElements'</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Container</span> <span class="kt">Vector</span> <span class="n">t</span><span class="p">,</span> <span class="kt">Numeric</span> <span class="n">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="kt">Vector</span> <span class="n">t</span><span class="p">)</span> <span class="n">t</span>
+<span class="n">sumElements'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">sumElements</span> <span class="n">v</span><span class="p">,</span> <span class="nf">\</span><span class="n">ds</span> <span class="o">-&gt;</span> <span class="n">scalar</span> <span class="n">ds</span><span class="p">)</span>
+
+<span class="n">reshape'</span> <span class="o">::</span> <span class="kt">Container</span> <span class="kt">Vector</span> <span class="n">t</span> <span class="o">=&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="kt">Vector</span> <span class="n">t</span><span class="p">)</span> <span class="p">(</span><span class="kt">Matrix</span> <span class="n">t</span><span class="p">)</span>
+<span class="n">reshape'</span> <span class="n">n</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">reshape</span> <span class="n">n</span> <span class="n">v</span><span class="p">,</span>  <span class="nf">\</span><span class="n">dm</span> <span class="o">-&gt;</span> <span class="n">flatten</span> <span class="n">dm</span><span class="p">)</span>
+
+<span class="c1">-- conjugate transpose not trace</span>
+<span class="n">tr''</span> <span class="o">::</span>  <span class="p">(</span><span class="kt">Transposable</span> <span class="n">m</span> <span class="n">mt</span><span class="p">,</span> <span class="kt">Transposable</span> <span class="n">mt</span> <span class="n">m</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="n">m</span> <span class="n">mt</span>
+<span class="n">tr''</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">tr</span> <span class="n">x</span><span class="p">,</span> <span class="nf">\</span><span class="n">dt</span> <span class="o">-&gt;</span> <span class="n">tr</span> <span class="n">dt</span><span class="p">)</span>
+
+
+<span class="n">flatten'</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Num</span> <span class="n">t</span><span class="p">,</span> <span class="kt">Container</span> <span class="kt">Vector</span> <span class="n">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="kt">Matrix</span> <span class="n">t</span><span class="p">)</span> <span class="p">(</span><span class="kt">Vector</span> <span class="n">t</span><span class="p">)</span>
+<span class="n">flatten'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">m</span> <span class="o">-&gt;</span> <span class="kr">let</span> <span class="n">s</span> <span class="o">=</span> <span class="n">fst</span> <span class="o">$</span> <span class="n">size</span> <span class="n">m</span> <span class="kr">in</span>  
+                            <span class="p">(</span><span class="n">flatten</span> <span class="n">m</span><span class="p">,</span>  <span class="nf">\</span><span class="n">dm</span> <span class="o">-&gt;</span> <span class="n">reshape</span> <span class="n">s</span> <span class="n">dm</span><span class="p">)</span>
+
+
+<span class="n">norm_2'</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Container</span> <span class="n">c</span> <span class="kt">R</span><span class="p">,</span> <span class="kt">Normed</span> <span class="p">(</span><span class="n">c</span> <span class="kt">R</span><span class="p">),</span> <span class="kt">Linear</span> <span class="kt">R</span> <span class="n">c</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">c</span> <span class="kt">R</span><span class="p">)</span> <span class="kt">R</span>
+<span class="n">norm_2'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="kr">let</span> <span class="n">nv</span> <span class="o">=</span> <span class="n">norm_2</span> <span class="n">v</span> <span class="kr">in</span> <span class="p">(</span><span class="n">nv</span><span class="p">,</span> <span class="nf">\</span><span class="n">dnv</span> <span class="o">-&gt;</span> <span class="n">scale</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dnv</span> <span class="o">/</span> <span class="n">nv</span><span class="p">)</span> <span class="n">v</span> <span class="p">)</span>
+
+
+
+<span class="n">cmap'</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Element</span> <span class="n">b</span><span class="p">,</span> <span class="kt">Container</span> <span class="kt">Vector</span> <span class="n">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="kt">Lens'</span> <span class="n">e</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="kt">Vector</span> <span class="n">e</span><span class="p">)</span> <span class="p">(</span><span class="kt">Vector</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">cmap'</span> <span class="n">l</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">c</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">cmap</span> <span class="n">f</span> <span class="n">c</span><span class="p">,</span> <span class="nf">\</span><span class="n">dc</span> <span class="o">-&gt;</span> <span class="n">zipVectorWith</span> <span class="n">f'</span> <span class="n">c</span> <span class="n">dc</span><span class="p">)</span> <span class="kr">where</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">view</span> <span class="n">l</span>
+        <span class="n">f'</span> <span class="o">=</span> <span class="n">set</span> <span class="n">l</span>
+    
+<span class="cm">{-
+maxElement' :: Container c e =&gt; Lens' (c e) e
+maxElement' = lens'' $ \v -&gt; let i = maxIndex v in (v ! i, dv -&gt; scalar 0)
+-}</span>
+
+<span class="n">det'</span> <span class="o">::</span> <span class="kt">Field</span> <span class="n">t</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="kt">Matrix</span> <span class="n">t</span><span class="p">)</span> <span class="n">t</span>
+<span class="n">det'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">m</span> <span class="o">-&gt;</span> <span class="kr">let</span> <span class="p">(</span><span class="n">minv</span><span class="p">,</span> <span class="p">(</span><span class="n">lndet</span><span class="p">,</span> <span class="n">phase</span><span class="p">))</span> <span class="o">=</span> <span class="n">invlndet</span> <span class="n">m</span> <span class="kr">in</span>
+                    <span class="kr">let</span> <span class="n">detm</span> <span class="o">=</span> <span class="n">phase</span> <span class="o">*</span> <span class="n">exp</span> <span class="n">detm</span> <span class="kr">in</span>
+                    <span class="p">(</span><span class="n">detm</span><span class="p">,</span> <span class="nf">\</span><span class="n">ds</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">scale</span> <span class="p">(</span><span class="n">ds</span> <span class="o">*</span> <span class="n">detm</span><span class="p">)</span> <span class="n">minv</span><span class="p">))</span>
+
+<span class="n">diag'</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Num</span> <span class="n">a</span><span class="p">,</span> <span class="kt">Element</span> <span class="n">a</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="kt">Vector</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="kt">Matrix</span> <span class="n">a</span><span class="p">)</span>
+<span class="n">diag'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">diag</span> <span class="n">v</span><span class="p">,</span> <span class="n">takeDiag</span><span class="p">)</span>
+
+<span class="n">takeDiag'</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Num</span> <span class="n">a</span><span class="p">,</span> <span class="kt">Element</span> <span class="n">a</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="kt">Matrix</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="kt">Vector</span> <span class="n">a</span><span class="p">)</span> 
+<span class="n">takeDiag'</span> <span class="o">=</span> <span class="n">lens''</span> <span class="o">$</span> <span class="nf">\</span><span class="n">m</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">takeDiag</span> <span class="n">m</span><span class="p">,</span> <span class="n">diag</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>In practice, I don’t think this is a very ergonomic approach without something like Conal Elliott’s<a href="https://github.com/conal/concat"> Compiling to Categories</a> plugin. You have to program in a point-free arrow style (inspired very directly by Conal’s above AD paper) which is pretty nasty IMO. The neural network code here is inscrutable. It is only a three layer neural network.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kr">import</span> <span class="nn">Numeric.ADLens.Lens</span>
+    <span class="kr">import</span> <span class="nn">Numeric.ADLens.Basic</span>
+    <span class="kr">import</span> <span class="nn">Numeric.ADLens.List</span>
+    <span class="kr">import</span> <span class="nn">Numeric.ADLens.HMatrix</span>
+    
+    
+    <span class="kr">import</span> <span class="nn">Numeric.LinearAlgebra</span>
+    
+    <span class="kr">type</span> <span class="kt">L1</span> <span class="o">=</span> <span class="kt">Matrix</span> <span class="kt">Double</span>
+    <span class="kr">type</span> <span class="kt">L2</span> <span class="o">=</span> <span class="kt">Matrix</span> <span class="kt">Double</span>
+    <span class="kr">type</span> <span class="kt">L3</span> <span class="o">=</span> <span class="kt">Matrix</span> <span class="kt">Double</span>
+    
+    
+    
+    <span class="kr">type</span> <span class="kt">Input</span> <span class="o">=</span> <span class="kt">Vector</span> <span class="kt">Double</span>
+    <span class="kr">type</span> <span class="kt">Output</span> <span class="o">=</span> <span class="kt">Vector</span> <span class="kt">Double</span>
+    <span class="kr">type</span> <span class="kt">Weights</span> <span class="o">=</span> <span class="p">(</span><span class="kt">L1</span><span class="p">,(</span><span class="kt">L2</span><span class="p">,(</span><span class="kt">L3</span><span class="p">,</span><span class="nb">()</span><span class="p">)))</span>
+    
+    <span class="kr">class</span> <span class="kt">TupleSum</span> <span class="n">a</span> <span class="kr">where</span>
+    	<span class="n">tupsum</span> <span class="o">::</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span>
+    <span class="kr">instance</span> <span class="kt">TupleSum</span> <span class="nb">()</span> <span class="kr">where</span>
+    	<span class="n">tupsum</span> <span class="kr">_</span> <span class="kr">_</span> <span class="o">=</span> <span class="nb">()</span>
+    <span class="kr">instance</span> <span class="p">(</span><span class="kt">Num</span> <span class="n">a</span><span class="p">,</span> <span class="kt">TupleSum</span> <span class="n">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">TupleSum</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="kr">where</span>
+    	<span class="n">tupsum</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">x</span><span class="p">)</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="n">tupsum</span> <span class="n">x</span> <span class="n">y</span><span class="p">)</span>
+    
+    <span class="c1">-- A dense relu neural network example</span>
+    <span class="n">swaplayer</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="p">((</span><span class="kt">Matrix</span> <span class="n">t</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="kt">Vector</span> <span class="n">t</span><span class="p">)</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="kt">Matrix</span> <span class="n">t</span><span class="p">,</span> <span class="kt">Vector</span> <span class="n">t</span><span class="p">))</span>
+    <span class="n">swaplayer</span> <span class="o">=</span> <span class="n">first'</span> <span class="n">swap'</span> <span class="o">.</span> <span class="n">assoc'</span> 
+    
+    <span class="n">mmultlayer</span> <span class="o">::</span> <span class="kt">Numeric</span> <span class="n">t</span> <span class="o">=&gt;</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="kt">Matrix</span> <span class="n">t</span><span class="p">,</span> <span class="kt">Vector</span> <span class="n">t</span><span class="p">))</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="kt">Vector</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">mmultlayer</span> <span class="o">=</span> <span class="n">second'</span> <span class="n">mdot'</span>
+    
+    <span class="n">relulayer</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="kt">Vector</span> <span class="kt">Double</span><span class="p">)</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="kt">Vector</span> <span class="kt">Double</span><span class="p">)</span>
+    <span class="n">relulayer</span> <span class="o">=</span> <span class="n">second'</span> <span class="o">$</span> <span class="n">cmap'</span> <span class="n">relu'</span>
+    
+    <span class="n">uselayer</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="p">((</span><span class="kt">Matrix</span> <span class="kt">Double</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="kt">Vector</span> <span class="kt">Double</span><span class="p">)</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="kt">Vector</span> <span class="kt">Double</span><span class="p">)</span>
+    <span class="n">uselayer</span> <span class="o">=</span> <span class="n">swaplayer</span> <span class="o">.</span> <span class="n">mmultlayer</span> <span class="o">.</span> <span class="n">relulayer</span>
+    
+    <span class="n">runNetwork</span> <span class="o">::</span> <span class="kt">Lens'</span> <span class="p">(</span><span class="kt">Weights</span><span class="p">,</span> <span class="kt">Input</span><span class="p">)</span> <span class="p">(</span><span class="nb">()</span><span class="p">,</span> <span class="kt">Output</span><span class="p">)</span>
+    <span class="n">runNetwork</span> <span class="o">=</span>  <span class="n">uselayer</span> <span class="o">.</span> <span class="n">uselayer</span> <span class="o">.</span> <span class="n">uselayer</span>
+    
+    <span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+    <span class="n">main</span> <span class="o">=</span> <span class="kr">do</span>
+       <span class="n">putStrLn</span> <span class="s">"Starting Tests"</span>
+       <span class="n">print</span> <span class="o">$</span> <span class="n">grad</span> <span class="p">(</span><span class="n">pow'</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
+       <span class="n">print</span> <span class="o">$</span> <span class="n">grad</span> <span class="p">(</span><span class="n">pow'</span> <span class="mi">4</span><span class="p">)</span> <span class="mi">1</span>
+       <span class="n">print</span> <span class="o">$</span> <span class="n">grad</span> <span class="p">(</span><span class="n">map'</span> <span class="p">(</span><span class="n">pow'</span> <span class="mi">2</span><span class="p">)</span> <span class="o">.</span> <span class="n">sum'</span><span class="p">)</span> <span class="o">$</span> <span class="p">[</span><span class="mi">1</span> <span class="o">..</span> <span class="mi">5</span><span class="p">]</span>
+       <span class="n">print</span> <span class="o">$</span> <span class="n">grad</span> <span class="p">(</span><span class="n">map'</span> <span class="p">(</span><span class="n">pow'</span> <span class="mi">4</span><span class="p">)</span> <span class="o">.</span> <span class="n">sum'</span><span class="p">)</span> <span class="o">$</span> <span class="p">[</span><span class="mi">1</span> <span class="o">..</span> <span class="mi">5</span><span class="p">]</span>
+       <span class="n">print</span> <span class="o">$</span> <span class="n">map</span> <span class="p">(</span><span class="nf">\</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">x</span> <span class="o">^</span> <span class="mi">3</span> <span class="p">)</span>  <span class="p">[</span><span class="mi">1</span> <span class="o">..</span> <span class="mi">5</span><span class="p">]</span>
+       <span class="n">l1</span> <span class="o">&lt;-</span> <span class="n">randn</span> <span class="mi">3</span> <span class="mi">4</span>
+       <span class="n">l2</span> <span class="o">&lt;-</span> <span class="n">randn</span> <span class="mi">2</span> <span class="mi">3</span>
+       <span class="n">l3</span> <span class="o">&lt;-</span> <span class="n">randn</span> <span class="mi">1</span> <span class="mi">2</span>
+       <span class="kr">let</span> <span class="n">weights</span> <span class="o">=</span> <span class="p">(</span><span class="n">l1</span><span class="p">,(</span><span class="n">l2</span><span class="p">,(</span><span class="n">l3</span><span class="p">,</span><span class="nb">()</span><span class="p">)))</span>
+       <span class="n">print</span> <span class="o">$</span> <span class="n">view</span> <span class="n">runNetwork</span> <span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">vector</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+       <span class="n">putStrLn</span> <span class="s">"The neural network gradients"</span>
+       <span class="n">print</span> <span class="o">$</span> <span class="n">set</span> <span class="n">runNetwork</span> <span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">vector</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span> <span class="p">(</span><span class="nb">()</span><span class="p">,</span> <span class="n">vector</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+</code></pre></div></div>
+
+<p>For those looking for more on automatic differentiation in Haskell:</p>
+
+<ul>
+  <li>
+    <p>Ed Kmett’s ad package <a href="http://hackage.haskell.org/package/ad">http://hackage.haskell.org/package/ad</a></p>
+  </li>
+  <li>
+    <p>Conal Elliott is making the rounds with a new take on AD (GOOD STUFF). <a href="http://conal.net/papers/essence-of-ad/">http://conal.net/papers/essence-of-ad/</a></p>
+  </li>
+  <li>
+    <p>Justin Le has been making excellent posts and has another library he’s working on. <a href="https://blog.jle.im/entry/introducing-the-backprop-library.html">https://blog.jle.im/entry/introducing-the-backprop-library.html</a></p>
+  </li>
+</ul>
+
+:ET

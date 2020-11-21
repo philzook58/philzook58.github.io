@@ -1,0 +1,192 @@
+I"�<p>Knife bot. Hide your children and wives and dogs.</p>
+
+<p>It’s a hot glued arrangement of servos and home depot painter sticks (they’re free!)</p>
+
+<p><img src="/assets/Tue-Dec-22-2015-150737-GMT-0500-EST.png" alt="" /></p>
+
+<p>We used python and numpy to solve for the needed angles as a function of the end position. We were having trouble with getting angles that are in the -np.pi/2 to np.pi/2 range until the suggestion of using [0,np.pi/2] as the initial position. In hindsight, a more robust method would be to make a loop attempting a set of reasonable starting positions, and accept them if they were attainable. Or to attempt a random set of initial conditions. Your choice. For only 2 variables, the computer will just chew that problem up. If you had 10 actuators, maybe you’d have more problems.</p>
+
+<p>Turns out random angles mode was more fun though.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from scipy import optimize
+import numpy as np
+import serial
+
+device = '/dev/cu.usbmodem1411'
+L = 1.
+
+
+def pos(theta, x):
+    rho = L* (np.sin(theta[0]) + np.sin(theta[0] + theta[1]))
+    z = L * (np.cos(theta[0]) + np.cos(theta[0] + theta[1]))
+    return np.array([rho - x[0], z - x[1]])
+
+def objective(theta,x):
+    temp = pos(theta,x)
+    return temp[0]**2+temp[1]**2
+
+
+
+
+anglerange = (-np.pi/2,np.pi/2)
+bnds = (anglerange,anglerange)
+
+#cons = [{'type':'ineq', 'fun': con},
+#        {'type':'eq', 'fun': con_real}]
+
+def cleanAngle(angle):
+    angle = (angle + np.pi) % (2 * np.pi) - np.pi
+    return angle
+
+
+def findAngles(x,y,z):
+
+    rho = np.sqrt(x**2 + y**2)
+    theta0 = np.arctan2(y,x)
+    sol = optimize.root(lambda theta: pos(theta, [rho,z] ), [0,np.pi/2])
+    #sol = optimize.minimize(lambda theta: objective(theta, [rho,z]), np.array([0,0]), method='SLSQP', bounds=bnds)
+    print sol.success
+    theta = sol.x
+    theta = cleanAngle(theta)
+    return [theta0, theta[0], theta[1]]
+
+
+ser = serial.Serial(device, 19200, timeout=1)
+
+import signal
+import sys
+def signal_handler(signal, frame):
+        print('You pressed Ctrl+C!')
+        ser.close()
+        sys.exit(0)
+signal.signal(signal.SIGINT, signal_handler)
+
+import time
+'''
+while True:
+    x = float(input('x: '))
+    y = float(input('y: '))
+    z = float(input('z: '))
+    theta = findAngles(x,y,z)
+    print(theta)
+    ser.write(str(theta[0])+ ',')
+    ser.write(str(theta[1])+ ',')
+    ser.write(str(theta[2])+ ';\r\n')
+    '''
+while True:
+    theta = np.random.rand(3) * np.pi - np.pi/2
+    ser.write(str(theta[0])+ ',')
+    ser.write(str(theta[1])+ ',')
+    ser.write(str(theta[2])+ ';\r\n')
+    time.sleep(1)
+
+
+
+ser.close()
+</code></pre></div></div>
+
+<p>This is the arduino code. Servos are on 9,10,11</p>
+
+<p>We dialed in the Zero and Ration numbers by iteratively try to get angle 0 and 90 degrees manually over the serial monitor for each servo in turn.</p>
+
+<p>The command strings is in the format</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.2,-.3,.4;
+</code></pre></div></div>
+
+<p>Comma separated angles for each motor in radians.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;Servo.h&gt;
+//#include &lt;SoftwareSerial.h&gt;
+#define RATIO 425/(PI/4)
+#define BRATIO -400/(PI/4)
+#define CRATIO -550/(PI/4)
+#define AZERO 1606
+//#define AZERO 2020
+#define BZERO 1645
+#define CZERO 2560
+#define D 200.
+
+Servo servoA, servoB, servoC;  // create servo object to control a servo
+String v = "";
+int sign = 1;
+float a = 0.;
+float b = 0.;
+float c = 0.;
+float x_temp;
+float y_temp;
+float angles[3] = {0.,0.,0.};
+
+//SoftwareSerial ser(2,3);
+
+void setup()
+{
+  servoA.attach(9);
+  servoB.attach(10);
+  servoC.attach(11);  // attaches the servo on pin 9 to the servo object
+  move(angles);
+  Serial.begin(19200);
+  //ser.begin(9600);
+}
+
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  
+  
+  if (Serial.available()) {
+    char ch = Serial.read();
+    //Serial.write(ch);
+    
+    switch(ch) {
+      case ';':
+        getAngles(v,angles);
+        for(int i = 0; i&lt;3 ; i++){
+        Serial.println(angles[i]);
+        }
+        move(angles);
+        resetV();
+      break;
+      default:
+        v += ch;
+      break;
+    }
+  }
+}
+
+void resetV() {
+  v = "";
+}
+
+void getAngles(String input, float *angles) {
+  int comma_1 = 0;
+  int comma_2 = 0;
+  for (int i = 0; i &lt; input.length(); i++) {
+    if (input.substring(i, i+1) == ",") {
+      if (comma_1 == 0) {
+        comma_1 = i;
+      } else {
+        comma_2 = i;
+      }
+    }
+  }
+  angles[0] = input.substring(0, comma_1).toFloat();
+  angles[1] = input.substring(comma_1+1, comma_2).toFloat();
+  angles[2] = input.substring(comma_2+1, input.length()).toFloat();
+}
+
+
+void move(float* angles) {
+  
+  
+
+      servoA.writeMicroseconds(floor(angles[0]*RATIO) + AZERO);
+      servoB.writeMicroseconds(floor(angles[1]*BRATIO) + BZERO);
+      servoC.writeMicroseconds(floor(angles[2]*CRATIO) + CZERO);
+    
+  }
+</code></pre></div></div>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/54QrgpVRJD4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+
+:ET

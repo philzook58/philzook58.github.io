@@ -1,0 +1,2 @@
+I" <p>The analytic center for a set of inequalities $ \phi(x)&lt;0$ is the minimizing position of $ \sum -\ln (-\phi(x)) $. In particular it is often used with linear inequalities. It gives a reasonable and easily computable for convex constraint function center of the region. The hessian at that point can give you a reasonable ellipse that approximates the region too (both interior and exterior approximation).</p>
+:ET

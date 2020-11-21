@@ -1,0 +1,2 @@
+I"r<p>We have been fighting a problem for weeks. The Serial port was just not reliable, it had sporadic. The problem ended up being a surprising thing, we were using threading to receive the messages nd checking for limit switches. It is not entirely clear why but this was totally screwing up the serial port update in an unpredictable manner. Yikes. What a disaster.</p>
+:ET

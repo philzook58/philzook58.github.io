@@ -13,7 +13,7 @@ So I'm looking at the sparse solver capabilities of python.
 
 Trying a 3d poisson problem (electrostatics of a point charge) in V=0 boundary conditions
 
-$latex \nabla^2 \phi = \delta^3 (x) $
+$ \nabla^2 \phi = \delta^3 (x) $
 
 
 
@@ -77,7 +77,7 @@ $latex \nabla^2 \phi = \delta^3 (x) $
     
 
 
-[![isosurface](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/12/isosurface-300x225.png)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/12/isosurface.png)
+[![isosurface](/assets/isosurface-300x225.png)](/assets/isosurface.png)
 
 Looks like a sphere. Cool.
 

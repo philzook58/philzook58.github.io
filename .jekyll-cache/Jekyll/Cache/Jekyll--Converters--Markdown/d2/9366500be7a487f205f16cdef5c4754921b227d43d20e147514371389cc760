@@ -1,0 +1,279 @@
+I"W�<p>Will, SUNDER! <a href="/assets/will_bw.mp4">link to vid if not working</a></p>
+
+<video controls="">
+  <source type="video/mp4" src="/assets/will_bw.mp4" />&lt;/source&gt;
+  Your browser does not support the video tag.
+</video>
+
+<p>A color version <a href="/assets/will_color.mp4">link to vid if not working</a></p>
+<video controls="">
+  <source type="video/mp4" src="/assets/will_color.mp4" />&lt;/source&gt;
+  Your browser does not support the video tag.
+</video>
+
+<p>As part of my random walk through topics, I was playing with shaders. I switched over to python because I didn’t feel like hacking out a linear solver.</p>
+
+<p>There are a number of different methods for simulating fluids. I had seen <a href="https://www.youtube.com/watch?v=766obijdpuU">Dan Piponi’s talk on youtube</a> where he describes Jos Stam’s stable fluids and thought it made it all seem pretty straightforward. Absolutely PHENOMENAL talk. Check it out! We need to</p>
+
+<ul>
+  <li>apply forces. I applied a gravitational force proportional to the total white of the image at that point</li>
+  <li>project velocity to be divergence free. This makes it an incompressible fluid. We also may want to project the velocity to be zero on boundaries. I’ve done a sketchy job of that. This requires solving a Laplace equation.  A sketch:
+    <ul>
+      <li>$ v_{orig} = v_{incomp} + \nabla w$</li>
+      <li>$ \nabla \cdot v_{incomp}=0$</li>
+      <li>$ \nabla ^2 w = \nabla \cdot v_{orig}$. Solve for w</li>
+      <li>$ v_{incomp}=v_{orig} - \nabla w$</li>
+    </ul>
+  </li>
+  <li>Advect using interpolation. Advect backwards in time. Use \(v(x,t+dt) \approx v(x-v(x)*dt,t)\) rather than \(v(x,t+dt) \approx v(x,t)+dv(x,t)*dt\) . This is intuitively related to the fact that backward Euler is more stable than forward Euler. Numpy had a very convenient function for this step <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.map_coordinates.html#scipy.ndimage.map_coordinates">https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.map_coordinates.html#scipy.ndimage.map_coordinates</a></li>
+</ul>
+
+<p>Given those basic ideas, I was flying very much by the seat of my pants. I wasn’t really following any other codes. I made this to look cool. It is not a scientific calculation. I have no idea what the error is like. With a critical eye, I can definitely spot weird oscillatory artifacts. Maybe a small diffusion term would help?</p>
+
+<p>When you solve for the corrections necessary to the velocity to make it incompressible $ \nabla \cdot v = 0$ , add the correction ONLY to the original field. As part of the incompressible solving step, you smooth out the original velocity field some. You probably don’t want that. By adding only the correction to the original field, you maintain the details in the original</p>
+
+<p>When you discretize a domain, there are vertices, edges, and faces in your discretization. It is useful to think about upon which of these you should place your field values (velocity, pressure, electric field etc). I take it as a rule of thumb that if you do the discretization naturally, you are more likely to get a good numerical method. For example, I discretized my velocity field in two ways. A very natural way is on the edges of the graph. This is because velocity is really a stand in for material flux. The x component of the velocity belongs on the x oriented edges of the graph on the y component of velocity on the y oriented edges. If you count edges, this means that they actually in an arrays with different dimensions. There are one less edges than there are vertices.</p>
+
+<p><img src="/assets/My-Drawing.png" alt="" />This grid is 6x4 of vertices, but the vx edges are 6x3, and the vy edges are 5x4. The boxes are a grid 5x3.</p>
+
+<p>For each box, we want to constrain that the sum of velocities coming out = 0. This is the discretization of the $ \nabla \cdot v = 0$ constraint. I’m basing this on my vague recollections of discrete differential geometry and some other things I’ve see. That fields sometimes live on the edges of the discretization is very important for gauge fields, if that means anything to you. I did not try it another way, so maybe it is an unnecessary complication.</p>
+
+<p>Since I needed velocities at the vertices of the grid, I do have a simple interpolation step from the vertices to the edges. So I have velocities being computed at both places. The one that is maintained between iterations lives on the vertices.</p>
+
+<p>At small resolutions the code runs at real time. For the videos I made, it is probably running ~10x slower than real time. I guarantee you can make it better. Good enough for me at the moment. An FFT based Laplace solver would be fast. Could also go into GPU land? Multigrid? Me dunno.</p>
+
+<p>I tried using cvxpy for the incompressibility solve, which gives a pleasant interface and great power of adding constraints, but wasn’t getting good results. i may have had a bug</p>
+
+<p>This is some code just to perform the velocity projection step and plot the field. I performed the projection to 0 on the boundaries using an alternating projection method (as discussed in Piponi’s talk), which is very simple and flexible but inefficient. It probably is a lot more appropriate when you have strange changing boundaries. I could have built the K matrix system to do that too.</p>
+
+<p><img src="/assets/spiral_out-1-1024x768.png" alt="" />The input velocity field is spiraling outwards (not divergence free, there is a fluid source in the center)</p>
+
+<p><img src="/assets/div_free-1024x768.png" alt="" />We project out the divergence free part of that velocity field, and project it such that the velocity does not point out at the boundary. Lookin good.</p>
+
+<p>Presolving the laplacian matrix vastly sped up each iteration. Makes sense.</p>
+
+<p>Why in gods name does sparse.kron_sum have the argument ordering it does? I had a LOT of trouble with x vs y ordering. np.meshgrid wasn’t working like I though it should. Images might have a weird convention? What a nightmare. I think it’s ok now? Looks good enough anyway.</p>
+
+<p>And here is the code to make the video. I converted to image sequence to an mp4 using ffmpeg</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+ffmpeg -i ./%06d.jpg will.mp4
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse.linalg</span> <span class="k">as</span> <span class="n">linalg</span> <span class="c1"># import spsolve
+</span>
+<span class="c1">#ffmpeg -i ./%06d.jpg will.mp4
+</span>
+<span class="c1">### Setup 
+</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">imread</span><span class="p">(</span><span class="s">'will.jpg'</span><span class="p">)</span>
+<span class="c1"># make image smaller to make run faster if you want
+#img = cv2.pyrDown(img)
+#img = cv2.pyrDown(img)
+</span>
+<span class="n">Nx</span> <span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">Ny</span> <span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
+
+
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Nx</span><span class="p">,</span><span class="n">Ny</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">Nx</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> 
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> 
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s">'ij'</span><span class="p">)</span>
+
+<span class="c1">#v[:,:,0] = -Y + 0.5
+#v[:,:,1] = X - 0.5
+</span>
+
+<span class="c1">#### Build necessary derivative and interpolation matrices
+</span>
+<span class="k">def</span> <span class="nf">build_grad</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="c1"># builds N-1 x N finite difference matrix 
+</span>    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">sparse</span><span class="p">.</span><span class="n">diags</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">shape</span><span class="o">=</span> <span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">))</span>
+
+<span class="c1"># gradient operators
+</span><span class="n">gradx</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">kron</span><span class="p">(</span><span class="n">build_grad</span><span class="p">(</span><span class="n">Nx</span><span class="p">),</span> <span class="n">sparse</span><span class="p">.</span><span class="n">identity</span><span class="p">(</span><span class="n">Ny</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">grady</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">kron</span><span class="p">(</span><span class="n">sparse</span><span class="p">.</span><span class="n">identity</span><span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">build_grad</span><span class="p">(</span><span class="n">Ny</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">build_K</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="c1"># builds N-1 x N - 1   K second defivative matrix
+</span>    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">2</span><span class="p">)])</span>
+    <span class="n">diags</span> <span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">sparse</span><span class="p">.</span><span class="n">diags</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">diags</span> <span class="p">)</span>
+
+<span class="c1"># Laplacian operator . Zero dirichlet boundary conditions
+# why the hell is this reversed? Sigh.
+</span><span class="n">K</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">kronsum</span><span class="p">(</span><span class="n">build_K</span><span class="p">(</span><span class="n">Ny</span><span class="p">),</span><span class="n">build_K</span><span class="p">(</span><span class="n">Nx</span><span class="p">))</span>
+<span class="n">Ksolve</span> <span class="o">=</span> <span class="n">linalg</span><span class="p">.</span><span class="n">factorized</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">build_interp</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span><span class="p">])</span>
+    <span class="n">diags</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">sparse</span><span class="p">.</span><span class="n">diags</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">diags</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span> <span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">))</span>
+<span class="n">interpy</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">kron</span><span class="p">(</span><span class="n">sparse</span><span class="p">.</span><span class="n">identity</span><span class="p">(</span><span class="n">Nx</span><span class="p">),</span> <span class="n">build_interp</span><span class="p">(</span><span class="n">Ny</span><span class="p">))</span>
+<span class="n">interpx</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">kron</span><span class="p">(</span><span class="n">build_interp</span><span class="p">(</span><span class="n">Nx</span><span class="p">),</span> <span class="n">sparse</span><span class="p">.</span><span class="n">identity</span><span class="p">(</span><span class="n">Ny</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">projection_pass</span><span class="p">(</span><span class="n">vx</span><span class="p">,</span><span class="n">vy</span><span class="p">):</span>
+    <span class="c1"># alternating projection? Not necessary. In fact stupid. but easy.
+</span>    <span class="s">'''
+    vx[0,:] = 0
+    vx[-1,:] = 0
+    vy[:,0] = 0
+    vy[:,-1] = 0
+    '''</span>
+    <span class="n">vx</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span> <span class="o">/=</span> <span class="mf">2.</span>
+    <span class="n">vx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">/=</span> <span class="mf">2.</span>
+    <span class="n">vy</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="mf">2.</span>
+    <span class="n">vy</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="mf">2.</span>
+
+    <span class="n">div</span> <span class="o">=</span> <span class="n">gradx</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vx</span><span class="p">.</span><span class="n">flatten</span><span class="p">())</span> <span class="o">+</span> <span class="n">grady</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vy</span><span class="p">.</span><span class="n">flatten</span><span class="p">())</span> <span class="c1">#calculate divergence
+</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">Ksolve</span><span class="p">(</span><span class="n">div</span><span class="p">.</span><span class="n">flatten</span><span class="p">())</span><span class="c1">#spsolve(K, div.flatten()) #solve potential
+</span>
+    <span class="k">return</span> <span class="n">gradx</span><span class="p">.</span><span class="n">T</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span><span class="n">Ny</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">grady</span><span class="p">.</span><span class="n">T</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">300</span><span class="p">):</span>
+    <span class="c1">#while True: #
+</span>    <span class="n">v</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">norm</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">*</span> <span class="mf">0.001</span> <span class="c1"># gravity force
+</span>
+    <span class="c1"># interpolate onto edges
+</span>    <span class="n">vx</span> <span class="o">=</span> <span class="n">interpy</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">].</span><span class="n">flatten</span><span class="p">()).</span><span class="n">reshape</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span><span class="n">Ny</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">vy</span> <span class="o">=</span> <span class="n">interpx</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">].</span><span class="n">flatten</span><span class="p">()).</span><span class="n">reshape</span><span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="p">)</span>
+    <span class="c1"># project incomperessible
+</span>
+    <span class="n">dvx</span><span class="p">,</span> <span class="n">dvy</span> <span class="o">=</span> <span class="n">projection_pass</span><span class="p">(</span><span class="n">vx</span><span class="p">,</span><span class="n">vy</span><span class="p">)</span>
+
+    <span class="c1">#interpolate change back to original grid
+</span>    <span class="n">v</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="n">interpy</span><span class="p">.</span><span class="n">T</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dvx</span><span class="p">.</span><span class="n">flatten</span><span class="p">()).</span><span class="n">reshape</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span><span class="n">Ny</span><span class="p">)</span>
+    <span class="n">v</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-=</span> <span class="n">interpx</span><span class="p">.</span><span class="n">T</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dvy</span><span class="p">.</span><span class="n">flatten</span><span class="p">()).</span><span class="n">reshape</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span><span class="n">Ny</span><span class="p">)</span>
+
+    <span class="c1">#advect everything
+</span>    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">stack</span><span class="p">(</span> <span class="p">[(</span><span class="n">X</span> <span class="o">-</span> <span class="n">v</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span><span class="o">*</span><span class="n">Nx</span><span class="p">,</span> <span class="p">(</span><span class="n">Y</span> <span class="o">-</span> <span class="n">v</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span><span class="o">*</span><span class="n">Ny</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">coords</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">img</span><span class="p">[:,:,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">ndimage</span><span class="p">.</span><span class="n">map_coordinates</span><span class="p">(</span><span class="n">img</span><span class="p">[:,:,</span><span class="n">j</span><span class="p">],</span> <span class="n">coords</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">'wrap'</span><span class="p">)</span>
+    <span class="n">v</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ndimage</span><span class="p">.</span><span class="n">map_coordinates</span><span class="p">(</span><span class="n">v</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">'wrap'</span><span class="p">)</span>
+    <span class="n">v</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ndimage</span><span class="p">.</span><span class="n">map_coordinates</span><span class="p">(</span><span class="n">v</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">'wrap'</span><span class="p">)</span>
+
+    <span class="n">cv2</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="s">'image'</span><span class="p">,</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="n">cv2</span><span class="p">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">f'will_anim3/</span><span class="si">{</span><span class="n">i</span><span class="p">:</span><span class="mi">06</span><span class="si">}</span><span class="s">.jpg'</span><span class="p">,</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s">' '</span><span class="p">):</span>
+       <span class="k">break</span>
+
+<span class="n">cv2</span><span class="p">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<p>Code to produce the velocity graphs above.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">import</span> <span class="nn">cvxpy</span> <span class="k">as</span> <span class="n">cvx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">spsolve</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">Nx</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">Ny</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="c1"># velcitites live on the edges
+</span><span class="n">vx</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Nx</span><span class="p">,</span><span class="n">Ny</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">vy</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">Nx</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> 
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> 
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s">'ij'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">X</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">vx</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span>
+<span class="n">vy</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="o">-</span><span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">:,:]</span>  <span class="o">+</span> <span class="n">Y</span><span class="p">[</span><span class="mi">1</span><span class="p">:,:]</span>
+
+
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Nx</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+<span class="n">diags</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">grad</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">diags</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">diags</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">Nx</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">grad</span><span class="p">.</span><span class="n">toarray</span><span class="p">())</span>
+
+<span class="n">gradx</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">kron</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="n">sparse</span><span class="p">.</span><span class="n">identity</span><span class="p">(</span><span class="n">Ny</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Ny</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Ny</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+<span class="n">diags</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">grad</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">diags</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">diags</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span> <span class="p">(</span><span class="n">Ny</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">grad</span><span class="p">.</span><span class="n">toarray</span><span class="p">())</span>
+
+<span class="n">grady</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">kron</span><span class="p">(</span><span class="n">sparse</span><span class="p">.</span><span class="n">identity</span><span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">grad</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">gradx</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">2</span><span class="p">)])</span>
+<span class="n">diags</span> <span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">Kx</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">diags</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">diags</span> <span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Ny</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Ny</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Ny</span><span class="o">-</span><span class="mi">2</span><span class="p">)])</span>
+<span class="n">diags</span> <span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">Ky</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">diags</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">diags</span> <span class="p">)</span>
+
+<span class="n">K</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">kronsum</span><span class="p">(</span><span class="n">Ky</span><span class="p">,</span><span class="n">Kx</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:],</span> <span class="n">Y</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:],</span> <span class="n">vx</span><span class="p">[</span><span class="mi">1</span><span class="p">:,:]</span> <span class="o">+</span> <span class="n">vx</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:],</span> <span class="n">vy</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">vy</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">60</span><span class="p">):</span>
+    <span class="n">div</span> <span class="o">=</span> <span class="n">gradx</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vx</span><span class="p">.</span><span class="n">flatten</span><span class="p">())</span> <span class="o">+</span> <span class="n">grady</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vy</span><span class="p">.</span><span class="n">flatten</span><span class="p">())</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"div size"</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">norm</span><span class="p">(</span><span class="n">div</span><span class="p">))</span>
+    <span class="n">div</span> <span class="o">=</span> <span class="n">div</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">w</span> <span class="o">=</span> <span class="n">spsolve</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">div</span><span class="p">.</span><span class="n">flatten</span><span class="p">())</span>
+
+    <span class="n">vx</span> <span class="o">-=</span> <span class="n">gradx</span><span class="p">.</span><span class="n">T</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span><span class="n">Ny</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">vy</span> <span class="o">-=</span> <span class="n">grady</span><span class="p">.</span><span class="n">T</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="p">)</span>
+
+    <span class="c1"># alternating projection? Not necessary. In fact stupid. but easy.
+</span>    <span class="n">div</span> <span class="o">=</span> <span class="n">gradx</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vx</span><span class="p">.</span><span class="n">flatten</span><span class="p">())</span> <span class="o">+</span> <span class="n">grady</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vy</span><span class="p">.</span><span class="n">flatten</span><span class="p">())</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"new div size"</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">norm</span><span class="p">(</span><span class="n">div</span><span class="p">))</span>
+    <span class="n">vx</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">vx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">vy</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">vy</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">div</span> <span class="o">=</span> <span class="n">gradx</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vx</span><span class="p">.</span><span class="n">flatten</span><span class="p">())</span> <span class="o">+</span> <span class="n">grady</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vy</span><span class="p">.</span><span class="n">flatten</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"new div size"</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">norm</span><span class="p">(</span><span class="n">div</span><span class="p">))</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">vx</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:],</span> <span class="n">Y</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:],</span> <span class="n">vx</span><span class="p">[</span><span class="mi">1</span><span class="p">:,:]</span> <span class="o">+</span> <span class="n">vx</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:],</span> <span class="n">vy</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">vy</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>I should give a particle in cell code a try</p>
+
+<h3 id="links">Links</h3>
+
+<ul>
+  <li><a href="https://github.com/PavelDoGreat/WebGL-Fluid-Simulation">https://github.com/PavelDoGreat/WebGL-Fluid-Simulation</a></li>
+  <li><a href="http://developer.download.nvidia.com/books/HTML/gpugems/gpugems_ch38.html">http://developer.download.nvidia.com/books/HTML/gpugems/gpugems_ch38.html</a></li>
+  <li><a href="https://www.youtube.com/watch?v=766obijdpuU">https://www.youtube.com/watch?v=766obijdpuU</a></li>
+  <li><a href="https://pdfs.semanticscholar.org/87ad/c1196efee7d65338966f051c61bb4985421f.pdf">https://pdfs.semanticscholar.org/87ad/c1196efee7d65338966f051c61bb4985421f.pdf</a> - Jos Stam stable fluid slides</li>
+  <li><a href="http://taichi.graphics/links/">http://taichi.graphics/links/</a></li>
+  <li><a href="https://benedikt-bitterli.me/gpu-fluid.html">https://benedikt-bitterli.me/gpu-fluid.html</a></li>
+</ul>
+
+<p>Edit:</p>
+
+<p>GregTJ found this post useful and made an even better simulator! Nice</p>
+
+<p>()[https://www.reddit.com/r/Python/comments/fkk7aa/fluid_simulation_in_python/]</p>
+
+<p><a href="https://github.com/GregTJ/stable-fluids">https://github.com/GregTJ/stable-fluids</a></p>
+
+:ET

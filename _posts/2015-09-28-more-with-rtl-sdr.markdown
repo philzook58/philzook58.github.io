@@ -59,7 +59,7 @@ I was confused for a long time by this. The example code for spectrogram doesn't
     plt.show()
 
 
-[![figure_1](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/09/figure_1-300x225.png)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/09/figure_1.png)
+[![figure_1](/assets/figure_1-300x225.png)](/assets/figure_1.png)
 
 
 

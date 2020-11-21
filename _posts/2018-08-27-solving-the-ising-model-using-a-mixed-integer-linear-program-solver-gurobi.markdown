@@ -27,27 +27,27 @@ Interesting Connection: Quantum Annealing (like the[ D-Wave](https://www.dwavesy
 
 So how do we encode the Ising model?
 
-Each spin is a binary variable $latex s_i \in {0,1}$
+Each spin is a binary variable $ s_i \in {0,1}$
 
-We also introduce a variable for every edge. which we will constrain to actually be the product of the spins. $latex e_{ij} \in {0,1}$. This is the big trick.
+We also introduce a variable for every edge. which we will constrain to actually be the product of the spins. $ e_{ij} \in {0,1}$. This is the big trick.
 
 We can compute the And/Multiplication (they coincide for 0/1 binary variables) of the spins using a couple linear constraints. I think this does work for the 4 cases of the two spins.
 
-$latex e_{ij} \ge s_i +s_j - 1$
+$ e_{ij} \ge s_i +s_j - 1$
 
-$latex e_{ij} \le s_j $
+$ e_{ij} \le s_j $
 
-$latex e_{ij} \le s_i $
+$ e_{ij} \le s_i $
 
 The xor is usually what we care about for the Ising model, we want aligned vs unaligned spins to have different energy. It will have value 1 if they are aligned and 0 if they are anti-aligned. This is a linear function of the spins and the And.
 
-$latex s_i \oplus s_j = s_i + s_j - 2 e_{ij}$
+$ s_i \oplus s_j = s_i + s_j - 2 e_{ij}$
 
 Then the standard Hamiltonian is
 
-$latex H=\sum B_i s_i + \sum J_{ij} (s_i + s_j - 2 e_{ij})$
+$ H=\sum B_i s_i + \sum J_{ij} (s_i + s_j - 2 e_{ij})$
 
-Well, modulo some constant offset. You may prefer making spins $latex \pm 1$, but that leads to basically the same Hamiltonian.
+Well, modulo some constant offset. You may prefer making spins $ \pm 1$, but that leads to basically the same Hamiltonian.
 
 The Gurobi python package actually let's us directly ask for AND constraints, which means I don't actually have to code much of this.
 
@@ -155,7 +155,7 @@ Here we've got the basic functionality. Getting 10,000 takes about a minute. Thi
 
 Here's the ground antiferromagnetic state. Cute.
 
-[![](http://philzucker2.nfshost.com/wp-content/uploads/2018/08/antiferromagnetic.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/08/antiferromagnetic.png)
+[![](/assets/antiferromagnetic.png)](/assets/antiferromagnetic.png)
 
 
 

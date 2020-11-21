@@ -1,0 +1,35 @@
+I"�<p>1.</p>
+
+<p>Redshift from gravity. Fire a photon up. Convert into mass and let mass drop. If energy conserved then you gain mgh of energy where $ m = \hbar \omega’$, the freqeuncy at the top. Hence you have $ \hbar \omega = m+mgh=\hbar \omega (1+gh)$.</p>
+
+<p>The frequency at the top is reduced by (1+gh), i.e. it is redder.</p>
+
+<ol>
+  <li>Uniform gravity raises no tides? That’s odd. naively I would think that the water would flow towards the lowest energy configuration, which would be at the bottom of the external potential. On the total gravitational potential (+ centrifugal force) constant surface. Which does get distorted by an external field.</li>
+</ol>
+
+<p>Oh. I see. Looking at the text, the earth would be freely falling as well.  Wow. That’s an important point. The earth is falling towards the moon at exactly the rate of free fall. It’s the differences of force that cause the tides. A little stronger on the front, a little weaker on the back. This is sort of the same thing as a draping cloth in a falling elevator.</p>
+
+<p>7.</p>
+
+<p>Can’t raise an lower $ \Lambda$ using the metric. They are coordinate transformations. I believe upper indices are components of vectors and lower indices are components of 1-forms. $ dx^\mu \partial_\mu $ and $ \partial_\mu \phi$</p>
+
+<p>$ x = r\cos(\theta)$</p>
+
+<p>$ y = r\sin(\theta)$</p>
+
+<p>This matrix will convert the gradient into new coordinates</p>
+
+<p>$ \begin{bmatrix} \cos{\theta} &amp; -r\sin(\theta) \ \sin(\theta) &amp; r\cos(\theta) \end{bmatrix}$</p>
+
+<p>$ \theta = \arctan(\frac{y}{x})$</p>
+
+<p>$ r = \sqrt{x^2+y^2}$</p>
+
+<p>This one will convert vectors into new coordinates</p>
+
+<p>$ \begin{bmatrix} x/r&amp; y/r\ -y/r^2 &amp;x/r^2\end{bmatrix}$</p>
+
+<p>Multiplying the two should give an identity matrix, since inner product should stay invariant under coordinate change. Quite miraculously they do. Try multiplying the two matrices. Nice.</p>
+
+:ET

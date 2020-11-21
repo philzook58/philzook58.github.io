@@ -33,7 +33,7 @@ From one perspective, categories are just another algebraic structure, like [gro
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2020/05/monoidjourney-640x1024.png)
+![](/assets/monoidjourney-640x1024.png)
 
 
 
@@ -47,7 +47,37 @@ A monoid is a thing that has an associative operation with a unit. Addition and 
 
 
 
-[gist https://gist.github.com/philzook58/77d5734faca0eea26e7d40e11c0e7853#file-monoid-py]
+
+```python
+class PlusIntMonoid(int):
+    def mplus(self,b):
+        return self + b
+    def mzero():
+        return 0
+
+class TimesIntMonoid(int):
+    def mplus(self,b):
+        return self * b
+    def mzero():
+        return 1
+
+class ListMonoid(list):
+    def mplus(self,b):
+        return self + b
+    def mzero():
+        return []
+
+class UnionMonoid(set):
+    def mplus(self,b):
+        return self.union(b)
+    def mzero():
+        return set()
+
+ListMonoid([1,2]).mplus(ListMonoid([1,2])) # [1,2,1,2]
+UnionMonoid({1,2}).mplus(UnionMonoid({1,4})) # {1,2,4}
+TimesIntMonoid(3).mplus(TimesIntMonoid.mzero()) # 3
+```
+
 
 
 
@@ -75,7 +105,51 @@ Continuing with our representation from [previous](http://www.philipzucker.com/c
 
 
 
-[gist https://gist.github.com/philzook58/77d5734faca0eea26e7d40e11c0e7853#file-monoidcat-py]
+
+```python
+class PlusIntCat(int):
+    def compose(self,b):
+        return self + b
+    def idd():
+        return 0
+    def dom(self):
+        return () # always return (), the only object
+    def cod(self):
+        return ()
+
+class TimesIntCat(int):
+    def compose(self,b):
+        return self * b
+    def idd():
+        return 1
+    def dom(self):
+        return ()
+    def cod(self):
+        return ()
+
+class ListCat(int):
+    def compose(self,b):
+        return self + b
+    def idd():
+        return []
+    def dom(self):
+        return ()
+    def cod(self):
+        return ()
+
+class UnionSetCat(set):
+    def compose(self,b):
+        return self.union(b)
+    def idd(self,b):
+        return set()
+    def dom(self):
+        return ()
+    def cod(self):
+        return ()
+    
+PlusIntCat(3).compose(PlusIntCat.idd()) # 3
+```
+
 
 
 
@@ -89,7 +163,7 @@ Some monoids are also groups if there is a natural inverse operation. The intege
 
 
 
-Similarly groups can be thought of as a category with one object, with the additional requirement that every morphism is invertible, that there is always a $latex f^{-1}$ such that  $latex  f \circ f^{-1} = id$.
+Similarly groups can be thought of as a category with one object, with the additional requirement that every morphism is invertible, that there is always a $ f^{-1}$ such that  $  f \circ f^{-1} = id$.
 
 
 
@@ -103,7 +177,31 @@ Sympy [has groups](https://docs.sympy.org/latest/modules/combinatorics/index.htm
 
 
 
-[gist https://gist.github.com/philzook58/77d5734faca0eea26e7d40e11c0e7853#file-sympygroup-py]
+
+```python
+from sympy.combinatorics.free_groups import free_group, vfree_group, xfree_group
+from sympy.combinatorics.fp_groups import FpGroup, CosetTable, coset_enumeration_r
+
+
+def fp_group_cat(G, catname):
+    # A Category generator that turns a finitely presented group into categorical python class
+    Cat = type(catname, (), vars(G))
+    def cat_init(self,a):
+        self.f = a
+    Cat.__init__ = cat_init
+    Cat.compose = lambda self,b : G.reduce(self.f * b.f)
+    Cat.dom = lambda : ()
+    Cat.cod = lambda : ()
+    Cat.idd = lambda : Cat(G.identity)
+    return Cat
+
+F, a, b = free_group("a, b")
+G = FpGroup(F, [a**2, b**3, (a*b)**4])
+MyCat = fp_group_cat(G, "MyCat")
+MyCat(a*a).compose(MyCat.idd())
+MyCat.dom()
+```
+
 
 
 
@@ -125,13 +223,33 @@ We can simplify the power of a category in a different direction. Instead of hav
 
 
 
-A category with many objects but at most a single morphism between a pair of them obeys the axioms of a [preorder](https://en.wikipedia.org/wiki/Preorder). In categorical terminology this is sometimes called a [thin category](https://en.wikipedia.org/wiki/Posetal_category) Any actual order like like $latex \le$ on numbers is also a preorder, but preorders have slightly weaker requirements. Here is a categorical representation of the ordering on integers (although really the same implementation will work for any python type that implements <= and == )
+A category with many objects but at most a single morphism between a pair of them obeys the axioms of a [preorder](https://en.wikipedia.org/wiki/Preorder). In categorical terminology this is sometimes called a [thin category](https://en.wikipedia.org/wiki/Posetal_category) Any actual order like like $ \le$ on numbers is also a preorder, but preorders have slightly weaker requirements. Here is a categorical representation of the ordering on integers (although really the same implementation will work for any python type that implements <= and == )
 
 
 
 
 
-[gist https://gist.github.com/philzook58/77d5734faca0eea26e7d40e11c0e7853#file-intorder-py]
+
+```python
+class IntOrderCat():
+    def __init__(self, dom, cod):
+        assert(dom <= cod)
+        self.cod = cod
+        self.dom = dom
+        self.f = ()
+    def idd(n):
+        return IntOrderCat(n,n)
+    def compose(f,g):
+        assert( f.dom == g.cod )
+        return IntOrderCat( g.dom, f.cod )
+    def __repr__(self):
+        return f"[{self.dom} <= {self.cod}]"
+    
+# our convention for the order of composition feels counterintuitive here.
+IntOrderCat(3,5).compose(IntOrderCat(2,3)) # [2 <= 5]
+IntOrderCat.idd(3) # [3 <= 3]
+```
+
 
 
 
@@ -143,7 +261,24 @@ An example of a partial order is the subset relationship, which we can represent
 
 
 
-[gist https://gist.github.com/philzook58/77d5734faca0eea26e7d40e11c0e7853#file-subset-py]
+
+```python
+class SubSetCat():
+    def __init__(self,dom,cod):
+        assert( dom.issubset(cod))
+        self.cod = cod
+        self.dom = dom
+    def compose(f,g):
+        assert(f.dom == g.cod)
+        return SubSetCat(g.dom, f.cod)
+    def idd(s):
+        return SubSetCat(s,s)
+    def __repr__(self):
+        return f"[{self.dom} <= {self.cod}]"
+
+SubSetCat(  {1,2,3} , {1,2,3,7} ).compose(SubSetCat( {1,2} , {1,2,3} )) # [{1, 2} <= {1, 2, 3, 7}]
+```
+
 
 
 

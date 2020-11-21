@@ -148,9 +148,14 @@ We can directly use the definition of relations as a set of tuples with the abov
 
 
     
-    <code>type Rel a b = [(a,b)]
-    type SetRel a b = Set (a,b)
-    type FunRel a b = (a,b) -> Bool</code>
+    
+```haskell
+
+type Rel a b = [(a,b)]
+type SetRel a b = Set (a,b)
+type FunRel a b = (a,b) -> Bool
+```
+
 
 
 
@@ -166,8 +171,13 @@ But we also have the option to "curry"  our relation representations, sort of mi
 
 
     
-    <code>type List a b = a -> [b] -- Commonly seen type  in List monad/logic programming
-    type MapRel a b = Map a (Set b)</code>
+    
+```haskell
+
+type List a b = a -> [b] -- Commonly seen type  in List monad/logic programming
+type MapRel a b = Map a (Set b)
+```
+
 
 
 
@@ -199,9 +209,14 @@ I'm also taking the restriction that we're working in bounded enumerable spaces 
 
 
     
-    <code>type BEnum = (Enum a, Bounded a) 
-    enumAll :: (BEnum a) => [a]
-    enumAll = [minBound .. maxBound]</code>
+    
+```haskell
+
+type BEnum = (Enum a, Bounded a) 
+enumAll :: (BEnum a) => [a]
+enumAll = [minBound .. maxBound]
+```
+
 
 
 
@@ -217,7 +232,7 @@ I'm also taking the restriction that we're working in bounded enumerable spaces 
 
 
 
-Functions can be thought of as relations with the special property that for each left part of the tuple, there is exactly one right side and every possible left side appears. The relation corresponding to a function $latex f$ looks like $latex F = \{(x,y) | x \in X, y \in Y, y = f (x)\}$.
+Functions can be thought of as relations with the special property that for each left part of the tuple, there is exactly one right side and every possible left side appears. The relation corresponding to a function $ f$ looks like $$ F = \{(x,y) \vert x \in X, y \in Y, y = f (x)\}$$.
 
 
 
@@ -225,8 +240,13 @@ Functions can be thought of as relations with the special property that for each
 
 
     
-    <code>tabulate :: (BEnum a) => (a -> b) -> Rel a b
-    tabulate f = [(x, f x) | x <- enumAll]</code>
+    
+```haskell
+
+tabulate :: (BEnum a) => (a -> b) -> Rel a b
+tabulate f = [(x, f x) | x <- enumAll]
+```
+
 
 
 
@@ -242,11 +262,16 @@ There is a natural and slightly clever lifting of function composition to relati
 
 
     
-    <code>rcompose :: Eq b => Rel b c -> Rel a b -> Rel a c
-    rcompose xs ys = [ (a,c)  | (a, b) <- ys, (b', c) <- xs, b' == b]
     
-    rid :: (Enum a, Bounded a) => Rel a a
-    rid = tabulate id</code>
+```haskell
+
+rcompose :: Eq b => Rel b c -> Rel a b -> Rel a c
+rcompose xs ys = [ (a,c)  | (a, b) <- ys, (b', c) <- xs, b' == b]
+
+rid :: (Enum a, Bounded a) => Rel a a
+rid = tabulate id
+```
+
 
 
 
@@ -270,25 +295,30 @@ We can lift the common arrow/categorical combinators up to relations for example
 
 
     
-    <code>-- arrow/category combinators
-    rfan :: Eq a => Rel a b -> Rel a c -> Rel a (b,c) 
-    rfan f g = [ (a, (b,c)) | (a,b) <- f, (a',c) <- g, a == a']
     
-    rfst :: BEnum (a,b) => Rel (a,b) a 
-    rfst = tabulate fst 
-    
-    rsnd :: BEnum (a,b) => Rel (a,b) b 
-    rsnd = tabulate snd
-    
-    rleft :: (Enum a, Bounded a) => Rel a (Either a b) 
-    rleft = tabulate Left
-    
-    rright :: BEnum b => Rel b (Either a b) 
-    rright = tabulate Right
-    
-    reither :: Eq a => Rel a c -> Rel b c -> Rel (Either a b) c 
-    reither f g = [(Left a, c) | (a,c) <- f] ++ [(Right b, c) | (b,c) <- g] 
-    </code>
+```haskell
+
+-- arrow/category combinators
+rfan :: Eq a => Rel a b -> Rel a c -> Rel a (b,c) 
+rfan f g = [ (a, (b,c)) | (a,b) <- f, (a',c) <- g, a == a']
+
+rfst :: BEnum (a,b) => Rel (a,b) a 
+rfst = tabulate fst 
+
+rsnd :: BEnum (a,b) => Rel (a,b) b 
+rsnd = tabulate snd
+
+rleft :: (Enum a, Bounded a) => Rel a (Either a b) 
+rleft = tabulate Left
+
+rright :: BEnum b => Rel b (Either a b) 
+rright = tabulate Right
+
+reither :: Eq a => Rel a c -> Rel b c -> Rel (Either a b) c 
+reither f g = [(Left a, c) | (a,c) <- f] ++ [(Right b, c) | (b,c) <- g] 
+
+```
+
 
 
 
@@ -304,13 +334,18 @@ With these combinators, you have access to many functions on basic non-recursive
 
 
     
-    <code>--- goofy inefficient definitions
-    dup :: (Eq a, Eq b, BEnum a, BEnum b) => Rel a (a,a)
-    dup = rfan rid rid
-    swap ::(Eq a, Eq b, BEnum (a,b)) => Rel (a,b) (b,a)
-    swap = rfan rsnd rfst
-    par :: (Eq a, Eq c, BEnum a, BEnum c) => Rel a b -> Rel c d -> Rel (a,c) (b,d) 
-    par f g =  rfan (rcompose f rfst) (rcompose g rsnd)</code>
+    
+```haskell
+
+--- goofy inefficient definitions
+dup :: (Eq a, Eq b, BEnum a, BEnum b) => Rel a (a,a)
+dup = rfan rid rid
+swap ::(Eq a, Eq b, BEnum (a,b)) => Rel (a,b) (b,a)
+swap = rfan rsnd rfst
+par :: (Eq a, Eq c, BEnum a, BEnum c) => Rel a b -> Rel c d -> Rel (a,c) (b,d) 
+par f g =  rfan (rcompose f rfst) (rcompose g rsnd)
+```
+
 
 
 
@@ -350,7 +385,7 @@ The ordinary row times column matrix multiplication corresponds to relation comp
 
 
 
-Another interesting way of looking at it is that we are replacing the summation binding form $latex \sum_i$ with the logical  quantifier $latex \exists_i$. Both introduce a scoped "dummy variable"  i and have a lot of syntactic similarity. Other related forms include $latex \lambda i$, $latex \forall i$, $latex \int di$,  $latex \max_i$ .
+Another interesting way of looking at it is that we are replacing the summation binding form $ \sum_i$ with the logical  quantifier $ \exists_i$. Both introduce a scoped "dummy variable"  i and have a lot of syntactic similarity. Other related forms include $ \lambda i$, $ \forall i$, $ \int di$,  $ \max_i$ .
 
 
 
@@ -358,7 +393,7 @@ Another interesting way of looking at it is that we are replacing the summation 
 
 
 
-There is also an analog of the point free relation algebra in linear algebra. Linear algebra has the most widely used point free notation in the world, matrix notation. Consider the expressions $latex Ax=b$ and $latex X = ABC$ as compared to $latex \sum_j A_{ij} x_j = b_i$ and $latex X_{il} = \sum_{jk} A_{ij} B_{jk} C_{kl} $. Matrix notation is SO much better for certain calculations. Other pieces of the matrix notation include transpose, inverse, Kronecker product, the Khatri-Rao product, and Hadamard product. Their properties are more clear in the index free form in my opinion. I believe even massive tensor expressions can be written index free using these operators. There are also analogies to be drawn between the [graphical notations in these different fields](http://math.ucr.edu/home/baez/rosetta.pdf).
+There is also an analog of the point free relation algebra in linear algebra. Linear algebra has the most widely used point free notation in the world, matrix notation. Consider the expressions $ Ax=b$ and $ X = ABC$ as compared to $ \sum_j A_{ij} x_j = b_i$ and $ X_{il} = \sum_{jk} A_{ij} B_{jk} C_{kl} $. Matrix notation is SO much better for certain calculations. Other pieces of the matrix notation include transpose, inverse, Kronecker product, the Khatri-Rao product, and Hadamard product. Their properties are more clear in the index free form in my opinion. I believe even massive tensor expressions can be written index free using these operators. There are also analogies to be drawn between the [graphical notations in these different fields](http://math.ucr.edu/home/baez/rosetta.pdf).
 
 
 
@@ -398,14 +433,18 @@ Unlike functions, Relations are always "invertible".  We call this the converse 
 
 
     
-    <code>converse :: Rel a b -> Rel b a
-    converse = [(b,a) | (a,b) <- r]
     
-    untrans :: Rel a (b,c) -> Rel (a,b) c
-    untrans r = [((a,b),c)  | (a, (b,c)) <- r]
-    
-    trans :: Rel (a,b) c -> Rel a (b, c)
-    trans r = [(a, (b,c))| ((a,b),c)  <- r]</code>
+```haskell
+
+converse :: Rel a b -> Rel b a
+converse = [(b,a) | (a,b) <- r]
+
+untrans :: Rel a (b,c) -> Rel (a,b) c
+untrans r = [((a,b),c)  | (a, (b,c)) <- r]
+
+trans :: Rel (a,b) c -> Rel a (b, c)
+trans r = [(a, (b,c))| ((a,b),c)  <- r]
+```
 
 
 
@@ -413,24 +452,8 @@ Unlike functions, Relations are always "invertible".  We call this the converse 
 
 
 
-Orderings can also be lifted to relations $latex (\leq) = \{(a,b) | a \leq b\}$. The composition of relations also respects the usual composition of ordering.
 
-
-
-
-
-
-    
-    <code>reflectOrd :: (Ord a, BEnum a) => Rel a a
-    reflectOrd = [(x,y) | x <- enumAll, y <- enumAll, x <= y]</code>
-
-
-
-
-
-
-
-Nondeterministic choice is sometimes represented in Haskell using Set returning functions `a -`> `[b]`. You may recall this from the context of the List monad. In fact in this case, we have an isomorphism as evidenced by `tabulateSearch` and `searchRel`. 
+Orderings can also be lifted to relations $$ (\leq) = \{ (a,b) \vert a \leq b \} $$ . The composition of relations also respects the usual composition of ordering.
 
 
 
@@ -438,11 +461,38 @@ Nondeterministic choice is sometimes represented in Haskell using Set returning 
 
 
     
-    <code>tabulateSearch :: BEnum a => (a -> [b]) -> Rel a b
-    tabulateSearch f = [(a,b) | a <- enumAll, b <- f a]
     
-    searchRel :: Eq a => Rel a b -> (a -> [b])
-    searchRel r a = [b | (a', b) <- r, a == a']</code>
+```haskell
+
+reflectOrd :: (Ord a, BEnum a) => Rel a a
+reflectOrd = [(x,y) | x <- enumAll, y <- enumAll, x <= y]
+```
+
+
+
+
+
+
+
+
+Nondeterministic choice is sometimes represented in Haskell using Set returning functions `a -> [b]`. You may recall this from the context of the List monad. In fact in this case, we have an isomorphism as evidenced by `tabulateSearch` and `searchRel`. 
+
+
+
+
+
+
+    
+    
+```haskell
+
+tabulateSearch :: BEnum a => (a -> [b]) -> Rel a b
+tabulateSearch f = [(a,b) | a <- enumAll, b <- f a]
+
+searchRel :: Eq a => Rel a b -> (a -> [b])
+searchRel r a = [b | (a', b) <- r, a == a']
+```
+
 
 
 
@@ -458,8 +508,12 @@ Similarly partial functions can be reflected into relations
 
 
     
-    <code>tabulatePartial :: BEnum a => (a -> Maybe b) -> Rel a b
-    tabulatePartial f = [(a,b) | a <- enumAll, b <- toList (f a)]</code>
+    
+```haskell
+
+tabulatePartial :: BEnum a => (a -> Maybe b) -> Rel a b
+tabulatePartial f = [(a,b) | a <- enumAll, b <- toList (f a)]
+```
 
 
 
@@ -467,7 +521,8 @@ Similarly partial functions can be reflected into relations
 
 
 
-A useful trick is to lift sets/subsets to relations as a diagonal relation. $latex \{(a,a) | a \in S \}$. Projection onto the set can be achieve by composing with this relation. The identity results if you are talking about the entire set S. 
+
+A useful trick is to lift sets/subsets to relations as a diagonal relation. $$ \{(a,a) \vert a \in S \} $$. Projection onto the set can be achieve by composing with this relation. The identity results if you are talking about the entire set S. 
 
 
 
@@ -475,14 +530,19 @@ A useful trick is to lift sets/subsets to relations as a diagonal relation. $lat
 
 
     
-    <code>diagRel :: [a] -> Rel a a
-    diagRel = map dup where dup x = (x,x)
     
-    leftSet :: Eq a => Rel a b -> [a]
-    leftSet = nub . (map fst)
-    
-    rightSet :: Eq b => Rel a b -> [b]
-    rightSet = nub . (map snd)</code>
+```haskell
+
+diagRel :: [a] -> Rel a a
+diagRel = map dup where dup x = (x,x)
+
+leftSet :: Eq a => Rel a b -> [a]
+leftSet = nub . (map fst)
+
+rightSet :: Eq b => Rel a b -> [b]
+rightSet = nub . (map snd)
+```
+
 
 
 
@@ -498,7 +558,7 @@ A useful trick is to lift sets/subsets to relations as a diagonal relation. $lat
 
 
 
-We can compare sets by asking if one is a subset of the other $latex A\subseteq B$ . Relations can also be compared by this operation, which we call relational inclusion.
+We can compare sets by asking if one is a subset of the other $ A\subseteq B$ . Relations can also be compared by this operation, which we call relational inclusion.
 
 
 
@@ -506,10 +566,15 @@ We can compare sets by asking if one is a subset of the other $latex A\subseteq 
 
 
     
-    <code>rSub :: (Eq a, Eq b) => Rel a b -> Rel a b -> Bool
-    rSub xs ys = and [x `elem` ys | x <- xs]
     
-    x <~ y = rSub x y</code>
+```haskell
+
+rSub :: (Eq a, Eq b) => Rel a b -> Rel a b -> Bool
+rSub xs ys = and [x `elem` ys | x <- xs]
+
+x <~ y = rSub x y
+```
+
 
 
 
@@ -525,11 +590,16 @@ A subservient notion to this is relational equality.
 
 
     
-    <code>
-    rEq :: (Eq a, Eq b) => Rel a b -> Rel a b -> Bool
-    rEq xs ys = (xs `rSub` ys) && (ys `rSub` xs)
     
-    x ~~ y = rEq x y</code>
+```haskell
+
+
+rEq :: (Eq a, Eq b) => Rel a b -> Rel a b -> Bool
+rEq xs ys = (xs `rSub` ys) && (ys `rSub` xs)
+
+x ~~ y = rEq x y
+```
+
 
 
 
@@ -553,17 +623,22 @@ Relations also form a [lattice](https://en.wikipedia.org/wiki/Lattice_(order)) w
 
 
     
-    <code>meet' :: (Eq a, Eq b) => Rel a b -> Rel a b -> Rel a b
-    meet' xs ys = [x | x <- xs, x `elem` ys] -- intersection
     
-    join' :: (Eq a, Eq b) => Rel a b -> Rel a b -> Rel a b
-    join' p q = nub (p ++ q) -- union
-    
-    
-    instance (Eq a, Eq b) => Lattice (Rel a b) where
-        x /\ y = meet' x y
-        x \/ y = join' x y
-    </code>
+```haskell
+
+meet' :: (Eq a, Eq b) => Rel a b -> Rel a b -> Rel a b
+meet' xs ys = [x | x <- xs, x `elem` ys] -- intersection
+
+join' :: (Eq a, Eq b) => Rel a b -> Rel a b -> Rel a b
+join' p q = nub (p ++ q) -- union
+
+
+instance (Eq a, Eq b) => Lattice (Rel a b) where
+    x /\ y = meet' x y
+    x \/ y = join' x y
+
+```
+
 
 
 
@@ -579,7 +654,7 @@ Using meet/join vs intersection/union becomes more interesting when the domain i
 
 
 
-An additional property that a lattice may possess is a largest and small element, called top ($latex \top$ ) and bottom ($latex \bot$). Our finite domain relations do have these.
+An additional property that a lattice may possess is a largest and small element, called top ($ \top$ ) and bottom ($ \bot$). Our finite domain relations do have these.
 
 
 
@@ -587,15 +662,20 @@ An additional property that a lattice may possess is a largest and small element
 
 
     
-    <code>instance (Eq a, Eq b, BEnum a, BEnum b) => BoundedMeetSemiLattice (Rel a b) where
-        top :: (BEnum a, BEnum b) => Rel a b 
-        top = [(x,y) | x <- enumAll, y <- enumAll]
-    -- all possible tuples
     
-    -- because of superclass constraints :(
-    instance (Eq a, Eq b) => BoundedJoinSemiLattice (Rel a b) where
-        bottom :: Rel a b -- no tuples
-        bottom = [] </code>
+```haskell
+
+instance (Eq a, Eq b, BEnum a, BEnum b) => BoundedMeetSemiLattice (Rel a b) where
+    top :: (BEnum a, BEnum b) => Rel a b 
+    top = [(x,y) | x <- enumAll, y <- enumAll]
+-- all possible tuples
+
+-- because of superclass constraints :(
+instance (Eq a, Eq b) => BoundedJoinSemiLattice (Rel a b) where
+    bottom :: Rel a b -- no tuples
+    bottom = [] 
+```
+
 
 
 
@@ -611,7 +691,7 @@ An additional property that a lattice may possess is a largest and small element
 
 
 
-And now finally we get to one of the most interesting, powerful, and confusing operations: relational division. Relational division is a kind of pseudo inverse to relational composition. In linear algebra, the pseudo inverse is a matrix that does the best job it can to invert another matrix in a least squares sense. If the matrix is actually invertible, it equals the inverse. Relational division does the best job it can to invert a relational composition. Instead of taking least squares as a criteria, it ensures that the result doesn't over approximate. If you had the inequality $latex X \cdot Y \subseteq Z$ and you want to  solve for X, relational division is the thing that does that. The right division $latex Q = Z/Y$ is the largest relation such that $latex Q \cdot Y \subseteq Z$.  
+And now finally we get to one of the most interesting, powerful, and confusing operations: relational division. Relational division is a kind of pseudo inverse to relational composition. In linear algebra, the pseudo inverse is a matrix that does the best job it can to invert another matrix in a least squares sense. If the matrix is actually invertible, it equals the inverse. Relational division does the best job it can to invert a relational composition. Instead of taking least squares as a criteria, it ensures that the result doesn't over approximate. If you had the inequality $ X \cdot Y \subseteq Z$ and you want to  solve for X, relational division is the thing that does that. The right division $ Q = Z/Y$ is the largest relation such that $ Q \cdot Y \subseteq Z$.  
 
 
 
@@ -635,8 +715,13 @@ And here is an implementation that I think is correct. I've goofed it up a coupl
 
 
     
-    <code>rdiv :: (BEnum a, BEnum b, Eq a, Eq b, Eq c) => Rel a c -> Rel b c -> Rel a b
-    rdiv x y = [ (a,b)  | a <- enumAll, b <- enumAll, all (\c -> ((b,c) `elem` y)`implies` ((a,c) `elem` x)) (rightSet y)]</code>
+    
+```haskell
+
+rdiv :: (BEnum a, BEnum b, Eq a, Eq b, Eq c) => Rel a c -> Rel b c -> Rel a b
+rdiv x y = [ (a,b)  | a <- enumAll, b <- enumAll, all (\c -> ((b,c) `elem` y)`implies` ((a,c) `elem` x)) (rightSet y)]
+```
+
 
 
 
@@ -666,7 +751,9 @@ Relational division encapsulates many notions of searching or optimizing. I invi
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/07/sketch1562042676469-576x1024.png)Oh. Mah. Glob. You guys. So many properties. (Artwork courtesy of David)
+![Oh. Mah. Glob. You guys. So many properties. ](/assets/sketch1562042676469-576x1024.png)
+
+(Artwork courtesy of David)
 
 
 
@@ -680,50 +767,55 @@ Relation algebra is so chock full of properties. This is a perfect opportunity f
 
 
     
-    <code>type R1 = Rel Bool Ordering
     
-    prop_ridleft :: Rel Bool Ordering -> Bool
-    prop_ridleft x = (rid <<< x) ~~ x
-    
-    prop_ridright :: Rel Bool Ordering  -> Bool
-    prop_ridright x = (x <<< rid) ~~ x
-    
-    prop_meet :: R1 -> R1  -> Bool
-    prop_meet x y = (x /\ y) <~ x
-    
-    prop_meet' :: R1 -> R1  -> Bool
-    prop_meet' x y = (x /\ y) <~ y
-    
-    prop_join_univ :: R1 -> R1 -> R1 -> Bool
-    prop_join_univ x y z = ((x \/ y) <~ z) == ((x <~ z) && (y <~ z))
-    
-    prop_join :: R1 -> R1  -> Bool
-    prop_join x y = y <~ (x \/ y) 
-    
-    prop_meet_univ :: R1 -> R1 -> R1 -> Bool
-    prop_meet_univ x y z = (z <~ (x /\ y)) == ((z <~ x) && (z <~ y))
-    
-    prop_top :: R1 -> Bool
-    prop_top x = x <~ top
-    
-    prop_bottom :: R1 -> Bool
-    prop_bottom x = bottom <~ x
-    
-    prop_bottom' :: R1 -> Bool
-    prop_bottom' x = (x <<< bottom) ~~ (bottom :: R1)
-    
-    prop_trans_iso :: Rel (Bool, Ordering) Word8 -> Bool
-    prop_trans_iso x = untrans (trans x) == x
-    
-    prop_rdiv :: Rel Bool Ordering -> Rel Word8 Ordering -> Bool
-    prop_rdiv g j = (j <<< (rdiv g j)) <~ g
-    
-    prop_con :: R1 -> Bool
-    prop_con x = con (con x) ~~ x
-    
-    prop_rdiv' :: Rel Bool Word8 -> Rel Bool Ordering -> Rel Word8 Ordering -> Bool
-    prop_rdiv' x g j = (x <~ (rdiv g j)) == ((j <<< x) <~ g) 
-     </code>
+```haskell
+
+type R1 = Rel Bool Ordering
+
+prop_ridleft :: Rel Bool Ordering -> Bool
+prop_ridleft x = (rid <<< x) ~~ x
+
+prop_ridright :: Rel Bool Ordering  -> Bool
+prop_ridright x = (x <<< rid) ~~ x
+
+prop_meet :: R1 -> R1  -> Bool
+prop_meet x y = (x /\ y) <~ x
+
+prop_meet' :: R1 -> R1  -> Bool
+prop_meet' x y = (x /\ y) <~ y
+
+prop_join_univ :: R1 -> R1 -> R1 -> Bool
+prop_join_univ x y z = ((x \/ y) <~ z) == ((x <~ z) && (y <~ z))
+
+prop_join :: R1 -> R1  -> Bool
+prop_join x y = y <~ (x \/ y) 
+
+prop_meet_univ :: R1 -> R1 -> R1 -> Bool
+prop_meet_univ x y z = (z <~ (x /\ y)) == ((z <~ x) && (z <~ y))
+
+prop_top :: R1 -> Bool
+prop_top x = x <~ top
+
+prop_bottom :: R1 -> Bool
+prop_bottom x = bottom <~ x
+
+prop_bottom' :: R1 -> Bool
+prop_bottom' x = (x <<< bottom) ~~ (bottom :: R1)
+
+prop_trans_iso :: Rel (Bool, Ordering) Word8 -> Bool
+prop_trans_iso x = untrans (trans x) == x
+
+prop_rdiv :: Rel Bool Ordering -> Rel Word8 Ordering -> Bool
+prop_rdiv g j = (j <<< (rdiv g j)) <~ g
+
+prop_con :: R1 -> Bool
+prop_con x = con (con x) ~~ x
+
+prop_rdiv' :: Rel Bool Word8 -> Rel Bool Ordering -> Rel Word8 Ordering -> Bool
+prop_rdiv' x g j = (x <~ (rdiv g j)) == ((j <<< x) <~ g) 
+
+```
+
 
 
 
@@ -740,7 +832,7 @@ Relation algebra is so chock full of properties. This is a perfect opportunity f
 
 
   * Relations over continuous spaces. Vector subspaces (Linear Relations), Polyhedra (Linear inequality relations).
-  * Non Bool-valued Relations. Replace $latex \exists_x$ with $latex \max_x$. The weighted edgelist of a graph is a natural relation. By using composition we can ask about paths. We still have a comparison operator $latex \subseteq $ which now respects the ordering of weights
+  * Non Bool-valued Relations. Replace $ \exists_x$ with $ \max_x$. The weighted edgelist of a graph is a natural relation. By using composition we can ask about paths. We still have a comparison operator $ \subseteq $ which now respects the ordering of weights
   * [Galois connections are cool.](https://www.sciencedirect.com/science/article/pii/S1567832612000525)
   * Relations combined with recursion schemes. Recursion schemes are the point free way of describing recursion.
   * Moving into infinite spaces. How do we cope?

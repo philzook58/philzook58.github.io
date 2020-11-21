@@ -159,10 +159,10 @@ THIS HAS BEEN A HORRIBLE UNPLEASANT PROJECT.
 
 Find it at [https://github.com/philzook58/mrsketcho](https://github.com/philzook58/mrsketcho)
 
-[![](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/Mon-Nov-09-2015-234733-GMT-0500-EST.png)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/Mon-Nov-09-2015-233813-GMT-0500-EST.png)
+[![](/assets/Mon-Nov-09-2015-234733-GMT-0500-EST.png)](/assets/Mon-Nov-09-2015-233813-GMT-0500-EST.png)
 
 
 
 BOOOOOOYAAAAAAAHHHH
 
-![](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/Mon-Nov-09-2015-234836-GMT-0500-EST.png)
+![](/assets/Mon-Nov-09-2015-234836-GMT-0500-EST.png)

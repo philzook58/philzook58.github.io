@@ -9,7 +9,7 @@ title: Noise and The Fluctuation Dissipation Theorem
 wordpress_id: 1053
 ---
 
-I was looking at some slides the other day and they quoted noise power in units of $latex \frac{W}{\sqrt{Hz}}$. Being the ignoramus I am, I was wondering why it was scaled
+I was looking at some slides the other day and they quoted noise power in units of $ \frac{W}{\sqrt{Hz}}$. Being the ignoramus I am, I was wondering why it was scaled
 
 First off, when a Watt is quoted in an electrical measurement, usually you're measuring Voltage with an instrument with a known input impedance Z. That's how you convert your fluctutating voltage measurement to Watts.
 
@@ -17,7 +17,7 @@ Second, the sqrt frequency thing? Nowadays, your measurement apparatus is probab
 
 These two are engineered to be the same to avoid distortion of the frequency signal via aliasing.
 
-But there is an even simpler way to see this. Suppose you have two measurements V1 and V2 that are the averages of time T with variance $latex \sigma$. Then the average of these two, V3, is over a time 2T. However, by the standard kind of manipulations (for Gaussian variables the squared variance of a sum = the sum of the squared variances, $latex \sigma^2_{\sum x_i}=\sum \sigma_{x_i}$ ), the variance of the new signal is $latex \sigma/\sqrt{2}$ which means it scales with the time window. Hence multiplying you actual measured variances by the square root of your time window gives you a time window invariant quantity.
+But there is an even simpler way to see this. Suppose you have two measurements V1 and V2 that are the averages of time T with variance $ \sigma$. Then the average of these two, V3, is over a time 2T. However, by the standard kind of manipulations (for Gaussian variables the squared variance of a sum = the sum of the squared variances, $ \sigma^2_{\sum x_i}=\sum \sigma_{x_i}$ ), the variance of the new signal is $ \sigma/\sqrt{2}$ which means it scales with the time window. Hence multiplying you actual measured variances by the square root of your time window gives you a time window invariant quantity.
 
 
 
@@ -25,15 +25,15 @@ While I was thinking about that in the car I realized that the fluctuation dissi
 
 Mean field theory tries to summarize all the complicated interactions with neighbors with a simple summary. For interacting spins, it tries to summarize as an effective B field from the surrounding spins. Then you have a 1-particle model which you can solve and try to find a self-consistent value of B. Here is a sketch in equations.
 
-$latex H= \sum S\cdot S - B_{ext}\cdot S \rightarrow \sum - B_{eff}\cdot  S $
+$ H= \sum S\cdot S - B_{ext}\cdot S \rightarrow \sum - B_{eff}\cdot  S $
 
-$latex Z=\sum_s e^{-\beta H}$
+$ Z=\sum_s e^{-\beta H}$
 
-$latex M = <S> = \partial_{\beta B} \ln(Z)$
+$ M = <S> = \partial_{\beta B} \ln(Z)$
 
-$latex B = \alpha M$
+$ B = \alpha M$
 
-You can do something similar to find an effective permeability due to your surrounding neighbors. $latex \partial_B M = \chi$
+You can do something similar to find an effective permeability due to your surrounding neighbors. $ \partial_B M = \chi$
 
 The fluctuating force due to your neighbors is like B, a constant forcing term.
 
@@ -41,11 +41,11 @@ The damping is like the permeability. One may want to consider a system that sta
 
 Another difference is that I think you really are going to need to work explicitly with time. Just the thermal average isn't going to cut it I think (at least not conceptually. There might be some dirty tricks you can play, but a typical Hamiltonian can't have damping terms. As I write this I am doubting it's truth).
 
-$latex \ddot{x} = -\nu \dot{x}+ f$
+$ \ddot{x} = -\nu \dot{x}+ f$
 
 calculate some averages ... Then use the self-consistency
 
-$latex B = \alpha M \rightarrow f = f(\hat{x}) $
+$ B = \alpha M \rightarrow f = f(\hat{x}) $
 
 The dissipation will be related to your correlation with your neighbors. When you are moving faster, they have to tend to move in such a way to make you slow down on average.
 

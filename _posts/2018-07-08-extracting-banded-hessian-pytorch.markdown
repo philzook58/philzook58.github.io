@@ -129,4 +129,4 @@ Output:
 
 
 
-[![pulled_string](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/pulled_string.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/pulled_string.png)
+[![pulled_string](/assets/pulled_string.png)](/assets/pulled_string.png)

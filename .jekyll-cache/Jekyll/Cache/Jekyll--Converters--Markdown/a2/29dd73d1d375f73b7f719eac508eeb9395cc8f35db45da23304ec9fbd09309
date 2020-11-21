@@ -1,0 +1,111 @@
+I"�H<p><a href="https://en.wikipedia.org/wiki/Sorting_network">Sorting networks</a> are a circuit flavored take on sorting. Although you can build circuits for any size input, any particular circuit works for a fixed sized input. They are like an unrolling of the loops or recursion of more familiar sorting algorithms. They come up also in the context of parallel and gpu sorting</p>
+
+<p>Here’s an interesting thing. We can go to Wikipedia and get a little python snippet for the comparison order of a <a href="https://en.wikipedia.org/wiki/Batcher_odd%E2%80%93even_mergesort">Batcher odd-even mergesort</a>. Kind of a confusing algorithm. Why does it even work? Is it even right? It’s written in some kind of funky, indexful generator style.</p>
+
+<p><img src="/assets/Batcher_Odd-Even_Mergesort_for_eight_inputs.svg_-1024x829.png" alt="" />Source: Wikipedia</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#direct from https://en.wikipedia.org/wiki/Batcher_odd%E2%80%93even_mergesort
+</span><span class="k">def</span> <span class="nf">oddeven_merge</span><span class="p">(</span><span class="n">lo</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hi</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="n">step</span> <span class="o">&lt;</span> <span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="k">from</span> <span class="n">oddeven_merge</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="k">from</span> <span class="n">oddeven_merge</span><span class="p">(</span><span class="n">lo</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="k">from</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lo</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">hi</span> <span class="o">-</span> <span class="n">r</span><span class="p">,</span> <span class="n">step</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">lo</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">oddeven_merge_sort_range</span><span class="p">(</span><span class="n">lo</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hi</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="s">""" sort the part of x with indices between lo and hi.
+
+    Note: endpoints (lo and hi) are included.
+    """</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># if there is more than one element, split the input
+</span>        <span class="c1"># down the middle and first sort the first and second
+</span>        <span class="c1"># half, followed by merging them.
+</span>        <span class="n">mid</span> <span class="o">=</span> <span class="n">lo</span> <span class="o">+</span> <span class="p">((</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="k">from</span> <span class="n">oddeven_merge_sort_range</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">mid</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="k">from</span> <span class="n">oddeven_merge_sort_range</span><span class="p">(</span><span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">hi</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="k">from</span> <span class="n">oddeven_merge</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">oddeven_merge_sort</span><span class="p">(</span><span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="s">""" "length" is the length of the list to be sorted.
+    Returns a list of pairs of indices starting with 0 """</span>
+    <span class="k">yield</span> <span class="k">from</span> <span class="n">oddeven_merge_sort_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">compare_and_swap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">x</span><span class="p">[</span><span class="n">b</span><span class="p">]:</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">b</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>Well we can confirm this relatively straightforwardly using z3 by replacing the implementation of compare_and_swap with its z3 equivalent. We then ask z3 .</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">compare_and_swap_z3</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">FreshInt</span><span class="p">(),</span> <span class="n">FreshInt</span><span class="p">()</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">If</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">,</span> <span class="n">And</span><span class="p">(</span><span class="n">x1</span> <span class="o">==</span> <span class="n">x</span><span class="p">,</span> <span class="n">y1</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span> <span class="p">,</span> <span class="n">And</span><span class="p">(</span><span class="n">x1</span> <span class="o">==</span> <span class="n">y</span><span class="p">,</span> <span class="n">y1</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">c</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">64</span> <span class="c1"># size of sorting network
+</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="n">Int</span><span class="p">(</span><span class="s">f"x_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">"</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span> <span class="c1">#build initial array in z3 variables
+</span><span class="n">pairs_to_compare</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">oddeven_merge_sort</span><span class="p">(</span><span class="n">N</span><span class="p">))</span> <span class="c1">#get sequence of compare and swaps to use
+</span><span class="n">a_orig</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="n">pairs_to_compare</span><span class="p">:</span>
+   <span class="n">x</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+   <span class="n">y</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+   <span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="n">compare_and_swap_z3</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> 
+   <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x1</span>
+   <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">y1</span>
+   <span class="n">s</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    
+<span class="k">def</span> <span class="nf">sorted_list</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="c1"># list is sorted
+</span>    <span class="k">return</span> <span class="n">And</span><span class="p">([</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span> <span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:])])</span>
+
+<span class="k">def</span> <span class="nf">in_list</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">a</span><span class="p">):</span> <span class="c1"># x is in the list of a
+</span>    <span class="k">return</span> <span class="n">Or</span><span class="p">([</span><span class="n">x</span> <span class="o">==</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">a</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">sub_list</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span> <span class="c1"># all elements of a appear in b
+</span>    <span class="k">return</span> <span class="n">And</span><span class="p">([</span><span class="n">in_list</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">b</span> <span class="p">])</span>
+<span class="k">def</span> <span class="nf">same_elems</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span> <span class="c1"># a contains the same elements as b
+</span>    <span class="k">return</span> <span class="n">And</span><span class="p">(</span><span class="n">sub_list</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span> <span class="n">sub_list</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">a</span><span class="p">))</span>
+
+<span class="n">s</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">And</span><span class="p">(</span><span class="n">sorted_pred</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">same_elems</span><span class="p">(</span><span class="n">a_orig</span><span class="p">,</span><span class="n">a</span><span class="p">)</span> <span class="p">)))</span>
+<span class="n">s</span><span class="p">.</span><span class="n">check</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>This comes back unsat, hence there are no inputs or executions that do not come back sorted. If I delete some elements from pair_to_compare, it comes back sat, showing that it doesn’t always sort.</p>
+
+<p>The trick here is that the circuit is fixed size, so we have no need for induction, one of the main things z3 is rather finicky at.</p>
+
+<p>It’s somewhat interesting to note that the output of odd_even_merge is a sequence of instructions, we can think of this as interpreting a very small 1 instruction programming language.</p>
+
+<p>We can also confirm similarly a simple odd-even bubblesort and other similar algorithms.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">even_comp</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">l</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)]:</span>
+        <span class="k">yield</span> <span class="n">x</span>
+<span class="k">def</span> <span class="nf">odd_comp</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">l</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)]:</span>
+        <span class="k">yield</span> <span class="n">x</span>
+<span class="k">def</span> <span class="nf">even_odd</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">even_comp</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">x</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">odd_comp</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">x</span>
+            
+<span class="k">def</span> <span class="nf">bubble</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">even_odd</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="n">l</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">x</span>
+</code></pre></div></div>
+
+<p>Q: What about using uninterpreted sorts rather than integers? Integers is pretty convincing to me.</p>
+
+<p>same_elems is slightly weaker than a permutation predicate. Wasn’t super obvious to me the best way to do a permutation predicate in z3. Would I want to internalize the array?</p>
+
+<p>Edit: Upon further thought, actually the sort IS a nice predicate for permutation. How do we compute if two things are permutations of each other? By sorting them and forcing a zipped equality. Alternatively count the number of each element (a piece of bucket sort).  Since this sort is done by composing swaps, it is somewhat intrinsically a permutation</p>
+
+<p>As a bummer though, I think randomized testing on arrays would be equally or perhaps more convincing of the correctness of the algorithm. Oh well.</p>
+
+:ET

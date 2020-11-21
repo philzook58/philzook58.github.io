@@ -31,15 +31,15 @@ Here is a GUESS. I haven't really done much hard work on this. But it's probably
 
 N is number of turns on one coil.
 
-$latex B = (4/5)^{3/2} \mu_0 N I / r$
+$ B = (4/5)^{3/2} \mu_0 N I / r$
 
-$latex \Phi = L I$
+$ \Phi = L I$
 
-$latex \Phi = 2 N A B$
+$ \Phi = 2 N A B$
 
-$latex L =(4/5)^{3/2} \mu_0 N^2 2 \pi r $
+$ L =(4/5)^{3/2} \mu_0 N^2 2 \pi r $
 
-$latex A = \pi r^2 $
+$ A = \pi r^2 $
 
 
 

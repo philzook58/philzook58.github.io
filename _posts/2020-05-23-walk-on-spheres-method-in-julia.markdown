@@ -55,7 +55,7 @@ https://twitter.com/keenanisalive/status/1258152669727899650?s=20
 
 
 
-I was vaguely aware that one can use a Monte Carlo method to solve the boundary value Laplace equation $latex \nabla^2 \phi = 0$ , but I don't think I had seen the walk on spheres variant of it before. I think Crane's point is how similar all this is to stuff graphics people already do and do well. It's a super cool paper. Check it out.
+I was vaguely aware that one can use a Monte Carlo method to solve the boundary value Laplace equation $ \nabla^2 \phi = 0$ , but I don't think I had seen the walk on spheres variant of it before. I think Crane's point is how similar all this is to stuff graphics people already do and do well. It's a super cool paper. Check it out.
 
 
 
@@ -63,7 +63,7 @@ I was vaguely aware that one can use a Monte Carlo method to solve the boundary 
 
 
 
-Conceptually, I think it is plausible that the Laplace equation and a monte carlo walk are related because the static diffusion equation $latex \nabla^2 n = 0$ from Fick's law ultimately comes from the brownian motion of little guys wobbling about from a microscopic perspective.
+Conceptually, I think it is plausible that the Laplace equation and a monte carlo walk are related because the static diffusion equation $ \nabla^2 n = 0$ from Fick's law ultimately comes from the brownian motion of little guys wobbling about from a microscopic perspective.
 
 
 
@@ -87,7 +87,7 @@ The mean value property of the Laplace equation allows one to speed this process
 
 
 
-So here's the procedure. Pick a point you want the value of $latex \phi$ at. Make the biggest sphere you can that stays in the domain. Pick a random point on the sphere. If that point is on the boundary, record that boundary value, otherwise iterate. Do this many many times, then the average value of the boundaries you recorded it the value of $latex \phi$
+So here's the procedure. Pick a point you want the value of $ \phi$ at. Make the biggest sphere you can that stays in the domain. Pick a random point on the sphere. If that point is on the boundary, record that boundary value, otherwise iterate. Do this many many times, then the average value of the boundaries you recorded it the value of $ \phi$
 
 
 
@@ -119,35 +119,40 @@ So we're gonna get a line out
 
 
     
-    <code>using LinearAlgebra
-    avg = 0
-    phi0 = 0
-    phi1 = 10
-    x_0 = 0.75
-    function monte_run(x)
-        while true
-                l = rand(Bool) # go left?
-                if (l && x <= 0.5) # finish at left edge 0
-                    return phi0
-                elseif (!l && x >= 0.5) # finish at right edge 1
-                    return phi1
+    
+```
+
+using LinearAlgebra
+avg = 0
+phi0 = 0
+phi1 = 10
+x_0 = 0.75
+function monte_run(x)
+    while true
+            l = rand(Bool) # go left?
+            if (l && x <= 0.5) # finish at left edge 0
+                return phi0
+            elseif (!l && x >= 0.5) # finish at right edge 1
+                return phi1
+            else
+                if x <= 0.5 # move away from 0
+                    x += x
                 else
-                    if x <= 0.5 # move away from 0
-                        x += x
-                    else
-                        x -= 1 - x # move away from 1
-                    end
+                    x -= 1 - x # move away from 1
                 end
-        end
+            end
     end
-    
-    monte_runs = [monte_run(x) for run_num =1:100, x=0:0.05:1 ]
-    import Statistics
-    avgs = vec(Statistics.mean( monte_runs , dims=1))
-    stddevs = vec(Statistics.std(monte_runs, dims=1)) ./ sqrt(size(monte_runs)[1]) # something like this right?
-    
-    plot(0:0.05:1, avgs, yerror=stddevs)
-    plot!(0:0.05:1,  (0:0.05:1) * 10 )</code>
+end
+
+monte_runs = [monte_run(x) for run_num =1:100, x=0:0.05:1 ]
+import Statistics
+avgs = vec(Statistics.mean( monte_runs , dims=1))
+stddevs = vec(Statistics.std(monte_runs, dims=1)) ./ sqrt(size(monte_runs)[1]) # something like this right?
+
+plot(0:0.05:1, avgs, yerror=stddevs)
+plot!(0:0.05:1,  (0:0.05:1) * 10 )
+```
+
 
 
 
@@ -161,7 +166,7 @@ And indeed we do.
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2020/05/plot_monte.png)
+![](/assets/plot_monte.png)
 
 
 
@@ -175,40 +180,45 @@ You can do a very similar thing in 2d. Here I use the boundary values on a disc 
 
 
     
-    <code>
     
-    function monte_run_2d(phi_b, x)
-        while true
-                r = norm(x)
-                if r > 0.95 # good enough
-                    return phi_b(x)
-                else
-                    dr = 1.0 - r #assuming big radius of 1
-                    θ = 2 * pi * rand(Float64) #
-                    x[1] += dr * cos(θ)
-                    x[2] += dr * sin(θ)
-                end
-        end
+```
+
+
+
+function monte_run_2d(phi_b, x)
+    while true
+            r = norm(x)
+            if r > 0.95 # good enough
+                return phi_b(x)
+            else
+                dr = 1.0 - r #assuming big radius of 1
+                θ = 2 * pi * rand(Float64) #
+                x[1] += dr * cos(θ)
+                x[2] += dr * sin(θ)
+            end
     end
-    
-    
-    monte_run_2d( x -> x[1],  [0.0 0.0] )
-    
-    
-    monte_runs = [monte_run_2d(x -> x[1]^2 - x[2]^2 ,  [x 0.0] ) for run_num =1:1000, x=0:0.05:1 ]
-    
-    import Statistics
-    avgs = vec(Statistics.mean( monte_runs , dims=1))
-    stddevs = vec(Statistics.std(monte_runs, dims=1)) ./ sqrt(size(monte_runs)[1]) # something like this right?
-    plot(0:0.05:1, avgs, yerror=stddevs)
-    plot!(0:0.05:1,  (0:0.05:1) .^2 )
-    </code>
+end
+
+
+monte_run_2d( x -> x[1],  [0.0 0.0] )
+
+
+monte_runs = [monte_run_2d(x -> x[1]^2 - x[2]^2 ,  [x 0.0] ) for run_num =1:1000, x=0:0.05:1 ]
+
+import Statistics
+avgs = vec(Statistics.mean( monte_runs , dims=1))
+stddevs = vec(Statistics.std(monte_runs, dims=1)) ./ sqrt(size(monte_runs)[1]) # something like this right?
+plot(0:0.05:1, avgs, yerror=stddevs)
+plot!(0:0.05:1,  (0:0.05:1) .^2 )
+
+```
 
 
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2020/05/monte_2d.png)
+
+![](/assets/monte_2d.png)
 
 
 

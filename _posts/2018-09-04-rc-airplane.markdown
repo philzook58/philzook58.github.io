@@ -21,14 +21,14 @@ We sized things to look roughly plane like. I've heard a longer wingspan is bett
 
 
 
-[![](http://philzucker2.nfshost.com/wp-content/uploads/2018/09/IMG_2016-2.jpg)](http://philzucker2.nfshost.com/wp-content/uploads/2018/09/IMG_2016-2.jpg) [![](http://philzucker2.nfshost.com/wp-content/uploads/2018/09/IMG_3431-2.jpg)](http://philzucker2.nfshost.com/wp-content/uploads/2018/09/IMG_3431-2.jpg) [![](http://philzucker2.nfshost.com/wp-content/uploads/2018/09/IMG_3293-2-e1536063624269.jpg)](http://philzucker2.nfshost.com/wp-content/uploads/2018/09/IMG_3293-2-e1536063624269.jpg) [![](http://philzucker2.nfshost.com/wp-content/uploads/2018/09/IMG_1943-2-e1536063581529.jpg)](http://philzucker2.nfshost.com/wp-content/uploads/2018/09/IMG_1943-2-e1536063581529.jpg) [![](http://philzucker2.nfshost.com/wp-content/uploads/2018/09/IMG_2486-3.jpg)](http://philzucker2.nfshost.com/wp-content/uploads/2018/09/IMG_2486-3.jpg)
+[![](/assets/IMG_2016-2.jpg)](/assets/IMG_2016-2.jpg) [![](/assets/IMG_3431-2.jpg)](/assets/IMG_3431-2.jpg) [![](/assets/IMG_3293-2-e1536063624269.jpg)](/assets/IMG_3293-2-e1536063624269.jpg) [![](/assets/IMG_1943-2-e1536063581529.jpg)](/assets/IMG_1943-2-e1536063581529.jpg) [![](/assets/IMG_2486-3.jpg)](/assets/IMG_2486-3.jpg)
 
-[![](http://philzucker2.nfshost.com/wp-content/uploads/2018/09/IMG_2486-3.jpg)](http://philzucker2.nfshost.com/wp-content/uploads/2018/09/IMG_2486-3.jpg)
-
-https://youtu.be/Qttrx26LyHM
+[![](/assets/IMG_2486-3.jpg)](/assets/IMG_2486-3.jpg)
 
 
 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Qttrx26LyHM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 

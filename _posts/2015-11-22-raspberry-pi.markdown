@@ -43,7 +43,12 @@ setting up wifi
 
 
     
-    <code>iwlist wlan0 scan</code>
+    
+```
+
+iwlist wlan0 scan
+```
+
 
 
 http://unix.stackexchange.com/questions/92799/connecting-to-wifi-network-through-command-line

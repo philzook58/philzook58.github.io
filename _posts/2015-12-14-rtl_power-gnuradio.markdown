@@ -14,7 +14,12 @@ You can take a big honkin spectrum with rtl_power
 [http://kmkeen.com/rtl-power/](http://kmkeen.com/rtl-power/)
 
     
-    <code>rtl_power -f 118M:137M:8k -g 50 -i 10 -e 1h airband.csv</code>
+    
+```
+
+rtl_power -f 118M:137M:8k -g 50 -i 10 -e 1h airband.csv
+```
+
 
 
 Frequency range and steps are self explanatory. Maximum steps is 2M ish (max sampling rate of SDR)

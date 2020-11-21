@@ -68,7 +68,7 @@ Here I made a bouncing ball using mixed integer programming in cvxpy. Currently 
 
 Pretty cool.
 
-[![](http://philzucker2.nfshost.com/wp-content/uploads/2019/05/ball_bounce.png)](http://philzucker2.nfshost.com/wp-content/uploads/2019/05/ball_bounce.png)
+[![](/assets/ball_bounce.png)](/assets/ball_bounce.png)
 
 The trick I used this time is to make boolean indicator variables for whether a collision will happen or not. The big M trick is then used to actually make the variable reflect whether the predicted position will be outside the wall at x=0. If it isn't, it uses regular gravity dynamics. If it will, it uses velocity reversing bounce dynamics
 

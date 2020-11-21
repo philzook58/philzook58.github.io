@@ -1,0 +1,2 @@
+I"«<p>Least squares fitting $ \sum (f(x_i)-y_i)^2$ is very commonly used and well loved. Sum of squared fitting can be solved using just linear algebra. One of the most convincing use cases to me of linear programming is doing sum of absolute value fits $ \sum |f(x_i)-y_i|$Â  and maximum deviation fits $ \max_i |f(x_i)-y_i|$. These two quality of fits are basically just as tractable as least squares, which is pretty cool.</p>
+:ET

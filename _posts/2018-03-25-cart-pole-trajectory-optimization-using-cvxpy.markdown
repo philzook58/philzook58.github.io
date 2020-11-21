@@ -189,4 +189,4 @@ Green is cart acceleration. You can see it slamming into the maximum acceleratio
 
 Blue is pole angle and orange is angular velocity. So it does a pretty good job. For some settings it is just awful though.
 
-[![figure_1](http://philzucker2.nfshost.com/wp-content/uploads/2018/03/Figure_1.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/03/Figure_1.png)
+[![figure_1](/assets/Figure_1.png)](/assets/Figure_1.png)

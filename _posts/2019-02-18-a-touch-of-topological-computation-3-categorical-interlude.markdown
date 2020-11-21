@@ -50,7 +50,7 @@ Unfortunately, I can't claim that this article is going to be enough to take you
 
 
 
-![](https://pbs.twimg.com/media/DjuKrDCVsAAG_Iy.jpg)
+![](/assets/DjuKrDCVsAAG_Iy.jpg)
 
 
 
@@ -165,8 +165,13 @@ In the Haskell base library there is a Category typeclass defined in [base](http
 
 
     
-    <code>{-# LANGUAGE NoImplicitPrelude #-} 
-    import Prelude hiding ((.), id) </code>
+    
+```haskell
+
+{-# LANGUAGE NoImplicitPrelude #-} 
+import Prelude hiding ((.), id) 
+```
+
 
 
 
@@ -182,9 +187,14 @@ The Category typeclass is defined on the type that corresponds to the morphisms 
 
 
     
-    <code>class Category cat where
-         id :: cat a a
-         (.) :: cat b c -> cat a b -> cat a c</code>
+    
+```haskell
+
+class Category cat where
+     id :: cat a a
+     (.) :: cat b c -> cat a b -> cat a c
+```
+
 
 
 
@@ -200,9 +210,14 @@ The most obvious example of this Category typeclass is the instance for the ordi
 
 
     
-    <code>instance Category (->) where     
-       id = \x -> x
-       f . g = \x -> f (g x)</code>
+    
+```haskell
+
+instance Category (->) where     
+   id = \x -> x
+   f . g = \x -> f (g x)
+```
+
 
 
 
@@ -218,10 +233,15 @@ Another example of a category that we've already encountered is that of linear o
 
 
     
-    <code>newtype LinOp a b = LinOp {runLin :: a -> Q b} 
-    instance Category LinOp where
-       id = LinOp pure 
-       (LinOp f) . (LinOp g) = LinOp (f <=< g) </code>
+    
+```haskell
+
+newtype LinOp a b = LinOp {runLin :: a -> Q b} 
+instance Category LinOp where
+   id = LinOp pure 
+   (LinOp f) . (LinOp g) = LinOp (f <=< g) 
+```
+
 
 
 
@@ -237,10 +257,15 @@ A related category is the FibOp category. This is the category of operations on 
 
 
     
-    <code>newtype FibOp a b = FibOp {runFib :: (forall c. FibTree c a -> Q (FibTree c b))} 
-    instance Category (FibOp) where
-       id = FibOp pure
-       (FibOp f) . (FibOp g) = FibOp (f <=< g)</code>
+    
+```haskell
+
+newtype FibOp a b = FibOp {runFib :: (forall c. FibTree c a -> Q (FibTree c b))} 
+instance Category (FibOp) where
+   id = FibOp pure
+   (FibOp f) . (FibOp g) = FibOp (f <=< g)
+```
+
 
 
 
@@ -288,14 +313,19 @@ We can sketch out this monoidal category concept as a typeclass, where we use `(
 
 
     
-    <code>class Category k => Monoidal k where
-         parC :: k a c -> k b d -> k (a,b) (c,d)
-         assoc :: k ((a,b),c) (a,(b,c))
-         assoc' :: k (a,(b,c)) ((a,b),c)
-         leftUnitor :: k ((),a) a
-         leftUnitor' :: k a ((),a)
-         rightUnitor :: k (a,()) a
-         rightUnitor' :: k a (a,()) </code>
+    
+```haskell
+
+class Category k => Monoidal k where
+     parC :: k a c -> k b d -> k (a,b) (c,d)
+     assoc :: k ((a,b),c) (a,(b,c))
+     assoc' :: k (a,(b,c)) ((a,b),c)
+     leftUnitor :: k ((),a) a
+     leftUnitor' :: k a ((),a)
+     rightUnitor :: k (a,()) a
+     rightUnitor' :: k a (a,()) 
+```
+
 
 
 
@@ -319,8 +349,13 @@ In Haskell, the standard monoidal product for regular Haskell functions is `(***
 
 
     
-    <code>(***) :: (a -> c) -> (b -> d) -> ((a,b) -> (c,d))
-    f *** g = \(x,y) -> (f x, g y) ﻿</code>
+    
+```haskell
+
+(***) :: (a -> c) -> (b -> d) -> ((a,b) -> (c,d))
+f *** g = \(x,y) -> (f x, g y) ﻿
+```
+
 
 
 
@@ -328,14 +363,19 @@ In Haskell, the standard monoidal product for regular Haskell functions is `(***
 
 
     
-    <code>instance Monoidal (->) where
-       parC f g = f *** g 
-       assoc ((x,y),z) = (x,(y,z))
-       assoc' (x,(y,z)) = ((x,y),z)
-       leftUnitor (_, x) = x
-       leftUnitor' x = ((),x)
-       rightUnitor (x, _) = x
-       rightUnitor' x = (x,()) </code>
+    
+```haskell
+
+instance Monoidal (->) where
+   parC f g = f *** g 
+   assoc ((x,y),z) = (x,(y,z))
+   assoc' (x,(y,z)) = ((x,y),z)
+   leftUnitor (_, x) = x
+   leftUnitor' x = ((),x)
+   rightUnitor (x, _) = x
+   rightUnitor' x = (x,()) 
+```
+
 
 
 
@@ -351,8 +391,13 @@ The monoidal product we'll choose for LinOp is the tensor/outer/[Kronecke](https
 
 
     
-    <code>kron :: Num b => W b a -> W b c -> W b (a,c)
-    kron (W x) (W y) = W [((a,c), r1 * r2) | (a,r1) <- x , (c,r2) <- y ]</code>
+    
+```haskell
+
+kron :: Num b => W b a -> W b c -> W b (a,c)
+kron (W x) (W y) = W [((a,c), r1 * r2) | (a,r1) <- x , (c,r2) <- y ]
+```
+
 
 
 
@@ -368,14 +413,19 @@ Otherwise, LinOp is basically a monadically lifted version of (->). The one dime
 
 
     
-    <code>instance Monoidal LinOp where
-        parC (LinOp f) (LinOp g) = LinOp $ \(a,b) -> kron (f a) (g b) 
-        assoc = LinOp  (pure . assoc)
-        assoc' = LinOp (pure . unassoc)
-        leftUnitor = LinOp (pure . leftUnitor)
-        leftUnitor' = LinOp (pure .leftUnitor')
-        rightUnitor = LinOp (pure . rightUnitor)
-        rightUnitor' = LinOp (pure . rightUnitor')</code>
+    
+```haskell
+
+instance Monoidal LinOp where
+    parC (LinOp f) (LinOp g) = LinOp $ \(a,b) -> kron (f a) (g b) 
+    assoc = LinOp  (pure . assoc)
+    assoc' = LinOp (pure . unassoc)
+    leftUnitor = LinOp (pure . leftUnitor)
+    leftUnitor' = LinOp (pure .leftUnitor')
+    rightUnitor = LinOp (pure . rightUnitor)
+    rightUnitor' = LinOp (pure . rightUnitor')
+```
+
 
 
 
@@ -391,25 +441,30 @@ Now for a confession. I made a misstep in my first post. In order to make our Fi
 
 
     
-    <code>rightUnit :: FibTree e (a,Id) -> Q (FibTree e a)
-    rightUnit (TTI t _) = pure t
-    rightUnit (III t _) = pure t
     
-    rightUnit' :: FibTree e a -> Q (FibTree e (a,Id))
-    rightUnit' t@(TTT _ _) = pure (TTI  t ILeaf)
-    rightUnit' t@(TTI _ _) = pure (TTI  t ILeaf)
-    rightUnit' t@(TIT _ _) = pure (TTI  t ILeaf)
-    rightUnit' t@(III _ _) = pure (III  t ILeaf)
-    rightUnit' t@(ITT _ _) = pure (III  t ILeaf)
-    rightUnit' t@(ILeaf) = pure (III t ILeaf)
-    rightUnit' t@(TLeaf) = pure (TTI t ILeaf)
-    
-    leftUnit :: FibTree e (Id,a) -> Q (FibTree e a)
-    leftUnit = rightUnit <=< braid
-    
-    -- braid vs braid' doesn't matter, but it has a nice symettry.
-    leftUnit' :: FibTree e a -> Q (FibTree e (Id,a))
-    leftUnit' = braid' <=< rightUnit' </code>
+```haskell
+
+rightUnit :: FibTree e (a,Id) -> Q (FibTree e a)
+rightUnit (TTI t _) = pure t
+rightUnit (III t _) = pure t
+
+rightUnit' :: FibTree e a -> Q (FibTree e (a,Id))
+rightUnit' t@(TTT _ _) = pure (TTI  t ILeaf)
+rightUnit' t@(TTI _ _) = pure (TTI  t ILeaf)
+rightUnit' t@(TIT _ _) = pure (TTI  t ILeaf)
+rightUnit' t@(III _ _) = pure (III  t ILeaf)
+rightUnit' t@(ITT _ _) = pure (III  t ILeaf)
+rightUnit' t@(ILeaf) = pure (III t ILeaf)
+rightUnit' t@(TLeaf) = pure (TTI t ILeaf)
+
+leftUnit :: FibTree e (Id,a) -> Q (FibTree e a)
+leftUnit = rightUnit <=< braid
+
+-- braid vs braid' doesn't matter, but it has a nice symettry.
+leftUnit' :: FibTree e a -> Q (FibTree e (Id,a))
+leftUnit' = braid' <=< rightUnit' 
+```
+
 
 
 
@@ -425,14 +480,19 @@ With these in place, we can define a monoidal instance for `FibOp`. The extremel
 
 
     
-    <code>instance Monoidal (FibOp) where
-        parC (FibOp f) (FibOp g) = (FibOp (lmap f)) . (FibOp (rmap g))
-        assoc = FibOp  fmove'
-        assoc' = FibOp fmove
-        leftUnitor = FibOp leftUnit
-        leftUnitor' = FibOp leftUnit'
-        rightUnitor = FibOp rightUnit
-        rightUnitor' = FibOp rightUnit'</code>
+    
+```haskell
+
+instance Monoidal (FibOp) where
+    parC (FibOp f) (FibOp g) = (FibOp (lmap f)) . (FibOp (rmap g))
+    assoc = FibOp  fmove'
+    assoc' = FibOp fmove
+    leftUnitor = FibOp leftUnit
+    leftUnitor' = FibOp leftUnit'
+    rightUnitor = FibOp rightUnit
+    rightUnitor' = FibOp rightUnit'
+```
+
 
 
 
@@ -448,7 +508,7 @@ With these in place, we can define a monoidal instance for `FibOp`. The extremel
 
 
 
-The `parC` operation is extremely useful to explicitly note in a program. It is an opportunity for optimization. It is possible to inefficiently implement `parC` in terms of other primitives, but it is very worthwhile to implement it in new primitives (although I haven't here). In the case of (->), `parC` is an explicit location where actual computational parallelism is available. Once you perform `parC`, it is not longer obviously apparent that the left and right side of the tuple share no data during the computation. In the case of LinOp and FibOp, `parC` is a location where you can perform factored linear computations. The matrix vector product $latex (A \otimes B)(v \otimes w)$ can be performed individually $latex (Av)\otimes (Bw)$. In the first case, where we densify $latex A \otimes B$ and then perform the multiplication, it costs $latex O((N_A N_B)^2)$ time, whereas performing them individually on the factors costs $latex O( N_A^2 + N_B^2)$ time, a significant savings. Applied category theory indeed.
+The `parC` operation is extremely useful to explicitly note in a program. It is an opportunity for optimization. It is possible to inefficiently implement `parC` in terms of other primitives, but it is very worthwhile to implement it in new primitives (although I haven't here). In the case of (->), `parC` is an explicit location where actual computational parallelism is available. Once you perform `parC`, it is not longer obviously apparent that the left and right side of the tuple share no data during the computation. In the case of LinOp and FibOp, `parC` is a location where you can perform factored linear computations. The matrix vector product $ (A \otimes B)(v \otimes w)$ can be performed individually $ (Av)\otimes (Bw)$. In the first case, where we densify $ A \otimes B$ and then perform the multiplication, it costs $ O((N_A N_B)^2)$ time, whereas performing them individually on the factors costs $ O( N_A^2 + N_B^2)$ time, a significant savings. Applied category theory indeed.
 
 
 
@@ -462,7 +522,7 @@ The `parC` operation is extremely useful to explicitly note in a program. It is 
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/judgedrd1-1024x503.png)Judge Dredd courtesy of David
+![](/assets/judgedrd1-1024x503.png)Judge Dredd courtesy of David
 
 
 
@@ -483,17 +543,22 @@ Like many typeclasses, these monoidal morphisms are assumed to follow certain la
 
 
 
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Monoidal_category_pentagon.svg/1400px-Monoidal_category_pentagon.svg.png)
+![](/assets/1400px-Monoidal_category_pentagon.svg.png)
 
 
 
 
     
-    <code>leftbottom :: (((a,b),c),d) -> (a,(b,(c,d)))
-    leftbottom = assoc . assoc
     
-    topright :: (((a,b),c),d) -> (a,(b,(c,d)))
-    topright = (id *** assoc) . assoc . (assoc *** id)</code>
+```haskell
+
+leftbottom :: (((a,b),c),d) -> (a,(b,(c,d)))
+leftbottom = assoc . assoc
+
+topright :: (((a,b),c),d) -> (a,(b,(c,d)))
+topright = (id *** assoc) . assoc . (assoc *** id)
+```
+
 
 
 
@@ -506,16 +571,21 @@ Like many typeclasses, these monoidal morphisms are assumed to follow certain la
 
 
 
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Monoidal_category_triangle.svg/800px-Monoidal_category_triangle.svg.png)
+![](/assets/800px-Monoidal_category_triangle.svg.png)
 
 
 
 
     
-    <code>topright' :: ((a,()),b) -> (a,b)
-    topright' = (id *** leftUnitor) . assoc
-    leftside :: ((a,()),b) -> (a,b)
-    leftside = rightUnitor *** id</code>
+    
+```haskell
+
+topright' :: ((a,()),b) -> (a,b)
+topright' = (id *** leftUnitor) . assoc
+leftside :: ((a,()),b) -> (a,b)
+leftside = rightUnitor *** id
+```
+
 
 
 
@@ -537,7 +607,7 @@ String diagrams are a diagrammatic notation for monoidal categories. Morphisms a
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/8acaa5b6-50cc-4208-89da-414b21867064-6.png)
+![](/assets/8acaa5b6-50cc-4208-89da-414b21867064-6.png)
 
 
 
@@ -549,7 +619,7 @@ Composition `g . f` is made by connecting lines.
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/8acaa5b6-50cc-4208-89da-414b21867064-7.png)
+![](/assets/8acaa5b6-50cc-4208-89da-414b21867064-7.png)
 
 
 
@@ -561,19 +631,19 @@ The identity `id` is a raw arrow.
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/8acaa5b6-50cc-4208-89da-414b21867064-8.png)
+![](/assets/8acaa5b6-50cc-4208-89da-414b21867064-8.png)
 
 
 
 
 
-The monoidal product of morphisms $latex f \otimes g$ is represented by placing lines next to each other.
+The monoidal product of morphisms $ f \otimes g$ is represented by placing lines next to each other.
 
 
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/8acaa5b6-50cc-4208-89da-414b21867064-9.png)
+![](/assets/8acaa5b6-50cc-4208-89da-414b21867064-9.png)
 
 
 
@@ -585,7 +655,7 @@ The diagrammatic notion is so powerful because the laws of monoidal categories a
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/8acaa5b6-50cc-4208-89da-414b21867064-3-1024x668.png)
+![](/assets/8acaa5b6-50cc-4208-89da-414b21867064-3.png)
 
 
 
@@ -599,7 +669,7 @@ This corresponds to the property
 
 
 
-$latex (id \otimes g) \circ (f \otimes id) = (f \otimes id) \circ (id \otimes g)$ 
+$ (id \otimes g) \circ (f \otimes id) = (f \otimes id) \circ (id \otimes g)$ 
 
 
 
@@ -613,13 +683,13 @@ What expression does the following diagram represent?
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/8acaa5b6-50cc-4208-89da-414b21867064-2-1.png)
+![](/assets/8acaa5b6-50cc-4208-89da-414b21867064-2-1.png)
 
 
 
 
 
-Is it $latex (f \circ f') \otimes (g \circ g')$ (in Haskell notation `parC (f . f') (g . g')` )?
+Is it $ (f \circ f') \otimes (g \circ g')$ (in Haskell notation `parC (f . f') (g . g')` )?
 
 
 
@@ -627,7 +697,7 @@ Is it $latex (f \circ f') \otimes (g \circ g')$ (in Haskell notation `parC (f . 
 
 
 
-Or is it $latex (f \otimes g) \circ (f' \otimes g')$ (in Haskell notation `(parC f g) . (parC f' g')`?
+Or is it $ (f \otimes g) \circ (f' \otimes g')$ (in Haskell notation `(parC f g) . (parC f' g')`?
 
 
 
@@ -656,7 +726,7 @@ There are a number of notations you might meet in the world that can be interpre
 
 
 
-![Image result for quantum circuits](https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Quantum_circuit_composition.svg/300px-Quantum_circuit_composition.svg.png)
+![Image result for quantum circuits](/assets/300px-Quantum_circuit_composition.svg.png)
 
 
 
@@ -667,7 +737,7 @@ There are a number of notations you might meet in the world that can be interpre
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/Penrose_covariant_derivate.png)
+![](/assets/Penrose_covariant_derivate.png)
 
 
 
@@ -678,7 +748,7 @@ There are a number of notations you might meet in the world that can be interpre
 
 
 
-![](https://3c1703fe8d.site.internapcdn.net/newman/gfx/news/hires/2014/fibonacciqua.png)
+![](/assets/fibonacciqua.png)
 
 
 
@@ -700,9 +770,14 @@ Some monoidal categories have a notion of being able to braid morphisms. If so, 
 
 
     
-    <code>class Monoidal k => Braided k where
-        over :: k (a,b) (b,a)
-        under :: k (a,b) (b,a)</code>
+    
+```haskell
+
+class Monoidal k => Braided k where
+    over :: k (a,b) (b,a)
+    under :: k (a,b) (b,a)
+```
+
 
 
 
@@ -716,7 +791,7 @@ The over and under morphisms are inverse of each other `over . under = id`. The 
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/8acaa5b6-50cc-4208-89da-414b21867064-4.png)
+![](/assets/8acaa5b6-50cc-4208-89da-414b21867064-4.png)
 
 
 
@@ -738,7 +813,12 @@ If the over and under of the braiding are the same the category is a [symmetric 
 
 
     
-    <code>class Braided k => Symmetric k where</code>
+    
+```haskell
+
+class Braided k => Symmetric k where
+```
+
 
 
 
@@ -752,7 +832,7 @@ When we draw a braid in a symmetric monoidal category, we don't have to be caref
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/02/8acaa5b6-50cc-4208-89da-414b21867064-5.png)
+![](/assets/8acaa5b6-50cc-4208-89da-414b21867064-5.png)
 
 
 
@@ -766,8 +846,13 @@ The examples that come soonest to mind have this symmetric property, for example
 
 
     
-    <code>swap :: (a, b) -> (b, a)
-    swap (x,y) = (y,x)</code>
+    
+```haskell
+
+swap :: (a, b) -> (b, a)
+swap (x,y) = (y,x)
+```
+
 
 
 
@@ -775,10 +860,15 @@ The examples that come soonest to mind have this symmetric property, for example
 
 
     
-    <code>instance Braided (->) where
-        over = swap
-        under = swap
-    instance Symmetric (->)</code>
+    
+```haskell
+
+instance Braided (->) where
+    over = swap
+    under = swap
+instance Symmetric (->)
+```
+
 
 
 
@@ -794,10 +884,15 @@ Similarly `LinOp` has an notion of swapping that is just a lifting of `swap`
 
 
     
-    <code>instance Braided (LinOp) where
-        over = LinOp (pure . swap)
-        under = LinOp (pure . swap)
-    instance Symmetric LinOp </code>
+    
+```haskell
+
+instance Braided (LinOp) where
+    over = LinOp (pure . swap)
+    under = LinOp (pure . swap)
+instance Symmetric LinOp 
+```
+
 
 
 
@@ -813,9 +908,14 @@ However, FibOp is not symmetric! This is perhaps at the core of what makes FibOp
 
 
     
-    <code>instance Braided FibOp where
-        over = FibOp braid
-        under = FibOp braid'</code>
+    
+```haskell
+
+instance Braided FibOp where
+    over = FibOp braid
+    under = FibOp braid'
+```
+
 
 
 
@@ -839,8 +939,13 @@ However, FibOp is not symmetric! This is perhaps at the core of what makes FibOp
 
 
     
-    <code>(...) :: ReAssoc b b' => FibOp b' c -> FibOp a b -> FibOp a c
-    (FibOp f) ... (FibOp g) = FibOp $ f <=< reassoc <=< g</code>
+    
+```haskell
+
+(...) :: ReAssoc b b' => FibOp b' c -> FibOp a b -> FibOp a c
+(FibOp f) ... (FibOp g) = FibOp $ f <=< reassoc <=< g
+```
+
 
 
 
@@ -856,36 +961,41 @@ Before defining `reassoc`, let's define a helper LeftCollect typeclass. Given a 
 
 
     
-    <code>leftcollect :: forall n gte l r o e. (gte ~ CmpNat n (Count l), LeftCollect n gte (l,r) o) => FibTree e (l,r) -> Q (FibTree e o)
-    leftcollect x = leftcollect' @n @gte x
     
-    class LeftCollect n gte a b | n gte a -> b where
-        leftcollect' :: FibTree e a -> Q (FibTree e b)
-    
-    -- The process is like a binary search.
-    -- LeftCollect pulls n leaves into the left branch of the tuple
-    
-    -- If n is greater than the size of l, we recurse into the right branch with a new number of leaves to collect
-    -- then we do a final reshuffle to put those all into the left tree.
-    instance (
-       k ~ Count l,
-       r ~ (l',r'),
-       n' ~ (n - k),
-       gte ~ CmpNat n' (Count l'), 
-       LeftCollect n' gte r (l'',r'')) => LeftCollect n 'GT (l,r) ((l,l''),r'') where
-            leftcollect' x = do       
-                   x' <- rmap (leftcollect @n') x -- (l,(l'',r'')) -- l'' is size n - k
-                   fmove x'  -- ((l,l''),r'') -- size of (l,l'') = k + (n-k) = n
-    instance (
-        l ~ (l',r'),
-        gte ~ CmpNat n (Count l'), 
-        LeftCollect n gte l (l'',r'')) => LeftCollect n 'LT (l,r) (l'',(r'',r)) where
-            leftcollect' x = do       
-                    x' <- lmap (leftcollect @n) x -- ((l'',r''),r) -- l'' is of size n
-                    fmove' x'  -- (l'',(r'',r)
-    
-    instance LeftCollect n 'EQ (l,r) (l,r) where
-        leftcollect' = pure</code>
+```haskell
+
+leftcollect :: forall n gte l r o e. (gte ~ CmpNat n (Count l), LeftCollect n gte (l,r) o) => FibTree e (l,r) -> Q (FibTree e o)
+leftcollect x = leftcollect' @n @gte x
+
+class LeftCollect n gte a b | n gte a -> b where
+    leftcollect' :: FibTree e a -> Q (FibTree e b)
+
+-- The process is like a binary search.
+-- LeftCollect pulls n leaves into the left branch of the tuple
+
+-- If n is greater than the size of l, we recurse into the right branch with a new number of leaves to collect
+-- then we do a final reshuffle to put those all into the left tree.
+instance (
+   k ~ Count l,
+   r ~ (l',r'),
+   n' ~ (n - k),
+   gte ~ CmpNat n' (Count l'), 
+   LeftCollect n' gte r (l'',r'')) => LeftCollect n 'GT (l,r) ((l,l''),r'') where
+        leftcollect' x = do       
+               x' <- rmap (leftcollect @n') x -- (l,(l'',r'')) -- l'' is size n - k
+               fmove x'  -- ((l,l''),r'') -- size of (l,l'') = k + (n-k) = n
+instance (
+    l ~ (l',r'),
+    gte ~ CmpNat n (Count l'), 
+    LeftCollect n gte l (l'',r'')) => LeftCollect n 'LT (l,r) (l'',(r'',r)) where
+        leftcollect' x = do       
+                x' <- lmap (leftcollect @n) x -- ((l'',r''),r) -- l'' is of size n
+                fmove' x'  -- (l'',(r'',r)
+
+instance LeftCollect n 'EQ (l,r) (l,r) where
+    leftcollect' = pure
+```
+
 
 
 
@@ -901,25 +1011,30 @@ Once we have LeftCollect, the typeclass ReAssoc is relatively simple to define. 
 
 
     
-    <code>class ReAssoc a b where
-        reassoc :: FibTree e a -> Q (FibTree e b)
-    instance (n ~ Count l',
-        gte ~ CmpNat n (Count l), 
-        LeftCollect n gte (l,r) (l'',r''),    
-        ReAssoc l'' l',
-        ReAssoc r'' r') => ReAssoc (l,r) (l',r') where
-            reassoc x = do 
-                        x' <- leftcollect @n x
-                        x'' <- rmap reassoc x'
-                        lmap reassoc x''
-                        
-    --instance {-# OVERLAPS #-} ReAssoc a a where
-     --   reassoc = pure
-        
-    instance ReAssoc Tau Tau where
-        reassoc = pure
-    instance ReAssoc Id Id where
-        reassoc = pure</code>
+    
+```haskell
+
+class ReAssoc a b where
+    reassoc :: FibTree e a -> Q (FibTree e b)
+instance (n ~ Count l',
+    gte ~ CmpNat n (Count l), 
+    LeftCollect n gte (l,r) (l'',r''),    
+    ReAssoc l'' l',
+    ReAssoc r'' r') => ReAssoc (l,r) (l',r') where
+        reassoc x = do 
+                    x' <- leftcollect @n x
+                    x'' <- rmap reassoc x'
+                    lmap reassoc x''
+
+--instance {-# OVERLAPS #-} ReAssoc a a where
+ --   reassoc = pure
+
+instance ReAssoc Tau Tau where
+    reassoc = pure
+instance ReAssoc Id Id where
+    reassoc = pure
+```
+
 
 
 

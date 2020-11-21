@@ -31,7 +31,7 @@ If one chooses to ignore the proof aspects of Coq for a moment, it becomes a biz
 
 
 
-![](https://www.philipzucker.com/wp-content/uploads/2020/06/piglegs-1024x640.png)Let's put some legs on this pig. Artwork courtesy of [David](https://davidtersegno.wordpress.com/)
+![](/assets/piglegs-1024x640.png)Let's put some legs on this pig. Artwork courtesy of [David](https://davidtersegno.wordpress.com/)
 
 
 
@@ -53,12 +53,17 @@ A problem I encountered is that it is somewhat difficult to get controlled evalu
 
 
     
-    <code>Require Import Extraction.
-    Axiom PCode : Type -> Type.
-    Extract Constant PCode "'a" => "'a".
     
-    Axiom block : forall {a : Type}, a -> PCode a.
-    Extract Inlined Constant block => "".</code>
+```
+
+Require Import Extraction.
+Axiom PCode : Type -> Type.
+Extract Constant PCode "'a" => "'a".
+
+Axiom block : forall {a : Type}, a -> PCode a.
+Extract Inlined Constant block => "".
+```
+
 
 
 
@@ -90,11 +95,16 @@ We can play a similar extraction game with two HOAS-ish combinators.
 
 
     
-    <code>Axiom ocaml_lam : forall {a b: Type}, (PCode a -> PCode b) -> PCode (a -> b).
-    Extract Inlined Constant ocaml_lam => "".
     
-    Axiom ocaml_app : forall {a b : Type},  PCode (a -> b) -> PCode a -> PCode b.
-    Extract Inlined Constant ocaml_app => "".</code>
+```
+
+Axiom ocaml_lam : forall {a b: Type}, (PCode a -> PCode b) -> PCode (a -> b).
+Extract Inlined Constant ocaml_lam => "".
+
+Axiom ocaml_app : forall {a b : Type},  PCode (a -> b) -> PCode a -> PCode b.
+Extract Inlined Constant ocaml_app => "".
+```
+
 
 
 
@@ -110,11 +120,16 @@ Here are some examples of other primitives we might add. The extra imports makes
 
 
     
-    <code>From Coq.extraction Require Import ExtrOcamlBasic ExtrOcamlNatInt.
-    Axiom ocaml_add : PCode nat -> PCode nat -> PCode nat.
-    Extract Inlined Constant ocaml_add => "(+)".
-    Axiom ocaml_mul : PCode nat -> PCode nat -> PCode nat.
-    Extract Inlined Constant ocaml_mul => "(*)".</code>
+    
+```
+
+From Coq.extraction Require Import ExtrOcamlBasic ExtrOcamlNatInt.
+Axiom ocaml_add : PCode nat -> PCode nat -> PCode nat.
+Extract Inlined Constant ocaml_add => "(+)".
+Axiom ocaml_mul : PCode nat -> PCode nat -> PCode nat.
+Extract Inlined Constant ocaml_mul => "(*)".
+```
+
 
 
 
@@ -146,25 +161,30 @@ Here is a very simplistic unrolling of a power  function with a compile time kno
 
 
     
-    <code>Fixpoint pow1 (n : nat) (x : PCode nat) : PCode nat :=
-      match n with
-      | O => block 1
-      | S O => x
-      | S n' => ocaml_mul x (pow1 n' x)
-      end.
     
-    Definition pow2 (n : nat) : PCode (nat -> nat) := ocaml_lam (fun x => pow1 n x).
-    
-    Definition compilepow : PCode (nat -> nat) := Eval native_compute in pow2 4.
-    Extraction compilepow.
-    (*
-    
-    (** val compilepow : (int -> int) pCode **)
-    
-    let compilepow =
-       (fun x -> (*) x ((*) x ((*) x x)))
-    
-    *)</code>
+```
+
+Fixpoint pow1 (n : nat) (x : PCode nat) : PCode nat :=
+  match n with
+  | O => block 1
+  | S O => x
+  | S n' => ocaml_mul x (pow1 n' x)
+  end.
+
+Definition pow2 (n : nat) : PCode (nat -> nat) := ocaml_lam (fun x => pow1 n x).
+
+Definition compilepow : PCode (nat -> nat) := Eval native_compute in pow2 4.
+Extraction compilepow.
+(*
+
+(** val compilepow : (int -> int) pCode **)
+
+let compilepow =
+   (fun x -> (*) x ((*) x ((*) x x)))
+
+*)
+```
+
 
 
 
@@ -180,18 +200,23 @@ What about if you want a quasiquoting interface though? Well here is one suggest
 
 
     
-    <code>(* No, I don't really know what Symantics means. Symbolic semantics? It's an Oleg-ism.
-    *)
-    Class Symantics (repr : Type -> Type) :=
-      {
-      lnat : nat -> repr nat;
-      lbool : bool -> repr bool;
-      lam : forall {a b}, (repr a -> repr b) -> repr (a -> b);
-      app : forall {a b},  repr (a -> b) -> repr a -> repr b;
-      add : repr nat -> repr nat -> repr nat;
-      mul : repr nat -> repr nat -> repr nat
-      }.
-    </code>
+    
+```
+
+(* No, I don't really know what Symantics means. Symbolic semantics? It's an Oleg-ism.
+*)
+Class Symantics (repr : Type -> Type) :=
+  {
+  lnat : nat -> repr nat;
+  lbool : bool -> repr bool;
+  lam : forall {a b}, (repr a -> repr b) -> repr (a -> b);
+  app : forall {a b},  repr (a -> b) -> repr a -> repr b;
+  add : repr nat -> repr nat -> repr nat;
+  mul : repr nat -> repr nat -> repr nat
+  }.
+
+```
+
 
 
 
@@ -199,34 +224,39 @@ What about if you want a quasiquoting interface though? Well here is one suggest
 
 
     
-    <code>(* A simple do nothing newtype wrapper for the typeclass *)
-    Record R a := { unR : a }.
-    Arguments Build_R {a}.
-    Arguments unR {a}.
-    (* Would Definition R (a:Type) := a. be okay? *)
     
-    Instance regularsym : Symantics R :=
-      {|
-      lnat := Build_R;
-      lbool := Build_R;
-      lam := fun a b f => Build_R (fun x => unR (f (Build_R (a:= a) x)));
-      app := fun _ _ f x => Build_R ((unR f) (unR x));
-      add := fun x y => Build_R ((unR x) + (unR y));
-      mul := fun x y => Build_R ((unR x) * (unR y));
-      |}.
-    
-    
-    Instance codesym : Symantics PCode := 
-      {|
-      lnat := block;
-      lbool := block;
-      lam := fun a b => ocaml_lam (a := a) (b := b);
-      app := fun a b => ocaml_app (a := a) (b := b);
-      add := ocaml_add;
-      mul := ocaml_mul
-      |}.
-    
-    </code>
+```
+
+(* A simple do nothing newtype wrapper for the typeclass *)
+Record R a := { unR : a }.
+Arguments Build_R {a}.
+Arguments unR {a}.
+(* Would Definition R (a:Type) := a. be okay? *)
+
+Instance regularsym : Symantics R :=
+  {|
+  lnat := Build_R;
+  lbool := Build_R;
+  lam := fun a b f => Build_R (fun x => unR (f (Build_R (a:= a) x)));
+  app := fun _ _ f x => Build_R ((unR f) (unR x));
+  add := fun x y => Build_R ((unR x) + (unR y));
+  mul := fun x y => Build_R ((unR x) * (unR y));
+  |}.
+
+
+Instance codesym : Symantics PCode := 
+  {|
+  lnat := block;
+  lbool := block;
+  lam := fun a b => ocaml_lam (a := a) (b := b);
+  app := fun a b => ocaml_app (a := a) (b := b);
+  add := ocaml_add;
+  mul := ocaml_mul
+  |}.
+
+
+```
+
 
 
 
@@ -242,17 +272,22 @@ Now we've overloaded the meaning of the base combinators. The type `PCode` vs `R
 
 
     
-    <code>Definition Code : Type -> Type := fun a => R (PCode a).
     
-    Definition quote {a}  : PCode a -> Code  a := Build_R.
-    Definition splice {a} : Code a  -> PCode a := unR.
-    
-    Declare Scope quote_scope.
-    Notation "<' x '>" := (quote x) : quote_scope.
-    Notation "<, x ,>" := (splice x) : quote_scope.
-    
-    Notation "n + m" := (add n m) : quote_scope.
-    Notation "n * m" := (mul n m) : quote_scope.</code>
+```
+
+Definition Code : Type -> Type := fun a => R (PCode a).
+
+Definition quote {a}  : PCode a -> Code  a := Build_R.
+Definition splice {a} : Code a  -> PCode a := unR.
+
+Declare Scope quote_scope.
+Notation "<' x '>" := (quote x) : quote_scope.
+Notation "<, x ,>" := (splice x) : quote_scope.
+
+Notation "n + m" := (add n m) : quote_scope.
+Notation "n * m" := (mul n m) : quote_scope.
+```
+
 
 
 
@@ -268,26 +303,31 @@ Now you can take the same version of code, add quote/splice annotations and get 
 
 
     
-    <code>Open Scope quote_scope.
     
-    Fixpoint pow1' (n : nat) (x : Code nat) : Code nat :=
-      match n with
-      | O => quote (lnat 1)
-      | S O => x
-      | S n' => <' <, x ,> * <, pow1' n' x ,> '>
-      end.
-    
-    Definition pow2' (n : nat) : Code (nat -> nat) := <' lam (fun x => <, pow1' n <' x '> ,> ) '>.
-    
-    Definition compilepow' : Code (nat -> nat) := Eval native_compute in pow2' 4.
-    Extraction compilepow'.
-    
-    (* Same as before basically.
-    (** val compilepow' : (int -> int) code **)
-    
-    let compilepow' =
-       (fun x -> (*) x ((*) x ((*) x x)))
-    *)</code>
+```
+
+Open Scope quote_scope.
+
+Fixpoint pow1' (n : nat) (x : Code nat) : Code nat :=
+  match n with
+  | O => quote (lnat 1)
+  | S O => x
+  | S n' => <' <, x ,> * <, pow1' n' x ,> '>
+  end.
+
+Definition pow2' (n : nat) : Code (nat -> nat) := <' lam (fun x => <, pow1' n <' x '> ,> ) '>.
+
+Definition compilepow' : Code (nat -> nat) := Eval native_compute in pow2' 4.
+Extraction compilepow'.
+
+(* Same as before basically.
+(** val compilepow' : (int -> int) code **)
+
+let compilepow' =
+   (fun x -> (*) x ((*) x ((*) x x)))
+*)
+```
+
 
 
 
@@ -335,9 +375,14 @@ Monad have something to do with partial evaluation. Moggi's [original paper](htt
 
 
     
-    <code>(* This is moggi's let. *)
-    Axiom ocaml_bind : forall {a b}, PCode a -> (a -> PCode b) -> PCode b.
-    Extract Inlined Constant ocaml_bind => "(fun x f -> f x)".</code>
+    
+```
+
+(* This is moggi's let. *)
+Axiom ocaml_bind : forall {a b}, PCode a -> (a -> PCode b) -> PCode b.
+Extract Inlined Constant ocaml_bind => "(fun x f -> f x)".
+```
+
 
 
 
@@ -393,25 +438,30 @@ Some snippets
 
 
     
-    <code>
-    Extract Constant ref "'a" => "'a ref".
-    (* make_ref     =>     "ref*)
-    Axiom get_ref : forall a, ref a -> World -> a * World.
-    Extract Constant get_ref => "fun r _ -> (!r  ,())".
-    Axiom set_ref : forall a, ref a -> a -> World -> unit * World.
-    Extract Constant set_ref => "fun r x _ -> let () = r := x in (() , ())".
     
-    
-    Axiom Array : Type -> Type.
-    Extract Constant Array "'a" => "'a array".
-    
-    Axiom make : forall {a : Type}, Code nat -> Code a -> Code World -> Code (Array a  *  World).
-    
-    Extract Constant make => "fun i def _ -> ( make i def , ())".
-    Axiom get : forall a, Array a -> nat -> World -> a * World.
-    Extract Constant get => "fun r i _ -> (r.(i)  ,())".
-    Axiom set : forall a, Array a -> nat -> a -> World -> unit * World.
-    Extract Constant set => "fun r i x _ -> let () = r.(i) <- x in (() , ())".</code>
+```
+
+
+Extract Constant ref "'a" => "'a ref".
+(* make_ref     =>     "ref*)
+Axiom get_ref : forall a, ref a -> World -> a * World.
+Extract Constant get_ref => "fun r _ -> (!r  ,())".
+Axiom set_ref : forall a, ref a -> a -> World -> unit * World.
+Extract Constant set_ref => "fun r x _ -> let () = r := x in (() , ())".
+
+
+Axiom Array : Type -> Type.
+Extract Constant Array "'a" => "'a array".
+
+Axiom make : forall {a : Type}, Code nat -> Code a -> Code World -> Code (Array a  *  World).
+
+Extract Constant make => "fun i def _ -> ( make i def , ())".
+Axiom get : forall a, Array a -> nat -> World -> a * World.
+Extract Constant get => "fun r i _ -> (r.(i)  ,())".
+Axiom set : forall a, Array a -> nat -> a -> World -> unit * World.
+Extract Constant set => "fun r i x _ -> let () = r.(i) <- x in (() , ())".
+```
+
 
 
 

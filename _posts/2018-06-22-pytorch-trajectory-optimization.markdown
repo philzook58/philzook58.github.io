@@ -23,11 +23,11 @@ One nicety of this approach is that we don't even have to have our derivatives s
 
 I thought that maybe I could just weight the dynamics cost enough to have it require the dynamics be satisfied, but that did not seem to work. Maybe with more fiddling? On further review my code had massive bugs in it. I'm not sure that the dynamics cost version wouldn't work, but the Lagrange multiplier method seems to work well and makes sense too.
 
-In this formulation, we can also train some kind of parametrized controller function $latex f_w(x)$ by sampling some random initial starting conditions (or even dynamical parameters like mass and length etc, or noise forces). This is quite nice.
+In this formulation, we can also train some kind of parametrized controller function $ f_w(x)$ by sampling some random initial starting conditions (or even dynamical parameters like mass and length etc, or noise forces). This is quite nice.
 
 Additional bits that may be nice: Backtracking line search, logarithmic potential for inequalities, I wonder if a symplectic style interleaving of position and momentum might be nice even for this global case. Should definitely just tie up all the vars into a single x. Can we use a lagrangian or hamiltonian and then have pytorch differentiate that? It may in fact be nice to use some combinator to be able to hand the same function to ODEInt for a couple reasons (getting good initilizations  of the path for example).
 
-For a simple system, I'm using $latex \dot{x}=v$ , $latex \dot{v}=f$ , where you get to control f at every time point and x is starting at 0 and wants to get to 1. I'm using a simple scheme of finite difference in time for the time derivative. x and v are defined at $latex t$ and $latex f, lx, lv $ are defined at the half time steps $latex t + \frac{1}{2}$. You need at least two time steps to get a derivative. I'm adding a square cost to the force, otherwise it would just get a huge force. lx and lv are Lagrange multipliers enforcing the equations of motion at each time step
+For a simple system, I'm using $ \dot{x}=v$ , $ \dot{v}=f$ , where you get to control f at every time point and x is starting at 0 and wants to get to 1. I'm using a simple scheme of finite difference in time for the time derivative. x and v are defined at $ t$ and $ f, lx, lv $ are defined at the half time steps $ t + \frac{1}{2}$. You need at least two time steps to get a derivative. I'm adding a square cost to the force, otherwise it would just get a huge force. lx and lv are Lagrange multipliers enforcing the equations of motion at each time step
 
 Here was an initial pass (just here for for historical reasons, look at the updated one below. This one does not work as is)
 

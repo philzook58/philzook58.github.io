@@ -216,20 +216,25 @@ TPTP syntax is mostly straightforward but note that  ! [X] is forall X, ? [X] is
 
 
     
-    <code>% axioms of a category
-    % we would resupply this for every category involved?
-    % ! [X] is forall X, ? [X] is exists X. Capital names are variables
-    % lowercase names are constants.
-    fof( dom_cod, axiom, ![X] : dom(cod(X)) = cod(X)).
-    fof( cod_dom, axiom, ![X] : cod(dom(X)) = dom(X)).
-    fof( comp_is_unique, axiom, ![F, G, FG1, FG2] : ((comp(F,G,FG1) & comp(F,G,FG2)) => FG1 = FG2)   ).
-    fof( comp_objects_middle, axiom, ![F, G] : ((? [FG] : comp(F,G,FG)) <=> dom(F) = cod(G))).
-    fof( comp_dom, axiom, ![F, G, FG] : (comp(F,G,FG) => dom(G) = dom(FG))).
-    fof( comp_cod, axiom, ![F, G, FG] : (comp(F,G,FG) => cod(F) = cod(FG))).
-    fof( left_id, axiom, ![F] : comp(cod(F),F,F) ).
-    fof( right_id, axiom, ![F] : comp(F,dom(F),F) ).
-    % I've heard that composition axioms cause churn?
-    fof( comp_assoc, axiom, ![F, G, H, FG, GH, FGH1, FGH2] : ((comp(F,G,FG) & comp(FG,H,FGH1) & comp(F,GH,FGH2) & comp(G,H,GH)) => FGH1 = FGH2  )).</code>
+    
+```
+
+% axioms of a category
+% we would resupply this for every category involved?
+% ! [X] is forall X, ? [X] is exists X. Capital names are variables
+% lowercase names are constants.
+fof( dom_cod, axiom, ![X] : dom(cod(X)) = cod(X)).
+fof( cod_dom, axiom, ![X] : cod(dom(X)) = dom(X)).
+fof( comp_is_unique, axiom, ![F, G, FG1, FG2] : ((comp(F,G,FG1) & comp(F,G,FG2)) => FG1 = FG2)   ).
+fof( comp_objects_middle, axiom, ![F, G] : ((? [FG] : comp(F,G,FG)) <=> dom(F) = cod(G))).
+fof( comp_dom, axiom, ![F, G, FG] : (comp(F,G,FG) => dom(G) = dom(FG))).
+fof( comp_cod, axiom, ![F, G, FG] : (comp(F,G,FG) => cod(F) = cod(FG))).
+fof( left_id, axiom, ![F] : comp(cod(F),F,F) ).
+fof( right_id, axiom, ![F] : comp(F,dom(F),F) ).
+% I've heard that composition axioms cause churn?
+fof( comp_assoc, axiom, ![F, G, H, FG, GH, FGH1, FGH2] : ((comp(F,G,FG) & comp(FG,H,FGH1) & comp(F,GH,FGH2) & comp(G,H,GH)) => FGH1 = FGH2  )).
+```
+
 
 
 
@@ -245,19 +250,24 @@ Here are some definitions. One could also just inline these definitions with a m
 
 
     
-    <code>fof(monic_def, axiom,  
-        ![M] : (monic(M) <=> (! [F,G] : (( ? [H] : (comp(M, F, H) & comp(M,G,H))) => F = G)))).
     
-    fof(commute_square_def, axiom, 
-        ![F,G,H,K] : (commute_square(F,G,H,K) <=> (? [M] : (comp(F,G,M) & comp(H,K,M))))).
-    
-    fof(pullback_def, axiom,
-       ![F,G,P1,P2] : (pullback(F,G,P1,P2) <=>
-            (commute_square(F,P1,G,P2) &
-            (![Q1,Q2] : (commute_square(F,Q1,G,Q2) => 
-                (?[U] : (! [U1] : ((comp(P1,U1,Q1) & comp(P2,U1,Q2)) <=> (U1 = U))))
-            ))))).
-    </code>
+```
+
+fof(monic_def, axiom,  
+    ![M] : (monic(M) <=> (! [F,G] : (( ? [H] : (comp(M, F, H) & comp(M,G,H))) => F = G)))).
+
+fof(commute_square_def, axiom, 
+    ![F,G,H,K] : (commute_square(F,G,H,K) <=> (? [M] : (comp(F,G,M) & comp(H,K,M))))).
+
+fof(pullback_def, axiom,
+   ![F,G,P1,P2] : (pullback(F,G,P1,P2) <=>
+        (commute_square(F,P1,G,P2) &
+        (![Q1,Q2] : (commute_square(F,Q1,G,Q2) => 
+            (?[U] : (! [U1] : ((comp(P1,U1,Q1) & comp(P2,U1,Q2)) <=> (U1 = U))))
+        ))))).
+
+```
+
 
 
 
@@ -273,13 +283,18 @@ Here are some pretty simple problems:
 
 
     
-    <code>% should be a trivial statement, but isn't literally an axiom.
-    fof( codcod, conjecture, ![F] : cod(cod(F)) = cod(F) ).
     
-    
-    % paste two commuting squares together gives another commuting square
-    fof( pasting_square,conjecture,   ![A,B,C,D, I,J,K, BI, CJ] : ((commute_square(B,A,D,C) & commute_square(I,D,K,J) & comp(I,B, IB) & comp( J, C,JC)) 
-                                                            =>  commute_square( IB,A, K,JC ) )).</code>
+```
+
+% should be a trivial statement, but isn't literally an axiom.
+fof( codcod, conjecture, ![F] : cod(cod(F)) = cod(F) ).
+
+
+% paste two commuting squares together gives another commuting square
+fof( pasting_square,conjecture,   ![A,B,C,D, I,J,K, BI, CJ] : ((commute_square(B,A,D,C) & commute_square(I,D,K,J) & comp(I,B, IB) & comp( J, C,JC)) 
+                                                        =>  commute_square( IB,A, K,JC ) )).
+```
+
 
 
 
@@ -295,14 +310,19 @@ One theorem that is not quite so trivial is the pullback of a monic is monic [ht
 
 
     
-    <code>include('cat.tptp').
-    include('constructions.tptp').
     
-    % warmup?
-    %fof(pullback_monic, conjecture, ![M, P1,P2] : ((monic(M) & pullback(cod(M),M,P1,P2)) => %monic(P2))).
-    
-    % pullback of monic is monic
-    fof(pullback_monic, conjecture, ![M, F, P1,P2] : ((monic(M) & pullback(F,M,P1,P2)) => monic(P1))).</code>
+```
+
+include('cat.tptp').
+include('constructions.tptp').
+
+% warmup?
+%fof(pullback_monic, conjecture, ![M, P1,P2] : ((monic(M) & pullback(cod(M),M,P1,P2)) => %monic(P2))).
+
+% pullback of monic is monic
+fof(pullback_monic, conjecture, ![M, F, P1,P2] : ((monic(M) & pullback(F,M,P1,P2)) => monic(P1))).
+```
+
 
 
 
@@ -318,7 +338,12 @@ Invoking the prover.
 
 
     
-    <code>eprover --auto-schedule --cpu-limit=60 --proof-object monic_pullback.tptp</code>
+    
+```
+
+eprover --auto-schedule --cpu-limit=60 --proof-object monic_pullback.tptp
+```
+
 
 
 
@@ -511,151 +536,156 @@ Example proof term: Is this even right? Hard to know.
 
 
     
-    <code># Proof found!
-    # SZS status Theorem
-    # SZS output start CNFRefutation
-    fof(pullback_monic, conjecture, ![X11, X13, X14]:((monic(X11)&pullback(cod(X11),X11,X13,X14))=>monic(X14)), file('properties.tptp', pullback_monic)).
-    fof(pullback_def, axiom, ![X2, X3, X13, X14]:(pullback(X2,X3,X13,X14)<=>(commute_square(X2,X13,X3,X14)&![X15, X16]:(commute_square(X2,X15,X3,X16)=>?[X17]:![X18]:((comp(X13,X18,X15)&comp(X14,X18,X16))<=>X18=X17)))), file('properties.tptp', pullback_def)).
-    fof(commute_square_def, axiom, ![X2, X3, X7, X12]:(commute_square(X2,X3,X7,X12)<=>?[X11]:(comp(X2,X3,X11)&comp(X7,X12,X11))), file('properties.tptp', commute_square_def)).
-    fof(comp_objects_middle, axiom, ![X2, X3]:(?[X6]:comp(X2,X3,X6)<=>dom(X2)=cod(X3)), file('cat.tptp', comp_objects_middle)).
-    fof(dom_cod, axiom, ![X1]:dom(cod(X1))=cod(X1), file('cat.tptp', dom_cod)).
-    fof(left_id, axiom, ![X2]:comp(cod(X2),X2,X2), file('cat.tptp', left_id)).
-    fof(comp_is_unique, axiom, ![X2, X3, X4, X5]:((comp(X2,X3,X4)&comp(X2,X3,X5))=>X4=X5), file('cat.tptp', comp_is_unique)).
-    fof(monic_def, axiom, ![X11]:(monic(X11)<=>![X2, X3]:(?[X7]:(comp(X11,X2,X7)&comp(X11,X3,X7))=>X2=X3)), file('properties.tptp', monic_def)).
-    fof(comp_cod, axiom, ![X2, X3, X6]:(comp(X2,X3,X6)=>cod(X2)=cod(X6)), file('cat.tptp', comp_cod)).
-    fof(comp_dom, axiom, ![X2, X3, X6]:(comp(X2,X3,X6)=>dom(X3)=dom(X6)), file('cat.tptp', comp_dom)).
-    fof(comp_assoc, axiom, ![X2, X3, X7, X6, X8, X9, X10]:((((comp(X2,X3,X6)&comp(X6,X7,X9))&comp(X2,X8,X10))&comp(X3,X7,X8))=>X9=X10), file('cat.tptp', comp_assoc)).
-    fof(c_0_11, negated_conjecture, ~(![X11, X13, X14]:((monic(X11)&pullback(cod(X11),X11,X13,X14))=>monic(X14))), inference(assume_negation,[status(cth)],[pullback_monic])).
-    fof(c_0_12, plain, ![X68, X69, X70, X71, X72, X73, X75, X76, X77, X78, X79, X80, X83]:(((commute_square(X68,X70,X69,X71)|~pullback(X68,X69,X70,X71))&((~comp(X70,X75,X72)|~comp(X71,X75,X73)|X75=esk7_6(X68,X69,X70,X71,X72,X73)|~commute_square(X68,X72,X69,X73)|~pullback(X68,X69,X70,X71))&((comp(X70,X76,X72)|X76!=esk7_6(X68,X69,X70,X71,X72,X73)|~commute_square(X68,X72,X69,X73)|~pullback(X68,X69,X70,X71))&(comp(X71,X76,X73)|X76!=esk7_6(X68,X69,X70,X71,X72,X73)|~commute_square(X68,X72,X69,X73)|~pullback(X68,X69,X70,X71)))))&((commute_square(X77,esk8_4(X77,X78,X79,X80),X78,esk9_4(X77,X78,X79,X80))|~commute_square(X77,X79,X78,X80)|pullback(X77,X78,X79,X80))&((~comp(X79,esk10_5(X77,X78,X79,X80,X83),esk8_4(X77,X78,X79,X80))|~comp(X80,esk10_5(X77,X78,X79,X80,X83),esk9_4(X77,X78,X79,X80))|esk10_5(X77,X78,X79,X80,X83)!=X83|~commute_square(X77,X79,X78,X80)|pullback(X77,X78,X79,X80))&((comp(X79,esk10_5(X77,X78,X79,X80,X83),esk8_4(X77,X78,X79,X80))|esk10_5(X77,X78,X79,X80,X83)=X83|~commute_square(X77,X79,X78,X80)|pullback(X77,X78,X79,X80))&(comp(X80,esk10_5(X77,X78,X79,X80,X83),esk9_4(X77,X78,X79,X80))|esk10_5(X77,X78,X79,X80,X83)=X83|~commute_square(X77,X79,X78,X80)|pullback(X77,X78,X79,X80)))))), inference(distribute,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(skolemize,[status(esa)],[inference(variable_rename,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(fof_nnf,[status(thm)],[pullback_def])])])])])])).
-    fof(c_0_13, negated_conjecture, ((monic(esk11_0)&pullback(cod(esk11_0),esk11_0,esk12_0,esk13_0))&~monic(esk13_0)), inference(skolemize,[status(esa)],[inference(variable_rename,[status(thm)],[inference(fof_nnf,[status(thm)],[c_0_11])])])).
-    fof(c_0_14, plain, ![X58, X59, X60, X61, X63, X64, X65, X66, X67]:(((comp(X58,X59,esk6_4(X58,X59,X60,X61))|~commute_square(X58,X59,X60,X61))&(comp(X60,X61,esk6_4(X58,X59,X60,X61))|~commute_square(X58,X59,X60,X61)))&(~comp(X63,X64,X67)|~comp(X65,X66,X67)|commute_square(X63,X64,X65,X66))), inference(distribute,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(skolemize,[status(esa)],[inference(variable_rename,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(fof_nnf,[status(thm)],[commute_square_def])])])])])])).
-    cnf(c_0_15, plain, (commute_square(X1,X2,X3,X4)|~pullback(X1,X3,X2,X4)), inference(split_conjunct,[status(thm)],[c_0_12])).
-    cnf(c_0_16, negated_conjecture, (pullback(cod(esk11_0),esk11_0,esk12_0,esk13_0)), inference(split_conjunct,[status(thm)],[c_0_13])).
-    fof(c_0_17, plain, ![X25, X26, X27, X28, X29]:((~comp(X25,X26,X27)|dom(X25)=cod(X26))&(dom(X28)!=cod(X29)|comp(X28,X29,esk1_2(X28,X29)))), inference(shift_quantors,[status(thm)],[inference(skolemize,[status(esa)],[inference(variable_rename,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(fof_nnf,[status(thm)],[comp_objects_middle])])])])])).
-    cnf(c_0_18, plain, (comp(X1,X2,esk6_4(X1,X2,X3,X4))|~commute_square(X1,X2,X3,X4)), inference(split_conjunct,[status(thm)],[c_0_14])).
-    cnf(c_0_19, negated_conjecture, (commute_square(cod(esk11_0),esk12_0,esk11_0,esk13_0)), inference(spm,[status(thm)],[c_0_15, c_0_16])).
-    fof(c_0_20, plain, ![X19]:dom(cod(X19))=cod(X19), inference(variable_rename,[status(thm)],[dom_cod])).
-    fof(c_0_21, plain, ![X37]:comp(cod(X37),X37,X37), inference(variable_rename,[status(thm)],[left_id])).
-    cnf(c_0_22, plain, (dom(X1)=cod(X2)|~comp(X1,X2,X3)), inference(split_conjunct,[status(thm)],[c_0_17])).
-    cnf(c_0_23, negated_conjecture, (comp(cod(esk11_0),esk12_0,esk6_4(cod(esk11_0),esk12_0,esk11_0,esk13_0))), inference(spm,[status(thm)],[c_0_18, c_0_19])).
-    cnf(c_0_24, plain, (dom(cod(X1))=cod(X1)), inference(split_conjunct,[status(thm)],[c_0_20])).
-    fof(c_0_25, plain, ![X21, X22, X23, X24]:(~comp(X21,X22,X23)|~comp(X21,X22,X24)|X23=X24), inference(variable_rename,[status(thm)],[inference(fof_nnf,[status(thm)],[comp_is_unique])])).
-    cnf(c_0_26, plain, (comp(cod(X1),X1,X1)), inference(split_conjunct,[status(thm)],[c_0_21])).
-    cnf(c_0_27, negated_conjecture, (cod(esk12_0)=cod(esk11_0)), inference(rw,[status(thm)],[inference(spm,[status(thm)],[c_0_22, c_0_23]), c_0_24])).
-    fof(c_0_28, plain, ![X46, X47, X48, X49, X50]:((~monic(X46)|(~comp(X46,X47,X49)|~comp(X46,X48,X49)|X47=X48))&(((comp(X50,esk2_1(X50),esk4_1(X50))|monic(X50))&(comp(X50,esk3_1(X50),esk4_1(X50))|monic(X50)))&(esk2_1(X50)!=esk3_1(X50)|monic(X50)))), inference(distribute,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(skolemize,[status(esa)],[inference(variable_rename,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(fof_nnf,[status(thm)],[monic_def])])])])])])).
-    cnf(c_0_29, plain, (X3=X4|~comp(X1,X2,X3)|~comp(X1,X2,X4)), inference(split_conjunct,[status(thm)],[c_0_25])).
-    cnf(c_0_30, negated_conjecture, (comp(cod(esk11_0),esk12_0,esk12_0)), inference(spm,[status(thm)],[c_0_26, c_0_27])).
-    fof(c_0_31, plain, ![X34, X35, X36]:(~comp(X34,X35,X36)|cod(X34)=cod(X36)), inference(variable_rename,[status(thm)],[inference(fof_nnf,[status(thm)],[comp_cod])])).
-    cnf(c_0_32, negated_conjecture, (~monic(esk13_0)), inference(split_conjunct,[status(thm)],[c_0_13])).
-    cnf(c_0_33, plain, (comp(X1,esk2_1(X1),esk4_1(X1))|monic(X1)), inference(split_conjunct,[status(thm)],[c_0_28])).
-    cnf(c_0_34, plain, (comp(X1,X2,esk6_4(X3,X4,X1,X2))|~commute_square(X3,X4,X1,X2)), inference(split_conjunct,[status(thm)],[c_0_14])).
-    cnf(c_0_35, plain, (comp(X1,esk3_1(X1),esk4_1(X1))|monic(X1)), inference(split_conjunct,[status(thm)],[c_0_28])).
-    cnf(c_0_36, negated_conjecture, (X1=esk12_0|~comp(cod(esk11_0),esk12_0,X1)), inference(spm,[status(thm)],[c_0_29, c_0_30])).
-    cnf(c_0_37, plain, (cod(X1)=cod(X3)|~comp(X1,X2,X3)), inference(split_conjunct,[status(thm)],[c_0_31])).
-    cnf(c_0_38, negated_conjecture, (comp(esk13_0,esk2_1(esk13_0),esk4_1(esk13_0))), inference(spm,[status(thm)],[c_0_32, c_0_33])).
-    cnf(c_0_39, negated_conjecture, (comp(esk11_0,esk13_0,esk6_4(cod(esk11_0),esk12_0,esk11_0,esk13_0))), inference(spm,[status(thm)],[c_0_34, c_0_19])).
-    cnf(c_0_40, negated_conjecture, (comp(esk13_0,esk3_1(esk13_0),esk4_1(esk13_0))), inference(spm,[status(thm)],[c_0_32, c_0_35])).
-    fof(c_0_41, plain, ![X31, X32, X33]:(~comp(X31,X32,X33)|dom(X32)=dom(X33)), inference(variable_rename,[status(thm)],[inference(fof_nnf,[status(thm)],[comp_dom])])).
-    cnf(c_0_42, negated_conjecture, (esk6_4(cod(esk11_0),esk12_0,esk11_0,esk13_0)=esk12_0), inference(spm,[status(thm)],[c_0_36, c_0_23])).
-    cnf(c_0_43, negated_conjecture, (cod(esk4_1(esk13_0))=cod(esk13_0)), inference(spm,[status(thm)],[c_0_37, c_0_38])).
-    cnf(c_0_44, negated_conjecture, (cod(esk13_0)=dom(esk11_0)), inference(spm,[status(thm)],[c_0_22, c_0_39])).
-    cnf(c_0_45, plain, (comp(X1,X2,esk1_2(X1,X2))|dom(X1)!=cod(X2)), inference(split_conjunct,[status(thm)],[c_0_17])).
-    cnf(c_0_46, negated_conjecture, (cod(esk3_1(esk13_0))=dom(esk13_0)), inference(spm,[status(thm)],[c_0_22, c_0_40])).
-    cnf(c_0_47, plain, (dom(X2)=dom(X3)|~comp(X1,X2,X3)), inference(split_conjunct,[status(thm)],[c_0_41])).
-    cnf(c_0_48, negated_conjecture, (comp(esk11_0,esk13_0,esk12_0)), inference(rw,[status(thm)],[c_0_39, c_0_42])).
-    cnf(c_0_49, negated_conjecture, (cod(esk4_1(esk13_0))=dom(esk11_0)), inference(rw,[status(thm)],[c_0_43, c_0_44])).
-    fof(c_0_50, plain, ![X39, X40, X41, X42, X43, X44, X45]:(~comp(X39,X40,X42)|~comp(X42,X41,X44)|~comp(X39,X43,X45)|~comp(X40,X41,X43)|X44=X45), inference(variable_rename,[status(thm)],[inference(fof_nnf,[status(thm)],[comp_assoc])])).
-    cnf(c_0_51, negated_conjecture, (comp(X1,esk3_1(esk13_0),esk1_2(X1,esk3_1(esk13_0)))|dom(X1)!=dom(esk13_0)), inference(spm,[status(thm)],[c_0_45, c_0_46])).
-    cnf(c_0_52, negated_conjecture, (dom(esk12_0)=dom(esk13_0)), inference(spm,[status(thm)],[c_0_47, c_0_48])).
-    cnf(c_0_53, negated_conjecture, (comp(X1,esk4_1(esk13_0),esk1_2(X1,esk4_1(esk13_0)))|dom(X1)!=dom(esk11_0)), inference(spm,[status(thm)],[c_0_45, c_0_49])).
-    cnf(c_0_54, plain, (X5=X7|~comp(X1,X2,X3)|~comp(X3,X4,X5)|~comp(X1,X6,X7)|~comp(X2,X4,X6)), inference(split_conjunct,[status(thm)],[c_0_50])).
-    cnf(c_0_55, negated_conjecture, (comp(esk12_0,esk3_1(esk13_0),esk1_2(esk12_0,esk3_1(esk13_0)))), inference(spm,[status(thm)],[c_0_51, c_0_52])).
-    cnf(c_0_56, negated_conjecture, (cod(esk2_1(esk13_0))=dom(esk13_0)), inference(spm,[status(thm)],[c_0_22, c_0_38])).
-    cnf(c_0_57, plain, (commute_square(X1,X2,X4,X5)|~comp(X1,X2,X3)|~comp(X4,X5,X3)), inference(split_conjunct,[status(thm)],[c_0_14])).
-    cnf(c_0_58, negated_conjecture, (comp(esk11_0,esk4_1(esk13_0),esk1_2(esk11_0,esk4_1(esk13_0)))), inference(er,[status(thm)],[c_0_53])).
-    cnf(c_0_59, negated_conjecture, (esk1_2(esk12_0,esk3_1(esk13_0))=X1|~comp(X2,esk3_1(esk13_0),X3)|~comp(X4,X2,esk12_0)|~comp(X4,X3,X1)), inference(spm,[status(thm)],[c_0_54, c_0_55])).
-    cnf(c_0_60, negated_conjecture, (comp(X1,esk2_1(esk13_0),esk1_2(X1,esk2_1(esk13_0)))|dom(X1)!=dom(esk13_0)), inference(spm,[status(thm)],[c_0_45, c_0_56])).
-    cnf(c_0_61, plain, (X2=esk7_6(X6,X7,X1,X4,X3,X5)|~comp(X1,X2,X3)|~comp(X4,X2,X5)|~commute_square(X6,X3,X7,X5)|~pullback(X6,X7,X1,X4)), inference(split_conjunct,[status(thm)],[c_0_12])).
-    cnf(c_0_62, negated_conjecture, (commute_square(X1,X2,esk11_0,esk4_1(esk13_0))|~comp(X1,X2,esk1_2(esk11_0,esk4_1(esk13_0)))), inference(spm,[status(thm)],[c_0_57, c_0_58])).
-    cnf(c_0_63, negated_conjecture, (cod(esk1_2(esk11_0,esk4_1(esk13_0)))=cod(esk11_0)), inference(spm,[status(thm)],[c_0_37, c_0_58])).
-    cnf(c_0_64, negated_conjecture, (esk1_2(esk12_0,esk3_1(esk13_0))=esk1_2(esk11_0,esk4_1(esk13_0))|~comp(X1,esk3_1(esk13_0),esk4_1(esk13_0))|~comp(esk11_0,X1,esk12_0)), inference(spm,[status(thm)],[c_0_59, c_0_58])).
-    cnf(c_0_65, negated_conjecture, (comp(esk12_0,esk2_1(esk13_0),esk1_2(esk12_0,esk2_1(esk13_0)))), inference(spm,[status(thm)],[c_0_60, c_0_52])).
-    cnf(c_0_66, negated_conjecture, (X1=esk7_6(cod(esk11_0),esk11_0,esk12_0,esk13_0,X2,X3)|~commute_square(cod(esk11_0),X2,esk11_0,X3)|~comp(esk13_0,X1,X3)|~comp(esk12_0,X1,X2)), inference(spm,[status(thm)],[c_0_61, c_0_16])).
-    cnf(c_0_67, negated_conjecture, (commute_square(cod(esk11_0),esk1_2(esk11_0,esk4_1(esk13_0)),esk11_0,esk4_1(esk13_0))), inference(rw,[status(thm)],[inference(spm,[status(thm)],[c_0_62, c_0_26]), c_0_63])).
-    cnf(c_0_68, negated_conjecture, (esk1_2(esk12_0,esk3_1(esk13_0))=esk1_2(esk11_0,esk4_1(esk13_0))), inference(cn,[status(thm)],[inference(rw,[status(thm)],[inference(spm,[status(thm)],[c_0_64, c_0_48]), c_0_40])])).
-    cnf(c_0_69, negated_conjecture, (esk1_2(esk12_0,esk2_1(esk13_0))=X1|~comp(X2,esk2_1(esk13_0),X3)|~comp(X4,X2,esk12_0)|~comp(X4,X3,X1)), inference(spm,[status(thm)],[c_0_54, c_0_65])).
-    cnf(c_0_70, negated_conjecture, (X1=esk7_6(cod(esk11_0),esk11_0,esk12_0,esk13_0,esk1_2(esk11_0,esk4_1(esk13_0)),esk4_1(esk13_0))|~comp(esk12_0,X1,esk1_2(esk11_0,esk4_1(esk13_0)))|~comp(esk13_0,X1,esk4_1(esk13_0))), inference(spm,[status(thm)],[c_0_66, c_0_67])).
-    cnf(c_0_71, negated_conjecture, (comp(esk12_0,esk3_1(esk13_0),esk1_2(esk11_0,esk4_1(esk13_0)))), inference(rw,[status(thm)],[c_0_55, c_0_68])).
-    cnf(c_0_72, negated_conjecture, (esk1_2(esk12_0,esk2_1(esk13_0))=esk1_2(esk11_0,esk4_1(esk13_0))|~comp(X1,esk2_1(esk13_0),esk4_1(esk13_0))|~comp(esk11_0,X1,esk12_0)), inference(spm,[status(thm)],[c_0_69, c_0_58])).
-    cnf(c_0_73, negated_conjecture, (esk7_6(cod(esk11_0),esk11_0,esk12_0,esk13_0,esk1_2(esk11_0,esk4_1(esk13_0)),esk4_1(esk13_0))=esk3_1(esk13_0)), inference(cn,[status(thm)],[inference(rw,[status(thm)],[inference(spm,[status(thm)],[c_0_70, c_0_40]), c_0_71])])).
-    cnf(c_0_74, negated_conjecture, (esk1_2(esk12_0,esk2_1(esk13_0))=esk1_2(esk11_0,esk4_1(esk13_0))), inference(cn,[status(thm)],[inference(rw,[status(thm)],[inference(spm,[status(thm)],[c_0_72, c_0_48]), c_0_38])])).
-    cnf(c_0_75, negated_conjecture, (X1=esk3_1(esk13_0)|~comp(esk12_0,X1,esk1_2(esk11_0,esk4_1(esk13_0)))|~comp(esk13_0,X1,esk4_1(esk13_0))), inference(rw,[status(thm)],[c_0_70, c_0_73])).
-    cnf(c_0_76, negated_conjecture, (comp(esk12_0,esk2_1(esk13_0),esk1_2(esk11_0,esk4_1(esk13_0)))), inference(rw,[status(thm)],[c_0_65, c_0_74])).
-    cnf(c_0_77, plain, (monic(X1)|esk2_1(X1)!=esk3_1(X1)), inference(split_conjunct,[status(thm)],[c_0_28])).
-    cnf(c_0_78, negated_conjecture, (esk3_1(esk13_0)=esk2_1(esk13_0)), inference(cn,[status(thm)],[inference(rw,[status(thm)],[inference(spm,[status(thm)],[c_0_75, c_0_38]), c_0_76])])).
-    cnf(c_0_79, negated_conjecture, ($false), inference(sr,[status(thm)],[inference(spm,[status(thm)],[c_0_77, c_0_78]), c_0_32]), ['proof']).
-    # SZS output end CNFRefutation
-    # Proof object total steps             : 80
-    # Proof object clause steps            : 57
-    # Proof object formula steps           : 23
-    # Proof object conjectures             : 44
-    # Proof object clause conjectures      : 41
-    # Proof object formula conjectures     : 3
-    # Proof object initial clauses used    : 18
-    # Proof object initial formulas used   : 11
-    # Proof object generating inferences   : 34
-    # Proof object simplifying inferences  : 16
-    # Training examples: 0 positive, 0 negative
-    # Parsed axioms                        : 14
-    # Removed by relevancy pruning/SinE    : 0
-    # Initial clauses                      : 31
-    # Removed in clause preprocessing      : 0
-    # Initial clauses in saturation        : 31
-    # Processed clauses                    : 4871
-    # ...of these trivial                  : 248
-    # ...subsumed                          : 2833
-    # ...remaining for further processing  : 1790
-    # Other redundant clauses eliminated   : 2
-    # Clauses deleted for lack of memory   : 0
-    # Backward-subsumed                    : 68
-    # Backward-rewritten                   : 917
-    # Generated clauses                    : 12894
-    # ...of the previous two non-trivial   : 12112
-    # Contextual simplify-reflections      : 0
-    # Paramodulations                      : 12870
-    # Factorizations                       : 0
-    # Equation resolutions                 : 24
-    # Propositional unsat checks           : 0
-    #    Propositional check models        : 0
-    #    Propositional check unsatisfiable : 0
-    #    Propositional clauses             : 0
-    #    Propositional clauses after purity: 0
-    #    Propositional unsat core size     : 0
-    #    Propositional preprocessing time  : 0.000
-    #    Propositional encoding time       : 0.000
-    #    Propositional solver time         : 0.000
-    #    Success case prop preproc time    : 0.000
-    #    Success case prop encoding time   : 0.000
-    #    Success case prop solver time     : 0.000
-    # Current number of processed clauses  : 772
-    #    Positive orientable unit clauses  : 155
-    #    Positive unorientable unit clauses: 0
-    #    Negative unit clauses             : 1
-    #    Non-unit-clauses                  : 616
-    # Current number of unprocessed clauses: 5468
-    # ...number of literals in the above   : 16715
-    # Current number of archived formulas  : 0
-    # Current number of archived clauses   : 1016
-    # Clause-clause subsumption calls (NU) : 303883
-    # Rec. Clause-clause subsumption calls : 253866
-    # Non-unit clause-clause subsumptions  : 2890
-    # Unit Clause-clause subsumption calls : 1530
-    # Rewrite failures with RHS unbound    : 0
-    # BW rewrite match attempts            : 1110
-    # BW rewrite match successes           : 80
-    # Condensation attempts                : 0
-    # Condensation successes               : 0
-    # Termbank termtop insertions          : 267453</code>
+    
+```
+
+# Proof found!
+# SZS status Theorem
+# SZS output start CNFRefutation
+fof(pullback_monic, conjecture, ![X11, X13, X14]:((monic(X11)&pullback(cod(X11),X11,X13,X14))=>monic(X14)), file('properties.tptp', pullback_monic)).
+fof(pullback_def, axiom, ![X2, X3, X13, X14]:(pullback(X2,X3,X13,X14)<=>(commute_square(X2,X13,X3,X14)&![X15, X16]:(commute_square(X2,X15,X3,X16)=>?[X17]:![X18]:((comp(X13,X18,X15)&comp(X14,X18,X16))<=>X18=X17)))), file('properties.tptp', pullback_def)).
+fof(commute_square_def, axiom, ![X2, X3, X7, X12]:(commute_square(X2,X3,X7,X12)<=>?[X11]:(comp(X2,X3,X11)&comp(X7,X12,X11))), file('properties.tptp', commute_square_def)).
+fof(comp_objects_middle, axiom, ![X2, X3]:(?[X6]:comp(X2,X3,X6)<=>dom(X2)=cod(X3)), file('cat.tptp', comp_objects_middle)).
+fof(dom_cod, axiom, ![X1]:dom(cod(X1))=cod(X1), file('cat.tptp', dom_cod)).
+fof(left_id, axiom, ![X2]:comp(cod(X2),X2,X2), file('cat.tptp', left_id)).
+fof(comp_is_unique, axiom, ![X2, X3, X4, X5]:((comp(X2,X3,X4)&comp(X2,X3,X5))=>X4=X5), file('cat.tptp', comp_is_unique)).
+fof(monic_def, axiom, ![X11]:(monic(X11)<=>![X2, X3]:(?[X7]:(comp(X11,X2,X7)&comp(X11,X3,X7))=>X2=X3)), file('properties.tptp', monic_def)).
+fof(comp_cod, axiom, ![X2, X3, X6]:(comp(X2,X3,X6)=>cod(X2)=cod(X6)), file('cat.tptp', comp_cod)).
+fof(comp_dom, axiom, ![X2, X3, X6]:(comp(X2,X3,X6)=>dom(X3)=dom(X6)), file('cat.tptp', comp_dom)).
+fof(comp_assoc, axiom, ![X2, X3, X7, X6, X8, X9, X10]:((((comp(X2,X3,X6)&comp(X6,X7,X9))&comp(X2,X8,X10))&comp(X3,X7,X8))=>X9=X10), file('cat.tptp', comp_assoc)).
+fof(c_0_11, negated_conjecture, ~(![X11, X13, X14]:((monic(X11)&pullback(cod(X11),X11,X13,X14))=>monic(X14))), inference(assume_negation,[status(cth)],[pullback_monic])).
+fof(c_0_12, plain, ![X68, X69, X70, X71, X72, X73, X75, X76, X77, X78, X79, X80, X83]:(((commute_square(X68,X70,X69,X71)|~pullback(X68,X69,X70,X71))&((~comp(X70,X75,X72)|~comp(X71,X75,X73)|X75=esk7_6(X68,X69,X70,X71,X72,X73)|~commute_square(X68,X72,X69,X73)|~pullback(X68,X69,X70,X71))&((comp(X70,X76,X72)|X76!=esk7_6(X68,X69,X70,X71,X72,X73)|~commute_square(X68,X72,X69,X73)|~pullback(X68,X69,X70,X71))&(comp(X71,X76,X73)|X76!=esk7_6(X68,X69,X70,X71,X72,X73)|~commute_square(X68,X72,X69,X73)|~pullback(X68,X69,X70,X71)))))&((commute_square(X77,esk8_4(X77,X78,X79,X80),X78,esk9_4(X77,X78,X79,X80))|~commute_square(X77,X79,X78,X80)|pullback(X77,X78,X79,X80))&((~comp(X79,esk10_5(X77,X78,X79,X80,X83),esk8_4(X77,X78,X79,X80))|~comp(X80,esk10_5(X77,X78,X79,X80,X83),esk9_4(X77,X78,X79,X80))|esk10_5(X77,X78,X79,X80,X83)!=X83|~commute_square(X77,X79,X78,X80)|pullback(X77,X78,X79,X80))&((comp(X79,esk10_5(X77,X78,X79,X80,X83),esk8_4(X77,X78,X79,X80))|esk10_5(X77,X78,X79,X80,X83)=X83|~commute_square(X77,X79,X78,X80)|pullback(X77,X78,X79,X80))&(comp(X80,esk10_5(X77,X78,X79,X80,X83),esk9_4(X77,X78,X79,X80))|esk10_5(X77,X78,X79,X80,X83)=X83|~commute_square(X77,X79,X78,X80)|pullback(X77,X78,X79,X80)))))), inference(distribute,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(skolemize,[status(esa)],[inference(variable_rename,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(fof_nnf,[status(thm)],[pullback_def])])])])])])).
+fof(c_0_13, negated_conjecture, ((monic(esk11_0)&pullback(cod(esk11_0),esk11_0,esk12_0,esk13_0))&~monic(esk13_0)), inference(skolemize,[status(esa)],[inference(variable_rename,[status(thm)],[inference(fof_nnf,[status(thm)],[c_0_11])])])).
+fof(c_0_14, plain, ![X58, X59, X60, X61, X63, X64, X65, X66, X67]:(((comp(X58,X59,esk6_4(X58,X59,X60,X61))|~commute_square(X58,X59,X60,X61))&(comp(X60,X61,esk6_4(X58,X59,X60,X61))|~commute_square(X58,X59,X60,X61)))&(~comp(X63,X64,X67)|~comp(X65,X66,X67)|commute_square(X63,X64,X65,X66))), inference(distribute,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(skolemize,[status(esa)],[inference(variable_rename,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(fof_nnf,[status(thm)],[commute_square_def])])])])])])).
+cnf(c_0_15, plain, (commute_square(X1,X2,X3,X4)|~pullback(X1,X3,X2,X4)), inference(split_conjunct,[status(thm)],[c_0_12])).
+cnf(c_0_16, negated_conjecture, (pullback(cod(esk11_0),esk11_0,esk12_0,esk13_0)), inference(split_conjunct,[status(thm)],[c_0_13])).
+fof(c_0_17, plain, ![X25, X26, X27, X28, X29]:((~comp(X25,X26,X27)|dom(X25)=cod(X26))&(dom(X28)!=cod(X29)|comp(X28,X29,esk1_2(X28,X29)))), inference(shift_quantors,[status(thm)],[inference(skolemize,[status(esa)],[inference(variable_rename,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(fof_nnf,[status(thm)],[comp_objects_middle])])])])])).
+cnf(c_0_18, plain, (comp(X1,X2,esk6_4(X1,X2,X3,X4))|~commute_square(X1,X2,X3,X4)), inference(split_conjunct,[status(thm)],[c_0_14])).
+cnf(c_0_19, negated_conjecture, (commute_square(cod(esk11_0),esk12_0,esk11_0,esk13_0)), inference(spm,[status(thm)],[c_0_15, c_0_16])).
+fof(c_0_20, plain, ![X19]:dom(cod(X19))=cod(X19), inference(variable_rename,[status(thm)],[dom_cod])).
+fof(c_0_21, plain, ![X37]:comp(cod(X37),X37,X37), inference(variable_rename,[status(thm)],[left_id])).
+cnf(c_0_22, plain, (dom(X1)=cod(X2)|~comp(X1,X2,X3)), inference(split_conjunct,[status(thm)],[c_0_17])).
+cnf(c_0_23, negated_conjecture, (comp(cod(esk11_0),esk12_0,esk6_4(cod(esk11_0),esk12_0,esk11_0,esk13_0))), inference(spm,[status(thm)],[c_0_18, c_0_19])).
+cnf(c_0_24, plain, (dom(cod(X1))=cod(X1)), inference(split_conjunct,[status(thm)],[c_0_20])).
+fof(c_0_25, plain, ![X21, X22, X23, X24]:(~comp(X21,X22,X23)|~comp(X21,X22,X24)|X23=X24), inference(variable_rename,[status(thm)],[inference(fof_nnf,[status(thm)],[comp_is_unique])])).
+cnf(c_0_26, plain, (comp(cod(X1),X1,X1)), inference(split_conjunct,[status(thm)],[c_0_21])).
+cnf(c_0_27, negated_conjecture, (cod(esk12_0)=cod(esk11_0)), inference(rw,[status(thm)],[inference(spm,[status(thm)],[c_0_22, c_0_23]), c_0_24])).
+fof(c_0_28, plain, ![X46, X47, X48, X49, X50]:((~monic(X46)|(~comp(X46,X47,X49)|~comp(X46,X48,X49)|X47=X48))&(((comp(X50,esk2_1(X50),esk4_1(X50))|monic(X50))&(comp(X50,esk3_1(X50),esk4_1(X50))|monic(X50)))&(esk2_1(X50)!=esk3_1(X50)|monic(X50)))), inference(distribute,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(skolemize,[status(esa)],[inference(variable_rename,[status(thm)],[inference(shift_quantors,[status(thm)],[inference(fof_nnf,[status(thm)],[monic_def])])])])])])).
+cnf(c_0_29, plain, (X3=X4|~comp(X1,X2,X3)|~comp(X1,X2,X4)), inference(split_conjunct,[status(thm)],[c_0_25])).
+cnf(c_0_30, negated_conjecture, (comp(cod(esk11_0),esk12_0,esk12_0)), inference(spm,[status(thm)],[c_0_26, c_0_27])).
+fof(c_0_31, plain, ![X34, X35, X36]:(~comp(X34,X35,X36)|cod(X34)=cod(X36)), inference(variable_rename,[status(thm)],[inference(fof_nnf,[status(thm)],[comp_cod])])).
+cnf(c_0_32, negated_conjecture, (~monic(esk13_0)), inference(split_conjunct,[status(thm)],[c_0_13])).
+cnf(c_0_33, plain, (comp(X1,esk2_1(X1),esk4_1(X1))|monic(X1)), inference(split_conjunct,[status(thm)],[c_0_28])).
+cnf(c_0_34, plain, (comp(X1,X2,esk6_4(X3,X4,X1,X2))|~commute_square(X3,X4,X1,X2)), inference(split_conjunct,[status(thm)],[c_0_14])).
+cnf(c_0_35, plain, (comp(X1,esk3_1(X1),esk4_1(X1))|monic(X1)), inference(split_conjunct,[status(thm)],[c_0_28])).
+cnf(c_0_36, negated_conjecture, (X1=esk12_0|~comp(cod(esk11_0),esk12_0,X1)), inference(spm,[status(thm)],[c_0_29, c_0_30])).
+cnf(c_0_37, plain, (cod(X1)=cod(X3)|~comp(X1,X2,X3)), inference(split_conjunct,[status(thm)],[c_0_31])).
+cnf(c_0_38, negated_conjecture, (comp(esk13_0,esk2_1(esk13_0),esk4_1(esk13_0))), inference(spm,[status(thm)],[c_0_32, c_0_33])).
+cnf(c_0_39, negated_conjecture, (comp(esk11_0,esk13_0,esk6_4(cod(esk11_0),esk12_0,esk11_0,esk13_0))), inference(spm,[status(thm)],[c_0_34, c_0_19])).
+cnf(c_0_40, negated_conjecture, (comp(esk13_0,esk3_1(esk13_0),esk4_1(esk13_0))), inference(spm,[status(thm)],[c_0_32, c_0_35])).
+fof(c_0_41, plain, ![X31, X32, X33]:(~comp(X31,X32,X33)|dom(X32)=dom(X33)), inference(variable_rename,[status(thm)],[inference(fof_nnf,[status(thm)],[comp_dom])])).
+cnf(c_0_42, negated_conjecture, (esk6_4(cod(esk11_0),esk12_0,esk11_0,esk13_0)=esk12_0), inference(spm,[status(thm)],[c_0_36, c_0_23])).
+cnf(c_0_43, negated_conjecture, (cod(esk4_1(esk13_0))=cod(esk13_0)), inference(spm,[status(thm)],[c_0_37, c_0_38])).
+cnf(c_0_44, negated_conjecture, (cod(esk13_0)=dom(esk11_0)), inference(spm,[status(thm)],[c_0_22, c_0_39])).
+cnf(c_0_45, plain, (comp(X1,X2,esk1_2(X1,X2))|dom(X1)!=cod(X2)), inference(split_conjunct,[status(thm)],[c_0_17])).
+cnf(c_0_46, negated_conjecture, (cod(esk3_1(esk13_0))=dom(esk13_0)), inference(spm,[status(thm)],[c_0_22, c_0_40])).
+cnf(c_0_47, plain, (dom(X2)=dom(X3)|~comp(X1,X2,X3)), inference(split_conjunct,[status(thm)],[c_0_41])).
+cnf(c_0_48, negated_conjecture, (comp(esk11_0,esk13_0,esk12_0)), inference(rw,[status(thm)],[c_0_39, c_0_42])).
+cnf(c_0_49, negated_conjecture, (cod(esk4_1(esk13_0))=dom(esk11_0)), inference(rw,[status(thm)],[c_0_43, c_0_44])).
+fof(c_0_50, plain, ![X39, X40, X41, X42, X43, X44, X45]:(~comp(X39,X40,X42)|~comp(X42,X41,X44)|~comp(X39,X43,X45)|~comp(X40,X41,X43)|X44=X45), inference(variable_rename,[status(thm)],[inference(fof_nnf,[status(thm)],[comp_assoc])])).
+cnf(c_0_51, negated_conjecture, (comp(X1,esk3_1(esk13_0),esk1_2(X1,esk3_1(esk13_0)))|dom(X1)!=dom(esk13_0)), inference(spm,[status(thm)],[c_0_45, c_0_46])).
+cnf(c_0_52, negated_conjecture, (dom(esk12_0)=dom(esk13_0)), inference(spm,[status(thm)],[c_0_47, c_0_48])).
+cnf(c_0_53, negated_conjecture, (comp(X1,esk4_1(esk13_0),esk1_2(X1,esk4_1(esk13_0)))|dom(X1)!=dom(esk11_0)), inference(spm,[status(thm)],[c_0_45, c_0_49])).
+cnf(c_0_54, plain, (X5=X7|~comp(X1,X2,X3)|~comp(X3,X4,X5)|~comp(X1,X6,X7)|~comp(X2,X4,X6)), inference(split_conjunct,[status(thm)],[c_0_50])).
+cnf(c_0_55, negated_conjecture, (comp(esk12_0,esk3_1(esk13_0),esk1_2(esk12_0,esk3_1(esk13_0)))), inference(spm,[status(thm)],[c_0_51, c_0_52])).
+cnf(c_0_56, negated_conjecture, (cod(esk2_1(esk13_0))=dom(esk13_0)), inference(spm,[status(thm)],[c_0_22, c_0_38])).
+cnf(c_0_57, plain, (commute_square(X1,X2,X4,X5)|~comp(X1,X2,X3)|~comp(X4,X5,X3)), inference(split_conjunct,[status(thm)],[c_0_14])).
+cnf(c_0_58, negated_conjecture, (comp(esk11_0,esk4_1(esk13_0),esk1_2(esk11_0,esk4_1(esk13_0)))), inference(er,[status(thm)],[c_0_53])).
+cnf(c_0_59, negated_conjecture, (esk1_2(esk12_0,esk3_1(esk13_0))=X1|~comp(X2,esk3_1(esk13_0),X3)|~comp(X4,X2,esk12_0)|~comp(X4,X3,X1)), inference(spm,[status(thm)],[c_0_54, c_0_55])).
+cnf(c_0_60, negated_conjecture, (comp(X1,esk2_1(esk13_0),esk1_2(X1,esk2_1(esk13_0)))|dom(X1)!=dom(esk13_0)), inference(spm,[status(thm)],[c_0_45, c_0_56])).
+cnf(c_0_61, plain, (X2=esk7_6(X6,X7,X1,X4,X3,X5)|~comp(X1,X2,X3)|~comp(X4,X2,X5)|~commute_square(X6,X3,X7,X5)|~pullback(X6,X7,X1,X4)), inference(split_conjunct,[status(thm)],[c_0_12])).
+cnf(c_0_62, negated_conjecture, (commute_square(X1,X2,esk11_0,esk4_1(esk13_0))|~comp(X1,X2,esk1_2(esk11_0,esk4_1(esk13_0)))), inference(spm,[status(thm)],[c_0_57, c_0_58])).
+cnf(c_0_63, negated_conjecture, (cod(esk1_2(esk11_0,esk4_1(esk13_0)))=cod(esk11_0)), inference(spm,[status(thm)],[c_0_37, c_0_58])).
+cnf(c_0_64, negated_conjecture, (esk1_2(esk12_0,esk3_1(esk13_0))=esk1_2(esk11_0,esk4_1(esk13_0))|~comp(X1,esk3_1(esk13_0),esk4_1(esk13_0))|~comp(esk11_0,X1,esk12_0)), inference(spm,[status(thm)],[c_0_59, c_0_58])).
+cnf(c_0_65, negated_conjecture, (comp(esk12_0,esk2_1(esk13_0),esk1_2(esk12_0,esk2_1(esk13_0)))), inference(spm,[status(thm)],[c_0_60, c_0_52])).
+cnf(c_0_66, negated_conjecture, (X1=esk7_6(cod(esk11_0),esk11_0,esk12_0,esk13_0,X2,X3)|~commute_square(cod(esk11_0),X2,esk11_0,X3)|~comp(esk13_0,X1,X3)|~comp(esk12_0,X1,X2)), inference(spm,[status(thm)],[c_0_61, c_0_16])).
+cnf(c_0_67, negated_conjecture, (commute_square(cod(esk11_0),esk1_2(esk11_0,esk4_1(esk13_0)),esk11_0,esk4_1(esk13_0))), inference(rw,[status(thm)],[inference(spm,[status(thm)],[c_0_62, c_0_26]), c_0_63])).
+cnf(c_0_68, negated_conjecture, (esk1_2(esk12_0,esk3_1(esk13_0))=esk1_2(esk11_0,esk4_1(esk13_0))), inference(cn,[status(thm)],[inference(rw,[status(thm)],[inference(spm,[status(thm)],[c_0_64, c_0_48]), c_0_40])])).
+cnf(c_0_69, negated_conjecture, (esk1_2(esk12_0,esk2_1(esk13_0))=X1|~comp(X2,esk2_1(esk13_0),X3)|~comp(X4,X2,esk12_0)|~comp(X4,X3,X1)), inference(spm,[status(thm)],[c_0_54, c_0_65])).
+cnf(c_0_70, negated_conjecture, (X1=esk7_6(cod(esk11_0),esk11_0,esk12_0,esk13_0,esk1_2(esk11_0,esk4_1(esk13_0)),esk4_1(esk13_0))|~comp(esk12_0,X1,esk1_2(esk11_0,esk4_1(esk13_0)))|~comp(esk13_0,X1,esk4_1(esk13_0))), inference(spm,[status(thm)],[c_0_66, c_0_67])).
+cnf(c_0_71, negated_conjecture, (comp(esk12_0,esk3_1(esk13_0),esk1_2(esk11_0,esk4_1(esk13_0)))), inference(rw,[status(thm)],[c_0_55, c_0_68])).
+cnf(c_0_72, negated_conjecture, (esk1_2(esk12_0,esk2_1(esk13_0))=esk1_2(esk11_0,esk4_1(esk13_0))|~comp(X1,esk2_1(esk13_0),esk4_1(esk13_0))|~comp(esk11_0,X1,esk12_0)), inference(spm,[status(thm)],[c_0_69, c_0_58])).
+cnf(c_0_73, negated_conjecture, (esk7_6(cod(esk11_0),esk11_0,esk12_0,esk13_0,esk1_2(esk11_0,esk4_1(esk13_0)),esk4_1(esk13_0))=esk3_1(esk13_0)), inference(cn,[status(thm)],[inference(rw,[status(thm)],[inference(spm,[status(thm)],[c_0_70, c_0_40]), c_0_71])])).
+cnf(c_0_74, negated_conjecture, (esk1_2(esk12_0,esk2_1(esk13_0))=esk1_2(esk11_0,esk4_1(esk13_0))), inference(cn,[status(thm)],[inference(rw,[status(thm)],[inference(spm,[status(thm)],[c_0_72, c_0_48]), c_0_38])])).
+cnf(c_0_75, negated_conjecture, (X1=esk3_1(esk13_0)|~comp(esk12_0,X1,esk1_2(esk11_0,esk4_1(esk13_0)))|~comp(esk13_0,X1,esk4_1(esk13_0))), inference(rw,[status(thm)],[c_0_70, c_0_73])).
+cnf(c_0_76, negated_conjecture, (comp(esk12_0,esk2_1(esk13_0),esk1_2(esk11_0,esk4_1(esk13_0)))), inference(rw,[status(thm)],[c_0_65, c_0_74])).
+cnf(c_0_77, plain, (monic(X1)|esk2_1(X1)!=esk3_1(X1)), inference(split_conjunct,[status(thm)],[c_0_28])).
+cnf(c_0_78, negated_conjecture, (esk3_1(esk13_0)=esk2_1(esk13_0)), inference(cn,[status(thm)],[inference(rw,[status(thm)],[inference(spm,[status(thm)],[c_0_75, c_0_38]), c_0_76])])).
+cnf(c_0_79, negated_conjecture, ($false), inference(sr,[status(thm)],[inference(spm,[status(thm)],[c_0_77, c_0_78]), c_0_32]), ['proof']).
+# SZS output end CNFRefutation
+# Proof object total steps             : 80
+# Proof object clause steps            : 57
+# Proof object formula steps           : 23
+# Proof object conjectures             : 44
+# Proof object clause conjectures      : 41
+# Proof object formula conjectures     : 3
+# Proof object initial clauses used    : 18
+# Proof object initial formulas used   : 11
+# Proof object generating inferences   : 34
+# Proof object simplifying inferences  : 16
+# Training examples: 0 positive, 0 negative
+# Parsed axioms                        : 14
+# Removed by relevancy pruning/SinE    : 0
+# Initial clauses                      : 31
+# Removed in clause preprocessing      : 0
+# Initial clauses in saturation        : 31
+# Processed clauses                    : 4871
+# ...of these trivial                  : 248
+# ...subsumed                          : 2833
+# ...remaining for further processing  : 1790
+# Other redundant clauses eliminated   : 2
+# Clauses deleted for lack of memory   : 0
+# Backward-subsumed                    : 68
+# Backward-rewritten                   : 917
+# Generated clauses                    : 12894
+# ...of the previous two non-trivial   : 12112
+# Contextual simplify-reflections      : 0
+# Paramodulations                      : 12870
+# Factorizations                       : 0
+# Equation resolutions                 : 24
+# Propositional unsat checks           : 0
+#    Propositional check models        : 0
+#    Propositional check unsatisfiable : 0
+#    Propositional clauses             : 0
+#    Propositional clauses after purity: 0
+#    Propositional unsat core size     : 0
+#    Propositional preprocessing time  : 0.000
+#    Propositional encoding time       : 0.000
+#    Propositional solver time         : 0.000
+#    Success case prop preproc time    : 0.000
+#    Success case prop encoding time   : 0.000
+#    Success case prop solver time     : 0.000
+# Current number of processed clauses  : 772
+#    Positive orientable unit clauses  : 155
+#    Positive unorientable unit clauses: 0
+#    Negative unit clauses             : 1
+#    Non-unit-clauses                  : 616
+# Current number of unprocessed clauses: 5468
+# ...number of literals in the above   : 16715
+# Current number of archived formulas  : 0
+# Current number of archived clauses   : 1016
+# Clause-clause subsumption calls (NU) : 303883
+# Rec. Clause-clause subsumption calls : 253866
+# Non-unit clause-clause subsumptions  : 2890
+# Unit Clause-clause subsumption calls : 1530
+# Rewrite failures with RHS unbound    : 0
+# BW rewrite match attempts            : 1110
+# BW rewrite match successes           : 80
+# Condensation attempts                : 0
+# Condensation successes               : 0
+# Termbank termtop insertions          : 267453
+```
+
 
 
 

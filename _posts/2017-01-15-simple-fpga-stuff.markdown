@@ -55,7 +55,7 @@ This is better than the cyclone II chip I had before. More logic units, and I ca
 
 
 
-[![fpga_pin_map](http://www.philipzucker.com/wp-content/uploads/2017/01/fpga_pin_map-149x300.jpg)](http://www.philipzucker.com/wp-content/uploads/2017/01/fpga_pin_map.jpg)
+[![fpga_pin_map](/assets/fpga_pin_map-149x300.jpg)](/assets/fpga_pin_map.jpg)
 
 So I have a couple boards now.
 

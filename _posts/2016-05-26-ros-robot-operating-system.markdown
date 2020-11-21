@@ -57,7 +57,12 @@ Install instructions here
 had problems at catkin_make
 
     
-    <code><span class="pln">pip install catkin_pkg</span></code>
+    
+```
+
+<span class="pln">pip install catkin_pkg</span>
+```
+
 
 
 nope.

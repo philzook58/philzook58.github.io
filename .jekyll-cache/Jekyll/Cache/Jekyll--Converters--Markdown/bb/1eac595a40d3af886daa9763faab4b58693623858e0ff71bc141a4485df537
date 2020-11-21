@@ -1,0 +1,261 @@
+I")Y<p>Last time <a href="http://www.philipzucker.com/a-touch-of-topological-quantum-computation-in-haskell-pt-i/">we built the basic pieces we need</a> to describe anyons in Haskell. Anyon models describe interesting physical systems where a set of particles (Tau and Id in our case) have certain splitting rules and peculiar quantum properties. The existence of anyons in a system are the core physics necessary to support topological quantum computation. In topological quantum computing, quantum gates are applied by braiding the anyons and measurements performed by fusing anyons together and seeing what particle comes out. Applying gates in this way has inherent error correcting properties.</p>
+
+<p>The tree of particle production with particle labelled leaves picks a basis (think the collection $ {\hat{x}, \hat{y}, \hat{z}}$ ) for the anyon quantum vector space. An individual basis vector (think $ \hat{x}$ ) from this basis is specified by labelling the internal edges of the tree. We built a Haskell data type for a basic free vector space and functions for the basic R-moves for braiding two anyons and reassociating the tree into a new basis with F-moves. In addition, you can move around your focus within the tree by using the function <code class="language-plaintext highlighter-rouge">lmap</code> and <code class="language-plaintext highlighter-rouge">rmap</code>. The github repo with that and what follows below is <a href="https://github.com/philzook58/fib-anyon">here</a>.</p>
+
+<h4 id="pain-points">Pain Points</h4>
+
+<p>We’ve built the atomic operations we need, but they work very locally and are quite manual. You can apply many <code class="language-plaintext highlighter-rouge">lmap</code> and <code class="language-plaintext highlighter-rouge">rmap</code> to zoom in to the leaves you actually wish to braid, and you can manually perform all the F-moves necessary to bring nodes under the same parent, but it will be rather painful.</p>
+
+<p>The standard paper-and-pencil graphical notation for anyons is really awesome. You get to draw little knotty squiggles to calculate. It does not feel as laborious. The human eye and hand are great at applying a sequence of reasonably optimal moves to untangle the diagram efficiently. Our eye can take the whole thing in and our hand can zip around anywhere.</p>
+
+<p>To try and bridge this gap, we need to build functions that work in some reasonable way on the global anyon tree and that automate simple tasks.</p>
+
+<h4 id="a-couple-useful-functions">A Couple Useful Functions</h4>
+
+<p>Our first useful operation is <code class="language-plaintext highlighter-rouge">pullLeftLeaf</code>. This operation will rearrange the tree using F-moves to get the leftmost leaf associated all the way to the root. The leftmost leaf will then have the root as a parent.</p>
+
+<p><a href="/assets/48a4a399-dd9e-4e7e-b6d5-7660a0e948ea.png"><img src="/assets/48a4a399-dd9e-4e7e-b6d5-7660a0e948ea.png" alt="" /></a></p>
+
+<p>Because the tree structure is in the <code class="language-plaintext highlighter-rouge">FibTree a b</code> data type, we need the tuple tree type of the pulled tree. This is a slightly non-trivial type computation.</p>
+
+<p>In order to do this, we’ll use a bit of typelevel programming. If this is strange and alarming stuff for you, don’t sweat it too much. I am not the most elegant user of these techniques, but I hope that alongside my prose description you can get the gist of what we’re going for.</p>
+
+<p>(Sandy Maguire has a new book on <a href="https://leanpub.com/thinking-with-types">typelevel programming</a> in Haskell out. Good stuff. Support your fellow Haskeller and toss him some buckos.)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class PullLeftLeaf a b | a -&gt; b where 
+  pullLeftLeaf :: FibTree c a -&gt; Q (FibTree c b)
+instance PullLeftLeaf (Tau,c) (Tau,c) where
+  pullLeftLeaf = pure
+instance PullLeftLeaf (Id,c) (Id,c) where
+  pullLeftLeaf = pure
+instance PullLeftLeaf Tau Tau where
+  pullLeftLeaf = pure
+instance PullLeftLeaf Id Id where
+  pullLeftLeaf = pure
+instance (PullLeftLeaf (a,b) (a',b'), 
+          r ~ (a',(b',c))) =&gt; PullLeftLeaf ((a, b),c) r where
+  pullLeftLeaf t = do 
+           t' &lt;- lmap pullLeftLeaf t
+           fmove' t'
+</code></pre></div></div>
+
+<p>The resulting tree type <code class="language-plaintext highlighter-rouge">b</code> is an easily computable function of the starting tree type <code class="language-plaintext highlighter-rouge">a</code>. That is what the “functional dependency” notation <code class="language-plaintext highlighter-rouge">| a -&gt; b</code> in the typeclass definition tells the compiler.</p>
+
+<p>The first 4 instances are base cases. If you’re all the way at the leaf, you basically want to do nothing. <code class="language-plaintext highlighter-rouge">pure</code> is the function that injects the classical tree description into a quantum state vector with coefficient 1.</p>
+
+<p>The meat is in the last instance. In the case that the tree type matches <code class="language-plaintext highlighter-rouge">((a,b),c)</code>, we recursively call PullLeftLeaf on <code class="language-plaintext highlighter-rouge">(a,b)</code> which returns a new result <code class="language-plaintext highlighter-rouge">(a',b')</code>. Because of the recursion, this <code class="language-plaintext highlighter-rouge">a'</code> is the leftmost leaf. We can then construct the return type by doing a single reassociation step. The notation <code class="language-plaintext highlighter-rouge">~</code> forces two types to unify. We can use this conceptually as an assignment statement at the type level. This is very useful for building intermediate names for large expressions, as assert statements to ensure the types are as expected, and also occasionally to force unification of previously unknown types. It’s an interesting operator for sure.</p>
+
+<p>The recursion at the type level is completely reflected in the actual function definition. We focus on the piece <code class="language-plaintext highlighter-rouge">(a,b)</code> inside <code class="language-plaintext highlighter-rouge">t</code> by using <code class="language-plaintext highlighter-rouge">lmap</code>. We do a recursive call to <code class="language-plaintext highlighter-rouge">pullLeftLeaf</code>, and finally <code class="language-plaintext highlighter-rouge">fmove'</code> performs the final reassociation move. It is all rather verbose, but straightforward I hope.</p>
+
+<p>You can also build a completely similar <code class="language-plaintext highlighter-rouge">PullRightLeaf</code>.</p>
+
+<h4 id="a-canonical-right-associated-basis">A Canonical Right Associated Basis</h4>
+
+<p>One common way of dealing with larger trees is to pick a canonical basis of fully right associated trees. The fully right associated tree is a list-like structure. Its uniformity makes it easier to work with.</p>
+
+<p>By recursively applying <code class="language-plaintext highlighter-rouge">pullLeftLeaf</code>, we can fully right associate any tree.</p>
+
+<p><a href="/assets/d44b3b38-bc0a-474e-9657-cac542862fea.png"><img src="/assets/d44b3b38-bc0a-474e-9657-cac542862fea.png" alt="" /></a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class RightAssoc a b | a -&gt; b where
+  rightAssoc :: FibTree c a -&gt; Q (FibTree c b)
+instance RightAssoc Tau Tau where
+  rightAssoc = pure
+instance RightAssoc Id Id where
+  rightAssoc = pure
+instance (PullLeftLeaf (a,b) (a',b'),
+          RightAssoc b' b'',
+          r ~ (a', b'')) =&gt; RightAssoc (a,b) r where
+  rightAssoc t = do 
+           t' &lt;- pullLeftLeaf t
+           rmap rightAssoc t'
+</code></pre></div></div>
+
+<p>This looks quite similar to the implementation of <code class="language-plaintext highlighter-rouge">pullLeftLeaf</code>. It doesn’t actually have much logic to it. We apply <code class="language-plaintext highlighter-rouge">pullLeftLeaf</code>, then we recursively apply <code class="language-plaintext highlighter-rouge">rightAssoc</code> in the right branch of the tree.</p>
+
+<h4 id="b-moves-braiding-in-the-right-associated-basis">B-Moves: Braiding in the Right Associated Basis</h4>
+
+<p>Now we have the means to convert any structure to it’s right associated canonical basis. In this basis, one can apply braiding to neighboring anyons using B-moves, which can be derived from the braiding R-moves and F-moves.</p>
+
+<p>The B-move applies one F-move so that the two neighboring leaves share a parent, uses the regular braiding R-move, then applies the inverse F-move to return back to the canonical basis. Similarly, <code class="language-plaintext highlighter-rouge">bmove'</code> is the same thing except applies the under braiding<code class="language-plaintext highlighter-rouge"> braid'</code> rather that the over braiding <code class="language-plaintext highlighter-rouge">braid</code>.</p>
+
+<p><a href="/assets/b-move.png"><img src="/assets/b-move.png" alt="" /></a></p>
+
+<p>(Image Source : <a href="http://www.theory.caltech.edu/~preskill/ph219/topological.pdf">Preskill’s notes</a>)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bmove :: forall b c d a. FibTree a (b,(c,d)) -&gt; Q (FibTree a (c,(b,d)))
+bmove t = do
+           t'  :: FibTree a ((b,c),d) &lt;- fmove t
+           t'' :: FibTree a ((c,b),d) &lt;-  lmap braid t'
+           fmove' t'' 
+bmove' :: forall b c d a. FibTree a (b,(c,d)) -&gt; Q (FibTree a (c,(b,d)))
+bmove' = fmove' &lt;=&lt; (lmap braid') &lt;=&lt; fmove -- point-free style for funzies. equivalent to the above except for braid'
+</code></pre></div></div>
+
+<h4 id="indexing-to-leaves">Indexing to Leaves</h4>
+
+<p>We also may desire just specifying the integer index of where we wish to perform a braid. This can be achieved with another typeclass for iterated <code class="language-plaintext highlighter-rouge">rmap</code>ing. When the tree is in canonical form, this will enable us to braid two neighboring leaves by an integer index. This index has to be a <a href="http://hackage.haskell.org/package/base-4.12.0.0/docs/GHC-TypeNats.html">typelevel number</a> because the output type depends on it.</p>
+
+<p>In fact there is quite a bit of type computation. Given a total tree type <code class="language-plaintext highlighter-rouge">s</code> and an index <code class="language-plaintext highlighter-rouge">n</code> this function will zoom into the subpart <code class="language-plaintext highlighter-rouge">a</code> of the tree at which we want to apply our function. The subpart <code class="language-plaintext highlighter-rouge">a</code> is replaced by <code class="language-plaintext highlighter-rouge">b</code>, and then the tree is reconstructed into <code class="language-plaintext highlighter-rouge">t</code>. <code class="language-plaintext highlighter-rouge">t</code> is <code class="language-plaintext highlighter-rouge">s</code> with the subpart <code class="language-plaintext highlighter-rouge">a</code> mapped into <code class="language-plaintext highlighter-rouge">b</code>. I have intentionally made this reminiscent of the type variables of the <a href="http://hackage.haskell.org/package/lens">lens</a> type <code class="language-plaintext highlighter-rouge">Lens s t a b</code> .</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rmapN :: forall n gte s t a b e. (RMapN n gte s t a b, gte ~ (CmpNat n 0)) =&gt; (forall r. FibTree r a -&gt; Q (FibTree r b)) -&gt; (FibTree e s) -&gt; Q (FibTree e t)
+rmapN f t = rmapN' @n @gte f t
+
+class RMapN n gte s t a b | n gte s b -&gt; a t where
+    rmapN' :: (forall r. FibTree r a -&gt; Q (FibTree r b)) -&gt; (FibTree e s) -&gt; Q (FibTree e t)
+
+instance (a ~ s, b ~ t) =&gt; RMapN 0 'EQ s t a b where
+    rmapN' f t = f t
+instance (RMapN (n-1) gte r r' a b, 
+               gte ~ (CmpNat (n-1) 0),
+               t ~ (l,r')) =&gt; RMapN n 'GT (l,r) t a b where
+    rmapN' f t = rmap (rmapN @(n-1) f) t
+</code></pre></div></div>
+
+<p>This looks much noisier that it has to because we need to work around some of the unfortunate realities of using the typeclass system to compute types. We can’t just match on the number <code class="language-plaintext highlighter-rouge">n</code> in order to pick which instance to use because the patterns <code class="language-plaintext highlighter-rouge">0</code> and <code class="language-plaintext highlighter-rouge">n</code> are overlapping. The pattern <code class="language-plaintext highlighter-rouge">n</code> can match the number <code class="language-plaintext highlighter-rouge">0</code> if <code class="language-plaintext highlighter-rouge">n ~ 0</code>. The pattern matching in the type instance is not quite the same as the regular Haskell pattern matching we use to define functions. The order of the definitions does not matter, so you can’t have default cases. The patterns you use cannot be unifiable. In order to fix this, we make the condition if <code class="language-plaintext highlighter-rouge">n</code> is greater than 0 an explicit type variable <code class="language-plaintext highlighter-rouge">gte</code>. Now the different cases cannot unify. It is a very common trick to need a variable representing some branching condition.</p>
+
+<p>For later convenience, we define <code class="language-plaintext highlighter-rouge">rmapN</code> which let’s us not need to supply the necessary comparison type <code class="language-plaintext highlighter-rouge">gte</code>.</p>
+
+<h4 id="parentifying-leaves-lazily">Parentifying Leaves Lazily</h4>
+
+<p>While it is convenient to describe anyon computations in a canonical basis, it can be quite inefficient. Converting an arbitrary anyon tree into the standard basis will often result in a dense vector. A natural thing to do for the sake of economy is only do reassociation on demand.</p>
+
+<p>The algorithm for braiding two neighboring leaves is pretty straightforward. We need to reassociate these leaves so that they have the same parent. First we need the ability to map into the least common ancestor of the two leaves. To reassociate these two leaves to have a common parent we <code class="language-plaintext highlighter-rouge">pullrightLeaf</code> the left subtree and then <code class="language-plaintext highlighter-rouge">pullLeftLeaf</code> the left subtree. Finally, there is a bit extra bit of shuffling to actually get them to be neighbors.</p>
+
+<p>As a first piece, we need a type level function to count the number of leaves in a tree. In this case, I am inclined to use type families rather than multi parameter typeclasses as before, since I don’t need value level stuff coming along for the ride.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type family Count a where
+  Count Tau = 1
+  Count Id = 1
+  Count (a,b) = (Count a) + (Count b)
+
+type family LeftCount a where
+  LeftCount (a,b) = Count a
+</code></pre></div></div>
+
+<p>Next, we make a typeclass for mapping into the least common ancestor position.</p>
+
+<p><a href="/assets/48a4a399-dd9e-4e7e-b6d5-7660a0e948ea-1.png"><img src="/assets/48a4a399-dd9e-4e7e-b6d5-7660a0e948ea-1.png" alt="" /></a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lcamap ::  forall n s t a b e gte .
+           (gte ~ CmpNat (LeftCount s) n,
+           LCAMap n gte s t a b)
+           =&gt; (forall r. FibTree r a -&gt; Q (FibTree r b)) -&gt; (FibTree e s) -&gt; Q (FibTree e t)
+lcamap f t = lcamap' @n @gte f t
+
+class LCAMap n gte s t a b | n gte s b -&gt; t a where
+    lcamap' :: (forall r. FibTree r a -&gt; Q (FibTree r b)) -&gt; (FibTree e s) -&gt; Q (FibTree e t)
+    
+
+instance (n' ~ (n - Count l), -- We're searching in the right subtree. Subtract the leaf number in the left subtree
+            lc ~ (LeftCount r), -- dip one level down to order which way we have to go next
+            gte ~ (CmpNat lc n'), -- Do we go left, right or have we arrived in the next layer?
+            LCAMap n' gte r r' a b,  -- recursive call
+            t ~ (l,r') -- reconstruct total return type from recursive return type. Left tree is unaffected by lcamapping
+            ) =&gt; LCAMap n 'LT (l,r) t a b where
+        lcamap' f x = rmap (lcamap @n' f) x
+    
+instance (lc ~ (LeftCount l),
+            gte ~ (CmpNat lc n),
+            LCAMap n gte l l' a b,
+            t ~ (l',r)
+            ) =&gt; LCAMap n 'GT (l,r) t a b where
+        lcamap' f x = lmap (lcamap @n f) x
+    
+instance (t ~ b, a ~ s) =&gt; LCAMap n 'EQ s t a b where -- Base case
+    lcamap' f x = f x
+</code></pre></div></div>
+
+<p>We find the least common ancestor position by doing a binary search on the size of the left subtrees at each node. Once the size of the left subtree equals <code class="language-plaintext highlighter-rouge">n</code>, we’ve found the common ancestor of leaf <code class="language-plaintext highlighter-rouge">n</code> and leaf <code class="language-plaintext highlighter-rouge">n+1</code>.</p>
+
+<p>Again, this <code class="language-plaintext highlighter-rouge">LCAMap</code> typeclass has a typelevel argument <code class="language-plaintext highlighter-rouge">gte</code> that directs it which direction to go down the tree.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Twiddle s t a b | s b -&gt; t a where
+    twiddle :: (forall r. FibTree r a -&gt; Q (FibTree r b)) -&gt; FibTree e s -&gt; Q (FibTree e t)
+    
+instance Twiddle ((l,x),(y,r)) ((l,c),r) (x,y) c where
+    twiddle f x = do
+            x'  &lt;- fmove x -- (((l',x),y),r')
+            x'' &lt;- lmap fmove' x' -- ((l',(x,y)),r')
+            lmap (rmap f) x''
+instance Twiddle (Tau, (y,r)) (c,r) (Tau, y) c where
+    twiddle f x = fmove x &gt;&gt;= lmap f
+instance Twiddle (Id, (y,r)) (c,r)  (Id, y) c where
+    twiddle f x = fmove x &gt;&gt;= lmap f
+instance Twiddle ((l,x), Tau) (l,c) (x,Tau) c where
+    twiddle f x = fmove' x &gt;&gt;= rmap f
+instance Twiddle ((l,x), Id) (l,c) (x,Id) c where
+    twiddle f x = fmove' x &gt;&gt;= rmap f
+instance Twiddle (Tau, Tau) c (Tau,Tau) c where
+    twiddle f x = f x 
+instance Twiddle (Id, Id) c (Id,Id)  c where
+    twiddle f x = f x 
+instance Twiddle (Tau, Id) c (Tau,Id)  c where
+    twiddle f x = f x 
+instance Twiddle (Id, Tau) c (Id,Tau) c where
+    twiddle f x = f x
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">Twiddle</code> typeclass will perform some final cleanup after we’ve done all the leaf pulling. At that point, the leaves still do not have the same parent. They are somewhere between 0 and 2 F-moves off depending on whether the left or right subtrees may be just a leaf or larger trees. <code class="language-plaintext highlighter-rouge">twiddle</code> is not a recursive function.</p>
+
+<p>Putting this all together we get the nmap function that can apply a function after parentifying two leaves. By far the hardest part is writing out that type signature.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmap :: forall (n :: Nat) s t a b a' b' l l' r r' e gte.
+    (gte ~ CmpNat (LeftCount s) n,
+    LCAMap n gte s t a' b',
+    a' ~ (l,r),
+    PullRightLeaf l l',
+    PullLeftLeaf r r',
+    Twiddle (l',r') b' a b) =&gt; 
+    (forall r. FibTree r a -&gt; Q (FibTree r b)) -&gt; FibTree e s -&gt; Q (FibTree e t)
+nmap f z = lcamap @n @s @t @a' @b' (\x -&gt; do
+                                           x'  &lt;- lmap pullRightLeaf x
+                                           x'' &lt;- rmap pullLeftLeaf x' 
+                                           twiddle f x'') z
+</code></pre></div></div>
+
+<h4 id="usage-example">Usage Example</h4>
+
+<p>Here’s some simple usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>t1 = nmap @2 braid (TTT (TTI TLeaf ILeaf) (TTT TLeaf TLeaf)) 
+t5 = nmap @2 pure (TTT (TTI TLeaf ILeaf) (TTT TLeaf TLeaf)) &gt;&gt;= nmap @3 pure
+t2 = nmap @1 braid (TTT (TTI TLeaf ILeaf) (TTT TLeaf TLeaf)) 
+t4 = nmap @1 braid (TTT TLeaf (TTT TLeaf TLeaf)) 
+t3 = nmap @2 braid (TTT (TTT (TTT TLeaf TLeaf) TLeaf) (TTT TLeaf TLeaf)) 
+t6 = rightAssoc (TTT (TTT (TTT TLeaf TLeaf) TLeaf) (TTT TLeaf TLeaf)) 
+t7 = t6 &gt;&gt;= bmove
+t8 = t6 &gt;&gt;= rmapN @0 bmove
+</code></pre></div></div>
+
+<p>Note that rmapN is 0-indexed but nmap is 1-indexed. This is somewhat horrifying, but that is what was natural in the implementation.</p>
+
+<p>Here is a more extended example showing how to fuse some particles.</p>
+
+<p><a href="/assets/8acaa5b6-50cc-4208-89da-414b21867064-1.png"><img src="/assets/8acaa5b6-50cc-4208-89da-414b21867064-1.png" alt="" /></a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ttt = TTT TLeaf TLeaf
+example = starttree &gt;&gt;=
+        nmap @1 braid &gt;&gt;=
+        nmap @2 braid &gt;&gt;=
+        nmap @1 (dot ttt) &gt;&gt;=
+        nmap @2 braid' &gt;&gt;=
+        nmap @2 (dot ttt) &gt;&gt;=
+        nmap @1 (dot ttt) where
+        starttree = pure (TTT (TTT TLeaf
+                              (TTT TLeaf 
+                                   TLeaf))
+                          TLeaf
+                         )
+</code></pre></div></div>
+
+<p>I started with the tree at the top and traversed downward implementing each braid and fusion. Implicitly all the particles shown in the diagram are Tau particles. The indices refer to particle position, not to the particles “identity” as you would trace it by eye on the page. Since these are identical quantum particles, the particles don’t have identity as we classically think of it anyhow.</p>
+
+<p>The particle pairs are indexed by the number on the left particle. First braid 1 over 2, then 2 over 3, fuse 1 and 2, braid 2 under 3, fuse 2 and 3, and then fuse 1 and 2. I got an amplitude for the process of -0.618, corresponding to a probability of 0.382. I would give myself 70% confidence that I implemented all my signs and conventions correctly. The hexagon and pentagon equations from last time being correct gives me some peace of mind.</p>
+
+<p>Syntax could use a little spit polish, but it is usable. With some readjustment, one could use the Haskell <code class="language-plaintext highlighter-rouge">do</code> notation removing the need for explicit <code class="language-plaintext highlighter-rouge">&gt;&gt;=</code>.</p>
+
+<h4 id="next-time">Next Time</h4>
+
+<p>Anyons are often described in categorical terminology. Haskell has a category culture as well. Let’s explore how those mix!</p>
+:ET

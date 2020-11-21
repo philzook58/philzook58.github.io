@@ -1,0 +1,61 @@
+---
+author: philzook58
+comments: true
+date: 2017-08-16 13:54:06+00:00
+layout: post
+link: https://www.philipzucker.com/?p=797
+published: false
+slug: Webrtc
+title: Webrtc
+wordpress_id: 797
+---
+
+webrtc is the thing that let's you do video chat over the internet. There is javascript access in the browser.
+
+https://webrtc.org/native-code/native-apis/
+
+webrtc-start seems great.
+
+Ok. Here's the plan. Use the phot transmission as a start. See if that works on local network.
+
+Then transition into a phone call app.
+
+Then transition to using the c api.
+
+
+
+ok so we've been using zencastr for phone call and audio recording. I'm just wondering how much it would take to get the bulk of that functionality.
+
+
+
+    
+    navigator.getUserMedia = navigator.getUserMedia ||
+        navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    
+    var constraints = {
+      audio: true,
+      video: false
+    };
+    var video = document.querySelector('video');
+    
+    function successCallback(stream) {
+      window.stream = stream; // stream available to console
+      if (window.URL) {
+        video.src = window.URL.createObjectURL(stream);
+      } else {
+        video.src = stream;
+      }
+    }
+    
+    function errorCallback(error) {
+      console.log('navigator.getUserMedia error: ', error);
+    }
+    
+    navigator.getUserMedia(constraints, successCallback, errorCallback);
+
+
+This gets the audio stream captured and echoing
+
+webaudio
+
+https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API

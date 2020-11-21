@@ -1,0 +1,43 @@
+---
+author: philzook58
+comments: true
+date: 2018-04-16 23:25:56+00:00
+layout: post
+link: https://www.philipzucker.com/?p=783
+published: false
+slug: Earth NMR
+title: Earth NMR
+wordpress_id: 783
+---
+
+http://www.colorado.edu/physics/phys4430/phys4430_sp17/CourseInformation/Modern/Earth's%20field%20NMR%20Teachspin%20Manual.pdf
+
+Interesting.
+
+So If I put a constant field on a thing, and then turn it off, I ought to get a ringing.
+
+http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.864.5139&rep=rep1&type=pdf
+
+https://www.youtube.com/watch?v=E9aQRDod2j4
+
+Idea: Use frequency generator + lock in as frequency selective guy. Hmm. That is actually very similar to the epr experiment.
+
+https://en.wikipedia.org/wiki/American_wire_gauge
+
+24 AWG is 84 milliOhms/m
+
+My tube (an oats container) is about 10cm diameter ~ 30cm circumference
+
+I have the patience for 30 wraps = 0.8 ohms * 2 coils = 2 ohms
+
+12V / 2 = 6A
+
+100 wraps -> 2A
+
+200 wraps -> 1A
+
+No way. I'm not disspating 5W in this thing.
+
+
+
+Helmholtz coil - distance between coils equals radius

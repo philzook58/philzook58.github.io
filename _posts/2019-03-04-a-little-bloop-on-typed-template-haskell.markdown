@@ -41,21 +41,26 @@ Here's a basic addition interpreter example.
 
 
     
-    <code>{-# LANGUAGE TemplateHaskell -#}
-    import Language.Haskell.TH
-    import Language.Haskell.TH.Syntax
     
-    data Expr = Val Int | Add Expr Expr
-    
-    eval' :: Expr -> Int
-    eval' (Val n) = n
-    eval' (Add e1 e2) = (eval' e1) + (eval' e2)
-    
-    eval :: Expr -> TExpQ Int
-    eval (Val n) = [|| n ||]
-    eval (Add e1 e2) = [|| $$(eval e1) + $$(eval e2) ||]
-    
-    </code>
+```
+
+{-# LANGUAGE TemplateHaskell -#}
+import Language.Haskell.TH
+import Language.Haskell.TH.Syntax
+
+data Expr = Val Int | Add Expr Expr
+
+eval' :: Expr -> Int
+eval' (Val n) = n
+eval' (Add e1 e2) = (eval' e1) + (eval' e2)
+
+eval :: Expr -> TExpQ Int
+eval (Val n) = [|| n ||]
+eval (Add e1 e2) = [|| $$(eval e1) + $$(eval e2) ||]
+
+
+```
+
 
 
 
@@ -79,8 +84,13 @@ You tend to have to put the actual use of the splice in a different file. GHC wi
 
 
     
-    <code>ex1 :: Int
-    ex1 = $$(eval (Add (Val 1) (Val 1)))</code>
+    
+```
+
+ex1 :: Int
+ex1 = $$(eval (Add (Val 1) (Val 1)))
+```
+
 
 
 
@@ -96,7 +106,12 @@ At the top of your file put this to have the template haskell splices dumped int
 
 
     
-    <code>{-# OPTIONS_GHC -ddump-splices -ddump-to-file #-}</code>
+    
+```
+
+{-# OPTIONS_GHC -ddump-splices -ddump-to-file #-}
+```
+
 
 
 
@@ -112,18 +127,23 @@ Or have your package.yaml look something like this
 
 
     
-    <code>executables:
-      staged-exe:
-        main:                Main.hs
-        source-dirs:         app
-        ghc-options:
-        - -threaded
-        - -rtsopts
-        - -with-rtsopts=-N
-        - -ddump-splices
-        - -ddump-to-file
-        dependencies:
-        - staged</code>
+    
+```
+
+executables:
+  staged-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -ddump-splices
+    - -ddump-to-file
+    dependencies:
+    - staged
+```
+
 
 
 
@@ -139,8 +159,13 @@ If you're using stack, you need to dive into .stack/dist/x86/Cabal/build and the
 
 
     
-    <code>app/Main.hs:11:10-35: Splicing expression
-        eval (Add (Val 1) (Val 1)) ======> (1 + 1)</code>
+    
+```
+
+app/Main.hs:11:10-35: Splicing expression
+    eval (Add (Val 1) (Val 1)) ======> (1 + 1)
+```
+
 
 
 
@@ -164,14 +189,19 @@ Some more examples: unrolling the recursion on a power function (a classic)
 
 
     
-    <code>-- ordinary version
-    power 0 x = 1
-    power n x = x * (power (n-1) x)
     
-    -- templated up
-    power' :: Int -> TExpQ (Int -> Int)
-    power' 0 = [|| const 1 ||]
-    power' n = [|| \x -> x * $$(power' (n-1)) x ||] </code>
+```
+
+-- ordinary version
+power 0 x = 1
+power n x = x * (power (n-1) x)
+
+-- templated up
+power' :: Int -> TExpQ (Int -> Int)
+power' 0 = [|| const 1 ||]
+power' n = [|| \x -> x * $$(power' (n-1)) x ||] 
+```
+
 
 
 
@@ -187,16 +217,21 @@ You can unroll a fibonacci calculation
 
 
     
-    <code>-- unrolled fib woth sharing
-    fib 0 = 1
-    fib 1 = 1
-    fib n = (fib (n-1)) + (fib (n-2))
     
-    -- we always need [||  ||] wheneve there is a Code
-    fib' :: Int -> TExpQ Int
-    fib' 0 = [|| 1 ||]
-    fib' 1 = [|| 1 ||] 
-    fib' n = [|| $$(fib' (n-1)) + $$(fib' (n-2)) ||]</code>
+```
+
+-- unrolled fib woth sharing
+fib 0 = 1
+fib 1 = 1
+fib n = (fib (n-1)) + (fib (n-2))
+
+-- we always need [||  ||] wheneve there is a Code
+fib' :: Int -> TExpQ Int
+fib' 0 = [|| 1 ||]
+fib' 1 = [|| 1 ||] 
+fib' n = [|| $$(fib' (n-1)) + $$(fib' (n-2)) ||]
+```
+
 
 
 
@@ -212,12 +247,17 @@ This is blowing up in calculation though (no memoization, you silly head).  We c
 
 
     
-    <code>fib4 :: Int -> TExpQ Int
-    fib4 n = go n [|| ( 0, 1 ) ||]
-                    where
-                      go :: Int -> TExpQ (Int, Int) -> TExpQ Int
-                      go n z | n==0      = [|| let (a,b) = $$(z) in a ||]
-                             | otherwise = go (n-1) [|| let (a,b) = $$(z) in (b, a + b) ||]</code>
+    
+```
+
+fib4 :: Int -> TExpQ Int
+fib4 n = go n [|| ( 0, 1 ) ||]
+                where
+                  go :: Int -> TExpQ (Int, Int) -> TExpQ Int
+                  go n z | n==0      = [|| let (a,b) = $$(z) in a ||]
+                         | otherwise = go (n-1) [|| let (a,b) = $$(z) in (b, a + b) ||]
+```
+
 
 
 

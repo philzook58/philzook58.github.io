@@ -1,0 +1,19 @@
+---
+author: philzook58
+comments: true
+date: 2016-08-16 19:50:08+00:00
+layout: post
+link: https://www.philipzucker.com/?p=491
+published: false
+slug: Arrows
+title: Arrows
+wordpress_id: 491
+---
+
+So Monads are ubiquitous in Haskell. Why are they good? Well, they are a many faced god. My personal favorite explanation (right now) is that they let you write perhaps special interfunction plumbing once (the bind defintion). For example every new function appends an entry to a carried along log (Writer monad) or checking for computation failure (Maybe monad).
+
+But there is sometimes mention of the Arrow, which is some kind of brother to monads. Or cousin. Or second Cousin. It's another one of those kind of funny abstractions.
+
+The arrow is supposed to be kind of like an abstraction of functions or of circuits or dataflow or or certain kinds of arrowy diagrams.
+
+

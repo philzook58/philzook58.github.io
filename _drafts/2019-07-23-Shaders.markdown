@@ -1,0 +1,450 @@
+---
+author: philzook58
+comments: true
+date: 2019-07-23 17:46:33+00:00
+layout: post
+link: https://www.philipzucker.com/?p=1872
+published: false
+slug: Shaders
+title: Shaders
+wordpress_id: 1872
+---
+
+
+
+
+
+https://www.youtube.com/playlist?list=PL4neAtv21WOmIrTrkNO3xCyrxg4LKkrF7
+
+
+
+
+
+
+
+
+[https://thebookofshaders.com/](https://thebookofshaders.com/)
+
+
+
+
+
+
+
+shaders are very fun
+
+
+
+
+
+
+
+[https://github.com/patriciogonzalezvivo/glslViewer](https://github.com/patriciogonzalezvivo/glslViewer) cool viewer and converter.
+
+
+
+
+
+
+
+uniforms
+
+
+
+
+
+
+
+Important variables. glFragColor
+
+
+
+
+
+
+
+A couple different things. If you have the closed form solution of an system, you can easily plot it.
+
+
+
+
+
+
+    
+    <code>#ifdef GL_ES
+    precision mediump float;
+    #endif
+    
+    #define PI 3.1459
+    uniform vec2 u_resolution;
+    uniform float u_time;
+    // closed form of diffusion
+    float gauss(vec2 pos, float t){
+        return exp(- length(pos) / (0.1*t + 0.001));
+    }
+    
+    float wave(vec2 pos, float t){
+        return cos(10.0*(length(pos - 0.5) - t));
+    }
+    
+    float rand(vec2 co){
+        return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+    }
+    
+    void main(){
+        vec2 position = gl_FragCoord.xy / u_resolution;
+        float mytime = mod(u_time, 2.0);
+        vec3 color = vec3(1.0);
+        float m = gauss(position - 0.5, mytime);
+        //vec3 color = vec3(m);
+        //vec3 color = vec3(rand(position));
+        //vec3 color = vec3(fract(20.0 *position.x + u_time), fract(100.0 *position.x - u_time), fract(2.0 *position.y));
+        //vec3 color = vec3( step() )
+        color = vec3(wave(position, u_time));
+        //color *= vec3(step(-0.99, sin(30.0* PI* position.x)));
+        //color *= vec3(step(-0.99, sin(30.0* PI* position.y)));
+        //color *= vec3(1.0 - step(0.1, abs(position.y - cos(position.x) ) ));
+        gl_FragColor = vec4(color,1.0);
+    }</code>
+
+
+
+
+
+
+
+Simply load a texture and show it
+
+
+
+
+
+
+    
+    <code>#ifdef GL_ES
+    precision mediump float;
+    #endif
+    
+    uniform sampler2D u_tex0; // u_tex0Resolution;
+    uniform vec2 u_tex0Resolution;
+    uniform vec2 u_resolution;
+    uniform float u_time;
+    
+    
+    
+    void main(){
+        vec2 position = gl_FragCoord.xy / u_resolution;
+        gl_FragColor = texture2D(u_tex0, position);
+    }</code>
+
+
+
+
+
+![](http://philzucker2.nfshost.com/wp-content/uploads/2019/07/mandel2.png)
+
+
+
+
+
+Here is a basic mandelbrot set
+
+
+
+
+
+
+    
+    <code>#ifdef GL_ES
+    precision mediump float;
+    #endif
+    
+    
+    uniform vec2 u_resolution;
+    uniform float u_time;
+    vec2 mul(vec2 pos1, vec2 pos2){
+        return vec2(pos1.x * pos2.x - pos1.y * pos2.y, pos1.x * pos2.y + pos1.y * pos2.x);
+    }
+    
+    void main(){
+        vec2 position = (gl_FragCoord.xy / u_resolution - 0.5) * 4.0;
+        vec3 color = vec3(0);
+        vec2 z = vec2(0);
+        for(int i = 0; i < 15 ; i ++){
+            z = mul(z,z) + position;
+        }
+        float l = length(z);
+        //color = vec3(step(100.0, length(z)));
+        color = vec3(smoothstep(0.0,30.0,l), 
+                    smoothstep(0.0,50.0,l), 
+                        smoothstep(0.0,20.0,l));
+        //color *= vec3(sin(position),0.5);
+        gl_FragColor = vec4(color,1);// vec4(1,1,0,1);
+    }</code>
+
+
+
+
+
+
+
+This is a simpler shader that uses a buffer to perform iterations to blur an image. In other words, it is a heat equation solver. Could also be used to solve a laplace equation by the relaxation method.
+
+
+
+
+
+
+    
+    <code>#ifdef GL_ES
+    precision mediump float;
+    #endif
+    
+    uniform sampler2D u_tex0; // u_tex0Resolution;
+    uniform vec2 u_tex0Resolution;
+    uniform vec2 u_resolution;
+    uniform float u_time;
+    
+    uniform sampler2D   u_buffer0;
+    uniform sampler2D   u_buffer1;
+    
+    
+    void main(){
+        vec2 position = gl_FragCoord.xy / u_resolution;
+        vec2 dx = vec2(1./u_resolution.x, 0.0);
+        vec2 dy = vec2(0.0, 1./u_resolution.y);
+    
+        #ifdef BUFFER_0
+            // a simple blur.
+            vec4 color = texture2D(u_buffer1, position + dx);
+            color += texture2D(u_buffer1, position - dx);
+            color += texture2D(u_buffer1, position + dy);
+            color += texture2D(u_buffer1, position - dy);
+            color /= 4.0;
+            gl_FragColor = color;
+        #elif defined( BUFFER_1 )
+            // initialize with the input image or just copy buffer 0
+            float run = step(0.2,mod(u_time,  3.0));
+            gl_FragColor = (1.0 - run)*texture2D(u_tex0, position) + run*texture2D(u_buffer0, position);
+        #else
+            gl_FragColor = texture2D(u_buffer1, position);;
+    
+        #endif 
+    }</code>
+
+
+
+
+
+
+
+Other things that would be cool: Simulate a dynamical system. More shapes. Transfromations like hyperbolic coordaintes. Tilings. What is the deal with particles systems. I did raymarching before. I think the interesting thing is that 2D drawings are still pretty cool. Hack some of the gpgpu stuff into glsl. Shouldn't there be library?
+
+
+
+
+
+
+
+
+https://www.youtube.com/watch?v=766obijdpuU
+
+
+
+
+
+
+
+
+stable fluids. Pull backward. This is anot a particle method
+
+
+
+
+
+
+
+Anything you have a closed form solution for is pretty easy. A diffusing thing, waves propagating. 
+
+
+
+
+
+
+
+shadertoy is really easy to get off the ground
+
+
+
+
+
+
+
+
+http://www.philipzucker.com/shaders-raymarching/
+
+
+
+
+
+
+
+
+an older post
+
+
+
+
+
+
+
+[https://www.shadertoy.com/view/wssXDj](https://www.shadertoy.com/view/wssXDj)
+
+
+
+
+
+
+
+
+http://www.huwbowles.com/wave-sims-shadertoy/
+
+
+
+
+
+
+
+
+You can add state to your shader by using the channels and buffers. It's sort of a funky system
+
+
+
+
+
+
+
+Click on the new tab button and make a BufferA.
+
+
+
+
+
+
+
+Then down at the bottom set channel 0 to BufferA. Now you have a recursive loops setup.
+
+
+
+
+
+
+
+A simple blurring filter is basically the same thing as the heat equation.
+
+
+
+
+
+
+
+At a certain point it is gonna be tough to embed mutiple data strctures into a single buffer.
+
+
+
+
+
+
+
+[http://www.iquilezles.org/apps/shadertoy/help.html](http://www.iquilezles.org/apps/shadertoy/help.html)
+
+
+
+
+
+
+
+It might be fun to generate glsl code. Conal does it in his compiling to categories.
+
+
+
+
+
+
+
+[https://www.shadertoy.com/view/4dG3RW](https://www.shadertoy.com/view/4dG3RW) a molecular dynamics simulation. cool. He explicitly loops over the molecules in his shader? If it works, why not?
+
+
+
+
+
+
+
+State machine for multipass
+
+
+
+
+
+
+
+[http://rreusser.github.io/sketches/](http://rreusser.github.io/sketches/)
+
+
+
+
+
+
+
+Very cool demos. He is using regl, glsify, stack.gl
+
+
+
+
+
+
+
+purescript bindings?
+
+
+
+
+
+
+
+[https://github.com/austinEng/WebGL-PIC-FLIP-Fluid](https://github.com/austinEng/WebGL-PIC-FLIP-Fluid)
+
+
+
+
+
+
+
+[https://www.cs.ubc.ca/~rbridson/docs/zhu-siggraph05-sandfluid.pdf](https://www.cs.ubc.ca/~rbridson/docs/zhu-siggraph05-sandfluid.pdf)
+
+
+
+
+
+
+
+Bridson - fluid simulation for computer graphics.
+
+
+
+
+
+
+
+Check out my other post for more fluid [http://www.philipzucker.com/annihilating-my-friend-will-with-a-python-fluid-simulation-like-the-cur-he-is/](http://www.philipzucker.com/annihilating-my-friend-will-with-a-python-fluid-simulation-like-the-cur-he-is/)
+
+
+
+
+
+
+
+GPipe haskell [http://hackage.haskell.org/package/GPipe](http://hackage.haskell.org/package/GPipe)
+
+
+

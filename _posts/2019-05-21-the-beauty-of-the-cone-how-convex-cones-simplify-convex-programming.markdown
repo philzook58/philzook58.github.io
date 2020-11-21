@@ -18,7 +18,7 @@ tags:
 
 
 
-I watched the [Stephen Boyd course](http://web.stanford.edu/class/ee364a/) to get me started in convex programming. At the beginning, he spends some time talking about convex sets rather than launching in convex optimization. I did not appreciate this sufficiently on the first pass. Convex sets are a very geometric topic and I think that for the most part, convex functions are best thought as a special case of them. The epigraph of a scalar valued convex function on $latex R^d$ , the filled in area above a graph, is a d+1 dimensional convex set. Convex constraints on the domain can be thought of as further cutting this shape. Finding the minimum of the shape can be thought of as a geometrical problem of finding the furthest point in the -y direction.
+I watched the [Stephen Boyd course](http://web.stanford.edu/class/ee364a/) to get me started in convex programming. At the beginning, he spends some time talking about convex sets rather than launching in convex optimization. I did not appreciate this sufficiently on the first pass. Convex sets are a very geometric topic and I think that for the most part, convex functions are best thought as a special case of them. The epigraph of a scalar valued convex function on $ R^d$ , the filled in area above a graph, is a d+1 dimensional convex set. Convex constraints on the domain can be thought of as further cutting this shape. Finding the minimum of the shape can be thought of as a geometrical problem of finding the furthest point in the -y direction.
 
 
 
@@ -43,7 +43,7 @@ I was sketching out a programmatic representation of convex sets and was annoyed
 
 
 
-The simplest problem is $latex \max_x c^T x$ with no constraints. The answer plunges off to infinity vaguely in the direction of $latex c$. The next simplest problem is $latex \max_x c^T x , a^T x \geq 0$. This either goes off to infinity away from the constraint plane, hits the constraint plane and goes off to infinity, or if c and a are parallel, it is an arbitrary location on the constraint plane.
+The simplest problem is $ \max_x c^T x$ with no constraints. The answer plunges off to infinity vaguely in the direction of $ c$. The next simplest problem is $ \max_x c^T x , a^T x \geq 0$. This either goes off to infinity away from the constraint plane, hits the constraint plane and goes off to infinity, or if c and a are parallel, it is an arbitrary location on the constraint plane.
 
 
 
@@ -68,7 +68,7 @@ In order to work with these problems, it is helpful (necessary?) to compactify y
 
 
 
-Another slightly less bothersome aesthetic problem is that the natural representation of half spaces is a normal ray and offset $latex a^T x \geq b$ The principles of duality make one want to make this object as similar to our representation of points as possible, but it has 1-extra dimension and 1 arbitrary degree of freedom (scalar multiplying a and b by the same positive constant does not change the geometrical half space described). This is ugly.
+Another slightly less bothersome aesthetic problem is that the natural representation of half spaces is a normal ray and offset $ a^T x \geq b$ The principles of duality make one want to make this object as similar to our representation of points as possible, but it has 1-extra dimension and 1 arbitrary degree of freedom (scalar multiplying a and b by the same positive constant does not change the geometrical half space described). This is ugly.
 
 
 
@@ -100,7 +100,7 @@ Can we use this method for describing the space we want to find convex sets in? 
 
 
 
-But I think we can fix it. Cones are good. In a slight twist on the projective geometry idea, what if you only non negative multiples of rays $latex \lambda \geq 0$ as the same "point". You can take as a canonical plane $latex x_0 =1$ similar to the pinhole camera. This plane can be thought of as your more ordinary affine space. Now half spaces touching the origin (cones) correspond to affine half spaces. We have a reasonable way of describing points at infinity on this plane, which correspond to rays. Arbitrary convex sets on this plane correspond to cones of rays.
+But I think we can fix it. Cones are good. In a slight twist on the projective geometry idea, what if you only non negative multiples of rays $ \lambda \geq 0$ as the same "point". You can take as a canonical plane $ x_0 =1$ similar to the pinhole camera. This plane can be thought of as your more ordinary affine space. Now half spaces touching the origin (cones) correspond to affine half spaces. We have a reasonable way of describing points at infinity on this plane, which correspond to rays. Arbitrary convex sets on this plane correspond to cones of rays.
 
 
 
@@ -116,7 +116,7 @@ Cones in this context are sets closed under arbitrary non-negative sums of point
 
 
 
-By adding in an arbtrary-ish degree of freedom to points, we bring points and half spaces much closer in alignment. Now evaluating whether a point in a half space looks like $latex a^T x \geq 0$ with no ugly extra b.
+By adding in an arbtrary-ish degree of freedom to points, we bring points and half spaces much closer in alignment. Now evaluating whether a point in a half space looks like $ a^T x \geq 0$ with no ugly extra b.
 
 
 

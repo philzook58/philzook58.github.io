@@ -1,0 +1,21 @@
+---
+author: philzook58
+comments: true
+date: 2017-12-06 13:41:50+00:00
+layout: post
+link: https://www.philipzucker.com/?p=936
+published: false
+slug: iLQR
+title: iLQR
+wordpress_id: 936
+---
+
+ToDo:
+
+Cleanup and finish explanation
+
+Why diverging? Maybe using inverse when should use solve. But probably the dynamic martrices are too unstable. How to diagnose
+
+Matrix Quadratic Solver - This could easily be it's own post.
+
+What if I started the pole at the bottom? That'd be cool.

@@ -1,0 +1,69 @@
+---
+author: philzook58
+comments: true
+date: 2019-02-09 17:01:16+00:00
+layout: post
+link: https://www.philipzucker.com/?p=1287
+published: false
+slug: Sparsity
+title: Sparsity
+wordpress_id: 1287
+---
+
+Sparse is "dual" to Hierarchical Matrices. I base this almost entirely on the finite difference laplacian to green's function inversion. Many operations go from N^3 to Nk^2 where k is the small number (either the sparsity, or the low rank ness)
+
+Good book
+
+https://www-users.cs.umn.edu/~saad/IterMethBook_2ndEd.pdf
+
+Packages:
+
+Paradiso ( there is a easily availabe old verison and a newer hotness). The older one is associated with intel
+
+MUMPS - open source parallel solver
+
+Eigen - I think has it's own solver but also bindings to external ones
+
+Petsc and Trilinos?
+
+cuSparse - CUDA based sparse solver on Nvidia gpus
+
+Scipy sparse has bindings to:
+
+Umfpack - supposedly faster than superlu
+
+superLU - the default implementation for scipy
+
+Finding optimal orderings
+
+colAMD
+
+https://www.mathworks.com/help/matlab/ref/colamd.html?searchHighlight=colamd&s_tid=doc_srchtitle
+
+cuthill-mckee and reverse - Pick lowest dgeree vertex. Do depth first search ordering layers in minimum degree. For some reason reverse is better
+
+minimum degree - greedly pick node with least number of neighbors
+
+nested dissection - A divide and concour. Find seperating sets rather than one vertex at a time? Divide space is two for exmaple. Find minimum graph cut? Amusingly solving a laplacian is one way of doing that
+
+Optimal ordering is not just a concept of linear algebra. It also makes sense in any system you're going to solve by substitution. See Factor Graphs or Groebner bases. Piggy back on sparse solver permutation output to get good Groebner ordering.
+
+Optimal permutation ordering - use mixed integer linear programming. https://hal.inria.fr/hal-01271838/document dicusses some. Can make a matrix of vboolean cariable of i -> j. sum constraints on rows and colmuns.
+
+Or boolean variables for i < j in the new ordering. These are more directly related to the cost.
+
+During sparse solve, can we find approximate H-matrix? Idea thatr sprase and H are "dual"
+
+Sparse matrix formats:
+
+Supernode -
+
+Multifrontal -
+
+TACO a tensor compiler. Generates code to perform operations on multi-index sparse structures. Pretty cool and thought provoking
+
+http://tensor-compiler.org/
+
+Tensor extension of kind of similar idea? Make bisecting cuts on each index. When two set of inidices are seperated, make a low rank connection between clusters. Kind of a numerical OPE.
+
+Chordal Graphs

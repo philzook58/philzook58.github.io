@@ -29,6 +29,6 @@ We were getting pretty wimpy sparks until we installed to lower brush and proper
 
 All in all a success!
 
-[![img_0231](http://philzucker2.nfshost.com/wp-content/uploads/2018/03/IMG_0231-e1522001735270.jpg)](http://philzucker2.nfshost.com/wp-content/uploads/2018/03/IMG_0231-e1522001735270.jpg) [![img_5799](http://philzucker2.nfshost.com/wp-content/uploads/2018/03/IMG_5799-e1522001753801.jpg)](http://philzucker2.nfshost.com/wp-content/uploads/2018/03/IMG_5799-e1522001753801.jpg) [![img_4759](http://philzucker2.nfshost.com/wp-content/uploads/2018/03/IMG_4759-e1522001773172.jpg)](http://philzucker2.nfshost.com/wp-content/uploads/2018/03/IMG_4759-e1522001773172.jpg) [![img_6389](http://philzucker2.nfshost.com/wp-content/uploads/2018/03/IMG_6389-e1522001792628.jpg)](http://philzucker2.nfshost.com/wp-content/uploads/2018/03/IMG_6389-e1522001792628.jpg)
+[![img_0231](/assets/IMG_0231-e1522001735270.jpg)](/assets/IMG_0231-e1522001735270.jpg) [![img_5799](/assets/IMG_5799-e1522001753801.jpg)](/assets/IMG_5799-e1522001753801.jpg) [![img_4759](/assets/IMG_4759-e1522001773172.jpg)](/assets/IMG_4759-e1522001773172.jpg) [![img_6389](/assets/IMG_6389-e1522001792628.jpg)](/assets/IMG_6389-e1522001792628.jpg)
 
 

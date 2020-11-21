@@ -33,9 +33,9 @@ This does not get all out of the signal.
 
 One model for discussing this is quantization noise. We can assume that the error introduced is uncorrelated with the input and is just additive noise.
 
-If it's quantized in steps of $latex \Delta$
+If it's quantized in steps of $ \Delta$
 
-$latex \Delta$
+$ \Delta$
 
 6n dB. For n bits be get another 6n of signal to noise.
 

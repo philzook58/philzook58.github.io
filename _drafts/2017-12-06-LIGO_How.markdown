@@ -1,0 +1,43 @@
+---
+author: philzook58
+comments: true
+date: 2017-12-06 13:20:32+00:00
+layout: post
+link: https://www.philipzucker.com/?p=934
+published: false
+slug: 'LIGO: How?'
+title: 'LIGO: How?'
+wordpress_id: 934
+---
+
+General relativity is very confusing. It is not so simple what space and time mean anymore.
+
+They are just labels. You could use an erratic watch to describe time. That is fine. And you can have stretching and shrinking rulers. None of that changes the physical nature of what is occuring.
+
+The physical effects of General relativity only express themselves in the curvature of space and time. Mere stretching and shrinking of space are necessary, but not sufficient to a be a physical effect.
+
+A cellophane grid overlay over a ball. Planar stretching of the cellpohane does not correspond to anything happening to the ball. But if the ball is actually in a bowl, that is reflected in a particular kind of stretching of the cellophane.
+
+One could imagine a network of observers sharing their observations.
+
+An observer might be grabbing a spectrum or a photo from a telescope or precision timing data based on comparison to an internal clock as examples.
+
+Then there is an inverse problem of figuring out the parameters of your physical model of the world. The physical parameters include things like the metric g, locations of stellar objects, etc.
+
+What is physics?
+
+How important should the observation methods matter? If the details of the experimental setup matter that much is it still physics? Most theories abstract away the experiment to great success, including quantum mechanics.
+
+Is a neural network that takes previous observations and outputs predictions, is that physics? An experimental curve fit without the backing of a "physical" explanation is questionably physics.
+
+So physics are the systems described by physical laws. Physical laws have extreme accuracy and extreme generality. No modern neural network seems even qualitatively to match the general applicability of physical theories like electromagnetism or quantum mechanics.
+
+Are mechanized proofs still proofs? Proofs so long and tedious that a human is no longer capable of checking it? What is mathematics?
+
+Different notions of distance which coincide in more ordinary physics no longer coincide. One tries to find a translation between each individual observation and the common ground of
+
+
+
+How is it possible for LIGO to be so sensitive? Basically there are so many photons in the system that you get crazy good statistics. You can in principle detect a single extra atom on a coin if you flip it 10^20 times. No wait. Let's actuall do that calculations. uncertainty in mean goes as 1/sqrt(N). Let us say that it is a reasonable guess that an extra atom might effect the mean on the order of weight of atom / weight of coin. So to have the statistical uncertainty go below that, yeah would take a lot of flips.
+
+How is it possible to avoid false positives from earthquakes and crap?

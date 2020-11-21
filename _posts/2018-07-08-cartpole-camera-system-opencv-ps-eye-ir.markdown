@@ -111,7 +111,7 @@ In regards to the frame delay problem from before, it's not clear that we're rea
 
 
 
-[![img_5311](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/IMG_5311.jpg)](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/IMG_5311.jpg) [![img_2511](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/IMG_2511-e1531081718210.jpg)](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/IMG_2511-e1531081718210.jpg)
+[![img_5311](/assets/IMG_5311.jpg)](/assets/IMG_5311.jpg) [![img_2511](/assets/IMG_2511-e1531081718210.jpg)](/assets/IMG_2511-e1531081718210.jpg)
 
 
 
@@ -119,9 +119,9 @@ In regards to the frame delay problem from before, it's not clear that we're rea
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2020/03/image-2.png)
+![](/assets/image-2.png)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2020/03/image-1.png)
+![](/assets/image-1.png)
 

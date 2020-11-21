@@ -1,0 +1,337 @@
+I"�[<p><a href="http://okmij.org/ftp/ML/MetaOCaml.html">MetaOCaml</a> is a very cool system for partial evaluation. I’m very jealous.</p>
+
+<p>If one chooses to ignore the proof aspects of Coq for a moment, it becomes a bizarre Ocaml metaprogramming system on insane steroids. Coq has very powerful evaluation mechanisms built in. Why not use these to perform partial evaluation?</p>
+
+<p><img src="/assets/piglegs-1024x640.png" alt="" />Let’s put some legs on this pig. Artwork courtesy of <a href="https://davidtersegno.wordpress.com/">David</a></p>
+
+<p>We had a really fun project at work where we did partial evaluation in Coq and I’ve been tinkering around with how to make the techniques we eventually stumbled onto there less ad hoc feeling.</p>
+
+<p>A problem I encountered is that it is somewhat difficult to get controlled evaluation in Coq. The fastest evaluation tactics <a href="https://coq.inria.fr/refman/proof-engine/tactics.html#coq:tacv.vm-compute">vm_compute and native_compute</a> do not let you protect values from unfolding. There is a construct that is protected though. Axioms added to Coq cannot be unfolded by construction, but can be extracted. So I think a useful mantra here is axioms ~ code.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Require Import Extraction.
+Axiom PCode : Type -&gt; Type.
+Extract Constant PCode "'a" =&gt; "'a".
+
+Axiom block : forall {a : Type}, a -&gt; PCode a.
+Extract Inlined Constant block =&gt; "".
+</code></pre></div></div>
+
+<p>It is useful to mark what things you expect to run and which you expect to block execution in the type. You can mark everything that is opaque with a type <code class="language-plaintext highlighter-rouge">PCode</code>. <code class="language-plaintext highlighter-rouge">block</code> is a useful combinator. It is <em>not</em> a <code class="language-plaintext highlighter-rouge">quote</code> combinator however, as it will allow evaluation underneath of it.  Nothing however will be able to inspect a blocked piece of code. It’s amusing that the blocking of computation of axioms is exactly what people dislike, but here it is the feature we desire. PCode is short for partial code indicating that it is possible for evaluation to occur within it. We’ll see a <code class="language-plaintext highlighter-rouge">Code</code> that is more similar to MetaOcaml’s later.</p>
+
+<p>It is a touch fishy to extract <code class="language-plaintext highlighter-rouge">block</code> as nothing <code class="language-plaintext highlighter-rouge">""</code> rather than an identity function <code class="language-plaintext highlighter-rouge">(fun x -&gt; x)</code>. It is rather cute though, and I suspect that you won’t find <code class="language-plaintext highlighter-rouge">block</code> occurring in  a higher order context although I could easily be wrong (ahhh the sweet dark freedom of ignoring correctness). If this makes you queasy, you can put the function in, which is likely to compiled away, especially if you use the flambda switch. Not as pretty an output though.</p>
+
+<p>We can play a similar extraction game with two HOAS-ish combinators.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Axiom ocaml_lam : forall {a b: Type}, (PCode a -&gt; PCode b) -&gt; PCode (a -&gt; b).
+Extract Inlined Constant ocaml_lam =&gt; "".
+
+Axiom ocaml_app : forall {a b : Type},  PCode (a -&gt; b) -&gt; PCode a -&gt; PCode b.
+Extract Inlined Constant ocaml_app =&gt; "".
+</code></pre></div></div>
+
+<p>Here are some examples of other primitives we might add. The extra imports makes extraction turn nat into the native Ocaml int type, which is nice. It is not made so clear in the Coq manual that you should use these libraries to get good extraction of some standard types (perhaps I missed it or should make a pull request).  You can find the full set of such things here: <a href="https://github.com/coq/coq/tree/master/theories/extraction">https://github.com/coq/coq/tree/master/theories/extraction</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+From Coq.extraction Require Import ExtrOcamlBasic ExtrOcamlNatInt.
+Axiom ocaml_add : PCode nat -&gt; PCode nat -&gt; PCode nat.
+Extract Inlined Constant ocaml_add =&gt; "(+)".
+Axiom ocaml_mul : PCode nat -&gt; PCode nat -&gt; PCode nat.
+Extract Inlined Constant ocaml_mul =&gt; "(*)".
+</code></pre></div></div>
+
+<p>If we had instead used the Coq definition of <code class="language-plaintext highlighter-rouge">nat</code> addition, it wouldn’t be protected during <code class="language-plaintext highlighter-rouge">vm_compute</code>, even if we wrapped it in <code class="language-plaintext highlighter-rouge">block</code>. It would unfold plus into it’s recursive definition, which is not what you want for extraction. We want to extract (+) to native ocaml (+).</p>
+
+<p>You can add in other primitives as you see fit. Some things can get by merely using <code class="language-plaintext highlighter-rouge">block</code>, such as lifting literals.</p>
+
+<p>Here is a very simplistic unrolling of a power  function with a compile time known exponent, following<a href="http://okmij.org/ftp/ML/MetaOCaml.html#using"> Kiselyov’s lead</a>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Fixpoint pow1 (n : nat) (x : PCode nat) : PCode nat :=
+  match n with
+  | O =&gt; block 1
+  | S O =&gt; x
+  | S n' =&gt; ocaml_mul x (pow1 n' x)
+  end.
+
+Definition pow2 (n : nat) : PCode (nat -&gt; nat) := ocaml_lam (fun x =&gt; pow1 n x).
+
+Definition compilepow : PCode (nat -&gt; nat) := Eval native_compute in pow2 4.
+Extraction compilepow.
+(*
+
+(** val compilepow : (int -&gt; int) pCode **)
+
+let compilepow =
+   (fun x -&gt; (*) x ((*) x ((*) x x)))
+
+*)
+</code></pre></div></div>
+
+<p>What about if you want a quasiquoting interface though? Well here is one suggestion. The same code should become either PCode or more ordinary Coq values depending on whether you decide to quote it or not. So you want overloadable syntax. This can be achieved via a typeclass.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+(* No, I don't really know what Symantics means. Symbolic semantics? It's an Oleg-ism.
+*)
+Class Symantics (repr : Type -&gt; Type) :=
+  {
+  lnat : nat -&gt; repr nat;
+  lbool : bool -&gt; repr bool;
+  lam : forall {a b}, (repr a -&gt; repr b) -&gt; repr (a -&gt; b);
+  app : forall {a b},  repr (a -&gt; b) -&gt; repr a -&gt; repr b;
+  add : repr nat -&gt; repr nat -&gt; repr nat;
+  mul : repr nat -&gt; repr nat -&gt; repr nat
+  }.
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+(* A simple do nothing newtype wrapper for the typeclass *)
+Record R a := { unR : a }.
+Arguments Build_R {a}.
+Arguments unR {a}.
+(* Would Definition R (a:Type) := a. be okay? *)
+
+Instance regularsym : Symantics R :=
+  {|
+  lnat := Build_R;
+  lbool := Build_R;
+  lam := fun a b f =&gt; Build_R (fun x =&gt; unR (f (Build_R (a:= a) x)));
+  app := fun _ _ f x =&gt; Build_R ((unR f) (unR x));
+  add := fun x y =&gt; Build_R ((unR x) + (unR y));
+  mul := fun x y =&gt; Build_R ((unR x) * (unR y));
+  |}.
+
+
+Instance codesym : Symantics PCode := 
+  {|
+  lnat := block;
+  lbool := block;
+  lam := fun a b =&gt; ocaml_lam (a := a) (b := b);
+  app := fun a b =&gt; ocaml_app (a := a) (b := b);
+  add := ocaml_add;
+  mul := ocaml_mul
+  |}.
+
+
+</code></pre></div></div>
+
+<p>Now we’ve overloaded the meaning of the base combinators. The type <code class="language-plaintext highlighter-rouge">PCode</code> vs <code class="language-plaintext highlighter-rouge">R</code> labels which “mode” of evaluation we’re in, “mode” being which typeclass instance we’re using. Here are two combinators for quasiquoting that were somewhat surprising to me, but so far seem to be working. <code class="language-plaintext highlighter-rouge">quote</code> takes a value of type <code class="language-plaintext highlighter-rouge">a</code> being evaluated in “<code class="language-plaintext highlighter-rouge">Code</code> mode” and makes it a value of type <code class="language-plaintext highlighter-rouge">Code a</code> being evaluated in “<code class="language-plaintext highlighter-rouge">R</code> mode”.  And <code class="language-plaintext highlighter-rouge">splice</code> sort of undoes that. I would have used the MetaOcaml syntax, but using periods in the notation seemed to make coq not happy.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Definition Code : Type -&gt; Type := fun a =&gt; R (PCode a).
+
+Definition quote {a}  : PCode a -&gt; Code  a := Build_R.
+Definition splice {a} : Code a  -&gt; PCode a := unR.
+
+Declare Scope quote_scope.
+Notation "&lt;' x '&gt;" := (quote x) : quote_scope.
+Notation "&lt;, x ,&gt;" := (splice x) : quote_scope.
+
+Notation "n + m" := (add n m) : quote_scope.
+Notation "n * m" := (mul n m) : quote_scope.
+</code></pre></div></div>
+
+<p>Now you can take the same version of code, add quote/splice annotations and get a partially evaluated version. The thing doesn’t type check if you don’t add the appropriate annotations.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Open Scope quote_scope.
+
+Fixpoint pow1' (n : nat) (x : Code nat) : Code nat :=
+  match n with
+  | O =&gt; quote (lnat 1)
+  | S O =&gt; x
+  | S n' =&gt; &lt;' &lt;, x ,&gt; * &lt;, pow1' n' x ,&gt; '&gt;
+  end.
+
+Definition pow2' (n : nat) : Code (nat -&gt; nat) := &lt;' lam (fun x =&gt; &lt;, pow1' n &lt;' x '&gt; ,&gt; ) '&gt;.
+
+Definition compilepow' : Code (nat -&gt; nat) := Eval native_compute in pow2' 4.
+Extraction compilepow'.
+
+(* Same as before basically.
+(** val compilepow' : (int -&gt; int) code **)
+
+let compilepow' =
+   (fun x -&gt; (*) x ((*) x ((*) x x)))
+*)
+</code></pre></div></div>
+
+<p>Coolio.</p>
+
+<h3 id="increasingly-scattered-thoughts">Increasingly Scattered Thoughts</h3>
+
+<p>With more elbow grease is this actually workable? Do we actually save anything over explicit language modelling with data types? Are things actually hygienic and playing nice? Not sure.</p>
+
+<p>We could also give notations to <code class="language-plaintext highlighter-rouge">lam</code> and the other combinators. Idiom brackets <a href="https://wiki.haskell.org/Idiom_brackets">https://wiki.haskell.org/Idiom_brackets</a>  might be nice for <code class="language-plaintext highlighter-rouge">app</code>. I am a little queasy going overboard on notation. I generally speaking hate it when people do stuff like this.</p>
+
+<p>Monad have something to do with partial evaluation. Moggi’s <a href="https://core.ac.uk/download/pdf/21173011.pdf">original paper</a> on monads seems to have partial evaluation in mind.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+(* This is moggi's let. *)
+Axiom ocaml_bind : forall {a b}, PCode a -&gt; (a -&gt; PCode b) -&gt; PCode b.
+Extract Inlined Constant ocaml_bind =&gt; "(fun x f -&gt; f x)".
+</code></pre></div></div>
+
+<p>Doing fix: playing nice with Coq’s fix restrictions is going to be a pain. Maybe just gas it up?</p>
+
+<p><code class="language-plaintext highlighter-rouge">match</code> statements might also suck to do in a dsl of the shown style. I supposed you’ll have to deal with everything via typeclass dispatched recursors / pattern matchers. Maybe one notation per data type? Or mostly stick to if then else and booleans. :(</p>
+
+<p>Quote and splice can also be overloaded with another typeclass such that they just interpret completely into R or the appropriate purely functionally defined Gallina monad to emulate the appropriate effects of interest. This would be helpful for verification and development purposes as then the entire code can be proved with and evaluated in Coq.</p>
+
+<p>Extracting arrays, mutable refs, for loops. All seems possible with some small inlined indirections that hopefully compile away. I’ve been finding <a href="https://godbolt.org/">godbolt.org </a>interesting to look at to see what flambda can and can’t do.</p>
+
+<p>Do I need to explcitly model a World token or an IO monad or is the Code paradigm already sufficiently careful about order of operations and such?</p>
+
+<p>Some snippets</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+Extract Constant ref "'a" =&gt; "'a ref".
+(* make_ref     =&gt;     "ref*)
+Axiom get_ref : forall a, ref a -&gt; World -&gt; a * World.
+Extract Constant get_ref =&gt; "fun r _ -&gt; (!r  ,())".
+Axiom set_ref : forall a, ref a -&gt; a -&gt; World -&gt; unit * World.
+Extract Constant set_ref =&gt; "fun r x _ -&gt; let () = r := x in (() , ())".
+
+
+Axiom Array : Type -&gt; Type.
+Extract Constant Array "'a" =&gt; "'a array".
+
+Axiom make : forall {a : Type}, Code nat -&gt; Code a -&gt; Code World -&gt; Code (Array a  *  World).
+
+Extract Constant make =&gt; "fun i def _ -&gt; ( make i def , ())".
+Axiom get : forall a, Array a -&gt; nat -&gt; World -&gt; a * World.
+Extract Constant get =&gt; "fun r i _ -&gt; (r.(i)  ,())".
+Axiom set : forall a, Array a -&gt; nat -&gt; a -&gt; World -&gt; unit * World.
+Extract Constant set =&gt; "fun r i x _ -&gt; let () = r.(i) &lt;- x in (() , ())".
+</code></pre></div></div>
+
+<p>MetaOCaml is super cool. The quote splice way of building of the exact expressions you want feels nice and having the type system differentiate between Code and static values is very useful conceptually. It’s another instance where I feel like the types really aid the design process and clarify thinking. The types give you a compile time guarantee of what will and won’t happen.</p>
+
+<p>There are other systems that do compile time stuff. Types themselves are compile time. Some languages have const types, which is pretty similar. Templates are also code generators. Macros.</p>
+
+<p>Why Coq vs metaocaml?</p>
+
+<ul>
+  <li>MetaOcaml doesn’t have critical mass.  Its ocaml switch lags behind the mainline. Coq seems more actively developed.</li>
+  <li>Possible verification and more powerful types (at your peril. Some may not extract nice)</li>
+  <li>One can go beyond purely generative metaprogamming since Ltac (and other techniques) can inspect terms.</li>
+  <li>Typeclasses</li>
+  <li>Can target more platforms. Haskell, Scheme, possibly C, fpgas?</li>
+</ul>
+
+<p>However, Metaocaml does present a much more ergonomic, consistent, well founded interface for what it does.</p>
+
+<p>One needs to have some protected structure in coq that represents a syntax tree of your intended ocaml expression. One natural choice would be a data type to represent this AST.</p>
+
+<p>You also want access to possibly impure abilities of ocaml like mutation, errors, loops, arrays, and unbounded recursion that don’t have direct equivalents in base Gallina. You can model the purely functional versions of these things, but you don’t persay want to extract the purely functional versions if you’re seeking the ultimate speed.</p>
+
+<p>Why Finally Tagless Style. Anything you can do finally taglessly you can do in initial style.</p>
+
+<ul>
+  <li>Positivity restrictions make some things difficult to express in Coq data types. You can turn these restrictions off, at your peril. Raw axiomatic fixpoints and HOAS without PHOAS become easier</li>
+  <li>Ultimately we need to build both a data type and an interpreter. A little bit using finally tagless cuts out the middle man. Why have a whole extra set of things to write?</li>
+  <li>Finally tagless style is open. You can add new capabilities without having to rewrite everything everywhere</li>
+</ul>
+
+<p>Downsides</p>
+
+<ul>
+  <li>More confusing</li>
+  <li>Optimizations are harder</li>
+  <li>Is the verification story shot?</li>
+</ul>
+
+<p>I guess ultimately there might not be a great reason. I just wandered into it. I was doing Kiselyov stuff, so other Kiselyov stuff was on the brain. I could make a DSL with Quote and Splice constructors.</p>
+
+<h4 id="partial-evaluation-links">Partial Evaluation Links</h4>
+
+<p>Typed Template Haskell gives you similar capabilities if that is more of your jam <a href="https://www.philipzucker.com/a-little-bloop-on-typed-template-haskell/">https://www.philipzucker.com/a-little-bloop-on-typed-template-haskell/</a></p>
+
+<p>The MetaOcaml book - Kiselyov <a href="http://okmij.org/ftp/meta-programming/tutorial/index.html">http://okmij.org/ftp/meta-programming/tutorial/index.html</a></p>
+
+<p><a href="http://okmij.org/ftp/tagless-final/JFP.pdf">http://okmij.org/ftp/tagless-final/JFP.pdf</a> Finally Tagless, Partially Evaluated is a paper I come back to. This is both because the subject matter is interesting, it seems to hold insights, and that it is quite confusing and long. I think there are entangled objectives occurring, chronologically this may be an early exposition of finally tagless style, for which it is not the most pedagogical reference.</p>
+
+<p>Jason Gross, Chlipala, others? . Coq partial evaluation. Once you go into plugin territory it’s a different game though. <a href="https://people.csail.mit.edu/jgross/personal-website/papers/2020-rewriting-popl-draft.pdf">https://people.csail.mit.edu/jgross/personal-website/papers/2020-rewriting-popl-draft.pdf</a></p>
+
+<p>Partial Evaluation book - Jones Sestoft Gomard <a href="https://www.itu.dk/people/sestoft/pebook/jonesgomardsestoft-a4.pdf">https://www.itu.dk/people/sestoft/pebook/jonesgomardsestoft-a4.pdf</a></p>
+
+<p>Nada Amin, Tiark Rompf. Two names to know <a href="https://scala-lms.github.io/">https://scala-lms.github.io/</a> scala partial evaluation system <a href="https://www.youtube.com/watch?v=QuJ-cEvH_oI">https://www.youtube.com/watch?v=QuJ-cEvH_oI</a></p>
+
+<p>Strymonas - a staged streaming library <a href="https://strymonas.github.io/">https://strymonas.github.io/</a></p>
+
+<p>Algebraic staged parsing - <a href="https://www.cl.cam.ac.uk/~nk480/parsing.pdf">https://www.cl.cam.ac.uk/~nk480/parsing.pdf</a></p>
+
+<p>Nielson and Nielson - Two level functional languages book</p>
+
+<p><a href="https://dl.acm.org/doi/10.1145/141478.141483">https://dl.acm.org/doi/10.1145/141478.141483</a> - Improving binding times without explicit CPS-conversion. This bondorf paper is often cited as the why CPS helps partial evaluation paper</p>
+
+<p>Modal logic. Davies and Pfenning. Was a hip topic. Their modal logic is something a bit like metaocaml. “Next” stage has some relationship to Next modal operator. Metaocaml as a proof language for intuitinisitc modal logic.</p>
+
+<p>Partial evaluation vs optimizing compilers. It is known that CPS tends to allow the internals of compilers to make more optimizations. The obvious optimizations performed by a compiler often correspond to simple partial evaluations. Perhaps to get a feeling for where GHC gets blocked, playing around with an explicit partial evaluation system is useful.</p>
+
+<p>An unrolled power in julia. It is unlikely I suspect that you want to use this technique to achieve performance goals. The Julia compiler itself is probably smarter than you unless you’ve got some real secret sauce.</p>
+
+<h2 id="rando-or-are-they-continuation-links">Rando (or ARE THEY!?!) continuation links</h2>
+
+<p>continuations and partial evaluation are like jam and peanut butter.</p>
+
+<p>I’ve been digging into the continuation literature a bit</p>
+
+<p>William byrd call/cc tutorial <a href="https://www.youtube.com/watch?v=2GfFlfToBCo">https://www.youtube.com/watch?v=2GfFlfToBCo</a></p>
+
+<p>Kenichi Asai - Delimitted continuations for everyone <a href="https://www.youtube.com/watch?v=QNM-njddhIw">https://www.youtube.com/watch?v=QNM-njddhIw</a></p>
+
+<ul>
+  <li><a href="http://okmij.org/ftp/continuations/">http://okmij.org/ftp/continuations/</a></li>
+  <li><a href="http://blog.sigfpe.com/2008/12/mother-of-all-monads.html">http://blog.sigfpe.com/2008/12/mother-of-all-monads.html</a></li>
+  <li><a href="https://gist.github.com/lexi-lambda/d97b8187a9b63619af29689e9fa1b880">https://gist.github.com/lexi-lambda/d97b8187a9b63619af29689e9fa1b880</a></li>
+  <li><a href="https://www.cs.utah.edu/plt/publications/icfp07-fyff.pdf">https://www.cs.utah.edu/plt/publications/icfp07-fyff.pdf</a></li>
+</ul>
+
+<p>Which of the many Danvy papers is most relevant</p>
+
+<ul>
+  <li>Defunctionalization and refunctionalization - Defunctionalize the continuation, see Jimmy’s talk <a href="https://dl.acm.org/doi/abs/10.1145/773184.773202">https://dl.acm.org/doi/abs/10.1145/773184.773202</a>  and</li>
+  <li><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.6.2739&amp;rep=rep1&amp;type=pdf">http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.6.2739&amp;rep=rep1&amp;type=pdf</a> Continuation based partial evaluations 1995</li>
+  <li>https://dl.acm.org/doi/pdf/10.1145/91556.91622 1990 abstracting control</li>
+  <li>Abstract machines = Evaluators https://dl.acm.org/doi/pdf/10.1145/888251.888254 Functional correspondence 2003</li>
+  <li>https://www.researchgate.net/profile/Olivier_Danvy/publication/226671340_The_essence_of_eta-expansion_in_partial_evaluation/links/00b7d5399ecf37a658000000/The-essence-of-eta-expansion-in-partial-evaluation.pdf Essence of Eta expansion (1995) Reference of “the trick”</li>
+  <li>Representing control (1992) https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.46.84&amp;rep=rep1&amp;type=pdf Explains plotkin translation of CPS carefully. How to get other operators</li>
+</ul>
+
+<p>Names to look out for: Dybvig, Felleison, Oleg, Filinksi, Asai, Danvy, Sabry</p>
+
+<p><a href="https://github.com/rain-1/continuations-study-group/wiki/Reading-List">https://github.com/rain-1/continuations-study-group/wiki/Reading-List</a> Great reading list</p>
+
+<p>What are the most interesting Oleg sections.</p>
+
+<p>CPS. Really this is converting a syntax tree of lambda calculus to one of another type. This other type can be lowered back down to lambda calculus.</p>
+
+<p>Control constructs can fill in holes in the CPS translation.</p>
+
+<p>Evaluation context. Contexts are terms with a single hole. Variables can also be used to show holes so therein lies some ocnfusion.</p>
+
+<p>Abstract Machines</p>
+
+<p>Ben pointed out that Node is in continuation passing style</p>
+
+<p>To what degree are monads and continuations related? <a href="http://hjemmesider.diku.dk/~andrzej/papers/RM-abstract.html">http://hjemmesider.diku.dk/~andrzej/papers/RM-abstract.html</a> Mother of all monads.</p>
+
+<p>Certainly error handling and escape are possible with continuation</p>
+
+<p>Call-cc is as if the compiler converts to cps, and then call-cc grabs the continuation for you</p>
+
+<p>call-cc allows you to kind of pull a program  inside out. It’s weird.</p>
+
+<p>Compiling to continuations book</p>
+
+<p>Lisp in Small Pieces</p>
+
+<p>CPSing a value x    ~     \f -&gt; f x.</p>
+
+<p><a href="https://homepages.inf.ed.ac.uk/wadler/papers/papers-we-love/reynolds-discoveries.pdf">https://homepages.inf.ed.ac.uk/wadler/papers/papers-we-love/reynolds-discoveries.pdf</a> - The discoveries of continuations - Reynolds. Interesting bit of history about the discovery in the 60s/70s</p>
+
+:ET

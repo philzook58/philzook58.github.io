@@ -15,7 +15,7 @@ However, a more general method, and truer to physical reality, is to not assume 
 
 I think a good way of thinking about it is that density matrices exist. Then you may massage them to get what you want.
 
-In particular, a good plot is the density matrix $latex \rho_E (k,k) $ This is an object who . You will want to smooth out on E. I used a Cauchy distribution. There are reasons to do so. I'll get to them later.
+In particular, a good plot is the density matrix $ \rho_E (k,k) $ This is an object who . You will want to smooth out on E. I used a Cauchy distribution. There are reasons to do so. I'll get to them later.
 
 What I'm doing is all ad hoc, although I'll make it better.
 
@@ -92,9 +92,9 @@ Another thing that might be fun to do is the try to show the band structure chan
     plt.show()
 
 
-[![ssh](http://www.philipzucker.com/wp-content/uploads/2016/11/ssh-300x225.png)](http://www.philipzucker.com/wp-content/uploads/2016/11/ssh.png)
+[![ssh](/assets/ssh-300x225.png)](/assets/ssh.png)
 
-[![t2less](http://www.philipzucker.com/wp-content/uploads/2016/11/t2less-300x225.png)](http://www.philipzucker.com/wp-content/uploads/2016/11/t2less.png)
+[![t2less](/assets/t2less-300x225.png)](/assets/t2less.png)
 
 The difference between these two is t2 or t1 being larger in magnitude around the t1=-t2 point. You can see the inversion of the bands. The more constant-like wavecetor flips up to the top band,  once flip flopping becomes energetically favorable.
 
@@ -104,29 +104,29 @@ It is interesting to see what happens when you tune the parameters.
 
 t1 = t2
 
-[![equal](http://www.philipzucker.com/wp-content/uploads/2016/11/equal-300x225.png)](http://www.philipzucker.com/wp-content/uploads/2016/11/equal.png)
+[![equal](/assets/equal-300x225.png)](/assets/equal.png)
 
 t2=-t1
 
-[![opposite](http://www.philipzucker.com/wp-content/uploads/2016/11/opposite-300x225.png)](http://www.philipzucker.com/wp-content/uploads/2016/11/opposite.png)
+[![opposite](/assets/opposite-300x225.png)](/assets/opposite.png)
 
 It is this point where the flip from a clockwise to counterclockwise encirclement of the origin occurs when the unit cell is expressed as psuedospin. Winding number change. Changing the band topology.
 
 Trivial energy histogram
 
-[![trivial](http://www.philipzucker.com/wp-content/uploads/2016/11/trivial-300x225.png)](http://www.philipzucker.com/wp-content/uploads/2016/11/trivial.png)
+[![trivial](/assets/trivial-300x225.png)](/assets/trivial.png)
 
 Nontrivial histogram. 2 Edge states in the gap. Both are exactly at zero. (well off by a factor of 10^-15 anyhow)
 
-[![nontrivial](http://www.philipzucker.com/wp-content/uploads/2016/11/nontrivial-300x225.png)](http://www.philipzucker.com/wp-content/uploads/2016/11/nontrivial.png)
+[![nontrivial](/assets/nontrivial-300x225.png)](/assets/nontrivial.png)
 
 Here's a real space plot of one of the deg states. Its that huge spike in the corner
 
-[![edgestate](http://www.philipzucker.com/wp-content/uploads/2016/11/edgestate-300x225.png)](http://www.philipzucker.com/wp-content/uploads/2016/11/edgestate.png)
+[![edgestate](/assets/edgestate-300x225.png)](/assets/edgestate.png)
 
 Here's the other edge state
 
-[![otheredge](http://www.philipzucker.com/wp-content/uploads/2016/11/otheredge-300x225.png)](http://www.philipzucker.com/wp-content/uploads/2016/11/otheredge.png)
+[![otheredge](/assets/otheredge-300x225.png)](/assets/otheredge.png)
 
 Pretty neat
 

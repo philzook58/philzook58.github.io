@@ -38,7 +38,7 @@ Neural networks made out of just [relus](https://en.wikipedia.org/wiki/Rectifier
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/12/relu.png)A relu
+![](/assets/relu.png)A relu
 
 
 
@@ -111,11 +111,23 @@ Generally speaking, the combination of the capabilities of sympy and z3 give us 
 
 
 
-[gist https://gist.github.com/philzook58/5aab67b65b476bb55e6b9c403ccabed2#file-cheb-py]
+
+```
+import sympy as sy
+import matplotlib.pyplot as plt
+import numpy as np
+x = sy.symbols('x')
+cheb = sy.lambdify(x, sy.chebyshevt(4,x))
+xs = np.linspace(-1,1,1000)
+ys = cheb(xs)
+plt.plot(xs, ys)
+plt.show()
+```
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/12/cheb.png)Our actual chebyshev polynomial
+
+![](/assets/cheb.png)Our actual chebyshev polynomial
 
 
 
@@ -127,11 +139,32 @@ Here we build a very small 3 layers network using Keras. We use a least squares 
 
 
 
-[gist https://gist.github.com/philzook58/5aab67b65b476bb55e6b9c403ccabed2#file-train-py]
+
+```
+import tensorflow as tf
+from tensorflow import keras
+
+model = keras.Sequential([
+    keras.layers.Dense(20, activation='relu', input_shape=[1]),
+    keras.layers.Dense(25, activation='relu'),
+    keras.layers.Dense(1)
+])
+
+optimizer = tf.keras.optimizers.Adam()
+
+model.compile(loss='mse',
+              optimizer=optimizer,
+              metrics=['mae', 'mse'])
+
+model.fit(xs, ys, epochs=100, verbose=0)
+plt.plot(xs,model.predict(xs))
+plt.show()
+```
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/12/neural_fit.png)Our neural fit of the polynomial
+
+![](/assets/neural_fit.png)Our neural fit of the polynomial
 
 
 
@@ -143,7 +176,40 @@ And here we extract the weights and reinterpret them into z3. We could also have
 
 
 
-[gist https://gist.github.com/philzook58/5aab67b65b476bb55e6b9c403ccabed2#file-verify-py]
+
+```
+from z3 import *
+
+w1, b1, w2, b2, w3, b3 = model.get_weights() # unpack weights from model
+
+def Relu(x):
+    return np.vectorize(lambda y: If(y >= 0 , y, RealVal(0)))(x)
+def Abs(x):
+    return If(x <= 0, -x, x)
+def net(x):
+    x1 = w1.T @ x + b1
+    y1 = Relu(x1)
+    x2 = w2.T @ y1 + b2
+    y2 = Relu(x2)
+    x3 = w3.T @ y2 + b3
+    return x3
+
+x = np.array([Real('x')])
+y_true = cheb(x)
+y_pred = net(x)
+s = Solver()
+s.add(-1 <= x[0], x[0] <= 1)
+s.add(Abs( y_pred[0] - y_true[0] ) >= 0.5)
+#prove(Implies( And(-1 <= x[0], x[0] <= 1),  Abs( y_pred[0] - y_true[0] ) >= 0.2))
+res = s.check()
+print(res)
+if res == sat:
+    m = s.model()
+    print("Bad x value:", m[x[0]])
+    x_bad = m[x[0]].numerator_as_long() / m[x[0]].denominator_as_long() 
+    print("Error of prediction: ", abs(model.predict(np.array([x_bad])) - cheb(x_bad)))
+```
+
 
 
 

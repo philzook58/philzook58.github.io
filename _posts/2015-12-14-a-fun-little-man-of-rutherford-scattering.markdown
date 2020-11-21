@@ -55,7 +55,7 @@ I sort of monte carlo it with gaussian distributed initial conditions
 
 The bundles that come off look pretty cool
 
-[![rutherford](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/12/rutherford-300x225.png)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/12/rutherford.png)
+[![rutherford](/assets/rutherford-300x225.png)](/assets/rutherford.png)
 
 Lots that one could do with this. Compare the outgoing distribution to the formula, Try to discern shape of other potentials. Do a little statistics to see if charge or whatever can be determined from the data.
 

@@ -1,0 +1,513 @@
+---
+author: philzook58
+comments: true
+date: 2020-08-10 21:11:51+00:00
+layout: post
+link: https://www.philipzucker.com/?p=2847
+published: false
+slug: ATP
+title: ATP
+wordpress_id: 2847
+---
+
+
+
+
+[http://www.michaelbeeson.com/research/papers/Tarski-JAR.pdf](http://www.michaelbeeson.com/research/papers/Tarski-JAR.pdf) Tarskian Geometry Wos and Beeson
+
+
+
+
+
+
+
+THF format is higher order logic. Lambda free higher order logic [https://arxiv.org/abs/2005.02094](https://arxiv.org/abs/2005.02094)  . The applicative encoding makes a an apply function. This is basically defunctionalization is it not? [https://github.com/sneeuwballen/zipperposition](https://github.com/sneeuwballen/zipperposition) [http://matryoshka.gforge.inria.fr/pubs/ehoh_report.pdf](http://matryoshka.gforge.inria.fr/pubs/ehoh_report.pdf)
+
+
+
+
+
+
+
+E has a bunch of options. Wos talks about features of otter like hints and set of support. --Answers for exitsentially quantified queries? -- cnf to dump cnf translation. --proof-graph for dot file. PCL, LOP and TPTP, --watchlist,  --expert-heuristic Auto, Weight, StandardWeight, RWeight, FIFO, LIFO, Uniq,  
+UseWatchlist. For a full list check HEURISTICS/che_proofcontrol.c. , term ordering file that it can fill out
+
+
+
+
+
+
+    
+    <code># Unprocessed positive unit clauses:
+    cnf(i_0_2, plain, (cod(dom(X1))=dom(X1))).
+    cnf(i_0_1, plain, (dom(cod(X1))=cod(X1))).
+    cnf(i_0_9, plain, (comp(X1,dom(X1),X1))).
+    cnf(i_0_8, plain, (comp(cod(X1),X1,X1))).
+    
+    # Unprocessed negative unit clauses:
+    
+    # Unprocessed non-unit clauses:
+    cnf(i_0_4, plain, (comp(X1,X2,esk1_2(X1,X2))|dom(X1)!=cod(X2))).
+    cnf(i_0_7, plain, (cod(X1)=cod(X3)|~comp(X1,X2,X3))).
+    cnf(i_0_6, plain, (dom(X2)=dom(X3)|~comp(X1,X2,X3))).
+    cnf(i_0_5, plain, (dom(X1)=cod(X2)|~comp(X1,X2,X3))).
+    cnf(i_0_3, plain, (X3=X4|~comp(X1,X2,X4)|~comp(X1,X2,X3))).
+    cnf(i_0_10, plain, (X5=X7|~comp(X3,X4,X5)|~comp(X2,X4,X6)|~comp(X1,X6,X7)|~comp(X1,X2,X3))).
+    
+    
+    only one skolem function from 
+    fof( comp_objects_middle, axiom, ![F, G] : ((? [FG] : comp(F,G,FG)) <=> dom(F) = cod(G))).
+    Makes sense. this is defining the composition function rather than relation. If type checking does not hold, composition function returns garbage.
+    
+      </code>
+
+
+
+
+
+
+
+Could i use the drinker's paradox? compf is a function that witnesses composition. It gives garbage if f and g are not composable, which is a certain kind of dirty partiality that you see in hilbert's epsilon for example.
+
+
+
+
+
+
+
+Is there a way to mechanically turn any GAT to first order logic + a typing relation. hastype(    , hom(A,B) ), hastype(A,obj) , hastype(B,obj) <=> (or => ?) 
+
+
+
+
+
+
+    
+    <code>
+    %possibly
+    
+    comp(prod(F,G), pi1) = F
+    comp(prod(F,G), pi2) = G
+    
+    </code>
+
+
+
+
+
+
+
+`type(A) = obj`, welltyped(T) <=> exists Ty (type(T)  = Ty ). welltyped(T) =>
+
+
+
+
+
+
+
+answer: ?[T] : type(T) = such and such
+
+
+
+
+
+
+
+Could try to make coq proofs that my system of axioms is equivalent to more traditional category formulation.
+
+
+
+
+
+
+
+Does "giving the diagrams" do anything extra?
+
+
+
+
+
+
+
+First order theorem provers are a thing. It is a domain that is somewhat amenable to automation.
+
+
+
+
+
+
+
+Propositional logic. Propositions are opaque variables. There are logical connectives like and, or, not, implies. Many questions about propositional logic can be solved by SAT solvers.  SAT solvers can be used to check the validity of an inference, or whether a formula is always true
+
+
+
+
+
+
+
+First order logic is propositional logic extended with the ability to talk about entities and predicates over those entities. You have new logical binding forms forall and exists. In some sense, first order logic is sufficient or close to sufficient to talk about a lot of mathematics. First order logic feels a bit like informal set theory. You can have predicates that feel like they are describing subsets for which they are true.
+
+
+
+
+
+
+
+Function symbols, atoms, and predicate symbols
+
+
+
+
+
+
+
+Well known solvers in the field include Vampire and the E-prover.
+
+
+
+
+
+
+
+Other solvers may exist as part of interactive proof assistants. Metis appears the be one. firstorder in coq does something like this.
+
+
+
+
+
+
+
+There is a database of problems here [http://www.tptp.org/](http://www.tptp.org/). This TPTP is also a file format for describing problems.
+
+
+
+
+
+
+
+There is a competition held every year [http://www.tptp.org/CASC/](http://www.tptp.org/CASC/)
+
+
+
+
+
+
+
+
+
+
+
+
+
+I came across recently an interesting pedagogical implementation: PyRes, which has a talk this year at IJCAR
+
+
+
+
+
+
+
+There is an intersection with prolog. Prolog is very similar to these systems, with the constraint that the formula have to be in a particular form (horn clauses). This gives a more straightforward proof procedure. The convention of have variables being Capital letter names I think stems from prolog or whatever preceded prolog.
+
+
+
+
+
+
+
+Clausification - turns first order formula into clause normal form (cnf). This is very similar to the process of turning propositional logic formulas into conjunctive normal form (another related cnf) called the [Tseitsin](https://en.wikipedia.org/wiki/Tseytin_transformation) transformation . Conjunctive normal form is writing you formula as a giant and-of-ors. It is a normal form similar to how expanding a polynomial is a kind of normal form. The reason it is really useful is that . It was highly recommend that one reads the appropriate chapter in the Automated Reasoning Handbook
+
+
+
+
+
+
+
+[https://www.cs.miami.edu/home/geoff/Papers/Journal/1996_SM96_SACJ.pdf](https://www.cs.miami.edu/home/geoff/Papers/Journal/1996_SM96_SACJ.pdf)
+
+
+
+
+
+
+
+Skolemization is important. It let's us convert quantifiers into new function symbols.
+
+
+
+
+
+
+
+A clause is a disjunction of propositions
+
+
+
+
+
+
+
+To make a proof, you assert the assumptions/axioms and then assert the negation of the thing you want to prove. This is the same procedure as Z3. Then the system tries to derive a contradiction (false). 
+
+
+
+
+
+
+
+
+
+
+
+
+
+Unification is the workhorse. Comparing two terms we can figure out a substitution for the variables to make them syntactically match.
+
+
+
+
+
+
+
+Factoring - within a single clause, can two terms be unified? If so we can deduce a new clause with those two terms replaced by their unified term
+
+
+
+
+
+
+
+Resolution - Between two clauses are there two terms of opposite polarity that can be unified. If so unify them, conjoin all the other terms applying the substitution recieved from the unification
+
+
+
+
+
+
+
+I am confused as to how an ATP has any more power than z3.
+
+
+
+
+
+
+
+[https://link.springer.com/content/pdf/10.1007%2F978-3-030-51054-1_9.pdf](https://link.springer.com/content/pdf/10.1007%2F978-3-030-51054-1_9.pdf)
+
+
+
+
+
+
+
+[https://www.cs.cornell.edu/~kozen/Papers/06ijcar-categories.pdf](https://www.cs.cornell.edu/~kozen/Papers/06ijcar-categories.pdf) Category theory automation
+
+
+
+
+
+
+
+[http://www.cse.chalmers.se/~laurako/pub/CAV13_Kovacs.pdf](http://www.cse.chalmers.se/~laurako/pub/CAV13_Kovacs.pdf) Vampire tutorial
+
+
+
+
+
+
+
+Example tptp file. Stuff to note. ! [X] is the notation for $latex \forall X$, ? [X] is the notation for $latex \exists X$. Variables are capitalized but constants are lower case. `e` in the example below is the identity element of the group. Axioms and Conjectures are named.
+
+
+
+
+
+
+    
+    <code>%---- 1 * x = 1
+    fof(left_identity,axiom,
+    ! [X] : mult(e,X) = X).
+    %---- i(x) * x = 1
+    fof(left_inverse,axiom,
+    ! [X] : mult(inverse(X),X) = e).
+    %---- (x * y) * z = x * (y * z)
+    fof(associativity,axiom,
+    ! [X,Y,Z] : mult(mult(X,Y),Z) = mult(X,mult(Y,Z))).
+    %---- x * x = 1
+    %fof(group_of_order_2,hypothesis,
+    %! [X] : mult(X,X) = e).
+    %---- prove x * y = y * x
+    fof(commutativity,conjecture,
+    ! [X] : mult(X,Y) = mult(Y,X)).</code>
+
+
+
+
+
+
+
+You can ask other questions like whether there is `e` is also a right_identity
+
+
+
+
+
+
+    
+    <code>fof(right_identity,conjecture,
+    ! [X] : mult(X,e) = X).</code>
+
+
+
+
+
+
+
+Or you could ask if there exists a right identity, for which in the proof it shows e. Pretty cool!
+
+
+
+
+
+
+    
+    <code>fof(commutativity,conjecture,
+    ! [X] : ? [Y] : mult(X,Y) = X).</code>
+
+
+
+
+
+
+    
+    <code>...
+    14. mult(e,X3) = mult(inverse(X2),mult(X2,X3)) [superposition 11,10]
+    16. mult(inverse(X2),mult(X2,X3)) = X3 [forward demodulation 14,9]
+    20. mult(inverse(inverse(X1)),e) = X1 [superposition 16,10]
+    22. mult(X5,X6) = mult(inverse(inverse(X5)),X6) [superposition 16,16]
+    33. mult(X3,e) = X3 [superposition 22,20]
+    47. sK0 != sK0 [superposition 12,33]
+    54. $false [trivial inequality removal 47]
+    % SZS output end Proof for group
+    % ------------------------------
+    % Version: Vampire 4.4.0 (commit 7916d27 on 2019-08-23 08:50:16 +0100)
+    % Termination reason: Refutation
+    
+    % Memory used [KB]: 4861
+    % Time elapsed: 0.029 s
+    % ------------------------------
+    % ------------------------------</code>
+
+
+
+
+
+
+
+Vampire apparently reccommends you run it with a time limit. 
+
+
+
+
+
+
+
+Fun ideas: Can I differentiate with this? Can I integrate? How does one do point free differentiation?
+
+
+
+
+
+
+
+[http://jens-otten.de/tutorial_cade19/](http://jens-otten.de/tutorial_cade19/) Jens Otten - Build your own first order prover
+
+
+
+
+
+
+
+Equality is somewhat special. It behooves people to treat it via reqriting rather as an abstract predicate. Term ordering, LPO, KBO, RPO.  [https://en.wikipedia.org/wiki/Path_ordering_(term_rewriting)](https://en.wikipedia.org/wiki/Path_ordering_(term_rewriting)) lexicogrpahic Recursive and knuth bendix
+
+
+
+
+
+
+
+[https://www.cs.unm.edu/~mccune/prover9/manual-examples.html](https://www.cs.unm.edu/~mccune/prover9/manual-examples.html) Lists an explicit default ordering.
+
+
+
+
+
+
+
+Picking which clause to process next. A common strategen is to take a ratio of oldest clauses and simplest/lightest clauses.
+
+
+
+
+
+
+
+backward reasoning as reolsution steps involving the conjecture. Forward steps as not
+
+
+
+
+
+
+
+[https://arxiv.org/pdf/1808.04251.pdf](https://arxiv.org/pdf/1808.04251.pdf)
+
+
+
+
+
+
+
+
+
+
+
+
+
+What about those category theory proofs that use adjunctions. Those were purely equational. hom1( A, f B ) = hom2(g A, B). These will be vastly preferred to deep quantifiers probably.
+
+
+
+
+
+
+
+If you wanted to prove an equation, could you hold the desired equation alongside the knuth bendix and now stopping criteria isn't knuth bendix completion, it's just normalization fo conjecture equation to the same thing.
+
+
+
+
+
+
+
+[http://wwwlehre.dhbw-stuttgart.de/~sschulz/PAPERS/SCV-CADE-2019.pdf](http://wwwlehre.dhbw-stuttgart.de/~sschulz/PAPERS/SCV-CADE-2019.pdf) E description paper
+
+
+
+
+
+
+
+Term indexing. Flat terms - You can make a simple flat representation of terms if you know arities. Then use a trie with backtracking search. There;s a chapter in handbook of automated reasoning. Graf - term Indexing book. [https://www.researchgate.net/profile/Stephan_Schulz/publication/228687912_Indexing_Techniques_for_First-Order_Theorem_Proving/links/00b4952b856cbd9b9c000000.pdf](https://www.researchgate.net/profile/Stephan_Schulz/publication/228687912_Indexing_Techniques_for_First-Order_Theorem_Proving/links/00b4952b856cbd9b9c000000.pdf) Schultz slides
+
+
+
+
+
+
+
+discrimination trees, context trees, path indexing, top symbol hashing ( the lightest weight one?)
+
+
+

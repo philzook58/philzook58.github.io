@@ -1,0 +1,2 @@
+I"è<p>Mixed Integer programming is crazy powerful. You can with ingenuity encode many problems into it. The following is a simplification of the ideas appearing in <a href="http://groups.csail.mit.edu/robotics-center/public_papers/Dai19.pdf">http://groups.csail.mit.edu/robotics-center/public_papers/Dai19.pdf</a> . They do 3d robot arms, I do 2d. I also stick to completely linear approximations.</p>
+:ET

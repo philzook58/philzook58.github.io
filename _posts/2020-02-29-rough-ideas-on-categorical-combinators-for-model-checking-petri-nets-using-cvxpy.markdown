@@ -74,19 +74,59 @@ I'm like 70% sure what I did here makes sense, but I'm pretty sure the general i
 
 
 
-[gist https://gist.github.com/philzook58/bb4d0af244966800cfa3d3a181041e31#file-petricat-py]
+
+```
+T = 10 # total number of time steps as a global parameter
+class PetriCat():
+    def compose(f,g):
+        def res():
+            a, b , fcon = f()
+            b1, c, gcon = g()
+            return a, c, fcon + gcon + [b == b1]
+    def idd():
+        def res()
+           x = cvx.Variable((T-1,1), integer = True)
+           return x, x, [x >= 0]
+    def par(f,g):
+        def res():
+            a, b , fcon = f()
+            c, d , gcon = g()
+            return cvx.vstack([a,c]), cvx.vstack([b,d]), fcon + gcon
+        return res
+    def weighted_block(wi, wo, wint):
+        def res():
+           (Na, Ni) = wi.shape # number inputs,  actions
+           (Na1,No) = wo.shape
+           (Na2, Nint) = wint.shape
+           assert(Na == Na1)
+           assert(Na == Na2)
+           action = cvx.Variable((T-1, Na), integer=True)
+           internal = cvx.Variable((T, Nint), integer =True)
+           flowin = action @ wi
+           flowout = action @ wo
+           return flowin, flowout, [internal[1:,:] == internal[:-1,:] + action @ wint, action >= 0, internal >= 0]
+        return res
+    def run(f):
+        a, b, fcon = f()
+        prob = cvx.Problem(cvx.Minimize(1), fcon)
+        prob.solve()
+        return a, b
+        
+# We need some way of specifying the initial and final states of things, Just more parameters to constructor functions I think
+```
 
 
 
 
 
-The big piece is the `weighted_block` function. It let's you build a combinator with an internal state and input and output flow variables. You give matrices with entries for every possible transition. Whether transitions occurred between $latex t$ and $latex t+1$ is indicated by integer variables. There is also possible accumulation of tokens at nodes, which also requires integer variables. Perhaps we'd want to expose the token state of the nodes to the outside too?
+
+The big piece is the `weighted_block` function. It let's you build a combinator with an internal state and input and output flow variables. You give matrices with entries for every possible transition. Whether transitions occurred between $ t$ and $ t+1$ is indicated by integer variables. There is also possible accumulation of tokens at nodes, which also requires integer variables. Perhaps we'd want to expose the token state of the nodes to the outside too?
 
 
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2020/02/My-Drawing-14.sketchpad.png)Weighted block schematically looks something like this
+![](/assets/My-Drawing-14.sketchpad.png)Weighted block schematically looks something like this
 
 
 

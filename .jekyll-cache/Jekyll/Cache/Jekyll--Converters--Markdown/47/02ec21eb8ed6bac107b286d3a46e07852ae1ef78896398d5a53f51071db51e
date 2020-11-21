@@ -1,0 +1,57 @@
+I"<h3 id="minimax-optimization-of-the-residual-of-a-differential-equation">Minimax optimization of the residual of a differential equation.</h3>
+
+<p>We can’t solve differential equations $Ly = 0$ exactly usually. We need to work in some finite subspace of the full function space $ y(t) = \sum_i a_i f_i(t)$. A common criteria is to find a solution that is closest to obeying the differential equation in a least squares sense, say $ \min (Ly)^2 $. This is nice because it leads to linear system of equations. However, a minimax objective $\min \max |Ly| $ is also feasible using the sum of squares method. See here for more <a href="http://www.philipzucker.com/deriving-the-chebyshev-polynomials-using-sum-of-squares-optimization-with-sympy-and-cvxpy/">http://www.philipzucker.com/deriving-the-chebyshev-polynomials-using-sum-of-squares-optimization-with-sympy-and-cvxpy/</a></p>
+
+<p>We can write down the optimization problem using a finite polynomial parametrization of our solution. We relax the condition of being some of squares everywhere to instead just a region of interest by adding a term that makes the inequality stricter in the domain and looser outside the domain. The domain is described by a polynomial expression $t (1 - t) $ which is positive when $ 0 \leq t \leq 1$ and negative otherwise. Here is an example for</p>
+
+\[\frac{d^2 y}{dt^2}=-y\]
+
+\[y(0)=1\]
+
+\[y'(0) = 0\]
+
+<p>with exact solution $ \cos(t) $</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">using</span> <span class="n">JuMP</span>
+<span class="k">using</span> <span class="n">SumOfSquares</span>
+<span class="k">using</span> <span class="n">DynamicPolynomials</span>
+<span class="k">using</span> <span class="n">SCS</span>
+
+<span class="nd">@polyvar</span> <span class="n">t</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">monomials</span><span class="x">(</span><span class="n">t</span><span class="x">,</span> <span class="mi">0</span><span class="o">:</span><span class="mi">4</span><span class="x">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SOSModel</span><span class="x">(</span><span class="n">with_optimizer</span><span class="x">(</span><span class="n">SCS</span><span class="o">.</span><span class="n">Optimizer</span><span class="x">))</span>
+<span class="nd">@variable</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">y</span><span class="x">,</span> <span class="n">Poly</span><span class="x">(</span><span class="n">T</span><span class="x">))</span>
+<span class="nd">@variable</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">α</span><span class="x">)</span>
+<span class="n">dy</span> <span class="o">=</span> <span class="n">differentiate</span><span class="x">(</span><span class="n">y</span><span class="x">,</span> <span class="n">t</span><span class="x">)</span>
+<span class="n">ddy</span> <span class="o">=</span> <span class="n">differentiate</span><span class="x">(</span><span class="n">dy</span><span class="x">,</span> <span class="n">t</span><span class="x">)</span>
+<span class="n">domain</span> <span class="o">=</span> <span class="n">t</span><span class="o">*</span><span class="x">(</span><span class="nb">π</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="n">t</span><span class="x">)</span>
+<span class="nd">@variable</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">λ_1</span> <span class="x">,</span> <span class="n">SOSPoly</span><span class="x">(</span><span class="n">T</span><span class="x">))</span>
+<span class="nd">@variable</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">λ_2</span> <span class="x">,</span> <span class="n">SOSPoly</span><span class="x">(</span><span class="n">T</span><span class="x">))</span>
+<span class="nd">@constraint</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">y</span><span class="x">(</span><span class="n">t</span> <span class="o">=&gt;</span> <span class="mi">0</span><span class="x">)</span> <span class="o">==</span> <span class="mi">1</span><span class="x">)</span>
+<span class="nd">@constraint</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">dy</span><span class="x">(</span><span class="n">t</span> <span class="o">=&gt;</span> <span class="mi">0</span><span class="x">)</span> <span class="o">==</span> <span class="mi">0</span><span class="x">)</span>
+<span class="nd">@constraint</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">ddy</span> <span class="o">+</span> <span class="n">y</span> <span class="o">-</span> <span class="n">λ_1</span><span class="o">*</span><span class="n">domain</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="n">α</span><span class="x">)</span>
+<span class="nd">@constraint</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">α</span> <span class="o">&gt;=</span> <span class="n">ddy</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="n">λ_2</span><span class="o">*</span><span class="n">domain</span><span class="x">)</span>
+
+<span class="nd">@objective</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">Min</span><span class="x">,</span> <span class="n">α</span><span class="x">)</span>
+
+<span class="n">optimize!</span><span class="x">(</span><span class="n">model</span><span class="x">)</span>
+<span class="n">value</span><span class="x">(</span><span class="n">y</span><span class="x">)</span>
+
+<span class="c"># $$ 0.027642031145745472t^{4} + 0.021799794207213376t^{3} - 0.5066442977156951t^{2} + 3.506190174561713e-8t + 1.0000000041335204 $$</span>
+
+<span class="k">using</span> <span class="n">Plots</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="mi">0</span><span class="o">:</span><span class="mf">0.01</span><span class="o">:</span><span class="nb">π</span><span class="o">/</span><span class="mi">2</span><span class="x">;</span> <span class="n">exact_y</span> <span class="o">=</span> <span class="n">cos</span><span class="o">.</span><span class="x">(</span><span class="n">xs</span><span class="x">);</span> <span class="n">approx_y</span> <span class="o">=</span> <span class="n">map</span><span class="x">(</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="n">value</span><span class="x">(</span><span class="n">y</span><span class="x">)(</span><span class="n">t</span> <span class="o">=&gt;</span> <span class="n">x</span><span class="x">),</span> <span class="n">xs</span><span class="x">)</span><span class="c"># These are the plotting data</span>
+<span class="n">plot</span><span class="x">(</span><span class="n">xs</span><span class="x">,[</span><span class="n">exact_y</span><span class="x">,</span><span class="n">approx_y</span><span class="x">])</span>
+
+</code></pre></div></div>
+
+<p><img src="/assets/sos_diff_eq.svg" alt="" /></p>
+
+<p>original link: <a href="https://gist.github.com/philzook58/2a42558f6f5bc417c0b68f930f0ef27c#file-sos-diff-eq-ipynb">https://gist.github.com/philzook58/2a42558f6f5bc417c0b68f930f0ef27c#file-sos-diff-eq-ipynb</a></p>
+
+<p>Huh. This doesn’t embed very well. Maybe you’re better off just clicking into the thing. It’s nice not to let things rot too long though. <em>shrug</em></p>
+
+<p>Other ideas: Can I not come up with some scheme to use Sum of Squares for rigorous upper and lower bound regions like in <a href="https://github.com/JuliaIntervals/TaylorModels.jl">https://github.com/JuliaIntervals/TaylorModels.jl</a> ? Maybe a next post.</p>
+
+:ET

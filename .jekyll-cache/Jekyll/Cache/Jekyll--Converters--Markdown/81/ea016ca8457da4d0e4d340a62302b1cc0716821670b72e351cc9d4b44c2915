@@ -1,0 +1,149 @@
+I"�!<p><a href="https://en.wikipedia.org/wiki/Unification_(computer_science)">Unification</a> is a workhorse of symbolic computations. Comparing two terms (two syntax trees with named variables spots) we can figure out the most general substitution for the variables to make them syntactically match.</p>
+
+<p>It is a sister to pattern matching, but it has an intrinsic bidirectional flavor that makes it feel more powerful and declarative.</p>
+
+<p>Unification can be implemented efficiently (not that I have done so yet) with some interesting variants of the <a href="https://en.wikipedia.org/wiki/Disjoint-set_data_structure#:~:text=In%20computer%20science%2C%20a%20disjoint,(non%2Doverlapping)%20subsets.">disjoint set / union-find</a> data type.</p>
+
+<ul>
+  <li>The magic of Prolog is basically built in unification + backtracking search.</li>
+  <li>The magic of polymorphic type inference in Haskell and OCaml comes from unification of type variables.</li>
+  <li>Part of magic of SMT solvers using the theory of uninterpreted functions is unification.</li>
+  <li>Automatic and Interactive Theorem provers have unification built in somewhere.</li>
+</ul>
+
+<p>To describe terms I made a simple data types for variables modelled of those in <a href="https://github.com/JuliaSymbolics/SymbolicUtils.jl">SymbolicUtils</a> (I probably should just <em>use</em> the definitions in SymbolicUtils but i was trying to keep it simple).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+#variables
+struct Sym
+    name::Symbol
+end
+
+struct Term
+    f::Symbol
+    arguments::Array{Any} # Array{Union{Term,Sym}} faster/better?
+end
+</code></pre></div></div>
+
+<p>The <a href="https://github.com/aimacode/aima-python/blob/9ea91c1d3a644fdb007e8dd0870202dcd9d078b6/logic4e.py#L1307">implementation by Norvig</a> and Russell for the their <a href="http://aima.cs.berkeley.edu/">AI book</a> is an often copied simple implementation of unification. It is small and kind of straightforward.  You travel down the syntax trees and when you hit variables you try to put them into your substitution dictionary. Although, like anything that touches substitution, it can be easy to get wrong. See his note below.</p>
+
+<p>I used the multiple dispatch as <a href="https://discourse.julialang.org/t/are-there-idioms-in-julia-for-fast-algebraic-data-types-adt/37244/13">a kind of pattern matching</a> on algebraic data types whether the variables are terms or variables. It’s kind of nice, but unclear to me whether obscenely slow or not. This is not a high performance implementation of unification in any case.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+occur_check(x::Sym,y::Term,s) = any(occur_check(x, a, s) for a in y.arguments)
+
+function occur_check(x::Sym,y::Sym,s)
+    if x == y
+        return s
+    elseif haskey(s,y)
+        return occur_check(x, s[y], s)
+    else
+        return nothing
+    end  
+end
+
+
+function unify(x::Sym, y::Union{Sym,Term}, s) 
+   if x == y
+        return s
+   elseif haskey(s,x)
+        return unify(s[x], y, s)
+   elseif haskey(s,y) # This is the norvig twist
+        return unify(x, s[y], s)
+   elseif occur_check(x,y,s)
+        return nothing
+   else
+        s[x] = y
+        return s
+   end
+end
+
+unify(x::Term, y::Sym, s) = unify(y,x,s)
+
+function unify(x :: Term, y :: Term, s)
+    if x.f == y.f &amp;&amp; length(x.arguments) == length(y.arguments)
+        for (x1, y1) in zip(x.arguments, y.arguments)
+            if unify(x1,y1,s) == nothing
+                return nothing
+            end
+        end
+        return s
+    else
+        return nothing
+    end
+end
+
+unify(x,y) = unify(x,y,Dict())
+</code></pre></div></div>
+
+<p>I also made a small macro function for converting simple julia expressions to my representation. It uses the prolog convention that capital letter starting names are variables.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+function string2term(x)
+    if x isa Symbol
+        name = String(x)
+        if isuppercase(name[1])
+           return Sym( x)
+        else
+           return Term( x, []  )
+        end
+    elseif x isa Expr
+        @assert(x.head == :call)
+        arguments = [string2term(y) for y in x.args[2:end] ]
+        return Term( x.args[1], arguments )
+    end
+end
+macro string2term(x)
+    return :( $(string2term(x)) )
+end
+
+print(unify( @string2term(p(X,g(a), f(a, f(a)))) , @string2term(p(f(a), g(Y), f(Y, Z)))))
+# Dict{Any,Any}(Sym(:X) =&gt; Term(:f, Any[Term(:a, Any[])]),Sym(:Y) =&gt; Term(:a, Any[]),Sym(:Z) =&gt; Term(:f, Any[Term(:a, Any[])]))
+</code></pre></div></div>
+
+<h2 id="links">Links</h2>
+
+<p>Unification: Multidisciplinary Survey by Knight <a href="https://kevincrawfordknight.github.io/papers/unification-knight.pdf">https://kevincrawfordknight.github.io/papers/unification-knight.pdf</a></p>
+
+<p><a href="https://github.com/roberthoenig/FirstOrderLogic.jl/tree/master/src">https://github.com/roberthoenig/FirstOrderLogic.jl/tree/master/src</a> A julia project for first order logic that also has a unification implementation, and other stuff</p>
+
+<p>An interesting category theoretic perspective on unification <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.48.3615">http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.48.3615</a> what is unification by Goguen</p>
+
+<p>There is also a slightly hidden implementation in sympy (it does not appear in the docs?)  <a href="http://matthewrocklin.com/blog/work/2012/11/01/Unification">http://matthewrocklin.com/blog/work/2012/11/01/Unification</a>  <a href="https://github.com/sympy/sympy/tree/master/sympy/unify">https://github.com/sympy/sympy/tree/master/sympy/unify</a></p>
+
+<p>PyRes <a href="https://github.com/eprover/PyRes/blob/master/unification.py">https://github.com/eprover/PyRes/blob/master/unification.py</a></p>
+
+<p>Norvig unify<br />
+<a href="https://github.com/aimacode/aima-python/blob/9ea91c1d3a644fdb007e8dd0870202dcd9d078b6/logic4e.py#L1307">https://github.com/aimacode/aima-python/blob/9ea91c1d3a644fdb007e8dd0870202dcd9d078b6/logic4e.py#L1307</a></p>
+
+<p>norvig - widespread error<br />
+<a href="http://norvig.com/unify-bug.pdf">http://norvig.com/unify-bug.pdf</a></p>
+
+<p>Efficient unification note<br />
+<a href="ftp://ftp.cs.indiana.edu/pub/techreports/TR242.pdf">ftp://ftp.cs.indiana.edu/pub/techreports/TR242.pdf</a></p>
+
+<p>blog post<br />
+<a href="https://eli.thegreenplace.net/2018/unification/">https://eli.thegreenplace.net/2018/unification/</a></p>
+
+<p>Efficient representations for triangular substitituions<br />
+<a href="https://users.soe.ucsc.edu/~lkuper/papers/walk.pdf">https://users.soe.ucsc.edu/~lkuper/papers/walk.pdf</a></p>
+
+<p>conor mcbride - first order substitition structurly recursive dependent types<br />
+<a href="http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=880725E316FA5E3540EFAD83C0C2FD88?doi=10.1.1.25.1516&amp;rep=rep1&amp;type=pdf">http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=880725E316FA5E3540EFAD83C0C2FD88?doi=10.1.1.25.1516&amp;rep=rep1&amp;type=pdf</a></p>
+
+<p>z3 unifier - an example of an actually performant unifier<br />
+<a href="https://github.com/Z3Prover/z3/blob/520ce9a5ee6079651580b6d83bc2db0f342b8a20/src/ast/substitution/unifier.cpp">https://github.com/Z3Prover/z3/blob/520ce9a5ee6079651580b6d83bc2db0f342b8a20/src/ast/substitution/unifier.cpp</a></p>
+
+<p>Warren Abstract Machine Tutorial Reconstruction <a href="http://wambook.sourceforge.net/wambook.pdf">http://wambook.sourceforge.net/wambook.pdf</a></p>
+
+<p>Handbook of Automated Reasoning - has a chapter on unification</p>
+
+<p>Higher Order Unification - LambdaProlog, Miller unification</p>
+
+<p>Syntax trees with variables in them are a way in which to represent sets of terms (possibly infinite sets!). In that sense it asks can we form the union or intersection of these sets.  The intersection is the most general unifier. The union is not expressible via a single term with variables in general. We can only over approximate it, like how the union of convex sets is not necessarily convex, however it’s hull is. This is a join on a term lattice. This is the process of anti-unification.</p>
+
+<p>What about the complement of these sets? Not really. Not with the representation we’ve chosen, we can’t have an interesting negation. What about the difference of two sets?</p>
+
+<p>I had an idea a while back about programming with relations, where I laid out some interesting combinators. I represented only finite relations, as those can be easily enumerated.</p>
+
+:ET

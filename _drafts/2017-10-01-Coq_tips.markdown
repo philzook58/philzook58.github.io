@@ -1,0 +1,41 @@
+---
+author: philzook58
+comments: true
+date: 2017-10-01 22:28:18+00:00
+layout: post
+link: https://www.philipzucker.com/?p=894
+published: false
+slug: Coq tips
+title: Coq tips
+wordpress_id: 894
+---
+
+https://softwarefoundations.cis.upenn.edu/
+
+coqtop is the repl
+
+run some functions
+
+Compute 1 + 1.
+
+Type check (like :t in ghci)
+
+Check 1.
+
+https://coq.inria.fr/tutorial-nahas
+
+Inductive is like data in Haskell - makes new datatypes, also produces new induction principles though
+
+Fixpoint is for recursively defined functions
+
+Definition is for non recursive functions
+
+pattern match with match
+
+Theorem, Lemma, Example all start proofs. There is some funny business being done by the coq runtime that is unfamiliar in other languages. Proofs have special syntax kind of like do notation or something (not saying it's a monad, just that it has a very particular syntax).
+
+I _think_ what is happening is that inside a proof, there is a proof tree-like data structure holding the incomplete proof, then once it is complete it gets interpreted into a coq value (3 or the function that actually computes or whatever).
+
+Constructors are the same as functions in a funny sense, except that they don't have much meaning. They are sort of just places to put stuff that eventually is going to be taken out. The taking out is done by pattern matching. Or they are a way of specifying how you would write down expressions of that variety.
+
+Inversion tactic - extracts equality of inside of constructors, shows that two constructors can't be equal? Generates the interior equalities. Shows explosions if two constructors need to be equal in the hypothesis.

@@ -11,7 +11,7 @@ wordpress_id: 831
 
 
 
-![random_source-grc](http://www.philipzucker.com/wp-content/uploads/2017/08/random_source.grc_.png)
+![random_source-grc](/assets/random_source.grc_.png)
 
 A simple graph where you can see a peak move as you move the microphone closer and farther from the speaker.
 

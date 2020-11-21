@@ -69,7 +69,7 @@ If we have an iterative, contractive process for getting better and better solut
 
 
 
-It is wise if at all possible to convert an ODE into integral form. $latex \dot{x}= f(x,t)$ is the same as $latex x(t) = x_0 + \int f(x,t)dt$.
+It is wise if at all possible to convert an ODE into integral form. $ \dot{x}= f(x,t)$ is the same as $ x(t) = x_0 + \int f(x,t)dt$.
 
 
 
@@ -77,7 +77,7 @@ It is wise if at all possible to convert an ODE into integral form. $latex \dot{
 
 
 
-For ODEs, the common example of such an operation is known as Picard iteration. In physical terms, this is something like the impulse approximation / born approximation. One assumes that the ODE evolves according to a known trajectory $latex x_0(t)$ as a first approximation. Then one plugs in the trajectory to the equations of motion $latex f(x_0,t)$ to determine the "force" it would feel and integrate up all this force. This creates a better approximation $latex x_1(t)$ (probably) which you can plug back in to create an even better approximation.
+For ODEs, the common example of such an operation is known as Picard iteration. In physical terms, this is something like the impulse approximation / born approximation. One assumes that the ODE evolves according to a known trajectory $ x_0(t)$ as a first approximation. Then one plugs in the trajectory to the equations of motion $ f(x_0,t)$ to determine the "force" it would feel and integrate up all this force. This creates a better approximation $ x_1(t)$ (probably) which you can plug back in to create an even better approximation.
 
 
 
@@ -141,7 +141,7 @@ It is not at all clear there is any benefit over interval based methods.
 
 
 
-Here is a sketch I wrote for $latex x'=x$ which has solution $latex e^t$. I used raised chebyshev polynomials to enforce positive polynomial constraints and tossed in a little taylor model / interval arithmetic to truncate off the highest terms. 
+Here is a sketch I wrote for $ x'=x$ which has solution $ e^t$. I used raised chebyshev polynomials to enforce positive polynomial constraints and tossed in a little taylor model / interval arithmetic to truncate off the highest terms. 
 
 
 
@@ -155,7 +155,140 @@ I'm using my helper functions for translating between sympy and cvxpy expression
 
 
 
-[gist https://gist.github.com/philzook58/f0068c4084cb307f9cdfd267b1e7411e]
+
+```python
+import cvxpy as cvx
+import numpy as np
+import sos
+import sympy as sy
+import matplotlib.pyplot as plt
+#raised chebyehve
+t = sy.symbols("t")
+
+N = 5
+# seems like even N becomes infeasible.
+terms = [sy.chebyshevt(n,t) + 1 for n in range(N)] # raised chebyshev functions are positive on interval [-1,1]
+print(terms)
+
+'''
+for i in range(1,4):
+    ts = np.linspace(-1,1,100)
+    #print(ts)
+    #rint(sy.lambdify(t,terms[i], 'numpy')(ts))
+    plt.plot( ts , sy.lambdify(t,terms[i])(ts))
+plt.show()
+'''
+
+vdict = {}
+
+l,d = sos.polyvar(terms) # lower bound on solution
+vdict.update(d)
+
+w,d = sos.polyvar(terms, nonneg=True) # width of tube. Width is always positive (nonneg)
+vdict.update(d)
+
+u = l + w # upper curve is higher than lower by width
+
+def picard(t,f):
+    return sy.integrate(f, [t,-1,t]) + np.exp(-1) # picard integration on [-1,1] interval with initial cond x(-1)=1/e
+
+ui = picard(t,u)
+li = picard(t,l)
+
+c = []
+
+def split(y , N): # split a polynomial into lower an upper parts.
+    yp = sy.poly(y, gens=t)
+    lower = sum([ c*t**p for (p,), c in  yp.terms() if p < N]) 
+    #upper = sum([ c*x**p for (p,), c in  yp.terms() if p > N])
+    upper = y - lower
+    return lower,upper
+
+terms = [sy.chebyshevt(n,t) + 1 for n in range(N+1)]
+
+# ui <= u
+lowerui, upperui = split(ui, N) # need to truncate  highest power of u using interval method
+print(lowerui)
+print(upperui)
+du = upperui.subs(t,1)  #Is this where the even dependence of N comes from?
+#c += [ du >= sos.cvxify(upperui.subs(t,1), vdict), du >= sos.cvxify(upperui.subs(t,1)]  # , upperui.subs(t,-1))
+print(du)
+lam1,d = sos.polyvar(terms,nonneg=True) # positive polynomial
+vdict.update(d)
+# This makes the iterated interval inside the original interval
+c += sos.poly_eq(  lowerui + du + lam1 , u , vdict) # write polynomial inequalities in slack equality form
+
+
+# l <= li 
+# 
+lam2, d = sos.polyvar(terms,nonneg=True)
+vdict.update(d)
+c += sos.poly_eq(  l + lam2 , li , vdict) # makes new lower bound higher than original lower bound
+
+obj = cvx.Minimize( sos.cvxify(w.subs(t ,0.9), vdict) ) # randomly picked reasonable objective. Try minimax?
+#obj = cvx.Maximize( sos.cvxify(l.subs(t ,1), vdict) )
+print(c)
+prob = cvx.Problem(obj, c)
+
+res = prob.solve(verbose=True) #solver=cvx.CBC
+print(res)
+lower = sy.lambdify(t, sos.poly_value(l , vdict))
+upper = sy.lambdify(t, sos.poly_value(u , vdict))
+
+#plt.plot(ts, upper(ts) - np.exp(ts) ) # plot differences
+#plt.plot(ts, lower(ts) - np.exp(ts)  )
+ts = np.linspace(-1,1,100)
+plt.plot(ts, upper(ts) , label= "upper")
+plt.plot(ts, lower(ts) , label= "lower")
+plt.plot(ts, np.exp(ts) , label= "exact")
+#plt.plot(ts,np.exp(ts) - lower(ts) )
+plt.legend()
+plt.show()
+
+''' 
+if I need to add in 
+interval rounding to get closure
+is there a point to this? Is it actually simpler in any sense?
+
+Collecting up chebyshev compoentns and chebysehv splitting would perform 
+lanczos economization. That'd be coo
+
+What about a bvp
+
+Get iterative formulation.
+
+And what are the requirements
+1. We need an iterative contractive operator
+2. We need to confirm all functions that forall t, l <= f <= u 
+map to in between li and ui. This part might be challenging
+3. Get the interval contracting and small.
+
+x <= a
+y = Lx
+Lx <= La ? Yes, if positive semi definite. Otherwise we need to split it.
+No. Nice try. not component wise inequality.
+
+Secondary question: finitely confirming a differential operator is positive semi definite
+forall x, xLx >= 0 ?
+Similar to the above. Make regions in space.
+
+
+
+
+
+Value function learning is contractive.
+hmm.
+
+
+Piecewise lyapunov functions
+
+
+
+Being able to use an LP makes it WAY faster, WAY more stable, and opens up sweet MIPpurtunities.
+
+
+'''
+```
 
 
 
@@ -165,7 +298,8 @@ I'm using my helper functions for translating between sympy and cvxpy expression
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2020/01/euler-1024x768.png)
+
+![](/assets/euler-1024x768.png)
 
 
 
@@ -251,7 +385,7 @@ If instead you use interval arithmetic for a bound on your solution rather than 
 
 
 
-A very simple bound for an integral $latex \int_a^b f(x)dx$ is $latex \int max_{x \in [a,b]}f(x)  dx= max_{x \in [a,b]}f(x) \int dx = max_{x \in [a,b]}f(x) (b - a)$
+A very simple bound for an integral $ \int_a^b f(x)dx$ is $ \int max_{x \in [a,b]}f(x)  dx= max_{x \in [a,b]}f(x) \int dx = max_{x \in [a,b]}f(x) (b - a)$
 
 
 
@@ -517,7 +651,7 @@ The beauty of sum of squares certificates is that they are very primitive proofs
 
 
 
-$latex y(t) = \lambda(t) \and \lambda(t) is SOS \Rightarrow \forall t. y(t) >= 0$. Sum of squares is a kind of a quantifier elimination method. The reverse direction of the above implication is the subject of the positivstullensatz, a theorem of real algebraic geometry. At the very least, we can use the SOS constraint as a relaxation of the quantified constraint.
+$ y(t) = \lambda(t) \and \lambda(t) is SOS \Rightarrow \forall t. y(t) >= 0$. Sum of squares is a kind of a quantifier elimination method. The reverse direction of the above implication is the subject of the positivstullensatz, a theorem of real algebraic geometry. At the very least, we can use the SOS constraint as a relaxation of the quantified constraint.
 
 
 
@@ -533,7 +667,7 @@ So, I think by using sum of squares, we can turn a differential equation into a 
 
 
 
-A function that is dominated by another in derivative, will be dominated in value also.  You can integrate over inequalities (I think. You have to be careful about such things. ) $latex \forall t. \frac{dx}{dt} >= \frac{dx}{dt} \Rightarrow $ x(t) - x(0) >=  y(t) - y(0) $
+A function that is dominated by another in derivative, will be dominated in value also.  You can integrate over inequalities (I think. You have to be careful about such things. ) $ \forall t. \frac{dx}{dt} >= \frac{dx}{dt} \Rightarrow $ x(t) - x(0) >=  y(t) - y(0) $
 
 
 
@@ -549,7 +683,7 @@ The derivative of a polynomial can be thought of as a completely formal operatio
 
 
 
-As an example, let's take $latex \frac{dx}{dt}=y$  $latex y(0) = 1$ with the solution $latex y = e^t$. $latex e$ is a transcendental 
+As an example, let's take $ \frac{dx}{dt}=y$  $ y(0) = 1$ with the solution $ y = e^t$. $ e$ is a transcendental 
 
 
 
@@ -565,7 +699,7 @@ The S-procedure is trick by which you can relax a sum of squares inequality to o
 
 
 
-For the domain $latex t \in [0,1]$  the polynomial $latex (1 - t)t$ works as our domain polynomial.
+For the domain $ t \in [0,1]$  the polynomial $ (1 - t)t$ works as our domain polynomial.
 
 
 
@@ -573,7 +707,7 @@ For the domain $latex t \in [0,1]$  the polynomial $latex (1 - t)t$ works as our
 
 
 
-We parametrize our solution as an explicit polynomial $latex x(t) = a_0 + a_1 t + a_2 t^2 + ...$. It is important to note that what follows is always linear in the $latex a_i$. 
+We parametrize our solution as an explicit polynomial $ x(t) = a_0 + a_1 t + a_2 t^2 + ...$. It is important to note that what follows is always linear in the $ a_i$. 
 
 
 
@@ -581,7 +715,7 @@ We parametrize our solution as an explicit polynomial $latex x(t) = a_0 + a_1 t 
 
 
 
-$latex \frac{dx}{dt} - x >= 0$ can be relaxed to $latex \frac{dx}{dt} - x(t) + \lambda(t)(1-t)t >= 0$ with $latex \lambda(t) is SOS$.
+$ \frac{dx}{dt} - x >= 0$ can be relaxed to $ \frac{dx}{dt} - x(t) + \lambda(t)(1-t)t >= 0$ with $ \lambda(t) is SOS$.
 
 
 
@@ -597,7 +731,7 @@ So with that we get a reasonable formulation of finding a polynomial upper bound
 
 
 
-$latex \min x(1) $
+$ \min x(1) $
 
 
 
@@ -605,7 +739,7 @@ $latex \min x(1) $
 
 
 
-$latex \frac{dx}{dt} - x(t) + \lambda_1(t)(1-t)t =  \lambda_2(t)$ 
+$ \frac{dx}{dt} - x(t) + \lambda_1(t)(1-t)t =  \lambda_2(t)$ 
 
 
 
@@ -613,7 +747,7 @@ $latex \frac{dx}{dt} - x(t) + \lambda_1(t)(1-t)t =  \lambda_2(t)$
 
 
 
-$latex \lambda_{1,2}(t) is SOS$.
+$ \lambda_{1,2}(t) is SOS$.
 
 
 
@@ -629,7 +763,11 @@ And here it is written out in python using my cvxpy-helpers which bridge the gap
 
 
     
-    <code></code>
+    
+```
+
+
+```
 
 
 
@@ -637,7 +775,8 @@ And here it is written out in python using my cvxpy-helpers which bridge the gap
 
 
 
-We can go backwards to figure out sufficient conditions for a bound. We want $latex x_u(t_f) \gte x(t_f)$. It is sufficient that $latex \forall t. x_u(t) \gte x(t)$. For this it is sufficient that  $latex \forall t. x_u'(t)  >= x'(t) \and x_u(t_i) >= x(t_i) $. We follow this down in derivative until we get the lowest derivative in the differential equation. Then we can use the linear differential equation itself $latex x^{(n)}(t) = \sum_i a_i(t) x^{(i)}(t)$. $latex x_u^{(n)}(t) >= \sum max(a_i x^{(i)}_u, x^{(i)}_l)$.
+
+We can go backwards to figure out sufficient conditions for a bound. We want $ x_u(t_f) \gte x(t_f)$. It is sufficient that $ \forall t. x_u(t) \gte x(t)$. For this it is sufficient that  $ \forall t. x_u'(t)  >= x'(t) \and x_u(t_i) >= x(t_i) $. We follow this down in derivative until we get the lowest derivative in the differential equation. Then we can use the linear differential equation itself $ x^{(n)}(t) = \sum_i a_i(t) x^{(i)}(t)$. $ x_u^{(n)}(t) >= \sum max(a_i x^{(i)}_u, x^{(i)}_l)$.
 
 
 
@@ -645,7 +784,7 @@ We can go backwards to figure out sufficient conditions for a bound. We want $la
 
 
 
-$latex a(t) * x(t) >= \max a(t) x_u(t), a(t) x_l(t)$. This accounts for the possibility of terms changing signs. Or you could separate the terms into regions of constant sign.
+$ a(t) * x(t) >= \max a(t) x_u(t), a(t) x_l(t)$. This accounts for the possibility of terms changing signs. Or you could separate the terms into regions of constant sign.
 
 
 
@@ -709,7 +848,7 @@ While we can differentiate through an equality, we can't differentiate through a
 
 
 
-$latex \frac{dx}{dt} >= f \and x(0) >= a \Rightarrow $ x(t) >=  \int^t_0 f(x) + a$
+$ \frac{dx}{dt} >= f \and x(0) >= a \Rightarrow $ x(t) >=  \int^t_0 f(x) + a$
 
 
 
@@ -717,7 +856,7 @@ $latex \frac{dx}{dt} >= f \and x(0) >= a \Rightarrow $ x(t) >=  \int^t_0 f(x) + 
 
 
 
-As a generalization we can integrate $latex \int p(x) $ over inequalities as long as $latex p(x) \gte 0$
+As a generalization we can integrate $ \int p(x) $ over inequalities as long as $ p(x) \gte 0$
 
 
 
@@ -725,7 +864,7 @@ As a generalization we can integrate $latex \int p(x) $ over inequalities as lon
 
 
 
-In particular $latex \forall t. \frac{dx}{dt} >= \frac{dx}{dt} \Rightarrow $ x(t) - x(0) >=  y(t) - y(0) $
+In particular $ \forall t. \frac{dx}{dt} >= \frac{dx}{dt} \Rightarrow $ x(t) - x(0) >=  y(t) - y(0) $
 
 
 
@@ -741,7 +880,7 @@ We can convert a differential equation into a differential inequation. It is not
 
 
 
-$latex \frac{dx}{dt} = A(t)x + f(t)$ 
+$ \frac{dx}{dt} = A(t)x + f(t)$ 
 
 
 

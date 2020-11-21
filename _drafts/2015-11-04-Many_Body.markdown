@@ -1,0 +1,43 @@
+---
+author: philzook58
+comments: true
+date: 2015-11-04 15:20:13+00:00
+layout: post
+link: https://www.philipzucker.com/?p=162
+published: false
+slug: Many Body
+title: Many Body
+wordpress_id: 162
+---
+
+To demonstrate some stuff, let's go into the simplest setting where what we're talking about makes sense.
+
+The Boson fermion thing is an unneccessary complication (although for the physics, absolutely essential).
+
+Consider a single spin, i.e. a quantum mechanical 2 entry vector. All operators for this thing are also 2x2 matrices. If I have 2 of these spins, I have 4x4 matrices. If I have 3 spins, I have 8x8. In other words the dimension goes as $latex 2^N$ where N is the number of spins.
+
+Ok. Now, let's stick the the 2 spin case. Since it's only 4x4, the system is totally and completely solvable. But let's apply the games we apply in the more hopeless cases so we can see what happens. There are the sort of independent parts of the energy.
+
+$latex H_1\otimes I$
+
+$latex I\otimes H_2$
+
+$latex H=H_1\otimes I+ I\otimes H_2$
+
+In Block form this would look like
+
+$latex \begin{bmatrix}
+
+h_1
+
+$
+
+If this was all there is, the system separates into two independent parts and it really isn't harder to solve than the spins individually.
+
+$latex e^{-iHt}=e^{-i(H_1\otimes I+ I\otimes H_2 )t}=e^{-iH_1 t}\otimes e^{-i H_2 t}$
+
+Now we can add an interaction energy to the thing. Some kind of inextricable 4x4 interaction V that can't be separated into .
+
+Let's say we have the ground state of the system $latex \psi_0$.
+
+

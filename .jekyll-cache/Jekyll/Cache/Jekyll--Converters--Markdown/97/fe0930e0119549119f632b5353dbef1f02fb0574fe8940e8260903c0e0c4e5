@@ -1,0 +1,2 @@
+I"<p>A fun method (and useful!) for solving the ground state of the Schrodinger equation is to minimize the energy integral $ dx \psi^\dagger H \psi $ while keeping the total probability 1. Pytorch is a big ole optimization library, so let’s give it a go.</p>
+:ET

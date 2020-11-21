@@ -554,494 +554,499 @@ IS rosette going to be useful for my work? coooooould be
 
 
     
-    <code>{-# LANGUAGE GADTs, DataKinds, PolyKinds #-}
-    {-@ LIQUID "--reflection" @-}
-    {-@ LIQUID "--short-names" @-}
-    {-@ LIQUID "--ple" @-}
     
-    {-@ type TRUE = {v: Bool | v = True }@-}
-    {-@  type NonEmpty a = {v : [a] | len v > 0}  @-}
-    {-@ head :: NonEmpty a -> a @-}
-    head (x : _) = x
-    
-    {-@ measure f :: Int -> Int @-}
-    f x = 2 * x
-    
-    {-@ true :: TRUE @-}
-    true = True
-    
-    
-    -- impl x y = x ==> y
-    -- {-@ congruence :: Int -> Int -> TRUE @-}
-    -- congruence x y = (x == y) ==> (f x == f y)
-    -- {-@ (==>) :: {x : Bool |} -> {y : Bool |} -> {z : Bool | z = x ==> y} @-}
-    -- x ==> y = (not x) || y
-    
-    -- aws automated reaosning group
-    {-
-    nullaway uber. 
-    sadowski google static anaylis
-    infer faecobook
-    
-    give programmer early 
-    
-    
-    refinement types
-    
-    why and how to use
-    how to implement refinement types
-    
-    mostly like floyd hoare logic
-    
-    types + predicates = refinement type
-    
-    t := {x:b | p} erefinemed b
-          x : t -> t -- refined function type
-    linear arithemtic
-    
-    congruence axioms
-    
-    
-    emit a bunch of verification conditions (VC)
-    p1 => p2 => p3 ... 
-    
-    SMT can tell if VC is alwasy true
-    
-    
-    -}
-    
-    {-@ type Zero = {v : Int | v == 0} @-}
-    {-@ zero :: Zero @-}
-    zero = (0 :: Int) -- why?
-    
-    
-    {-@ type NAT = {v: Int | v >= 0} @-}
-    {-@ nats :: [Nat]  @-}
-    nats = [0,1,1,1] :: [Int]
-    
-    {-
-    
-    subtype
-    
-    in an environemnt Gamma, t1 is a subtype of t2
-    x are vairables are in scope.
-    /\x |- {v | q} <= {v | r}
-    
-    True  => 
-    
-    
-    -}
-    
-    
-    {-@ plus :: x : Int -> y : Int -> {v : Int | v = x + y} @-}
-    plus :: Int -> Int -> Int
-    plus x y = x + y
-    
-    -- measure. uninterpeteyd function called measure.
-    -- {-@ measure vlen :: Vector a -> Int @-}
-    
-    -- {-@ at :: vec :Vector a -> {i : Nat | i < vlen vec} ->  @-}
-    
-    -- {-@  size :: vec : Vector a -> {n : Nat | n == vlen vec} @-}
-    
-    {-
-    horn contrints infer 
-    
-    Collections and Higher and order fucntions
-    
-    reduce :: (a -> b -> a) -> a -> [b] -> a
-    type a is an invaraint that holds on initial acc and indictively on f
-    Huh. That is true.
-    
-    
-    -- Huh. I could prove sum formulas this way.
-    
-    sum'' = vec = let is = range 0 (size vec)
-                  add = \tot i -> ot + at vec i
-    
-    
-                  properties of data structures
-    
-    
-    size of of a list
-    allow uninterpetyed functions inside refinements
-    
-    { measre length}
-    
-    LISTNE a = {v : [a] | 0 < length v}
-    
-    
-    measure yields refined constructions
-    
-    [] :: {v : [a] | legnth v = 0}
-    
-    
-                  --}
-    
-    
-                  {-
-                  
-                  Q: measure?
-                  Q : environment?
-                  Q : where is standard libraru?
-                  
-                  no foralls anywhere? All in decidable fragment
-    
-    
-                  p : ([a],[a]) | (fst p) + (snd p) == lenght xs
-                  measures fst and snd
-    
-    
-                  interpeter
-    
-                  impossible :: {v : String | false} -> a
-    
-    imperative language
-    
-    interpolation
-    
-    
-    /inlcude folder has prelude
-    
-    basic values
-    {v : Int | lo <= v && v < hi }
-    
-    
-    invaraint properties of structures
-    
-    encoe invraints in constructor
-    
-    data OrdPair = OP {opX :: Int, opY :: Int}
-    
-    {-@ data OrdPair = OP {opX :: Int, opY :: {v : Int | opX < v}@-}
-    
-    
-    class Liquid Int
-    class Liquid Bool
-    class Liquid ... Real?
-    
-    {-@   @-}
-    
-    Liquid Relations?
-    {  }
-    
-    data OList 
-    {-@data OList a LB = Empt | :< {oHd :: {v : a | LB = v}   oTl :: OList a oHd }   @-}
-    
-    
-    {-@   {oHd :: a, oTl :: OList {v : a | oHd < v}   }@-}
-                  
-    GADTs?
-    -}
-    data MyList a where
-        Nil :: MyList a
-        {-@ Cons :: v : a -> MyList {x : a | x < v} ->  MyList a @-}
-        Cons :: a -> MyList a -> MyList a
-    
-    test :: MyList Int
-    test = Cons 2 (Cons 1 Nil)
-    
-    {-
-    
-    abstracting the invaraint from the data structure
-    parametrzie by relations
-    
-    data [a]<rel :: a -> a -> Bool> where
-        = []
-        | (:) {hd :: }
-    
-        rel != is unique list
-    
-    {\x y -> x >= y}
-    type level lambdas!? .... uh.... maybe.
-    
-    reflecting singletons into liquid?
-    
-    termination metrics
-    
-    / [length xs + len ys] -- merge sort
-    
-    {-@ Half a s = }@-}
-    
-    Oncey ou have temrination proofs you have proofs of correctness
-    
-    Propositions as Types
-    
-    Plus commutes is trivial
-    {n = n + n}
-    
-    -}
-    
-    
-    {-@ easyProof :: {True} @-}
-    easyProof = ()
-    
-    -- hot damn. I mean this is in it's legerdomain. But prettttty sweet.
-    {-@ commute :: x : Int -> y : Int -> {x + y = y + x} @-}
-    commute :: Int -> Int -> ()
-    commute x y = ()
-    
-    {-@ reflect mysum @-}
-    {-@ mysum :: Nat -> Nat @-}
-    mysum :: Int -> Int
-    mysum 0 = 0 -- if n <= 0 then 0 else  2 * n + (mysum (n - 1))
-    mysum n = 2 * n + (mysum (n - 1))
-    
-    -- what is going on here? why do I need _?
-    {-@ mysumpf :: _ -> {mysum 0 = 0 } @-}
-    -- mysumpf :: Proof
-    mysumpf _ = let x = mysum 0 in x
-    
-    {-@ mysumpf' :: {mysum 3 = 12 } @-}
-    -- mysumpf :: Proof
-    mysumpf' = ()
-    
-    {-@ reflect fastsum @-}
-    {-@ fastsum :: Nat -> Nat @-}
-    fastsum :: Int -> Int
-    fastsum n = n * (n + 1)
-    
-    type Proof = ()
-    {-
-    {-@ pfsum :: x : Nat -> {fastsum x = mysum x} @-}
-    pfsum :: Int -> Proof
-    pfsum 0 = () -- let _ = fastsum 0 in let _ = mysum 0 in ()
-    pfsum n = pfsum (n-1)  
-    -}
-    
-    {-@ pfsum :: x : Nat -> {fastsum x = mysum x} @-}
-    pfsum :: Int -> Proof
-    pfsum 0 = () -- let _ = fastsum 0 in let _ = mysum 0 in ()
-    pfsum n = pfsum (n-1)  
-    
-    {-
-    
-    reflection
-    
-    reflect takes the prcondition of sum and dumps it as the poscondition
-    
-    sum3 _ = let s0 =sum 0
-                 s1  = sum 1
-                 s2  = sum 3 -- all are going to be in scope.
-    z3 will connect the dots.
-    
-    
-    
-    using proof combinatos from Proof Combinators
-    long chains of claculations
-    
-    reflection of singletons
-    
-    data SS s where
-        {-@ SZero :: {v : Int | v = 0} -> SS 'Zero @-} 
-        SZero :: Int -> SS 'Zero 
-        {-@ SZero :: {v : Int | v = 0} -> SS 'S a @-} 
-        SZero :: Int -> SS 'Zero 
-    
-    
-    
-    
-    
-        proof by induction
-        sum n = n * (n + 1)/2
-    
-        2 * sum n  = n * (n + 1)
-    
-    
-    point free liquid types
-    
-    (.) :: (a -> b) -> (a -> )
-    ? Can I abstract over predicates like this?
-    ({v:a | p} -> {s:}) -> 
-    
-    
-    
-    Vectors
-    
-    cauchy schwartz
-    
-    
-    
-    -}
-    
-    data V2 a = V2 a a 
-    
-    {-@ reflect dot @-} 
-    dot (V2 x y) (V2 x' y') = x * x' + y * y'
-    
-    {-@ reflect vplus @-}
-    vplus (V2 x y) (V2 x' y') = V2 (x + x') (y + y')
-    
-    {-@ reflect smul @-}
-    smul s (V2 x' y') = V2 (s * x') (s * y')
-    {-
-    {-@ cauchy :: x : V2 Int -> y : V2 Int -> {(dot x y) * (dot x y) <= (dot x x) * (dot y y) } @-}
-    cauchy :: V2 Int -> V2 Int -> Proof
-    cauchy x y = let q = dotpos (vplus x y) in let r = dotpos (vplus x (smul (-1 :: Int) y)) in (\_ _ -> ()) q r
-    -}
-    
-    -- {-@ square :: Int -> Nat @-} -- basiclly the same thing
-    {-@ reflect square @-}
-    square :: Int -> Int
-    square x = x * x
-    
-    
-    
-    {-@ sqpos :: x: Int -> {square x >= 0} @-}
-    sqpos :: Int -> ()
-    sqpos x = ()
-    
-    {-@ dotpos :: x: V2 Int -> {dot x x >= 0} @-}
-    dotpos :: V2 Int -> ()
-    dotpos x = ()
-    
-    {-@ dotsym :: x: V2 Int -> y : V2 Int -> {dot x y = dot y x} @-}
-    dotsym :: V2 Int -> V2 Int ->  ()
-    dotsym x y = ()
-    
-    {-@ vpluscomm :: x: V2 Int -> y : V2 Int -> {vplus x y = vplus y x} @-}
-    vpluscomm :: V2 Int -> V2 Int ->  ()
-    vpluscomm x y = ()
-    
-    {-@ dotlin :: x: V2 Int -> y : V2 Int -> z : V2 Int -> {dot (vplus x y) z = dot x z + dot y z} @-}
-    dotlin :: V2 Int -> V2 Int ->  V2 Int ->  ()
-    dotlin x y z = ()
-    
-    
-    
-    
-    
-    {-
-    
-    What else is interesting to prove?
-    
-    verify stuff about ODEs?
-    
-    fold [1 .. t] where t = 10
-    
-    could give little spiel about how dynamical systems are like imperative programming
-    
-    
-    
-    get some rationals.
-    
-    profunctor
-    p a b
-    a -> b are refined functions
-    
-    
-    I should learn how to abstract over typeclasses. Verified typeclasses?
-    
-    SMT has built in rationals prob?
-    -}
-    
-    data Rat = Rat Int Int 
-    
-    {-@ reflect rplus @-}
-    rplus :: Rat -> Rat -> Rat
-    rplus (Rat x y) (Rat x' y') = Rat (x*y' + x'*y) (y * y')
-    
-    
-    
-    {-@ reflect rmul @-}
-    rmul :: Rat -> Rat -> Rat
-    rmul (Rat x y) (Rat x' y') = Rat (x*x') (y * y')
-    
-    
-    
-    
-    
-    data Nat' = S Nat' | Z
-    
-    {-@ measure nlen @-}
-    {-@ nlen :: Nat' -> Nat @-}
-    nlen :: Nat' -> Int
-    nlen Z = 0
-    nlen (S x) = 1 + (nlen x) 
-    {-
-    -- failing?
-    -- crash: SMTLIB2 respSat = Error "line 31 column 169: unknown sort 'Main.SNat'"
-    data SNat a where
-        SZ :: SNat 'Z
-        SS :: SNat x -> SNat ('S x)
-    -}
-    
-    {-@ reflect conv @-}
-    {-@ conv :: x : Nat -> {v : Nat' | nlen v = x} @-}
-    conv :: Int -> Nat'
-    conv 0 = Z
-    conv x = S (conv (x-1))
-    
-    -- It's an isomorphism
-    
-    {-@ pfconv :: x : Nat -> {nlen (conv x) = x} @-}
-    pfconv :: Int -> Proof
-    pfconv 0 = ()
-    pfconv x = pfconv (x - 1)
-    
-    {-@ pfconv' :: x : Nat' -> {conv (nlen x) = x} @-}
-    pfconv' :: Nat' -> Proof
-    pfconv' Z = ()
-    pfconv' (S x) = pfconv' x
-    
-    {-@ reflect plus' @-}
-    plus' :: Nat' -> Nat' -> Nat'
-    plus' Z x = x
-    plus' (S x) y = S (plus' x y)
-    
-    {-@ plusz' :: x : Nat' -> {plus' x Z = plus' Z x}  @-}
-    plusz' :: Nat' -> Proof
-    plusz' Z = ()
-    plusz' (S x) = plusz' x
-    
-    
-    {-@ pluscomm' :: x : Nat' -> y : Nat' -> {plus' x y = plus' y x} / [nlen x, nlen y] @-}
-    pluscomm' :: Nat' -> Nat' -> Proof
-    pluscomm' Z y = plusz' y
-    pluscomm' (S x) (S y) = const (pluscomm' (S x) y) $ const (pluscomm' x (S y)) $  pluscomm' x y
-        -- const () $ const (plus' (S x) (S y)) $ const (plus' x (S y)) (plus' x y)
-        
-        -- const (pluscomm' (S x) y) $ const (pluscomm' x (S y)) $  pluscomm' x y
-     -- flip const is proof combinator .==   
-        {-let q = pluscomm' x (S y) in
-                            let w = pluscomm' (S x) y in 
-                            let r = pluscomm' x y in (\b n m -> ()) q w r -- ? Was this necessary? -}
-    pluscomm' x Z = plusz' x
-    
-    
-    
-    
-    -- {-@ data Iso = @-}
-    data Iso a b = Iso { to :: a -> b, from :: b -> a, p1 :: Proof, p2 :: Proof}
-    
-    
-    {-
-    
-    We also have type level lambdas.
-    refinement polymorphism
-    
-    LH is somewhat like singletons in the sense there is a manual reflection step.
-    In singletons the manual reflection is in the Sing type
-    in LH it is kind of all over the place. (+) has a type. Where is it defined?
-    
-    
-    How does it know that the Haskell function + is the same as the SMT solver function?
-    
-    Coq and Agda and Idris type checking is powered quite a bit by an internal unification engine
-    explicit annotation may lessen the burden somewhat
-    
-    SMT solvers as a unification engine
-    structure unification vs uninterpeted functions.
-    f a ~ Int is not a valid Haskell constraint. Maybe with the unmatchable arrow it is?
-    In a funny sense, there is a difference between  Just and (+ 1). 
-    One being a constructor means we can match out of it
-    Just :: a ->> b
-    (+ 1) :: Int -> Int
-    
-    -}
-    
-    -- test' :: (f a ~ Int) => ()
-    -- test' = ()</code>
+```
+
+{-# LANGUAGE GADTs, DataKinds, PolyKinds #-}
+{-@ LIQUID "--reflection" @-}
+{-@ LIQUID "--short-names" @-}
+{-@ LIQUID "--ple" @-}
+
+{-@ type TRUE = {v: Bool | v = True }@-}
+{-@  type NonEmpty a = {v : [a] | len v > 0}  @-}
+{-@ head :: NonEmpty a -> a @-}
+head (x : _) = x
+
+{-@ measure f :: Int -> Int @-}
+f x = 2 * x
+
+{-@ true :: TRUE @-}
+true = True
+
+
+-- impl x y = x ==> y
+-- {-@ congruence :: Int -> Int -> TRUE @-}
+-- congruence x y = (x == y) ==> (f x == f y)
+-- {-@ (==>) :: {x : Bool |} -> {y : Bool |} -> {z : Bool | z = x ==> y} @-}
+-- x ==> y = (not x) || y
+
+-- aws automated reaosning group
+{-
+nullaway uber. 
+sadowski google static anaylis
+infer faecobook
+
+give programmer early 
+
+
+refinement types
+
+why and how to use
+how to implement refinement types
+
+mostly like floyd hoare logic
+
+types + predicates = refinement type
+
+t := {x:b | p} erefinemed b
+      x : t -> t -- refined function type
+linear arithemtic
+
+congruence axioms
+
+
+emit a bunch of verification conditions (VC)
+p1 => p2 => p3 ... 
+
+SMT can tell if VC is alwasy true
+
+
+-}
+
+{-@ type Zero = {v : Int | v == 0} @-}
+{-@ zero :: Zero @-}
+zero = (0 :: Int) -- why?
+
+
+{-@ type NAT = {v: Int | v >= 0} @-}
+{-@ nats :: [Nat]  @-}
+nats = [0,1,1,1] :: [Int]
+
+{-
+
+subtype
+
+in an environemnt Gamma, t1 is a subtype of t2
+x are vairables are in scope.
+/\x |- {v | q} <= {v | r}
+
+True  => 
+
+
+-}
+
+
+{-@ plus :: x : Int -> y : Int -> {v : Int | v = x + y} @-}
+plus :: Int -> Int -> Int
+plus x y = x + y
+
+-- measure. uninterpeteyd function called measure.
+-- {-@ measure vlen :: Vector a -> Int @-}
+
+-- {-@ at :: vec :Vector a -> {i : Nat | i < vlen vec} ->  @-}
+
+-- {-@  size :: vec : Vector a -> {n : Nat | n == vlen vec} @-}
+
+{-
+horn contrints infer 
+
+Collections and Higher and order fucntions
+
+reduce :: (a -> b -> a) -> a -> [b] -> a
+type a is an invaraint that holds on initial acc and indictively on f
+Huh. That is true.
+
+
+-- Huh. I could prove sum formulas this way.
+
+sum'' = vec = let is = range 0 (size vec)
+              add = \tot i -> ot + at vec i
+
+
+              properties of data structures
+
+
+size of of a list
+allow uninterpetyed functions inside refinements
+
+{ measre length}
+
+LISTNE a = {v : [a] | 0 < length v}
+
+
+measure yields refined constructions
+
+[] :: {v : [a] | legnth v = 0}
+
+
+              --}
+
+
+              {-
+
+              Q: measure?
+              Q : environment?
+              Q : where is standard libraru?
+
+              no foralls anywhere? All in decidable fragment
+
+
+              p : ([a],[a]) | (fst p) + (snd p) == lenght xs
+              measures fst and snd
+
+
+              interpeter
+
+              impossible :: {v : String | false} -> a
+
+imperative language
+
+interpolation
+
+
+/inlcude folder has prelude
+
+basic values
+{v : Int | lo <= v && v < hi }
+
+
+invaraint properties of structures
+
+encoe invraints in constructor
+
+data OrdPair = OP {opX :: Int, opY :: Int}
+
+{-@ data OrdPair = OP {opX :: Int, opY :: {v : Int | opX < v}@-}
+
+
+class Liquid Int
+class Liquid Bool
+class Liquid ... Real?
+
+{-@   @-}
+
+Liquid Relations?
+{  }
+
+data OList 
+{-@data OList a LB = Empt | :< {oHd :: {v : a | LB = v}   oTl :: OList a oHd }   @-}
+
+
+{-@   {oHd :: a, oTl :: OList {v : a | oHd < v}   }@-}
+
+GADTs?
+-}
+data MyList a where
+    Nil :: MyList a
+    {-@ Cons :: v : a -> MyList {x : a | x < v} ->  MyList a @-}
+    Cons :: a -> MyList a -> MyList a
+
+test :: MyList Int
+test = Cons 2 (Cons 1 Nil)
+
+{-
+
+abstracting the invaraint from the data structure
+parametrzie by relations
+
+data [a]<rel :: a -> a -> Bool> where
+    = []
+    | (:) {hd :: }
+
+    rel != is unique list
+
+{\x y -> x >= y}
+type level lambdas!? .... uh.... maybe.
+
+reflecting singletons into liquid?
+
+termination metrics
+
+/ [length xs + len ys] -- merge sort
+
+{-@ Half a s = }@-}
+
+Oncey ou have temrination proofs you have proofs of correctness
+
+Propositions as Types
+
+Plus commutes is trivial
+{n = n + n}
+
+-}
+
+
+{-@ easyProof :: {True} @-}
+easyProof = ()
+
+-- hot damn. I mean this is in it's legerdomain. But prettttty sweet.
+{-@ commute :: x : Int -> y : Int -> {x + y = y + x} @-}
+commute :: Int -> Int -> ()
+commute x y = ()
+
+{-@ reflect mysum @-}
+{-@ mysum :: Nat -> Nat @-}
+mysum :: Int -> Int
+mysum 0 = 0 -- if n <= 0 then 0 else  2 * n + (mysum (n - 1))
+mysum n = 2 * n + (mysum (n - 1))
+
+-- what is going on here? why do I need _?
+{-@ mysumpf :: _ -> {mysum 0 = 0 } @-}
+-- mysumpf :: Proof
+mysumpf _ = let x = mysum 0 in x
+
+{-@ mysumpf' :: {mysum 3 = 12 } @-}
+-- mysumpf :: Proof
+mysumpf' = ()
+
+{-@ reflect fastsum @-}
+{-@ fastsum :: Nat -> Nat @-}
+fastsum :: Int -> Int
+fastsum n = n * (n + 1)
+
+type Proof = ()
+{-
+{-@ pfsum :: x : Nat -> {fastsum x = mysum x} @-}
+pfsum :: Int -> Proof
+pfsum 0 = () -- let _ = fastsum 0 in let _ = mysum 0 in ()
+pfsum n = pfsum (n-1)  
+-}
+
+{-@ pfsum :: x : Nat -> {fastsum x = mysum x} @-}
+pfsum :: Int -> Proof
+pfsum 0 = () -- let _ = fastsum 0 in let _ = mysum 0 in ()
+pfsum n = pfsum (n-1)  
+
+{-
+
+reflection
+
+reflect takes the prcondition of sum and dumps it as the poscondition
+
+sum3 _ = let s0 =sum 0
+             s1  = sum 1
+             s2  = sum 3 -- all are going to be in scope.
+z3 will connect the dots.
+
+
+
+using proof combinatos from Proof Combinators
+long chains of claculations
+
+reflection of singletons
+
+data SS s where
+    {-@ SZero :: {v : Int | v = 0} -> SS 'Zero @-} 
+    SZero :: Int -> SS 'Zero 
+    {-@ SZero :: {v : Int | v = 0} -> SS 'S a @-} 
+    SZero :: Int -> SS 'Zero 
+
+
+
+
+
+    proof by induction
+    sum n = n * (n + 1)/2
+
+    2 * sum n  = n * (n + 1)
+
+
+point free liquid types
+
+(.) :: (a -> b) -> (a -> )
+? Can I abstract over predicates like this?
+({v:a | p} -> {s:}) -> 
+
+
+
+Vectors
+
+cauchy schwartz
+
+
+
+-}
+
+data V2 a = V2 a a 
+
+{-@ reflect dot @-} 
+dot (V2 x y) (V2 x' y') = x * x' + y * y'
+
+{-@ reflect vplus @-}
+vplus (V2 x y) (V2 x' y') = V2 (x + x') (y + y')
+
+{-@ reflect smul @-}
+smul s (V2 x' y') = V2 (s * x') (s * y')
+{-
+{-@ cauchy :: x : V2 Int -> y : V2 Int -> {(dot x y) * (dot x y) <= (dot x x) * (dot y y) } @-}
+cauchy :: V2 Int -> V2 Int -> Proof
+cauchy x y = let q = dotpos (vplus x y) in let r = dotpos (vplus x (smul (-1 :: Int) y)) in (\_ _ -> ()) q r
+-}
+
+-- {-@ square :: Int -> Nat @-} -- basiclly the same thing
+{-@ reflect square @-}
+square :: Int -> Int
+square x = x * x
+
+
+
+{-@ sqpos :: x: Int -> {square x >= 0} @-}
+sqpos :: Int -> ()
+sqpos x = ()
+
+{-@ dotpos :: x: V2 Int -> {dot x x >= 0} @-}
+dotpos :: V2 Int -> ()
+dotpos x = ()
+
+{-@ dotsym :: x: V2 Int -> y : V2 Int -> {dot x y = dot y x} @-}
+dotsym :: V2 Int -> V2 Int ->  ()
+dotsym x y = ()
+
+{-@ vpluscomm :: x: V2 Int -> y : V2 Int -> {vplus x y = vplus y x} @-}
+vpluscomm :: V2 Int -> V2 Int ->  ()
+vpluscomm x y = ()
+
+{-@ dotlin :: x: V2 Int -> y : V2 Int -> z : V2 Int -> {dot (vplus x y) z = dot x z + dot y z} @-}
+dotlin :: V2 Int -> V2 Int ->  V2 Int ->  ()
+dotlin x y z = ()
+
+
+
+
+
+{-
+
+What else is interesting to prove?
+
+verify stuff about ODEs?
+
+fold [1 .. t] where t = 10
+
+could give little spiel about how dynamical systems are like imperative programming
+
+
+
+get some rationals.
+
+profunctor
+p a b
+a -> b are refined functions
+
+
+I should learn how to abstract over typeclasses. Verified typeclasses?
+
+SMT has built in rationals prob?
+-}
+
+data Rat = Rat Int Int 
+
+{-@ reflect rplus @-}
+rplus :: Rat -> Rat -> Rat
+rplus (Rat x y) (Rat x' y') = Rat (x*y' + x'*y) (y * y')
+
+
+
+{-@ reflect rmul @-}
+rmul :: Rat -> Rat -> Rat
+rmul (Rat x y) (Rat x' y') = Rat (x*x') (y * y')
+
+
+
+
+
+data Nat' = S Nat' | Z
+
+{-@ measure nlen @-}
+{-@ nlen :: Nat' -> Nat @-}
+nlen :: Nat' -> Int
+nlen Z = 0
+nlen (S x) = 1 + (nlen x) 
+{-
+-- failing?
+-- crash: SMTLIB2 respSat = Error "line 31 column 169: unknown sort 'Main.SNat'"
+data SNat a where
+    SZ :: SNat 'Z
+    SS :: SNat x -> SNat ('S x)
+-}
+
+{-@ reflect conv @-}
+{-@ conv :: x : Nat -> {v : Nat' | nlen v = x} @-}
+conv :: Int -> Nat'
+conv 0 = Z
+conv x = S (conv (x-1))
+
+-- It's an isomorphism
+
+{-@ pfconv :: x : Nat -> {nlen (conv x) = x} @-}
+pfconv :: Int -> Proof
+pfconv 0 = ()
+pfconv x = pfconv (x - 1)
+
+{-@ pfconv' :: x : Nat' -> {conv (nlen x) = x} @-}
+pfconv' :: Nat' -> Proof
+pfconv' Z = ()
+pfconv' (S x) = pfconv' x
+
+{-@ reflect plus' @-}
+plus' :: Nat' -> Nat' -> Nat'
+plus' Z x = x
+plus' (S x) y = S (plus' x y)
+
+{-@ plusz' :: x : Nat' -> {plus' x Z = plus' Z x}  @-}
+plusz' :: Nat' -> Proof
+plusz' Z = ()
+plusz' (S x) = plusz' x
+
+
+{-@ pluscomm' :: x : Nat' -> y : Nat' -> {plus' x y = plus' y x} / [nlen x, nlen y] @-}
+pluscomm' :: Nat' -> Nat' -> Proof
+pluscomm' Z y = plusz' y
+pluscomm' (S x) (S y) = const (pluscomm' (S x) y) $ const (pluscomm' x (S y)) $  pluscomm' x y
+    -- const () $ const (plus' (S x) (S y)) $ const (plus' x (S y)) (plus' x y)
+
+    -- const (pluscomm' (S x) y) $ const (pluscomm' x (S y)) $  pluscomm' x y
+ -- flip const is proof combinator .==   
+    {-let q = pluscomm' x (S y) in
+                        let w = pluscomm' (S x) y in 
+                        let r = pluscomm' x y in (\b n m -> ()) q w r -- ? Was this necessary? -}
+pluscomm' x Z = plusz' x
+
+
+
+
+-- {-@ data Iso = @-}
+data Iso a b = Iso { to :: a -> b, from :: b -> a, p1 :: Proof, p2 :: Proof}
+
+
+{-
+
+We also have type level lambdas.
+refinement polymorphism
+
+LH is somewhat like singletons in the sense there is a manual reflection step.
+In singletons the manual reflection is in the Sing type
+in LH it is kind of all over the place. (+) has a type. Where is it defined?
+
+
+How does it know that the Haskell function + is the same as the SMT solver function?
+
+Coq and Agda and Idris type checking is powered quite a bit by an internal unification engine
+explicit annotation may lessen the burden somewhat
+
+SMT solvers as a unification engine
+structure unification vs uninterpeted functions.
+f a ~ Int is not a valid Haskell constraint. Maybe with the unmatchable arrow it is?
+In a funny sense, there is a difference between  Just and (+ 1). 
+One being a constructor means we can match out of it
+Just :: a ->> b
+(+ 1) :: Int -> Int
+
+-}
+
+-- test' :: (f a ~ Int) => ()
+-- test' = ()
+```
+
 
 
 
@@ -1661,58 +1666,63 @@ Or simpler case is parameter is an integer. a magic number.
 
 
     
-    <code>
     
-    @pre(lambda x: None)
-    @post(lambda r: r >= 0)
-    def square(x):
-    	return x**2
-    
-    @verify(pre, post) # Easier. because now we can also verify the individual function. Call Z3 at function definition time.
-    def pre(f,cond):
-       if(VERIFCAIOTN_ON)
-       return fnew
-       def fnew(x):
-            if(VERIFICATION_ON):
-    	   		if(x == VerificationEnv):
-    	   			newenv = x.copy
-    	            new.add_pre(cond(x.var))
-    	            newVar = Z3.variable()
-    	            newenv.add(newVar == f(x.var))
-    
-    
-    
-    	        else:
-    	        	return f(x)
-    
-    
-    
-    def post(f, cond):
-       def fnew(x):
-        if x == VerifcationEnv:
-            Z3.findmodel(not cond(x.var), x.env)
-            if can't find one:
-               we're good.
-               x.env.append(cond(x.var))
-               return x
-            else:
-               assert(False, model, function name, function postcondition code.)
-    
-    
-    #overloading assignment. isn't a problem.
-    class VerifyArray():
-       #numpy Z3 shim.
-    
-    #termination requires measure decreasing at every recursive call.
-    #arbaitrary loops? How to deal with those?
-    #maybe a hierarchy of envs to make it easier on z3. Like it doesn't need to give the whole program history if the local use is good enough.
-    
-    
-    
-    class VerificationEnv():
-        self.var = []
-        self.pre = []
-        self.post = []</code>
+```
+
+
+
+@pre(lambda x: None)
+@post(lambda r: r >= 0)
+def square(x):
+	return x**2
+
+@verify(pre, post) # Easier. because now we can also verify the individual function. Call Z3 at function definition time.
+def pre(f,cond):
+   if(VERIFCAIOTN_ON)
+   return fnew
+   def fnew(x):
+        if(VERIFICATION_ON):
+	   		if(x == VerificationEnv):
+	   			newenv = x.copy
+	            new.add_pre(cond(x.var))
+	            newVar = Z3.variable()
+	            newenv.add(newVar == f(x.var))
+
+
+
+	        else:
+	        	return f(x)
+
+
+
+def post(f, cond):
+   def fnew(x):
+    if x == VerifcationEnv:
+        Z3.findmodel(not cond(x.var), x.env)
+        if can't find one:
+           we're good.
+           x.env.append(cond(x.var))
+           return x
+        else:
+           assert(False, model, function name, function postcondition code.)
+
+
+#overloading assignment. isn't a problem.
+class VerifyArray():
+   #numpy Z3 shim.
+
+#termination requires measure decreasing at every recursive call.
+#arbaitrary loops? How to deal with those?
+#maybe a hierarchy of envs to make it easier on z3. Like it doesn't need to give the whole program history if the local use is good enough.
+
+
+
+class VerificationEnv():
+    self.var = []
+    self.pre = []
+    self.post = []
+```
+
 
 
 

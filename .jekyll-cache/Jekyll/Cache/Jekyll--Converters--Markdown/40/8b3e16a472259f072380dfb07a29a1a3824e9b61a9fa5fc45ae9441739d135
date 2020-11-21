@@ -1,0 +1,2 @@
+I"}<p><a href="https://en.wikipedia.org/wiki/Sorting_network">Sorting networks</a> are a circuit flavored take on sorting. Although you can build circuits for any size input, any particular circuit works for a fixed sized input. They are like an unrolling of the loops or recursion of more familiar sorting algorithms. They come up also in the context of parallel and gpu sorting</p>
+:ET

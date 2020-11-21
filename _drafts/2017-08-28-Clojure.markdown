@@ -1,0 +1,35 @@
+---
+author: philzook58
+comments: true
+date: 2017-08-28 14:57:38+00:00
+layout: post
+link: https://www.philipzucker.com/?p=840
+published: false
+slug: Clojure
+title: Clojure
+wordpress_id: 840
+---
+
+Clara - pattern matching
+
+Neanderthal - fast linear algebra
+
+Quil - simple drawing
+
+core.logic - prolog ish
+
+tarantella - dancing links
+
+rollings stones - SAT
+
+https://github.com/latte-central/LaTTe
+
+CIDER - emacs
+
+Cortex - machine learning
+
+Onyx - Distributed computing like spark
+
+Om - React bindings
+
+

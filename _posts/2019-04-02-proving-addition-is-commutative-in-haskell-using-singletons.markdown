@@ -50,7 +50,12 @@ For future reference, I have on the following extensions, some of which I'll men
 
 
     
-    <code>{-# LANGUAGE GADTs, DataKinds, TypeFamilies, RankNTypes, UndecidableInstances, PolyKinds #-}</code>
+    
+```
+
+{-# LANGUAGE GADTs, DataKinds, TypeFamilies, RankNTypes, UndecidableInstances, PolyKinds #-}
+```
+
 
 
 
@@ -74,7 +79,12 @@ Step 1: define your ordinary data type. `Bool` is already defined in the Prelude
 
 
     
-    <code>data Bool = True | False</code>
+    
+```
+
+data Bool = True | False
+```
+
 
 
 
@@ -90,9 +100,14 @@ Step 2: turn on the DataKinds extension. This automatically promotes any data ty
 
 
     
-    <code>data True
-    data False
-    data Just a</code>
+    
+```
+
+data True
+data False
+data Just a
+```
+
 
 
 
@@ -108,8 +123,13 @@ Step 3: Define your singleton datatype. The singleton datatype is a GADT (genera
 
 
     
-    <code>just :: a -> Maybe a
-    just = Just</code>
+    
+```
+
+just :: a -> Maybe a
+just = Just
+```
+
 
 
 
@@ -141,10 +161,15 @@ Letting you define the type signature for the constructor let's you define a con
 
 
     
-    <code>id x = x
     
-    boolid :: Bool -> Bool
-    boolid x = x</code>
+```
+
+id x = x
+
+boolid :: Bool -> Bool
+boolid x = x
+```
+
 
 
 
@@ -168,9 +193,14 @@ With all that spiel, here is the singleton type for `Bool` as a  GADT.
 
 
     
-    <code>data SBool s where
-       STrue :: SBool 'True
-       SFalse :: SBool 'False</code>
+    
+```
+
+data SBool s where
+   STrue :: SBool 'True
+   SFalse :: SBool 'False
+```
+
 
 
 
@@ -194,11 +224,16 @@ Here's the analogous construction for a Peano natural number
 
 
     
-    <code>data Nat = Zero | Succ Nat
     
-    data SNat s where
-        SZero :: SNat 'Zero
-        SSucc :: SNat n -> SNat ('Succ n)</code>
+```
+
+data Nat = Zero | Succ Nat
+
+data SNat s where
+    SZero :: SNat 'Zero
+    SSucc :: SNat n -> SNat ('Succ n)
+```
+
 
 
 
@@ -222,9 +257,14 @@ Addition is straightforward to define for our `Nat`.
 
 
     
-    <code>nplus :: Nat -> Nat -> Nat
-    nplus Zero x = x
-    nplus (Succ x) y = Succ (nplus x y)</code>
+    
+```
+
+nplus :: Nat -> Nat -> Nat
+nplus Zero x = x
+nplus (Succ x) y = Succ (nplus x y)
+```
+
 
 
 
@@ -240,9 +280,14 @@ Let's replicate this definition at the type level. The extension we'll want is `
 
 
     
-    <code>type family NPlus x y where
-        NPlus 'Zero x = x
-        NPlus ('Succ x) y = 'Succ (NPlus x y)</code>
+    
+```
+
+type family NPlus x y where
+    NPlus 'Zero x = x
+    NPlus ('Succ x) y = 'Succ (NPlus x y)
+```
+
 
 
 
@@ -258,9 +303,14 @@ Now finally, we can exactly mirror this definition on singletons
 
 
     
-    <code>snplus :: SNat n -> SNat n' -> SNat (NPlus n n')
-    snplus SZero x = x
-    snplus (SSucc x) y = SSucc (snplus x y) </code>
+    
+```
+
+snplus :: SNat n -> SNat n' -> SNat (NPlus n n')
+snplus SZero x = x
+snplus (SSucc x) y = SSucc (snplus x y) 
+```
+
 
 
 
@@ -292,8 +342,13 @@ We're going to want to prove something about equality. The standard definition o
 
 
     
-    <code>data Eq1 a b where
-        Refl :: Eq1 a a</code>
+    
+```
+
+data Eq1 a b where
+    Refl :: Eq1 a a
+```
+
 
 
 
@@ -317,7 +372,7 @@ Why is this a reasonable equality?  You can construct using `Refl` only when you
 
 
 
-We can prove a couple facts about equality. First off that it is a symmetric relation. If $latex a = b$ then $latex b = a$.
+We can prove a couple facts about equality. First off that it is a symmetric relation. If $ a = b$ then $ b = a$.
 
 
 
@@ -325,8 +380,13 @@ We can prove a couple facts about equality. First off that it is a symmetric rel
 
 
     
-    <code>symm :: Eq1 a b -> Eq1 b a
-    symm Refl = _</code>
+    
+```
+
+symm :: Eq1 a b -> Eq1 b a
+symm Refl = _
+```
+
 
 
 
@@ -342,8 +402,13 @@ When we pattern match and expose the incoming `Refl`, the type checker learns th
 
 
     
-    <code>symm :: Eq1 a b -> Eq1 b a
-    symm Refl = Refl</code>
+    
+```
+
+symm :: Eq1 a b -> Eq1 b a
+symm Refl = Refl
+```
+
 
 
 
@@ -359,8 +424,13 @@ Similarly we can prove the transitivity of equality.
 
 
     
-    <code>trans :: Eq1 a b -> Eq1 b c -> Eq1 a c 
-    trans Refl Refl = Refl</code>
+    
+```
+
+trans :: Eq1 a b -> Eq1 b c -> Eq1 a c 
+trans Refl Refl = Refl
+```
+
 
 
 
@@ -393,8 +463,12 @@ Now let's start proving things about our addition operator. Can we prove that
 
 
     
-    <code>proof1 :: Eq1 'Zero 'Zero
-    proof1 = Refl</code>
+    
+```
+
+proof1 :: Eq1 'Zero 'Zero
+proof1 = Refl
+```
 
 
 
@@ -402,7 +476,8 @@ Now let's start proving things about our addition operator. Can we prove that
 
 
 
-This one is straightforward since obviously `'Zero` is `'Zero`. How about something slightly more complicated $latex 1 + 0 = 1$.
+
+This one is straightforward since obviously `'Zero` is `'Zero`. How about something slightly more complicated $ 1 + 0 = 1$.
 
 
 
@@ -410,8 +485,13 @@ This one is straightforward since obviously `'Zero` is `'Zero`. How about someth
 
 
     
-    <code>proof1' :: Eq1 (NPlus ('Succ 'Zero) 'Zero) ('Succ 'Zero)
-    proof1' = Refl</code>
+    
+```
+
+proof1' :: Eq1 (NPlus ('Succ 'Zero) 'Zero) ('Succ 'Zero)
+proof1' = Refl
+```
+
 
 
 
@@ -427,7 +507,7 @@ The typechecker can evaluate addition on concrete numbers to confirm this all wo
 
 
 
-Here's a much more interesting property $latex \forall x. 0 + x = x$  
+Here's a much more interesting property $ \forall x. 0 + x = x$  
 
 
 
@@ -436,8 +516,13 @@ Here's a much more interesting property $latex \forall x. 0 + x = x$
 
 
     
-    <code>proof2 :: SNat x -> Eq1 (NPlus 'Zero x) x
-    proof2 x = Refl</code>
+    
+```
+
+proof2 :: SNat x -> Eq1 (NPlus 'Zero x) x
+proof2 x = Refl
+```
+
 
 
 
@@ -453,7 +538,7 @@ This one is also straightforward to prove. Looking at the definition of `NPlus` 
 
 
 
-Here's our first toughy. $latex \forall x. x + 0 = x$ This may seem silly, but our definition of `NPlus` did not treat the two arguments symmetrically. it only pattern match on the first. Until we know more about x, we can't continue. So how do we learn more? By pattern matching and looking at the possible cases of `x`.
+Here's our first toughy. $ \forall x. x + 0 = x$ This may seem silly, but our definition of `NPlus` did not treat the two arguments symmetrically. it only pattern match on the first. Until we know more about x, we can't continue. So how do we learn more? By pattern matching and looking at the possible cases of `x`.
 
 
 
@@ -461,9 +546,14 @@ Here's our first toughy. $latex \forall x. x + 0 = x$ This may seem silly, but o
 
 
     
-    <code>proof3 :: SNat x -> (Eq1 (NPlus x 'Zero) x)
-    proof3 SZero = Refl
-    proof3 (SSucc x) | Refl <- proof3 x = Refl</code>
+    
+```
+
+proof3 :: SNat x -> (Eq1 (NPlus x 'Zero) x)
+proof3 SZero = Refl
+proof3 (SSucc x) | Refl <- proof3 x = Refl
+```
+
 
 
 
@@ -479,7 +569,12 @@ The first case is very concrete and easy to prove. The second case is more subtl
 
 
     
-    <code>proof3 (SSucc x) = case (proof3 x) of Refl -> Refl</code>
+    
+```
+
+proof3 (SSucc x) = case (proof3 x) of Refl -> Refl
+```
+
 
 
 
@@ -503,10 +598,15 @@ Now finally, the piece de resistance, the commutativity of addition, which works
 
 
     
-    <code>natcomm :: SNat x -> SNat y -> Eq1 (NPlus x y) (NPlus y x)
-    natcomm SZero y | Refl <- proof3 y = Refl 
-    natcomm x@(SSucc x') SZero | Refl <- proof3 x = Refl
-    natcomm (SSucc x) (SSucc y) | Refl <- natcomm x (SSucc y), Refl <- natcomm (SSucc x) y, Refl <- natcomm x y = Refl</code>
+    
+```
+
+natcomm :: SNat x -> SNat y -> Eq1 (NPlus x y) (NPlus y x)
+natcomm SZero y | Refl <- proof3 y = Refl 
+natcomm x@(SSucc x') SZero | Refl <- proof3 x = Refl
+natcomm (SSucc x) (SSucc y) | Refl <- natcomm x (SSucc y), Refl <- natcomm (SSucc x) y, Refl <- natcomm x y = Refl
+```
+
 
 
 

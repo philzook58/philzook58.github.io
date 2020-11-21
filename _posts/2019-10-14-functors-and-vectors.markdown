@@ -62,7 +62,12 @@ Due to the expressivity of its type system, Haskell has a first class notion of 
 
 
     
-    <code>data V4 a = V4 a a a a</code>
+    
+```haskell
+
+data V4 a = V4 a a a a
+```
+
 
 
 
@@ -78,9 +83,14 @@ This really isn't such a strange, esoteric thing as it may appear. You wouldn't 
 
 
     
-    <code>struct V4 {
-       double x, y, z, w;
-    }</code>
+    
+```C
+
+struct V4 {
+   double x, y, z, w;
+}
+```
+
 
 
 
@@ -128,8 +138,13 @@ Functors in Haskell are a typeclass for containers. They allow you to map functi
 
 
     
-    <code>type Container = * -> * -- Note: This is actually a kind signature.
-    -- Kinds and types are the same thing in Haskell.</code>
+    
+```haskell
+
+type Container = * -> * -- Note: This is actually a kind signature.
+-- Kinds and types are the same thing in Haskell.
+```
+
 
 
 
@@ -145,8 +160,13 @@ You can lift the [product and sum of types](http://www.philipzucker.com/linear-a
 
 
     
-    <code>newtype Product f g a = Pair (f a , g a)
-    newtype Sum f g a = Sum (Either (f a) (g a))</code>
+    
+```haskell
+
+newtype Product f g a = Pair (f a , g a)
+newtype Sum f g a = Sum (Either (f a) (g a))
+```
+
 
 
 
@@ -162,7 +182,12 @@ Functors also compose. A container of containers of `a` is still a container of 
 
 
     
-    <code>newtype Compose f g a = Compose (f (g a))</code>
+    
+```haskell
+
+newtype Compose f g a = Compose (f (g a))
+```
+
 
 
 
@@ -186,10 +211,15 @@ When you use this Compose newtype, instead of having to address the individual e
 
 
     
-    <code>{- Enter into ghci -}
-    :kind Compose ==> (* -> *) -> (* -> *) -> (* -> *)
-    :kind Product ==> (* -> *) -> (* -> *) -> (* -> *)
-    :kind Sum ==> (* -> *) -> (* -> *) -> (* -> *)</code>
+    
+```haskell
+
+{- Enter into ghci -}
+:kind Compose ==> (* -> *) -> (* -> *) -> (* -> *)
+:kind Product ==> (* -> *) -> (* -> *) -> (* -> *)
+:kind Sum ==> (* -> *) -> (* -> *) -> (* -> *)
+```
+
 
 
 
@@ -213,7 +243,12 @@ You can define mappings between containers that don't depend on the specifics of
 
 
     
-    <code>type f ~> g = forall a. f a -> g a</code>
+    
+```haskell
+
+type f ~> g = forall a. f a -> g a
+```
+
 
 
 
@@ -237,9 +272,14 @@ How the lifting of functions works for `Compose` is kind of neat.
 
 
     
-    <code>mon_prod :: Functor f' => (f ~> f') -> (g ~> g') -> (Compose f g ~> Compose f' g')
-    mon_prod ntf ntg (Compose fg) = Compose (fmap ntg (ntf fg))
-    -- or equvalently Compose (ntf (fmap ntg fg)) with a (Functor f) typeclass requirement.</code>
+    
+```haskell
+
+mon_prod :: Functor f' => (f ~> f') -> (g ~> g') -> (Compose f g ~> Compose f' g')
+mon_prod ntf ntg (Compose fg) = Compose (fmap ntg (ntf fg))
+-- or equvalently Compose (ntf (fmap ntg fg)) with a (Functor f) typeclass requirement.
+```
+
 
 
 
@@ -312,7 +352,12 @@ Just as a type of kind `* -> *` can be thought of as a container modulo it's hel
 
 
     
-    <code>type Vect = * -> *</code>
+    
+```haskell
+
+type Vect = * -> *
+```
+
 
 
 
@@ -345,7 +390,7 @@ The[ linear library](http://hackage.haskell.org/package/linear-1.20.9/docs/Linea
 
 
 
-Once we've got the basics down of addition and scalar multiplication, the next thing I want is operations for combining vector spaces. Two important ones are the Kronecker product and direct sum. In terms of indices, the Kronecker product is a space that is indexed by the cartesian product `(,)` of its input space indices and the direct sum is a space indexed by the `Either` of its input space indices. Both are very useful constructs. I use the Kronecker product all the time when I want to work on 2D or 3D grids for example. If you'll excuse my python, here is a toy 2-D finite difference Laplace equation example. We can lift the 1D second derivative matrix $latex K = \partial_x^2 $ using the kronecker product $latex K2 = K \otimes I + I \otimes K$. The direct sum is useful as a notion of stacking matrices.
+Once we've got the basics down of addition and scalar multiplication, the next thing I want is operations for combining vector spaces. Two important ones are the Kronecker product and direct sum. In terms of indices, the Kronecker product is a space that is indexed by the cartesian product `(,)` of its input space indices and the direct sum is a space indexed by the `Either` of its input space indices. Both are very useful constructs. I use the Kronecker product all the time when I want to work on 2D or 3D grids for example. If you'll excuse my python, here is a toy 2-D finite difference Laplace equation example. We can lift the 1D second derivative matrix $ K = \partial_x^2 $ using the kronecker product $ K2 = K \otimes I + I \otimes K$. The direct sum is useful as a notion of stacking matrices.
 
 
 
@@ -353,14 +398,19 @@ Once we've got the basics down of addition and scalar multiplication, the next t
 
 
     
-    <code>import numpy as np
-    N = 10 # We're making a 10x10 grid
-    row = np.zeros(N)
-    row[0] = -2
-    row[1] = 1
-    K = np.toeplitz(row,row) #toeplitz makes constant diagonal matrices
-    I = np.eye(N) #identity matrix
-    K2 = np.kron(K,I) + np.kron(I,K)</code>
+    
+```python
+
+import numpy as np
+N = 10 # We're making a 10x10 grid
+row = np.zeros(N)
+row[0] = -2
+row[1] = 1
+K = np.toeplitz(row,row) #toeplitz makes constant diagonal matrices
+I = np.eye(N) #identity matrix
+K2 = np.kron(K,I) + np.kron(I,K)
+```
+
 
 
 
@@ -376,8 +426,13 @@ The following is perhaps the most important point of the entire post.
 
 
     
-    <code>type Kron = Compose
-    type DSum = Product</code>
+    
+```haskell
+
+type Kron = Compose
+type DSum = Product
+```
+
 
 
 
@@ -401,11 +456,16 @@ We can form the Kronecker product of vectors given a Functor constraint.
 
 
     
-    <code>kron :: (Num a, Functor f, Functor g) => f a -> g a -> Kron f g a
-    kron f g = Compose $ fmap (\s1 -> fmap (\s2 -> s1 * s2) g) f
     
-    dsum :: f a -> g a -> DSum f g a
-    dsum f g = Pair f g</code>
+```haskell
+
+kron :: (Num a, Functor f, Functor g) => f a -> g a -> Kron f g a
+kron f g = Compose $ fmap (\s1 -> fmap (\s2 -> s1 * s2) g) f
+
+dsum :: f a -> g a -> DSum f g a
+dsum f g = Pair f g
+```
+
 
 
 
@@ -462,7 +522,12 @@ I have been tempted to lift the natural transformation type above to the followi
 
 
     
-    <code>type LinOp f g = forall a. (Num a) => f a -> g a</code>
+    
+```haskell
+
+type LinOp f g = forall a. (Num a) => f a -> g a
+```
+
 
 
 
@@ -486,7 +551,12 @@ We don't really want to lock away the scalar in a higher rank polymorphic type. 
 
 
     
-    <code>type LinOp f g a = f a -> g a</code>
+    
+```haskell
+
+type LinOp f g a = f a -> g a
+```
+
 
 
 
@@ -502,9 +572,14 @@ Note also that this type does not constrain us to linearity. Can we form the Kro
 
 
     
-    <code>kron''' :: (Applicative f', Applicative g', Traversable f, Traversable g') =>
-        (f a -> f' a) -> (g a -> g' a) -> (Kron f g a -> Kron f' g' a)
-    kron'' lf lg (Compose fga) = Compose $ sequenceA $ (fmap lf) $ sequenceA $ (fmap lg fga)</code>
+    
+```haskell
+
+kron''' :: (Applicative f', Applicative g', Traversable f, Traversable g') =>
+    (f a -> f' a) -> (g a -> g' a) -> (Kron f g a -> Kron f' g' a)
+kron'' lf lg (Compose fga) = Compose $ sequenceA $ (fmap lf) $ sequenceA $ (fmap lg fga)
+```
+
 
 
 
@@ -528,7 +603,12 @@ Giving the vector direct access to the scalar feels a bit off to me. I feel like
 
 
     
-    <code>type LinOp1 f g a = forall k. Additive k => Kron f k a -> Kron g k a</code>
+    
+```haskell
+
+type LinOp1 f g a = forall k. Additive k => Kron f k a -> Kron g k a
+```
+
 
 
 
@@ -552,10 +632,15 @@ One other interesting thing to note is that these forms allow nonlinear operatio
 
 
     
-    <code>class Additive' f where
-      smul :: Num a => a -> f a -> f a
-      vadd :: Num a => f a -> f a -> f a
-      zero :: Num a => f a</code>
+    
+```haskell
+
+class Additive' f where
+  smul :: Num a => a -> f a -> f a
+  vadd :: Num a => f a -> f a -> f a
+  zero :: Num a => f a
+```
+
 
 
 
@@ -579,11 +664,16 @@ There seems to be a missing instance to Additive that is useful. There is probab
 
 
     
-    <code>instance (Additive g, Additive f) => Additive (Compose f g) where
-        (Compose v) ^+^ (Compose w) = Compose (liftU2 (^+^) v w)
-        zero = zero
-        liftU2 f (Compose x) (Compose y) = Compose $ liftU2 (liftU2 f) x y
-        liftI2 f (Compose x) (Compose y) = Compose $ liftI2 (liftI2 f) x y</code>
+    
+```haskell
+
+instance (Additive g, Additive f) => Additive (Compose f g) where
+    (Compose v) ^+^ (Compose w) = Compose (liftU2 (^+^) v w)
+    zero = zero
+    liftU2 f (Compose x) (Compose y) = Compose $ liftU2 (liftU2 f) x y
+    liftI2 f (Compose x) (Compose y) = Compose $ liftI2 (liftI2 f) x y
+```
+
 
 
 
@@ -679,9 +769,14 @@ The Monoid typeclass in Haskell demonstrates this [http://hackage.haskell.org/pa
 
 
     
-    <code>class Semigroup a => Monoid a where
-            mempty  :: a
-            mappend :: a -> a -> a</code>
+    
+```haskell
+
+class Semigroup a => Monoid a where
+        mempty  :: a
+        mappend :: a -> a -> a
+```
+
 
 
 
@@ -769,52 +864,57 @@ This is the connection to quantum circuits, which are after all a graphical nota
 
 
     
-    <code>type Qubit = V2
-    type C = Complex Double
     
-    assoc :: Functor f => (Kron (Kron f g) h) ~> (Kron f (Kron g h))
-    assoc = Compose . (fmap Compose) . getCompose . getCompose
-    
-    assoc' :: Functor f =>  (Kron f (Kron g h)) ~> (Kron (Kron f g) h)
-    assoc' (Compose x)  = Compose $ Compose $ (fmap getCompose x) 
-    
-    kron'' :: (Additive f, Additive g, Additive k, Additive f', Additive g') => 
-      LinOp1 f f' a -> LinOp1 g g' a -> Kron (Kron f g) k a -> Kron (Kron f' g') k a
-    kron'' lf lg fgk = let v = (assoc fgk) in assoc' (Compose $ fmap lg $ getCompose (lf v))
-    
-    sigx' :: LinOp1 Qubit Qubit C 
-    sigx' (Compose (V2 up down)) = Compose $ V2 down up  
-    
-    sigz' :: LinOp1 Qubit Qubit C 
-    sigz' (Compose (V2 up down)) = Compose  $ V2 up ((-1) *^ down) 
-    
-    sigy' :: LinOp1 Qubit Qubit C 
-    sigy' (Compose (V2 up down)) = Compose $ V2 ((-i) *^ down) (i *^ up) where i = 0 :+ 1
-    
-    swap' :: (Traversable f, Applicative g) => LinOp1 (Kron f g) (Kron g f) a 
-    swap' (Compose (Compose fgk)) = Compose $ Compose $ sequenceA fgk 
-    
-    cnot :: LinOp1 (Kron Qubit Qubit) (Kron Qubit Qubit) a 
-    cnot (Compose (Compose (V2 (V2 up1 down1) v))) = Compose $ Compose $ V2 (V2 down1 up1) v
-    
-    phase :: Double -> LinOp1 Qubit Qubit C
-    phase phi (Compose (V2 up down)) = Compose $ V2 up ((cis phi) *^ down)
-    
-    lefting :: (Additive f, Additive k, Additive g) => LinOp1 f g a -> LinOp1 (Kron f k) (Kron g k) a
-    lefting l = kron'' l id -- Qubit.assoc' . l . Qubit.assoc 
-    
-    righting :: (Additive k, Additive f, Additive g) => LinOp1 f g a -> LinOp1 (Kron k f) (Kron k g) a
-    righting l = kron'' id l -- (Compose (Compose fkk)) = Compose $ Compose $ (fmap (getCompose . l . Compose) fkk)
-    
-    example :: LinOp1 (Kron Qubit Qubit) (Kron Qubit Qubit) C 
-    example = (lefting sigx') . (lefting sigy') . (righting sigz') . swap'
-    </code>
+```haskell
+
+type Qubit = V2
+type C = Complex Double
+
+assoc :: Functor f => (Kron (Kron f g) h) ~> (Kron f (Kron g h))
+assoc = Compose . (fmap Compose) . getCompose . getCompose
+
+assoc' :: Functor f =>  (Kron f (Kron g h)) ~> (Kron (Kron f g) h)
+assoc' (Compose x)  = Compose $ Compose $ (fmap getCompose x) 
+
+kron'' :: (Additive f, Additive g, Additive k, Additive f', Additive g') => 
+  LinOp1 f f' a -> LinOp1 g g' a -> Kron (Kron f g) k a -> Kron (Kron f' g') k a
+kron'' lf lg fgk = let v = (assoc fgk) in assoc' (Compose $ fmap lg $ getCompose (lf v))
+
+sigx' :: LinOp1 Qubit Qubit C 
+sigx' (Compose (V2 up down)) = Compose $ V2 down up  
+
+sigz' :: LinOp1 Qubit Qubit C 
+sigz' (Compose (V2 up down)) = Compose  $ V2 up ((-1) *^ down) 
+
+sigy' :: LinOp1 Qubit Qubit C 
+sigy' (Compose (V2 up down)) = Compose $ V2 ((-i) *^ down) (i *^ up) where i = 0 :+ 1
+
+swap' :: (Traversable f, Applicative g) => LinOp1 (Kron f g) (Kron g f) a 
+swap' (Compose (Compose fgk)) = Compose $ Compose $ sequenceA fgk 
+
+cnot :: LinOp1 (Kron Qubit Qubit) (Kron Qubit Qubit) a 
+cnot (Compose (Compose (V2 (V2 up1 down1) v))) = Compose $ Compose $ V2 (V2 down1 up1) v
+
+phase :: Double -> LinOp1 Qubit Qubit C
+phase phi (Compose (V2 up down)) = Compose $ V2 up ((cis phi) *^ down)
+
+lefting :: (Additive f, Additive k, Additive g) => LinOp1 f g a -> LinOp1 (Kron f k) (Kron g k) a
+lefting l = kron'' l id -- Qubit.assoc' . l . Qubit.assoc 
+
+righting :: (Additive k, Additive f, Additive g) => LinOp1 f g a -> LinOp1 (Kron k f) (Kron k g) a
+righting l = kron'' id l -- (Compose (Compose fkk)) = Compose $ Compose $ (fmap (getCompose . l . Compose) fkk)
+
+example :: LinOp1 (Kron Qubit Qubit) (Kron Qubit Qubit) C 
+example = (lefting sigx') . (lefting sigy') . (righting sigz') . swap'
+
+```
 
 
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/10/My-Drawing.sketchpad-546x1024.png)example circuit
+
+![example circuit](/assets/My-Drawing.sketchpad.png)
 
 
 
@@ -888,7 +988,7 @@ There is an annoying amount of stupid repetitive book keeping with the associati
 
 
 
-Containers that are basically big product types are also known as representable, Naperian, or logarithmic. Representable places emphasis on the isomorphism between such a container type and the type `(->) i` which by the algebra of types correspond is isomorphic to $latex a^i$ (i copies of a). They are called Naperian/Logarithmic because there is a relationship similar to exponentiation between the index type `a` and the container type `f`. If you take the `Product f g`, this container is indexed by (a + b) = `Either a b`.  `Compose f g` is indexed by the product `(a,b)`. `(f r) ~ r^a` The arrow type is written as an exponential `b^a` because if you have finite enumerable types `a` and `b`, that is the number of possible tabulations available for `f`. The Sum of two representable functors is no longer representable. Regular logarithms of sums Log(f + g) do not have good identities associated with them.
+Containers that are basically big product types are also known as representable, Naperian, or logarithmic. Representable places emphasis on the isomorphism between such a container type and the type `(->) i` which by the algebra of types correspond is isomorphic to $ a^i$ (i copies of a). They are called Naperian/Logarithmic because there is a relationship similar to exponentiation between the index type `a` and the container type `f`. If you take the `Product f g`, this container is indexed by (a + b) = `Either a b`.  `Compose f g` is indexed by the product `(a,b)`. `(f r) ~ r^a` The arrow type is written as an exponential `b^a` because if you have finite enumerable types `a` and `b`, that is the number of possible tabulations available for `f`. The Sum of two representable functors is no longer representable. Regular logarithms of sums Log(f + g) do not have good identities associated with them.
 
 
 
@@ -913,9 +1013,14 @@ But note that there is a reasonable interpretation for container types with sum 
 
 
     
-    <code>data V2_45 a = XY a a | XY' a a
-    data Maybe a = Just a | Notinhg -- a 1-d vectro space with a special marker for the zero vector.
-    data Maybe2 a = Just2 a a | Nothing2 -- a 2d vector space with special zero marker</code>
+    
+```haskell
+
+data V2_45 a = XY a a | XY' a a
+data Maybe a = Just a | Notinhg -- a 1-d vectro space with a special marker for the zero vector.
+data Maybe2 a = Just2 a a | Nothing2 -- a 2d vector space with special zero marker
+```
+
 
 
 
@@ -979,8 +1084,13 @@ You can smash together types with tuple `(,)` or with `Either`. Both of these ar
 
 
     
-    <code>(***) :: a b c -> a b' c' -> a (b, b') (c, c') 
-    (+++) :: a b c -> a b' c' -> a (Either b b') (Either c c') </code>
+    
+```haskell
+
+(***) :: a b c -> a b' c' -> a (b, b') (c, c') 
+(+++) :: a b c -> a b' c' -> a (Either b b') (Either c c') 
+```
+
 
 
 
@@ -1012,17 +1122,22 @@ A monoidal category also has unit objects. This is given by the Identity functor
 
 
     
-    <code>rightUnitor :: Functor f => Compose f Identity a -> f a
-    rightUnitor (Compose f) = fmap runIdentity f
     
-    rightUnitor' :: f ~> Compose f Identity
-    rightUnitor' = Compose . fmap Identity
-    
-    leftUnitor' :: f ~> Compose Identity f
-    leftUnitor' = Compose . Identity
-    
-    leftUnitor :: Identity *** f ~> f
-    leftUnitor = runIdentity . getCompose</code>
+```haskell
+
+rightUnitor :: Functor f => Compose f Identity a -> f a
+rightUnitor (Compose f) = fmap runIdentity f
+
+rightUnitor' :: f ~> Compose f Identity
+rightUnitor' = Compose . fmap Identity
+
+leftUnitor' :: f ~> Compose Identity f
+leftUnitor' = Compose . Identity
+
+leftUnitor :: Identity *** f ~> f
+leftUnitor = runIdentity . getCompose
+```
+
 
 
 
@@ -1038,11 +1153,16 @@ There is also a sense of associativity. It is just newtype rearrangement, so it 
 
 
     
-    <code>assoc :: Functor f => ((f *** g) *** h) ~> (f *** (g *** h))
-    assoc = Compose . (fmap Compose) . getCompose . getCompose
     
-    assoc' :: Functor f => (f *** (g *** h)) ~> ((f *** g) *** h)
-    assoc' (Compose x) = Compose $ Compose $ (fmap getCompose x)</code>
+```haskell
+
+assoc :: Functor f => ((f *** g) *** h) ~> (f *** (g *** h))
+assoc = Compose . (fmap Compose) . getCompose . getCompose
+
+assoc' :: Functor f => (f *** (g *** h)) ~> ((f *** g) *** h)
+assoc' (Compose x) = Compose $ Compose $ (fmap getCompose x)
+```
+
 
 
 

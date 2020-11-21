@@ -1,0 +1,94 @@
+I"/<p>So gonna give machine learning a try on AWS. Ultimately, I think this is not economically viable, but since I’m just screwing around, whatever.</p>
+
+<p>I searched for a prebuilt AMI ami-180ad670 called gpu_theano or something. Picked the first one for no reason except it seemed reasonable.</p>
+
+<p>I picked a spot instance with .30$ per hour as max rate. g2.2xlarge</p>
+
+<p>ran some script inside called check_theano.py. Theano appears to be working on the gpu. (theano )</p>
+
+<p>Let’s see if we can get this puppy running</p>
+
+<p><a href="https://github.com/alexjc/neural-doodle">https://github.com/alexjc/neural-doodle</a></p>
+
+<p>Error: Command ‘[‘/home/ubuntu/neural-doodle/pyvenv/bin/python3’, ‘-Im’, ‘ensurepip’, ‘–upgrade’, ‘–default-pip’]’ returned non-zero exit status 1</p>
+
+<p>Okay. Forget doing the virtual env stuff. Not worth it on a burner computer.</p>
+
+<p>sudo apt-get install python3-dev</p>
+
+<p>sudo apt-get install python3-pip</p>
+
+<p>sudo python3 -m pip install numpy</p>
+
+<p>sudo python3 -m pip install scipy</p>
+
+<p>Why aren’t these in requirements.txt</p>
+
+<p>I wonder if I could use python2. scipy and numpy are probably already installed.</p>
+
+<p>sudo python3 -m pip install –upgrade setuptools</p>
+
+<p>sudo python3 -m pip install –upgrade cython</p>
+
+<p>sudo apt-get update</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+&lt;span class="pln"&gt;sudo apt&lt;/span&gt;&lt;span class="pun"&gt;-&lt;/span&gt;&lt;span class="pln"&gt;get build&lt;/span&gt;&lt;span class="pun"&gt;-&lt;/span&gt;&lt;span class="pln"&gt;dep matplotlib&lt;/span&gt;
+</code></pre></div></div>
+
+<p>sudo apt-get install libfreetype6-dev</p>
+
+<p>sudo apt-get build-dep pillow</p>
+
+<p>sudo python3 -m pip install –upgrade scikit-image</p>
+
+<p>sudo python3 -m pip install  theano</p>
+
+<p>sudo python3 -m pip install lasagne</p>
+
+<p>Bad move DOn’t install lasagne and theano on their own</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 -m pip install --ignore-installed -r requirements.txt
+</code></pre></div></div>
+
+<p>This is running slow as hell. What is up. Github page</p>
+
+<p>Using screen so ssh failing won’t quit job</p>
+
+<p>use screen</p>
+
+<p>run your job</p>
+
+<p>detach with ctrl-a ctrl-d</p>
+
+<p>then you can reattach with screen -r</p>
+
+<p><a href="https://github.com/BVLC/caffe/wiki/Install-Caffe-on-EC2-from-scratch-(Ubuntu,-CUDA-7,-cuDNN)">https://github.com/BVLC/caffe/wiki/Install-Caffe-on-EC2-from-scratch-(Ubuntu,-CUDA-7,-cuDNN)</a></p>
+
+<p>Interesting Link. Should try this next time.</p>
+
+<p>Okay. I got a free nvidia graphics card (GTX 560 ti) from a bro. I set up my router to forward port 22 to my desktop so I can ssh in from anywhere. Installed cuda and cudnn. Tensorflow by default does support this old of a graphics card. Saw some rumblings</p>
+
+<p>FInally got scipy to install once I download the blas and lapack libaryr prerequisites using apt-get.</p>
+
+<p>I was having a lot of trouble installing scikit-image with some kind of error about pgen. Eventually I renamed /usr/local/bin/pgen which is not the porgram it is expecting to /usr/local/bin/pgentmp  and then it seems txo get past it fine.</p>
+
+<p>sudo apt-get install libatlas-base-dev</p>
+
+<p>Needed to install some matplotlib dependancies</p>
+
+<p>Needed to set a .theanorc file. Change cude5.5 to the verison you have</p>
+
+<p>http://stackoverflow.com/questions/18165131/getting-theano-to-use-the-gpu</p>
+
+<p>Finally running.</p>
+
+<p>I’d say the speed is on par with the AWS. It will take about an hour or two to finish the job at 40 iterations.</p>
+
+<p>Phase 3 is the beast.</p>
+
+<p>Failed at phase 3. My card has only 1GB of ram. Not enough I guess.</p>
+
+<p>I’ll post this for now, but clearly a work in progress.</p>
+
+:ET

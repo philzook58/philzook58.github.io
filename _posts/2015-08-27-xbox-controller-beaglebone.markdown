@@ -32,10 +32,10 @@ Can just use a node library to attach to the controller
 https://github.com/Jabbath/node-xboxdrv
 
 Make a new file and put this in it
-`
+```
 var xbox = require('node-xboxdrv');
 var controller = new xbox("045e","028e",{});
-var b = require('bonescript');`
+var b = require('bonescript');
 
 b.pinMode("USR0", b.OUTPUT);
 b.pinMode("USR1", b.OUTPUT);
@@ -53,3 +53,4 @@ if(state == b.LOW) state = b.HIGH;
 else state = b.LOW;
 b.digitalWrite("USR3", state);
 }
+```

@@ -1,0 +1,51 @@
+---
+author: philzook58
+comments: true
+date: 2017-09-08 13:22:24+00:00
+layout: post
+link: https://www.philipzucker.com/?p=871
+published: false
+slug: KiCad
+title: KiCad
+wordpress_id: 871
+---
+
+https://www.youtube.com/watch?v=JN_Y93RTdSo&index;=1&list;=PL5iUxv3Op2fOpVASHvcpM2O4UO0yMfKJi
+
+
+
+Gonna do this tutorial and send it off.
+
+Kicad forum for questions
+
+
+
+Question mark opens up hotkeys
+
+M moves
+
+R roattes
+
+V changes value
+
+A adds an element
+
+C copies
+
+w makes wires
+
+Little bug at top does erc checking
+
+Left of it is the schematic labelling function
+
+
+
+cvpcb to associate footprints with symbols
+
+
+
+Click NET button to generate netlist
+
+and again in pcbnew to import netlist
+
+

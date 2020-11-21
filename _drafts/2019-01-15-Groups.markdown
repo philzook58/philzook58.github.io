@@ -1,0 +1,631 @@
+---
+author: philzook58
+comments: true
+date: 2019-01-15 16:42:06+00:00
+layout: post
+link: https://www.philipzucker.com/?p=1615
+published: false
+slug: Groups
+title: Groups
+wordpress_id: 1615
+---
+
+I have been underwhelmed by groups in the past. They are promsied as the end all be all
+
+
+
+
+Computational aspects. https://en.wikipedia.org/wiki/Computational_group_theory
+
+
+
+
+Generators and relations. Knuth-Bendix
+
+
+
+
+https://en.wikipedia.org/wiki/Todd%E2%80%93Coxeter_algorithm
+
+
+
+
+Cayley Diagrams. Action spaces.
+
+
+
+
+Rubik's Cube - https://en.wikipedia.org/wiki/Optimal_solutions_for_Rubik%27s_Cube#Thistlethwaite's_algorithm
+
+
+
+
+https://en.wikipedia.org/wiki/Rubik%27s_Cube_group
+
+
+
+
+http://www.gap-system.org/Doc/Examples/rubik.html
+
+
+
+
+Counting
+
+
+
+
+Solving polynomials. Galois
+
+
+
+
+ 
+
+
+
+
+Cosets - Partition a gruop into disjoint pieces.
+
+
+
+
+aH=bH or non interescting. Why? suppose c is in aH and bH and d is in aH but not bH. c = ah. c = bh'. d = ah''. we need to show that d = bh''' for a constradiciton. a = ch^-1. d=(ch^-1)h''=(bh')h^-1h''=bh'''. Contradiction.
+
+
+
+
+ 
+
+
+
+
+Catgories. Groups have no precondition on who can multiply who. Category qwith a single object (and inverse arrows). Then Functors between these things are Homomorphisms.
+
+
+
+
+Cayley's theorem. Isomorphism to subset of permutation group of the size of the group. But also any element can be considered as a function from the group to itself. It has to be a permutaiton because groups elements need to be invertible. If applying a group element collapsed two different things into 1, then we wouldn't know how to undo it. Hence, the action of a group element on the gorup must be a 1-to-1 function i.e. a permutation
+
+
+
+
+Cayley's Theorem is Yoneda Lemma?
+
+
+
+
+forall s. k s a -> k s b ~ k a b
+
+
+
+
+Not clear to me that k s a -> k s b is a permutation group... uh, well since k s a is a finite set itself, I guess it is a permutation. We can map to integers. Or Fin. Huh. So this polymorphism actually kind of achieves a linear type...?
+
+
+
+
+The CoSet functor : G -> Set.
+
+
+
+
+Awodey's chapter
+
+
+
+
+https://www.andrew.cmu.edu/course/80-413-713/notes/chap04.pdf
+
+
+
+
+Interesting point: Groups are symmettries of objects. So they are functions of an object back to itself that are invertible. Kind of makes the categorical definition make sense from that perspective.
+
+
+
+
+A totally alternative approach to start. C x C -> C is the group product function. Then there are also inverse and identity functions. And they have diagrams that relay the various group axioms.
+
+
+
+
+The homomorphism theorem is sometimes presewnted as a constructiom involving quiotent categories or equalizers or something. Quutient category is made by an equvialence relation on morphgisms. There is a natural projection functor from C to C/~ and any functor also defines an equivlance relation if it projects . https://en.wikipedia.org/wiki/Quotient_category
+
+
+
+
+ 
+
+
+
+
+The fundamental homomorphism theorem feels very much like a Kan extension construction. I saw a triangle and a G/K notation.
+
+
+
+
+Groups as categories. Monoid is category with a single object. group Is Monoid with and inversion operator
+
+
+
+
+Use GADTs to constrain the arguments
+
+
+
+
+data ZGroup a b where
+
+
+
+
+Elem :: Int -> ZGroup Int Int
+
+
+
+
+Elem :: Int -> ZGruop () ()
+
+
+
+
+ElemZ :: Int -> ZGroup a a -- This is reasonable. It constraints the types the be the same. Int didn't really make sense. It was confusing notions. () is actually the best
+
+
+
+
+IdZ :: ZGroup a a -- One way of getting id to typecheck. Extends catgory with identity morphisms on everything that isn't Int
+
+
+
+
+data ModGroup n a b where
+
+
+
+
+Mod :: Int -> ModGroup n a a  -- use typelevel number for n.
+
+
+
+
+http://hackage.haskell.org/package/modular-arithmetic -- Has some cute and useful things
+
+
+
+
+instance Monoid (ZGroup Int Int) where
+
+
+
+
+(Elem x) <> (Elem y) = Elem (x <> y)
+
+
+
+
+mempty = Elem 0
+
+
+
+
+instance Category ZGroup where
+
+
+
+
+(.) = <>  -- This could type check but we need to pattern match.
+
+
+
+
+id = mempty --? This won't type check. Can also unsafeCoerce mempty. Or use IdZ extension
+
+
+
+
+permutations can have a functional representation using Linear Haskell?
+
+
+
+
+type Perm = forall a. (a,a,a,a) -o (a,a,a,a)
+
+
+
+
+Then use the trick? Well, I think there is an elegant way to invert them.
+
+
+
+
+What about setter functions. \(a,b,c,d) -> \a' -> (a',b,c,d). Then just apply them all.
+
+
+
+
+inv p = where flipflup = p (\(x1, _, _, _) -> x1 ,   \(_, x2, _ , _, _) -> x2,  ...)
+
+
+
+
+ 
+
+
+
+
+Group --
+
+
+
+
+http://hackage.haskell.org/package/groups-0.4.1.0
+
+
+
+
+ 
+
+
+
+
+class Category k => GroupCat k a where
+
+
+
+
+inv :: k a a -> k a a
+
+
+
+
+Functors? How to deal with them
+
+
+
+
+ 
+
+
+
+
+class FunctorC label k k' | label -> k k' where
+
+
+
+
+type ObjMap :: * -> *
+
+
+
+
+arrmap :: k a b -> k' (ObjMap a) (ObjMap b)
+
+
+
+
+data FCompose label label' where
+
+
+
+
+FunctorC label k k', FunctorC label' k' k'' => FComp label label'
+
+
+
+
+ 
+
+
+
+
+instance  (FunctorC label k k', FuncotrC lbael' k' k'') => FunctorC (FCompose label label') k k'' where
+
+
+
+
+ObjMap x = ObjMap ObjMap
+
+
+
+
+arrmap = arrmap @k  .  arrmap @k'
+
+
+
+
+ 
+
+
+
+
+https://github.com/ekmett/hask/blob/master/src/Hask/Category.hs
+
+
+
+
+http://hackage.haskell.org/package/categories
+
+
+
+
+http://hackage.haskell.org/package/hask
+
+
+
+
+http://hackage.haskell.org/package/semigroupoids
+
+
+
+
+http://hackage.haskell.org/package/data-category
+
+
+
+
+http://hackage.haskell.org/package/category
+
+
+
+
+http://hackage.haskell.org/package/constrained-categories
+
+
+
+
+ 
+
+
+
+
+Functors from a Group to Vect are repsentations.
+
+
+
+
+ 
+
+
+
+
+ 
+
+
+
+
+Fields have addition and multiplication
+
+
+
+
+ 
+
+
+
+
+Automorphisms of fields forms a group. Linear representations of these groups?
+
+
+
+
+ 
+
+
+
+
+Galois connection is adjunction. Connecting subgrouping relation to subfield relation? Automorphism of field is Functor from field to Group.
+
+
+
+
+ 
+
+
+
+
+Category of group homomorphism.
+
+
+
+
+Catgeory of group inclusion. Thse two categories are related. That is what isomorphism theorems are saying?
+
+
+
+
+Galois connection between integerized problems and continuum problems. Is there some way in which galois theory tells us something there?
+
+
+
+
+ 
+
+
+
+
+What does it mean to solve a polynomial in terms of radicals? Nested application? Why not use my function FooBobbles? There is something special (algebraic!) about square roots. Maybe. We can introduce a large number of intermedate vairables.
+
+
+
+
+Minimal polynomial.
+
+
+
+
+We want to find the smallest field that contains solutions to our polynomial. C always works, but it has too much.
+
+
+
+
+ 
+
+
+
+
+Galois Theory
+
+
+
+
+There is an analytic and an algerbaic viewpoint of polynomials. From the analytic viewpoint, we're using floats. We use derivatives and guesses and othger stuff to localize the roots.
+
+
+
+
+The algebraic viewpoint wants "exact" expressions. What does that mean?
+
+
+
+
+What does it even MEAN man to "solve a polynomial in radicals". My first thought is give a syntax tree representing the solution.
+
+
+
+
+Can we define symbols a b c d and just say they are the roots? Yes. Why is that unsatisfying. What else do we want?
+
+
+
+
+ 
+
+
+
+
+Something like this:
+
+
+
+
+data Rational
+
+
+
+
+data RootTerm f a = Root Int (f a) | Lit Int
+
+
+
+
+data PowTerm f a = Pow (Rational Int) (f a)
+
+
+
+
+newtype Signature f a= Rational [RootTerm f a]
+
+
+
+
+type RadExpr = Fix Signature
+
+
+
+
+-- Or maybe Free with Pure Int instead of Lit Int
+
+
+
+
+Ok. Can we finitize this space?
+
+
+
+
+Well. We have the constraint that the solution has to obey a polynomial. This means all the roots must cancel in deg n. I conjecture this bounds the degree involved in the roots. We could be concerned about some funky cancellation being necessary.  Suppose the expression needs a radical > n.
+
+
+
+
+Are deeper levels of the tree... subfields?
+
+
+
+
+ 
+
+
+
+
+The roots of polynomials can be added and multiplied.
+
+
+
+
+RadExpr form a field. The Rational gives them division, the list gives them addition for free. Multiplication of radicals can also be defined as addition of the exponents.
+
+
+
+
+The RadExpr data type is not all that disimilar from a polynomial data type.
+
+
+
+
+i.e. we can form a Num typeclass instance for this data type.
+
+
+
+
+ 
+
+
+
+
+ 
+
+
+
+
+One useful way to see that a problem is at least in principle solvable is to bound it into a finite search. Decidable vs Undecidable is the first question. Complexity is the next (P v NP often).
+
+
+
+
+Find me the rational solutions of a polynomial. If we get bounds on the numerator and denominator, there is a clear brute force procedure. Just try them all.
+
+
+
+
+The Prime decomposition seems helpful here.
+
+
+
+
+Bounds on total root magnitude
+
+
+
+
+https://en.wikipedia.org/wiki/Properties_of_polynomial_roots
+
+
+
+
+Can use analytic root finding to heavily guide search.
+
+
+
+
+ 
+
+
+
+
+One of the things I want is just why is it natural to look at fields? And field extensions?
+
+
+
+
+ 
+
+
+
+
+
+
+
+

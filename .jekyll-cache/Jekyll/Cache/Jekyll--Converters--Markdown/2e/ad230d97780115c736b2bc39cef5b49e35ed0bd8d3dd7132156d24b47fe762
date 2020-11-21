@@ -1,0 +1,2 @@
+I"7<p>David Sanders (who lives in Julia land <a href="https://github.com/JuliaIntervals">https://github.com/JuliaIntervals</a> ) explained a bit of how interval constraint propagation library worked to me last night. He described it as being very similar to backpropagation, which sets off alarm bells for me.</p>
+:ET

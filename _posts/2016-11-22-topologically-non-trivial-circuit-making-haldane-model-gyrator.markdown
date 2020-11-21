@@ -27,13 +27,13 @@ The basic arrangement can be built out of gyrators and capacitors.[![drawing](ht
 
 The laws of motion come from conservation of current at every node
 
-$latex (j\omega C + z/R - 1/Rz)V=0$
+$ (j\omega C + z/R - 1/Rz)V=0$
 
-This equations gives the dispersion relations $latex C\omega=2 \sin(ka)$
+This equations gives the dispersion relations $ C\omega=2 \sin(ka)$
 
 The 2d arrangement is very similar, just place gyrators also going in the y direction. But to get a topologically nontrivial band structure we need to dimerize the unit cell (or work on a hexagonal lattice where your unit cell is sort of force to be doubled). In totality you have 4 gyrator parameters to play with and 2 capacitance parameters. And you can in fact arrange the parameters such that the circuit is in the topological regime. It's easiest to see this by writing the thing in terms of Pauli matrices with the pesudospin referring to which point of the unit cell
 
-$latex j \omega C V= \sigma\cdot B(k_x,k_y) V$
+$ j \omega C V= \sigma\cdot B(k_x,k_y) V$
 
 If you arrange the parameters (not even that carefully, which is kind of the point) you can get it such that the normalized B vector wraps the sphere as you traverse the entire Brillouin zone.
 

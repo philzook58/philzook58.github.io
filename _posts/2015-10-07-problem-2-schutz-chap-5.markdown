@@ -11,7 +11,7 @@ wordpress_id: 194
 
 1.
 
-Redshift from gravity. Fire a photon up. Convert into mass and let mass drop. If energy conserved then you gain mgh of energy where $latex m = \hbar \omega'$, the freqeuncy at the top. Hence you have $latex \hbar \omega = m+mgh=\hbar \omega (1+gh)$.
+Redshift from gravity. Fire a photon up. Convert into mass and let mass drop. If energy conserved then you gain mgh of energy where $ m = \hbar \omega'$, the freqeuncy at the top. Hence you have $ \hbar \omega = m+mgh=\hbar \omega (1+gh)$.
 
 The frequency at the top is reduced by (1+gh), i.e. it is redder.
 
@@ -21,23 +21,23 @@ Oh. I see. Looking at the text, the earth would be freely falling as well.  Wow
 
 7.
 
-Can't raise an lower $latex \Lambda$ using the metric. They are coordinate transformations. I believe upper indices are components of vectors and lower indices are components of 1-forms. $latex dx^\mu \partial_\mu $ and $latex \partial_\mu \phi$
+Can't raise an lower $ \Lambda$ using the metric. They are coordinate transformations. I believe upper indices are components of vectors and lower indices are components of 1-forms. $ dx^\mu \partial_\mu $ and $ \partial_\mu \phi$
 
-$latex x = r\cos(\theta)$
+$ x = r\cos(\theta)$
 
-$latex y = r\sin(\theta)$
+$ y = r\sin(\theta)$
 
 This matrix will convert the gradient into new coordinates
 
-$latex \begin{bmatrix} \cos{\theta} & -r\sin(\theta) \\ \sin(\theta) & r\cos(\theta) \end{bmatrix}$
+$ \begin{bmatrix} \cos{\theta} & -r\sin(\theta) \\ \sin(\theta) & r\cos(\theta) \end{bmatrix}$
 
-$latex \theta = \arctan(\frac{y}{x})$
+$ \theta = \arctan(\frac{y}{x})$
 
-$latex r = \sqrt{x^2+y^2}$
+$ r = \sqrt{x^2+y^2}$
 
 This one will convert vectors into new coordinates
 
-$latex \begin{bmatrix} x/r& y/r\\ -y/r^2 &x/r^2\end{bmatrix}$
+$ \begin{bmatrix} x/r& y/r\\ -y/r^2 &x/r^2\end{bmatrix}$
 
 Multiplying the two should give an identity matrix, since inner product should stay invariant under coordinate change. Quite miraculously they do. Try multiplying the two matrices. Nice.
 

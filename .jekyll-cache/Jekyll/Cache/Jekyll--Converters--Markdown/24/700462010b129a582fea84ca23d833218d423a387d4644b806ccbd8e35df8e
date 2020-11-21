@@ -1,0 +1,1023 @@
+I"�y<p>I gave a talk for an online discussion group giving a summary of some of the things I’ve posted on this blog. The talk was on some of my experiences and opinions on category theory flavored things programmed for real computers with a focus on calculating answers rather than proving things. It was the Wednesday right after the election, kind of a nerve wracking time.</p>
+
+<p>Rough Outline:</p>
+
+<ul>
+  <li>Language Choice. Haskell vs Theorem provers vs Python vs Julia</li>
+  <li>Computer functions as categories.</li>
+  <li>Linear operators as a category</li>
+  <li>Automatic differentiation</li>
+  <li>Relations</li>
+  <li>Linear relations</li>
+  <li>Optimization problems as a category</li>
+</ul>
+
+<p>These topics are discussed in much greater detail in blog posts, which are linked in the notes below.</p>
+
+<p>It is very embarrassing to watch oneself in a video, so I haven’t. Edit: ok I did. Here’s a fun game. Do a shot every time I say the word interesting. You’ll get 2 minutes in before you die.</p>
+
+<p>Thanks to Jules Hedges for organizing!</p>
+
+<p>https://www.youtube.com/watch?v=ZnsY2QriWnE</p>
+
+<p>This is the notebook for the talk. It is not entirely compiling or correct code, but more for giving a flavor. You’re probably better off clicking this link, since wordpress embeds notebooks kind of weird. <a href="https://github.com/philzook58/cybercat_talk_2020/blob/main/talk.ipynb">https://github.com/philzook58/cybercat_talk_2020/blob/main/talk.ipynb</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Executing Categories\n",
+    "\n",
+    "- I like code. It lives outside of me\n",
+    "- A little skeptical of theory that lives only in minds\n",
+    "- Language significantly influences thought\n",
+    "- Representation is irrelevant\n",
+    "- Representation is crucial\n",
+    "- Different styles make different ideas easy or hard to think of"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Styles\n",
+    "\n",
+    "### Haskell\n",
+    "\n",
+    "- My originating point\n",
+    "\n",
+    "```haskell\n",
+    "class Category cat :: o -&gt; o -&gt; Type where\n",
+    "    -- | the identity morphism\n",
+    "    id :: cat a a\n",
+    "\n",
+    "    -- | morphism composition\n",
+    "    (.) :: cat b c -&gt; cat a b -&gt; cat a c\n",
+    "\n",
+    "```\n",
+    "\n",
+    "- Category represented by a type with slots for a domain and codomain object.\n",
+    "- Composition is well typed.\n",
+    "- unification / type inferrance does some work for you\n",
+    "- Useful model of polymorphism\n",
+    "- Wacky type level programing or true dependent types.\n",
+    "- This is no more what a category *is* than this encoding of peano numbers are the naturals.\n",
+    "```haskell\n",
+    "data Nat = Zero | Succ Nat\n",
+    "```\n",
+    "\n",
+    "- Compiling to categories - http://conal.net/papers/compiling-to-categories/\n",
+    "\n",
+    "### Theorem Provers\n",
+    "\n",
+    "- Similar to the above.\n",
+    "- Focus on proof\n",
+    "\n",
+    "- https://mathoverflow.net/questions/152497/formalizations-of-category-theory-in-proof-assistants\n",
+    "- https://github.com/agda/agda-categories\n",
+    "- https://github.com/statebox/idris-ct\n",
+    "- https://github.com/jwiegley/category-theory\n",
+    "- https://arxiv.org/pdf/1401.7694.pdf\n",
+    "- https://www.isa-afp.org/\n",
+    "\n",
+    "\n",
+    "### Computational Category Theory\n",
+    "- http://www.cs.man.ac.uk/~david/categories/book/book.ps \n",
+    "- This book opened my eyes to a different style\n",
+    "- Focus on *calculation*\n",
+    "- Use more first order data (dictionaries, matrices, graphs, trees), less functional representations\n",
+    "\n",
+    "\n",
+    "### Python\n",
+    "- Ubiquitous\n",
+    "- Popular\n",
+    "- Lots of packages\n",
+    "- https://github.com/oxford-quantum-group/discopy\n",
+    "\n",
+    "### Julia\n",
+    "\n",
+    "- My current preference\n",
+    "- Acceptable syntax for Scientists and Engineers (compared to Haskell). Sad but true.\n",
+    "- Catlab\n",
+    "- Fascinating package ecosystem.\n",
+    "- A fun assortment of features for the right variety of language wonk\n",
+    "- Easy to implement novel algorithms that run fast. \"Two Language Problem\"\n",
+    "- Open minded experimental community.\n",
+    "\n",
+    "- https://www.epatters.org/wiki/algebra/computational-category-theory.html\n",
+    "- https://algebraicjulia.github.io/Catlab.jl/latest/"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Computer Functions as a category\n",
+    " \n",
+    "- Morphisms are functions\n",
+    "- Objects are types\n",
+    "- Base structural combinators + a piles of domain specific atoms"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "4-element Array{Any,1}:\n",
+       " :c\n",
+       " :a\n",
+       " :a\n",
+       " (:a, :b)"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "Main.Func1"
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "module Func1\n",
+    "    id = x -&gt; x\n",
+    "    compose(f,g) = x -&gt; g(f(x))\n",
+    "    otimes(f,g) = ((x,y),) -&gt; (f(x),g(y))\n",
+    "    mcopy = x -&gt; (x,x)\n",
+    "    fst = ((x,y),) -&gt; x\n",
+    "    snd = ((x,y),) -&gt; y\n",
+    "    pair(f,g) = x -&gt; (f(x), g(x))\n",
+    "    assoc = (((x,y),z),) -&gt; (x, (y,z))\n",
+    "    braid = ((x,y),) -&gt; (y,x)\n",
+    "\n",
+    "    add = ((x,y),) -&gt; x + y # xy -&gt; +(xy...)\n",
+    "    mul = ((x,y),) -&gt; x * y # xy -&gt; *(xy...)\n",
+    "    #spread(f) = (x,) -&gt; f(x...)\n",
+    "    square = compose(mcopy, mul)\n",
+    "\n",
+    "    # examples\n",
+    "    display([\n",
+    "        compose(fst,snd)(((:a, :c), :b))\n",
+    "        compose(fst, id)((:a, :b))\n",
+    "        id(:a)\n",
+    "        otimes(id,id)((:a, :b))\n",
+    "    ])\n",
+    "end"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Flat representation\n",
+    "- There are always choices in representation\n",
+    "- On the nose associativity via storing in arrays\n",
+    "- canonical form is nice, no assoc jiggling\n",
+    "- Flatten pointer indirections\n",
+    "- We run into problems where the data we need just isn't there\n",
+    "- isomorphism vs equality\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "module NoGo\n",
+    "    id = x -&gt; x\n",
+    "    compose(f,g) = x -&gt; g(f(x))\n",
+    "    fst = () # ??? \n",
+    "    otimes(f,g) = () #  ???\n",
+    "end"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### How to get missing information\n",
+    "- There isn't really any magic. You need the data you need\n",
+    "\n",
+    "Choices:\n",
+    "\n",
+    "1. Encode in types\n",
+    "2. User annotate everything with types. `pair(a,b,c,f,g)`\n",
+    "3. Wrapper types. Avoids some annotations\n",
+    "4. others"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "4-element Array{Symbol,1}:\n",
+       " :a\n",
+       " :c\n",
+       " :a\n",
+       " :a"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "Main.Func"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "module Func\n",
+    "    id(n) = x -&gt; x\n",
+    "    fst(n,m) = x -&gt; x[1:n] # fst(n) ?\n",
+    "    snd(n,m) = x -&gt; x[end-m:end] #snd(m) ?\n",
+    "    compose(f,g) = x -&gt; g(f(x))\n",
+    "    otimes(f,g) = x -&gt; () # ??? Still can't do this one\n",
+    "    mcopy = x -&gt; [x ; x]\n",
+    "    pair(f,g) = x -&gt; [f(x) ; g(x)]\n",
+    "    braid(n,m) = x -&gt; [x[end-m:end] ; x[1:n]]\n",
+    "\n",
+    "    # examples\n",
+    "    display([\n",
+    "        compose(fst(2,1),snd(1,1))([:a :c :b])\n",
+    "        compose(fst(1,1), id(1))([:a :b])\n",
+    "        id(1)([:a])\n",
+    "        #otimes(id(1),id(1))([:a :b])\n",
+    "    ])\n",
+    "end"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Main.FuncWrap"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "module FuncWrap\n",
+    "    struct FunOb\n",
+    "       ob::Int64 # Fishy ain't it. Alternatively  Array{Type}\n",
+    "    end\n",
+    "    struct FunMorph\n",
+    "       fun\n",
+    "       dom\n",
+    "       cod\n",
+    "    end\n",
+    "    id(n::FunOb) = FunMorph(x -&gt; x, n , n)\n",
+    "    fst(n::FunOb,m::FunOb) = FunMorph(x -&gt; x[1:n.ob], FunOb(n.ob + m.ob), FunOb(n.ob))  # fst(n) ?\n",
+    "    compose(f::FunMorph,g::FunMorph) = FunMorph(x -&gt; g.fun(f.fun(x)),  f.dom, g.cod )\n",
+    "    # and so on\n",
+    "end"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## FinVect\n",
+    "\n",
+    "- Linear Operators are the morphism \n",
+    "- Objects are vector spaces\n",
+    "\n",
+    "\n",
+    "### Matrices as Morphisms\n",
+    "\n",
+    "- Linear Operators represented by matrices\n",
+    "- Vector spaces represented by an integer of dimensions.\n",
+    "- This is *data*. Slice it, dice it, however you please.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "2×2 Array{Float64,2}:\n",
+       " 1.0  0.0\n",
+       " 0.0  1.0"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "2×5 Array{Float64,2}:\n",
+       " 1.0  0.0  0.0  0.0  0.0\n",
+       " 0.0  1.0  0.0  0.0  0.0"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "4×2 Array{Float64,2}:\n",
+       " 1.0  0.0\n",
+       " 0.0  1.0\n",
+       " 1.0  0.0\n",
+       " 0.0  1.0"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "3×3 Array{Float64,2}:\n",
+       " 1.0  0.0  0.0\n",
+       " 0.0  1.0  0.0\n",
+       " 0.0  0.0  1.0"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "WARNING: replacing module MatCat.\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "Main.MatCat"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "module MatCat\n",
+    "    using LinearAlgebra\n",
+    "    eye(n) = Matrix{Float64}(I,n,n)\n",
+    "\n",
+    "    id(n) = eye(n) \n",
+    "    compose(f,g) = g * f\n",
+    "    function oplus(f,g) #note this monoidal product\n",
+    "        (n,m) = size(f)\n",
+    "        (p,q) = size(g)\n",
+    "        [     f      zeros(n,q) ;\n",
+    "          zeros(p,m)     g      ]\n",
+    "    end\n",
+    "    mcopy(n) = [ eye(n) ;\n",
+    "                 eye(n) ] \n",
+    "    fst(n,m) = [   eye(n)   zeros(n, m)] \n",
+    "    snd(n,m) = [zeros(m, n)    eye(m)  ] \n",
+    "\n",
+    "    pair(f,g) = [ f ;\n",
+    "                  g ]\n",
+    "\n",
+    "    sum(n) = transpose(mcopy(n))\n",
+    "\n",
+    "    display.(\n",
+    "        [\n",
+    "        id(2),\n",
+    "        fst(2,3),\n",
+    "        mcopy(2),\n",
+    "        pair(fst(1,2), snd(1,2))\n",
+    "        ])\n",
+    "end"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Functional representations of linear maps\n",
+    "\n",
+    "- Identical to the computer function implementation for combinator\n",
+    "- We can reconstitute the matrix by applying to a basis\n",
+    "- We kill some operations that matrices allow. Gaussian elimination for example\n",
+    "- We can build out of a matrix using the `apply` function\n",
+    "- Equivalently can use the tranpose or multiply from left\n",
+    "\n",
+    "- https://github.com/JuliaSmoothOptimizers/LinearOperators.jl\n",
+    "- https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "WARNING: replacing module LinFunc.\n",
+      "WARNING: replacing module LinFunc.\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "Main.LinFunc"
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "module LinFunc\n",
+    "    id = x -&gt; x\n",
+    "    fst(n,m) = x -&gt; x[1:n] \n",
+    "    snd(n,m) = x -&gt; x[end-m:end]\n",
+    "    compose(f,g) = x -&gt; g(f(x))\n",
+    "end\n",
+    "module LinFunc\n",
+    "    import Main.Func\n",
+    "\n",
+    "    id = Func.id\n",
+    "    fst = Func.fst\n",
+    "    snd = Func.snd\n",
+    "    compose = Func.compose\n",
+    "    #oplus = Func.otimes\n",
+    "    # and so on\n",
+    "end\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Automatic differentiation as a category\n",
+    "\n",
+    "https://www.youtube.com/watch?v=17gfCTnw6uE&amp;feature=youtu.be&amp;ab_channel=Topos \n",
+    "Good lord. Conal Elliot is the best. Watch this.\n",
+    "\n",
+    "### Bundle together functions with their Jacobians\n",
+    "\n",
+    "- Use $\\mathbb{R}^n \\rightarrow \\mathbb{R}^m$ for intuition. Notions collapse in a bad way for 1d functions\n",
+    "- The chain rule *is* matrix multiplication is you ignore the base point\n",
+    "- While you're composing functions, compose Jacobians\n",
+    "- So it's a kind of bundling of FunCat &amp; MatCat\n",
+    "- The value in the matrix depend on the basepoint though.\n",
+    "- `(x -&gt; y, dx -&gt; dy)` - Close, but not quite right.\n",
+    "- `x -&gt; (y, dx -&gt; dy)` Yes. Jacobian depends on base point. This is forward mode.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(1, 4)"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "WARNING: replacing module ADMatrix.\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "Main.ADMatrix"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "module ADMatrix\n",
+    "    import Main.MatCat\n",
+    "    # here are a couple combinators in matrix form\n",
+    "    id(n) = x -&gt; (x, MatCat.id(n))\n",
+    "    compose(f,g) = x -&gt; begin\n",
+    "        (y, df) = f(x)\n",
+    "        (z, dg) = g(y)\n",
+    "        (z, MatCat.compose(df,dg))\n",
+    "    end\n",
+    "\n",
+    "    sin = x -&gt; (Base.sin(x), Base.cos(x))\n",
+    "    square = x -&gt; (x * x, 2 * x)\n",
+    "    add = x -&gt; (sum(x), ones(1,length(x)))\n",
+    "\n",
+    "    display(compose(square,square)(1))\n",
+    "end\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Association, \"Hughes Lists\", and Reverse Mode\n",
+    "- Function application is special. It is strongly associative operationally\n",
+    "- Lists append cost proportional to first list.\n",
+    "- Hughes lists partially applies append to always associate \"the good way\"\n",
+    "- Related to Cayley representation and the Yoneda lemma\n",
+    "- Similarly, different matrix associativities hace different multiplication cost https://en.wikipedia.org/wiki/Matrix_chain_multiplication\n",
+    "- Use LinFunc represent operator and associate the way you want it to happen by default.\n",
+    "- `x -&gt; (y, dy -&gt; dx)` \n",
+    "- This so happens to be the type of a Lens.\n",
+    "- In a sense we're composing the Jacobian tranpose\n",
+    "- Can also be considered a mapping of linear functionals from codomain to domain. \"Cotangent space\"\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "WARNING: replacing module LensRAD.\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "Main.LensRAD"
+      ]
+     },
+     "execution_count": 23,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "module LensRAD\n",
+    "    id = x -&gt; (x, dy -&gt; dy)\n",
+    "    fst(n,m) = x -&gt; (x[1:n] , dy -&gt; [dy ; zeros(m)  ])\n",
+    "    snd(n,m) = x -&gt; (x[end-m:end] , dy -&gt; [zeros(n) ; dx] )\n",
+    "    compose(f, g) = \n",
+    "        x -&gt; begin\n",
+    "             (y, df) = f(x)\n",
+    "             (z, fg) = g(y)\n",
+    "             (z, df ∘ dg)\n",
+    "             end\n",
+    "    function pair(f,g)\n",
+    "        @assert f.dom == g.dom\n",
+    "        x -&gt; begin\n",
+    "        (y, df) = f(x)\n",
+    "        (z, dg) = g(x)\n",
+    "        (vcat(y,z), dq -&gt; df(dq[1:f.cod]) + dg(dq[end-g.cod:end])   )\n",
+    "\n",
+    "                            ( x[1:f.dom]  )\n",
+    "        end\n",
+    "    end\n",
+    "    mcopy(m) = x -&gt; ([x ; x], dxx -&gt; dxx[1:m] + dxx[m+1:end] )\n",
+    "\n",
+    "    # the lens domain isn't really necessary. I guess it might changed the stage? Dimension is now known before x values rather than at the same time. That's nice\n",
+    "    mul(m) = x -&gt; (x[1:m] .* x[m+1:end] , dx -&gt; vcat( dx .* x[m+1:end], dx .* x[1:m]  ) )\n",
+    "    add(m) = x -&gt; (x[1:m] .+ x[m+1:end] , dx -&gt; vcat( dx , dx ) ) # sum and dup are dual.\n",
+    "\n",
+    "    sin = x -&gt; (sin.(x) , dx -&gt; cos.(x) .* dx)\n",
+    "    cos = x -&gt; (cos.(x) , dx -&gt; -sin.(x) .* dx)\n",
+    "    pow(n) = x -&gt; (x ^ n, dx -&gt; n * dx .* x ^ (n-1) )\n",
+    "end"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### How exotic is this?\n",
+    "- It is not. \n",
+    "- Can Defunctionalize the backwards pass functions to Wengert tapes\n",
+    "- Can Closure convert to existential lens for object oriented backprop. `{forward :: x -&gt; (e,y), backward :: (e,dy) -&gt; dx}`. Objects can be modelled as existential types\n",
+    "- Lenses live on a spectrum of control flow techniques with continuations and coroutines. Question: Can lenses be compiled efficiently?\n",
+    "- Dual numbers are a little wrong. `(x,dx) -&gt; (y,dy)` allows y to depend on dx.\n",
+    "- Is this competitive? I don't know and I won't start to believe you unless you work on a serious AD library\n",
+    "\n",
+    "### References\n",
+    "- http://conal.net/papers/essence-of-ad/\n",
+    "- https://www.philipzucker.com/reverse-mode-differentiation-is-kind-of-like-a-lens-ii/\n",
+    "- https://www.cs.tufts.edu/~nr/cs257/archive/john-hughes/lists.pdf\n",
+    "- https://t.co/4tjLhB4b4P?amp=1\n",
+    "- https://twitter.com/SandMouth/status/1270409619693875201?s=20\n",
+    "- https://arxiv.org/pdf/1803.10228.pdf\n",
+    "- https://gist.github.com/Keno/4a6507b75288b1fe671e9d1cc683014f - Keno Fischer"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Relations\n",
+    "- And now for something a little different\n",
+    "\n",
+    "### Finite Relations\n",
+    "- Objects = finite sets\n",
+    "- Are finite sets just the number of elements they have?\n",
+    "- Morphisms = Relationships between these sets ~ Sets of tuples\n",
+    "- Simplest representation: Array of tuples\n",
+    "- Comprehension notation is da bomb\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Main.FinRel"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "module FinRel\n",
+    "    id(m) = [(x,x) for x in m ]\n",
+    "    compose(f,g) = [(a,c) for (a,b1) in f for (b2,c) in g if b1 == b2 ]\n",
+    "    fst(a,b) = [ ( [a ; b] , a )  for x in a for y in b ] \n",
+    "    mcopy(m) = [ (x  , [x ; x]) for x in m ]\n",
+    "    # and so on.\n",
+    "\n",
+    "\n",
+    "    converse(f) = [(y,x) for (x,y) in f ]\n",
+    "\n",
+    "    x ⊆ y = all( [(a,b) ∈ y for (a,b) in x] )\n",
+    "\n",
+    "    meet(x,y) = [ (a,b) for (a,b) in x if (a,b) ∈ y ]\n",
+    "    join(y,x) = [ (a,b) for (a,b) in x if (a,b) ∈ y ]\n",
+    "    ∨(x,y) = join(x,y)\n",
+    "    ∧(x,y) = meet(x,y) \n",
+    "    bottom = []\n",
+    "end"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Other representations\n",
+    "\n",
+    "- Finite relations are obviously executable.\n",
+    "- Question is efficiency. What queries?\n",
+    "\n",
+    "- Sets of tuples\n",
+    "- Boolean matrices\n",
+    "- BDDS\n",
+    "- `a -&gt; [b]` Powerset functions\n",
+    "- DataFrames\n",
+    "- Databases\n",
+    "\n",
+    "- Set representation -&gt; Relation representation\n",
+    "\n",
+    "- Lattices - Executable subcategories of Rel\n",
+    "    - Intervals\n",
+    "    - Octagons\n",
+    "    - Polyhedra\n",
+    "    - Convex Sets\n",
+    "    - Term Patterns\n",
+    "    - Linear Subspaces\n",
+    "\n",
+    "\n",
+    "### Reference\n",
+    "\n",
+    "\n",
+    "\n",
+    "- https://www.cambridge.org/core/books/relational-mathematics/8CB9CE4F196319222E8991D909AA2F87 - Relational Mathematics - Gunther Schmidt\n",
+    "- https://github.com/AlgebraicJulia/AlgebraicRelations.jl\n",
+    "- Pixel Arrays - http://math.mit.edu/~dspivak/informatics/PixelArrays--SpivakDobsonKumari.pdf \n",
+    "- https://www.philipzucker.com/a-short-skinny-on-relations-towards-the-algebra-of-programming/\n",
+    "- http://www4.di.uminho.pt/~jno/ps/pdbc.pdf\n",
+    "- https://themattchan.com/docs/algprog.pdf\n",
+    "- http://www.philipzucker.com/computational-category-theory-in-python-i-dictionaries-for-finset/ - A similar approach for FinSet\n",
+    "- https://github.com/AlgebraicJulia/Catlab.jl/blob/master/src/categorical_algebra/FinSets.jl\n",
+    "- http://www.cas.mcmaster.ca/~kahl/\n",
+    "- https://github.com/AlgebraicJulia/Catlab.jl/blob/master/src/categorical_algebra/FinRelations.jl\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Linear Relations\n",
+    "\n",
+    "- The importance of Linear Maps cannot be overstated \n",
+    "- Linear Relations are almost as important. There is no higher praise\n",
+    "\n",
+    "Examples:\n",
+    "- Control Systems \n",
+    "- Circuits\n",
+    "- Discretized linear PDEs and ODEs\n",
+    "- Quadratic Optimization problems\n",
+    "\n",
+    "Implementation\n",
+    "- Two big representations:\n",
+    "    - Generators - Good for projection, union\n",
+    "    - Relations - Good for conjunction\n",
+    "- In other words, Range and Nullspace\n",
+    "- SVD for numerical. Julia routine `nullspace` does this for us\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "id(n) = [eye(n) -eye(n)]\n",
+    "\n",
+    "struct LinRel\n",
+    "    left\n",
+    "    right\n",
+    "end\n",
+    "\n",
+    "\n",
+    "id(n) = LinRel(eye(n), -eye(n))\n",
+    "\n",
+    "\n",
+    "function compose(x::LinRel,y::LinRel) \n",
+    "    # extract sizes of different matrices\n",
+    "    (m, n) = size(x.left)\n",
+    "    (n1, x) = size(x.output)\n",
+    "    @assert n1 == n\n",
+    "    ny, yi = size(y.input)\n",
+    "    ny1, yo = size(y.output)\n",
+    "    @assert ny1 == ny\n",
+    "    \n",
+    "    # combine constraints\n",
+    "    A = [ x.input      x.output zeros(nx,yo) ;\n",
+    "          zeros(ny,xi) y.input  y.output     ]\n",
+    "    # convert to range representation\n",
+    "    B = nullspace(A)\n",
+    "    # project in range representation\n",
+    "    projB = [B[1:xi       ,:] ;\n",
+    "             B[xi+yi+1:end,:] ]\n",
+    "    # return to nullspace representation\n",
+    "    C = Base.transpose(nullspace(Base.transpose(projB)))\n",
+    "    return LinRel( C[:, 1:xi] ,C[:,xi+1:end] )\n",
+    "end\n",
+    "\n",
+    "# basically the direct sum. The monoidal product of linear relations\n",
+    "function otimes( x::LinRel{T}, y::LinRel{T}) where {T} \n",
+    "    nx, xi = size(x.input)\n",
+    "    nx1, xo = size(x.output)\n",
+    "    @assert nx1 == nx\n",
+    "    ny, yi = size(y.input)\n",
+    "    ny1, yo = size(y.output)\n",
+    "    @assert ny1 == ny\n",
+    "    return LinRel(    [ x.input                zeros(nx,yi);\n",
+    "                       zeros(ny,xi)           y.input               ],\n",
+    "                      [x.output               zeros(nx,yo);\n",
+    "                       zeros(ny,xo)     y.output               ])\n",
+    "    \n",
+    "end"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "- Circuit Diagrams are string diagrams\n",
+    "- Control structures and feedback loops are string diagrams\n",
+    "- Can convert optimization problems like LQR to linear relations by lagrange multipliers and taking gradients (see reference blog post)\n",
+    "![image.png](lqr.png)\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Layin' it all out there: A second style for linear relations\n",
+    "\n",
+    "- Eager projection is a lot to ask. Projection ~ Quantifier elimination\n",
+    "- Lazily build up problem\n",
+    "- Query solver at the end\n",
+    "- In our case a good solver will probably be more stable and faster than doing it ourselves. Use sparsity.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Main.LinRel2Sketch"
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#pseudo code\n",
+    "module LinRel2Sketch\n",
+    "    struct LinRel\n",
+    "        left\n",
+    "        hidden\n",
+    "        right\n",
+    "    end\n",
+    "\n",
+    "    id(n) = LinRel(eye(n), zeros(n,0),  -eye(n))\n",
+    "    function compose(f,g)\n",
+    "        LinRel( [ f.left ; 0 ; 0]   ,  \n",
+    "                [f.right f.middle   0        0 ;\n",
+    "                   0        0       g.left   g.middle ;\n",
+    "                   eye(n)   0       -eye(n)  0 ]   \n",
+    "               , [0 ; g.right ; 0] )    \n",
+    "    end\n",
+    "\n",
+    "end\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Reference \n",
+    "\n",
+    "- https://www.philipzucker.com/linear-relation-algebra-of-circuits-with-hmatrix/\n",
+    "- http://www.philipzucker.com/categorical-lqr-control-with-linear-relations/\n",
+    "- http://www.philipzucker.com/solving-the-laplace-equations-with-linear-relations/\n",
+    "- https://www.philipzucker.com/checkpoint-implementing-linear-relations-for-linear-time-invariant-systems/"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Point Freeing Pointful DSLs\n",
+    "\n",
+    "- A cookbook recipe for DSLs that expose Variables\n",
+    "\n",
+    "- JuMP\n",
+    "- cvxpy\n",
+    "- z3\n",
+    "- Sympy\n",
+    "- Homotopy Continuation\n",
+    "\n",
+    "### The Recipe\n",
+    "\n",
+    "1. Thunk or Carry environment\n",
+    "2. create input and output variables through DSL api\n",
+    "3. Create new side stuff (like constraints, objective functions)\n",
+    "4. Output tuple of input/output variables + side stuff generated\n",
+    "\n",
+    "\n",
+    "\n",
+    "- If you like monads, you can think of this as either a writer or state monad\n",
+    "- Similar to the second method for linear relations in the you can only solve in one shot.\n",
+    "- A single query at end vs eager queries has some connection to quantifier elimination\n",
+    "- Bad: Lots of fresh vars. If DSL is smart, optimizes them away\n",
+    "\n",
+    "## Optimization Problems\n",
+    "\n",
+    "- Morphisms = Relations (feasible set) + additive objective functions\n",
+    "- Motivation: Linear operators are a category. Steepest descent takes quantum linear operators to classical least action. Takes statistical mechanics transfer matrix method to thermodynamics.\n",
+    "\n",
+    "- http://www.philipzucker.com/a-sketch-of-categorical-relation-algebra-combinators-in-z3py/\n",
+    "- http://www.philipzucker.com/categorical-combinators-for-convex-optimization-and-model-predictive-control-using-cvxpy/\n",
+    "- http://www.philipzucker.com/categorical-combinators-for-graphviz-in-python/"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "module JumpCat\n",
+    "    using JuMP\n",
+    "    id(m) = model -&gt; begin\n",
+    "        x = @variable(model,[1:m])\n",
+    "        (x, x, 0)\n",
+    "        end\n",
+    "  compose(f,g) =\n",
+    "     model -&gt; begin \n",
+    "            (x,y, o1) = M.f(model)\n",
+    "            (y1, z, o2) = N.f(model)\n",
+    "            @constraint(model,  y1 .== y)\n",
+    "            (x,z, o1 + o2)\n",
+    "            end\n",
+    "\n",
+    "  otimes(f, g) = \n",
+    "     model -&gt; begin\n",
+    "            (x,y, o1) = f.f(model)\n",
+    "            (a,b, o2) = g.f(model)\n",
+    "            ( [x ; a], [y ; b ], o1 + o2 )\n",
+    "        end\n",
+    "\n",
+    "  function run(f, model) = \n",
+    "     (input,ouput, obj) = f(model)\n",
+    "     @objective(model, ob)\n",
+    "     solve(model)\n",
+    "end\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Speculative Work\n",
+    "\n",
+    "- Module Relations\n",
+    "- Semialgebraic Relations\n",
+    "- Theorem Proving For Catlab\n",
+    "- Polyhedral Relations\n",
+    "- Iterative LQR as a lens\n",
+    "- Graphs\n",
+    "- Homotopy continuation to find Nash equilibria for mixed strategy games\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Julia 1.4.1",
+   "language": "julia",
+   "name": "julia-1.4"
+  },
+  "language_info": {
+   "file_extension": ".jl",
+   "mimetype": "application/julia",
+   "name": "julia",
+   "version": "1.4.1"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
+</code></pre></div></div>
+
+:ET

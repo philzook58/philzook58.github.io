@@ -34,7 +34,7 @@ There are many beautifully implemented solvers out there and equally beautiful D
 
 
 
-Point-free languages are ones that do not include binding forms that introduce bound/dummy variables. Examples of binding forms like this are $latex \lambda \sum \max \min \int \sup \lim \forall \exists$.  One problem lies in the fact that the names of bound variables don't matter, and that they end up accidentally smashing into each other.  You may have experienced this in physics or math class as the dummy indices or dummy variable problem causing you to screw up your calculation of some cross product identity or some complicated tensor sum. These are surprisingly subtle problems, very difficult to diagnose and get right. de Bruijn indices is a technique for giving the bound variables canonical names, but it sucks to implement in its own way. When you make a DSL point free, it is a joy to manipulate, optimize, and search. I think this may be the core of why category theory is good language for mathematics and programming.
+Point-free languages are ones that do not include binding forms that introduce bound/dummy variables. Examples of binding forms like this are $ \lambda \sum \max \min \int \sup \lim \forall \exists$.  One problem lies in the fact that the names of bound variables don't matter, and that they end up accidentally smashing into each other.  You may have experienced this in physics or math class as the dummy indices or dummy variable problem causing you to screw up your calculation of some cross product identity or some complicated tensor sum. These are surprisingly subtle problems, very difficult to diagnose and get right. de Bruijn indices is a technique for giving the bound variables canonical names, but it sucks to implement in its own way. When you make a DSL point free, it is a joy to manipulate, optimize, and search. I think this may be the core of why category theory is good language for mathematics and programming.
 
 
 
@@ -112,7 +112,42 @@ Fair warning, I'm being sketchy here. I haven't really tried this stuff out.
 
 
 
-[gist https://gist.github.com/philzook58/328a29e64cf740c62cbe2138913b59a2#file-idcomp-py]
+
+```
+def rid1(x,y): # a receptive relations. It receives variables
+    return x == y
+
+def compose1(f, sort, g): # annoying but we need to supply the sort of the inner variable
+    def res(x,z):
+        y = FreshConst(sort)
+        return Exists([y], And(f(x,y), g(y,z)))
+   return res
+
+def rid2(x): # a functional relation. It receives a variable then produces one.
+    y = FreshConst(x.sort())
+    return y, x == y
+
+def compose2(f,g):
+    def res(x):
+      y, cf = f(x)
+      z, cg = g(y)
+      return z, Exists([y], And(cf,cg) )
+
+def rid3(sort):  # a type indexed generator of relations. Annoying we have to supply the type of the variable
+    def res(): # a productive relation
+       x = FreshConst(sort)
+       y = FreshConst(sort)
+       return x, y, x == y
+   return res
+
+def compose3(f,g):
+   def res():
+       x, yf, cf = f()
+       yg, z, cg = g()
+       return x, z, Exists([yf,yg], And(cf, cg, yf == yg))
+   return res
+```
+
 
 
 
@@ -124,7 +159,30 @@ z3 is a simply typed language. You can get away with some polymorphism at the py
 
 
 
-[gist https://gist.github.com/philzook58/328a29e64cf740c62cbe2138913b59a2#file-convert-py]
+
+```
+def lift12(sorty, f):
+    def res(x):
+        y = FreshConst(sorty)
+        c = f(x,y)
+        return y, c
+    return res
+
+def lift23(sortx, f):
+    def res():
+        x = FreshConst(sortx)
+        y, c = f(x)
+        return x, y, c
+    return res
+  
+def lift31(f):
+    def r(x,y):
+      x1, y1, c = f()
+      return x1, y1, And(c, x1 == x, y1 == y)
+    return res
+
+```
+
 
 
 
@@ -136,7 +194,87 @@ We can create the general cadre of relation algebra operators. Here is a somewha
 
 
 
-[gist  https://gist.github.com/philzook58/328a29e64cf740c62cbe2138913b59a2#file-combinators-py]
+
+```
+trivial = BoolVal(True)
+
+def top1(x,y): # top is the full relation,
+    return trivial
+def bottom1(x,y):
+    return BoolVal(False)
+
+def top2(sorty):
+    def res(x):
+        y = FreshConst(sorty)
+        return y, trivial
+    return res
+
+def top3(sortx, sorty):
+    def res():
+        x = FreshConst(sortx)
+        y = FreshConst(sorty)
+        return x, y, trivial
+    return res
+
+def converse1(r):
+    return lambda x,y: r(y,x)
+def meet1(p,q):
+    return lambda x,y : p(x,y) & q(x,y)
+def join1(p,q):
+    return lambda x,y : p(x,y) | q(x,y)
+
+# product and sum types
+def fst1(x,y): # proj(0)
+    return y == x.sort().accessor(0,0)(x)
+def snd1(x,y): # proj(1)
+    return y == x.sort().accessor(0,1)(x)
+def left1(x,y):
+    return y == y.sort().constructor(0)(x)
+def right1(x,y):
+    return y == y.sort().constructor(1)(x)
+def inj1(n):
+    return lambda x, y: return y == y.sort().constructor(n)(x)
+def proj1(n):
+    return lambda x, y: return y == x.sort().accessor(0,n)(x)
+def fan(p,q):
+    def res(x,y): 
+       a = y.sort().accessor(0,0)(y)
+       b = y.sort().accessor(0,1)(y)
+       return And(p(x,a), q(x,b))
+    return res
+def dup1(x,(y1,y2)): # alternatively we may not want to internalize the tuple into z3.
+    return And(x == y1 , x == y2)
+def convert_tuple((x,y), xy):  # convert between internal z3 tuple and python tuple.
+    return xy == xy.constructor(0)(x,y)
+#def split():
+#def rdiv # relation division is so important, and yet I'm always too mentally exhausted to try and straighten it out
+
+def itern(n, sortx, p): # unroll 
+    if n == 0:
+        return rid1(sortx)
+    else:
+        return compose(starn(n-1, sortx, p), p)
+def starn(n, sortx, p): # unroll and join
+    if n == 0:
+        return rid1(sortx)
+    else:
+        return join(rid, compose(starn(n-1, sortx, p))) # 1 + x * p 
+
+# more specialized operations than general puyrpose structural operators
+def lte1(x,y):
+    return x <= y
+def sum1(x,y): # I'm being hazy about what x is here exactly
+    return x[0] + x[1] == y
+def npsum(x,y):
+    return np.sum(x) == y # you can make numpy arrays of z3 variables. Some vectorized functions work.
+def mul1(x,y):
+    return x[0] * x[1] == y
+def and1((x,y), z):
+    return z == And(x,y)
+def If1((b,t,e),y):
+    return If(b, t,e) == y
+```
+
 
 
 
@@ -148,7 +286,33 @@ Questions about relation algebra expressions are often phrased in term of relati
 
 
 
-[gist https://gist.github.com/philzook58/328a29e64cf740c62cbe2138913b59a2#file-properties-py]
+
+```
+# relational properties
+
+def rsub(p,q, sortx, sorty):
+    x = FreshConst(sortx)
+    y = FreshConst(sorty)
+    return ForAll([x,y].Implies(p(x,y) , q(x,y) ))
+def req(p,q,sortx, sorty):
+    return And(rsub(p,q,sortx,sorty), rsub(q,p,sortx,sorty) 
+def symmetric1(sortx, sorty, r):
+    x = FreshConst(sortx)
+    y = FreshConst(sorty)
+    return ForAll([x,y], r(x,y) == r(y,x))
+def reflexive1(sortx, r):
+    x = FreshConst(sortx)
+    return ForAll([x],r(x,x))
+def transitive1(sortx,sorty,sortz, r):
+    x = FreshConst(sx)
+    y = FreshConst(sy)
+    ForAll([x,y], Implies(r(x,y) & r(y,z) , r(x,z))
+def strict1(r,sortx):
+    x = FreshConst(sortx)
+    return Not(r(x,x))
+
+```
+
 
 
 

@@ -1,0 +1,27 @@
+---
+author: philzook58
+comments: true
+date: 2017-02-22 19:59:09+00:00
+layout: post
+link: https://www.philipzucker.com/?p=664
+published: false
+slug: BEM++
+title: BEM++
+wordpress_id: 664
+---
+
+The Boundary element method takes a known free green's function and just uses the discretization on the boundary of the domain.
+
+brew install bempp
+
+https://www.youtube.com/watch?v=2j8HoXHVRH8
+
+This is the first getting started tutorial, which I found not entirely self explanatory
+
+http://nbviewer.jupyter.org/github/bempp/tutorials/blob/master/notebooks/laplace_interior_dirichlet.ipynb
+
+First off, for there example function it looks like they place a source in their domain (x=0.9). However,
+
+
+
+H-Matrices! A very interesting twist.

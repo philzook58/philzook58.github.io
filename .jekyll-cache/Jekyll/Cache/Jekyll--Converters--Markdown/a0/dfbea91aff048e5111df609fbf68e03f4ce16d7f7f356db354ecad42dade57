@@ -1,0 +1,189 @@
+I"�\<p>DataFrames.jl is a Julia library to store, retrieve and manipulate tabular data. It is the analog of Pandas for python or related tools in R.  It implements an interface that is a mish-mash of numpy-like slicing and SQL-like queries and can be used as  lightweight flexible relational database. It has proven to be a popular and intuitive interface.</p>
+
+<p><a href="https://en.wikipedia.org/wiki/Relational_database">Relational Databases</a> are computer implementations of the mathematical concept of finite relations, but there are other classes of relations. This blog post is about using (abusing?)  the DataFrame.jl interface to implement linear relations. Linear relations are useful for describing physical systems whose behavior is constrained by linear equations, such as electrical circuits.</p>
+
+<p>It all comes out quite cute.</p>
+
+<h3 id="databases-and-relations">Databases and Relations</h3>
+
+<p>A <a href="https://en.wikipedia.org/wiki/Finitary_relation">finite relation</a> over sets A,B,C,D is a subset of $ A\times B \times C \times D $ . In the database, each of these sets corresponds to a column of the database, and each element of the subset corresponds to a row of the database.</p>
+
+<p>Much of the time, we think of storing discrete data in databases, things like names, ids, occupations, ages. However, DataFrame.jl is certainly also capable of storing floats. In this case, the DataFrame could be interpreted as storing a finite number of points in the continuous space $ R^n $, one dimension for each column, one point for each row.</p>
+
+<p>In continuous space, it is desirable to not only describe discrete sets of points, but also blobs. Conceptually,  blobs are only a subset of $ R^n$, and are still a mathematical relation. In some sense a blob could be thought of as the contents of a database holding an uncountable number of rows, but then the enumerative storage schemes of an actual physical database doesn’t cut it anymore. We need an extremely compressed storage scheme.</p>
+
+<h2 id="describing-linear-subspaces">Describing Linear Subspaces</h2>
+
+<p>Trying to store arbitrary blobs is a bit too unruly, but if we constrain ourselves to certain classes of blobs, we can still make headway. In this case, we are going to stick to linear blobs, i.e. hyperplanes.</p>
+
+<p>One can concretely describe a hyperplane of $ R^n$ by two main representations. First one can list a set of vectors $ {v_i }$ that span the hyperplane. From this list, we are implicitly describing any linear combination of these vectors $ v = \sum \lambda_i v_i $. A second distinct representation is to list the coefficient vectors $ {c_i^T }$ of a set of linear equations $ { c_i^T v = 0 }$ describing the hyperplane. I will call these the span and constraint representations.</p>
+
+<p>An alternative name for these two representations might be the range and nullspace representation, the generator and equation representation, or by analogy to polyhedral computation, the v-rep and h-rep.</p>
+
+<p>These two representations are dual in some sense. One way in which they feel dual is that adding a new non independent vector to the span increases the dimensionality of the linear subspace by 1. Adding a new independent linear equation to the constraint rep decreases the dimension of the subspace by 1.</p>
+
+<p>It is important to have both representations because different operations on linear subspaces are easy in each. The intersection of two subspaces is easy in the constraint representation. It corresponds to just concatenating two constraint sets. Projection is easy in the span representation where it corresponds to just taking a slice out of each individual generator vector.</p>
+
+<p>As more evidence for the two representation’s duality, two other important operations that are easy in a particular representation are the image and preimage operations under linear maps. The image is easy to compute in the span representation (matrix multiply $ {Av_i}$) and the preimage is easy in the constraint representation (matrix multiply maybe with a transpose thrown in there $ {c_i^T A}$).</p>
+
+<h2 id="the-julia-implementation">The Julia Implementation</h2>
+
+<p>The interface of DataFrames still makes sense for linear relations and we can slightly abuse its already existent machinery to make fast headway.</p>
+
+<p>First the constructors of the two representations. As a slight hack, to differentiate between the two representations, I will tag a special blank column to differentiate which representation we are in. Otherwise I forward all arguments to the ordinary DataFrames constructor so you can build these as you would any DataFrame. Each row of the dataframe is either one vector from the span set or one constraint from the constraint set. Column are components of these vectors</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">using</span> <span class="n">DataFrames</span>
+<span class="k">using</span> <span class="n">LinearAlgebra</span>
+
+<span class="k">function</span><span class="nf"> DataFrameSpan</span><span class="x">(</span> <span class="n">x</span><span class="o">...</span><span class="x">;</span> <span class="n">kwargs</span><span class="o">...</span><span class="x">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="x">(</span><span class="n">x</span><span class="o">...</span><span class="x">;</span> <span class="n">kwargs</span><span class="o">...</span><span class="x">)</span>
+    <span class="n">df</span><span class="x">[</span><span class="o">:</span><span class="n">spanrep</span><span class="x">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c"># missing</span>
+    <span class="n">df</span>
+<span class="k">end</span>
+
+<span class="c"># representing linear relations via constraints</span>
+<span class="k">function</span><span class="nf"> DataFrameCons</span><span class="x">(</span> <span class="n">x</span><span class="o">...</span><span class="x">;</span> <span class="n">kwargs</span><span class="o">...</span><span class="x">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="x">(</span><span class="n">x</span><span class="o">...</span><span class="x">;</span> <span class="n">kwargs</span><span class="o">...</span><span class="x">)</span>
+    <span class="n">df</span><span class="x">[</span><span class="o">:</span><span class="n">consrep</span><span class="x">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c"># missing</span>
+    <span class="n">df</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Because each individual vector in the span obeys the constraint equations, we can numerically convert between them by calling the Julia function <code class="language-plaintext highlighter-rouge">[nullspace](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/#LinearAlgebra.nullspace)</code>. There is a pleasing symmetry between the two conversion directions.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c"># nullconvert turns span rep to constraint rep or vice versa</span>
+<span class="k">function</span><span class="nf"> nullconvert</span><span class="x">(</span><span class="n">df</span><span class="x">)</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="n">names</span><span class="x">(</span><span class="n">df</span><span class="x">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">nullspace</span><span class="x">(</span><span class="kt">Matrix</span><span class="x">(</span><span class="n">df</span><span class="x">))</span>
+
+    <span class="n">DataFrame</span><span class="x">(</span><span class="n">mapslices</span><span class="x">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="x">[</span><span class="n">x</span><span class="x">],</span> <span class="n">A</span><span class="x">,</span> <span class="n">dims</span><span class="o">=</span><span class="mi">2</span><span class="x">)[</span><span class="o">:</span><span class="x">]</span> <span class="x">,</span> <span class="n">cols</span> <span class="x">)</span> 
+<span class="k">end</span>
+
+<span class="c">#https://discourse.julialang.org/t/converting-a-matrix-into-an-array-of-arrays/17038/2</span>
+
+
+<span class="c"># We tag somewhat inelegantly whether we're inb the span rep or constrain rep via a column tag</span>
+<span class="n">isspanrep</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="s">"spanrep"</span> <span class="n">∈</span> <span class="n">names</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
+<span class="n">isconsrep</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="s">"consrep"</span> <span class="n">∈</span> <span class="n">names</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
+
+
+<span class="k">function</span><span class="nf"> spanrep</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> 
+    <span class="k">if</span> <span class="n">isspanrep</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+    <span class="k">else</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">select</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">Not</span><span class="x">(</span><span class="o">:</span><span class="n">consrep</span><span class="x">))</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">nullconvert</span><span class="x">(</span><span class="n">df</span><span class="x">)</span>
+        <span class="n">df</span><span class="x">[</span><span class="o">:</span><span class="n">spanrep</span><span class="x">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c">#add tag</span>
+        <span class="k">return</span> <span class="n">df</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">function</span><span class="nf"> consrep</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> 
+    <span class="k">if</span> <span class="n">isconsrep</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+    <span class="k">else</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">select</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">Not</span><span class="x">(</span><span class="o">:</span><span class="n">spanrep</span><span class="x">))</span> <span class="c">#remove tag</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">nullconvert</span><span class="x">(</span><span class="n">df</span><span class="x">)</span>
+        <span class="n">df</span><span class="x">[</span><span class="o">:</span><span class="n">consrep</span><span class="x">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c">#add tag </span>
+        <span class="k">return</span> <span class="n">df</span>
+     <span class="k">end</span>
+<span class="k">end</span>
+
+
+</code></pre></div></div>
+
+<p>The ability to name columns and the analog of the join operation from database gives us a way to compositionally construct systems of linear equations. We also define a projection operations which in some sense solves these equations.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">function</span><span class="nf"> linearjoin</span><span class="x">(</span><span class="n">df</span><span class="x">,</span><span class="n">dg</span><span class="x">)</span>  <span class="c">#should we add makefresh flag?</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">consrep</span><span class="x">(</span><span class="n">df</span><span class="x">)</span>
+        <span class="n">dg</span> <span class="o">=</span> <span class="n">consrep</span><span class="x">(</span><span class="n">dg</span><span class="x">)</span>
+        <span class="n">coalesce</span><span class="o">.</span><span class="x">(</span><span class="n">vcat</span><span class="x">(</span><span class="n">df</span><span class="x">,</span><span class="n">dg</span><span class="x">,</span> <span class="n">cols</span><span class="o">=:</span><span class="n">union</span><span class="x">),</span> <span class="mi">0</span><span class="x">)</span>
+<span class="k">end</span>
+
+
+<span class="k">function</span><span class="nf"> linearproject</span><span class="x">(</span><span class="n">df</span><span class="x">,</span> <span class="n">cols</span><span class="x">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">spanrep</span><span class="x">(</span><span class="n">df</span><span class="x">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="x">[</span> <span class="x">[</span><span class="n">cols</span> <span class="x">;</span> <span class="o">:</span><span class="n">spanrep</span><span class="x">]]</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>And shockingly, that’s about it. A very elegant implementation compared to my previous efforts.</p>
+
+<p>Here as an example we join two resistors in series. We then project out the inner voltage, which returns a relation describing the</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">resistor</span><span class="x">(</span><span class="n">R</span><span class="x">,</span> <span class="n">i</span> <span class="x">,</span> <span class="n">v1</span><span class="x">,</span> <span class="n">v2</span><span class="x">)</span> <span class="o">=</span> <span class="n">DataFrameCons</span><span class="x">(</span> <span class="x">[</span><span class="n">i</span> <span class="o">=&gt;</span> <span class="x">[</span><span class="n">R</span><span class="x">],</span> <span class="n">v1</span> <span class="o">=&gt;</span> <span class="x">[</span><span class="mi">1</span><span class="x">],</span> <span class="n">v2</span> <span class="o">=&gt;</span> <span class="x">[</span><span class="o">-</span><span class="mi">1</span><span class="x">]</span> <span class="x">]</span> <span class="x">)</span>
+<span class="n">vsource</span><span class="x">(</span><span class="n">V</span><span class="x">,</span> <span class="n">v1</span><span class="x">,</span> <span class="n">v2</span><span class="x">)</span> <span class="o">=</span>  <span class="n">DataFrameCons</span><span class="x">(</span> <span class="x">[</span><span class="o">:</span><span class="n">one</span> <span class="o">=&gt;</span> <span class="x">[</span><span class="n">V</span><span class="x">],</span> <span class="n">v1</span> <span class="o">=&gt;</span> <span class="x">[</span><span class="mi">1</span><span class="x">],</span> <span class="n">v2</span> <span class="o">=&gt;</span> <span class="x">[</span><span class="o">-</span><span class="mi">1</span><span class="x">]</span> <span class="x">]</span> <span class="x">)</span>
+<span class="n">isource</span><span class="x">(</span><span class="n">I</span><span class="x">,</span> <span class="n">i</span><span class="x">)</span> <span class="o">=</span>  <span class="n">DataFrameCons</span><span class="x">(</span> <span class="x">[</span><span class="o">:</span><span class="n">one</span> <span class="o">=&gt;</span> <span class="x">[</span><span class="n">I</span><span class="x">],</span> <span class="n">i</span> <span class="o">=&gt;</span> <span class="x">[</span><span class="o">-</span><span class="mi">1</span><span class="x">]</span> <span class="x">]</span> <span class="x">)</span>
+
+<span class="n">r1</span> <span class="o">=</span> <span class="n">resistor</span><span class="x">(</span><span class="mi">10</span><span class="x">,</span> <span class="o">:</span><span class="n">i1</span><span class="x">,</span> <span class="o">:</span><span class="n">v1</span><span class="x">,</span> <span class="o">:</span><span class="n">v2</span><span class="x">)</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">resistor</span><span class="x">(</span><span class="mi">10</span><span class="x">,</span> <span class="o">:</span><span class="n">i1</span><span class="x">,</span> <span class="o">:</span><span class="n">v2</span><span class="x">,</span> <span class="o">:</span><span class="n">v3</span><span class="x">)</span>
+
+
+<span class="n">sys</span> <span class="o">=</span> <span class="n">consrep</span><span class="x">(</span><span class="n">linearproject</span><span class="x">(</span><span class="n">linearjoin</span><span class="x">(</span><span class="n">r1</span><span class="x">,</span><span class="n">r2</span><span class="x">),</span> <span class="x">[</span><span class="o">:</span><span class="n">i1</span><span class="x">,</span> <span class="o">:</span><span class="n">v1</span><span class="x">,</span> <span class="o">:</span><span class="n">v3</span><span class="x">])</span> <span class="x">)</span> 
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+1×4 DataFrame
+│ Row │ i1       │ v1        │ v3         │ consrep │
+│     │ Float64  │ Float64   │ Float64    │ Int64   │
+├────┼──────────┼───────────┼────────────┼─────────┤
+│ 1   │ 0.997509 │ 0.0498755 │ -0.0498755 │ 0       │
+
+</code></pre></div></div>
+
+<p>This solution is linear proportional to <code class="language-plaintext highlighter-rouge">[20,1,-1]</code>  hence representing the linear relation of a 20ohm resistor.</p>
+
+<p>For more examples of usage of linear relations, check out these blog posts.</p>
+
+<ul>
+  <li><a href="https://www.philipzucker.com/linear-relation-algebra-of-circuits-with-hmatrix/">https://www.philipzucker.com/linear-relation-algebra-of-circuits-with-hmatrix/</a></li>
+  <li><a href="https://www.philipzucker.com/checkpoint-implementing-linear-relations-for-linear-time-invariant-systems/">https://www.philipzucker.com/checkpoint-implementing-linear-relations-for-linear-time-invariant-systems/</a></li>
+  <li><a href="https://www.philipzucker.com/solving-the-laplace-equations-with-linear-relations/">https://www.philipzucker.com/solving-the-laplace-equations-with-linear-relations/</a></li>
+  <li><a href="https://www.philipzucker.com/categorical-lqr-control-with-linear-relations/">https://www.philipzucker.com/categorical-lqr-control-with-linear-relations/</a></li>
+</ul>
+
+<p>That one could use pandas or Dataframes.jl in this way is something I realized about a year ago when I was writing these posts, but I didn’t realize how pleasantly it would all fall out when I actually sat down to do it.</p>
+
+<h3 id="bits-and-bobbles">Bits and Bobbles</h3>
+
+<ul>
+  <li>
+    <p>One often wants not only linear subspaces, but <a href="https://en.wikipedia.org/wiki/Affine_space#:~:text=first%20Weyl's%20axioms.-,Affine%20subspaces%20and%20parallelism,is%20a%20linear%20subspace%20of%20.">affine subspaces</a>. The convenient and standard trick to convert affine subspaces to linear subspaces is the method of <a href="https://en.wikipedia.org/wiki/Homogeneous_coordinates">homogenous coordinates</a>. We can increase our linear space with an extra dimension called <code class="language-plaintext highlighter-rouge">:one</code>. Whenever we need a scalar occurring in an equation, it now goes in front of this new variable. In the span representation, it is convenient to normalize this entry to 1 by scaling the each span vector. Then the span representation representing the affine subspace is $ \sum \lambda_i v_i$ with the constraint that $ \sum \lambda_i = 1$.</p>
+  </li>
+  <li>
+    <p>Linear relations are not the only sensible relations. Other classes of relations that have computational teeth include</p>
+  </li>
+</ul>
+
+<ol>
+  <li>Polyhedral relations <a href="https://github.com/JuliaPolyhedra/Polyhedra.jl">https://github.com/JuliaPolyhedra/Polyhedra.jl</a></li>
+  <li>Polynomial Relations (aka algebraic or semialgebraic relations) <a href="https://www.juliahomotopycontinuation.org/">https://www.juliahomotopycontinuation.org/</a></li>
+  <li>Convex relations <a href="https://juliareach.github.io/LazySets.jl/dev/">https://juliareach.github.io/LazySets.jl/dev/</a></li>
+</ol>
+
+<p>It seems reasonable that each of these could also use the DataFrames interface as a way of modelling themselves.</p>
+
+<ul>
+  <li>Linear relations elegantly express operations I would ordinarily phrase in terms of Schur complements, one of my favorite pieces of linear algebra. Projecting a linear relation is finding the effective or reduced system of equations.</li>
+</ul>
+
+<p>In this manner, linear relations are related to Gaussian integrals, which are the canonical example of “integrating out” dynamics in physics. Multidimensional Gaussian integrals are ultimately basically linear algebra engines, giving a way to formulate the Schur complement operation.  I think linear relations would form a good core for an “exact” Gaussian integral library.</p>
+
+<p>Quadratic Optimization with linear equality constraints is reducible to a linear relation. I used this for example in my LQR control example above. This is also related to Gaussians, since<a href="https://en.wikipedia.org/wiki/Method_of_steepest_descent"> the method of steepest descent</a> approximates an integration problem by an optimization problem. Gaussian integrals in the presence of linear delta functions $ \delta(Ax-b)$ (which are important) convert under the steepest descent method to a quadratic optimization problem with linear equality constraints. All of this is completely ubiquitous in the connection between classical and quantum mechanics, and between statistical and thermodynamics. The Feynman integration over all paths becomes the principle of least action. The partition function integrals become free energy minimizations.</p>
+
+<ul>
+  <li>In the past, I’ve modeled relations in a Categorical style. This is still I think an excellent internal representation, but perhaps not the best user facing interface.</li>
+</ul>
+
+<p><a href="https://en.wikipedia.org/wiki/Query_optimization">Query optimization</a> is a big topic in database theory.  The ordering of the joins and projections and the chosen points at which to change representations or indices can greatly change the time of the query. It is intriguing that such disparate seeming calculations may benefit from a unified relational query optimizer. I suggest that a categorical IR and the tools of Catlab <a href="https://github.com/AlgebraicJulia/Catlab.jl">https://github.com/AlgebraicJulia/Catlab.jl</a> might be a way to do this.</p>
+
+<ul>
+  <li>Using sparse matrices would be a boon to linear relations (they tend to be very sparse), but we may have to roll our own DataFrame implementation to do so.</li>
+  <li>Should we allow columns to have width? Then variables can represent blocks of the matrix rather than just a single component. It feels like this has nice modelling power. It was also not convenient to do so with the stock DataFrame implementation</li>
+</ul>
+
+:ET

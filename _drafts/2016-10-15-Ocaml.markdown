@@ -1,0 +1,32 @@
+---
+author: philzook58
+comments: true
+date: 2016-10-15 18:32:42+00:00
+layout: post
+link: https://www.philipzucker.com/?p=527
+published: false
+slug: Ocaml
+title: Ocaml
+wordpress_id: 527
+---
+
+The ocaml repl is annoying. No previous command? That's ridiculous.
+
+Installing utop as alternative
+
+opam install utop
+
+    
+    <code class="ocamltop"><span class="ocaml-input"><span class="governing">let</span> <span class="ocaml-function">average</span> <span class="ocaml-variable">a b </span>=
+        (a +. b) /. 2.0</span><span class="ocaml-prompt">;;</span></code>
+
+
+You have to defne top level stuff with let
+
+The dots are for float ops.
+
+
+
+
+
+

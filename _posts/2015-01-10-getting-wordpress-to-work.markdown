@@ -11,4 +11,4 @@ post_format:
 - Image
 ---
 
-Google up wordpress and nearly free speech. You should follow their directions.[![ALLLLL RIIIIIGHT](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/01/profile.jpg)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/01/profile.jpg)
+Google up wordpress and nearly free speech. You should follow their directions.[![ALLLLL RIIIIIGHT](/assets/profile.jpg)](/assets/profile.jpg)

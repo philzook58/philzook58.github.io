@@ -72,23 +72,28 @@ The bohm-berarducci encoding of data types makes the pattern matching function t
 
 
     
-    <code>data BoolI where
-      TrueI  :: BoolI
-      FalseI :: BoolI
     
-    type BoolC = forall s. s -> s -> s
-    truec :: BoolC
-    truec = \x y -> x
-    falsec :: BoolC 
-    falsec = \x y -> y
-    
-    to :: BoolI -> BoolC
-    to TrueI = truec
-    to FalseI = falsec
-    
-    from :: BoolC -> BoolI
-    from f = f TrueI FalseI
-    </code>
+```
+
+data BoolI where
+  TrueI  :: BoolI
+  FalseI :: BoolI
+
+type BoolC = forall s. s -> s -> s
+truec :: BoolC
+truec = \x y -> x
+falsec :: BoolC 
+falsec = \x y -> y
+
+to :: BoolI -> BoolC
+to TrueI = truec
+to FalseI = falsec
+
+from :: BoolC -> BoolI
+from f = f TrueI FalseI
+
+```
+
 
 
 
@@ -104,17 +109,22 @@ In the final encoding of the datatype, we replace the `data` keyword with the `c
 
 
     
-    <code>class BoolF a where
-       truef :: a
-       falsef :: a
     
-    instance BoolF BoolI where
-       truef = TrueI
-       falsef = FalseI
-    
-    interpf :: BoolF a => BoolI -> a
-    interpf TrueI = truef
-    interpf FalseI = falsef</code>
+```
+
+class BoolF a where
+   truef :: a
+   falsef :: a
+
+instance BoolF BoolI where
+   truef = TrueI
+   falsef = FalseI
+
+interpf :: BoolF a => BoolI -> a
+interpf TrueI = truef
+interpf FalseI = falsef
+```
+
 
 
 
@@ -138,21 +148,26 @@ Once way you can have something run many ways is by having a syntax tree for the
 
 
     
-    <code>interpi :: BoolI -> Int
-    interpi TrueI = 40
-    interpi FalseF = 27
     
-    interps :: BoolI -> String
-    interps TrueI = "hi"
-    interps FalseF = "fred"
-    
-    instance BoolF Int where
-       truef = 40
-       falsef = 27
-    
-    instance BoolF String where
-      truef = "hi"
-      falsef = "fred" </code>
+```
+
+interpi :: BoolI -> Int
+interpi TrueI = 40
+interpi FalseF = 27
+
+interps :: BoolI -> String
+interps TrueI = "hi"
+interps FalseF = "fred"
+
+instance BoolF Int where
+   truef = 40
+   falsef = 27
+
+instance BoolF String where
+  truef = "hi"
+  falsef = "fred" 
+```
+
 
 
 
@@ -184,7 +199,12 @@ We can see the correspondence in a different way. A typeclass constraint corresp
 
 
     
-    <code>s -> s -> s ~ (s,s) -> s ~ {truef :: s, falsef :: s} -> s ~ BoolF s => s</code>
+    
+```
+
+s -> s -> s ~ (s,s) -> s ~ {truef :: s, falsef :: s} -> s ~ BoolF s => s
+```
+
 
 
 
@@ -208,20 +228,25 @@ Here's another example on list
 
 
     
-    <code>class ListF f where
-      cons :: a -> f a -> f a
-      nil :: f a
     
-    instance ListF [] where
-      cons = (:)
-      nil = []
-    
-    interpl :: LiftF f => [a] -> f a
-    interpl (x : xs) = cons x (interpl xs)
-    interpl [] = nil
-    
-    
-    type ListC a = forall s. (a -> s -> s) -> s -> s</code>
+```
+
+class ListF f where
+  cons :: a -> f a -> f a
+  nil :: f a
+
+instance ListF [] where
+  cons = (:)
+  nil = []
+
+interpl :: LiftF f => [a] -> f a
+interpl (x : xs) = cons x (interpl xs)
+interpl [] = nil
+
+
+type ListC a = forall s. (a -> s -> s) -> s -> s
+```
+
 
 
 
@@ -237,15 +262,20 @@ Going the other direction from finally tagless is interesting as well. If you ta
 
 
     
-    <code>data FreeMonoid a where
-       Mappend :: FreeMonoid a -> FreeMonoid a -> FreeMonoid a
-       Mempty :: FreeMonoid a
-       Pure :: a -> Freemonoid a
-    data FreeMonad f a where
-       Bind :: FreeMond f a -> (a -> FreeMonad f b) -> FreeMonad f b
-       Return :: a -> FreeMonad f a
-       Pure' :: f a -> FreeMonad f a
-     </code>
+    
+```
+
+data FreeMonoid a where
+   Mappend :: FreeMonoid a -> FreeMonoid a -> FreeMonoid a
+   Mempty :: FreeMonoid a
+   Pure :: a -> Freemonoid a
+data FreeMonad f a where
+   Bind :: FreeMond f a -> (a -> FreeMonad f b) -> FreeMonad f b
+   Return :: a -> FreeMonad f a
+   Pure' :: f a -> FreeMonad f a
+
+```
+
 
 
 

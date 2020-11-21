@@ -115,62 +115,67 @@ Unfortunately, (or fortunately? A good learning experience. Learned some stuff a
 
 
     
-    <code>using MultivariatePolynomials
-    using DataStructures
     
-    
-    function spoly(p,q)
-        pq = lcm(leadingmonomial(p),leadingmonomial(q))
-        return div(  pq , leadingterm(p) ) * p - div(pq , leadingterm(q)) * q
-    end
-    
-    function isgrobner(F::Array{T}) where {T <: AbstractPolynomialLike} # check buchberger criterion
-        for (i, f1) in enumerate(F)
-            for f2 in F[i+1:end]
-                s = spoly(f1,f2)
-                _,s = divrem(s,F)
-                if !iszero(s)
-                    return false
-                end
-            end
-        end
-        return true
-    end
-    
-    function buchberger(F::Array{T}) where {T <: AbstractPolynomialLike}
-        pairs = Queue{Tuple{T,T}}()
-        # intialize with all pairs from F
-        for (i, f1) in enumerate(F)
-            for f2 in F[i+1:end]
-                enqueue!(pairs, (f1,f2))
-            end
-        end
-        
-        # consider all possible s-polynomials and reduce them
-        while !isempty(pairs)
-            (f1,f2) = dequeue!(pairs)
+```
+
+using MultivariatePolynomials
+using DataStructures
+
+
+function spoly(p,q)
+    pq = lcm(leadingmonomial(p),leadingmonomial(q))
+    return div(  pq , leadingterm(p) ) * p - div(pq , leadingterm(q)) * q
+end
+
+function isgrobner(F::Array{T}) where {T <: AbstractPolynomialLike} # check buchberger criterion
+    for (i, f1) in enumerate(F)
+        for f2 in F[i+1:end]
             s = spoly(f1,f2)
             _,s = divrem(s,F)
-            if !iszero(s) #isapproxzero? Only add to our set if doesn't completely reduce
-                for f in F
-                    enqueue!(pairs, (s,f))
-                end
-                push!(F,s)
+            if !iszero(s)
+                return false
             end
         end
-    
-        # reduce redundant entries in grobner basis.
-        G = Array{T}(undef, 0)
-        while !isempty(F)
-            f = pop!(F)
-            _,r = divrem(f, vcat(F,G))
-            if !iszero(r)
-                push!(G,r)
-            end
+    end
+    return true
+end
+
+function buchberger(F::Array{T}) where {T <: AbstractPolynomialLike}
+    pairs = Queue{Tuple{T,T}}()
+    # intialize with all pairs from F
+    for (i, f1) in enumerate(F)
+        for f2 in F[i+1:end]
+            enqueue!(pairs, (f1,f2))
         end
-        
-        return G
-    end</code>
+    end
+
+    # consider all possible s-polynomials and reduce them
+    while !isempty(pairs)
+        (f1,f2) = dequeue!(pairs)
+        s = spoly(f1,f2)
+        _,s = divrem(s,F)
+        if !iszero(s) #isapproxzero? Only add to our set if doesn't completely reduce
+            for f in F
+                enqueue!(pairs, (s,f))
+            end
+            push!(F,s)
+        end
+    end
+
+    # reduce redundant entries in grobner basis.
+    G = Array{T}(undef, 0)
+    while !isempty(F)
+        f = pop!(F)
+        _,r = divrem(f, vcat(F,G))
+        if !iszero(r)
+            push!(G,r)
+        end
+    end
+
+    return G
+end
+```
+
 
 
 
@@ -186,32 +191,37 @@ Some usage. You can see here that Gaussian elimination implemented by the backsl
 
 
     
-    <code>
-    using DynamicPolynomials
-    @polyvar x y
     
-    buchberger( [ x + 1.0 + y   , 2.0x + 3y + 7  ] )
-    #= 
-    2-element Array{Polynomial{true,Float64},1}:
-     -0.5y - 2.5
-     x - 4.0
-    =#
-    
-    [ 1 1 ; 2  3 ] \ [-1 ; -7]
-    #=
-    2-element Array{Float64,1}:
-      4.0
-     -5.0
-    =#
-    
-    
-    buchberger( [ x^3 - y , x^2 - x*y ])
-    #=
-    3-element Array{Polynomial{true,Int64},1}:
-     -xy + y²
-     y³ - y
-     x² - y²
-    =#</code>
+```
+
+
+using DynamicPolynomials
+@polyvar x y
+
+buchberger( [ x + 1.0 + y   , 2.0x + 3y + 7  ] )
+#= 
+2-element Array{Polynomial{true,Float64},1}:
+ -0.5y - 2.5
+ x - 4.0
+=#
+
+[ 1 1 ; 2  3 ] \ [-1 ; -7]
+#=
+2-element Array{Float64,1}:
+  4.0
+ -5.0
+=#
+
+
+buchberger( [ x^3 - y , x^2 - x*y ])
+#=
+3-element Array{Polynomial{true,Int64},1}:
+ -xy + y²
+ y³ - y
+ x² - y²
+=#
+```
+
 
 
 

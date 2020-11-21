@@ -1,0 +1,2 @@
+I"û<p>Ordinary Haskell functions form a cartesian closed category. Category means you can compose functions. Cartesian basically means you can construct and deconstruct tuples and Closed means that you have first class functions you can pass around.</p>
+:ET

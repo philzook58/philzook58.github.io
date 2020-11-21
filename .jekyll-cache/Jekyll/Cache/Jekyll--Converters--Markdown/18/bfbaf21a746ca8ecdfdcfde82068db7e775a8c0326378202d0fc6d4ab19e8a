@@ -1,0 +1,2 @@
+I"Ð<p>There are many problems in physics that take the form of minimizing the energy. Often this energy is taken to be quadratic in the field. The canonical example is electrostatics. The derivative of the potential $ \phi$ gives the electric field E. The energy is given as $ \int (|\nabla \phi|^2 + \phi \rho) d^3 x $. We can encode a finite difference version of this (with boundary conditions!) directly into a convex optimization modelling language like so.</p>
+:ET

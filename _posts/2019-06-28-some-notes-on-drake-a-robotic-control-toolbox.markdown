@@ -169,7 +169,12 @@ Drake can be run natively in C++, or by using its MATLAB, python, or Julia bindi
 
 
     
-    <code>export PYTHONPATH=~/drake/drake-build/install/lib/python2.7/site-packages:${PYTHONPATH}</code>
+    
+```
+
+export PYTHONPATH=~/drake/drake-build/install/lib/python2.7/site-packages:${PYTHONPATH}
+```
+
 
 
 
@@ -185,7 +190,12 @@ The following line will import everything in Drake into the python namespace.
 
 
     
-    <code>from pydrake.all import *</code>
+    
+```python
+
+from pydrake.all import *
+```
+
 
 
 
@@ -203,13 +213,18 @@ The following message may be thrown if you inadvertently use `python3`.
 
 
     
-    <code>Traceback (most recent call last):
-    File "inverse_kinematics.py", line 2, in <module>
-    from pydrake.all import
     
-    ...
-    
-    ImportError: dynamic module does not define module export function (PyInit__common_py)</code>
+```
+
+Traceback (most recent call last):
+File "inverse_kinematics.py", line 2, in <module>
+from pydrake.all import
+
+...
+
+ImportError: dynamic module does not define module export function (PyInit__common_py)
+```
+
 
 
 
@@ -249,7 +264,7 @@ A very useful tool for exploring and confirming the Drake functionality and synt
 
 
 
-# Drake resources
+## Drake resources
 
 
 
@@ -257,7 +272,7 @@ A very useful tool for exploring and confirming the Drake functionality and synt
 
 
 
-## Doxygen
+### Doxygen
 
 
 
@@ -281,7 +296,7 @@ Besides the source code itself, the most accurate and up to date information is 
 
 
 
-## Underactuated Robotics textbook and examples
+### Underactuated Robotics textbook and examples
 
 
 
@@ -337,7 +352,7 @@ The full course is available online both on Edx and more recent versions on Yout
 
 
 
-## Examples directory.
+### Examples directory.
 
 
 
@@ -382,7 +397,7 @@ Additional usage examples for pydrake can be found in the drake/bindings/pydrake
 
 
 
-## Periscope Tutorials
+### Periscope Tutorials
 
 
 
@@ -406,7 +421,7 @@ There is a set of Jupyter notebook based tutorials for some basic Drake function
 
 
 
-# Drake Concepts
+## Drake Concepts
 
 
 
@@ -414,7 +429,7 @@ There is a set of Jupyter notebook based tutorials for some basic Drake function
 
 
 
-## Simulation
+### Simulation
 
 
 
@@ -464,23 +479,28 @@ There following excerpt from [https://github.com/RussTedrake/underactuated/tree/
 
 
     
-    <code>from pydrake.systems.framework import VectorSystem
     
-    # Define the system.
-    class SimpleContinuousTimeSystem(VectorSystem):
-    def __init__(self):
-    VectorSystem.__init__(self,
-    0, # Zero inputs.
-    1) # One output.
-    self._DeclareContinuousState(1) # One state variable.
-    
-    # xdot(t) = -x(t) + x^3(t)
-    def _DoCalcVectorTimeDerivatives(self, context, u, x, xdot):
-    xdot[:] = -x + x**3
-    
-    # y(t) = x(t)
-    def _DoCalcVectorOutput(self, context, u, x, y):
-    y[:] = x</code>
+```python
+
+from pydrake.systems.framework import VectorSystem
+
+# Define the system.
+class SimpleContinuousTimeSystem(VectorSystem):
+def __init__(self):
+VectorSystem.__init__(self,
+0, # Zero inputs.
+1) # One output.
+self._DeclareContinuousState(1) # One state variable.
+
+# xdot(t) = -x(t) + x^3(t)
+def _DoCalcVectorTimeDerivatives(self, context, u, x, xdot):
+xdot[:] = -x + x**3
+
+# y(t) = x(t)
+def _DoCalcVectorOutput(self, context, u, x, y):
+y[:] = x
+```
+
 
 
 
@@ -496,32 +516,37 @@ There following excerpt from [https://github.com/RussTedrake/underactuated/tree/
 
 
     
-    <code>import matplotlib.pyplot as plt
-    from pydrake.all import (DiagramBuilder, SignalLogger, Simulator)
-    from continuous_time_system import *
     
-    # Create a simple block diagram containing our system.
-    builder = DiagramBuilder()
-    system = builder.AddSystem(SimpleContinuousTimeSystem())
-    logger = builder.AddSystem(SignalLogger(1))
-    builder.Connect(system.get_output_port(0), logger.get_input_port(0))
-    diagram = builder.Build()
-    
-    # Create the simulator.
-    simulator = Simulator(diagram)
-    
-    # Set the initial conditions, x(0).
-    state = simulator.get_mutable_context().get_mutable_continuous_state_vector()
-    state.SetFromVector([0.9])
-    
-    # Simulate for 10 seconds.
-    simulator.StepTo(10)
-    
-    # Plot the results.
-    plt.plot(logger.sample_times(), logger.data().transpose())
-    plt.xlabel('t')
-    plt.ylabel('x(t)')
-    plt.show()</code>
+```
+
+import matplotlib.pyplot as plt
+from pydrake.all import (DiagramBuilder, SignalLogger, Simulator)
+from continuous_time_system import *
+
+# Create a simple block diagram containing our system.
+builder = DiagramBuilder()
+system = builder.AddSystem(SimpleContinuousTimeSystem())
+logger = builder.AddSystem(SignalLogger(1))
+builder.Connect(system.get_output_port(0), logger.get_input_port(0))
+diagram = builder.Build()
+
+# Create the simulator.
+simulator = Simulator(diagram)
+
+# Set the initial conditions, x(0).
+state = simulator.get_mutable_context().get_mutable_continuous_state_vector()
+state.SetFromVector([0.9])
+
+# Simulate for 10 seconds.
+simulator.StepTo(10)
+
+# Plot the results.
+plt.plot(logger.sample_times(), logger.data().transpose())
+plt.xlabel('t')
+plt.ylabel('x(t)')
+plt.show()
+```
+
 
 
 
@@ -597,7 +622,7 @@ This is an example URDF for a pendulum cart system.
 
 
 
-### Example: Pendulum URDF
+#### Example: Pendulum URDF
 
 
 
@@ -605,105 +630,110 @@ This is an example URDF for a pendulum cart system.
 
 
     
-    <code>
     
-    <robot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://drake.mit.edu" name="CartPole">
-    
-        <link name="ground">
-            <visual>
-                <origin rpy="0 0 0" xyz="0 0 -5"></origin>
-                <geometry>
-                    <box size="1000 1000 10"></box>
-                </geometry>
-                <material>
-                    <color rgba="0.93 .74 .4 1"></color>
-                </material>
-            </visual>
-        </link>
-    
-        <link name="cart">
-            <inertial>
-                <origin rpy="0 0 0" xyz="0 0 -.5"></origin>
-                <mass value="10"></mass>
-                <inertia ixz="0" ixx="0" ixy="0" izz="0" iyy="0" iyz="0"></inertia>
-            </inertial>
-            <visual>
-                <origin rpy="0 0 0" xyz="0 0 .25"></origin>
-                <geometry>
-                    <box size=".6 .3 .3"></box>
-                </geometry>
-                <material>
-                    <color rgba="0 1 0 1"></color>
-                </material>
-            </visual>
-            <visual>
-                <origin rpy="0 0 0" xyz=".15 0 .025"></origin>
-                <geometry>
-                    <sphere radius=".05"></sphere>
-                </geometry>
-                <material>
-                    <color rgba="0 0 0 1"></color>
-                </material>
-            </visual>
-            <visual>
-                <origin rpy="0 0 0" xyz="-.15 0 .025"></origin>
-                <geometry>
-                    <sphere radius=".05"></sphere>
-                </geometry>
-                <material>
-                    <color rgba="0 0 0 1"></color>
-                </material>
-            </visual>
-        </link>
-    
-        <link name="pole">
-            <inertial>
-                <origin rpy="0 0 0" xyz="0 0 -.5"></origin>
-                <mass value="1"></mass>
-                <inertia ixz="0" ixx="0" ixy="0" izz="0" iyy="0" iyz="0"></inertia>
-            </inertial>
-            <visual>
-                <origin rpy="0 0 0" xyz="0 0 -.25"></origin>
-                <geometry>
-                     <cylinder length=".5" radius=".01"></cylinder>
-                </geometry>
-                <material>
-                    <color rgba="1 0 0 1"></color>
-                </material>
-            </visual>
-            <visual>
-                <origin rpy="0 0 0" xyz="0 0 -.5"></origin>
-                <geometry>
-                     <sphere radius=".05"></sphere>
-                </geometry>
-                <material>
-                    <color rgba="0 0 1 1"></color>
-                </material>
-            </visual>
-        </link>
-    
-        <joint type="prismatic" name="x">
-            <parent link="ground"></parent>
-            <child link="cart"></child>
-            <origin xyz="0 0 0"></origin>
-            <axis xyz="1 0 0"></axis>
-            <dynamics damping="0.1"></dynamics>
-        </joint>
-    
-        <joint type="continuous" name="theta">
-            <parent link="cart"></parent>
-            <child link="pole"></child>
-            <origin xyz="0 0 .25"></origin>
-            <axis xyz="0 1 0"></axis>
-            <dynamics damping="0.1"></dynamics>
-        </joint>
-    
-        <transmission type="SimpleTransmission" name="cart_force">
-            <actuator name="force"></actuator>
-            <joint name="x"></joint>
-            <mechanicalreduction>1</mechanicalreduction>
-        </transmission>
-    </robot></code>
+```xml
+
+
+
+<robot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://drake.mit.edu" name="CartPole">
+
+    <link name="ground">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 -5"></origin>
+            <geometry>
+                <box size="1000 1000 10"></box>
+            </geometry>
+            <material>
+                <color rgba="0.93 .74 .4 1"></color>
+            </material>
+        </visual>
+    </link>
+
+    <link name="cart">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 -.5"></origin>
+            <mass value="10"></mass>
+            <inertia ixz="0" ixx="0" ixy="0" izz="0" iyy="0" iyz="0"></inertia>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 .25"></origin>
+            <geometry>
+                <box size=".6 .3 .3"></box>
+            </geometry>
+            <material>
+                <color rgba="0 1 0 1"></color>
+            </material>
+        </visual>
+        <visual>
+            <origin rpy="0 0 0" xyz=".15 0 .025"></origin>
+            <geometry>
+                <sphere radius=".05"></sphere>
+            </geometry>
+            <material>
+                <color rgba="0 0 0 1"></color>
+            </material>
+        </visual>
+        <visual>
+            <origin rpy="0 0 0" xyz="-.15 0 .025"></origin>
+            <geometry>
+                <sphere radius=".05"></sphere>
+            </geometry>
+            <material>
+                <color rgba="0 0 0 1"></color>
+            </material>
+        </visual>
+    </link>
+
+    <link name="pole">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 -.5"></origin>
+            <mass value="1"></mass>
+            <inertia ixz="0" ixx="0" ixy="0" izz="0" iyy="0" iyz="0"></inertia>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 -.25"></origin>
+            <geometry>
+                 <cylinder length=".5" radius=".01"></cylinder>
+            </geometry>
+            <material>
+                <color rgba="1 0 0 1"></color>
+            </material>
+        </visual>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 -.5"></origin>
+            <geometry>
+                 <sphere radius=".05"></sphere>
+            </geometry>
+            <material>
+                <color rgba="0 0 1 1"></color>
+            </material>
+        </visual>
+    </link>
+
+    <joint type="prismatic" name="x">
+        <parent link="ground"></parent>
+        <child link="cart"></child>
+        <origin xyz="0 0 0"></origin>
+        <axis xyz="1 0 0"></axis>
+        <dynamics damping="0.1"></dynamics>
+    </joint>
+
+    <joint type="continuous" name="theta">
+        <parent link="cart"></parent>
+        <child link="pole"></child>
+        <origin xyz="0 0 .25"></origin>
+        <axis xyz="0 1 0"></axis>
+        <dynamics damping="0.1"></dynamics>
+    </joint>
+
+    <transmission type="SimpleTransmission" name="cart_force">
+        <actuator name="force"></actuator>
+        <joint name="x"></joint>
+        <mechanicalreduction>1</mechanicalreduction>
+    </transmission>
+</robot>
+```
+
 
 
 
@@ -737,9 +767,14 @@ The RigidBodyTree is a Drake class that describes both the intrinsic and extrins
 
 
     
-    <code>jaco_urdf = FindResourceOrThrow(
-        "drake/manipulation/models/jaco_description/urdf/j2n6s300.urdf")
-    tree = RigidBodyTree(jaco_urdf, FloatingBaseType.kFixed)</code>
+    
+```python
+
+jaco_urdf = FindResourceOrThrow(
+    "drake/manipulation/models/jaco_description/urdf/j2n6s300.urdf")
+tree = RigidBodyTree(jaco_urdf, FloatingBaseType.kFixed)
+```
+
 
 
 
@@ -763,9 +798,14 @@ You can probe the RigidBodyTree for useful properties about the linkage, for exa
 
 
     
-    <code>print(tree.get_num_positions())
-    print(tree.get_num_velocities())
-    print(tree.get_num_bodies())</code>
+    
+```python
+
+print(tree.get_num_positions())
+print(tree.get_num_velocities())
+print(tree.get_num_bodies())
+```
+
 
 
 
@@ -781,9 +821,14 @@ For many operations, one needs to perform the forward dynamics to build a kinema
 
 
     
-    <code>q = np.zeros(tree.get_num_positions())
-    v = np.zeros(tree.get_num_velocities())
-    cache = tree.doKinematics(q,v)</code>
+    
+```python
+
+q = np.zeros(tree.get_num_positions())
+v = np.zeros(tree.get_num_velocities())
+cache = tree.doKinematics(q,v)
+```
+
 
 
 
@@ -799,7 +844,7 @@ Drake describes the dynamics in terms of the intrinsic coordinates. The robot ma
 
 
 
-$latex M(q)\ddot{q} + C(q,\dot{q})\dot{q} = \tau_g(q) + Bu $
+$ M(q)\ddot{q} + C(q,\dot{q})\dot{q} = \tau_g(q) + Bu $
 
 
 
@@ -807,7 +852,7 @@ $latex M(q)\ddot{q} + C(q,\dot{q})\dot{q} = \tau_g(q) + Bu $
 
 
 
-where q is the state vector, M is the inertia matrix, C captures Coriolis forces, and $latex \tau_g$ is the gravity vector. The matrix B maps control inputs u into generalized forces. 
+where q is the state vector, M is the inertia matrix, C captures Coriolis forces, and $ \tau_g$ is the gravity vector. The matrix B maps control inputs u into generalized forces. 
 
 
 
@@ -825,7 +870,7 @@ External forces on the tree are described as wrenches. Wrenches are an object th
 
 
 
-Drake will also compute the quantities in the manipulator equation. For example, to compute the term $latex C(q,v,f_{ext})$ in the manipulator equations with no externally applied wrenches.
+Drake will also compute the quantities in the manipulator equation. For example, to compute the term $ C(q,v,f_{ext})$ in the manipulator equations with no externally applied wrenches.
 
 
 
@@ -833,9 +878,14 @@ Drake will also compute the quantities in the manipulator equation. For example,
 
 
     
-    <code>bodies = [tree.get_body(j) for j in range(tree.get_num_bodies())]
-    no_wrench = { body : np.zeros(6) for body in bodies}
-    print(tree.dynamicsBiasTerm(cache, no_wrench))</code>
+    
+```python
+
+bodies = [tree.get_body(j) for j in range(tree.get_num_bodies())]
+no_wrench = { body : np.zeros(6) for body in bodies}
+print(tree.dynamicsBiasTerm(cache, no_wrench))
+```
+
 
 
 
@@ -851,7 +901,12 @@ Drake can be asked to compute the other terms in the manipulator equation as wel
 
 
     
-    <code>tree.centerOfMass(cache)</code>
+    
+```python
+
+tree.centerOfMass(cache)
+```
+
 
 
 
@@ -883,7 +938,7 @@ The extrinsic frames can be expressed as a function of the intrinsic coordinates
 
 
 
-$latex X_i = f_i(x_j) $
+$ X_i = f_i(x_j) $
 
 
 
@@ -891,7 +946,11 @@ $latex X_i = f_i(x_j) $
 
 
     
-    <code>tree.relativeTransform(cache, 0, 9)</code>
+    
+```python
+
+tree.relativeTransform(cache, 0, 9)
+```
 
 
 
@@ -899,7 +958,8 @@ $latex X_i = f_i(x_j) $
 
 
 
-Returns a $latex 4\times 4$ transformation matrix between body 0 and 9 of the tree. The upper $latex 3\times 3$ block corresponds to a rotation matrix, and the last column a translation vector of the frame. 
+
+Returns a $ 4\times 4$ transformation matrix between body 0 and 9 of the tree. The upper $ 3\times 3$ block corresponds to a rotation matrix, and the last column a translation vector of the frame. 
 
 
 
@@ -915,7 +975,7 @@ The Jacobian of this mapping,
 
 
 
-$latex J_{ij} = \frac{\partial f_i}{\partial x_j} $
+$ J_{ij} = \frac{\partial f_i}{\partial x_j} $
 
 
 
@@ -947,7 +1007,7 @@ The time derivative or differential of a frame will possess a linear and angular
 
 
 
-The geometric Jacobian function returns the Jacobian in a sparse format. It returns a tuple of a $latex m\times 6$ matrix and a $latex 1\times m$ vector of indices to which coordinates these correspond.  
+The geometric Jacobian function returns the Jacobian in a sparse format. It returns a tuple of a $ m\times 6$ matrix and a $ 1\times m$ vector of indices to which coordinates these correspond.  
 The function takes the id of three different frames. In this example, it computes the differential of the transformation from frame 0 to frame 9 expressed in frame 3.
 
 
@@ -956,7 +1016,12 @@ The function takes the id of three different frames. In this example, it compute
 
 
     
-    <code>tree.geometricJacobian(cache, 0, 9, 3)</code>
+    
+```python
+
+tree.geometricJacobian(cache, 0, 9, 3)
+```
+
 
 
 
@@ -972,9 +1037,14 @@ The dense matrix can be constructed by
 
 
     
-    <code>jsparse, inds = tree.geometricJacobian(cache, 0, 9, 0)
-    jdense = np.zeros((tree.get_num_positions(), 6))
-    jdense[inds, :] = jsparse</code>
+    
+```python
+
+jsparse, inds = tree.geometricJacobian(cache, 0, 9, 0)
+jdense = np.zeros((tree.get_num_positions(), 6))
+jdense[inds, :] = jsparse
+```
+
 
 
 
@@ -1022,7 +1092,12 @@ The Drake visualizer may be found in the tools folder. The Drake visualizer need
 
 
     
-    <code>bazel run //tools:drake_visualizer</code>
+    
+```
+
+bazel run //tools:drake_visualizer
+```
+
 
 
 
@@ -1040,8 +1115,13 @@ May need to run commands here to make LCM work and visualizer not crash immediat
 
 
     
-    <code>sudo ifconfig lo multicast
-    sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev lo</code>
+    
+```
+
+sudo ifconfig lo multicast
+sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev lo
+```
+
 
 
 
@@ -1131,35 +1211,40 @@ The topics made available by the ROS Package are
 
 
     
-    <code>/j2n6s300_driver/fingers_action/finger_positions/cancel
-    /j2n6s300_driver/fingers_action/finger_positions/feedback
-    /j2n6s300_driver/fingers_action/finger_positions/goal
-    /j2n6s300_driver/fingers_action/finger_positions/result
-    /j2n6s300_driver/fingers_action/finger_positions/status
-    /j2n6s300_driver/in/cartesian_force
-    /j2n6s300_driver/in/cartesian_velocity
-    /j2n6s300_driver/in/joint_torque
-    /j2n6s300_driver/in/joint_velocity
-    /j2n6s300_driver/joints_action/joint_angles/cancel
-    /j2n6s300_driver/joints_action/joint_angles/feedback
-    /j2n6s300_driver/joints_action/joint_angles/goal
-    /j2n6s300_driver/joints_action/joint_angles/result
-    /j2n6s300_driver/joints_action/joint_angles/status
-    /j2n6s300_driver/out/cartesian_command
-    /j2n6s300_driver/out/finger_position
-    /j2n6s300_driver/out/joint_angles
-    /j2n6s300_driver/out/joint_command
-    /j2n6s300_driver/out/joint_state
-    /j2n6s300_driver/out/joint_torques
-    /j2n6s300_driver/out/tool_pose
-    /j2n6s300_driver/out/tool_wrench
-    /j2n6s300_driver/pose_action/tool_pose/cancel
-    /j2n6s300_driver/pose_action/tool_pose/feedback
-    /j2n6s300_driver/pose_action/tool_pose/goal
-    /j2n6s300_driver/pose_action/tool_pose/result
-    /j2n6s300_driver/pose_action/tool_pose/status
-    /j2n6s300_driver/trajectory_controller/command
-    /j2n6s300_driver/trajectory_controller/state</code>
+    
+```
+
+/j2n6s300_driver/fingers_action/finger_positions/cancel
+/j2n6s300_driver/fingers_action/finger_positions/feedback
+/j2n6s300_driver/fingers_action/finger_positions/goal
+/j2n6s300_driver/fingers_action/finger_positions/result
+/j2n6s300_driver/fingers_action/finger_positions/status
+/j2n6s300_driver/in/cartesian_force
+/j2n6s300_driver/in/cartesian_velocity
+/j2n6s300_driver/in/joint_torque
+/j2n6s300_driver/in/joint_velocity
+/j2n6s300_driver/joints_action/joint_angles/cancel
+/j2n6s300_driver/joints_action/joint_angles/feedback
+/j2n6s300_driver/joints_action/joint_angles/goal
+/j2n6s300_driver/joints_action/joint_angles/result
+/j2n6s300_driver/joints_action/joint_angles/status
+/j2n6s300_driver/out/cartesian_command
+/j2n6s300_driver/out/finger_position
+/j2n6s300_driver/out/joint_angles
+/j2n6s300_driver/out/joint_command
+/j2n6s300_driver/out/joint_state
+/j2n6s300_driver/out/joint_torques
+/j2n6s300_driver/out/tool_pose
+/j2n6s300_driver/out/tool_wrench
+/j2n6s300_driver/pose_action/tool_pose/cancel
+/j2n6s300_driver/pose_action/tool_pose/feedback
+/j2n6s300_driver/pose_action/tool_pose/goal
+/j2n6s300_driver/pose_action/tool_pose/result
+/j2n6s300_driver/pose_action/tool_pose/status
+/j2n6s300_driver/trajectory_controller/command
+/j2n6s300_driver/trajectory_controller/state
+```
+
 
 
 
@@ -1231,7 +1316,12 @@ In another terminal turn on the Jaco driver
 
 
     
-    <code>roslaunch kinova_bringup kinova_robot.launch kinova_robotType:=j2n6s300</code>
+    
+```
+
+roslaunch kinova_bringup kinova_robot.launch kinova_robotType:=j2n6s300
+```
+
 
 
 
@@ -1247,7 +1337,12 @@ Also get the drake visualizer running from the drake directory before running th
 
 
     
-    <code>bazel run //tools:drake_visualizer</code>
+    
+```
+
+bazel run //tools:drake_visualizer
+```
+
 
 
 
@@ -1263,54 +1358,59 @@ Also get the drake visualizer running from the drake directory before running th
 
 
     
-    <code>import rospy
-    from pydrake.all import *
-    import numpy as np
-    from sensor_msgs.msg import JointState
-    jaco_urdf = FindResourceOrThrow("drake/manipulation/models/jaco_description/urdf/j2n6s300.urdf")
-    tree = RigidBodyTree(jaco_urdf , FloatingBaseType.kFixed)
     
-    builder = DiagramBuilder()
-    
-    lc = DrakeLcm()
-    vis = DrakeVisualizer(tree, lc)
-    robot = builder.AddSystem(RigidBodyPlant(tree))
-    publisher = builder.AddSystem(vis)
-    builder.Connect(robot.get_output_port(0), publisher.get_input_port(0))
-    
-    diagram = builder.Build()
-    simulator = Simulator(diagram)
-    simulator.set_target_realtime_rate(1.0)
-    simulator.set_publish_every_time_step(False)
-    context = simulator.get_mutable_context()
-    state = context.get_mutable_continuous_state_vector()
-    state.SetFromVector(np.zeros(9*2))
-    simulator.Initialize()
-    
-    
-    q = None
-    v = None
-    f = None
-    def callback(data):
-            global q, v, f
-            q = np.array(data.position)
-            v = np.array(data.velocity)
-            f = np.array(data.effort)
-            # Some of the coordinates are offset between the Kinova Ros package and the Drake model
-            q[1] = np.pi + q[1]
-            q[2] = np.pi + q[2]
-    
-    
-    rospy.init_node('listener', anonymous=True)
-    rospy.Subscriber("/j2n6s300_driver/out/joint_state", JointState, callback)
-    
-    rate = rospy.Rate(4)
-    rate.sleep()
-    while not rospy.is_shutdown():
-            state = context.get_mutable_continuous_state_vector()
-            state.SetFromVector(np.append(q,v))
-            simulator.Initialize()
-            rate.sleep()</code>
+```python
+
+import rospy
+from pydrake.all import *
+import numpy as np
+from sensor_msgs.msg import JointState
+jaco_urdf = FindResourceOrThrow("drake/manipulation/models/jaco_description/urdf/j2n6s300.urdf")
+tree = RigidBodyTree(jaco_urdf , FloatingBaseType.kFixed)
+
+builder = DiagramBuilder()
+
+lc = DrakeLcm()
+vis = DrakeVisualizer(tree, lc)
+robot = builder.AddSystem(RigidBodyPlant(tree))
+publisher = builder.AddSystem(vis)
+builder.Connect(robot.get_output_port(0), publisher.get_input_port(0))
+
+diagram = builder.Build()
+simulator = Simulator(diagram)
+simulator.set_target_realtime_rate(1.0)
+simulator.set_publish_every_time_step(False)
+context = simulator.get_mutable_context()
+state = context.get_mutable_continuous_state_vector()
+state.SetFromVector(np.zeros(9*2))
+simulator.Initialize()
+
+
+q = None
+v = None
+f = None
+def callback(data):
+        global q, v, f
+        q = np.array(data.position)
+        v = np.array(data.velocity)
+        f = np.array(data.effort)
+        # Some of the coordinates are offset between the Kinova Ros package and the Drake model
+        q[1] = np.pi + q[1]
+        q[2] = np.pi + q[2]
+
+
+rospy.init_node('listener', anonymous=True)
+rospy.Subscriber("/j2n6s300_driver/out/joint_state", JointState, callback)
+
+rate = rospy.Rate(4)
+rate.sleep()
+while not rospy.is_shutdown():
+        state = context.get_mutable_continuous_state_vector()
+        state.SetFromVector(np.append(q,v))
+        simulator.Initialize()
+        rate.sleep()
+```
+
 
 
 
@@ -1346,32 +1446,37 @@ A simple example of the simulation capabilities is the simulation of an unactuat
 
 
     
-    <code>import rospy
-    from pydrake.all import *
-    import numpy as np
-    from sensor_msgs.msg import JointState
-    jaco_urdf = FindResourceOrThrow("drake/manipulation/models/jaco_description/urdf/j2n6s300.urdf")
-    tree = RigidBodyTree(jaco_urdf , FloatingBaseType.kFixed)
     
-    builder = DiagramBuilder()
-    
-    lc = DrakeLcm()
-    vis = DrakeVisualizer(tree, lc)
-    robot = builder.AddSystem(RigidBodyPlant(tree))
-    publisher = builder.AddSystem(vis)
-    builder.Connect(robot.get_output_port(0), publisher.get_input_port(0))
-    force = builder.AddSystem(ConstantVectorSource(np.zeros(9)))
-    builder.Connect(force.get_output_port(0), robot.get_input_port(0))
-    
-    diagram = builder.Build()
-    simulator = Simulator(diagram)
-    simulator.set_target_realtime_rate(1.0)
-    simulator.set_publish_every_time_step(False)
-    context = simulator.get_mutable_context()
-    state = context.get_mutable_continuous_state_vector()
-    state.SetFromVector(np.zeros(9*2)+0.1)
-    simulator.Initialize()
-    simulator.StepTo(10)</code>
+```python
+
+import rospy
+from pydrake.all import *
+import numpy as np
+from sensor_msgs.msg import JointState
+jaco_urdf = FindResourceOrThrow("drake/manipulation/models/jaco_description/urdf/j2n6s300.urdf")
+tree = RigidBodyTree(jaco_urdf , FloatingBaseType.kFixed)
+
+builder = DiagramBuilder()
+
+lc = DrakeLcm()
+vis = DrakeVisualizer(tree, lc)
+robot = builder.AddSystem(RigidBodyPlant(tree))
+publisher = builder.AddSystem(vis)
+builder.Connect(robot.get_output_port(0), publisher.get_input_port(0))
+force = builder.AddSystem(ConstantVectorSource(np.zeros(9)))
+builder.Connect(force.get_output_port(0), robot.get_input_port(0))
+
+diagram = builder.Build()
+simulator = Simulator(diagram)
+simulator.set_target_realtime_rate(1.0)
+simulator.set_publish_every_time_step(False)
+context = simulator.get_mutable_context()
+state = context.get_mutable_continuous_state_vector()
+state.SetFromVector(np.zeros(9*2)+0.1)
+simulator.Initialize()
+simulator.StepTo(10)
+```
+
 
 
 
@@ -1419,25 +1524,30 @@ Drake provides a symbolic expression modeling language in which to describe cons
 
 
     
-    <code>from pydrake.all import *
-    import numpy as np
     
-    m = MathematicalProgram()
-    
-    xs = m.NewContinuousVariables(2, 'x')
-    print(xs)
-    c = np.array([-1,-1])
-    m.AddCost( c[0]*xs[0] + c[1]*xs[1] )
-    
-    m.AddLinearConstraint(xs[0] == 0)
-    m.AddLinearConstraint(3*xs[1] + xs[0] <= -1)
-    
-    print(m.linear_equality_constraints())
-    print(m.bounding_box_constraints())
-    print(m.linear_costs()[0])
-    print(m.Solve())
-    print(m.GetSolverId().name())
-    print(m.GetSolution(xs))</code>
+```python
+
+from pydrake.all import *
+import numpy as np
+
+m = MathematicalProgram()
+
+xs = m.NewContinuousVariables(2, 'x')
+print(xs)
+c = np.array([-1,-1])
+m.AddCost( c[0]*xs[0] + c[1]*xs[1] )
+
+m.AddLinearConstraint(xs[0] == 0)
+m.AddLinearConstraint(3*xs[1] + xs[0] <= -1)
+
+print(m.linear_equality_constraints())
+print(m.bounding_box_constraints())
+print(m.linear_costs()[0])
+print(m.Solve())
+print(m.GetSolverId().name())
+print(m.GetSolution(xs))
+```
+
 
 
 
@@ -1469,9 +1579,9 @@ A Mathematical Program is generally of the form
 
 
 
-$latex \min f(x) \   s.t. $  
-$latex g(x) \ge 0 $  
-$latex h(x) = 0 $
+$ \min f(x) \   s.t. $  
+$ g(x) \ge 0 $  
+$ h(x) = 0 $
 
 
 
@@ -1514,7 +1624,7 @@ Subclasses of Convex programming may have solvers tuned to them. Important subcl
   * Linear Programming - Linear objective, linear equality, and linear inequality constraints.
   * Quadratic Programming - Linear Programming + quadratic objective
   * Second Order Cone Programming
-  * Semidefinite Programming - Optimization allowing for the constraint of a SemiDefinite matrix. This means the matrix is constrained to have all nonnegative eigenvalues or equivalently the quadratic form it defines $latex q^T Xq$ is non-negative for all possible vectors $latex q$.
+  * Semidefinite Programming - Optimization allowing for the constraint of a SemiDefinite matrix. This means the matrix is constrained to have all nonnegative eigenvalues or equivalently the quadratic form it defines $ q^T Xq$ is non-negative for all possible vectors $ q$.
   * Sum of Squares Programming - Optimization over polynomials with the constraint that the polynomial can be written as a sum of squares, a manifestly positive form.
 
 
@@ -1630,13 +1740,18 @@ Drake exposes automatic differentiation capability for manual use
 
 
     
-    <code>from pydrake.all import *
-    import numpy as np
     
-    # second parameter initializes forward mode derivative information
-    x = AutoDiffXd(4.0, np.array([1,1]))
-    f = x * x * x
-    print(f.derivatives())</code>
+```python
+
+from pydrake.all import *
+import numpy as np
+
+# second parameter initializes forward mode derivative information
+x = AutoDiffXd(4.0, np.array([1,1]))
+f = x * x * x
+print(f.derivatives())
+```
+
 
 
 
@@ -1708,16 +1823,21 @@ Drake provides a useful interface for talking about trajectories. For both descr
 
 
     
-    <code>ctx = robot.CreateDefaultContext()
-    dircol = DirectCollocation(robot, ctx, 10, 0.01, 0.1) # timesteps, minimum time step, max timestep
-    dircol.AddEqualTimeIntervalsConstraints()
     
-    state = dircol.state
-    u = dircol.input
-    t = dircol.time
-    
-    dircol.AddRunningCost(state[0]**2)
-    dircol.AddConstraintToAllKnotPoints(u[0] >= 0)</code>
+```python
+
+ctx = robot.CreateDefaultContext()
+dircol = DirectCollocation(robot, ctx, 10, 0.01, 0.1) # timesteps, minimum time step, max timestep
+dircol.AddEqualTimeIntervalsConstraints()
+
+state = dircol.state
+u = dircol.input
+t = dircol.time
+
+dircol.AddRunningCost(state[0]**2)
+dircol.AddConstraintToAllKnotPoints(u[0] >= 0)
+```
+
 
 
 
@@ -1733,8 +1853,13 @@ You may want to select the initial and final state specifically to specify goals
 
 
     
-    <code>init = dircol.initial_state
-    final = dircol.final_state</code>
+    
+```python
+
+init = dircol.initial_state
+final = dircol.final_state
+```
+
 
 
 
@@ -1774,67 +1899,71 @@ This example comes from the Underactuated Robotics textbook source
 
 
     
-    <code>import math
-    import numpy as np
-    import matplotlib.pyplot as plt
     
-    from pydrake.examples.pendulum import (PendulumPlant, PendulumState)
-    from pydrake.all import (DirectCollocation, PiecewisePolynomial,
-                                                     SolutionResult)
-    #from visualizer import PendulumVisualizer
-    
-    plant = PendulumPlant()
-    context = plant.CreateDefaultContext()
-    
-    dircol = DirectCollocation(plant, context, num_time_samples=21,
-                                minimum_timestep=0.2, maximum_timestep=0.5)
-    
-    dircol.AddEqualTimeIntervalsConstraints()
-    
-    torque_limit = 3.0  # N*m.
-    u = dircol.input()
-    dircol.AddConstraintToAllKnotPoints(-torque_limit <= u[0])
-    dircol.AddConstraintToAllKnotPoints(u[0] <= torque_limit)
-    
-    initial_state = PendulumState()
-    initial_state.set_theta(0.0)
-    initial_state.set_thetadot(0.0)
-    dircol.AddBoundingBoxConstraint(initial_state.get_value(),
-                                initial_state.get_value(),
-                                dircol.initial_state())
-    # More elegant version is blocked on drake #8315:
-    # dircol.AddLinearConstraint(dircol.initial_state()
-    #                               == initial_state.get_value())
-    
-    final_state = PendulumState()
-    final_state.set_theta(math.pi)
-    final_state.set_thetadot(0.0)
-    dircol.AddBoundingBoxConstraint(final_state.get_value(),
-                                    final_state.get_value(),
-                                    dircol.final_state())
-    # dircol.AddLinearConstraint(dircol.final_state() == final_state.get_value())
-    
-    R = 10  # Cost on input "effort".
-    dircol.AddRunningCost(R*u[0]**2)
-    
-    initial_x_trajectory = \
-            PiecewisePolynomial.FirstOrderHold([0., 4.],
-                                     [initial_state.get_value(),
-                                     final_state.get_value()])
-    dircol.SetInitialTrajectory(PiecewisePolynomial(), 
-                                initial_x_trajectory) 
-    result = dircol.Solve() 
-    assert(result == SolutionResult.kSolutionFound) 
-    x_trajectory = dircol.ReconstructStateTrajectory() 
-    #vis = PendulumVisualizer() 
-    #ani = vis.animate(x_trajectory, repeat=True) 
-    x_knots = np.hstack([x_trajectory.value(t) for t in                                          
-                          np.linspace(x_trajectory.start_time(),                                          
-                          x_trajectory.end_time(), 100)]) 
-    plt.figure() 
-    plt.plot(x_knots[0, :], x_knots[1, :]) 
-    plt.show() 
-                                            </code>
+```python
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+
+from pydrake.examples.pendulum import (PendulumPlant, PendulumState)
+from pydrake.all import (DirectCollocation, PiecewisePolynomial,
+                                                 SolutionResult)
+#from visualizer import PendulumVisualizer
+
+plant = PendulumPlant()
+context = plant.CreateDefaultContext()
+
+dircol = DirectCollocation(plant, context, num_time_samples=21,
+                            minimum_timestep=0.2, maximum_timestep=0.5)
+
+dircol.AddEqualTimeIntervalsConstraints()
+
+torque_limit = 3.0  # N*m.
+u = dircol.input()
+dircol.AddConstraintToAllKnotPoints(-torque_limit <= u[0])
+dircol.AddConstraintToAllKnotPoints(u[0] <= torque_limit)
+
+initial_state = PendulumState()
+initial_state.set_theta(0.0)
+initial_state.set_thetadot(0.0)
+dircol.AddBoundingBoxConstraint(initial_state.get_value(),
+                            initial_state.get_value(),
+                            dircol.initial_state())
+# More elegant version is blocked on drake #8315:
+# dircol.AddLinearConstraint(dircol.initial_state()
+#                               == initial_state.get_value())
+
+final_state = PendulumState()
+final_state.set_theta(math.pi)
+final_state.set_thetadot(0.0)
+dircol.AddBoundingBoxConstraint(final_state.get_value(),
+                                final_state.get_value(),
+                                dircol.final_state())
+# dircol.AddLinearConstraint(dircol.final_state() == final_state.get_value())
+
+R = 10  # Cost on input "effort".
+dircol.AddRunningCost(R*u[0]**2)
+
+initial_x_trajectory = \
+        PiecewisePolynomial.FirstOrderHold([0., 4.],
+                                 [initial_state.get_value(),
+                                 final_state.get_value()])
+dircol.SetInitialTrajectory(PiecewisePolynomial(), 
+                            initial_x_trajectory) 
+result = dircol.Solve() 
+assert(result == SolutionResult.kSolutionFound) 
+x_trajectory = dircol.ReconstructStateTrajectory() 
+#vis = PendulumVisualizer() 
+#ani = vis.animate(x_trajectory, repeat=True) 
+x_knots = np.hstack([x_trajectory.value(t) for t in                                          
+                      np.linspace(x_trajectory.start_time(),                                          
+                      x_trajectory.end_time(), 100)]) 
+plt.figure() 
+plt.plot(x_knots[0, :], x_knots[1, :]) 
+plt.show() 
+
+```
 
 
 
@@ -1842,7 +1971,8 @@ This example comes from the Underactuated Robotics textbook source
 
 
 
-  * ![](http://philzucker2.nfshost.com/wp-content/uploads/2019/06/pendulum_phase.png)
+
+  * ![](/assets/pendulum_phase.png)
 
 
 
@@ -1881,7 +2011,7 @@ The geometric Jacobian transforms the extrinsic force into intrinsic coordinates
 
 
 
-A force $latex f$ applied to the end effector appears linearly in the manipulator equations as $latex J^Tf$. This will be canceled by the torques of the motors during static or quasi-static movement. Hence, we can can determinethe external force from the motor torques if we assume it is the only external force at play.
+A force $ f$ applied to the end effector appears linearly in the manipulator equations as $ J^Tf$. This will be canceled by the torques of the motors during static or quasi-static movement. Hence, we can can determinethe external force from the motor torques if we assume it is the only external force at play.
 
 
 
@@ -1897,7 +2027,7 @@ The pseudo-inverse is the best possible solution to an overdetermined set of lin
 
 
 
-$latex \min (Jx - X)^2 \rightarrow J^T Jx = J^T X$
+$ \min (Jx - X)^2 \rightarrow J^T Jx = J^T X$
 
 
 
@@ -1913,61 +2043,66 @@ The following script prints both the end effector force as supplied by the Jaco 
 
 
     
-    <code>import rospy
-    from pydrake.all import *
-    import numpy as np
-    from sensor_msgs.msg import JointState
-    from geometry_msgs.msg import WrenchStamped
-    urdf_tree = FindResourceOrThrow("drake/manipulation/models/jaco_description/urdf/j2n6s300.urdf")
-    tree = RigidBodyTree( urdf_tree,
-                                             FloatingBaseType.kFixed)
-    bodies = [tree.get_body(j) for j in range(tree.get_num_bodies())]
-    no_wrench = { body : np.zeros(6)  for body in bodies}
     
-    body_n = 9 #end_effector body number
-    print(bodies[body_n].get_name())
-    
-    def end_effector_force(q, v, u):
-            cache = tree.doKinematics(q,v)
-            # returns the external torque term for only gravity and no other external wrenches
-            Cgrav = tree.dynamicsBiasTerm(cache, no_wrench )
-            C = u - Cgrav # subtract off gravity of robot itself
-            print(u - Cgrav)
-            j = tree.geometricJacobian(cache, 0 , body_n, 0) # returns a tuple of 6 by n matrix in j[0] and the indices to which it applied in j[1]
-            jjt = np.dot(j[0] ,j[0].T) # 
-            Wext = np.linalg.solve(jjt,  np.dot(j[0],  C[j[1]])) # C[j[1]] is cryptic numpy sub indexing for densifying the Jacobian
-            return Wext[3:]
-    
-    
-    q = None
-    v = None
-    f = None
-    fext = np.zeros(3)
-    
-    def callback(data):
-            global q, v, f, initu, start
-            q = np.array(data.position)
-            v = np.array(data.velocity)
-            q[1] = np.pi + q[1] #The drake conventions and the kinova conventions for angles are off
-            q[2] = np.pi + q[2]
-            f = np.array(data.effort)
-    
-    def wrenchcallback(data):
-            global fext
-            fext[0] = data.wrench.force.x
-            fext[1] = data.wrench.force.y
-            fext[2] = data.wrench.force.z
-    
-    rospy.init_node('listener', anonymous=True)
-    rospy.Subscriber("/j2n6s300_driver/out/joint_state", JointState, callback)
-    rospy.Subscriber("/j2n6s300_driver/out/tool_wrench", WrenchStamped, wrenchcallback)
-    
-    rate = rospy.Rate(1)
-    rate.sleep()
-    while not rospy.is_shutdown():
-            print(end_effector_force(q,v,f))
-            print(fext)
-            rate.sleep()</code>
+```python
+
+import rospy
+from pydrake.all import *
+import numpy as np
+from sensor_msgs.msg import JointState
+from geometry_msgs.msg import WrenchStamped
+urdf_tree = FindResourceOrThrow("drake/manipulation/models/jaco_description/urdf/j2n6s300.urdf")
+tree = RigidBodyTree( urdf_tree,
+                                         FloatingBaseType.kFixed)
+bodies = [tree.get_body(j) for j in range(tree.get_num_bodies())]
+no_wrench = { body : np.zeros(6)  for body in bodies}
+
+body_n = 9 #end_effector body number
+print(bodies[body_n].get_name())
+
+def end_effector_force(q, v, u):
+        cache = tree.doKinematics(q,v)
+        # returns the external torque term for only gravity and no other external wrenches
+        Cgrav = tree.dynamicsBiasTerm(cache, no_wrench )
+        C = u - Cgrav # subtract off gravity of robot itself
+        print(u - Cgrav)
+        j = tree.geometricJacobian(cache, 0 , body_n, 0) # returns a tuple of 6 by n matrix in j[0] and the indices to which it applied in j[1]
+        jjt = np.dot(j[0] ,j[0].T) # 
+        Wext = np.linalg.solve(jjt,  np.dot(j[0],  C[j[1]])) # C[j[1]] is cryptic numpy sub indexing for densifying the Jacobian
+        return Wext[3:]
+
+
+q = None
+v = None
+f = None
+fext = np.zeros(3)
+
+def callback(data):
+        global q, v, f, initu, start
+        q = np.array(data.position)
+        v = np.array(data.velocity)
+        q[1] = np.pi + q[1] #The drake conventions and the kinova conventions for angles are off
+        q[2] = np.pi + q[2]
+        f = np.array(data.effort)
+
+def wrenchcallback(data):
+        global fext
+        fext[0] = data.wrench.force.x
+        fext[1] = data.wrench.force.y
+        fext[2] = data.wrench.force.z
+
+rospy.init_node('listener', anonymous=True)
+rospy.Subscriber("/j2n6s300_driver/out/joint_state", JointState, callback)
+rospy.Subscriber("/j2n6s300_driver/out/tool_wrench", WrenchStamped, wrenchcallback)
+
+rate = rospy.Rate(1)
+rate.sleep()
+while not rospy.is_shutdown():
+        print(end_effector_force(q,v,f))
+        print(fext)
+        rate.sleep()
+```
+
 
 
 

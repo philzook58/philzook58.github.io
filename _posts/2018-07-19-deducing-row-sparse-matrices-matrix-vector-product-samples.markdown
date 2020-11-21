@@ -15,7 +15,7 @@ If every row of a matrix has <N non zero entries, you can back out that matrix f
 
 
 
-[![14c0bdc6-d4b3-453d-8d98-8bef87c41a02](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/14c0bdc6-d4b3-453d-8d98-8bef87c41a02.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/14c0bdc6-d4b3-453d-8d98-8bef87c41a02.png)
+[![14c0bdc6-d4b3-453d-8d98-8bef87c41a02](/assets/14c0bdc6-d4b3-453d-8d98-8bef87c41a02.png)](/assets/14c0bdc6-d4b3-453d-8d98-8bef87c41a02.png)
 
 The unknown in this case is the row of the matrix, represented in green. We put a known set of inputs into it and get outputs. Each row of the output, represented in red, can tell use the matrix row. We have to invert the matrix that consists of all the elements that the nonzero elements of that row touches represented in blue. That black T is a transpose. To turn those row vectors into column vectors, we have to transpose everything.
 

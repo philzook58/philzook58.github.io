@@ -29,47 +29,51 @@ so mpi4py
 
 give this code a run
 
-`#mpirun -np 3 python helloworld.py
+```
+#mpirun -np 3 python helloworld.py
 from mpi4py import MPI
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 name = MPI.Get_processor_name()
 print "Hello. This is rank " + str(rank) + " of " + str(size) + " on processor " + name`
-
+```
 the command mpirun runs a couple instances. You know which instance you are by checking the rank number which in this case is 0 through 2.
 
 Typically rank 0 is some kind of master
 
 lower case methods in mpi4py work kind of like how you'd expect.  You can communicate between with comm.send and comm.recv
 
-`#mpirun -np 2 python helloworld.py
+```
+#mpirun -np 2 python helloworld.py
 from mpi4py import MPI
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
-name = MPI.Get_processor_name()`
-`
+name = MPI.Get_processor_name()
+
 if rank == 0:
 comm.send("fred",dest=1)
 else:
 counter = comm.recv(source=0)
-print counter`
+print counter
+```
 
 However I think the these are toy methods. Apparently they use pickle (python's fast and dirty file storage library) in the background. On the other hand, maybe since you're writing in python anyhow, you don't need the ultimate in performance and just want things to be easy. On the third hand, why are you doing parallel programming if you want things to be easy? On the fourth hand, maybe you
 
 The capital letter mpi functions are the ones that are better, but they are not pythony. They are direct translations of the C api which uses no returns values. Instead you pass along pointers to the variables you want to be filled.
-`from mpi4py import MPI
+```
+from mpi4py import MPI
 import numpy as np
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 name = MPI.Get_processor_name()
-``
+
 nprank = np.array(float(rank))
 result = np.zeros(1)
 comm.Reduce(nprank, result, op=MPI.SUM, root=0)
-``
+
 if rank == 0:
 print result
-`
+```

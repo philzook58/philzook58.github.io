@@ -1,0 +1,19 @@
+---
+author: philzook58
+comments: true
+date: 2018-01-31 15:20:18+00:00
+layout: post
+link: https://www.philipzucker.com/?p=972
+published: false
+slug: Operads
+title: Operads
+wordpress_id: 972
+---
+
+https://bartoszmilewski.com/2015/10/07/operads-type-level-nats-and-tic-tac-toe/
+
+https://hub.darcs.net/dolio/category-practice/browse/src/Operad.lhs
+
+https://github.com/ekmett/multicategories
+
+http://blog.sigfpe.com/2008/10/operads-and-their-monads.html

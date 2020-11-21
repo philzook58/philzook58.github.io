@@ -1,0 +1,29 @@
+---
+author: philzook58
+comments: true
+date: 2015-12-11 22:04:09+00:00
+layout: post
+link: https://www.philipzucker.com/?p=301
+published: false
+slug: sfepy
+title: sfepy
+wordpress_id: 301
+---
+
+Curious what is the best way to get my FEM on. I have tried this online
+
+brew install hdf5
+
+sudo pip install tables
+
+brew install vtk5
+
+brew reinstall --python --qt vtk5
+
+
+ echo /usr/local/opt/vtk5/lib/python2.7/site-packages >> /usr/local/lib/python2.7/site-packages/vtk5.pth
+
+
+sudo pip install mayavi
+
+Complains about missing stuff, I'll just install it if it doesn't work

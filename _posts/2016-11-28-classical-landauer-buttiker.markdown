@@ -47,7 +47,7 @@ The S/N quantization plays a role somewhat like the Pauli exclusion principle. E
 
 The analog of current would be the difference in information rates between left to right and right to left. Worrying about a pretty silly extreme, Landauer's principle, this information has to be dissipated out somewhere or stored. Information has to be preserved at this extreme, like electrical charge
 
-The conductance would be the derivative of information flow to bandwidth $latex \dot S=G\Delta \omega$? And G=ln(1+S/N)?
+The conductance would be the derivative of information flow to bandwidth $ \dot S=G\Delta \omega$? And G=ln(1+S/N)?
 
 Perhaps also, if you had thermal reservoirs at the two ends and you were communicating by raising and lowering the temperatures slightly? That would be somewhat analogous to the chemical potential reservoirs.
 

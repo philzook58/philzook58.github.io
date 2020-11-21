@@ -46,7 +46,7 @@ Then next two years we did a catamaran with triangular plywood pontoons held tog
 
 
 
-[http://www.jyc.org/FoolsRules/images/2018/foolsrules20183.jpg](http://www.jyc.org/FoolsRules/images/2018/foolsrules20183.jpg)
+![/assets/foolsrules20183.jpg](/assets/foolsrules20183.jpg)
 
 
 
@@ -54,7 +54,7 @@ Then next two years we did a catamaran with triangular plywood pontoons held tog
 
 
 
-[http://www.jyc.org/FoolsRules/images/2018/foolsrules20187.jpg](http://www.jyc.org/FoolsRules/images/2018/foolsrules20187.jpg)
+![/assets/foolsrules20187.jpg](/assets/foolsrules20187.jpg)
 
 
 
@@ -84,42 +84,42 @@ Declan's post on the same event: [https://www.declanoller.com/2019/08/11/skydog-
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/08/IMG_20190810_121224-1024x768.jpg)So majestic.
+![](/assets/IMG_20190810_121224-1024x768.jpg)So majestic.
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/08/7261500578976324907.jpg)SKYDOG! SKYDOG! ARF ARF ARF!
+![](/assets/7261500578976324907.jpg)SKYDOG! SKYDOG! ARF ARF ARF!
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/08/IMG_7566-6-768x1024.jpg)Will is the ultimate cutie. Ladies, please apply inside.
+![](/assets/IMG_7566-6-scaled.jpg)Will is the ultimate cutie. Ladies, please apply inside.
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/08/IMG_7566-0-1024x768.jpg)Layin' out the frame
+![](/assets/IMG_7566-0-scaled.jpg)Layin' out the frame
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/08/IMG_7566-1-1024x768.jpg)Sky dog ascendent!
+![](/assets/IMG_7566-1-1024x768.jpg)Sky dog ascendent!
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/08/IMG_7566-4-1024x768.jpg)Our reward for first place was an unholy bucket of ice cream
+![](/assets/IMG_7566-4-1024x768.jpg)Our reward for first place was an unholy bucket of ice cream
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/08/IMG_7566-5-769x1024.jpg)
+![](/assets/IMG_7566-5-769x1024.jpg)
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/08/IMG_7566-2-1024x769.jpg)
+![](/assets/IMG_7566-2-1024x769.jpg)
 
 
 
 
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/KNerhKf8XdA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-https://www.youtube.com/watch?v=KNerhKf8XdA&feature=youtu.be
 
 
 

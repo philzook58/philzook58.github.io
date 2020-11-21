@@ -104,6 +104,6 @@ We'll see where we can get with the Lyapunov control next time.
 
 
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/c65y1GXsSw4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
-https://www.youtube.com/watch?v=c65y1GXsSw4

@@ -25,7 +25,7 @@ Polyak's step length
 
 http://stanford.edu/class/ee364b/lectures/subgrad_method_notes.pdf
 
-The idea is that if you know the optimal value you're trying to achieve, that gives you a scale of gradient to work with. Not as good as a hessian maybe, but it's somethin'. If you use a gradient step of $latex x + (f-f*)\frac{\nabla f}{|\nabla f|^2}$ it at least has the same units as x and not f/x. In some simple models of f, this might be exactly the step size you'd need. If you know you're far away from optimal, you should be taking some big step sizes.
+The idea is that if you know the optimal value you're trying to achieve, that gives you a scale of gradient to work with. Not as good as a hessian maybe, but it's somethin'. If you use a gradient step of $ x + (f-f*)\frac{\nabla f}{\|\nabla f\|^2}$ it at least has the same units as x and not f/x. In some simple models of f, this might be exactly the step size you'd need. If you know you're far away from optimal, you should be taking some big step sizes.
 
 The Polyak step length has not been useful so far. Interesting idea though.
 
@@ -444,4 +444,4 @@ The idea is to increase the quadratic constraint cost slowly over time, while ad
 
 The left is residuals of obeying the equations of motion, the middle is the force and trajectories themselves and the right is cost vs iteration time. Not entirely clear that a residual of 0.04 is sufficient. Integrated over time this could be an overly optimistic error of 0.2 ish I'd guess. That is on the edge of making me uncomfortable. Increase rho more? Also that force schedule seems funky and overly complex. Still, improvement from before. Feels like we're cookin' with gas
 
-[![traj_plots_1](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/traj_plots_1.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/traj_plots_1.png)
+[![traj_plots_1](/assets/traj_plots_1.png)](/assets/traj_plots_1.png)

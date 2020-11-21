@@ -32,11 +32,46 @@ Here's an interesting thing. We can go to Wikipedia and get a little python snip
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/12/Batcher_Odd-Even_Mergesort_for_eight_inputs.svg_-1024x829.png)Source: Wikipedia
+![](/assets/Batcher_Odd-Even_Mergesort_for_eight_inputs.svg_-1024x829.png)Source: Wikipedia
 
 
 
-[gist https://gist.github.com/philzook58/4aa17037bcb9b1ee57f4afdf87f7f3fd#file-batcher-py]
+
+```python
+#direct from https://en.wikipedia.org/wiki/Batcher_odd%E2%80%93even_mergesort
+def oddeven_merge(lo: int, hi: int, r: int):
+    step = r * 2
+    if step < hi - lo:
+        yield from oddeven_merge(lo, hi, step)
+        yield from oddeven_merge(lo + r, hi, step)
+        yield from [(i, i + r) for i in range(lo + r, hi - r, step)]
+    else:
+        yield (lo, lo + r)
+
+def oddeven_merge_sort_range(lo: int, hi: int):
+    """ sort the part of x with indices between lo and hi.
+
+    Note: endpoints (lo and hi) are included.
+    """
+    if (hi - lo) >= 1:
+        # if there is more than one element, split the input
+        # down the middle and first sort the first and second
+        # half, followed by merging them.
+        mid = lo + ((hi - lo) // 2)
+        yield from oddeven_merge_sort_range(lo, mid)
+        yield from oddeven_merge_sort_range(mid + 1, hi)
+        yield from oddeven_merge(lo, hi, 1)
+
+def oddeven_merge_sort(length: int):
+    """ "length" is the length of the list to be sorted.
+    Returns a list of pairs of indices starting with 0 """
+    yield from oddeven_merge_sort_range(0, length - 1)
+
+def compare_and_swap(x, a, b) -> None:
+    if x[a] > x[b]:
+        x[a], x[b] = x[b], x[a]
+```
+
 
 
 
@@ -48,7 +83,42 @@ Well we can confirm this relatively straightforwardly using z3 by replacing the 
 
 
 
-[gist https://gist.github.com/philzook58/4aa17037bcb9b1ee57f4afdf87f7f3fd#file-verify-py]
+
+```python
+def compare_and_swap_z3(x,y):
+    x1, y2 = FreshInt(), FreshInt()
+    c = If(x <= y, And(x1 == x, y1 == y) , And(x1 == y, y1 == x) )
+    return x1, y1, c
+
+N = 64 # size of sorting network
+
+s = Solver()
+
+a = [Int(f"x_{i}") for i in range(N)] #build initial array in z3 variables
+pairs_to_compare = list(oddeven_merge_sort(N)) #get sequence of compare and swaps to use
+a_orig = a.copy()
+for i,j in pairs_to_compare:
+   x = a[i]
+   y = a[j]
+   x1,y1,c = compare_and_swap_z3(x,y) 
+   a[i] = x1
+   a[j] = y1
+   s.add(c)
+    
+def sorted_list(x): # list is sorted
+    return And([x <= y for x,y in zip(x , x[1:])])
+
+def in_list(x,a): # x is in the list of a
+    return Or([x == y for y in a])
+def sub_list(a, b): # all elements of a appear in b
+    return And([in_list(x,a) for x in b ])
+def same_elems(a,b): # a contains the same elements as b
+    return And(sub_list(a,b), sub_list(b,a))
+
+s.add(Not(And(sorted_pred(a), same_elems(a_orig,a) )))
+s.check()
+```
+
 
 
 
@@ -84,7 +154,26 @@ We can also confirm similarly a simple odd-even bubblesort and other similar alg
 
 
 
-[gist https://gist.github.com/philzook58/4aa17037bcb9b1ee57f4afdf87f7f3fd#file-bubble-py]
+
+```python
+def even_comp(l):
+    for x in [(i, i + 1) for i in range(0,l-1,2)]:
+        yield x
+def odd_comp(l):
+    for x in [(i, i + 1) for i in range(1,l-1,2)]:
+        yield x
+def even_odd(l, n):
+    for j in range(n):
+        for x in even_comp(l):
+            yield x
+        for x in odd_comp(l):
+            yield x
+            
+def bubble(l):
+    for x in even_odd(l,l//2):
+        yield x
+```
+
 
 
 

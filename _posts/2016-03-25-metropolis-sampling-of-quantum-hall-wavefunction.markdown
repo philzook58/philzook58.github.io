@@ -83,7 +83,7 @@ There are a ton of inefficiencies in this implementation, some that would be ver
     
 
 
-[![laughlindensity](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/laughlindensity-300x225.png)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/03/laughlindensity.png)
+[![laughlindensity](/assets/laughlindensity-300x225.png)](/assets/laughlindensity.png)
 
 Not totally sure everything is right, but at least we are getting a filling of 1/3 for the laughlin state. So that's something.
 

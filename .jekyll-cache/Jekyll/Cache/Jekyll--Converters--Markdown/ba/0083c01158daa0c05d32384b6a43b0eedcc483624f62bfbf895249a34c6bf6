@@ -1,0 +1,167 @@
+I"�V<p>It gives my brain a pleasant thrum to learn new mathematics which mimics the algebra I learned in middle school. Basically this means that the new system has operations with properties that match those of regular numbers as much as possible. Two pretty important operations are addition and multiplication with the properties of distributivity and associativity. Roughly this corresponds to the mathematical notion of a <a href="https://en.wikipedia.org/wiki/Semiring">Semiring</a>.</p>
+
+<p>Some examples of semirings include</p>
+
+<ul>
+  <li>Regular multiplication and addition</li>
+  <li>And-Or</li>
+  <li><a href="https://en.wikipedia.org/wiki/Tropical_semiring">Min-plus</a></li>
+  <li>Matrices.</li>
+  <li>Types</li>
+</ul>
+
+<p>I have<a href="http://www.philipzucker.com/lens-as-a-divisibility-relation-goofin-off-with-the-algebra-of-types/"> written before about how types also form a semiring</a>, using <code class="language-plaintext highlighter-rouge">Either</code> for plus and <code class="language-plaintext highlighter-rouge">(,)</code> for times. These constructions don’t obey distributivity or associativity “on the nose”, but instead are isomorphic to the rearranged type, which when you squint is pretty similar to equality.</p>
+
+<p>Matrices are grids of numbers which multiply by “row times column”. You can form matrices out of other semirings besides just numbers. One somewhat trivial but interesting example is<a href="https://en.wikipedia.org/wiki/Block_matrix"> block matrices</a>, where the elements of the matrix itself are also matrices. Another interesting example is that of <a href="http://www.philipzucker.com/a-short-skinny-on-relations-towards-the-algebra-of-programming/">relation</a>s, which can be thought of as matrices of boolean values. Matrix  multiplication using the And-Or semiring on the elements corresponds to relational composition.</p>
+
+<p>What if we put our type peanut butter in our matrix chocolate and  consider matrices of types, using the <code class="language-plaintext highlighter-rouge">Either</code>-<code class="language-plaintext highlighter-rouge">(,</code>) semiring?</p>
+
+<p>The simplest implementation to show how this could go can be made using the naive list based implementation of vectors and matrices. We can directly lift this representation to the typelevel and the appropriate value-level functions to type families.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">type</span> <span class="n">a</span> <span class="o">:*:</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+<span class="kr">type</span> <span class="n">a</span> <span class="o">:+:</span> <span class="n">b</span> <span class="o">=</span> <span class="kt">Either</span> <span class="n">a</span> <span class="n">b</span>
+
+<span class="kr">type</span> <span class="n">family</span> <span class="kt">Dot</span> <span class="n">v</span> <span class="n">v'</span> <span class="kr">where</span>
+    <span class="kt">Dot</span> <span class="n">'</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="n">'</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span> <span class="o">:*:</span> <span class="n">y</span> 
+    <span class="kt">Dot</span> <span class="p">(</span><span class="n">x</span> <span class="o">:</span> <span class="n">xs</span><span class="p">)</span> <span class="p">(</span><span class="n">y</span> <span class="o">:</span> <span class="n">ys</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">:*:</span> <span class="n">y</span><span class="p">)</span> <span class="o">:+:</span> <span class="p">(</span><span class="kt">Dot</span> <span class="n">xs</span> <span class="n">ys</span><span class="p">)</span>
+
+<span class="kr">type</span> <span class="n">family</span> <span class="kt">MVMult</span> <span class="n">m</span> <span class="n">v</span> <span class="kr">where</span>
+    <span class="kt">MVMult</span> <span class="n">'</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="n">v</span> <span class="o">=</span> <span class="n">'</span><span class="p">[</span><span class="kt">Dot</span> <span class="n">r</span> <span class="n">v</span><span class="p">]</span>
+    <span class="kt">MVMult</span> <span class="p">(</span><span class="n">r</span> <span class="o">:</span> <span class="n">rs</span><span class="p">)</span> <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="kt">Dot</span> <span class="n">r</span> <span class="n">v</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="kt">MVMult</span> <span class="n">rs</span> <span class="n">v</span><span class="p">)</span>
+
+<span class="kr">type</span> <span class="n">family</span> <span class="kt">VMMult</span> <span class="n">m</span> <span class="n">v</span> <span class="kr">where</span>
+    <span class="kt">VMMult</span> <span class="n">v</span> <span class="n">'</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">'</span><span class="p">[</span><span class="kt">Dot</span> <span class="n">v</span> <span class="n">c</span><span class="p">]</span>
+    <span class="kt">VMMult</span> <span class="n">v</span> <span class="p">(</span><span class="n">c</span> <span class="o">:</span> <span class="n">cs</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="kt">Dot</span> <span class="n">v</span> <span class="n">c</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="kt">VMMult</span> <span class="n">v</span> <span class="n">cs</span><span class="p">)</span>
+
+<span class="kr">type</span> <span class="n">family</span> <span class="kt">MMMult'</span> <span class="n">m</span> <span class="n">m'</span> <span class="kr">where</span>
+    <span class="kt">MMMult'</span> <span class="n">'</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="n">cs</span> <span class="o">=</span> <span class="n">'</span><span class="p">[</span><span class="kt">VMMult</span> <span class="n">r</span> <span class="n">cs</span><span class="p">]</span>
+    <span class="kt">MMMult'</span> <span class="p">(</span><span class="n">r</span> <span class="o">:</span> <span class="n">rs</span><span class="p">)</span> <span class="n">cs</span> <span class="o">=</span> <span class="p">(</span><span class="kt">VMMult</span> <span class="n">r</span> <span class="n">cs</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="kt">MMMult'</span> <span class="n">rs</span> <span class="n">cs</span><span class="p">)</span>
+
+<span class="kr">type</span> <span class="n">family</span> <span class="kt">MMMult</span> <span class="n">m</span> <span class="n">m'</span> <span class="kr">where</span>
+    <span class="kt">MMMult</span> <span class="n">m</span> <span class="n">m'</span> <span class="o">=</span> <span class="kt">MMMult'</span> <span class="n">m</span> <span class="p">(</span><span class="kt">Transpose</span> <span class="n">m'</span><span class="p">)</span>
+
+<span class="kr">type</span> <span class="n">family</span> <span class="kt">Transpose</span> <span class="n">m</span> <span class="kr">where</span>
+    <span class="kt">Transpose</span> <span class="p">((</span><span class="n">r1</span> <span class="o">:</span> <span class="n">rs'</span><span class="p">)</span> <span class="o">:</span> <span class="n">rs</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">r1</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Heads</span> <span class="n">rs</span><span class="p">))</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Conss</span> <span class="n">rs'</span> <span class="p">(</span><span class="kt">Transpose</span> <span class="p">(</span><span class="kt">Tails</span> <span class="n">rs</span><span class="p">)))</span>
+    <span class="kt">Transpose</span> <span class="n">'</span><span class="kt">[]</span> <span class="o">=</span> <span class="n">'</span><span class="kt">[]</span>
+
+<span class="c1">-- some mapped helper functions</span>
+<span class="c1">-- verrrrrry ugly. Eh. Get 'er dun</span>
+<span class="kr">type</span> <span class="n">family</span> <span class="kt">Heads</span> <span class="n">v</span> <span class="kr">where</span>
+    <span class="kt">Heads</span> <span class="p">((</span><span class="n">v</span> <span class="o">:</span> <span class="n">vs</span><span class="p">)</span> <span class="o">:</span> <span class="n">xs</span><span class="p">)</span> <span class="o">=</span> <span class="n">v</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Heads</span> <span class="n">xs</span><span class="p">)</span>
+    <span class="kt">Heads</span> <span class="n">'</span><span class="kt">[]</span> <span class="o">=</span> <span class="n">'</span><span class="kt">[]</span>
+<span class="kr">type</span> <span class="n">family</span> <span class="kt">Tails</span> <span class="n">v</span> <span class="kr">where</span>
+    <span class="kt">Tails</span> <span class="p">((</span><span class="n">v</span> <span class="o">:</span> <span class="n">vs</span><span class="p">)</span> <span class="o">:</span> <span class="n">xs</span><span class="p">)</span> <span class="o">=</span> <span class="n">vs</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Tails</span> <span class="n">xs</span><span class="p">)</span>
+    <span class="kt">Tails</span> <span class="n">'</span><span class="kt">[]</span> <span class="o">=</span> <span class="n">'</span><span class="kt">[]</span>
+<span class="kr">type</span> <span class="n">family</span> <span class="kt">Conss</span> <span class="n">v</span> <span class="n">vs</span> <span class="kr">where</span>
+    <span class="kt">Conss</span> <span class="p">(</span><span class="n">x</span> <span class="o">:</span> <span class="n">xs</span><span class="p">)</span> <span class="p">(</span><span class="n">y</span> <span class="o">:</span> <span class="n">ys</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">:</span> <span class="n">y</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Conss</span> <span class="n">xs</span> <span class="n">ys</span><span class="p">)</span>
+    <span class="kt">Conss</span> <span class="n">'</span><span class="kt">[]</span> <span class="n">'</span><span class="kt">[]</span> <span class="o">=</span> <span class="n">'</span><span class="kt">[]</span>
+
+<span class="kr">type</span> <span class="n">family</span> <span class="kt">Index</span> <span class="n">v</span> <span class="n">i</span> <span class="kr">where</span>
+    <span class="kt">Index</span> <span class="p">(</span><span class="n">x</span> <span class="o">:</span> <span class="n">xs</span><span class="p">)</span> <span class="mi">0</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="kt">Index</span> <span class="p">(</span><span class="n">x</span> <span class="o">:</span> <span class="n">xs</span><span class="p">)</span> <span class="n">n</span> <span class="o">=</span> <span class="kt">Index</span> <span class="n">xs</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<p>This was just for demonstration purposes. It is not my favorite representation of vectors. You can lift a large fraction of possible ways to encode vector spaces at the value level up to the type level, such as the <a href="http://hackage.haskell.org/package/linear">linear package</a>, or using dual vectors <code class="language-plaintext highlighter-rouge">type V2 a = a -&gt; a -&gt; a</code>. Perhaps more on that another day.</p>
+
+<h3 id="what-is-the-point"><strong>What is the point</strong>?</h3>
+
+<p>Ok. That’s kind of neat, but why do it? Well, one way to seek an answer to that question is to ask “what are matrices useful for anyway?”</p>
+
+<p>One thing they can do is describe transition systems. You can write down a matrix whose entire $ a_{ij}$ describes something about the transition from state $  i$ to state $ j$. For example the entry could be:</p>
+
+<ul>
+  <li>The cost of getting from $ i$ to $ j$ (min-plus gives shortest path),</li>
+  <li>The count of ways to get from $ i$ to $ j$ (combinatorics of paths)</li>
+  <li>The connectivity of the system from $ i$ to $ j$ using boolean values and the and-or semiring</li>
+  <li>The probability of transition from $ i$ to $ j$</li>
+  <li>The quantum amplitude of going from $ i$ to $ j$ if we’re feeling saucy.</li>
+</ul>
+
+<p>If we form a matrix describing a single time step, then multiplying this matrix by itself gives 2 time steps and so on.</p>
+
+<p>Lifting this notion to types, we can build a type exactly representing all the possible paths from state $ i$ to $ j$.</p>
+
+<p>Concretely, consider the following humorously bleak transition system: You are going between home and work. Every 1 hour period you can make a choice to do a home activity, commute, or work. There are different options of activities at each.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">data</span> <span class="kt">Commute</span> <span class="o">=</span> <span class="kt">Drive</span>
+<span class="kr">data</span> <span class="kt">Home</span> <span class="o">=</span> <span class="kt">Sleep</span> <span class="o">|</span> <span class="kt">Eat</span>
+<span class="kr">data</span> <span class="kt">Work</span> <span class="o">=</span> <span class="kt">TPSReport</span> <span class="o">|</span> <span class="kt">Bitch</span> <span class="o">|</span> <span class="kt">Moan</span>
+</code></pre></div></div>
+
+<p>This is described by the following transition diagram</p>
+
+<p><img src="/assets/My-Drawing-1-1024x674.png" alt="" />Stapler.</p>
+
+<p>The transitions are described by the following matrix.type:</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">type</span> <span class="kt">T</span> <span class="o">=</span> <span class="n">'</span><span class="p">[</span> <span class="n">'</span><span class="p">[</span><span class="kt">Home</span>    <span class="p">,</span>  <span class="kt">Commute</span> <span class="p">],</span>  
+            <span class="n">'</span><span class="p">[</span><span class="kt">Commute</span> <span class="p">,</span>  <span class="kt">Work</span>    <span class="p">]]</span>
+
+</code></pre></div></div>
+
+<p>What is the data type that describe all possible 4-hour day? You’ll find the appropriate data types in the following matrix.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">type</span> <span class="kt">FourHour</span> <span class="o">=</span> <span class="kt">MMMult</span> <span class="kt">T</span> <span class="p">(</span><span class="kt">MMMult</span> <span class="kt">T</span> <span class="p">(</span><span class="kt">MMMult</span> <span class="kt">T</span> <span class="kt">T</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Now, time to come clean. I don’t think this is necessarily the best way to go about this problem. There are alternative ways of representing it.</p>
+
+<p>Here are two data types that describe an indefinite numbers of transition steps.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">data</span> <span class="kt">HomeChoice</span> <span class="o">=</span> <span class="kt">StayHome</span> <span class="kt">Home</span> <span class="kt">HomeChoice</span> <span class="o">|</span> <span class="kt">GoWork</span> <span class="kt">Commute</span> <span class="kt">WorkChoice</span>
+<span class="kr">data</span> <span class="kt">WorkChoice</span> <span class="o">=</span> <span class="kt">StayWork</span> <span class="kt">Work</span> <span class="kt">WorkChoice</span> <span class="o">|</span> <span class="kt">GoHome</span> <span class="kt">Commute</span> <span class="kt">HomeChoice</span>
+</code></pre></div></div>
+
+<p>Another style would hold the current state as a type parameter in the type using a GADT.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">data</span> <span class="kt">Path</span> <span class="n">state</span> <span class="kr">where</span>   
+   <span class="kt">StayWork</span> <span class="o">::</span> <span class="kt">Work</span> <span class="o">-&gt;</span> <span class="kt">Path</span> <span class="kt">Work</span> <span class="o">-&gt;</span> <span class="kt">Path</span> <span class="kt">Work</span>
+   <span class="kt">CommuteHome</span> <span class="o">::</span> <span class="kt">Commute</span> <span class="o">-&gt;</span> <span class="kt">Path</span> <span class="kt">Home</span> <span class="o">-&gt;</span>  <span class="kt">Path</span> <span class="kt">Work</span>
+   <span class="kt">StayHome</span> <span class="o">::</span> <span class="kt">Home</span> <span class="o">-&gt;</span> <span class="kt">Path</span> <span class="kt">Home</span> <span class="o">-&gt;</span> <span class="kt">Path</span> <span class="kt">Home</span>
+   <span class="kt">CommuteWork</span> <span class="o">::</span> <span class="kt">Commute</span> <span class="o">-&gt;</span> <span class="kt">Path</span> <span class="kt">Work</span> <span class="o">-&gt;</span>  <span class="kt">Path</span> <span class="kt">Home</span>
+</code></pre></div></div>
+
+<p>We could construct types that are to the above types as <code class="language-plaintext highlighter-rouge">Vec n </code> is to <code class="language-plaintext highlighter-rouge">[]</code> by including an explicit step size parameter.</p>
+
+<p>Still, food for thought.</p>
+
+<h3 id="further-thoughts">Further Thoughts</h3>
+
+<p>The reason i was even thinking about this is because we can lift the above construction to perform a linear algebra of vectors spaces. And I mean the spaces, not the vectors themselves. This is a confusing point.</p>
+
+<p>Vector spaces have also have two natural operations on them that act like addition and multiplication, the direct sum and kronecker product. These operations do form a semiring, although again not on the nose.</p>
+
+<p>This is connected to the above algebra of types picture by considering the index types of these vector spaces. The simplest way to denote this in Haskell is using the free vector space construction as shown in this <a href="http://blog.sigfpe.com/2007/03/monads-vector-spaces-and-quantum.html">Dan Piponi post</a>. The Kronecker product makes tuples of the indices and the direct sum has an index that is the Either of the original index types.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kr">type</span> <span class="kt">Vec</span> <span class="n">b</span> <span class="n">r</span> <span class="o">=</span> <span class="p">[(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)]</span>
+<span class="c1">-- Example 2D vector space type</span>
+<span class="kr">type</span> <span class="kt">V2D</span> <span class="o">=</span> <span class="kt">Vec</span> <span class="kt">Bool</span> <span class="kt">Double</span>
+</code></pre></div></div>
+
+<p>This is by far not the only way to go about it. We can also consider using the Compose-Product semiring on functors (Compose is Kron, Product is DSum) to get a more index-free kind of feel and work with dense vectors.</p>
+
+<p>Going down this road (plus a couple layers of mathematical sophistication) leads to a set of concepts known as<a href="https://ncatlab.org/nlab/show/TwoVect"> 2Vect</a>. Dan Roberts and James Vicary produced a Mathematica package for 2Vect which is basically incomprehensible to me. It seems to me that typed functional programming is a more appropriate venue for something of this kind of pursuit, given how evocative/ well modeled by category theory it can be. These mathematical ideas are applicable to describing anyonic vector spaces. See my previous post below. It is not a coincidence that the <code class="language-plaintext highlighter-rouge">Path</code> data type above is so similar to <code class="language-plaintext highlighter-rouge">FibTree</code> data type. The <code class="language-plaintext highlighter-rouge">root</code> type variable takes the place of the work/home state, and the tuple structure take the place of a Vec-like size parameter <code class="language-plaintext highlighter-rouge">n</code> .</p>
+
+<p><a href="http://www.philipzucker.com/a-touch-of-topological-quantum-computation-in-haskell-pt-i/">http://www.philipzucker.com/a-touch-of-topological-quantum-computation-in-haskell-pt-i/</a></p>
+
+<p>More to on this to come probably as I figure out how to explain it cleanly.</p>
+
+<p>Edit: Wordpress, your weird formatting is <em>killing</em> me.</p>
+
+<p>Edit: Hoo Boy. This is why we write blog posts. Some relevant material was pointed out to me  that I was not aware of. Thanks @DrEigenbastard.</p>
+
+<p><a href="https://link.springer.com/chapter/10.1007/978-3-319-19797-5_6">https://link.springer.com/chapter/10.1007/978-3-319-19797-5_6</a></p>
+
+<p><a href="http://blog.sigfpe.com/2010/08/constraining-types-with-regular.html">http://blog.sigfpe.com/2010/08/constraining-types-with-regular.html</a></p>
+
+<p><a href="http://blog.sigfpe.com/2010/08/divided-differences-and-tomography-of.html">http://blog.sigfpe.com/2010/08/divided-differences-and-tomography-of.html</a></p>
+
+:ET

@@ -102,7 +102,12 @@ First we need a data type for arithmetic
 
 
     
-    <code>data AExpr = Lit Int | Add AExpr AExpr deriving (Eq, Show)</code>
+    
+```
+
+data AExpr = Lit Int | Add AExpr AExpr deriving (Eq, Show)
+```
+
 
 
 
@@ -118,11 +123,16 @@ Pretty basic. We could easily add multiplication and other operators and it does
 
 
     
-    <code>type Value = Int
     
-    eval :: AExpr -> Value
-    eval (Add x y) = (eval x) + (eval y)
-    eval (Lit i) = i</code>
+```
+
+type Value = Int
+
+eval :: AExpr -> Value
+eval (Add x y) = (eval x) + (eval y)
+eval (Lit i) = i
+```
+
 
 
 
@@ -138,12 +148,17 @@ The first step of our transformation is to put everything in continuation passin
 
 
     
-    <code>evalk :: AExpr -> (Value -> Value) -> Value
-    evalk (Add x y) k = evalk x (\vx -> (evalk y $ \vy -> k (vx + vy)))
-    evalk (Lit i) k = k i
     
-    eval' :: AExpr -> Value
-    eval' e = evalk e id</code>
+```
+
+evalk :: AExpr -> (Value -> Value) -> Value
+evalk (Add x y) k = evalk x (\vx -> (evalk y $ \vy -> k (vx + vy)))
+evalk (Lit i) k = k i
+
+eval' :: AExpr -> Value
+eval' e = evalk e id
+```
+
 
 
 
@@ -159,7 +174,12 @@ Now we defunctionalize this continuation. We note that higher order continuation
 
 
     
-    <code>data AHole = IdDone | AddL AExpr AHole | AddR Value AHole </code>
+    
+```
+
+data AHole = IdDone | AddL AExpr AHole | AddR Value AHole 
+```
+
 
 
 
@@ -175,10 +195,15 @@ What functions _are_ is a thing that can be applied to it's arguments. We can us
 
 
     
-    <code>apply :: AHole -> Value -> Value 
-    apply IdDone      v = v
-    apply (AddL e k)  v = evald e (AddR v k)
-    apply (AddR v' k) v = apply k (v' + v) </code>
+    
+```
+
+apply :: AHole -> Value -> Value 
+apply IdDone      v = v
+apply (AddL e k)  v = evald e (AddR v k)
+apply (AddR v' k) v = apply k (v' + v) 
+```
+
 
 
 
@@ -194,11 +219,16 @@ And using this we can convert `evalk` into a new form by replacing the continuat
 
 
     
-    <code>evald :: AExpr -> AHole -> Value
-    evald (Add x y) k = evald x (AddL y k)
-    evald (Lit i) k = apply k i
     
-    eval'' e = evald e IdDone</code>
+```
+
+evald :: AExpr -> AHole -> Value
+evald (Add x y) k = evald x (AddL y k)
+evald (Lit i) k = apply k i
+
+eval'' e = evald e IdDone
+```
+
 
 
 
@@ -214,23 +244,28 @@ We can make this into more of a machine by inlining `apply` into `evald` and bre
 
 
     
-    <code>data Machine = Machine {  prog :: AExpr  , kont :: AHole}
     
-    step :: Machine -> Either Value Machine
-    step (Machine (Add x y) k) = Right $ Machine x (AddL y k)
-    step (Machine (Lit i) (AddL e k)) = Right $ Machine e (AddR i k)
-    step (Machine (Lit i) (AddR v k)) = Right $ Machine (Lit (i + v)) k
-    step (Machine (Lit i) (IdDone)) = Left i
-    
-    init_machine e = Machine e IdDone
-    
-    -- https://hackage.haskell.org/package/extra-1.7.4/docs/src/Control.Monad.Extra.html#loop
-    loop :: (a -> Either b a) -> a -> b
-    loop act x = case act x of
-        Right x -> loop act x
-        Left v -> v
-    
-    eval'''' e = loop step (init_machine e)</code>
+```
+
+data Machine = Machine {  prog :: AExpr  , kont :: AHole}
+
+step :: Machine -> Either Value Machine
+step (Machine (Add x y) k) = Right $ Machine x (AddL y k)
+step (Machine (Lit i) (AddL e k)) = Right $ Machine e (AddR i k)
+step (Machine (Lit i) (AddR v k)) = Right $ Machine (Lit (i + v)) k
+step (Machine (Lit i) (IdDone)) = Left i
+
+init_machine e = Machine e IdDone
+
+-- https://hackage.haskell.org/package/extra-1.7.4/docs/src/Control.Monad.Extra.html#loop
+loop :: (a -> Either b a) -> a -> b
+loop act x = case act x of
+    Right x -> loop act x
+    Left v -> v
+
+eval'''' e = loop step (init_machine e)
+```
+
 
 
 
@@ -244,7 +279,7 @@ Pretty neat right?
 
 
 
-![](https://www.philipzucker.com/wp-content/uploads/2020/08/face.gif)Artwork Courtesy of [David](https://davidtersegno.wordpress.com/)
+![](/assets/face.gif)Artwork Courtesy of [David](https://davidtersegno.wordpress.com/)
 
 
 
@@ -256,7 +291,7 @@ Now the next simplest steps in my opinion would be to add Booleans, Let expressi
 
 
 
-![](https://www.philipzucker.com/wp-content/uploads/2020/08/ec171a6b-08ee-4000-8c74-11b658435937-1024x640.png)Artwork Courtesy of [David](https://davidtersegno.wordpress.com/)
+![](/assets/ec171a6b-08ee-4000-8c74-11b658435937.png)Artwork Courtesy of [David](https://davidtersegno.wordpress.com/)
 
 
 

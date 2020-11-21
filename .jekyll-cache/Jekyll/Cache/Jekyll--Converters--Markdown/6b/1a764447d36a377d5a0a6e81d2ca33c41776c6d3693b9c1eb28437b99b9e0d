@@ -1,0 +1,2 @@
+I"a<p>Z3 can be used for proofs. The input language isn’t anywhere near as powerful as interactive theorem provers like Coq, Isabelle, or Agda, but you can ask Z3 to prove pretty interesting things. Although the theorems that follow aren’t hard in interactive theorem provers, they would take beyond complete novice level skills to state or prove.</p>
+:ET

@@ -70,13 +70,13 @@ The final result is never all that great. Seems to have a lot of trouble at the 
 
 Here I plotted the result at intermediate steps of convergence. The accuracy tends to propagate out from 0 and sort of wrap around the curves. I wonder if this is due to where the thing is initialized
 
-[![neural_progress](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/05/neural_progress-300x225.png)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/05/neural_progress.png)
+[![neural_progress](/assets/neural_progress-300x225.png)](/assets/neural_progress.png)
 
 
 
 Still, I guess for being dead easy, not bad?
 
-[![bad_maxima](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/05/bad_maxima-300x225.png)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2016/05/bad_maxima.png)
+[![bad_maxima](/assets/bad_maxima-300x225.png)](/assets/bad_maxima.png)
 
 
 

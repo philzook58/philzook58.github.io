@@ -1,0 +1,2 @@
+I"/<p><a href="http://www.philipzucker.com/linear-relation-algebra-of-circuits-with-hmatrix/">Last time</a>, I described and built an interesting expansion of describing systems via linear functions, that of using linear relations. We remove the requirement that mappings be functional (exactly one output vector for any given input vector), which extends our descriptive capability. This is useful for describing “open” pieces of a linear system like electric circuits. This blog post is about another application: linear dynamical systems and control.</p>
+:ET

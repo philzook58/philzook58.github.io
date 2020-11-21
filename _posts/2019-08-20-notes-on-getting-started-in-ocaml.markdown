@@ -72,10 +72,15 @@ Here's an example execution. Note that even though the file is called `main.ml` 
 
 
     
-    <code>dune init exe hello
-    dune exec ./main.exe
-    dune build main.exe
-    </code>
+    
+```
+
+dune init exe hello
+dune exec ./main.exe
+dune build main.exe
+
+```
+
 
 
 
@@ -91,17 +96,22 @@ Here's a dune file with some junk in it. You make executables with blocks. You i
 
 
     
-    <code>(executable
-     (name main)
-     (modules ("main"))
-     (libraries core z3 owl owl-plplot)
-     )
     
-     (executable 
-      (name lambda)
-      (modules ("lambda"))
-      (libraries core)
-     )</code>
+```
+
+(executable
+ (name main)
+ (modules ("main"))
+ (libraries core z3 owl owl-plplot)
+ )
+
+ (executable 
+  (name lambda)
+  (modules ("lambda"))
+  (libraries core)
+ )
+```
+
 
 
 
@@ -550,11 +560,16 @@ Note you need to install both the js_of_ocaml-compiler AND the library js_of_oca
 
 
     
-    <code>(executable
-     (name jsboy)
-     (libraries js_of_ocaml)
-     (preprocess (pps js_of_ocaml-ppx))
-     )</code>
+    
+```
+
+(executable
+ (name jsboy)
+ (libraries js_of_ocaml)
+ (preprocess (pps js_of_ocaml-ppx))
+ )
+```
+
 
 
 
@@ -562,14 +577,19 @@ Note you need to install both the js_of_ocaml-compiler AND the library js_of_oca
 
 
     
-    <code>open Js_of_ocaml
-    let _ =
-      Js.export "myMathLib"
-        (object%js
-           method add x y = x +. y
-           method abs x = abs_float x
-           val zero = 0.
-         end)</code>
+    
+```
+
+open Js_of_ocaml
+let _ =
+  Js.export "myMathLib"
+    (object%js
+       method add x y = x +. y
+       method abs x = abs_float x
+       val zero = 0.
+     end)
+```
+
 
 
 
@@ -585,9 +605,14 @@ Go digging through your _build folder and you can find a completely mangled inco
 
 
     
-    <code>var mystuff = require("./jsboy.bc.js").myMathLib;
-    console.log(mystuff)
-    console.log(mystuff.add(1,2))</code>
+    
+```
+
+var mystuff = require("./jsboy.bc.js").myMathLib;
+console.log(mystuff)
+console.log(mystuff.add(1,2))
+```
+
 
 
 
@@ -595,7 +620,12 @@ Go digging through your _build folder and you can find a completely mangled inco
 
 
     
-    <code>node test.js</code>
+    
+```
+
+node test.js
+```
+
 
 
 
@@ -675,7 +705,12 @@ Ocaml new monadic let syntax
 
 
     
-    <code></code>
+    
+```
+
+
+```
+
 
 
 
@@ -715,19 +750,24 @@ Took a bit of fiddling to figure out how to get dune to do.
 
 
     
-    <code> (executable
-     (name lisp)
-     (modules ("lisp" "parse_lisp" "lex_lisp" "ast"))
-     (preprocess (pps  ppx_jane))
-     (libraries core)
-     )
     
-    (ocamllex
-      (modules lex_lisp))
-    
-    (menhir
-     
-     (modules parse_lisp))</code>
+```
+
+ (executable
+ (name lisp)
+ (modules ("lisp" "parse_lisp" "lex_lisp" "ast"))
+ (preprocess (pps  ppx_jane))
+ (libraries core)
+ )
+
+(ocamllex
+  (modules lex_lisp))
+
+(menhir
+
+ (modules parse_lisp))
+```
+
 
 
 
@@ -811,37 +851,42 @@ lex_lisp.mll : simplistic usage of ocamllex and menhir
 
 
     
-    <code>{
-      (*
-    type token = RightParen | LeftParen | Id of string
-    *)
     
-    open Lexing
-    open Parse_lisp
-    
-    exception SyntaxError of string
-    
-    let next_line lexbuf =
-      let pos = lexbuf.lex_curr_p in
-      lexbuf.lex_curr_p <-
-        { pos with pos_bol = lexbuf.lex_curr_pos;
-                   pos_lnum = pos.pos_lnum + 1
-        }
+```
+
+{
+  (*
+type token = RightParen | LeftParen | Id of string
+*)
+
+open Lexing
+open Parse_lisp
+
+exception SyntaxError of string
+
+let next_line lexbuf =
+  let pos = lexbuf.lex_curr_p in
+  lexbuf.lex_curr_p <-
+    { pos with pos_bol = lexbuf.lex_curr_pos;
+               pos_lnum = pos.pos_lnum + 1
     }
-    
-    
-    let white = [' ' '\t']+
-    let newline = '\r' | '\n' | "\r\n"
-    let id = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
-    
-    rule read =
-      parse
-      | white    { read lexbuf }
-      | newline  { next_line lexbuf; read lexbuf }
-      | '('      { LEFTPAREN }
-      | ')'    { RIGHTPAREN }
-      | id     {  ID( Lexing.lexeme lexbuf )  }
-      | eof     {  EOF }</code>
+}
+
+
+let white = [' ' '\t']+
+let newline = '\r' | '\n' | "\r\n"
+let id = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
+
+rule read =
+  parse
+  | white    { read lexbuf }
+  | newline  { next_line lexbuf; read lexbuf }
+  | '('      { LEFTPAREN }
+  | ')'    { RIGHTPAREN }
+  | id     {  ID( Lexing.lexeme lexbuf )  }
+  | eof     {  EOF }
+```
+
 
 
 
@@ -857,37 +902,42 @@ parse_lisp.mly
 
 
     
-    <code>%token <string> ID
-    %token RIGHTPAREN
-    %token LEFTPAREN
-    %token EOF
     
-    
-    
-    %start <Ast.tree list> prog
-    %%
-    
-    
-    
-    prog:
-      | s = sexpr; p = prog              { s :: p }
-      | EOF                      {[]}
-    
-    
-    sexpr : 
-      | LEFTPAREN;  l = idlist; RIGHTPAREN { Ast.Node( l ) }
-      | s = ID                         { Ast.Atom(s) } 
-    
-    (* inefficient because right recursive 
-    There are thingy's in menhir to ake this better?
-    *)
-    idlist :
-      | (* empty *) { [] }
-      | x = sexpr; l = idlist { x :: l  } 
-    
-    
-    
-    (* *)</code>
+```
+
+%token <string> ID
+%token RIGHTPAREN
+%token LEFTPAREN
+%token EOF
+
+
+
+%start <Ast.tree list> prog
+%%
+
+
+
+prog:
+  | s = sexpr; p = prog              { s :: p }
+  | EOF                      {[]}
+
+
+sexpr : 
+  | LEFTPAREN;  l = idlist; RIGHTPAREN { Ast.Node( l ) }
+  | s = ID                         { Ast.Atom(s) } 
+
+(* inefficient because right recursive 
+There are thingy's in menhir to ake this better?
+*)
+idlist :
+  | (* empty *) { [] }
+  | x = sexpr; l = idlist { x :: l  } 
+
+
+
+(* *)
+```
+
 
 
 
@@ -903,44 +953,49 @@ Doinking around with some graphics
 
 
     
-    <code>
-    open Core
-    (* Printf.printf "%b\n" status.keypressed *)
-    let loop : Graphics.status -> unit = fun _ -> Graphics.draw_circle 200 200 50;
-                                                  Graphics.fill_rect 400 400 50 50
     
-    
-    
-                                                  (* Graphics.synchronize () *)
-          
-                                        
-    
-    let main () = Graphics.open_graph ""; 
-                  Graphics.set_window_title "My Fun Boy";
-                  (* Graphics.auto_synchronize true; *)
-                  Graphics.set_color Graphics.black;
-                  Graphics.draw_circle 200 200 50;
-                  List.iter ~f:(fun i -> Graphics.fill_circle (200 + 20 * i) 200 50) [1;2;3;4];
-                  (* Graphics.sound 500 5000; *)
-                  let img = Images.load "fish.jpg" [] in 
-                  
-                  (* Images. *)
-                  Images.save "notfish.jpg" (Some Images.Jpeg) [] img;
-                  Graphic_image.draw_image img 0 0;
-                  Graphics.loop_at_exit [Graphics.Poll;Graphics.Key_pressed] loop
-                  (* 
-                  let evt = Graphics.wait_next_event [Graphics.Key_pressed] in
-                  () *)
-    
-    
-    
-    (* let i = create_image 640 640 *)
-    (** resize_window  640 640 *)
-    
-                  
-    
-    
-    let () = main ()</code>
+```
+
+
+open Core
+(* Printf.printf "%b\n" status.keypressed *)
+let loop : Graphics.status -> unit = fun _ -> Graphics.draw_circle 200 200 50;
+                                              Graphics.fill_rect 400 400 50 50
+
+
+
+                                              (* Graphics.synchronize () *)
+
+
+
+let main () = Graphics.open_graph ""; 
+              Graphics.set_window_title "My Fun Boy";
+              (* Graphics.auto_synchronize true; *)
+              Graphics.set_color Graphics.black;
+              Graphics.draw_circle 200 200 50;
+              List.iter ~f:(fun i -> Graphics.fill_circle (200 + 20 * i) 200 50) [1;2;3;4];
+              (* Graphics.sound 500 5000; *)
+              let img = Images.load "fish.jpg" [] in 
+
+              (* Images. *)
+              Images.save "notfish.jpg" (Some Images.Jpeg) [] img;
+              Graphic_image.draw_image img 0 0;
+              Graphics.loop_at_exit [Graphics.Poll;Graphics.Key_pressed] loop
+              (* 
+              let evt = Graphics.wait_next_event [Graphics.Key_pressed] in
+              () *)
+
+
+
+(* let i = create_image 640 640 *)
+(** resize_window  640 640 *)
+
+
+
+
+let () = main ()
+```
+
 
 
 
@@ -956,55 +1011,65 @@ A couple Advent of code 2018
 
 
     
-    <code>open Core_kernel
     
-    (** if I want to try pulling input from the web *)
-    (**  https://adventofcode.com/2018/day/1/input *)
-    
-    let r = In_channel.read_lines "puzz.txt"
-    
-    
-    let main () = Printf.printf "Hey\n";
-                  let puzz = In_channel.read_lines "puzz.txt" |>  List.map ~f:int_of_string  in
-                  (* List.iter puzz ~f:(fun x -> Printf.printf "%d " x); *)
-                  let res = List.fold puzz ~init:0 ~f:(+) in
-                  Printf.printf "Sum: %d\n" res
-    
-    
-                 
-    let () = main ()</code>
+```
+
+open Core_kernel
+
+(** if I want to try pulling input from the web *)
+(**  https://adventofcode.com/2018/day/1/input *)
+
+let r = In_channel.read_lines "puzz.txt"
+
+
+let main () = Printf.printf "Hey\n";
+              let puzz = In_channel.read_lines "puzz.txt" |>  List.map ~f:int_of_string  in
+              (* List.iter puzz ~f:(fun x -> Printf.printf "%d " x); *)
+              let res = List.fold puzz ~init:0 ~f:(+) in
+              Printf.printf "Sum: %d\n" res
+
+
+
+let () = main ()
+```
 
 
 
 
 
 
-    
-    <code>open Core_kernel
-    
-    (**   
-    Obviously the way I'm doing it is not that efficient, nor all that clean really.
-    
-    *)
-    (*
-    let exists23 str = let charset = String.to_list str |> Set.of_list (module Char) |> Set.to_list in
-                      let counts = List.map ~f:(fun c -> String.count str ~f:(fun y -> y = c)) charset in
-                      (List.exists counts ~f:(fun i -> i = 3), List.exists counts ~f:(fun i -> i = 2)) 
-    *)
-    
-    let exists23 str = let charset = String.to_list str |> Set.of_list (module Char) in
-                       let counts = Set.map (module Int) ~f:(fun c -> String.count str ~f:((=) c)) charset in
-                       (Set.mem counts 2, Set.mem counts 3) 
-    
-    let main () = Printf.printf "Hey\n";
-                  let puzz = In_channel.read_lines "puzz2.txt" in
-                  let res = List.map ~f:exists23 puzz in
-                  let (c2,c3) = List.fold res ~init:(0,0) ~f:(fun (x,y) (a,b) -> (begin if a then (x + 1) else x end, begin if b then y + 1 else y end)) in
-                  Printf.printf "Prod: %d\n" (c2 * c3)
+
     
     
-                 
-    let () = main ()</code>
+```
+
+open Core_kernel
+
+(**   
+Obviously the way I'm doing it is not that efficient, nor all that clean really.
+
+*)
+(*
+let exists23 str = let charset = String.to_list str |> Set.of_list (module Char) |> Set.to_list in
+                  let counts = List.map ~f:(fun c -> String.count str ~f:(fun y -> y = c)) charset in
+                  (List.exists counts ~f:(fun i -> i = 3), List.exists counts ~f:(fun i -> i = 2)) 
+*)
+
+let exists23 str = let charset = String.to_list str |> Set.of_list (module Char) in
+                   let counts = Set.map (module Int) ~f:(fun c -> String.count str ~f:((=) c)) charset in
+                   (Set.mem counts 2, Set.mem counts 3) 
+
+let main () = Printf.printf "Hey\n";
+              let puzz = In_channel.read_lines "puzz2.txt" in
+              let res = List.map ~f:exists23 puzz in
+              let (c2,c3) = List.fold res ~init:(0,0) ~f:(fun (x,y) (a,b) -> (begin if a then (x + 1) else x end, begin if b then y + 1 else y end)) in
+              Printf.printf "Prod: %d\n" (c2 * c3)
+
+
+
+let () = main ()
+```
+
 
 
 
@@ -1020,89 +1085,94 @@ A little Owl usage
 
 
     
-    <code>open Core_kernel
-    open Owl
     
-    module Plot = Owl_plplot.Plot
-    let () = print_endline "Hello, World!"
-    let greeting name = Printf.printf "Hello, %s%i \n%!" name 7
-    (* let x : int = 7 *)
-    
-    let () = greeting "fred"
-    (*
-    let () = match (In_channel.input_line In_channel.stdin) with
-     | None -> ()
-     | Some x -> print_endline x
-    
-    let () = In_channel.with_file "dune" ~f:(fun t -> 
-        match In_channel.input_line t with
-        | Some x -> print_endline x
-        | None -> ()
-    )
-    *)
-    (**
-    type 'a mygadt = 
-    | Myint : int mygadt
-    | Mybool : bool mygadt
-     *)
-     
-    let kmat i j = if i = j then -2.0 
-                   else if abs (i - j) = 1 then 1.0 
-                   else 0.0
-                     
-    
-    let main () = 
-        Mat.print (Mat.vector 10);
-        Mat.print (Mat.uniform 5 5);
-        Mat.print (Mat.zeros 5 5);
-        let h = Owl_plplot.Plot.create "plot_003.png" in
-        Plot.set_foreground_color h 0 0 0;
-        Plot.set_background_color h 255 255 255;
-        Plot.set_title h "Function: f(x) = sine x / x";
-        Plot.set_xlabel h "x-axis";
-        Plot.set_ylabel h "y-axis";
-        Plot.set_font_size h 8.;
-        Plot.set_pen_size h 3.;
-        (* Plot.plot_fun ~h f 1. 15.; *)
-        
-        let x = Mat.linspace 0.0 1.0 20 in
-        (*let f x = Maths.sin x /. x in
-        Plot.plot_fun ~h f 1. 15.; *)
-        let y = (Mat.ones 1 20) in
-        Mat.print (Mat.ones 1 20);
-        Mat.print (Mat.ones 10 1);
-        Mat.print y;
-        Mat.print x;
-        (* y.{0,10} <- 0.0; *)
-        (* Mat.set y 10 1 0.0; *)
-        Plot.plot ~h x (Mat.vector_ones 20);
-        (* Owl_plplot.Plot.plot ~h x (Mat.vector_ones 20); *)
-        Owl_plplot.Plot.output h;
-        (* let q = Arr.create [|2;2;2|] 1.8 in *)
-        let k = Mat.init_2d 10 10 kmat in 
-        Mat.print k;
-        Linalg.D.inv k |> Mat.print;
-        Plot.plot ~h x (Mat.row (Linalg.D.inv k) 5);
-        Plot.plot ~h x (Mat.row (Linalg.D.inv k) 7);
-        let r = Mat.zeros 1 10 in
-        Mat.set r 0 0 (-2.0);
-        Mat.set r 0 1 (1.0);
-        let k2 = Mat.kron k k in
-        let g2 = Linalg.D.inv k2 in
-        let s = Mat.row g2 10 in
-        let phi = Mat.reshape s [|10;10|] in 
-        Plot.plot ~h x (Mat.row  phi 7); (** not convinecd this is actually doing what I want *)
-    
-        let k' = Mat.toeplitz r in (* also works. more cryptic though *)
-        Mat.print k'
-    
-    
-    
-    
-    
-    
-    
-    let () = main ()</code>
+```
+
+open Core_kernel
+open Owl
+
+module Plot = Owl_plplot.Plot
+let () = print_endline "Hello, World!"
+let greeting name = Printf.printf "Hello, %s%i \n%!" name 7
+(* let x : int = 7 *)
+
+let () = greeting "fred"
+(*
+let () = match (In_channel.input_line In_channel.stdin) with
+ | None -> ()
+ | Some x -> print_endline x
+
+let () = In_channel.with_file "dune" ~f:(fun t -> 
+    match In_channel.input_line t with
+    | Some x -> print_endline x
+    | None -> ()
+)
+*)
+(**
+type 'a mygadt = 
+| Myint : int mygadt
+| Mybool : bool mygadt
+ *)
+
+let kmat i j = if i = j then -2.0 
+               else if abs (i - j) = 1 then 1.0 
+               else 0.0
+
+
+let main () = 
+    Mat.print (Mat.vector 10);
+    Mat.print (Mat.uniform 5 5);
+    Mat.print (Mat.zeros 5 5);
+    let h = Owl_plplot.Plot.create "plot_003.png" in
+    Plot.set_foreground_color h 0 0 0;
+    Plot.set_background_color h 255 255 255;
+    Plot.set_title h "Function: f(x) = sine x / x";
+    Plot.set_xlabel h "x-axis";
+    Plot.set_ylabel h "y-axis";
+    Plot.set_font_size h 8.;
+    Plot.set_pen_size h 3.;
+    (* Plot.plot_fun ~h f 1. 15.; *)
+
+    let x = Mat.linspace 0.0 1.0 20 in
+    (*let f x = Maths.sin x /. x in
+    Plot.plot_fun ~h f 1. 15.; *)
+    let y = (Mat.ones 1 20) in
+    Mat.print (Mat.ones 1 20);
+    Mat.print (Mat.ones 10 1);
+    Mat.print y;
+    Mat.print x;
+    (* y.{0,10} <- 0.0; *)
+    (* Mat.set y 10 1 0.0; *)
+    Plot.plot ~h x (Mat.vector_ones 20);
+    (* Owl_plplot.Plot.plot ~h x (Mat.vector_ones 20); *)
+    Owl_plplot.Plot.output h;
+    (* let q = Arr.create [|2;2;2|] 1.8 in *)
+    let k = Mat.init_2d 10 10 kmat in 
+    Mat.print k;
+    Linalg.D.inv k |> Mat.print;
+    Plot.plot ~h x (Mat.row (Linalg.D.inv k) 5);
+    Plot.plot ~h x (Mat.row (Linalg.D.inv k) 7);
+    let r = Mat.zeros 1 10 in
+    Mat.set r 0 0 (-2.0);
+    Mat.set r 0 1 (1.0);
+    let k2 = Mat.kron k k in
+    let g2 = Linalg.D.inv k2 in
+    let s = Mat.row g2 10 in
+    let phi = Mat.reshape s [|10;10|] in 
+    Plot.plot ~h x (Mat.row  phi 7); (** not convinecd this is actually doing what I want *)
+
+    let k' = Mat.toeplitz r in (* also works. more cryptic though *)
+    Mat.print k'
+
+
+
+
+
+
+
+let () = main ()
+```
+
 
 
 

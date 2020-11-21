@@ -19,15 +19,15 @@ A noticeable problem is the missing of the pinout
 
 [http://www.wayengineer.com/blackgold-high-speed-adda-module-for-fpga-development-board-p-2753.html#.VlYh2d-rQfE](http://www.wayengineer.com/blackgold-high-speed-adda-module-for-fpga-development-board-p-2753.html#.VlYh2d-rQfE)
 
-[![AD:DA pinout](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/ADDA-pinout-241x300.jpg)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/ADDA-pinout.jpg)
+[![AD:DA pinout](/assets/ADDA-pinout-241x300.jpg)](/assets/ADDA-pinout.jpg)
 
 This appears to be the same product and I can at least confirm that this pinout does work for the DA side of things.
 
 I wrote a quick test program to service it with a ramp function with an arduino. Good idea to sanity check before diving into the deeper waters of fpga.
 
-[![IMG_0142](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/IMG_0142-300x225.jpg)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/IMG_0142.jpg)
+[![IMG_0142](/assets/IMG_0142-300x225.jpg)](/assets/IMG_0142.jpg)
 
-[![IMG_0143 2](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/IMG_0143-2-300x225.jpg)](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/IMG_0143-2.jpg)Ripping through the arduino code with no delay makes a ramp at 53.2Hz. Pathetic, but working.
+[![IMG_0143 2](/assets/IMG_0143-2-300x225.jpg)](/assets/IMG_0143-2.jpg)Ripping through the arduino code with no delay makes a ramp at 53.2Hz. Pathetic, but working.
 
     
     #define CLKPIN 2 

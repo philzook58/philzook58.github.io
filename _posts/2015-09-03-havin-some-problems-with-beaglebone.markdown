@@ -15,7 +15,7 @@ However things turned to shit and now I'm a little more hesitant to embrace dat 
 
 The pin headers are too long and unmarked. It's a pain to count from the side to find the pin you need. Especially since the pins have different functionality. Not all pins are PWM for example.
 
-A problem that took forever was getting the xbox controller to work really properly. Apparently some kind of EMI was occurring. dmesg|grep usb had some business about babble. Found a forum post that said to use a hub or usb extender and then you'll be find. Used an usb extender and it worked. Bizarre.
+A problem that took forever was getting the xbox controller to work really properly. Apparently some kind of EMI was occurring. `dmesg|grep usb` had some business about babble. Found a forum post that said to use a hub or usb extender and then you'll be find. Used an usb extender and it worked. Bizarre.
 
 For some unknown reason I had difficulty getting more than 2 PWM to works. It spit mysterious messages about device trees (which apparently are important. A lot of things in this world are important.).
 

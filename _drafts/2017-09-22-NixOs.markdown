@@ -1,0 +1,15 @@
+---
+author: philzook58
+comments: true
+date: 2017-09-22 13:49:23+00:00
+layout: post
+link: https://www.philipzucker.com/?p=889
+published: false
+slug: NixOs
+title: NixOs
+wordpress_id: 889
+---
+
+I've heard people in the functional community talk about NixOs and I am sufficiently interested to boot up a virtual machine
+
+

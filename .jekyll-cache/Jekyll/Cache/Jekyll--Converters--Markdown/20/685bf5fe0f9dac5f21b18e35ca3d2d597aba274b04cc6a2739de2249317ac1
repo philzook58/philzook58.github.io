@@ -1,0 +1,2 @@
+I"ã<p>The coulomb gas is a model of electrostatics where you take the discreteness of charge into account. That is what makes it hard compared to the continuous charge problem. Previously, Iâ€™ve used mixed integer programming to find lowest energy states of the<a href="http://www.philipzucker.com/solving-the-ising-model-using-a-mixed-integer-linear-program-solver-gurobi/"> ising model</a>.  This is even more obvious application of mixed integer programming to a physics model.</p>
+:ET

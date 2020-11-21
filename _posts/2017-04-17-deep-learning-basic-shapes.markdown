@@ -36,7 +36,7 @@ We also weren't sure what cross-entropy was. This helped.
 
 The cross entropy is the number of bits you'd need to determine the actual answer after the neural network gave you its guess for the probabilities of the answer given the input. If the neural network gives you a 1 for one answer then it is absolutely certain and you need no more bits. If it gives you a 1 for the wrong answer, you'd need infinitely many bits if you were encoding answers using the networks guesses. In efficient coding, impossible answers take infinite bits. Kind of funny thing.
 
-If I understand it right, the cross entropy of a randomly guessing neural network would be $latex \log _2 (3 )$, since you'd expect it to take that many bits to encode 3 options. The starting point tends to be around 6 or so though?
+If I understand it right, the cross entropy of a randomly guessing neural network would be $ \log _2 (3 )$, since you'd expect it to take that many bits to encode 3 options. The starting point tends to be around 6 or so though?
 
 The tensorflow vs theano backend is a constant problem. I suppose we're going to use the tensorflow backend. Tensorflow has momentum behind it.
 

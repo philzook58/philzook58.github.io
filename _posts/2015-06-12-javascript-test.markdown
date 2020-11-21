@@ -13,8 +13,8 @@ Checkout the console for a fun message!
 Apparently, I have the freedom to put script tags in my posts. Excellent.
 `console.log("Hey There Buddo")`
 
-Installed Jetpack to piggyback on Wordpress.com and get some nice $latex \LaTeX$ going
-$latex i\hbar\frac{\partial}{\partial t}\left|\Psi(t)\right>=H\left|\Psi(t)\right>$
-$latex \hbar$
+Installed Jetpack to piggyback on Wordpress.com and get some nice $ \LaTeX$ going
+$ i\hbar\frac{\partial}{\partial t}\left|\Psi(t)\right>=H\left|\Psi(t)\right>$
+$ \hbar$
 
 BOBBA BUOY

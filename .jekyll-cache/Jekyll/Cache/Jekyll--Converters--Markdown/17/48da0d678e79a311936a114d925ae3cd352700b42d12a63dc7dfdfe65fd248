@@ -1,0 +1,2 @@
+I"<p>I’ve discussed relation algebra <a href="http://www.philipzucker.com/a-short-skinny-on-relations-towards-the-algebra-of-programming/">before</a>. Relations are sets of tuples. There, I implemented the relations naively using lists for sets. This is very simple, and very clean especially with list comprehension syntax.  It is however horrifically inefficient, and we could only deal with finitely enumerable domains. The easiest path to fixing these problems is to cash out to an external solver, in this case z3.</p>
+:ET

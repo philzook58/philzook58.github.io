@@ -35,7 +35,12 @@ Lens are described as[ functional getters and setters](http://hackage.haskell.or
 
 
     
-    <code>type Lens a b = a -> (b, b -> a)</code>
+    
+```haskell
+
+type Lens a b = a -> (b, b -> a)
+```
+
 
 
 
@@ -51,7 +56,12 @@ Lens are described as[ functional getters and setters](http://hackage.haskell.or
 
 
     
-    <code>a->b</code>
+    
+```haskell
+
+a -> b
+```
+
 
 
 
@@ -67,7 +77,12 @@ and the getter is
 
 
     
-    <code>a -> b -> a</code>
+    
+```haskell
+
+a -> b -> a
+```
+
 
 
 
@@ -123,7 +138,7 @@ The forward pass is for the concrete execution. The backward pass is for transfo
 
 
 
-I often think of a state machine as a function taking s -> s. However, this is kind of restrictive. It is possible to have heterogenous transformations s -> s'. Why not? I think I am often thinking about finite state machines, which we really don't intend to have a changing state size. Perhaps we allocated new memory or something or brought something into or out of scope. We could model this by assuming the memory was always there, but it seems wasteful and perhaps confusing. We need to a priori know everything we will need, which seems like it might break compositionally.
+I often think of a state machine as a function taking `s -> s`. However, this is kind of restrictive. It is possible to have heterogenous transformations `s -> s'`. Why not? I think I am often thinking about finite state machines, which we really don't intend to have a changing state size. Perhaps we allocated new memory or something or brought something into or out of scope. We could model this by assuming the memory was always there, but it seems wasteful and perhaps confusing. We need to a priori know everything we will need, which seems like it might break compositionally.
 
 
 
@@ -135,13 +150,18 @@ We could [model our language](https://softwarefoundations.cis.upenn.edu/lf-curre
 `data Imp = Skip | Print String | Assign String Expr | Seq Imp Imp | ...`  
 and then build an interpreter 
     
-    <code>interp :: Imp -> s -> s'</code>
+    
+```haskell
+
+interp :: Imp -> s -> s'
+```
 
 
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/10/Imp-01.jpg)Imp.
+
+![Imp.](/assets/Imp-01.jpg)
 
 
 
@@ -149,7 +169,12 @@ and then build an interpreter
 
 But we can also cut out the middle man and directly define our language using combinators. 
     
-    <code>type Stmt s s' = s ->s'</code>
+    
+```haskell
+
+type Stmt s s' = s ->s'
+```
+
 
 
 
@@ -169,7 +194,12 @@ To me this has some flavor of a finally tagless style.
 Likewise for expressions. Expressions evaluate to something in the context of the state (they can lookup variables), so let's just use  
 
     
-    <code>type Expr s a = s -> a</code>
+    
+```haskell
+
+type Expr s a = s -> a
+```
+
 
 
 
@@ -201,38 +231,43 @@ With that said, here we go.
 
 
     
-    <code>
-    type Stmt s s' = s -> s' 
-    type Lens' a b = a -> (b, b -> a)
-    set l s a = let (_, f) = l s in f a
     
-    type Expr s a = s -> a
-    type Var s a = Lens' s a
-    
-    skip :: Stmt s s
-    skip = id
-    
-    sequence :: Stmt s s' -> Stmt s' s'' -> Stmt s s''
-    sequence = flip (.)
-    
-    assign :: Var s a -> Expr s a -> Stmt s s
-    assign v e = \s -> set v s (e s)
-    
-    (===) :: Var s a -> Expr s a -> Stmt s s
-    v === e = assign v e
-    
-    ite :: Expr s Bool -> Stmt s s' -> Stmt s s' -> Stmt s s'
-    ite e stmt1 stmt2 = \s -> if (e s) then stmt1 s else stmt2 s
-    
-    while :: Expr s Bool -> Stmt s s -> Stmt s s
-    while e stmt = \s -> if (e s) then ((while e stmt) (stmt s)) else s
-    
-    assert :: Expr s Bool -> Stmt s s  
-    assert e = \s -> if (e s) then s else undefined 
-    
-    abort :: Stmt s s'  
-    abort = const undefined
-    </code>
+```haskell
+
+
+type Stmt s s' = s -> s' 
+type Lens' a b = a -> (b, b -> a)
+set l s a = let (_, f) = l s in f a
+
+type Expr s a = s -> a
+type Var s a = Lens' s a
+
+skip :: Stmt s s
+skip = id
+
+sequence :: Stmt s s' -> Stmt s' s'' -> Stmt s s''
+sequence = flip (.)
+
+assign :: Var s a -> Expr s a -> Stmt s s
+assign v e = \s -> set v s (e s)
+
+(===) :: Var s a -> Expr s a -> Stmt s s
+v === e = assign v e
+
+ite :: Expr s Bool -> Stmt s s' -> Stmt s s' -> Stmt s s'
+ite e stmt1 stmt2 = \s -> if (e s) then stmt1 s else stmt2 s
+
+while :: Expr s Bool -> Stmt s s -> Stmt s s
+while e stmt = \s -> if (e s) then ((while e stmt) (stmt s)) else s
+
+assert :: Expr s Bool -> Stmt s s  
+assert e = \s -> if (e s) then s else undefined 
+
+abort :: Stmt s s'  
+abort = const undefined
+
+```
+
 
 
 
@@ -251,7 +286,12 @@ Weakest precondition can be done similarly, instead we start from the end and wo
 Predicates are roughly sets. A simple type for sets is  
 
     
-    <code>type Pred s = s -> Bool</code> 
+    
+```haskell
+
+type Pred s = s -> Bool
+```
+ 
 
 Now, this doesn't have much deductive power, but I think it demonstrates the principles simply. We could replace `Pred` with perhaps an SMT solver expression, or some data type for predicates, for which we'll need to implement things like substitution. Let's not today. 
 
@@ -263,19 +303,39 @@ Now, this doesn't have much deductive power, but I think it demonstrates the pri
 
 A function 
     
-    <code>a -> b</code> 
+    
+```haskell
+
+a -> b
+```
+ 
 
 is equivalent to 
     
-    <code>forall c. (b -> c) -> (a -> c)</code>
+    
+```haskell
+
+forall c. (b -> c) -> (a -> c)
+```
+
 
 . This is some kind of CPS / Yoneda transformation thing. A state transformer 
     
-    <code>s -> s'</code>
+    
+```haskell
+
+s -> s'
+```
+
 
 to predicate transformer 
     
-    <code>(s' -> Bool) -> (s -> Bool)</code>
+    
+```haskell
+
+(s' -> Bool) -> (s -> Bool)
+```
+
 
 is somewhat evocative of that. I'm not being very precise here at all.
 
@@ -293,43 +353,48 @@ Without further ado, here's how I think a weakest precondition looks roughly.
 
 
     
-    <code>
-    type Lens' a b = a -> (b, b -> a)
-    set l s a = let (_, f) = l s in f a
     
-    type Expr s a = s -> a
-    type Var s a = Lens' s a
-    type Pred s = s -> Bool
-    type Stmt s s' = Pred s' -> Pred s 
-    
-    skip :: Stmt s s
-    skip = \post -> let pre = post in pre -- if
-    
-    sequence :: Stmt s s' -> Stmt s' s'' -> Stmt s s''
-    sequence = (.)
-    
-    assign :: Var s a -> Expr s a -> Stmt s s
-    assign v e = \post -> let pre s = post (set v s (e s)) in pre
-    
-    (===) :: Var s a -> Expr s a -> Stmt s s
-    v === e = assign v e
-    
-    ite :: Expr s Bool -> Stmt s s' -> Stmt s s' -> Stmt s s'
-    ite e stmt1 stmt2 = \post -> let pre s = if (e s) then (stmt1 post) s else (stmt2 post) s in pre
-    
-    abort :: Stmt s s'  
-    abort = \post -> const False
-    
-    assert :: Expr s Bool -> Stmt s s  
-    assert e = \post -> let pre s = (e s) && (post s) in pre
-    
-    {-
-    -- tougher. Needs loop invariant
-    while :: Expr s Bool -> Stmt s s -> Stmt s s
-    while e stmt = \post -> let pre s = if (e s) then ((while e stmt) (stmt post)) s else  in pre
-    -}
-    
-    </code>
+```haskell
+
+
+type Lens' a b = a -> (b, b -> a)
+set l s a = let (_, f) = l s in f a
+
+type Expr s a = s -> a
+type Var s a = Lens' s a
+type Pred s = s -> Bool
+type Stmt s s' = Pred s' -> Pred s 
+
+skip :: Stmt s s
+skip = \post -> let pre = post in pre -- if
+
+sequence :: Stmt s s' -> Stmt s' s'' -> Stmt s s''
+sequence = (.)
+
+assign :: Var s a -> Expr s a -> Stmt s s
+assign v e = \post -> let pre s = post (set v s (e s)) in pre
+
+(===) :: Var s a -> Expr s a -> Stmt s s
+v === e = assign v e
+
+ite :: Expr s Bool -> Stmt s s' -> Stmt s s' -> Stmt s s'
+ite e stmt1 stmt2 = \post -> let pre s = if (e s) then (stmt1 post) s else (stmt2 post) s in pre
+
+abort :: Stmt s s'  
+abort = \post -> const False
+
+assert :: Expr s Bool -> Stmt s s  
+assert e = \post -> let pre s = (e s) && (post s) in pre
+
+{-
+-- tougher. Needs loop invariant
+while :: Expr s Bool -> Stmt s s -> Stmt s s
+while e stmt = \post -> let pre s = if (e s) then ((while e stmt) (stmt post)) s else  in pre
+-}
+
+
+```
+
 
 
 
@@ -345,56 +410,61 @@ Finally here is a combination of the two above that uses the branching structure
 
 
     
-    <code>
-    type Lens' a b = a -> (b, b -> a)
-    set l s a = let (_, f) = l s in f a
     
-    
-    type Expr s a = s -> a
-    type Var s a = Lens' s a
-    type Pred a = a -> Bool
-    type Stmt s s' = s -> (s', Pred s' -> Pred s) -- eh. Screw the newtype
-    
-    skip :: Stmt s s
-    skip = \x -> (x, id)
-    
-    
-    sequence :: Stmt s s' -> Stmt s' s'' -> Stmt s s''
-    sequence f g =   \s -> let (s', j) = f s in
-                           let (s'', j') = g s' in
-                               (s'', j . j')
-    assign :: Var s a -> Expr s a -> Stmt s s
-    assign v e = \s -> (set v s (e s), \p -> \s -> p (set v s (e s)))
-    
-    --if then else
-    ite :: Expr s Bool -> Stmt s s' -> Stmt s s' -> Stmt s s'
-    ite e stmt1 stmt2 = \s -> 
-                        if (e s) 
-                        then let (s', wp) = stmt1 s in
-                             (s', \post -> \s -> (e s) && (wp post s))
-                        else let (s', wp) = stmt2 s in
-                                (s', \post -> \s -> (not (e s)) && (wp post s))
-    
-    assert :: Pred s -> Stmt s s
-    assert p = \s -> (s, \post -> let pre s = (post s) && (p s) in pre)
-    
-    while :: Expr s Bool -> Stmt s s -> Stmt s s
-    while e stmt = \s -> if e s then let (s' , wp) = (while e stmt) s in
-                                     (s', \post -> let pre s'' = (post s'') && (wp post s'') in pre)   
-                                else (s, \p -> p)
-    
-    {-
-    
-    -- declare and forget can change the size and shape of the state space.
-    -- These are heterogenous state commpands
-    declare :: Iso (s,Int) s' -> Int -> Stmt s s'   
-    declare iso defalt = (\s -> to iso (s, defalt), \p -> \s -> p $ to iso (s, defalt)) 
-    
-    forget :: Lens' s s' -> Stmt s s' -- forgets a chunk of state
-    
-    declare_bracket :: Iso (s,Int) s' -> Int ->  Stmt s' s' -> Stmt s s
-    declare_bracket iso defalt stmt = (declare iso default) . stmt . (forget (_1 . iso))
-    </code>
+```haskell
+
+
+type Lens' a b = a -> (b, b -> a)
+set l s a = let (_, f) = l s in f a
+
+
+type Expr s a = s -> a
+type Var s a = Lens' s a
+type Pred a = a -> Bool
+type Stmt s s' = s -> (s', Pred s' -> Pred s) -- eh. Screw the newtype
+
+skip :: Stmt s s
+skip = \x -> (x, id)
+
+
+sequence :: Stmt s s' -> Stmt s' s'' -> Stmt s s''
+sequence f g =   \s -> let (s', j) = f s in
+                       let (s'', j') = g s' in
+                           (s'', j . j')
+assign :: Var s a -> Expr s a -> Stmt s s
+assign v e = \s -> (set v s (e s), \p -> \s -> p (set v s (e s)))
+
+--if then else
+ite :: Expr s Bool -> Stmt s s' -> Stmt s s' -> Stmt s s'
+ite e stmt1 stmt2 = \s -> 
+                    if (e s) 
+                    then let (s', wp) = stmt1 s in
+                         (s', \post -> \s -> (e s) && (wp post s))
+                    else let (s', wp) = stmt2 s in
+                            (s', \post -> \s -> (not (e s)) && (wp post s))
+
+assert :: Pred s -> Stmt s s
+assert p = \s -> (s, \post -> let pre s = (post s) && (p s) in pre)
+
+while :: Expr s Bool -> Stmt s s -> Stmt s s
+while e stmt = \s -> if e s then let (s' , wp) = (while e stmt) s in
+                                 (s', \post -> let pre s'' = (post s'') && (wp post s'') in pre)   
+                            else (s, \p -> p)
+
+{-
+
+-- declare and forget can change the size and shape of the state space.
+-- These are heterogenous state commpands
+declare :: Iso (s,Int) s' -> Int -> Stmt s s'   
+declare iso defalt = (\s -> to iso (s, defalt), \p -> \s -> p $ to iso (s, defalt)) 
+
+forget :: Lens' s s' -> Stmt s s' -- forgets a chunk of state
+
+declare_bracket :: Iso (s,Int) s' -> Int ->  Stmt s' s' -> Stmt s s
+declare_bracket iso defalt stmt = (declare iso default) . stmt . (forget (_1 . iso))
+
+```
+
 
 
 

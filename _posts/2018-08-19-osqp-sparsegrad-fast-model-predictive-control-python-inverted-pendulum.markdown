@@ -26,29 +26,29 @@ The problem is setup as a sequential quadratic program. I have a quadratic cost 
 
 The equations of motion are roughly
 
-$latex \ddot{\theta}I=-mgL\sin(\theta)+mfL\cos(\theta)$
+$ \ddot{\theta}I=-mgL\sin(\theta)+mfL\cos(\theta)$
 
-$latex \ddot{x}=f$
+$ \ddot{x}=f$
 
-$latex I=\frac{1}{3}mL^2$
+$ I=\frac{1}{3}mL^2$
 
 We don't include the back reaction of the pole on the cart. It is basically irrelevant for our systems and overly complicated for no reason. The interesting bit is the nonlinear dynamics and influence of the cart acceleration.
 
 I write down obeying the equations of motion as a linear constraint between timesteps. I use [sparsegrad](https://github.com/mzszym/sparsegrad) to get a sparse Jacobian of the equations of motion. The upper and lower (l and u) bounds are set equal to make an equality constraint.
 
-Our setup has a finite track about a meter long. Our motors basically are velocity control and they can go about +-1m/s. Both of these can be encapsulated as linear constraints on the position and velocity variables. $latex l \le Ax \le u$
+Our setup has a finite track about a meter long. Our motors basically are velocity control and they can go about +-1m/s. Both of these can be encapsulated as linear constraints on the position and velocity variables. $ l \le Ax \le u$
 
-$latex \phi(x)=0$
+$ \phi(x)=0$
 
-$latex \phi(x) \approx \phi(x_0) + \partial \phi(x_0) (x - x_0)$
+$ \phi(x) \approx \phi(x_0) + \partial \phi(x_0) (x - x_0)$
 
-$latex A= \partial \phi(x_0)$
+$ A= \partial \phi(x_0)$
 
-$latex l=u=\partial \phi(x_0) x_0 - \phi_0(x_0)$
+$ l=u=\partial \phi(x_0) x_0 - \phi_0(x_0)$
 
-Similarly for finding the quadratic cost function in terms of the setpoint $latex x_s$. $latex \frac{1}{2}x^T P x + q^Tx= \frac{1}{2}(x-x_s)P(x-x_s)$ Expanding this out we get
+Similarly for finding the quadratic cost function in terms of the setpoint $ x_s$. $ \frac{1}{2}x^T P x + q^Tx= \frac{1}{2}(x-x_s)P(x-x_s)$ Expanding this out we get
 
-$latex q = - Px_s$
+$ q = - Px_s$
 
 I run for multiple iterations to hopefully converge to a solution (it does). The initial linearization might be quite poor, but it gets better.
 
@@ -201,4 +201,4 @@ Still to be seen if it works on hardware. I was already having infeasibility pro
     
 
 
-[![osqp_cart](http://philzucker2.nfshost.com/wp-content/uploads/2018/08/osqp_cart.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/08/osqp_cart.png)
+[![osqp_cart](/assets/osqp_cart.png)](/assets/osqp_cart.png)

@@ -13,15 +13,15 @@ tags:
 - quantum
 ---
 
-A fun method (and useful!) for solving the ground state of the Schrodinger equation is to minimize the energy integral $latex dx \psi^\dagger H \psi $ while keeping the total probability 1. Pytorch is a big ole optimization library, so let's give it a go.
+A fun method (and useful!) for solving the ground state of the Schrodinger equation is to minimize the energy integral $ dx \psi^\dagger H \psi $ while keeping the total probability 1. Pytorch is a big ole optimization library, so let's give it a go.
 
 I've tried two versions, using a stock neural network with relus and making it a bit easier by giving a gaussian with variable width and shift.
 
-We can mimic the probability constraint by dividing by to total normalization $latex \int dx \psi^\dagger \psi$. A Lagrange multiplier or penalty method may allows us to access higher wavefunctions.
+We can mimic the probability constraint by dividing by to total normalization $ \int dx \psi^\dagger \psi$. A Lagrange multiplier or penalty method may allows us to access higher wavefunctions.
 
 SGD seems to do a better job getting a rounder gaussian, while Adam is less finicky but makes a harsh triangular wavefunction.
 
-The ground state solution of $latex -\frac{d^2\psi}{dx^2} + x^2\psi=E\psi$ is $latex e^{-x^2/2}$, with an energy of 1/2 (unless I botched up my head math). We may not get it, because we're not sampling a very good total domain. Whatever, for further investigation.
+The ground state solution of $ -\frac{d^2\psi}{dx^2} + x^2\psi=E\psi$ is $ e^{-x^2/2}$, with an energy of 1/2 (unless I botched up my head math). We may not get it, because we're not sampling a very good total domain. Whatever, for further investigation.
 
 Very intriguing is that pytorch has a determinant in it, I believe. That opens up the possibility of doing a Hartree-Fock style variational solution.
 
@@ -120,4 +120,4 @@ Edit: Hmm I didn't compensate for the fact I was using randn sampling. That was 
 
 
 
-[![sho](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/sho.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/sho.png)
+[![sho](/assets/sho.png)](/assets/sho.png)

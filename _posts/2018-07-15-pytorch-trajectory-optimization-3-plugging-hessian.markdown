@@ -222,6 +222,6 @@ Edit: Ooh. Adding a simple backtracking line search really improves stability.
     
 
 
-[![figure_repl_version](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/Figure_repl_version.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/Figure_repl_version.png)
+[![figure_repl_version](/assets/Figure_repl_version.png)](/assets/Figure_repl_version.png)
 
-[![figure_repl_resid](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/Figure_repl_resid.png)](http://philzucker2.nfshost.com/wp-content/uploads/2018/07/Figure_repl_resid.png)
+[![figure_repl_resid](/assets/Figure_repl_resid.png)](/assets/Figure_repl_resid.png)

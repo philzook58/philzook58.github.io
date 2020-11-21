@@ -36,7 +36,7 @@ PINOUT BABY
 
 3 is signal
 
-![](http://philzucker.nfshost.com/wordpress/wp-content/uploads/2015/11/Sat-Nov-28-2015-220532-GMT-0500-EST.png)
+![](/assets/Sat-Nov-28-2015-220532-GMT-0500-EST.png)
 
 left to right.
 

@@ -1,0 +1,147 @@
+---
+author: philzook58
+comments: true
+date: 2020-09-05 15:12:24+00:00
+layout: post
+link: https://www.philipzucker.com/?p=2960
+published: false
+slug: CTF stuff
+title: CTF stuff
+wordpress_id: 2960
+---
+
+
+
+
+radare2, a binary analysis thingo. rax is useful for conversion of hex
+
+
+
+
+
+
+
+binary ninja
+
+
+
+
+
+
+
+ghidra
+
+
+
+
+
+
+
+IDA
+
+
+
+
+
+
+
+
+
+
+
+
+
+RSACTFTool
+
+
+
+
+
+
+
+factordb
+
+
+
+
+
+
+
+
+
+
+
+
+
+manticore
+
+
+
+
+
+
+
+
+
+
+
+
+
+Maybe we should get a docker of all sorts of tools. Kali Linux? [https://github.com/zardus/ctf-tools](https://github.com/zardus/ctf-tools)
+
+
+
+
+
+
+
+klee, afl,  other fuzzers? valgrind
+
+
+
+
+
+
+
+cwe-checker
+
+
+
+
+
+
+
+shellcode
+
+
+
+
+
+
+
+ROP
+
+
+
+
+
+
+
+[https://quipqiup.com/](https://quipqiup.com/) - solve substitution cyphers
+
+
+
+
+
+
+
+[https://github.com/openwall/john](https://github.com/openwall/john) john the ripper. Brute force password cracker
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,51 @@
+---
+author: philzook58
+comments: true
+date: 2015-11-04 23:10:23+00:00
+layout: post
+link: https://www.philipzucker.com/?p=227
+published: false
+slug: Magnets
+title: Magnets
+wordpress_id: 227
+---
+
+We can easily reason quite a bit without actually finding the exact answers. That should worry you. This might all be bullshit.
+
+Laplace (electric potential problems and similar) problems tend to be surprisingly subtle in what can be ignored and what can't. There is a tendency for the weakening effect of how far away stuff (charge) is to be exactly cancelled by the strengthening effect of how much more stuff can be far away. There is more volume away from a position than near it.
+
+A canonical example is what is the electric field right outside of a charged sphere? Well, you reason that really close the sphere must look like an infinite plane. Therefore $latex E = \sigma / 2 \epsilon$.
+
+That is off by half though.
+
+The actual answer is $latex E=\frac{Q}{4\pi \epsilon R^2} = \frac{\sigma 4\pi R^2}{4\pi\epsilon R^2}=\frac{\sigma}{\epsilon}$.
+
+The conclusion is that the far away parts of the sphere count for exactly half of the field.
+
+Magnets are most easily approached by analogy to the more familiar electric cases. This might just be a result of my educational background. The two things obey similar differential equations (Essentially Laplace's equation which is pretty damn ubiquitous.)
+
+Long solenoids have fields that look like the fields of monopoles if you're much closer to only one end and farther away than the size of the opening of the solenoid ($B\propto\frac{1}{r^2}$ ). You can imagine a nice flexible tightly wound solenoid. You can drag the ends around, magnetic field pours out one end and into the other, being pumped very concentrated through the interior of the solenoid. The must always be a negative charge to cancel the positive charge somewhere, so once you're far away the field will take the character of a magnetic dipole, as is more familiar. Once you're far enough away from any magnetic system it looks like a dipole. Deal with it.
+
+![](http://vignette3.wikia.nocookie.net/powerlisting/images/0/02/Bach-deal-with-it.jpg/revision/latest?cb=20130822031533)
+
+The regimes of the magnet
+
+Magnets have a built in magnetization M. The canonical behavior is that magnetic materials have a hysteresis curve behavior in the magnetization as a function of applied field. Once you apply a strong enough field (using an electromagnet say) to the magnet, it will maintain some kind of magnetization in the interior even when the applied field is removed.
+
+A long skinny magnet is basically the same thing as a long skinny solenoid, except now the . Far away looks like a dipole with length L and charge
+
+A squat magnet
+
+$latex H = B/\mu_0 - M$
+
+The infinitely wide bar magnet. It looks like two charged sheets, like a capacitor arrangement. Or more closely a hunk of polarized material with a built in polarization P.
+
+In the capacitor the only place there is electric field is inside the thing, point from positive charge to negative. If it is due to a built in polarization D=0 everywhere.
+
+However, in the magnet, we know that outside the magnet there is all kinds of B. So it is slightly different by an overall uniform B point up. Then H is 0 inside the magnet and parallel to B outside the magnet. The total magnitude of H outside = M, since H+M has to be continuous across the interface ($latex \nabla\cdot B=0$).
+
+In the infinite Magnet we have a similar but different case. If we had wrapped the magnet in a solenoid, then it would be more similar. The solenoid cancels the magnetic field B of the magnet
+
+Near the face the magnet looks like a sheet of charge.
+
+Okay, so here's a good one: What should be the force law between a magnet and your fridge? Well, basically it is similar to the problem of what is the force between a sheet of charge and a conducting metal plate. The sheet of charge induces the field of an image sheet of charge across the plate and then is attracted to it by a constant electric field

@@ -19,8 +19,8 @@ After a very disappointing day trying to use hand twisted wire crankshafts and b
 Things that may have helped: We got those Sterno heat things. Actually it was too aggressive. The steel wool displacer was nearly the width of the.
 
 We kept the floss hole pretty tight, by poking it with a small object and threading the floss through with a needle and running it back and forth until the steel wool weight is enough. It is basically air tight and a little too sticky, but it works.
+<iframe width="560" height="315" src="https://www.youtube.com/embed/OqCxWK0yNSk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-https://www.youtube.com/watch?v=OqCxWK0yNSk
 
 The files can be found here [https://cad.onshape.com/documents/65e85cdc777333555f580b5a/w/e8a82a796b8d794bd914d077/e/82b3f39011e3b6223a8eb6be](https://cad.onshape.com/documents/65e85cdc777333555f580b5a/w/e8a82a796b8d794bd914d077/e/82b3f39011e3b6223a8eb6be)
 

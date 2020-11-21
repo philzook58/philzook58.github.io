@@ -88,29 +88,34 @@ Makin a json request
 
 
     
-    <code>-# LANGUAGE OverloadedStrings, DeriveGeneric #-}
-    module JsonRequest where
     
-    import Data.Aeson
-    import Network.Wreq
-    import GHC.Generics
-    import Control.Lens
-    
-    data ToDo  = ToDo {
-        userId :: Int,
-        id :: Int,
-        title :: String,
-        completed :: Bool
-      } deriving (Generic, Show)
-    instance ToJSON ToDo
-    
-    
-    instance FromJSON ToDo
-    
-    my_url = "https://jsonplaceholder.typicode.com/todos/1"
-    
-    main = do r <- get my_url
-              print $ ((decode $ r ^. responseBody) :: Maybe ToDo) -- ((decode $ r ^. responseBody) :: Maybe ToDo)</code>
+```haskell
+
+-# LANGUAGE OverloadedStrings, DeriveGeneric #-}
+module JsonRequest where
+
+import Data.Aeson
+import Network.Wreq
+import GHC.Generics
+import Control.Lens
+
+data ToDo  = ToDo {
+    userId :: Int,
+    id :: Int,
+    title :: String,
+    completed :: Bool
+  } deriving (Generic, Show)
+instance ToJSON ToDo
+
+
+instance FromJSON ToDo
+
+my_url = "https://jsonplaceholder.typicode.com/todos/1"
+
+main = do r <- get my_url
+          print $ ((decode $ r ^. responseBody) :: Maybe ToDo) -- ((decode $ r ^. responseBody) :: Maybe ToDo)
+```
+
 
 
 
@@ -126,21 +131,26 @@ Showing a plot of a sine function
 
 
     
-    <code>module Plot where
     
-    import Graphics.Rendering.Chart.Easy
-    import Graphics.Rendering.Chart.Backend.Cairo -- Chart-cairo
-    import Graphics.Image as I -- hip
-    
-    -- https://github.com/timbod7/haskell-chart/wiki/example-1
-    filename = "example1_big.png"
-    
-    main = do 
-            toFile def filename $ plot (line "a sine" [[ (x :: Double, sin x) | x <- [0, 0.1 .. 2 * pi]]])
-            plotimg <- readImageRGB VU filename -- yeah,I want the plot to pop up
-            displayImage plotimg
-            print "Press Enter to Quit"
-            getLine</code>
+```haskell
+
+module Plot where
+
+import Graphics.Rendering.Chart.Easy
+import Graphics.Rendering.Chart.Backend.Cairo -- Chart-cairo
+import Graphics.Image as I -- hip
+
+-- https://github.com/timbod7/haskell-chart/wiki/example-1
+filename = "example1_big.png"
+
+main = do 
+        toFile def filename $ plot (line "a sine" [[ (x :: Double, sin x) | x <- [0, 0.1 .. 2 * pi]]])
+        plotimg <- readImageRGB VU filename -- yeah,I want the plot to pop up
+        displayImage plotimg
+        print "Press Enter to Quit"
+        getLine
+```
+
 
 
 
@@ -156,20 +166,25 @@ Doing a least squares fit of some randomly created data
 
 
     
-    <code>module LeastSquares where
     
-    import Numeric.LinearAlgebra
-    
-    n = 20
-    x = linspace n (-3,7::Double)
-    y0 = 3 * x
-    
-    main = do
-            noise <- randn 1 n
-            let y = (flatten noise) + y0
-            let sampleMatrix = (asColumn x) ||| (konst 1 (n,1))
-            let sol = (sampleMatrix <\> y) 
-            print $ "Best fit is y = " ++ show (sol ! 0) ++ " * x + " ++ (show (sol ! 1))</code>
+```haskell
+
+module LeastSquares where
+
+import Numeric.LinearAlgebra
+
+n = 20
+x = linspace n (-3,7::Double)
+y0 = 3 * x
+
+main = do
+        noise <- randn 1 n
+        let y = (flatten noise) + y0
+        let sampleMatrix = (asColumn x) ||| (konst 1 (n,1))
+        let sol = (sampleMatrix <\> y) 
+        print $ "Best fit is y = " ++ show (sol ! 0) ++ " * x + " ++ (show (sol ! 1))
+```
+
 
 
 
@@ -217,12 +232,17 @@ Very simple symbolic differentiation example. When I saw this in SICP for the fi
 
 
     
-    <code>data Expr = X | Plus Expr Expr | Times Expr Expr | Const Double
-    deriv :: Expr -> Expr
-    deriv X = Const 1
-    deriv (Const _) = Const 0
-    deriv (Plus x y) = Plus (deriv x) (deriv y)
-    deriv (Times x y) = (Times (deriv x) y) `Plus` (Times x (deriv y))</code>
+    
+```haskell
+
+data Expr = X | Plus Expr Expr | Times Expr Expr | Const Double
+deriv :: Expr -> Expr
+deriv X = Const 1
+deriv (Const _) = Const 0
+deriv (Plus x y) = Plus (deriv x) (deriv y)
+deriv (Times x y) = (Times (deriv x) y) `Plus` (Times x (deriv y))
+```
+
 
 
 
@@ -398,14 +418,19 @@ standard output io
 
 
     
-    <code>main = do
-          x <- getStrLn
-          putStrLn "Hello"
-          print [1,2,3]
-          print (Just 19022.32)
-          print x
     
-    </code>
+```haskell
+
+main = do
+      x <- getStrLn
+      putStrLn "Hello"
+      print [1,2,3]
+      print (Just 19022.32)
+      print x
+
+
+```
+
 
 
 

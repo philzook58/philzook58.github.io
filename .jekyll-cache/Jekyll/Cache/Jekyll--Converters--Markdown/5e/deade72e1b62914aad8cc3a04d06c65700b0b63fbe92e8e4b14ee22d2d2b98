@@ -1,0 +1,922 @@
+I"V_<p>Dumping these notes out there as is. Some material is out of date. Hope they’re useful.</p>
+
+<h1 id="what-is-drake">What is Drake?</h1>
+
+<p>From the Drake Website (<a href="https://drake.mit.edu/">https://drake.mit.edu/</a>):</p>
+
+<p>“Drake (“dragon” in Middle English) is a C++ toolbox started by the Robot Locomotion Group at the MIT Computer Science and Artificial Intelligence Lab (CSAIL). The development team has now grown significantly, with core development led by the Toyota Research Institute. It is a collection of tools for analyzing the dynamics of our robots and building control systems for them, with a heavy emphasis on optimization-based design/analysis.</p>
+
+<p>While there are an increasing number of simulation tools available for robotics, most of them function like a black box: commands go in, sensors come out. Drake aims to simulate even very complex dynamics of robots (e.g. including friction, contact, aerodynamics, …), but always with an emphasis on exposing the structure in the governing equations (sparsity, analytical gradients, polynomial structure, uncertainty quantification, …) and making this information available for advanced planning, control, and analysis algorithms. Drake provides interfaces to high-level languages (MATLAB, Python, …) to enable rapid-prototyping of new algorithms, and also aims to provide solid open-source implementations for many state-of-the-art algorithms. Finally, we hope Drake provides many compelling examples that can help people get started and provide much needed benchmarks. We are excited to accept user contributions to improve the coverage.”</p>
+
+<p>Drake is a powerful toolkit for the control of dynamical systems, and I hope I lower some of the barrier to entry with this post. Be forewarned, Drake changes quickly with time, and some of the following may be out of date (especially the rigid body trees) or ill advised. Use your judgement.</p>
+
+<h1 id="getting-drake">Getting Drake</h1>
+
+<p>Drake may be installed from binaries or source. Both may be gotten here:</p>
+
+<p><a href="https://drake.mit.edu/installation.html">https://drake.mit.edu/installation.html</a></p>
+
+<h1 id="using-bazel">Using Bazel</h1>
+
+<p>Drake uses Bazel as a build tool. Bazel is an open-source build and test tool similar to Make, Maven, and Gradle.</p>
+
+<p>There are three commands that you need to know:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">bazel build</code></li>
+  <li><code class="language-plaintext highlighter-rouge">bazel run</code></li>
+  <li><code class="language-plaintext highlighter-rouge">bazel query</code></li>
+</ul>
+
+<p>Query is very useful for investigating available binaries within the examples folder and elsewhere.</p>
+
+<p>The notation <code class="language-plaintext highlighter-rouge">//</code> is used to refer to the build’s main directory. This corresponds to the drake folder.</p>
+
+<p><code class="language-plaintext highlighter-rouge">...</code> is the notation for everything in the subdirectory</p>
+
+<p>Examples:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">bazel build //...</code> will build everything in the project.</li>
+  <li>To query all the binaries available for tools run <code class="language-plaintext highlighter-rouge">bazel query //tools/...</code></li>
+</ul>
+
+<h1 id="using-pydrake">Using Pydrake</h1>
+
+<p>Drake can be run natively in C++, or by using its MATLAB, python, or Julia bindings. This manual will be focusing on using Drake in python. By default pydrake will not be in the path. You can put pydrake into the path after building by running the following line or adding it to your .bashrc</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+export PYTHONPATH=~/drake/drake-build/install/lib/python2.7/site-packages:${PYTHONPATH}
+</code></pre></div></div>
+
+<p>The following line will import everything in Drake into the python namespace.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">from</span> <span class="nn">pydrake.all</span> <span class="kn">import</span> <span class="o">*</span>
+</code></pre></div></div>
+
+<p>Drake is only compatible with python 2.7. If your default system install is <code class="language-plaintext highlighter-rouge">python3</code>, you may need to explicitly run the command <code class="language-plaintext highlighter-rouge">python2</code>.</p>
+
+<p>The following message may be thrown if you inadvertently use <code class="language-plaintext highlighter-rouge">python3</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Traceback (most recent call last):
+File "inverse_kinematics.py", line 2, in &lt;module&gt;
+from pydrake.all import
+
+...
+
+ImportError: dynamic module does not define module export function (PyInit__common_py)
+</code></pre></div></div>
+
+<p>Pydrake itself has generated documentation available here:</p>
+
+<p><a href="http://drake.mit.edu/pydrake/index.html">http://drake.mit.edu/pydrake/index.html</a></p>
+
+<p>This is an extremely useful resource.</p>
+
+<p>A very useful tool for exploring and confirming the Drake functionality and syntax is the python REPL. From the python REPL or within your code, it is useful to inspect an object using either <code class="language-plaintext highlighter-rouge">help(obj)</code> or <code class="language-plaintext highlighter-rouge">print(dir(obj))</code> which will print a list of all the properties available on your object.</p>
+
+<h2 id="drake-resources">Drake resources</h2>
+
+<h3 id="doxygen">Doxygen</h3>
+
+<p>Besides the source code itself, the most accurate and up to date information is available in searchable form on the Doxygen page. This is a useful reference, but can be overwhelming.</p>
+
+<p><a href="https://drake.mit.edu/doxygen_cxx/index.html">https://drake.mit.edu/doxygen_cxx/index.html</a></p>
+
+<h3 id="underactuated-robotics-textbook-and-examples">Underactuated Robotics textbook and examples</h3>
+
+<p>Drake has a textbook being built alongside it by Russ Tedrake.</p>
+
+<p><a href="http://underactuated.mit.edu/underactuated.html">http://underactuated.mit.edu/underactuated.html</a></p>
+
+<p>In particular the python source used to generate some of the examples in the book is worth examining.</p>
+
+<p><a href="https://github.com/RussTedrake/underactuated/tree/master/src">https://github.com/RussTedrake/underactuated/tree/master/src</a></p>
+
+<p>The full course is available online both on Edx and more recent versions on Youtube.</p>
+
+<p><a href="http://underactuated.csail.mit.edu/Spring2018/">http://underactuated.csail.mit.edu/Spring2018/</a></p>
+
+<h3 id="examples-directory">Examples directory.</h3>
+
+<p>A useful source of use cases for drake can be found in the examples directory within the Drake project. As of October 2018 the contents include:</p>
+
+<ul>
+  <li>Cartpole - The cartpole is a classic control system consisting of a pendulum attached to a linearly actuated cart. In this directory you can find examples</li>
+  <li>Pendulum</li>
+  <li>Double Pendulum</li>
+  <li>Acrobot - The Acrobot is a double pendulum system actuated at the shoulder</li>
+  <li>Kinova Jaco Arm - A commercially available robotic arm</li>
+  <li>Kuka Iiwa Arm - A commerically available robotic arm</li>
+  <li>Particles</li>
+  <li>Bouncing Ball</li>
+  <li>Contact Model - Contains bowling pins, a gripper, and sliding bricks demonstrating Drakes ability to simulate contact dynamics</li>
+  <li>Rimless Wheel - A very simple model of a walking robot</li>
+  <li>Compass Gait - A slightly less simple model of a walking robot</li>
+  <li>Atlas - Examples concerning the Atlas humanoid robot</li>
+  <li>zmp</li>
+  <li>quadcopter</li>
+  <li>and others</li>
+</ul>
+
+<p>Additional usage examples for pydrake can be found in the drake/bindings/pydrake/test folder.</p>
+
+<h3 id="periscope-tutorials">Periscope Tutorials</h3>
+
+<p>There is a set of Jupyter notebook based tutorials for some basic Drake functionality in python.</p>
+
+<p><a href="https://github.com/gizatt/drake_periscope_tutorial">https://github.com/gizatt/drake_periscope_tutorial</a></p>
+
+<h2 id="drake-concepts">Drake Concepts</h2>
+
+<h3 id="simulation">Simulation</h3>
+
+<p>For dynamic simulation, Drake exposes a Lego block interface for building complex systems out of smaller pieces, a paradigm similar to Simulink and other modeling software.</p>
+
+<p>Objects possess input and output ports. One wires up input ports to output ports to build composite systems.</p>
+
+<p>To build a simple forward simulation, construct a builder object. Then add all subsystems to the builder object. Explicitly connected input and output ports together. One possible cause of crashes may be leaving ports unconnected.</p>
+
+<p>Once the entire system has been built, a Simulator object can be constructed from it. You may select an integration scheme and set initial conditions by getting a context from the Simulator object. The context holds state information.</p>
+
+<p>There following excerpt from <a href="https://github.com/RussTedrake/underactuated/tree/master/src/simple">https://github.com/RussTedrake/underactuated/tree/master/src/simple</a> shows how to define a simple system and simulate it.</p>
+
+<hr />
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">from</span> <span class="nn">pydrake.systems.framework</span> <span class="kn">import</span> <span class="n">VectorSystem</span>
+
+<span class="c1"># Define the system.
+</span><span class="k">class</span> <span class="nc">SimpleContinuousTimeSystem</span><span class="p">(</span><span class="n">VectorSystem</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="n">VectorSystem</span><span class="p">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<span class="mi">0</span><span class="p">,</span> <span class="c1"># Zero inputs.
+</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># One output.
+</span><span class="bp">self</span><span class="p">.</span><span class="n">_DeclareContinuousState</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># One state variable.
+</span>
+<span class="c1"># xdot(t) = -x(t) + x^3(t)
+</span><span class="k">def</span> <span class="nf">_DoCalcVectorTimeDerivatives</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">xdot</span><span class="p">):</span>
+<span class="n">xdot</span><span class="p">[:]</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span>
+
+<span class="c1"># y(t) = x(t)
+</span><span class="k">def</span> <span class="nf">_DoCalcVectorOutput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="n">y</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">x</span>
+</code></pre></div></div>
+
+<hr />
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+import matplotlib.pyplot as plt
+from pydrake.all import (DiagramBuilder, SignalLogger, Simulator)
+from continuous_time_system import *
+
+# Create a simple block diagram containing our system.
+builder = DiagramBuilder()
+system = builder.AddSystem(SimpleContinuousTimeSystem())
+logger = builder.AddSystem(SignalLogger(1))
+builder.Connect(system.get_output_port(0), logger.get_input_port(0))
+diagram = builder.Build()
+
+# Create the simulator.
+simulator = Simulator(diagram)
+
+# Set the initial conditions, x(0).
+state = simulator.get_mutable_context().get_mutable_continuous_state_vector()
+state.SetFromVector([0.9])
+
+# Simulate for 10 seconds.
+simulator.StepTo(10)
+
+# Plot the results.
+plt.plot(logger.sample_times(), logger.data().transpose())
+plt.xlabel('t')
+plt.ylabel('x(t)')
+plt.show()
+</code></pre></div></div>
+
+<h4 id="refs">Refs:</h4>
+
+<p><a href="http://underactuated.mit.edu/underactuated.html?chapter=systems">http://underactuated.mit.edu/underactuated.html?chapter=systems</a></p>
+
+<h2 id="rigid-body-trees">Rigid Body Trees</h2>
+
+<p>Edit : I think the Rigid Body Trees interface is deprecated. Use Multi Body Trees.</p>
+
+<p>There are two complementary perspectives to take of the degrees of freedom of a robot, intrinsic coordinates and extrinsic coordinates. The intrinsic coordinates have one variable per degree of freedom of the robot. A common example is a set of joint angles. The dynamics are simply expressed in the intrinsic coordinates and can derived using Lagrangian mechanics. The extrinsic coordinates specify the spatial locations and orientation of frames attached to the robot. These are called frames. These spatial coordinates may be constrained in a relationship by a rigid mounting or gearing, so there may be more extrinsic frames available than intrinsic coordinates. Extrinsic coordinates are particularly pertinent for discussions of geometry, contact, and external forces.</p>
+
+<p>Drake uses the URDF (Universal Robot Description Format) format. This is a common robot format originating in the ROS community for which you can find models of many commercial robots online. It is an XML based format with visualization, inertial, and collision tags.</p>
+
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Cart-pendulum.svg" alt="" /></p>
+
+<p>This is an example URDF for a pendulum cart system.</p>
+
+<hr />
+
+<h4 id="example-pendulum-urdf">Example: Pendulum URDF</h4>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+
+<span class="nt">&lt;robot</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="na">xmlns=</span><span class="s">"http://drake.mit.edu"</span> <span class="na">name=</span><span class="s">"CartPole"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"ground"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;visual&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span> <span class="na">xyz=</span><span class="s">"0 0 -5"</span><span class="nt">&gt;&lt;/origin&gt;</span>
+            <span class="nt">&lt;geometry&gt;</span>
+                <span class="nt">&lt;box</span> <span class="na">size=</span><span class="s">"1000 1000 10"</span><span class="nt">&gt;&lt;/box&gt;</span>
+            <span class="nt">&lt;/geometry&gt;</span>
+            <span class="nt">&lt;material&gt;</span>
+                <span class="nt">&lt;color</span> <span class="na">rgba=</span><span class="s">"0.93 .74 .4 1"</span><span class="nt">&gt;&lt;/color&gt;</span>
+            <span class="nt">&lt;/material&gt;</span>
+        <span class="nt">&lt;/visual&gt;</span>
+    <span class="nt">&lt;/link&gt;</span>
+
+    <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"cart"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;inertial&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span> <span class="na">xyz=</span><span class="s">"0 0 -.5"</span><span class="nt">&gt;&lt;/origin&gt;</span>
+            <span class="nt">&lt;mass</span> <span class="na">value=</span><span class="s">"10"</span><span class="nt">&gt;&lt;/mass&gt;</span>
+            <span class="nt">&lt;inertia</span> <span class="na">ixz=</span><span class="s">"0"</span> <span class="na">ixx=</span><span class="s">"0"</span> <span class="na">ixy=</span><span class="s">"0"</span> <span class="na">izz=</span><span class="s">"0"</span> <span class="na">iyy=</span><span class="s">"0"</span> <span class="na">iyz=</span><span class="s">"0"</span><span class="nt">&gt;&lt;/inertia&gt;</span>
+        <span class="nt">&lt;/inertial&gt;</span>
+        <span class="nt">&lt;visual&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span> <span class="na">xyz=</span><span class="s">"0 0 .25"</span><span class="nt">&gt;&lt;/origin&gt;</span>
+            <span class="nt">&lt;geometry&gt;</span>
+                <span class="nt">&lt;box</span> <span class="na">size=</span><span class="s">".6 .3 .3"</span><span class="nt">&gt;&lt;/box&gt;</span>
+            <span class="nt">&lt;/geometry&gt;</span>
+            <span class="nt">&lt;material&gt;</span>
+                <span class="nt">&lt;color</span> <span class="na">rgba=</span><span class="s">"0 1 0 1"</span><span class="nt">&gt;&lt;/color&gt;</span>
+            <span class="nt">&lt;/material&gt;</span>
+        <span class="nt">&lt;/visual&gt;</span>
+        <span class="nt">&lt;visual&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span> <span class="na">xyz=</span><span class="s">".15 0 .025"</span><span class="nt">&gt;&lt;/origin&gt;</span>
+            <span class="nt">&lt;geometry&gt;</span>
+                <span class="nt">&lt;sphere</span> <span class="na">radius=</span><span class="s">".05"</span><span class="nt">&gt;&lt;/sphere&gt;</span>
+            <span class="nt">&lt;/geometry&gt;</span>
+            <span class="nt">&lt;material&gt;</span>
+                <span class="nt">&lt;color</span> <span class="na">rgba=</span><span class="s">"0 0 0 1"</span><span class="nt">&gt;&lt;/color&gt;</span>
+            <span class="nt">&lt;/material&gt;</span>
+        <span class="nt">&lt;/visual&gt;</span>
+        <span class="nt">&lt;visual&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span> <span class="na">xyz=</span><span class="s">"-.15 0 .025"</span><span class="nt">&gt;&lt;/origin&gt;</span>
+            <span class="nt">&lt;geometry&gt;</span>
+                <span class="nt">&lt;sphere</span> <span class="na">radius=</span><span class="s">".05"</span><span class="nt">&gt;&lt;/sphere&gt;</span>
+            <span class="nt">&lt;/geometry&gt;</span>
+            <span class="nt">&lt;material&gt;</span>
+                <span class="nt">&lt;color</span> <span class="na">rgba=</span><span class="s">"0 0 0 1"</span><span class="nt">&gt;&lt;/color&gt;</span>
+            <span class="nt">&lt;/material&gt;</span>
+        <span class="nt">&lt;/visual&gt;</span>
+    <span class="nt">&lt;/link&gt;</span>
+
+    <span class="nt">&lt;link</span> <span class="na">name=</span><span class="s">"pole"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;inertial&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span> <span class="na">xyz=</span><span class="s">"0 0 -.5"</span><span class="nt">&gt;&lt;/origin&gt;</span>
+            <span class="nt">&lt;mass</span> <span class="na">value=</span><span class="s">"1"</span><span class="nt">&gt;&lt;/mass&gt;</span>
+            <span class="nt">&lt;inertia</span> <span class="na">ixz=</span><span class="s">"0"</span> <span class="na">ixx=</span><span class="s">"0"</span> <span class="na">ixy=</span><span class="s">"0"</span> <span class="na">izz=</span><span class="s">"0"</span> <span class="na">iyy=</span><span class="s">"0"</span> <span class="na">iyz=</span><span class="s">"0"</span><span class="nt">&gt;&lt;/inertia&gt;</span>
+        <span class="nt">&lt;/inertial&gt;</span>
+        <span class="nt">&lt;visual&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span> <span class="na">xyz=</span><span class="s">"0 0 -.25"</span><span class="nt">&gt;&lt;/origin&gt;</span>
+            <span class="nt">&lt;geometry&gt;</span>
+                 <span class="nt">&lt;cylinder</span> <span class="na">length=</span><span class="s">".5"</span> <span class="na">radius=</span><span class="s">".01"</span><span class="nt">&gt;&lt;/cylinder&gt;</span>
+            <span class="nt">&lt;/geometry&gt;</span>
+            <span class="nt">&lt;material&gt;</span>
+                <span class="nt">&lt;color</span> <span class="na">rgba=</span><span class="s">"1 0 0 1"</span><span class="nt">&gt;&lt;/color&gt;</span>
+            <span class="nt">&lt;/material&gt;</span>
+        <span class="nt">&lt;/visual&gt;</span>
+        <span class="nt">&lt;visual&gt;</span>
+            <span class="nt">&lt;origin</span> <span class="na">rpy=</span><span class="s">"0 0 0"</span> <span class="na">xyz=</span><span class="s">"0 0 -.5"</span><span class="nt">&gt;&lt;/origin&gt;</span>
+            <span class="nt">&lt;geometry&gt;</span>
+                 <span class="nt">&lt;sphere</span> <span class="na">radius=</span><span class="s">".05"</span><span class="nt">&gt;&lt;/sphere&gt;</span>
+            <span class="nt">&lt;/geometry&gt;</span>
+            <span class="nt">&lt;material&gt;</span>
+                <span class="nt">&lt;color</span> <span class="na">rgba=</span><span class="s">"0 0 1 1"</span><span class="nt">&gt;&lt;/color&gt;</span>
+            <span class="nt">&lt;/material&gt;</span>
+        <span class="nt">&lt;/visual&gt;</span>
+    <span class="nt">&lt;/link&gt;</span>
+
+    <span class="nt">&lt;joint</span> <span class="na">type=</span><span class="s">"prismatic"</span> <span class="na">name=</span><span class="s">"x"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;parent</span> <span class="na">link=</span><span class="s">"ground"</span><span class="nt">&gt;&lt;/parent&gt;</span>
+        <span class="nt">&lt;child</span> <span class="na">link=</span><span class="s">"cart"</span><span class="nt">&gt;&lt;/child&gt;</span>
+        <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 0"</span><span class="nt">&gt;&lt;/origin&gt;</span>
+        <span class="nt">&lt;axis</span> <span class="na">xyz=</span><span class="s">"1 0 0"</span><span class="nt">&gt;&lt;/axis&gt;</span>
+        <span class="nt">&lt;dynamics</span> <span class="na">damping=</span><span class="s">"0.1"</span><span class="nt">&gt;&lt;/dynamics&gt;</span>
+    <span class="nt">&lt;/joint&gt;</span>
+
+    <span class="nt">&lt;joint</span> <span class="na">type=</span><span class="s">"continuous"</span> <span class="na">name=</span><span class="s">"theta"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;parent</span> <span class="na">link=</span><span class="s">"cart"</span><span class="nt">&gt;&lt;/parent&gt;</span>
+        <span class="nt">&lt;child</span> <span class="na">link=</span><span class="s">"pole"</span><span class="nt">&gt;&lt;/child&gt;</span>
+        <span class="nt">&lt;origin</span> <span class="na">xyz=</span><span class="s">"0 0 .25"</span><span class="nt">&gt;&lt;/origin&gt;</span>
+        <span class="nt">&lt;axis</span> <span class="na">xyz=</span><span class="s">"0 1 0"</span><span class="nt">&gt;&lt;/axis&gt;</span>
+        <span class="nt">&lt;dynamics</span> <span class="na">damping=</span><span class="s">"0.1"</span><span class="nt">&gt;&lt;/dynamics&gt;</span>
+    <span class="nt">&lt;/joint&gt;</span>
+
+    <span class="nt">&lt;transmission</span> <span class="na">type=</span><span class="s">"SimpleTransmission"</span> <span class="na">name=</span><span class="s">"cart_force"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;actuator</span> <span class="na">name=</span><span class="s">"force"</span><span class="nt">&gt;&lt;/actuator&gt;</span>
+        <span class="nt">&lt;joint</span> <span class="na">name=</span><span class="s">"x"</span><span class="nt">&gt;&lt;/joint&gt;</span>
+        <span class="nt">&lt;mechanicalreduction&gt;</span>1<span class="nt">&lt;/mechanicalreduction&gt;</span>
+    <span class="nt">&lt;/transmission&gt;</span>
+<span class="nt">&lt;/robot&gt;</span>
+</code></pre></div></div>
+
+<p>Ref:</p>
+
+<p><a href="https://github.com/RussTedrake/underactuated/blob/master/src/cartpole/cartpole.urdf">https://github.com/RussTedrake/underactuated/blob/master/src/cartpole/cartpole.urdf</a></p>
+
+<hr />
+
+<p>The RigidBodyTree is a Drake class that describes both the intrinsic and extrinsic properties of a linkage. RigidBodyTrees may be built from a URDF file, some of which are packaged inside of Drake. For example, the Jaco arm URDF is available packaged with Drake.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">jaco_urdf</span> <span class="o">=</span> <span class="n">FindResourceOrThrow</span><span class="p">(</span>
+    <span class="s">"drake/manipulation/models/jaco_description/urdf/j2n6s300.urdf"</span><span class="p">)</span>
+<span class="n">tree</span> <span class="o">=</span> <span class="n">RigidBodyTree</span><span class="p">(</span><span class="n">jaco_urdf</span><span class="p">,</span> <span class="n">FloatingBaseType</span><span class="p">.</span><span class="n">kFixed</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The full properties of the RigidBodyTree class are available at <a href="https://drake.mit.edu/pydrake/pydrake.multibody.rigid_body_tree.html">https://drake.mit.edu/pydrake/pydrake.multibody.rigid_body_tree.html</a> , but it will be useful to highlight some of the most commonly used functionality.</p>
+
+<p>You can probe the RigidBodyTree for useful properties about the linkage, for example the number of intrinsic coordinates, or the number of bodies in the tree.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">print</span><span class="p">(</span><span class="n">tree</span><span class="p">.</span><span class="n">get_num_positions</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">tree</span><span class="p">.</span><span class="n">get_num_velocities</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">tree</span><span class="p">.</span><span class="n">get_num_bodies</span><span class="p">())</span>
+</code></pre></div></div>
+
+<p>For many operations, one needs to perform the forward dynamics to build a kinematic cache that needs to be supplied later.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">tree</span><span class="p">.</span><span class="n">get_num_positions</span><span class="p">())</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">tree</span><span class="p">.</span><span class="n">get_num_velocities</span><span class="p">())</span>
+<span class="n">cache</span> <span class="o">=</span> <span class="n">tree</span><span class="p">.</span><span class="n">doKinematics</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Drake describes the dynamics in terms of the intrinsic coordinates. The robot manipulator equations have the common form  (See <a href="http://underactuated.csail.mit.edu/underactuated.html?chapter=multibody">http://underactuated.csail.mit.edu/underactuated.html?chapter=multibody</a> )</p>
+
+<p>$ M(q)\ddot{q} + C(q,\dot{q})\dot{q} = \tau_g(q) + Bu $</p>
+
+<p>where q is the state vector, M is the inertia matrix, C captures Coriolis forces, and $ \tau_g$ is the gravity vector. The matrix B maps control inputs u into generalized forces.</p>
+
+<p>External forces on the tree are described as wrenches. Wrenches are an object that combines forces and torques. In Drake, they are specified by 6 dimensional vectors. From the Drake docs:</p>
+
+<p>“A column vector consisting of one wrench (spatial force) = [r X f; f], where f is a force (translational force) applied at a point P and r is the position vector from a point O (called the “moment center”) to point P.”</p>
+
+<p>Drake will also compute the quantities in the manipulator equation. For example, to compute the term $ C(q,v,f_{ext})$ in the manipulator equations with no externally applied wrenches.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">bodies</span> <span class="o">=</span> <span class="p">[</span><span class="n">tree</span><span class="p">.</span><span class="n">get_body</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tree</span><span class="p">.</span><span class="n">get_num_bodies</span><span class="p">())]</span>
+<span class="n">no_wrench</span> <span class="o">=</span> <span class="p">{</span> <span class="n">body</span> <span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="n">bodies</span><span class="p">}</span>
+<span class="k">print</span><span class="p">(</span><span class="n">tree</span><span class="p">.</span><span class="n">dynamicsBiasTerm</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="n">no_wrench</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Drake can be asked to compute the other terms in the manipulator equation as well. Drake can compute the center of mass of the entire tree.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">tree</span><span class="p">.</span><span class="n">centerOfMass</span><span class="p">(</span><span class="n">cache</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Drake provides a couple of useful mappings between the intrinsic and extrinsic coordinates.</p>
+
+<p>First, given a set of internal coordinates, Drake can transform these into frames, which may be expressed in yet another coordinate system.</p>
+
+<p>The extrinsic frames can be expressed as a function of the intrinsic coordinates</p>
+
+<p>$ X_i = f_i(x_j) $</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">tree</span><span class="p">.</span><span class="n">relativeTransform</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Returns a $ 4\times 4$ transformation matrix between body 0 and 9 of the tree. The upper $ 3\times 3$ block corresponds to a rotation matrix, and the last column a translation vector of the frame.</p>
+
+<p>The Jacobian of this mapping,</p>
+
+<p>$ J_{ij} = \frac{\partial f_i}{\partial x_j} $</p>
+
+<p>is useful for translating externally described small displacements, velocities, forces, and torques, into the equivalent terms for the intrinsic coordinates.</p>
+
+<p>The time derivative or differential of a frame will possess a linear and angular velocity. These come packed in a 6 dimensional vector called the Twist.</p>
+
+<p><a href="https://en.wikipedia.org/wiki/Screw_theory#Twist">https://en.wikipedia.org/wiki/Screw_theory#Twist</a></p>
+
+<p>The geometric Jacobian function returns the Jacobian in a sparse format. It returns a tuple of a $ m\times 6$ matrix and a $ 1\times m$ vector of indices to which coordinates these correspond.<br />
+The function takes the id of three different frames. In this example, it computes the differential of the transformation from frame 0 to frame 9 expressed in frame 3.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">tree</span><span class="p">.</span><span class="n">geometricJacobian</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The dense matrix can be constructed by</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">jsparse</span><span class="p">,</span> <span class="n">inds</span> <span class="o">=</span> <span class="n">tree</span><span class="p">.</span><span class="n">geometricJacobian</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">jdense</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">tree</span><span class="p">.</span><span class="n">get_num_positions</span><span class="p">(),</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">jdense</span><span class="p">[</span><span class="n">inds</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">jsparse</span>
+</code></pre></div></div>
+
+<p>Refs:</p>
+
+<p>A Mathematical Introduction to Robotic Manipulation - <a href="https://www.cds.caltech.edu/~murray/books/MLS/pdf/mls94-complete.pdf">https://www.cds.caltech.edu/~murray/books/MLS/pdf/mls94-complete.pdf</a></p>
+
+<p><a href="http://underactuated.csail.mit.edu/underactuated.html?chapter=intro">http://underactuated.csail.mit.edu/underactuated.html?chapter=intro</a></p>
+
+<h1 id="visualization">Visualization</h1>
+
+<p>The Drake visualizer may be found in the tools folder. The Drake visualizer needs to be running before any applications that needs to communicate with it are started. To get the drake visualizer running run the following command from the drake directory</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+bazel run //tools:drake_visualizer
+</code></pre></div></div>
+
+<p>May need to run commands here to make LCM work and visualizer not crash immediately</p>
+
+<p><a href="http://lcm-proj.github.io/multicast_setup.html">http://lcm-proj.github.io/multicast_setup.html</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+sudo ifconfig lo multicast
+sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev lo
+</code></pre></div></div>
+
+<h1 id="kinova-ros-package">Kinova ROS package</h1>
+
+<p>The Kinova Jaco arm is easily communicated to through the Kinova ROS package</p>
+
+<p><a href="https://github.com/Kinovarobotics/kinova-ros">https://github.com/Kinovarobotics/kinova-ros</a></p>
+
+<p>The package as of October 2018 supports Ubuntu 14.04 and ROS Indigo. The package includes bindings to the Jaco SDK for reading sensor data and giving motion commands. The package supports a variety of control modes, including torque control.</p>
+
+<p>To update functionality to ubuntu 16.04 and ROS Kinetic you may wish to pull from this external branch</p>
+
+<p><a href="https://github.com/CNURobotics/kinova-ros/tree/kinetic_devel">https://github.com/CNURobotics/kinova-ros/tree/kinetic_devel</a></p>
+
+<p>or try the beta branch</p>
+
+<p><a href="https://github.com/Kinovarobotics/kinova-ros/tree/kinova-ros-beta">https://github.com/Kinovarobotics/kinova-ros/tree/kinova-ros-beta</a></p>
+
+<p>The Gazebo simulator seems to have a great deal of trouble.</p>
+
+<p>One suggestion is that you have to add a small nonzero size parameter to your URDF files. <a href="https://github.com/Kinovarobotics/kinova-ros/issues/103">https://github.com/Kinovarobotics/kinova-ros/issues/103</a></p>
+
+<p>The topics made available by the ROS Package are</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+/j2n6s300_driver/fingers_action/finger_positions/cancel
+/j2n6s300_driver/fingers_action/finger_positions/feedback
+/j2n6s300_driver/fingers_action/finger_positions/goal
+/j2n6s300_driver/fingers_action/finger_positions/result
+/j2n6s300_driver/fingers_action/finger_positions/status
+/j2n6s300_driver/in/cartesian_force
+/j2n6s300_driver/in/cartesian_velocity
+/j2n6s300_driver/in/joint_torque
+/j2n6s300_driver/in/joint_velocity
+/j2n6s300_driver/joints_action/joint_angles/cancel
+/j2n6s300_driver/joints_action/joint_angles/feedback
+/j2n6s300_driver/joints_action/joint_angles/goal
+/j2n6s300_driver/joints_action/joint_angles/result
+/j2n6s300_driver/joints_action/joint_angles/status
+/j2n6s300_driver/out/cartesian_command
+/j2n6s300_driver/out/finger_position
+/j2n6s300_driver/out/joint_angles
+/j2n6s300_driver/out/joint_command
+/j2n6s300_driver/out/joint_state
+/j2n6s300_driver/out/joint_torques
+/j2n6s300_driver/out/tool_pose
+/j2n6s300_driver/out/tool_wrench
+/j2n6s300_driver/pose_action/tool_pose/cancel
+/j2n6s300_driver/pose_action/tool_pose/feedback
+/j2n6s300_driver/pose_action/tool_pose/goal
+/j2n6s300_driver/pose_action/tool_pose/result
+/j2n6s300_driver/pose_action/tool_pose/status
+/j2n6s300_driver/trajectory_controller/command
+/j2n6s300_driver/trajectory_controller/state
+</code></pre></div></div>
+
+<h2 id="ros-intercommunication">ROS Intercommunication</h2>
+
+<p>The communication stack used by Drake is Lightweight Communications and Marshalling (LCM). For interconnection to the rest of the ROS ecosystem, this adds a layer of friction.</p>
+
+<p>One option is to use the lcm_to_ros project https://github.com/nrjl/lcm_to_ros</p>
+
+<p>This is a generator for building republishers of messages going between ROS and LCM</p>
+
+<p>Another option is to build custom subscribers and publishers as in the following example.</p>
+
+<p><a href="http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28python%29">http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28python%29</a></p>
+
+<h2 id="example-connecting-drake-visualizer-to-external-jaco-arm">Example: Connecting Drake Visualizer to External Jaco Arm</h2>
+
+<p>In another terminal turn on the Jaco driver</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+roslaunch kinova_bringup kinova_robot.launch kinova_robotType:=j2n6s300
+</code></pre></div></div>
+
+<p>Also get the drake visualizer running from the drake directory before running the script</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+bazel run //tools:drake_visualizer
+</code></pre></div></div>
+
+<hr />
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">import</span> <span class="nn">rospy</span>
+<span class="kn">from</span> <span class="nn">pydrake.all</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">sensor_msgs.msg</span> <span class="kn">import</span> <span class="n">JointState</span>
+<span class="n">jaco_urdf</span> <span class="o">=</span> <span class="n">FindResourceOrThrow</span><span class="p">(</span><span class="s">"drake/manipulation/models/jaco_description/urdf/j2n6s300.urdf"</span><span class="p">)</span>
+<span class="n">tree</span> <span class="o">=</span> <span class="n">RigidBodyTree</span><span class="p">(</span><span class="n">jaco_urdf</span> <span class="p">,</span> <span class="n">FloatingBaseType</span><span class="p">.</span><span class="n">kFixed</span><span class="p">)</span>
+
+<span class="n">builder</span> <span class="o">=</span> <span class="n">DiagramBuilder</span><span class="p">()</span>
+
+<span class="n">lc</span> <span class="o">=</span> <span class="n">DrakeLcm</span><span class="p">()</span>
+<span class="n">vis</span> <span class="o">=</span> <span class="n">DrakeVisualizer</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">lc</span><span class="p">)</span>
+<span class="n">robot</span> <span class="o">=</span> <span class="n">builder</span><span class="p">.</span><span class="n">AddSystem</span><span class="p">(</span><span class="n">RigidBodyPlant</span><span class="p">(</span><span class="n">tree</span><span class="p">))</span>
+<span class="n">publisher</span> <span class="o">=</span> <span class="n">builder</span><span class="p">.</span><span class="n">AddSystem</span><span class="p">(</span><span class="n">vis</span><span class="p">)</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Connect</span><span class="p">(</span><span class="n">robot</span><span class="p">.</span><span class="n">get_output_port</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">publisher</span><span class="p">.</span><span class="n">get_input_port</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="n">diagram</span> <span class="o">=</span> <span class="n">builder</span><span class="p">.</span><span class="n">Build</span><span class="p">()</span>
+<span class="n">simulator</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span><span class="n">diagram</span><span class="p">)</span>
+<span class="n">simulator</span><span class="p">.</span><span class="n">set_target_realtime_rate</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">simulator</span><span class="p">.</span><span class="n">set_publish_every_time_step</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">context</span> <span class="o">=</span> <span class="n">simulator</span><span class="p">.</span><span class="n">get_mutable_context</span><span class="p">()</span>
+<span class="n">state</span> <span class="o">=</span> <span class="n">context</span><span class="p">.</span><span class="n">get_mutable_continuous_state_vector</span><span class="p">()</span>
+<span class="n">state</span><span class="p">.</span><span class="n">SetFromVector</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">9</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">simulator</span><span class="p">.</span><span class="n">Initialize</span><span class="p">()</span>
+
+
+<span class="n">q</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">v</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">f</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">q</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">f</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">position</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">velocity</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">effort</span><span class="p">)</span>
+        <span class="c1"># Some of the coordinates are offset between the Kinova Ros package and the Drake model
+</span>        <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+
+<span class="n">rospy</span><span class="p">.</span><span class="n">init_node</span><span class="p">(</span><span class="s">'listener'</span><span class="p">,</span> <span class="n">anonymous</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">rospy</span><span class="p">.</span><span class="n">Subscriber</span><span class="p">(</span><span class="s">"/j2n6s300_driver/out/joint_state"</span><span class="p">,</span> <span class="n">JointState</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+
+<span class="n">rate</span> <span class="o">=</span> <span class="n">rospy</span><span class="p">.</span><span class="n">Rate</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">rate</span><span class="p">.</span><span class="n">sleep</span><span class="p">()</span>
+<span class="k">while</span> <span class="ow">not</span> <span class="n">rospy</span><span class="p">.</span><span class="n">is_shutdown</span><span class="p">():</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">context</span><span class="p">.</span><span class="n">get_mutable_continuous_state_vector</span><span class="p">()</span>
+        <span class="n">state</span><span class="p">.</span><span class="n">SetFromVector</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">v</span><span class="p">))</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">Initialize</span><span class="p">()</span>
+        <span class="n">rate</span><span class="p">.</span><span class="n">sleep</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="drake_vis.png" alt="The Drake Visualizer" /></p>
+
+<hr />
+
+<h2 id="example-crumpling-jaco">Example: Crumpling Jaco</h2>
+
+<p>A simple example of the simulation capabilities is the simulation of an unactuated Jaco arm.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">import</span> <span class="nn">rospy</span>
+<span class="kn">from</span> <span class="nn">pydrake.all</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">sensor_msgs.msg</span> <span class="kn">import</span> <span class="n">JointState</span>
+<span class="n">jaco_urdf</span> <span class="o">=</span> <span class="n">FindResourceOrThrow</span><span class="p">(</span><span class="s">"drake/manipulation/models/jaco_description/urdf/j2n6s300.urdf"</span><span class="p">)</span>
+<span class="n">tree</span> <span class="o">=</span> <span class="n">RigidBodyTree</span><span class="p">(</span><span class="n">jaco_urdf</span> <span class="p">,</span> <span class="n">FloatingBaseType</span><span class="p">.</span><span class="n">kFixed</span><span class="p">)</span>
+
+<span class="n">builder</span> <span class="o">=</span> <span class="n">DiagramBuilder</span><span class="p">()</span>
+
+<span class="n">lc</span> <span class="o">=</span> <span class="n">DrakeLcm</span><span class="p">()</span>
+<span class="n">vis</span> <span class="o">=</span> <span class="n">DrakeVisualizer</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">lc</span><span class="p">)</span>
+<span class="n">robot</span> <span class="o">=</span> <span class="n">builder</span><span class="p">.</span><span class="n">AddSystem</span><span class="p">(</span><span class="n">RigidBodyPlant</span><span class="p">(</span><span class="n">tree</span><span class="p">))</span>
+<span class="n">publisher</span> <span class="o">=</span> <span class="n">builder</span><span class="p">.</span><span class="n">AddSystem</span><span class="p">(</span><span class="n">vis</span><span class="p">)</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Connect</span><span class="p">(</span><span class="n">robot</span><span class="p">.</span><span class="n">get_output_port</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">publisher</span><span class="p">.</span><span class="n">get_input_port</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">force</span> <span class="o">=</span> <span class="n">builder</span><span class="p">.</span><span class="n">AddSystem</span><span class="p">(</span><span class="n">ConstantVectorSource</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">9</span><span class="p">)))</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Connect</span><span class="p">(</span><span class="n">force</span><span class="p">.</span><span class="n">get_output_port</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">robot</span><span class="p">.</span><span class="n">get_input_port</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="n">diagram</span> <span class="o">=</span> <span class="n">builder</span><span class="p">.</span><span class="n">Build</span><span class="p">()</span>
+<span class="n">simulator</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span><span class="n">diagram</span><span class="p">)</span>
+<span class="n">simulator</span><span class="p">.</span><span class="n">set_target_realtime_rate</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">simulator</span><span class="p">.</span><span class="n">set_publish_every_time_step</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">context</span> <span class="o">=</span> <span class="n">simulator</span><span class="p">.</span><span class="n">get_mutable_context</span><span class="p">()</span>
+<span class="n">state</span> <span class="o">=</span> <span class="n">context</span><span class="p">.</span><span class="n">get_mutable_continuous_state_vector</span><span class="p">()</span>
+<span class="n">state</span><span class="p">.</span><span class="n">SetFromVector</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">9</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">simulator</span><span class="p">.</span><span class="n">Initialize</span><span class="p">()</span>
+<span class="n">simulator</span><span class="p">.</span><span class="n">StepTo</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="optimization-solvers">Optimization Solvers</h1>
+
+<p>Drake provides a common interface to many optimization solvers. Because of the tight integration, Drake has the capability to directly build the equations of motion for a system into a form the solver can comprehend.</p>
+
+<p>The Mathematical Program class provides a high level interface to the different solvers. This class can be constructed as an object on it’s own or as returned by other helper classes such as trajectory optimization builders.</p>
+
+<p>Drake provides a symbolic expression modeling language in which to describe constraints and costs.</p>
+
+<hr />
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">from</span> <span class="nn">pydrake.all</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">MathematicalProgram</span><span class="p">()</span>
+
+<span class="n">xs</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="n">NewContinuousVariables</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s">'x'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">m</span><span class="p">.</span><span class="n">AddCost</span><span class="p">(</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">xs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span>
+
+<span class="n">m</span><span class="p">.</span><span class="n">AddLinearConstraint</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">m</span><span class="p">.</span><span class="n">AddLinearConstraint</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">xs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">linear_equality_constraints</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">bounding_box_constraints</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">linear_costs</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">Solve</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">GetSolverId</span><span class="p">().</span><span class="n">name</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">GetSolution</span><span class="p">(</span><span class="n">xs</span><span class="p">))</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>There are a large variety of solvers out there for problems of different structure.</p>
+
+<p>A Mathematical Program is generally of the form</p>
+
+<p>$ \min f(x) \   s.t. $<br />
+$ g(x) \ge 0 $<br />
+$ h(x) = 0 $</p>
+
+<p>One of the oldest and most studied class of these programs are known as Linear Programs which has linear cost and constraints. This mathematical program has very efficient solvers available for it.</p>
+
+<p>A large class of optimization problems that are tractable are known as Convex Optimization problems. The cost functions must be bowl shaped (convex), the inequality constraints must define convex regions and the equality constraints must be affine (linear + offset). For this class, gradient descent roughly works and refinements of gradient descent like Newton’s method work even better. Convexity implies that greedy local moves are also acceptable global moves and there are no local minima or tendril regions to get caught in.</p>
+
+<p>The common reference for convex optimization is the textbook by Boyd and Vandenberghe freely available at <a href="http://web.stanford.edu/~boyd/cvxbook/">http://web.stanford.edu/~boyd/cvxbook/</a>. There is also an accompanying video course available online.</p>
+
+<p>Subclasses of Convex programming may have solvers tuned to them. Important subclasses include:</p>
+
+<ul>
+  <li>Linear Programming - Linear objective, linear equality, and linear inequality constraints.</li>
+  <li>Quadratic Programming - Linear Programming + quadratic objective</li>
+  <li>Second Order Cone Programming</li>
+  <li>Semidefinite Programming - Optimization allowing for the constraint of a SemiDefinite matrix. This means the matrix is constrained to have all nonnegative eigenvalues or equivalently the quadratic form it defines $ q^T Xq$ is non-negative for all possible vectors $ q$.</li>
+  <li>Sum of Squares Programming - Optimization over polynomials with the constraint that the polynomial can be written as a sum of squares, a manifestly positive form.</li>
+</ul>
+
+<p>Many problems cannot be put into this form. If the inherent nature of the problem at hand requires it, you may choose to use a nonlinear programming solver or Mixed Integer Programming Solver.</p>
+
+<p>The solvers Ipopt and Snopt are nonlinear programming solvers. Ipopt is an open source and Snopt is proprietary. These solvers use local convex approximations to the problem to heuristically drive the solution to a local minimum.</p>
+
+<p>Mixed Integer Linear Programming is Linear Programming with additional ability to require variables to take on integer values. This additional constraint type takes the problem from polynomial time solvable to NP-complete. A surprisingly large number of discrete and continuous optimization problems can be encoded into this framework. Internally, these solvers use linear programming solvers to guide the discrete search.</p>
+
+<p>Part of the art and fun of the subject comes from manipulating your problem into a form amenable to powerful available solvers and theory.</p>
+
+<p>Hans Mittelmann at the University of Arizona maintains benchmarks for a variety of optimization tools. <a href="http://plato.asu.edu/bench.html">http://plato.asu.edu/bench.html</a> A rule of thumb is that commercial solvers perform better than open source solvers.</p>
+
+<h3 id="available-solvers-in-drake">Available Solvers in Drake</h3>
+
+<ul>
+  <li>
+    <p>Mosek - Mosek is a proprietary optimization solver package offering solvers for</p>
+
+    <ul>
+      <li>Linear.</li>
+      <li>Conic quadratic.</li>
+      <li>Semi-definite (Positive semi-definite matrix variables).</li>
+      <li>Quadratic and quadratically constrained.</li>
+      <li>General convex nonlinear.</li>
+      <li>Mixed integer linear, conic and quadratic.</li>
+    </ul>
+  </li>
+  <li>
+    <p>Gurobi - Gurobi is a proprietary optimization solver package offering solvers for</p>
+
+    <ul>
+      <li>linear programming solver (LP)</li>
+      <li>mixed-integer linear programming solver (MILP)</li>
+      <li>mixed-integer quadratic programming solver (MIQP)</li>
+      <li>quadratic programming solver (QP)</li>
+      <li>quadratically constrained programming solver (QCP)</li>
+      <li>mixed-integer quadratically constrained programming solver (MIQCP)</li>
+    </ul>
+  </li>
+  <li>Snopt - Snopt is a nonlinear optimization solver using sequential convex optimization (SQP) <a href="http://www.sbsi-sol-optimize.com/asp/sol_product_snopt.htm">http://www.sbsi-sol-optimize.com/asp/sol_product_snopt.htm</a></li>
+  <li>Ipopt - Ipopt is a open source nonlinear optimization solver using sequential convex optimization (SQP) <a href="https://projects.coin-or.org/Ipopt">https://projects.coin-or.org/Ipopt</a></li>
+  <li>Operator Splitting Quadratic Program (OSQP) - Open source quadratic programming package <a href="https://osqp.org/">https://osqp.org/</a></li>
+  <li>ik</li>
+  <li>LCP</li>
+  <li>dReal - An SMT solver for reals <a href="http://dreal.github.io/">http://dreal.github.io/</a></li>
+</ul>
+
+<h1 id="automatic-differentiation">Automatic Differentiation</h1>
+
+<p>Automatic Differentiation is the capability to have derivatives computed alongside code that computes the values. It is largely based upon application of the chain rule. There are two modes, forward and reverse mode.</p>
+
+<p>Forward mode is the simplest to describe. Functions can be overloaded so that they take a dual number, a value combined in a tuple with it’s derivative information. As the value of a function is computed, the Jacobian of that function is matrix multiplied on the derivative concurrently.</p>
+
+<p>Drake exposes automatic differentiation capability for manual use</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">from</span> <span class="nn">pydrake.all</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="c1"># second parameter initializes forward mode derivative information
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">AutoDiffXd</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">derivatives</span><span class="p">())</span>
+</code></pre></div></div>
+
+<p>More importantly Drake uses automatic differentiation internally to marshal symbolic problems into forms acceptable to external solvers and to calculate the various Jacobians we’ve already seen.</p>
+
+<h2 id="trajectory-optimization">Trajectory Optimization</h2>
+
+<p>Trajectory optimization is a framework in which one uses Mathematical programming to solve optimal trajectory problems. The input to the system</p>
+
+<p>is considered to be a decision variable in a Mathematical programming problem.</p>
+
+<p>The combination of dynamical system modeling, automatic differentiation, and bindings to mathematical programming solvers makes Drake an excellent platform for trajectory optimization.</p>
+
+<p>In Direct Collocation, both the path and the input variables are discretized along time. The trajectories are described by cubics and force curves are described by piecewise linear. One way of performing direct collocation is to take the path position at a discrete number of time points and make a decision variable for each. The discretized equations of motion become constraints that neighboring time points have to obey. One may then inject any other desired requirements (staying inside some safe region for example) as additional constraints.</p>
+
+<p>The Drake docs state:</p>
+
+<p>”</p>
+
+<p>DirectCollocation implements the approach to trajectory optimization as described in C. R. Hargraves and S. W. Paris. Direct trajectory optimization using nonlinear programming and collocation. J Guidance, 10(4):338-342, July-August 1987. It assumes a first-order hold on the input trajectory and a cubic spline representation of the state trajectory, and adds dynamic constraints (and running costs) to the midpoints as well as the knot points in order to achieve a 3rd order integration accuracy.</p>
+
+<p>”</p>
+
+<p>Drake provides a useful interface for talking about trajectories. For both describing the cost function and the constraint functions, you want them to apply at all time steps. You can ask drake for variables representing the position or forces at all time steps. Drake will then build the appropriate mathematical program applying the cost of constraint at all time steps.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">ctx</span> <span class="o">=</span> <span class="n">robot</span><span class="p">.</span><span class="n">CreateDefaultContext</span><span class="p">()</span>
+<span class="n">dircol</span> <span class="o">=</span> <span class="n">DirectCollocation</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span> <span class="c1"># timesteps, minimum time step, max timestep
+</span><span class="n">dircol</span><span class="p">.</span><span class="n">AddEqualTimeIntervalsConstraints</span><span class="p">()</span>
+
+<span class="n">state</span> <span class="o">=</span> <span class="n">dircol</span><span class="p">.</span><span class="n">state</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">dircol</span><span class="p">.</span><span class="nb">input</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">dircol</span><span class="p">.</span><span class="n">time</span>
+
+<span class="n">dircol</span><span class="p">.</span><span class="n">AddRunningCost</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">dircol</span><span class="p">.</span><span class="n">AddConstraintToAllKnotPoints</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>You may want to select the initial and final state specifically to specify goals and initial conditions</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">init</span> <span class="o">=</span> <span class="n">dircol</span><span class="p">.</span><span class="n">initial_state</span>
+<span class="n">final</span> <span class="o">=</span> <span class="n">dircol</span><span class="p">.</span><span class="n">final_state</span>
+</code></pre></div></div>
+
+<p>Refs:</p>
+
+<p><a href="http://underactuated.mit.edu/underactuated.html?chapter=trajopt">http://underactuated.mit.edu/underactuated.html?chapter=trajopt</a></p>
+
+<h2 id="example-trajectory-optimization-of-a-pendulum">Example: Trajectory Optimization of a Pendulum</h2>
+
+<p>This example comes from the Underactuated Robotics textbook source</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="kn">from</span> <span class="nn">pydrake.examples.pendulum</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PendulumPlant</span><span class="p">,</span> <span class="n">PendulumState</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pydrake.all</span> <span class="kn">import</span> <span class="p">(</span><span class="n">DirectCollocation</span><span class="p">,</span> <span class="n">PiecewisePolynomial</span><span class="p">,</span>
+                                                 <span class="n">SolutionResult</span><span class="p">)</span>
+<span class="c1">#from visualizer import PendulumVisualizer
+</span>
+<span class="n">plant</span> <span class="o">=</span> <span class="n">PendulumPlant</span><span class="p">()</span>
+<span class="n">context</span> <span class="o">=</span> <span class="n">plant</span><span class="p">.</span><span class="n">CreateDefaultContext</span><span class="p">()</span>
+
+<span class="n">dircol</span> <span class="o">=</span> <span class="n">DirectCollocation</span><span class="p">(</span><span class="n">plant</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">num_time_samples</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span>
+                            <span class="n">minimum_timestep</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">maximum_timestep</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">dircol</span><span class="p">.</span><span class="n">AddEqualTimeIntervalsConstraints</span><span class="p">()</span>
+
+<span class="n">torque_limit</span> <span class="o">=</span> <span class="mf">3.0</span>  <span class="c1"># N*m.
+</span><span class="n">u</span> <span class="o">=</span> <span class="n">dircol</span><span class="p">.</span><span class="nb">input</span><span class="p">()</span>
+<span class="n">dircol</span><span class="p">.</span><span class="n">AddConstraintToAllKnotPoints</span><span class="p">(</span><span class="o">-</span><span class="n">torque_limit</span> <span class="o">&lt;=</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">dircol</span><span class="p">.</span><span class="n">AddConstraintToAllKnotPoints</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">torque_limit</span><span class="p">)</span>
+
+<span class="n">initial_state</span> <span class="o">=</span> <span class="n">PendulumState</span><span class="p">()</span>
+<span class="n">initial_state</span><span class="p">.</span><span class="n">set_theta</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">initial_state</span><span class="p">.</span><span class="n">set_thetadot</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">dircol</span><span class="p">.</span><span class="n">AddBoundingBoxConstraint</span><span class="p">(</span><span class="n">initial_state</span><span class="p">.</span><span class="n">get_value</span><span class="p">(),</span>
+                            <span class="n">initial_state</span><span class="p">.</span><span class="n">get_value</span><span class="p">(),</span>
+                            <span class="n">dircol</span><span class="p">.</span><span class="n">initial_state</span><span class="p">())</span>
+<span class="c1"># More elegant version is blocked on drake #8315:
+# dircol.AddLinearConstraint(dircol.initial_state()
+#                               == initial_state.get_value())
+</span>
+<span class="n">final_state</span> <span class="o">=</span> <span class="n">PendulumState</span><span class="p">()</span>
+<span class="n">final_state</span><span class="p">.</span><span class="n">set_theta</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">final_state</span><span class="p">.</span><span class="n">set_thetadot</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">dircol</span><span class="p">.</span><span class="n">AddBoundingBoxConstraint</span><span class="p">(</span><span class="n">final_state</span><span class="p">.</span><span class="n">get_value</span><span class="p">(),</span>
+                                <span class="n">final_state</span><span class="p">.</span><span class="n">get_value</span><span class="p">(),</span>
+                                <span class="n">dircol</span><span class="p">.</span><span class="n">final_state</span><span class="p">())</span>
+<span class="c1"># dircol.AddLinearConstraint(dircol.final_state() == final_state.get_value())
+</span>
+<span class="n">R</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># Cost on input "effort".
+</span><span class="n">dircol</span><span class="p">.</span><span class="n">AddRunningCost</span><span class="p">(</span><span class="n">R</span><span class="o">*</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">initial_x_trajectory</span> <span class="o">=</span> \
+        <span class="n">PiecewisePolynomial</span><span class="p">.</span><span class="n">FirstOrderHold</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="n">initial_state</span><span class="p">.</span><span class="n">get_value</span><span class="p">(),</span>
+                                 <span class="n">final_state</span><span class="p">.</span><span class="n">get_value</span><span class="p">()])</span>
+<span class="n">dircol</span><span class="p">.</span><span class="n">SetInitialTrajectory</span><span class="p">(</span><span class="n">PiecewisePolynomial</span><span class="p">(),</span> 
+                            <span class="n">initial_x_trajectory</span><span class="p">)</span> 
+<span class="n">result</span> <span class="o">=</span> <span class="n">dircol</span><span class="p">.</span><span class="n">Solve</span><span class="p">()</span> 
+<span class="k">assert</span><span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="n">SolutionResult</span><span class="p">.</span><span class="n">kSolutionFound</span><span class="p">)</span> 
+<span class="n">x_trajectory</span> <span class="o">=</span> <span class="n">dircol</span><span class="p">.</span><span class="n">ReconstructStateTrajectory</span><span class="p">()</span> 
+<span class="c1">#vis = PendulumVisualizer() 
+#ani = vis.animate(x_trajectory, repeat=True) 
+</span><span class="n">x_knots</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">x_trajectory</span><span class="p">.</span><span class="n">value</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span>                                          
+                      <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_trajectory</span><span class="p">.</span><span class="n">start_time</span><span class="p">(),</span>                                          
+                      <span class="n">x_trajectory</span><span class="p">.</span><span class="n">end_time</span><span class="p">(),</span> <span class="mi">100</span><span class="p">)])</span> 
+<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">()</span> 
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_knots</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">x_knots</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span> 
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span> 
+
+</code></pre></div></div>
+
+<ul>
+  <li><img src="/assets/pendulum_phase.png" alt="" /></li>
+</ul>
+
+<hr />
+
+<h2 id="example-application-estimating-end-effector-force-from-jaco-motor-torques">Example Application: Estimating end-effector force from Jaco motor torques</h2>
+
+<p>End effector forces become part of the equations of motion.</p>
+
+<p>The geometric Jacobian transforms the extrinsic force into intrinsic coordinates. It is in general a rectangular matrix, since the number of extrinsic coordinates does not need to match the number of intrinsic coordinates.</p>
+
+<p>A force $ f$ applied to the end effector appears linearly in the manipulator equations as $ J^Tf$. This will be canceled by the torques of the motors during static or quasi-static movement. Hence, we can can determinethe external force from the motor torques if we assume it is the only external force at play.</p>
+
+<p>The pseudo-inverse is the best possible solution to an overdetermined set of linear equations, in the least squares sense. We use this operation due to the non square nature of the Jacobian.</p>
+
+<p>$ \min (Jx - X)^2 \rightarrow J^T Jx = J^T X$</p>
+
+<p>The following script prints both the end effector force as supplied by the Jaco SDK and the force as computed by Drake from the internal motor torques.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">import</span> <span class="nn">rospy</span>
+<span class="kn">from</span> <span class="nn">pydrake.all</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">sensor_msgs.msg</span> <span class="kn">import</span> <span class="n">JointState</span>
+<span class="kn">from</span> <span class="nn">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">WrenchStamped</span>
+<span class="n">urdf_tree</span> <span class="o">=</span> <span class="n">FindResourceOrThrow</span><span class="p">(</span><span class="s">"drake/manipulation/models/jaco_description/urdf/j2n6s300.urdf"</span><span class="p">)</span>
+<span class="n">tree</span> <span class="o">=</span> <span class="n">RigidBodyTree</span><span class="p">(</span> <span class="n">urdf_tree</span><span class="p">,</span>
+                                         <span class="n">FloatingBaseType</span><span class="p">.</span><span class="n">kFixed</span><span class="p">)</span>
+<span class="n">bodies</span> <span class="o">=</span> <span class="p">[</span><span class="n">tree</span><span class="p">.</span><span class="n">get_body</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tree</span><span class="p">.</span><span class="n">get_num_bodies</span><span class="p">())]</span>
+<span class="n">no_wrench</span> <span class="o">=</span> <span class="p">{</span> <span class="n">body</span> <span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>  <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="n">bodies</span><span class="p">}</span>
+
+<span class="n">body_n</span> <span class="o">=</span> <span class="mi">9</span> <span class="c1">#end_effector body number
+</span><span class="k">print</span><span class="p">(</span><span class="n">bodies</span><span class="p">[</span><span class="n">body_n</span><span class="p">].</span><span class="n">get_name</span><span class="p">())</span>
+
+<span class="k">def</span> <span class="nf">end_effector_force</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+        <span class="n">cache</span> <span class="o">=</span> <span class="n">tree</span><span class="p">.</span><span class="n">doKinematics</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
+        <span class="c1"># returns the external torque term for only gravity and no other external wrenches
+</span>        <span class="n">Cgrav</span> <span class="o">=</span> <span class="n">tree</span><span class="p">.</span><span class="n">dynamicsBiasTerm</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="n">no_wrench</span> <span class="p">)</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">u</span> <span class="o">-</span> <span class="n">Cgrav</span> <span class="c1"># subtract off gravity of robot itself
+</span>        <span class="k">print</span><span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="n">Cgrav</span><span class="p">)</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">tree</span><span class="p">.</span><span class="n">geometricJacobian</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="mi">0</span> <span class="p">,</span> <span class="n">body_n</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># returns a tuple of 6 by n matrix in j[0] and the indices to which it applied in j[1]
+</span>        <span class="n">jjt</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">,</span><span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">T</span><span class="p">)</span> <span class="c1"># 
+</span>        <span class="n">Wext</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">jjt</span><span class="p">,</span>  <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>  <span class="n">C</span><span class="p">[</span><span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))</span> <span class="c1"># C[j[1]] is cryptic numpy sub indexing for densifying the Jacobian
+</span>        <span class="k">return</span> <span class="n">Wext</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+
+
+<span class="n">q</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">v</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">f</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">fext</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">q</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">initu</span><span class="p">,</span> <span class="n">start</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">position</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">velocity</span><span class="p">)</span>
+        <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#The drake conventions and the kinova conventions for angles are off
+</span>        <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">effort</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">wrenchcallback</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">fext</span>
+        <span class="n">fext</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">wrench</span><span class="p">.</span><span class="n">force</span><span class="p">.</span><span class="n">x</span>
+        <span class="n">fext</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">wrench</span><span class="p">.</span><span class="n">force</span><span class="p">.</span><span class="n">y</span>
+        <span class="n">fext</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">wrench</span><span class="p">.</span><span class="n">force</span><span class="p">.</span><span class="n">z</span>
+
+<span class="n">rospy</span><span class="p">.</span><span class="n">init_node</span><span class="p">(</span><span class="s">'listener'</span><span class="p">,</span> <span class="n">anonymous</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">rospy</span><span class="p">.</span><span class="n">Subscriber</span><span class="p">(</span><span class="s">"/j2n6s300_driver/out/joint_state"</span><span class="p">,</span> <span class="n">JointState</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+<span class="n">rospy</span><span class="p">.</span><span class="n">Subscriber</span><span class="p">(</span><span class="s">"/j2n6s300_driver/out/tool_wrench"</span><span class="p">,</span> <span class="n">WrenchStamped</span><span class="p">,</span> <span class="n">wrenchcallback</span><span class="p">)</span>
+
+<span class="n">rate</span> <span class="o">=</span> <span class="n">rospy</span><span class="p">.</span><span class="n">Rate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">rate</span><span class="p">.</span><span class="n">sleep</span><span class="p">()</span>
+<span class="k">while</span> <span class="ow">not</span> <span class="n">rospy</span><span class="p">.</span><span class="n">is_shutdown</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">end_effector_force</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">f</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">fext</span><span class="p">)</span>
+        <span class="n">rate</span><span class="p">.</span><span class="n">sleep</span><span class="p">()</span>
+</code></pre></div></div>
+
+:ET

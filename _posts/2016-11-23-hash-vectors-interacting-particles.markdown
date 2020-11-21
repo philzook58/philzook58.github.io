@@ -107,7 +107,7 @@ I'm working in a particle number emphasizing basis. This may be very bad.
 
 Could I implement a renormalization procedure by Schur complementing out high frequency subspace then rescaling (this is loose talk. I'm not sure what I mean yet)?
 
-$latex J a^\dagger $ terms for injecting from external leads. Fully interacting Landauer-Buttiker conductance? Also connection to generating function techniques in QFT?
+$ J a^\dagger $ terms for injecting from external leads. Fully interacting Landauer-Buttiker conductance? Also connection to generating function techniques in QFT?
 
 Maybe I should be doing this in Haskell? I like Haskell. I like types. I like persistence and non mutation. I think I'll want numpy facilities down the road though.
 

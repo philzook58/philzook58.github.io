@@ -15,29 +15,29 @@ We're aiming a laser at it. A blindingly powerful laser
 
 Essentially Servo B controls the angle in the x-y plane of the mirror and servo A controls the z angle to that plane.
 
-The mirror law is $latex v_2=v_1 - 2(v_1 \cdot n)n$
+The mirror law is $ v_2=v_1 - 2(v_1 \cdot n)n$
 
-Where all are unit vectors. $latex v_1$ is the incoming, $latex n$ is the mirror normal and $latex v_2$ is the outgoing unit vector.
+Where all are unit vectors. $ v_1$ is the incoming, $ n$ is the mirror normal and $ v_2$ is the outgoing unit vector.
 
 We fixed the laser to the base so
 
-$latex v_1 = \hat{y}$
+$ v_1 = \hat{y}$
 
 The outgoing ray must hit the ceiling (at a height R) at position x,y.
 
-$latex v_2 = (x,y,R) \frac {1} {\sqrt{x^2+y^2+R^2}}$
+$ v_2 = (x,y,R) \frac {1} {\sqrt{x^2+y^2+R^2}}$
 
 Here's a nice observation:
 
-$latex v_2 - \hat{y} \propto n$
+$ v_2 - \hat{y} \propto n$
 
-So we have an algorithm for finding n right there. Find v2, subtract off 1 and then normalize the resulting vector to get $latex \hat{n}$.
+So we have an algorithm for finding n right there. Find v2, subtract off 1 and then normalize the resulting vector to get $ \hat{n}$.
 
-Then finally we can write n in terms of the angles $latex \alpha,\beta$, which heavily depend on our conventions of where angle 0 is and whether the servo spin clockwise or counterclockwise.
+Then finally we can write n in terms of the angles $ \alpha,\beta$, which heavily depend on our conventions of where angle 0 is and whether the servo spin clockwise or counterclockwise.
 
 I believe ours came out to be something like:
 
-$latex n = (\cos(\alpha)\sin(\beta), -\cos(\alpha)\cos(\beta) ,\sin(\alpha))$
+$ n = (\cos(\alpha)\sin(\beta), -\cos(\alpha)\cos(\beta) ,\sin(\alpha))$
 
 In all honesty, we coded her up, then fiddled with minus signs until it was working. Not necessarily a bad way of going about things. Find the things to think about and find the things to just try.
 

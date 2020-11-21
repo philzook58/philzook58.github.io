@@ -35,13 +35,13 @@ Geometrical optics is a pretty interesting topic. It really is almost pure geome
 
 
 
-In physical optics, this corresponds to the linear superposition of the waves produced at each point by a propagator function $latex \int dx' G(x,x')$. In geometrical optics, which was Huygens original intent I think (these old school guys were VERY geometrical), this is the curious operation of taking the geometrical envelope of the little waves produced by each point.
+In physical optics, this corresponds to the linear superposition of the waves produced at each point by a propagator function $ \int dx' G(x,x')$. In geometrical optics, which was Huygens original intent I think (these old school guys were VERY geometrical), this is the curious operation of taking the geometrical envelope of the little waves produced by each point.
 
 
 
 
 
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Refraction_-_Huygens-Fresnel_principle.svg/1920px-Refraction_-_Huygens-Fresnel_principle.svg.png)The gist of Huygens principles. Ripped from wikipedia
+![](/assets/1920px-Refraction_-_Huygens-Fresnel_principle.svg.png)The gist of Huygens principles. Ripped from wikipedia
 
 
 
@@ -53,13 +53,13 @@ In physical optics, this corresponds to the linear superposition of the waves pr
 
 
 
-![](https://upload.wikimedia.org/wikipedia/commons/b/b3/EnvelopeAnim.gif)Taking the envelope of a family of lines. Ripped from wikipedia
+![](/assets/EnvelopeAnim.gif)Taking the envelope of a family of lines. Ripped from wikipedia
 
 
 
 
 
-You can describe a geometrical wavefront implicitly with an equations $latex \phi(x,y) = 0$.  Maybe the wavefront is a circle, or a line, or some wacky shape.
+You can describe a geometrical wavefront implicitly with an equations $ \phi(x,y) = 0$.  Maybe the wavefront is a circle, or a line, or some wacky shape.
 
 
 
@@ -67,7 +67,7 @@ You can describe a geometrical wavefront implicitly with an equations $latex \ph
 
 
 
-The wavelet produced by the point x,y after a time t is described implicitly by $latex d(\vec{x},\vec{x'})^2 - t^2 = (x-x')^2 + (y-y')^2 - t^2 = 0$.
+The wavelet produced by the point x,y after a time t is described implicitly by $ d(\vec{x},\vec{x'})^2 - t^2 = (x-x')^2 + (y-y')^2 - t^2 = 0$.
 
 
 
@@ -83,7 +83,7 @@ This described a family of curves, the circles produced by the different points 
 
 
 
-How do we do this? [Grobner bases](https://en.wikipedia.org/wiki/Gr%C3%B6bner_basis) is one way if we make $latex \phi$ a polynomial equation. For today's purposes, Grobner bases are a method for solving multivariate polynomial equations. Kind of surprising that such a thing even exists. It's actually a guaranteed terminating algorithm with horrific asymptotic complexity. Sympy has an implementation. For more on Grobner bases, the links here are useful [http://www.philipzucker.com/dump-of-nonlinear-algebra-algebraic-geometry-notes-good-links-though/](http://www.philipzucker.com/dump-of-nonlinear-algebra-algebraic-geometry-notes-good-links-though/). Especially check out the Cox Little O'Shea books
+How do we do this? [Grobner bases](https://en.wikipedia.org/wiki/Gr%C3%B6bner_basis) is one way if we make $ \phi$ a polynomial equation. For today's purposes, Grobner bases are a method for solving multivariate polynomial equations. Kind of surprising that such a thing even exists. It's actually a guaranteed terminating algorithm with horrific asymptotic complexity. Sympy has an implementation. For more on Grobner bases, the links here are useful [http://www.philipzucker.com/dump-of-nonlinear-algebra-algebraic-geometry-notes-good-links-though/](http://www.philipzucker.com/dump-of-nonlinear-algebra-algebraic-geometry-notes-good-links-though/). Especially check out the Cox Little O'Shea books
 
 
 
@@ -107,26 +107,31 @@ So check this out
 
 
     
-    <code>from sympy import *
     
-    
-    x1, y1, x2, y2, dx, dy = symbols('x1, y1, x2, y2, dx, dy')
-    
-    def dist(x,y,d):
-        return x**2 + y**2 - d**2
-    
-    e1 = dist(x1,y1,2) # the original circle of radius 2
-    e2 = dist(x1-x2 ,y1 - y2 , 1) # the parametrized wavefront after time 1
-    
-    
-    # The two envelope conditions.
-    e3 = diff(e1,x1)*dx + diff(e1,y1)*1
-    e4 = diff(e2,x1)*dx + diff(e2,y1)*1
-    
-    
-    envelope = groebner([e1,e2,e3,e4], y1, x1, dx, dy, x2, y2, order='lex')[-1]
-    plot_implicit(e1, show=False)
-    plot_implicit(envelope, show = True)</code>
+```
+
+from sympy import *
+
+
+x1, y1, x2, y2, dx, dy = symbols('x1, y1, x2, y2, dx, dy')
+
+def dist(x,y,d):
+    return x**2 + y**2 - d**2
+
+e1 = dist(x1,y1,2) # the original circle of radius 2
+e2 = dist(x1-x2 ,y1 - y2 , 1) # the parametrized wavefront after time 1
+
+
+# The two envelope conditions.
+e3 = diff(e1,x1)*dx + diff(e1,y1)*1
+e4 = diff(e2,x1)*dx + diff(e2,y1)*1
+
+
+envelope = groebner([e1,e2,e3,e4], y1, x1, dx, dy, x2, y2, order='lex')[-1]
+plot_implicit(e1, show=False)
+plot_implicit(envelope, show = True)
+```
+
 
 
 
@@ -156,13 +161,13 @@ This does indeed show the two new wavefronts at radius 1 and radius 3.
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/10/orginal_circle-1-1024x768.png)Original circle radius = 2  
+![](/assets/orginal_circle-1-1024x768.png)Original circle radius = 2  
   
 x1**2 + y1**2 - 4  = 0
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/10/evolved_circles-1024x768.png)Evolved circles found via grobner basis.  
+![](/assets/evolved_circles-1024x768.png)Evolved circles found via grobner basis.  
   
   
 (x2**2 + y2**2 - 9)*(x2**2 + y2**2 - 1)  = 0
@@ -177,11 +182,11 @@ Here's a different one of a parabola using e1 = y1 - x1 + x1**2
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/10/out2-1024x768.png)Original curve y1 - x1 + x1**2 = 0
+![](/assets/out2-1024x768.png)Original curve y1 - x1 + x1**2 = 0
 
 
 
-![](http://philzucker2.nfshost.com/wp-content/uploads/2019/10/out2png-1024x768.png)After 1 time step.    
+![](/assets/out2png.png)After 1 time step.    
   
   
   
