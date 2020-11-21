@@ -49,7 +49,7 @@ plugins:
 exclude:
   - Gemfile
   - Gemfile.lock
-permalink: /:title
+permalink: /:title/
 #plugins_dir:
 #  - jekyll-seo-tag
 
