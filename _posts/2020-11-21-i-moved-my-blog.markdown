@@ -4,7 +4,7 @@ comments: true
 date: 2020-11-21 01:05:56+00:00
 layout: post
 link: https://www.philipzucker.com/dataframes-jl-style-linear-relations/
-slug: dataframes-jl-style-linear-relations
+slug: i-moved-my-blog-from-wordpress
 title: I Moved My Blog From Wordpress
 
 
