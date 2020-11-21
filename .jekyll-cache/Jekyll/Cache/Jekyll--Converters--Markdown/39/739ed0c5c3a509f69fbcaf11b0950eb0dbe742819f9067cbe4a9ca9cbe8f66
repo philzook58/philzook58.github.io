@@ -1,2 +1,0 @@
-I"(<p>So pytorch does have some capability towards higher derivatives, with the caveat that you have to dot the gradients to turn them back into scalars before continuing. What this means is that you can sample a single application of the  Hessian (the matrix of second derivatives) at a time.</p>
-:ET

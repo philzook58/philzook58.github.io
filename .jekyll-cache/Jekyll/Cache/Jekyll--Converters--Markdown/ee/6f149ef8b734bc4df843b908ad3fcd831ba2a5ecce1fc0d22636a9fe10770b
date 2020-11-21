@@ -1,2 +1,0 @@
-I"]<p><a href="https://web.casadi.org/">Casadi</a> is something I’ve been aware of and not really explored much. It is a C++ / python / matlab library for modelling optimization problems for optimal control with bindings to IPOpt and other solvers. It can produce C code and has differentiation stuff. See below for some examples after I ramble.</p>
-:ET

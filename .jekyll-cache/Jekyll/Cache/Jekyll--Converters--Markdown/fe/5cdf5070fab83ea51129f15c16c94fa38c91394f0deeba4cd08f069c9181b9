@@ -1,2 +1,0 @@
-I"�<p>As a simple extension of <a href="http://www.philipzucker.com/stupid-z3py-tricks-verifying-sorting-networks-off-of-wikipedia/">verifying the sorting networks from before</a>, we can synthesize optimally small sorting networks. The “program” of the sorting network is specified by a list of tuples of the elements we wish to compare and swap in order. We just generate all possible sequences of comparison operations and ask z3 to try verifying. If z3 says it verifies, we’re done.</p>
-:ET

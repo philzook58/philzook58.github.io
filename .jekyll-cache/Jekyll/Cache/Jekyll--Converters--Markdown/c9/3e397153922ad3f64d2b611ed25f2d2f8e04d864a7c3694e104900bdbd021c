@@ -1,2 +1,0 @@
-I"H<p><a href="https://en.wikipedia.org/wiki/Ray_tracing_(graphics)">Ray tracing</a> is a natural way of producing computer images. One takes a geometrical ray that connects the pinhole of the camera to a pixel of the camera and find where it hits objects in the scene. You then color the pixel the color of the object it hit.</p>
-:ET

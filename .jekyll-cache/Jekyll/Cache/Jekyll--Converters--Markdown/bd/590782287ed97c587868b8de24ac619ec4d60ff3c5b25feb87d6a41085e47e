@@ -1,2 +1,0 @@
-I"=<p>So, we’ve been building a little servo mechanism to move a mirror to aim a laser (a super fast and hacky hot glue job on a 2x4, but dang dong if it don’t basically work) and I thought it’d be nice to write a little script that converts paths in svg files (which I can draw in inkscape)  into a C struct that we can just stick into an arduino file and read from. If anybody else needs this, you’ll need to modify some stuff. All the stuff is cobbled together from stackexchange replies. God, I love python. Checkout the nice little float regular expression.</p>
-:ET

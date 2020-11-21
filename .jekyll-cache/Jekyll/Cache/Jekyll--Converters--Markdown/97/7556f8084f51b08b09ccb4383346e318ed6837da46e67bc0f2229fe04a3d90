@@ -1,2 +1,0 @@
-I"‡<p>An approach I donâ€™t see much is using a hash table for vectors. I have seen a key value pair list vector. It makes sense. I think it gives you more algorithmic flexibility in the indices. Typical vectors are encoded in contiguous arrays index by integers. But encoding things that way feels kind of rigid. Perhaps in some circumstances the flexibility is worth the performance hit?</p>
-:ET

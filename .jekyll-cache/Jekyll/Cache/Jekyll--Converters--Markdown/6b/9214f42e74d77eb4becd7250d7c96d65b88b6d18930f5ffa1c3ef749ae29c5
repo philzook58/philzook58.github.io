@@ -1,2 +1,0 @@
-I"Ø<p>I though of another fun use case of mixed integer programming the other day. The quantization part of a digital to analog converter is difficult to analyze by the techniques taught in a standard signals course (linear analysis, spectral techniques, convolution that sort of thing). The way it is usually done is via assuming the <a href="https://en.wikipedia.org/wiki/Quantization_(signal_processing)">quantization error is a kind of randomized additive noise</a>.</p>
-:ET
