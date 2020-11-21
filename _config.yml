@@ -23,6 +23,8 @@ url: "https:/www.philipzucker.com" # the base hostname & protocol for your site,
 twitter_username: sandmouth
 github_username:  philzook58
 
+google_analytics: G-EBC4529QNG
+
 logo: /assets/logo.png
 twitter:
   username: sandmouth
