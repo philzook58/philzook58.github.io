@@ -14,13 +14,13 @@ Wordpress has been a source of stress and disatisfaction for a number of years n
 
 There is also the issue that my blog has become a really useful record that I'd like to continue to exist, perhaps even beyond the lifetime of Wordpress. Better now than never.
 
-I also didn't like how slow rendering it was. I kind of like the pared down raw aesthetic of html like in [danluu.com](danluu.com) or Oleg Kiselyov's site.
+I also didn't like how slow rendering it was. I kind of like the pared down raw aesthetic of html like in [danluu.com](http://danluu.com) or Oleg Kiselyov's site.
 
 In the end, I didn't go totally raw html. I actually started a Jekyll based blog around 2017 where I was going to keep better written posts, but I abandoned it. Here it is live again!
 
 I think by setting my jekyll urls to the titles, links to posts from the Wordpress site should still work.
 
-The old site is still available at [philzucker.nfshost.com](philzucker.nfshost.com) and [philzucker2.nfshost.com](philzucker2.nfshost.com).
+The old site is still available at [philzucker.nfshost.com](https://philzucker.nfshost.com) and [philzucker2.nfshost.com](http://philzucker2.nfshost.com).
 
 For the transfer I used exitwp which is old (python 2), but still worked ok. [https://github.com/some-programs/exitwp](https://github.com/some-programs/exitwp)
 

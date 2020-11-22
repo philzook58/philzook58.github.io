@@ -25,6 +25,8 @@ github_username:  philzook58
 
 google_analytics: G-EBC4529QNG
 
+feed:
+  tags: true
 
 logo: /assets/logo.png
 twitter:
