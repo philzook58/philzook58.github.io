@@ -1,0 +1,36 @@
+11-20-2020
+
+* llvm2z3 - verifying julia at the llvm level?
+* C stuff and assembly
+* compiling to catgeories in julia using Casette or IRtools?
+finite yoneda lemma
+relation algebra minikanren style
+gaussians
+polynomial games
+tla+ concurrency
+2Rel and HyperSpecs
+2Vec
+pattern matching, rewriting catlab, 
+rewriting rubi
+Wengert tapes and primop lens
+seperation logic
+coroutines iterators post
+Partial evaluation
+Rust - The wormhole equality type. Egg
+cubical, F*, ada/spark, 
+propagators
+
+Thought pieces:
+What is the point of a Phd
+I got one 3 years ago now. It still haunts me. I've heard suggested that one of my younger coworkers should go get one. I'm not sure what my advice is.
+School plays a real funny con.
+
+
+
+What is it am I trying to do?
+Am I bad
+What is a good life?
+Is it good to blog/ what is my blogging system
+https://sites.google.com/site/steveyegge2/you-should-write-blogs
+danluu.com
+gwern

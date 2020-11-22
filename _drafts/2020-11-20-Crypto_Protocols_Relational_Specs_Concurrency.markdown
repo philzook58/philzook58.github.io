@@ -11,7 +11,7 @@ wordpress_id: 3009
 ---
 
 
-
+## Crypto Protocol Verification
 
   * https://www.ccs.neu.edu/home/riccardo/courses/csg399-sp06/
   * model checking. http://seclab.stanford.edu/pcl/mc/mc.html
@@ -55,7 +55,7 @@ Relational verification
 
   * https://www.cs.cornell.edu/fbs/publications/HyperpropertiesCSFW.pdf hyperproperties
   * https://www.cs.purdue.edu/homes/bendy/cs590-mpl/#Barthe+SecSelfComp
-
+  * https://alastairreid.github.io/RelatedWork/notes/information-flow/
 
 
 

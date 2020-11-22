@@ -10,31 +10,19 @@ title: Rust
 wordpress_id: 1849
 ---
 
+* https://altsysrq.github.io/proptest-book/intro.html
+* egg - e graph library
+* https://nnethercote.github.io/perf-book/
+* https://ferrous-systems.com/blog/dlx-in-rust/
+* https://hexgolems.com/2020/10/getting-started-with-ddlog/
 
 
-
+6/2020
 Nom parsing
-
-
-
-
-
-
 
 It helps that you can use smart constructors that do the Box::new. That takes away some of the pain
 
-
-
-
-
-
-
 // https://stackoverflow.com/questions/51182640/is-it-possible-to-represent-higher-order-abstract-syntax-in-rust interesting example of HOAS
-
-
-
-
-
 
     
     <code>    #[derive(Debug, Eq, PartialEq, Clone)]
@@ -78,172 +66,41 @@ It helps that you can use smart constructors that do the Box::new. That takes aw
             );
         }</code>
 
-
-
-
-
-
-
 ### Webassembly
-
-
-
-
-
-
 
 [https://rustwasm.github.io/](https://rustwasm.github.io/) The general webassembly site
 
-
-
-
-
-
-
 There is a web assembly tutorial
-
-
-
-
-
-
 
 [https://rustwasm.github.io/docs/book/introduction.html](https://rustwasm.github.io/docs/book/introduction.html)
 
-
-
-
-
-
-
 wasm-bindgen is a crate that auto builds javacript bindings given a macro annotation. This guide has the most stuff in it. web-sys and js-sys give useful bindings to things.
-
-
-
-
-
-
 
 [https://rustwasm.github.io/docs/wasm-bindgen/](https://rustwasm.github.io/docs/wasm-bindgen/)
 
-
-
-
-
-
-
 wasm-pack is a tool for building rust to webassembly projects
-
-
-
-
-
-
 
 [https://rustwasm.github.io/docs/wasm-pack/introduction.html](https://rustwasm.github.io/docs/wasm-pack/introduction.html)
 
-
-
-
-
-
-
 println! does not work unfortunately. You need to custom bind to console.log or use the web-sys bindings. It's kind of a pain in the ass [https://rustwasm.github.io/docs/wasm-bindgen/examples/console-log.html](https://rustwasm.github.io/docs/wasm-bindgen/examples/console-log.html)
-
-
-
-
-
-
 
 [https://www.nalgebra.org/](https://www.nalgebra.org/) nalgebra and ndarray are crates that give matrix and numerical stuff. They can bind to blas but also a lot of functionality is in pure rust, so it can be compiled to the web.
 
-
-
-
-
-
-
 Getting a webpage up that runs webassembly seems like an involved process. I thnk there is some preference to using web-pack. There is a lot of modern javascript features being used that I'm not familiar with. Guess I'm a grandpa. [https://javascript.info/](https://javascript.info/) Most importantly is the ES6 module system. Also some examples use await/async syntax to initialize the rust built webassembly.  [https://rustwasm.github.io/docs/wasm-bindgen/examples/without-a-bundler.html](https://rustwasm.github.io/docs/wasm-bindgen/examples/without-a-bundler.html)
-
-
-
-
-
-
 
 Serde seems like a useful route to getting stuff into and out of javascript. It is a serialization deserialization library.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 * * *
-
-
-
-
-
-
 
 Thoughts. Put the enum in the outer type. Matching on that outer type then tells us which branch we're in. Make each indivudal field of the gadt an irretuable struct. Each one then has an eliminator form. Writing the elim typeclass for these is more foolproof. The irrefutable match in the eliminator allows for a more pattern matching like syntax. No mixup of lambda is possible. Two layer design. The rust compiler knows that actual branches of a match can't all happen. The pure eliminator form I had didn't. That will be a problem for moving stuff into the closures proabbly. Another possibility that feels interesting is Gadt<S>(Gadt<Int>()) where we have the specalize version inside the unspecialized version. Still use smart construcotrs. that guy mentioned. The pure structs in the enum should hypoethtically have no additional overhead as far as i know. Somehow related to the fact that gadts are somehow very similar to typelevel programming using typeclasses.
 
-
-
-
-
-
-
 Might still be things to leanr in the gadtless programming paper
-
-
-
-
-
-
 
 [https://www.cs.ox.ac.uk/files/3060/gadtless.pdf](https://www.cs.ox.ac.uk/files/3060/gadtless.pdf)
 
-
-
-
-
-
-
 Simpler forms of the eliminator can be used based on the situation. Singletons - GADTs aren't free, so maybe it is better off doing the isngleton pattern a different way.
 
-
-
-
-
-
-
 The two layer design gives kind of a type level witness to the branch you are in. If the only way to Access the TTBool type is in the context of the TBool enum constructor, then you know you are in that branch of a pattern match in your have access to such a thing. Then you can use a typeclass predictaed pon that type to do a simple eimination. Or you could have a leibnitz class that let's you cast s. The inner construcotrs also gfive a reasonable place to put existentiual variables?
-
-
-
-
-
 
     
     <code>
@@ -287,193 +144,53 @@ The two layer design gives kind of a type level witness to the branch you are in
     
     </code>
 
-
-
-
-
-
-
 This pattern of giving each in an enum constructor it's own struct data type has the flavor of something oner might call an associated type constructor. If you wanted to associate a constructor with a type, you could give this tpye name as an associated type . Nvm. This is not what is meant by the term in rust. 
-
-
-
-
-
-
 
 This is trash. i hate this
 
-
-
-
-
-
-
 Linear types: Secret sharing. If i had a channel that output two linked bits on each side, then I could use functions that accept ownership only of the shares, enforcing via the type system that i only use them once. Then I can open shares and send them. Secrets are held in their own data type that can be combined with Shares.
-
-
-
-
-
-
 
 Linear types for quantum. Again, functions that consume the arguments. Kron could have a bimap function that takes tuples of vectors. The kron needs the ability to know how to seperate out the vectors into sums. lmap and rmap as well.
 
-
-
-
-
-
-
-
-
-
-
-
-
 What are type constructors? They are very similar to functions. Through some strange twist of fate, we don't get to specify their type the same way in most programming languages. Any type variables in the type have to be fully generic/polymorphic. This is not the case for functions.
-
-
-
-
-
-
 
 We can have an identity function
 
-
-
-
-
-
-
 fn id<A>(x : A) -> A { x}
 
-
-
-
-
-
-
 but without changing the implementation we can restrict the allowed types
-
-
-
-
-
 
     
     <code>fn id_i64(x : i64) -> i64 { x }</code>
 
-
-
-
-
-
-
 Where the type constructor Id we don't really have this specialization available at define time.
-
-
-
-
-
 
     
     <code>struct Id<A>(A);</code>
 
-
-
-
-
-
-
 However, we can build a type specialized smart constructor.
-
-
-
-
-
 
     
     <code>struct Idi64INTERNAL<A> (A);
     fn Idi64(x : i64) -> Idi64INTERNAL<i64> { Idi64INTERNAL(x) }</code>
 
-
-
-
-
-
-
-
-
-
-
-
-
 Likewise we can build smart constructors with restricted types. This gives us half of the GADT. We can only produce GADT correct values
-
-
-
-
-
-
 
 What else is a data type? It is a thing you can pattern match to get stuff out of. The regular rust `match` will not work for us anymore. What is a match? Well, one way to replicate the behavior of a match is with another function
 
-
-
-
-
-
-
 An example of this is in the standard library for Option
-
-
-
-
-
-
 
 [https://doc.rust-lang.org/std/option/enum.Option.html#method.map_or_else](https://doc.rust-lang.org/std/option/enum.Option.html#method.map_or_else)
 
-
-
-
-
-
-
 map_or_else is exactly the eliminator form.
-
-
-
-
-
-
 
 Similarly 
 
-
-
-
-
-
-
 [https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else)
-
-
-
-
-
-
 
 #### `pub fn [map_or_else](https://doc.rust-lang.org/std/option/enum.Option.html#method.map_or_else)<U, D, F>(self, default: D, f: F) -> U where  
 D: [FnOnce](https://doc.rust-lang.org/std/ops/trait.FnOnce.html)() -> U,  
 F: [FnOnce](https://doc.rust-lang.org/std/ops/trait.FnOnce.html)(T) -> U, `
-
-
-
-
-
 
     
     <code>
@@ -484,51 +201,15 @@ F: [FnOnce](https://doc.rust-lang.org/std/ops/trait.FnOnce.html)(T) -> U, `
        }
     }</code>
 
-
-
-
-
-
-
 The extra power of the GADT match is that somehow it knows how to handle every possible type parameter that might show up and the result can depend on that type parameter.
-
-
-
-
-
-
 
 Rust does not have great support for higher-kinded-types. In order to talk about a Vec, you need to fully apply it to something Vec. This is too bad. There are some thoughts on how to fake them.
 
-
-
-
-
-
-
 [https://gist.github.com/CMCDragonkai/a5638f50c87d49f815b8](https://gist.github.com/CMCDragonkai/a5638f50c87d49f815b8)
-
-
-
-
-
-
 
 [https://gist.github.com/14427/af90a21b917d2892eace](https://gist.github.com/14427/af90a21b917d2892eace)  
 
-
-
-
-
-
-
-
 A related trick that I think works the best is defunctionalization. You need to make a new type that means VecTag. Then we can make a typelevel function using a trait with associated types to apply it.
-
-
-
-
-
 
     
     <code>// every use site of gmatch reuqires an instance of App1 connected to a function symbol.
@@ -570,299 +251,66 @@ A related trick that I think works the best is defunctionalization. You need to 
         type T = A; 
     }</code>
 
-
-
-
-
-
-
 Having to define a new impl for App every time you want to eliminate is _literally_ the worst, it's merely pretty bad.
-
-
-
-
-
-
 
 The other problem is how to get the eliminator to typecheck at all. One way out is to just blow a hole in the type system with an unsafe coercion construct. This is what is done in the Refl library for example. [https://docs.rs/refl/0.1.2/refl/ ](https://docs.rs/refl/0.1.2/refl/)This is okay-ish, but I'd rather do it this way. 
 
-
-
-
-
-
-
 It is more clear to me in this encoding that given I only construct via my safe constructors, I should never end up in any of the panic! statements. Should it bug you that I've made the program a little more unsafe in order to implement these features? Yeah, probably.
-
-
-
-
-
 
     
     <code>impl<A> App<A> for VecTag {
        type T = Vec<A>;
     }</code>
 
-
-
-
-
-
-
   
 Now we need to manually supply the type of the result if we want a GADT elimination. We can get the original eliminator that didn't depend on the type via a wrapping function that calls gadtElim with Const1<A>. 
 
-
-
-
-
-
-
 A little macro sugar may be in order here as well.
-
-
-
-
-
-
-
-
-
-
-
-
 
 Downsides:
 
-
-
-
-
-
-
 It is unfortunate that now the order in which you pattern match matters. You also don't get good syntax for default cases.
-
-
-
-
-
-
 
 syntax is worse overall
 
-
-
-
-
-
-
 safety is possibly compromised by those panic! statements.
-
-
-
-
-
-
 
 The eliminator typeclass is tough to read and probably error prone to write.  
 
-
-
-
-
-
-
-
 Upsides:
 
-
-
-
-
-
-
 Actually using the eliminator is surprisingly not that bad.
-
-
-
-
-
 
     
     <code>TInt().gadtElim::<F7>(vec!(true,false) , vec!(34,45,4,3,46))</code>
 
-
-
-
-
-
-
 more types = good. If you don't buy into that, you probably hated this post.
-
-
-
-
-
-
 
 Combining this with the singleton techniques you can do cool pseudo-dependently typed stuff in pure Rust. Neat-o.  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ATC/GAT do not exist at the moment.
-
-
-
-
-
-
-
-
-
-
-
-
 
 Traits.
 
-
-
-
-
-
-
-
-
-
-
-
-
 lifetimes are kind of like ST monad?
-
-
-
-
-
-
 
 Higher ranked lifetimes are available. But no general rank-n types.
 
-
-
-
-
-
-
 Existentials are in some weird nebulous zone.
-
-
-
-
-
-
 
 The Key monad.
 
-
-
-
-
-
-
 [https://cglab.ca/~abeinges/blah/too-many-lists/book/](https://cglab.ca/~abeinges/blah/too-many-lists/book/)
-
-
-
-
-
-
 
 Huh. mem::replace is not something I would have expected. Neither the Option as_ref
 
-
-
-
-
-
-
 null pointer optimization. Certain enums can use the tag field and unify it with the pointer field
-
-
-
-
-
-
 
 In particular Option(&T) is the same size as Option
 
-
-
-
-
-
-
 [http://cosmic.mearie.org/2014/01/periodic-table-of-rust-types/](http://cosmic.mearie.org/2014/01/periodic-table-of-rust-types/)
 
-
-
-
-
-
-
 periodic table of rust
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     
     <code>
@@ -1072,55 +520,11 @@ periodic table of rust
     class LockDoor lockstate repr where
         lockAnyDoor :: repr lockstate -> repr 'Locked</code>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 lam \i
-
-
-
-
-
-
 
 sum \i
 
-
-
-
-
-
-
 argmin \i
 
-
-
-
-
-
-
 max \i
-
-
-
-
-
-
-
-
 
