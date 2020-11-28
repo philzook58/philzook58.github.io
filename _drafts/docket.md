@@ -19,6 +19,9 @@ Partial evaluation
 Rust - The wormhole equality type. Egg
 cubical, F*, ada/spark, 
 propagators
+SMT style integration with JuMP?
+
+
 
 Thought pieces:
 What is the point of a Phd
@@ -34,3 +37,6 @@ Is it good to blog/ what is my blogging system
 https://sites.google.com/site/steveyegge2/you-should-write-blogs
 danluu.com
 gwern
+
+
+
