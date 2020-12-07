@@ -87,5 +87,5 @@ Concurrency.
   * https://deadlockempire.github.io/#3-simpleCounter
   * https://lamport.azurewebsites.net/pubs/lamport-verification.pdf  https://www.microsoft.com/en-us/research/uploads/prod/2018/05/book-02-08-08.pdf Specifying systems I like this lamport guy. 
   * https://github.com/cfsamson/book-green-threads-explained
-
+  * https://pdos.csail.mit.edu/6.824/ mit dist sys course
 

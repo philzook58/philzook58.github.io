@@ -10,232 +10,62 @@ title: Agda doodles, links
 wordpress_id: 1284
 ---
 
+https://jesper.sikanda.be/files/leibniz-equality.pdf Cockx theoretical pearl. Leibnitz equalityy is isomorphic to martin-lof idenitty
+
+https://jesper.sikanda.be/publications.html Agda rewrite rules extension
 
 
 
+06/2020
 Back on the agda train. I guess. Or should I be an idris boy? I want to try idris 2 but it feels not ready. Plus apparently agda has irrelevant notations?
-
-
-
-
-
-
 
 Maybe I should try some of that homotopy stuff I wass trying in Haskell. Kind of defeats the point of "simp0lciity" to be in agda though
 
-
-
-
-
-
-
 New mcbride notes [https://github.com/pigworker/ProgrammerCommaCon/tree/master/CS410-19/Lec](https://github.com/pigworker/ProgrammerCommaCon/tree/master/CS410-19/Lec)
-
-
-
-
-
-
 
 Old mcbride notes document I'd never seen [http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.706.8140&rep=rep1&type=pdf](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.706.8140&rep=rep1&type=pdf) Pretty cool
 
-
-
-
-
-
-
 [http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=E3CD5927D73589F5E8AC1DE03CB29E05?doi=10.1.1.705.3086&rep=rep1&type=pdf](http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=E3CD5927D73589F5E8AC1DE03CB29E05?doi=10.1.1.705.3086&rep=rep1&type=pdf)
-
-
-
-
-
-
 
 Dependently typed programming with finite sets
 
-
-
-
-
-
-
 Decidable and Semidecidable. The same as recursive and recrusively enumerable. The same as some part of the arithemtic hierarchy
-
-
-
-
-
-
-
-
-
-
-
-
 
 Observational Types Now says it has some artifact in Agda?
 
-
-
-
-
-
-
 Relationship between theorem proving and partial evaluation. You have to case on stuff because it gets "stuck". Is this the trick? Lambda is the ultaimte abrtaction. I was oncsidering at one point using typeclasses to keep everything abstract that I wanted to stay folded. I guess this is ultimately the finally tagless style, where you use modules or typeclasses to carry around that huge outer lambda. "Charlike" 
-
-
-
-
-
-
 
 Any equality that the compiler can't understand immediately is something that wouldn't partially evaluate to optimized form. If I have some   to . from = id, I want the compiler to know that by construction (basically by beta reduction). It gets blocked on abstract terms.
 
-
-
-
-
-
-
 I did have some impression that Agda might be nice for 2Vect
-
-
-
-
-
-
 
 You know  figuring out if two algerbaic expressions are identical: The easiest thing is to just evaluate them. Maybe define this indictively? Probing for equality.. "Auotmatic" equality. Probe n f.  ; holds n and f such that probing f n unique times is enough to determine equality of g f. n can be overestimate. nf+ ng => nq (I think )
 
-
-
-
-
-
-
 nf * mg => (n + m) h. Why is this?Is this a general ring property or depends on nats?
-
-
-
-
-
-
 
 const x = requires 1
 
-
-
-
-
-
-
 multivariate multiplies probes. (tensoring) Is this inspired by plotkin's talk? Maybe.
-
-
-
-
-
-
 
 Brute force SAT search, or List monad style search
 
-
-
-
-
-
-
 (p : bool -> Set) -> (bool -> Dec (p x)) -> Dec (exists b, pb) - if forall b it's decidable if b satisfies p, it's decidable if b . Where was that website
-
-
-
-
-
-
 
 (bool -> Dec (p x)) -> Dec (forall b, p b)
 
-
-
-
-
-
-
 doit f with f true  f false =   
-
-
-
-
-
-
 
 Maybe I want strong things than Dec p . That's just bools. sometimes I want more. Like, if I had a nat -> ? function, if it could tell me how far I am from the nearest region or truth, that would be nice. Or dual
 
-
-
-
-
-
-
 Duals as proof objects. Give me a set of affine equations( many). If I can produce a vectorial combination of them that gives 0 = 1, then they are inconsistent. Nullstullensatz is analog for polynomial. Fa
-
-
-
-
-
-
 
 Bezout as duals.
 
-
-
-
-
-
-
 view from the left
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 Try to do the final differentiation is automatic
 
-
-
-
-
-
-
 2/20
-
-
-
-
-
-
 
   * [http://relmics.mcmaster.ca/RATH-Agda/RATH-Agda-2.0.0.pdf](http://relmics.mcmaster.ca/RATH-Agda/RATH-Agda-2.0.0.pdf) - Relation lagerba agda
   *   * [https://agda.readthedocs.io/en/v2.6.0.1/getting-started/tutorial-list.html](https://agda.readthedocs.io/en/v2.6.0.1/getting-started/tutorial-list.html)
@@ -243,17 +73,7 @@ Try to do the final differentiation is automatic
   * [https://people.inf.elte.hu/divip/AgdaTutorial/Symbols.html](https://people.inf.elte.hu/divip/AgdaTutorial/Symbols.html)
   * [https://wenkokke.github.io/pubs/mpc2015.pdf](https://wenkokke.github.io/pubs/mpc2015.pdf) auto in agda
 
-
-
-
-
-
 From agda-pkg project
-
-
-
-
-
 
     
     <code>agda-base            v0.2            https://github.com/pcapriotti/agda-base.git
@@ -279,127 +99,51 @@ From agda-pkg project
     routing-library      thesis          https://github.com/MatthewDaggitt/agda-routing.git
     standard-library     v1.1            https://github.com/agda/agda-stdlib.git</code>
 
-
-
-
-
-
-
-
-
-
-
-
 Agda. What a trip
 
-
-
-
 Atom agda-mode seems acceptable
-
-
-
 
 -- C-alt- is go to definiton?  
 
 -- search is C-c C-z
 
-
-
-
 https://atom.io/packages/agda-mode
-
-
-
 
 -- https://homes.cs.washington.edu/~jrw12/#blog coq stuff
 
-
-
-
 https://github.com/alhassy/gentle-intro-to-reflection
-
-
-
 
 http://casperbp.net/posts/2019-04-nondeterminism-using-a-free-monad/index.html
 
-
-
-
 https://gallais.github.io/blog/blog.Agda.html
-
-
-
 
 https://serokell.io/blog/2018/11/30/playing-with-negation
 
-
-
-
 https://mazzo.li/posts/AgdaSort.html
-
-
-
 
 https://doisinkidney.com/
 
-
-
-
 https://jozefg.bitbucket.io/posts/2014-09-21-what-are-dep-types-2.html
-
-
-
 
 there is a more useful readme hidden. God that's dumb
 
-
-
-
 https://github.com/agda/agda-stdlib/blob/master/README.agda
-
-
-
 
 An exploration of the standard lib. Stops short unfortunately
 
-
-
-
 http://neil-strickland.staff.shef.ac.uk/formal/agdalib.pdf
-
-
-
 
 I need to stop playing with Nat and just do other stuff
 
-
-
-
 more hotkeys. \bN gives funky N. \Gl gives lambda so does \lambda -> is fine
-
-
-
 
 \all \forall
 
-
-
-
 ------------
-
-
-
 
 Linear Functions category
 
-
-
-
 A fun silly category
-
-
 
     
     -- from Conor mcBride's cs410 notes
@@ -414,67 +158,29 @@ A fun silly category
        id = CMonoid mempty
        (CMonoid x) . (CMonoid y) = CMonoid (x <> y)
 
-
-
-
 It would be fun to do some number theory style proofs.
-
-
-
 
 record Prime {a : Nat}
 
-
-
-
 (c : Nat -> b : Nat -> c \ne 1 -> b \ne 1 -> b * c == a -> Void) -> Prime a
-
-
-
 
 If you look at the agda standard lib
 
-
-
-
 https://github.com/agda/agda-stdlib/blob/master/src/Data/Nat/Divisibility.agda
-
-
-
 
 Divisibility seems to be the first notion
 
-
-
-
 m | n
-
-
-
 
 The proof of such statement is to supply a divisor d and the equality proof d * m = n.
 
-
-
-
 Divisiblity forms a partial order. if a divides b and b divides c then a divides c. a divides itself.
-
-
-
 
 These are the first couple theorems.
 
-
-
-
 Prime factorization is quite useful
 
-
-
-
 Can we verify that the maximum of a list is bigger than anything in it? Really, we want that it is the least upper bound.
-
-
 
     
     open import Data.List
@@ -575,17 +281,9 @@ Can we verify that the maximum of a list is bigger than anything in it? Really, 
     
     
 
-
-
-
 Transitivty of <= is important.
 
-
-
-
 Dynamic programming verified?
-
-
 
     
     -- open import Data.Rational
@@ -803,8 +501,6 @@ Dynamic programming verified?
     
     
 
-
-
     
     p1 : (x : ℕ) -> ℕ
     p1 x = x * x + 2 * x + 1 
@@ -824,22 +520,11 @@ Dynamic programming verified?
     divp1p2 : {a : ℕ} -> (p2 a) ∣ (p1 a)
     divp1p2 {a} = divides (a + 1) (sym (lem {a}))
 
-
-
-
 Proof that output of one function is always a integer divisor of another function. Goofy Polynomial division kind of.
-
-
-
 
 Reflecting Rings
 
-
-
-
 Is this not also somewhat reminiscent of Free Monoids being lists. via foldMap
-
-
 
     
     class CommRing a where
@@ -855,78 +540,32 @@ Is this not also somewhat reminiscent of Free Monoids being lists. via foldMap
       idtimes = [0]
       sub x y = (-) <
 
-
-
-
-
-
     
     gt; x <*> y plus x y = (+) <
-
-
-
-
-
 
     
     gt; x <*> y times [] _ = [] times _ [] = [] times xss@(x: xs) yss@(y : ys) = x * y : (times xs yss + times xss ys) -- finally tagless style? Similar I suppose. -- kind of Poly is the initial version of CommRing -- reflect :: (forall a. CommRing a => a -> a) -> Poly reflect f = f idplus apply :: Poly -> (forall a. CommRing a => a -> a) apply Tree a = Leaf a | Node Tree a Tree a reflect :: (forall a. Tree a -> Tree a) -> CartCat apply :: CartCat -> Tree a -> Tree a class Reflection x where type Contr :: Constraint type Rep :: * reflect :: (forall a. Constr a => a -> a) -> x apply :: Constr a => x -> a -> a -- reflect . apply = id -- apply . reflect = id class Applicable f a b where apply :: f -> a -> b instance Applicable Int Int Int where apply = (+) instance Reflectable Int where Constr = Applicable reflect f = f 0 -- count # of applications --Catgoeyr? -- multiple applications reflect :: (forall a. (a -> a) -> a -> a) -> Int reflect f = f (+ 1) 0 reflect -- reflect of representables reflect :: Represetnable f => reflect = tabulate reflect :: Enumerable x => (x -> a) -> Table x a
 
-
-
-
 Case splitting on forall contexts.
-
-
-
 
 a -> a  => case to id
 
-
-
-
 so of weakened function extensionality
-
-
-
 
 {t :: forall a. a -> a} -> t == id
 
-
-
-
 introduce the free theorems as
-
-
-
 
 Laarhoven's simple reflect.
 
-
-
-
 Maybe sometimes have to probe multiple times.
-
-
-
 
 We're very often trying to notice polymorphism at the typeclass level.
 
-
-
-
 newtype NotePolyMorphic -- DO NOT export.
-
-
-
 
 -- safety of incoherence use is guranteed by the unexported NotPolymorphic unification, which will fail unless a was actuall polymorphic
 
-
-
-
 { Incoherent } (a ~ (NotPolymorphic ,b) => IsUniversal a True
-
-
-
 
 IsUniversal a False

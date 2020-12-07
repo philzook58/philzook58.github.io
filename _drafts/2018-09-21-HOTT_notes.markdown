@@ -10,9 +10,113 @@ title: HOTT notes
 wordpress_id: 1302
 ---
 11/2020 
+https://github.com/HoTT-Intro/Agda
+I screwed up my emacs agda by having a rotten tuareg in it. I think
+https://github.com/martinescardo/HoTT-UF-Agda-Lecture-Notes
+
+https://pure.itu.dk/portal/files/84649948/icfp19main_p164_p.pdf - ICFP cubical agda, a depdently typed programming language with higher inductive types. Interestingly, from Mertberg's demo, I feel like the emphasis was not on cubical itself. More interested in standard HoTT they just want it to be better
+
+
 HoTT - quotients supposedly? Fractions? Integers vs naturals. I guess that's the zeroth.
 Or maybe True / False modulo True = False?
 Anders Morberg - cubical agda  https://vimeo.com/459020971
+
+data _===_ {A : Set} (x : A) : A -> Set where
+  refl : x == x
+
+funExt
+
+replcace inductive === with paths
+
+{-# OPTIONS -- cubical #-}
+open import Cubival.Foundations.Prelude
+                        Equiv
+                         Isomorphism
+                         Univalence
+                         Cubical.Data.Int
+                         Cubical.Data.prod
+
+-- I , npoitns i0, i1
+apply0 : (A; Type ) -> (p : I -> A) -> A
+apply0 A p = p i0
+
+refl' : {A : Type} (x : A) -> x \== x -- PathP (\ _ -> A) x x
+refl' x = \i -> x
+
+-- x \== x  h means PathP (\ _ -> A) x y
+-- path over path. depednent paths
+
+cong' : {A B : Type} (f : A -> B) {x y : A} -> x == y -> f x == f y
+cong' f p = \ i -> f ( p i )
+
+funext'  : {A B : Type} (f g : A -> B) {x y : A} -> ( p: x : A ->  f x == g y ) -> f == g
+funext p i = \x -> p x i
+
+transport' : {A B : Type} -> A == B -> A -> B
+trasnport' p x = transp (\i -> p i) i0 x
+
+-- another primitive called hcomp
+
+ua' :  {A B : Type} -> A ~ B -> A == B
+ua' e = ua e
+
+isToEquiv' : {A B :type} -> Iso A B -> A ~ B
+isToEquiv' e =  isoToEquiv e
+
+isoToPath : Iso A B -> A == B
+isoToPath e = ua (isoToEquiv e) 
+
+data Bool : Type where
+   false : Bool
+   true : Bool
+
+not : Bool -> Bool
+not false = true
+not true = false
+
+notPath : Bool === Bool
+notPath = isoToPath' (iso  not not rem rem)
+  where 
+  rem : (x : Bool) -> not (not x) == x
+  rem false = refl
+  rem true = refl 
+
+transport notPath true -- false
+
+sucPath : Int === Int
+sucPath = (isoToPath' (iso sucInt predInt sucPred redSuc)
+
+transport ( sucPath . sucPath) (pos 4) 
+
+-- multisets
+
+data FMSet (A : Type) : Type where
+   [] : FMSet A
+   _::_ : A -> FMSet A -> FMSet A
+   comm : ( x y : A) (xs : FMSet A) -> 
+         x :: y :: xs == y :: x :: xs
+    trunc : isSet (FMSet A) -- UIP
+
+_++_ : {A : Type} -> FMSet A -> FMSet A -> FMSet A
+[] ++ ys = ys
+(x :: xs) ++ ys = x :: (xs ++ ys)
+(comm x y xs i) ++ ys = comm x y (xs ++ ys) i
+
+-- can prove all kinds of things : xs ++ [] == xs ...
+
+Cubical.HITs.FiniteMultiSet
+
+unitr-++ : {A : Type} (xs : FMSet) -> xs ++ [] == xs
+unitr++ [] = refl
+unitr++ (x :: xs) =    
+
+SIP structure idenity principle
+Cubical.Algerba.Monoid.Base -- reflection
+
+queues, matrices. Huh. representiation independence transportiung proofs.
+
+
+
 https://arxiv.org/abs/1701.04391 - de moura selsam. good explanation of equality type
 John Major equality - conor mcbride
 Doing raw recursor proofs. Can I do it? I feel like it's kind of straightforward.

@@ -20,7 +20,11 @@ Rust - The wormhole equality type. Egg
 cubical, F*, ada/spark, 
 propagators
 SMT style integration with JuMP?
-
+what is tabling?
+games
+experimental design and statistics
+probablistic programming
+Waves in random media
 
 
 Thought pieces:
@@ -38,5 +42,13 @@ https://sites.google.com/site/steveyegge2/you-should-write-blogs
 danluu.com
 gwern
 
+
+
+building a type theory
+harrison's book and hol notes
+epigram 2 manual
+the little typer
+lean core 
+cody's boole
 
 

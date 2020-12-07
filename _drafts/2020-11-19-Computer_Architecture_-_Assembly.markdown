@@ -31,13 +31,16 @@ Fun old timey books. If you go before 1980, a decent chunk of all books had asse
   * The science of programming - D Gries
   * Pascal, wirth
   * structured programming https://seriouscomputerist.atariverse.com/media/pdf/book/Structured%20Programming.pdf djikstra hoare
-  * Hehner
+  * Eric Hehner
   * https://dl.acm.org/collections/classics ACM classic books
   * lambda papers
   * per brinch hansen
   * https://en.wikipedia.org/wiki/List_of_important_publications_in_theoretical_computer_science#Formal_verification
   * https://en.wikipedia.org/wiki/List_of_important_publications_in_computer_science
+  * http://www.mathmeth.com/read.shtml some welevant EQD notes. Derivation of alogrithms
+  * winskel 
 
+  
 I could write an interpreter in assembly. Knuth does it. Or I could write an asbtract machine CEK or something?
 
 The stack is a linked list. It has pointers to the previous base pointer locations.   I found a stack overflow answer that was saying the stack and heap have constant, n, and ln n complexity for different operations. ... Wait. Is that right? Why does the heap have ln n?
