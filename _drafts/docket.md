@@ -25,6 +25,14 @@ games
 experimental design and statistics
 probablistic programming
 Waves in random media
+flatterms and term indexing
+CAD and NLSAT
+circle packing
+floating point adjunction
+hoare logic vs sequents
+nand2coq + alectryon
+prove correctness of unification - interesting useful algorithm. Correctness non obvious
+
 
 
 Thought pieces:

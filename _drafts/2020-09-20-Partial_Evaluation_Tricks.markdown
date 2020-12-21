@@ -10,10 +10,40 @@ title: Partial Evaluation Tricks
 wordpress_id: 2677
 ---
 
-I have more stuff in the coq metaocaml post
 
-https://github.com/stedolan/ppx_stage
+https://mpickering.github.io/papers/parsley-icfp.pdf
 
+I have more stuff in the coq metaocaml post https://www.philipzucker.com/metaocaml-style-partial-evaluation-in-coq/
+
+- https://github.com/stedolan/ppx_stage
+- https://github.com/thierry-martinez/metapp
+- https://github.com/thierry-martinez/metaquot https://ppxlib.readthedocs.io/en/latest/ppx-for-plugin-authors.html#metaquot
+- Nada Amin course https://namin.seas.harvard.edu/publications  https://www.cl.cam.ac.uk/teaching/1819/Metaprog/materials.html
+- Yallop https://www.cl.cam.ac.uk/~jdy22/ https://www.cl.cam.ac.uk/~jdy22/papers/certified-optimisation-of-stream-operations-using-heterogeneous-staging.pdf
+
+http://wry.me/~darius/writings/peval/ - a hacker's intro to partial evaluation
+
+tutorial notes on partial evaluation - consel and danvy 93 https://www.researchgate.net/profile/Charles_Consel/publication/2810226_Tutorial_Notes_on_Partial_Evaluation/links/54ba866e0cf24e50e9403382/Tutorial-Notes-on-Partial-Evaluation.pdf
+From rmpf thesis
+Partial Evaluation of Pattern Matching in Strings dnavy 89
+Fast partial evaluation of pattern matching in strings danvy 03
+Implementing Multistage Languages Using ASTs, Gensym, and Reflection - xavier taha
+
+Shifting the stage: staging with delimited control
+Closing the stage: from staged code to typed closures
+
+
+Quine invented qasuiquotation in the 40s
+https://3e8.org/pub/scheme/doc/Quasiquotation%20in%20Lisp%20(Bawden).pdf Quasiquotation bawden
+
+https://www.cs.purdue.edu/homes/rompf/papers/ofenbeck-gpce17.pdf staing for generic programming in space and time rompg
+
+ones, N.D., Gomard, C.K., Sestoft, P.: Partial Evaluation and Automatic Program Generation. International Series in Computer Science 
+https://cs.stackexchange.com/questions/2869/what-are-staged-functions-conceptually
+
+Generative Programming" by Czarnecki and Eisenecke
+
+- 
 7/4/20
 
 Partial evaluation has some tricks

@@ -12,9 +12,32 @@ wordpress_id: 2843
 
 https://news.ycombinator.com/item?id=25273907 llvm comments
 
+Low level ocaml and haskell
+
 The STG. It's curiously like a Bohm mararducci or finally tagless. Constructors are function points. I mean. They're both called tagless.
 https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/generated-code
 push-enter vs eval-apply
+https://github.com/lexi-lambda/ghc-proposals/blob/delimited-continuation-primops/proposals/0000-delimited-continuation-primops.md continuation primop
+https://medium.com/superstringtheory/haskell-compilation-pipeline-and-stg-language-7fe5bb4ed2de
+http://www.scs.stanford.edu/11au-cs240h/notes/ghc-slides.html#(1) crazy slides on the full stack
+https://hackage.haskell.org/package/stgi stg interpeter. but also a good read
+--ddump-ds
+--ddump-stg
+
+http://ezyang.com/jfp-ghc-rts-draft.pdf ghc rts
+
+https://stackoverflow.com/questions/11322163/ocaml-calling-convention-is-this-an-accurate-summary ocaml calling conventions. To quote:
+The first 10 integer and pointer arguments are passed in the registers rax, rbx, rdi, rsi, rdx, rcx, r8, r9, r10 and r11
+The first 10 floating-point arguments are passed in the registers xmm0 - xmm9
+Additional arguments are pushed onto the stack (leftmost-first-in?), floats and ints and pointers intermixed
+The trap pointer (see Exceptions below) is passed in r14
+The allocation pointer (presumably for the minor heap as described in this blog post) is passed in r15 https://rwmj.wordpress.com/2009/08/06/ocaml-internals-part-3-the-minor-heap/
+The return value is passed back in rax if it is an integer or pointer, and in xmm0 if it is a float
+All registers are caller-save?
+
+http://fyquah95.github.io/some-fun-with-ocaml-closures closure represnetatio n
+
+
 
 If you can write a fold, you can write finally taglessly. Deepply nested patterns mactches are convenient. Double negation removal is one example. You need to refiying the pattern into a data structure.
 
@@ -44,6 +67,7 @@ There are many courses that use racket and ocaml
 * Koka, Eff, F*
 * Plotkin papers
 * Alexis King effects for less https://www.youtube.com/watch?v=0jI-AlWEwYI&ab_channel=Z%C3%BCrichFriendsofHaskell
+* https://github.com/ghc-proposals/ghc-proposals/pull/313 delmiitted conitauition primops ghc propsoal. Lots of interestnig discussion
 * Pretnar 2015  An Introduction to Algebraic Effects and Handlers Invited tutorial pap https://www.eff-lang.org/handlers-tutorial.pdf
 - https://cs.ru.nl/~dfrumin/notes/delim.html delimitted contiunuations
 - Asai

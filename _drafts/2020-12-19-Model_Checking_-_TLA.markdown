@@ -10,6 +10,11 @@ title: Model Checking - TLA+
 wordpress_id: 879
 ---
 
+Stuttering is important.
+Stuttering is when y' = y.
+It is this option which allows refinement.
+
+
 Back on the TLA+ train
 
 
@@ -19,10 +24,13 @@ Back on the TLA+ train
   * https://www.learntla.com/introduction/
   * https://github.com/tlaplus/Examples
 
+https://news.ycombinator.com/item?id=14728226
+
 I find something very conceptually pleasing about making the program counter an explicit thing. Every language has things that are implicit. Powerful new languages constructs are often backed by runtime data structures. Even in "low level" languages like C, there is a whole lot of implicit stack shuffling. The stack exists. It is a data structure.
 However, even in assembly I tend to take the program counter for granted most of the time. When you thnk about what the insturction `add` does, you don't tend to mention the movement of the program counter. It is so obvious that it increments to the next instruction that usually remains tacit.
 
 
+http://muratbuffalo.blogspot.com/2020/06/learning-about-distributed-systems.html
 
 
 5/2019

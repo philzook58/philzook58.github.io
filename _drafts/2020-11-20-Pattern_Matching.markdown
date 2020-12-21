@@ -10,6 +10,7 @@ title: Pattern Matching
 wordpress_id: 2991
 ---
 
+https://matchpy.readthedocs.io/en/latest/index.html matchpy
 
 Egison https://arxiv.org/pdf/1808.10603.pdf https://www.egison.org/
 

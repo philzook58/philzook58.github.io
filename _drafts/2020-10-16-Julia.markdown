@@ -10,6 +10,55 @@ title: Julia Packages
 wordpress_id: 2987
 ---
 
+
+Scientific Computing in Julia. Numerical Computing in Julia
+HPC in Julia
+Data Science in Julia
+Deep Learning in Julia
+Algorithm Design in Julia
+Physics for Programmers
+
+
+
+Audience: 
+Someone at my level or higher?
+People who do scientific computing? At labs?
+Engineers?
+Grad students?
+Hobbyists?
+
+End Expectations:
+? No one actually reads books
+
+
+
+that optimization book in julia
+
+Strang Book
+
+
+Fluid Solver
+Wave Solver
+Fitting Data -
+An Inverse Problem
+Particle simulation
+Convnet
+ODE and PDE
+
+
+
+Function Breaks, Type Stability
+Examining Code, llvm and native
+Fast Loops SIMD
+Parallelism
+GPU
+DSLs
+Partial Evaluation / Macros. generative functions
+Dispatch - Fast matrix overloading
+
+
+
+
 Minimal: you can activate a environment. 
 
 From a julia repl, you can press `]` to put it into Pkg mode

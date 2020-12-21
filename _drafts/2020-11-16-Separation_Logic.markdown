@@ -9,9 +9,22 @@ slug: Separation Logic
 title: Separation Logic
 wordpress_id: 2997
 ---
+
+https://stackoverflow.com/questions/52313122/map-data-structure-in-z3 dafny axioms for maps. Maybe use this to model
+ https://github.com/Z3Prover/z3/issues/811 pointers to seperation logic stuff in smt
+viper has seperation logic?
+
 https://alastairreid.github.io/RelatedWork/notes/separation-logic/
 
-I
+CVC4 for automatically checking simple seperation logic.
+
+https://sl-comp.github.io/
+
+
+Chris : Sequent and Hoarse are similiar
+Could you intersperse tactics and commands? {A /\ B }split{A, B} drop A { B } 
+apply C x { x : B,  } 
+if() {} {}
 
 
 What is logic?
