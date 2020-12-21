@@ -31,12 +31,12 @@ data augmentation. Adding adversarial examples.
 
 
 attention - transformer netowrk
-proof search - Lerin, openai guy
-
+proof search - sorin lerner Lerin, openai guy
+http://cseweb.ucsd.edu/~lerner/papers/proverbot-mapl2020.pdf 
 autoencoder
 
 boltzmann machines?
-
+deep learned GC. what was up with that
 
 Resources:
 
