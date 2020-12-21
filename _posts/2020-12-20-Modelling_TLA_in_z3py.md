@@ -7,7 +7,7 @@ categories:
 tags:
 - python
 - z3
-title: Modelling TLA+ in Z3Py
+title: Modeling TLA+ in Z3Py
 ---
 
 It's that time of year again where I'm fiddling around with Z3Py. I'm booting it back up because I'm scheduled to do a [tutorial on Z3](https://fmie2021.github.io/agenda.html) on Feb 3. It's kind of silly because I probably already have too much content, and the tutorial is aimed at newbies, but there are some fun new things that I've learned in the last year I can do in Z3. As one example, it's not so hard to build a pretty reasonable simulacrum of TLA+ in Z3.
