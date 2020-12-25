@@ -32,7 +32,11 @@ floating point adjunction
 hoare logic vs sequents
 nand2coq + alectryon
 prove correctness of unification - interesting useful algorithm. Correctness non obvious
-
+kripke models and topoi
+differential eqs + smt
+quantum hall circuit
+JuMP category
+Polynomial solver for games
 
 
 Thought pieces:
