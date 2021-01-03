@@ -37,7 +37,7 @@ differential eqs + smt
 quantum hall circuit
 JuMP category
 Polynomial solver for games
-
+key monad, ST, and the oleg equality tunnel
 
 Thought pieces:
 What is the point of a Phd

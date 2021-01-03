@@ -1,6 +1,15 @@
 
 
 
+Disjkstra and Scholten
+That link off of Leino
+
+Could I make an equation style system in Z3py? Probably, right?
+Take Agda as an example
+Backhouse
+Hehner
+https://news.ycombinator.com/item?id=11797522
+
 
 
 I've been feeling like i should be doing manual hoare logic/ imperative proofs
