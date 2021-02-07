@@ -186,7 +186,7 @@ function fillbox(e){
 //simple_query("fruit.pl","fruits_in([carrot, apple, banana, broccoli], X)." );
 </script>
 
-Prolog Code:
+<b>Prolog Code:</b>
 <textarea id="prolog_code" rows="20" style="width:100%"> 
 % -----------------------------------------------------------------
 % leanseq.pl - A sequent calculus prover implemented in Prolog
@@ -273,6 +273,8 @@ Proofs are actions or things that convince you of something.
 
 How's that for really nailing it down?
 
+Some examples of stuff that might be considered "proof":
+
 - A solution to a set of linear equations is proof that they can be solved.
 - A dual vector is proof of optimality of a linear program.
 - A convincing English paragraph is proof.
@@ -287,7 +289,7 @@ One thing that you can prove is the truth of a proposition combined using logica
 A [sequent](https://en.wikipedia.org/wiki/Sequent) is a structure that represents a partial state of a proof. It contains a breakdown of formula.
 $ A,B,C,... \vdash D,E,F,...$. Spiritually a sequent represents the knowledge or [judgement](https://en.wikipedia.org/wiki/Judgment_(mathematical_logic)) that the conjunction of the antecedents implies one of the consequents, but a sequent could be just considered pure syntax, merely a dead data structure to hold a pile of meaningless symbols.
 
-The sequent proof viewed from the bottom up is a stepwise breakdown of formula until they are trivially true
+The sequent proof viewed from the bottom up is a stepwise breakdown of formula until they are trivially true.
 From the top down it is the combination of simpler facts into more complicated ones.
 
 It's all a very funny shell game. Somehow proofs take small steps that each feel so simple that they aren't doing anything and build up a statement that is non obvious.
@@ -302,7 +304,7 @@ In one reading Prolog formula are themselves statements of axioms of a particula
 It also has a fairly declarative reading as a nondeterminstic match statement that tries each match in turn.
 Another interesting one is to consider `:-` to be the horizontal bar of an inference rule.
 
-One model of the state of a prolog execution is as a sequent. The trace of prolog execution is is a sequent style proof. See [Nadathur and Miller](https://www.amazon.com/Programming-Higher-Order-Logic-Dale-Miller/dp/052187940X) Or Frank Pfenning's [notes](http://www.cs.cmu.edu/~fp/courses/15317-f17/) for more
+One model of the state of a prolog execution is as a sequent. The trace of prolog execution is is a sequent style proof. See [Nadathur and Miller](https://www.amazon.com/Programming-Higher-Order-Logic-Dale-Miller/dp/052187940X) or Frank Pfenning's [notes](http://www.cs.cmu.edu/~fp/courses/15317-f17/) for more
 
 Notable tricks from the [Jens Otten](http://jens-otten.de/tutorial_cade19/) tutorial (which I highly recommend):
 1. Invertible rules. Rules that are reversible (in what sense?) can be eagerly applied. Use cuts !
@@ -490,7 +492,8 @@ function pretty_proof(proof) {
 }
 ```
 
-You can also look at the source of this page to see everything in context. It's just all slammed together.
+You can also look at the source of this page to see everything in context. <https://raw.githubusercontent.com/philzook58/philzook58.github.io/master/_posts/2021-02-07-javascript-automated-proving.md>
+It's just all slammed together.
 
 ### Bits and Bobbles
 
