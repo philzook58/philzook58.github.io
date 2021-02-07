@@ -301,6 +301,19 @@ Some thoughts for future posts:
 - Continuity as a lens
 - CEGAR, dReal, Z3
 
+
+```python
+def integral(f : Callable[[real], real]):
+    def res():
+        return sum([ f(lambda : i)() for i in partition() ]) * const(f"1/{10**iv.dps}")()
+    return res
+
+v = integral( lambda x : rmul(x,x) )
+for i in range(3):
+    iv.dps = i
+    print(f"Precision {i}: {v()}")
+```
+
 ### Links
 
 

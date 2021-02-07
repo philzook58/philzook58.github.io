@@ -1,6 +1,23 @@
 
 
 
+Djikstra monads - this might be a stretch
+F* 
+Djikstra moand + interaciton trees https://www.seas.upenn.edu/~lucsil/papers/dmf.pdf
+Interaction trees ~ free monad rearranged for total language
+related to freer monads - kiselyov thing. This is what lexi king was working on yea?
+http://hackage.haskell.org/package/freer
+http://okmij.org/ftp/Haskell/extensible/more.pdf
+
+
+General Monad mcbride
+https://www.cis.upenn.edu/~bcpierce/papers/deepweb-overview.pdf from C to interaction trees li-yao xia
+
+
+
+
+
+
 Disjkstra and Scholten
 That link off of Leino
 

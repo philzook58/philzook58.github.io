@@ -10,10 +10,17 @@ title: Model Checking - TLA+
 wordpress_id: 879
 ---
 
+
+LTL vs CTL
+Ok, I think I've got it. When you're model checking a CTL formula, you're checking a  single Tree |= CTL_formula, single entry in the entailment relation. But when you're model checking an LTL formula you're checking a family path paths p |= LTL_formula, a bunch of entries of the entailment relation.
+
+
+
 Stuttering is important.
 Stuttering is when y' = y.
 It is this option which allows refinement.
 
+Using Z3 I feel has a decent shot of being more scalable than the checking used by TLC, which as I understand it is brute force search for countermodels.
 
 Back on the TLA+ train
 

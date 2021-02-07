@@ -10,6 +10,14 @@ title: Continuations, Implementing Functional Languages
 wordpress_id: 2843
 ---
 
+
+-dlambda and -dinstr flags for ocaml. interesting
+http://cadmium.x9c.fr/distrib/caml-instructions.pdf
+https://dev.realworldocaml.org/compiler-backend.html
+
+
+
+https://news.ycombinator.com/item?id=25386756 compiler course cornell. Interesting links in comments
 https://news.ycombinator.com/item?id=25273907 llvm comments
 
 Low level ocaml and haskell

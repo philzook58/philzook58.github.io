@@ -10,6 +10,49 @@ title: Partial Evaluation Tricks
 wordpress_id: 2677
 ---
 
+Partial evaluation in Julia.
+
+Partial evaluation is when you have a program and you supply a portion of it's arguments ahead of time.
+In light of this information, there may be significant simplifications that can occur, although because of still missing arguments, the computation cannot be completely computed. The unknown input variables are blockers of computation.
+You could have some arbitrary rewriting simplication system do this, but it is more principled to have this partial evaluator take a form that is systematically connected to a standard evaluator.
+
+- Loop unrolling - If you know the bounds o the loop ahead of time
+- constexpr - 
+- Pattern matching - Unroll the pattern into 
+- 
+
+
+One way this might happen (and it is illuminating) is to consider a deeply embedded DSL where you explicitly represent the AST of your language of interest as a data type.
+However there is a shallower approach available when your language offers the appropriate compile-time computation facilities.
+Julia has a lisp-y quasiquoting macro system that is really neat.
+
+If you like o think of it this way, it is that analog of string interpolation.
+```julia
+:( 1 +  $(2 + 3) )
+# :(1 + 5)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Mjolnir
+
+
+
+
 
 https://mpickering.github.io/papers/parsley-icfp.pdf
 

@@ -13,6 +13,401 @@ wordpress_id: 1865
 ---
 
 
+Datalog and program analysis
+https://www2.cs.sfu.ca/CourseCentral/721/jim/DatalogPaper.pdf - What you always wanted to know about datalog
+http://rightingcode.org/tutorials/popl20/ popl 2020 - reasoning tools using llvm and z3
+Z3 has a datalog style reasoning engine in it
+
+First you need to get a program as a mapping
+
+
+The Chase - get existentials in the head. Wisnesky says somethign to do with jkabn extensions and lawvere theory
+What was up with the notion of quantifiers as adjoints anyway?
+Maybe also some kind of completion?
+Datalog +-
+Formulog
+Bap KB as datalog
+What 
+
+Typeclasses vs Canonical Structures. I don't get it.
+Could I make a model? Maybe in prolog?
+Diamond problem
+Inheritance.
+What are typeclasses? "Kind of like prolog"
+Things are incompatible for some reason?
+Canonical structures add unification hints?
+https://hal.inria.fr/hal-00816703v1/document canonical structures ofr the working coq user
+
+
+So what is the synctatic condition that precludes search?
+1. nonoverlapping 
+
+Would it be more interesting to just 
+What am I understanding here?
+
+Canonical structures was suggesting that some kind of inconstency would manifest.
+Maybe lambda prolog gets us closer. We can have existential variables and such.
+
+extensible unification
+
+
+nat === (carrier nat_abGrp) :- 
+A === A.
+
+
+nat == carrier(Eq) :- Eq == natEq.
+carrier(Eq,nat).
+
+
+
+nonunifiable(L) :- all( /= , L ).
+
+
+% haskell has no backtracking
+% every case has a cut.
+eq(tup()) :- !.
+eq(tup(A,B)) :- !, eq(A), eq(B)
+
+% 
+
+eq(int, prim__equal_int).
+eq(tup(A,B), lambda( x, case( x, tup(a,b) => bool_and( apply(EqualA, a) , apply(EqualB, b )  )    )  )  ) :- 
+      eq(A, EqualA), eq(B, EqualB).
+eq(tup(A,B), comp(and, par(EqualA,EqualB)))
+
+
+eq(int).
+eq()
+eq(tup(A,B)) :- eq(A), eq(B).
+
+
+ord(bool).
+ord().
+
+functor( maybe )
+functor(compose(F,G)) := functor(F), functor(G)
+
+traversable :-
+
+% superclass
+class(ord(A)) :- call(ord, A), class(eq(A))
+
+
+
+"diamonds appear evertwhere. See pullbacks" ~ Hale
+
+
+Transcribing rules to prolog and coq.
+In Coq the cookbook is that you make an inductive. One constrctor per rule.
+If you call eauto, coq will perform prolog style backchaining search. See Chlipala
+You could write these as functions rather than as 
+The data type is the proof structure.
+
+Prolog is the same thing. It's less imposing than coq though.
+You make predicates and :- for each condition.
+Prolog has built in nondtermisnion and unification.
+
+
+Tying rules in prolog.
+I did the point-free simply typed lambda calculus
+type(fst, tup(A,B), A).
+
+
+type(Gamma |- plus(A,B) : nat ) :- 
+          type(Gamma |- A : nat), type(Gamma |- B : nat)
+type(Gamma, lam(X, Body) |- fun(A,B )) :- type() , type( [X | Gamma]
+
+
+http://www.coli.uni-saarland.de/projects/milca/esslli/comsem.pdf computational semantics. some interesting material here
+https://samples.jbpub.com/9780763772062/PrologLabBook09.pdf - prolog experiment in discretem mathemtiacs logic and computatilbitly
+
+
+
+They start with defining a set of atoms like
+
+var(x).
+var(y).
+
+forall(x, stupid(x)).
+
+
+https://www.youtube.com/watch?v=RwBiHLoQ3E4&ab_channel=PapersWeLove niko matsakis - lambda prolog
+
+https://rust-lang.github.io/chalk/book/recursive.html chalk. harrop formula
+
+
+The Otten sequent calculus prover is very similar to a meta circular intepreter for prolog
+
+Horn clauses (or harrop formula) 
+
+
+
+Lambda-mu calculus and prolog. Focusing is relevant.
+Prolog has an imperative reading
+
+
+Executing the Algebra of Programming
+
+type(fst, prod(A,B) -> A ).
+type(snd, prod(A,B) -> B ).
+type(id, A -> A).
+
+interp(fst, tup(A,B), A ).
+interp(snd,  tup(A,B), B).
+interp(id, A , A).
+interp(fan(F,G), A, tup(B,C)) := interp( F, A, B) , interp(G, B, C).  
+interp(comp(F,G), A, C ) :- interp( F, A, B ), interp(G, B, C).
+interp(conv(F), A, B) :- interp(F, B, A).
+interp(cata(F) , fix(A) , C )  :-  interp(map(cata(F)), A, B) ,  interp(F, B, C)
+
+% map instance for ListF
+interp(map(F), cons(A,B) , cons(A,B2) ) :- interp(F, B, B2).
+interp(map(F), nil, nil).
+
+% in constrast to map instance for list
+interp(map(F), [], []).
+interp(map(F), [X | XS], [Y | YS]  ) :- interp(F, X, Y), interp(map(F), XS, YS).
+
+
+
+
+
+% convert to listf form
+listf([], nil).
+listf([A | XS ], cons(A,fix(L))  ) :- listf(XS, L).
+
+
+Different style
+
+
+cata(F, fix(A), C) :- map(cata(F), A, B), call(F, B, C).
+fst(pair(A,B), A).
+
+comp(F, G, A, B) :- call() , call()
+
+
+% define what it means to be a functional relation
+functional( fst, fst).
+functional( snd, snd).
+function(  )
+
+% prolog is database stuff ~ relation algebra. It makes perfect sense.
+
+
+interp( map )
+
+Converting prolog to abstract machine form
+step( Stack Result ) :-
+
+
+oprolog veriffication
+
+Warrne and Maier 1988 textboook
+proplog - propsitional goals only. 
+datalog - constants only
+prolog - functional symbols
+
+% tail recursive formulations
+factorial(N,F) :- factorial(0, N,1,F)
+factorial(I,N,T,F) :- I < N, I1 is I+1, T1 is T * I1, factorial(I1, N, T1,F)
+factorial(N,N,F,F).
+
+hitchikers guide to prolog machine
+https://drops.dagstuhl.de/opus/volltexte/2018/8453/pdf/OASIcs-ICLP-2017-10.pdf
+
+
+ref a
+ref b
+
+https://formal.iti.kit.edu/beckert/leantap/leantap.html Beckert posegga leantap
+https://link.springer.com/chapter/10.1007%2F3-540-36377-7_6 metacircular abstarct interpretation in prolog
+https://www.metalevel.at/acomip/
+
+Pfenning constructive logic course http://www.cs.cmu.edu/~fp/courses/15317-f17/schedule.html
+Programs as proof search
+He considers the prolog predictaes as the judgements themeselves
+As compared to considering the pile of predicates as entedcedents of a sequent
+Bottom up search ius forward reasoning, top down is backward reasonining
+bidrectional type checking - https://arxiv.org/pdf/1908.05839.pdf
+
+
+
+Prolog semantics -
+Since prolog can not terminate you can take that denotational semantics perspective.
+https://www.swi-prolog.org/pldoc/man?section=WFS well founded semantics. - True/False/unknown
+https://en.wikipedia.org/wiki/Well-founded_semantics
+http://www.cse.unsw.edu.au/~cs4415/2010/resources/gelder91wellfounded.pdf
+http://dai.fmph.uniba.sk/~sefranek/links/FixPointSurvey.pdf  fixpoitn semantics for logic programming a survey. melvin fitting
+Melvin fitting has a number of interesting bokos http://melvinfitting.org/
+
+So prolog already has belnap bools in it. 
+
+
+What does it look like to mix prolog with exact reals?
+
+
+
+Modes and determinism annotations.
+
+Kowalski - hgistory of prolog https://www.researchgate.net/publication/277670164_History_of_Logic_Programming
+
+
+
+tabling - 
+Tabling is some kind of memoization.
+It is connected to bottom up strategies
+swi prolog https://www.swi-prolog.org/pldoc/man?section=tabling
+https://www.metalevel.at/prolog/memoization
+https://biblio.ugent.be/publication/6880648/file/6885145.pdf tabling as a library with delimited control
+https://www.cambridge.org/core/journals/theory-and-practice-of-logic-programming/article/abs/delimited-continuations-for-prolog/DD08147828169E26212DFAF743C8A9EB delimitted continuations for prolog
+https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.294.9440&rep=rep1&type=pdf XSB extending prolog with tabled logic programming. XSB prolog is the most advanced tabling implementation (still? maybe that is old information)
+https://github.com/SWI-Prolog/tabled-prolog-book warren wrote a book draft
+https://www3.cs.stonybrook.edu/~warren/xsbbook/book.html ok This may not be being finished anytime soon
+Tabled typeclass resolution
+
+
+http://www.covingtoninnovations.com/mc/plcoding.pdf - coding guidelines for prolog
+
+https://swi-prolog.discourse.group/t/algebra-in-prolog/1849 - algerba in prolog
+https://github.com/maths/PRESS prolog equation solving system
+
+
+scryer prolog - a rust based implemnentation . https://github.com/mthom/scryer-prolog
+Interesting links
+Precise garbage collection in Prolog 
+"Can Logic Programming Execute as Fast as Imperative Programming?" - Peter van Roy
+indexing dif/2 https://arxiv.org/abs/1607.01590 calls for if_ predicate
+debray allocator
+
+https://wiki.nikitavoloboev.xyz/programming-languages/prolog notes
+
+https://mercurylang.org/documentation/documentation.html mercury
+
+Names:
+Kowalski
+schrijver
+Nuemerekl
+Markus triska
+Wielemaker
+Warren
+Miller
+Nadathur
+melivn fitting
+
+https://www.metalevel.at/prolog/theoremproving 
+presburger and resolution
+https://www.youtube.com/watch?v=b2Px7cu2a68&feature=youtu.be&ab_channel=ThePowerofProlog term rewriting in prolog
+
+https://dl.acm.org/doi/book/10.1145/3191315
+Declarative Logic Programming: Theory, Systems, and ApplicationsSeptember 2018
+Has another WAM tutorial in it
+
+So
+
+
+prolog modes
+
+https://www.metalevel.at/prolog/attributedvariables attributed variables
+
+https://sicstus.sics.se/sicstus/docs/latest4/pdf/sicstus.pdf sicstus prolog manual
+
+
+Exact reals. The semantics already has this three valued logic flavor
+
+```
+partition([X,Y]).
+partition([X,Y]) :- partition([[X, X+Y / 2]]).
+partition([[X,Y]) :- partition( [X+Y/2 , Y  ]).
+
+interval(X), stuff.
+
+
+sqrt()
+
+```
+
+Using prolog multiple answer streams is kind of like relying on haskell laziness.
+It's this intrinsic lANGUAGE construct being used as a streaming datatpe
+Unclear if wise. Fast but inflexible and unclear. Too clever for own good.
+
+clpq
+clpr
+
+delmittied dontinuation. The contiuation is a goal stack.
+But is the continuation also catching choice point stack?
+
+
+homoiconic. Term syntax is identical to 
+
+
+Maier and Warren 
+
+T_p, the immediate conseqeunce operator. Applying one round of prolog/datalog/ etc rules
+
+Proplog
+
+
+SMT-log
+Datafun - a fiunctional datalog https://www.cl.cam.ac.uk/~nk480/datafun.pdf https://www.youtube.com/watch?v=gC295d3V9gE
+datalog - stephenel diehl https://www.stephendiehl.com/posts/exotic04.html
+uZ - datalog in Z3
+souffle
+doup
+
+
+What are appli8cations of datalog
+program analysis. That points to analysis tutorial
+
+Datalog ~ polynomial time in some sense. 
+ So application wise, it can be fixed point computations
+ Or we can encode
+
+ send more money
+ num(0) num(1)
+ num(2)
+ adder(  )
+
+ https://sites.google.com/site/pydatalog/Online-datalog-tutorial
+ nqueens - they unroll it significantly.
+
+Some examples
+http://cse.unl.edu/~riedesel/pub/cse413/des/doc/manualDES.pdf
+
+ ok farmer goat. As a path search basicaly
+
+state(goat, foxm, chienbk, ) :- 
+
+
+
+Parsing a grammar. This is an odd one. Encode positions of string in database.
+t(1,a,2).
+t(2,b,3).
+t(3,a,4).
+t(4,b,5).
+t(5,a,6).
+a(F,L) :- t(F,a,L).
+a(F,L) :- a(F,M), t(M,b,L).
+a(F,L) :- a(F,M), t(M,a,L).
+DES> a(1,6)
+{
+ a(1,6)
+}
+Info: 1 tuple computed.
+
+Games? 
+
+Domain modeling with datalog
+https://www.youtube.com/watch?v=oo-7mN9WXTw&ab_channel=%23pivorakLvivRubyMeetUp
+
+https://github.com/ptarau/TypesAndProofs
+More theorem provers
+
+binprolog - analog of CPS. Add a new parameter to every predicate
+
+LD resolution
+
+monoid of clauses - unfolding
+bin(A :- BBBB) = (A>C :- BBBB>C)
 
 
 2020/9

@@ -10,6 +10,17 @@ title: Separation Logic
 wordpress_id: 2997
 ---
 
+
+Compiling speration logic to Z3. I'd want to representy maps.
+The big shift for me is that seperation logic wants to talk about partial maps/functions.
+
+Choices for map:
+association lists
+Sets of tuples
+Abstract definition with axioms
+
+
+
 https://stackoverflow.com/questions/52313122/map-data-structure-in-z3 dafny axioms for maps. Maybe use this to model
  https://github.com/Z3Prover/z3/issues/811 pointers to seperation logic stuff in smt
 viper has seperation logic?
@@ -17,6 +28,8 @@ viper has seperation logic?
 https://alastairreid.github.io/RelatedWork/notes/separation-logic/
 
 CVC4 for automatically checking simple seperation logic.
+
+
 
 https://sl-comp.github.io/
 

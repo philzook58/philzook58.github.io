@@ -123,9 +123,34 @@ Kind of reminscent of dancing links in a way
 f 20 90 190 yada yada yada could desribe links to the approprate spots.
 This would be the analog of flatterms. 
 
+There is something like encoding lambda terms with de bruijn. vs unique signifiers.
+If we could encode the unique signifiers in a way such that they never collide.
+
 There is something to that we're kind of converting to rpn.
 https://github.com/GillesArcas/numsed
 https://github.com/shinh/sedlisp 
+
+http://cl-informatik.uibk.ac.at/teaching/ws20/trs/content.php term rewriting course mitteldorp
+https://github.com/bytekid/mkbtt - does knuth bendix completion. There is a web interface
+https://github.com/bytekid/maedmax ? 
+http://cime.lri.fr/ cime
+
+
+KBO
+RPO
+LPO
+
+stable under subsitition
+stable under contect
+terminating
+
+kbo - maps all variables to number that is less than all actual symbols
+Then upon subsitution, the cost can only increase
+first check variabnle count is ok
+complicated tie breaking
+https://www.cs.miami.edu/home/geoff/Courses/TPTPSYS/FirstOrder/SyntacticRefinements.shtml
+
+
 
 
 https://www.regular-expressions.info/recurse.html

@@ -27,7 +27,7 @@ This one is actually an ILP.
 
 This is polynomial interpetation where concat/cons symbol has intepretation of plus and each constant symbol has interpetation of a number.
 
-
+http://www.cs.tau.ac.il/~nachumd/papers/termination.pdf dershowitz termination review 1987
 
 The obviously terminating stuff always decreases
 Doesn't always decrease, but clearly we lose 3 aaa to make a c but only gain 2 a from a c. We're losing net a every time we make a step.

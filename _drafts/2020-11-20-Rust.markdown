@@ -19,7 +19,12 @@ wordpress_id: 1849
 * crust of rust series 
 * Max Willsey https://www.mwillsey.com/blog/rust-intro
 * https://rust-unofficial.github.io/too-many-lists/
+* https://news.ycombinator.com/item?id=25610741 alhalf hour to learn rust. This guy has other good articles too
+* https://rust-unofficial.github.io/patterns/
+#warn clippy will give advice 
 
+
+deref trait 
 
 Rust ffi
 https://rust-embedded.github.io/book/interoperability/rust-with-c.html

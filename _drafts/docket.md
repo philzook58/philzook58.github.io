@@ -37,7 +37,22 @@ differential eqs + smt
 quantum hall circuit
 JuMP category
 Polynomial solver for games
-key monad, ST, and the oleg equality tunnel
+key monad, ST, and the oleg equality tunnel. Unification and variables.+
+what if I made a logitext like thing in pure javascript.
+math bitch
+linking and modules - symbols are outputs, relocations are inputs. Geometru of synethsis. Linking as cospan?
+knuth bendix in rust
+HOL to smtlib. Smtlib 3 something?
+metaocaml as modal proofs. Julia partial E. ppx partial E. modular implicits + prolog = typeclasses
+nand2lean?
+tactics as lenses
+juliacon talk
+prolog + e saturation
+sed for homotopy equaivalence
+juliacon talk
+apply for unitary grant?
+engage with allessandro
+
 
 Thought pieces:
 What is the point of a Phd
@@ -62,5 +77,11 @@ epigram 2 manual
 the little typer
 lean core 
 cody's boole
+
+
+https://thume.ca/2019/07/14/a-tour-of-metaprogramming-models-for-generics/
+
+
+
 
 

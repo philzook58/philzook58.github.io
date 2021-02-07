@@ -9,6 +9,11 @@ slug: HOTT notes
 title: HOTT notes
 wordpress_id: 1302
 ---
+
+Higher inductive types are where it is actually at I guess.
+
+https://www.youtube.com/watch?v=A6hXn6QCu0k emily reihl - inifnity categroeis for undergrads, but really it's about homotopy type thoery
+
 11/2020 
 https://github.com/HoTT-Intro/Agda
 I screwed up my emacs agda by having a rotten tuareg in it. I think

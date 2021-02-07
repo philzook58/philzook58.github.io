@@ -121,6 +121,36 @@ A great thing about the lattice abstraction is for fixed point algorithms once y
 
 Knaster Tarski Theorem - An extremely often referenced theorem.
 
+### Truth Values
+https://en.wikipedia.org/wiki/Truth_value
+{true,false} {0,1}
+
+Where do these live in logic? They seem most likely to live in models.
+(true and false or true) vs something with variables in it (p and q or r)
+
+p and q or r does not have a value {true,false}. It does if p,q,r are interpeted as true false
+We''r interpeting the dead syntax /\ as the function {(0,0) : 0 , ...}
+
+x + y is not a number. It isn't like 7. 
+
+Synatctic forms are dead.
+
+
+Kripke model is analog of variable assignments, not of true/false.
+
+It's not true / false.
+It's in the semantic relation |= or not
+
+
+Topos
+Orindary functions have a subobject classifier.
+Indicator functions are a useful idea
+Subsets are represented by parametrizations. An injection into another set./
+
+
+
+
+
 ### Intervals
 
 There are two different kinds of uses for interval arithmetic

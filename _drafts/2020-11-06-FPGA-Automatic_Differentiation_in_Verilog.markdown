@@ -10,6 +10,10 @@ title: Automatic Differentiation in Verilog
 wordpress_id: 1159
 ---
 
+6.004 course https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-004-computation-structures-spring-2017/
+https://twitter.com/diodesign/status/1332507524403056641 6.004 2020 Risc-V
+
+
 I'm back on the case a little
 
 I'm going to try nmigen. I like python. 
