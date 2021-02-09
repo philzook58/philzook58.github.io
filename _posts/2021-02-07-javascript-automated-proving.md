@@ -3,7 +3,11 @@ author: Philip Zucker
 date: 2021-02-07 10:45:34+00:00
 layout: post
 title: Automated Propositional Sequent Proofs in Your Browser with Tau Prolog
-tags: prolog, javascript, proof, sequent
+tags: 
+- prolog
+- javascript
+- proof
+-  sequent
 ---
 
 <script src="https://cdn.jsdelivr.net/npm/tau-prolog@0.3.0/modules/core.min.js"></script>
