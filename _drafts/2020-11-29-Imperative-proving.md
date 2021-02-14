@@ -1,5 +1,8 @@
 
 
+https://www.lulu.com/en/us/shop/k-rustan-m-leino-and-kaleb-leino/program-proofs/paperback/product-wqy8w5.html?page=1&pageSize=4
+Rustan leino book
+https://github.com/backtracking/program-proofs-with-why3
 
 Djikstra monads - this might be a stretch
 F* 

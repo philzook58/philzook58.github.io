@@ -10,6 +10,24 @@ title: A Suggested Search Method for Quantified Linear Programs
 wordpress_id: 1064
 ---
 
+1/21
+http://www.sc-square.org/CSA/school/lectures/SCSC-Brown.pdf
+
+Interesnotes on the cylindircal decompositions.
+
+The logic - egeometry dictionary
+and intersection, or union, not complemente
+
+exsietntical eleminiation - projection
+
+converting forall to exists = complement + projection
+skolemization - finding 
+
+https://twitter.com/jjcarett2/status/1355555191500779522
+
+ISSAC conferencwe
+
+
 9/20
 
 I think that quantified linear programs might be the same or related to presburger arithmetic http://www.lsv.fr/~haase/documents/h18.pdf

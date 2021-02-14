@@ -13,6 +13,103 @@ wordpress_id: 1865
 ---
 
 
+Hmm. Gauntlet thrown.
+Byrd is not sure how prolog can? do this stuff.
+https://www.youtube.com/watch?v=aS8oj2GXras&feature=youtu.be&ab_channel=LecturesbyProf.EadesatAU
+
+meta interpeter, sure.
+
+Hmm. Could one do barliman style in lambda prolog?
+F, ex1, ex2, ex3.
+2012 quine ppaper
+2017 barliman paper
+
+Tree automa, lvar, language for fixpoints.
+Not depth first, not breadth first,
+coniductive logic programming UT Dallas
+Abstract Interpretation ~ tabling. What does that mean?
+
+nada Amin
+lambda kanren
+defeasible logic
+
+proof checker running backwards
+
+
+
+Scheme workshop
+
+
+
+https://git.sr.ht/~sforman/Prolog-Junkyard/tree/master/miscellaneous/itc.pl interval tree clocks in prolog
+https://www.metalevel.at/trs/ knuth bendix completion
+https://arxiv.org/abs/1706.00231 auto differentiating uysing constraint handking rules
+
+http://adam.chlipala.net/papers/MakamICFP18/MakamICFP18.pdf prototpying functional language using higher order logic programing makam
+chlipala
+https://www.tweag.io/blog/2019-11-28-PCF-makam-spec/
+
+Egraphs in prolog
+Unification variables give native union find data strcuture
+Hash consing - ??
+equal( (t, E1), (t2,E2) :- E1 = E2. % union find joining
+
+Great. But then we need to possibly union find parents
+
+t(x,y) ====> t(E1,E2)
+
+equal(  t1, t2  ) :- lookup( t1 )
+
+file:///home/philip/Downloads/ODonnell1987_Chapter_Term-rewritingImplementationOf.pdf
+
+https://core.ac.uk/download/pdf/81972151.pdf Logic programming with equations.
+
+Eqlog - goguen and mesegaer?
+
+assert_equal(EGraph,   ,EGraph') :- lookup(t1, E1), lookup(t2, E2), E1 = E2, EGraph' = EGraph
+assert_eqyal(  ) :- lookup(t1, E1), lookup(t2, E2)
+
+rebuild(EGraph, EGraph' ) :- 
+
+rebuild(EGraph) :- EGraph = (  , Map )
+
+To miss a parent inference isn't wrong, it's just wasteful
+
+If we do no hash consing, we do have to store every known term.
+We also need a map from Eclasses back to terms don't we?
+
+What if we broke apart. are association lists so bad?
+f(g(y)) ===> [  f(G) => F , g(Y) => G, y => Y ]
+
+Or we could use the HEADS as keys in assoc. and then assoc list the leftovers.
+This isunder the assumptyiong that variables
+
+== for search
+[ == , ]
+
+We may want to prune duplicates occasionally
+If we interweave 
+
+Can we even achieve apttern matching without an index from ENodes => terms?
+Yessss.....?
+Given a pattern ( EClass, g(f(A)) )
+We can look in g/1 for Eclass on the right hand side.
+For those matches, we build a subproblem of matching the pieces of the left hand size ENodes.
+
+
+
+
+
+With tabling?
+Tabling gives us some kind of memoization
+
+equal?(Egraph, t1,t2) :- lookup(EGraph, t1, E1), lookup(EGraph, t2, E2).
+equal?(arg1(  ) :- eqwal?(args1, args2), assert_equal(EGraph, t1, t2)
+
+Stratified prolog predciates. This euqation paper mentions this 
+and this tabling thing mentions it https://www.swi-prolog.org/pldoc/man?section=tabling-non-termination
+
+
 Datalog and program analysis
 https://www2.cs.sfu.ca/CourseCentral/721/jim/DatalogPaper.pdf - What you always wanted to know about datalog
 http://rightingcode.org/tutorials/popl20/ popl 2020 - reasoning tools using llvm and z3

@@ -52,6 +52,10 @@ sed for homotopy equaivalence
 juliacon talk
 apply for unitary grant?
 engage with allessandro
+quantum mechanics and positive semidefinite cone.
+Julog translation step + binarized implementation.
+Computational thermodynamics 
+gadducci and filipp - allesandro says i should reach out.
 
 
 Thought pieces:
@@ -84,4 +88,26 @@ https://thume.ca/2019/07/14/a-tour-of-metaprogramming-models-for-generics/
 
 
 
+Notes from conference
+mitch wabnd contniuation based program transformation strategies
+Convex theory - somehow actually convexity makes real arithemtic a convex theory
+Memo tries
+induction recursion - if you want to model dependenlty typed languages in dependelty typed languages useful. agda supports
+de moura backjumping higher order unification
+irrelevance and erasure should be thought of as separate - weirich
+pure type systems
+Syetem U and u- - good counterexamples
+eak normalization , strong normalziation
+subject reduction ~ progress?
+confluence
+barendregt book 2
+Geuvers conjecture
+weak and strong sigma types - like existential in modules? Projection vs pattertn matching
+Hinze polytypiuc values. Memotrie package conal elliot
+Principle Types vs bidirectional types?
+constrained horn clauses and infertence of invaraints
+NOVA - Greg Malecha
+pi injkectivity
 
+https://unsat.cs.washington.edu/papers/bornholt-sympro.pdf fionding code that explodesu nder symbolic evaluation
+https://github.com/lpw25/girards-paradox/blob/master/girard.ml girard paradox in ocaml

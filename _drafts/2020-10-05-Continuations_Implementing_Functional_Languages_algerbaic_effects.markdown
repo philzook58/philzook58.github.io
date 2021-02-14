@@ -10,6 +10,9 @@ title: Continuations, Implementing Functional Languages
 wordpress_id: 2843
 ---
 
+http://www.t3x.org/lfn/index.html lisp from nothing
+https://news.ycombinator.com/item?id=20591771
+
 
 -dlambda and -dinstr flags for ocaml. interesting
 http://cadmium.x9c.fr/distrib/caml-instructions.pdf
@@ -86,6 +89,10 @@ Coroutines and generators as effect systems. javascript cotuotines to conitation
 Rebvisting coroutines [http://www.inf.puc-rio.br/~roberto/docs/MCC15-04.pdf](http://www.inf.puc-rio.br/~roberto/docs/MCC15-04.pdf)
 
 [https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.398.9600&rep=rep1&type=pdf](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.398.9600&rep=rep1&type=pdf) Yield - mainstream delimitted continuations. slides [http://parametricity.net/dropbox/yield-slides.subc.pdf](http://parametricity.net/dropbox/yield-slides.subc.pdf)
+
+https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.399.1021&rep=rep1&type=pdf
+Lazy v Yield - kiselyov sabry peytonjones
+Inremental linear pretty printing
 
 https://twitter.com/sigfpe/status/1274764185658769408?s=20
 

@@ -32,19 +32,55 @@ If you like o think of it this way, it is that analog of string interpolation.
 # :(1 + 5)
 ```
 
+#### The Power Example
+
+
+## Tricks
+
+### The Trick
+A big trick is that one can convert a runtime value into a compile time value by guarding under a runtime check.
+The nonobvious step in refining a program to be partially evaluatable is that you may have to insert extra runtime checks than you would ordinarily use but the payoff is that the information you gain at compile time is worth the cost of the runtime check.
+In other words it is case splitting
+
+One simple example of this is special case unrolling small n.
+
+```julia
+function foo(x::Char)
+  if x > 9
+  else
+end
+
+
+```
+
+```julia
+function foo(x::Expr)
+    :(if $foo == 1
+    
+    
+    )
+end
+
+```
+
+
+
+### Let lifting
+
+### CPS
+
+
+
+###
 
 
 
 
 
 
-
-
-
-
-
-
-
+Carette generative programming course
+https://www.cas.mcmaster.ca/~carette/CAS761/F2018/index.html
+https://www.cas.mcmaster.ca/~carette/CAS761/F2020/index.html
 
 
 

@@ -1,3 +1,9 @@
+---
+date: 2021-02-07
+layout: post
+title: Sequent Category Stuff
+---
+
 
 https://en.wikipedia.org/wiki/Categorical_logic
 Categorical Logic
@@ -8,6 +14,138 @@ axiom = identity
 
 proof terms = categorical expressions
 
+Am I overthinking it with regards to quantifiers = adjoint?
+Maybe we should have explicit named variables.
+
+A(x) |- Q(x)
+
+Ex x, A(x) |-
+
+```
+prove( G > D, comp(F,G) ) :- 
+
+```
+
+http://therisingsea.org/notes/ch2018-lecture9.pdf
+
+$$ \begin{prooftree}
+\AxiomC{$ f : A \vdash_V B $}
+\AxiomC{$ g : B \vdash_V C $}
+\RightLabel{cut}
+\BinaryInfC{ $  f \cdot g : A \vdash_V C  $  }
+\end{prooftree}
+$$
+
+$$ \begin{prooftree}
+\AxiomC{}
+\RightLabel{ax}
+\UnaryInfC{ $  id_A : A \vdash_V A  $  }
+\end{prooftree}
+$$
+
+$$ \begin{prooftree}
+\AxiomC{$  f : A \vdash_V B  $}
+\RightLabel{weak var}
+\UnaryInfC{ $  f : A \vdash_{V \cup \{x\}} B  $  }
+\end{prooftree}
+$$
+
+Substitution axiom
+
+$$ \begin{prooftree}
+\AxiomC{}
+\RightLabel{terminal}
+\UnaryInfC{ $  unit(A) : A \vdash_{V} \top  $  }
+\end{prooftree}
+$$
+
+$$ \begin{prooftree}
+\AxiomC{}
+\RightLabel{initial}
+\UnaryInfC{ $  absurd(A) : \bot \vdash_{V} A  $  }
+\end{prooftree}
+$$
+
+Should I signify meta variables somehow?
+
+Different variables sets are different categories. We could define perhaps auto upcasting of some kind.
+This is unsatisfying in how arbitrary it seems and clearly we want to make statements about categories regardless of variable sets
+
+
+
+The terms are just another way of formatting the proof tree in some sense. If you look at the syntax of the term, you can determine exactly which rule is about to applied.
+
+
+http://therisingsea.org/notes/ch2018-lecture13.pdf
+Weakening is unprojection
+The interpetation of Sets
+A(x,y) |- B(x,y) means B is subset A
+The free variables are a different category? The sequnt should be labeled by them
+A |-x B is different from A |- B or  \Sig ; A |- B
+In prolog prover, we do explicitly track free vars.
+The various quantifiers forall x , exists x only make sense in particular categroies and are typed
+such that they remove 
+forall x_(xyz->yz) might be a way of denoting this exact quantifier.
+
+Weakening W_x_(yz->xyz). W_x is a schema
+
+Morphisms aren't sequents. They are proofs. We compose proofs by applying a cut rule.
+This is the same as f . g = \x -> let y = f(x) in g(y)
+
+
+
+From above we can see that all these thigns must be intimately related. There is a paremtric polymorphism at play.
+It is just like the STLC vs System F. STLC terms like id= \x -> x are homogenous in some sense that we can see.
+Things like forall x and W_x are schema for producing concrete things.
+
+How can you compose arrows of different free variables? Via
+
+We need explcit weakening of free variable steps.
+
+http://therisingsea.org/post/seminar-ch/
+Oh man what a rush.
+I feel like i get the quantifier adjoint thing now.
+
+Is the next step figuring out how one would do set theory?
+Raw First order logic is only set theory in its wekeast sense.
+
+cody says empty right hand side of sequent + normal form on the left becomes reolustion proving.
+Makes sense as a refutation proof.
+Put into a normal form
+
+Every combo of multi/single/empty on left or right gives something interesting
+
+suingle single - categorical
+multi multi - seqeunt
+multi single - natural
+empty single - hilbert
+empty multi - 
+What about single left, multi right?
+
+
+Could be fun to:
+First order logic
+Intuitionistic logic (with lambda terms checkbox)
+tactical proving. I could take in a tactic script
+[split, case(H), ] in prolog syntax.
+
+
+typeclass resolution - returns proof terms, 
+Each instance is named.
+
+natEq for exmaple
+Eq a, Eq b => pairEq : Eq (a,b)
+Expands to
+Eq((A,B), pairEq(DictA,DictB)) :- Eq(A, DictA), Eq(B, DictB)
+
+We could do a runtime typeclass mechanism.
+
+
+Bart Jacobs cateogrical loigc
+Scott and lambek
+
+Logical frameworks
+Isabelle is a logical framework?
 
 
 
