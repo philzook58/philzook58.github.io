@@ -231,6 +231,16 @@ Talia Ringer and cubical type theory <https://twitter.com/SandMouth/status/13300
 
 Gershom Bazerman and topology of rewrite systems <https://paperswelove.org/2017/video/gershom-bazerman-homological-computations/>
 
+Edit: Michael Misamore on twitter brings up an interesting application I was not aware of. Apparently the concept of homotopy is useful in concurrency theory. <https://twitter.com/m_misamore/status/1360957349658316802?s=20>
+<http://www.jeremy-gunawardena.com/papers/hac.pdf>
+<http://www.lix.polytechnique.fr/Labo/Samuel.Mimram/hcr.html>
+<http://boole.stanford.edu/pub/hda.pdf>
+
+I don't know if Z3 is useful here or not.
+
+
+
+
 
 String rewriting is the analog of find/replace in your text editor. It finds an exact match and will replace it.
 You can emulate a string rewriting system by putting the starting string into you text editor and iteratively applyying replace all
