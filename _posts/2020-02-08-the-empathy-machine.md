@@ -15,7 +15,9 @@ An idea that has been kicking around for while is to create an augmented reality
 
 ![](/assets/bobby_ben.gif)
 
-It does feel odd, I'll admit. Will has kept the flame of this idea alive for years, but we finally got around to doing it. It's been fun. Much ice cream has been had.
+It does feel odd, I'll admit. 
+
+Will has kept the flame of this idea alive for years, but we finally got around to doing it. It's been fun. Much ice cream has been had.
 
 It's now up on [https://iamyouyouare.me/](https://iamyouyouare.me/) and the code is at [https://github.com/Smung-Institute/empathy-machine](https://github.com/Smung-Institute/empathy-machine). The main bulk of the work is done by Tensorflow.js [Facemesh](https://github.com/tensorflow/tfjs-models/tree/master/facemesh), which was the starting point. It works pretty dang well, better than I could've hoped. The project has been pretty straightforward gluing together facemesh with a threejs overlay, figuring out web apis and such.
 
