@@ -2,7 +2,7 @@
 author: Philip Zucker
 date: 2021-02-18 13:52:20+00:00
 layout: post
-title: CEGARing Exponentials into Z3 with Python Coroutines
+title: CEGARing Exponentials into Z3 with Intervals and Python Coroutines
 tags:
 - python
 - category theory
