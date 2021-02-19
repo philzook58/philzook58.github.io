@@ -15,6 +15,15 @@ https://theory.stanford.edu/~arbrad/papers/Understanding_IC3.pdf
 
 Programming Z3 tutorial
 Spacer jupyter tutorial https://github.com/agurfinkel/spacer-on-jupyter/blob/master/Dagstuhl2019.ipynb
+https://arieg.bitbucket.io/pdf/synasc2019.pdf
+
+IC3 / PDR unbounded model checking
+
+This is somehow more than a prolog. It's inferring _predicates_
+
+
+
+Wait, so SAT is solving the problem, but unsat is a counterexample trace?
 
 ```python
 from z3 import *

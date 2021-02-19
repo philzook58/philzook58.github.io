@@ -10,6 +10,50 @@ title: HOTT notes
 wordpress_id: 1302
 ---
 
+The most straightforward computational attack on homotopy is usuing a trinagulated mesh that I think is fairly intuitive to computer people
+
+Computerizing something involes:
+- how to you even represent the thing you want to talk about
+- howw do you actually compute answers to interesting questions. I divide these into differewnt classes 1. Just recognize something, i.e.e proof checking or 2. Calculate or find something, i.e. actual numerical computations or proof finding or what have you. 1. Is often an interesting thing to start with since it is easier even if what you really want is 2.
+
+
+Paths are lists of adjacent vertices.
+
+Using haskell gadts for example, we can encode all the paths and then use the types to enforce that the path is actually connected.
+
+
+Another persepctive on this is to encopde the proerties of the mesh in logic, like first order logic.
+Z3 is a way to make this conrete
+
+
+From the perspective of systems like Coq or agda, these two pictures become the same thing. There systems have the notion of inductive predicates that boil down to defining a datatype like that in Haskell.
+
+
+It sucks to work with this stuff though.
+
+
+
+A second straightforward attack to model homotopy would be to directly model functions from the interval
+R -> R.
+Reals are floats.
+
+
+We might try to directly model these things in functions and use functional programming
+def homo1():
+
+
+Or we might try to take a more symbolic approach, like using sympy or some custom dsl.
+The difference here is tha6t in many languages, lambdas are basically totally opaque. There are advantages and disadvenmtages to 
+this rule. It does not have to be so. Languages with strong metaprogramming paradigms 
+(and I include lisps, Julia, and coq here) let you poke around in the guts to varying degrees.
+
+Reals as floats may be objectionable to your sensibiliuties. Then perhaps a preferable approach may be to use exact reals, numbers that retain the capacity to be computed to arbitrary precision upon request.
+
+
+
+
+
+
 Higher inductive types are where it is actually at I guess.
 
 https://www.youtube.com/watch?v=A6hXn6QCu0k emily reihl - inifnity categroeis for undergrads, but really it's about homotopy type thoery

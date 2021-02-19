@@ -10,6 +10,20 @@ title: ATP
 wordpress_id: 2847
 ---
 
+
+https://github.com/mechtaev/maxsmt-playground maxsmt in scala using z3
+
+Qeustion ,ecnoding de burjin to smt?
+
+Formulog - smt + datalog
+uZ = smt + datalog
+Spacer.
+
+What is the difference?
+
+
+2020/08
+
 [http://www.michaelbeeson.com/research/papers/Tarski-JAR.pdf](http://www.michaelbeeson.com/research/papers/Tarski-JAR.pdf) Tarskian Geometry Wos and Beeson
 
 THF format is higher order logic. Lambda free higher order logic [https://arxiv.org/abs/2005.02094](https://arxiv.org/abs/2005.02094)  . The applicative encoding makes a an apply function. This is basically defunctionalization is it not? [https://github.com/sneeuwballen/zipperposition](https://github.com/sneeuwballen/zipperposition) [http://matryoshka.gforge.inria.fr/pubs/ehoh_report.pdf](http://matryoshka.gforge.inria.fr/pubs/ehoh_report.pdf)

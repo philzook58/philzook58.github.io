@@ -23,6 +23,10 @@ wordpress_id: 1849
 * https://rust-unofficial.github.io/patterns/
 #warn clippy will give advice 
 
+https://rust-lang.github.io/chalk/book/recursive.html chalk is interesting
+
+modelling lifetimes as St monad. Moslty makes sense. Lifetimes are ordered though.
+Could one make an ST monad that uses a stack of scopes?
 
 deref trait 
 
