@@ -27,7 +27,9 @@ There are a number of factors to lead to this:
 - Z3 can actually be used to declaratively state problems and pushbutton calculate solutions to them with very little user help, which gives it a lot more &quot;Wow&quot; factor.
 - Coq is a tool that requires significantly more background to even comprehend what the hell it is. I still think many aspects of it are totally bizarre. But Coq users, this is just the water they swim in. For example, defining an inductive predicate as a datatype is still a bizarre notion to me, but it is Coq 101. I say this to Coq users and they look at me like I'm nuts. "What could even be the problem?"
 <p>Anyway, a fun exercise for me was to take the examples from my tutorial and try to translate them into Coq. For the most part I think it isn't that hard and rather educational.</p>
-<p>It's interesting the things that show up. Because the Z3 tutorial was designed for automation, the more automated tactics in MicroOmega and Ring are super useful. 
+<p>It's interesting the things that show up. Because the Z3 tutorial was designed for automation, the more automated tactics in MicroOmega and Ring are super useful. </p>
+<https://coq.inria.fr/refman/addendum/micromega.html>
+<p>
 The thing is that the sort of proofs that show up here are fine and all, but they aren't going to teach you to fish for yourself. When you step out of this super automatable fragment you're sunk if you don't know other techniques, like the ones Cody was teaching. There may be a better balance of fun and education to be found.</p>
 <p>I think there is a hole in the educational content out there on Coq. Software Foundations focuses on the rudiments, CPDT and FRAP kind of takes it a little hardcore, and the Mathematical Components stuff makes you buy in on ssreflect style and some hardcore math topics, both of which are nuts I have not cracked. Also, all of them are really long and initimidating. Seems like there should be something a little more breezy, a little more automatic. It is demoralizing as a beginner to either not know how to prove obvious trivial facts, or even to struggle to do so at great length.</p>
 <p>This was also a nice opportunity to take Alectryon by Clément Pit-Claudel out for a spin <a class="reference external" href="https://github.com/cpitclaudel/alectryon">https://github.com/cpitclaudel/alectryon</a> Alectryon allows you to see the proof state on hover over in your browser. It's a super important part of the Coq. It was pretty easy to put in my blog. Just copy and paste the gnarly html output into a Jekyll post and make sure to link in the CSS files in an assets folder, because they are where the magic happens.</p>
@@ -546,6 +548,7 @@ Anton Trunov on twitter makes a good point:
 
 By no means are the techniques shown here the end of the road. I have not even covered all the low hanging fruit.
 
+If you liked this, you may also enjoy the programming flavored tutorial I wrote on Learn X in Y minutes <https://learnxinyminutes.com/docs/coq/>
 
 
 
