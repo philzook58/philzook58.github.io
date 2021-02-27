@@ -56,7 +56,13 @@ quantum mechanics and positive semidefinite cone.
 Julog translation step + binarized implementation.
 Computational thermodynamics 
 gadducci and filipp - allesandro says i should reach out.
+wasm forth
+ACT 2021 talk on ATP
+balancing a stick "with Coq"
 
+
+The point of specification: quickcheck, Talia's Iorek. 
+https://www.youtube.com/watch?v=Br16rvT_C00&feature=emb_title&ab_channel=SplashConference2017
 
 Thought pieces:
 What is the point of a Phd
@@ -108,6 +114,19 @@ Principle Types vs bidirectional types?
 constrained horn clauses and infertence of invaraints
 NOVA - Greg Malecha
 pi injkectivity
+tensorflow.js principle of least action, maximum entropy? Or could use Owl.
 
 https://unsat.cs.washington.edu/papers/bornholt-sympro.pdf fionding code that explodesu nder symbolic evaluation
 https://github.com/lpw25/girards-paradox/blob/master/girard.ml girard paradox in ocaml
+
+
+Mitchelkl Wand paper.
+Subgoal induction looks like Horn
+Is he suggesting that a CPS transformation could be an interesting thing to mix in to the mc example
+I suppose defunctionalization must have swome interplay with termination proofs.
+A well ordering on the conitnuation data type
+
+category theory in security
+colin ohallaran - thesis
+d pavlovic chasing diagrams in cryptography
+equations = diagrams.

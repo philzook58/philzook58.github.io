@@ -39,7 +39,7 @@ Prolog and minikanren represent trees using this representation.
        )
     )
 
-    car cdr projection?
+
 
 
   
@@ -49,9 +49,31 @@ Prolog and minikanren represent trees using this representation.
 )
 
 
+    car cdr projection. Lisp flavored aop should have lists as fundamental
 
-(define (functiono   )
 
+
+(define (mapo f a b) 
+   (conde
+     (== a `(tup c d))  (aopo f c c2) (aopo f d d2)    )
+     
+   
+   )
+
+)
+
+
+(define (functiono f)
+   (conde
+     ((== f 'id))
+     ((== f 'fst))
+     ((== f 'snd))
+     ((== f 'inj1))
+     ((== f 'inj2))
+     ((== f `(comp ,f ,g)))
+     ((== f 'id))
+
+   )
 )
 
 
@@ -74,3 +96,4 @@ fastprog = Code (a -> b)
 fastprog = search prog
 
 
+https://free.cofree.io/2019/07/31/beautiful-bridges/ beautiful bridges algebra of programming blog post

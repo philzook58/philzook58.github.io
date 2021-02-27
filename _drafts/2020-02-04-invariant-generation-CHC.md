@@ -21,6 +21,11 @@ IC3 / PDR unbounded model checking
 
 This is somehow more than a prolog. It's inferring _predicates_
 
+https://people.eecs.berkeley.edu/~sseshia/219c/#books modelchecking course.
+
+
+Subgoal induction. ??? Seems tailor fitted to CHC. From Mitchel Wand paper refernces to Morris paper
+"inductionless induction / narrowing" are the things cody seemed to find this reminsent of 
 
 
 Wait, so SAT is solving the problem, but unsat is a counterexample trace?
@@ -47,3 +52,19 @@ s.add(init, loop, post)
 s.check()
 s.model().eval( Inv(x) )
 ```
+
+You can use horn clauses to perform craig interpolation.
+A => I
+I /\ B => False
+Hmmmmmm. But what do you use craig interpolation for?
+IC3 I think. You can build over approximations of intermiedate sets.
+
+
+
+Running a prolog query:
+
+forall(x, plus(s(x), ) )
+plus(x,y,z) => False
+Or 
+True => plus(x,y,z) ? with no quantification?
+

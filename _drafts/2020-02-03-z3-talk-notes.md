@@ -15,7 +15,6 @@ and here's the video
 
 
 
-
 Some solutions to the exercises
 
 ```python
@@ -72,3 +71,34 @@ prog = [
 prove(Implies(And(prog), x1 <= y1 ))
 
 ```
+
+
+
+
+### Further topics that would be nice to get into
+Not that I necessarily understand these things completely
+
+- Really abusing uninterpreted functions
+- Quantifier whispering
+- Constrained Horn Clauses
+- Datalog
+- CEGAR loops
+- Extracting proofs
+
+Nikolaj Bjorner talk on SMT solving
+https://www.youtube.com/watch?v=TgAVIqraCHo&ab_channel=SimonsInstitute
+
+Interesting tidbits:
+
+```python
+def CDCL():
+   while True:
+      if [] in clauses: return UNSAT
+      elif in_conflict(): learn(); backtrack()
+      elif not free_vars return SAT
+      elif should_propagate(): propagate()
+      elif should_simplify(): simplify()
+
+```
+
+Armin Biere presented a similar looking loop

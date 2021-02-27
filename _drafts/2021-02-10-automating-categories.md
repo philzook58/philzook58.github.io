@@ -79,3 +79,19 @@ fof(     ) # pullabck condition
 We need to qwuantify over morphisms, which FOL will not let us do.
 Howveer, zipperposition offers lambda free HOL?
 
+
+
+
+WWhat about automating co end calculus profunctor nonsense.
+Hom(-,-)
+????
+
+could I use the standard rewrites of categories to develop something...
+Equivalence proofs?
+(a * b) + c etc. ordinary algebra.
+
+adjunctions
+a -> G b  <=> F a -> b 
+kan extensions
+
+
