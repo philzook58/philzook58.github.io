@@ -540,6 +540,12 @@ x&#39; &lt;= y&#39; /\ (x = x&#39; /\ y = y&#39; \/ y = x&#39; /\ x = y&#39;)</s
 <div class="section" id="there-ya-go">
 <h1>There Ya Go</h1>
 <p>So you see that it isn't that much harder if you lean on automation to do these problems in Coq rather than Z3. However, having said that, I did not do the most impressive tasks from the tutorial. Verifying a neural network or a sorting network are worthy blogposts in their own right.
+
+Anton Trunov on twitter makes a good point 
+" In addition to the automatic tactics covered in the post, you might want to check things like field, congruence (EUF solver), intuition, firstorder, and some powerful combinations like 'firstorder congruence'. And also, CoqHammer's sauto and hammer, see <https://github.com/lukaszcz/coqhammer>"
+
+By no means are the techniques shown here the end of the road. I have not even covered all the low hanging fruit.
+
 </p>
 
 
