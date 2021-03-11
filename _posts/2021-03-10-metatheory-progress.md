@@ -303,6 +303,7 @@ end
 
 # Where to go from here
 - We could just say this is already nice and push forward. 
+- You may have noticed I have a few rules commented out. These may or may not present extra difficulties. The unit production rules are probably fine with another kind of guard. The deletion rule in the other direction will never be fine. This rule truly invents `f` in an essential way.
 - This is all totally unintegrated with catlab itself. A WIP. There are different directions one could go on this. Alessandro has a branch of Metatheory in the work for custom user defined data structures, so it is possible to use Catlab's native GATExpr maybe. He's looking for help too btw!
 - I'm kind of intrigued at trying to make a pure egg version of the above, especially so I can compile to wasm
 -String diagrams <https://julialang.zulipchat.com/#narrow/stream/230248-catlab.2Ejl/topic/Using.20Metatheory.20for.20String.20Diagrams> There is a compelling argument that string diagrams are a preferred representation, normalizing the associativity,commutative, and unit properties of a categorical construction.  The useful canonicity of string diagrams is a viewpoint Evan Patterson has put forward.  It has been suggested by Alessandro and others that generalizing the EGraph data structure in some sense may be to go. Extensions of the egraph that work natively on something more string diagram-like?
