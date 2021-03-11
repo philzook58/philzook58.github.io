@@ -147,6 +147,19 @@ Scott and lambek
 Logical frameworks
 Isabelle is a logical framework?
 
+Jacobs:
+objects
+(s1,s2) s.t. s1 <= s2
+([ 0..10 if even ], 0..10  )
+forgetful functor to set, take second eleent
+
+morphisms = u from x to y defined over the larger set s.t. forall x  x(i) implies (y(u(i)))
+Fixing I - subsets of i. Morphisms are inlcusion functions.
+
+Yes Jon Stirling mentioned variables as baby sheaves. I would like to understnad the baby version
+The category of variables = sets of variables. Functions between them
+[x => y, z => y] .
+A map from variables to predicates is a functor. 
 
 
 adjoints - 
@@ -155,6 +168,11 @@ Awodey and Bauer notes
 
 There seem to be more layers though
 
+
+http://angg.twu.net/LATEX/2021excuse.pdf edward ochs- category theory an excuse to learn type theory
+https://news.ycombinator.com/item?id=26203257 HN occmments on native type theory. 
+https://www.cl.cam.ac.uk/~amp12/papers/catl/catl.pdf Pitts categrocal logic
+Bart Jacobs book
 
 
 The sequent calculus as an intermediate language makes a related but distinct choice.

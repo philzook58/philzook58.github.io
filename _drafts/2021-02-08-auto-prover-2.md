@@ -87,11 +87,20 @@ Should I try to figure out the tableau prover and build a d3 visualiziation for 
 Should I attempt to use js_of_ocaml for something interesting?
 
 
-https://cdibbs.github.io/folproof/
+https://cdibbs.github.io/folproof/ interactive fol prover
 
-
+https://github.com/jyp/FOL minimal fol prover
 https://www.d3-graph-gallery.com/graph/network_basic.html
 
+Could we make an interactive prover using these seeds?
+Leave reason for each step inferred sometimes.
+Discharge into external z3 call
+
+
+# Sequents, Matrices, and Tableaus
+
+What is the correspondence here?
+Tableaus and Matrices represent equivalence classes of sequent proofs. A tree is not persay the end all be all of what a proof is. There 
 
 
 

@@ -9,7 +9,10 @@ slug: Model Checking - TLA+
 title: Model Checking - TLA+
 wordpress_id: 879
 ---
-
+Ivy
+EPR a decidable fragment?
+https://twitter.com/wilcoxjay/status/1367698694988992513?s=20
+https://graydon.github.io/ivy-notes/logical-fragment.html
 
 LTL vs CTL
 Ok, I think I've got it. When you're model checking a CTL formula, you're checking a  single Tree |= CTL_formula, single entry in the entailment relation. But when you're model checking an LTL formula you're checking a family path paths p |= LTL_formula, a bunch of entries of the entailment relation.

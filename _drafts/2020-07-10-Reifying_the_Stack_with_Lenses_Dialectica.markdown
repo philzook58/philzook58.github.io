@@ -10,12 +10,39 @@ title: Reifying the Stack with Lenses, Dialectica
 wordpress_id: 2839
 ---
 
+```haskell
+data SysT_Type =  TProd SysT_Type SysF_Type | Arrow SysT_Type SysF_Type | Nat
+data HeytOmega = Exists String  SysT_Type  HeytOmega | Forall String SysT_Type HeytOmega | Hand HeyOmega HeytOmega | PropAtom String | Eq SysTType SysTTerm SysTTerm | Implies .. | Or .. | True | False | Anything else?
+```
+HA^omega
+So none of the right hand side of the translation is system T types
+All of it is the heyting connectives
+The only things that are in system t are the variables f,x,y,v,u
+And they represent terms, not types.
+The types of system T do not show up as presented in the wikipedia page
+And the inference rules of HA^omega allow you to instantiate universally quantified propositions to any term you so like, ( of the appropriate System T type) etc. (edited) 
+I suppose the beta conversion rules etc for the terms must be part of the inference rules for HA^omega?
 
+A mixed shallow and deep embedding http://math.andrej.com/2011/01/03/the-dialectica-interpertation-in-coq/
+Basically the actual proof -> proof encoding is not focused on?
+The programs must show up in the higher order existentials
+
+
+Can we do dialectica wihtouyt nats.
+I bet we can.
+What does that leave? Finite sets? 
+Sum, product and Unit and void
+quantification 1 + 1 = bool
+We need a little juice to say interesting things
+HA has axioms for addition, succ, induction principle.
+?P (Left unit) /\ ?P (Right unit)  => forall x : (1 + 1), P x
+forall (x : 1 + 1), x = x 
+flip 0 = 1 /\ flip 1 = 0 => forall x, flip x != x
 
 
 Dialectica ~ Markov. Markov says that if something is decidable, you can use a form of negation trasnformation of forall to exists. Indepdence of premise is about moving the exists quantifier around. Markov requires unbounded search.
 
-
+https://arxiv.org/pdf/1101.5446.pdf Dialectica Interpretation with Marked Counterexamples
 
 
 

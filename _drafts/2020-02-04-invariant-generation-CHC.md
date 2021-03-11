@@ -68,3 +68,18 @@ plus(x,y,z) => False
 Or 
 True => plus(x,y,z) ? with no quantification?
 
+
+
+https://www.youtube.com/watch?v=-eH2t8G1ZkI&t=3413s
+syntax guided synthesis
+sygus-if https://sygus.org/
+CVC4 supports it.
+LoopInvGen, OASES, DryadSynth, CVC4
+
+rahul sharma
+polikarpova, peleg, isil dillig
+
+https://www.youtube.com/watch?v=h2ZsstWit9E&ab_channel=SimonsInstitute - 
+automated formal program reapir
+"fault localization" 
+https://github.com/eionblanc/mini-sygus

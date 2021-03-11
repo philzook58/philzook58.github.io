@@ -41,6 +41,20 @@ Reals are floats.
 We might try to directly model these things in functions and use functional programming
 def homo1():
 
+```python
+def composepath(p1,p2):
+  assert(p1(1) == p2(0) )
+  def res(t):
+    if t < 0.5:
+      return p1(2 * t)
+    else:
+      return p2(2*t-1)
+  return res
+```
+
+Skeletonizing this path with an open cover.
+1 open cover = [0,1) and (0,1]
+
 
 Or we might try to take a more symbolic approach, like using sympy or some custom dsl.
 The difference here is tha6t in many languages, lambdas are basically totally opaque. There are advantages and disadvenmtages to 
@@ -50,6 +64,7 @@ this rule. It does not have to be so. Languages with strong metaprogramming para
 Reals as floats may be objectionable to your sensibiliuties. Then perhaps a preferable approach may be to use exact reals, numbers that retain the capacity to be computed to arbitrary precision upon request.
 
 
+Maybe there is more connection to my path thing than I realezied
 
 
 

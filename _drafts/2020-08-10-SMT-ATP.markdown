@@ -10,6 +10,7 @@ title: ATP
 wordpress_id: 2847
 ---
 
+2021-02
 
 https://github.com/mechtaev/maxsmt-playground maxsmt in scala using z3
 

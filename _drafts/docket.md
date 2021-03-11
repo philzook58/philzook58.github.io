@@ -61,6 +61,8 @@ ACT 2021 talk on ATP
 balancing a stick "with Coq"
 
 
+
+
 The point of specification: quickcheck, Talia's Iorek. 
 https://www.youtube.com/watch?v=Br16rvT_C00&feature=emb_title&ab_channel=SplashConference2017
 
