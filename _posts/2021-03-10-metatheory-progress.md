@@ -17,7 +17,7 @@ I've been working on mechanizing equational reasoning for categories for a while
 
 
 
-The [Egg](https://egraphs-good.github.io/) paper came out and was very compelling to me. It is an implementation with novel twists of egraphs, a useful data structure for equational reasoning. I tried my hand at implementing the egraph data structure here.
+The [Egg](https://egraphs-good.github.io/) paper came out and was very compelling to me. It is an implementation with novel twists of egraphs, a useful data structure for equational reasoning. I tried my hand at implementing the egraph data structure here with the purpose of using it for Catlab reasoning in mind.
 - <https://www.philipzucker.com/egraph-1/>
 - <https://www.philipzucker.com/egraph-2/>
 
