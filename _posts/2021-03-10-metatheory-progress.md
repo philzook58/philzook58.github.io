@@ -102,6 +102,7 @@ Pkg.activate("metacat")
 Pkg.add(url = "https://github.com/0x0f0f0f/Metatheory.jl.git")
 using Metatheory
 using Metatheory.EGraphs
+using Metatheory.Util
 
 # See this link for the catlab axioms
 # https://github.com/AlgebraicJulia/Catlab.jl/blob/ce2fde9c63a8aab65cf2a7697f43cd24e5e00b3a/src/theories/Monoidal.jl#L127
@@ -251,7 +252,6 @@ end
 
 rules = typing_rules ∪ cat_rules ∪ monoidal_rules ∪ sym_rules ∪ diag_rules ∪ cart_rules ∪ typing_rules
 
-using MacroTools
 
 # A goofy little helper macro
 # Taking inspiration from Lean/Dafny/Agda
