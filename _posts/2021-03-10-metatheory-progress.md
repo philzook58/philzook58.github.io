@@ -32,7 +32,7 @@ There are a couple problems.
 1. The typing context contains important information. Consider the rule $f \rightarrow id(a) \cdot f $. Looking at only the syntax of this rule, `a` is invented on the right hand side. This information actually comes from the type of `f::hom(a,b)`
 2. We need to strip off overloading? $\otimes$ is a symbol used in catlab for both the binary operator on objects and morphisms, as is customary. I guess this might fine? It makes me squeamish.
 3. Some rules require guarding on the type before execution. For most of the rules in Catlab, if the left hand side of the rule is well-typed, then so is the right. This is not the case in general though.
-Consider the trick question: Can you apply the interchange law (f ⊗ g) ⋅ (h ⊗ k) => (f ⋅ h) ⊗ (g ⋅ k) to the term (f ⊗ id(a)) ⋅ (id(b) ⊗ k)?
+Consider the trick question: Can you apply the interchange law `(f ⊗ g) ⋅ (h ⊗ k) => (f ⋅ h) ⊗ (g ⋅ k)` to the term `(f ⊗ id(a)) ⋅ (id(b) ⊗ k)`?
 No you can't. For in my example, I have secretly decided that `f` actually has type `b ⊗ c -> b ⊗ c`  and `k` has type `c ⊗ a -> c ⊗ a`.
 The other direction is always fine though. Given `(f ⋅ h) ⊗ (g ⋅ k)` is well typed, so is `(f ⊗ g) ⋅ (h ⊗ k)`
 
@@ -87,6 +87,10 @@ Idea two is to use Metatheory "guards" to enforce type correctness of the left h
 You can see that even making the query about whether the types are right adds them to the egraph. It may be currently unknown what the types are, but by adding them, eventually the typing rules will fire and this rule will have its chance again. This also isn't as bad as it may appear performance wise, because the egraph in a sense memoizes these typing calls. See the Fibonacci example by Mason Protter which has non exponential complexity despite the naive implementation <https://github.com/0x0f0f0f/Metatheory.jl/blob/master/test/test_fibonacci.jl>
 
 It is my belief that both of these points (internalization of the typing rules and guards) can be mechanized to produce a sound rule system for an arbitrary GAT. I could easily be wrong. The rough picture I suggest is that you need to infer by looking at the lhs of each rule what typing constraints are implied. If you do not imply the entire typing context, you need to add as many extra guards to ensure it as needed. For example, the well typed-ness of `(f ⊗ₘ p) ⋅ (g ⊗ₘ q)` implies $cod(f) \otimes cod(p) = dom(g) \otimes dom(q)$ but this does not imply the condition $cod(f) = dom(g) \land cod(p) = dom(q)$ so they must be added.
+
+EGraphs are confusing to reason about. But 2 points:
+1. I think it is important that the Egraph inductively contains only well typed terms in some sense. This should be definable and checkable in a precise manner.
+2. I think it is important to have a _semantic_ model in mind when working with egraphs. Pure syntax considerations lead you astray. EGraphs are more than just a bag of terms.
 
 Here is a full script to run the derivation `pair(proj1(a,b),proj2(a,b)) = id(a ⊗ₒ b)`. I can't get it to go end to end without assistance yet. We'll get there. I believe. The real holy grail is not proofs, but simplifications. This also works, but not yet at the depth I'm hoping for.
 
