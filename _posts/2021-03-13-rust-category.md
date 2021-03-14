@@ -74,9 +74,9 @@ tags:
 
 I have been finding it quite pleasant to find ways to make things run in the browser. It makes for a much more compelling blog post I think. If you need someone to install your thing, there is a very low chance they'll take the effort to see it working. And that is where the magic is.
 
-This is a follow on post to <http://www.philipzucker.com/metatheory-progress/>. In essence, I'm taking the same guarded rewrite system on egraphs and translating it to use [egg](https://egraphs-good.github.io/), which Metatheory.jl borrows heavily from in terms of it's implementation. Egg is still to my knowledge more performant, easier to compile to wasm for the web, plus it is a good excuse to write some rust.
+This is a follow on post to <http://www.philipzucker.com/metatheory-progress/>. For a more detailed discussion of the tricks involved in the rule system, see that post. In essence, I'm taking the same guarded rewrite system on egraphs and translating it to use [egg](https://egraphs-good.github.io/), which [Metatheory.jl](https://github.com/0x0f0f0f/Metatheory.jl) borrows heavily from in terms of it's implementation. Egg is still to my knowledge more performant (although Alessandro makes great strides every day), easier to compile to [wasm](https://rustwasm.github.io/book/) for the web, plus it is a good excuse to write some rust.
 
-Egg is straightforward enough to use. First you define your language (or you can use the built in generic SymbolLang, presumably at a performance hit.)
+Egg is straightforward enough to use <https://docs.rs/egg/0.6.0/egg/tutorials/>. First you define your language (or you can use the built in generic SymbolLang, presumably at a performance hit.)
 There is a nice macro for this. What is it doing? Well it's defining a parser and an ordinary enum. Don't forget the trailing comma!
 
 Here is a language define for my categorical constructors. I renamed everything away from unicode symbols so they would be easier to type. 
