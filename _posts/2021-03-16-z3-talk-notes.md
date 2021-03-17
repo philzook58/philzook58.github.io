@@ -16,6 +16,8 @@ and here's the video
 <iframe width="560" height="315" src="https://www.youtube.com/embed/56IIrBZy9Rc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
+I translated some of these Z3 examples to Coq in a blog post here <https://www.philipzucker.com/translating-z3-to-coq/>
+
 Some solutions to the exercises
 
 ```python
