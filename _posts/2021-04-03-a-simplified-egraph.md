@@ -36,9 +36,9 @@ EGraph() = EGraph( IntDisjointMap(union)  , Dict{ENode,Int64}())
 
 The `eclass` field is a union-find dictionary from equivalence classes to vectors of ENodes. We tell the underlying `IntDisjointMap` that upon a `union!` of equivalence classes, we will `union` the enode vectors in the codomain of the `IntDisjointMap` to each other.
 
-The `memo` table is not strictly necessary, but it gives us a good way to lookup which eclass an enode belongs to. Otherwise we'd have to brute force search the entire `IntDisjointMap` to find `ENode`s when we want them.
+The `memo` table is not strictly necessary, but it gives us a good way to lookup which eclass an enode belongs to. Otherwise we'd have to brute force search the entire `IntDisjointMap` to find `ENodes` when we want them.
 
-`ENode`s hold references to `EClass` ids, which unfortunately can go stale. We can canonize `ENode`s to use the freshest equivalence class indices.
+`ENodes` hold references to `EClass` ids, which unfortunately can go stale. We can canonize `ENodes` to use the freshest equivalence class indices.
 
 ```julia
 canonize(G::EGraph, f::ENode) = ENode(f.head, [find_root(G.eclass, a) for a in f.args])
@@ -90,7 +90,7 @@ Instead we can merely just find congruences via a sweep over the egraph. This is
 
 An unfortunate thing is that `congruences` needs to be applied in worst case a number of time proportional to the depth of the egraph, as it only propagates congruences one layer at a time.
 
-How it works: after a `union!` operation there are non canonical `ENodes` held in both `memo` and `eclass`. These noncanonical `ENodes` are exactly those who have arguments that include the eclass that was just turned into a child of another eclass. These are also exactly those `ENode`s that are candidates for congruence closure propagation. We can detect them during the sweep
+How it works: after a `union!` operation there are non canonical `ENodes` held in both `memo` and `eclass`. These noncanonical `ENodes` are exactly those who have arguments that include the eclass that was just turned into a child of another eclass. These are also exactly those `ENodes` that are candidates for congruence closure propagation. We can detect them during the sweep
 
 This expensive congruence sweep forgives sins. Something that can happen is that we try to `addexpr!` an `ENode` that is one of the stale ones, in other words it should be in the memo table but is not. This was falsely create a new `eclass` for this `ENode`. However, the congruence closure sweep will find this equivalence on the next pass.
 
