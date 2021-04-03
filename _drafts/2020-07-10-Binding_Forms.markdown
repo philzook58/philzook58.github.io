@@ -10,45 +10,13 @@ title: Binding Forms
 wordpress_id: 2837
 ---
 
-
-
-
 What do we do with binders?
-
-
-
-
-
-
-
-
-
-
-
-
 
 [https://www.schoolofhaskell.com/user/edwardk/bound](https://www.schoolofhaskell.com/user/edwardk/bound)
 
-
-
-
-
-
-
 Do Just dumbass names
 
-
-
-
-
-
-
 [https://www.cs.cornell.edu/courses/cs3110/2019sp/textbook/interp/subst_lambda.html](https://www.cs.cornell.edu/courses/cs3110/2019sp/textbook/interp/subst_lambda.html) ordinary stringy substituion done right possibly
-
-
-
-
-
 
     
     <code>data Lambo = Var String | Lam String Lambo | App lambo Lambo
@@ -71,191 +39,46 @@ Do Just dumbass names
                    | otherwise = (App f x) 
     eval x = x</code>
 
-
-
-
-
-
-
 barendregt convention - bound variables are uniquely named. The rapier. 
-
-
-
-
-
-
 
 ## de Bruijn.
 
-
-
-
-
-
-
 de bruin has some tricky points
-
-
-
-
-
-
-
-
-
-
-
 
     
     <code></code>
 
-
-
-
-
-
-
 Direct Substitution
-
-
-
-
-
-
 
 Environment passing
 
-
-
-
-
-
-
-
-
-
-
-
-
 Well typed de bruijn. [http://docs.idris-lang.org/en/latest/tutorial/interp.html](http://docs.idris-lang.org/en/latest/tutorial/interp.html)
-
-
-
-
-
-
 
 Bird and Patterson, Altenkirch and Reus. Look at Eisenberg's Stitch. and Idris tutorial. 
 
-
-
-
-
-
-
 [https://plfa.github.io/DeBruijn/](https://plfa.github.io/DeBruijn/)
-
-
-
-
-
-
 
 [http://www.cs.ox.ac.uk/people/richard.bird/online/BirdPaterson99DeBruijn.pdf](http://www.cs.ox.ac.uk/people/richard.bird/online/BirdPaterson99DeBruijn.pdf)
 
-
-
-
-
-
-
 Chris mentioned [https://nms.kcl.ac.uk/christian.urban/Publications/nom-tech.pdf](https://nms.kcl.ac.uk/christian.urban/Publications/nom-tech.pdf) nominal forms in isabelle. I don't know what this is
-
-
-
-
-
-
 
 HOAS. Weak HOAS, PHOAS.
 
-
-
-
-
-
-
 Locally nameless. Separate free and bound variables. Conor Mcbride and Charuand paper
-
-
-
-
-
-
 
 Point-free style. Does my point-free guide hold some stuff about binding forms?
 
-
-
-
-
-
-
 Map -style. This one is new to me. Conor Mcbride's Everybody's got the be somewhere mentions this. At every lambda, you hold a map of where those variables end up going. This leads to a lot of duplication of structure, but it makes sense. Even de Bruijn indices are a peculiar indirection. [https://arxiv.org/pdf/1807.04085.pdf](https://arxiv.org/pdf/1807.04085.pdf)
-
-
-
-
-
-
 
 I had some notes I was doing for indexful differentiation. Tensor expressions. It was an interesting exercise
 
-
-
-
-
-
-
 Differentiation is syntactic, not semantic. That's why is sucks so hard in thermo
-
-
-
-
-
-
 
 Differential is a binding form itself. See a comment in Functional Differential geometry and in Plotkin's talk. 
 
-
-
-
-
-
-
 weirich [https://www.youtube.com/watch?v=j2xYSxMkXeQ](https://www.youtube.com/watch?v=j2xYSxMkXeQ)
-
-
-
-
-
-
 
 [https://github.com/sweirich/challenge/blob/canon/debruijn/debruijn1.md](https://github.com/sweirich/challenge/blob/canon/debruijn/debruijn1.md)
 
-
-
-
-
-
-
 In locally nameless we don't have to shift on the term we're substituting in since the free variables in the term have names.
-
-
-
-
-
-
-
-
 

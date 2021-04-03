@@ -12,12 +12,27 @@ title: prolog, scheme,racket, lambdaprolog, What the Hell is LogicT / Guanxi not
 wordpress_id: 1865
 ---
 
+Mercury - mode declarations and type declarations. Allows reordering, but deals with IO using lionear types?
+
+
+BAP universal valures
+OCaml typeclasss system
+Oleg modellign typeclasses as prolog
+https://inbox.ocaml.org/caml-list/20190904152517.GA2014@Melchior.localnet/
+http://okmij.org/ftp/ML/index.html#trep
 
 Hmm. Gauntlet thrown.
 Byrd is not sure how prolog can? do this stuff.
 https://www.youtube.com/watch?v=aS8oj2GXras&feature=youtu.be&ab_channel=LecturesbyProf.EadesatAU
 
-meta interpeter, sure.
+meta interpeter, sure. That's one way to get com,plketeness
+What if one defunctionalizes the minikanren pause mechanism. What does it look like?
+Oh there's a first order kanren paper that does this
+
+
+
+https://popl21.sigplan.org/details/PADL-2021-papers/5/A-Family-of-Unification-oblivious-Program-Transformations-and-Their-Applications
+https://github.com/ptarau/LogicTransformers
 
 Hmm. Could one do barliman style in lambda prolog?
 F, ex1, ex2, ex3.

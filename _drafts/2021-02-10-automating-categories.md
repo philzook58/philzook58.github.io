@@ -94,4 +94,29 @@ adjunctions
 a -> G b  <=> F a -> b 
 kan extensions
 
+# Category theory of sets ETCS
 
+https://arxiv.org/pdf/1212.6543.pdf Leinster. great paper
+
+Topos in elementary terms
+
+pullback = substitions https://math.stackexchange.com/questions/2403265/substitution-is-pullback
+
+Pullback takes in 3 objects, 2 morphisms, and outputs object, 2 morphisms, and the universal morphism generators.
+
+Sierpinski as truth object
+
+What about doing my category theory thing with computable functions. Sierp is truth object?
+
+Gneralized points - elements are functions {.} -> a
+Subsets = monomorphisms
+function application = function composition
+Points = terminal object domained morphism (pointed?)
+
+
+what are pullbacks?
+Solutions to Ax=By
+inverse images Ax = vl , if B is a vector, that is the analog of a point prjectively, so this
+calculated the subspace that maps to that point
+
+Cody said somoehow the bottom one can be subsutition and the side one

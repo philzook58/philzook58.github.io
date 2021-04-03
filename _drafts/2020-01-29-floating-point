@@ -7,5 +7,18 @@ https://gitlab.com/numerical_shaman/shaman shaman - another error tracking thing
 
 Gappa
 Sollya
+textbook on coq floating point
+FlocQ
+
+Verified plotting -Melquiond
+
 
 http://www.lix.polytechnique.fr/~putot/fluctuat.html Fluctuat analyzer
+
+https://pavpanchekha.com/blog/understanding-fptaylor.html
+
+Textbook Formal Verification fo Floatng Point Hardware
+
+
+
+My coq pendulum swing up. Could I verify it?

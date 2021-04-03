@@ -10,6 +10,12 @@ title: Simulating Fluids
 wordpress_id: 970
 ---
 
+3/21
+Lattice boltzmann
+https://news.ycombinator.com/item?id=26610826
+
+jan/18
+
 **Meshing of Navier Stokes**
 
 CFL conditions

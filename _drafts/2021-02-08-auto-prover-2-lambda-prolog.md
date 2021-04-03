@@ -104,6 +104,47 @@ Tableaus and Matrices represent equivalence classes of sequent proofs. A tree is
 
 
 
+# Lambda prolog intro
+
+Logic and computation. Logic describes computations. Computations are models of logic. Hoare
+Curry Howard - Functional programs are natural deduction proofs. Inlining is beta reduction
+Logic programming - Goal states are seqeunts. Searching for a proof is computation
+
+Higher order logic - 3 senses
+Second order arithmetic quantifies over sets
+Qunatification over predicates and comprehensions schemes
+Anything with lambda terms allowed in it.
+
+Sequents include the signature. This is very important.
+https://ncatlab.org/nlab/show/sequent+calculus They suggest the context can be made implciit in certain settings.
+In proppsiytional logic, the context is empty. In single sorted FOL, you can gather up the 
+
+http://www.lix.polytechnique.fr/~dale/pisa14/lecture2.pdf
+Hmm Identity rules are compose and id.
+
+Cut rule - Can we take a cut free proof and compress it using hash consings?
+Or online can we remember subtrees and hash cons them. Is this a way to think about tabling?
+
+Automata accepting strings
+
+Simple provers.
+
+Lambda prolog has types that affect unification.
+
+
+forall exists /\ = /\  as unification problems
+equality between lambda terms (lam x ) = (lam x ) is the same as forall x, body1 = body2.
+Lambda and forall extrude to each other. That's odd. 
+
+Hmm my notion of predicate as sets. I consider terms with patterns to represent the set of all
+terms that fill thge pattern, This is also a logical formula
+
+Two different notiongs
+Expressions have types.
+Values have types.
+
+
+
 
 <!-- <script src="/assets/elpi-js/lib/elpi-api.js" type="module"> </script> -->
 <!-- <script src="/assets/elpi-js/lib/elpi-worker.js" type="module"> </script> -->

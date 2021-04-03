@@ -225,3 +225,9 @@ struct IntDisjointMap{V, merge_fun}
 end
 ```
 
+Would Int32 give savings?
+
+Is there a category of Equivalence Maps? Maybe.
+
+How to do this in prolog? A dict keyed on unification variables. Would attributed variables suffice?
+

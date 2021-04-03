@@ -10,6 +10,45 @@ title: Intervals + Automatic Differentiation ~ Exact Reals, Sheaves, Geometry Lo
 wordpress_id: 2729
 ---
 
+Semidecision in coq
+https://www.ps.uni-saarland.de/~smolka/drafts/icl2019.pdf
+exists n, f n = true
+exists n, f n = True <=> P x -- reflection principle
+
+This means it has a semi decider. It doesn't mean it is semi descdiale
+
+Why bring the nats into it though . What other formulations might there be?
+We need to encode non terminating search in some way. So this is related to the nontermination
+encodings
+Gas. Basically.
+I don't think Gas requires stabilization persay usually.
+We could go coinductive. 
+We could have a kind of a chain of lesser proofs. P (n+1) -> P (n+1)
+Can one use Acc? Maybe not? I mean the point is that we have true non termination possibly
+
+What is decision and semidecision
+
+Problems are decidable.
+https://en.wikipedia.org/wiki/Decision_problem
+Decision problems are a question on an infinite set of inputs.
+
+But what is a question?
+
+https://en.wikipedia.org/wiki/Borel_hierarchy
+https://en.wikipedia.org/wiki/F%CF%83_set
+
+We can talk about sets of inputs tapes. (?)
+How do we talk about these sets?
+Turing machines can halt yes,no, or not terminate
+
+What is an algorithm
+What is a computable fucntion
+
+What is a problem?
+I think a problem 
+
+
+https://arxiv.org/pdf/1904.13203.pdf computable analysus and notions of computability in coq
 
 
 

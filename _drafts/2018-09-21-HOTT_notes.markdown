@@ -10,6 +10,8 @@ title: HOTT notes
 wordpress_id: 1302
 ---
 
+https://fplab.wordpress.com/2015/05/09/hott-for-lazy-functional-programmers/
+
 The most straightforward computational attack on homotopy is usuing a trinagulated mesh that I think is fairly intuitive to computer people
 
 Computerizing something involes:

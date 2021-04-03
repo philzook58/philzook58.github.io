@@ -10,6 +10,51 @@ title: Reifying the Stack with Lenses, Dialectica
 wordpress_id: 2839
 ---
 
+Basically an error monad of a kind.
+contract :: (a -> b) -> (a -> Blame b)
+data Blame = InvalidPre | InvalidPost | Good b
+If the blame is an invalid pre, then really we want to push blame backwards.
+(a -> b) -> (a -> (b , Bad b -> MyBad or Blame a ))
+
+a -> BadA | (b, BadB -> MyBad | BadA)
+
+But in what sense is `a` bad? not locally? There's something bad
+
+contract f a = if cond x then (f x, ) else BadA
+
+CotractArrow a b = (a -> Boo, a -> b -> Bool)
+ContractArrow a b = (a -> Bool, a -> b -> Bool, a -> b)
+
+[a -> Bool] --  pile of contracts
+(a, [a -> Bool]) actual computation values?
+\(x,cs) -> check cs x,   (f x, )
+
+
+We kind of need to keep a record of every trasnaction.
+compose :: Blarrow a b -> Blarrow b c -> Blarrow a c
+
+
+Cody: dialectica and higher order contracts? Proof relevant way of saying who failed?
+https://twitter.com/codydroux/status/1370821785688682501?s=20
+
+Felleison contract paper
+https://users.cs.northwestern.edu/~robby/pubs/papers/ho-contracts-techreport.pdf
+
+Mike stay had that fun thing. Catgoriies in javascript
+
+Wadler findler - well typed programs can't be blamed
+https://homepages.inf.ed.ac.uk/wadler/papers/blame/blame-tr.pdf
+
+fun HO-posadd : (f g : int -> int > 0) -> int > 0 =
+   (f 10) + (g -34)
+And what is the issue? We want to know who violated the contract?
+Ordinarily they'd throw the error.
+What does it even mean for f to have contract (int -> int > 0)? This is not checkable?
+
+
+
+
+
 ```haskell
 data SysT_Type =  TProd SysT_Type SysF_Type | Arrow SysT_Type SysF_Type | Nat
 data HeytOmega = Exists String  SysT_Type  HeytOmega | Forall String SysT_Type HeytOmega | Hand HeyOmega HeytOmega | PropAtom String | Eq SysTType SysTTerm SysTTerm | Implies .. | Or .. | True | False | Anything else?
