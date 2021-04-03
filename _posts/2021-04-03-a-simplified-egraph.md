@@ -7,6 +7,8 @@ categories: julia
 tags: julialang julia datastructures
 ---
 
+Edit: Oooh I just found an error in this post. I'm assessing how serious it is.
+
 I've been spending some time mulling over e-graphs. I think I have it kind of pared down until it's fairly simple.
 This implementation is probably not high performance as the main trick is removing a genuinely useful indexing structure. Still, this implementation is small enough that I can kind of keep it in my head. It has become rather cute.
 
@@ -48,7 +50,7 @@ To add an `ENode` to the egraph first we canonize it, then we check if it alread
 
 ```julia
 function addenode!(G::EGraph, f::ENode)
-    canonize(G,f)
+    f = canonize(G,f)
     if haskey(G.memo, f)
         return G.memo[f]
     else
