@@ -146,6 +146,8 @@ Everything in this post could probably be tuned up to be more efficient.
 
 To add analyses, you want to store a compound structure in the IntDisjointMap. `Tuple{Vector{ENode}, Analysis)` The merge operation then does both enode merge and analysis merge.
 
+Possibly changing enodes to be binary might be nice. One can compile arbitrary arity into this. Then everything fits in place in the appropriate arrays, removing significant indirection
+
 
 Uses of egraphs:
 - https://www.philipzucker.com/rust-category/
