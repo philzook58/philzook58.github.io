@@ -2,12 +2,12 @@
 author: Philip Zucker
 date: 2021-04-03
 layout: post
-title: "Simplified Egraph Implementation"
+title: "A Simplified E-graph Implementation"
 categories: julia
 tags: julialang julia datastructures
 ---
 
-I've been spending some time mulling over egraphs. I think I have it kind of pared down until it's fairly simple.
+I've been spending some time mulling over e-graphs. I think I have it kind of pared down until it's fairly simple.
 This implementation is probably not high performance as the main trick is removing a genuinely useful indexing structure. Still, this implementation is small enough that I can kind of keep it in my head. It has become rather cute.
 
 For a user ready implementation of egraphs, see Metatheory <https://github.com/0x0f0f0f/Metatheory.jl> or egg <https://egraphs-good.github.io/>
