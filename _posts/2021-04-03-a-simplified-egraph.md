@@ -144,6 +144,8 @@ In principle I think this formulation makes it easier to parallelize congruence 
 
 Everything in this post could probably be tuned up to be more efficient.
 
+To add analyses, you want to store a compound structure in the IntDisjointMap. `Tuple{Vector{ENode}, Analysis)` The merge operation then does both enode merge and analysis merge.
+
 
 Uses of egraphs:
 - https://www.philipzucker.com/rust-category/
