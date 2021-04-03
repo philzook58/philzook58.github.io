@@ -131,10 +131,10 @@ end
 function propagate_congruence(G::EGraph)
     cong = congruences(G)
     while length(cong) > 0
-        cong = congruences(G)
         for (i,j) in cong
             union!(G,i,j)
         end
+        cong = congruences(G)
     end
 end
 ```
