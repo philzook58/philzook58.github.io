@@ -66,7 +66,7 @@ function addexpr!(G::EGraph, f::Expr)
 end
 ```
 
-When we assert an equality to an egraph, we take the `union!` of the two corresponding eclasses. We `union!` the underlying `IntDisjointMap`, then we recanonize all the held `Enodes` in that eclass and update the `memo` table.
+When we assert an equality to an egraph, we take the `union!` of the two corresponding eclasses. We `union!` the underlying `IntDisjointMap`, then we recanonize all the held `ENodes` in that eclass and update the `memo` table.
 
 ```julia
 function Base.union!(G::EGraph, f::Int64, g::Int64)
@@ -86,13 +86,13 @@ That's kind of it.
 
 The big thing we haven't discussed is calculating congruence closure. In my original presentation, this was a whole ordeal and the reason why we needed to maintain parent pointers from eclasses to enodes. This was very confusing.
 
-Instead we can merely just find congruences via a sweep over the egraph. This is inefficient compared to having likely candidates pointed out to us by the parent pointers. _However_, during naive ematching we are sweeping over the egraph anyway to find possible rewrite rules applications. This approach makes congruence closure feel rather similar to the other rewrite rules in the sense. There may be some utility in not considering congruence closure as a truly intrinsic part of the egraph. Perhaps you could use it for systems where congruence does not strictly hold?
+Instead we can just find congruences via a brute force sweep over the egraph. This is inefficient compared to having likely candidates pointed out to us by the parent pointers. _However_, during naive ematching we are sweeping over the egraph anyway to find possible rewrite rules applications. This approach makes congruence closure feel rather similar to the other rewrite rules in the sense. There may be some utility in not considering congruence closure as a truly intrinsic part of the egraph. Perhaps you could use it for systems where congruence does not strictly hold?
 
 An unfortunate thing is that `congruences` needs to be applied in worst case a number of time proportional to the depth of the egraph, as it only propagates congruences one layer at a time.
 
-How it works: after a `union!` operation there are non canonical `ENodes` held in both `memo` and `eclass`. These noncanonical `ENodes` are exactly those who have arguments that include the eclass that was just turned into a child of another eclass. These are also exactly those `ENodes` that are candidates for congruence closure propagation. We can detect them during the sweep
+How it works: after a `union!` operation there are non canonical `ENodes` held in both `memo` and `eclass`. These noncanonical `ENodes` are exactly those who have arguments that include the eclass that was just turned into a child of another eclass. These are also exactly those `ENodes` that are candidates for congruence closure propagation. We can detect them during the sweep by canonization.
 
-This expensive congruence sweep forgives sins. Something that can happen is that we try to `addexpr!` an `ENode` that is one of the stale ones, in other words it should be in the memo table but is not. This was falsely create a new `eclass` for this `ENode`. However, the congruence closure sweep will find this equivalence on the next pass.
+This expensive congruence sweep forgives more sins than the more efficient one. Something that can happen is that we try to `addexpr!` an `ENode` that is one of the stale ones, in other words it should be in the memo table but is not. This will falsely create a new `eclass` for this `ENode`. However, the congruence closure sweep will find this equivalence on the next pass.
 
 
 ```julia
@@ -150,8 +150,8 @@ Possibly changing enodes to be binary might be nice. One can compile arbitrary a
 
 
 Uses of egraphs:
-- https://www.philipzucker.com/rust-category/
-- https://www.philipzucker.com/metatheory-progress/
+- <https://www.philipzucker.com/rust-category/>
+- <https://www.philipzucker.com/metatheory-progress/>
 
 My other implementation
 - <https://www.philipzucker.com/egraph-1/>
