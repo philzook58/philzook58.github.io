@@ -158,6 +158,8 @@ My other implementation
 - <https://www.philipzucker.com/egraph-1/>
 - <https://www.philipzucker.com/egraph-2/> egraph pattern matching
 
+Edit: Max Willsey on twitter, an author of egg, says that egg originally took an approach to congruence like the above but found it too slow on larger workloads. It does indeed have a worse asymptotic performance than actually tracking parents and sniping the congruence locations. <https://twitter.com/mwillsey/status/1378476707460509698?s=20>
+
 
 Some tests
 ```julia
