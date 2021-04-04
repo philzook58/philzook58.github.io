@@ -11,7 +11,7 @@ tags: julialang julia datastructures
 I've been spending some time mulling over e-graphs. I think I have it kind of pared down until it's fairly simple.
 This implementation is probably not high performance as the main trick is removing a genuinely useful indexing structure. Still, this implementation is small enough that I can kind of keep it in my head. It has become rather cute.
 
-For a user ready implementation of egraphs, see Metatheory <https://github.com/0x0f0f0f/Metatheory.jl> or egg <https://egraphs-good.github.io/>
+For a user ready implementation of egraphs, see Metatheory <https://github.com/0x0f0f0f/Metatheory.jl> or egg <https://egraphs-good.github.io/>. For more motivation, see the egg paper or my first post <https://www.philipzucker.com/egraph-1/>
 
 In a computer, terms like `(a + b) * c` are typically stored as trees. The EGraph converts this tree structure to one with an extra layer of indirection. Instead of nodes directly connecting to nodes, they connect first through a different kind of node labelled by an integer. These integer nodes are called eclasses and the modified original nodes are called enodes.
 
