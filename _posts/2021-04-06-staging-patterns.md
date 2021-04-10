@@ -184,7 +184,7 @@ function compile_pat(p)
 end
 ```
 
-Then I can write an interpreter over these instructions. You case on which instruction type. If it is a `Bind` you make a for loop over all `ENodes` in that eclass, check if the head matches the pattern's head and the length is right, add all the new found enode numbers to the context, and finally recurse into the next instruction. If it is a `CheckClassEq` you check with the context to see if we should stop this branch of the search. If it is a `Yield` we add the current solution to the `buf`.
+Then I can write an interpreter over these instructions. You case on which instruction type. If it is a `Bind` you make a for loop over all `ENodes` in that eclass, check if the head matches the pattern's head and the length is right, add all the new found enode numbers to the context, and finally recurse into the next instruction. If it is a `CheckClassEq` you check with the context to see if we should stop this branch of the search. If it is a `Yield` we add the current solution to the `buf`. The `buf` thing came up in Alessandro's journey to optimize the ematcher in Metatheory.jl <https://github.com/0x0f0f0f/Metatheory.jl> and it really cleared things up for me compared to my monstrous Channel based implementation.
 
 ```julia
 function interp_unstaged(G, insns, ctx, buf) 
@@ -375,7 +375,8 @@ println(prettify(interp_staged( p1  )))
 ## Bits and Bobbles
 
 - Code in progress here <https://github.com/philzook58/EGraphs.jl/blob/proof/src/matcher.jl>
-- how much staging do Symbolics and MatchCore do? I don't think they use generative metaprogramming style. 
+- It _would_ be kind of fun to do this in MetaOcaml itself. I love the typed staged metaprogramming.
+- How much staging do Symbolics and MatchCore do? I don't think they use generative metaprogramming style. 
 - Let's get proof output workin'! Next time.
 - We can optimize our insns either during the insn generation process or afterward before converting them into the matcher code. We want ot push `CheckClassEq` as soon and as eagerly as possible to get early pruning.
 - Egg version <https://github.com/egraphs-good/egg/blob/main/src/machine.rs>
