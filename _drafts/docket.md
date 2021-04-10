@@ -59,12 +59,22 @@ gadducci and filipp - allesandro says i should reach out.
 wasm forth
 ACT 2021 talk on ATP
 balancing a stick "with Coq"
-
-
+nbe javascript + higher order unification
+export coq proofs to sequent trees?
+Concrete mathetmaics in Coq?
+proof relevant parser combinators - <|> should tell use which, be heterogenous
+semidecidable = open, in coq + munkres
+resultants + contour integrals numerical. What other fun contour integral things are there?
 
 
 The point of specification: quickcheck, Talia's Iorek. 
 https://www.youtube.com/watch?v=Br16rvT_C00&feature=emb_title&ab_channel=SplashConference2017
+
+
+Catlab GatExpr inlcusion - I could take it all the way. Who better I guess.
+Egg Cli
+Nand2Coq
+
 
 Thought pieces:
 What is the point of a Phd

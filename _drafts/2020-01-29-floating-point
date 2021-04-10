@@ -22,3 +22,10 @@ Textbook Formal Verification fo Floatng Point Hardware
 
 
 My coq pendulum swing up. Could I verify it?
+ 
+https://www.cs.cmu.edu/~quake/robust.html Adaptive Precision Floating-Point Arithmetic and Fast Robust Predicates for Computational Geometry
+https://github.com/mourner/robust-predicates
+https://github.com/mikolalysenko/robust-arithmetic-notes
+
+http://doc.cgal.org/latest/Number_types/classCGAL_1_1Gmpq.html
+http://www.algorithmic-solutions.info/leda_guide/geometryalgorithms.html

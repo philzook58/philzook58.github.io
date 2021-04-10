@@ -1,4 +1,13 @@
 
+
+
+https://www.cs.cornell.edu/~kozen/Papers/06ijcar-categories.pdf Dexter Kozen nuprl.
+We should revisist this.
+
+Could we make a theory of functors?
+
+
+
 Problems to pose:
 Finitely presented categories
 Axiomatic categories - (equality questions over)

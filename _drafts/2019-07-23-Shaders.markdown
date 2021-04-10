@@ -10,65 +10,19 @@ title: Shaders
 wordpress_id: 1872
 ---
 
-
-
-
-
 https://www.youtube.com/playlist?list=PL4neAtv21WOmIrTrkNO3xCyrxg4LKkrF7
-
-
-
-
-
-
-
 
 [https://thebookofshaders.com/](https://thebookofshaders.com/)
 
-
-
-
-
-
-
 shaders are very fun
-
-
-
-
-
-
 
 [https://github.com/patriciogonzalezvivo/glslViewer](https://github.com/patriciogonzalezvivo/glslViewer) cool viewer and converter.
 
-
-
-
-
-
-
 uniforms
-
-
-
-
-
-
 
 Important variables. glFragColor
 
-
-
-
-
-
-
 A couple different things. If you have the closed form solution of an system, you can easily plot it.
-
-
-
-
-
 
     
     <code>#ifdef GL_ES
@@ -107,18 +61,7 @@ A couple different things. If you have the closed form solution of an system, yo
         gl_FragColor = vec4(color,1.0);
     }</code>
 
-
-
-
-
-
-
 Simply load a texture and show it
-
-
-
-
-
 
     
     <code>#ifdef GL_ES
@@ -137,22 +80,9 @@ Simply load a texture and show it
         gl_FragColor = texture2D(u_tex0, position);
     }</code>
 
-
-
-
-
 ![](http://philzucker2.nfshost.com/wp-content/uploads/2019/07/mandel2.png)
 
-
-
-
-
 Here is a basic mandelbrot set
-
-
-
-
-
 
     
     <code>#ifdef GL_ES
@@ -182,18 +112,7 @@ Here is a basic mandelbrot set
         gl_FragColor = vec4(color,1);// vec4(1,1,0,1);
     }</code>
 
-
-
-
-
-
-
 This is a simpler shader that uses a buffer to perform iterations to blur an image. In other words, it is a heat equation solver. Could also be used to solve a laplace equation by the relaxation method.
-
-
-
-
-
 
     
     <code>#ifdef GL_ES
@@ -232,219 +151,55 @@ This is a simpler shader that uses a buffer to perform iterations to blur an ima
         #endif 
     }</code>
 
-
-
-
-
-
-
 Other things that would be cool: Simulate a dynamical system. More shapes. Transfromations like hyperbolic coordaintes. Tilings. What is the deal with particles systems. I did raymarching before. I think the interesting thing is that 2D drawings are still pretty cool. Hack some of the gpgpu stuff into glsl. Shouldn't there be library?
-
-
-
-
-
-
-
 
 https://www.youtube.com/watch?v=766obijdpuU
 
-
-
-
-
-
-
-
 stable fluids. Pull backward. This is anot a particle method
-
-
-
-
-
-
 
 Anything you have a closed form solution for is pretty easy. A diffusing thing, waves propagating. 
 
-
-
-
-
-
-
 shadertoy is really easy to get off the ground
-
-
-
-
-
-
-
 
 http://www.philipzucker.com/shaders-raymarching/
 
-
-
-
-
-
-
-
 an older post
-
-
-
-
-
-
 
 [https://www.shadertoy.com/view/wssXDj](https://www.shadertoy.com/view/wssXDj)
 
-
-
-
-
-
-
-
 http://www.huwbowles.com/wave-sims-shadertoy/
-
-
-
-
-
-
-
 
 You can add state to your shader by using the channels and buffers. It's sort of a funky system
 
-
-
-
-
-
-
 Click on the new tab button and make a BufferA.
-
-
-
-
-
-
 
 Then down at the bottom set channel 0 to BufferA. Now you have a recursive loops setup.
 
-
-
-
-
-
-
 A simple blurring filter is basically the same thing as the heat equation.
-
-
-
-
-
-
 
 At a certain point it is gonna be tough to embed mutiple data strctures into a single buffer.
 
-
-
-
-
-
-
 [http://www.iquilezles.org/apps/shadertoy/help.html](http://www.iquilezles.org/apps/shadertoy/help.html)
-
-
-
-
-
-
 
 It might be fun to generate glsl code. Conal does it in his compiling to categories.
 
-
-
-
-
-
-
 [https://www.shadertoy.com/view/4dG3RW](https://www.shadertoy.com/view/4dG3RW) a molecular dynamics simulation. cool. He explicitly loops over the molecules in his shader? If it works, why not?
-
-
-
-
-
-
 
 State machine for multipass
 
-
-
-
-
-
-
 [http://rreusser.github.io/sketches/](http://rreusser.github.io/sketches/)
-
-
-
-
-
-
 
 Very cool demos. He is using regl, glsify, stack.gl
 
-
-
-
-
-
-
 purescript bindings?
-
-
-
-
-
-
 
 [https://github.com/austinEng/WebGL-PIC-FLIP-Fluid](https://github.com/austinEng/WebGL-PIC-FLIP-Fluid)
 
-
-
-
-
-
-
 [https://www.cs.ubc.ca/~rbridson/docs/zhu-siggraph05-sandfluid.pdf](https://www.cs.ubc.ca/~rbridson/docs/zhu-siggraph05-sandfluid.pdf)
-
-
-
-
-
-
 
 Bridson - fluid simulation for computer graphics.
 
-
-
-
-
-
-
 Check out my other post for more fluid [http://www.philipzucker.com/annihilating-my-friend-will-with-a-python-fluid-simulation-like-the-cur-he-is/](http://www.philipzucker.com/annihilating-my-friend-will-with-a-python-fluid-simulation-like-the-cur-he-is/)
 
-
-
-
-
-
-
 GPipe haskell [http://hackage.haskell.org/package/GPipe](http://hackage.haskell.org/package/GPipe)
-
-
 

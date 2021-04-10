@@ -9,6 +9,42 @@ slug: Continuations, Implementing Functional Languages
 title: Continuations, Implementing Functional Languages
 wordpress_id: 2843
 ---
+https://www.cs.princeton.edu/~appel/papers/safe-closure.pdf
+closure converision is safe for space- Appel paper in coq about closures
+
+Defunctionalization and closures
+How do anonymous functions actually come to be?
+Function pointers in C.
+Closures are open function data types
+Defunctionalizations are closed function data types. Internal to an algorithm we build closures, but the external interface does not accept them.
+
+Continuations
+Control flow is implicit and there are implicit auxiliary data structures. One of them (perhaps the most primordial) is the program counter. Even programming in assembly it is often a little hidden behind using instructions like jmp and call that yuou are manipulating it. 
+For example in programming an FPGA, it is puzzling how you can get a sequential algorithm to run as there is no CPU a priori available. A standard approach is to build a finite state machine and a register that holds which state you are in. This register is effectivley the program counter. This is a micro special purpose cpu in many respects.
+
+The next implicit control structure is the stack, which holds in it a pointer to what code to return to and also the context needed for the code to run.
+
+The stack holds a code pointer and an environment, and in this sense it has great similarity to a closure.
+
+
+
+Depth first search vs Breadth first.
+Depth first is easy, because you can just use recursive function calls whereas breadth first is a pain because you need to maintain 
+a queue. However, this is a false perspective. You can write DFS using a manual stack data structure. You are using the implicit stack of your programming language.
+
+Assembly programmers know very intimately that the stack exists (if they choose to even have one). They have access to a continuation in this sense. It is part of a strange close mindedness that the memory of a program is divided into a heap and stack. This does not have to be. We could have multiples of each, forego them, perhaps have other fundamental regions of some other kind of data type. Implementing the stack as a heap allocated object is a valid approach. This allows you to save and destroy multiple stacks at will and is essentially what CPS boils down to under the hood assuming a typical implementation of a functional programming language.
+
+
+
+
+What else does this paper bring into play? Correctness conditions
+
+Functional programming has both a pure branch/smenatics and an operational semantics. It also has techniques needed to transform functional looking things into a form that can be executed by a computer. The output of a functional compiler is assembly.
+
+
+Hmm. Yes proving the cps version of a list reverse is the same as no cps is 
+Does CPS help streuctural recursion restirctions in coq?
+
 
 http://www.t3x.org/lfn/index.html lisp from nothing
 https://news.ycombinator.com/item?id=20591771
