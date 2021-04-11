@@ -61,8 +61,8 @@ EMatching throws a wrench into the simplicity that you need to return multiple m
 function matchfx(G, e::Int64)
     buf = []
     for enode in G[e]
-        if f.head == :f && length(f.args) == 1
-            push!(buf, f.args[1])
+        if enode.head == :f && length(enode.args) == 1
+            push!(buf, enode.args[1])
         end
     end
     return buf
@@ -72,8 +72,8 @@ end
 function matchfxy(G, e::Int64)
 buf = []
 for enode in G[e]
-    if f.head == :f && length(f.args) == 2
-        push!(buf, [f.arg[1], f.arg[2]])
+    if enode.head == :f && length(enode.args) == 2
+        push!(buf, [enode.arg[1], enode.arg[2]])
     end
 end
 return buf
@@ -83,8 +83,8 @@ end
 function match(G, e::Int64)
     buf = []
     for enode in G[e]
-        if f.head == :f && f.args[1] == f.args[2]
-            push!(buf, f.args[1])
+        if enode.head == :f && enode.args[1] == enode.args[2]
+            push!(buf, enode.args[1])
         end
     end
     return buf
