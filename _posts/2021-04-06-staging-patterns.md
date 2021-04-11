@@ -184,10 +184,11 @@ function compile_pat(p)
 end
 ```
 
-Then I can write an interpreter over these instructions. You case on which instruction type. If it is a `Bind` you make a for loop over all `ENodes` in that eclass, check if the head matches the pattern's head and the length is right, add all the new found enode numbers to the context, and finally recurse into the next instruction. If it is a `CheckClassEq` you check with the context to see if we should stop this branch of the search. If it is a `Yield` we add the current solution to the `buf`. The `buf` thing came up in Alessandro's journey to optimize the ematcher in Metatheory.jl <https://github.com/0x0f0f0f/Metatheory.jl> and it really cleared things up for me compared to my monstrous Channel based implementation.
+Then I can write an interpreter over these instructions. You case on which instruction type. If it is a `Bind` you make a for loop over all `ENodes` in that eclass, check if the head matches the pattern's head and the length is right, add all the new found enode numbers to the context, and finally recurse into the next instruction. If it is a `CheckClassEq` you check with the context to see if we should stop this branch of the search. If it is a `Yield` we add the current solution to the `buf`. The `buf` thing came up in Alessandro's journey to optimize the e-matcher in Metatheory.jl <https://github.com/0x0f0f0f/Metatheory.jl> and it really cleared things up for me compared to my monstrous Channel based implementation.
 
 ```julia
-function interp_unstaged(G, insns, ctx, buf) 
+# uh is this code even right? In all honesty I made it by de-staging the code below.
+function interp_unstaged(G, insns, ctx, buf)
     if length(insns) == 0
         return 
     end
