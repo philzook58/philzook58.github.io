@@ -13,6 +13,8 @@ wordpress_id: 970
 3/21
 Lattice boltzmann
 https://news.ycombinator.com/item?id=26610826
+There was a nice julia post
+
 
 jan/18
 

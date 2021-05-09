@@ -5,6 +5,19 @@ layout: post
 title: Deep Learning
 ---
 
+https://www.kdnuggets.com/2020/07/pytorch-lstm-text-generation-tutorial.html
+
+https://karpathy.github.io/2015/05/21/rnn-effectiveness/
+
+https://github.com/jsvine/markovify - markov model
+
+Glove, word2vec, elmo, BERT
+spacy, nltk
+https://huggingface.co/transformers/quicktour.html
+
+
+https://www.reddit.com/r/LanguageTechnology/comments/moc365/any_good_nlp_roadmap/
+
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
 <script>
     console.log(tf.getBackend());

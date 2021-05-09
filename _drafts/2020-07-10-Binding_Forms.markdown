@@ -10,6 +10,27 @@ title: Binding Forms
 wordpress_id: 2837
 ---
 
+2021-03
+
+kiselyov lambda to SKI semantically
+http://okmij.org/ftp/tagless-final/ski.pdf
+
+
+http://math.andrej.com/2012/11/29/how-to-implement-dependent-type-theory-iii/#:~:text=de%20Bruijn%20levels%20are%20positions,the%20top%20of%20the%20stack.
+
+https://cs.stackexchange.com/questions/119861/semantics-for-de-bruijn-levels
+
+Yes so, Semantic of de bruijn
+z really is a projection function from a tuple
+s is a reduction function ignoring
+They really use polymorphism to achieve what they need here.
+i + l = n levels plus indices = number of binders.
+I can be wokring in Fock space for homogenous operators. 
+Simon here shows a homogenous list based semantics.
+
+
+2020-07
+
 What do we do with binders?
 
 [https://www.schoolofhaskell.com/user/edwardk/bound](https://www.schoolofhaskell.com/user/edwardk/bound)

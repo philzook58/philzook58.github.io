@@ -14,6 +14,14 @@ EPR a decidable fragment?
 https://twitter.com/wilcoxjay/status/1367698694988992513?s=20
 https://graydon.github.io/ivy-notes/logical-fragment.html
 
+exists* forall * is decidable - cody mentions this is synthesis? Connection here?
+Other fragments too. Monadic full first order logic (without function symbols?)
+Goldfarb, Gurevich, Rabin, Shelah: all decidable and undecidable prefix classes completely characterized.
+
+Modal logics are "robustly decidable" translation to first order has a particular guarded form
+
+
+
 LTL vs CTL
 Ok, I think I've got it. When you're model checking a CTL formula, you're checking a  single Tree |= CTL_formula, single entry in the entailment relation. But when you're model checking an LTL formula you're checking a family path paths p |= LTL_formula, a bunch of entries of the entailment relation.
 

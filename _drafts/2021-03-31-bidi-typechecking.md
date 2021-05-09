@@ -1,51 +1,190 @@
-I picked bidirectional typechecking for reading group
-
-The fool.
-
-
-It has something to do with focusing? Hmm The review paper says explicitly it does not.
 
 
 
-https://twitter.com/puffnfresh/status/1377474203444637701?s=20
-
-http://noamz.org/thesis.pdf
-
-https://consequently.org/papers/dggl.pdf
-
-https://personal.cis.strath.ac.uk/neil.ghani/papers/ghani-jfcs09.pdf
-
-Positive and negative types
-
-Focusing
-
-The two G and D categories in Harrop/Horn formula
-
-Positivityv checking
-
-Covaraince and contravaraince
-
-hmm. Harper seems to suggest a positive v neagtive product type is a lazy vs strict distinction
-https://ncatlab.org/nlab/show/product+type - 
-
-https://ncatlab.org/nlab/show/sum+type - need multiple sequents for 
+Notes on Bidirectional Typing and the Meaning of Horizontal Lines
 
 
-Linear logic.
+```ocaml
+type var = string
+type typ = Unit | Arr of typ * typ
+type expr = Var of var | Lam of var * expr |
+     App of (expr * expr) | TT | Annot of (expr * typ)
+type typ_ctx = (var * typ) list
 
-Positive is "charactersize " by introductions. Plays nice with eager evaluation
-Negative is "characterized" by eliminations. Plays "nice" with lazy evaluation
+let rec type_check gamma e t = match e,t with
+  (* | Var v, t -> (List.assoc v gamma) = t *)
+  | TT , Unit -> true
+  | Lam(x,e), Arr(a1,a2) -> type_check ((x,a1) :: gamma) e a2
+  | _,  _  -> let t' = type_infer gamma e in
+              t = t'
+and type_infer gamma e = match e with
+  | Var v -> List.assoc v gamma
+  | Annot(e, t) -> let c = type_check gamma e t in
+                  if c then t else failwith "Bad annotation"
+  | App(f, x) -> let Arr (a,b) = type_infer gamma f in
+                let c = type_check gamma x a in
+                if c then b else failwith "App typecheck failed"
+  | _ -> failwith "can't infer"
 
-Introduction rules, elimination rules AND computation rules?
+(* #use bidi.ml;;
+type_check [] TT Unit;;
+type_infer [] (Annot (Lam ("x", App(Var "x", TT)), Arr(Arr(Unit,Unit),Unit)));;
+type_infer [] (Annot (Lam ("x", TT), Arr(Unit,Unit)));;
+*)
 
-Proof search vs Preoof normalization semantics.
 
-focussing and prolog
+```
 
-hmm harper actually has a chapter on classical logic dynamics
+```prolog
 
-Bidrectional typing
-Type synthesis can be interleaved with type checking
+% It works but it is not well moded
+
+type(G, var(X), A) :- member( X - A  , G ). % member is a little wrong.
+type(G, ann( E, T), T) :- type(G, ann(E,T), T).
+type(G, tt, unit).
+type(G, lam(X,E), arr(A1,A2)) :- type([X - A1 | G], E, A2 ).
+type(G, app(E1,E2), B) :- type(G, E1, arr(A,B)), type(G, E2, A).
+
+%?- type([], lam(x,lam(y,var(y))), T).
+%T = arr(_6662, arr(_6680, _6680)) 
+```
+
+```coq
+
+Require Import String.
+Inductive type :=
+    | unit
+    | arr : type -> type -> type
+    .
+Inductive expr :=
+    | var : string -> expr
+    | lam : string -> expr -> expr
+    | ap : expr -> expr -> expr
+    | tt : expr
+    | ann : expr -> type -> expr.
+
+Fixpoint type_eq a b :=
+     match a,b with
+     | unit, unit => true
+     | (arr x y), (arr z w) => andb (type_eq x z) ( type_eq y w)
+     | _, _ => false
+     end.
+
+Definition ctx := list (string * type).
+Require Import List.
+Import ListNotations.
+
+Search app.
+
+Fixpoint lookup k l := match l with 
+| (t,v) :: ls => if String.eqb k t then v else lookup k ls 
+| [] => unit (* chris mocked me for this *)
+end.
+(** adequacy *)
+Inductive hastype (gamma : ctx) : expr -> type -> Type :=
+   | Var : forall x A, lookup x gamma = A -> hastype gamma (var x) A
+   | UnitI : hastype gamma tt unit
+   | ArrI :  forall e x A1 A2, hastype ((x, A1) :: gamma) e A2 -> 
+             hastype gamma (lam x e) (arr A1 A2)
+   | ArrE :  forall A B e2 e1, 
+             hastype gamma e1 (arr A B) ->
+             hastype gamma e2 A ->
+             hastype gamma (ap e1 e2) B
+    | Anno : forall a b e, 
+        hastype gamma e a -> 
+        type_eq a b = true -> 
+        hastype gamma (ann e a) b
+           .
+
+Inductive inferstype (g : ctx) : expr -> type -> Type :=
+| Varinf : forall x A, lookup x g = A -> inferstype g (var x) A
+| ArrEInf :  forall A B e2 e1, 
+            inferstype g e1 (arr A B) ->
+            checkstype g e2 A ->
+            inferstype g (ap e1 e2) B
+| AnoInf : forall a e, checkstype g e a -> 
+           inferstype g (ann e a) a
+
+with checkstype (g : ctx) : expr -> type -> Type :=
+| UnitIc : checkstype g tt unit
+| ArrIc :  forall e x A1 A2, checkstype ((x, A1) :: g) e A2 -> 
+          checkstype g (lam x e) (arr A1 A2)
+| Subc : forall A e B, inferstype g e A -> type_eq A B = true -> checkstype g e B
+.
+
+Goal checkstype [] tt unit. eauto using checkstype. Qed.
+Goal hastype [] tt unit. eauto using hastype. Qed.
+Goal {t & hastype [] tt t}. eauto using hastype. Qed.
+Goal checkstype [] (lam "x" tt) (arr unit unit).
+eauto using checkstype. Qed.
+Goal hastype [] (lam "x" tt) (arr unit unit).
+eauto using hastype. Qed.
+Goal hastype [] (ap (lam "x" tt) tt) unit.
+eauto using hastype. Qed.
+Goal inferstype [] (ap 
+                   (lam "x" tt)
+                   tt) unit.
+                   eauto using inferstype, checkstype. Abort.
+
+Goal inferstype [] (ap 
+                   (ann (lam "x" tt) (arr unit unit)) 
+                   tt) unit.
+                   eauto using inferstype, checkstype. Qed.
+(* eapply ArrEInf. 
+- eapply AnoInf.
+apply ArrIc. apply UnitIc.
+- apply UnitIc.
+Qed. *)  
+
+
+
+
+(* Decision procedures. 
+
+Fixpoint inferstype (g:ctx) (e : expr) : option {t : type | inferstype g e t} :=
+Fixpoint checkstype (g:ctx) (e : expr) (t : type) : option (checkstype g e t) :=
+
+sound : checkstype -> hastype
+complete : hastype -> checkstype \/ inferstype
+*)
+
+From elpi Require Import elpi.
+
+
+
+
+
+
+```
+
+I picked bidirectional typechecking for reading group this week. A lovely survey paper.
+
+Bidirectional typing is a methodology for taking piles of typing rules and making them more algorithmic.
+This gets into my strike zone, as an outsider to type theory and logic, the notion of inference rules bends me in knots. I don't know what they mean. I do have some notion of computer programs having meaning. C, python, C++, ocaml, even Coq mean something to me because they create artifacts that exist and live outside of myself. They run. Their execution becomes fact regardless if I understand them or not. Executable programs become a part of the physical world.
+I do not feel the same about mathematics or computer science written down in papers. It is static and only moves in the minds of people. I do not feel compelled to consider what is written in a paper as fact, a fait accompli, if I do not personally understand it. I don't think many people are trying to willfully deceive me in the academic literature, but there is always the possibility and that of self deception.
+
+So for me, a pile of cryptic symbols with horizontal lines is unacceptable and contains almost no meaning. It begins to have meaning when I know how to translate the concepts into an executable programming language.
+
+These concepts also being to have meaning if I personally know how to manipulate them with paper and pencil.
+
+
+To put symbolic mathematical stuff in a computer, a standard methodology is to consider expressions as trees. We then want to manipulate those trees in programs or produce new trees.
+
+
+Something that gives me conniptions is that implication $$\rimpl$$, turnstile $\vdash$, And horizontal bars are all some kind of notion of logic implication, albeit with the subtlest conceptual and mechanical distinctions. Somehow it the interplay of pushing things around between these three similar things encapsulates a notion of logical deduction. Super bizarre.
+
+
+B is mangetic field, Gamma is a context
+
+
+
+
+
+What are types?
+
+
+
+
 
 
 Checking is easy?
@@ -218,6 +357,64 @@ https://www.swi-prolog.org/pldoc/man?section=modes
 
 
 
+The fool.
 
 
+It has something to do with focusing? Hmm The review paper says explicitly it does not.
+
+https://twitter.com/rob_rix/status/1379966266723680256?s=20 rob rix dicssuion polarity
+sterling says look at sequent. negative have noninvertible left rules, positive has noninvertible right
+Substructural logic (like linear)
+What about bunched logic like seperation? Does that add any clairty? What is the polarity of seperating conjunction?
+
+https://github.com/jonsterling/dreamtt "pedagogical" binrectional dependent tpye implentation
+
+https://astampoulis.github.io/blog/taksim-modes-makam/ - huh makam has modes inspired by the bidi survey
+
+
+https://twitter.com/puffnfresh/status/1377474203444637701?s=20
+
+http://noamz.org/thesis.pdf
+
+https://consequently.org/papers/dggl.pdf
+
+https://personal.cis.strath.ac.uk/neil.ghani/papers/ghani-jfcs09.pdf
+
+Positive and negative types
+
+Focusing
+
+The two G and D categories in Harrop/Horn formula
+
+Positivityv checking
+
+Covaraince and contravaraince
+
+hmm. Harper seems to suggest a positive v neagtive product type is a lazy vs strict distinction
+https://ncatlab.org/nlab/show/product+type - 
+
+https://ncatlab.org/nlab/show/sum+type - need multiple sequents for 
+
+
+Linear logic.
+
+Positive is "charactersize " by introductions. Plays nice with eager evaluation
+Negative is "characterized" by eliminations. Plays "nice" with lazy evaluation
+
+Introduction rules, elimination rules AND computation rules?
+
+Proof search vs Preoof normalization semantics.
+
+focussing and prolog
+
+hmm harper actually has a chapter on classical logic dynamics
+
+Bidrectional typing
+Type synthesis can be interleaved with type checking
+
+
+Session types to understand linear logic vs memory management
+Types are things that can be attached to terms. Terms are expressions
+Process calculi are some kind of terms.
+https://homepages.inf.ed.ac.uk/wadler/papers/propositions-as-sessions/propositions-as-sessions.pdf
 

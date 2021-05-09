@@ -67,6 +67,16 @@ semidecidable = open, in coq + munkres
 resultants + contour integrals numerical. What other fun contour integral things are there?
 
 
+Classcial feynman diagrams - homotopy continuation, grobner, CAD. E^2 = p^2 + . momentum + energy conservation.
+Pressure, temperature of ideal gas simulation. Maintain sum of impulses
+Van der waals gas. Geometry of thermo. Virial Theorem
+Fast multipole.
+Circle packing, conformal transfromations
+Shadow calculus in coq
+http://depts.washington.edu/acelab/proj/dollar/index.html $1 recodgnixzer
+
+
+
 The point of specification: quickcheck, Talia's Iorek. 
 https://www.youtube.com/watch?v=Br16rvT_C00&feature=emb_title&ab_channel=SplashConference2017
 

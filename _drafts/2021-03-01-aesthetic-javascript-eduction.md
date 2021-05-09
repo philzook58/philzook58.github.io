@@ -35,10 +35,19 @@ https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Pixel_manip
 
 https://meep.readthedocs.io/en/latest/
 
-ray(x,y,theta) = {
+Question of returning t vs returning
+Are there good ray coordinate systems?
+projective x y w, but also alpha?
+
+
+If we treat these ray functions as differentiable, we get gaussian beam optics
+
+
+
+ray = (x,y,theta) => ({
     pos : [x,y];
     theta : theta
-}
+})
 
 dot = (u,v) => {
     u[0] * v[0] + u[1] * v[1]
@@ -84,12 +93,11 @@ That's kind of fun.
 
 
 propagate = t => line => {
-        {
+        ()
             x : line.x + t * Math.cos(theta),
             y : line.y + t * Math.sin(theta),
             theta : line.theta
-        }
-}
+        })
 
 reflect = (nx,ny) => ray => {
     var rx = Math.cos(ray.theta);

@@ -10,6 +10,10 @@ title: Intervals + Automatic Differentiation ~ Exact Reals, Sheaves, Geometry Lo
 wordpress_id: 2729
 ---
 
+Bishop-brouwer - all constructible functions are continuous.
+
+Bauer paper - 
+
 Semidecision in coq
 https://www.ps.uni-saarland.de/~smolka/drafts/icl2019.pdf
 exists n, f n = true

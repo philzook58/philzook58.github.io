@@ -9,8 +9,22 @@ slug: 'Etendue: A Cornerstone of Optics / Optics'
 title: 'Etendue: A Cornerstone of Optics / Optics'
 wordpress_id: 1949
 ---
-
+https://en.wikipedia.org/wiki/Nonimaging_optics
+https://www.osapublishing.org/aop/fulltext.cfm?uri=aop-10-2-484&id=389885
+Nonimaging optics a tutorial
 https://what-if.xkcd.com/145/
+
+Oh this is interesting, I think the angle of total internal reflection might be a way to build an "angle accepting" window. A thin piece of glass of different n only allows certain angles with respect to the normal pass through. Not very diagrammatic thought.
+
+Phase space diagrams. Boxes become parallelograms in free space.
+Spherical source, spherical surface
+Z axis, sin theta , y phase space.
+
+If you drop uncooked spaghetti on the ground, it will have random angle, random position. If you mod out by symmettry along the length of the spaghetti, you have a pile uniformly ditributed in etendue.
+
+To coordinatize rays themselves is a little tough. But does the sin(theta) do it?
+
+
 
 Talking with Ben: What is the right verbiage to use when discussing etendue? How does etendue compose? I sometimes want to use the formula AA/R^2. But this is probably not quite right. Really dAdOmega is the proper one. Consider the etendue going across a surface, Snell's law style. There isn't really an A A to consider. But the pencils of rays change their acuteness going across the surface.  Why can't we heat something up with a mirror or lens to hotter than the surface of the sun? What fails in the thin lens equation? The thin lens equation seems to be saying that we could bring the focal length to 0
 

@@ -21,6 +21,9 @@ Oleg modellign typeclasses as prolog
 https://inbox.ocaml.org/caml-list/20190904152517.GA2014@Melchior.localnet/
 http://okmij.org/ftp/ML/index.html#trep
 
+canonical structures and unification hints. Can we make a metaintepreter for this?
+
+
 Hmm. Gauntlet thrown.
 Byrd is not sure how prolog can? do this stuff.
 https://www.youtube.com/watch?v=aS8oj2GXras&feature=youtu.be&ab_channel=LecturesbyProf.EadesatAU

@@ -18,6 +18,8 @@ Bove-Capretta method - a Defunctionalization of the Acc method?
 Adding an accessibility parameter - delays the requirement of proof to when it receives this
 
 
+
+
 2020-12-07
 
 Polynomial interpetations - each function symbol goes to some polynomial. variable stay variables.

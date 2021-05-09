@@ -10,6 +10,17 @@ title: Reifying the Stack with Lenses, Dialectica
 wordpress_id: 2839
 ---
 
+Proofs going down counterexamples comin back
+Over approximations going down, countexamples coming back
+CEGIS - consider that i used generators in my python interval thing
+Generators are on the spectrum of control flow with lens.
+Lazy abstraction refinement
+
+This also seems similar to my concolic execution thing
+Now it's abstract interpoetation going forward, counterexamples comin back
+
+
+
 Basically an error monad of a kind.
 contract :: (a -> b) -> (a -> Blame b)
 data Blame = InvalidPre | InvalidPost | Good b

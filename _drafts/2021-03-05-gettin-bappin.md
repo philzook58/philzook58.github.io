@@ -41,9 +41,16 @@ The bap command line has some stock features available + some plugins.
 
 Ivan has an Ascii Cinema here
 
+Get some info from the Knowledge Base. 
+`bap list`
 
 
 ## The Knowledge Base
+The Knowledge Base is a key value store? Database.
+It is also kind of an alternative class (like object oriented classes) system
+It is also kind of a
+
+
 
 
 ## Core Theory
@@ -62,3 +69,25 @@ insns
 
 Dataflow analysis. Backwards Forwards. Fixedpoint on graphs, topological sort.
 May/Must
+
+## Other tidbits
+JT's gists
+Ivan's gists
+Choice gitter tips
+
+## Universal Values
+https://discuss.ocaml.org/t/types-as-first-class-citizens-in-ocaml/2030
+https://github.com/janestreet/core_kernel/blob/master/univ/src/univ.ml
+http://binaryanalysisplatform.github.io/bap/api/odoc/bap/Bap/Std/Value/index.html
+https://blog.shaynefletcher.org/2017/03/universal-type.html
+
+locally abstract types. Using (type u) as an argument - useful for first class modules ande gadts
+
+Storing first class modules in a hashtable is an example.
+
+DIY typeclasses
+
+universal value + registry of typeclass instances?
+
+
+

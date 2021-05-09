@@ -10,6 +10,16 @@ title: Compilers
 wordpress_id: 2913
 ---
 
+Dataflow analysis
+Must/May and intersection vs union. Least fixed point vs greatest
+Is datalog actually a good fit
+https://tudelft-cs4200-2020.github.io/ - hmm sppoofax
+https://www.youtube.com/watch?v=Qp3zfM-JSx8&ab_channel=ACMSIGPLAN - souffle
+http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.648.1834&rep=rep1&type=pdf - reps
+Engler 96
+
+Man souffle does seem cool
+
   * [https://github.com/aalhour/awesome-compilers](https://github.com/aalhour/awesome-compilers)
   * [https://www.cs.cornell.edu/~asampson/blog/llvm.html](https://www.cs.cornell.edu/~asampson/blog/llvm.html)
   *   * [https://gcc.gnu.org/wiki/ListOfCompilerBooks](https://gcc.gnu.org/wiki/ListOfCompilerBooks)

@@ -1,4 +1,6 @@
 
+https://blog.sigplan.org/2019/10/14/how-to-design-co-programs/
+Howw to design co-porgrams - gibbonsd
 
 Coinduction. What up?
 https://en.wikipedia.org/wiki/Coinduction
@@ -49,6 +51,12 @@ Keep list of previous calls. Attempt to unify with a previous call. This recogni
 co-auto for Coq? Does paco do something like this?
 Interesting connection: Sequent as a virtual machine, lambnda prolog sequents describe logic programming, This coniductive metainterpreter reifies the goal stack. So does the delmittied continuation based tabling. Coinductive = negative types
 Sequent calc as a virtual machine is already kind of how lambda prolog is described. But Downen was talking classical logic, and Miller nadathur almost exclusively constructive logic. Miller and nadathur do have function types, distinct from implication (I think). 
+Could one make a prolog on this basis. Should the coinductive predicates somehow be connected to continuations? The tabled version reifies a goal stack for delimitted continuations. No wait. I'm remembering achieving tabling via delimitted conts.
+
+<   |   > :- < | >,  <  |  >
+Or this as a notation for callcc, shift/reset? In scheme or whatever the conitnuation is not omnipresent in notation.
+p(X,Y) :-  < K |     >  % this is binding a K with callCC or something
+Downen and Ariloa are saing classical logic does have an operational semantics, some what maybe in contradictin to the feel of what Miller is saying,.
 
 
 https://personal.utdallas.edu/~gupta/ppdp06.pdf  Co-Logic Programming: Extending Logic Programming
@@ -117,3 +125,4 @@ For strict languages, they do not coincide, and while you can still encode them,
 For languages with first class continuations, they are perfect duals -- the negation of an inductive type is a coinductive type, and vice versa. This also means that the eliminator for an inductive value is a coinductively defined continuation, and vice versa. (See David Baelde's Least and Greatest Fixed Points in Linear Logic.)
 This duality does not hold in languages without first class continuations, since there is an asymmetry between how you can use values and how you can use continuations.
 You will sometimes see people talking about how inductive types are strict and coinductive types are lazy. This is a misconception -- in a language with continuations, you can have both strict and lazy inductive types, and strict and lazy coinductive types. Due to the aforementioned asymmetry, in a language withouts control, you can have strict and lazy inductives, but only lazy coinductive types. (This is in Baelde's paper, but you have to squint to realize it, because he was doing proof theory rather than language design.)
+https://arxiv.org/pdf/0910.3383.pdf Balede's paper

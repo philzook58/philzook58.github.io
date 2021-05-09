@@ -18,6 +18,8 @@ and here's the video
 
 I translated some of these Z3 examples to Coq in a blog post here <https://www.philipzucker.com/translating-z3-to-coq/>
 
+Edit: Hey I got on HN! <https://news.ycombinator.com/item?id=27045771>
+
 Some solutions to the exercises
 
 ```python

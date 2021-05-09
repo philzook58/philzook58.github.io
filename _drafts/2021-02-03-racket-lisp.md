@@ -4,6 +4,14 @@ date: 2021-02-06 19:08:24+00:00
 layout: post
 title: Scheme racket
 ---
+
+https://felleisen.org/matthias/7480-s21/lectures.html
+history of PL. interesting discussion of hygienic macros at the least
+https://www.sweetjs.org/ - hygienic macros
+
+macros
+
+
 What is the deal.
 
 https://news.ycombinator.com/item?id=26008869

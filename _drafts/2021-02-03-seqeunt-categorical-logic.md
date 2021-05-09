@@ -5,6 +5,15 @@ title: Sequent Category Stuff
 ---
 
 
+Sequents include the signature. This is very important.
+https://ncatlab.org/nlab/show/sequent+calculus They suggest the context can be made implciit in certain settings.
+In proppsiytional logic, the context is empty. In single sorted FOL, you can gather up the constants by inspecting the propositions. At least a minimal number of constatsd. You can weaken both the cedent and the context. In Coq, The area before the turnstile plays both roles. Mashing distinct things together becasue you can is not always good. Type theorists should be aware of this as that is sort of a complaint of set theory
+
+http://www.lix.polytechnique.fr/~dale/pisa14/lecture2.pdf
+Hmm Identity rules are compose and id.
+
+
+
 https://en.wikipedia.org/wiki/Categorical_logic
 Categorical Logic
 A |- B

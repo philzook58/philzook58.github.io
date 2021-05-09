@@ -1,6 +1,12 @@
 
 
+Fuzzing is so fuckin useful. To not beusing dynamic techniques
 https://github.com/mykter/afl-training afl fuzzing training
+
+
+What changes do yoiu need to make to use arbitrary control flow graphs vs structured programs
+
+
 
 
 https://www.lulu.com/en/us/shop/k-rustan-m-leino-and-kaleb-leino/program-proofs/paperback/product-wqy8w5.html?page=1&pageSize=4

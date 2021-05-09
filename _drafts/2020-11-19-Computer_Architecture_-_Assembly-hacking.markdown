@@ -10,6 +10,43 @@ title: Computer Architecture - Assembly
 wordpress_id: 2995
 ---
 
+
+
+Hacking:
+http://langsec.org/papers/Bratus.pdf sergey weird machine paper
+smashing the stack for fun and profit - stacks are no longer executable
+return to libc https://en.wikipedia.org/wiki/Return-to-libc_attack - libc is very common and
+you can weave together libc calls. "Solar Designer"
+https://en.wikipedia.org/wiki/Return-to-libc_attack
+https://acmccs.github.io/papers/geometry-ccs07.pdf geometry of innocent flesh on the bone. ROP
+http://phrack.org/issues/61/6.html advanced doug lea malloc hacking
+https://github.com/sashs/Ropper
+https://github.com/sashs/filebytes
+http://www.capstone-engine.org/ - disassembler. converse of key
+blackhat
+defcon
+bluehat
+ccc
+https://en.wikipedia.org/wiki/Security_BSides bsides
+ctf
+project zero
+kpaersky blog https://usa.kaspersky.com/blog/
+spectre/meltdown
+mattermost gce8
+https://www.youtube.com/watch?v=b7urNgLPJiQ&ab_channel=PinkDraconian
+
+return oriented programming sounds like my backwards pass.
+Huh.
+
+
+example risc5 programs. sort, search. vector matrix mult, string copy.
+https://marz.utk.edu/my-courses/cosc230/book/example-risc-v-assembly-programs/
+
+https://arxiv.org/pdf/1911.03282.pdf nanobench
+https://developer.amd.com/amd-uprof/ amd uprof
+https://people.freebsd.org/~lstewart/articles/cpumemory.pdf what every programmer should know baout memory
+
+
 Hennessey and patterson
 
 agner fog

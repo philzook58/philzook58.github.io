@@ -29,3 +29,17 @@ https://github.com/mikolalysenko/robust-arithmetic-notes
 
 http://doc.cgal.org/latest/Number_types/classCGAL_1_1Gmpq.html
 http://www.algorithmic-solutions.info/leda_guide/geometryalgorithms.html
+
+https://twitter.com/santoshgnag/status/1381959477759463429?s=20 
+https://arxiv.org/pdf/2104.04043.pdf - synethesizing a correctly rounded floating point guy
+
+CRLibm
+MetaLbim
+gappa
+http://toccata.lri.fr/fp.en.html tocatta 
+http://toccata.lri.fr/gallery/newton_sqrt.en.html
+I guess why3 has extensive support for floating point?
+
+https://gitlab.inria.fr/why3/whymp a multirpecision library verified using why3
+
+https://scicomp.stackexchange.com/questions/1026/when-do-orthogonal-transformations-outperform-gaussian-elimination

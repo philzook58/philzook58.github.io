@@ -143,6 +143,44 @@ Two different notiongs
 Expressions have types.
 Values have types.
 
+netabeta long. eta expand any variables too. Anything with non primitiv type is eta expanded. Beta redexes are reduces.
+
+flexible and rigid uniification
+1. A term can only use the variables it has access to. This makes certain flexible problems imposssible.  This is a flexible rigid - lam x y. F x = lam x y. y is impossible
+2. lam x. f (G x) = lam x. g (F x) is impossible. This is reminscent of first order uniifocation . This is rigid rigid
+
+
+exists forall problems are synthesis problems.
+
+Can I get Agda to solver higher order unification problems for me? It has some kind of higher order unficiation in it. Or maybe coq tactics mode?
+
+Predicates to specify the search space of programs. At that point
+
+You can use prolog as just a unifier engine
+?- f(X,a) = f(b,Y).
+X = b,
+Y = a.  
+is a perfectly good query 
+
+
+Lambda prolog implenetation does
+
+Prolog difference lists compared to functional difference lists.
+Very light function synthesis, although it may not actually work in the real system.
+Who actually impelements full HO unification?
+Would using lambda prolog give a significant step up towards implementing full HO unification?
+
+
+extract_a wwas kind of cool. It isn't really different from wwhat you coul do in a functional language thouh
+extracta A = \x -> x
+extraca B = \x -> B
+extract (F x y) = \z -> F (extract x z) (extract y z)
+
+
+
+Could I use zipperposition? makam?
+
+
 
 
 

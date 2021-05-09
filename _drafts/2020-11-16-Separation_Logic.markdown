@@ -10,6 +10,39 @@ title: Separation Logic
 wordpress_id: 2997
 ---
 
+Dynamic asseretions of separation logic queries. Programmers like these. Can be written in host language. Can be turned off. Useful debugging and documentation tool. Gets people thinking about the right stuff. Lightweight verification.
+Cody had the idea that garbage collectors must already be doing a lot of the work necessary.
+Might be an interesting 
+&& is easy
+(heap, bool) * (heap, bool)
+
+emp * (x -> y)
+x.head -> y is   ([x.head] , x.head === y)
+emp is ([], true)
+(x, a ) * (y, b) = ( x ++ y,  noverlap(xs, ys) && a && b )
+
+nooverlap(  )
+
+Using physical equality to reify the heap graph.
+
+
+A language that is low level enough
+What about a seperation logic fuzzer?
+
+Shape analysis is talking about something similar. It tracks graphs https://research.cs.wisc.edu/wpis/papers/cc2000.pdf  Null? May alias, must alias, others. An abstract domain for heap states.
+
+Abstract domain of other graphs. Armando had that one class.
+
+Heaps as partial maps. Heaps as graphs?
+
+
+
+strong equality
+=== 
+
+Points-to analysis
+
+
 
 Compiling speration logic to Z3. I'd want to representy maps.
 The big shift for me is that seperation logic wants to talk about partial maps/functions.

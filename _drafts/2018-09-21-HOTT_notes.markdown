@@ -9,6 +9,36 @@ slug: HOTT notes
 title: HOTT notes
 wordpress_id: 1302
 ---
+https://epit2020cnrs.inria.fr/ spring school
+Type/Space        A type
+Elekemntn/Point   t:A
+type and point may depend on other points
+x:A1, x2:A2 |-  B(x1,,x2) type
+
+R^n depends on n. n : N |- R^n type
+[a,b] depends on a,b, and a <= b
+a:R, b:R, p :(a<= b) |- [a,b]
+Equality judgemental equal
+A === B equal types
+s ===_A t  equal points
+
+Type theory as formal system
+Gam |- A type
+t A
+A === B
+s ===_A t
+
+rules of inference
+
+Base space A
+a:A |- B(x)
+fiber at x.
+ttoal space - dpeendent sum
+
+Basic constructions
+
+dependent sum
+
 
 https://fplab.wordpress.com/2015/05/09/hott-for-lazy-functional-programmers/
 

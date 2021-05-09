@@ -3,6 +3,11 @@ author: philzook58
 layout: post
 title: Unification
 ---
+What is the pattern fragment?
+L_lambda subset
+"existential variables" applied to unique bound variables.
+reminscent of haskell pattern matching using distinct variables
+
 
 http://conal.net/papers/elliott90.pdf conal elliott's thesis
 

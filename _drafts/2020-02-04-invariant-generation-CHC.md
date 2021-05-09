@@ -1,7 +1,121 @@
 
+
+https://arxiv.org/abs/2002.09002 rusthorn. Trick involving old new values to model borrowing from creusot talk
+
+https://arieg.bitbucket.io/pdf/gurfinkel_ssft15.pdf
+IC3/PDR
+
+deadlock empire using CHC? Well deadlock empire has counterexamples.
+
+Recursion and Loops are where it comes handy. We can reduce the straight line behavior (and branching) with ordinary wp. But the loops are tougher.
+Function calls may not be recursive of course. If we previously establidshed
+
+
+Keeping overapproximations of Reachable sets.
+Generalize counterexamnple and push them backwards
+
+Z3 imlementation.
+https://github.com/pddenhar/Z3-IC3-PDR
+
+really nice description
+http://www.cs.tau.ac.il/~msagiv/courses/asv/IC3.pdf
+
+ic3/pdr vs interpolation based
+use unsat cores
+
+https://github.com/Z3Prover/z3/blob/master/examples/python/mini_ic3.py
+
+There is some interpolation happening in SPACER
+
+The SAT version
+Maintain cnf fomrulas (sets of clauses)for each time step
+A cube = an assignment = a conjunction of literals.
+We manitain a queue of counterexamples
+If the counterexample is in F0, then we found a bad trace
+NewLemma - take negation of counterexample.. This is candidate clauses (possibly we may delete some literals). We want to exclude an errant counterexample. 
+
+
+
+Push - pick a clauses in Fi. split it into two pieces. if a subpiece is not in Fi+1 
+unfold - we initialize a new Fi to have no clauses (no constraints). Candidate will pick any bad state now.
+Predecessor- m0 and m1 is a combined state picked. m1 -> m means we may add literals to m. We need to find a state that ends up in m. We pushed the counterexample backwards. That makes sense. And we might find multiple.
+Requeue - if this counterexample can't be reached from previous guy, push it forward.
+```python
+init = And(p, q, r, yada)
+sets = [init]
+
+def check_unreachable():
+  for F, Fn in zip(sets, sets[1:]):
+    if check(Implies(Fn,F)):
+      retrun True
+  return False
+
+
+
+queue = []
+while true:
+  check_reachable()
+  check_unreachable
+```
+
+So if I used spacer naively with a predicate per programs point, each would be solved in the PDR manner.
+
+
+Hmm. So the horn clauses don't give you anything in regards to wp itself. They are useful for interprcoedural and invaraints?
+
+Interesting stuff in here.
+Locking examples.
+Concurrency
+In raw smtlib but also using tool
+https://github.com/seahorn/seahorn-tutorial
+
+Hmm. The tutorial shows the block-like CHC form
+But then takes macro steps using wp to fuse out?
+
+Hmm. So the horn clauses aren't because they are a natural modelling framework, but because they have a natural solution method.
+
+CHC and CLP are the same thing, different communities
+
+init -> inv
+inv /\ 
+
+https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/nbjorner-yurifest.pdf
+
+Maybe there is some connection to the datalog stuff?
+One predicate per line of program?
+Or you could have program point as varaible?
+
+
+Lifting blocks to clauses. How would one model a control flow diagram in prolog?
+block1in(x') :- blockout(x) /\ blocktransition(x,x')
+
+blockin(x) :- (blockout( wp()  ))
+
+block1in :- block7out
+
+which direction should be in/out? depends on wp vs sp?
+
+Alternatively an explciit variable for control point block(n, )
+
+Or should entire block be a predicate?
+block(invars, outvars) :- blocka(outvars, invars')
+
+https://www.youtube.com/watch?v=bTPSCVzp1m8&ab_channel=WorkshoponSoftwareCorrectnessandReliability2013
+
+The expnasion / unrolling operator.
+
+https://arxiv.org/abs/2104.04224 - A theory of heap[s for cxonstrained horn clauses
+
+Houdini dillig
+daikon - random execution traces infer stuf
+"invasraint inference"
+Aiken - https://ti.arc.nasa.gov/m/events/nfm2013/pubs/AikenNFM13.pdf "sounds like daikon"
 Notes on z3 codebase
 muz = muZ. fixedpoint solvers.
 There are a vairety
+
+PDR / IC3 always come up.
+I should try to know what those are
 
 Meta foregin code base techniques
 - checkout build files - Gives a hierarchy of the structure of the project. Dependency sorted.

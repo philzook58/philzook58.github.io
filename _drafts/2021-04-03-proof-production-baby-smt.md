@@ -30,7 +30,7 @@ The union find is also online?
 From the perspective of union-find as solving a system of equations, each left and right hand side is a vertex and each equation is an edge. A proof is the subset of equations necessary to prove the thing or a specific rewriting path to get from the lhs term to the rhs term.
 
 
-It is a general purpose principle that if a program is figuring something out or proving something and outputs "yes", a good place to look for a proof object is a trace of the programs execution. This is true for example in prolog, branch and bound solvers, SAT solvers <<https://www.cs.utexas.edu/~marijn/drat-trim/> (drat is basically a SAT solver trace) and other things. 
+It is a general purpose principle that if a program is figuring something out or proving something and outputs "yes", a good place to look for a proof object is a trace of the programs execution. This is true for example in prolog (prolog goes down lots of blind alleys, but the ones that succeed are proof trees), branch and bound solvers, SAT solvers <<https://www.cs.utexas.edu/~marijn/drat-trim/> (drat is basically a SAT solver trace) and other things. 
 
 So we need to instrument our union-find data structure with some extra logging information.
 
