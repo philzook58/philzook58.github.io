@@ -10,32 +10,11 @@ title: Phil's Gud Systems / Programs
 wordpress_id: 2038
 ---
 
-
-
-
 Sometimes I have no idea what to do with a new programming language or new ideas. Here is a brainstorm list of stuff too do.
-
-
-
-
-
-
 
 ## Phil's gud systems
 
-
-
-
-
-
-
 Good systems for simulation and control and verification
-
-
-
-
-
-
 
   * 1-D Linear - Heating
   * 2-D linear. SHO. damped undamped Sliding block/free particle.
@@ -53,25 +32,9 @@ Good systems for simulation and control and verification
   * Wall SHO
   * 
 
-
-
-
-
 ### Phil's gud programs
 
-
-
-
-
-
-
 Interetsing programs to write in any language. 
-
-
-
-
-
-
 
   * Any of the above
   * Ray trace
@@ -83,23 +46,12 @@ Interetsing programs to write in any language.
   * Video games
   * Project euler
 
-
-
-
-
-
 ### Phil's Gud verification / Proofs
 
-
-
-
-
-
-
   * Fibonacci
-  * List Functions
+  * List Functions - append, reverse. Pointer version vs functional version
   * Nats - commutative associative
-  * Z 
+  * Z
   * Rationals
   * Lambda calc I guess
   * cosine / sine / exp
@@ -110,10 +62,5 @@ Interetsing programs to write in any language.
   * Gaussian Elim
   * Dynamic Programming, rod cutting
 
-
-
-
-
-
-
-
+  * two sort
+  * sum 1 to n

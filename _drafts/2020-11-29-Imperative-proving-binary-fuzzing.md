@@ -1,4 +1,18 @@
 
+Model checking
+Software Model Checking for
+People who Love Automata
+https://swt.informatik.uni-freiburg.de/staff/heizmann/2013cav-heizmann-hoenicke-podelski-software-model-checking-for-people-who-love-automata.pdf
+https://dl.acm.org/doi/10.1145/2858965.2814304 auomtating grammar compiarsno
+file:///home/philip/Documents/coq/game/3434298.pdf - verifying context free api protoclls
+java path finder 
+https://ultimate.informatik.uni-freiburg.de/smtinterpol/news.html
+https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/ - ultimate program analyzers
+CPAchecker
+
+
+
+
 
 Fuzzing is so fuckin useful. To not beusing dynamic techniques
 https://github.com/mykter/afl-training afl fuzzing training

@@ -203,7 +203,6 @@ label(7, "plus(plus(a,b),c)").
 .decl comm_pat(a:number, b:number)
 comm_pat(a,b) :- plus(a,b,_).
 
-
 // pattern plus(a,plus(b,c))
 .decl assoc_pat1(a:number, b:number, c:number)
 assoc_pat1(a,b,c) :- plus(a,x,_), plus(b,c,x).
@@ -243,6 +242,8 @@ a       b       c
 
 This datalog representation of patterns does not present difficulties to some very useful extensions of pattern matching: Multipatterns and Guards. Also this does not have to be in pure rewrite mode. Whatever you choose to do with the pattern instantiation is the job of the next stage of code.
 
+Datalog seems like a reasonable way to approach having programmable ematching search.
+
 ### Bits and Bobbles
 
 What I think this demonstrates more than anything is that Datalog is a very good candidate for a specification language for egraph solvers. Datalog or some variant of it seems like a somewhat natural way to express operations on the egraph. Some changes may be necessary. 
@@ -267,8 +268,10 @@ Are datalog evaluation techniques applicable here.
 Seminaive evaluation is a fairly simple but powerful idea of avoiding looking at things twice. Could this be a way to avoid multiple redundant pattern instantiations, only looking at new info?
 
 
+Integrating egraphs into datalog might be a way to a way to nicely integrate them with other static analysis for program optimization. See <https://www.cs.cornell.edu/~ross/publications/eqsat/>
 
-Prolog and Datalog have a special predicate = expressing unification. Could we not have a special predicate = which expresses egraph joining when it appears in the head of the clause and eclass guards or searches when in the clause? 
+
+Prolog and Datalog have a special predicate `=` expressing unification. Could we not have a special predicate = which expresses egraph joining when it appears in the head of the clause and eclass guards or searches when in the clause? 
 
 
 

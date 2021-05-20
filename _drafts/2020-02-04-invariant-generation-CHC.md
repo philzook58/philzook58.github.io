@@ -1,4 +1,95 @@
 
+Constrained Horn Clauses: Z3 has kind of a prolog in it
+
+
+Horn clauses are a logical view on the form of programs allowed in prolog programs. They can explained in a couple different ways. <https://www.youtube.com/watch?v=hgw59_HBU2A>
+One way is to describe them as logical statements of the form `a /\ b /\ c /\ d -> e`, a conjunction of literals implying a single conclusion predicate. The reason this form is nice is because it lends itself to back-chaining. If we need to prove `e` we can look for all the rules that have `e` in their head and try them one byu one, recursively seeing if we can also backchain the rules requirements.
+Alternatively we can easily drive the forward. We can look at each clause in turn, see if we satisfy the requirements, and if so add the conclusion to the database of things we know. This is roughly how a datalog program is typically run.
+We can also throw variables into the mix and lift the `a/b/c/d/e` into being predicates.
+
+There is a sense when you are constructing a normal z3 query that you need to be talking about a kind of fixed arena. You need to define enough variables to describe all the possibilities you want z3 to explore. If you have a query where a system could go down road A and take 20 steps and road B and take 3 steps, you need to spell out enough variables ahead of time to encode all these steps. 
+
+Quantifiers kind of let you get around this. There are different mechanisms in Z3 for working with quantifiers. One is the ematching engine that looks for patterns in the stuff you have lying around and instantiates forall quantifiers with those patterns. Another is the horn clause engine.
+
+Constrained logic programming and constrained horn clauses are the same thing. The first name comes from the logic programming/prolog community and the second from the verification/smt solver community.
+<https://www.metalevel.at/prolog/clpz> Basically, it seems you call it one or the other depending on whether you're tacking constraints onto a prolog implementation or a "prolog" onto some kind of constraint engine like an smt solver.
+
+
+
+
+
+
+Z3 currently has a bounded model checker, datalog, and a mode called spacer as distinct engines for solving horn clauses. It has had different options such as the "duality" engine in the past that are now defunct.
+
+I do say and feel that you need a rough picture of what a tool/library is doing to be able to use it.
+
+
+The most obvious way to me to check a system is to unroll it out in time. This is bounded model checking (BMC). If it finds a counterexample, great! That's a real counterexample If not, well, you haven't proven anything that useful without more analysis. You probably have gained some confidence in the system though.
+
+IC3/PDR (Property Directed Reachability) is a kind of model checking algorithm that doesn't unroll executions out into a giant query. Instead it maintains an approximate representation of reachable sets N step out in time. This representation is basically as a logical formula, which you can query and refine by using SMT queries. The spacer algorithm is some kind of twist on these algorithms.
+
+### What is a query?
+
+
+Z3 has a separate interface you can use to define prolog like rules, or you can phrase them in the ordinary smtlib interface and specify to use the horn solver. It is somewhat confusing that the return codes of `sat/unsat` mean opposite things depending on the mode you're using. Using the fixedpoint interface, `sat` means the query succeeded, like how a prolog query might succeed. This means there was a way to successfully chain together the horn clauses
+<https://stackoverflow.com/questions/39403644/%E2%88%83-queries-and-%E2%88%80-queries-with-z3-fixedpoint-engine>
+
+I rather like the perspective from Miller and Nadathur where they describe a prolog query as intuitinistic proof search. A query `p(X)` creates an executions that corresponds to a proof of `exists x. p(x)`
+
+However prolog is usually considered in a background of classical logic, and Z3 certainly is a classical logic engine. A successful query is a proof of unsat by adding `(not p)` or equivalently `(=> p false)` from the perspective of the sat solver. It is trying to backchain a proof of `false` or forward chain finding `p` to be true and then immediately finding false. The resolution proof of false is the analog of 
+The production of learned clauses is a form of resolution proof. The DRAT format records a trace of the SAT execution. It records the clauses you need to resolve together to make lemma clauses eventually leading to a contradiction.
+Classically, if you want to prove `p`, a uniform way of doing so is to add `not p` as an assumption and try to prove false.
+
+
+
+
+### Program Verification
+
+Just as you can write a functional program to emulate the execution of some imperative code or assembly, you can write a prolog program to do the same. In these pure languages, this is achieved by explicitly passing state as a parameter.
+
+To actuallyl get the output state.
+start(State, EndState) :- body_start(State, State1), block2(State1, EndState).
+block2(State1, )
+
+You could query a program to give back those states for which there is an error.
+
+main_err(State) :- body_start(State, State1), block2_err(State1).
+main_err(State) :- err_inside_main(State).
+block2(State1)
+
+
+
+Z3, eldraica, hsf?
+
+http://theory.stanford.edu/~nikolaj/nus.html - Bjorner talk
+
+
+http://seahorn.github.io/blog/
+
+https://www.youtube.com/watch?v=yJQZ7sG8xSM&ab_channel=Rust - horn clasues generation from rust - eldarica
+
+https://www.cs.utexas.edu/~tdillig/cs395/esc-houdini.ps houdini leino and flanagan.
+https://www.cs.utexas.edu/~isil/fmcad-tutorial.pdf abduction
+https://theory.stanford.edu/~aiken/publications/papers/pldi19.pdf
+
+
+
+isil dillig - mistral an abduction generating smt solver?
+On LIA, get minimal satisyinfyng assignemtn (pins least variables) and quantifier eliminate the rest
+
+Interesting z3 tidbit - use unsat core to get minimal satisfying assignment
+unsat core tricks in general are something to think about.
+Partial models to avoid the else case https://stackoverflow.com/questions/41425514/partial-assignments-in-z3
+
+http://www.cs.cmu.edu/~aldrich/courses/17-355-19sp/notes/slides27-daikon.pdf - daikon - dynamic checking of guessed invaraints. Fuzzing basically.
+
+C2I
+LoopInvGen
+ICE-DT
+CODE2Inv
+
+CHC clauses allows us to get predictaes out. These predicate solutions are over approximations of possible state sufficient to satisfy the problem.
+
 
 https://arxiv.org/abs/2002.09002 rusthorn. Trick involving old new values to model borrowing from creusot talk
 
@@ -116,6 +207,7 @@ There are a vairety
 
 PDR / IC3 always come up.
 I should try to know what those are
+
 
 Meta foregin code base techniques
 - checkout build files - Gives a hierarchy of the structure of the project. Dependency sorted.

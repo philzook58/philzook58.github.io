@@ -43,3 +43,6 @@ I guess why3 has extensive support for floating point?
 https://gitlab.inria.fr/why3/whymp a multirpecision library verified using why3
 
 https://scicomp.stackexchange.com/questions/1026/when-do-orthogonal-transformations-outperform-gaussian-elimination
+
+https://www.youtube.com/watch?v=RxOkV3wmEik&ab_channel=ACMSIGPLANACMSIGPLAN Generating Correctly Rounded Math Libraries for New Floating Point Variants (full)
+https://www.youtube.com/watch?v=B_J7DSX_ZXM&ab_channel=ACMSIGPLAN  λS: Computable Semantics for Diff'ble Programming with HO Functions and Datatypes (full)

@@ -5,6 +5,30 @@ layout: post
 title: Scheme racket
 ---
 
+Oleg of course. http://okmij.org/ftp/Scheme/
+- Has an implementation of shift reset delimitted contianutations
+
+Macro examples:
+- Making a pattern matcher might be kind of interesting exercise.
+- making your own short circuiting "or" or other non call by value constructs. In some sense this is defining a new interpreter back into scheme?
+- making your own binding forms or introducing variables into the environment
+
+
+https://www.cs.utexas.edu/ftp/garbage/cs345/schintro-v14/schintro_toc.html - an intorudcition to scheme and it's impllementation
+
+https://ds26gte.github.io/tyscheme/index-Z-H-1.html teach yourself scheme in fixnum days
+
+The scheme objects technique. Let bindings are mutable. Isn't that nuts. Let's you do all kinds of shenanigans that you _could_ do in ocaml with refs, but would be unlikely to.
+
+let make_counter () = let state = mk_ref 0 in fun () -> let state := !state + 1 in !state
+
+amb is genuinely surprising. It isn't even that it's a macro. Its callcc that makes it possible
+call/cc for break statements.
+
+https://letoverlambda.com/index.cl/guest/chap2.html
+let over lambda. Let in common lisp makes a ref cell?
+
+
 https://felleisen.org/matthias/7480-s21/lectures.html
 history of PL. interesting discussion of hygienic macros at the least
 https://www.sweetjs.org/ - hygienic macros
