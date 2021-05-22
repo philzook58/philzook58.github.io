@@ -5,7 +5,7 @@ layout: post
 title: Making a "MiniKanren" using Z3Py
 ---
 
-Relational/logic programming is quite cool. It let's you do things that sound impossible, like run a program backwards. Using Z3py to do a lot of heavy lifting, there's a cute, simple, and pretty powerful little [microkanren](http://minikanren.org/) you can make. You can have it answer queries like the following that run list append backwards.
+Relational/logic programming is quite cool. It let's you do things that sound impossible, like run a program backwards. Using [Z3py](https://github.com/philzook58/z3_tutorial)  to do a lot of heavy lifting, there's a cute, simple, and pretty powerful little [microkanren](http://minikanren.org/) you can make. You can have it answer queries like the following that run list append backwards.
 
 ```python
 q = Const("q", List)
