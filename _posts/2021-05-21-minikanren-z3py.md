@@ -83,7 +83,7 @@ import operator
 eq = lift2(operator.__eq__)
 ```
 
-Now we can define the kanren goal combinators `disj` and `conj` for disjunction (or) and conjunction (and). `conj1` basically runs two goals in sequence, the second one being in the scope of the first. `disj1` . `disj` and `conj` are the multiargument forms for convenience. The `*` are the wacky little notations for python varargs.
+Now we can define the kanren goal combinators `disj` and `conj` for disjunction (or) and conjunction (and). `conj1` basically runs two goals in sequence, the second one being in the scope of the first. `disj1`runs two goals sort of in parallel, where they aren't in thr scope of each other. `disj` and `conj` are the multiargument forms for convenience. The `*` are the wacky little notations for python varargs.
 
 ```python
 def conj1(f,g):
