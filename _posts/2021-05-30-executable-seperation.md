@@ -2,7 +2,7 @@
 author: Philip Zucker
 date: 2021-05-30
 layout: post
-title: Modeling Separation Logic in Python Dicts and Z3
+title: Modeling Separation Logic with Python Dicts and Z3
 ---
 
 [Separation logic](https://en.wikipedia.org/wiki/Separation_logic) has made me feel uneasy. I felt a lot better about it once I realized it's all about partial maps.
