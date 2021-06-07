@@ -38,6 +38,7 @@ Interetsing programs to write in any language.
 
   * Any of the above
   * Ray trace
+  * physics engine collisions
   * lambda calc intepreter
   * particles
   * fractals
@@ -45,6 +46,7 @@ Interetsing programs to write in any language.
   * Fluid
   * Video games
   * Project euler
+  * arithmetic evaluator
 
 ### Phil's Gud verification / Proofs
 
@@ -64,3 +66,9 @@ Interetsing programs to write in any language.
 
   * two sort
   * sum 1 to n
+  * binary search
+  * integer square root
+  * maximum of array
+  * reduce to 0. subtract in loop until thing is 0
+  * reduce integer division
+

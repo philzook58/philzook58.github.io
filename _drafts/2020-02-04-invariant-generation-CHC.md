@@ -57,7 +57,22 @@ main_err(State) :- body_start(State, State1), block2_err(State1).
 main_err(State) :- err_inside_main(State).
 block2(State1)
 
+How does one 
 
+```
+for(int i = 0; i < 10; i++){ y += 5; }
+```
+
+```
+main(Y) :- loop_entry(0, Y).
+loop_entry(I, Y) :- I >= 10, loop_exit(Y).
+loop_entry(I, Y) :- I < 10,  I1 = I + 1, Y1 = Y + 5, loop_entry(I1, Y1).  
+```
+
+
+https://www.cs.stevens.edu/~ejk/papers/cav21-preprint.pdf - relational verficiation using some enhancement on CHC
+
+I guess the most basic version of invaraint generation is to use an abstract interpetation. If the invaraint falls within the epxressive power of the abstract domain and it terminates (not too much erroenous widening) Then you can discover invaraints in the abstract domain.
 
 Z3, eldraica, hsf?
 
@@ -65,6 +80,7 @@ http://theory.stanford.edu/~nikolaj/nus.html - Bjorner talk
 
 
 http://seahorn.github.io/blog/
+https://github.com/seahorn/seahorn-tutorial
 
 https://www.youtube.com/watch?v=yJQZ7sG8xSM&ab_channel=Rust - horn clasues generation from rust - eldarica
 

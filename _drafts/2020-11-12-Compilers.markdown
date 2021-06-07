@@ -10,6 +10,8 @@ title: Compilers
 wordpress_id: 2913
 ---
 
+http://ssabook.gforge.inria.fr/latest/book.pdf SSA book
+
 Dataflow analysis
 Must/May and intersection vs union. Least fixed point vs greatest
 Is datalog actually a good fit

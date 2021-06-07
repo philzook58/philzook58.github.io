@@ -10,11 +10,19 @@ title: Model Checking - TLA+
 wordpress_id: 879
 ---
 
+CFA control flow automata. Abstracting out control flow. An over approximation is that you can non detemirnstically take branches
+
+
 
 Model checking
 Software Model Checking for
 People who Love Automata
 https://swt.informatik.uni-freiburg.de/staff/heizmann/2013cav-heizmann-hoenicke-podelski-software-model-checking-for-people-who-love-automata.pdf
+http://www2.informatik.uni-freiburg.de/~heizmann/2010POPL-HeizmannHoenickePodelski-Nested_Interpolants-Slides.pdf
+nested interpolants hiezmann
+
+interpolant mcmillan
+BLAST and other jhala
 https://dl.acm.org/doi/10.1145/2858965.2814304 auomtating grammar compiarsno
 file:///home/philip/Documents/coq/game/3434298.pdf - verifying context free api protoclls
 java path finder 

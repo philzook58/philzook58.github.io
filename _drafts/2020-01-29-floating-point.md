@@ -12,6 +12,7 @@ FlocQ
 
 Verified plotting -Melquiond
 
+https://twitter.com/santoshgnag/status/1396807877260726280?s=20 generating correctly rounded math libraries for 32 bit
 
 http://www.lix.polytechnique.fr/~putot/fluctuat.html Fluctuat analyzer
 

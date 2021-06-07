@@ -5,6 +5,19 @@ layout: post
 title: Scheme racket
 ---
 
+Lisp-2 - seperate namespace for functions and vasriables -Common lisp
+Condition system
+lisp class system
+
+
+
+Rosette - should be a confluence of my interests. 
+I feel like I want some kind of macro engine for smtlib.
+Perhaps it makes intermiedtae queries, perhaps not.
+stage0 would be "just" a macro expander for smtlib.
+
+
+
 Oleg of course. http://okmij.org/ftp/Scheme/
 - Has an implementation of shift reset delimitted contianutations
 
@@ -18,12 +31,25 @@ https://www.cs.utexas.edu/ftp/garbage/cs345/schintro-v14/schintro_toc.html - an 
 
 https://ds26gte.github.io/tyscheme/index-Z-H-1.html teach yourself scheme in fixnum days
 
+In particular the extneded examples section is kind of interesting
+https://www.scheme.com/tspl4/examples.html#./examples:h0
+
 The scheme objects technique. Let bindings are mutable. Isn't that nuts. Let's you do all kinds of shenanigans that you _could_ do in ocaml with refs, but would be unlikely to.
+
+
 
 let make_counter () = let state = mk_ref 0 in fun () -> let state := !state + 1 in !state
 
 amb is genuinely surprising. It isn't even that it's a macro. Its callcc that makes it possible
 call/cc for break statements.
+
+continuations
+https://www.ps.uni-saarland.de/~duchier/python/continuations.html
+call/cc let's you pretend you were writing in CPS the whole time.
+- call/cc for break statements
+- call/cc for coroutines
+- search
+- amb
 
 https://letoverlambda.com/index.cl/guest/chap2.html
 let over lambda. Let in common lisp makes a ref cell?

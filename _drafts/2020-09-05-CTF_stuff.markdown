@@ -10,138 +10,38 @@ title: CTF stuff
 wordpress_id: 2960
 ---
 
-
-
-
 radare2, a binary analysis thingo. rax is useful for conversion of hex
-
-
-
-
-
-
 
 binary ninja
 
-
-
-
-
-
-
 ghidra
-
-
-
-
-
-
 
 IDA
 
-
-
-
-
-
-
-
-
-
-
-
-
 RSACTFTool
-
-
-
-
-
-
 
 factordb
 
-
-
-
-
-
-
-
-
-
-
-
-
 manticore
-
-
-
-
-
-
-
-
-
-
-
-
 
 Maybe we should get a docker of all sorts of tools. Kali Linux? [https://github.com/zardus/ctf-tools](https://github.com/zardus/ctf-tools)
 
-
-
-
-
-
-
 klee, afl,  other fuzzers? valgrind
-
-
-
-
-
-
 
 cwe-checker
 
-
-
-
-
-
-
 shellcode
-
-
-
-
-
-
 
 ROP
 
-
-
-
-
-
-
 [https://quipqiup.com/](https://quipqiup.com/) - solve substitution cyphers
-
-
-
-
-
-
 
 [https://github.com/openwall/john](https://github.com/openwall/john) john the ripper. Brute force password cracker
 
+ropper
 
+Best CTFs. I probably don't want the most prestigious ones? They'll be too high level? I want the simple stuff
 
+https://ctf101.org/ - check out the heap exploitation github thing
 
-
-
-
-
-
+advanced doug lea malloc - phreak post

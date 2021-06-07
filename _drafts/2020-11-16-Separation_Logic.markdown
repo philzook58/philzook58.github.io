@@ -1,16 +1,14 @@
 ---
-author: philzook58
-comments: true
+author: Philip Zucker
 date: 2020-11-16 19:20:24+00:00
 layout: post
-link: https://www.philipzucker.com/?p=2997
-published: false
-slug: Separation Logic
 title: Separation Logic
-wordpress_id: 2997
 ---
 
-Dynamic asseretions of separation logic queries. Programmers like these. Can be written in host language. Can be turned off. Useful debugging and documentation tool. Gets people thinking about the right stuff. Lightweight verification.
+There is a theme that "special" logics are implicitly talking about something. The two examples are temporal logics, which are implicitly talking about some kind of notion of time, and separation logic. I suppose intuitionistic logic could be put on the same pedestal.
+
+
+Dynamic assertions of separation logic queries. Programmers like these. Can be written in host language. Can be turned off. Useful debugging and documentation tool. Gets people thinking about the right stuff. Lightweight verification.
 Cody had the idea that garbage collectors must already be doing a lot of the work necessary.
 Might be an interesting 
 && is easy

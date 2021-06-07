@@ -1,6 +1,10 @@
 I feel like most algorithms and data structures are os ordinary they are kind of boring?
 
 
+Sparse Sets - knuth - bitvectors + 
+Bitvectors  http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.681.8766&rep=rep1&type=pdf
+ullmann bitvector algos for binary constraint and subgraph iso.
+
 Books:
 CLRS
 

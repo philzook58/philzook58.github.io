@@ -1,4 +1,60 @@
 
+A pointery circular list is a labelled transition system if which node you're on is the state, and tail takes you to the nexxt state and head is an action that takes you to the same state.
+Two observationally eqauivalnt cirucils lists ones = 1 : 1 : ones and   ones = 1 : ones
+are bisimilar
+
+A more natural definition is observation O, S states, A actions.
+head would then be an observation on the state.
+
+Egraphs as transition systems? Observations of head, argument choice as action?
+This suggests we don't have to canonicalize it?
+
+The existential form of a coinduccutive type
+exists s, (s, s -> f s)
+Is the analog of a closure form  exists s. (s, (s,a) -> b)
+We can defunctionalize the possible states and put all the s -> f s things in the apply function?
+
+Ones | Inc1 n |
+
+apply (Inc1 n) = Cons a (Inc1 (1 + n))
+A closed data type of all my possible streams
+
+
+CoCaml
+
+bisimulation goes hand in hand with condicution.
+
+What does it mean for two systems to be equal?
+
+Automata traditionally just worry about the trace they accept.
+Nodes are labelled with somethign and edges are labelled with somethign. not persay atomic actions.
+
+Hmm. So the record type condictive in coq. Each accessor is a message or action
+And I suppose each value of the conidcutive is a state.
+Is this a bisimulation under that understanding?
+```
+CoInductive bisim {A : Set} (x y : stream A) : Set :=
+  | bisim_eq : head x = head y -> bisim (tail x) (tail y) -> bisim x y.
+```
+
+https://poisson.chat/aquarium/defunctionalization.pdf - lusxia - shows an interesting defunctionalization trick to define fix.
+Is the point to close the universe of possible functions so that coq can see that we're only using productive ones
+
+https://arxiv.org/pdf/1906.00046.pdf interaction trees
+conor mcbride turing completeness
+
+
+A process in coq.
+The labelled trasnition relation. Ok sure.
+Inductive trans s1 a s2 :=
+
+Then what?
+Definition bisim ta tb sa1 sa2 := 
+   forall s1
+Definition IsBisim r ta t2 := forall sa1 
+
+
+
 https://blog.sigplan.org/2019/10/14/how-to-design-co-programs/
 Howw to design co-porgrams - gibbonsd
 

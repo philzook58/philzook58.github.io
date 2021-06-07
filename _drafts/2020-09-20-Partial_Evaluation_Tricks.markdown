@@ -10,6 +10,24 @@ title: Partial Evaluation Tricks
 wordpress_id: 2677
 ---
 
+https://stackoverflow.com/questions/46614561/implementing-partial-evaluation-in-swi-prolog
+The clause/2 predicate  is like a macro?
+https://github.com/leuschel/logen
+https://github.com/leuschel/ecce
+https://stackoverflow.com/questions/35261361/prolog-generate-unique-symbol gensym
+is gensym sufficient for making eigenvariables like lambdaprolog?
+interp(Env, lam(B), lam(B)). % this is wrong.
+interp(Env, app(F,X), R) :- interp( Env, F, lam(B)), interp(Env, X, X'), interp([ X' | Env], B, R )
+interp([H | T], z, H).
+interp([H | T], s(X), R) :- interp(T, X, R). % nah this ain't right. we need to do raising and lowering.
+
+interp(Env, var(X), R) :- lookup(X, Env, R).
+interp(Env, lam(X,B), lam(X,B)). % X not in Env?
+interp(Env, app(F,X), R) :- interp( Env, F, lam(V,B)), interp(Env, X, X1), gensym(var, V), interp([ V-X1 | Env], B, R )
+
+http://okmij.org/ftp/Prolog/index.html#lambda-calc - he implements a pure copy_term using gensym basically
+
+
 Staged logic programming is kind of like CLP. CLP collects up constraints to be solved later (at future stage).
 Instead staged logic programming is collecting up constraints in the original unification language.
 Can I not make new clauses? To fully do this at compile time requires that the compile time query terminates. Otherwise i need to jump between compile and runtime (which is how clp works)

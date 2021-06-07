@@ -10,6 +10,26 @@ title: Reifying the Stack with Lenses, Dialectica
 wordpress_id: 2839
 ---
 
+Tyoed contracts hinze
+
+
+What if any relationship is there between contracts and refinement types? It kind of feels like they are both gimped in what they can talk about in similar ways. One so they can be resolved by smt and one at runtime. Refinment types have one more layer of symbolism, one more layer of quantifier available.
+
+(x, bad -> Error)
+
+What to fix suggestion - by analogy with backwards mode
+
+(x, what's wrong -> )
+Not just a predicate a -> Bool, but a -> Reason/Correction
+
+
+
+https://cstheory.stackexchange.com/questions/5228/relationship-between-contracts-and-dependent-typing?rq=1 Krishnasawmi - pairs of assertions bnlaming contex. Model contravariance by swapping
+
+Undoing dynamic typing - benton http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.69.8486&rep=rep1&type=pdf
+
+Could contracts be useful in Coq? {x | x > 0} downcst to Int, but a contracted Int? Which is?   (x, Nat -> Bool) ? a decision procuedre for x > 0?
+
 Proofs going down counterexamples comin back
 Over approximations going down, countexamples coming back
 CEGIS - consider that i used generators in my python interval thing

@@ -10,6 +10,22 @@ title: Normalization by Evaluation
 wordpress_id: 2660
 ---
 
+
+"unioning" ground equalities and term rewiritng equalities
+Suppose you have a termination ordering of rules. A confluent terminating system.
+Can you add in 100000 ground rules efficiently?
+What if I modify the egraph to obey the ordering of the rules? Why would that matter
+I think the point is that cody wants semidecidable to turn decidable. That's what a temrinating system does. Useful in Ryan wisnesky databsae stuff?
+
+
+cdoy's plan for a catgoery solver:
+graph search from objects
+patterns that can be instnaitted for new morphisms. They may have side conditions
+construction of certain morphisms takes equality guards
+
+A category proof is the diagram. Diagram chasing is some kind of equality satruation process?
+
+
 Cody talks about stuff he cares about:
 
 Conversion
