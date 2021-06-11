@@ -1,6 +1,7 @@
 ---
 author: Philip Zucker
 layout: post
+date: 2021-06-10
 title: "An Interpreter of the Algebra of Programming in MiniKanren"
 ---
 
