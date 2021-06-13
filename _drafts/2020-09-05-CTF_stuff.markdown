@@ -44,4 +44,24 @@ Best CTFs. I probably don't want the most prestigious ones? They'll be too high 
 
 https://ctf101.org/ - check out the heap exploitation github thing
 
+https://heap-exploitation.dhavalkapil.com/
+
 advanced doug lea malloc - phreak post
+
+pwntools
+
+and the pwn category of ctf
+
+ROP
+JOP
+SROP
+BOP - block oriented
+
+return 2 libc - a subset of rop?
+
+
+pwn.college
+ryan chapman syscall 
+https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/
+
+http://ref.x86asm.net/
