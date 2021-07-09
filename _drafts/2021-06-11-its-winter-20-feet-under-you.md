@@ -22,3 +22,6 @@ Go for short and sweet. Don't explain a whole field from nothing. I never have t
 - The magnet down the pipe
 - Eddy currents
 - How to do permanents magnets
+
+### The basic physics problems
+- The big 4

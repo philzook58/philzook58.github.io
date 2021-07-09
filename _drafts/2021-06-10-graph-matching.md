@@ -78,5 +78,24 @@ mulnode(up, left, right)
 
 Yeah.
 
+https://www.red-gate.com/simple-talk/sql/t-sql-programming/binary-trees-in-sql/
+
+ben in pandas
+
+https://colab.research.google.com/drive/1rf5IMYxyCTD9w14rHgR4J3Ro3llz029F?usp=sharing
+recursive common table rexpression
 
 
+Graph matching 
+The ematching I did was not special to egraphs really. It is all general graph matching
+
+I don't super understand by subgraph isomorphism is considered hard
+For small patterns it's not bad.
+Yes for big loops and big complete graphs it is equivalent to problems that seem hard
+
+Planar graphs - is this actually useful?
+Circle packing
+Feynamn diagramws and hashing subgraphs.
+
+Ben's notebook. Using pandas
+https://colab.research.google.com/drive/1rf5IMYxyCTD9w14rHgR4J3Ro3llz029F?usp=sharing#scrollTo=WDVu1zQjHPLx

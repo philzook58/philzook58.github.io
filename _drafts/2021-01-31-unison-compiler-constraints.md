@@ -18,6 +18,9 @@ VF2 algorithm
 
 type aexpr = Mul | Add
 
+Macro expansion
+ - procede bottom up
+Maximal Munch
 
 
 # Graph Coloring and Register Allocation

@@ -62,6 +62,108 @@ return 2 libc - a subset of rop?
 
 pwn.college
 ryan chapman syscall 
-https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/
+
 
 http://ref.x86asm.net/
+
+https://github.com/revng/revng
+
+
+
+privilege escalation - getuid effective id.. Inherit user and group from parent process.
+switching to user resets the setuid bit.
+sticky bits
+id command
+
+shellcode - binary that launchs the shell system call execv("/bin/sh", NULL, NULL) - args and env params
+
+intel vs at&t syntax
+Load up addresses
+constantrs in binary with .string
+gcc -static -nostdlib
+objcopy --section .text=outfile 
+exiting cleanly is smart. Helps know what is screwing up
+ldd 
+
+Trying out shellcode
+mmap. mprotect?
+read()
+deref function pointer
+
+gdb
+x for eXamine
+$rsi
+x/5i $rip gives assembly?
+x/gx
+break *0xx040404
+n next
+s step 
+ni
+si
+
+strace is useful first debugging
+
+## Intro
+system calls
+set rax to syscall number.
+call syscall instruction
+https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/
+man yada
+strace
+- fork
+- execve
+- read
+- write
+- wait
+- brk - program brk. change size of data segment. sbrk by increments. sbrk(0) returns current address of break
+
+stack. rbp, rsp. stack grows down decreasing. Rsp + 0x8 is on stack, rbp - 8 is on stack
+most systems are little endian
+calling conventions. rdi rsi rdx rcx r8 r9, return in rax
+rbx rbp r12 r13 r14 r15 are callee saved. guaranteed not smashed
+
+http://ref.x86asm.net/coder64.html opcode listing
+https://github.com/yrp604/rappel - assembly repl
+https://github.com/zardus/ctf-tools
+
+### binary files
+    file - tells info about file
+    elf - interpreter, 
+     - sections - text, plt/got resolve and siprach library calls, data preinitilize data, rodata, global read only,, bss for uniitialized data. sections are not required to run a binary
+     - symbols - 
+    - segments - where to load
+
+    readelf, objdump, nm - reads symbols, patcheld, objcopy, strip, kaitai struct https://www.intezer.com/blog/malware-analysis/executable-linkable-format-101-part-2-symbols/
+
+### process loading
+https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-4.html
+   what to load. look for #! or elf magic. /proc/sys/fs/binsmt_misc can match a string there. hand off to elf defined interpeter is dynamically linked.
+
+   Then it's onto ld probably. 
+   LD_PRELOAD,, LD_LIBRARY_PATH,, DT_RUNTIME in binary file,, system wide /etc/ld.so.conf, /lib and /usr/lib
+   relocations updated
+   /proc/self/maps
+   https://gist.github.com/CMCDragonkai/10ab53654b2aa6ce55c11cfc5b2432a4
+   libc is almost always linked.
+   printf, scanf, socket, atoi, amlloc, free
+
+# shellcode
+    
+## Protection
+ASLR - Addresses are randomized
+cat /proc/mem/self ? To look at what actually loaded
+Also ldd shows were libraries get loaded in memory
+Stack canaries - set once per binary run, so with forking you can brute force them or maybe leak them?
+
+checksec tells you about which things are enabled.
+
+gcc options
+-no-pie
+-no-stack-protection
+
+## pwntools 
+attaching to gdb and/or a process is really useful.
+cyclic bytes can let you localize what ends up where in a buffer overflow for example
+cyclic_find
+
+## Examples from pwn.college

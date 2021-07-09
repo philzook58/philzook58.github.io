@@ -15,7 +15,17 @@ Mutex
 Lock
 Concurrent hash table https://en.wikipedia.org/wiki/Concurrent_hash_table
 barriers
- 
+
+ https://www.youtube.com/watch?v=80ifzK3b8QQ&list=PL1835A90FC78FF8BE&index=1&ab_channel=BartoszMilewski - bartosz on c++11 concurrency
+
+pthread vs std::thread
+Arc in rust
+condition variables
+
+https://www.manning.com/books/c-plus-plus-concurrency-in-action-second-edition
+
+https://www.coursera.org/learn/concurrent-programming-in-java
+
 futex - fats userspace mutex
 
  lockless algorithsm
@@ -141,7 +151,14 @@ https://www.researchgate.net/publication/221403132_A_Concurrent_Portfolio_Approa
 
 Relational verification
 
+Yeah so securtity high information to low infornmation is formulated as relational execution of programs. The information is held in a "spooky" correlation of two executions. Does this give an interesting persepctive on the paramtricity theorem?
 
+That mike stay vicary stuff
+
+noninterference for free- bowman.
+
+https://arxiv.org/pdf/1912.08788.pdf - binsec/rel
+https://dodisturb.me/posts/2021-06-27-Typed-Programs-Dont-Leak-Data.html - imp like interpeter with securty levels.
 
 
 
