@@ -51,6 +51,36 @@ It is also kind of an alternative class (like object oriented classes) system
 It is also kind of a
 
 
+# What is Binary Analysis
+
+Trying to understand a binary
+Why?
+- Finding vulnerabilities for defense or offense
+  + buffer overflows
+  + double frees
+  + use after frees
+  + memory leaks - just bad performance
+  + info leaks - bad security
+- Verification - Did your compiler produce a thing that does what your code said?
+- Reversing/Cracking closed source software
+- Patching and Code injection
+- Auditing
+- Aids for manual RE work. RE is useful because things may be undocumented intentionally or otherwise. You want to reuse a chip, or turn on secret functionality, or reverse a protocol.
+- Discovery of patent violation or GPL violations
+- Comparing programs. Discovering what has been patched.
+
+I don't want my information stolen or held ransom. I don't want people peeping in on my conversations. I don't want my computer wrecked. These are all malicious actors
+We also don't want our planes and rockets crashing. This does not require maliciousness on anyone's part persay.
+
+
+- Symbol recovery
+- Disassembly
+- CFG recovery
+- Taint tracking
+- symbolic execution
+
+### Program Analysis
+What's the difference? Binaries are less structured than what you'll typically find talked about in program analysis literature./
 
 
 ## Core Theory

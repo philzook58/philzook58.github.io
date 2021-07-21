@@ -50,6 +50,8 @@ advanced doug lea malloc - phreak post
 
 pwntools
 
+metasploit, pacu - aws, cobalt strike
+
 and the pwn category of ctf
 
 ROP

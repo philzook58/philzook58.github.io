@@ -9,7 +9,7 @@ slug: Rust
 title: Rust
 wordpress_id: 1849
 ---
-
+* https://news.ycombinator.com/item?id=25222750 - risp a rust lisp
 * https://altsysrq.github.io/proptest-book/intro.html
 * egg - e graph library https://docs.rs/egg/0.6.0/egg/ https://arxiv.org/abs/2004.03082
 * https://nnethercote.github.io/perf-book/

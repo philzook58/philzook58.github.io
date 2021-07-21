@@ -10,6 +10,79 @@ title: Differentiation Lens Redux
 wordpress_id: 2873
 ---
 
+Primitive Lenses - two stacks? How would I go about this
+2*x ->  
+
+int twice(x){
+    return 2 * x
+}
+
+
+push2 dret
+call1 twice
+push2 dtwice
+mov  rsi, rax
+call1 twice
+push2 dtwice
+... and so on
+
+backwards:
+    ret2 # pops the second stack and starts off "rop" chain
+
+
+
+SP2
+SP1
+
+Huh. This _is_ a rop chain.
+
+Primitive Lenses, ROP chains, and wengert tapes.
+
+Discussion of marco zocca blogpost:
+https://twitter.com/ocramz_yo/status/1417153500899909636?s=20
+
+Kmett:
+Selective Functors
+"Constant complement encoding" for linear lenses?
+"Does this omit the usual sharing optimizations that a Wengert list gives you? Almost everyone that I see that tries to use delimited continuations winds up paying for the entire tree complexity rather than the graph complexity when computing z = w*w; y = z*z; x = y*y"
+
+
+Hmm, continuations _are_ the stack. So my two stack idea suggests that we need two types of conitatuions, which as i recall the kiselyov version supports.
+
+https://enzyme.mit.edu/
+
+
+CPS -> defunctionalize -> the stack is a data structure
+The stack is also a bundling of a code pointer (return address) and data. In this sense it is a closure.
+
+For sharing like kmett is talking about, you need to pass in the location to write to. The return void style / the "prolog" style / channel passing style.
+In Rust, a hetergenous lifetime vector? subsequent pieces are in the scope of previous guys, i.e. pointers only point backwards? A fun sounding puzzle
+s -> (a, b -> t)
+(&mut t, s) -> (a, b -> ())
+Also could literally thread a stack Vec
+(&mut t, s) -> (mut stack) -> a
+The stack holds Vec<exists. b -> ()>
+(&mut t, s) -> mut stack -> (a, Either *b (b -> ()) ) 
+We may choose to allocate space for b and return a reference, otherwise there was already space on stack
+
+We need to decide on a standard of communication to achieve composiabilituy
+
+
+These are my initial thoughts.
+Everyone is tied to look at things from their background and their natural predilections.
+My background is physics, engineering, a bit of control theory and now computer science and programming. I am not a hardcore category theory person. It is thought provoking stuff that lives at the periphery of my understanding.
+
+There is a partial order of possible definitions:
+
+One of the strictest ones would be a Haskell function of type a -> (b, b -> a) that obeys the getter and setter laws.
+Less strict that that would be to go to s -> (a, b -> t) and/or to remove the restriction of getter and setter laws or to consider isomorphic types like exists e. s -> (e,a) * (e,b) -> t.
+Above(?) that would be to consider basically the same form in different languages. You can essentially still talk about functions like that in python using higher order functions for example, although types take a back seat.
+Above that might consider the different forms in which essentially the same construct presents itself. Automatic differentiation manifests itself using wengert tapes, using tracing computation graphs with object oriented interfaces, etc. In this sense a lens is a compositional programming abstraction or control flow construct that has one forward pass that saves information, and a backwards pass that may reuse this information. Generalizing this can lead to stream transducers, which don't have a particular pass structure picked at compile time. In this sense lenses live roughly at the same vague level as the notions of first class function, visitor patterns, while loops, etc the closest analogy being first class functions which are things that can take on different forms depending on the language. A first class function is an object that supports a single method call if that is your preferred way of thinking about things. I have wondered if there would be utility to having a language with lens as a primitive notion for efficient compiling rather than encoding lens into objects or closures. Perhaps this would generalize differentiable and probabilistic programming languages? I have no clue what form such a thing would take
+At a higher level, these programming constructs are modelling or reflecting something in the physical or mathematical world. Again the analogy between computer functions and mathematical functions or physical processes seems appropriate. A way of formalizing this relationship is probably some kind of functor or homomorphism between these things and here would live something like the mathematical definition you suggest. I suppose only here is where the general abstraction power of category theory really exists.
+I personally am inclined to the compositional forward-backward information saving pass "definition" although perhaps this is not a definition by a certain standard.
+A honest form of definition might be "things that behave similarly to reverse mode automatic differentiation" because that may be the analogy I go to the most. This may be a rather circular definition for some purposes.
+
+
 
 Functional differentiation
 Once you explicitly reduce a function to a set of parameters, it becomes ordinary differentiation.

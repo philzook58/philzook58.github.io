@@ -1,6 +1,27 @@
 
 
 
+Different styles of proving on CFGs.
+
+The CFG is already giving you a lot, to pretend you know what jumps are possible. This does let you
+
+Nand2Tetris style, we could model the gates of the hardware. And then unfold in time using BMC
+
+- Do we maintain the instruction pointer as a concept?
+- For every block, with every entrance and exit, one could manually state a summary entrance and summary exit predciates. For every edge linking an exit to and entrance one requires that P |- Q. And in addition that the entrance predicates imply the exit predicates of the block itself
+- DAGs present no problems as CFGs. You can finitely produce a trasntiion relation for them, or run WP on them. So one perspective if that you need to cut enough edges to make the cfg a dag. And every time you cut an edge, you need a predicate associated with that edge or perhaps one with the entrance and one with the exit of that edge.
+- Lamport had some mention of ther Floyd method as being more general than the hoare method. Floyd seemed to be considering cfgs. TLA+ does explicitly model the program counter.
+- Symbolic execution branches at the logical level instead of at the logical level. This does not lend itself obviously to something that works in the presence of loops. 
+
+We could do the Micro-WP to demonstrate these styles. But it is a pain.
+Infer a CFG for Nand2Tetris? Perhaps hards because it can be difficult to know what locations you may jump to. We could instead work in a CFG intermediate representation that compiles.
+
+class Block:
+    code: list[instr] # no jumps
+    jump: A1, A2, JMP 
+
+
+
 
 
 
