@@ -184,7 +184,7 @@ Here's the payoff. Read below for what the hell this is.
   (== in out)
 )
 
-(define (compo f g in out)
+(define (compo f g in out) ; I should probably curry this
      (fresh (b) (f in b) (g b out))
 )
 
