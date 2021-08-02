@@ -16,11 +16,11 @@ Egglog <https://github.com/philzook58/egglog> is a prolog-like syntax I'm fiddli
 
 ### Categorical Diagram Chasing
 
-A dragon I've been chasing for a while is how to do categorical reasoning automatically. Way back at the beginning I tried to prove that the pullback of a monic is monic <https://www.philipzucker.com/category-theory-in-the-e-automated-theorem-prover/>. I have reason to doubt that this encoding is sound, but I haven't revisited it.
+A dragon I've been chasing for a while is how to do categorical reasoning automatically. Way back at the beginning I tried to prove that the pullback of a monic is monic <https://www.philipzucker.com/category-theory-in-the-e-automated-theorem-prover/>. I have reason to doubt that this  exact encoding was sound, but I haven't revisited it.
 
-I had already been using egraphs to do equational reasoning in monoidal categories <https://www.philipzucker.com/rust-category/> but I did not realize that they could also be very useful for reasoning about universal properties, 
+I had already been using egraphs to do equational reasoning in monoidal categories <https://www.philipzucker.com/rust-category/> but I did not realize that they could also be very useful for reasoning about universal properties.
 
-In a conversation with Cody Roux, he described his catnapp project <https://github.com/codyroux/catnapp> and how it was to go about solving these kinds of problems. According to him, diagram chasing involves discovering / building new objects, discovering / building new morphisms, recording equalities, and inspecting known morphisms and equalities to instantiate known universal properties. You can go about this in a bespoke way, but I think this procedure can be neatly encoded into the mechanisms egglog, since the horn clauses encode building new things and discovering new equalities, and egglog supports very strongly a notion of equality that seems useful here.
+In principle diagram chasing should be easy. In a conversation with Cody Roux, he described his catnapp project <https://github.com/codyroux/catnapp> and how it was to go about solving these kinds of problems. According to him, diagram chasing involves discovering / building new objects, discovering / building new morphisms, recording equalities, and inspecting known morphisms and equalities to instantiate known universal properties. You can go about this in a bespoke way, but I think this procedure can be neatly encoded into the mechanisms egglog, since the horn clauses encode building new things and discovering new equalities, and egglog supports very strongly a notion of equality that seems useful here. 
 
 Well, now I have a bespoke theorem prover I've built for the very purpose!
 
