@@ -21,16 +21,30 @@ objdump -d a.out
 
 To make a basic file to explore some binary, first make a dune file
 
-```ocaml
-
-
+```lisp
+( executable
+  (name main)
+  (libraries bap bap-primus)
+  (flags -linkall)
+  (preprocess (pps ppx_jane))
+)
 ```
 
 
-
-
 ```ocaml
+open Core_kernel
+open Bap.Std
+include Self()
 
+(* Must call init before everything*)
+let _ : (unit, Bap_main.error) Stdlib.result = Bap_main.init ()
+
+(* Load a file as a project *)
+let myfile = "/home/philip/Documents/ocaml/a.out"
+let proj = Project.create (Project.Input.file ~loader:"llvm" ~filename:myfile) |> Or_error.ok_exn
+
+(* Getting the current knowledge base *)
+let state = Toplevel.current ()
 
 ```
 
@@ -43,6 +57,23 @@ Ivan has an Ascii Cinema here
 
 Get some info from the Knowledge Base. 
 `bap list`
+
+## Bap Lifecycle
+We open Bap.Std
+open Self()
+
+Call Bap_main.init
+Bap_toplevel is in Bap_types. It holds an empty knowledge base at first
+
+Project.create
+calls the disassembler
+calls the brancher
+
+Core theory holds both the finally tagless module definition, but also a bunch of slots.
+
+https://github.com/BinaryAnalysisPlatform/bap/blob/ef6afa455a086fdf6413d2f32db98fa9ff1b28d8/plugins/bil/bil_ir.mli
+Bil.reify
+What is this. Why is this in plugins
 
 
 ## The Knowledge Base

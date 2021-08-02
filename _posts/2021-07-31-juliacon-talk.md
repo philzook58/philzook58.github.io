@@ -6,6 +6,7 @@ title: "JuliaCon 2021 Talk on Metatheory.jl and Snippets From the Cutting Room F
 tags:
 - julia
 - egraphs
+- julialang
 ---
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/tdXfsTliRJk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

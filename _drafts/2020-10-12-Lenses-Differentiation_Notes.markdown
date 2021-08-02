@@ -10,6 +10,9 @@ title: Differentiation Lens Redux
 wordpress_id: 2873
 ---
 
+
+
+
 Primitive Lenses - two stacks? How would I go about this
 2*x ->  
 
@@ -40,6 +43,10 @@ Primitive Lenses, ROP chains, and wengert tapes.
 
 Discussion of marco zocca blogpost:
 https://twitter.com/ocramz_yo/status/1417153500899909636?s=20
+https://hackage.haskell.org/package/ad-delcont-0.2.0.0/docs/Numeric-AD-DelCont.html
+https://enzyme.mit.edu/
+
+https://semantic-domain.blogspot.com/2012/11/in-this-post-ill-show-how-to-turn.html?m=1
 
 Kmett:
 Selective Functors

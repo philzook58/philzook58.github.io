@@ -1,5 +1,8 @@
 
 
+https://categorytheory.zulipchat.com/#narrow/stream/229136-theory.3A-category.20theory/topic/Software.20packages.20for.20computer-assisted.20category.20theory/near/247080854
+Discussion of interesting stuff Anne Heyworth thesis rewriting for kan extenbsion https://arxiv.org/abs/math/9812097
+
 
 https://www.cs.cornell.edu/~kozen/Papers/06ijcar-categories.pdf Dexter Kozen nuprl.
 We should revisist this.
