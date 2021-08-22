@@ -11,7 +11,7 @@ tags:
 
 Rise4Fun was a very cool demo page for projects at Microsoft Research. I think it was fantastic. But it may have finally [died](https://github.com/Z3Prover/z3/discussions/5473)
 
-First off, just check this out <https://www.philipzucker.com/z3-rise4fun/> (not on mobile). A Z3 right in your browser! Neat right?
+First off, just check this out <https://www.philipzucker.com/z3-rise4fun/> (mobile doesn't seem to be doin' so hot). A Z3 right in your browser! Neat right?
 
 
 ### Compiling to the Web
@@ -19,7 +19,7 @@ I'm a big proponent of compiling to the web. Ultimately, nearly no one cares abo
 
 So it behooves you if you care about having your work seen to make the barrier as low as possible. The lowest barrier way of doing this that I know of is compiling to the web.
 
-Another great thing about compiling to the web is you can use static hosting. It is tempting and simple sounding to just make a server that runs ruquests for your project on the backend. I don't do it, perhaps because I'm stuck on github.io hosting. Github.io hosting is so useful and easy though. I love it. In addition your server will probably be a little wonky, definitely a little complicated, probably insecure, especially if you're evaluating semi-arbitrary queries in some kind of programming language.
+Another great thing about compiling to the web is you can use static hosting. It is tempting and simple sounding to just make a server that runs requests for your project on the backend, but I think it is ultimately a mistake and complicated. Also, Github.io hosting is so useful and easy but it is static. I love it. In addition your server will probably be a little wonky, definitely a little complicated, probably insecure, especially if you're evaluating semi-arbitrary queries in some kind of programming language.
 
 I've explored:
 
@@ -40,6 +40,7 @@ And all of them are basically the same thing. I have an input textarea, run butt
  }
 </script>
 <textarea id="query" rows="20" style="width:100%">
+Fill in your nice example here
 </textarea>
 <button onclick="run()">Run</button>
 <code id="result" style="white-space:pre-wrap"> </code>
