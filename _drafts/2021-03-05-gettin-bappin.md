@@ -75,11 +75,41 @@ https://github.com/BinaryAnalysisPlatform/bap/blob/ef6afa455a086fdf6413d2f32db98
 Bil.reify
 What is this. Why is this in plugins
 
+## The Bap Command
+After installing, if you type `bap` you will get a list of information
+- Commands
+- Plugins
+
+`bap --help` is an overwhelming amount of information.
+
+Useful flags
+
+
+### Bap Plugins
+> And this is the whole idea of BAP as a framework instead of a library. There are extension points, which enable you to extend bap without having to worry about how to create a project, how to properly find the file, how to specify the architecture and other parameters. You just register a pass that takes a ready project and focus on your analysis instead of writing all this boilerplate. E.g., in the example above it is rightful to assume that you want to get the project before starting enqueing jobs, so you can register a pass that will be called once the project is ready and if the pass is selected,
+
+https://binaryanalysisplatform.github.io/bap/api/master/bap-main/Bap_main/index.html
+https://gitter.im/BinaryAnalysisPlatform/bap?at=610c3e322453386b6c373696
+https://en.wikipedia.org/wiki/Dependency_injection
+
+The bap main thing
+
+### Bap Passes
+
+
+## OCaml and Registries
+
+There is a pattern avialable in OCaml, which has mutable global state avaialable if you need it, to use a pattern where you make a global table with which to 
+
+In this form, this pattern is ubiquitous in bap
 
 ## The Knowledge Base
 The Knowledge Base is a key value store? Database.
 It is also kind of an alternative class (like object oriented classes) system
 It is also kind of a
+
+The knowledge base is backed by global tables.
+New keys to these tables are generated
 
 
 # What is Binary Analysis

@@ -10,7 +10,7 @@ title: Compilers
 wordpress_id: 2913
 ---
 
-http://ssabook.gforge.inria.fr/latest/book.pdf SSA book
+http://ssabook.gforge.inria.fr/latest/book.pdf SSA bookv
 
 Dataflow analysis
 Must/May and intersection vs union. Least fixed point vs greatest

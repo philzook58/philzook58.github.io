@@ -1,6 +1,15 @@
 
 
 
+Use z3-wasm.
+
+let's as assignemnt
+injecting block addigment variables after phi nodes
+gated ssa vs
+
+smtlib preporcoesor - wp mode.
+
+
 Different styles of proving on CFGs.
 
 The CFG is already giving you a lot, to pretend you know what jumps are possible. This does let you

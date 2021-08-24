@@ -11,6 +11,11 @@ wordpress_id: 2873
 ---
 
 
+https://twitter.com/mattecapu/status/1423214663853031430 - green's functions are kan extensions and yoneda?
+https://jadeedenstarmaster.wordpress.com/2020/10/10/matrices-are-enriched-profunctors/
+
+Prof is to Cat as LinRel is to Vect - Jules
+Very intriguing
 
 
 Primitive Lenses - two stacks? How would I go about this
