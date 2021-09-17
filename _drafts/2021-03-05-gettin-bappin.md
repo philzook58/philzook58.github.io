@@ -146,6 +146,26 @@ What's the difference? Binaries are less structured than what you'll typically f
 
 ## Core Theory
 
+# Bap Lisp
+You can run primus lisp functions by making a file demo.lisp filled with the content
+```(defun mymain ()  (declare (external 'mymain))    (msg "hello world"))`
+And invoke it via `bap eval-lisp mymain --primus-lisp-load=demo --primus-print-obs=lisp-message,exception`
+
+loading into semantics primus lisp
+`bap show-lisp foo --primus-lisp-load=demo -tarmv5+le`
+
+```lisp
+foo:
+((core:eff ((set R0 1)))
+ (bap:ir-graph "00000009:
+                0000000a: R0 := 1")
+ (bap:insn-dests (()))
+ (bap:bir (%00000009))
+ (bap:bil "{
+             R0 := 1
+           }")
+ (core:value ((core:val (1)) (bap:static-value (0x1)) (bap:exp 1))))
+```
 
 # Project Structure
 

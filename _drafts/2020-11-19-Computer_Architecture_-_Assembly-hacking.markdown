@@ -10,7 +10,7 @@ title: Computer Architecture - Assembly
 wordpress_id: 2995
 ---
 
-
+https://cs.lmu.edu/~ray/notes/gasexamples/ Seems like really good intro to assembly
 
 Hacking:
 http://langsec.org/papers/Bratus.pdf sergey weird machine paper
