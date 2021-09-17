@@ -2,6 +2,35 @@
 
 title: Gettin Bappin with Bap
 
+
+https://watch.ocaml.org/videos/watch/8dc2d8d3-c140-4c3d-a8fe-a6fcf6fba988
+JVM and C support in the futute
+primus lisp - common lisp like
+C and python ctypes bindings
+
+semantics - either in
+ocaml dsl or primus lisp dsl
+
+(defun rTST (rn rm _ _ )
+  "tst rn, rm"
+  (let ((rd (logand rn rm))
+  (set ZF (is-zero rd))))
+  (set NF ())
+)
+
+dependency injection
+dynamic linking 
+
+
+framework
+inital style insufficient because need to update
+extensible variants (GADTS)? no
+not abstract. Heavyweight. 
+Not serializable
+higher kinded
+
+
+
 Bap is quite the beast.
 
 To me starting out there was a lot to swallow. First I had to learn Ocaml, second I knew even less about program analysis and binary stuff than I do now.
@@ -201,4 +230,30 @@ DIY typeclasses
 universal value + registry of typeclass instances?
 
 
+#Primus
+Primus is built in this extensible style.
+
+You can find them in the plugins directory
+
+
+I'm trying to understand the different primus plugins.
+
+I suppose all of them can be mixed and matched but for some it be very strange to. Basically I would think you'd want only one Schedulers
+
+
+Schedulers determine when and how forked machines are put into and take out of some kind of storage structure
+
+
+Schedulers:
+- primus-promiscuous
+- primus-greedy
+
+
+Forkers decide how and when to fork
+- primus-random - fuzzing?
+- primus-symbolic - symbolic execution?
+
+
+primus-limit = limit the number of somethigns a machine can do before being killed. depth limited search
+primus-print - just print various observations when they get fired
 
