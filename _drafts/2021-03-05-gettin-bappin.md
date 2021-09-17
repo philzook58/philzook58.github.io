@@ -2,6 +2,35 @@
 
 title: Gettin Bappin with Bap
 
+
+https://watch.ocaml.org/videos/watch/8dc2d8d3-c140-4c3d-a8fe-a6fcf6fba988
+JVM and C support in the futute
+primus lisp - common lisp like
+C and python ctypes bindings
+
+semantics - either in
+ocaml dsl or primus lisp dsl
+
+(defun rTST (rn rm _ _ )
+  "tst rn, rm"
+  (let ((rd (logand rn rm))
+  (set ZF (is-zero rd))))
+  (set NF ())
+)
+
+dependency injection
+dynamic linking 
+
+
+framework
+inital style insufficient because need to update
+extensible variants (GADTS)? no
+not abstract. Heavyweight. 
+Not serializable
+higher kinded
+
+
+
 Bap is quite the beast.
 
 To me starting out there was a lot to swallow. First I had to learn Ocaml, second I knew even less about program analysis and binary stuff than I do now.
@@ -75,11 +104,41 @@ https://github.com/BinaryAnalysisPlatform/bap/blob/ef6afa455a086fdf6413d2f32db98
 Bil.reify
 What is this. Why is this in plugins
 
+## The Bap Command
+After installing, if you type `bap` you will get a list of information
+- Commands
+- Plugins
+
+`bap --help` is an overwhelming amount of information.
+
+Useful flags
+
+
+### Bap Plugins
+> And this is the whole idea of BAP as a framework instead of a library. There are extension points, which enable you to extend bap without having to worry about how to create a project, how to properly find the file, how to specify the architecture and other parameters. You just register a pass that takes a ready project and focus on your analysis instead of writing all this boilerplate. E.g., in the example above it is rightful to assume that you want to get the project before starting enqueing jobs, so you can register a pass that will be called once the project is ready and if the pass is selected,
+
+https://binaryanalysisplatform.github.io/bap/api/master/bap-main/Bap_main/index.html
+https://gitter.im/BinaryAnalysisPlatform/bap?at=610c3e322453386b6c373696
+https://en.wikipedia.org/wiki/Dependency_injection
+
+The bap main thing
+
+### Bap Passes
+
+
+## OCaml and Registries
+
+There is a pattern avialable in OCaml, which has mutable global state avaialable if you need it, to use a pattern where you make a global table with which to 
+
+In this form, this pattern is ubiquitous in bap
 
 ## The Knowledge Base
 The Knowledge Base is a key value store? Database.
 It is also kind of an alternative class (like object oriented classes) system
 It is also kind of a
+
+The knowledge base is backed by global tables.
+New keys to these tables are generated
 
 
 # What is Binary Analysis
@@ -151,4 +210,30 @@ DIY typeclasses
 universal value + registry of typeclass instances?
 
 
+#Primus
+Primus is built in this extensible style.
+
+You can find them in the plugins directory
+
+
+I'm trying to understand the different primus plugins.
+
+I suppose all of them can be mixed and matched but for some it be very strange to. Basically I would think you'd want only one Schedulers
+
+
+Schedulers determine when and how forked machines are put into and take out of some kind of storage structure
+
+
+Schedulers:
+- primus-promiscuous
+- primus-greedy
+
+
+Forkers decide how and when to fork
+- primus-random - fuzzing?
+- primus-symbolic - symbolic execution?
+
+
+primus-limit = limit the number of somethigns a machine can do before being killed. depth limited search
+primus-print - just print various observations when they get fired
 

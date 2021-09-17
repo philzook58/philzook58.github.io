@@ -1,4 +1,7 @@
 
+Consider using sexp macro expansion to chc.
+
+
 Constrained Horn Clauses: Z3 has kind of a prolog in it
 
 

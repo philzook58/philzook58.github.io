@@ -152,3 +152,7 @@ category theory in security
 colin ohallaran - thesis
 d pavlovic chasing diagrams in cryptography
 equations = diagrams.
+
+
+history of move semantics
+ACM thesis award for hybrid systems

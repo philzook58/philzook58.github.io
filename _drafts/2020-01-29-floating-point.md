@@ -1,3 +1,20 @@
+Herbie is super cool.
+1. you can just do rancom sampling to estimate errors, with extreme multiprecision accuracy and regular. Dynamic analysis in a sense?
+2. rewriitng
+Denali
+
+Arith_2021 - a conference on FP?
+FPTalks
+
+Hamming book
+kahan summation
+
+What is fluctuat?
+precisa
+precision tuning
+
+
+
 https://monadius.github.io/FPTaylorJS/#/ FPTaylor demo
 https://github.com/arnabd88/Satire - scaling numerical rounding analysis
 FPBench , FPTalk
