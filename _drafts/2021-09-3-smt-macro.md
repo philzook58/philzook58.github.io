@@ -29,3 +29,17 @@ What kinds of things might we want?
 - Bounded unrolling / recursion. 
 - Defunctionalization
 
+
+Reusing lisp
+(define spec (read (open-input-string "(foo bar)")))
+We can then pattern match through it to find `define-macro` definitions.
+And then there are usable definable macros. If I want to do so in ocaml I'll have a gimped bad lisp.
+We need to write the traversing macro pass, but it shouldn't be too hard?
+Use biwa scheme
+Need some funky eval magic.
+
+
+
+- Using ocaml - upside javascript story is better. Better compiling to binary. Doesn't need full scheme runtime to work. I'm more familiar with it. More palatable to vibes. I'd have to write
+- using scheme / CL. user defined macros. just kind of feels right. Actually parse |#123| closer to correctly.
+

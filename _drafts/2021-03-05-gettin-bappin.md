@@ -175,6 +175,335 @@ What's the difference? Binaries are less structured than what you'll typically f
 
 ## Core Theory
 
+To describe the operations of different machines, bap lifts into a common intermediate representation. From the common representation you can perform different binary analysis.
+
+The main form representation in previous version of bap was an algebraic data type, BIL. This is to some degree still the case, but now there is a different programming construct intended as the primary source. This thing is called the the Core Theory of bap. The word "theory", strange as it sounds to some ears, refers to a common set of typed apis that analysis need to implement to receive lifted code.
+
+Instead of having analysis receive a normal ocaml algebraic data type, instead they implement a finally tagless style type signature.
+
+It is a curious fact that there is an equivalence between ordinary tree-like and a functional representation of how to use them. The idea being is that the only thing you can do to an algebraic data structure is take it apart and "summarize" it in some way. This taking apart operation is the analog of folding a list. This is related to the concept of a Church encoding.
+
+More concretely, consider the following simple datatype describing arithmetic expressions.
+```ocaml
+type aexpr = Add of initadd * initadd | Lit of int
+```
+
+You can interpret it in different ways
+
+```ocaml
+let rec int_interp x = match x with
+   | Add (x,y) -> (int_inter x) + (int_interp y)
+   | Lit n -> n
+
+let rec string_interp x = match x with
+   | Add (x,y) -> sprintf "(%s + %s)" (string_inter x) (string_interp y)
+   | Lit n -> int_of_string n
+
+let ex1 = Add (Lit 1, Lit 2)
+let ex1_int = int_interp ex1
+let ex1_string = string_interp ex1
+```
+
+We can completely mechanically turn this type definition into a module signature definition. Every constructor becomes a function in the module signature.
+
+```ocaml
+module type AEXPR = sig
+  type t
+  val lit : int -> t
+  val add : t -> t -> t
+end
+```
+Every interpretation becomes a new module that implements this signature
+
+```ocaml
+module IntAExpr = struct
+  type t = int
+  let lit x = x
+  let add x y = x + y
+end
+
+module StringAExpr = struct
+  type t = string
+  let lit x = string_of_int x
+  let add x y = sprintf "(%s + %s)" x y
+end
+
+module Ex1 (S : AExpr) = struct
+  let ex1 : S.t = S.add (S.lit 1) (S.lit 2)
+end
+
+module Int_Ex1 = Ex1(IntAExpr)
+module String_Ex1 = Ex1(StringAExpr)
+```
+
+When you boil it down, a module is mostly a record. I say mostly because modules may also contain types. You can achieve a very similar effect by using records.
+
+
+```ocaml
+type 't aexpr_rec = {
+  lit : int -> 't;
+  add : 't -> 't -> 't
+}
+
+let int_rec : int aexpr_rec = {
+  lit = fun x -> x;
+  add : fun x y -> x + y
+}
+
+let string_rec : string aexpr_rec = {
+  lit = string_of_int;
+  add : fun x y -> sprintf "(%s + %s)" x y
+}
+
+let ex1 (s : 't aexpr_rec) : 't = s.add (s.lit 1) (s.lit 2)
+let ex1_int = ex1 int_rec
+let ex1_string = ex1 string_rec
+```
+
+To more closely match the above, we shouldn't expose the underlying type `'t`. We can to this by packing it away in an existential type. Packing it away means we can never do anything with it though. This brings in the concept of keys which are a witness of the packed away type. It tends to be the case these keys are implemented using extensible variants.
+
+```ocaml
+type _ k = ..
+type packed_aexpr = { key : 't k;  impl : 't aexpr_rec}
+
+type _ k += Int : int k
+type _ k += String : string k
+
+let packed_int_aexpr = {key =  Int; impl = int_rec}
+let packed_string_aexpr = {key =  String; impl = string_rec}
+```
+
+Using first class modules amounts to about the same thing?
+
+Now we can make a registry of implementations.
+
+
+Finally tagless is interesting for multiple reasons.
+Because you can combine multiple signatures in a module, finally tagless is open to new "constructors" in a way a concrete data type is not.
+Interpreting over the initial data type is just that, an interpreter. Interpreters usually have a performance hit. It can be the case that finally tagless has less indirection and exposes more optimizations to the compiler. YMMV.
+Finally tagless style is also interesting because it allows type safe interfaces that would require gadts to describe in initial style. This is because gadts allow you to constrain and hide the types in constructors in a way that you recover the types inside a pattern match. Since ordinary functions always allowed annotating more constrained types than their most general type, this is easy in the context of a finally tagless encoding
+
+
+```ocaml
+type 'a abexpr = 
+   | Lit : 'a -> 'a abexpr
+   | Add : int abexpr -> int abexpr -> int abexpr
+   | Ite : bool abexpr -> 'a abexpr -> 'a abexpr -> 'a abexpr
+
+let rec interp_val (type a) (x : a abexpr) : a = 
+  match x with
+  | Lit x -> x
+  | Add (x,y) -> (interp_val x) + (interp_val y)
+
+module type ABEXPR = sig
+  type 'a t
+  val lit : 'a -> 'a t
+  val add : int t -> int t -> int t
+  val ite : bool t -> 'a t -> 'a t -> 'a t 
+end
+```
+
+
+
+The finally tagless style in bap performs a refactoring on this registry.
+Way back at the beginning, the module namespace is ultimately under the hood a dictionary in the compiler associating the implementations with a name. We can reify this to a first class value instead
+
+packed_aexpr String.Map.t
+
+
+### Extensible Records
+
+https://discuss.ocaml.org/t/types-as-first-class-citizens-in-ocaml/2030/2
+https://github.com/janestreet/base/blob/master/src/type_equal.ml
+https://github.com/mirage/repr
+https://github.com/let-def/distwit
+https://github.com/samoht/depyt
+
+### Universal Types, Existentials and Packing
+
+Extensible 
+
+Types describe how data can be treated. If you want to have different types treatable in the same way, you need to find to convert them to a format that is uniform. Ocaml itself achieves this by having a uniform tagging convention and pointer.s Maybe more deeply under the hood, everything is made up of the same stuff.
+
+But two common options are boxing and serialization.
+
+`Sexp.t` is a uniform serialization format in ocaml. It is actually a good universal type. "stringly typed" indeed.
+This is perhaps what Ivan was getting at in his comment about Ogre.
+
+Instead of doing fancy typelevel tricks, a hlist can be presented as
+`type hlist = Sexp.t list`
+
+An extensible record is `Sexp.t String.Map.t` which we could hide behind a safe interface?
+
+Packing is
+`sexp_of_t : t -> Sexp.t`
+
+And unpacking from the universal type is
+`t_of_sexp : Sexp.t -> t option`
+
+```ocaml
+module Dict : sig
+  type t
+  type 'a key
+  type create_key : string -> (Sexp.t -> 'a) -> (t -> Sexp.t option) -> 'a key
+  val put : t -> 'a key -> 'a -> t
+  val get : t -> 'a key -> 'a option
+end = struct
+type 'a key = { name : string;
+                t_of_sexp : Sexp.t -> 'a;
+                sexp_of_t : 'a -> Sexp.t option
+              }
+type t = Sexp.t String.Map.t
+let create_key name t_of_sexp sexp_of_t = {name; t_of_sexp; sexp_of_t}
+let empty = String.Map.empty
+let put d k v = String.Map.put d k.name (k.sexp_of_t v)
+let get d k = (String.Map.get d k.name) >>= k.t_of_sexp
+end
+```
+
+It's almost silly.
+
+Now, not everything has a `Sexp.t` representation. Functions typically don't (we could in the case of finite types as a domain reify the function into a table and serialize that, but otherwise we need to serialize the text of the function or code, or closure, all of which is tough (probably also not impossible though).)
+
+A more low level approach might be to use Marshalling https://ocaml.org/api/Marshal.html
+
+It is interesting to consider what we lose here and what we gain by going to more convoluted representations.
+
+A different representation can be had by using existential packing. The following type can indeed contain anything.
+
+`type some_type = Pack : 'a -> some_type`
+
+We can get pretty far in the above
+
+```ocaml
+let create_key name = name
+let put d k v -> String.Map.put d k (Pack v)
+let get d k -> let Pack x = String.Map.get d k in ? (* We have lost the connection between the original type and the typed key. *)  
+```
+We coulkd maintain a table of all keys registered and only allow it to happen once in which case we're possibly dignified in using an unsafe cast, but who knows. These things can be subtle.
+
+```ocaml
+let get d k -> let Pack x = String.Map.get d k in Obj.magic x
+```
+
+So we want to seal away the types so that things of different types are uniformly represented, but not forever. This leads us to a notion of a typed key, which is a kind of evidence we can pack up of the original type.
+
+
+### Typed Keys
+
+Let's say we have something that may work over ints and floats.
+
+```ocaml
+type ty = Int | Float
+type univ = IntVal of int | FloatVal of float
+
+let int_float_add (t : ty) (x : univ) (y : univ) : univ =
+ match t, x, y with
+ | Int, IntVal x, IntVal y -> IntVal (x + y)
+ | Float, FloatVal x, FloatVal y -> FloatVal (x +. y)
+ | _, _ , _ -> failwith "type mismatch in int_float_add"
+
+```
+
+You may have see this trick before. GADTs offer a convenient way to build value level thingies that tell us stuff about types.
+For example if we wanted to tell the different between floats and ints.
+
+```ocaml
+type _ ty = 
+   | Int : int ty
+   | Float : float ty
+```
+
+Now we can use this value as evidence that an incoming type is either an int or float. (As a rule of thumb, it is wise to use the `type a` syntax when dealing with gadts)
+
+```ocaml
+let int_float_add (type a) (t : a ty) (x : a) (y : a) : a = 
+  match ty
+  | Int -> x + y
+  | Float -> x +. y
+```
+
+We've removed the indirection of `univ` and made a compile time type check so that we no longer have a failure case.
+
+In a sense, this reflection gives us a first class notion of quantifying over types, reflecting the type level down to the value level. Separately, modules and functors already gave a way of second class quantifying over types, and first class modules make that first class.
+
+Something related is known as the singleton technique for reflecting values into the type level.
+
+```ocaml
+type zero = Zero
+type 'a succ = Succ of 'a
+
+type _ snat = 
+  | SZero : zero snat
+  | SSucc : 'a snat -> 'a succ snat 
+
+(* plus as a relation *)
+type (_,_,_) plus =
+  | PZero : (zero, 'a, 'a) plus
+  | PSucc : ('a, 'b, 'c) plus -> ('a succ, 'b, 'c succ) plus
+
+(* exists c, (a,b,c) plus *)
+type ('a,'b) exists_plus = Pack : 'c snat * ('a,'b,'c) plus -> ('a,'b) exists_plus
+
+let rec splus : type a b. a snat -> b snat -> (a,b) exists_plus =
+  fun x y ->
+  match x with
+  | SZero -> Pack (y, PZero)
+  | SSucc n -> let (Pack (z, pf)) = splus n y in
+               Pack (SSucc z, PSucc pf)
+```
+
+Ocaml has a very very interesting addition to this story you won't find in many other languages, using extensible variants. Extensible variants I believe have their history associated with exceptions, for which you could add new exception constructors to. This mechanism was generalized and interoperates with gadts and first class modules. Pretty crazy.
+Now instead of having to have a closed universe of possible type witnesses like in `'a ty` above, we can leave the universe open and extensible. 
+
+```ocaml
+
+```
+
+Other discussions of interest
+- The Key Monad https://www.reddit.com/r/haskell/comments/574t1e/the_key_monad_type_safe_unconstrained_dynamic/ . Interesting examples- convert phoas to well typed de bruijn. Off the wall question: can we embed true hoas pattern matching?
+- https://apfelmus.nfshost.com/blog/2011/09/04-vault.html
+- The value restriction http://mlton.org/ValueRestriction https://counterexamples.org/polymorphic-references.html I wonder if there is a general theme that every counterexample is basically a technique in disguise. This may or may not work in rust as this is in some sense dependent upon aliasing.
+- https://github.com/c-cube/datalog/blob/a29910e3262f4e0490fb69575b1246c4b4a165ee/src/bottom_up/bottomUp.ml#L8 Universal type
+- https://blog.janestreet.com/more-expressive-gadt-encodings-via-first-class-modules/
+- http://okmij.org/ftp/ML/first-class-modules/index.html "simplistic gadts" uses a ref cell tunnel. http://okmij.org/ftp/ML/GADT.ml This is exactly using the value restriction counterexample to good use.
+
+Channel passing style. subroutine style giving output pointers.
+(a -> b) -> (a -> unit * unit -> b) in ocaml. Can break apart. "Spooky action at a distance"
+or 
+(a -> b) -> (a -> b ref -> unit)
+(a -> b ref -> ()) -> (a -> b)
+
+
+
+### Extensible Functions
+Ref cell techniques let you do some funky looking stuff from the eyes of a pure functional programmer. There is a great deal in SICP using this technique and it is part of lisp tradition. If you close over a a single ref cell with a bunch of closures, this collection of closures becomes in essence a kind of object manipulating an internal protected state. One common use case for this is to implement a counter object, which is useful for generating fresh symbols (sometimes called a gensym).
+
+Extensible variants I suspect actually have a dynamic runtime effect. Declaring an extensible variant creates a runtime representation (a counter and perhaps a table) which gets incremented whenever you declare a new constructor. No it doesn't, unless the call goes into the runtime maybe? But `type foo += Gary` is a runtime effectful thing that does have code.
+Declaring an ordinary closed datatype allows everything to pretty much be done at compile time and a great deal is erased
+
+
+Anyhow
+
+```ocaml
+let extensible_function = ref (fun success fail -> fail ())
+let add_case g = let f = !extensible_function in
+                 extensible_function := fun success fail ->
+                  g success (fun () -> f success fail)
+
+```
+
+
+This is a linked list like lookup table. Not very efficient.
+We can instead use perhaps a hashtable or dictionary as our key access.
+
+
+http://okmij.org/ftp/ML/canonical.html#trep
+
+
+
+
+
 # Bap Lisp
 You can run primus lisp functions by making a file demo.lisp filled with the content
 ```(defun mymain ()  (declare (external 'mymain))    (msg "hello world"))`

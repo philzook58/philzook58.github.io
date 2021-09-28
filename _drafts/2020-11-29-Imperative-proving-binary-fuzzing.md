@@ -1,13 +1,28 @@
 
 
+The Hamming Book. Gilbert Strang book. Numerical analysis
+Geometrical algorithms
+Stuff in CLRS?
+
+limbs circuit. 3d printed snapping.
+
 
 Use z3-wasm.
+
+Specit - word based specification challenges.
+Prove equivalence using Z3?
 
 let's as assignemnt
 injecting block addigment variables after phi nodes
 gated ssa vs
 
 smtlib preporcoesor - wp mode.
+
+boogie why
+
+
+https://github.com/UniMath/SymmetryBook
+https://github.com/xavierleroy/cdf-mech-sem
 
 
 Different styles of proving on CFGs.

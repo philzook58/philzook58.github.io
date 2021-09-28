@@ -12,6 +12,20 @@ title: prolog, scheme,racket, lambdaprolog, What the Hell is LogicT / Guanxi not
 wordpress_id: 1865
 ---
 
+
+Twelf.
+dedukti. lambda - pi
+beluga
+abella.
+These are all related I guess? abella might not be LF
+
+Logical frameworks is a general vague concept I think. It is a system in which it is easy to model logical language nad inference rules.
+but ELF the edburgh logical fraemwork is more specific
+Twelf is a dpenedelty typed landguage that is also a logic programming langfuage
+Because it has a totality checker and termination checker, prolog clauses can be considered proofs.
+
+https://core.ac.uk/download/pdf/82649367.pdf Normalization for the Simply-Typed Lambda-Calculus in Twelf
+
 Mercury - mode declarations and type declarations. Allows reordering, but deals with IO using lionear types?
 
 
