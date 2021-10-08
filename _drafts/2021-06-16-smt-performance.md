@@ -21,3 +21,26 @@ LLogic debugging - https://www.metalevel.at/prolog/debugging
 "rewriter.flat=false"
 -v:10
 
+
+WWDD - what would dafny do
+
+
+https://arxiv.org/pdf/2010.07763.pdf refinement types tutorial
+
+fascinating that this paper internalizes the partial evaluation prcoess into the smt formula
+
+Amin Leino Rompf, Computing with an SMT Solver” https://www.microsoft.com/en-us/research/wp-content/uploads/2016/12/krml237.pdf
+They translate functions to versions that have fuel. They don't give them much fuel
+Lit marking. 
+Lit(x) + Lit(y) => Lit(x + y). This is another wya to encode constant propagation into egglog 
+
+Trigger whispering. Can I use Z3 as an egglog? Completely using the trigger system I can't trigger on equality can I?
+
+Michal Moskal's thesis - interesting
+
+Claire Dross, Sylvain Conchon, Johannes Kanig, and Andrei Paskevich. Reasoning with
+triggers. In Pascal Fontaine and Amit Goel, editors, 10th International Workshop on Satisfiability Modulo Theories, SMT 2012, EasyChair 2013 EPiC Series, pages 22–31, 2012. - a logical semantics of triggers
+
+http://www.rosemarymonahan.com/specsharp/papers/SAC_Final.pdf Reasoning about Comprehensions with
+First-Order SMT Solvers
+Duplicate functions. Trigger on only one version. Avoids things going off the rails.

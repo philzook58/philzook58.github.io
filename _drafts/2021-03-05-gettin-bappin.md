@@ -113,6 +113,21 @@ After installing, if you type `bap` you will get a list of information
 
 Useful flags
 
+## Bap Project Directory Structure
+
+It may be the case that the easiest thing to do sometimes is some source code spelunking.
+
+- plugins
+- src
+- lib
+
+
+Github search
+odoc
+
+
+
+
 
 ### Bap Plugins
 > And this is the whole idea of BAP as a framework instead of a library. There are extension points, which enable you to extend bap without having to worry about how to create a project, how to properly find the file, how to specify the architecture and other parameters. You just register a pass that takes a ready project and focus on your analysis instead of writing all this boilerplate. E.g., in the example above it is rightful to assume that you want to get the project before starting enqueing jobs, so you can register a pass that will be called once the project is ready and if the pass is selected,
@@ -123,7 +138,36 @@ https://en.wikipedia.org/wiki/Dependency_injection
 
 The bap main thing
 
+
+
+#### Bap api
+The flags corresponding to plugins are typically namespace like `--pluginname-pluginoption`
+
+
+ In order for bap to recover high level function arguments you can supply a header file.
+ If you know this plugin is called `api` you can find the options available by 
+ `bap --help | grep -C 4 api`
+
+ --api-path=somefolder where somefolder has a folder called C in it.
+ --api-show
+ --api-list-paths
+
+### Bap Disassemble
+Bap disassemble is the default command if you choose no command.
+You can use it similar to objdump
+--print-symbol
+### Saving and restroing the knowledge base
+-k
+--project
+--update
+
+### Bap Analyze
+https://asciinema.org/a/358996
+
 ### Bap Passes
+
+### Bap.Std
+
 
 
 ## OCaml and Registries
@@ -501,7 +545,61 @@ We can instead use perhaps a hashtable or dictionary as our key access.
 http://okmij.org/ftp/ML/canonical.html#trep
 
 
+###
 
+type person = {name : string; age : int}
+type people = person list
+
+A refactoring one might want to do.
+type people = {names : string list; ages : int list}
+
+Now this isn't an isomorphism, but it's close. The new type is not constrained to have as many names as ages
+
+These distinct reprentations show up all over the place.
+
+There is a natural notion of product. We call it so because it obeys in a sense the usual laws of products
+(int * bool) * string <-> int * (bool * string)
+
+The usual tuple interpretation functor for finally tagless:
+module Tup(S : ADDEXPR)(T : ADDEXPR) = struct
+
+end
+
+
+modules are kind of like records. In some sense, what we have done with defining multiple modules is isomorphic to
+
+
+type 'a all_expr_impls = {
+  intaexpr : 'a;
+  stringaexpr : 'a;
+}
+type all_aexpr = aexpr all_aexpr_impl
+
+We can factor through two composed records like this.
+
+
+
+We can perform a refactoring of this to
+The is the bap-style finally tagless for non extensbile records
+
+type ('a,'b) t = 'a option
+hold a key?
+A tuple is a hetergenous record of sorts. but kind of not really. Only simpler in that the number of fields is small.
+
+I guess 
+type het_tup = {key1 : 'a key; 'a : key2 : 'b key; val2 : 'b}
+Is complicating the key packed record on one axis, by increasing the number of fields. If we want a runtime dynamic number of fields
+we go to `keyed list`
+
+module FstString = 
+  type t = (string * _ option)
+  let lit x = (int_of_string x,  None)
+end
+
+module SndInt = 
+  type t = (_ option * )
+end
+module Join( : Fst)( : Snd) =
 
 
 # Bap Lisp
