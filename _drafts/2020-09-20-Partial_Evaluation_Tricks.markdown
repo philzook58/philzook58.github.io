@@ -10,6 +10,13 @@ title: Partial Evaluation Tricks
 wordpress_id: 2677
 ---
 
+https://github.com/metaocaml/metaocaml-bibliography 
+
+https://wiki.hh.se/wg211/index.php/Main_Page program generation working group
+
+
+https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.81.8435&rep=rep1&type=pdf pattern matching via partial evaluation
+
 https://stackoverflow.com/questions/46614561/implementing-partial-evaluation-in-swi-prolog
 The clause/2 predicate  is like a macro?
 https://github.com/leuschel/logen

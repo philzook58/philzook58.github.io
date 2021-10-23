@@ -10,6 +10,24 @@ title: Crypto, Protocols, Relational Specs, Concurrency
 wordpress_id: 3009
 ---
 
+John regehr thread https://twitter.com/johnregehr/status/1451355617583460355?s=20 Really good
+https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html  Is Parallel Programming Hard, And, If So, What Can You Do About It?
+https://deadlockempire.github.io/
+https://github.com/BIT-SYS/KDR list of kernel data races
+Herlihy is discussed as a given? https://www.amazon.com/Art-Multiprocessor-Programming-Revised-Reprint/dp/0123973376
+https://www.amazon.com/-/en/dp/0470093552 concurrency state models and jabva programsd
+https://www.manning.com/books/c-plus-plus-concurrency-in-action-second-edition
+https://leanpub.com/concurrencywithmodernc
+https://greenteapress.com/wp/semaphores/ little book of semaphors
+https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html kernel memory corruption bug from data race prokject zero
+Concurrent Programming (Andrews) -- uses pseudo-code with synchronization/concurrency notation.
+Transactional Memory (Harris) -- for non-lock based concurrency.
+https://lwn.net/Articles/844224/ an introduction to lockless algorithms 
+"Shared-Memory Synchronization" by Michael Scott
+https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/
+http://plv.mpi-sws.org/gps/paper.pdf GPS: Navigating Weak Memory with Ghosts, Protocols, and Separation
+Weak memory models?
+
 Concurrency
 Mutex
 Lock
