@@ -1,7 +1,40 @@
+
+Macros for SMTLib: MicroDafny
+
+
 SMTPP - A pre-processor for SMTlib2
 
-Smtlib2 is the standardized query and logical language for SMT solvers. It is supposed to be an automatically generated representation, but I actually rather like it even written manually. It has a lisp-y prenex flavor.
-It does however not have the full set of features
+Smtlib2 is the standardized query and logical language for SMT solvers. It has a lisp-y prenex flavor. Here's an example from <https://www.philipzucker.com/z3-rise4fun/>
+
+```lisp
+(declare-fun f (Int) Int)
+(declare-fun a () Int) ; a is a constant
+(declare-const b Int) ; syntax sugar for (declare-fun b () Int)
+(assert (> a 20))
+(assert (> b a))
+(assert (= (f 10) 1))
+(check-sat)
+(get-model)
+```
+
+It is supposed to be an automatically generated representation, but I actually rather like it even written manually. It does however have some rough edges. The lisp-y character naturally brings one to ask, can we smooth those edges using macros? Lisps have a natural way of reifying their own syntax as a data structure and processing it. You can use this to simple synonyms, make constructs that reduce boilerplate, or make new control flow operations. This can easily be integrated with many other tools if we write the preprocessor as a standalone binary that just outputs the expanded smtlib. Then you can just pipe the output of a tool into the preprocessor before piping it into your smt solver of choice.
+
+
+As an example of this idea, I wrote a very minimal version of a dafny-esque language. This is still missing a lot of features of dafny (like all the hard parts)
+
+Many things you might think have to be macros can actually be written using other constructos of smtlib, in particular the `define-fun` capability. My understanding is that smt solvers treat these essentially as macros anyhow. Other things that could be interesting as smtlib macros
+- less verbose type annotation requirements
+- bitvector mode to use operators like `+` instead of `bvadd`
+- a `calc` macro
+- structured proofs
+- Auto defunctionalization / Combinatorization to support higher order functions (use smtlib3 syntax? <http://smtlib.cs.uiowa.edu/version3.shtml> )
+- A refinement type checker
+- symbolic differentiation operator
+- Presolve calls to other solvers
+- Collecting up extra facts to assert (like interval constraints on every use of `cosine` etc)
+- Macro expanded bounded quantification
+
+
 
 The interesting angle here is that we can start with raw smtlib2 and work backwards, slowly adding more sugar on top of it. Because of this approach, the full spectrum of stmlib2 constructs will be available and never obscured.
 
@@ -28,6 +61,8 @@ What kinds of things might we want?
 - Bounded quantification that can be expanded
 - Bounded unrolling / recursion. 
 - Defunctionalization
+- Something TLA+ like. Verify invariants
+- Ivy?
 
 
 Reusing lisp
@@ -42,4 +77,19 @@ Need some funky eval magic.
 
 - Using ocaml - upside javascript story is better. Better compiling to binary. Doesn't need full scheme runtime to work. I'm more familiar with it. More palatable to vibes. I'd have to write
 - using scheme / CL. user defined macros. just kind of feels right. Actually parse |#123| closer to correctly.
+
+
+On the difference between sets and lets:
+Set scopes to the end of time, let has a scope when it ends. That's about it. This is perhaps why it is so easy to use `let` to simulate `set` in the weakest precondition formulation. `let` has connotation of peristence, expressions. `set` has connotations of mutation and destruction.
+
+
+Ghost code and noninterference. Metaocaml and interference.
+
+
+
+You know I'm still unhygienic because of smtlib allows includes
+
+Houdini huh.
+
+
 

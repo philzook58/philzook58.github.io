@@ -4,7 +4,6 @@ comments: true
 date: 2020-09-20 03:24:45+00:00
 layout: post
 link: https://www.philipzucker.com/?p=2677
-published: false
 slug: Partial Evaluation Tricks
 title: Partial Evaluation Tricks
 wordpress_id: 2677

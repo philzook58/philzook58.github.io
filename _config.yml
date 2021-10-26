@@ -60,3 +60,7 @@ defaults:
     path: "pynb"
   values:
     image: true
+
+collections:
+  notes:
+    output: true

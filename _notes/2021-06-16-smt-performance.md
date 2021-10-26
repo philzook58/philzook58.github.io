@@ -1,3 +1,7 @@
+---
+layout: post
+title: SMT Solvers
+---
 
 delta debugging  - https://ddsmt.readthedocs.io/en/master/
 
@@ -44,3 +48,6 @@ triggers. In Pascal Fontaine and Amit Goel, editors, 10th International Workshop
 http://www.rosemarymonahan.com/specsharp/papers/SAC_Final.pdf Reasoning about Comprehensions with
 First-Order SMT Solvers
 Duplicate functions. Trigger on only one version. Avoids things going off the rails.
+
+
+

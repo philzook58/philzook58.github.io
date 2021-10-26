@@ -1,5 +1,15 @@
+---
+layout: post
+title: Invariants - Constrained Horn Clauses
+---
 
 Consider using sexp macro expansion to chc.
+
+higher order model checking? Kobayashi?
+There's some stuff here https://ericpony.github.io/z3py-tutorial/fixpoint-examples.htm that didn't register
+See the bottom
+
+
 
 
 Constrained Horn Clauses: Z3 has kind of a prolog in it
@@ -415,3 +425,6 @@ https://www.youtube.com/watch?v=h2ZsstWit9E&ab_channel=SimonsInstitute -
 automated formal program reapir
 "fault localization" 
 https://github.com/eionblanc/mini-sygus
+
+
+https://arxiv.org/pdf/2010.07763.pdf refinement types constrained horn lcauses. Describes using simple houdini algorithm,.

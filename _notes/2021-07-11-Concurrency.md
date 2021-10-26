@@ -3,10 +3,7 @@ author: philzook58
 comments: true
 date: 2020-11-20 19:07:10+00:00
 layout: post
-link: https://www.philipzucker.com/?p=3009
-published: false
-slug: Crypto, Protocols, Relational Specs, Concurrency
-title: Crypto, Protocols, Relational Specs, Concurrency
+title: Concurrency
 wordpress_id: 3009
 ---
 
@@ -27,6 +24,16 @@ https://lwn.net/Articles/844224/ an introduction to lockless algorithms
 https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/
 http://plv.mpi-sws.org/gps/paper.pdf GPS: Navigating Weak Memory with Ghosts, Protocols, and Separation
 Weak memory models?
+https://pvk.ca/Blog/2019/01/09/preemption-is-gc-for-memory-reordering/ - 
+https://pvk.ca/Blog/2020/07/07/flatter-wait-free-hazard-pointers/
+https://www.cs.rochester.edu/u/scott/papers/1991_TOCS_synch.pdf algorithms for scababe synchronization on shared-memory. Same Michiael Scott. BBN butterfly?
+https://arxiv.org/abs/1106.5730 HOGWILD - parallizingf lock free SGD
+A Primer on Memory Consistency and Cache Coherence  https://course.ece.cmu.edu/~ece847c/S15/lib/exe/fetch.php?media=part2_2_sorin12.pdf
+https://pure.tue.nl/ws/files/4279816/344354178746665.pdf cooperating seauentail prcoesses by dikstra
+http://www0.cs.ucl.ac.uk/staff/p.ohearn/papers/concurrency.pdf ohearn resources concurrency and local reasoning
+http://pascal.hansotten.com/uploads/pbh/Monitors%20and%20Concurrent%20Pascal.pdf monitors and concrurent pacscal hitsotry - per brinch hansen https://twitter.com/PeterOHearn12/status/1452240719725346827?s=20 " atomic "release and sleep" is the key as far as I'm concerned, it's so easy to invent bad solutions without that primitive"
+https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.227.3871&rep=rep1&type=pdf the 12 commandments of synchrnonizatiojn
+
 
 Concurrency
 Mutex

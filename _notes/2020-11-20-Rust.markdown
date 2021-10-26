@@ -4,7 +4,6 @@ comments: true
 date: 2020-06-25 20:45:34+00:00
 layout: post
 link: https://www.philipzucker.com/?p=1849
-published: false
 slug: Rust
 title: Rust
 wordpress_id: 1849

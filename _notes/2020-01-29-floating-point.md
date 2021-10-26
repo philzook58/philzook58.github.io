@@ -1,3 +1,8 @@
+---
+layout: post
+title: Floating Point
+---
+
 Herbie is super cool.
 1. you can just do rancom sampling to estimate errors, with extreme multiprecision accuracy and regular. Dynamic analysis in a sense?
 2. rewriitng

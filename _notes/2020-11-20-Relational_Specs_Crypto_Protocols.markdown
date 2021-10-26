@@ -4,7 +4,7 @@ comments: true
 date: 2020-11-20 19:07:10+00:00
 layout: post
 link: https://www.philipzucker.com/?p=3009
-published: false
+
 slug: Crypto, Protocols, Relational Specs, Concurrency
 title: Crypto, Protocols, Relational Specs, Concurrency
 wordpress_id: 3009

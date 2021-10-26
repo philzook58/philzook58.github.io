@@ -3,14 +3,21 @@ author: philzook58
 comments: true
 date: 2020-09-22 15:37:08+00:00
 layout: post
-link: https://www.philipzucker.com/?p=1865
-published: false
 slug: prolog, scheme,racket, lambdaprolog, What the Hell is LogicT / Guanxi notes
   Minikanren, Unification, Resolution
-title: prolog, scheme,racket, lambdaprolog, What the Hell is LogicT / Guanxi notes
-  Minikanren, Unification, Resolution
+title: Prolog
 wordpress_id: 1865
 ---
+
+old title: prolog, scheme,racket, lambdaprolog, What the Hell is LogicT / Guanxi notes
+  Minikanren, Unification, Resolution
+
+inductive logic programmingh
+popper https://arxiv.org/abs/2005.02259
+https://github.com/metagol/metagol metagol 
+http://andrewcropper.com/
+https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
+
 
 
 Twelf.

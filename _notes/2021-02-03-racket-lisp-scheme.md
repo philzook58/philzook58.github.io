@@ -2,8 +2,19 @@
 author: Philip Zucker
 date: 2021-02-06 19:08:24+00:00
 layout: post
-title: Scheme racket
+title: Scheme Racket Lisp
 ---
+
+
+
+https://ianthehenry.com/posts/janet-game/the-problem-with-macros/ interesting blog post
+cross stage persistence. How does one serialize a function?
+http://www.nhplace.com/kent/Papers/Technical-Issues.html why a lisp 2 i guess
+
+https://turtleware.eu/ common lisp essay
+
+
+https://www.cs.utah.edu/plt/publications/macromod.pdf composable and compileable macros - you want in whe?
 
 Lisp-2 - seperate namespace for functions and vasriables -Common lisp
 Condition system

@@ -4,11 +4,21 @@ comments: true
 date: 2020-07-10 14:54:22+00:00
 layout: post
 link: https://www.philipzucker.com/?p=2839
-published: false
 slug: Reifying the Stack with Lenses, Dialectica
 title: Reifying the Stack with Lenses, Dialectica
 wordpress_id: 2839
 ---
+
+
+Can one use something like blame claculus to implement _good_ parser combinators
+Good parsers try to explain what you fucked up.
+Good parsers also track where you are and localize the problem
+they also can ship problems downstream back upstream to translae them into user terms.
+A bidirectional thing
+What does a parse failure look like though?
+exhaustion or immediate failure. The last case in an alt.
+best effort parsing.
+
 
 Tyoed contracts hinze
 

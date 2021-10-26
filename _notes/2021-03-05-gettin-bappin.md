@@ -1,6 +1,8 @@
+---
+layout: post
+title: Gettin' Bappin' with Bap
+---
 
-
-title: Gettin Bappin with Bap
 
 
 https://watch.ocaml.org/videos/watch/8dc2d8d3-c140-4c3d-a8fe-a6fcf6fba988
@@ -187,6 +189,13 @@ New keys to these tables are generated
 
 # What is Binary Analysis
 
+Dynamic - It feels like you're running the binary in some sense. Maybe on an emulated environment
+Static - It feels like you're not running the binary
+
+Fuzzing is definitely dynamic.
+Dataflow analysis on a CFG is static
+There are greys areas. Symbolic execution starts to feel like a grey area. I would consider it to be largely dynamic, but you are executing in a rather odd way.
+
 Trying to understand a binary
 Why?
 - Finding vulnerabilities for defense or offense
@@ -207,6 +216,7 @@ I don't want my information stolen or held ransom. I don't want people peeping i
 We also don't want our planes and rockets crashing. This does not require maliciousness on anyone's part persay.
 
 
+
 - Symbol recovery
 - Disassembly
 - CFG recovery
@@ -214,7 +224,21 @@ We also don't want our planes and rockets crashing. This does not require malici
 - symbolic execution
 
 ### Program Analysis
-What's the difference? Binaries are less structured than what you'll typically find talked about in program analysis literature./
+What's the difference? Binaries are less structured than what you'll typically find talked about in program analysis literature.
+
+Binaries are tough because we have tossed away or the coupling has become very loose between high level intent and constructs and what is there. 
+
+### How are binaries made
+
+
+C preprocessor -> Maintains file number information isn't that interesting
+
+C compiler -> assembly. You can ask for this assembly with `-S`. You can also 
+Or more cut up
+C -> IR
+IR -> MIR (what does gcc do? RTL right? )
+MIR -> Asm
+
 
 
 ## Core Theory

@@ -1,4 +1,7 @@
-
+---
+layout: post
+title: Bidirectional Typing
+---
 
 
 Notes on Bidirectional Typing and the Meaning of Horizontal Lines
