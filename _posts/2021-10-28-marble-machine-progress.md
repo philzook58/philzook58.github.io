@@ -19,20 +19,22 @@ It was inspired by Daniel Rozin's mechanical mirrors <http://www.smoothware.com/
 
 We were insane to think we could do it in a month (meeting once a week). Like that is actually laughable.
 
+But we've hit a milestone!
 
-The github code is here <https://github.com/perciplex/marble-mirror>.
-
-Success!
 <blockquote class="twitter-tweet"><p lang="fr" dir="ltr">A momentous occasion! <a href="https://t.co/fWjtwTHqRN">pic.twitter.com/fWjtwTHqRN</a></p>&mdash; Philip Zucker (@SandMouth) <a href="https://twitter.com/SandMouth/status/1453563957696999430?ref_src=twsrc%5Etfw">October 28, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+It's a laser cut marble mirror. There is a servo powered "connect 4" mechanism at the bottom of the marbles. A "pacman" drives the bnalls up a column. On the back are 2 steppers and a servo. The stepper controls a carriage which has an RGB sensor and a servo. It draws some image of choice (4x4 at the moment) in silver and blackened steel bearings. We have python code that rejects balls until it gets one it can use. The github code is here <https://github.com/perciplex/marble-mirror>.
+
+This was long time comin'.
 
 ### Timeline
 - late May 2021 - Start
-- June - 3d printed prototypes
+- June - 3d printed prototypes. Lots of churn on ideas and discussion going nowhere.
 - July - purchase laser cutter. Fiddle with it a lot. Helix design
 - August - Move to Declonian method. More stock 3d printer-esque technology. Carriage with turnscrew + steppers. Pitbull fever overtakes Perciplex. It's ironic?
 ![](/assets/marble_mirror/pitbull.jpg){: width="50" }
 - Sept - super busy month. Ben's wedding is close. I am moving. Didn't work much
-- Oct - A parade of triumphs
+- Oct - A parade of triumphs!
 
 <video controls width="300px">
   <source src="/assets/marble_mirror/output/initial_motion.mp4" type="video/mp4">
@@ -67,7 +69,7 @@ Some initial designs were tested on the 3d printer. It exposed issues with the p
 
 #### Horizontal Rows 
 Some compelling early protoypes. 
-<video controls>
+<video controls  width="300px">
   <source src="/assets/marble_mirror/output/proto_rows.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
@@ -101,11 +103,7 @@ We originally had a homemade CNC router machine and 3d printers at our disposal.
 For marble detection in the carriage we are using an adafruit [RGB sensor](https://www.adafruit.com/product/1334?gclid=Cj0KCQjw--GFBhDeARIsACH_kdbDYvOA1wqbCp5bGrZr_MtyvXWWLGTW4zd54Z9W6Y294JAX-nNjMYIaAixpEALw_wcB)
 It is a little finicky and not entirely clear we should continue using it. We colored the inside of the carriage blue with painters tape. For the moment, taking some samples of empty, black ball, and silver ball and then using Nearest neighbor classifier from scikit-learn seems to be working ok.
 
-
-
-
-
-
+A clever trick was to use two backboards so that we can have the screws not interfere with balls and rails.
 
 We got a cheap raspberry pi motor driver board. It acted weird. Not worth it. Bought an actual adafruit.
 
