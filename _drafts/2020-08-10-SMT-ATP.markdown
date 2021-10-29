@@ -10,6 +10,38 @@ title: ATP
 wordpress_id: 2847
 ---
 
+2021-10
+
+Differentiation + Z3. That Plotkin talk
+Prefill Z3 with Derived equalities based on differentiating constraints
+Stopping matching loops - exp' = exp  has in some sense the power series in it
+Ematching derivtive rules. Use point free denfuctionalizaed function definitions
+apply(sin,x) = sin(x)
+diff(sin) = cos
+apply(diff(f), x)
+Can this be used to make an integrator?
+
+Encoding Remainder bounds?
+
+Formulog
+bddbdbbd (and egglog/ hashlog) shows that symbolic databases. Use Z3 expressions as databases.
+Start at False.
+f :- z,q,
+Pattern matching manually is a challenge.
+idea: Use Z3 query to instantiate. Does or does not uZ3 do this?
+Analog of 
+
+Ocaml datalog + Sexp.t
+Souffle + Z3 bindings?
+
+Man I really need a datalog framework
+
+Can I use a z3 context as a hashcons table?
+
+Could also just manually unroll? But then how to instantiate? I guess by defining x1, x2, x3,... and then asking for any of them.
+
+
+
 2021-02
 
 https://github.com/mechtaev/maxsmt-playground maxsmt in scala using z3

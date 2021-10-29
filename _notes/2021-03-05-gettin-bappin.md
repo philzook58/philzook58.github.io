@@ -205,8 +205,8 @@ Why?
   + memory leaks - just bad performance
   + info leaks - bad security
 - Verification - Did your compiler produce a thing that does what your code said?
-- Reversing/Cracking closed source software
-- Patching and Code injection
+- Reversing/Cracking closed source software. 
+- Patching and Code injection. Finding Bugs for use in speed runs. Game Genie.
 - Auditing
 - Aids for manual RE work. RE is useful because things may be undocumented intentionally or otherwise. You want to reuse a chip, or turn on secret functionality, or reverse a protocol.
 - Discovery of patent violation or GPL violations

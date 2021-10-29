@@ -27,6 +27,10 @@ It's a laser cut marble mirror. There is a servo powered "connect 4" mechanism a
 
 This was long time comin'.
 
+Now how the heck do we scale?
+
+Ben's blog post on the project <http://blog.benwiener.com/electronics/projects/programming/2021/10/28/marble-mirror.html>
+
 ### Timeline
 - late May 2021 - Start
 - June - 3d printed prototypes. Lots of churn on ideas and discussion going nowhere.

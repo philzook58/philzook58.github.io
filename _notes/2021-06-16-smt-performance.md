@@ -50,4 +50,5 @@ First-Order SMT Solvers
 Duplicate functions. Trigger on only one version. Avoids things going off the rails.
 
 
+https://github.com/Z3Prover/z3/pull/5625/commits/ec792f64205a6aea5ab21d2859a632676726bedf user propagation of theories example
 

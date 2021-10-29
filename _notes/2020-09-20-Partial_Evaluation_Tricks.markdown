@@ -9,6 +9,18 @@ title: Partial Evaluation Tricks
 wordpress_id: 2677
 ---
 
+staging a relational interpreter - nada amin
+multilevel langage
+- annotate lambda and app by level
+or quasi quote
+manual online partial evaluation
+binding time analysis - automatic partial evaluation
+Pink - stage polymosphic metacircular evaluator
+"half-closure" from reynolds definitional interepters?
+seven programming pearls
+collpasing towers of interpeters
+stged-minikanren https://github.com/namin/staged-miniKanren https://namin.seas.harvard.edu/files/namin/files/staged-mk.pdf
+
 https://github.com/metaocaml/metaocaml-bibliography 
 
 https://wiki.hh.se/wg211/index.php/Main_Page program generation working group
