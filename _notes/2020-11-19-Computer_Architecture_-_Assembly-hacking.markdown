@@ -4,11 +4,44 @@ comments: true
 date: 2020-11-19 15:49:32+00:00
 layout: post
 link: https://www.philipzucker.com/?p=2995
-published: false
-slug: Computer Architecture - Assembly
-title: Computer Architecture - Assembly
+slug: Computer Architecture / Assembly
+title: Computer Architecture / Assembly
 wordpress_id: 2995
 ---
+
+
+
+### RISC V
+https://www.cs.cornell.edu/courses/cs3410/2019sp/riscv/interpreter/# nice little interpeter to play with
+
+
+
+```riscv
+# it's the sum of 1 to n
+addi a0, x0, 4
+addi t0, x0, 0
+addi t1, x0, 1
+loop:
+  add t0,a0,t0
+  sub a0, a0, t1
+  #jal x0, loop
+  bne a0, x0, loop
+```
+
+<https://web.eecs.utk.edu/~smarz1/courses/ece356/notes/assembly/> notes
+
+<https://github.com/jameslzhu/riscv-card/blob/master/riscv-card.pdf> nice cheatsheet of instructions, registers
+registers
+- a0 a1 are arguments nad returns values
+- t0-t are temporaries
+- x0 or zero is zero register
+- equivalent floating point just add f.
+- s0 .. saved resgiters
+
+instructions
+
+
+
 
 https://cs.lmu.edu/~ray/notes/gasexamples/ Seems like really good intro to assembly
 

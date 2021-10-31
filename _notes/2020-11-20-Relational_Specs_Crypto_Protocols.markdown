@@ -175,3 +175,4 @@ The abstraction theorem - is a kind of security theorem
   * https://github.com/cfsamson/book-green-threads-explained
   * https://pdos.csail.mit.edu/6.824/ mit dist sys course
 
+WHat's the deal with ivy
