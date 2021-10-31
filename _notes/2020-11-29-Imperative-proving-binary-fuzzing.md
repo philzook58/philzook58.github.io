@@ -1,4 +1,8 @@
 
+<https://dl.acm.org/doi/pdf/10.1145/3314221.3314601> instruction semantics for x86 in K
+<https://cs.stanford.edu/people/eschkufz/docs/pldi_16.pdf> Synthesiszing automatically learning semantics of x86
+
+
 
 The Hamming Book. Gilbert Strang book. Numerical analysis
 Geometrical algorithms
