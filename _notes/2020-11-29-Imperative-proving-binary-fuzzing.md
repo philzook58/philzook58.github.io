@@ -1,3 +1,10 @@
+---
+layout: post
+title: Imperative Proving
+---
+
+Maybe verifying a pipelined processor (how hard could it be amirite?!?!) would be a fun concurrency example to attempt int ivy or tla+ or whatever
+
 
 <https://dl.acm.org/doi/pdf/10.1145/3314221.3314601> instruction semantics for x86 in K
 <https://cs.stanford.edu/people/eschkufz/docs/pldi_16.pdf> Synthesiszing automatically learning semantics of x86
@@ -173,3 +180,20 @@ A good question is: what are interesting programs to prove?
 3. red black trees
 4. find
 
+### Fun old timey books. 
+If you go before 1980, a decent chunk of all books had assembly in mind.
+
+  * discpline of programming - djikstra https://seriouscomputerist.atariverse.com/media/pdf/book/Discipline%20of%20Programming.pdf
+  * Reynolds - The craft of programming
+  * Knuth - The Art of Computer Programming
+  * The science of programming - D Gries
+  * Pascal, wirth
+  * structured programming https://seriouscomputerist.atariverse.com/media/pdf/book/Structured%20Programming.pdf djikstra hoare
+  * Eric Hehner
+  * https://dl.acm.org/collections/classics ACM classic books
+  * lambda papers
+  * per brinch hansen
+  * https://en.wikipedia.org/wiki/List_of_important_publications_in_theoretical_computer_science#Formal_verification
+  * https://en.wikipedia.org/wiki/List_of_important_publications_in_computer_science
+  * http://www.mathmeth.com/read.shtml some welevant EQD notes. Derivation of alogrithms
+  * winskel 

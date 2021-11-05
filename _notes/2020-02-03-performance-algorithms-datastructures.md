@@ -3,6 +3,13 @@ layout: post
 title: Performance, Algorithms
 ---
 
+<https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html>
+<https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-optimization-manual.pdf> intel opimization manual
+
+<https://twitter.com/pervognsen/status/1455409607426207744?s=20> mimalloc- de moura, daan leijen, ben zorn
+<https://lobste.rs/s/4awecj/mimalloc_free_list_sharding_action>
+<https://github.com/microsoft/snmalloc/blob/c5b65d07b8079b22eec9f78bec197ea7a0fd15f2/difference.md>
+
 I feel like most algorithms and data structures are os ordinary they are kind of boring?
 
 
@@ -63,23 +70,25 @@ https://en.wikipedia.org/wiki/Program_optimization
 Bentley Writing Efficient Program
 
 
-https://news.ycombinator.com/item?id=28955461
-https://www.youtube.com/watch?v=1tEqsQ55-8I&ab_channel=MollyRocket
-https://www.youtube.com/watch?v=pgoetgxecw8&ab_channel=MollyRocket - refterm optimization talk. this is fascinating
+<https://news.ycombinator.com/item?id=28955461> - a rust optimization story
+<https://pvk.ca/Blog/2012/07/03/binary-search-star-eliminates-star-branch-mispredictions/> 
+<https://dirtyhandscoding.wordpress.com/2017/08/25/performance-comparison-linear-search-vs-binary-search/>
+<https://www.youtube.com/watch?v=1tEqsQ55-8I&ab_channel=MollyRocket> - handmade hero guy talkin about optimizations
+<https://www.youtube.com/watch?v=pgoetgxecw8&ab_channel=MollyRocket> - refterm optimization talk. this is fascinating
 
 1. optimization - measuring.
 2. non-pessimization - don't do unnecessary work
 3. fake optimziation - people just repeatin shit
 
 
-https://www.uops.info/
-https://uica.uops.info/ uica online demo gives info on what's hurtin ya. Cycle counts and stuff
+<https://www.uops.info/>
+<https://uica.uops.info/> uica online demo gives info on what's hurtin ya. Cycle counts and stuff
 microp_ops. Ports? Queue?
 DaY 112 of hnadmade hero. perf counter. simd. converting to simd. measuring port usage with iaca
 
-perf seems balla. Works on ocaml btw https://ocaml.org/learn/tutorials/performance_and_profiling.html
-https://www.brendangregg.com/perf.html
-https://www.youtube.com/watch?v=fhBHvsi0Ql0&ab_channel=USENIX - linux systems performance
+perf seems balla. Works on ocaml btw <https://ocaml.org/learn/tutorials/performance_and_profiling.html>
+<https://www.brendangregg.com/perf.html>
+<https://www.youtube.com/watch?v=fhBHvsi0Ql0&ab_channel=USENIX> - linux systems performance
 
 
 

@@ -170,6 +170,12 @@ https://asciinema.org/a/358996
 
 ### Bap.Std
 
+Bap.Std 
+
+BIL - Bap Instruction Language.
+http://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/index.html
+
+
 
 
 ## OCaml and Registries
@@ -222,6 +228,10 @@ We also don't want our planes and rockets crashing. This does not require malici
 - CFG recovery
 - Taint tracking
 - symbolic execution
+
+<https://github.com/analysis-tools-dev/dynamic-analysis> A list of tools
+https://analysis-tools.dev/
+
 
 ### Program Analysis
 What's the difference? Binaries are less structured than what you'll typically find talked about in program analysis literature.
@@ -682,6 +692,11 @@ universal value + registry of typeclass instances?
 
 
 #Primus
++ https://feliam.wordpress.com/2010/10/07/the-symbolic-maze/ solving a maze with symbolic execution
++ tabulating a function
++ a supercompiler?
++ taint tracking is like a cup game? Some myterious program swaps and does claculations on the entries. Which final entry came from your input? Taint tracking is like abstract interpetation with 100% path sensitvity. Concolic-ish. You can track what was possible along your exact path. Could i tag probabilities in any meaningful way on variables? I tfeels like probabilites tag the whole state, not pieces of it. 
+
 Primus is built in this extensible style.
 
 You can find them in the plugins directory

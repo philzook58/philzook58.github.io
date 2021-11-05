@@ -9,6 +9,55 @@ title: CTF stuff
 wordpress_id: 2960
 ---
 
+Gray Hat Hacking
+The Shellcoder's handbook
+Attacking network Protocols
+Implementing Effective Code Review
+
+<https://objective-see.com/blog/blog_0x64.html> 
+
+
+Hacking:
+http://langsec.org/papers/Bratus.pdf sergey weird machine paper
+smashing the stack for fun and profit - stacks are no longer executable
+return to libc https://en.wikipedia.org/wiki/Return-to-libc_attack - libc is very common and
+you can weave together libc calls. "Solar Designer"
+https://en.wikipedia.org/wiki/Return-to-libc_attack
+https://acmccs.github.io/papers/geometry-ccs07.pdf geometry of innocent flesh on the bone. ROP
+http://phrack.org/issues/61/6.html advanced doug lea malloc hacking
+https://github.com/sashs/Ropper
+https://github.com/sashs/filebytes
+http://www.capstone-engine.org/ - disassembler. converse of key
+blackhat
+defcon
+bluehat
+ccc
+https://en.wikipedia.org/wiki/Security_BSides bsides
+ctf
+project zero
+kpaersky blog https://usa.kaspersky.com/blog/
+spectre/meltdown
+mattermost gce8
+https://www.youtube.com/watch?v=b7urNgLPJiQ&ab_channel=PinkDraconian
+
+return oriented programming sounds like my backwards pass.
+Huh.
+
+
+
+#### Heap
+
+https://milianw.de/blog/heaptrack-a-heap-memory-profiler-for-linux.html
+valgrind massif
+perf-mem, valgrind massif, and heaptrack
+
+#### Digital forensics 
+
+- Volatility <https://www.volatilityfoundation.org/>
+- wireshark
+- sleuth kit?
+
+
 radare2, a binary analysis thingo. rax is useful for conversion of hex
 
 binary ninja
@@ -61,7 +110,7 @@ BOP - block oriented
 return 2 libc - a subset of rop?
 
 
-pwn.college
+#### pwn.college
 ryan chapman syscall 
 
 
