@@ -50,7 +50,30 @@ There is a default makefile that is included with every make invocation if you d
 ### CMake
 <https://learnxinyminutes.com/docs/cmake/>
 
+<https://www.youtube.com/watch?v=zOmUHM0sFOc&ab_channel=CyrillStachniss>
+
 
 # Loading 
 <https://news.ycombinator.com/item?id=29104841> <http://dbp-consulting.com/tutorials/debugging/linuxProgramStartup.html>
 
+# C++
+
+Cherno 
+Cyril Stachniss https://www.youtube.com/c/CyrillStachniss/videos
+
+
+Class vs struct
+Smart pointers
+new/delete ~ malloc + constructor caling
+static
+const
+virtual 
+interfaces - classes that are all virtual methods
+name mangling
+
+precompiled headers (pch)
+
+
+
+## Build Systems
+Shake

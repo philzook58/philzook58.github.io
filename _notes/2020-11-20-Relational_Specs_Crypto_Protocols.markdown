@@ -10,6 +10,10 @@ title: Crypto, Protocols, Relational Specs, Concurrency
 wordpress_id: 3009
 ---
 
+Noniterference and seperation logic can be thought of as buddies?
+Seperation is kind of a high variable low variable split  <https://link.springer.com/chapter/10.1007/978-3-319-89722-6_4>
+I guess you could use taint tracking to find a seperation logic violation
+
 Noninterference and information flow control
 
 ghost variables have a non interference property http://why3.lri.fr/ejcp-2016/ejcp16-slides.pdf
