@@ -3,6 +3,17 @@ layout: post
 title: Imperative Proving
 ---
 
+Imp stmt to stack machine
+Imp expr to stack machine
+
+Expr as state?
+Expr + Context as state. Ok sure.
+List stack as state
+Try just binary operator
+Try booleans rather than nats
+
+forall s1 : S1, s2 : S2, (p : s1 ~ s2), (R1 s1 s1') (R2 s2 s2') : s1' ~ s2'
+
 Maybe verifying a pipelined processor (how hard could it be amirite?!?!) would be a fun concurrency example to attempt int ivy or tla+ or whatever
 
 

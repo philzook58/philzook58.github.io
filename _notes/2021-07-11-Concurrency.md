@@ -7,6 +7,9 @@ title: Concurrency
 wordpress_id: 3009
 ---
 
+
+<https://news.ycombinator.com/item?id=29109156> what memory model should rust use
+
 John regehr thread https://twitter.com/johnregehr/status/1451355617583460355?s=20 Really good
 https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html  Is Parallel Programming Hard, And, If So, What Can You Do About It?
 https://deadlockempire.github.io/
