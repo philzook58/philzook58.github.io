@@ -9,6 +9,8 @@ title: CTF stuff
 wordpress_id: 2960
 ---
 
+<https://github.com/grimm-co/NotQuite0DayFriday> exploit examples
+
 Gray Hat Hacking
 The Shellcoder's handbook
 Attacking network Protocols

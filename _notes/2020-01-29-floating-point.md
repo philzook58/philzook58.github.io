@@ -2,6 +2,8 @@
 layout: post
 title: Floating Point
 ---
+<https://news.ycombinator.com/item?id=29201473> The dangers of fast-math flags. Herbie comments
+
 
 Herbie is super cool.
 1. you can just do rancom sampling to estimate errors, with extreme multiprecision accuracy and regular. Dynamic analysis in a sense?

@@ -9,6 +9,8 @@ title: Prolog
 wordpress_id: 1865
 ---
 
+<https://github.com/aprolog-lang/aprolog> alpha prolog. Nominal logic. What the heck is that again?
+
 old title: prolog, scheme,racket, lambdaprolog, What the Hell is LogicT / Guanxi notes
   Minikanren, Unification, Resolution
 
@@ -39,8 +41,8 @@ Mercury - mode declarations and type declarations. Allows reordering, but deals 
 BAP universal valures
 OCaml typeclasss system
 Oleg modellign typeclasses as prolog
-https://inbox.ocaml.org/caml-list/20190904152517.GA2014@Melchior.localnet/
-http://okmij.org/ftp/ML/index.html#trep
+<https://inbox.ocaml.org/caml-list/20190904152517.GA2014@Melchior.localnet/>
+<http://okmij.org/ftp/ML/index.html#trep>
 
 canonical structures and unification hints. Can we make a metaintepreter for this?
 
@@ -84,9 +86,9 @@ https://git.sr.ht/~sforman/Prolog-Junkyard/tree/master/miscellaneous/itc.pl inte
 https://www.metalevel.at/trs/ knuth bendix completion
 https://arxiv.org/abs/1706.00231 auto differentiating uysing constraint handking rules
 
-http://adam.chlipala.net/papers/MakamICFP18/MakamICFP18.pdf prototpying functional language using higher order logic programing makam
+<http://adam.chlipala.net/papers/MakamICFP18/MakamICFP18.pdf> prototpying functional language using higher order logic programing makam
 chlipala
-https://www.tweag.io/blog/2019-11-28-PCF-makam-spec/
+<https://www.tweag.io/blog/2019-11-28-PCF-makam-spec/>
 
 Egraphs in prolog
 Unification variables give native union find data strcuture

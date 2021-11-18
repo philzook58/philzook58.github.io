@@ -389,13 +389,7 @@ Way back at the beginning, the module namespace is ultimately under the hood a d
 packed_aexpr String.Map.t
 
 
-### Extensible Records
 
-https://discuss.ocaml.org/t/types-as-first-class-citizens-in-ocaml/2030/2
-https://github.com/janestreet/base/blob/master/src/type_equal.ml
-https://github.com/mirage/repr
-https://github.com/let-def/distwit
-https://github.com/samoht/depyt
 
 ### Universal Types, Existentials and Packing
 
@@ -458,7 +452,7 @@ let create_key name = name
 let put d k v -> String.Map.put d k (Pack v)
 let get d k -> let Pack x = String.Map.get d k in ? (* We have lost the connection between the original type and the typed key. *)  
 ```
-We coulkd maintain a table of all keys registered and only allow it to happen once in which case we're possibly dignified in using an unsafe cast, but who knows. These things can be subtle.
+We could maintain a table of all keys registered and only allow it to happen once in which case we're possibly dignified in using an unsafe cast, but who knows. These things can be subtle.
 
 ```ocaml
 let get d k -> let Pack x = String.Map.get d k in Obj.magic x
@@ -554,29 +548,6 @@ or
 
 
 
-### Extensible Functions
-Ref cell techniques let you do some funky looking stuff from the eyes of a pure functional programmer. There is a great deal in SICP using this technique and it is part of lisp tradition. If you close over a a single ref cell with a bunch of closures, this collection of closures becomes in essence a kind of object manipulating an internal protected state. One common use case for this is to implement a counter object, which is useful for generating fresh symbols (sometimes called a gensym).
-
-Extensible variants I suspect actually have a dynamic runtime effect. Declaring an extensible variant creates a runtime representation (a counter and perhaps a table) which gets incremented whenever you declare a new constructor. No it doesn't, unless the call goes into the runtime maybe? But `type foo += Gary` is a runtime effectful thing that does have code.
-Declaring an ordinary closed datatype allows everything to pretty much be done at compile time and a great deal is erased
-
-
-Anyhow
-
-```ocaml
-let extensible_function = ref (fun success fail -> fail ())
-let add_case g = let f = !extensible_function in
-                 extensible_function := fun success fail ->
-                  g success (fun () -> f success fail)
-
-```
-
-
-This is a linked list like lookup table. Not very efficient.
-We can instead use perhaps a hashtable or dictionary as our key access.
-
-
-http://okmij.org/ftp/ML/canonical.html#trep
 
 
 ###
@@ -695,7 +666,8 @@ universal value + registry of typeclass instances?
 + https://feliam.wordpress.com/2010/10/07/the-symbolic-maze/ solving a maze with symbolic execution
 + tabulating a function
 + a supercompiler?
-+ taint tracking is like a cup game? Some myterious program swaps and does claculations on the entries. Which final entry came from your input? Taint tracking is like abstract interpetation with 100% path sensitvity. Concolic-ish. You can track what was possible along your exact path. Could i tag probabilities in any meaningful way on variables? I tfeels like probabilites tag the whole state, not pieces of it. 
++ taint tracking is like a cup game? Some myterious program swaps and does claculations on the entries. Which final entry came from your input? Taint tracking is like abstract interpetation with 100% path sensitvity. Concolic-ish. You can track what was possible along your exact path. Could i tag probabilities in any meaningful way on variables? I tfeels like probabilites tag the whole state, not pieces of it. Partial 
++ Partial evaluation/binding time analysis - Mark one input as "runtime" tainted and another as "compile" time tainted.
 
 Primus is built in this extensible style.
 

@@ -1,4 +1,7 @@
-
+---
+layout: post
+title: C/C++
+---
 
 static keyword
 
@@ -77,3 +80,4 @@ precompiled headers (pch)
 
 ## Build Systems
 Shake
+https://www.microsoft.com/en-us/research/uploads/prod/2018/03/build-systems.pdf build systems a la carte

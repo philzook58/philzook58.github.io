@@ -1,3 +1,7 @@
+---
+layout: post
+title: Assembly
+---
 
 <https://learnxinyminutes.com/docs/mips/>
 

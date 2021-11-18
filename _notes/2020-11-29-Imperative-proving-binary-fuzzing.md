@@ -12,6 +12,9 @@ List stack as state
 Try just binary operator
 Try booleans rather than nats
 
+There is a single reflection step to a machine
+
+
 forall s1 : S1, s2 : S2, (p : s1 ~ s2), (R1 s1 s1') (R2 s2 s2') : s1' ~ s2'
 
 Maybe verifying a pipelined processor (how hard could it be amirite?!?!) would be a fun concurrency example to attempt int ivy or tla+ or whatever
