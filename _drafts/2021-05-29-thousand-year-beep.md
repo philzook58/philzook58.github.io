@@ -24,3 +24,6 @@ by desoldering the led on the qt py we could lower the power by quite a bit. I b
 
 The qt py has a built in rtc.
 
+
+Ben's blog notes
+<http://blog.benwiener.com/electronics/projects/programming/2021/10/15/beep.html>

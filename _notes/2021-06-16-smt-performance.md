@@ -3,6 +3,11 @@ layout: post
 title: SMT Solvers
 ---
 
+
+Idea: Convert Z3 DRAT to tactic script <https://github.com/Z3Prover/z3/discussions/5000> <https://github.com/Z3Prover/z3/discussions/4881>
+
+User propagated theories
+
 delta debugging  - https://ddsmt.readthedocs.io/en/master/
 
 https://twitter.com/RanjitJhala/status/1391074098441187328 - jhala asks for 

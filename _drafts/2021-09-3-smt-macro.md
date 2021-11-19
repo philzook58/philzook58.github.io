@@ -2,6 +2,8 @@
 Macros for SMTLib: MicroDafny
 
 
+
+
 SMTPP - A pre-processor for SMTlib2
 
 Smtlib2 is the standardized query and logical language for SMT solvers. It has a lisp-y prenex flavor. Here's an example from <https://www.philipzucker.com/z3-rise4fun/>
@@ -33,7 +35,12 @@ Many things you might think have to be macros can actually be written using othe
 - Presolve calls to other solvers
 - Collecting up extra facts to assert (like interval constraints on every use of `cosine` etc)
 - Macro expanded bounded quantification
-
+- Idea: Analgous to intervals or complex numbers, do extended reals <https://en.wikipedia.org/wiki/Extended_real_number_line> Using Reals + ADTs. Interesting because algerbaic operations become partial. Do as smt macro? P
+- Partial functions. If I want to use z3 systematically with partial functions what do I do. I guess Maybe values. At which point, perhaps monadic sugar becomes desirable `let*`. I guess I should look at other places macro sugar was nice.  Automatic deriving.  Alternative: Collect up "VC" somehow. (value, is_junk). Monadic discipline is still nice. It's kind of like Either R R, where Left means value good, Right means it is junk. [(value, is_junk)] is interesting. WWell, is there a point? This should be an if then else chain, with a final.
+ junk value.
+- list comprehensions?
+- Auto derive "gassed" versions of functions
+- Datalog
 
 
 The interesting angle here is that we can start with raw smtlib2 and work backwards, slowly adding more sugar on top of it. Because of this approach, the full spectrum of stmlib2 constructs will be available and never obscured.

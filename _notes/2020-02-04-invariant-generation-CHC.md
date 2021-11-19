@@ -9,6 +9,7 @@ higher order model checking? Kobayashi?
 There's some stuff here https://ericpony.github.io/z3py-tutorial/fixpoint-examples.htm that didn't register
 See the bottom
 
+<https://insights.sei.cmu.edu/blog/ghihorn-path-analysis-in-ghidra-using-smt-solvers/> ghihorn - using horn solver on ghidra pcode
 
 
 

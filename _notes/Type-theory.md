@@ -209,3 +209,10 @@ Isomorphisms
 - <https://counterexamples.org/title.html> Counterexamples in Type Systems. Really cool resources of problems that can show up in type systems
 - <https://github.com/FStarLang/FStar/issues/360> Examples that show paradoxes when using combinations of impredicative polymorphism + excluded middle + large elimination -- can only choose two <https://cstheory.stackexchange.com/questions/21836/why-does-coq-have-prop/21878#21878> Berardi's paradox
 <https://github.com/coq/coq/issues/9458> future of impredicative set
+
+## Books:
+- TAPL
+- Programming Language Foundations - Harper
+- Programming in Martin Lof Type Theory
+- Software Foundations
+- PLFA

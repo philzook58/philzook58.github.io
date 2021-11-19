@@ -9,6 +9,12 @@ title: Prolog
 wordpress_id: 1865
 ---
 
+See also:
+- Datalog
+- Constrained Horn Clauses
+
+<https://github.com/philzook58/lips-minikanren> trying to use lips sccheme for minikanren in browser
+
 <https://github.com/aprolog-lang/aprolog> alpha prolog. Nominal logic. What the heck is that again?
 
 old title: prolog, scheme,racket, lambdaprolog, What the Hell is LogicT / Guanxi notes

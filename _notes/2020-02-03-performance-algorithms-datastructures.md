@@ -3,6 +3,21 @@ layout: post
 title: Performance, Algorithms
 ---
 
+<https://twitter.com/lemire/status/1461181871841320962?s=20> Lemire converting integerrs to fix digit representations
+By considering data dependencies and using lookup tables take from 25ns to 2ns.
+
+
+See also
+- Computer Architecture
+- Assembly
+
+MIT optimization course <https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-172-performance-engineering-of-software-systems-fall-2018/>
+
+
+<https://news.ycombinator.com/item?id=29107147> <https://randomascii.wordpress.com/2012/12/29/the-surprising-subtleties-of-zeroing-a-register/> surprising subtleites of zeroing a register.
+
+<https://www.agner.org/optimize/> agner fog optimization manuals
+
 <https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html>
 <https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-optimization-manual.pdf> intel opimization manual
 
@@ -144,3 +159,4 @@ https://travisdowns.github.io/
 https://www.agner.org/optimize/
 https://www.real-logic.co.uk/
 https://groups.google.com/g/mechanical-sympathy
+
