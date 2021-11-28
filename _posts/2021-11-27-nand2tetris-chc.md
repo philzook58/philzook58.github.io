@@ -44,9 +44,9 @@ The is something very confusing compared with the prolog model given above. Spac
 
 This CHC methodology becomes particularly useful when you're dealing with low level code, which is unstructured (in the sense of structured programming).
 
-There is in some sense a hiearchy of partial evaluations you can do to the verficiation problem depending on how much you can analyze ahead of time. Since for example on the nand2tetris cpu, the program is stored in rom and is unchanging, we can remove the rom from the state and expand out the important lines of the program.
+There is in some sense a hiearchy of partial evaluations you can do to the verficiation problem depending on how much you can analyze ahead of time. Since for example on the nand2tetris cpu, the program is stored in rom and is unchanging, we can remove the rom from the state and expand out the important lines of the program. If we statically know certain control flow possibility or possible values, we can profitably do other "compile time" transformations on our logical formulae.
 
-The Nand2tetris course describes a very simple cpu. A fun thing to try is take the specification and interpret it into constrained horn clauses, and query Z3. This is a very simple way to build a verifier.
+The [Nand2tetris](https://www.nand2tetris.org/) course describes a very simple cpu. A fun thing to try is take the specification and interpret it into constrained horn clauses, and query Z3. This is a very simple way to build a verifier.
 
 ![](/assets/hack_spec.png)
 
@@ -358,7 +358,7 @@ if status == sat:
 
 This may not scale at all. These are both pretty simple programs.
 
-However it would be interesting to attempt to go as far as one can or build a model of the stack based virtual machine and show that the compilation is a "simulation".
+However it would be interesting to attempt to go as far as one can or build a model of the stack based virtual machine and show that the compilation is a "simulation". A form of relational verification.
 
 I am not feeling python very much anymore. I've lost touch with reality.
 
@@ -370,3 +370,6 @@ Other CHC verifiers of interest:
 - SeaHorn
 - JayHorn
 - GhiHorn
+
+There are obvious blocks we can handle. "Larger" scale CHC translation can be done if you have a Control flow graph. Verifying that the CFG lifted version is identical to the unlifted version is interesting and useful too. This is a form of control flow integrity.
+
