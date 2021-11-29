@@ -3,6 +3,8 @@ layout: post
 title: Imperative Proving
 ---
 
+<https://alastairreid.github.io/uses-for-isa-specs/> what can you do with an isa spec - alastair reid
+
 Imp stmt to stack machine
 Imp expr to stack machine
 
