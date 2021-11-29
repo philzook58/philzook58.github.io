@@ -364,7 +364,7 @@ I am not feeling python very much anymore. I've lost touch with reality.
 
 Compare and contrast with coq
 
-Try to help solver by partially giving invariants. Do this by replacing `Insn` with metalevel `Insn` that is uninterpeted anded with known invariants. Will Z3 accept this?
+Try to help solver by partially giving invariants. Do this by replacing `Insn` with metalevel `Insn` that is uninterpreted anded with known invariants. Will Z3 accept this?
 
 Other CHC verifiers of interest:
 - SeaHorn

@@ -3,6 +3,11 @@ layout: post
 title: Performance, Algorithms
 ---
 
+
+<https://twitter.com/nadavrot/status/1464364562409422852?s=20> memset and memcpy ooptimizations
+
+<https://twitter.com/PieCalculus/status/1464252793225678850?s=20> Go does not need a garbage collector. Compares and contrasts java GC with others. Claims Java poorly designed make high pressure on GC
+
 <https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html>
 <https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-optimization-manual.pdf> intel opimization manual
 
