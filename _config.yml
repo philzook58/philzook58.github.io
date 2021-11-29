@@ -19,7 +19,7 @@ email: philzook58@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
   Hot Leaves in a Cold Worlds. 
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https:/www.philipzucker.com" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://www.philipzucker.com" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: sandmouth
 github_username:  philzook58
 
