@@ -6,6 +6,9 @@ title: SMT Solvers
 
 Idea: Convert Z3 DRAT to tactic script <https://github.com/Z3Prover/z3/discussions/5000> <https://github.com/Z3Prover/z3/discussions/4881>
 
+Idea: Analgous to intervals or complex numbers, do extended reals <https://en.wikipedia.org/wiki/Extended_real_number_line> Using Reals + ADTs. Interesting because algerbaic operations become partial. Do as smt macro?
+
+
 User propagated theories
 
 delta debugging  - https://ddsmt.readthedocs.io/en/master/
@@ -57,3 +60,30 @@ Duplicate functions. Trigger on only one version. Avoids things going off the ra
 
 https://github.com/Z3Prover/z3/pull/5625/commits/ec792f64205a6aea5ab21d2859a632676726bedf user propagation of theories example
 
+
+
+
+
+
+How to get Z3 to return models with quantified statements.
+mbqi needs to saturate? epr
+Can I do it by explicitly gassing?
+
+Axiom schema
+
+
+
+# EPR
+"Bernays Schonfinkel"
+A decidable fragment of first order logic.
+It relies on there being no function symbols, it's similar to datalog in this sense.
+Also the only quantifiers allowed are exists, forall.
+Quantifier alternation also leads to a form of function symbols thanks for skolemization.
+There are more sophisticated variants which can have function symbols satisfying certain straitifcation conditions.
+
+
+The finite model property.
+
+<http://microsoft.github.io/ivy/decidability.html>
+<https://theory.stanford.edu/~nikolaj/programmingz3.html#sec-model-based-quantifier-instantiation>
+<https://arxiv.org/pdf/1710.07191.pdf>

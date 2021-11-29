@@ -242,11 +242,12 @@ ideas:
 - Verilator to ocaml bindings, compile coq interpeter and compare
 - Symbolic Executor
 - Datalog disassembler
+- Horn clause translation of hack
 
 
 <https://github.com/jopdorp/nand2tetris-verilog> Another implementation of nand2tetris cpu in verilog.
 <https://gitlab.com/x653/nand2tetris-fpga/> another implementation of nand2teris in verilog
-
+<https://misterfpga.org/viewtopic.php?t=28>
 
 - Bluespec is quite cool
 - Koika
