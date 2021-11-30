@@ -3,6 +3,43 @@ layout: post
 title: Differential Equations
 ---
 
+<script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
+<script type="text/javascript">
+    async function main(){
+        let pyodide = await loadPyodide({
+            indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/"
+        });
+        await pyodide.loadPackage("numpy");
+
+        var codedivs = document.getElementsByClassName("python");
+        for (var i = 0; i < codedivs.length; i++) {
+            let codediv = codedivs[i];
+            let code = codediv.innerHTML;
+            codediv.innerHTML = "";
+
+            let t = document.createElement("textarea");
+            t.innerHTML = code;
+            codediv.appendChild(t);
+
+            let b = document.createElement("Button");
+            b.innerHTML = "Run";
+            b.onclick = function(){
+                console.log(t.value);
+                pyodide.runPython(t.value);
+            }
+            codediv.appendChild(b);
+
+        /* ideas
+        Extract this into a javascript file?
+        Get plotting code working
+        get z3 working via pysmt and external smtlib
+        */
+        }
+    }
+    main();
+</script>
+
+
 Differential Equations are neat. They are the mathematical underpinning of a lot of physics.
 
 Newtonian Mechanics is to canonical instance of differential equations. This may be the mechanics of point particles, or of rigid bodies.
@@ -29,6 +66,12 @@ Where can this show up?
 - RC circuits. If you attach a resistor to a charged capaictor, the charge will leak through the resistor.
 - Particle Decay
 - Cooling & Heating.
+
+<div class="python">
+import numpy as np
+print(np.array([1,2,3]))
+</div>
+
 
 ## Forced Decay
 

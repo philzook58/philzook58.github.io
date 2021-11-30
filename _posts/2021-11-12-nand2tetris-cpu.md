@@ -3,6 +3,7 @@ author: Philip Zucker
 date: 2021-11-12
 layout: post
 title: "Simple Nand2Tetris Verilog CPU"
+description: A simple implementation of the Nand2Tetris cpu in Verilog. There is also an icarus verilog based simulator that can load Hack programs
 ---
 
 I feel like my standards of what is worthy of a blog post are creeping up. I don't like that.

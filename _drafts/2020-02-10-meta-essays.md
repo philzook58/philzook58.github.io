@@ -1,13 +1,22 @@
 
-## How to search for shit
+https://news.ycombinator.com/item?id=28953781 how to learn the asterisk method
+active learning
+- copy out. rote learning is good
+- gotta load stuff up to the brain
+- 
+
+## How to search for shit /  How to understand
+
 
 The power of magic words
 Reverse citations
 Dig down to a highly cited paper and dig up
 Look at common authors
-Read many things shallowly
+Read many things shallowly. 5 books at once. Keeps it fresh. You'll notice the important commonalities
 Keep a textfile open
 Write an explanation on your blog and get precious doots
+Break down, concretify and simplify to a ridiculous extent
+What homework would you assign? Do it. Understanding is in the hands.
 
 
 # Is a PhD Good

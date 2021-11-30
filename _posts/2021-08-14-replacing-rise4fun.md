@@ -7,6 +7,7 @@ tags:
   - z3
   - smt
   - wasm
+description: Replicating the Z3 Rise4Fun page using Webassembly / Wasm since the old one went down. Notes on how to do it and pushing for compiling to the web.
 ---
 
 Rise4Fun was a very cool demo page for projects at Microsoft Research. I think it was fantastic. But it may have finally [died](https://github.com/Z3Prover/z3/discussions/5473)

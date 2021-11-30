@@ -87,3 +87,12 @@ The finite model property.
 <http://microsoft.github.io/ivy/decidability.html>
 <https://theory.stanford.edu/~nikolaj/programmingz3.html#sec-model-based-quantifier-instantiation>
 <https://arxiv.org/pdf/1710.07191.pdf>
+
+
+Can be turned into equisatisfiable propositional formula by:
+1. Turn outer existential to free variable
+2. Turn inner forall into conjunction over all existential variable possibilities.
+
+<https://ethz.ch/content/dam/ethz/special-interest/infk/chair-program-method/pm/documents/Education/Courses/SS2017/Program%20Verification/04-Quantifiers.pdf>
+
+Herbrand universe saturation is sort of key. Can I achieve this with gas? I could artificially macroize sorts to do so.

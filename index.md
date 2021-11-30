@@ -4,4 +4,4 @@
 # See: https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 layout: home
 ---
-<div style="text-align:center"><img src="/assets/logo.png" /></div>
+<div style="text-align:center"><img src="/assets/logo.png" alt="Blog Logo"/></div>

@@ -1,10 +1,11 @@
 ---
-author: Philip Zucker
 date: 2021-11-27
 layout: post
 canonical_url: 'https://www.philipzucker.com/nand2tetris-chc/'
 title: "Verifying Nand2Tetris Assembly Programs with Constrained Horn Clauses"
 tags: python z3 smt
+image: /assets/hack_spec.png
+description: Using the constrained horn clause capabilities of the Z3 SMT solver in order to verify nand2tetris assembly programs. Done in a python embedded DSL.
 ---
 
 

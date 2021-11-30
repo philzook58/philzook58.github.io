@@ -14,10 +14,10 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: Hey There Buddo!
-tagline: A Blog by Philip Zucker
+tagline: Hot Leaves in a Cold Worlds.
 email: philzook58@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  Hot Leaves in a Cold Worlds. 
+  A blog about life, programming, math, logic, and physics.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://www.philipzucker.com" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: sandmouth
@@ -27,6 +27,10 @@ google_analytics: G-EBC4529QNG
 
 feed:
   tags: true
+
+author:
+  name: Philip Zucker
+  url: https://www.philipzucker.com
 
 logo: /assets/logo.png
 twitter:
@@ -56,10 +60,17 @@ permalink: /:title/
 #  - jekyll-seo-tag
 
 defaults:
-- scope:
+-
+  scope:
     path: "pynb"
   values:
     image: true
+-
+  scope:
+    path: ""
+  values:
+    image: /assets/logo.png
+
 
 collections:
   notes:

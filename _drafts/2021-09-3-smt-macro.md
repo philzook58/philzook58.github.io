@@ -28,7 +28,7 @@ Many things you might think have to be macros can actually be written using othe
 - less verbose type annotation requirements
 - bitvector mode to use operators like `+` instead of `bvadd`
 - a `calc` macro
-- structured proofs
+- structured proofs. deftheorem. define-axiom. define-schema. + calc mode possibly. This is simiilar to hilbert style proofs.
 - Auto defunctionalization / Combinatorization to support higher order functions (use smtlib3 syntax? <http://smtlib.cs.uiowa.edu/version3.shtml> )
 - A refinement type checker
 - symbolic differentiation operator
