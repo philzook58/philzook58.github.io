@@ -12,6 +12,8 @@ Tips:
 - write short permalinks
 - Use alt text on images
 - Use descriptive text on links instead of just "here"
+- give an image description to each post
+- add a 404.html page
 
 
 Tools:
@@ -20,3 +22,5 @@ Tools:
 - [Rich Results Testing Tool](https://search.google.com/test/rich-results)
 
 
+Links
+- [SEO Start Guide](https://developers.google.com/search/docs/beginner/seo-starter-guide)

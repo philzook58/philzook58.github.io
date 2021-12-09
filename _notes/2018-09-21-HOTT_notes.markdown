@@ -6,9 +6,17 @@ layout: post
 link: https://www.philipzucker.com/?p=1302
 published: false
 slug: HOTT notes
-title: HOTT notes
+title: HOTT
 wordpress_id: 1302
 ---
+
+[Escardo notes](https://www.cs.bham.ac.uk/~mhe/HoTT-UF-in-Agda-Lecture-Notes/)
+
+
+
+
+# Older
+
 https://epit2020cnrs.inria.fr/ spring school
 Type/Space        A type
 Elekemntn/Point   t:A

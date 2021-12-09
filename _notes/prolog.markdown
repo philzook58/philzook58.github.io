@@ -13,6 +13,12 @@ See also:
 - Datalog
 - Constrained Horn Clauses
 
+
+### CHR
+
+### 
+
+
 <https://github.com/philzook58/lips-minikanren> trying to use lips sccheme for minikanren in browser
 
 <https://github.com/aprolog-lang/aprolog> alpha prolog. Nominal logic. What the heck is that again?

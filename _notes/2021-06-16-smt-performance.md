@@ -96,3 +96,8 @@ Can be turned into equisatisfiable propositional formula by:
 <https://ethz.ch/content/dam/ethz/special-interest/infk/chair-program-method/pm/documents/Education/Courses/SS2017/Program%20Verification/04-Quantifiers.pdf>
 
 Herbrand universe saturation is sort of key. Can I achieve this with gas? I could artificially macroize sorts to do so.
+
+
+[interestting tidbit](https://stackoverflow.com/questions/24062292/most-efficient-way-to-represent-memory-buffers-in-z3) suggests not using array initialization using stores. Instead element by element. Also extensionality axiom for arrays can be turned off
+
+https://stackoverflow.com/questions/28149863/why-is-e-matching-for-conjunctions-sensitive-to-order-case-splitting-strategy

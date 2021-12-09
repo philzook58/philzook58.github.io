@@ -216,3 +216,8 @@ Isomorphisms
 - Programming in Martin Lof Type Theory
 - Software Foundations
 - PLFA
+
+# System T
+- [Harper Class notes](https://www.andrew.cmu.edu/course/15-312/recitations/rec3-notes.pdf)
+- [Girard Proofs and Types](http://www.paultaylor.eu/stable/prot.pdf)
+- <https://gregorulm.com/godels-system-t-in-agda/>
