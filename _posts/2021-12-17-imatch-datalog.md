@@ -2,7 +2,7 @@
 date: 2021-12-17
 layout: post
 title: "Instruction Matching with Souffle Datalog"
-tags: datalog
+tags: datalog compiler
 description: I use Souffle datalog to find patterns in a toy compiler IR. This also shows how to do graph pattern matching using datalog/sql 
 ---
 
@@ -31,6 +31,8 @@ What about the ordering of statements in a block? Actually, The ordering of the 
 Filling the initial database looks a bit like writing LLVM IR. The `.` of datalog is a bit like a statement ending `;`. You have to specify what block every statement is in with an explicit column in the statement table rather than declaring it at the top of the block like in LLVM IR.
 
 Patterns can be specified as datalog clauses which fill out tables of every possible match. This is not a recursive query, so you could implement this in bog standard sql too if you'd like. You can dump all the matches as the entries of these tables and then ship them off to the constraint solver.
+
+This is all a bit verbose. It would probably be better to generate this datalog from a more concise dsl of some kind.
 
 ```
 .type var <: symbol
