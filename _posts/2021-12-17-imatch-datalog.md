@@ -3,7 +3,7 @@ date: 2021-12-17
 layout: post
 title: "Instruction Matching with Souffle Datalog"
 tags: datalog compiler
-description: I use Souffle datalog to find patterns in a toy compiler IR. This also shows how to do graph pattern matching using datalog/sql 
+description: I use Souffle datalog to find patterns in a toy compiler IR. This also shows how to do graph pattern matching using datalog or sql 
 ---
 
 I've been thinking about instruction selection and datalog a lot lately.
