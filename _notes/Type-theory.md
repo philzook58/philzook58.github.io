@@ -221,3 +221,57 @@ Isomorphisms
 - [Harper Class notes](https://www.andrew.cmu.edu/course/15-312/recitations/rec3-notes.pdf)
 - [Girard Proofs and Types](http://www.paultaylor.eu/stable/prot.pdf)
 - <https://gregorulm.com/godels-system-t-in-agda/>
+- [Avigad Feferman Dialectica](https://www.andrew.cmu.edu/user/avigad/Papers/dialect.pdf)
+
+"Quantifier free theory of functionals of finite type"
+
+# Logical Relations
+- [History of programming course](https://felleisen.org/matthias/7480-s21/22.pdf) <https://felleisen.org/matthias/7480-s21/lectures.html> Mentions Amal thesis as being good
+- [Intro to logical relations](https://www.cs.uoregon.edu/research/summerschool/summer16/notes/AhmedLR.pdf)
+
+Tait proved strong normalization using them 1967.
+
+Parametricity is supposedly an example also
+
+# Realizability
+
+
+
+[Cody's suggested book TOC](https://twitter.com/codydroux/status/1470121974655500293?s=20)
+Extensional vs Intensional models?
+Chapter 1: The type theory and its variants:
+1. The CIC with universes
+2. Recursors vs guarded fixpoints
+3. Predicative variant
+4. Untyped conversion
+5. Some additional conversion rules
+6. Extensionality principles
+7. Anti-extensionality principles
+8. Coinduction
+Chapter 2: Theorems about syntax
+1. Substitution, weakening
+2. Well-sortedness
+3. Progress and preservation
+4. Uniqueness of types(?)
+5. Properties of normal forms
+Chapter 3: Extensional models
+1. The not-so-simple set theoretic interpretation
+2. Models of sets in types
+3. The effective topos interpretation
+4. The groupoid interpretation
+5. Consistency implications
+Chapter 4: Intensional models
+1. Realizability interpretations
+2. The Lambda-set model
+3. The normalization proof
+5. Consistency implications
+Chapter 5: Inconsistent combinations of rules
+1. Failures of subject reduction
+2. Failures of termination *alone*
+3. Impredicative inconsistencies
+4. Guard condition and inductive type issues
+5. Other universe issues
+
+
+[smalltt](https://github.com/AndrasKovacs/smalltt) a demo for high performance type theory elaboration. Really good readme too
+[elboration seminar](https://www.youtube.com/playlist?list=PL2ZpyLROj5FOt99f_KCxARvd1hDqKns5b)

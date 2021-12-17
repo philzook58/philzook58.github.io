@@ -15,9 +15,11 @@ See also:
 
 
 ### CHR
+Constraint handling rules
 
-### 
 
+### Stuff
+<https://github.com/Anniepoo> - Annie ogborn has some cool seeming tutorials
 
 <https://github.com/philzook58/lips-minikanren> trying to use lips sccheme for minikanren in browser
 

@@ -8,6 +8,23 @@ slug: Partial Evaluation Tricks
 title: Partial Evaluation Tricks
 wordpress_id: 2677
 ---
+[scheme bibliogrphy](https://github.com/schemedoc/bibliography/blob/master/page10.md)
+
+
+[Memory layout and staging part 1: type-passing polymorphism, two-level type theory introduction Kovacs](https://www.youtube.com/watch?v=OmNqXP9Hp_A&ab_channel=Andr%C3%A1sKov%C3%A1cs)
+
+
+https://github.com/fpottier/metaocaml-hello-world huh. Running metaocaml through dune is more involed than I realized
+https://github.com/fpottier/loop - extracting loops form coq no axioms
+If I wanted to do a picture perfect strymonas copy for example.
+
+"Coq as a Metaprogramming Framework"
+
+
+
+Sam's parsers https://dl.acm.org/doi/10.1145/3453483.3454053  https://drops.dagstuhl.de/opus/volltexte/2019/11079/pdf/LIPIcs-ITP-2019-24.pdf  Costar and vermillion
+https://github.com/slasser/vermillion
+
 
 staging a relational interpreter - nada amin
 multilevel langage

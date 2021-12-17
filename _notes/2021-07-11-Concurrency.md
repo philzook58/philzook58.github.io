@@ -7,7 +7,7 @@ title: Concurrency
 wordpress_id: 3009
 ---
 
-
+<https://www.youtube.com/watch?v=N07tM7xWF1U&ab_channel=CppCon> abusing your memory model for fun and profit
 <https://news.ycombinator.com/item?id=29109156> what memory model should rust use
 
 John regehr thread https://twitter.com/johnregehr/status/1451355617583460355?s=20 Really good

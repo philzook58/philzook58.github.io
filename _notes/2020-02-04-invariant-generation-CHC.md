@@ -3,6 +3,11 @@ layout: post
 title: Invariants - Constrained Horn Clauses
 ---
 
+
+
+
+<https://github.com/Z3Prover/z3/discussions/5093> Interpolants with CHCs and List. Using List to represent a stack. Seems reasonable.. Lists of questionable support.
+
 Consider using sexp macro expansion to chc.
 
 higher order model checking? Kobayashi?
@@ -11,9 +16,15 @@ See the bottom
 
 <https://insights.sei.cmu.edu/blog/ghihorn-path-analysis-in-ghidra-using-smt-solvers/> ghihorn - using horn solver on ghidra pcode
 
+(https://www.youtube.com/watch?v=kbtnye_q3PA&t=677s&ab_channel=VSS-IARCS)
 
+[Constrained Horn Clauses: Z3 has kind of a prolog in it](https://www.youtube.com/watch?v=kbtnye_q3PA&t=677s&ab_channel=VSS-IARCS)
 
-Constrained Horn Clauses: Z3 has kind of a prolog in it
+[Maurizio Proietti: Removing Algebraic Data Types from Constrained Horn Clauses… (IJCAR A)](https://www.youtube.com/watch?v=LUR_F8m7nnI&ab_channel=IJCAR-FSCD2020)
+adtrem  - interestintg Program trasnformations from prolog can be used on CHC to remove or deforest annoying structures. mentions a CVC4+induction mode
+
+[rusthorn](https://github.com/hopv/rust-horn) +holce?
+[Towards Automatic Verification of Unsafe Rust with Constrained Horn Solvers](https://www.youtube.com/watch?v=yJQZ7sG8xSM&ab_channel=Rust)
 
 
 Horn clauses are a logical view on the form of programs allowed in prolog programs. They can explained in a couple different ways. <https://www.youtube.com/watch?v=hgw59_HBU2A>
@@ -50,7 +61,7 @@ Z3 has a separate interface you can use to define prolog like rules, or you can 
 
 I rather like the perspective from Miller and Nadathur where they describe a prolog query as intuitinistic proof search. A query `p(X)` creates an executions that corresponds to a proof of `exists x. p(x)`
 
-However prolog is usually considered in a background of classical logic, and Z3 certainly is a classical logic engine. A successful query is a proof of unsat by adding `(not p)` or equivalently `(=> p false)` from the perspective of the sat solver. It is trying to backchain a proof of `false` or forward chain finding `p` to be true and then immediately finding false. The resolution proof of false is the analog of 
+However prolog is usually considered in a background of classical logic, and Z3 certainly is a classical logic engine. A successful query is a proof of unsat by adding `(not p)` or equivalently `(=> p false)` from the perspective of the sat solver. It is trying to backchain a proof of `false` or forward chain finding `p` to be true and then immediately finding false. The resolution proof of false is the analog of <https://www.javatpoint.com/ai-resolution-in-first-order-logic> 
 The production of learned clauses is a form of resolution proof. The DRAT format records a trace of the SAT execution. It records the clauses you need to resolve together to make lemma clauses eventually leading to a contradiction.
 Classically, if you want to prove `p`, a uniform way of doing so is to add `not p` as an assumption and try to prove false.
 

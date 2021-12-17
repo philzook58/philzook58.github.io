@@ -53,3 +53,8 @@ instructions
 
 example risc5 programs. sort, search. vector matrix mult, string copy.
 https://marz.utk.edu/my-courses/cosc230/book/example-risc-v-assembly-programs/
+
+  * [https://www.chiark.greenend.org.uk/~sgtatham/coroutines.html](https://www.chiark.greenend.org.uk/~sgtatham/coroutines.html)
+  * https://en.wikibooks.org/wiki/X86_Assembly
+  * https://en.wikibooks.org/wiki/Embedded_Systems
+  * https://www.ic.unicamp.br/~pannain/mc404/aulas/pdfs/Art%20Of%20Intel%20x86%20Assembly.pdf Art of Assembly DOS version. Good stuff in here. Some ways of implementing function calls I'd never considered

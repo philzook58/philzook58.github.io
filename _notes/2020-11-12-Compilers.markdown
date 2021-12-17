@@ -10,20 +10,21 @@ title: Compilers
 wordpress_id: 2913
 ---
 
+<https://jonathan2251.github.io/lbd/index.html>  Tutorial: Creating an LLVM Backend for the Cpu0 Architecturehttps://danielkeep.github.io/tlborm/book/README.html
+
 <https://lowlevelbits.org/how-to-learn-compilers-llvm-edition/> - interesting links <https://twitter.com/1101_debian/status/1456346324794806274?s=20>
 <https://news.ycombinator.com/item?id=29112482> more links
 <https://www.youtube.com/watch?v=m8G_S5LwlTo&ab_channel=LLVM> LLVM IR tutorial
-
 <cs.au.dk/~amoeller/spa> static program analysis
 
 modules - global symbols, function declaration, function definitions, target information
-
 
 
 <https://www.llvm.org/docs/ProgrammersManual.html>
 <https://mukulrathi.com/create-your-own-programming-language/llvm-ir-cpp-api-tutorial/>
 
 
+<https://gist.github.com/MattPD/00573ee14bf85ccac6bed3c0678ddbef> program analysis resources. Big long list.
 
 http://ssabook.gforge.inria.fr/latest/book.pdf SSA bookv
 

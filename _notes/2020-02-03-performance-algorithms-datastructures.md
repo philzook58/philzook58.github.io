@@ -3,6 +3,23 @@ layout: post
 title: Performance, Algorithms
 ---
 
+## Easyperf
+Performance matters, it unlocks new applications, important for business
+python -> avx extensions: x60,000 in one example
+Measurement is really important and hard.
+CPU can overclock for a little bit. Try to control the environment
+
+## Agner Fog
+###  manual 1
+Reduce data dependencies
+a[i++] may be faster than a[++i] because of a data dependency reduction
+bool in C++ outputs 0/1 but may have come from a source that didn't. This means it needs branching code for simple satuff
+short circuiting && ||, try to short circuit early
+
+
+
+## Stuff
+
 <https://twitter.com/lemire/status/1461181871841320962?s=20> Lemire converting integerrs to fix digit representations
 By considering data dependencies and using lookup tables take from 25ns to 2ns.
 

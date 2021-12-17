@@ -421,3 +421,7 @@ Types are things that can be attached to terms. Terms are expressions
 Process calculi are some kind of terms.
 https://homepages.inf.ed.ac.uk/wadler/papers/propositions-as-sessions/propositions-as-sessions.pdf
 
+tactics are perhaps another operational interpetation of inference rules
+https://hackage.haskell.org/package/refinery
+https://reasonablypolymorphic.com/blog/towards-tactics/
+https://www.youtube.com/watch?v=S0HvfXq3454&ab_channel=Z%C3%BCrichFriendsofHaskell

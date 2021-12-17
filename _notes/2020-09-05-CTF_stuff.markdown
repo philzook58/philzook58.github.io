@@ -9,6 +9,8 @@ title: CTF stuff
 wordpress_id: 2960
 ---
 
+[relative disassembler performance](https://twitter.com/richinseattle/status/1468418790006267910?s=20)
+
 <https://github.com/grimm-co/NotQuite0DayFriday> exploit examples
 
 Gray Hat Hacking
@@ -39,7 +41,6 @@ ctf
 project zero
 kpaersky blog https://usa.kaspersky.com/blog/
 spectre/meltdown
-mattermost gce8
 https://www.youtube.com/watch?v=b7urNgLPJiQ&ab_channel=PinkDraconian
 
 return oriented programming sounds like my backwards pass.

@@ -11,7 +11,7 @@ wordpress_id: 1302
 ---
 
 [Escardo notes](https://www.cs.bham.ac.uk/~mhe/HoTT-UF-in-Agda-Lecture-Notes/)
-
+[The HoTT game](https://thehottgameguide.readthedocs.io/en/latest/getting-started/index.html)
 
 
 

@@ -9,6 +9,18 @@ slug: Continuations, Implementing Functional Languages
 title: Continuations, Implementing Functional Languages
 wordpress_id: 2843
 ---
+
+<http://t3x.org/klisp/klsys/index.html> KLSYS a kilolisp systems - bytecode compiler etc of lisp 2000 lines C, 3000 lines lisp
+<http://t3x.org/index.html> Also lots of books: lisp from nothing, lisp system implementation
+
+
+<http://www.iro.umontreal.ca/~feeley/papers/YvonFeeleyVMIL21.pdf> a msall scheme vm compiler and repl in 4k
+<https://github.com/udem-dlteam/ribbit>
+<http://www.iro.umontreal.ca/~feeley/> Marc Feeley
+
+
+<https://arxiv.org/pdf/1805.08842.pdf> compiling with continuations and LLVM
+
 https://www.cs.princeton.edu/~appel/papers/safe-closure.pdf
 closure converision is safe for space- Appel paper in coq about closures
 

@@ -2,7 +2,17 @@
 layout: post
 title: Floating Point
 ---
+
+
+[Fixed point smtlib endoding pysmt](https://www.youtube.com/watch?v=sny9X77ZjTQ&t=1224s)
+
+[john harrison](https://www.youtube.com/watch?v=2F3tQL-SmgI) p-adic and floats are similar? msb vs lsb? 
+
+harrison book - Proving About Real Numbers
+Boldo Melquiond book - computer arithemtic and formal proofs
+
 <https://news.ycombinator.com/item?id=29201473> The dangers of fast-math flags. Herbie comments
+ocaml crlibm <https://github.com/Chris00/ocaml-crlibm>
 
 
 Herbie is super cool.
