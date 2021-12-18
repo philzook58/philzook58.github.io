@@ -108,7 +108,7 @@ Many methods can be built on the assumption that the result can be approximated 
 For "short times" $t$ is a small parameter and it is reasonable to expect you can approximate the solution well
 
 # Perturbation Methods
-
+[Numerical parameter continuation](https://github.com/nschloe/pacopy)
 
 
 
@@ -123,13 +123,15 @@ Finding fixed points is a question that is much easier than solving a differenti
 
 ## Matrix "Decay"
 
-$\frac{}
+$\frac{}$
 
 ## Control Problems
 
 ### LQR
 
 ### Inverse Problems?
+
+## DFT, Fourier Series, Fourier Transform
 
 
 
@@ -189,6 +191,15 @@ $ \phi(0) = a$
 $ \phi(1) = b$
 
 ## Particle in a Box
+
+## Periodic Systems and Bands
+A periodic system is separable into it's periodic and cell parts.
+$H = I \otimes H_1 - C \otimes H_2 - C^{-1} \otimes H_3 $
+
+
+Crystal momentum.
+
+
 
 ## Method of Matching coefficients
 
