@@ -1,3 +1,10 @@
+Graph matching in the list monad style.
+Brute force with pruning, just like everythign else.
+I had the suggestion of graph matching via SAT solver. This is not as ridiculous as I first though.
+A match is a relation between vertices and edges. V^2 + E^2 variables. 
+We can perhaps suppress some of the variables (in exchange for clause complication)
+For every vertex in pattern,
+a_{vv'} =>
 
 
 You can pattern match over trees.
