@@ -7,15 +7,15 @@ description: I use Souffle datalog to perform egraph like rewriting. It's cute.
 ---
 
 
-Rewriting using equations is a compelling way to do a expression simplification, symbolic calculations, compiler optimizations. Egraphs are a data structure that keeps around all the possible terms instead of destructively rewriting them.
+Rewriting using equations is a compelling way to do a expression simplification, symbolic calculations, compiler optimizations. Egraphs are a data structure that keeps around all the possible equivalent terms instead of destructively rewriting them.
 
-I previously wrote a [blog post](https://www.philipzucker.com/egraph-datalog/) sketchily describing how to encode some of the steps (ematching and congruence closure) in egraph rewriting using [Souffle datalog](https://souffle-lang.github.io/). The intention was to compile a nicer high level language (which became [egglog](http://www.philipzucker.com/egglog/) Give it a try in the browser! It's neat!) to these pieces via flattening of expressions mostly and insertion of indirections to eclass id.
+I previously wrote a [blog post](https://www.philipzucker.com/egraph-datalog/) sketchily describing how to encode some of the steps (ematching and congruence closure) in egraph rewriting using [Souffle datalog](https://souffle-lang.github.io/). The intention was to compile a nicer high level language (which became [egglog](http://www.philipzucker.com/egglog/). Give it a try in the browser! It's neat!) to these pieces via flattening of expressions mostly and insertion of indirections to eclass id.
 
-I abandoned using souffle at a certain point because I realized it was unlikely to beat [egg](https://egraphs-good.github.io/) at it's own game, and it turned out actually doing the encoding I described before was not that clarifying or pleasant. A big issue is the stratification requirements of datalog (which maybe souffle let's you turn off?) and the reliance on the gensym counter. I was tying myself in knots trying to macro expand into stages of ematching and congruence closure. It sucked.
+I abandoned using souffle for egglog at a certain point because I realized it was unlikely to beat [egg](https://egraphs-good.github.io/) at it's own game, and it turned out actually doing the encoding I described before was not that clarifying or pleasant. A big issue is the stratification requirements of datalog (which maybe souffle let's you turn off?) and my reliance on the gensym counter. I was tying myself in knots trying to macro expand into stages of ematching and congruence closure. It sucked.
 
 I have since come to understand more features of souffle that are not stock datalog. One such powerful feature is [algebraic data types](https://souffle-lang.github.io/types#algebraic-data-types-adt). Yes. Souffle datalog already has tree data structures available.
 
-A simplified variant of egglog is what I call hashlog. It is still a bottom up datalog-like evaluation, but instead of being backed by an egraph, you can be backed by a hash cons data structure.
+A simplified variant of egglog is what I like to call "hashlog". It is still a bottom up datalog-like evaluation, but instead of being backed by an egraph, you can be backed by a hash cons data structure.
 
 My understand of the backing data structure of souffle ADTs make souffle already a hashlog. I think that ADTs are flattened into tables with unique ids for each node in the ADT.
 
@@ -181,3 +181,5 @@ Perhaps if the developers of souffle are interested in such things, they could f
 I note that the souffle authors have a [similar example](https://github.com/souffle-lang/souffle/blob/master/tests/example/rewrite/rewrite.dl) to the above in their test folder 
 
 How useful might magic transforms be for proving purposes?
+
+You can have (and must have) different `eq` relations if you have multiple ADTs you've defined. This is good and bad.
