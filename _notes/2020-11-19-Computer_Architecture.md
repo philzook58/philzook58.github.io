@@ -34,12 +34,22 @@ reg-mem
 
 
 ## pipelining
+Like car assembly line
 Make processing instructions deep. Different stages. You need to stall the pipeline sometimes
 Better throughput, worse latency
+Appendix C
+classic 5 stage [RISC pipline](https://en.wikipedia.org/wiki/Classic_RISC_pipeline)
+- Instruction fetch
+- instruction decode
+- execute
+- Memory
+- Write
+
 
 ## [Hazards](https://en.wikipedia.org/wiki/Hazard_(computer_architecture))
+structural - if only have so many units that do a certain thing
 Data
-interrupts are an interesting one you can forget about, because they are so implciit
+interrupts are an interesting one you can forget about, because they are so implicit
 
 Control hazards
 [Branch prediction](https://en.wikipedia.org/wiki/Branch_predictor)
@@ -52,17 +62,72 @@ Parallelism is decided at runtime. Check for data dependencies
 
 ## Out of order execution
 [Scoreboard](https://en.wikipedia.org/wiki/Scoreboarding)
-
+Is this where the idea of register file really comes into play?
+To remember dependencies
 
 ## [VLIW](https://en.wikipedia.org/wiki/Very_long_instruction_word)
 pushes scheduling to compile time. Removes lots of complicated scheduling circuitt
-Software pipelining vs Loop unrolling
+[Software pipelining](https://en.wikipedia.org/wiki/Software_pipelining) vs Loop unrolling. Sortware pipelining removes the loop head? No, software pipelining reorders the statements perhaps after a loop unroll to give dependencies space. We can also sort of reorganize the association of loop variable to statements 
+
 Trace scheduling 
 
 equal scheduling model - when does operation finish? Exactly at its latency
-less-equal scheduling
+less-equal scheduling - can't pack something in that less than windoww anymore. The looawe the spec, the less ahead of time reeasonig we can do
 
-# EPIC 
+compressed instructions
+
+[predication](https://en.wikipedia.org/wiki/Predication_(computer_architecture))
+partial predication - Conditional move instructions for example
+full predication
+avoid small chunks of branched code
+When is computing both sides of a branch worth it? balanced or longest is frequently executed
+The `it` instructions in arm
+
+
+ALAT
+code hammock
+
+appendix H. 
+Dependency analysis. The indices are 
+[Loop dependence analysis](https://en.wikipedia.org/wiki/Loop_dependence_analysis)
+I wonder if this is what llvm wants presburger for
+True dependence - read after write
+antidependance - write after read
+output dependence- write after write
+
+Use z3 for analysis
+
+loop carried dependence
+For going across loops we need to know the order. 
+i <= i' dependence
+
+antidependeance
+
+### [branch prediction](https://en.wikipedia.org/wiki/Branch_predictor)
+static prediction 0 Coin toss or just assuming fallthrough may work 50% of time
+Alternative to delay slots. 2 delay slots can be hard to fill
+Backwards jumps occur commonly in loops. More commonly taken than not taken
+Hint flags in instructions - can be profiled to make better. Maybe %80 accuracy
+
+1-bit predictor. did you most recently jump or not
+n-bit history predictor - keep table
+table based on jump address
+Predictor is trained. A table is built
+Time adn spatial correlation
+Combinding methods - boosting. gets you to ~99% which you need for deep pipelines
+
+predicting address of indirect jumps
+
+EPIC
+
+# Cache
+associative cache
+cache coherence
+victim cache
+write buffer
+multi level cache
+prefetching
+
 
 # SMT - simultaneous multi threading
 Intel hyperthreading

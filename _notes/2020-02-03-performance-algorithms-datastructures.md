@@ -3,11 +3,21 @@ layout: post
 title: Performance, Algorithms
 ---
 
+See Also:
+- compilers
+- computer architecture
+
 ## Easyperf
 Performance matters, it unlocks new applications, important for business
 python -> avx extensions: x60,000 in one example
 Measurement is really important and hard.
 CPU can overclock for a little bit. Try to control the environment
+
+Use statistical tests to determine if real change. student t for example
+Plot your benchmark data. Bimodal? Two different behaviors are happening
+microbenchmarks: be careful. Is it inlining a bunch of stuff? Anything except your exact final application and environment is a proxy. That the proxy at all represents the real behavior is fishy. Never forget that.
+System clock and system counters.
+
 
 ## Agner Fog
 ###  manual 1
@@ -19,6 +29,8 @@ short circuiting && ||, try to short circuit early
 
 
 ## Stuff
+
+[List of interesting optimizers](https://en.wikipedia.org/wiki/Optimizing_compiler) - These are compiler optimizations, so hopefully your compiler does them for you, but maybe it doesn't and maybe 
 
 <https://twitter.com/lemire/status/1461181871841320962?s=20> Lemire converting integerrs to fix digit representations
 By considering data dependencies and using lookup tables take from 25ns to 2ns.
