@@ -156,3 +156,9 @@ equations = diagrams.
 
 history of move semantics
 ACM thesis award for hybrid systems
+
+
+Verifying a mathemtical object obeys axioms
+vs using axioms to prove some other property
+Finite categories
+

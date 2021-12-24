@@ -10,6 +10,17 @@ title: Compilers
 wordpress_id: 2913
 ---
 
+[Loop invariant code motion](https://en.wikipedia.org/wiki/Loop-invariant_code_motion) - aka hoisting. Move stuff that doesn't change out of the loop
+
+[instruction level parallelism](https://link.springer.com/book/10.1007/978-1-4899-7797-7) Alex Aiken Utpal Banerjee Arun Kejariwal Alexandru Nicolau
+
+Reassociate to lessen tree height - less dependencies
+Expand expressions with care - less dependencies
+
+[Polyhedral model](https://en.wikipedia.org/wiki/Polytope_model)
+[Foundations of Fine Grain Parallelism](https://www.cs.colostate.edu/~cs560/Fall2015/). Recurrence equations. Analyze them
+[granulairty](https://en.wikipedia.org/wiki/Granularity_(parallel_computing)) 
+
 <https://jonathan2251.github.io/lbd/index.html>  Tutorial: Creating an LLVM Backend for the Cpu0 Architecturehttps://danielkeep.github.io/tlborm/book/README.html
 
 <https://lowlevelbits.org/how-to-learn-compilers-llvm-edition/> - interesting links <https://twitter.com/1101_debian/status/1456346324794806274?s=20>

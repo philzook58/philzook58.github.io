@@ -183,3 +183,5 @@ I note that the souffle authors have a [similar example](https://github.com/souf
 How useful might magic transforms be for proving purposes?
 
 You can have (and must have) different `eq` relations if you have multiple ADTs you've defined. This is good and bad.
+
+Termification could fairly easily be removed at compile time. You only need termification for initialization and for any rewrite rule that constructs new compound terms.

@@ -4,7 +4,9 @@ title: Invariants - Constrained Horn Clauses
 ---
 
 
+Forward vs backwards chaining. One could also consider a datalog like execution model.
 
+Linear logic and CHC. Perhaps a more convenient language for frames.
 
 <https://github.com/Z3Prover/z3/discussions/5093> Interpolants with CHCs and List. Using List to represent a stack. Seems reasonable.. Lists of questionable support.
 

@@ -9,6 +9,12 @@ title: CTF stuff
 wordpress_id: 2960
 ---
 
+[live overflow youtube](https://www.youtube.com/watch?v=iyAyN3GFM7A)
+[](https://guyinatuxedo.github.io/00-intro/index.html)
+[exploit education](https://exploit.education/)
+[rop emporium](https://ropemporium.com/)
+
+
 [relative disassembler performance](https://twitter.com/richinseattle/status/1468418790006267910?s=20)
 
 <https://github.com/grimm-co/NotQuite0DayFriday> exploit examples

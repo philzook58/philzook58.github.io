@@ -3,8 +3,15 @@ layout: post
 title: Floating Point
 ---
 
+Henessey and Patterson Appendix H has a good section with reference by the same Golberg who wrote the 
+[What Every Computer Scientist Should Know About Floating-Point Arithmetic](https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html)
 
-[Fixed point smtlib endoding pysmt](https://www.youtube.com/watch?v=sny9X77ZjTQ&t=1224s)
+- NaN
+- Denormalized numbers
+
+
+
+[Fixed point smtlib encoding pysmt](https://www.youtube.com/watch?v=sny9X77ZjTQ&t=1224s)
 
 [john harrison](https://www.youtube.com/watch?v=2F3tQL-SmgI) p-adic and floats are similar? msb vs lsb? 
 

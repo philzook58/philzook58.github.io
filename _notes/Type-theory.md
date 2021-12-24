@@ -275,3 +275,4 @@ Chapter 5: Inconsistent combinations of rules
 
 [smalltt](https://github.com/AndrasKovacs/smalltt) a demo for high performance type theory elaboration. Really good readme too
 [elboration seminar](https://www.youtube.com/playlist?list=PL2ZpyLROj5FOt99f_KCxARvd1hDqKns5b)
+[learn type theory](https://github.com/jozefg/learn-tt)

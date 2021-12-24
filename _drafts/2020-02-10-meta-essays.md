@@ -18,6 +18,7 @@ Write an explanation on your blog and get precious doots
 Break down, concretify and simplify to a ridiculous extent
 What homework would you assign? Do it. Understanding is in the hands.
 
+[Read stuff backwards, exercises first](https://twitter.com/sigfpe/status/1467568480241152001?s=20)
 
 # Is a PhD Good
 My opinions are informed by my history and background, as anyone's is.
@@ -30,6 +31,10 @@ If you're going to be white and male, it helps to be jewish.
 
 # I hate everyone else's Macros
 But I love mine.
+
+## What is the whole thing of programming tricks
+It's to abuse your host languages features.
+To avoid deeply embedding DSLs
 
 
 # How did I get here
