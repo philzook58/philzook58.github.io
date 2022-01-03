@@ -9,6 +9,7 @@ title: CTF stuff
 wordpress_id: 2960
 ---
 
+[malware reversing class](https://class.malware.re/)
 [live overflow youtube](https://www.youtube.com/watch?v=iyAyN3GFM7A)
 [](https://guyinatuxedo.github.io/00-intro/index.html)
 [exploit education](https://exploit.education/)
