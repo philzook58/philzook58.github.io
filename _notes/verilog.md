@@ -3,6 +3,20 @@ layout: post
 title: Verilog
 ---
 
+HLS
+SystemC - C++ classes for event driven simulation. Kind of an embedded dsl verilog ish
+systemverilog - https://github.com/zachjs/sv2v/ systemverilgo to verilog converter 
+[What is AXI](https://www.youtube.com/watch?v=1zw1HBsjDH8&ab_channel=DillonHuff)
+
+https://en.wikipedia.org/wiki/Universal_Verification_Methodology - verification language
+
+
+Bluespec 
+Silicon Compiler - what is this?
+
+Circt - llvm project
+
+
 ### Verilog
 
 Verilog is a bit dual brained. In one sense it is a hardware design language. In this sense it's almost just a netlist, aka a graph data structure describing a circuit. Each module can has ports which are wired up internally. Internal instantiations of modules are named.

@@ -18,6 +18,11 @@ Henessey and Patterson Appendix H has a good section with reference by the same 
 harrison book - Proving About Real Numbers
 Boldo Melquiond book - computer arithemtic and formal proofs
 
+Can I directly write down the principals of interval arithmetic?
+The contraction map principle.
+True ODES are the capability to do something for all dt
+
+
 <https://news.ycombinator.com/item?id=29201473> The dangers of fast-math flags. Herbie comments
 ocaml crlibm <https://github.com/Chris00/ocaml-crlibm>
 

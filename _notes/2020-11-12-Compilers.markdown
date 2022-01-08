@@ -21,6 +21,12 @@ Expand expressions with care - less dependencies
 [Foundations of Fine Grain Parallelism](https://www.cs.colostate.edu/~cs560/Fall2015/). Recurrence equations. Analyze them
 [granulairty](https://en.wikipedia.org/wiki/Granularity_(parallel_computing)) 
 
+[Polyhedral Compilation as a Design Pattern for Compilers PLISS](https://www.youtube.com/watch?v=mt6pIpt5Wk0&ab_channel=PLISS)
+
+isl and presburger arithmetic.
+A relative of omega?
+
+
 <https://jonathan2251.github.io/lbd/index.html>  Tutorial: Creating an LLVM Backend for the Cpu0 Architecturehttps://danielkeep.github.io/tlborm/book/README.html
 
 <https://lowlevelbits.org/how-to-learn-compilers-llvm-edition/> - interesting links <https://twitter.com/1101_debian/status/1456346324794806274?s=20>
@@ -116,3 +122,6 @@ gdb. Compile with -g flag. break main. step next print. tui enabe https://source
 objdump -d -S -l
 
 valgrind and core dumps.
+
+## LLVM
+[llvm-mca](https://llvm.org/docs/CommandGuide/llvm-mca.html) - static analysis of performance of code 
