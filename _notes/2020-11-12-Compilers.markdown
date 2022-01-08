@@ -10,6 +10,8 @@ title: Compilers
 wordpress_id: 2913
 ---
 
+[esolang VM](https://github.com/shinh/elvm) - C compiler to simple virtual machine for compiling to esolangs
+
 [Loop invariant code motion](https://en.wikipedia.org/wiki/Loop-invariant_code_motion) - aka hoisting. Move stuff that doesn't change out of the loop
 
 [instruction level parallelism](https://link.springer.com/book/10.1007/978-1-4899-7797-7) Alex Aiken Utpal Banerjee Arun Kejariwal Alexandru Nicolau
