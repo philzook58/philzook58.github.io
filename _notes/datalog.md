@@ -3,6 +3,18 @@ layout: post
 title: Datalog
 ---
 
+[choice domain](https://www.youtube.com/watch?v=TnLGbUqOsBc&ab_channel=ACMSIGPLAN) Functional dependencies of pieces of relation. 
+eligible advisors, total order, bipartite matching, more dogs than cats, highest mark in grade.
+Defined at relation level. Makes check before any insertion to see if something already defines functional dependency
+
+`.plan` statements
+
+`--show=initial-ram` and other options are quite interesting. The RAM is quite readable at least for small examples.
+
+
+as(a, number) I can cast ADTs to numbers?
+https://github.com/yihozhang/souffle/blob/conglog/tests/congruence/math.dl  interesting
+
 Subsumption examples
 ```prolog
 

@@ -20,6 +20,17 @@ What homework would you assign? Do it. Understanding is in the hands.
 
 [Read stuff backwards, exercises first](https://twitter.com/sigfpe/status/1467568480241152001?s=20)
 
+
+#### code base splelunking
+- Build it. Try verbose mode. Try to kind of pay attention to the stream of things flying by
+- Run it. Run the examples
+- Look at tests
+- Look at build files. They may implicitly provide a hierarchy
+- Look top down or bottom up. If there is an output, something prints it. There is probably a main
+
+
+- Try trivial modifications. Adding a case to some data type for example.
+
 # Is a PhD Good
 My opinions are informed by my history and background, as anyone's is.
 

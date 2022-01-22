@@ -9,12 +9,45 @@ title: CTF stuff
 wordpress_id: 2960
 ---
 
+burp suite
+idor - autorize
+
+
+bloodhound
+ 
+shellcode encoding and decoding - sometimes you need to avoid things like \0 termination. https://www.ired.team/offensive-security/code-injection-process-injection/writing-custom-shellcode-encoders-and-decoders
+Shellcode generators. What do they do?
+[shellcode database](http://shell-storm.org/shellcode/)
+
+[google dorking](https://github.com/iGotRootSRC/Dorkers) Like using google with special commands? Why "dork"?
+shodan
+
+nmap
+-A -T4. OS detection
+
+p0f - passive sniffing. fingerprinting
+
+
 [malware reversing class](https://class.malware.re/)
 [live overflow youtube](https://www.youtube.com/watch?v=iyAyN3GFM7A)
 [](https://guyinatuxedo.github.io/00-intro/index.html)
 [exploit education](https://exploit.education/)
 [rop emporium](https://ropemporium.com/)
 
+yara - patterns to recognize malware. Byte level patterns?
+Sigma
+snort
+
+SIEM
+IDS - intrusin detection systems
+https://en.wikipedia.org/wiki/Intrusion_detection_system
+
+shellcode encoder/decoder/generator
+https://www.msreverseengineering.com/blog/2017/7/15/the-synesthesia-shellcode-generator-code-release-and-future-directions 
+synesthesia
+
+FLIRT
+https://github.com/avast/retdec
 
 [relative disassembler performance](https://twitter.com/richinseattle/status/1468418790006267910?s=20)
 

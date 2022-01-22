@@ -144,6 +144,13 @@ Propositional extensionality implies proof irrelevance
 https://coq.inria.fr/library/Coq.Logic.ProofIrrelevance.html
 Axiom proof_irrelevance : forall (P:Prop) (p1 p2:P), p1 = p2.
 
+https://github.com/coq/ceps/pull/32 RFC: Disentangling erasure and proof irrelevance
+
+It feels like proof irrelevance and erasure are related concepts, but like almost everything in type theory there is probably a time and place and level of sophistication to consider them as distinct
+
+[Irrelevance, Polymorphism, and Erasure in Type Theory](https://pdxscholar.library.pdx.edu/open_access_etds/2674/)
+
+
 #### Universes
 <https://github.com/jdolson/hott-notes/blob/pdfs/pdfs/notes_week5.pdf>
 Universes are 
@@ -192,23 +199,17 @@ Isomorphisms
 
 
 
-
-
-
-
-
-# Coq
-- QED does something serious.
-- Surface coq is desugared
-- match annnotations are 
-- Note that the judgement `a : A, b : B, c : C |- f : F` is sort of getting Coq to accept `Definition foo (a : A) (b : B) (c : C) : F := f.` It sort of reorders the pieces and make you give a name to the whole judgement `foo`. That's an interesting way of looking at it anyway. Of course the more usual way is that `foo` is a function definition.
-
-
-
-
 - <https://counterexamples.org/title.html> Counterexamples in Type Systems. Really cool resources of problems that can show up in type systems
 - <https://github.com/FStarLang/FStar/issues/360> Examples that show paradoxes when using combinations of impredicative polymorphism + excluded middle + large elimination -- can only choose two <https://cstheory.stackexchange.com/questions/21836/why-does-coq-have-prop/21878#21878> Berardi's paradox
 <https://github.com/coq/coq/issues/9458> future of impredicative set
+
+
+Amusingly, by mixing the type level and value level, do we end up with a situation akin to dynamic types where we often need
+to carry types a runtime? Or is that mistaken?
+
+
+
+
 
 ## Books:
 - TAPL
@@ -276,3 +277,6 @@ Chapter 5: Inconsistent combinations of rules
 [smalltt](https://github.com/AndrasKovacs/smalltt) a demo for high performance type theory elaboration. Really good readme too
 [elboration seminar](https://www.youtube.com/playlist?list=PL2ZpyLROj5FOt99f_KCxARvd1hDqKns5b)
 [learn type theory](https://github.com/jozefg/learn-tt)
+
+
+regular propositions are basically the "constructive-content-free" parts of propositions

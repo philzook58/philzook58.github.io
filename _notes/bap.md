@@ -4,6 +4,9 @@ title: Gettin' Bappin' with Bap
 ---
 
 
+`--print-missing` flag for missing instruction semantics https://github.com/BinaryAnalysisPlatform/bap/pull/1409
+
+
 
 https://watch.ocaml.org/videos/watch/8dc2d8d3-c140-4c3d-a8fe-a6fcf6fba988
 JVM and C support in the futute
@@ -255,9 +258,11 @@ MIR -> Asm
 
 To describe the operations of different machines, bap lifts into a common intermediate representation. From the common representation you can perform different binary analysis.
 
-The main form representation in previous version of bap was an algebraic data type, BIL. This is to some degree still the case, but now there is a different programming construct intended as the primary source. This thing is called the the Core Theory of bap. The word "theory", strange as it sounds to some ears, refers to a common set of typed apis that analysis need to implement to receive lifted code.
+The main form representation in previous version of bap was an algebraic data type, BIL. This is to some degree still the case for some purposes, but now there is a different programming construct intended as the primary source. This thing is called the the Core Theory of bap. The word "theory", strange as it sounds to some ears, refers to a common set of typed apis that analysis need to implement to receive lifted code. A "theory" in the context of logic is a set of types, functions/constants, and axioms. We don't really have axioms expressible in ocaml, but we can certainly talk about types and functions.
 
-Instead of having analysis receive a normal ocaml algebraic data type, instead they implement a finally tagless style type signature.
+Instead of having analysis receive a normal ocaml algebraic data type, instead they implement a finally tagless style type signature of core_theory. Instead of registering as a pass to receive the adt, they register their cor_theory instance with a global database that is typically automatically called by other parts of bap.
+
+There is a confusing intertwining of the concepts of the knowledge base and core_theory. This is done I think so that there is a possibility of using arbitrary data tucked away in the knowledge base, which operates as a kind of global state monad. In principle, it is possible to construct an analog of core_theory that has nothing to do with the knowledge base.
 
 It is a curious fact that there is an equivalence between ordinary tree-like and a functional representation of how to use them. The idea being is that the only thing you can do to an algebraic data structure is take it apart and "summarize" it in some way. This taking apart operation is the analog of folding a list. This is related to the concept of a Church encoding.
 

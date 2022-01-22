@@ -10,6 +10,14 @@ title: Compilers
 wordpress_id: 2913
 ---
 
+
+ILang
+Tiramisu http://tiramisu-compiler.org/Comparison.html
+MLIR
+Halide
+TVM
+BYOC bring your own codegen https://tvm.apache.org/2020/07/15/how-to-bring-your-own-codegen-to-tvm
+
 [esolang VM](https://github.com/shinh/elvm) - C compiler to simple virtual machine for compiling to esolangs
 
 [Loop invariant code motion](https://en.wikipedia.org/wiki/Loop-invariant_code_motion) - aka hoisting. Move stuff that doesn't change out of the loop

@@ -1,8 +1,13 @@
 ---
 layout: post
 title: Ocaml
+tags: ocaml
+description: my notes about ocaml
 ---
-
+[LexiFi blog](https://www.lexifi.com/blog/) some interesting articles
+[Using, Understanding, and Unraveling
+The OCaml Language
+From Practice to Theory and vice versa](https://caml.inria.fr/pub/docs/u3-ocaml/index.html)
 [postl ink optimizer for ocaml](https://github.com/nandor/llir-opt)
 [duplo](https://www.cl.cam.ac.uk/~nl364/docs/duplo.pdf)
 [A beginners guide to OCaml internals](https://rwmj.wordpress.com/2009/08/04/ocaml-internals/)
@@ -14,6 +19,209 @@ title: Ocaml
 - cmm
 - mach
 - linear
+
+I wrote a bit about cma vs cmo files vs cmx files here <https://www.philipzucker.com/bap-js-1/>
+
+### META vs dune vs opam files
+
+
+### Debugging
+ocamldebug is nice for bytecode debugging
+
+https://ocaml.org/meetings/ocaml/2012/slides/oud2012-paper5-slides.pdf
+objdump -t the symbols. The  module entrypoint is probably something like `camlMyModule__entry` You can set a breakpoint there.
+
+### Obj module
+The obj module holds all kinds of nasty introspective goodies. Possibly physical equality `=` deserves to be in here too.
+
+
+### Runtime
+
+You can easily examine the ocaml assembly in <https://godbolt.org/>
+[About unboxed float arrays](https://www.lexifi.com/blog/ocaml/about-unboxed-float-arrays/)
+[floatarray migration](https://www.lexifi.com/blog/ocaml/floatarray-migration/)
+Float arrays have a special representation. It is an odd choice given how uniform representation is generally.
+He mentions that lazy has an optimization - when gc runs it removes the indirection of the lazy value. Is this compiler intrinsic?
+
+local variables can be unboxed. However what counts as local? Even arithmetic operations are functions. So this relies on inlining?
+
+I have heard that ocaml is a typed scheme in a sense. 
+
+-nodynlink removes the disconcerting GOT table stuff.
+
+
+
+caml<Modulename>__entry I would guess is what gets called when the module is loaded
+
+There is a bit of data called camlModule. The entry code fills in toplevel definitions into this table.
+
+I am not sure what causes mangled versus unmangled names. Somethings are statically built and stored as symbols. The things that can't have their string definition stored at the bottom in `.ascii` fields
+The labels at the bottom are connected to the strings at the bottom. I don't know what the clacuatins they are doing are
+
+
+There are closures that don't have to capture anything. I think those are the __1 __2 __3 things at the top. The environment packing is ` .quad   0x100000000000005` which is some kind of null value?
+
+frametable - for the GC to understand the stack
+
+Hey [@@ocaml.unboxed] actually works. That's cool
+
+A static linked list is just right there. That's neat.
+`[0;3;4;5;7]`
+```
+camlExample__6:
+        .quad   1
+        .quad   camlExample__5
+camlExample__5:
+        .quad   7
+        .quad   camlExample__4
+camlExample__4:
+        .quad   9
+        .quad   camlExample__3
+camlExample__3:
+        .quad   11
+        .quad   camlExample__2
+camlExample__2:
+        .quad   15
+        .quad   1
+```
+Hmm. The Nil is represented as 1. Does that make sense?
+
+Integers are 2*n + 1
+
+### Compiler
+<https://dev.realworldocaml.org/compiler-frontend.html#an-overview-of-the-toolchain>
+
+Let's go backwards.
+
+[runtime](https://github.com/ocaml/ocaml/tree/trunk/runtime)
+ - main.c `main` calls `caml_main`
+ - startup_nat.c  `caml_main` work upto file, the meat happens at `caml_start_program(Caml_state);`
+ - `caml_start_program` is in assembly file. It saves registers and stuff and calls `caml_program` 
+   which switches over to compiled program code
+
+let max_arguments_for_tailcalls = 10 (* in regs *) + 64 (* in domain state *)
+
+(* C calling conventions under Unix:
+     first integer args in rdi, rsi, rdx, rcx, r8, r9
+     first float args in xmm0 ... xmm7
+     remaining args on stack
+     return value in rax or xmm0.
+  C calling conventions under Win64:
+     first integer args in rcx, rdx, r8, r9
+     first float args in xmm0 ... xmm3
+     each integer arg consumes a float reg, and conversely
+     remaining args on stack
+     always 32 bytes reserved at bottom of stack.
+     Return value in rax or xmm0. *)
+
+Backends. Both of these receive lambda 
+- [asmcomp folder](https://github.com/ocaml/ocaml/tree/trunk/asmcomp)
+- [bytecomp folder](https://github.com/ocaml/ocaml/tree/trunk/bytecomp) bytecode compiler backend
+    + bytecode insutructions
+
+```
+(* Abstract machine instructions *)
+
+type label = int                        (* Symbolic code labels *)
+
+type instruction =
+    Klabel of label
+  | Kacc of int
+  | Kenvacc of int
+  | Kpush
+  | Kpop of int
+  | Kassign of int
+  | Kpush_retaddr of label
+  | Kapply of int                       (* number of arguments *)
+  | Kappterm of int * int               (* number of arguments, slot size *)
+  | Kreturn of int                      (* slot size *)
+  | Krestart
+  | Kgrab of int                        (* number of arguments *)
+  | Kclosure of label * int
+  | Kclosurerec of label list * int
+  | Koffsetclosure of int
+  | Kgetglobal of Ident.t
+  | Ksetglobal of Ident.t
+  | Kconst of structured_constant
+  | Kmakeblock of int * int             (* size, tag *)
+  | Kmakefloatblock of int
+  | Kgetfield of int
+  | Ksetfield of int
+  | Kgetfloatfield of int
+  | Ksetfloatfield of int
+  | Kvectlength
+  | Kgetvectitem
+  | Ksetvectitem
+  | Kgetstringchar
+  | Kgetbyteschar
+  | Ksetbyteschar
+  | Kbranch of label
+  | Kbranchif of label
+  | Kbranchifnot of label
+  | Kstrictbranchif of label
+  | Kstrictbranchifnot of label
+  | Kswitch of label array * label array
+  | Kboolnot
+  | Kpushtrap of label
+  | Kpoptrap
+  | Kraise of raise_kind
+  | Kcheck_signals
+  | Kccall of string * int
+  | Knegint | Kaddint | Ksubint | Kmulint | Kdivint | Kmodint
+  | Kandint | Korint | Kxorint | Klslint | Klsrint | Kasrint
+  | Kintcomp of integer_comparison
+  | Koffsetint of int
+  | Koffsetref of int
+  | Kisint
+  | Kisout
+  | Kgetmethod
+  | Kgetpubmet of int
+  | Kgetdynmet
+  | Kevent of debug_event
+  | Kperform
+  | Kresume
+  | Kresumeterm of int
+  | Kreperformterm of int
+  | Kstop
+```
+
+- lambda. 
+  + matching.mli compiels pattern matches. Very complex
+  + tail call modulo optimization - opt in? Is it this https://jamesrwilcox.com/tail-mod-cons.html ? https://arxiv.org/abs/2102.09823
+  +https://github.com/ocaml/ocaml/blob/trunk/lambda/translprim.ml primitives
+
+- [file formats](https://github.com/ocaml/ocaml/tree/trunk/file_formats)
+ + remarkably simple to see the types of a compilation unit
+
+- typing
+ + <https://github.com/ocaml/ocaml/blob/trunk/typing/HACKING.adoc>
+
+### Object System
+Not particularly highly recommended but it puts the O in ocaml.
+
+Objects add subtyping to ocaml. So do polymorphic variants though. And in asense, polymorphism has a subtyping of "more general than"
+
+[ocaml objects](https://roscidus.com/blog/blog/2013/09/28/ocaml-objects/)
+[mixins](https://www.lexifi.com/blog/ocaml/mixin/)
+### Open Recursion
+This somewhat is related to objects. `self` is a late bound variable that can be overridden. You can emulate this by having base classes take in later classes as an argument.
+Related to the fix form of recursion?
+Landin's knot?
+
+
+[Open Recursion with Modules](https://blag.bcc32.com/shenanigans/2019/07/15/open-recursion-with-modules/)
+[](https://whitequark.org/blog/2014/04/16/a-guide-to-extension-points-in-ocaml/)
+[Ralk Hinze Close and Open](https://www.cs.ox.ac.uk/people/ralf.hinze/talks/Open.pdf)
+[Nystrom - What is “Open Recursion”?](http://journal.stuffwithstuff.com/2013/08/26/what-is-open-recursion/)
+### Recursive Modules
+https://blog.janestreet.com/a-trick-recursive-modules-from-recursive-signatures/
+https://lesleylai.info/en/recursive_modules_in_ocaml/
+Manual section
+
+### Multicore
+https://github.com/ocaml-multicore/parallel-programming-in-multicore-ocaml
+Domains
+Algebraic effects - related to delimitted continuations
 
 ### Extensible Variants
 Extensible variants allow you to add new constructors to a data type kind of imperatively. They let data types be open. They are a strong relative of exceptions in ocaml (maybe even the same thing now) which have let you add new exception cases for a long time.
@@ -86,15 +294,18 @@ We can instead use perhaps a hashtable or dictionary as our key access.
 http://okmij.org/ftp/ML/canonical.html#trep
 
 ### Universal Types
-
-### Extensible Records
-
-
+- <http://mlton.org/StandardML> some interesting stuff here. The universal type representation is the same as cc-ubes
+- strings and Sexp.t
 - <https://discuss.ocaml.org/t/types-as-first-class-citizens-in-ocaml/2030/2>
 - <https://github.com/janestreet/base/blob/master/src/type_equal.ml>
 - <https://github.com/mirage/repr>
 - <https://github.com/let-def/distwit>
 - <https://github.com/samoht/depyt>
+- [Heterogeneous physical equality for references](https://github.com/ocaml/ocaml/issues/7425)
+
+### Extensible Records
+
+
 
 
 ### Build System

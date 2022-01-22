@@ -1,5 +1,23 @@
 [Operating Systems: Three Easy Pieces](https://pages.cs.wisc.edu/~remzi/OSTEP/)
 
+Serial port programing https://www.cmrr.umn.edu/~strupp/serial.html
+https://en.wikibooks.org/wiki/Serial_Programming/termios termios
+
+ioctl
+fcntl
+
+[Beej's Guide to Network Programming](https://beej.us/guide/bgnet/html/)
+
+##  System Calls
+[The Definitive Guide to Linux System Calls](https://blog.packagecloud.io/the-definitive-guide-to-linux-system-calls/) some nice info on how syscalls happens. Interrupt x80, `syscall` instruction etc. VDSO - v
+
+- `mmap`
+- `connect`
+- `open`
+- `read`
+- `write`
+
+
 ## Virtualization
 
 ## Concurrency
