@@ -41,7 +41,8 @@ You can easily examine the ocaml assembly in <https://godbolt.org/>
 [About unboxed float arrays](https://www.lexifi.com/blog/ocaml/about-unboxed-float-arrays/)
 [floatarray migration](https://www.lexifi.com/blog/ocaml/floatarray-migration/)
 Float arrays have a special representation. It is an odd choice given how uniform representation is generally.
-He mentions that lazy has an optimization - when gc runs it removes the indirection of the lazy value. Is this compiler intrinsic?
+He mentions that lazy has an optimization - when gc runs it removes the indirection of the lazy value. Is this compiler intrinsic? Yes.
+<https://stackoverflow.com/questions/56746374/how-does-ocaml-represent-lazy-values-at-runtime>
 
 local variables can be unboxed. However what counts as local? Even arithmetic operations are functions. So this relies on inlining?
 

@@ -10,6 +10,68 @@ title: Continuations, Implementing Functional Languages
 wordpress_id: 2843
 ---
 
+See also:
+- binding forms
+
+Xaviery leroy implementing functional languagues
+https://xavierleroy.org/talks/compilation-agay.pdf really good.
+He describes an interesting operation "disassembling" SOme relation to quote :: Value -> Term
+
+
+```ocaml
+type term = 
+ | Var of int
+ | Const of int
+ | Lambda of term
+ | Apply of term * term
+ | Prim of value list -> value * term list
+and env = value list 
+and value = Lit of int | Closure of term * env
+
+let rec eval env = function
+| Var n -> List.nth n env
+| Const n -> Lit n
+| Lambda t -> Closure (t, env)
+| Apply f x ->
+     let Closure(f', env') = eval env f in
+     let x' = eval env x in
+     eval (x' :: env') f'
+| Prim (f, args) -> let args' = List.map (eval env) args in
+                    f args'
+```
+
+
+
+Terms are syntax. The original program? Values are data objects. Bit patterns?
+
+```ocaml
+type aexpr = Lit of int | Add of aexpr * aexpr
+type rpn = Push of int | Add
+
+let rec compile : aexpr -> rpn list = function
+| Lit n -> [Push n]
+| Add (a,b) -> (compile a) @ (compile b) @ [Add]
+
+```
+
+```ocaml
+(* term as above*)
+type machine = 
+| Access of int
+| Closure of machine list
+| Return
+| Apply
+
+let rec compile : term -> machine list = function
+| Var n -> [Access n]
+| Lambda t -> [Closure (compile t) @ [Return]]
+| Apply (f,x) -> (compile f) @ (compile x) @ Apply
+```
+
+[data representation of chicken scheme](https://www.more-magic.net/posts/internals-data-representation.html) very similar to ocaml
+[cheney on the mta of chicken scheme](https://www.more-magic.net/posts/internals-gc.html)
+
+[resources on compilers for fnctional languages](https://github.com/soupi/rfc/blob/master/fun-compilers.md)
 <http://t3x.org/klisp/klsys/index.html> KLSYS a kilolisp systems - bytecode compiler etc of lisp 2000 lines C, 3000 lines lisp
 <http://t3x.org/index.html> Also lots of books: lisp from nothing, lisp system implementation
 

@@ -3,6 +3,8 @@ layout: post
 title: Floating Point
 ---
 
+[Formally Verified Approximations of Definite Integrals](https://hal.inria.fr/hal-01630143/file/main.pdf)
+
 Henessey and Patterson Appendix H has a good section with reference by the same Golberg who wrote the 
 [What Every Computer Scientist Should Know About Floating-Point Arithmetic](https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html)
 

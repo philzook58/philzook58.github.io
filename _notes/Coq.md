@@ -1,4 +1,7 @@
-
+---
+layout: post
+title: Coq
+---
 
 See also:
 - Type theory
@@ -30,6 +33,10 @@ Is this bytecode interpreter described anywhere?
 
 Cody suggests Benjamin Gregoire
 
+Sometimes is feels like cody knows a lot
+<https://cstheory.stackexchange.com/questions/18777/is-compiler-for-dependent-type-much-harder-than-an-intepreter>
+[leroy gergoire paper bytecode interpreter](https://xavierleroy.org/publi/strong-reduction.pdf)
+[full reduction at full throttle](https://hal.inria.fr/file/index/docid/650940/filename/full_throttle.pdf)
 # Ocaml
 There are plugin tutorials
 Coq is available as a library. coq-core. Note the Ocam API documentation https://coq.github.io/doc/

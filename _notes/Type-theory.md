@@ -66,6 +66,11 @@ We can encode data types into functions using church like encodings.
 
 
 
+### Decidability of type checking
+type checking is the question of whether given all the pieces going into the judgement under line of the inference rule, is it decidable to construct a typing tree that produces such a thing. Even this seemingly simple question can be undecidable in some type systems, because higher up in the typing tree you may ask questions that are very difficult. In the presence of nontermination, you probably are encountering a variant of the halting problem. Undecidability of type checking is typically considered to be an undesriable property, but people are willing to entertain the notion.
+
+
+Type inference supposes I give the context and term, but leave out the type, can I construct both the typing tree and the type. [Principle types](https://en.wikipedia.org/wiki/Principal_type) are asking whether there is a unique most general type that can be inferred.
 
 
 ### Consistency
@@ -80,6 +85,8 @@ Evaluation does not cause types to change.
 ### Head Normal Form
 ### Value
 <https://ice1000.org/2019/04-07-Reduction.html>
+
+
 
 #### Neutral
 #### Canonical

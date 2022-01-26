@@ -1,3 +1,8 @@
+---
+layout: post
+title: Databases
+---
+
 [postgres indexes for newbies](https://blog.crunchydata.com/blog/postgres-indexes-for-newbies)
 [postgres tutorial](https://www.postgresqltutorial.com/)
 
