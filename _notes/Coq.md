@@ -61,3 +61,22 @@ coqpp is the tool that turns .mlg into .ml files
 - Note that the judgement `a : A, b : B, c : C |- f : F` is sort of getting Coq to accept `Definition foo (a : A) (b : B) (c : C) : F := f.` It sort of reorders the pieces and make you give a name to the whole judgement `foo`. That's an interesting way of looking at it anyway. Of course the more usual way is that `foo` is a function definition.
 
 
+[Leroy and Appell caonical binary trees](https://github.com/xavierleroy/canonical-binary-tries) 
+
+## Iris
+Higher order separation logic. Kind of modelling concurrent ML in Coq I think? 
+
+# Compcert
+<https://github.com/AbsInt/CompCert>
+[manual](https://compcert.org/man/index.html)
+The long form compcert paper seems the most useful 
+
+An interpreter of C. It stops if it hits undefined behavior? That's cool. This seems really useful even for a non verified version
+
+![](https://compcert.org/man/manual001.svg)
+C -> Clight -> C#minor -> Cminor -> CminoSel -> RTL -> LTL -> Linear 0> Mach
+
+
+Individual folders for each architecture. Interesting.
+
+- backend

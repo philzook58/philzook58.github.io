@@ -3,6 +3,9 @@ layout: post
 title: C/C++
 ---
 
+<https://stackoverflow.com/questions/7237963/a-c-implementation-that-detects-undefined-behavior>
+See compcert and frama-c
+
 static keyword
 
 

@@ -3,9 +3,11 @@ layout: post
 title: Lean
 ---
 
+[Lambda the Ultimate SSA: Optimizing Functional Programs in SSA](https://arxiv.org/abs/2201.07272)
+
 Numerical packages in lean
-[numlean](https://github.com/arthurpaulino/NumLean)
-[lean karray](https://github.com/lecopivo/lean4-karray)
+- [numlean](https://github.com/arthurpaulino/NumLean)
+- [lean karray](https://github.com/lecopivo/lean4-karray)
 
 Webserver example. Custom syntax
 https://github.com/leanprover/lean4/blob/master/tests/playground/webserver/Webserver.lean

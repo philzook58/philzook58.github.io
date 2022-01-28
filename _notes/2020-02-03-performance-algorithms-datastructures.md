@@ -3,6 +3,8 @@ layout: post
 title: Performance, Algorithms
 ---
 
+https://blog.janestreet.com/magic-trace/
+
 See Also:
 - compilers
 - computer architecture

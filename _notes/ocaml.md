@@ -89,11 +89,50 @@ Hmm. The Nil is represented as 1. Does that make sense?
 
 Integers are 2*n + 1
 
+Inspecting bytecode in a jupyter notebook:
+```python
+import subprocess
+import tempfile
+def bytecode(code):
+    fp = tempfile.NamedTemporaryFile(prefix="my_module_",suffix='.ml', delete=False)
+    fp.write(code.encode())
+    name = fp.name
+    fp.close()
+    print(subprocess.run(["ocamlc", "-dlambda", "-dinstr", "-dcamlprimc", name], capture_output=True).stderr.decode())
+
+bytecode('''
+let () = print_endline "hello world"
+''')
+```
+
+r15 is the minor heap, so adjustments to it are allocations
+8(%r14) looks like the heap end information, which triggers a GCcccccccccc
+
+### The Zinc Abstract Machine (ZAM)
+See chapter 2 of ZINC report
+Also [From Krivine’s machine to the Caml implementations by Leroy](https://xavierleroy.org/talks/zam-kazam05.pdf)
+ZAM1 - Accumulator, argument stack, environment, return stack 
+
+- `Access(n)` - nth thing in env
+- 
+
+Dynamic vs persistent part of environment - stack vs heap
+
+ZAM2 - argument and return stack fused. I feel like Dolan was talking about this as being a useful distinction though
+
+push enter - callee receives more or less  push arguments on the stack with marks. over application, underapplication and just right. as seperate dynamic cases
+eval-apply - callee receives eactly as many arguments - caller responsible for the differnece.
+
+Wait, so `apply :: Closure -> Arguments -> `?
+
+
+But this talk is 15 years old. 
+
 ### Compiler
 <https://dev.realworldocaml.org/compiler-frontend.html#an-overview-of-the-toolchain>
 
 Let's go backwards.
-
+Native code:
 [runtime](https://github.com/ocaml/ocaml/tree/trunk/runtime)
  - main.c `main` calls `caml_main`
  - startup_nat.c  `caml_main` work upto file, the meat happens at `caml_start_program(Caml_state);`
@@ -119,6 +158,9 @@ Backends. Both of these receive lambda
 - [asmcomp folder](https://github.com/ocaml/ocaml/tree/trunk/asmcomp)
 - [bytecomp folder](https://github.com/ocaml/ocaml/tree/trunk/bytecomp) bytecode compiler backend
     + bytecode insutructions
+
+
+- [The C bytecode interpreter](https://github.com/ocaml/ocaml/blob/trunk/runtime/interp.c) Interesting. They pre pick a register often for PC and SP.
 
 ```
 (* Abstract machine instructions *)
@@ -197,6 +239,9 @@ type instruction =
 - typing
  + <https://github.com/ocaml/ocaml/blob/trunk/typing/HACKING.adoc>
 
+
+Zinc report mentions tha some objects you can statically allocate for in the data section of the binary. This does seem to be the case. Somehow the garbage collector knows not to try to collect these.
+
 ### Object System
 Not particularly highly recommended but it puts the O in ocaml.
 
@@ -223,6 +268,15 @@ Manual section
 https://github.com/ocaml-multicore/parallel-programming-in-multicore-ocaml
 Domains
 Algebraic effects - related to delimitted continuations
+
+### MetaOcaml
+See note on partial evaluaton.
+What do the metaocaml patches look like?
+
+### PPX
+PPX is a preprocessing stage. You get access to the ocaml syntax tree and can modify it
+
+
 
 ### Extensible Variants
 Extensible variants allow you to add new constructors to a data type kind of imperatively. They let data types be open. They are a strong relative of exceptions in ocaml (maybe even the same thing now) which have let you add new exception cases for a long time.
@@ -350,8 +404,14 @@ https://github.com/dinosaure/gilbraltar mirageos on pi4
 
 <https://twitter.com/wengshiwei/status/1454128911219003393?s=12> an explanation of the z3 bindings problems and linking diagrams
 
+# Js_of_ocaml
+Js_of_ocaml is a compiler from ocaml bytecode to javascript.
+
+[state of webassembly](https://discuss.ocaml.org/t/state-of-ocaml-and-web-assembly/2725) some interesting stuff here. emscripten build of C bytecode interpreter. cmm_of_wasm uses ocaml itself as a wasm backend
+[ocaml-wasm](https://github.com/corwin-of-amber/ocaml-wasm/tree/wasm-4.11)
 
 # Modules
+See note on modules
 
 https://ocaml.org/manual/moduleexamples.html#
 
@@ -361,6 +421,8 @@ What are modules?
 - "compilation units"
 
 Functors are "dependently typed" in some ways in that the signature of the output can depend on the types in the actual module of the input
+
+Modules are by default a runtime notion actually.? They are literally records that get built by the entrypoint of each file. When I access an external file there is actually an indirection through the record? Well they do dynamic linking? 
 
 ### Modules vs Typeclasses
 
