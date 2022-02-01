@@ -265,7 +265,9 @@ https://lesleylai.info/en/recursive_modules_in_ocaml/
 Manual section
 
 ### Multicore
-https://github.com/ocaml-multicore/parallel-programming-in-multicore-ocaml
+[WIki](https://github.com/ocaml-multicore/ocaml-multicore/wiki) links to papers, discussions and videos
+
+[Parallel Programming in Multicore OCaml](https://github.com/ocaml-multicore/parallel-programming-in-multicore-ocaml)
 Domains
 Algebraic effects - related to delimitted continuations
 

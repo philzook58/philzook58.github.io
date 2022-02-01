@@ -2,7 +2,7 @@
 layout: post
 title: Datalog
 ---
-
+[modulog](https://github.com/bobatkey/modulog) - datalog with ocaml style modules
 [choice domain](https://www.youtube.com/watch?v=TnLGbUqOsBc&ab_channel=ACMSIGPLAN) Functional dependencies of pieces of relation. 
 eligible advisors, total order, bipartite matching, more dogs than cats, highest mark in grade.
 Defined at relation level. Makes check before any insertion to see if something already defines functional dependency
