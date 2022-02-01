@@ -4,38 +4,40 @@ title: Ocaml
 tags: ocaml
 description: my notes about ocaml
 ---
-[LexiFi blog](https://www.lexifi.com/blog/) some interesting articles
-[Using, Understanding, and Unraveling
-The OCaml Language
-From Practice to Theory and vice versa](https://caml.inria.fr/pub/docs/u3-ocaml/index.html)
-[postl ink optimizer for ocaml](https://github.com/nandor/llir-opt)
-[duplo](https://www.cl.cam.ac.uk/~nl364/docs/duplo.pdf)
-[A beginners guide to OCaml internals](https://rwmj.wordpress.com/2009/08/04/ocaml-internals/)
-[OCaml compiler design and development](https://discuss.ocaml.org/t/ocaml-compiler-design-and-development/5823/4)
-- parsetree
-- typetree
-- lambda
-- clambda
-- cmm
-- mach
-- linear
 
-I wrote a bit about cma vs cmo files vs cmx files here <https://www.philipzucker.com/bap-js-1/>
+- [Ocaml Guts](#ocaml-guts)
+  - [Runtime](#runtime)
+    - [The Zinc Abstract Machine (ZAM)](#the-zinc-abstract-machine-zam)
+  - [Compiler](#compiler)
+- [Ecosystem](#ecosystem)
+  - [Debugging](#debugging)
+  - [Stdlib](#stdlib)
+    - [Obj module](#obj-module)
+  - [Multicore](#multicore)
+  - [MetaOcaml](#metaocaml)
+  - [PPX](#ppx)
+  - [Build System](#build-system)
+    - [META vs dune vs opam files](#meta-vs-dune-vs-opam-files)
+  - [Js_of_ocaml](#js_of_ocaml)
+- [Language Features](#language-features)
+  - [Object System](#object-system)
+  - [Open Recursion](#open-recursion)
+  - [Recursive Modules](#recursive-modules)
+  - [Extensible Variants](#extensible-variants)
+  - [Extensible Functions](#extensible-functions)
+  - [Universal Types](#universal-types)
+  - [Extensible Records](#extensible-records)
+  - [Modules](#modules)
+    - [Modules vs Typeclasses](#modules-vs-typeclasses)
+  - [First Class Modules](#first-class-modules)
+  - [Higher Kinded Polymorphism](#higher-kinded-polymorphism)
+  - [GADTs](#gadts)
+  - [Registries](#registries)
+  - [Typelevel programming](#typelevel-programming)
+- [Misc Resources](#misc-resources)
 
-### META vs dune vs opam files
-
-
-### Debugging
-ocamldebug is nice for bytecode debugging
-
-https://ocaml.org/meetings/ocaml/2012/slides/oud2012-paper5-slides.pdf
-objdump -t the symbols. The  module entrypoint is probably something like `camlMyModule__entry` You can set a breakpoint there.
-
-### Obj module
-The obj module holds all kinds of nasty introspective goodies. Possibly physical equality `=` deserves to be in here too.
-
-
-### Runtime
+# Ocaml Guts
+## Runtime
 
 You can easily examine the ocaml assembly in <https://godbolt.org/>
 [About unboxed float arrays](https://www.lexifi.com/blog/ocaml/about-unboxed-float-arrays/)
@@ -128,7 +130,19 @@ Wait, so `apply :: Closure -> Arguments -> `?
 
 But this talk is 15 years old. 
 
-### Compiler
+## Compiler
+[A beginners guide to OCaml internals](https://rwmj.wordpress.com/2009/08/04/ocaml-internals/)
+[OCaml compiler design and development](https://discuss.ocaml.org/t/ocaml-compiler-design-and-development/5823/4)
+
+The main internal IRs?
+- parsetree
+- typetree
+- lambda
+- clambda
+- cmm
+- mach
+- linear
+
 <https://dev.realworldocaml.org/compiler-frontend.html#an-overview-of-the-toolchain>
 
 Let's go backwards.
@@ -242,14 +256,92 @@ type instruction =
 
 Zinc report mentions tha some objects you can statically allocate for in the data section of the binary. This does seem to be the case. Somehow the garbage collector knows not to try to collect these.
 
-### Object System
+# Ecosystem 
+
+## Debugging
+ocamldebug is nice for bytecode debugging
+
+https://ocaml.org/meetings/ocaml/2012/slides/oud2012-paper5-slides.pdf
+objdump -t the symbols. The  module entrypoint is probably something like `camlMyModule__entry` You can set a breakpoint there.
+
+## Stdlib
+### Obj module
+The obj module holds all kinds of nasty introspective goodies. Possibly physical equality `=` deserves to be in here too.
+## Multicore
+[WIki](https://github.com/ocaml-multicore/ocaml-multicore/wiki) links to papers, discussions and videos
+
+[Parallel Programming in Multicore OCaml](https://github.com/ocaml-multicore/parallel-programming-in-multicore-ocaml)
+Domains
+Algebraic effects - related to delimitted continuations
+
+## MetaOcaml
+See note on partial evaluaton.
+What do the metaocaml patches look like?
+
+## PPX
+PPX is a preprocessing stage. You get access to the ocaml syntax tree and can modify it
+
+
+## Build System
+
+I wrote a bit about cma vs cmo files vs cmx files here <https://www.philipzucker.com/bap-js-1/>
+
+I have used dune for a long time. It's great. It's so good that I've never really worked with the raw ocaml build system. This is bad. Stuff doesn't always go right, so it's good to know how things work.
+
+All the ocaml tools: <https://ocaml.org/manual/comp.html>
+- ocamlc - batch compiler
+- ocaml - a repl
+- ocamlrun - runtime system (for bytecode output)
+- ocamldep 
+- 
+
+
+ocamlc takes many kind of arguments and does things based on their file suffix
+ocamlc needs to take in the modules in their topological order. If you try out of order it will fail
+
+-linkall What is it.
+
+ocamlc main.ml -> main.cmi, main.cmo, a.out
+a.out is a bytecode executable. `file` reveals it runs ocamlrun. `head a.out` shows a hash bang for ocamlrun 
+
+ocamlfind, META files. <http://projects.camlcity.org/projects/dl/findlib-1.9.1/doc/guide-html/c74.html>
+- `ocamlfind list` all known packages
+- `ocamlfind query` 
+- `ocamlfind ocamlc -package foo` will add the appropriate includes to ocamlc `-linkpkg` adds also the file names
+https://discuss.ocaml.org/t/cmo-specification/4112 cmo file format
+
+ocamlopt main.ml -> main.cmx main.
+
+`-i` print all defined things.
+`-S` output assembly
+
+https://ocsigen.org/js_of_ocaml/2.5/manual/overview
+js_of_ocaml - i really needed to output it with main.bytes? No no. I needed to give it the byte _exectuable_. This is the result of the ocamlc compiler
+
+<https://www.ocamlpro.com/2021/09/02/generating-static-and-portable-executables-with-ocaml/>
+
+
+https://github.com/dinosaure/gilbraltar mirageos on pi4
+
+<https://twitter.com/wengshiwei/status/1454128911219003393?s=12> an explanation of the z3 bindings problems and linking diagrams
+### META vs dune vs opam files
+
+## Js_of_ocaml
+Js_of_ocaml is a compiler from ocaml bytecode to javascript.
+
+[state of webassembly](https://discuss.ocaml.org/t/state-of-ocaml-and-web-assembly/2725) some interesting stuff here. emscripten build of C bytecode interpreter. cmm_of_wasm uses ocaml itself as a wasm backend
+[ocaml-wasm](https://github.com/corwin-of-amber/ocaml-wasm/tree/wasm-4.11)
+
+# Language Features
+
+## Object System
 Not particularly highly recommended but it puts the O in ocaml.
 
 Objects add subtyping to ocaml. So do polymorphic variants though. And in asense, polymorphism has a subtyping of "more general than"
 
 [ocaml objects](https://roscidus.com/blog/blog/2013/09/28/ocaml-objects/)
 [mixins](https://www.lexifi.com/blog/ocaml/mixin/)
-### Open Recursion
+## Open Recursion
 This somewhat is related to objects. `self` is a late bound variable that can be overridden. You can emulate this by having base classes take in later classes as an argument.
 Related to the fix form of recursion?
 Landin's knot?
@@ -259,28 +351,16 @@ Landin's knot?
 [](https://whitequark.org/blog/2014/04/16/a-guide-to-extension-points-in-ocaml/)
 [Ralk Hinze Close and Open](https://www.cs.ox.ac.uk/people/ralf.hinze/talks/Open.pdf)
 [Nystrom - What is “Open Recursion”?](http://journal.stuffwithstuff.com/2013/08/26/what-is-open-recursion/)
-### Recursive Modules
+## Recursive Modules
 https://blog.janestreet.com/a-trick-recursive-modules-from-recursive-signatures/
 https://lesleylai.info/en/recursive_modules_in_ocaml/
 Manual section
 
-### Multicore
-[WIki](https://github.com/ocaml-multicore/ocaml-multicore/wiki) links to papers, discussions and videos
-
-[Parallel Programming in Multicore OCaml](https://github.com/ocaml-multicore/parallel-programming-in-multicore-ocaml)
-Domains
-Algebraic effects - related to delimitted continuations
-
-### MetaOcaml
-See note on partial evaluaton.
-What do the metaocaml patches look like?
-
-### PPX
-PPX is a preprocessing stage. You get access to the ocaml syntax tree and can modify it
 
 
 
-### Extensible Variants
+
+## Extensible Variants
 Extensible variants allow you to add new constructors to a data type kind of imperatively. They let data types be open. They are a strong relative of exceptions in ocaml (maybe even the same thing now) which have let you add new exception cases for a long time.
 They give a new axis upon which to consider data type definitions problems. Ordinary data types are closed in Ocaml. It is easy enough to check for pattern matching coverage because of that. Going Finally Tagless is a classic technique for achieving a kind of open-ness to the data type.
 
@@ -322,7 +402,7 @@ You can also have anonymous keys. Instead of destructuring a type like above, yo
 - <https://ocaml.org/manual/extensiblevariants.html> The Ocaml manual is actually quite good.
 - [discussion of runtime representation](https://stackoverflow.com/questions/54730373/when-should-extensible-variant-types-be-used-in-ocaml)
 
-### Extensible Functions
+## Extensible Functions
 
 As part of extensible data types, you might also desire extensible functions. When you add a new case to the datatype, you need to probably add a new handling case to functions that match over this type. These can be simulated using references and mutation. See the Kiselyov example <https://okmij.org/ftp/ML/trep.ml>
 
@@ -350,7 +430,7 @@ We can instead use perhaps a hashtable or dictionary as our key access.
 
 http://okmij.org/ftp/ML/canonical.html#trep
 
-### Universal Types
+## Universal Types
 - <http://mlton.org/StandardML> some interesting stuff here. The universal type representation is the same as cc-ubes
 - strings and Sexp.t
 - <https://discuss.ocaml.org/t/types-as-first-class-citizens-in-ocaml/2030/2>
@@ -360,59 +440,13 @@ http://okmij.org/ftp/ML/canonical.html#trep
 - <https://github.com/samoht/depyt>
 - [Heterogeneous physical equality for references](https://github.com/ocaml/ocaml/issues/7425)
 
-### Extensible Records
+## Extensible Records
 
 
 
 
-### Build System
 
-I have used dune for a long time. It's great. It's so good that I've never really worked with the raw ocaml build system. This is bad. Stuff doesn't always go right, so it's good to know how things work.
-
-All the ocaml tools: <https://ocaml.org/manual/comp.html>
-- ocamlc - batch compiler
-- ocaml - a repl
-- ocamlrun - runtime system (for bytecode output)
-- ocamldep 
-- 
-
-
-ocamlc takes many kind of arguments and does things based on their file suffix
-ocamlc needs to take in the modules in their topological order. If you try out of order it will fail
-
--linkall What is it.
-
-ocamlc main.ml -> main.cmi, main.cmo, a.out
-a.out is a bytecode executable. `file` reveals it runs ocamlrun. `head a.out` shows a hash bang for ocamlrun 
-
-ocamlfind, META files. <http://projects.camlcity.org/projects/dl/findlib-1.9.1/doc/guide-html/c74.html>
-- `ocamlfind list` all known packages
-- `ocamlfind query` 
-- `ocamlfind ocamlc -package foo` will add the appropriate includes to ocamlc `-linkpkg` adds also the file names
-https://discuss.ocaml.org/t/cmo-specification/4112 cmo file format
-
-ocamlopt main.ml -> main.cmx main.
-
-`-i` print all defined things.
-`-S` output assembly
-
-https://ocsigen.org/js_of_ocaml/2.5/manual/overview
-js_of_ocaml - i really needed to output it with main.bytes? No no. I needed to give it the byte _exectuable_. This is the result of the ocamlc compiler
-
-<https://www.ocamlpro.com/2021/09/02/generating-static-and-portable-executables-with-ocaml/>
-
-
-https://github.com/dinosaure/gilbraltar mirageos on pi4
-
-<https://twitter.com/wengshiwei/status/1454128911219003393?s=12> an explanation of the z3 bindings problems and linking diagrams
-
-# Js_of_ocaml
-Js_of_ocaml is a compiler from ocaml bytecode to javascript.
-
-[state of webassembly](https://discuss.ocaml.org/t/state-of-ocaml-and-web-assembly/2725) some interesting stuff here. emscripten build of C bytecode interpreter. cmm_of_wasm uses ocaml itself as a wasm backend
-[ocaml-wasm](https://github.com/corwin-of-amber/ocaml-wasm/tree/wasm-4.11)
-
-# Modules
+## Modules
 See note on modules
 
 https://ocaml.org/manual/moduleexamples.html#
@@ -428,10 +462,10 @@ Modules are by default a runtime notion actually.? They are literally records th
 
 ### Modules vs Typeclasses
 
-### First Class Modules
+## First Class Modules
 http://okmij.org/ftp/ML/first-class-modules/
 
-### Higher Kinded Polymorphism
+## Higher Kinded Polymorphism
 In Haskell, one is used to parametrizing over (Functor f), (Monad f) etc.
 It is not directly possible to refer to an unapplied type constructor in ocaml. 
 
@@ -453,15 +487,15 @@ module type READER
 end
 
 
-# GADTs
+## GADTs
 - https://www.cl.cam.ac.uk/teaching/1718/L28/07-gadts-notes.pdf
 
 For me this is more familiar territory
 
-# Registries
+## Registries
 
 
-# Typelevel programming
+## Typelevel programming
 Here's a fun gizmo.
 
 
@@ -555,7 +589,16 @@ module Gadt : PLUS = struct
 end
 ```
 
-### Misc
+# Misc Resources
+
+[LexiFi blog](https://www.lexifi.com/blog/) some interesting articles
+[Using, Understanding, and Unraveling
+The OCaml Language
+From Practice to Theory and vice versa](https://caml.inria.fr/pub/docs/u3-ocaml/index.html)
+[postl ink optimizer for ocaml](https://github.com/nandor/llir-opt)
+[duplo](https://www.cl.cam.ac.uk/~nl364/docs/duplo.pdf)
+
+
 Abstract binding trees
 https://github.com/shonfeder/um-abt
 https://semantic-domain.blogspot.com/2015/03/abstract-binding-trees.html
