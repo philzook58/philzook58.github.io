@@ -3,6 +3,35 @@ layout: post
 title: Linkers
 ---
 
+
+# DWARF
+Debug info
+unwind tables
+[Reliable and Fast DWARF-Based Stack Unwinding](https://hal.inria.fr/hal-02297690/document)
+<https://fzn.fr/projects/frdwarf/>
+C++ uses drawf unwind tables to implement exceptions
+
+- `.debug_line` maps addresses to source code lines
+- `.debug_info` maps source variables to registers and stack locations
+- `.eh_frame` maps address location return address and callee saved registers info. "exception handling"
+- 
+DWARF encodes using bytecode.
+CFA - canonical frame address
+FDE - frame description entity
+I suppose the dwarf bytecode is kind of a uniform abstraction of the code itself? Only replicating instructions that change frame information?
+
+I don't know what these are
+https://github.com/emersion/libdwarfw
+https://github.com/emersion/dareog
+
+[Exploitng the hard working dwarf](https://www.cs.dartmouth.edu/~sergey/battleaxe/hackito_2011_oakley_bratus.pdf)
+[video](https://www.youtube.com/watch?v=nLH7ytOTYto&ab_channel=Dartmouth)
+
+[dwarf debug format](https://developer.ibm.com/articles/au-dwarf-debug-format/)
+.loc directive outputs into debug_lines table
+
+[Introduction to the DWARF Debugging Format](https://dwarfstd.org/doc/Debugging%20using%20DWARF-2012.pdf)
+# Resources
 [mold design notes](https://github.com/rui314/mold/blob/main/docs/design.md) very interesting. performance tricks, history of linker features
 [The teensy files](https://www.muppetlabs.com/~breadbox/software/tiny/) - writing elf by hand
 [On ELF, Part 2](https://kestrelcomputer.github.io/kestrel/2018/02/01/on-elf-2) - a ctrique of elf for being too complex compared to previous formats and for little gain. Counterpoints https://news.ycombinator.com/item?id=29660319

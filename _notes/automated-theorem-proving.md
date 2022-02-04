@@ -1,6 +1,6 @@
 
 
-See also:
+See also notes on:
 - SMT
 - prolog
 - datalog

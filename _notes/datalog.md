@@ -3,6 +3,29 @@ layout: post
 title: Datalog
 ---
 [modulog](https://github.com/bobatkey/modulog) - datalog with ocaml style modules
+
+
+# What is datalog?
+When I say datalog, I might mean a couple intertwined different things. I might be referring to bottom up execution of logic programs.
+Or I might be concentrating on 
+
+# What can you do with datalog?
+Well, anything you can do with ordinary database queries. What do you do with those? I dunno. Search for patterns
+
+But then on top of that you can use recursive queries. And that is where things get more interesting.
+Program analysis.
+
+# Souffle
+
+Souffle is a datalog implementation that is fast. It can be compiled to parallel C++ code. It also has a number of very intriguing datalog extensions available
+- records
+- algebraic data types
+- subsumption
+- aggregates
+- choice domains
+
+
+
 [choice domain](https://www.youtube.com/watch?v=TnLGbUqOsBc&ab_channel=ACMSIGPLAN) Functional dependencies of pieces of relation. 
 eligible advisors, total order, bipartite matching, more dogs than cats, highest mark in grade.
 Defined at relation level. Makes check before any insertion to see if something already defines functional dependency
@@ -15,7 +38,7 @@ Defined at relation level. Makes check before any insertion to see if something 
 as(a, number) I can cast ADTs to numbers?
 https://github.com/yihozhang/souffle/blob/conglog/tests/congruence/math.dl  interesting
 
-Subsumption examples
+## Subsumption examples
 ```prolog
 
 .type optionsymbol = None {} | Some {val : symbol}
@@ -73,6 +96,27 @@ lower("foo", -3).
 i1.upper(3).
 i1.upper(14).
 .output i1.upper(IO=stdout)
+```
+
+
+A canonical element relation. Similiar to union find algorithm
+```
+#define EQ(x,y) canon(x,z), canon(y,z)
+.decl canon(x : symbol, y : symbol)
+
+.decl symbol(x : symbol)
+symbol("x").
+symbol("y").
+symbol("z").
+
+canon(x,x) :- symbol(x).
+canon(x,z) :- canon(x,y), canon(y,z).
+canon(x,y) <= canon(x,z) :- y <= z.
+
+canon("x","y").
+canon("y","z").
+
+.output canon(IO=stdout)
 ```
 
 [dr. disassembler](https://github.com/lifting-bits/dds) and blog post

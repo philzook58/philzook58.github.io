@@ -32,6 +32,14 @@ short circuiting && ||, try to short circuit early
 
 ## Stuff
 
+[OSACA](https://github.com/RRZE-HPC/OSACA) an analyzer of assembly code. It is on godbolt 
+
+<iframe width="800px" height="200px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,fontUsePx:'0',j:1,lang:analysis,selection:(endColumn:12,endLineNumber:8,positionColumn:12,positionLineNumber:8,selectionStartColumn:12,selectionStartLineNumber:8,startColumn:12,startLineNumber:8),source:'square(int):%0A++++++++pushq+++%25rbp%0A++++++++movq++++%25rsp,+%25rbp%0A++++++++movl++++%25edi,+-4(%25rbp)%0A++++++++movl++++-4(%25rbp),+%25eax%0A++++++++imull+++%25eax,+%25eax%0A++++++++popq++++%25rbp%0A++++++++ret'),l:'5',n:'0',o:'Analysis+source+%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:osacatrunk,filters:(b:'0',binary:'1',commentOnly:'0',demangle:'0',directives:'0',execute:'1',intel:'1',libraryCode:'1',trim:'1'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:analysis,libs:!(),options:'',selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1,tree:'1'),l:'5',n:'0',o:'OSACA+(0.4.7)+(Analysis,+Editor+%231,+Compiler+%231)',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),version:4"></iframe>
+
+ This gruop has a number of interesting tools. <https://github.com/RRZE-HPC> It scrapes info from 
+- Likwid
+- [kerncraft](https://github.com/RRZE-HPC/kerncraft) loop kernel analysis and performance modelling
+
 [List of interesting optimizers](https://en.wikipedia.org/wiki/Optimizing_compiler) - These are compiler optimizations, so hopefully your compiler does them for you, but maybe it doesn't and maybe 
 
 <https://twitter.com/lemire/status/1461181871841320962?s=20> Lemire converting integerrs to fix digit representations

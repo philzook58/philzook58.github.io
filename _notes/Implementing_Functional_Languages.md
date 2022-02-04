@@ -1,19 +1,16 @@
 ---
-author: philzook58
-comments: true
-date: 2020-10-05 13:52:20+00:00
 layout: post
-link: https://www.philipzucker.com/?p=2843
-published: true
-slug: Continuations, Implementing Functional Languages
-title: Continuations, Implementing Functional Languages
-wordpress_id: 2843
+title: Functional Languages Implementation
 ---
 
-See also:
+See also notes on:
 - binding forms
+- continuations
+- ocaml
+- haskell
+- scheme / lisp
 
-Xaviery leroy implementing functional languagues
+Xavier leroy implementing functional languagues
 https://xavierleroy.org/talks/compilation-agay.pdf really good.
 He describes an interesting operation "disassembling" SOme relation to quote :: Value -> Term
 
@@ -133,28 +130,10 @@ https://dev.realworldocaml.org/compiler-backend.html
 https://news.ycombinator.com/item?id=25386756 compiler course cornell. Interesting links in comments
 https://news.ycombinator.com/item?id=25273907 llvm comments
 
-Low level ocaml and haskell
 
-The STG. It's curiously like a Bohm mararducci or finally tagless. Constructors are function points. I mean. They're both called tagless.
-https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/generated-code
-push-enter vs eval-apply
-https://github.com/lexi-lambda/ghc-proposals/blob/delimited-continuation-primops/proposals/0000-delimited-continuation-primops.md continuation primop
-https://medium.com/superstringtheory/haskell-compilation-pipeline-and-stg-language-7fe5bb4ed2de
-http://www.scs.stanford.edu/11au-cs240h/notes/ghc-slides.html#(1) crazy slides on the full stack
-https://hackage.haskell.org/package/stgi stg interpeter. but also a good read
---ddump-ds
---ddump-stg
 
 http://ezyang.com/jfp-ghc-rts-draft.pdf ghc rts
 
-https://stackoverflow.com/questions/11322163/ocaml-calling-convention-is-this-an-accurate-summary ocaml calling conventions. To quote:
-The first 10 integer and pointer arguments are passed in the registers rax, rbx, rdi, rsi, rdx, rcx, r8, r9, r10 and r11
-The first 10 floating-point arguments are passed in the registers xmm0 - xmm9
-Additional arguments are pushed onto the stack (leftmost-first-in?), floats and ints and pointers intermixed
-The trap pointer (see Exceptions below) is passed in r14
-The allocation pointer (presumably for the minor heap as described in this blog post) is passed in r15 https://rwmj.wordpress.com/2009/08/06/ocaml-internals-part-3-the-minor-heap/
-The return value is passed back in rax if it is an integer or pointer, and in xmm0 if it is a float
-All registers are caller-save?
 
 http://fyquah95.github.io/some-fun-with-ocaml-closures closure represnetatio n
 
@@ -176,55 +155,7 @@ There are many courses that use racket and ocaml
   * [https://bernsteinbear.com/blog/compiling-a-lisp-0/](https://bernsteinbear.com/blog/compiling-a-lisp-0/) nice blog series compiling lisp to C
   * https://bernsteinbear.com/assets/img/11-ghuloum.pdf incremental appraoich to compiler construction
 
- Algebraic effects
-* https://www.stephendiehl.com/posts/exotic03.html effect systems are off to the side, but do they help explain lifetimes?  https://news.ycombinator.com/item?id=25178437 interesting commments. Oleg talk. Frank language
-* divergence as an effect. But also is memory usage an effect 
-* ocaml algebraic effects.  https://github.com/ocaml-multicore/effects-examples https://www.youtube.com/watch?v=z8SI7WBtlcA&feature=emb_title&ab_channel=JaneStreet https://ocamlverse.github.io/content/future_ocaml.html#typed-algebraic-effects https://github.com/ocamllabs/ocaml-effects-tutorial
-* There was an andrej bauer video https://www.youtube.com/watch?v=atYp386EGo8&ab_channel=OPLSS
-*  Sandy Maguire and polysemy
-* resumable exceptions.
-* Related the the python yield stuff. 
-* Daan Leijen paper https://www.microsoft.com/en-us/research/wp-content/uploads/2016/08/algeff-tr-2016-v2.pdf comes up
-* Koka, Eff, F*
-* Plotkin papers
-* Alexis King effects for less https://www.youtube.com/watch?v=0jI-AlWEwYI&ab_channel=Z%C3%BCrichFriendsofHaskell
-* https://github.com/ghc-proposals/ghc-proposals/pull/313 delmiitted conitauition primops ghc propsoal. Lots of interestnig discussion
-* Pretnar 2015  An Introduction to Algebraic Effects and Handlers Invited tutorial pap https://www.eff-lang.org/handlers-tutorial.pdf
-- https://cs.ru.nl/~dfrumin/notes/delim.html delimitted contiunuations
-- Asai
-- Eff direclt in ocaml Kiselyov Sivaramakrishnan  https://arxiv.org/pdf/1812.11664.pdf
 
-Coroutines and generators as effect systems. javascript cotuotines to conitations [https://gist.github.com/yelouafi/bbc559aef92f00d9682b8d0531a36503](https://gist.github.com/yelouafi/bbc559aef92f00d9682b8d0531a36503)
-
-Rebvisting coroutines [http://www.inf.puc-rio.br/~roberto/docs/MCC15-04.pdf](http://www.inf.puc-rio.br/~roberto/docs/MCC15-04.pdf)
-
-[https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.398.9600&rep=rep1&type=pdf](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.398.9600&rep=rep1&type=pdf) Yield - mainstream delimitted continuations. slides [http://parametricity.net/dropbox/yield-slides.subc.pdf](http://parametricity.net/dropbox/yield-slides.subc.pdf)
-
-https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.399.1021&rep=rep1&type=pdf
-Lazy v Yield - kiselyov sabry peytonjones
-Inremental linear pretty printing
-
-https://twitter.com/sigfpe/status/1274764185658769408?s=20
-
-io.py [https://gist.github.com/alexknvl/e15ea9762a58935b28f2](https://gist.github.com/alexknvl/e15ea9762a58935b28f2)
-https://github.com/alexknvl/ai-meetup/blob/master/19-09-26-ppl1/ppl-meetup.ipynb probablistic programming
-https://twitter.com/ezyang/status/1300278419188580353?s=20
-
-[https://pypi.org/project/effect/#:~:text=Effect%20is%20a%20library%20for,It%20supports%203.6%20and%20above.](https://pypi.org/project/effect/#:~:text=Effect%20is%20a%20library%20for,It%20supports%203.6%20and%20above.) effect - as python library
-
-takafumi asrakaki using julia yieldto for a "callcc"
-https://julialang.zulipchat.com/#narrow/stream/137791-general/topic/call.2Fcc.20for.20Julia.3F.20%28or.20how.20to.20use.20.60yieldto.60%29/near/218188425
-
-
-[https://news.ycombinator.com/item?id=24257488](https://news.ycombinator.com/item?id=24257488) Anatomy of Lisp. Lisp in small pieces.
-
-[https://www.cs.utexas.edu/ftp/garbage/cs345/schintro-v14/schintro_142.html#SEC271](https://www.cs.utexas.edu/ftp/garbage/cs345/schintro-v14/schintro_142.html#SEC271)
-
-Lambda prolog book is drectly talking about semantics in terms of sequents
-
-[https://github.com/nornagon/jonesforth/blob/master/jonesforth.S](https://github.com/nornagon/jonesforth/blob/master/jonesforth.S) Jones forth tutorail assembly
-
-https://slang.soe.ucsc.edu/cormac/papers/pldi93.pdf The essence of compiling with continuations. Pushing A normal form.
 
 I like to start things simple.
 
@@ -286,7 +217,7 @@ Named functions also gives you recursion.
 
 #### Currying and Closures.
 
-One trasnformation is known as lambda lifting, where you 
+One transformation is known as lambda lifting, where you 
 
 [http://matt.might.net/articles/closure-conversion/](http://matt.might.net/articles/closure-conversion/)
 
@@ -494,15 +425,7 @@ We can take a physical perspective that at the moment not withstanding any hypot
 
 Higher up the stack, we have the abstractions available from C. We have the abstraction of functions calls, the low level details of the stack abstracted away by lagnauge facilities, often the ability to malloc and free.
 
-[https://github.com/rain-1/continuations-study-group/wiki/Reading-List](https://github.com/rain-1/continuations-study-group/wiki/Reading-List)
 
-Oleg delimcc an implemntation of delimitted continuations for the 
-
-Relationship between monads and conitnuations - mohter of all monads. Buyt also Filinkski paper. refiication and reflection - In a langue with  effects like ocaml, we can reflect / reify the exceptions or mutation into their pure form that uses monad dsiciplaine. Converting native ocaml exception to Either exceptions [https://www.reddit.com/r/haskell/comments/1cyajx/the_mother_of_all_monads_school_of_haskell/](https://www.reddit.com/r/haskell/comments/1cyajx/the_mother_of_all_monads_school_of_haskell/) some caustic yet intriguing discussion. The embedding is (x >>=) like how cps embedding is (x $)?
-
-[https://gist.github.com/sjoerdvisscher/a56a286ccfabce40e424](https://gist.github.com/sjoerdvisscher/a56a286ccfabce40e424) This is interesting. Using cont monad in swift probably to deal with the lack of higher kinded types. Similar to rust problem
-
-https://www.reddit.com/r/haskell/comments/1cyajx/the_mother_of_all_monads_school_of_haskell/
 
 [https://caml.inria.fr/pub/papers/xleroy-zinc.pdf](https://caml.inria.fr/pub/papers/xleroy-zinc.pdf) Leroy describes the zinc machine and basically a whole ml implementation. Very interesting 
 

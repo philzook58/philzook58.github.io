@@ -3,6 +3,17 @@ layout: post
 title: Gettin' Bappin' with Bap
 ---
 
+- [What is Binary Analysis](#what-is-binary-analysis)
+    - [Program Analysis](#program-analysis)
+    - [How are binaries made](#how-are-binaries-made)
+  - [Core Theory](#core-theory)
+    - [Universal Types, Existentials and Packing](#universal-types-existentials-and-packing)
+    - [Typed Keys](#typed-keys)
+- [Bap Lisp](#bap-lisp)
+- [Project Structure](#project-structure)
+- [Binary / Program Analysis](#binary--program-analysis)
+  - [Other tidbits](#other-tidbits)
+  - [Universal Values](#universal-values)
 
 `--print-missing` flag for missing instruction semantics https://github.com/BinaryAnalysisPlatform/bap/pull/1409
 
@@ -160,7 +171,24 @@ The flags corresponding to plugins are typically namespace like `--pluginname-pl
 ### Bap Disassemble
 Bap disassemble is the default command if you choose no command.
 You can use it similar to objdump
---print-symbol
+`--print-symbol` lets you print just a particular function
+
+[where print flags are defined](https://github.com/BinaryAnalysisPlatform/bap/blob/master/plugins/print/print_main.ml)
+-d is dump options to bap diassemble. currently I see 
+- knowledge
+- cfg
+- graph
+- asm
+- asm.adt
+- adm.decoded
+- asm.sexp
+- bil
+- bil.adt
+- bil.sexp
+- bir
+- ogre
+
+
 ### Saving and restroing the knowledge base
 -k
 --project
@@ -255,6 +283,11 @@ MIR -> Asm
 
 
 ## Core Theory
+
+Dumping the concrete syntax of core theory <https://gitter.im/BinaryAnalysisPlatform/bap?at=61fd525703f27047821b4c08>
+`bap /bin/true --core-theory-herbrand -dknowledge`
+
+Always try `--no-cache`
 
 To describe the operations of different machines, bap lifts into a common intermediate representation. From the common representation you can perform different binary analysis.
 

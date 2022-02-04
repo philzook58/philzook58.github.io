@@ -1,9 +1,70 @@
 ---
 layout: post
-title: Invariants - Constrained Horn Clauses
+title:  Constrained Horn Clauses - Invariants
 ---
 
 
+- [BTOR2](#btor2)
+- [Resources](#resources)
+    - [What is a query?](#what-is-a-query)
+    - [Program Verification](#program-verification)
+
+# BTOR2
+Btor is a model checking format supported by bitwuzla.
+
+Hmm. Interesting.
+So btor is intended for hardware model checking. There is a single transition relation. If you want more, you should model a program counter.
+btormc is a boolector based model checker. It iteratively unwraps the state relation
+K induction mode --kind
+Refers to variables and calculations by number. Many operations are predicated on sort. You can repeat sort definitions
+`20 sort bitvec 1` defines at 20 a bitvector sort of length 1
+
+Ok doesn't allow duplicate symbol declaration
+`21 state 20 fred` defines a symbol of sort "20" called fred
+
+`22 add 1 4 2` add takes a sort. It isn't inferred. `eq` also takes a sort? Can it not be bitvec 1?
+
+`b` bad states and `j` justice states?
+bad, constraint, fair, output.
+`constraint` lets you assume something (an invariant)
+`input` for un constraied stuff
+
+Yeah, it all makes sense. Especially in a hardware context.
+
+How do you put suggested hand written invariants in?
+
+```
+; int i = 1, factorial = 1;
+; assert (i <= 2 || !(factorial & 1));
+; for (;;) {
+;   factorial *= i;
+;   i++;
+;   assert (i <= 2 || !(factorial & 1));
+; }
+1 sort bitvec 4
+2 one 1
+3 state 1 factorial  ; defining 2 state variables
+4 state 1 i
+5 init 1 3 2      ; initialization of factorial= 1
+6 init 1 4 2      ; initialization of i =  1
+7 add 1 4 2       ; expression i + 1
+8 mul 1 3 4       ; expression factorial * i
+9 next 1 4 7      ; next state i = i + 1
+10 next 1 3 8     ; this is setting factorial = factorial * i
+11 ones 1         ; b1111
+12 sort bitvec 1
+13 eq 12 4 11     ; predicate i == b1111 overflow condition?
+14 bad 13
+15 slice 12 3 0 0
+16 constd 1 3
+17 ugt 12 4 16    ; comparing i > 3
+18 and 12 17 15
+19 bad 18
+```
+
+# Resources
+
+[Solving Constrained Horn Clauses Modulo Algebraic Data Types and Recursive Functions ](https://www.youtube.com/watch?v=AGaYhwe-mYU&ab_channel=ACMSIGPLAN)
 Forward vs backwards chaining. One could also consider a datalog like execution model.
 
 Linear logic and CHC. Perhaps a more convenient language for frames.
@@ -257,90 +318,6 @@ Meta foregin code base techniques
 - checkout tests
 
 
-Folders:
-- cmake, not that interesting
-- contrib - qprofdiff tool. axiom profiler diff tool?
-- doc - not that ijnterest
-- examples 
-  * tptp
-  * maxsat solver using C bindings
-## src - most of the goodies are here.
-
-
-
-- CmakeLists.txt - ineresting actually. Gives a more full listing of everything
-  header files.
-  subdirectories to scan. util comes first.
-  util, math, ast, params, model, tactic, parsers, sat,
-- utils 
-  * approx_nat. uses UINTMAX to represent "huge". That's cool.
-  * bitvector - arrau for storing bit vbectors
-  * hash - custom hash stuff http://burtleburtle.net/bob/hash/doobs.html
-  * inf_int_rational - rationals with infinitesimals
-  * memory_manager? 
-  * min_cut
-  * mpbq - binary rationals. multi precision binary Q, q meaing rational
-  * mpff - mulitprecision fast floats?
-  * sexp
-  * stack - low level stack allocator?
-  * state_graph - tracking "live" and "dead" states 
-- math
-  * polynomial - upolonymial - uvariate. some facotrizxations, algerbaic numbers
-  * dd - decision diagrams
-  * hilbert - computes hilbert basis. A thing from inequalities o https://en.wikipedia.org/wiki/Hilbert_basis_(linear_programming)
-  * simplex - bit matrix, network flow, simplex algo
-  * automata
-  * interval - interval arithemtic
-  * realclosure - closing the rationals, computale reals, infinitesimals, Huh. This idea of infinitesimals is odd but intriguing. What is that for?
-  * subpaving
-  * greobner
-  * lp
-- ast
- * euf - has an egraph implementation -referencing egg?! etable - one entry per function symbol
- * fpa - conversion between bitvector and floating point
- * macro - z3 macros. universally quantified that can be used as macros. Macros are universally quantified formulas of the form:
-     (forall X  (= (f X) T[X]))
-     (forall X  (iff (f X) T[X]))
-   where T[X] does not contain X. macro_finder=True flag?
- * normal - normal forms. skolemaizaytion. negation normals form. Pull quantifiers
- * pattern - pattern ordering, can one be instantiated to the other?
- * proof - proof checker and traversal
- * rewriter - huge. der destructive equality resoltion. rewrite.h common infratsture
- * More I got tired
-- params - stuff
-- model
-
-
-You know, it's a lot, but it isn't quite as overwhelming as I have felt in the past
-- shell - z3 executable
- * main.cpp - hmm trace and debug builds.
- * smtlib_frontend.cpp - parse_smt2_commands
- * src/smt2/smt23parser - oh wow. the parser is pretty complex. Is this really the runtime in some sense? This file is best read bottom to top. Well, it's loading evertythning up into the context. That makes sense. asserts. parse_cmd. declarations, consts, asserrs,  eventually you run check_sat
- * src/solver/solver.h check_sat, combined_solver.cpp. check_sat is like an overloadable class function though? Where does the solver get built?
-
- * cmd_context? This is where commands are defined. Might be secret ones.
-
-paramaters, tactics, and commands
-z3 -in  interactive mode
-(help) - gives commands?
-model based projection
-(query predicate) horn rules. there are an insane number of options to this
-(include)
-(help-tactic)
-(get-value expr) in current model. Crazy
-(get-proof-graph) whaaaaat
-(eval term) options - completion. arrays as stores? array_equalities
-(eufi) model based interpolation
-(euf-project) congurence propjection
-(declare-rel) declare new relation? takes a representation*. This is a datalog thing right?
-(rule (=> ))
-(declare-map) new array map operator
-(dbg- stuff) - wow a lot here
-(check-sat-assuming)
-(check-sat-using tactic)
-(declare-tactic)
-(apply tactic)
-(simplfiy) has a print-proofs option?
 
 muz has: datalog, bmc, and spacer mode, and xform?
 :print-certificatie fives "inductive invataint" even in datalog?
@@ -424,21 +401,3 @@ plus(x,y,z) => False
 Or 
 True => plus(x,y,z) ? with no quantification?
 
-
-
-https://www.youtube.com/watch?v=-eH2t8G1ZkI&t=3413s
-syntax guided synthesis
-sygus-if https://sygus.org/
-CVC4 supports it.
-LoopInvGen, OASES, DryadSynth, CVC4
-
-rahul sharma
-polikarpova, peleg, isil dillig
-
-https://www.youtube.com/watch?v=h2ZsstWit9E&ab_channel=SimonsInstitute - 
-automated formal program reapir
-"fault localization" 
-https://github.com/eionblanc/mini-sygus
-
-
-https://arxiv.org/pdf/2010.07763.pdf refinement types constrained horn lcauses. Describes using simple houdini algorithm,.

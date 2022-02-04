@@ -7,6 +7,8 @@ description: my notes about ocaml
 
 - [Ocaml Guts](#ocaml-guts)
   - [Runtime](#runtime)
+    - [Calling Conventions](#calling-conventions)
+    - [Exceptions](#exceptions)
     - [The Zinc Abstract Machine (ZAM)](#the-zinc-abstract-machine-zam)
   - [Compiler](#compiler)
 - [Ecosystem](#ecosystem)
@@ -14,11 +16,14 @@ description: my notes about ocaml
   - [Stdlib](#stdlib)
     - [Obj module](#obj-module)
   - [Multicore](#multicore)
+    - [Domains](#domains)
+    - [Effects](#effects)
   - [MetaOcaml](#metaocaml)
   - [PPX](#ppx)
   - [Build System](#build-system)
     - [META vs dune vs opam files](#meta-vs-dune-vs-opam-files)
   - [Js_of_ocaml](#js_of_ocaml)
+    - [WASM](#wasm)
 - [Language Features](#language-features)
   - [Object System](#object-system)
   - [Open Recursion](#open-recursion)
@@ -106,9 +111,23 @@ bytecode('''
 let () = print_endline "hello world"
 ''')
 ```
-
+### Calling Conventions
 r15 is the minor heap, so adjustments to it are allocations
-8(%r14) looks like the heap end information, which triggers a GCcccccccccc
+r14 is a pointer to the Ocaml_state structure [domain state after multicore?](https://github.com/ocaml/ocaml/blob/trunk/runtime/caml/domain_state.tbl)
+8(%r14) looks like the heap end information, which triggers a GC
+[Conventions here](https://github.com/ocaml/ocaml/blob/trunk/asmcomp/amd64/proc.ml)
+
+[ocaml calling conentions stack overflow](https://stackoverflow.com/questions/11322163/ocaml-calling-convention-is-this-an-accurate-summary) ocaml calling conventions. To quote:
+The first 10 integer and pointer arguments are passed in the registers rax, rbx, rdi, rsi, rdx, rcx, r8, r9, r10 and r11
+The first 10 floating-point arguments are passed in the registers xmm0 - xmm9
+Additional arguments are pushed onto the stack (leftmost-first-in?), floats and ints and pointers intermixed
+The trap pointer (see Exceptions below) is passed in r14
+The allocation pointer (presumably for the minor heap as described in this blog post) is passed in r15 <https://rwmj.wordpress.com/2009/08/06/ocaml-internals-part-3-the-minor-heap/>
+The return value is passed back in rax if it is an integer or pointer, and in xmm0 if it is a float
+All registers are caller-save?
+
+### Exceptions
+How do they work ata low level?
 
 ### The Zinc Abstract Machine (ZAM)
 See chapter 2 of ZINC report
@@ -129,6 +148,8 @@ Wait, so `apply :: Closure -> Arguments -> `?
 
 
 But this talk is 15 years old. 
+
+[Caml Virtual Machine Instruction Set](http://cadmium.x9c.fr/distrib/caml-instructions.pdf). ocaml 3.11. closer to modern
 
 ## Compiler
 [A beginners guide to OCaml internals](https://rwmj.wordpress.com/2009/08/04/ocaml-internals/)
@@ -264,6 +285,7 @@ ocamldebug is nice for bytecode debugging
 https://ocaml.org/meetings/ocaml/2012/slides/oud2012-paper5-slides.pdf
 objdump -t the symbols. The  module entrypoint is probably something like `camlMyModule__entry` You can set a breakpoint there.
 
+[comments on using perf](https://discuss.ocaml.org/t/ann-perf-demangling-of-ocaml-symbols-a-short-introduction-to-perf/7143/5)
 ## Stdlib
 ### Obj module
 The obj module holds all kinds of nasty introspective goodies. Possibly physical equality `=` deserves to be in here too.
@@ -271,12 +293,86 @@ The obj module holds all kinds of nasty introspective goodies. Possibly physical
 [WIki](https://github.com/ocaml-multicore/ocaml-multicore/wiki) links to papers, discussions and videos
 
 [Parallel Programming in Multicore OCaml](https://github.com/ocaml-multicore/parallel-programming-in-multicore-ocaml)
-Domains
+### Domains
+For parallelism not concurrency
+
+### Effects
+- See also note on continuations and effects
 Algebraic effects - related to delimitted continuations
+For concurrency, not parallelism
+
+[PLDI talk](https://pldi21.sigplan.org/details/pldi-2021-papers/14/Retrofitting-Effect-Handlers-onto-OCaml) 
+[paper](https://arxiv.org/pdf/2104.00250.pdf)
+[effect examples](https://github.com/ocaml-multicore/effects-examples)
+[Concurrent system programing with effect handlers paper]
+
+OS threads are heavyweight.
+async/await, generators, coroutines.
+Current method of concurrency - Lwt and Async. Callback oriented with monad syntax. no backtraces, no exceptions, too many closures
+- similar languages - go goroutines and ghc hackell thread - lightweight threads
+
+effect handlers, plotkin et al 2009, modular basis of non-local control flow mechaism ~ similar to first class resumable exceptions
+
+```ocaml
+effect E : string
+let comp () = print_endline (perform E)
+
+let main () = try comp () with
+   | effect E k -> continue k "2"
+```
+
+
+Is mechanically it similar to throwing expectins holding callback functions?
+
+When you enter `try`, a new fiber stack is created. It has a pointer to it's parent stack. Starts small (32 words) and dynamically grown. At perform, create cotinuation. This is small, bring ourselfs back up to parent frame.
+One shot continations. No frame copying necessary. The pointer back to the fiber frame is nulled once used.
+multi shot continuation via explicit copying
+Hanlders can be nested. Linear search through handler stack. 
+
+Light threading
+```ocaml
+effect Fork : (unit -> unit) -> unit
+effect Yield : unit
+```
+
+The arguemnts to effects are given when performed
+The result of the effect is given when continue
+
+You can overload exceptions in match? Huh.
+
+Generators
+Can be derived from iterator
+
+
+Linearity. You canleak resources in legacy code. assume captured continuations are linearly used
+
+backtraces - dwarf stack unwinding support. gdb perf, libunwind.
+bespoke swarf bytecode for unwiding across fibers. They used stephen kell's dwarf verifier. That's cool
+
+static semantics - no effect safety. no static gurantee all effects ar handled
+effect system - eff link koka, helium
+effectiv ocaml - ocaml becomes pure?
+
+dynamic semantics - cek machine. Why? stack layout is complicated.
+system stack - where C is executed. fiber 1 is main ocaml. 
+ocaml and c functions as different kinds of lambdas. Huh.
+"because a cek machine terms are expressions or values" Hmm.
+stacks are C stack or ocaml stack
+
+Cancellation contexts from F#
+clone_continuation is multi shot.  In Obj module.
+"what color is your function" Function color is a concept? This design explicitly avoids this. Generator in javascript are "colored" different
+loom conitnuations
+
+
 
 ## MetaOcaml
-See note on partial evaluaton.
+See note on:
+ - partial evaluaton.
+
 What do the metaocaml patches look like?
+
+[Meta ocaml bibliography](https://github.com/metaocaml/metaocaml-bibliography)
 
 ## PPX
 PPX is a preprocessing stage. You get access to the ocaml syntax tree and can modify it
@@ -329,8 +425,10 @@ https://github.com/dinosaure/gilbraltar mirageos on pi4
 ## Js_of_ocaml
 Js_of_ocaml is a compiler from ocaml bytecode to javascript.
 
+### WASM
 [state of webassembly](https://discuss.ocaml.org/t/state-of-ocaml-and-web-assembly/2725) some interesting stuff here. emscripten build of C bytecode interpreter. cmm_of_wasm uses ocaml itself as a wasm backend
 [ocaml-wasm](https://github.com/corwin-of-amber/ocaml-wasm/tree/wasm-4.11)
+[ocaml-to-wasm-overview](https://github.com/sabine/ocaml-to-wasm-overview)
 
 # Language Features
 
@@ -355,10 +453,6 @@ Landin's knot?
 https://blog.janestreet.com/a-trick-recursive-modules-from-recursive-signatures/
 https://lesleylai.info/en/recursive_modules_in_ocaml/
 Manual section
-
-
-
-
 
 ## Extensible Variants
 Extensible variants allow you to add new constructors to a data type kind of imperatively. They let data types be open. They are a strong relative of exceptions in ocaml (maybe even the same thing now) which have let you add new exception cases for a long time.
@@ -591,12 +685,14 @@ end
 
 # Misc Resources
 
-[LexiFi blog](https://www.lexifi.com/blog/) some interesting articles
-[Using, Understanding, and Unraveling
+- "resource programming in ocaml" linearity [Resource polymorphism](https://arxiv.org/abs/1803.02796) Is it this? Yes probably [linear types in ocaml](https://stackoverflow.com/questions/15620411/linear-types-in-ocaml) using type state basically? [kiselyov monadic regions](https://okmij.org/ftp/Haskell/regions.html)
+- [Towards Automatic Resource Bound Analysis for OCaml - hoffmann et al](http://www.cs.cmu.edu/~janh/papers/HoffmannDW17.pdf)
+- [LexiFi blog](https://www.lexifi.com/blog/) some interesting articles
+- [Using, Understanding, and Unraveling
 The OCaml Language
 From Practice to Theory and vice versa](https://caml.inria.fr/pub/docs/u3-ocaml/index.html)
-[postl ink optimizer for ocaml](https://github.com/nandor/llir-opt)
-[duplo](https://www.cl.cam.ac.uk/~nl364/docs/duplo.pdf)
+- [postl ink optimizer for ocaml](https://github.com/nandor/llir-opt)
+- [duplo](https://www.cl.cam.ac.uk/~nl364/docs/duplo.pdf)
 
 
 Abstract binding trees

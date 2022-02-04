@@ -17,10 +17,16 @@ fcntl
 - `read`
 - `write`
 
+- `select`
+- `poll`
+- 
 
 ## Virtualization
 
 ## Concurrency
+libuv
+libev
+libevent
 
 ## File System
 Disk sectors.

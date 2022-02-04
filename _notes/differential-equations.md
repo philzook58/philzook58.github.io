@@ -3,6 +3,49 @@ layout: post
 title: Differential Equations
 ---
 
+- [Closed Form Solutions](#closed-form-solutions)
+  - [Integrals](#integrals)
+  - [Decay](#decay)
+  - [Forced Decay](#forced-decay)
+  - [Simple Harmonic Motion](#simple-harmonic-motion)
+  - [Forced Simple Harmonic Motion](#forced-simple-harmonic-motion)
+  - [Simple Harmonic Motion with Drag](#simple-harmonic-motion-with-drag)
+- [Non closed Form Problems](#non-closed-form-problems)
+  - [Iterative Methods](#iterative-methods)
+  - [Perturbation Methods](#perturbation-methods)
+    - [Solving For Fixed Points](#solving-for-fixed-points)
+    - [Lie Method](#lie-method)
+- [Extensions](#extensions)
+  - [Matrix "Decay"](#matrix-decay)
+  - [Control Problems](#control-problems)
+    - [LQR](#lqr)
+    - [Inverse Problems?](#inverse-problems)
+  - [DFT, Fourier Series, Fourier Transform](#dft-fourier-series-fourier-transform)
+- [Finite Difference](#finite-difference)
+  - [Summations](#summations)
+  - [Growth Equation](#growth-equation)
+- [Computers](#computers)
+  - [Symbolic](#symbolic)
+    - [State Machine Analogs](#state-machine-analogs)
+    - [Symbolic Solution of Diff Eqs](#symbolic-solution-of-diff-eqs)
+      - [Pattern matching](#pattern-matching)
+      - [Lie Algebra methods](#lie-algebra-methods)
+  - [Numeric](#numeric)
+    - [Numbers](#numbers)
+    - [Finite Difference](#finite-difference-1)
+    - [Validated Numerics](#validated-numerics)
+  - [1-D Laplace](#1-d-laplace)
+  - [Particle in a Box](#particle-in-a-box)
+  - [Periodic Systems and Bands](#periodic-systems-and-bands)
+  - [Method of Matching coefficients](#method-of-matching-coefficients)
+- [Higher PDE Dimensions](#higher-pde-dimensions)
+  - [Poisson Free Space (Coulomb's Law)](#poisson-free-space-coulombs-law)
+  - [Separation of Variables](#separation-of-variables)
+  - [Laplace Box](#laplace-box)
+  - [Analytic Functions](#analytic-functions)
+  - [Circle](#circle)
+
+
 <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
 <script type="text/javascript">
     async function main(){
@@ -39,6 +82,7 @@ title: Differential Equations
     main();
 </script>
 
+# Closed Form Solutions
 
 Differential Equations are neat. They are the mathematical underpinning of a lot of physics.
 
@@ -104,10 +148,10 @@ Waves Book
 
 Many methods can be built on the assumption that the result can be approximated by a power series
 
-# Iterative Methods
+## Iterative Methods
 For "short times" $t$ is a small parameter and it is reasonable to expect you can approximate the solution well
 
-# Perturbation Methods
+## Perturbation Methods
 [Numerical parameter continuation](https://github.com/nschloe/pacopy)
 
 
@@ -146,7 +190,11 @@ For many of the closed form problems in the continuum differential equation case
 
 # Computers
 ## Symbolic
-### State Machines
+### State Machine Analogs
+### Symbolic Solution of Diff Eqs
+See sympy docs 
+#### Pattern matching
+#### Lie Algebra methods
 
 ## Numeric
 

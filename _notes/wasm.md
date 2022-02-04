@@ -208,3 +208,9 @@ https://microsoft.github.io/monaco-editor/
 <https://news.ycombinator.com/item?id=29376105> compiling stock python to wasm
 pyiodide
 
+
+[cheerp](https://leaningtech.com/cheerp/) - an alternative to emscripten?
+
+[webvm](https://medium.com/leaningtech/webvm-client-side-x86-virtual-machines-in-the-browser-40a60170b361) JIT compilation of stock x86 in the brwoser. Apparently higher perfomance than bessard's jslinux [hacker news discussion](https://news.ycombinator.com/item?id=30167403)
+
+[virtual x86](https://copy.sh/v86/) a similar open source project but slower?

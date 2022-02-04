@@ -1,21 +1,15 @@
 ---
-author: philzook58
-comments: true
-date: 2018-09-21 18:49:59+00:00
 layout: post
-link: https://www.philipzucker.com/?p=1302
-published: false
-slug: HOTT notes
 title: HOTT
-wordpress_id: 1302
 ---
 
-[Escardo notes](https://www.cs.bham.ac.uk/~mhe/HoTT-UF-in-Agda-Lecture-Notes/)
-[The HoTT game](https://thehottgameguide.readthedocs.io/en/latest/getting-started/index.html)
-
-
+- [Escardo notes](https://www.cs.bham.ac.uk/~mhe/HoTT-UF-in-Agda-Lecture-Notes/)
+- [The HoTT game](https://thehottgameguide.readthedocs.io/en/latest/getting-started/index.html)
+- [Introduction to Cubical Type Theory (Part I) youtube](https://www.youtube.com/watch?v=6cLUwAiQU6Q&ab_channel=Favonia)
+- [CSCI 8980 Higher-Dimensional Type Theory](https://favonia.org/courses/hdtt2020/)
 
 # Older
+2018
 
 https://epit2020cnrs.inria.fr/ spring school
 Type/Space        A type

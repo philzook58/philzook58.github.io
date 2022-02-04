@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Floating Point
+title: Floating Point and Numerical verification
 ---
 
 [Formally Verified Approximations of Definite Integrals](https://hal.inria.fr/hal-01630143/file/main.pdf)

@@ -8,6 +8,49 @@ slug: Partial Evaluation Tricks
 title: Partial Evaluation Tricks
 wordpress_id: 2677
 ---
+
+[Partial history of partial evaluation](https://www.youtube.com/watch?v=-PbO-hDzvoc&list=PLyrlk8Xaylp7TRTz_6BwLNwLhF-tdzQEY&index=3&ab_channel=ACMSIGPLAN)
+
+```
+target = mix(interp,s)
+comp = mix(mix,interp)
+cogen = mix(mix,mix)  compiler geerator
+```
+Jones optimality
+Binding time analysis
+Are the staging annotation automatically inferred or not?
+Two level languages
+Kleene's s-m-n theorem
+
+
+Hutton's Razor
+```ocaml
+type aexpr = 
+   Add of aexpr * aexpr | Lit of int
+
+type aexpr_st = 
+  AddS of aexpr_st * aexpr_st | Lit of int
+type aexpr_dyn =  (* Not mutually recursive actually. Makes sense *)
+  AddDS of aexpr_dyn * aexpr_st | AddSS | AddSD | Var of string
+
+type val_st = int
+type a_expr_eval = 
+  AddDS of aexpr_eval * val_st | 
+
+```
+
+What is the relationship of marshalling and partial evaluation? Any? I can't really make new code in some sense, only closures. I could remove some interpetation overhead, but only that which could be done via `compile :: Prog -> (a -> b)` anyhow. Maybe the key is the sense of that (a -> b). Is it capturing Prog when partially applied or not? Maybe a language like rust whose clsoures are more explicit about capturing.
+
+Code combinators. One can literally use `type 'a code = string` and printf. Correctly introducing lambdas is a pain. Is a gensym enough? Make `code` a more complex type?
+```ocaml
+type 'a code = string
+
+let lit i : int code = string_of_int i
+
+```
+
+Cross Stage Persistence
+
 [scheme bibliogrphy](https://github.com/schemedoc/bibliography/blob/master/page10.md)
 
 
