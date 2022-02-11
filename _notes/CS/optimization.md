@@ -6,6 +6,13 @@ description: my notes about optimization
 ---
 
 - [Linear Programming](#linear-programming)
+  - [Tricks](#tricks)
+    - [Encoding equality in terms of inequality](#encoding-equality-in-terms-of-inequality)
+    - [Making the objective a variables](#making-the-objective-a-variables)
+    - [Absolute value encoding](#absolute-value-encoding)
+    - [Minimax encoding](#minimax-encoding)
+    - [Linear in _what_?](#linear-in-what)
+    - [Absolute values regularization tends to make solutions sparse.](#absolute-values-regularization-tends-to-make-solutions-sparse)
   - [Applications](#applications)
 - [Convex Optimization](#convex-optimization)
 - [Duality](#duality)
@@ -13,10 +20,13 @@ description: my notes about optimization
   - [Geometrical Perspective](#geometrical-perspective)
   - [Lagrange Multipliers and Legendre Transformation](#lagrange-multipliers-and-legendre-transformation)
 - [Bilevel programming](#bilevel-programming)
+  - [method 1 KKT condition](#method-1-kkt-condition)
+- [Quadratic Programming](#quadratic-programming)
+- [Conic Programming](#conic-programming)
 - [Stochastic programming](#stochastic-programming)
 - [Semi definite programs](#semi-definite-programs)
-- [Conic Programming](#conic-programming)
-- [Quadratic Programming](#quadratic-programming)
+  - [Applications](#applications-1)
+  - [Sum of Squares](#sum-of-squares)
 - [Complementarity Problems](#complementarity-problems)
 - [Mixed Integer](#mixed-integer)
   - [Big-M](#big-m)
@@ -35,7 +45,32 @@ $$ Ax \le b $$
 $$ Ax \le b $$ and Ax \ge b $$ gives a equality
 ### Making the objective a variables
 Make a new variable $$ t $$ and add constraint $$ t = c^T x $$. Now you can minimize $$ t $$ instead.
-### 
+### Absolute value encoding
+min \sum_i |c_i^T x|
+
+You can create a new variable t_i for each absolute value term
+replace with
+
+min \sum_i t_i
+\forall_i t_i <= c_i^T x <= t_i
+
+### Minimax encoding
+A similar feeling trick
+
+min ( max_i c_i^T x)
+
+create a _shared_ bound t
+
+min t
+\forall_i c_i^T <= t
+
+Because minimizing t tries to push against these new constraints, t will end up being the maximum of them. The constraint correspond to this will be tight, whereas the others will be slack.
+This trick does not generalize as much as one might naively hope. Nested optimization is often difficult. See bilevel optimization.
+
+### Linear in _what_?
+
+### Absolute values regularization tends to make solutions sparse.
+
 
 ## Applications
 - least absolute value optimization
@@ -127,16 +162,52 @@ A Cone is a set that is closed under non-negative combinations of it's points. T
 ## Lagrange Multipliers and Legendre Transformation
 
 # Bilevel programming
+[Review on Bilevel optimization](https://arxiv.org/pdf/1705.06270)
+[Gentle and incomcplete introduction to bilevel optimization](http://www.optimization-online.org/DB_FILE/2021/06/8450.pdf)
+Bilevel programming is a natural idea of modelling nested optimization problems. They occur when you want to optimize given that someone else is optimizing
+For example, suppose you want to optimize a trajectory for worst case error forces. You minimize a cost while errors are trying to maximize it.
+Or the two problems can have unrelated objectives
+
+
+## method 1 KKT condition
+Optimal points of the lower problem hav KKT conditions ~ gradient = 0. These are equality constraints. This turns it into a nonlinear optimization problem.
+It is not entirely clear to me that any point that satisfies kkt conditions is necessarily a global optimum. That sounds ok... hmm
+
+KKT conditions include complementarity conditions, converting into a complementarity problem. This can in turn perhaps be encoded into MIP. Or possibly you might end up with a system of polynomial equations which can be treated (at small scale) using homotopy continuation methods or other algebraic methods.
+
+
+
+
+# Quadratic Programming
+# Conic Programming
+
 
 # Stochastic programming
 
 # Semi definite programs
+optimization over positive semidefinite matrices. Very powerful
 
-# Conic Programming
+## Applications
+- lyapunov matrices. You need to show that something is stable. The interesting example is that you have linear dynamical system and a discrete set of possible dynamics. You can find a common lyapunov matrix to all of them 
+- density matrices
+- sum of squares polynomial optimization
 
-# Quadratic Programming
+## Sum of Squares
+Again we should ask linear in what?
+
+m = [1 x x^2]
+
+m^T Q m is a sum of squares polynomial if Q is positive semidefinite. The eigenvectors are the terms of the sum. 
+
+This is the analog of $a^Tm$ being a linear parametrization of an arbitrary polynomial
+
+Trick: you can find the optimal value of a polynomial by considering $p(x) + t$. You want to minimize t such that $p(x) + t$ stays positive.
+
+Moments: This one always kind of confused me. Linear functionals s.t. if f(x) is sos that L[f] >= 0
 
 # Complementarity Problems
+
+xy = 0 constraints, which is another way of saying only one of x and y can be nonzero
 
 # Mixed Integer
 

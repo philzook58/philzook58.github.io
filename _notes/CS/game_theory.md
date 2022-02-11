@@ -1,0 +1,5 @@
+
+
+Nash equilibrium
+Bimatrix games
+
