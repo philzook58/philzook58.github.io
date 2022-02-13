@@ -69,11 +69,19 @@ Mapping variables to histories
 Each thread can pick arbitrary values out of histories given timestamp constraints
 
 [thin air problem - Sewell Batty](https://www.cl.cam.ac.uk/~pes20/cpp/notes42.html)
+[Sewell Weak Memory page](https://www.cl.cam.ac.uk/~pes20/weakmemory/)
+[multicodre semantics - making sense of weak memory](https://www.cl.cam.ac.uk/~pes20/slides-acs-2020.pdf)
 [The Problem of Programming Language Concurrency Semantics](https://www.cl.cam.ac.uk/~jp622/the_problem_of_programming_language_concurrency_semantics.pdf)
 [A Primer on Memory Consistency and Cache Coherence,](https://www.morganclaypool.com/doi/abs/10.2200/S00962ED2V01Y201910CAC049)
 
 <https://www.youtube.com/watch?v=N07tM7xWF1U&ab_channel=CppCon> abusing your memory model for fun and profit
 <https://news.ycombinator.com/item?id=29109156> what memory model should rust use
+
+People
+- Hans Boehm
+- Peter Sewell
+
+[diy](http://diy.inria.fr/) a design and testing thing for weak memory models. Litmus7, herd7
 
 John regehr thread <https://twitter.com/johnregehr/status/1451355617583460355?s=20> Really good
 [Is Parallel Programming Hard, And, If So, What Can You Do About It? ](https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html)
