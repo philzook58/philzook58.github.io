@@ -2,7 +2,6 @@
 layout: post
 title: Datalog
 ---
-[modulog](https://github.com/bobatkey/modulog) - datalog with ocaml style modules
 
 
 # What is datalog?
@@ -125,8 +124,11 @@ Linear "datalog" - destructive state update
 Using Sqllite - https://www.sqlite.org/lang_with.html recursive ctes seem to get you a lot. Cool examples. Mandelbrot
 
 
-Datalog
+# Resources
 
+[modulog](https://github.com/bobatkey/modulog) - datalog with ocaml style modules
+
+[crepe](https://github.com/ekzhang/crepe) a rust prcoedural macro datalog
 
 Dedalus datalog. Is it datalog with a time variable or something more? I think it may have changed the stratification conditions.
 
