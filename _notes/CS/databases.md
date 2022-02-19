@@ -3,8 +3,9 @@ layout: post
 title: Databases
 ---
 
-[postgres indexes for newbies](https://blog.crunchydata.com/blog/postgres-indexes-for-newbies)
-[postgres tutorial](https://www.postgresqltutorial.com/)
+See also:
+- Datalog
+
 
 ## indices
 
@@ -16,6 +17,9 @@ This is interesting
 ## Aggregate functions
 
 ## Window Functions
+
+
+## The Chase
 
 ## SQL
 - `create table`
@@ -32,3 +36,11 @@ This is interesting
 - `.schema`
 - `.indexes`
 - `.expert` suggests indices?
+
+
+
+
+# Resources
+[postgres indexes for newbies](https://blog.crunchydata.com/blog/postgres-indexes-for-newbies)
+[postgres tutorial](https://www.postgresqltutorial.com/)
+[raytracer in sql](https://github.com/chunky/sqlraytracer)

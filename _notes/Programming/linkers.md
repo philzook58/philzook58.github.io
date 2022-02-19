@@ -3,6 +3,16 @@ layout: post
 title: Linkers
 ---
 
+# Sections
+# Segments
+# Symbol Table
+# Relocations
+# Compilation Units
+https://en.wikipedia.org/wiki/Single_Compilation_Unit
+
+# Link Time Optimization
+
+# ELF
 
 # DWARF
 Debug info

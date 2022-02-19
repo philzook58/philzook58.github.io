@@ -3,6 +3,55 @@ layout: post
 title: Partial Evaluation 
 ---
 
+
+# Code Combinators
+The most obvious way of code generation is to just print the code you'd write by hand. You can build up combinators to do this for you instead of directly manipulating strings all over your codebase.
+
+
+```ocaml
+type 'a code = string
+(* or alternatively [formatter -> unit] *)
+
+let int (i : int) : int code = string_of_int int
+let app : ('a -> 'b) code -> 'b code ->
+let lam (f : 'a code -> 'b code) : ('a -> 'b) code = 
+let let_ (x : 'a code) (in_ : 'a code -> 'b code) = 
+    let fresh = fresh () in 
+    "let %s = %s in %s" fresh x (in_ fresh)
+(* let module_. first classe modules *)
+(* toplevel defintion *)
+let comment (com : string) (c : 'a code) : 'a code =
+  "(* %s *) %s" com c (* additionally we should escape comment (* *) characters in [com] *)
+let defs = ref [] (* not going to type check. Maybe it should be a module? Maybe it will actually. code = string is exposed *)
+let def (name : string) (body : 'a code) : unit =
+  defs := (name, body) :: !defs
+
+
+(* (args : ? code list) ( : ? code list -> 'b code) =
+  register? *)
+
+```
+
+I didn't realize it at the time, but this is what I was doing in my coq post.
+
+If you use HOAS, you can feel safe about variable capture.
+
+If you make `type 'a code = 'a * string` you can 
+
+
+
+# Cross Stage Persistance 
+Same thing as [cross phase persistence](https://docs.racket-lang.org/reference/eval-model.html#%28part._cross-phase._persistent-modules%29? 
+
+Taking the code printing model, you need to serialize some things. The things that come from other modules can be shared. In metaocaml, you can also share
+It is easy to for example take a compile time int and produce a string that can be evaluated to that int. string_of_int : 
+
+CSP vs lifting.
+Oleg talks about copying vs sharing. serialization isa form of 
+
+
+
+
 [Partial history of partial evaluation](https://www.youtube.com/watch?v=-PbO-hDzvoc&list=PLyrlk8Xaylp7TRTz_6BwLNwLhF-tdzQEY&index=3&ab_channel=ACMSIGPLAN)
 
 ```

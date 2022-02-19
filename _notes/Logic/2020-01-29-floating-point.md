@@ -3,6 +3,13 @@ layout: post
 title: Floating Point and Numerical verification
 ---
 
+[Linkes to dd arithmetic](https://twitter.com/hypergeometer/status/1493976347177275394?s=20&t=HpXMueCpbbces3-09fMYhw). dd+d and qd+d. airthemtic. Ball arithemtic using float formats for everything? double double arithemtic. using two doubles to represent and one double for ballradius. Sometimes you need to go to higher precision to correctly round. So 2 doubles is attarcive sine 128bit floas rarely exist in hardware
+
+compute recude bound |result| * 2^-53 or "error-free transformation"
+
+mathemagix
+
+
 [Formally Verified Approximations of Definite Integrals](https://hal.inria.fr/hal-01630143/file/main.pdf)
 
 Henessey and Patterson Appendix H has a good section with reference by the same Golberg who wrote the 

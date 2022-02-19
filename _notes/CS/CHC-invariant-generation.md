@@ -8,6 +8,8 @@ title:  Constrained Horn Clauses - Invariants
 - [Resources](#resources)
     - [What is a query?](#what-is-a-query)
     - [Program Verification](#program-verification)
+  - [Tricks](#tricks)
+- [Ideas](#ideas)
 
 # BTOR2
 Btor is a model checking format supported by bitwuzla.
@@ -133,6 +135,8 @@ Classically, if you want to prove `p`, a uniform way of doing so is to add `not 
 
 ### Program Verification
 
+Reachable
+
 Just as you can write a functional program to emulate the execution of some imperative code or assembly, you can write a prolog program to do the same. In these pure languages, this is achieved by explicitly passing state as a parameter.
 
 To actuallyl get the output state.
@@ -157,6 +161,29 @@ loop_entry(I, Y) :- I >= 10, loop_exit(Y).
 loop_entry(I, Y) :- I < 10,  I1 = I + 1, Y1 = Y + 5, loop_entry(I1, Y1).  
 ```
 
+```lisp
+(define-fun main (Int Int) Bool)
+(define-fun loop-entry (Int Int) Bool)
+(define-fun loop-exit (Int Int) Bool)
+```
+
+## Tricks
+
+- Tracking inputs.
+- Product Program
+- WP using let
+- Program counter exists.
+- Memory modelling - 
+
+"partial evaluations"
+You can ask for the program counter to stay in a known set. This is an invariant
+You can ask that only certain PC -> PC edges exist. This is more difficult. It requires remembering prev_PC? No, but not tracked through the predciate. Just put a ghost `prev_PC := PC` before every  
+Once you know that you can fuse the firs program counter variables with the predicate itself. Then you havethe CFG flavored version.
+You can also pre-fuse linear program flow.
+
+Getting a counterexample - the counterexample is in the UNSAT proof. But you can instead try negating the initial condition clause and remove it's forall binder to expose the initial variables? But then the forall of each statement are a disaster. Hmm. Maybe flip Bad -> Good and make horn clauses equalities? Yeah. This doesn't work. nvm
+
+
 
 https://www.cs.stevens.edu/~ejk/papers/cav21-preprint.pdf - relational verficiation using some enhancement on CHC
 
@@ -175,6 +202,16 @@ https://www.youtube.com/watch?v=yJQZ7sG8xSM&ab_channel=Rust - horn clasues gener
 https://www.cs.utexas.edu/~tdillig/cs395/esc-houdini.ps houdini leino and flanagan.
 https://www.cs.utexas.edu/~isil/fmcad-tutorial.pdf abduction
 https://theory.stanford.edu/~aiken/publications/papers/pldi19.pdf
+
+# Ideas
+How to help along the solver.
+I think, maybe, that if you can guess parts of the invariant that helps.
+(declare-const pvar )
+(define-fun p ()   (and known_invariants pvar )
+
+This goes into both heads an bodies. Is that okay?
+Or have a reach-exit, reach-entry split.
+Fill this in with info from user annotation and abstract analysis.
 
 
 
@@ -209,7 +246,7 @@ Function calls may not be recursive of course. If we previously establidshed
 Keeping overapproximations of Reachable sets.
 Generalize counterexamnple and push them backwards
 
-Z3 imlementation.
+Z3 implementation.
 https://github.com/pddenhar/Z3-IC3-PDR
 
 really nice description
@@ -324,14 +361,14 @@ muz has: datalog, bmc, and spacer mode, and xform?
 
 
 
-data driven horn clause solver. They use decision trees?
+[data driven horn clause solver](https://www.cs.purdue.edu/homes/suresh/papers/pldi18.pdf). They use decision trees?
 That's interesting. What about a scikit-learn loop,
 Or polynomial fitting?
 Good invariants candidates over bit vectors? That cbat thing sounds kind of good.
 One of those domains. There was also that thing. That paper for comparative whatever that was guessing useful conditions inside.
-https://www.cs.purdue.edu/homes/suresh/papers/pldi18.pdf
 
-https://www.cs.utexas.edu/~isil/cs389L/houdini-6up.pdf
+
+[houdini](https://www.cs.utexas.edu/~isil/cs389L/houdini-6up.pdf)
 
 Constrained horn clauses
 

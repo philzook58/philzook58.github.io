@@ -14,8 +14,18 @@ See also:
 - Constrained Horn Clauses
 
 
-### CHR
+# CHR
 Constraint handling rules
+
+# Things that are prolog
+- Typeclasses
+- Inductive data types
+- Inference rules
+
+
+
+# Lambda Prolog
+elpi
 
 
 ### Stuff

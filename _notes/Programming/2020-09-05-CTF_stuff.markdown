@@ -9,6 +9,9 @@ title: CTF stuff
 wordpress_id: 2960
 ---
 
+
+[dronesploit](https://github.com/dhondta/dronesploit)
+
 burp suite
 idor - autorize
 
@@ -22,8 +25,9 @@ Shellcode generators. What do they do?
 [google dorking](https://github.com/iGotRootSRC/Dorkers) Like using google with special commands? Why "dork"?
 shodan
 
-nmap
+# nmap
 -A -T4. OS detection
+nmap nse - nmap scriping engine. There is a folder of scripts
 
 p0f - passive sniffing. fingerprinting
 
@@ -33,7 +37,7 @@ p0f - passive sniffing. fingerprinting
 [](https://guyinatuxedo.github.io/00-intro/index.html)
 [exploit education](https://exploit.education/)
 [rop emporium](https://ropemporium.com/)
-
+[linux exploitation course](https://twitter.com/binitamshah/status/1492855772384219138?s=20&t=Fyek6pLGPQrxADkntoVadg)
 yara - patterns to recognize malware. Byte level patterns?
 Sigma
 snort

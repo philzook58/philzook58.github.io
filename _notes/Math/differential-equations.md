@@ -13,7 +13,8 @@ title: Differential Equations
 - [Non closed Form Problems](#non-closed-form-problems)
   - [Iterative Methods](#iterative-methods)
   - [Perturbation Methods](#perturbation-methods)
-    - [Solving For Fixed Points](#solving-for-fixed-points)
+    - [Fixed Points](#fixed-points)
+  - [Chaos](#chaos)
     - [Lie Method](#lie-method)
 - [Extensions](#extensions)
   - [Matrix "Decay"](#matrix-decay)
@@ -44,6 +45,10 @@ title: Differential Equations
   - [Laplace Box](#laplace-box)
   - [Analytic Functions](#analytic-functions)
   - [Circle](#circle)
+
+
+See also:
+- Linear Algebra
 
 
 <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
@@ -148,6 +153,9 @@ Waves Book
 
 Many methods can be built on the assumption that the result can be approximated by a power series
 
+
+
+
 ## Iterative Methods
 For "short times" $t$ is a small parameter and it is reasonable to expect you can approximate the solution well
 
@@ -156,9 +164,15 @@ For "short times" $t$ is a small parameter and it is reasonable to expect you ca
 
 
 
-### Solving For Fixed Points
+### Fixed Points
 
-Finding fixed points is a question that is much easier than solving a differential equation. It only involves 
+Finding fixed points is a question that is much easier than solving a differential equation. It takes out the differential stuff and now you just need to solve a possibly nonlinear set of equations. Linearization around a fixed point can be useful. Tells you about stability.
+
+## Chaos
+Attractors
+
+[Koopman Operators](https://twitter.com/IgorMezic/status/1492326556433195009?s=20&t=Fyek6pLGPQrxADkntoVadg)
+
 
 ### Lie Method
 
@@ -262,3 +276,10 @@ Crystal momentum.
 
 
 Morse and Feshbach
+
+https://github.com/pyamg/pyamg Algebraic multigrid
+Fast Multi pole method
+FFT
+Domain Decomposition
+Finite Elements / Galerkin
+Boundary Element Method

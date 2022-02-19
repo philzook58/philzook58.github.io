@@ -80,3 +80,152 @@ C -> Clight -> C#minor -> Cminor -> CminoSel -> RTL -> LTL -> Linear 0> Mach
 Individual folders for each architecture. Interesting.
 
 - backend
+
+
+[autosubst](https://github.com/coq-community/autosubst)
+VCFloat
+gappa
+flocq
+mathematical components
+coq platform
+
+[Verified software Toolchain](https://vst.cs.princeton.edu/) higher order separation logic for C
+[certigraph](https://github.com/CertiGraph/CertiGraph) graph manipulation programs
+[certigc](https://github.com/CertiGraph/CertiGC) verified garbage collector
+
+[Axioms to consider enabling](https://github.com/coq/coq/wiki/CoqAndAxioms)
+
+# Coq hackthan 2022
+https://github.com/coq/coq/tree/master/dev/doc
+https://github.com/coq/coq/wiki/DevelSetup coq devel setup
+
+
+- dev helpful information and scripts
+- kernel
+- interp
+- vernac - all sorts of files implementing vernacular commands fixpoint, indcutive, define search etc
+- tactics - ocaml code implementing some built in tactics like auto, autorewrite,
+- pretyping? Is this elaboration from surface syntax to kernel.
+- plugins - some native plugins are implemented. Extraction, btauto. Possibly a good place to look if you want to implement your own plguin. ssr. ring. micromega, ltac, ltac2
+- kernel. I'll try to list these in a dependency order
+  + names.ml
+  + univ.ml
+  + sorts.ml
+  + constr.ml - internal syntax of terms. "constructions" 
+  + native*.ml stuff related to native compilation to ocaml for normalization
+  + 
+
+- testuite
+- ide - coq ide
+- boot
+
+types
+- constr
+- unsafe_judgement
+- evar_map
+- glob_constr
+- 
+
+You can build coq using dune
+make -f Makefile.dune
+
+https://github.com/ejgallego/coq/tree/simple_compiler
+
+stm
+
+parse
+resolution of names
+interpret
+type inferrance
+
+
+compiler/scoq.c
+vernac com* are implementationso f that vernac
+vernacexpr.ml vernac as
+VerancExtend constructor is where extension points hook in
+
+using serapi to probe coq ast
+camlp5
+mlg files. you can find them in _build
+vernacentires - interpeter out of vernac
+vernacextend.mli  a typed dsl for vernac
+vernax_interp
+vernac_state
+declare.mli
+
+Wehen you do a lemma
+Proof_info
+interp/Constrintern first step of elbation
+
+interp/constrr_expr is surface syntax of coq terms.
+pretyping/glob_contr globalized /internalized term name resolution applied
+pretyping.mli type inferrence
+pretyping/understand_tcc is an important entry point?
+
+evar_map
+
+gramlib?
+
+pretypinggggggggg
+evarconv.mli what is this?
+
+
+libraries
+coq_checklib
+bool
+clib
+config
+coqpp
+top printer
+engine 0 actual proof engine
+gramlib
+interp
+kernel
+lib
+library
+parsing
+parsing
+pretypng
+printing
+parsing
+proofs legacy
+sysinti
+tactics
+tactics
+vernac
+
+
+engine is 2 compoenents in one. pconstr e
+
+https://github.com/ejgallego/coq-serapi/blob/v8.13/FAQ.md#how-many-asts-does-coq-have
+
+## dune
+make problmatic
+
+couple of pointers
+- build systems a la carte
+- podcast about build systems by andrey
+
+language agnostic
+language secpfic rules
+in dunesrc
+dep.mli
+memo.mli - memo is important huh. Build monad 
+src/dune_rules
+
+1. scan all stanzas
+2. build virtual view of file system
+3. setup rule
+4. build a target
+
+(coq.theory
+
+
+)
+
+1. we detect dune file with (coq.theory
+2. extract generated files
+3. setup rules, informrm the build enginer about what _net targets_ are in scope
+
+
+

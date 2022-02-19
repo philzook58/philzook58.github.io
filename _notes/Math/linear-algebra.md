@@ -2,6 +2,39 @@
 layout: post
 title: Linear Algebra
 ---
+- [Applications](#applications)
+  - [Linear Dynamical Systems](#linear-dynamical-systems)
+  - [LQR Control](#lqr-control)
+  - [Kalman Filters](#kalman-filters)
+  - [Probability](#probability)
+  - [Quantum Mechanics](#quantum-mechanics)
+  - [Least Squares Optimization](#least-squares-optimization)
+  - [Boundary Value Problems](#boundary-value-problems)
+  - [Filtering](#filtering)
+- [Matrices](#matrices)
+  - [Kronecker products](#kronecker-products)
+- [Numerical](#numerical)
+- [Decompositions](#decompositions)
+    - [LU](#lu)
+    - [SVD](#svd)
+    - [Jordan](#jordan)
+    - [QR](#qr)
+    - [Eigenvector](#eigenvector)
+      - [Power method](#power-method)
+      - [Krylov](#krylov)
+      - [Conjugate Gradient](#conjugate-gradient)
+      - [](#)
+- [Eigenvalues](#eigenvalues)
+  - [Resolvent](#resolvent)
+  - [Characteristic polynomial](#characteristic-polynomial)
+- [Special Matrices](#special-matrices)
+- [Schur Complements](#schur-complements)
+  - [Domain Decomposition](#domain-decomposition)
+  - [H-Matrices](#h-matrices)
+  - [Infinite domains](#infinite-domains)
+  - [Circuit equivalents](#circuit-equivalents)
+- [Resources](#resources)
+
 
 # Applications
 ## Linear Dynamical Systems

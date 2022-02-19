@@ -32,6 +32,44 @@ active learning
 
 
 - Try trivial modifications. Adding a case to some data type for example.
+# Blogging
+
+https://www.gwern.net/
+Dan luu
+Dan piponi
+
+
+It's hard to pick links. Some of REALLY good, but it's hard to denote that. This is why link dumps aren't that useful. Lack of emphasis.
+
+Ctrl+Shift+V puts in markdown render mode.
+"markdown shortcuts" auto generates table of contents
+Go into .vscode/jeepshen... /src/share.js to add new languages. Not ideal
+Also executorMap in package.json. I re aliased python to python3
+
+
+```python
+print("hello world")
+```
+```ocaml
+let () = print_endline "hello world"
+```
+```julia
+print("hi")
+```
+```bash
+echo hellow
+```
+```c
+#include <stdio.h>
+int main(){
+    puts("foo");
+}
+```
+```souffle
+.decl foo(x : number)
+foo(3).
+.output foo(IO=stdout)
+```
 
 # Is a PhD Good
 My opinions are informed by my history and background, as anyone's is.

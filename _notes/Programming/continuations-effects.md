@@ -11,8 +11,48 @@ mother of all monads. Buyt also Filinkski paper. refiication and reflection - In
 
 https://www.reddit.com/r/haskell/comments/1cyajx/the_mother_of_all_monads_school_of_haskell/
 
+# Contexts and Holes
+
+
+# Are continuations functions?
+Mostly no.
+
+[standard ml contiutation signature](https://www.smlnj.org/doc/SMLofNJ/pages/cont.html)
+```
+type 'a cont
+val callcc : ('a cont -> 'a) -> 'a
+val throw : 'a cont -> 'a -> 'b
+val isolate : ('a -> unit) -> 'a cont
+type 'a control_cont
+val capture : ('a control_cont -> 'a) -> 'a
+val escape : 'a control_cont -> 'a -> 'b
+```
+throw is apply. The question is do we really want `cont` and `(->)` to be interchangeable. In a CPS implementation, the are 
+
+# The stack as a closure
+A closure is an value that contains a code pointer and captured data. To invoke a closure, you need to know some things about it's layout, but not everything. It hides it's implementation. Closures are objects in this sense.
+
+Closures sometimes only store minimal amounts of environment, but in a naive implementation can store much more, maybe a copy of every variable in local scope for example instead of just the variables it closes over.
+
+The conventional C stack has a return address and all the context of what has been going on. This really is a function pointer and environment. It is a closure. This closure however does not rely on the garbage collector to reclaim its memory, but so what?
+
+
 # Delimitted Continuations
 Oleg delimcc an implemntation of delimitted continuations for the
+This uses exceptions (trap frames) as stack markers. In ocaml, at every try block puts handlers in the stack. These are marks
+It then copies the stack up to these points.
+mentions camlcallcc by xavier leroy https://xavierleroy.org/software.html It's pretty small actually. Very interesting. It is copying the stack quite literally.
+
+
+A delimitted continuation is a mapping between contexts... ?
+[lwt fibers using delimcc](http://ambassadortothecomputers.blogspot.com/2010/08/mixing-monadic-and-direct-style-code.html)
+## Continuations Prompts
+[](https://stackoverflow.com/questions/29838344/what-exactly-is-a-continuation-prompt)
+
+Marks
+[racket docs on conituation karks](https://docs.racket-lang.org/reference/contmarks.html)
+[Compiler and runtik support for continuation marks](https://www.cs.utah.edu/plt/publications/pldi20-fd.pdf)
+The stack exists. You can put marks on it that could be searched for.
 
 # Exceptions
 
@@ -20,9 +60,24 @@ Oleg delimcc an implemntation of delimitted continuations for the
 call with current continuation
 Relationship to double negation encoding
 
+
+[An argument against call-cc](https://okmij.org/ftp/continuations/against-callcc.html)
+[undelimited continuations are covalues rather than functions](https://okmij.org/ftp/continuations/undelimited.html)
+### dynamic-wind
+
 # Algebraic effects
 
 What even are algebraic effects?
+
+Kind of like resumable exceptions.
+Also kind of like yield-step (exactly like?).
+## Exceptions
+
+Either Err a piggy backs error handling on the regular return mechanisms. Every stack frame needs to be inspected to bubble error up. This is not how native ocaml exceptions are implemented and probably not how many systems do it.
+
+CPS piggybacks other control flow on closure creation mechanisms.
+
+
 
 [Ocaml is getting an effect system](https://pldi21.sigplan.org/details/pldi-2021-papers/14/Retrofitting-Effect-Handlers-onto-OCaml) 
 See my ocaml notes for more.
@@ -36,6 +91,7 @@ See my ocaml notes for more.
 * Related the the python yield stuff. 
 * Daan Leijen paper https://www.microsoft.com/en-us/research/wp-content/uploads/2016/08/algeff-tr-2016-v2.pdf comes up
 * Koka, Eff, F*, Link, Helium
+* [Daan Leijen Asynchrony with Algerbaic Effects](https://www.youtube.com/watch?v=hrBq8R_kxI0&ab_channel=Vercel)
 * Plotkin papers
 * Alexis King effects for less https://www.youtube.com/watch?v=0jI-AlWEwYI&ab_channel=Z%C3%BCrichFriendsofHaskell
 * https://github.com/ghc-proposals/ghc-proposals/pull/313 delimitted continuation primops ghc proposal. Lots of interestnig discussion
@@ -43,7 +99,8 @@ See my ocaml notes for more.
 - https://cs.ru.nl/~dfrumin/notes/delim.html delimitted contiunuations
 - Asai
 - [Eff directly in ocaml](https://arxiv.org/pdf/1812.11664.pdf) Kiselyov Sivaramakrishnan  
-
+- [algerbaic effects for the rest of us](https://overreacted.io/algebraic-effects-for-the-rest-of-us/) async functions and generators have a different "color". effects remove the need for this how?
+common lisp condition system is related? Is another example of resumable exceptions.
 
 # Resources
 [https://github.com/rain-1/continuations-study-group/wiki/Reading-List](https://github.com/rain-1/continuations-study-group/wiki/Reading-List)

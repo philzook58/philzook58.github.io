@@ -22,3 +22,6 @@ Seems very reasonable for max sat too?
 [Quadrangulation using a SAT solver](https://github.com/hjwdzh/QuadriFlow)
 [satsort](https://github.com/arminbiere/satsort) I'm not sure what this is
 
+[AWS automated reasoning frontier](https://www.amazon.science/blog/automated-reasonings-scientific-frontiers)
+[mallob-mono](https://github.com/domschrei/mallob)
+Good sat solver enabled "Seshia" tehcnique for smt? https://github.com/awslabs/rust-smt-ir bounds integers and turns to bitvectors + ackermannization

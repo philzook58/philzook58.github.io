@@ -1,6 +1,185 @@
 
+See also:
+- Optimization
 
-# Old
+# Applications
+- Speech recognition
+- Image recognition
+- branch prediction
+- phase transition recognition
+- Dimensionality reduction?
+- recommender systems
+- Fluid sim accelerate
+- system identification
+- leanring program invariants http://pranav-garg.com/papers/cav14.pdf https://www.cs.purdue.edu/homes/suresh/papers/pldi18.pdf
+
+# Data
+outliers
+
+
+augmentation - sometimes you can apply trasnformations to the data in ways. For example rotating images if you want the answer to not depend on direction. Or adding noise if you want it to ignore noise. Warping.
+
+In some problems it's nice that you can cripple your data and train it to undo the crippling
+- colorizing images
+- interpolating frames
+- super resolution
+
+
+# Good Practice? What's the right word here
+Test and training sets
+cross validation
+data cleaning
+meta parameter tuning
+don't set auxiliary goals.
+
+Reading training curves
+debugging?
+
+# Supervised
+
+$$ \hat{y}_i = f(x_i; \theta) $$
+
+Classification
+discrete output
+
+Regression - continous output
+
+one hot encoding
+
+
+
+## Linear in WHAT?
+## Nearest neighbor
+## SVM
+## Kernel
+## decision trees
+
+# Unsupervised
+
+PCA
+k-means clustering
+hierarchical clustering
+
+dimsenionlaity reduction?
+
+# Visualization
+t-sne
+umap
+
+# Learning Theory
+VC dimension
+
+# Overfitting
+
+
+bias variance
+
+# Bayesian Shit
+pyro pymc3
+stan 
+particle filters?
+probalistic programming
+
+## Regularization
+[diffrax](https://twitter.com/PatrickKidger/status/1493239723497857025?s=20&t=vnpYi0b4BbBHdrISb_Kxfw) JAX powered differential equations.
+
+# Deep Learning
+## Convolutional
+
+## Recurrent
+lstm
+gru
+blowup problem / vanishing gradient
+
+## tidbits
+ Attention
+ Capsule
+ transformers
+
+batch normalization
+
+dropout
+grokking? overfit and keep going. Sometimes it gets better later. Bizarre. Don't count on this. https://mathai-iclr.github.io/papers/papers/MATHAI_29_paper.pdf
+autoencoders
+GANs
+
+graph neural networks?
+
+transfer learning
+
+# Verification
+Adversarial examples
+
+# Famous Models
+word2vec
+node2vec
+
+code2vec
+
+copilot
+gpt-3
+
+wavenet
+DALL-E
+
+
+alexnet
+vgg
+alphafold
+alpha zero / go
+BERT
+
+
+## Backprop Technqiues
+adam
+sgd
+with momentum?
+
+## Frameworks
+
+Tensorflow
+Pytorch
+JAX
+
+Julia
+## Resources
+- Deep Learning Book
+- 
+
+
+
+
+# Reinforcement Learning
+
+imitation learning
+reinforce
+helmut with 3 cameras.
+
+Markov Decision Process
+Partially observed mdp (POMDP)
+
+Temporal difference
+Reward function
+Value function
+Q function
+policy function
+Learn Dynamics - system identification
+
+
+Q-learning
+sarsa
+policy gradient
+Actor critic
+
+
+
+Monte-carlo search
+
+## Resources
+[openai spinning up](https://spinningup.openai.com/en/latest/index.html)
+Sutton and Barto
+
+# Old Reinforcement learning
 
 I watched David Silver's lectures on Reinforcement Learning.
 

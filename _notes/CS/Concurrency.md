@@ -3,8 +3,9 @@ layout: post
 title: Concurrency
 ---
 
-See also:
+See also notes on:
 - Computer Architecture
+- Operating Systems
 
 # Memory Models
 What's the point?
@@ -60,41 +61,51 @@ Lock free
 
 Data Race Freedom
 
+[string vs weak memory models](https://news.ycombinator.com/item?id=30303003) - programming languages need to be as weak as the weakest hardware they target, or else they can't generate optimal code. Interesting.
+
 [Shared memory concurrency - a tutorial](https://www.hpl.hp.com/techreports/Compaq-DEC/WRL-95-7.pdf)
 [A Promising Semantics for Relaxed-Memory Concurrency](https://www.cs.tau.ac.il/~orilahav/papers/popl17.pdf)
 Mapping variables to histories
 Each thread can pick arbitrary values out of histories given timestamp constraints
 
 [thin air problem - Sewell Batty](https://www.cl.cam.ac.uk/~pes20/cpp/notes42.html)
+[Sewell Weak Memory page](https://www.cl.cam.ac.uk/~pes20/weakmemory/)
+[multicodre semantics - making sense of weak memory](https://www.cl.cam.ac.uk/~pes20/slides-acs-2020.pdf)
 [The Problem of Programming Language Concurrency Semantics](https://www.cl.cam.ac.uk/~jp622/the_problem_of_programming_language_concurrency_semantics.pdf)
 [A Primer on Memory Consistency and Cache Coherence,](https://www.morganclaypool.com/doi/abs/10.2200/S00962ED2V01Y201910CAC049)
 
 <https://www.youtube.com/watch?v=N07tM7xWF1U&ab_channel=CppCon> abusing your memory model for fun and profit
 <https://news.ycombinator.com/item?id=29109156> what memory model should rust use
 
-John regehr thread https://twitter.com/johnregehr/status/1451355617583460355?s=20 Really good
-https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html  Is Parallel Programming Hard, And, If So, What Can You Do About It?
-https://deadlockempire.github.io/
-https://github.com/BIT-SYS/KDR list of kernel data races
-Herlihy is discussed as a given? https://www.amazon.com/Art-Multiprocessor-Programming-Revised-Reprint/dp/0123973376
-https://www.amazon.com/-/en/dp/0470093552 concurrency state models and jabva programsd
-https://www.manning.com/books/c-plus-plus-concurrency-in-action-second-edition
-https://leanpub.com/concurrencywithmodernc
-https://greenteapress.com/wp/semaphores/ little book of semaphors
-https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html kernel memory corruption bug from data race prokject zero
+People
+- Hans Boehm
+- Peter Sewell
+
+[diy](http://diy.inria.fr/) a design and testing thing for weak memory models. Litmus7, herd7
+
+John regehr thread <https://twitter.com/johnregehr/status/1451355617583460355?s=20> Really good
+[Is Parallel Programming Hard, And, If So, What Can You Do About It? ](https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html)
+[deadlock empire](https://deadlockempire.github.io/) Gives a false sense of sequential consistency?
+[list of kernel data races](https://github.com/BIT-SYS/KDR)
+Herlihy is discussed as a given? <https://www.amazon.com/Art-Multiprocessor-Programming-Revised-Reprint/dp/0123973376>
+<https://www.amazon.com/-/en/dp/0470093552> concurrency state models and jabva programsd
+<https://www.manning.com/books/c-plus-plus-concurrency-in-action-second-edition>
+<https://leanpub.com/concurrencywithmodernc>
+[little book of semaphores](https://greenteapress.com/wp/semaphores/) 
+[kernel memory corruption bug from data race prokject zero](https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html)
 Concurrent Programming (Andrews) -- uses pseudo-code with synchronization/concurrency notation.
 Transactional Memory (Harris) -- for non-lock based concurrency.
-https://lwn.net/Articles/844224/ an introduction to lockless algorithms 
+[LWN an introduction to lockless algorithms ](https://lwn.net/Articles/844224/ )
 "Shared-Memory Synchronization" by Michael Scott
-https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/
+<https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/>
 http://plv.mpi-sws.org/gps/paper.pdf GPS: Navigating Weak Memory with Ghosts, Protocols, and Separation
 Weak memory models?
-https://pvk.ca/Blog/2019/01/09/preemption-is-gc-for-memory-reordering/ - 
-https://pvk.ca/Blog/2020/07/07/flatter-wait-free-hazard-pointers/
-https://www.cs.rochester.edu/u/scott/papers/1991_TOCS_synch.pdf algorithms for scababe synchronization on shared-memory. Same Michiael Scott. BBN butterfly?
+<https://pvk.ca/Blog/2019/01/09/preemption-is-gc-for-memory-reordering/> - 
+<https://pvk.ca/Blog/2020/07/07/flatter-wait-free-hazard-pointers/>
+<https://www.cs.rochester.edu/u/scott/papers/1991_TOCS_synch.pdf> algorithms for scababe synchronization on shared-memory. Same Michiael Scott. BBN butterfly?
 https://arxiv.org/abs/1106.5730 HOGWILD - parallizingf lock free SGD
-A Primer on Memory Consistency and Cache Coherence  https://course.ece.cmu.edu/~ece847c/S15/lib/exe/fetch.php?media=part2_2_sorin12.pdf
-https://pure.tue.nl/ws/files/4279816/344354178746665.pdf cooperating seauentail prcoesses by dikstra
+[A Primer on Memory Consistency and Cache Coherence](https://course.ece.cmu.edu/~ece847c/S15/lib/exe/fetch.php?media=part2_2_sorin12.pdf)
+[cooperating seauentail prcoesses by dikstra](https://pure.tue.nl/ws/files/4279816/344354178746665.pdf)
 http://www0.cs.ucl.ac.uk/staff/p.ohearn/papers/concurrency.pdf ohearn resources concurrency and local reasoning
 http://pascal.hansotten.com/uploads/pbh/Monitors%20and%20Concurrent%20Pascal.pdf monitors and concrurent pacscal hitsotry - per brinch hansen https://twitter.com/PeterOHearn12/status/1452240719725346827?s=20 " atomic "release and sleep" is the key as far as I'm concerned, it's so easy to invent bad solutions without that primitive"
 https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.227.3871&rep=rep1&type=pdf the 12 commandments of synchrnonizatiojn
@@ -128,10 +139,8 @@ http://www.cl.cam.ac.uk/~pes20/cpp/popl085ap-sewell.pdf - mathematizzing C++ mem
 Various kinds of relations.
 
 
-futex - fats userspace mutex
+futex - fast userspace mutex
 
- lockless algorithsm
-https://lwn.net/Articles/844224/
 MPI Cilk OpenMP
 
 rust model checker actor system thing

@@ -2,7 +2,6 @@
 layout: post
 title: Datalog
 ---
-[modulog](https://github.com/bobatkey/modulog) - datalog with ocaml style modules
 
 
 # What is datalog?
@@ -124,9 +123,27 @@ canon("y","z").
 Linear "datalog" - destructive state update
 Using Sqllite - https://www.sqlite.org/lang_with.html recursive ctes seem to get you a lot. Cool examples. Mandelbrot
 
+bottom up Dynamic programming in datalog?
 
-Datalog
+`f(@g()) :- true` Sometimes you need to put true in the rhs position.
 
+# Souffle source
+- synthesizer - actual code printers
+- include/souffle - the runtime of souffle
+- ram, relational abstract machine
+- 
+
+# Resources
+[parser in datalog](https://homes.cs.washington.edu/~bodik/ucb/cs164/sp13/lectures/09-Datalog-CYK-Earley-sp13.pdf) bottom up parsing
+
+[Rust lifetime analysis written in souffle](https://github.com/rljacobson/lifetimes)
+[analysis are arrows](https://luctielen.com/posts/analyses_are_arrows/)
+
+[Static analysis in datalog slides](http://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf)
+
+[modulog](https://github.com/bobatkey/modulog) - datalog with ocaml style modules
+
+[crepe](https://github.com/ekzhang/crepe) a rust prcoedural macro datalog
 
 Dedalus datalog. Is it datalog with a time variable or something more? I think it may have changed the stratification conditions.
 

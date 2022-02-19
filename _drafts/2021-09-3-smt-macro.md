@@ -40,7 +40,8 @@ Many things you might think have to be macros can actually be written using othe
  junk value.
 - list comprehensions?
 - Auto derive "gassed" versions of functions
-- Datalog
+- Datalog - rules2chc already is kind of like this.
+- egglog using z3 triggers
 
 
 The interesting angle here is that we can start with raw smtlib2 and work backwards, slowly adding more sugar on top of it. Because of this approach, the full spectrum of stmlib2 constructs will be available and never obscured.
@@ -51,6 +52,7 @@ The interesting angle here is that we can start with raw smtlib2 and work backwa
 - What about Rosette?
 - What about Why3 and Boogie?
 
+The advantage of this approach is that it is very thin layer. Other smtlib++ languages like Boogie, Why3, etc are much heavier and have their own syntax. They are not nearly as universally accepted also. Smtlib is a langua franca.
 
 
 

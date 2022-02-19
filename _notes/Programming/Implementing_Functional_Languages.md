@@ -10,7 +10,19 @@ See also notes on:
 - haskell
 - scheme / lisp
 
-Xavier leroy implementing functional languagues
+
+# Abstract Machines
+# CEK
+
+# SECD
+# Krivine
+# ZAM
+# G-machine
+# Combinators
+# HVM
+
+
+Xavier leroy implementing functional languages
 https://xavierleroy.org/talks/compilation-agay.pdf really good.
 He describes an interesting operation "disassembling" SOme relation to quote :: Value -> Term
 
@@ -171,7 +183,7 @@ I think this may be closer to how hardware is built because physical systems are
 
 Something that is less compelling about abstract machines is that they aren't entirely trivial and explicit. The may still contain nontrivial data structures or judgement. What is trivial or not is in the eye of the beholder.
 
-A huge issue that needs to be dealt with is how to deal with functions that capture variables from there environment.
+A huge issue that needs to be dealt with is how to deal with functions that capture variables from their environment.
 
 #### Why Stacks?
 

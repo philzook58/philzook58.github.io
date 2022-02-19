@@ -6,7 +6,15 @@ title: Gettin' Bappin' with Bap
 - [What is Binary Analysis](#what-is-binary-analysis)
     - [Program Analysis](#program-analysis)
     - [How are binaries made](#how-are-binaries-made)
-  - [Core Theory](#core-theory)
+- [Disassembly](#disassembly)
+- [Knowledge Base](#knowledge-base)
+    - [Classes, Slots](#classes-slots)
+    - [Objects and Values](#objects-and-values)
+    - [Domains](#domains)
+    - [Promises](#promises)
+    - [`Record.t` = `Dict.t` + Domains](#recordt--dictt--domains)
+    - [Value = Record + Sorts](#value--record--sorts)
+- [Core Theory](#core-theory)
     - [Universal Types, Existentials and Packing](#universal-types-existentials-and-packing)
     - [Typed Keys](#typed-keys)
 - [Bap Lisp](#bap-lisp)
@@ -262,7 +270,7 @@ We also don't want our planes and rockets crashing. This does not require malici
 
 <https://github.com/analysis-tools-dev/dynamic-analysis> A list of tools
 https://analysis-tools.dev/
-
+[CSE597: Binary-level program analysis	Spring 19 Gang Tan](http://www.cse.psu.edu/~gxt29/teaching/cse597s19/schedule.html)
 
 ### Program Analysis
 What's the difference? Binaries are less structured than what you'll typically find talked about in program analysis literature.
@@ -280,9 +288,72 @@ C -> IR
 IR -> MIR (what does gcc do? RTL right? )
 MIR -> Asm
 
+# Disassembly
+- Linear
+- Recursive
+- Shingled
+- 
+
+[Disasm.Driver](https://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Disasm/Driver/index.html)
+[](https://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Disasm/index.html)
+
+Delay slots are an annoyance. Some architectures allow instructions to exist in the shadow of jump instructions that logically execute beofre the jump instruction. This makes sense from a micro architectural perspective, but it is bizarre to disassemble
+
+# Knowledge Base
+
+The BAP knowledge base is a centralized store of information meant to hold all the things discovered about a binary. This include properties like the architecture, addresses, and lifted code. User defined analysis may intercommunicate by storing their results into the knowledge base.
+
+The term knowledge base may mean nothing more than database, but to me it implies that it is a combination of a database and mechanisms to automatically derive or populate more information.
 
 
-## Core Theory
+
+
+`bap list classes` shows a list of classes and slots of those classes.
+
+`Toplevel.current ()` is the implicit current knowledge base. This has the program you've lifted in it
+
+In spirit, each object in the KB is a record. Orindary ocaml records look like
+
+
+```ocaml
+type myrecord = {myint : int; mybool : bool}
+```
+but this is not acceptable, because the record needs to be user extensible. Hence some fairly sophisticated "extensible record" programming techniques are used.  The Bap type `Dict.t` is an extensible record. <https://github.com/ivg/bap/blob/master/lib/bap_types/bap_value.ml>
+
+
+
+### Classes, Slots
+
+A class is a description of the fields (slots) of a record. You can declare a new class with no field via `KB.Class.declare`
+A slot os a field of a record. It has a type and name.
+
+You can add another slot to a class by calling `KB.Class.property`
+
+### Objects and Values
+
+
+### Domains
+
+### Promises
+
+Slots are often lazily filled when something `collects` them. These lazy promises are registered via the `KB.promise` funcion.
+
+### `Record.t` = `Dict.t` + Domains
+
+It is desirable for bap to define a notion of record merging. This is a useful concept if you want to combine information built by different pieces of code into a single record.
+One way of doing this is require each field implement the `domain` interface, so that you can merge record by merging each field individually.
+The common case is that some code may only fill out certain fields of the record and other code other disjoint fields. The empty fields are represented by ocaml `None` values. Then the merge you want is the record with all the fields filled out. This is the optional domain.
+Another common case is to merge a field that is a set by using the union or intersection of those sets. 
+
+### Value = Record + Sorts
+
+[code implementing Knowledge base code](https://github.com/ivg/bap/tree/master/lib/knowledge)
+
+[Discussion of Ivan's talk](https://gitter.im/BinaryAnalysisPlatform/bap?at=614c7f4c1179346966327e8c)
+
+[Jt's notes](https://github.com/jtpaasch/bap-kb)
+
+# Core Theory
 
 Dumping the concrete syntax of core theory <https://gitter.im/BinaryAnalysisPlatform/bap?at=61fd525703f27047821b4c08>
 `bap /bin/true --core-theory-herbrand -dknowledge`

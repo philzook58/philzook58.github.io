@@ -5,6 +5,7 @@ tags: ocaml
 description: my notes about ocaml
 ---
 
+- [Beginner Material](#beginner-material)
 - [Ocaml Guts](#ocaml-guts)
   - [Runtime](#runtime)
     - [Calling Conventions](#calling-conventions)
@@ -40,6 +41,27 @@ description: my notes about ocaml
   - [Registries](#registries)
   - [Typelevel programming](#typelevel-programming)
 - [Misc Resources](#misc-resources)
+
+# Beginner Material
+Sometimes there are too many links. These three are really the best IMO.
+- <https://cs3110.github.io/textbook/cover.html>
+- <https://dev.realworldocaml.org/>
+- <https://ocaml.org/manual/>
+
+[Install](https://ocaml.org/docs/install.html): Get opam. Use opam. It's really good. It installs the compiler and packages
+
+I use the ocaml platform vs-code plugin.
+
+Use [dune](https://dune.build/). It is a build system for projects.
+
+Supplementary material
+- https://johnwhitington.net/ocamlfromtheverybeginning/
+- https://ocaml.org/learn/tutorials/
+- https://learnxinyminutes.com/docs/ocaml/
+- https://ocaml-sf.org/learn-ocaml-public/
+- https://ocamlverse.github.io/content/learning.html
+- https://www.philipzucker.com/notes-on-getting-started-in-ocaml/
+
 
 # Ocaml Guts
 ## Runtime
