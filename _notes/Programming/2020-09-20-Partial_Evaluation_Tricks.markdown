@@ -66,6 +66,17 @@ Two level languages
 Kleene's s-m-n theorem
 
 
+# Stream Fusion
+Strymonas
+
+[Even better stream fusion](https://www.youtube.com/watch?v=WrbAwOTekaQ&ab_channel=JeremyGibbons)
+type 'a arr = Aof int * (int -> 'a)
+type 'a arr = A of int * (int -> ('a -> unit) -> unit)
+
+
+
+
+
 Hutton's Razor
 ```ocaml
 type aexpr = 

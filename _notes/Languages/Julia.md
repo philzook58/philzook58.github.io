@@ -6,6 +6,14 @@ wordpress_id: 2987
 ---
 
 
+If you want just linear problems, you can also try Tulip (this is me self-advertising; I wrote it). It's pure Julia, and should give you decent performance.
+If you want nonlinear problems, among the open-source pure Julia solvers, you have:
+COSMO, which supports several cones & quadratic objective. It's based on ADMM, same as SCS/OSQP
+Hypatia, which supports the largest variety of cones (especially the ones you've never heard of). It's based on interior-point, same as ECOS/Mosek.
+For LP and convex QP, there is also https://github.com/JuliaSmoothOptimizers/RipQP.jl
+
+JuliaSmoothOptimizers https://www.youtube.com/watch?v=FsQJ6NEUF6g&ab_channel=TheJuliaProgrammingLanguage
+
 - [Fellisson course](https://felleisen.org/matthias/4400-s20/lecture15.html) Nice description of expression problem and multiple dispatch
 - [Rackauckas comments on paper about julia types](https://twitter.com/ChrisRackauckas/status/1468610935673831430?s=20)
 - [Gotchas](https://www.stochasticlifestyle.com/7-julia-gotchas-handle/)
