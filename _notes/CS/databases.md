@@ -26,6 +26,10 @@ Normal Formals
 
 ## The Chase
 
+## Schema
+
+
+
 ## SQL
 - `create table`
 - `create index`
@@ -46,6 +50,8 @@ Normal Formals
 
 
 # Resources
+[Data integration the relational logic approach](http://logic.stanford.edu/dataintegration/)
+
 [postgres indexes for newbies](https://blog.crunchydata.com/blog/postgres-indexes-for-newbies)
 [postgres tutorial](https://www.postgresqltutorial.com/)
 [raytracer in sql](https://github.com/chunky/sqlraytracer)

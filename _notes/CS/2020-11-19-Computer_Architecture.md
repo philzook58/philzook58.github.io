@@ -137,6 +137,10 @@ Intel hyperthreading
 
 
 
+# Misc
+
+[dan luu what cpus have since the 80s(https://danluu.com/new-cpu-features/)]
+
 dhrystone -benchmark suite. Patterson kind of rails on it.
 
 delay slots - something that makes more sense when you're aware of microarchecture

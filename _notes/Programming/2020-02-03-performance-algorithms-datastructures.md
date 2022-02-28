@@ -3,11 +3,12 @@ layout: post
 title: Performance, Algorithms
 ---
 
-https://blog.janestreet.com/magic-trace/
+
 
 See Also:
 - compilers
 - computer architecture
+- operating systems
 
 ## Easyperf
 Performance matters, it unlocks new applications, important for business
@@ -28,11 +29,38 @@ a[i++] may be faster than a[++i] because of a data dependency reduction
 bool in C++ outputs 0/1 but may have come from a source that didn't. This means it needs branching code for simple satuff
 short circuiting && ||, try to short circuit early
 
+# Estimating Maximum Possible Perf
+If compute bound: Single core freq ~3Ghz * 8 byte words -> 24Gb/s
+RAM 
+SSD speeds - look it up. sequential vs no nsequential v different. Maybe ~1 gb/s as a order of magnitude
+
+Network
+
+[latency numbers every programmer should know](https://colin-scott.github.io/personal_website/research/interactive_latency.html)
+[napkin math](https://www.youtube.com/watch?v=IxkSlnrRFqc)
+# SIMD
 
 
 ## Stuff
 
+[](https://blog.janestreet.com/magic-trace/)
+
+[fread vs mmap](https://lemire.me/blog/2012/06/26/which-is-fastest-read-fread-ifstream-or-mmap/) Rough advice: fread is simple and often comparable to mmap (system dependent). mmap can sometimes be up to 4x faster, use madvise, weird exceptions/signals need to be handled.
+
+[performance tuning on linux - cromwell](https://cromwell-intl.com/open-source/performance-tuning/)
+
+[dan luu new cpu features](https://danluu.com/new-cpu-features/)
+
+[Parsing series of integers with SIMD](http://0x80.pl/articles/simd-parsing-int-sequences.html) This [Wojciech Muła](http://0x80.pl/) guy is a wizard
+
+[unaligned vector load + length-driven PSHUFB. What's everyone's favourite way to handle page crossings?](https://twitter.com/pkhuong/status/1497332651891515395?s=20&t=BoUiLAriWXha2_XgoVMl5A) overreading for short variables possibly into out of bounds memory? pshufb 
+
+[umash](https://github.com/backtrace-labs/umash) very fast hash
 [Algorithms for Modern Hardware](https://github.com/sslotin/amh-code) - book on algorithms on modern hardware
+
+[CLMUL](https://en.wikipedia.org/wiki/CLMUL_instruction_set) fast instruction set for galois field calculations. carryless
+
+[x86 instrinsic cheatsheet](https://db.in.tum.de/~finis/x86-intrin-cheatsheet-v2.1.pdf)
 
 [OSACA](https://github.com/RRZE-HPC/OSACA) an analyzer of assembly code. It is on godbolt 
 

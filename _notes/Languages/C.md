@@ -63,11 +63,34 @@ There is a default makefile that is included with every make invocation if you d
 # Loading 
 <https://news.ycombinator.com/item?id=29104841> <http://dbp-consulting.com/tutorials/debugging/linuxProgramStartup.html>
 
+# Sanitization
+Dynamic Bug detection technique
+[SoK](https://oaklandsok.github.io/papers/song2019.pdf) sanitizing for security. Really interesting.
+
+https://github.com/google/sanitizers/wiki
+Address sanitizer [ASAN](https://en.wikipedia.org/wiki/AddressSanitizer) 
+[memory snatizier](https://clang.llvm.org/docs/MemorySanitizer.html) -fsanitize=memory
+https://github.com/google/sanitizers
+ThreadSanitizier - detect race conditions
+UBSan undefine behavior sanitizer
+
+valgrind
+SAFECode, and SoftBound
+
+See also notes on CTF stuff and compilers
+
+Shadow memory. mapping of memory to shadow memory where you can hold metadata.
+Guard pages - try to access an overflow and hit unmapped page, you'll crash
+
+fat pointers - make pointer a struct
+tagged pointer - use unused bits in pointer. 64 bits is too many. ALignment makes low bits unused
+
 # C++
 
 Cherno 
 Cyril Stachniss https://www.youtube.com/c/CyrillStachniss/videos
 
+[nice C++ cheat sheets](https://hackingcpp.com/cpp/cheat_sheets.html) 
 
 Class vs struct
 Smart pointers
@@ -80,7 +103,18 @@ name mangling
 
 precompiled headers (pch)
 
+```cpp
+#include <iostream>
+int main(){
+    std::cout << "hello world" << std::endl;
+    std::cout << [](int x){ return x * 42; }(2); // lambda
 
+
+    return 0; // don't have to though
+}
+```
+
+[fmt library](https://github.com/fmtlib/fmt) C++20 has this in `#include<format>` ?
 
 ## Build Systems
 Shake
