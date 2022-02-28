@@ -59,12 +59,31 @@ Lock Mutex Semaphore
 Barriers
 Lock free
 
+
+Atomics are a way to mark thread shared variables in a sense. Many instances of variables in high level code are a delusion. Assignment to them is not supposed to be a real observable effect. Threads have a "debugger" view into your code.
+
+
+Maybe a better starting point (or even equally valid as assuming literality of code) is every statement can be reordered. Ok then this isn't quite true. There are certain restrictions.
+
+a = 2;
+x = 3;
+a = 3;
+These assignments aren't real.
+Loop reordering
+
+C assignment is not imperative assignment really. The resulting code is not required to have an instruction that corresponds to it. It is more like a functional binding. So then relying on it for some concurrent construct (and concurrency _is_ stateful/imperative?) is nonsensical
+
+Caches. One model of the problem is to imagine your program runs literally, but then randomly flushes a store cache out to main memory.
+
+
 Data Race Freedom
-
-[string vs weak memory models](https://news.ycombinator.com/item?id=30303003) - programming languages need to be as weak as the weakest hardware they target, or else they can't generate optimal code. Interesting.
-
-[Shared memory concurrency - a tutorial](https://www.hpl.hp.com/techreports/Compaq-DEC/WRL-95-7.pdf)
-[A Promising Semantics for Relaxed-Memory Concurrency](https://www.cs.tau.ac.il/~orilahav/papers/popl17.pdf)
+- [rust atomics and memory ordering](https://www.youtube.com/watch?v=rMGWeSjctlY&ab_channel=JonGjengset)
+- [twitter question about atomics](https://twitter.com/Lucretiel/status/1496239049585086477?s=20&t=4esjK-MOGsuvJEiLsISA6Q)
+- [guide to preshing's blog](https://gist.github.com/valarauca/e34fa2b6c8503561364a05d67a0a1333)
+- [herb sutter atomic weapons](https://www.youtube.com/watch?v=A8eCGOqgvH4&ab_channel=toalexsmail)
+- [string vs weak memory models](https://news.ycombinator.com/item?id=30303003) - programming languages need to be as weak as the weakest hardware they target, or else they can't generate optimal code. Interesting.
+- [Shared memory concurrency - a tutorial](https://www.hpl.hp.com/techreports/Compaq-DEC/WRL-95-7.pdf)
+- [A Promising Semantics for Relaxed-Memory Concurrency](https://www.cs.tau.ac.il/~orilahav/papers/popl17.pdf)
 Mapping variables to histories
 Each thread can pick arbitrary values out of histories given timestamp constraints
 

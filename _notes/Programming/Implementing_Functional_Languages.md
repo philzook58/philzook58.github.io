@@ -21,6 +21,7 @@ See also notes on:
 # Combinators
 # HVM
 
+[Justine Lambda Calculus in 400 Bytes](https://justine.lol/lambda/) unbelievable
 
 Xavier leroy implementing functional languages
 https://xavierleroy.org/talks/compilation-agay.pdf really good.

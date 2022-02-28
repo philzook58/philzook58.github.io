@@ -18,6 +18,11 @@ This is interesting
 
 ## Window Functions
 
+# Schema
+## Functional Dependencies
+Armstrong axioms
+
+Normal Formals
 
 ## The Chase
 

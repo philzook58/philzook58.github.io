@@ -9,9 +9,45 @@ title: Rust
 wordpress_id: 1849
 ---
 
-[cyclone](https://pling.jondgoodwin.com/post/cyclone/) Interesting breakdown of some history
+# Formal methods
+## RustBelt
+## RustHorn
+Prophetic encoding. Mutable borrows are modelled as pairs of current and final values.
+## RustHornBelt
+## Prusti
+## Creusot
+https://hal.inria.fr/hal-03526634/document
+buolt in why3
+pearlite - specification language
+
+This toggle thing is very surpising to me
+
+```rust
+fn toggle<T>(t : bool, a : &mut T, b : &mut T) -> &mut T {
+    if t { a} else {b}
+}
+```
+
+# Macros
+[updated little book of macros](https://github.com/veykril/tlborm/)
+
+[syn]
+[quote] for quasiquoting
+## Declarative macros aka macro_rules!
 
 
+## Proc Macros
+## Hygiene
+I think macro_rules! is hygienic
+
+Hygiene is dealing with what environment variables in your macro refer to. The sort of easy version is to just paste in the code in the call site of the macro. 
+
+This kind of isn't what you want though. You almost certainly want to refer to libraries in scope at macro definition. If for example a function `foo` gets shadowed at the callsite.
+
+
+# Resources
+
+- [cyclone](https://pling.jondgoodwin.com/post/cyclone/) Interesting breakdown of some history
 - [little book of rust macros](https://danielkeep.github.io/tlborm/book/README.html)
 * https://news.ycombinator.com/item?id=25222750 - risp a rust lisp
 * https://altsysrq.github.io/proptest-book/intro.html

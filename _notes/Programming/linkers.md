@@ -42,6 +42,9 @@ https://github.com/emersion/dareog
 
 [Introduction to the DWARF Debugging Format](https://dwarfstd.org/doc/Debugging%20using%20DWARF-2012.pdf)
 # Resources
+[mold talks about arm thunks for long jums](https://twitter.com/rui314/status/1497846501740998662?s=20&t=MRs67YjTJIE5glLjgsAcRA)
+
+
 [mold design notes](https://github.com/rui314/mold/blob/main/docs/design.md) very interesting. performance tricks, history of linker features
 [The teensy files](https://www.muppetlabs.com/~breadbox/software/tiny/) - writing elf by hand
 [On ELF, Part 2](https://kestrelcomputer.github.io/kestrel/2018/02/01/on-elf-2) - a ctrique of elf for being too complex compared to previous formats and for little gain. Counterpoints https://news.ycombinator.com/item?id=29660319
