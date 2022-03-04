@@ -27,10 +27,10 @@ eql(as(xy, number), as(yx, number)),
 
 I thought I had a cute idea. What if one use the souffle [user defined functor](https://souffle-lang.github.io/functors) feature to backdoor into the native souffle equivalence relation or interact with an external union find library?
 
-A nice sample problem is commutativity and reassociating an AExpr tree. Naively there are a lot of terms. The egraph significantly compresses this.
+A nice sample problem is commutativity and reassociating an AExpr tree for example N = 4, `add(1, add(2, add(3, add(4))))`. Without constant propagation, the egraph never learns the `add(1,2) = 3` for example. Naively there are a lot of terms. The egraph significantly compresses this.
 In the saturated egraph there should be
 - $2^N - 1$ eclasses. This corresponds to all possible ways of picking a set of the N leaves minus 1 because there is no eclass for no leaves. Modulo associativity and commutativity, an AExpr tree corresponds to just it's set of leaves.
-- The number of `add` enodes is $$\sum_{n=1}^{N} \sum_{k = 1}^{N - n} {N \choose n} {N - n \choose k} $$. Suppose I pick n leaves for the left child and k leaves to go in the right child. You can choose a set of n leaves  for the left child of `add` $$N \choose n $$ ways. You can then choose the right branch of `add` out of the remaining $$N - n$$ remaining leaves $$N - n \choose k $$ ways. Then sum over all possible values for $$n$$ and $$k$$. Wolfram alpha says this is $-2^{N} + 3^{N} + 1$ which perhaps there is a way to see this directly.
+- The number of `add` enodes is $$\sum_{n=1}^{N} \sum_{k = 1}^{N - n} {N \choose n} {N - n \choose k} $$. Suppose I pick n leaves for the left child and k leaves to go in the right child. You can choose a set of n leaves  for the left child of `add` $$N \choose n $$ ways. You can then choose the right branch of `add` out of the remaining $$N - n$$ remaining leaves $$N - n \choose k $$ ways. Then sum over all possible values for $$n$$ and $$k$$. Wolfram alpha says this is $-2^{N+1} + 3^{N} + 1$ which perhaps there is a way to see this directly.
 
 These numbers matter, because it was difficult to get this hacked souffle program to actually saturate to the right number of things. I think soundness of the equality saturation process is still ok. If souffle says two terms are equal, they really are. Completeness is highly questionable though. If souffle thinks it has saturated the egraph, it may not actually have.
 
