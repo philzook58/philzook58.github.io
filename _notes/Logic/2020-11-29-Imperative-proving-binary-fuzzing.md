@@ -3,6 +3,13 @@ layout: post
 title: Imperative Proving
 ---
 
+[why3 implemtnation of stackify](https://gitlab.inria.fr/why3/why3/-/merge_requests/453)
+Stackifty algorithm of llvm for wasm
+
+Why is structuring unstructured control flow so important?
+
+[Weakest-precondition of unstructured programs banrett leino](https://dl.acm.org/doi/pdf/10.1145/1108792.1108813?casa_token=ob3emjwEGOMAAAAA:UhXOCwPb0Kt_tnRPAoscxpjMkFo744scDwCvwbBu6OiWH0TwZ0wBhJG8jxTFuW7h1BXETVL7zjB-)
+
 <https://alastairreid.github.io/uses-for-isa-specs/> what can you do with an isa spec - alastair reid
 
 Imp stmt to stack machine

@@ -23,6 +23,9 @@ title: Gettin' Bappin' with Bap
   - [Other tidbits](#other-tidbits)
   - [Universal Values](#universal-values)
 
+
+[JT's Bap 2.0 Notes](https://github.com/draperlaboratory/cbat_tools/tree/master/bap-notes)
+
 `--print-missing` flag for missing instruction semantics https://github.com/BinaryAnalysisPlatform/bap/pull/1409
 
 
