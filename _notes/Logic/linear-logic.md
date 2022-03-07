@@ -4,6 +4,10 @@ title: Linear Logic
 ---
 
 
+# FinVect model
+<https://www.pls-lab.org/en/Vector_space_models_of_Linear_Logic>
+<https://www.seas.upenn.edu/~sweirich/types/archive/1992/msg00047.html>
+
 Cyclone
 Regions
 Tofte

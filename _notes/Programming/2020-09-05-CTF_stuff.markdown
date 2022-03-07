@@ -9,6 +9,7 @@ title: CTF stuff
 wordpress_id: 2960
 ---
 
+[firmadyne](https://github.com/firmadyne/firmadyne) emulating and analyzing firmware
 
 [dronesploit](https://github.com/dhondta/dronesploit)
 

@@ -3,6 +3,24 @@ layout: post
 title: Floating Point and Numerical verification
 ---
 
+Fused multiply add
+[multiply accumlate](https://en.wikipedia.org/wiki/Multiply%E2%80%93accumulate_operation)
+
+[Remez algorithm](https://github.com/simonbyrne/Remez.jl) Find minimax optimal polynomial over range
+
+How to calculate things
+1. taylor series. We often have these in closed form. We can bound errors using remainder theorem (The error of a taylor series is bounded by the maximum value the next term can take over the interval). If nothing else, taylor series can boot strap other methods by using them to define arbitrary precision approximations.
+2.
+
+Dyadic rationals = $$ m \times 2^d $$. These are an idealized model of floating point. They can add, subtract, and multiply exactly.
+
+ULP - Unit in Last place. a measure of how accurate an fp calculation is. 0.5 ulp is the best you can do for approximating an antagonisitcally chosen number.
+
+How and how not to compute matrix exponentials https://www.maths.manchester.ac.uk/~higham/talks/exp10.pdf
+19 dubious ways
+
+[interesting discussion of deriving a specific approximator](https://discourse.julialang.org/t/a-faster-pow-x-1-12-function-available-in-fast12throot-jl/10893/11)
+
 # Range reduction
 Powers of 2 are often easier to handle seperately, leaving behind a problem
 

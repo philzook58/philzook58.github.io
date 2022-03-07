@@ -42,7 +42,9 @@ https://github.com/emersion/dareog
 
 [Introduction to the DWARF Debugging Format](https://dwarfstd.org/doc/Debugging%20using%20DWARF-2012.pdf)
 # Resources
-[mold talks about arm thunks for long jums](https://twitter.com/rui314/status/1497846501740998662?s=20&t=MRs67YjTJIE5glLjgsAcRA)
+[mold talks about arm thunks for long jumps](https://twitter.com/rui314/status/1497846501740998662?s=20&t=MRs67YjTJIE5glLjgsAcRA)  veneers, risc v does opposite, shrinks long jumps into short jumps. rv5 abi allows this in ways arm doesnt? What does that mean
+[veneer](https://www.keil.com/support/man/docs/armlink/armlink_pge1406301797482.htm)
+[linker relacation on rv5](https://www.sifive.com/blog/all-aboard-part-3-linker-relaxation-in-riscv-toolchain)
 
 
 [mold design notes](https://github.com/rui314/mold/blob/main/docs/design.md) very interesting. performance tricks, history of linker features

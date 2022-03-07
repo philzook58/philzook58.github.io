@@ -226,7 +226,7 @@ A Cone is a set that is closed under non-negative combinations of it's points. T
 
 # Semi definite programs
 optimization over positive semidefinite matrices. Very powerful
-https://arxiv.org/abs/2202.12374
+https://arxiv.org/abs/2202.12374 - iterate sdd to get sdp. sounds good
 ## Tricks
 Semidefinite kind of gets you multiplication
 

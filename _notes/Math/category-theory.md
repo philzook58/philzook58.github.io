@@ -23,6 +23,20 @@ Functors are mappings between categories (a object to object map and morphism to
 
 
 
+
+# Examples
+## Groups
+A group can be modeled as a category with one element, where ever morphism has an inverse. Then the axioms of cateogory corresponds to the axioms of a group
+
+## FinSet
+Finite sets as objects, 
+
+## Functors
+Representations of groups. Functor from
+
+## Adjunctions
+Free/Forgetful
+
 # Encodings
 Relational Composition
 comp(F,G,H)
