@@ -9,6 +9,31 @@ See also:
 - automated theorem proving
 - Imperative Verification
 
+
+
+# Solvers
+W: What options are actualy worth fiddling with
+It is interesting to note what unusual characteristics solvers have.
+
+z3
+bitwuzla
+boolector
+cvc4
+cvc5
+yices2
+smtinterpol
+alt-ergo
+veriT
+colibri
+mathsat (ultimate eliminator https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&tool=eliminator)
+smt-rat
+stp
+
+
+vampire
+aprove
+
+
 https://yices.csl.sri.com/papers/manual.pdf yices has a `ef-solve` mode that synesthesia used for synthesis. Is this the analog of PBR solving?
 
 Idea: Convert Z3 DRAT to tactic script <https://github.com/Z3Prover/z3/discussions/5000> <https://github.com/Z3Prover/z3/discussions/4881>
@@ -78,7 +103,160 @@ Can I do it by explicitly gassing?
 
 Axiom schema
 
+# CVC5
+[Paper](https://homepages.dcc.ufmg.br/~hbarbosa/papers/tacas2022.pdf)
+- abduction
+- inteprolation
+- sygus
+- Proofs, alethe lfsc lean4 maybe others?
+- coinductive types
+- separation logic
 
+[kinds files](https://github.com/cvc5/cvc5/blob/a8623b22f6f8d28191f090f8f5456540d9cb0a18/src/theory/builtin/kinds)
+This is a [parsers listing](https://github.com/cvc5/cvc5/blob/a8623b22f6f8d28191f090f8f5456540d9cb0a18/src/parser/smt2/smt2.cpp). You can find all (exposed) built in functions here 
+
+- `eqrange`? So set equality over a range? Seems useful. Rewriter expands to obvious quantified fromula
+- `iand`
+- `int.pow2`
+- `real.pi`
+- `@` is HO apply
+- bags
+- lots of strings functions
+
+## Proofs
+```cvc5
+(set-logic ALL)
+(set-option :produce-proofs true)
+(declare-const x Int)
+(assert (= x 1))
+(assert (= x 2))
+(check-sat)
+(get-proof)
+```
+
+## abduction
+- get-abduct --produce-abducts https://github.com/cvc5/cvc5/blob/master/test/regress/regress1/abduction/abduct-dt.smt2 get-abduct-next (set-option :produce-abducts true)
+(set-option :incremental true)
+```cvc5
+(set-logic QF_LIA)
+(set-option :produce-abducts true)
+(set-option :incremental true)
+(declare-fun x () Int)
+(declare-fun y () Int)
+(assert (>= x 0))
+(get-abduct A (>= (+ x y) 2))
+(get-abduct-next)
+(get-abduct-next)
+```
+
+```cvc5
+(set-logic QF_LRA)
+(set-option :produce-abducts true)
+(declare-const x Real)
+(declare-const y Real)
+(declare-const z Real)
+(assert (and (>= x 0) (< y 7)))
+(get-abduct A (>= y 5))
+```
+## Higher Order
+```cvc5
+(set-logic HO_ALL) ; HO_UF; HO_LIA
+(declare-const f (-> Int Int))
+(assert (= (f 1) 2))
+(assert (= f (lambda ((x Int)) 2)))
+(assert (= f f))
+(check-sat)
+(get-model)
+```
+
+
+## Sep logic
+<https://cvc5.github.io/docs/cvc5-0.0.7/theories/separation-logic.html>
+
+`sep.nil` a nil pointer value. Not sure this has any semantics. Maybe it is one extra value out of domain?
+`sep.emp`
+`sep` seperating conjunction
+`pto`
+`wand`
+
+```cvc5
+(set-logic QF_ALL)
+(declare-heap (Int Int))
+(assert (sep (pto 1 1) (pto (as sep.nil Int) 2)))
+(check-sat)
+;(get-model)
+```
+## datatypes
+`Tuple`
+`dt.size`
+`tuple_select` `tuple_update`
+
+## Transcendentals
+<https://cvc5.github.io/docs/cvc5-0.0.7/theories/transcendentals.html>
+
+`exp` `sin` `cos` `arccos` `sqrt` and so on
+```cvc5
+(set-logic QF_NRAT)
+(declare-fun x () Real)
+(declare-fun y () Real)
+
+(assert (> x real.pi))
+(assert (< x (* 2 real.pi)))
+(assert (< (* y y) (sin x)))
+(check-sat)
+```
+## Float
+[Good real to float?](https://github.com/cvc5/cvc5/discussions/8024)
+`+oo` `+zero` `-zero` `NaN` 
+`fp` What is this? `fq.eq` `fp.abs` `fp.neg` `fp.fma` `fp.sqrt` `fp.roundtoIntegral`
+`fp.isNormal` `fp.isSubnormal` `fp.izZero` `fp.isInfinitr` `fp.isNaN` `fp.isNegative` `fp.isPositive` `fp.to_real`
+Indexed operators
+`to_fp` `to_fp_unsigned` `fp.to_ubv` `fp.tosbv` `to_fp_real`
+
+```cvc5
+(set-logic ALL)
+(declare-const x Float64)
+(define-const onef Float64 ((_ to_fp 11 53) RNE 1))
+(assert (= x (fp.add RNE x x)))
+(assert (fp.lt onef (fp.add RNE x x)))
+(check-sat)
+(get-model)
+```
+## test/regress
+Looking at the test/regress folder, what sort of odd looking stuff is there?
+- (_ iand 4) what is this
+- sygus
+- (! :named foo)
+- (-> Event$ Bool) higher order sorts
+- --product-proofs finite-model-find fmf-bound
+- (set-info :status sat) . Hmm does it use this?
+
+So it looks like theory specific stuff can be accesed namespaces
+- str.prefixof str.substr str.len str.to_int
+- set.subset set.insert set.singleton
+- fp.is_zero fp.to_real
+
+## options
+<https://cvc5.github.io/docs/cvc5-0.0.7/binary/options.html#most-commonly-used-cvc5-options>
+cvc --help
+--dump-intsantiations
+--dump-proofs
+--dump-unsat-cores
+--proof-dot-dag
+--proof-format-mode
+
+
+--conjecture-gen candidate fo inductive proof
+--dt-stc-ind strengthening based on structural induction
+--finite-model-find
+--e-matching
+
+<https://cvc5.github.io/docs/cvc5-0.0.7/binary/output-tags.html>
+-o inst
+-o sygus
+-o trigger - print selected triggers
+-o learned-lits
+-o subs
 
 # EPR
 "Bernays Schonfinkel"

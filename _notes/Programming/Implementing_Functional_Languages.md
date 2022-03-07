@@ -21,6 +21,7 @@ See also notes on:
 # Combinators
 # HVM
 
+[Peyton jone compiling without continutations](https://www.youtube.com/watch?v=LMTr8yw0Gk4&ab_channel=ECOOPLDI2017)
 
 Xavier leroy implementing functional languages
 https://xavierleroy.org/talks/compilation-agay.pdf really good.

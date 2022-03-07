@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Performance, Algorithms
+title: Performance
 ---
 
 
@@ -42,6 +42,9 @@ Network
 
 
 ## Stuff
+[programming parallel computers course](https://ppc.cs.aalto.fi/)
+`asm("# foo");` nice trick. Inject comment into assembly
+
 
 [](https://blog.janestreet.com/magic-trace/)
 

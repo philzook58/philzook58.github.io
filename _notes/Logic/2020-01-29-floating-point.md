@@ -54,10 +54,20 @@ e <= u
 ## Sterbenz lemma
 Addition and subtraction are exact if the numbers are really close to each other. (A factor of 2)
 
+# Gappa
+<https://gappa.gitlabpages.inria.fr/gappa/index.html>
+Proofs about 
 
+multiple proof output modes
+-B latex -Bcoq
+
+Boldo
+[Formal Verification of Scientific Computing Programs icfp 19](https://www.youtube.com/watch?v=d38KO5UgHv8&ab_channel=ACMSIGPLAN)
 
 Ranged Floats {range : interval; x : float code}
 
+Numerical Analysis
+Higham
 
 [One Polynomial Approximation to Produce Correctly Rounded Results of an Elementary Function for Multiple Representations and Rounding Modes](https://people.cs.rutgers.edu/~sn349/papers/rlibmall-popl-2022.pdf)
 [shaman](https://gitlab.com/numerical_shaman/shaman) operator overloading to estimate numerical error

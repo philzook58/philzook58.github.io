@@ -10,7 +10,7 @@ wordpress_id: 1849
 ---
 
 [cyclone](https://pling.jondgoodwin.com/post/cyclone/) Interesting breakdown of some history
-
+[parallel rust](https://parallel-rust-cpp.github.io/)
 
 - [little book of rust macros](https://danielkeep.github.io/tlborm/book/README.html)
 * https://news.ycombinator.com/item?id=25222750 - risp a rust lisp
