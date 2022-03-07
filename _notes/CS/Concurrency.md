@@ -46,16 +46,36 @@ We could describe some realatively concrete concurrent machine, with some layer 
 
 ## Total Store Order (TSO)
 ## Relaxed Memory Models
+## Fence Instructions
+The fact that assembly instructions are a linear stream is a bit silly. This is not a great match for how the unstructions are executed. They are executed out of order and pipelined.
+The processor can see local data dependncies and creates stalls for those. But nonlocal dependencies on simulatnesous memory access can't be automatically seen? So you can sort of demarcate regions of the linear stream tht can't be moved past each other.
 
+VLIW processors for example can schemes for having streams of concurrent operations.
+
+
+### x86
+
+https://stackoverflow.com/questions/20316124/does-it-make-any-sense-to-use-the-lfence-instruction-on-x86-x86-64-processors
+
+
+### Arm
+https://developer.arm.com/documentation/dui0489/c/arm-and-thumb-instructions/miscellaneous-instructions/dmb--dsb--and-isb
+https://stackoverflow.com/questions/15491751/real-life-use-cases-of-barriers-dsb-dmb-isb-in-arm
+- dmb loadload barrier. Can't move loads across this
+- dsb 
+- isb
 ## Language Models
 ### C++
 ### Java
 ### Ocaml
 [a memory model for multicore ocaml](https://kcsrk.info/papers/memory_model_ocaml17.pdf) [bounding data races in space and time](https://kcsrk.info/papers/pldi18-memory.pdf)
 You can see in the references to also Go, Swift, Rust, wasm work
-
+[arm64 mutlicore support](https://github.com/ocaml/ocaml/pull/10972) interesing discussions
 # Data Structures
 Lock Mutex Semaphore
+### Double Locking 
+[The "Double-Checked Locking is Broken" Declaration](http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html)
+
 Barriers
 Lock free
 
@@ -70,6 +90,12 @@ x = 3;
 a = 3;
 These assignments aren't real.
 Loop reordering
+
+Data Race Freedom
+
+[Memory Barriers: a Hardware View for Software Hackers](http://www.rdrop.com/users/paulmck/scalability/paper/whymb.2010.07.23a.pdf)
+[Memory access ordering an introduction](https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/memory-access-ordering---an-introduction)
+[string vs weak memory models](https://news.ycombinator.com/item?id=30303003) - programming languages need to be as weak as the weakest hardware they target, or else they can't generate optimal code. Interesting.
 
 C assignment is not imperative assignment really. The resulting code is not required to have an instruction that corresponds to it. It is more like a functional binding. So then relying on it for some concurrent construct (and concurrency _is_ stateful/imperative?) is nonsensical
 

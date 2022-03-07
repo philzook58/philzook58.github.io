@@ -3,6 +3,8 @@ layout: post
 title: Coinduction / Bisimulation
 ---
 
+[[POPL'22] Coalgebra for the working programming languages researcher](https://www.youtube.com/watch?v=Qb0z1FWT5bw&ab_channel=ACMSIGPLAN)
+
 A pointery circular list is a labelled transition system if which node you're on is the state, and tail takes you to the nexxt state and head is an action that takes you to the same state.
 Two observationally eqauivalnt cirucils lists ones = 1 : 1 : ones and   ones = 1 : ones
 are bisimilar

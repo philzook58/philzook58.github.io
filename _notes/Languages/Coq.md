@@ -95,6 +95,7 @@ coq platform
 
 [Axioms to consider enabling](https://github.com/coq/coq/wiki/CoqAndAxioms)
 
+[ringer pluin tutorial](https://github.com/tlringer/plugin-tutorial)
 # Coq hackthan 2022
 https://github.com/coq/coq/tree/master/dev/doc
 https://github.com/coq/coq/wiki/DevelSetup coq devel setup
@@ -227,5 +228,9 @@ src/dune_rules
 2. extract generated files
 3. setup rules, informrm the build enginer about what _net targets_ are in scope
 
+# Examples
 
+```coq
+{% include_relative coq/test.v %}
+```
 

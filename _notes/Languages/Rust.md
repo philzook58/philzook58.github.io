@@ -21,6 +21,8 @@ buolt in why3
 pearlite - specification language
 
 This toggle thing is very surpising to me
+[cyclone](https://pling.jondgoodwin.com/post/cyclone/) Interesting breakdown of some history
+[parallel rust](https://parallel-rust-cpp.github.io/)
 
 ```rust
 fn toggle<T>(t : bool, a : &mut T, b : &mut T) -> &mut T {

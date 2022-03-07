@@ -3,6 +3,76 @@ layout: post
 title: Floating Point and Numerical verification
 ---
 
+# Range reduction
+Powers of 2 are often easier to handle seperately, leaving behind a problem
+
+exp = 2^(log_2(e) * x)
+
+sin/cos don't matter modulo 2 pi. modulo pi for some signs.
+
+# 2Sum and Fast2Sum
+https://en.wikipedia.org/wiki/2Sum
+Compensated summation
+Exact roundoff in floating point addition.
+From an information perspective, taking two 64 bit numbers into 1 is lossy? Well, yeah but so what?
+What if you kept an entire error tape?
+You can't get exact roundoff
+
+You can get exact errors. If you try to keep doing this, the error terms keep growing in size though.
+(a + (b + c)) gets two seperate error terms. Exact addition of these gives you exact error.
+
+Fused multiply add let's you obviously get the exact error of a multiplication
+```
+x = o(a * b)
+err = o(a*b - x)
+```
+
+[kahan summation](https://en.wikipedia.org/wiki/Kahan_summation_algorithm)
+[pairwise summation](https://en.wikipedia.org/wiki/Pairwise_summation) simple divide and conquer summation.
+
+## Veltkamp splitting
+You can split a float into 2 floats that add together to it precisely. This is useful sometimes
+## Dekker Multiplication
+Exact error can be represented in floating point for floating point multiplication
+
+## Newton Raphson
+## Multiplication by arbitrary precision number like pi
+Compute a hgh and low part of the number
+Ch = RN(C)
+Cl = RN(C - x)
+
+
+## Error Models
+https://pavpanchekha.com/blog/epsilon-delta.html
+
+o(x op y) = (x op y)(1 + e)
+e <= u
+
+
+
+
+## Sterbenz lemma
+Addition and subtraction are exact if the numbers are really close to each other. (A factor of 2)
+
+# Gappa
+<https://gappa.gitlabpages.inria.fr/gappa/index.html>
+Proofs about 
+
+multiple proof output modes
+-B latex -Bcoq
+
+Boldo
+[Formal Verification of Scientific Computing Programs icfp 19](https://www.youtube.com/watch?v=d38KO5UgHv8&ab_channel=ACMSIGPLAN)
+
+Ranged Floats {range : interval; x : float code}
+
+Numerical Analysis
+Higham
+
+[One Polynomial Approximation to Produce Correctly Rounded Results of an Elementary Function for Multiple Representations and Rounding Modes](https://people.cs.rutgers.edu/~sn349/papers/rlibmall-popl-2022.pdf)
+[shaman](https://gitlab.com/numerical_shaman/shaman) operator overloading to estimate numerical error
+
+Daisy
 [accruate algorithms](https://accurate-algorithms.readthedocs.io/en/latest/index.html)
 
 [rlibm](https://arxiv.org/pdf/2111.12852.pdf) better polynomial approximations using linear programming
@@ -54,7 +124,7 @@ Arith_2021 - a conference on FP?
 FPTalks
 
 Hamming book
-kahan summation
+
 
 What is fluctuat?
 precisa

@@ -44,7 +44,27 @@ Alternating Quantifiers
 inductive logic programming
 
 # Syntax Guided Synthesis (Sygus)
-Sygus - syntax guided synthesis
+[Sygus](https://sygus.org/) - syntax guided synthesis
+[demo of sygus](https://www.youtube.com/watch?v=VkbDQtCS1VY&ab_channel=DG)
+[sygus 2](https://sygus.org/assets/pdf/SyGuS-IF_2.0.pdf) compatbile with smtlib2?
+[search based program synthesis](https://sygus.org/assets/pdf/CACM'18_Search-based_Program_Synthesis.pdf)
+```cvc5
+(set-option :lang sygus2)
+()
+;(check-synth)
+;(define-fun spec ((x (BitVec 4)) (y BitVec 4)) (BitVec 4)
+;    (ite (bvslt x y) y x)
+;)
+
+```
+
+invariant synthesis: `Spec = Inv /\ body /\ Test' => Inv'`
+Proof synthesis?
+
+## Sketch
+
+
+
 
 PDR
 

@@ -16,6 +16,12 @@ Any particular question can be answered via enumeration
 
 Finitely Generated Categories
 
+# Axioms
+Category is objects and morphisms. Morphisms have an operation called composition and there is an identity element
+
+Functors are mappings between categories (a object to object map and morphism to morphism map) that plays nice with composition and identity. F(id) = id. F(f.g) = F(f) . F(g)
+
+
 
 # Encodings
 Relational Composition
@@ -48,3 +54,4 @@ Computational Category Theory
 Maclane
 [Computational Category Theory](https://www.cs.man.ac.uk/~david/categories/book/book.pdf)
 https://www.epatters.org/wiki/algebra/computational-category-theory.html
+[Rosetta stone](https://math.ucr.edu/home/baez/rosetta.pdf)

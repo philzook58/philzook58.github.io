@@ -22,6 +22,7 @@ See also notes on:
 # HVM
 
 [Justine Lambda Calculus in 400 Bytes](https://justine.lol/lambda/) unbelievable
+[Peyton jone compiling without continutations](https://www.youtube.com/watch?v=LMTr8yw0Gk4&ab_channel=ECOOPLDI2017)
 
 Xavier leroy implementing functional languages
 https://xavierleroy.org/talks/compilation-agay.pdf really good.
