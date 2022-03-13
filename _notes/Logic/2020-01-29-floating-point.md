@@ -3,7 +3,7 @@ layout: post
 title: Floating Point and Numerical verification
 ---
 
-Fused multiply add
+# Fused multiply add
 [multiply accumlate](https://en.wikipedia.org/wiki/Multiply%E2%80%93accumulate_operation)
 
 [Remez algorithm](https://github.com/simonbyrne/Remez.jl) Find minimax optimal polynomial over range
@@ -87,6 +87,10 @@ Ranged Floats {range : interval; x : float code}
 Numerical Analysis
 Higham
 
+[precisa](http://precisa.nianet.org/) program round off error certifier via static analysi. Accepts subset of PVS. Hmm outputs framaC with annotations. Web demo is interesting.
+[fprock](https://github.com/nasa/FPRoCK)
+
+
 [One Polynomial Approximation to Produce Correctly Rounded Results of an Elementary Function for Multiple Representations and Rounding Modes](https://people.cs.rutgers.edu/~sn349/papers/rlibmall-popl-2022.pdf)
 [shaman](https://gitlab.com/numerical_shaman/shaman) operator overloading to estimate numerical error
 
@@ -147,7 +151,8 @@ Hamming book
 What is fluctuat?
 precisa
 precision tuning
-
+Real2float
+rosa
 
 
 https://monadius.github.io/FPTaylorJS/#/ FPTaylor demo

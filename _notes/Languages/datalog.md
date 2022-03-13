@@ -2,7 +2,29 @@
 layout: post
 title: Datalog
 ---
-
+- [What is datalog?](#what-is-datalog)
+- [What can you do with datalog?](#what-can-you-do-with-datalog)
+- [Implementations](#implementations)
+  - [Formulog](#formulog)
+- [Souffle](#souffle)
+  - [instrinsic functors](#instrinsic-functors)
+  - [Souffle proofs](#souffle-proofs)
+  - [Magic Set](#magic-set)
+  - [Examples](#examples)
+  - [User Defined Functors](#user-defined-functors)
+  - [ADTs](#adts)
+    - [Use ADT instead of autoinc()](#use-adt-instead-of-autoinc)
+    - [Record Packing](#record-packing)
+  - [Macros](#macros)
+  - [Components](#components)
+  - [Subsumption examples](#subsumption-examples)
+    - [Subsumption as a master feature](#subsumption-as-a-master-feature)
+  - [Choice Domain](#choice-domain)
+- [Souffle source](#souffle-source)
+  - [Lambda representiation](#lambda-representiation)
+- [Resources](#resources)
+- [class(slotname : f(x,y) , ) :-](#classslotname--fxy----)
+  - [building souffle emscripten](#building-souffle-emscripten)
 
 # What is datalog?
 When I say datalog, I might mean a couple intertwined different things. I might be referring to bottom up execution of logic programs.
@@ -13,6 +35,16 @@ Well, anything you can do with ordinary database queries. What do you do with th
 
 But then on top of that you can use recursive queries. And that is where things get more interesting.
 Program analysis.
+
+# Implementations
+Souffle
+Flix
+Rel
+Datafun
+## Formulog
+SMT formulas as data. Interesting distinction with CHC where smt formula are predicates.
+Refinement type checker.
+
 
 # Souffle
 
@@ -37,7 +69,216 @@ Defined at relation level. Makes check before any insertion to see if something 
 as(a, number) I can cast ADTs to numbers?
 https://github.com/yihozhang/souffle/blob/conglog/tests/congruence/math.dl  interesting
 
+## instrinsic functors
+`cat` `strlen` `substr(string,index,length)` `ord`
+
+lor land lxor band bxor bshl bshr bshru
+
+```souffle
+.type bitset <: unsigned
+// Operations
+#define BOT 0x0
+//assuming 32 bit
+#define TOP  0xFFFFFFFF 
+#define SING(x) (0x1 bshl x)
+#define UNION(x,y) (x bor y)
+#define ADD(x,set) UNION(SING(x), set)
+#define INTER(x,y) (x band y)
+#define COMP(x) (TOP bxor x)
+#define DIFF(x,y) (x bxor INTER(x,y))
+
+// Predicates
+#define ISEMPTY(x) (x = 0)
+#define NONEMPTY(x) (x != 0)
+#define SUBSET(x,y) ISEMPTY(DIFF(x,y))
+#define ELEM(x, set) NONEMPTY(INTER(SING(x), set))
+
+.decl test(l : symbol, b : bitset)
+test("ex1", SING(1)).
+test("ex1", SING(2)).
+test("ex2", DIFF(set, SING(2))) :- test("ex1", set).
+test(l,UNION(s1,s2)) :- test(l, s1), test(l,s2).
+test(l,s1) <= test(l,s2) :- SUBSET(s1,s2).
+
+.output test(IO=stdout)
+
+```
+```
+#define FLAG0 0x0
+#define FLAG1 0x2
+#define FLAG2 0x4
+```
+
+
+every non zero number is considered true.
+max min + * % ^
+
+`f(@g()) :- true` Sometimes you need to put true in the rhs position.
+
+## Souffle proofs
+Manual exploration of just dump it. Does the dump memoize?
+
+`-t explain`
+`.pragma "provenance" "explain"
+```
+output proof.json
+format json
+explain path(1,2)
+exit
+```
+
+You can emulate proof production using subsumption. See below.
+
+## Magic Set
+
+Specializes datalog program to a particular query / output.
+Query answer transfomation
+
+We could imagine applying dataflow analysis techniques to prolog programs. We can write dataflow analysis in a pleasant way using datalog. The languages of datalog and prolog coincide. Datalog terminates.
+
+I suppose I identify datalog with bottom up execution, which is not necessarily the case depending on author.
+
+In prolog SLD resolution, there are program points. We could create relations describing the store at these points. These are the supplementary 
+For annotated predicates we could move the annotations as extra fields of the predicates instead of as annotations. This feels more natural when interpreting as a dataflow analysis. Annotations are a describing the binding state? (annotations are lattice? Maybe so but not in the right way)
+
+"It is a form of partial evaluation: at query time, rewrite (specialize) the entire program to an equivalent one, then evaluate it bottom-up. A binding-time analysis identifies which predicates benefit from specialization. Sideways-information passing strategy guides the rewrite."
+"I see it as a way to "hack" a bottom-up execution (from facts) into computing top-down (from queries). John Gallagher's query-answer transformation is related to that and used for program analysis https://arxiv.org/pdf/1405.3883.pdf, https://bishoksan.github.io/papers/scp18.pdf"
+
+
+## Examples
+
+```souffle
+.type obj <: symbol // Sometimes we need constructors, like Otimes.
+.type typ = Obj {} | Hom {a : obj, b : obj}
+// skolem symbols go into user defined type because we need to generate them
+.typ Morph = Comp {f : Morph, g : Morph} | Id {a : Obj} | Sym {s : symbol}
+#define F $Sym("f")
+#define G $Sym("g")
+
+// .decl morph( , a : obj. b : obj)
+.decl typ()
+.decl eqm(f : Morph, g : Morph) eqrel
+
+comp(f : Morph, g : Morph : h : Morph)
+comp() :- typ(), comp
+
+
+
+```
+
+## User Defined Functors
+What about normalization? That's intriguing
+BitSets
+
+[souffle lib](https://github.com/souffle-lang/souffle-lib)
+lib_ldscript
+use `whereis` if ascii `cat` the file and include the things in group
+`souffle libc.dl -lm-2.31 -lmvec`
+
+
+```
+.pragma "libraries" "m-2.31"
+.pragma "libraries" "mvec"
+.functor acosf(x: float): float
+.decl test1(x : float)
+test1(@acosf(0.1)) :- true.
+.output test1(IO=stdout)
+```
+
+Holy crap this works
+
+```souffle
+.pragma "libraries" "z3"
+.functor Z3_get_full_version(): symbol
+.decl test1(x : symbol)
+test1(@Z3_get_full_version()) :- true.
+.output test1(IO=stdout)
+```
+
+```souffle
+.pragma "libraries" "z3"
+.functor Z3_get_full_version(): symbol
+.functor Z3_mk_config() : Z3_config // It's cute but these are almost certainly 64 bit pointers. So a helper lib is probably better.
+.type Z3_config :< unsigned
+.functor Z3_mk_context(Z3_config): Z3_context
+.functor Z3_eval_smtlib2_string(unsigned, symbol) : symbol
+#define is_sat(x) Z3_eval_smtlib2_string(ctx, )
+
+.decl test1(x : symbol)
+test1(@Z3_get_full_version()) :- true.
+.output test1(IO=stdout)
+```
+
+I can't figure out how to get libc, but it is the weirdest library of all.
+
+Formulog via linking to Z3. Do my own interning for handling int32? Or compile souffle in 64bit mode. String manipulation of smtlib? Pool of z3 ctx? This is probably good because we may want to run parallel souffle.
+```souffle
+#define BINOP(op,x,y) cat(cat(cat(cat(cat("(", op), ", x), " "), y), " )") 
+#define AND(x,y) BINOP("and", x, y)
+#define OR(x,y)  BINOP("or", x, y)
+#define IMPL(x,y) BINOP("=>",x,y)
+#define TRUE "true"
+// but like interpolated with cat.
+.type smtint <: symbol
+.type smtbool <: symbol
+.type smtreal :< symbol
+
+```
+Hmm But how to deal with `define-const`.
+
+
+Syscalls. libc might already be available?
+
+```souffle
+.pragma "library-dirs" "/usr/lib/x86_64-linux-gnu/"
+.pragma "libraries" "c"
+.functor puts(symbol) : number
+
+.decl test(x : number)
+test(@puts("Hellow world")) :- true.
+.output test(IO=stdout)
+
+```
+
+You can't defined your own user-defined functors inline. Two options that get you a lot of the way there are:
+1. use cpp macros `#define FOO(x,y)`
+2. Use auxiliary choice-domain relations. Memoization of functions. Many functions are so cheap you don't want to memoize them though.
+
+## ADTs
+
+ADTs are huge. They expand the expressive succinctness of souffle by so much it is unreal. It is somewhat possible to emulate them using other souffle features.
+
+### Use ADT instead of autoinc()
+autoinc() is a generative counter. It is nice because it is efficient. However, the stratification requirements on it are gnarly. It is too imperative, not declarative enough andyou get in trouble.
+ADTs are also generative though. I you makea new
+
+### Record Packing
+Sometimes your number of filds in the relation get crazy. Like let's say you want to describe some abstract domain like an interval. You need to carry 2 parameters everywhere when you're really talking about 1.
+
+You may however be taking a big performance hit. There is always a indirection hit of records vs unpacked records. Here is it felt more accutely because it isn't just a memory deref, it's a whole table lookup (? how exactly are records imlepmented).
+
+It is a bummer that souffle doesn't have record access notation. It's be nice for macros.
+
+If you want join semantics on lattice records
+```
+.type Interval = [l : unsigned, u : unsigned]
+.type VSA = [l, u, stride, ]
+
+```
+// default souffle has 32 unsigned. You can make your own 64 bit by combination. Taking a big perfroamcne hit
+.type U64 =  [l : unsigned, u : unsigned]
+
+## Macros
+You get the C preprocessor run by default over souffle files. I find this incredibly useful. Admittedly, the need for a C preprocessor can be considered evidence of a weakness in a language (meaning many many languages are weak. C, haskell, etc.)
+
+## Components
+
 ## Subsumption examples
+```souffle
+
+```
+
+
 ```prolog
 
 .type optionsymbol = None {} | Some {val : symbol}
@@ -123,9 +364,35 @@ canon("y","z").
 Linear "datalog" - destructive state update
 Using Sqllite - https://www.sqlite.org/lang_with.html recursive ctes seem to get you a lot. Cool examples. Mandelbrot
 
-bottom up Dynamic programming in datalog?
+bottom up Dynamic programming in datalog? Rod cutting.
 
-`f(@g()) :- true` Sometimes you need to put true in the rhs position.
+### Subsumption as a master feature
+
+Subsumption is kind of the master feature.
+Provenance using subsumption. Provenance works by deleting longer derivations.
+```souffle
+.type Explain = Base {} | Trans {u : unsigned}
+.decl edge(a : unsigned, b : unsigned)
+edge(1,2).
+edge(2,3).
+edge(1,3).
+edge(3,4).
+.decl path(a : unsigned, b : unsigned, why : Explain, proof_depth : unsigned)
+path(a,b, $Base(), 1) :- edge(a,b).
+path(a, c, $Trans(b), depth + 1) :- edge(a,b), path(b,c, _, depth).
+path(a,b, w1, d1) <= path(a, b, w2, d2) :- d2 <= d1.
+.output path(IO=stdout)
+```
+
+Max, min using subsumption. Can I do sum and count? Maybe not. Not without tracking what we've already used.
+Choice using subsumption, static or dynamic notion of "better".
+
+
+## Choice Domain
+<https://souffle-lang.github.io/choice> picks first one to come along
+Can I combine choice domain and lattice. But choice domain once you pick you're done...
+well. I can recover lattice style via an explicit congruence closure. So. it doesn't matter I guess.
+
 
 # Souffle source
 - synthesizer - actual code printers
@@ -133,7 +400,43 @@ bottom up Dynamic programming in datalog?
 - ram, relational abstract machine
 - 
 
+
+## Lambda representiation
+What is the most appropriate way? Probably we want to implement some kind of machine flavored implementation.
+
 # Resources
+Building a compiler in datalog. I can parse. I can do program analysis. How do I backend? Backend takes arbitrary non monotonic choices.
+Use choice domain? that could work. I could force an ordering through the program.
+```souffle
+// linear assembly sequence
+.type Op = Mov {out , in , }
+asm(1, "mov", "x", "y").
+asm(2, ")
+
+liveness(instr, var)
+
+assign("x", : reg)
+
+
+```
+
+```souffle
+.decl A(k:number, v:number)
+.output A(IO=stdout)
+A(1, 1).
+A(1, x+1):-
+    A(1, x),
+    x < 10.
+A(x, v1) <= A(_, v2):-
+    v1 < v2.
+```
+
+What if i did a call to minizinc formulog style?
+
+A reversible compiler. would requires exists and equality. ... egraph?
+
+[geometric database](http://www.mmrc.iss.ac.cn/~xgao/paper/jar-gdbase.pdf) horn clauses. good clean fun
+[So You Want To Analyze Scheme Programs With Datalog?](http://webyrd.net/scheme_workshop_2021/scheme2021-final2.pdf)
 [parser in datalog](https://homes.cs.washington.edu/~bodik/ucb/cs164/sp13/lectures/09-Datalog-CYK-Earley-sp13.pdf) bottom up parsing
 
 [Rust lifetime analysis written in souffle](https://github.com/rljacobson/lifetimes)
@@ -175,6 +478,13 @@ Could roll own bad datalog.
 Ogre?
 
 https://souffle-lang.github.io/examples simple points to analysis
+
+Is datalog actually a good fit
+https://tudelft-cs4200-2020.github.io/ - hmm sppoofax
+https://www.youtube.com/watch?v=Qp3zfM-JSx8&ab_channel=ACMSIGPLAN - souffle
+[Demand Interprocedural Program Analysis Using Logic Databases](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.648.1834&rep=rep1&type=pdf) - reps
+Engler 96
+
 
 prosynth - leanr datalog rules from data?
 

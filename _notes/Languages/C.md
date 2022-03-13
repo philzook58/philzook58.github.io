@@ -119,3 +119,18 @@ int main(){
 ## Build Systems
 Shake
 https://www.microsoft.com/en-us/research/uploads/prod/2018/03/build-systems.pdf build systems a la carte
+
+
+
+## Stressing C compilers
+Csmith
+[undefined behavior canaries](https://github.com/regehr/ub-canaries)
+
+
+[a guide to undefined behavior](https://blog.regehr.org/archives/213)
+
+
+# Allocators
+[DieHard](https://github.com/emeryberger/DieHard) error resitant allocator
+Ptmalloc
+mimalloc https://github.com/microsoft/mimalloc

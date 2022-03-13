@@ -227,6 +227,8 @@ A Cone is a set that is closed under non-negative combinations of it's points. T
 # Semi definite programs
 optimization over positive semidefinite matrices. Very powerful
 https://arxiv.org/abs/2202.12374 - iterate sdd to get sdp. sounds good
+[quantum and sdp](https://twitter.com/jj_xyz/status/1501220764506337287?s=20&t=_9HZg1SjTUMm-W15rZhP5w)
+
 ## Tricks
 Semidefinite kind of gets you multiplication
 
@@ -268,6 +270,9 @@ Any boolean function/relation is a convex polytope subset of the hypercube + int
 
 
 ## Piecewise linear encodings
+[PiecewiseLinearOpt.jl](https://github.com/joehuchette/PiecewiseLinearOpt.jl) [paper](https://arxiv.org/abs/1708.00050)
+
+
 ## Unrolling time
 
 Techniques papers from the COAT slack

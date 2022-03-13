@@ -191,6 +191,7 @@ It needs to be in an mjs file
 Lots of important stuff is in the api reference
 Module, FS
 
+[wasmcloud](https://wasmcloud.com/)
 
 https://stackoverflow.com/questions/48292269/how-can-i-run-an-interactive-program-compiled-with-emscripten-in-a-web-page
 

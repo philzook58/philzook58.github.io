@@ -55,3 +55,5 @@ Normal Formals
 [postgres indexes for newbies](https://blog.crunchydata.com/blog/postgres-indexes-for-newbies)
 [postgres tutorial](https://www.postgresqltutorial.com/)
 [raytracer in sql](https://github.com/chunky/sqlraytracer)
+
+[sqllancer](https://github.com/sqlancer/sqlancer) detecting lgoic bugs in dbms
