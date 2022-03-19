@@ -15,6 +15,8 @@ gcc flags
 -s output assembly (don't assemble)
 -c output object file
 
+- Wall -Werrer different warning flas https://stackoverflow.com/questions/399850/best-compiler-warning-level-for-c-c-compilers
+- -ffunction-sections 
 
 gcc -shared foo.o -o foo.so  - makes a dynamically linkable file. You actually have to make a object file first before you do this
 

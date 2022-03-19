@@ -21,7 +21,8 @@ cfi directives - call frame information
 
 shadow stack
 
-
+joern.io 
+https://github.com/RUB-SysSec/EvilCoder automatic bug insertion using joern
 
 Hiding instructions in instructions
 https://lucris.lub.lu.se/ws/portalfiles/portal/78489284/nop_obfs.pdf
@@ -29,14 +30,16 @@ disassembler
 linear sweep
 recusrive traversal 
 anti-disassembly 
+https://github.com/AppleReer/Anti-Disassembly-On-Arm64
 
+Thomas stars https://github.com/bsoddreams?tab=stars
 
 SGX enclaves
 
 obfuscation
 [snapchat](https://hot3eed.github.io/2020/06/18/snap_p1_obfuscations.html)
 ollvm
-vmprotect
+vmprotect https://github.com/void-stack/VMUnprotect
 opaque preciates - one branch always taken
 
 

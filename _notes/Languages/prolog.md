@@ -16,6 +16,22 @@ See also:
 
 # CHR
 Constraint handling rules
+A question I never had an answer for https://twitter.com/notjfmc/status/1422215450675535877?s=20&t=RyHMtBS3ySaALLC9MuGmUA . CHR afaik are a way of integrating eager rewriting into prolog https://en.wikipedia.org/wiki/Constraint_Handling_Rules 
+
+I'm not sure this is even persay a prolog topic. But the prolog community is the most engaged
+
+http://www.informatik.uni-ulm.de/pm/fileadmin/pm/home/fruehwirth/constraint-handling-rules-book.html
+[chr what else](https://arxiv.org/pdf/1701.02668.pdf)
+
+compiler to sql statements. Makes sense.
+Multiset rewriting?
+
+[sql](https://github.com/awto/chr2sql)
+Man what hope is there of compiling a 7 year old haskell project?
+
+[cchr](https://github.com/nickmain/cchr) efficient implementation in C
+
+[yihong's egraph in chr. awesome](https://github.com/yihozhang/cchr/blob/master/experiment/egraph.cchr)
 
 # Things that are prolog
 - Typeclasses

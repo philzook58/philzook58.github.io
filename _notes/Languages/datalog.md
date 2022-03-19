@@ -4,10 +4,15 @@ title: Datalog
 ---
 - [What is datalog?](#what-is-datalog)
 - [What can you do with datalog?](#what-can-you-do-with-datalog)
+  - [Program Analysis](#program-analysis)
 - [Implementations](#implementations)
   - [Formulog](#formulog)
+  - [dr lojekyl](#dr-lojekyl)
 - [Souffle](#souffle)
-  - [instrinsic functors](#instrinsic-functors)
+  - [intrinsic functors](#intrinsic-functors)
+    - [Parsing](#parsing)
+    - [BitSets](#bitsets)
+      - [Bitset reflection](#bitset-reflection)
   - [Souffle proofs](#souffle-proofs)
   - [Magic Set](#magic-set)
   - [Examples](#examples)
@@ -17,9 +22,16 @@ title: Datalog
     - [Record Packing](#record-packing)
   - [Macros](#macros)
   - [Components](#components)
-  - [Subsumption examples](#subsumption-examples)
+  - [Subsumption](#subsumption)
+    - [Lattices](#lattices)
+      - [Maybe/Option lattice](#maybeoption-lattice)
+      - [Intervals](#intervals)
     - [Subsumption as a master feature](#subsumption-as-a-master-feature)
-  - [Choice Domain](#choice-domain)
+      - [Provenance](#provenance)
+      - [max min](#max-min)
+      - [Equivalence relations](#equivalence-relations)
+      - [Choice domain](#choice-domain)
+  - [Choice Domain](#choice-domain-1)
 - [Souffle source](#souffle-source)
   - [Lambda representiation](#lambda-representiation)
 - [Resources](#resources)
@@ -36,15 +48,31 @@ Well, anything you can do with ordinary database queries. What do you do with th
 But then on top of that you can use recursive queries. And that is where things get more interesting.
 Program analysis.
 
+topics:
+- incremental datalog
+- differential datalog
+
+## Program Analysis
+[Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
+
+
+
 # Implementations
-Souffle
-Flix
-Rel
-Datafun
+- Souffle
+- Flix
+- Rel
+- [Datafun](http://www.rntz.net/datafun/). lambda calculus with type system for tracking lattice monotonicity. and built in set type with comprehensions.
+- [differential datalog](https://github.com/vmware/differential-datalog)
+- dr lojekyll
+- formulog
+
 ## Formulog
 SMT formulas as data. Interesting distinction with CHC where smt formula are predicates.
 Refinement type checker.
 
+## dr lojekyl
+https://blog.trailofbits.com/2022/01/05/toward-a-best-of-both-worlds-binary-disassembler/
+https://www.petergoodman.me/docs/dr-lojekyll.pdf
 
 # Souffle
 
@@ -69,11 +97,22 @@ Defined at relation level. Makes check before any insertion to see if something 
 as(a, number) I can cast ADTs to numbers?
 https://github.com/yihozhang/souffle/blob/conglog/tests/congruence/math.dl  interesting
 
-## instrinsic functors
+## intrinsic functors
 `cat` `strlen` `substr(string,index,length)` `ord`
 
-lor land lxor band bxor bshl bshr bshru
+`lor` `land` `lxor` `band` `bxor` `bshl` `bshr` `bshru`
 
+
+every non zero number is considered true.
+max min + * % ^
+
+`f(@g()) :- true` Sometimes you need to put true in the rhs position.
+
+### Parsing
+`substr` makes this feasible. This unfortuantely is going to reintern the string though. So hard to believe it'll ever be efficient.
+
+
+### BitSets
 ```souffle
 .type bitset <: unsigned
 // Operations
@@ -109,11 +148,96 @@ test(l,s1) <= test(l,s2) :- SUBSET(s1,s2).
 #define FLAG2 0x4
 ```
 
+#### Bitset reflection
+Can I use bitsets to reflect? Yes. Up to 32 entries allows.
+More if we use records of bitsets, n  * 32 element sets.
 
-every non zero number is considered true.
-max min + * % ^
 
-`f(@g()) :- true` Sometimes you need to put true in the rhs position.
+```souffle
+.type bitset <: unsigned
+// Operations
+#define SING(x) (0x1 bshl x)
+#define UNION(x,y) (x bor y)
+#define INTER(x,y) (x band y)
+#define DIFF(x,y) (x bxor INTER(x,y))
+
+// Predicates
+#define ISEMPTY(x) (x = 0)
+#define NONEMPTY(x) (x != 0)
+#define SUBSET(x,y) ISEMPTY(DIFF(x,y))
+#define ELEM(x, set) NONEMPTY(INTER(SING(x), set))
+
+.type findomain = A {} | B {} | C {}
+.decl foo(a : findomain)
+foo($A()).
+foo($C()).
+.decl refl_foo(a : bitset)
+// reflection
+refl_foo(SING(as(x, unsigned))) :- foo(x).
+// Join semantics
+refl_foo(UNION(s1,s2)) :- refl_foo(s1), refl_foo(s2).
+refl_foo(s1) <= refl_foo(s2) :- SUBSET(s1,s2).
+.decl reify_foo(x : findomain)
+reify_foo(as(x, findomain)) :- x = range(0,3), refl_foo(s), ELEM(x,s).
+.output reify_foo(IO=stdout)
+.output refl_foo(IO=stdout)
+```
+
+Could we perhaps use sparse bitsets? If there are universes of 2^n we can encode into a record with unsigned representing if we a priori know limit of sparsity.
+Possibly better is to use a lattice approximate reflection. Like factored over approximation.
+
+```
+factor_reflect(sing(arg1), sing(arg2)) :- rel(arg1, arg2).
+```
+The cartesian product of these sets over approximates `rel`. Rather reminds me of relational division.
+
+Speculative idea: Could have reflection as a true primitive. User defined functors? Don't really get access to relations. 
+We need persitent set data structures if we want to do this. Garbage collection? We could mark them as special reflective relations `.decl foo() reflective`
+`reflect("rel_foo")`
+Something like this.
+```
+rel reflect(string name){
+   program.get_relation(name)
+}
+```
+Oh, user defined functors woould support this `store(k,v, oldmap)` or `add(v, oldset)`. It would be nice if we could somehow just make sets pointers to souffle's structure themselves, or projections thereof? I mean what can you really do in that case?
+
+
+Reflection by grouping.
+```
+reflect(group : unsigned, bitset)
+reflect(n / 32, sing(n % 32)) :- rel(n)
+```
+Can the process be iterated?
+
+We could build a binary search tree ADT and reflect to that. What does that really do though? Uhhh. Yeah That makes sense. ADTs are persistent data structures. Maybe something other than binary tree is most appropriate? It would make sense to make sure we have a canonical representation of a particular set. I don't think the record table gets garbage collected. So we might build a set for every subset of the relation. Not good.
+
+Another possibility, reflect into a bloom filter via hashing. Kind of a fun "lattice"? Yeah it is right?
+
+Reifying back into a relation
+n lg n overhead:
+need to define split macro. to split set in two. Maybe it takes the upper and lower range.
+
+```
+#define split(upper,lower,bs) ((-1 << lower) & (-1 >> upper) & bs)
+.decl reify(size : unsigned, offset: unsigned, set : bitset)
+reify(32, 0, n) :- bitset(n).
+reify(n/2, m, bs1), reify(n/2,m + n/2, bs2) :- reify(n,m, bs), n > 1, bs1 = split(m, m + n/2 bs), bs2 = split(m+n/2, m + n, bs)
+done(v) :- reify(1, v, bs), NONEMPTY(b)
+```
+
+Oh, of course you could straight up unroll it
+```
+#REIFY(r2, r1, n) r2(1) :- r1(bs), ELEM(n,bs)
+// done(1) :- bitset(bs), ELEM(1,bs). 
+REIFY(done,bitset,1).
+REIFY(done,bitset,2).
+REIFY(done,bitset,3).
+// and so on
+```
+
+Or it could be componentized.
+
 
 ## Souffle proofs
 Manual exploration of just dump it. Does the dump memoize?
@@ -226,6 +350,10 @@ Formulog via linking to Z3. Do my own interning for handling int32? Or compile s
 ```
 Hmm But how to deal with `define-const`.
 
+Ah. This is in a sense striaghtforward ish CLP? CLP but in datalog.
+
+CHR constraint handling rules. Can I embed into subsumption?
+
 
 Syscalls. libc might already be available?
 
@@ -246,14 +374,24 @@ You can't defined your own user-defined functors inline. Two options that get yo
 
 ## ADTs
 
-ADTs are huge. They expand the expressive succinctness of souffle by so much it is unreal. It is somewhat possible to emulate them using other souffle features.
+ADTs are an incredible feature. They expand the expressive succinctness of souffle by so much it is unreal. It is somewhat possible to emulate them using other souffle features.
+
+You can flatten adts into their relational form `$Add(x,y) = z ---> add(x,y,z)`. Perhaps you can get autoinc + choice to make them uniquely constructed.
+
+See also <https://www.philipzucker.com/souffle-functor-hack/>
+
+It is somewhat unfortnuate that there are not accessors for ADTs? It would make macro writing more satisfying
+
+[interesting discussion of adt storage](https://github.com/souffle-lang/souffle/issues/2181)
+- simple enums = ramdomain values
+- 
 
 ### Use ADT instead of autoinc()
 autoinc() is a generative counter. It is nice because it is efficient. However, the stratification requirements on it are gnarly. It is too imperative, not declarative enough andyou get in trouble.
 ADTs are also generative though. I you makea new
 
 ### Record Packing
-Sometimes your number of filds in the relation get crazy. Like let's say you want to describe some abstract domain like an interval. You need to carry 2 parameters everywhere when you're really talking about 1.
+Sometimes your number of fields in the relation get crazy. Like let's say you want to describe some abstract domain like an interval. You need to carry 2 parameters everywhere when you're really talking about 1.
 
 You may however be taking a big performance hit. There is always a indirection hit of records vs unpacked records. Here is it felt more accutely because it isn't just a memory deref, it's a whole table lookup (? how exactly are records imlepmented).
 
@@ -273,11 +411,17 @@ You get the C preprocessor run by default over souffle files. I find this incred
 
 ## Components
 
-## Subsumption examples
-```souffle
+## Subsumption
+[1995 subsumption paper](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.28.103&rep=rep1&type=pdf)
 
-```
 
+### Lattices
+See also bitset lattice above
+
+Todo:
+- vsa
+- 
+#### Maybe/Option lattice
 
 ```prolog
 
@@ -294,9 +438,10 @@ A($None()) :- A(x), A(y), x != y.
 A(x) <= A($None()) :- A($None()).
 
 .output A(IO=stdout)
+```
 
-
-
+#### Intervals
+```
 // intervals getting bigger
 /*
 components?
@@ -339,26 +484,6 @@ i1.upper(14).
 ```
 
 
-A canonical element relation. Similiar to union find algorithm
-```
-#define EQ(x,y) canon(x,z), canon(y,z)
-.decl canon(x : symbol, y : symbol)
-
-.decl symbol(x : symbol)
-symbol("x").
-symbol("y").
-symbol("z").
-
-canon(x,x) :- symbol(x).
-canon(x,z) :- canon(x,y), canon(y,z).
-canon(x,y) <= canon(x,z) :- y <= z.
-
-canon("x","y").
-canon("y","z").
-
-.output canon(IO=stdout)
-```
-
 [dr. disassembler](https://github.com/lifting-bits/dds) and blog post
 
 Linear "datalog" - destructive state update
@@ -368,8 +493,11 @@ bottom up Dynamic programming in datalog? Rod cutting.
 
 ### Subsumption as a master feature
 
-Subsumption is kind of the master feature.
+Subsumption is kind of the master feature. Now, you can kind of also model these just ignoring the fact you're producing way to many tuples. But subsumption let's you at least keep it kind of under control
+
+#### Provenance
 Provenance using subsumption. Provenance works by deleting longer derivations.
+
 ```souffle
 .type Explain = Base {} | Trans {u : unsigned}
 .decl edge(a : unsigned, b : unsigned)
@@ -384,7 +512,67 @@ path(a,b, w1, d1) <= path(a, b, w2, d2) :- d2 <= d1.
 .output path(IO=stdout)
 ```
 
-Max, min using subsumption. Can I do sum and count? Maybe not. Not without tracking what we've already used.
+#### max min
+Max, min using subsumption. 
+```
+mymax(z) :- reltomax(z).
+mymax(z) <= mymax(z2) :- z1 <= z2.
+```
+
+Can I do sum and count? Maybe not. Not without tracking what we've already used. You could do this with bitsets. Requires reflection I guess. c
+Ah, I don't need to require tracking the set of already used, only count. Oh. Wait. no.
+```
+mysum(count : unsigned, partial_sum : unsigned)
+mysum(1,n) :- foo(n).
+mysum(n+1,) 
+nope
+```
+But if I cluster them into groups, I can take approximate sums.
+What if I track the current biggest element in the sum. This is tracking the state of a naive summation algorithm. We can lways necode an imperative algorithm to datalog by tracking state. This relies on summing positive numbers only
+```
+mysum(n,n) :- foo(n).
+mysum(n, partsum + n) :- mysum(top,partsum), foo(n), top < n.
+mysum(n,sum) <= mysum(n,sum') :- sum <= sum'.
+```
+
+count
+```
+mycount(n,1) :- foo(n).
+mycount(n, partcount + 1) :- mysum(top,partcount), foo(n), top < n.
+mysum(n,count) <= mysum(n,count2) :- count <= count2.
+```
+
+Could hyperloglog be relevant for approximate counts? https://en.wikipedia.org/wiki/HyperLogLog
+
+A* search. Interesting. If you have the a bound on distance you can subsumpt away bad possible paths. Path search is a canonical datalog program. Subsumption allows shortest path search (which I showed above).
+
+
+#### Equivalence relations
+You can make a findParent relation to get a lot of the functionality of equivalence relations. Eq relations are already the same thing as
+```souffle
+eq(x,y) :- eq(y,x). //sym
+eq(x,z) :- eq(x,y), eq(y,z). //trans
+```
+
+But this is more efficient. The relation is linear sized instead of quadratic in the size of the eq classes.
+
+```souffle
+#define EQ(x,y) canon(x,z), canon(y,z)
+.decl canon(x : symbol, y : symbol)
+.decl symbol(x : symbol)
+symbol("x").
+symbol("y").
+symbol("z").
+canon(x,x) :- symbol(x).
+canon(x,z) :- canon(x,y), canon(y,z).
+canon(x,y) <= canon(x,z) :- y <= z.
+canon("x","y").
+canon("y","z").
+.output canon(IO=stdout)
+```
+
+#### Choice domain
+
 Choice using subsumption, static or dynamic notion of "better".
 
 
@@ -399,6 +587,8 @@ well. I can recover lattice style via an explicit congruence closure. So. it doe
 - include/souffle - the runtime of souffle
 - ram, relational abstract machine
 - 
+
+
 
 
 ## Lambda representiation
@@ -431,9 +621,18 @@ A(x, v1) <= A(_, v2):-
     v1 < v2.
 ```
 
+[topdown vs bottom up datalog](https://twitter.com/wilton_quinn/status/1496393635533066241?s=20&t=XQ6lmI5ivNs5z5-EwnGKMQ)
+
+[datalog and recursive query processing](http://blogs.evergreen.edu/sosw/files/2014/04/Green-Vol5-DBS-017.pdf)
+
 What if i did a call to minizinc formulog style?
 
 A reversible compiler. would requires exists and equality. ... egraph?
+[dr lojekyll](https://www.petergoodman.me/docs/dr-lojekyll.pdf)
+
+So an object oriented datalog.
+
+"These are generative functors? Is that how they return a relation? Do these functors take arguments?. Would the analog in souffle to be running the C++ program api in a user defined functor?"
 
 [geometric database](http://www.mmrc.iss.ac.cn/~xgao/paper/jar-gdbase.pdf) horn clauses. good clean fun
 [So You Want To Analyze Scheme Programs With Datalog?](http://webyrd.net/scheme_workshop_2021/scheme2021-final2.pdf)
@@ -496,7 +695,7 @@ prosynth - leanr datalog rules from data?
 
 
 
-https://arxiv.org/abs/2107.12909 - so you want to analyze soufle with datalog https://www.youtube.com/watch?v=oiXL44WlC-U&ab_channel=ACMSIGPLAN
+https://arxiv.org/abs/2107.12909 - so you want to analyze scheme with datalog https://www.youtube.com/watch?v=oiXL44WlC-U&ab_channel=ACMSIGPLAN
 
 Might this not be a nice pass for higher-order theorem proving?
 

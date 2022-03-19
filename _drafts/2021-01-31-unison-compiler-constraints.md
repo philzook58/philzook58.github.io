@@ -5,6 +5,18 @@ title: Compiling with Constraints I
 
 Hey Hey! We've open sourced our project [VIBES](https://github.com/draperlaboratory/VIBES) (Verified, Incremental Binary Editing with Synthesis).
 
+A compiler can be a complicated thing. Often we break up and approach the problem by breaking it into pieces. The front end takes text and converts it to a tree. In turn it is often converted to some kind of intermediate representation, say a control flow graph. The middle end performs rearrangements and analyses on this graph. The back end is in charge of taking this intermediate representation and bringing it to executable machine code.
+
+The backend of a compiler has a number of different problems
+
+1. Instruction Selection - Take `x := a + b` and turn it into `mov x, a; add x,b` 
+2. Register Allocation - Take `add x,a` and turn it into `add R0, R1`
+3. Instruction Scheduling - Rearrange instructions to maximize throughput of CPU. Internally cpu has pipelines and resources, store and loads to memory are slow, you want to make sure these are chugging along and interleaved well.
+
+Typically, these will be run one after the other in some order, with greedy-ish algorithms and hand tuned code. This works pretty well and is fast to compile.
+It does leave performance and size of the resulting code on the table.
+The Unison approach is trying to build a non toy compiler that uses declarative constraint programming to solve these in concert.
+Now any optimization is only as good as our modelling of the situation. This is one of the common fallacies of godhood people get when they think about applying math to problems. If your model of the cpu is coarse, then perfectly optimizing with respect to this . Ultimately, every ahead of time model is bad because it must be unable to know information that is readily accessible at runtime. This is at least one reason why without experimentation and measurement, you really can't tell whether crass online optimization can deliver superior results to thorough ahead of time optimization. See for example JITs, branch prediction, VLIW architectures, out of order execution. 
 
 
 

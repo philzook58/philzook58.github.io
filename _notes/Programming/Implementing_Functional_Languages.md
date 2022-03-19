@@ -19,6 +19,8 @@ See also notes on:
 # ZAM
 # G-machine
 # Combinators
+[When were combinators inveneted](https://twitter.com/code_report/status/1502854198005690371?s=20&t=NnxLD33Ap2wMOWoFXRFmHw)
+
 # HVM
 https://news.ycombinator.com/item?id=30219452
 "
