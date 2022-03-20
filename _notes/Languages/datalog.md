@@ -7,6 +7,7 @@ title: Datalog
   - [Program Analysis](#program-analysis)
 - [Implementations](#implementations)
   - [Formulog](#formulog)
+  - [Flix](#flix)
   - [dr lojekyl](#dr-lojekyl)
 - [Souffle](#souffle)
   - [intrinsic functors](#intrinsic-functors)
@@ -18,12 +19,15 @@ title: Datalog
   - [Examples](#examples)
   - [User Defined Functors](#user-defined-functors)
   - [ADTs](#adts)
+    - [field accessors](#field-accessors)
+    - [Vectors](#vectors)
     - [Use ADT instead of autoinc()](#use-adt-instead-of-autoinc)
     - [Record Packing](#record-packing)
   - [Macros](#macros)
   - [Components](#components)
   - [Subsumption](#subsumption)
     - [Lattices](#lattices)
+      - [Min/max lattice](#minmax-lattice)
       - [Maybe/Option lattice](#maybeoption-lattice)
       - [Intervals](#intervals)
     - [Subsumption as a master feature](#subsumption-as-a-master-feature)
@@ -32,8 +36,13 @@ title: Datalog
       - [Equivalence relations](#equivalence-relations)
       - [Choice domain](#choice-domain)
   - [Choice Domain](#choice-domain-1)
-- [Souffle source](#souffle-source)
-  - [Lambda representiation](#lambda-representiation)
+  - [Souffle source](#souffle-source)
+- [Examples](#examples-1)
+  - [Lambda representation](#lambda-representation)
+  - [Equality Saturation](#equality-saturation)
+  - [Theorem Proving](#theorem-proving)
+  - [Typeclass resolution.](#typeclass-resolution)
+  - [Type checking / inferring](#type-checking--inferring)
 - [Resources](#resources)
 - [class(slotname : f(x,y) , ) :-](#classslotname--fxy----)
   - [building souffle emscripten](#building-souffle-emscripten)
@@ -70,6 +79,9 @@ topics:
 SMT formulas as data. Interesting distinction with CHC where smt formula are predicates.
 Refinement type checker.
 
+## Flix
+[online playground](https://play.flix.dev/)
+Also install as a vs code plugin. very nice.
 ## dr lojekyl
 https://blog.trailofbits.com/2022/01/05/toward-a-best-of-both-worlds-binary-disassembler/
 https://www.petergoodman.me/docs/dr-lojekyll.pdf
@@ -97,6 +109,30 @@ Defined at relation level. Makes check before any insertion to see if something 
 as(a, number) I can cast ADTs to numbers?
 https://github.com/yihozhang/souffle/blob/conglog/tests/congruence/math.dl  interesting
 
+
+[Examples directory](https://github.com/souffle-lang/souffle/tree/master/tests/example)
+- convex hall
+- anderson pointer, hmmer, java-pointsto
+- dfa dataflow analysis
+- edit distance
+- josephus
+- minesweeper
+- nfsa2fsa nondet automata to det
+- farmer wolf cabbage
+- rewrite
+- turing - turing machine implementation
+- [trie](https://github.com/souffle-lang/souffle/blob/master/tests/example/sequences/sequences.dl) maybe this is what to do first.
+- [palindrome](https://github.com/souffle-lang/souffle/blob/master/tests/example/palindrome/palindrome.dl)
+- [matrix multipy](https://github.com/souffle-lang/souffle/blob/master/tests/example/mmult/mmult.dl)
+- [early parser](https://github.com/souffle-lang/souffle/blob/master/tests/example/earley/earley.dl)
+- graph domaintors
+- 2sat
+
+Convert string to relation. To avoid 
+```souffle
+str(s, char, i) :- range(0, len(s)) = i, char = substr(i, i+1, s) 
+```
+
 ## intrinsic functors
 `cat` `strlen` `substr(string,index,length)` `ord`
 
@@ -111,6 +147,7 @@ max min + * % ^
 ### Parsing
 `substr` makes this feasible. This unfortuantely is going to reintern the string though. So hard to believe it'll ever be efficient.
 
+CYK Parsing is an example of dynamic programming.
 
 ### BitSets
 ```souffle
@@ -171,14 +208,16 @@ More if we use records of bitsets, n  * 32 element sets.
 .decl foo(a : findomain)
 foo($A()).
 foo($C()).
-.decl refl_foo(a : bitset)
+
 // reflection
+.decl refl_foo(a : bitset)
 refl_foo(SING(as(x, unsigned))) :- foo(x).
-// Join semantics
 refl_foo(UNION(s1,s2)) :- refl_foo(s1), refl_foo(s2).
 refl_foo(s1) <= refl_foo(s2) :- SUBSET(s1,s2).
+
+// reify
 .decl reify_foo(x : findomain)
-reify_foo(as(x, findomain)) :- x = range(0,3), refl_foo(s), ELEM(x,s).
+reify_foo(as(x, findomain)) :- x = range(0,3), refl_foo(s), ELEM(x,s). // could make range 32 without hurting anything
 .output reify_foo(IO=stdout)
 .output refl_foo(IO=stdout)
 ```
@@ -384,11 +423,62 @@ It is somewhat unfortnuate that there are not accessors for ADTs? It would make 
 
 [interesting discussion of adt storage](https://github.com/souffle-lang/souffle/issues/2181)
 - simple enums = ramdomain values
-- 
+Converting simple enums to numbers. unsigned or number should do the same thing until you get to 2^31 or so
+```
+as($A(), number)
+```
+
+- Values with single fields representable as interger become `[tag: unsigned, value : A]`
+- Compound values becomes [tag : unsigned, [all the stff]]
+
+
+You can access the "id" associated with a value also `as([1,2,3],number)` for devious ends
+
+
+### field accessors
+It is a pain that there isn't a good way to make trustworthy fresh variables using `mcpp` due to lack of `__COUNTER__`. Best I can figure is hacks using `__LINE__` and concatenation. Otherwise insist on variables coming from outside into macro.
+
+```souffle
+#define FST(a,r) (r = [a,_])
+
+.type myrec = [a : number, b : number]
+.decl test(x : myrec)
+.decl myfst(a : number)
+myfst(a) :- test(r), FST(a,r).
+test([1,2]).
+.output myfst(IO=stdout)
+```
+
+This does _not_ work.
+```souffle
+#define FST(a,r) (r = $A(a, _))
+
+.type myadt = A {x : number, b : number} | B {}
+.decl test(x : myadt)
+.decl myfst(a : number)
+myfst(a) :- test(r), FST(a,r).
+test($A(1,2)).
+.output myfst(IO=stdout)
+```
+
+We _could_ probably cast to records to get the same effect. If you dare.
+
+### Vectors
+I am in no way endorsing this. Actual representation of vectors have size field in them. Eh maybe I can't even do this. I was thinking maybe I could do a unsafe cast, but that's a pain too. Maybe this is possible with some truly horrific macro programming + unsafe casts. Yikes.
+```souffle
+.type vector = [size : unsigned, key : unsigned]
+```
+
+safer alternaitve
+```
+.comp Vector<T>{
+.type vector = V0 {} | V1 {x1 : T} | V2 {x1 : T, x2 : T} | V3 {x1 : T, x2 : T, x3 : T} | V4 {x1 : T, x2 : T, x3 : T, x4 : T}
+}
+```
 
 ### Use ADT instead of autoinc()
 autoinc() is a generative counter. It is nice because it is efficient. However, the stratification requirements on it are gnarly. It is too imperative, not declarative enough andyou get in trouble.
-ADTs are also generative though. I you makea new
+ADTs are also generative though. If you makea new object with them, you can make things that didn't exist in the original dataset. They sort of track how they were made by their arguments. This helps prevent you from instantiating the same thing twice. ADTs are basically hash consed/interned.
 
 ### Record Packing
 Sometimes your number of fields in the relation get crazy. Like let's say you want to describe some abstract domain like an interval. You need to carry 2 parameters everywhere when you're really talking about 1.
@@ -418,9 +508,59 @@ You get the C preprocessor run by default over souffle files. I find this incred
 ### Lattices
 See also bitset lattice above
 
+You often need 1 rule to combine pieces with the join of the lattice and 1 rule for subsumption. This is probably not efficient, but it is works.
+It would be be nice to have a construct that did both at once efficiently. We should be immeditaly erasing a and b when we compute their join.
+
+```souffle
+rel(join(a,b)) :- rel(a), rel(b).
+rel(a) <= rel(b) :- lattice_order(a, b).
+```
+
+Perhaps you could make a generic lattice compment parametrized over join
+
+```
+.comp Lattice<T> {
+  .decl join(x: T, y : T, z : T) overridable
+  .decl r(x:T, y:T)
+  r(z) :- r(x), r(y), join(x,y,z).
+  r(x) <= r(y) :- join(x,y,y).
+}
+```
+But filling out joi will be annoying. There isn't a great way to parametrize over functors so far as I can tell.
+
+
+
 Todo:
 - vsa
-- 
+
+
+#### Min/max lattice
+
+labaeller Max lattice
+I suppose in a sense this is the lattice of the function space `T -> int` defining join pointwise. If that's your bag.
+
+```souffle
+.comp Upper<T> {
+   .decl upper(label: T, x : unsigned)
+   upper(l,x) <= upper(l,x1) :- x <= x1.
+}
+
+.comp Lower<T> {
+   .decl lower(label: T, x : unsigned)
+   lower(l,x) <= lower(l,x1) :- x1 <= x.
+}
+
+.init symu = Upper<symbol>
+
+symu.upper("x", 1).
+symu.upper("x", 7).
+symu.upper("y", 4).
+.output symu.upper(IO=stdout)
+
+```
+
+If you have both, you have an interval, see below.
+
 #### Maybe/Option lattice
 
 ```prolog
@@ -440,7 +580,45 @@ A(x) <= A($None()) :- A($None()).
 .output A(IO=stdout)
 ```
 
+Also you can make N max set lattice. Keep sorted. Insertion sort. Kind of a pain if you get too many
+
+```
+.type Nary = None {} | One {a : T} | Two {a : T, b : T} | Top {}
+```
+
+
 #### Intervals
+
+```souffle
+.type Interval = [l : float, u : float]
+.type Expr = Add {a : Expr, b : Expr} | Lit { a : float} | Var {x : symbol} 
+
+// all expressions
+.decl expr(e : Expr)
+expr(a), expr(b) :- expr($Add(a,b)).
+
+expr($Add($Var("x"), $Lit(1))).
+
+.decl iexpr(e : Expr, i : Interval)
+iexpr($Lit(n), [n,n]):- expr($Lit(n)).
+iexpr(e, [la + lb, ua + ub]) :- iexpr( a, [la,ua] ), iexpr(b, [lb, ub]), e = $Add(a,b), expr(e).
+
+// also vice versa back down the tree
+iexpr(b, [ l1 - ua, u1 - la]) :- iexpr($Add(a,b), [l1,u1]), iexpr(a, [la,ua]).
+
+
+iexpr($Var("x"), [-1,1]).
+iexpr($Var("x"), [0,1]).
+iexpr($Add($Var("x"), $Var("x")), [0.5,0.75]).
+
+// meet semantics
+iexpr(e, [max(l1,l2), min(u1,u2)]) :- iexpr(e, [l1,u1]), iexpr(e, [l2,u2]).
+iexpr(e, [l1,u1]) <= iexpr(e, [l2,u2]) :- l1 <= l2, u2 <= u1.  
+.output iexpr(IO=stdout)
+```
+It may not be worth packing into a record though. This almost certainly has performance cost. Records never get deleted. So you should just unpack into a relation. 
+
+
 ```
 // intervals getting bigger
 /*
@@ -582,7 +760,8 @@ Can I combine choice domain and lattice. But choice domain once you pick you're 
 well. I can recover lattice style via an explicit congruence closure. So. it doesn't matter I guess.
 
 
-# Souffle source
+
+##  Souffle source
 - synthesizer - actual code printers
 - include/souffle - the runtime of souffle
 - ram, relational abstract machine
@@ -590,9 +769,77 @@ well. I can recover lattice style via an explicit congruence closure. So. it doe
 
 
 
-
-## Lambda representiation
+# Examples
+## Lambda representation
 What is the most appropriate way? Probably we want to implement some kind of machine flavored implementation.
+Or maybe a graph like representation.
+
+I could literally do hash cons modulo alpha. I can dor xor trick.
+
+Could make user defined functor for substition.
+
+I could make udf for normalization. And memoize into a choice domain?
+
+
+## Equality Saturation
+See blog posts
+
+egglog
+
+## Theorem Proving
+
+```souffle
+// these constructors are actually the skolemizaion of axioms
+.type Morph = Comp {f : Morph, g : Morph} | Id {a : Ob} | M {f : symbol}
+.type Ob <: symbol
+
+.decl ob(a : symbol)
+
+.decl eq(f : Morph, g : Morph) eqrel
+.decl hom(f : Morph, a : Ob, b : Ob)
+
+// category axioms
+// identity morphism exists
+hom($Id(a), a, a) :- ob(a).
+eq(f, $Comp(f,$Id(b))), eq($Comp($Id(a),f), f) :- hom(f,a,b).
+// composition exists
+hom($Comp(f,g),a,c) :- hom(f, a, b), hom(g, b, c).//, f != $Id(_), g != $Id(_).
+// associativity axiom rewrite rules
+eq(fgh2, fgh), hom(fgh2, a, b) :- hom(fgh, a, b), fgh = $Comp(f,$Comp(g,h)), $Comp($Comp(f,g),h) = fgh2.
+eq(fgh2, fgh), hom(fgh, a, b) :- hom(fgh2, a, b), fgh = $Comp(f,$Comp(g,h)), $Comp($Comp(f,g),h) = fgh2.
+
+
+// typing rule guarded on eq
+hom($Comp(f,g), a, c):- eq($Comp(f,g), _), hom(f, a, b), hom(g, b, c).
+// Just filling out stuff.
+eq(f,f), ob(a), ob(b) :- hom(f,a,b).
+
+/*
+.decl depth(t : Morph, n : unsigned)
+depth($M(f), 1) :- hom($M(f), _, _).
+depth($Id(a), 1) :- hom($Id(a), _, _).
+depth($Comp(f,g), max(m,n) + 1) :- hom($Comp(f,g), _, _), depth(f,n), depth(g,m).
+*/
+
+hom(f,a,b) <= hom(f2,a,b) :- eq(f,f2), depth(f2, d2), depth(f,d1),  d2 <= d1.
+
+hom($M("f"),"a","b").
+hom($M("g"),"b","c").
+
+.limitsize hom(n=15)
+.output hom(IO=stdout)
+```
+
+Hmm. Comp(Id, f) is going off the rails. Any loop will. Can subsume on term size? Not clear who wins subsumption vs building bigger. Tag size inside of term?
+
+Mayybe it's worth it to do Comp { symbol, morph} list style. Hard to do.
+Could block composition rule on Id. Kind of a cheap shot
+
+## Typeclass resolution.
+
+## Type checking / inferring
+Related of course to the above.
+
 
 # Resources
 Building a compiler in datalog. I can parse. I can do program analysis. How do I backend? Backend takes arbitrary non monotonic choices.

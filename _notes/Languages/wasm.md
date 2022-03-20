@@ -6,6 +6,7 @@ title: Wasm/Emscripten
 <https://medium.com/swlh/a-suduko-solving-serverless-endpoint-using-webassembly-and-or-tools-df9f7bb10044>
 https://github.com/google/or-tools/pull/2404
 
+[walrus](https://docs.rs/walrus/latest/walrus/) webassembly transformation library in rust
 
 ### WABT
 (likely wascally wabbit) Web assembly binary toolkit
