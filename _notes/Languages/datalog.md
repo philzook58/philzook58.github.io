@@ -134,6 +134,7 @@ bottom up Dynamic programming in datalog?
 - 
 
 # Resources
+[provenance based synthesis of datalog programs](https://www.youtube.com/watch?v=cYAjOGhclcM&ab_channel=ACMSIGPLAN)
 [parser in datalog](https://homes.cs.washington.edu/~bodik/ucb/cs164/sp13/lectures/09-Datalog-CYK-Earley-sp13.pdf) bottom up parsing
 
 [Rust lifetime analysis written in souffle](https://github.com/rljacobson/lifetimes)

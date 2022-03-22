@@ -87,6 +87,8 @@ Ranged Floats {range : interval; x : float code}
 Numerical Analysis
 Higham
 
+[comparing floating point is tricky](https://www.reddit.com/r/cpp/comments/tavh14/comparing_floatingpoint_numbers_is_tricky/)
+
 [One Polynomial Approximation to Produce Correctly Rounded Results of an Elementary Function for Multiple Representations and Rounding Modes](https://people.cs.rutgers.edu/~sn349/papers/rlibmall-popl-2022.pdf)
 [shaman](https://gitlab.com/numerical_shaman/shaman) operator overloading to estimate numerical error
 

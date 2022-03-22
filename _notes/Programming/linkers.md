@@ -6,7 +6,24 @@ title: Linkers
 # Sections
 # Segments
 # Symbol Table
+A key value mapping
+
 # Relocations
+[relocation](https://en.wikipedia.org/wiki/Relocation_(computing))
+Relocations are "fixups" to the binary. There is a list of possible ones.
+The name comes from relocatable values or something. A memory address you don't currently know. But the mechanism can get used for more things.
+Some relocations look for the keys coming in from the symbol table and do something with the corresponding value.
+
+
+[understanding relocations](https://stac47.github.io/c/relocation/elf/tutorial/2018/03/01/understanding-relocation-elf.html)
+# Dynamic Linking
+GOT global offset table - table holding global variables
+PLT - procedure linkage table - table holding function pointers
+got.plt 
+
+DSO - dynamic shared object
+
+[how to write shared libraries](https://www.akkadia.org/drepper/dsohowto.pdf)
 # Compilation Units
 https://en.wikipedia.org/wiki/Single_Compilation_Unit
 
@@ -42,6 +59,12 @@ https://github.com/emersion/dareog
 
 [Introduction to the DWARF Debugging Format](https://dwarfstd.org/doc/Debugging%20using%20DWARF-2012.pdf)
 # Resources
+ld - linker editor
+
+[oracle linker guide](https://docs.oracle.com/cd/E23824_01/html/819-0690/index.html)
+
+[armlink user guide](https://www.keil.com/support/man/docs/armlink/armlink_deb1353594352617.htm) A different flavor. Some interesting optimization options "veneer" as chunks of linker produced code.
+
 [mold talks about arm thunks for long jumps](https://twitter.com/rui314/status/1497846501740998662?s=20&t=MRs67YjTJIE5glLjgsAcRA)  veneers, risc v does opposite, shrinks long jumps into short jumps. rv5 abi allows this in ways arm doesnt? What does that mean
 [veneer](https://www.keil.com/support/man/docs/armlink/armlink_pge1406301797482.htm)
 [linker relacation on rv5](https://www.sifive.com/blog/all-aboard-part-3-linker-relaxation-in-riscv-toolchain)

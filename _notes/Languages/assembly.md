@@ -19,6 +19,8 @@ sectorlisp
 
 x86 forth 
 ### RISC V
+[risc v J extesnions](https://news.ycombinator.com/item?id=30647151)
+
 https://www.cs.cornell.edu/courses/cs3410/2019sp/riscv/interpreter/# nice little interpeter to play with
 [risc v from scratch](https://twilco.github.io/riscv-from-scratch/2019/04/27/riscv-from-scratch-2.html)
 
