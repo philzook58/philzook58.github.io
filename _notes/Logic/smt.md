@@ -3,14 +3,29 @@ layout: post
 title: SMT Solvers
 ---
 
+- [Solvers](#solvers)
+- [CVC5](#cvc5)
+  - [Proofs](#proofs)
+  - [interpolation](#interpolation)
+  - [abduction](#abduction)
+  - [Higher Order](#higher-order)
+  - [Sep logic](#sep-logic)
+  - [datatypes](#datatypes)
+  - [Transcendentals](#transcendentals)
+  - [Float](#float)
+  - [test/regress](#testregress)
+  - [options](#options)
+- [EPR](#epr)
+- [Z3 source spelunking](#z3-source-spelunking)
+  - [src - most of the goodies are here.](#src---most-of-the-goodies-are-here)
+
 See also:
 - SAT solvers
 - Synthesis
 - automated theorem proving
 - Imperative Verification
 
-
-
+[datalog based systems can us incremental smt solving ](https://cs.pomona.edu/~michael/papers/iclp2020_extabs.pdf) Nice trick to use (=> label clause). This trick also comes up in unsat cores. (check-sat-assuming label label) then. ALso consider doing minimal number of push pops or keep pool of solver contexts to find miniaml push pop
 # Solvers
 W: What options are actualy worth fiddling with
 It is interesting to note what unusual characteristics solvers have.
@@ -21,7 +36,7 @@ boolector
 cvc4
 cvc5
 yices2
-smtinterpol
+[smtinterpol](https://github.com/ultimate-pa/smtinterpol)
 alt-ergo
 veriT
 colibri
@@ -135,6 +150,16 @@ This is a [parsers listing](https://github.com/cvc5/cvc5/blob/a8623b22f6f8d28191
 (check-sat)
 (get-proof)
 ```
+
+## interpolation
+[interpolation slide](https://userpages.uni-koblenz.de/~sofronie/vtsa-2015/slides-griggio2.pdf)
+For unsatisifable formula `A => B`, produces a C such that `A => C`, `C => B` whihc only uses shared variables. Considered as sets, B is a subset of A.
+
+For finite unrolling of transition relation, we can use it to produce an abstraction of the initial state that is sufficient to prove the property. Maybe this gets us a full inductive invariant.
+
+For pure sat interpolation can be found from resolution proof / unsat certificate
+
+Theory specific interpolation.
 
 ## abduction
 - get-abduct --produce-abducts https://github.com/cvc5/cvc5/blob/master/test/regress/regress1/abduction/abduct-dt.smt2 get-abduct-next (set-option :produce-abducts true)

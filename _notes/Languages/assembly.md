@@ -3,23 +3,64 @@ layout: post
 title: Assembly
 ---
 
-<https://learnxinyminutes.com/docs/mips/>
+- [Assemblers](#assemblers)
+  - [Directives](#directives)
+- [x86](#x86)
+- [BMI1 BMI2](#bmi1-bmi2)
+  - [memory barrier](#memory-barrier)
+  - [CET control enforcement technology](#cet-control-enforcement-technology)
+- [ARM](#arm)
+- [RISC V](#risc-v)
+- [Misc](#misc)
 
-Introduction to 80x86 Assembly Language and Computer Architecture" by R. C. Detmer, 2.
-ed. 2006.
 
-boot sector means they got the code under 512 bytes
+See also nots on:
+- computer architecture
+- performance
+- linkers
 
-https://github.com/nanochess/bootBASIC boot sector basic
-https://nanochess.org/
-https://www.lulu.com/shop/oscar-toledo-gutierrez/programming-boot-sector-games/paperback/product-24188564.html?page=1&pageSize=4  <https://nanochess.org/store.html> programming boot sector games
+`-S` flag on gcc and other compilers often dumps assembly
+Godbolt compiler explorer is also very useful
+
+# Assemblers
+gas - gnu assembler
+[llvm-as](https://llvm.org/docs/CommandGuide/llvm-as.html)
+
+command line flag
 
 
-sectorlisp
+
+## Directives
+[gas](https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_chapter/as_7.html) gas directives
+
+- `.equiv`
+- cfi directives
+- `.debug_line` maps addresses to source code lines
+- `.debug_info` maps source variables to registers and stack locations
+- `.eh_frame` maps address location return address and callee saved registers info. "exception handling"
+
+# x86
+De facto standard for desktops
+
+[intel software develpoer manuals](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
+
+# BMI1 BMI2
+Bit manipulation instructions https://twitter.com/geofflangdale/status/1502481857375793153?s=20&t=j5MN13cFOkc3qH8tpATyNA
+apparently people can do crazy stuff with this https://twitter.com/pkhuong/status/1497332651891515395?s=20&t=j5MN13cFOkc3qH8tpATyNA
+
+pshufb 
+pext
+pdep
+
+## memory barrier
+## CET control enforcement technology
+`endbr` valid jump destinations for indirect jumps
 
 x86 forth 
 ### RISC V
+# ARM
 [risc v J extesnions](https://news.ycombinator.com/item?id=30647151)
+
 
 https://www.cs.cornell.edu/courses/cs3410/2019sp/riscv/interpreter/# nice little interpeter to play with
 [risc v from scratch](https://twilco.github.io/riscv-from-scratch/2019/04/27/riscv-from-scratch-2.html)
@@ -60,3 +101,20 @@ https://marz.utk.edu/my-courses/cosc230/book/example-risc-v-assembly-programs/
   * https://en.wikibooks.org/wiki/X86_Assembly
   * https://en.wikibooks.org/wiki/Embedded_Systems
   * https://www.ic.unicamp.br/~pannain/mc404/aulas/pdfs/Art%20Of%20Intel%20x86%20Assembly.pdf Art of Assembly DOS version. Good stuff in here. Some ways of implementing function calls I'd never considered
+
+# Misc
+<https://learnxinyminutes.com/docs/mips/>
+
+Introduction to 80x86 Assembly Language and Computer Architecture" by R. C. Detmer, 2.
+ed. 2006.
+
+boot sector means they got the code under 512 bytes
+
+https://github.com/nanochess/bootBASIC boot sector basic
+https://nanochess.org/
+https://www.lulu.com/shop/oscar-toledo-gutierrez/programming-boot-sector-games/paperback/product-24188564.html?page=1&pageSize=4  <https://nanochess.org/store.html> programming boot sector games
+
+
+sectorlisp
+
+x86 forth 

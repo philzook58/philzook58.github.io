@@ -19,8 +19,34 @@ See also notes on:
 # ZAM
 # G-machine
 # Combinators
-# HVM
+[When were combinators inveneted](https://twitter.com/code_report/status/1502854198005690371?s=20&t=NnxLD33Ap2wMOWoFXRFmHw)
 
+# HVM
+https://news.ycombinator.com/item?id=30219452
+"
+So, in short, my journey was:
+1. Learn the abstract algorithm
+2. Implement it naively as a graph
+3. Optimize it by making trees whenever possible
+4. Favor rewrite equations over case-trees
+These steps lead to the design of HVM, which does fairly well in practice.
+[0] https://github.com/VictorTaelin/Symmetric-Interaction-Calculus
+"
+Sharing nodes. Fan
+"Cheap clone"
+Victor's syntactic representaion is really interesting. I wonder if it makes it all more confusing though
+
+
+Asperti
+
+
+
+# Graph combinators
+[spj book](https://www.microsoft.com/en-us/research/uploads/prod/1987/01/slpj-book-1987.pdf)
+
+
+
+# Misc
 [Justine Lambda Calculus in 400 Bytes](https://justine.lol/lambda/) unbelievable
 [Peyton jone compiling without continutations](https://www.youtube.com/watch?v=LMTr8yw0Gk4&ab_channel=ECOOPLDI2017)
 

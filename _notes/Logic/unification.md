@@ -6,6 +6,7 @@ title: Unification
 # Union Find
 
 # Higher Order Unification
+[efficient full higher order unification](https://arxiv.org/abs/2011.09507) zipperposition
 
 # Pattern Matching
 Arguably pattern matching should be it's own article.

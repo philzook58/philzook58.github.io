@@ -6,9 +6,10 @@ title: Imperative Proving
 # Why3
 
 # Boogie
-
+<https://boogie-docs.readthedocs.io/en/latest/index.html>
 # Dafny
 
+[modelling the heap](https://www.youtube.com/watch?v=AbiVYHVU0mQ&ab_channel=MicrosoftResearch)
 
 [why3 implemtnation of stackify](https://gitlab.inria.fr/why3/why3/-/merge_requests/453)
 Stackifty algorithm of llvm for wasm

@@ -6,6 +6,7 @@ title: Wasm/Emscripten
 <https://medium.com/swlh/a-suduko-solving-serverless-endpoint-using-webassembly-and-or-tools-df9f7bb10044>
 https://github.com/google/or-tools/pull/2404
 
+[walrus](https://docs.rs/walrus/latest/walrus/) webassembly transformation library in rust
 
 ### WABT
 (likely wascally wabbit) Web assembly binary toolkit
@@ -191,6 +192,7 @@ It needs to be in an mjs file
 Lots of important stuff is in the api reference
 Module, FS
 
+[wasmcloud](https://wasmcloud.com/)
 
 https://stackoverflow.com/questions/48292269/how-can-i-run-an-interactive-program-compiled-with-emscripten-in-a-web-page
 

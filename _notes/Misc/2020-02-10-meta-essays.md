@@ -46,6 +46,7 @@ Ctrl+Shift+V puts in markdown render mode.
 Go into .vscode/jeepshen... /src/share.js to add new languages. Not ideal
 Also executorMap in package.json. I re aliased python to python3
 
+Maybe what I want is shebangs  `#! c++ /tmp/foo -o /tmp/a.out && /tmp/a.out`? Sometimes I want to add command line flags. Then I could use whatever highlighting I want. It would be better to have a hotkey to do this.
 
 ```python
 print("hello world")

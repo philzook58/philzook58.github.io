@@ -89,12 +89,14 @@ Semantic Actions
 # Intermediate Representations
 ## SSA
 http://ssabook.gforge.inria.fr/latest/book.pdf SSA bookv
+[mirror of ssa book](https://github.com/pfalcon/ssabook)
+
+[compcertssa](http://compcertssa.gforge.inria.fr/) verified ssa
+
 ## LLVM IR
-<https://jonathan2251.github.io/lbd/index.html>  Tutorial: Creating an LLVM Backend for the Cpu0 Architecturehttps://danielkeep.github.io/tlborm/book/README.html
+See LLVM section
 
-<https://www.youtube.com/watch?v=m8G_S5LwlTo&ab_channel=LLVM> LLVM IR tutorial
 
-[llvm-mca](https://llvm.org/docs/CommandGuide/llvm-mca.html) - static analysis of performance of code 
 ## CPS
 ## RTL
 
@@ -133,6 +135,8 @@ Expand expressions with care - less dependencies
 
 isl and presburger arithmetic.
 A relative of omega?
+
+[liveness analysis for ssa form program](https://hal.inria.fr/inria-00558509v2/document)
 
 ## Link Time Optimization (LTO)
 - See note on Linker
@@ -237,6 +241,8 @@ mul v3, v1
 The interference graph has an edge between any two variables that are live at the same time.
 Live means that the variable has been made and someone still needs to use it now or later.
 In this example, if we assume v1 v2 & v3 are live at the beginning, v1 is live for all 3 instructions, v3 is live for all three and at the output, but v2 is only live at the first instruction since it is never used again.
+
+[dsatur graph coliring heurisitc](https://en.wikipedia.org/wiki/DSatur)
 ## Instruction Scheduling
 ## Assembly Production
 You need to produce actual binary, actual 1s and 0s
@@ -264,8 +270,13 @@ Making a simple garbage collector [https://maplant.com/gc.html](https://maplant.
 
 # Misc
 
+[rose compiler](https://en.wikipedia.org/wiki/ROSE_(compiler_framework)) source to source compiler? Makes sense.
+
+
+[compiler optimizations website](https://compileroptimizations.com/)
+
   * [https://github.com/aalhour/awesome-compilers](https://github.com/aalhour/awesome-compilers)
-  * [https://www.cs.cornell.edu/~asampson/blog/llvm.html](https://www.cs.cornell.edu/~asampson/blog/llvm.html)
+
   *  [https://gcc.gnu.org/wiki/ListOfCompilerBooks](https://gcc.gnu.org/wiki/ListOfCompilerBooks)
 
 
@@ -274,7 +285,7 @@ Making a simple garbage collector [https://maplant.com/gc.html](https://maplant.
 
 
 
-<https://lowlevelbits.org/how-to-learn-compilers-llvm-edition/> - interesting links <https://twitter.com/1101_debian/status/1456346324794806274?s=20>
+- interesting links <https://twitter.com/1101_debian/status/1456346324794806274?s=20>
 <https://news.ycombinator.com/item?id=29112482> more links
 
 <cs.au.dk/~amoeller/spa> static program analysis
@@ -282,8 +293,7 @@ Making a simple garbage collector [https://maplant.com/gc.html](https://maplant.
 modules - global symbols, function declaration, function definitions, target information
 
 
-<https://www.llvm.org/docs/ProgrammersManual.html>
-<https://mukulrathi.com/create-your-own-programming-language/llvm-ir-cpp-api-tutorial/>
+
 
 
 <https://gist.github.com/MattPD/00573ee14bf85ccac6bed3c0678ddbef> program analysis resources. Big long list.
@@ -291,11 +301,7 @@ modules - global symbols, function declaration, function definitions, target inf
 
 
 
-Is datalog actually a good fit
-https://tudelft-cs4200-2020.github.io/ - hmm sppoofax
-https://www.youtube.com/watch?v=Qp3zfM-JSx8&ab_channel=ACMSIGPLAN - souffle
-http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.648.1834&rep=rep1&type=pdf - reps
-Engler 96
+
 
 Man souffle does seem cool
 
@@ -363,8 +369,25 @@ objdump -d -S -l
 valgrind and core dumps.
 
 ## LLVM
+LLVM IR
 
+MIR
 
+Instruction Combiner
+
+  * [https://www.cs.cornell.edu/~asampson/blog/llvm.html](https://www.cs.cornell.edu/~asampson/blog/llvm.html)
+
+<https://jonathan2251.github.io/lbd/index.html>  Tutorial: Creating an LLVM Backend for the Cpu0 Architecturehttps://danielkeep.github.io/tlborm/book/README.html
+
+<https://www.youtube.com/watch?v=m8G_S5LwlTo&ab_channel=LLVM> LLVM IR tutorial
+
+[llvm-mca](https://llvm.org/docs/CommandGuide/llvm-mca.html) - static analysis of performance of code 
+
+<https://www.llvm.org/docs/ProgrammersManual.html>
+<https://mukulrathi.com/create-your-own-programming-language/llvm-ir-cpp-api-tutorial/>
+
+[Learning to combine instructions in LLVM compiler](https://twitter.com/johnregehr/status/1501649959505985537?s=20&t=-ebjuD7WRIIQNgiBChK5cQ)
+<https://lowlevelbits.org/how-to-learn-compilers-llvm-edition/> 
 # JVM
 
 

@@ -31,6 +31,22 @@ https://en.wikipedia.org/wiki/Single_Compilation_Unit
 
 # ELF
 
+# Objcopy
+Not linking persay. But some useful stuff for manipulating object files
+
+- `redefine-sym` `--redefine-syms` 
+- 
+# ld
+## Linker scripts
+[linker scripts for firmware](https://interrupt.memfault.com/blog/how-to-write-linker-scripts-for-firmware)
+[linker script guide](https://www.phaedsys.com/principals/emprog/emprogdata/thunderbench-Linker-Script-guide.pdf)
+[most throughly commented linker script](https://blog.thea.codes/the-most-thoroughly-commented-linker-script/)
+[linker script](https://mcyoung.xyz/2021/06/01/linker-script/)
+
+LMA vs VMA load memoery address vs virtual memory address. Can differe when stored in romvs ram for example
+
+
+
 # DWARF
 Debug info
 unwind tables

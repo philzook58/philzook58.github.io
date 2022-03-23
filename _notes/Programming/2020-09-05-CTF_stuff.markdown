@@ -9,6 +9,52 @@ title: CTF stuff
 wordpress_id: 2960
 ---
 
+<https://twitter.com/peter_a_goodman/status/1503016499824537600?s=20&t=1Z4ew6rnGnFiMTSrQJSmKw> goodman on binary rewriting
+binrec - lift program merge lifted bytecode into debloated
+egalito 
+BOLT
+lifting bits/grr
+
+[endbr](https://stackoverflow.com/questions/56905811/what-does-the-endbr64-instruction-actually-do) intel control flow enforcement technology (CET). Valid locations for indirect jumps.
+
+cfi directives - call frame information
+
+shadow stack
+
+joern.io 
+https://github.com/RUB-SysSec/EvilCoder automatic bug insertion using joern
+
+Hiding instructions in instructions
+https://lucris.lub.lu.se/ws/portalfiles/portal/78489284/nop_obfs.pdf
+disassembler 
+linear sweep
+recusrive traversal 
+anti-disassembly 
+https://github.com/AppleReer/Anti-Disassembly-On-Arm64
+
+Thomas stars https://github.com/bsoddreams?tab=stars
+
+SGX enclaves
+
+obfuscation
+[snapchat](https://hot3eed.github.io/2020/06/18/snap_p1_obfuscations.html)
+ollvm
+vmprotect https://github.com/void-stack/VMUnprotect
+opaque preciates - one branch always taken
+
+
+chris domas https://github.com/xoreaxeaxeax/movfuscator
+tom 7
+
+usenix security
+[heaphopper](https://www.usenix.org/conference/usenixsecurity18/presentation/eckert) angr symbolic analysis for heap exploits?
+[archeap](https://github.com/sslab-gatech/ArcHeap)
+[maze toward heap feng shui](https://www.usenix.org/system/files/sec21fall-wang-yan.pdf)
+[backward search from heaphopper](https://scholar.google.com/scholar?start=0&hl=en&as_sdt=40000005&sciodt=0,22&cites=5560685275836890680&scipsc=)
+[teerex](https://www.youtube.com/watch?v=HrrPDyHy7v8&list=PLbRoZ5Rrl5leqxwFLw3lAQ9on-fK5xLea&index=48&ab_channel=USENIX) discover of memory corrupton vulen
+[symcc]
+
+
 [firmadyne](https://github.com/firmadyne/firmadyne) emulating and analyzing firmware
 
 [dronesploit](https://github.com/dhondta/dronesploit)
