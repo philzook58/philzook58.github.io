@@ -8,6 +8,8 @@ https://github.com/google/or-tools/pull/2404
 
 [walrus](https://docs.rs/walrus/latest/walrus/) webassembly transformation library in rust
 
+[awesome wasm tools](https://github.com/vshymanskyy/awesome-wasm-tools)
+- 
 ### WABT
 (likely wascally wabbit) Web assembly binary toolkit
 sudo apt install wabt 

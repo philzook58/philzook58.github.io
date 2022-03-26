@@ -24,6 +24,28 @@ got.plt
 DSO - dynamic shared object
 
 [how to write shared libraries](https://www.akkadia.org/drepper/dsohowto.pdf)
+
+
+[Better understanding Linux secondary dependencies solving with examples](http://www.kaizou.org/2015/01/linux-libraries.html)
+[Shared Libraries: Understanding Dynamic Loading](https://amir.rachum.com/blog/2016/09/17/shared-libraries/)
+
+
+The .dynamic section of the elf file is symbols to look for at runtime.
+`readelf -d` and `objdump -T`
+If the library file found during the ocmpile process has `.so` it is linked at load time. 
+
+`ldd` lists dynamic dependencies recursively.
+
+For some purposes you really link during program execuction. For example if you're JIT compiling this might be a way to do it. `#include <dlfcn.h>`
+- dlopen(libname, flags)
+- dlsym(handle, symbolname) looks up symbol name by string
+dlmopen
+
+- `LD_LIBRARY_PATH`
+- `LD_DEBUG=help cat` This is crazy. This exists?
+- `LD_PRELOAD`
+`ldconfig`
+[`ld.so`](https://man7.org/linux/man-pages/man8/ld.so.8.html)
 # Compilation Units
 https://en.wikipedia.org/wiki/Single_Compilation_Unit
 

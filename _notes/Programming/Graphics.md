@@ -7,3 +7,5 @@ title: Graphics
 
 <https://www.youtube.com/playlist?list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh> Intro to graphics
 <https://www.youtube.com/playlist?list=PLQ3UicqQtfNuBjzJ-KEWmG1yjiRMXYKhh> Justin Solomon
+
+[Line art from images cvpr](https://twitter.com/ak92501/status/1507163038666919941?s=20&t=y2AWW1GNA8vyxsWqTXmKPQ)

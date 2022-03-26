@@ -74,7 +74,8 @@ topics:
 - [differential datalog](https://github.com/vmware/differential-datalog)
 - dr lojekyll
 - formulog
-
+- datafrog
+- ascent https://dl.acm.org/doi/pdf/10.1145/3497776.3517779 <https://docs.rs/ascent/latest/ascent/>
 ## Formulog
 SMT formulas as data. Interesting distinction with CHC where smt formula are predicates.
 Refinement type checker.
@@ -786,7 +787,169 @@ See blog posts
 
 egglog
 
+## Term Rewriting
+It's similar to "path" in some respects.
+
+Maybe don't bother with "t" parameter?
+
+```
+.type Term = Lit {x : signed} | Add {a : Term, b : Term} | Var {x : symbol}
+.decl simplify(t : Term, t2 : Term)
+
+simplify(t,t2) <= simplify(t,t3) :- t2 <= t3.
+
+// recursive cases
+simplify(t,$Add(ta2,tb2)) :- simplify(t, $Add(ta,tb)), simplify(ta, ta2), simplify(tb, tb2).
+
+// patterns
+simplify(t, a) :- term(t), t = $Add($Lit(0), a).
+
+// should have the analog of "edge" here
+simplify(t,t2) :- simplify(t,t1), simplify(t1,t2).
+
+simplify(t,t) :- term(t).
+
+//initiliaze
+term(t) :- start(t).
+term(a), term(b) :- term($Add(a,b)).
+
+```
+
+## Translating Imperative Programs
+similar to translating to functional style.
+Figure out the state. Make them all parameters to relation
+One style is:
+```
+foo(nextstate) :- foo(state).
+```
+
+You need program counter to do in this style.
+Instead can use store style. Every statement of program gets own relation. Need to pass entire store
+
+```
+line2(newx) :- line1(x), newx = x + 1.
+line3(x,y) :- line2(x), y = x * 3
+```
+
+We're edging on dataflow analysis at this point.
+
+```souffle
+line2("x", x + 1):- line1("x", x).
+line3("x",x) :- line2("x",x).
+line3("y", x *3) :- line2("x",x).
+```
+
+Note the big difference here though. We have _factored_ the old line3 relation. The new version is not capable of storing seperate runs without dataloss. We no longer would know which "x" corresponded to which "y".
+This is of some relation to lossless joins and things in database theory.
+This factoring can be useful as an overapproximation technique.
+
+## Translating functional programs 
+Lift function to relation by making return value part of relation
+fib(n) becomes fib(b,ret)
+
+Datalog is bottom up. You need to rip apart all the recursive calls. What is the most principled way to see this? Principled transformation to bottom up call?
+```souffle
+fact(0,1).
+fact(1,1).
+fact(n + 1, (n+1) * m) :- fact(n, m), n < 10.
+```
+
+I like the build a table of all possible arguments.
+```souffle
+needed(n).
+needed(n - 1) :- needed(n), n > 0. 
+fact(0,1).
+fact(1,1).
+fact(n + 1, (n+1) * m) :- fact(n, m), needed(n).
+```
+For ADTs this ends up being a table of all subterms.
+
+Is needed a representation of call frames maybe?
+
+## Timestamping
+Transtion systems. All possible executions. Model Checking.
+
 ## Theorem Proving
+A lot of these techniques are taken from interpeting the Lambda Prolog rules.
+Question: Is it possible to consider static analysis over lambda prolog to systematically understand some of these tricks?
+
+### Skolemization for Existential Heads
+$ \forall x, \psi(x) \implies \exists y, \phi(x,y)$ can be replaced with 
+$ \forall x, \psi(x) \implies \phi(x,y(x))$ where y is now the function that selects the approproate existential value. You can represent function symbols of this kind wtih ADTs. ADTs are great because they know if you've already made the symbol or not.
+```
+.type Skolemized = Y { x : xtype } | Lit { a : ytype}
+```
+An alternative semantics might be to try
+
+$ \forall x, \psi(x) \implies \phi(x,autoinc())$ but then the thing will never terminate.
+
+### Goals / Queries
+Souffle doesn't quite have a notion of goal. But `.output` relations are the analog of goals/queries.
+The magic set transform works this way.
+
+If in prolog you would write
+```
+?- foo(X), bar(X,Y,7).
+```
+as a query, you can do the same thing by naming this query
+
+```souffle
+myquery(x,y) :- foo(x), bar(x,y,7).
+.output myquery
+```
+
+In theorem proving, your axioms because clauses, and your to-be-proved theorem will become a goal of this variety.
+
+### Uncurrying 
+A logical formula of the form
+$p \implies q \implies r$
+is equivalent to 
+$p \land q \implies r$
+`r :- p, q`
+So you can express axioms of this type by uncurrying.
+
+A alternative approach to dealing with the same class of formula is "defunctionalization". Make predicates for each partial application of a horn clause.
+
+```
+part_rule1(x) :- p(x)
+r(z) :- part_rule(x), q()
+```
+
+### Higher Order Clauses
+$ (p \implies q) \implies r$ is a different animal from the above.
+I'm not super sure how to deal with these.
+I'd suggest that predicates need to be extended with a notion of context. Higher order rules like these are interpetted as something like
+
+```
+r(ctx_without_p) :- q(ctx_with_p)
+```
+
+What precisely I mean by ctx is unclear here. It seems like I'd need to internalize relations and or clauses into the language of datalog itself.
+Contexts do have a partial order. Derivations in weaker contexts can subsume strong ones.
+I suspect we are running into serious problems where we are just lacking the appropriate primitive to do this efficiently.
+
+### Universal Quantifier
+$\forall x, foo(x)$ is not a probem in unification based prolog, but it is in pattern matching based datalog where everything needs to be grounded in the head by the body of a clause.
+
+Bounded quantification is one solution.
+$\forall x \elem [0,10], foo(x)$
+`foo(x) :- x = range(0,10)`
+
+Not particularly satisfying.
+We might also try to globally collect up all constants of that type. This is similar to the above, but a slightly diffferent flavor.
+`foo(x) :- allsymbols(x)`
+
+`allsymbols` can be manually instantiated as ground facts or generated from any predicate that uses symbol of said type
+```
+allsymbols(x) :- biz(x,_,_).
+allsymbols(x) :- biz(_,_,x).
+allsymbols(x) :- baz(x,_). 
+```
+
+
+Some foralls that are part of rules can just be dropped. $\forall x, \phi(x) \implies \phi(x)$. I suppose this could be considered an optimization of the `allsymbols` strategy.
+
+### Categorical Example
 
 ```souffle
 // these constructors are actually the skolemizaion of axioms
@@ -807,7 +970,7 @@ hom($Comp(f,g),a,c) :- hom(f, a, b), hom(g, b, c).//, f != $Id(_), g != $Id(_).
 // associativity axiom rewrite rules
 eq(fgh2, fgh), hom(fgh2, a, b) :- hom(fgh, a, b), fgh = $Comp(f,$Comp(g,h)), $Comp($Comp(f,g),h) = fgh2.
 eq(fgh2, fgh), hom(fgh, a, b) :- hom(fgh2, a, b), fgh = $Comp(f,$Comp(g,h)), $Comp($Comp(f,g),h) = fgh2.
-
+ 
 
 // typing rule guarded on eq
 hom($Comp(f,g), a, c):- eq($Comp(f,g), _), hom(f, a, b), hom(g, b, c).
@@ -840,7 +1003,14 @@ Could block composition rule on Id. Kind of a cheap shot
 ## Type checking / inferring
 Related of course to the above.
 
+```souffle
+.type type = Unit {} | Int {} | Bool {} | List {a : type} | Maybe {a : type} | Sum {a : type, b : type} | Prod {a : type, b : type}
 
+
+
+```
+
+ 
 # Resources
 [provenance based synthesis of datalog programs](https://www.youtube.com/watch?v=cYAjOGhclcM&ab_channel=ACMSIGPLAN)
 Building a compiler in datalog. I can parse. I can do program analysis. How do I backend? Backend takes arbitrary non monotonic choices.
