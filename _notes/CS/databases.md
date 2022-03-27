@@ -11,6 +11,19 @@ https://en.wikipedia.org/wiki/Database_normalization
 
 everything is foreign keys? Interning
 
+```sql
+CREATE TABLE edge(a INTEGER, b INTEGER);
+INSERT INTO edge(a,b)
+VALUES
+    (1,2),
+    (2,3),
+    (3,4);
+SELECT a,b FROM edge;
+.quit
+
+```
+
+
 ## indices
 
 ## views
@@ -31,6 +44,9 @@ Normal Formals
 ## The Chase
 
 ## Schema
+
+
+
 
 
 

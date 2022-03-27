@@ -10,7 +10,7 @@ title: Assembly
   - [memory barrier](#memory-barrier)
   - [CET control enforcement technology](#cet-control-enforcement-technology)
 - [ARM](#arm)
-- [RISC V](#risc-v)
+    - [RISC V](#risc-v)
 - [Misc](#misc)
 
 
@@ -44,6 +44,8 @@ De facto standard for desktops
 
 [intel software develpoer manuals](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
 
+https://en.wikipedia.org/wiki/INT_(x86_instruction) int3 is a breakpoint instruction 
+https://twitter.com/pkhuong/status/1507790343151960073?s=20&t=GsM8M-fHdbvp9M4n5S4-kg
 # BMI1 BMI2
 Bit manipulation instructions https://twitter.com/geofflangdale/status/1502481857375793153?s=20&t=j5MN13cFOkc3qH8tpATyNA
 apparently people can do crazy stuff with this https://twitter.com/pkhuong/status/1497332651891515395?s=20&t=j5MN13cFOkc3qH8tpATyNA
@@ -52,13 +54,92 @@ pshufb
 pext
 pdep
 
+
+<https://cs.lmu.edu/~ray/notes/gasexamples/> Seems like really good intro to assembly
+<https://jameshfisher.com/2018/03/10/linux-assembly-hello-world/>
+```x86
+.global _start
+.data
+hello:
+  .ascii "Hello world\n"
+  len = . - hello
+.text
+_start:
+  mov $1, %rax # write
+  mov $1, %rdi # stdout
+  mov $hello, %rsi #
+  mov $len, %rdx
+  syscall
+
+  mov $60, %rax #  exit
+  mov $0, %rdi
+  syscall
+
+```
+
+using a macro
+
+```x86
+.global _start
+.macro myprint str len
+  mov $1, %rax # write
+  mov $1, %rdi # stdout
+  mov \str, %rsi
+  mov \len, %rdx
+  syscall
+.endm
+
+.data
+hello:
+  .ascii "Hello world\n"
+  len = . - hello
+.text
+_start:
+  myprint $hello, $len
+
+  mov $60, %rax #  exit
+  mov $0, %rdi
+  syscall
+
+```
+
+Using a function. RDI, RSI, RDX, RCX, R8, R9
+```x86
+.global _start
+.text
+myprint:
+  mov %rsi, %rdx   #len
+  mov %rdi, %rsi
+  mov $1, %rax  # write
+  mov $1, %rdi  # stdout
+  syscall
+  ret
+_start:
+  mov $hello, %rdi
+  mov $len, %rsi
+  call myprint
+
+  mov $60, %rax #  exit
+  mov $0, %rdi
+  syscall
+.data
+hello:
+  .ascii "Hello world\n"
+  len = . - hello
+
+```
+
 ## memory barrier
 ## CET control enforcement technology
 `endbr` valid jump destinations for indirect jumps
 
 x86 forth 
-### RISC V
+
 # ARM
+
+Arm memory tagging extension
+
+### RISC V
 [risc v J extesnions](https://news.ycombinator.com/item?id=30647151)
 
 
@@ -91,7 +172,6 @@ registers
 instructions
 
 
-<https://cs.lmu.edu/~ray/notes/gasexamples/> Seems like really good intro to assembly
 
 
 example risc5 programs. sort, search. vector matrix mult, string copy.

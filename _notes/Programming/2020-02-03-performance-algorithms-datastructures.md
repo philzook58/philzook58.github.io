@@ -42,6 +42,9 @@ Network
 
 
 ## Stuff
+[Given the potential for straightline speculation w/ deleterious performance impact, does it makes sense to align functions with speculation blocking instructions like INT3 instead of nops?](https://twitter.com/pkhuong/status/1507790343151960073)
+[microbenchmarks of return address prediction (ras)](https://blog.stuffedcow.net/2018/04/ras-microbenchmarks/)
+
 [programming parallel computers course](https://ppc.cs.aalto.fi/)
 `asm("# foo");` nice trick. Inject comment into assembly
 

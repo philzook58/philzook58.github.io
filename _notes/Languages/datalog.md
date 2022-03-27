@@ -15,10 +15,13 @@ title: Datalog
     - [BitSets](#bitsets)
       - [Bitset reflection](#bitset-reflection)
   - [Souffle proofs](#souffle-proofs)
-  - [Magic Set](#magic-set)
+  - [Emulating Prolog](#emulating-prolog)
+    - [Need Sets](#need-sets)
+    - [Magic Set](#magic-set)
   - [Examples](#examples)
   - [User Defined Functors](#user-defined-functors)
   - [ADTs](#adts)
+    - [Contexts are King](#contexts-are-king)
     - [field accessors](#field-accessors)
     - [Vectors](#vectors)
     - [Use ADT instead of autoinc()](#use-adt-instead-of-autoinc)
@@ -39,8 +42,20 @@ title: Datalog
   - [Souffle source](#souffle-source)
 - [Examples](#examples-1)
   - [Lambda representation](#lambda-representation)
+  - [meta circular interpreter](#meta-circular-interpreter)
   - [Equality Saturation](#equality-saturation)
+  - [Term Rewriting](#term-rewriting)
+  - [Graph Algorithms](#graph-algorithms)
+  - [Translating Imperative Programs](#translating-imperative-programs)
+  - [Translating functional programs](#translating-functional-programs)
+  - [Timestamping](#timestamping)
   - [Theorem Proving](#theorem-proving)
+    - [Skolemization for Existential Heads](#skolemization-for-existential-heads)
+    - [Goals / Queries](#goals--queries)
+    - [Uncurrying](#uncurrying)
+    - [Higher Order Clauses](#higher-order-clauses)
+    - [Universal Quantifier](#universal-quantifier)
+    - [Categorical Example](#categorical-example)
   - [Typeclass resolution.](#typeclass-resolution)
   - [Type checking / inferring](#type-checking--inferring)
 - [Resources](#resources)
@@ -51,8 +66,14 @@ title: Datalog
 When I say datalog, I might mean a couple intertwined different things. I might be referring to bottom up execution of logic programs.
 Or I might be concentrating on 
 
+
+Maybe part of what I like about datalog compared to prolog is
+1. complete search strategy
+2. logically pure
+3. simple execution semantics
+
 # What can you do with datalog?
-Well, anything you can do with ordinary database queries. What do you do with those? I dunno. Search for patterns
+Well, just about anything you can do with ordinary database queries. What do you do with those? I dunno. Search for patterns?
 
 But then on top of that you can use recursive queries. And that is where things get more interesting.
 Program analysis.
@@ -63,7 +84,7 @@ topics:
 
 ## Program Analysis
 [Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
-
+[hash consed points to sets](https://yuleisui.github.io/publications/sas21.pdf)
 
 
 # Implementations
@@ -76,9 +97,12 @@ topics:
 - formulog
 - datafrog
 - ascent https://dl.acm.org/doi/pdf/10.1145/3497776.3517779 <https://docs.rs/ascent/latest/ascent/>
+- uZ3 (mu z3)
+- 
 ## Formulog
 SMT formulas as data. Interesting distinction with CHC where smt formula are predicates.
 Refinement type checker.
+Symbolic Execution
 
 ## Flix
 [online playground](https://play.flix.dev/)
@@ -293,7 +317,35 @@ exit
 
 You can emulate proof production using subsumption. See below.
 
-## Magic Set
+## Emulating Prolog
+Datalog is bottom up and prolog is top down. In a sense datalog feels “push” and prolog feels “pull”. These viewpoints can be translated to some degree to each other. Prolog can gain some benefits of datalog via tabling, which is a memoization technique. Likewise datalog can become goal driven via the “magic set transformation”, The following is a simplified but intuitive presentation I believe of the vague idea.
+
+Relations in prolog can be used in different [modes](https://www.swi-prolog.org/pldoc/man?section=modes) (this is prolog terminology btw. An interesting concept). It’s part of the beauty of prolog that relations are sometimes reversible or generative if written to be so. Sometimes prolog programs are written to only behave correctly if used as if they were essentially a function.
+
+### Need Sets
+
+
+If you find yourself needing what is essentially a function call on a relation, you can define “need” relation for that relation that takes the arguments. Then the regular clauses producing that relation also take the need relation to push in the actually needed instantiations of the clause. Here is an example for factorial. We examine the body of fact to see that we need the recursive call evaluated in order to evaluate.
+
+```souffle
+.decl fib(n : unsigned, m : unsigned) //choice-domain n
+.decl need_fib(n : unsigned)
+
+fib(0,0).
+fib(1,1).
+fib(n, i + j) :- need_fib(n), fib(n-1,i), fib(n-2,j), n > 1.
+need_fib(n-1), need_fib(n-2) :- need_fib(n), n > 1.
+
+need_fib(6).
+.output fib(IO=stdout)
+```
+
+We have the expense of the extra table but we have gained pull based evaluation. Bottom up evaluation of fact would not terminate without an a priori bound on the argument. We could use subsumption to reduce the size of this table in this case.
+
+Choice domain may present an optimization. It is marking the relation as functional in character, which in principle could allow soufflé to use an optimized data structure. I hope it makes things faster and doesn’t just add unnecessary checks on insert.
+I a little bit suspect it will just make things slower.
+
+### Magic Set
 
 Specializes datalog program to a particular query / output.
 Query answer transfomation
@@ -307,6 +359,19 @@ For annotated predicates we could move the annotations as extra fields of the pr
 
 "It is a form of partial evaluation: at query time, rewrite (specialize) the entire program to an equivalent one, then evaluate it bottom-up. A binding-time analysis identifies which predicates benefit from specialization. Sideways-information passing strategy guides the rewrite."
 "I see it as a way to "hack" a bottom-up execution (from facts) into computing top-down (from queries). John Gallagher's query-answer transformation is related to that and used for program analysis https://arxiv.org/pdf/1405.3883.pdf, https://bishoksan.github.io/papers/scp18.pdf"
+
+
+
+Emulating clp evaluation of prolog. The constraint store. Dif constraint into egglog.
+What matters in a prolog context.
+Order of goals hypothetically doesn’t matter? We want to hash cons to unique representatives of stuff that doesn't matter.
+Scoping of fresh vars? Maybe a list of clauses that produced fresh vars. Does that order matter in principle? It might because unification can
+Dif kind of lets us do a piece of scope escape prevention. Doesn’t contain.
+What causes unification vars to exists? Presence fresh in a rule.
+De bruin as cause. The binders cause variables to exist. Hence de bruin is close to a canonical rep.
+Varmap says usage sites cause to exist?
+Existential var in body. We can choose to ignore in datalog. Or we can say it would have been grounded eventually by some grounding site. (Or terminated on a ground fact.) yeah. A non ground fact could be seen as a new kind of constant?
+
 
 
 ## Examples
@@ -435,6 +500,11 @@ as($A(), number)
 
 You can access the "id" associated with a value also `as([1,2,3],number)` for devious ends
 
+### Contexts are King
+a very useful thing to note is that you should use
+contexts, delimited continuations, goal stack, zippers, to implement control flow.
+Datalog is bottom up. In a sense it's a giant while loop. When you bottom upify or loopify recursive algorithms, sometimes you need to reify the call stack (or whatever else you might call it). See defunctionalize the continuation talk.
+These contexts are expressible as 
 
 ### field accessors
 It is a pain that there isn't a good way to make trustworthy fresh variables using `mcpp` due to lack of `__COUNTER__`. Best I can figure is hacks using `__LINE__` and concatenation. Otherwise insist on variables coming from outside into macro.
@@ -470,12 +540,24 @@ I am in no way endorsing this. Actual representation of vectors have size field 
 .type vector = [size : unsigned, key : unsigned]
 ```
 
-safer alternaitve
+safer alternative: We can make finite sized vectors as an adt
 ```
 .comp Vector<T>{
 .type vector = V0 {} | V1 {x1 : T} | V2 {x1 : T, x2 : T} | V3 {x1 : T, x2 : T, x3 : T} | V4 {x1 : T, x2 : T, x3 : T, x4 : T}
 }
+
 ```
+
+Or we can partially unroll a linked list to avoid so much indirection cost.
+
+```
+.comp Vector<T>{
+.type vector = V0 {} | V1 {x1 : T} | V2 {x1 : T, x2 : T} | V3 {x1 : T, x2 : T, x3 : T} | V4 {x1 : T, x2 : T, x3 : T, x4 : T}
+     | Cons {x1 : T, x2 : T, x3 : T, x4 : T, tail : vector}  
+}
+```
+
+
 
 ### Use ADT instead of autoinc()
 autoinc() is a generative counter. It is nice because it is efficient. However, the stratification requirements on it are gnarly. It is too imperative, not declarative enough andyou get in trouble.
@@ -781,6 +863,13 @@ Could make user defined functor for substition.
 
 I could make udf for normalization. And memoize into a choice domain?
 
+## meta circular interpreter
+See extensive prolog literature on meta circular intepreters
+
+```souffle
+.type Pred = [name : symbol, args : TList]
+.type Clause = {head : }
+```
 
 ## Equality Saturation
 See blog posts
@@ -814,6 +903,13 @@ term(t) :- start(t).
 term(a), term(b) :- term($Add(a,b)).
 
 ```
+
+
+
+## Graph Algorithms
+Graph form of monoidal category in soufflé?
+Graph rewriting? We have graph matching. How do we say some subgraph is better than some other.
+Graph combinator reduction?
 
 ## Translating Imperative Programs
 similar to translating to functional style.
@@ -1012,6 +1108,7 @@ Related of course to the above.
 
  
 # Resources
+[Synthesizing Datalog Programs Using Numerical Relaxation](https://arxiv.org/abs/1906.00163) difflog
 [provenance based synthesis of datalog programs](https://www.youtube.com/watch?v=cYAjOGhclcM&ab_channel=ACMSIGPLAN)
 Building a compiler in datalog. I can parse. I can do program analysis. How do I backend? Backend takes arbitrary non monotonic choices.
 Use choice domain? that could work. I could force an ordering through the program.

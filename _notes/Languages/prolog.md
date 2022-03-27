@@ -9,12 +9,131 @@ title: Prolog
 wordpress_id: 1865
 ---
 
+- [Systems](#systems)
+- [Examples](#examples)
+    - [Hello World](#hello-world)
+- [Topics](#topics)
+  - [Abstract Machines](#abstract-machines)
+  - [meta circular interpreters](#meta-circular-interpreters)
+  - [Delimitted Continuations](#delimitted-continuations)
+  - [Tabling](#tabling)
+  - [Attributed Variables](#attributed-variables)
+  - [Constraint Logic Programming (CLP)](#constraint-logic-programming-clp)
+  - [Definite Clauses Grammars (DCG)](#definite-clauses-grammars-dcg)
+  - [CHR](#chr)
+  - [Extralogical features](#extralogical-features)
+- [Things that are prolog](#things-that-are-prolog)
+  - [Lambda](#lambda)
+- [Lambda Prolog](#lambda-prolog)
+  - [LF](#lf)
+- [LogTalk](#logtalk)
+- [Coinductive Logic Programming](#coinductive-logic-programming)
+- [inductive logic programmingh](#inductive-logic-programmingh)
+    - [Stuff](#stuff)
+  - [2019](#2019)
+  - [Notes from 2017 -Resolution and unification](#notes-from-2017--resolution-and-unification)
+
 See also:
 - Datalog
 - Constrained Horn Clauses
+- Constraint Programming
+
+# Systems
+- Swi prolog - I think this is a good default choice.
+- [sicstus](https://sicstus.sics.se/) requires commercial license
+- gnu
+- [scryrer](https://github.com/mthom/scryer-prolog)
+- [ciao](http://ciao-lang.org/)
+- tau prolog - javascript web enabled
+- hprolog
+- binprolog
+- XSB
+- YAP
+- B-prolog
+- ECLiPSe
+- Qu-prolog
+- 
+Relatives:
+- Minikanren
+- minizinc
+- picat
+- Mercury - mode declarations and type declarations. Allows reordering, but deals with IO using lionear types?
+- Curry - Haskell syntax like language.
+# Examples
+
+### Hello World
+
+```prolog
+:- initialization(main,main).
+main(_) :- format("hello world ~p\n", [foo(8)]).
+```
 
 
-# CHR
+# Topics
+
+## Abstract Machines
+[Warren's Abstract Machine: A Tutorial Reconstruction.](http://wambook.sourceforge.net/wambook.pdf)
+
+
+Paul Tarau showing an interesting compilation strategy. <https://popl21.sigplan.org/details/PADL-2021-papers/5/A-Family-of-Unification-oblivious-Program-Transformations-and-Their-Applications>
+<https://github.com/ptarau/LogicTransformers>
+binprolog. Translate to binary relations
+
+## meta circular interpreters
+
+[power of prolog - A Couple of Meta-interpreters in Prolog](https://www.metalevel.at/acomip/)
+
+`call/N`
+## Delimitted Continuations
+Continuations are a reification of a call stack. The call stack in prolog is a goal stack.
+When you 
+
+[swipl manual entry](https://www.swi-prolog.org/pldoc/man?section=delcont)
+[schrivers et al](https://www.swi-prolog.org/download/publications/iclp2013.pdf)
+
+- effect handlers - implicit state
+- definite clause grammars
+- coroutines
+
+## Tabling
+[Tabling as a Library with Delimited Control](https://biblio.ugent.be/publication/6880648/file/6885145.pdf)
+[Swi prolog manual](https://www.swi-prolog.org/pldoc/man?section=tabling)
+
+```prolog
+:- table path/2.
+edge(1,2).
+edge(2,3).
+edge(3,1).
+edge(3,4).
+
+path(X,Y) :- edge(X,Y).
+path(X,Z) :- edge(X,Y), path(Y,Z).
+
+:- initialization(main,main).
+main(_) :- path(1,4).
+```
+
+```prolog
+:- use_module(library(tabling)).
+:- table a/0.
+
+a :- a.
+```
+## Attributed Variables
+## Constraint Logic Programming (CLP)
+CLP(B)
+CLP(Z)
+
+[Indexing dif/2](https://arxiv.org/abs/1607.01590)
+`reif` `if_/` `tfilter/3`
+
+
+
+## Definite Clauses Grammars (DCG)
+
+
+## CHR
+[swipl manual section](https://www.swi-prolog.org/pldoc/man?section=chr)
 Constraint handling rules
 A question I never had an answer for https://twitter.com/notjfmc/status/1422215450675535877?s=20&t=RyHMtBS3ySaALLC9MuGmUA . CHR afaik are a way of integrating eager rewriting into prolog https://en.wikipedia.org/wiki/Constraint_Handling_Rules 
 
@@ -33,34 +152,50 @@ Man what hope is there of compiling a 7 year old haskell project?
 
 [yihong's egraph in chr. awesome](https://github.com/yihozhang/cchr/blob/master/experiment/egraph.cchr)
 
+## Extralogical features
+Database manipulation
+
+
+
 # Things that are prolog
 - Typeclasses
 - Inductive data types
 - Inference rules
 
+## Lambda
+Oh sweet mysterious lambda
+
+The minikanren `evalo`
+
+[Oleg's lambda interpreter](https://okmij.org/ftp/Prolog/index.html#lambda-calc)
+
+One is tempted to attempt to use prolog variables for lambda variables. Requires extralogical copying primitives
+`copy_term`
+
+[swipl](https://www.swi-prolog.org/pldoc/man?section=yall) lambda expressions.
+
 
 
 # Lambda Prolog
 elpi
+Install as `opam install elpi`. Run as `elpi -test` to run with main query
+
+```elpi
+main :- print "hello world".
+```
+
+Some built in elpi files
+- [builtin](https://github.com/LPCIC/elpi/blob/master/src/builtin.elpi) surprising that even very basic stuff is defined in here.
+- [stdlib](https://github.com/LPCIC/elpi/blob/master/src/builtin_stdlib.elpi)
+
+`external` fields. Interesting
+
+[a tutorial on lambda prolog and is applications to theorem provin - Amy Felty](https://www.site.uottawa.ca/~afelty/dist/lprolog97.pdf)
+[thesis implementing lambda prolog in ciao prolog](https://www.yumpu.com/en/document/view/39502786/university-of-minnesota-this-is-to-certify-that-i-employers)
 
 
-### Stuff
-<https://github.com/Anniepoo> - Annie ogborn has some cool seeming tutorials
-
-<https://github.com/philzook58/lips-minikanren> trying to use lips sccheme for minikanren in browser
-
-<https://github.com/aprolog-lang/aprolog> alpha prolog. Nominal logic. What the heck is that again?
-
-old title: prolog, scheme,racket, lambdaprolog, What the Hell is LogicT / Guanxi notes
-  Minikanren, Unification, Resolution
-
-inductive logic programmingh
-popper https://arxiv.org/abs/2005.02259
-https://github.com/metagol/metagol metagol 
-http://andrewcropper.com/
-https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
-
-
+## LF
+LF is of some relation to lambda prolog (being a prologish system with lambdas in it) although with some different aims. It is dependently typed (pi 2 I think?) in a way different from coq etc.
 
 Twelf.
 dedukti. lambda - pi
@@ -70,12 +205,42 @@ These are all related I guess? abella might not be LF
 
 Logical frameworks is a general vague concept I think. It is a system in which it is easy to model logical language nad inference rules.
 but ELF the edburgh logical fraemwork is more specific
-Twelf is a dpenedelty typed landguage that is also a logic programming langfuage
-Because it has a totality checker and termination checker, prolog clauses can be considered proofs.
+Twelf is a depnedelty typed landguage that is also a logic programming langfuage. Because it has a totality checker and termination checker, prolog clauses can be considered proofs.
 
 https://core.ac.uk/download/pdf/82649367.pdf Normalization for the Simply-Typed Lambda-Calculus in Twelf
 
-Mercury - mode declarations and type declarations. Allows reordering, but deals with IO using lionear types?
+# LogTalk
+
+[logtalk](https://logtalk.org/) is it's own curious kind of universe.
+[github repo](https://github.com/LogtalkDotOrg/logtalk3)
+It adds object oriented programming to prolog.
+<https://logtalk.org/2009/12/08/lambda-expressions-in-logtalk.html> lambdas
+
+
+# Coinductive Logic Programming
+Actually fairly unrelated to inductive logic programming.
+Dealing with infinite terms and streams.
+
+
+# inductive logic programmingh
+popper https://arxiv.org/abs/2005.02259
+https://github.com/metagol/metagol metagol 
+http://andrewcropper.com/
+https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
+
+### Stuff
+[50 years of prolog and beyond](https://arxiv.org/pdf/2201.10816.pdf)
+
+<https://github.com/Anniepoo> - Annie ogborn has some cool seeming tutorials
+
+<https://github.com/philzook58/lips-minikanren> trying to use lips sccheme for minikanren in browser
+
+<https://github.com/aprolog-lang/aprolog> alpha prolog. Nominal logic. What the heck is that again?
+
+old title: prolog, scheme,racket, lambdaprolog, What the Hell is LogicT / Guanxi notes
+  Minikanren, Unification, Resolution
+
+
 
 
 BAP universal valures
@@ -89,16 +254,20 @@ canonical structures and unification hints. Can we make a metaintepreter for thi
 
 Hmm. Gauntlet thrown.
 Byrd is not sure how prolog can? do this stuff.
-https://www.youtube.com/watch?v=aS8oj2GXras&feature=youtu.be&ab_channel=LecturesbyProf.EadesatAU
+<https://www.youtube.com/watch?v=aS8oj2GXras&feature=youtu.be&ab_channel=LecturesbyProf.EadesatAU>
+XSB prolog
+"complicated
+tabling and abstract interpretation
+tabling has a notion of subsumption? when are two calls the same?
+conductive logic over streams
+tree automata
+lvars. fixpoint over lattices
 
 meta interpeter, sure. That's one way to get com,plketeness
 What if one defunctionalizes the minikanren pause mechanism. What does it look like?
 Oh there's a first order kanren paper that does this
 
 
-
-https://popl21.sigplan.org/details/PADL-2021-papers/5/A-Family-of-Unification-oblivious-Program-Transformations-and-Their-Applications
-https://github.com/ptarau/LogicTransformers
 
 Hmm. Could one do barliman style in lambda prolog?
 F, ex1, ex2, ex3.
@@ -124,7 +293,7 @@ Scheme workshop
 
 https://git.sr.ht/~sforman/Prolog-Junkyard/tree/master/miscellaneous/itc.pl interval tree clocks in prolog
 https://www.metalevel.at/trs/ knuth bendix completion
-https://arxiv.org/abs/1706.00231 auto differentiating uysing constraint handking rules
+https://arxiv.org/abs/1706.00231 auto differentiating using constraint handling rules
 
 <http://adam.chlipala.net/papers/MakamICFP18/MakamICFP18.pdf> prototpying functional language using higher order logic programing makam
 chlipala
