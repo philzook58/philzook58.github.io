@@ -21,7 +21,7 @@ Smart pointers
 new/delete ~ malloc + constructor caling
 static
 const
-virtual 
+virtual
 interfaces - classes that are all virtual methods
 name mangling
 
@@ -39,3 +39,5 @@ int main(){
 ```
 
 [fmt library](https://github.com/fmtlib/fmt) C++20 has this in `#include<format>` ?
+
+`extern "C"` blocks prevent name mangling for ffi purposes.

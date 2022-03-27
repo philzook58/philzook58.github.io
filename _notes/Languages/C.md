@@ -87,36 +87,7 @@ Guard pages - try to access an overflow and hit unmapped page, you'll crash
 fat pointers - make pointer a struct
 tagged pointer - use unused bits in pointer. 64 bits is too many. ALignment makes low bits unused
 
-# C++
 
-Cherno 
-Cyril Stachniss https://www.youtube.com/c/CyrillStachniss/videos
-
-[nice C++ cheat sheets](https://hackingcpp.com/cpp/cheat_sheets.html) 
-
-Class vs struct
-Smart pointers
-new/delete ~ malloc + constructor caling
-static
-const
-virtual 
-interfaces - classes that are all virtual methods
-name mangling
-
-precompiled headers (pch)
-
-```cpp
-#include <iostream>
-int main(){
-    std::cout << "hello world" << std::endl;
-    std::cout << [](int x){ return x * 42; }(2); // lambda
-
-
-    return 0; // don't have to though
-}
-```
-
-[fmt library](https://github.com/fmtlib/fmt) C++20 has this in `#include<format>` ?
 
 ## Build Systems
 Shake

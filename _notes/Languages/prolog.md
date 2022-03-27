@@ -121,8 +121,9 @@ a :- a.
 ```
 ## Attributed Variables
 ## Constraint Logic Programming (CLP)
-CLP(B)
-CLP(Z)
+- CLP(B) - constraint over boolean variables. Sometimes bdd based
+- CLP(FD)
+- CLP(Z)
 
 [Indexing dif/2](https://arxiv.org/abs/1607.01590)
 `reif` `if_/` `tfilter/3`

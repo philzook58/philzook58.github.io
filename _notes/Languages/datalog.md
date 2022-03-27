@@ -14,6 +14,7 @@ title: Datalog
     - [Parsing](#parsing)
     - [BitSets](#bitsets)
       - [Bitset reflection](#bitset-reflection)
+  - [Patricia Tries](#patricia-tries)
   - [Souffle proofs](#souffle-proofs)
   - [Emulating Prolog](#emulating-prolog)
     - [Need Sets](#need-sets)
@@ -69,8 +70,8 @@ Or I might be concentrating on
 
 Maybe part of what I like about datalog compared to prolog is
 1. complete search strategy
-2. logically pure
-3. simple execution semantics
+2. logically pure. Kind of like Haskell's laziness kept it pure, Datalog's operation ordering is not obvious after compilation. This means extralogical stuff doesn't fly. 
+3. simple execution semantics. Pattern match over database
 
 # What can you do with datalog?
 Well, just about anything you can do with ordinary database queries. What do you do with those? I dunno. Search for patterns?
@@ -96,7 +97,7 @@ topics:
 - dr lojekyll
 - formulog
 - datafrog
-- ascent https://dl.acm.org/doi/pdf/10.1145/3497776.3517779 <https://docs.rs/ascent/latest/ascent/>
+- ascent https://dl.acm.org/doi/pdf/10.1145/3497776.3517779 <https://docs.rs/ascent/latest/ascent/> Rust macro based datalog.
 - uZ3 (mu z3)
 - 
 ## Formulog
@@ -131,7 +132,7 @@ Defined at relation level. Makes check before any insertion to see if something 
 `--show=initial-ram` and other options are quite interesting. The RAM is quite readable at least for small examples.
 
 
-as(a, number) I can cast ADTs to numbers?
+`as(a, number)` I can cast ADTs to numbers?
 https://github.com/yihozhang/souffle/blob/conglog/tests/congruence/math.dl  interesting
 
 
@@ -302,6 +303,25 @@ REIFY(done,bitset,3).
 
 Or it could be componentized.
 
+## Patricia Tries
+[fillaitre](https://www.lri.fr/~filliatr/ftp/ocaml/ds/ptset.ml.html)
+```souffle
+.type ptrie = Nil {} 
+            | Leaf {x : unsigned} 
+            | Branch {prefix : unsigned, branchbit : unsigned, l : ptrie, r : ptrie}
+
+.type Bool = False {} | True {}
+/*
+.decl mem(x : unsigned, t : ptrie, tf : Bool)
+mem($Nil(), _, $False()). // not valid
+*/
+.decl add(x : unsigned, t : ptrie, t2 : ptrie)
+add(x, $Empty(), $Leaf(x)).
+add(x, $Leaf(x)), $Leaf(x)).
+
+
+
+```
 
 ## Souffle proofs
 Manual exploration of just dump it. Does the dump memoize?
@@ -338,6 +358,7 @@ need_fib(n-1), need_fib(n-2) :- need_fib(n), n > 1.
 
 need_fib(6).
 .output fib(IO=stdout)
+.output need_fib(IO=stdout)
 ```
 
 We have the expense of the extra table but we have gained pull based evaluation. Bottom up evaluation of fact would not terminate without an a priori bound on the argument. We could use subsumption to reduce the size of this table in this case.
@@ -345,7 +366,21 @@ We have the expense of the extra table but we have gained pull based evaluation.
 Choice domain may present an optimization. It is marking the relation as functional in character, which in principle could allow soufflé to use an optimized data structure. I hope it makes things faster and doesn’t just add unnecessary checks on insert.
 I a little bit suspect it will just make things slower.
 
+Basically the idea is, you need to pick which top down modes you want to support, i.e. which of the prolog fields you expect to be grounded and which you don't. Then you can make a new relation that holds only the grounded fields. You make clauses that push down the need for every recursive call.
+When you're translating typical functional algorithms, there is typically only the one functional mode required `-+`.
+
+If you are using ADTs then perhaps one should consider the flattened version of the adt? ADTs only support some particular modes in the first place either ---+ or +++-. Give all args or give term and get args.
+
+
+We could possibly subsume to reclaim need_fib? Hardly seems worth it.
+```
+need_fib(n) <= need_fib(m) :- fib(n,_). // doesn't do anything. Subsumption bug?
+need_fib(n) <= need_fib(m) :- fib(n,_), n < m. // this one works. I don't know why n < m is required.
+```
+
 ### Magic Set
+
+
 
 Specializes datalog program to a particular query / output.
 Query answer transfomation
@@ -358,6 +393,7 @@ In prolog SLD resolution, there are program points. We could create relations de
 For annotated predicates we could move the annotations as extra fields of the predicates instead of as annotations. This feels more natural when interpreting as a dataflow analysis. Annotations are a describing the binding state? (annotations are lattice? Maybe so but not in the right way)
 
 "It is a form of partial evaluation: at query time, rewrite (specialize) the entire program to an equivalent one, then evaluate it bottom-up. A binding-time analysis identifies which predicates benefit from specialization. Sideways-information passing strategy guides the rewrite."
+
 "I see it as a way to "hack" a bottom-up execution (from facts) into computing top-down (from queries). John Gallagher's query-answer transformation is related to that and used for program analysis https://arxiv.org/pdf/1405.3883.pdf, https://bishoksan.github.io/papers/scp18.pdf"
 
 
@@ -372,7 +408,32 @@ De bruin as cause. The binders cause variables to exist. Hence de bruin is close
 Varmap says usage sites cause to exist?
 Existential var in body. We can choose to ignore in datalog. Or we can say it would have been grounded eventually by some grounding site. (Or terminated on a ground fact.) yeah. A non ground fact could be seen as a new kind of constant?
 
+[magic set slides](http://users.informatik.uni-halle.de/~brass/lp07/c7_magic.pdf)
+- tail recursion is more efficient in sld resolution.
+- metainterpeter. partial evaluation of metainterpeter with respect ot program and query, but not database. "sldmagic"
 
+[A Framework for Bottom-Up Simulation of SLD-Resolution](https://users.informatik.uni-halle.de/~brass/push/publ/iclp14.pdf) bottom up metainterpeters
+SLDMagic
+"Sniped! I have never understood it but have wanted to. The output has always looked to me like constprop (bottom-up) and specialization (top-down), repeating." - Goodman
+Resprenting sets of goals.
+
+
+binding patterns using Option. Could also allow options in fields of adts.
+```
+.comp Option<T> {
+  .type t = None {} | Some {x : t} 
+}
+
+fib()
+```
+What about `foo(X,X,1)`? `foo(None, None, Some(1))` is an over approximation of this case, losing the equivalence info. Well, therse constraints are also probably finitely enumerable.
+
+
+sideways information passing strategy - SIPS. I think this is kind of picking an equivalent prolog evaluation order
+
+[Efficient bottom-up computation of queries on stratified databases 1991](https://www.sciencedirect.com/science/article/pii/074310669190030S)
+
+[Query evaluation in recursive databases: bottom-up and top-down reconciled bry](https://www.sciencedirect.com/science/article/abs/pii/0169023X90900178)
 
 ## Examples
 
@@ -857,11 +918,13 @@ well. I can recover lattice style via an explicit congruence closure. So. it doe
 What is the most appropriate way? Probably we want to implement some kind of machine flavored implementation.
 Or maybe a graph like representation.
 
-I could literally do hash cons modulo alpha. I can dor xor trick.
+I could literally do hash cons modulo alpha. I can dor xor trick. Hmm. PosTree is a trie.
 
 Could make user defined functor for substition.
 
 I could make udf for normalization. And memoize into a choice domain?
+
+Combinators
 
 ## meta circular interpreter
 See extensive prolog literature on meta circular intepreters
@@ -964,6 +1027,32 @@ Is needed a representation of call frames maybe?
 
 ## Timestamping
 Transtion systems. All possible executions. Model Checking.
+Dedalus
+```souffle
+.decl foo(a : number, b : number, time : unsigned)
+foo(a,b,t) <= foo(a1,b1,t2) :- t < t2. //possibly allow subsumption of new states only. This won't build all possible paths though.
+foo(x,y,t) :- bar(x,t1), biz(y, t2), t = max(t1,t2) + 1.
+
+reached(a,b) :- foo(a,b,t). // how will this interact with subsumption? Why even bother timestamping if you just want reached.
+```
+
+Using datalog to control reactive systems
+
+```souffle
+//.pragma "libraries" "libc.so.6"
+.functor time(): unsigned // unix system call
+.decl timestamp(t : unsigned)
+timestamp(@time()) :- true.
+.output timestamp(IO=stdout)
+```
+Ah I see 
+<https://github.com/souffle-lang/souffle/blob/d1522e06c6e99c259951dc348689a77fa5f5c932/src/interpreter/Engine.cpp#L381>
+I can't open libc.so.6 because this string is being made in this way. libc.so is not the right kind of file.
+
+[Integrity Constraints for Microcontroller Programming in Datalog](https://users.informatik.uni-halle.de/~brass/micrologS/) arduino timestamping, external pin relations. pretty cool.
+[Microlog - A Datalog for Microcontrollers and other Interactive Systems](https://dbs.informatik.uni-halle.de/microlog/)
+
+
 
 ## Theorem Proving
 A lot of these techniques are taken from interpeting the Lambda Prolog rules.
@@ -1108,6 +1197,34 @@ Related of course to the above.
 
  
 # Resources
+What about interfacing with prolog?
+What about interfacing with lua or python? ocaml haskell, minizinc.
+
+[Brass's website](https://users.informatik.uni-halle.de/~brass/)
+[push based datalog](https://users.informatik.uni-halle.de/~brass/push/talks/inap17.pdf)
+[push method](https://users.informatik.uni-halle.de/~brass/push/)
+push method ~ like seminaive of only one fact? Hmm. Interesting.
+function calls correpond to heads. They memoize. Then they push themselves to any location predicate appears in body. Cute.
+hmm. binding patterns are related to map vs set vs iterator storage.
+This might lend itself really nicely to an embedded datalog. datakanren.
+minikanren makes the horn clause aspect more hidden. It heavily uses the function call mechanisms of the host language for heads.
+This uses host languae mechanism for bodys. It kind of has an object oriented feel for some reason to me. relations need to support call and iterate.
+There's this big fixpoint.
+Many language already support some kind of auto memoization.
+```
+class Rel():
+  def __init__(self,name,arity):
+  def __call__():
+  def __iter__():
+    # register as usage site here?
+ @memo
+ def f(x,y):
+  
+class Rule():
+
+```
+
+
 [Synthesizing Datalog Programs Using Numerical Relaxation](https://arxiv.org/abs/1906.00163) difflog
 [provenance based synthesis of datalog programs](https://www.youtube.com/watch?v=cYAjOGhclcM&ab_channel=ACMSIGPLAN)
 Building a compiler in datalog. I can parse. I can do program analysis. How do I backend? Backend takes arbitrary non monotonic choices.
