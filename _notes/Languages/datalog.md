@@ -38,10 +38,12 @@ title: Datalog
       - [Provenance](#provenance)
       - [max min](#max-min)
       - [Equivalence relations](#equivalence-relations)
+      - [Negation](#negation)
       - [Choice domain](#choice-domain)
   - [Choice Domain](#choice-domain-1)
   - [Souffle source](#souffle-source)
 - [Examples](#examples-1)
+  - [BogoSort](#bogosort)
   - [Lambda representation](#lambda-representation)
   - [meta circular interpreter](#meta-circular-interpreter)
   - [Equality Saturation](#equality-saturation)
@@ -377,6 +379,8 @@ We could possibly subsume to reclaim need_fib? Hardly seems worth it.
 need_fib(n) <= need_fib(m) :- fib(n,_). // doesn't do anything. Subsumption bug?
 need_fib(n) <= need_fib(m) :- fib(n,_), n < m. // this one works. I don't know why n < m is required.
 ```
+
+In what sense is need_set representing the call stack?
 
 ### Magic Set
 
@@ -892,6 +896,20 @@ canon("x","y").
 canon("y","z").
 .output canon(IO=stdout)
 ```
+#### Negation
+Can I emulate negation using subsumption? Maybe remove negated clauses from rule, and later delete them?
+
+Need to duplicate all clauses to negated versions?
+
+f(a,b) <= f(dummy,dummy) :- not_f(a,b)
+not_f() <= not_f() :- f(a,b).
+
+f(a,b) :- g(a,b)
+not_g(a,b) :- not_f(a,b)
+
+
+
+But f(a,b) does damage we need to undo?
 
 #### Choice domain
 
@@ -914,6 +932,24 @@ well. I can recover lattice style via an explicit congruence closure. So. it doe
 
 
 # Examples
+## BogoSort
+Hmmmm... Can I do this?
+
+```souffle
+.decl array(index : unsigned, n : number)
+array(0,14)
+array(1,934).
+array(2,49).
+array(3,-23209).
+
+// permute
+array(i+1,n) :- array(i,n), i < 3.
+array(i-1,n) :- array(i,n), i > 0.
+
+// subsume bad possibilities...?
+array(i-1, n) <= array(i, n) :- i > 0, 
+```
+
 ## Lambda representation
 What is the most appropriate way? Probably we want to implement some kind of machine flavored implementation.
 Or maybe a graph like representation.
@@ -1197,6 +1233,13 @@ Related of course to the above.
 
  
 # Resources
+`call/N` is emulatable clause by clause in prolog.
+Is there an analogous meta predicate?
+foo(a,b) :- push(["foo", a,b]).
+bar(a) :- push(["bar", a]).
+
+
+
 What about interfacing with prolog?
 What about interfacing with lua or python? ocaml haskell, minizinc.
 

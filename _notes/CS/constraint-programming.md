@@ -12,7 +12,31 @@ var int : x;
 solve satisfy;
 ```
 
+How to make DSLs. Look for macros. Look for function call. Look for gensyms
 
+
+```minizinc
+
+mov("a","b");
+
+
+```
+
+
+var vs par is compile vs runtime distinction in type system
+it would be cool if minizinc could support adts or records.
+
+# Topics
+## Branch and Bound
+
+## Local Search
+## Lattices
+
+## Propagators
+
+## Heuristics
+
+# Misc
 
 Coursera Course
 

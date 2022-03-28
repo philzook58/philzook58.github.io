@@ -83,7 +83,16 @@ binprolog. Translate to binary relations
 
 [power of prolog - A Couple of Meta-interpreters in Prolog](https://www.metalevel.at/acomip/)
 
-`call/N`
+
+[metapredicates](https://www.metalevel.at/prolog/metapredicates#call)
+`call/N` in principle could be implemented in prolog itself.
+
+```prolog
+:- initialization(main,main).
+foo(7).
+main(_) :- call(foo(X)), print(X).
+```
+
 ## Delimitted Continuations
 Continuations are a reification of a call stack. The call stack in prolog is a goal stack.
 When you 
@@ -156,7 +165,8 @@ Man what hope is there of compiling a 7 year old haskell project?
 ## Extralogical features
 Database manipulation
 
-
+findall bagor setof are aggregation of solutions.
+[ Finding all Solutions to a Goal](https://www.swi-prolog.org/pldoc/man?section=allsolutions)
 
 # Things that are prolog
 - Typeclasses
@@ -175,7 +185,7 @@ One is tempted to attempt to use prolog variables for lambda variables. Requires
 
 [swipl](https://www.swi-prolog.org/pldoc/man?section=yall) lambda expressions.
 
-
+[lambda is iso prolog](http://www.complang.tuwien.ac.at/ulrich/Prolog-inedit/ISO-Hiord.html)
 
 # Lambda Prolog
 elpi
@@ -230,6 +240,8 @@ http://andrewcropper.com/
 https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
 
 ### Stuff
+[O-keefe - An Elementary Prolog Library](http://www.cs.otago.ac.nz/staffpriv/ok/pllib.htm)
+
 [50 years of prolog and beyond](https://arxiv.org/pdf/2201.10816.pdf)
 
 <https://github.com/Anniepoo> - Annie ogborn has some cool seeming tutorials

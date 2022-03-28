@@ -7,6 +7,9 @@ title: C++
 [consetexpr maze](https://twitter.com/Cor3ntin/status/1507860690400419842?s=20&t=GsM8M-fHdbvp9M4n5S4-kg)
 [constexpr interpeter](https://twitter.com/cfbolz/status/1506182747584401411?s=20&t=GsM8M-fHdbvp9M4n5S4-kg)
 
+# Observable behavior
+https://en.cppreference.com/w/cpp/language/as_if as if rule
+https://en.cppreference.com/w/c/language/eval_order eval order
 # CMake
 
 # Misc

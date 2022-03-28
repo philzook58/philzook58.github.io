@@ -41,7 +41,25 @@ Armstrong axioms
 
 Normal Formals
 
+Tuple Generating dependencies
+
 ## The Chase
+Equality Generating Dependencies
+
+
+Yisu:
+[query optimization](https://dl.acm.org/doi/10.1145/342009.335421)
+[data integration](https://drops.dagstuhl.de/opus/volltexte/2013/4288/pdf/ch01-onet.pdf)
+[querying incomplete databases](https://dl.acm.org/doi/abs/10.1016/j.is.2009.08.002)
+[benchmarking the chase](https://dl.acm.org/doi/abs/10.1145/3034786.3034796)
+
+Chasefun, DEMOo, Graal, llunatic, pdg, pegasus, dlv, e, rdfox
+
+Stratgeies - (restricted, unrestricted, parallel, skolem, fresh-null
+
+Chase Strategies vs SIPS
+
+[The power of the terminating chase](https://drops.dagstuhl.de/opus/volltexte/2019/10305/pdf/LIPIcs-ICDT-2019-3.pdf)
 
 ## Schema
 

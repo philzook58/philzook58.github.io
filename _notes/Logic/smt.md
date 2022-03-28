@@ -26,6 +26,10 @@ See also:
 - Imperative Verification
 
 [datalog based systems can us incremental smt solving ](https://cs.pomona.edu/~michael/papers/iclp2020_extabs.pdf) Nice trick to use (=> label clause). This trick also comes up in unsat cores. (check-sat-assuming label label) then. ALso consider doing minimal number of push pops or keep pool of solver contexts to find miniaml push pop
+
+[Fuzzy-sat](https://arxiv.org/pdf/2102.06580.pdf) running smt queries through a fuzzer
+
+
 # Solvers
 W: What options are actualy worth fiddling with
 It is interesting to note what unusual characteristics solvers have.
