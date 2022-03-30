@@ -1233,6 +1233,25 @@ Related of course to the above.
 
  
 # Resources
+[Datalog+-](https://dl.acm.org/doi/pdf/10.1145/1514894.1514897) A Unified Approach to Ontologies and Integrity Constraints. Integraes datalog with equality and tuple generating dependencies. 
+[Datalog+- questions and answers](https://www.aaai.org/ocs/index.php/KR/KR14/paper/viewFile/7965/7972)
+- weakly acyclic
+- guarded - one relation holds all atoms
+- sticky
+
+
+[DLV](https://en.wikipedia.org/wiki/DLV) datalog with disjunction. 
+https://www.dlvsystem.it/dlvsite/dlv-user-manual/ 
+constraints - empty headed rules...? I've also seen them as `! :- ` in dglp
+some funky features here. I wonder what the execution semantics is. Maybe disjunctive heads go in constraint store?
+
+negation as failure vs stable model
+
+
+
+[https://en.wikipedia.org/wiki/Fixed-point_logic#Least_fixed-point_logic](https://en.wikipedia.org/wiki/Fixed-point_logic#Least_fixed-point_logic) descriptive complexity theory says datalog is same thing as first order logic with fixpoints. Curious because datalog is also in some sense restricted horn clauses whereas this is saying in another sense it is full FO + fixpoint. 
+
+
 `call/N` is emulatable clause by clause in prolog.
 Is there an analogous meta predicate?
 foo(a,b) :- push(["foo", a,b]).

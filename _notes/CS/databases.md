@@ -52,6 +52,7 @@ Yisu:
 [data integration](https://drops.dagstuhl.de/opus/volltexte/2013/4288/pdf/ch01-onet.pdf)
 [querying incomplete databases](https://dl.acm.org/doi/abs/10.1016/j.is.2009.08.002)
 [benchmarking the chase](https://dl.acm.org/doi/abs/10.1145/3034786.3034796)
+[chasebench](https://dbunibas.github.io/chasebench/)
 
 Chasefun, DEMOo, Graal, llunatic, pdg, pegasus, dlv, e, rdfox
 
@@ -60,6 +61,36 @@ Stratgeies - (restricted, unrestricted, parallel, skolem, fresh-null
 Chase Strategies vs SIPS
 
 [The power of the terminating chase](https://drops.dagstuhl.de/opus/volltexte/2019/10305/pdf/LIPIcs-ICDT-2019-3.pdf)
+
+
+Is the chase meant to be applied to actual databases, symbolic databases / schema, or other dependencies? 
+Is it fair the say that the restricted chase for full dependencies is datalog?
+
+Alice book chapter 8-11
+
+Graal - 
+https://github.com/hamhec/DEFT https://hamhec.github.io/DEFT/
+defeasible programming http://lidia.cs.uns.edu.ar/delp_client/ Something about extra negation power? Defeatable rules if something contradicts them
+Pure is part of graal
+
+llunatic - https://github.com/donatellosantoro/Llunatic
+
+RDfox - https://docs.oxfordsemantic.tech/
+
+dlgp - datalog plus format. Allows variables in head = existentials. Variables in facts.
+Notion of constraint `! :- ` and notion of query. Hmm.
+
+
+# Ontology Formats
+
+graph database
+OWL
+RDF
+[sparql](https://en.wikipedia.org/wiki/SPARQL)
+shacl - 
+
+semantic web
+
 
 ## Schema
 
