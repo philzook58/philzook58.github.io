@@ -91,6 +91,22 @@ shacl -
 
 semantic web
 
+# Streaming
+[streaming 101](https://www.oreilly.com/radar/the-world-beyond-batch-streaming-101/)
+unbounded data
+
+lambda architecture - low latency inaccurate, then batch provides accurate
+
+event time vs processing time
+
+Watermark
+
+Flink
+Apache Beam
+millwheel
+spark streaming
+
+
 
 ## Schema
 

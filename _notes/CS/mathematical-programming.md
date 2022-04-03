@@ -330,12 +330,14 @@ Or the two problems can have unrelated objectives
 
 [Mathematical programming with equilibrium constraints](https://en.wikipedia.org/wiki/Mathematical_programming_with_equilibrium_constraints) a 
 
-
+[modeling bilevel programs in pyomo](https://www.osti.gov/servlets/purl/1526125)
 
 Game Theory
 Nash equilbirium
 
 Follower leader problems
+[interdiction problem](https://www.usna.edu/Users/math/traves/papers/interdiction.pdf)
+
 
 
 

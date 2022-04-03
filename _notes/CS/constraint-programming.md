@@ -3,6 +3,20 @@ layout: post
 title: Constraint Programming
 ---
 
+- [What is it for?](#what-is-it-for)
+- [Minizinc](#minizinc)
+- [Picat](#picat)
+- [Answer Set Programming](#answer-set-programming)
+  - [negation](#negation)
+    - [nqueens](#nqueens)
+- [Topics](#topics)
+  - [Branch and Bound](#branch-and-bound)
+  - [Local Search](#local-search)
+  - [Lattices](#lattices)
+  - [Propagators](#propagators)
+  - [Heuristics](#heuristics)
+- [Misc](#misc)
+
 # What is it for?
 Puzzle solving
 - n-queens
@@ -11,8 +25,11 @@ Puzzle solving
 Compiler problems
 
 Routing Problems
-Allation problems
+Allocation problems
 
+Plannning
+Reachability
+Verification
 # Minizinc
 [tutorial](https://www.minizinc.org/doc-2.6.2/en/part_2_tutorial.html)
 [202 autumn school](https://www.youtube.com/watch?v=lQi3b-sxt1s&ab_channel=AutumnSchoolonLogicandConstraintProgramming)
@@ -36,6 +53,14 @@ mov("a","b");
 var vs par is compile vs runtime distinction in type system
 it would be cool if minizinc could support adts or records.
 
+# Picat
+[website](http://www.picat-lang.org/)
+
+index mode annotations
+table annotions include lattice type stuff "mode-directed tabling"
+
+action rules
+loops
 # Answer Set Programming
 <https://en.wikipedia.org/wiki/Answer_set_programming>
 
@@ -81,6 +106,163 @@ huh clingo supports lua programs. That's intriuging. I was considerig doing that
 
 Alviano, M., Faber, W., Greco, G., & Leone, N. (2012). Magic sets for disjunctive Datalog programs
 
+[ASP-core2 standard](https://www.mat.unical.it/aspcomp2013/files/ASP-CORE-2.03c.pdf)
+
+```clingo
+innocent(Suspect) :- motive(Suspect), not guilty(Suspect).
+motive(harry).
+motive(sally).
+guilty(harry).
+```
+
+There is "constructive character". negation as failure. not guilty is assumed to hold unless is has to . This is innocent until proven guilty? Hmm. That's a fun constructive example. In the eyes of the law innocent = unknown and known guilty.
+This example is also valid stratified datalog.
+
+## negation
+<https://en.wikipedia.org/wiki/Negation_as_failure>
+<https://en.wikipedia.org/wiki/Autoepistemic_logic>
+<https://en.wikipedia.org/wiki/Default_logic>
+<https://en.wikipedia.org/wiki/Stable_model_semantics>
+<https://en.wikipedia.org/wiki/Nonmonotonic_logic>
+
+stable models are not unique
+in prolog multiple model program do not terminate
+
+wellfounded semantics - true,false, unkown. If atom in wellfounded model it is true in every stable model. upper bound on union and lower bound on interesection. Unique well founded model?
+
+
+classical interpretation of prolog rules has way too many models.
+completion of logic program - :- becoms if and only if <->
+This still has too many models.
+There are things there that are only self proving like `e :- e`
+Loop formula block these out
+
+True false prpagation
+Known true atom set and known false atom set
+
+Fitting operator
+Phi(T,F) = using rules who fit known true and know false
+F(<t,f>) = {a | }
+
+foo() :- pos(), pos(), neg(), neg()
+// all atoms from program. one generator for eac argument of foo.
+notfoo() :- atom(x), atom(y), atom(z), { notpos() ; notpos() ; neg(); neg() }
+The result of this datalog program is an underapproximation of foo and notfoo. Stable models do not include any atoms of notfoo and must have all atoms in foo.
+If you then branch on one of the remaining choices, you can allow propagation to proceed. I guess until notfoo U foo cover all possible atoms.
+
+
+Upper bounding operator keep foo rule above. replace notfoo where you just ignore negs of rule. This results in a smaller notfoo. In fact this doesn't fepend on the true set at all?
+notfoo() :-  atom(x), atom(y), atom(z), { notpos() ; notpos() }
+So this will make a large foo. foo overapproximates, notfoo underapproximates.
+
+What about base facts, and then do completion modulo basefacts
+basefoo()
+foo :- basefoo().
+foo() :- bar, biz, foo, yada
+bar,biz,foo  :- foo, !basefoo()
+
+
+nogood is a set of entries expressing that any solution containing is inadmissble
+
+
+
+
+```clingo
+child(X,Y) :- parent(Y,X).
+parent(ann,bob). parent(bob,carol). parent(bob,dan).
+```
+
+constants are larger than integers
+```clingo
+% p in model
+p :- abracadabra > 7.
+```
+```clingo
+% p not in model
+p :- abracadabra < 7.
+```
+
+unsafe variable. Clingo throws error
+```clingo
+p(X) :- X > 7.
+```
+
+shorthand for multiple tuples
+```clingo
+p(1,2; 2,4; 4,8; 8,16).
+```
+
+Pick which to show and which to not
+```clingo
+p. p(a). p(a,b).
+#show p/0. #show p/2.
+```
+
+`#const n=4` can also be done as `-c n 4` on command line
+`#include` directives
+
+Ranges are inclusive
+```clingo
+p(1..5). % analog of p(0). p(1). ... p(5).
+```
+
+remainder operator `\`
+```clingo
+#const n=10.
+composite(N) :- N = 1..n, I = 2..N-1, N\I = 0.
+prime(N) :- N=2..n, not composite(N).
+
+```
+
+Choice rules. pieces from the set. Cardniality constraints. 
+```clingo
+#const n=4.
+{p(X); q(X)} = 1 :- X = 1..n.
+:- p(1). % model can't have p(1)
+% :- not p(1). % model has to have p(1). Combo gives unsat
+```
+
+`{p(a); p(b)} 1` is the same as `{p(a); p(b)}. :- p(a), q(b).` We could enumerate every subset that can't be and exclude them with constraint.
+`1 {p(a); p(b)} ` is the same as `{p(a); p(b)}. :- p(X), q(X).`
+
+`:- f(X,Y1), f(X,Y2), Y1 != Y2.` expresses functional constraint. Same thing as `Y1 = Y2 :- f(X,Y1), f(X,Y2).`
+
+Clingo makes auxiliary predicates instead of dummy variables for `_` interesting.
+
+
+grounding time and solving time.
+For slow ground: try enumerating better. symettry breaking. Rules with fewer variables.
+
+### nqueens
+```clingo
+#const n=4.
+{q(1..n,1..n)} = n.
+% These are all possible atoms. "generation"
+
+```
+
+Clingo options --help:
+- enum-mode
+- projective solution enumeration
+- `--models 10` compute at most 10 models
+- opt-mode, find opt, enumate optimal, enum below bound, set known initial bound
+- paralel mode `-t` number of threads. compete and split mode
+- --const replace const with whatever
+- print simplified program
+- verbose
+- help=3 gives more options
+- --warn
+
+
+nogoods
+loops
+
+gringo is the grounder
+clasp is the solver - very SAT solver sounding. The options in help=3 talk about random restarts, glucose, 
+
+Is ASP an ackermannization stage kind of followed by SAT/CSP? Datalog followed by SAT/CSP? How intertwined are the stages?
+
+Hmm. All constraints are encodable to 
 
 # Topics
 ## Branch and Bound

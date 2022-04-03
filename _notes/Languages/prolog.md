@@ -10,20 +10,34 @@ wordpress_id: 1865
 ---
 
 - [Systems](#systems)
+- [History](#history)
 - [Examples](#examples)
+  - [Things that are prolog](#things-that-are-prolog)
     - [Hello World](#hello-world)
+  - [Lists](#lists)
+  - [Difference Lists](#difference-lists)
+  - [Rewriting in prolog](#rewriting-in-prolog)
 - [Topics](#topics)
-  - [Abstract Machines](#abstract-machines)
+  - [SLD resolution](#sld-resolution)
+  - [Interesting predicates](#interesting-predicates)
+  - [Imperative analogies](#imperative-analogies)
+  - [Abstract Machines / Implementation](#abstract-machines--implementation)
+  - [Modes](#modes)
+  - [Verification](#verification)
+  - [Modules](#modules)
   - [meta circular interpreters](#meta-circular-interpreters)
   - [Delimitted Continuations](#delimitted-continuations)
   - [Tabling](#tabling)
   - [Attributed Variables](#attributed-variables)
   - [Constraint Logic Programming (CLP)](#constraint-logic-programming-clp)
+    - [Prolog II, III IV.](#prolog-ii-iii-iv)
+  - [Parallel](#parallel)
+  - [Coroutines](#coroutines)
   - [Definite Clauses Grammars (DCG)](#definite-clauses-grammars-dcg)
   - [CHR](#chr)
   - [Extralogical features](#extralogical-features)
-- [Things that are prolog](#things-that-are-prolog)
   - [Lambda](#lambda)
+- [Semantics](#semantics)
 - [Lambda Prolog](#lambda-prolog)
   - [LF](#lf)
 - [LogTalk](#logtalk)
@@ -36,21 +50,23 @@ wordpress_id: 1865
 See also:
 - Datalog
 - Constrained Horn Clauses
-- Constraint Programming
+- Constraint Programming (Answer Set programming in particular)
 
 # Systems
+[50 years of prolog](https://arxiv.org/pdf/2201.10816.pdf)
+
 - Swi prolog - I think this is a good default choice.
-- [sicstus](https://sicstus.sics.se/) requires commercial license
-- gnu
-- [scryrer](https://github.com/mthom/scryer-prolog)
 - [ciao](http://ciao-lang.org/)
+- [sicstus](https://sicstus.sics.se/) requires commercial license [manual](https://sicstus.sics.se/sicstus/docs/latest4/html/sicstus.html/index.html)
+- gnu prolog
+- [scryrer](https://github.com/mthom/scryer-prolog)
 - tau prolog - javascript web enabled
 - hprolog
 - binprolog
-- XSB
+- XSB - fancy tabling. 
 - YAP
 - B-prolog
-- ECLiPSe
+- ECLiPSe - can talk to minizinc
 - Qu-prolog
 - 
 Relatives:
@@ -59,8 +75,41 @@ Relatives:
 - picat
 - Mercury - mode declarations and type declarations. Allows reordering, but deals with IO using lionear types?
 - Curry - Haskell syntax like language.
-# Examples
+- Lambda prolog - teyjus, elpi, makam
+- Hilog
+- Godel
+- Hyprolog - abduction
+# History
+Resolution in automatc theorem provers came earlier.
+Kowalski and Colmerauer
 
+Flotd nondeterminstic algorithms 9167
+PLANNER Hewitt
+
+Prolog 0
+Prolog 1
+
+metamorphisis grammars -> DCG
+Dec-10 prolog
+Ediburgh prolog
+
+structure copying vs structure sharing
+
+fifth generation computing
+
+Extensions to unification
+prolog II
+Prolog III
+
+CLP Jaffar Lassez 1987
+
+
+# Examples
+## Things that are prolog
+- Typeclasses
+- Inductive data types
+- Inference rules
+- 
 ### Hello World
 
 ```prolog
@@ -68,16 +117,62 @@ Relatives:
 main(_) :- format("hello world ~p\n", [foo(8)]).
 ```
 
+## Lists
+```prolog
+append([], X, X).
+append([H | X], Y, [H | Z]) :- append(X, Y, Z).
+```
+## Difference Lists
+## Rewriting in prolog
+
+
 
 # Topics
+## SLD resolution
 
-## Abstract Machines
+
+## Interesting predicates
+[comparson and unification of terms](https://www.swi-prolog.org/pldoc/man?section=compare)
+`=@=`
+`==`
+`=`
+`/=` a weaker version of dif. Uses negation as fialure in kind of unsatisfactory way
+
+`=..` destructures a term
+
+## Imperative analogies
+Unification variables are pointers
+Unification is bidirecitonal pattern matching
+
+
+
+
+
+## Abstract Machines / Implementation
 [Warren's Abstract Machine: A Tutorial Reconstruction.](http://wambook.sourceforge.net/wambook.pdf)
 
 
 Paul Tarau showing an interesting compilation strategy. <https://popl21.sigplan.org/details/PADL-2021-papers/5/A-Family-of-Unification-oblivious-Program-Transformations-and-Their-Applications>
 <https://github.com/ptarau/LogicTransformers>
+
 binprolog. Translate to binary relations
+
+structure copying vs structure sharing
+
+Term indexing
+
+Original Dec-10 prolog paper
+
+
+## Modes
+mercury
+ciao prolog
+
+## Verification
+
+## Modules
+
+
 
 ## meta circular interpreters
 
@@ -128,7 +223,15 @@ main(_) :- path(1,4).
 
 a :- a.
 ```
+
+Hmm. Tabling comes _from_ earley parsing historically. That's interesting.
+
+tabling and packrat parsing [DCGs + Memoing = Packrat Parsing But is it worth it?](https://mercurylang.org/documentation/papers/packrat.pdf)
+tabling vs memoing
+
 ## Attributed Variables
+Attaching extra info to variables. This can be be used to implement CLP as a library
+
 ## Constraint Logic Programming (CLP)
 - CLP(B) - constraint over boolean variables. Sometimes bdd based
 - CLP(FD)
@@ -138,6 +241,20 @@ a :- a.
 `reif` `if_/` `tfilter/3`
 
 
+eclipse talks to minizinc?
+
+### Prolog II, III IV.
+Cyclic terms. Rational terms. See Condicutive logic programming
+[swi prolog comments on rational trees](https://www.swi-prolog.org/pldoc/man?section=cyclic)
+
+[introduction to prolog III](https://www.researchgate.net/publication/220427862_Introduction_to_prolog_III)
+[prolog and infinite trees](http://www.softwarepreservation.org/projects/prolog/marseille/doc/Colmerauer-InfTree-1982.pdf)
+
+## Parallel 
+## Coroutines
+delay
+freeze
+block
 
 ## Definite Clauses Grammars (DCG)
 
@@ -162,16 +279,28 @@ Man what hope is there of compiling a 7 year old haskell project?
 
 [yihong's egraph in chr. awesome](https://github.com/yihozhang/cchr/blob/master/experiment/egraph.cchr)
 
+
+CHR parsing
 ## Extralogical features
 Database manipulation
+[sicstus database manip](https://sicstus.sics.se/sicstus/docs/latest4/html/sicstus.html/ref_002dmdb.html#ref_002dmdb)
+retract
+assert
+set_prolog_falg
 
-findall bagor setof are aggregation of solutions.
+
+cut
+green cut
+
+
+
+
+findall bagor setof are aggregation of solutions. They are reifying predicates kind of.
+
+
 [ Finding all Solutions to a Goal](https://www.swi-prolog.org/pldoc/man?section=allsolutions)
 
-# Things that are prolog
-- Typeclasses
-- Inductive data types
-- Inference rules
+
 
 ## Lambda
 Oh sweet mysterious lambda
@@ -187,8 +316,21 @@ One is tempted to attempt to use prolog variables for lambda variables. Requires
 
 [lambda is iso prolog](http://www.complang.tuwien.ac.at/ulrich/Prolog-inedit/ISO-Hiord.html)
 
+HiLog - My impression is this is a bit like "first order functional" programming. All predicates need names. You can achieve this via defunctionalization, lambda lifting, etc.
+
+# Semantics
+Completion semantics
+Well-founded
+Completion semantics
+
 # Lambda Prolog
-elpi
+[lambda prolog page](https://www.lix.polytechnique.fr/~dale/lProlog/)
+Implementations
+- Teyjus - seems to maybe not be developed anymore
+- elpi - alive and well. Coq metaprogamming
+- Makam - a variant on lambda prolog with some cooll paper tutorials
+
+
 Install as `opam install elpi`. Run as `elpi -test` to run with main query
 
 ```elpi
@@ -240,7 +382,9 @@ http://andrewcropper.com/
 https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
 
 ### Stuff
-[O-keefe - An Elementary Prolog Library](http://www.cs.otago.ac.nz/staffpriv/ok/pllib.htm)
+defeasible logic programming
+
+[O-keefe - An Elementary Prolog Library](http://www.cs.otago.ac.nz/staffpriv/ok/pllib.htm) some suggestions about unicode and other test stuff. Higher order operators
 
 [50 years of prolog and beyond](https://arxiv.org/pdf/2201.10816.pdf)
 

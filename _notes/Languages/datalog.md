@@ -7,6 +7,7 @@ title: Datalog
   - [Program Analysis](#program-analysis)
 - [Implementations](#implementations)
   - [Formulog](#formulog)
+  - [Datafrog](#datafrog)
   - [Flix](#flix)
   - [dr lojekyl](#dr-lojekyl)
 - [Souffle](#souffle)
@@ -41,6 +42,7 @@ title: Datalog
       - [Negation](#negation)
       - [Choice domain](#choice-domain)
   - [Choice Domain](#choice-domain-1)
+  - [Negation](#negation-1)
   - [Souffle source](#souffle-source)
 - [Examples](#examples-1)
   - [BogoSort](#bogosort)
@@ -51,6 +53,7 @@ title: Datalog
   - [Graph Algorithms](#graph-algorithms)
   - [Translating Imperative Programs](#translating-imperative-programs)
   - [Translating functional programs](#translating-functional-programs)
+  - [Model Checking](#model-checking)
   - [Timestamping](#timestamping)
   - [Theorem Proving](#theorem-proving)
     - [Skolemization for Existential Heads](#skolemization-for-existential-heads)
@@ -98,14 +101,21 @@ topics:
 - [differential datalog](https://github.com/vmware/differential-datalog)
 - dr lojekyll
 - formulog
-- datafrog
+- [datafrog](https://github.com/rust-lang/datafrog) 
 - ascent https://dl.acm.org/doi/pdf/10.1145/3497776.3517779 <https://docs.rs/ascent/latest/ascent/> Rust macro based datalog.
-- uZ3 (mu z3)
-- 
+- uZ3 (mu z3) built into z3
+
 ## Formulog
 SMT formulas as data. Interesting distinction with CHC where smt formula are predicates.
 Refinement type checker.
 Symbolic Execution
+
+## Datafrog
+Engine behind polonius?
+A kind of unsugared rust dsl
+[Description](https://github.com/frankmcsherry/blog/blob/master/posts/2018-05-19.md)
+I remember this being totally incomprehensible. I guess I must have lost my mind becaus it seems kind of nice now.
+
 
 ## Flix
 [online playground](https://play.flix.dev/)
@@ -656,6 +666,9 @@ You get the C preprocessor run by default over souffle files. I find this incred
 ### Lattices
 See also bitset lattice above
 
+Lattices can be sometimes encoded into finite sets. Consider the 4 valued lattice of unknonw, true, false, conflict. These are the power sets of a set of size 2. This can be represented as two tables which can be in different states of full. Because of stratified negation, it is not always possible to observe things. You shouldn't really observe anything other than filter questions anyhow though. Anf you're always above unknown.
+true(a), false(a)
+
 You often need 1 rule to combine pieces with the join of the lattice and 1 rule for subsumption. This is probably not efficient, but it is works.
 It would be be nice to have a construct that did both at once efficiently. We should be immeditaly erasing a and b when we compute their join.
 
@@ -922,6 +935,21 @@ Can I combine choice domain and lattice. But choice domain once you pick you're 
 well. I can recover lattice style via an explicit congruence closure. So. it doesn't matter I guess.
 
 
+## Negation
+Stratification
+
+See answer set programming and stable model semantics
+
+What about
+
+foo(x) :- biz, !foo(z).
+
+and making it stratified by deleting all negative atoms (an overpapproximation?) And then using the overapproximation of !.
+
+foo1(x) :- biz.
+foo(x) :- biz, !foo1(z)
+
+
 
 ##  Souffle source
 - synthesizer - actual code printers
@@ -1061,7 +1089,68 @@ For ADTs this ends up being a table of all subterms.
 
 Is needed a representation of call frames maybe?
 
-## Timestamping
+
+## Model Checking
+See Chapter 8 State-Space Search with Tabled Logic Programs
+
+Farmer puzzle
+
+Die Hard puzzle
+```souffle
+.pragma "provenance" "explain"
+.decl reach(big : unsigned, small : unsigned)
+reach(0,0).
+// move water small to big
+reach(big + small, 0) :- reach(big,small), big + small <= 5.
+reach(5,  small - (5 - big)) :- reach(big,small), !big + small <= 5.
+// move water big to small
+reach(0, big + small) :- reach(big,small), big + small <= 3.
+reach(big  - (3 - small),  3) :- reach(big,small), !big + small <= 3.
+// empty big
+reach(0, small) :- reach(_,small).
+// empty small
+reach(big,0) :- reach(big,_).
+// fill big
+reach(5, small) :- reach(_,small).
+// fill small
+reach(big,3) :- reach(big,_).
+
+.decl big_is_4(small : unsigned)
+big_is_4(small) :- reach(4,small).
+.output big_is_4(IO=stdout)
+/*
+---------------
+big_is_4
+small
+===============
+0
+3
+===============
+Explain is invoked.
+Enter command > setdepth 10
+Depth is now 10
+Enter command > explain big_is_4(3)
+reach(0, 0)                          
+--------(R8)                         
+reach(5, 0)  5 > 3                   
+---------------(R5)                  
+    reach(2, 3)                      
+----------------(R7)                 
+    reach(2, 0)      2 <= 3          
+------------------------(R4)         
+        reach(0, 2)                  
+-------------------------(R8)        
+         reach(5, 2)          7 > 3  
+--------------------------------(R5) 
+            reach(4, 3)              
+---------------------------------(R1)
+             big_is_4(3)             
+Enter command > 
+*/
+```
+
+
+## Timestamping 
 Transtion systems. All possible executions. Model Checking.
 Dedalus
 ```souffle
@@ -1233,6 +1322,9 @@ Related of course to the above.
 
  
 # Resources
+[datalog : concept history outlook 2018](https://dl.acm.org/doi/10.1145/3191315.3191317)
+[declarative logic programming](https://www.google.com/books/edition/Declarative_Logic_Programming/CMatvAEACAAJ?hl=en)
+
 [Datalog+-](https://dl.acm.org/doi/pdf/10.1145/1514894.1514897) A Unified Approach to Ontologies and Integrity Constraints. Integraes datalog with equality and tuple generating dependencies. 
 [Datalog+- questions and answers](https://www.aaai.org/ocs/index.php/KR/KR14/paper/viewFile/7965/7972)
 - weakly acyclic

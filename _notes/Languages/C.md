@@ -107,3 +107,7 @@ Csmith
 [DieHard](https://github.com/emeryberger/DieHard) error resitant allocator
 Ptmalloc
 mimalloc https://github.com/microsoft/mimalloc
+
+
+
+[how debuggers work](https://eli.thegreenplace.net/2011/01/27/how-debuggers-work-part-2-breakpoints) int3 and ptrace
