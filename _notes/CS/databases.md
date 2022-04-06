@@ -3,6 +3,18 @@ layout: post
 title: Databases
 ---
 
+- [Schema](#schema)
+  - [Functional Dependencies](#functional-dependencies)
+  - [Query Optimization](#query-optimization)
+  - [The Chase](#the-chase)
+- [Ontology Formats](#ontology-formats)
+- [Streaming](#streaming)
+  - [Schema](#schema-1)
+  - [SQL](#sql)
+  - [sqlite](#sqlite)
+- [Resources](#resources)
+
+
 See also:
 - Datalog
 
@@ -42,6 +54,9 @@ Armstrong axioms
 Normal Formals
 
 Tuple Generating dependencies
+
+## Query Optimization
+[Cascades framework](https://www.cse.iitb.ac.in/infolab/Data/Courses/CS632/Papers/Cascades-graefe.pdf)
 
 ## The Chase
 Equality Generating Dependencies
@@ -90,6 +105,8 @@ RDF
 shacl - 
 
 semantic web
+
+[Knowdlege representation handbook](https://dai.fmph.uniba.sk/~sefranek/kri/handbook/handbook_of_kr.pdf)
 
 # Streaming
 [streaming 101](https://www.oreilly.com/radar/the-world-beyond-batch-streaming-101/)

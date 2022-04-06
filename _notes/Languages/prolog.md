@@ -41,8 +41,10 @@ wordpress_id: 1865
 - [Lambda Prolog](#lambda-prolog)
   - [LF](#lf)
 - [LogTalk](#logtalk)
+- [Linear Logic Programming](#linear-logic-programming)
 - [Coinductive Logic Programming](#coinductive-logic-programming)
 - [inductive logic programmingh](#inductive-logic-programmingh)
+- [Theorem Proving](#theorem-proving)
     - [Stuff](#stuff)
   - [2019](#2019)
   - [Notes from 2017 -Resolution and unification](#notes-from-2017--resolution-and-unification)
@@ -252,9 +254,15 @@ Cyclic terms. Rational terms. See Condicutive logic programming
 
 ## Parallel 
 ## Coroutines
+[swi manual](https://www.swi-prolog.org/pldoc/man?section=coroutining)
+- `dif/2` ? Test is delyed until terms are sfufcient different or have become identical
+- `freeze/2` - equivalent to call is Var is bound
+frozen
+when
+call_residue_vars
+
 delay
-freeze
-block
+[block](https://www.swi-prolog.org/pldoc/doc_for?object=block_directive%3A(block)/1)
 
 ## Definite Clauses Grammars (DCG)
 
@@ -281,12 +289,23 @@ Man what hope is there of compiling a 7 year old haskell project?
 
 
 CHR parsing
+“Analysing graph transformation systems through Constraint Handling Rules” by Frank Raiser and Thom Frühwirth
+“As time goes by: Constraint Handling Rules — A survey of CHR research from 1998 to 2007” by Jon Sneyers, Peter Van Weert, Tom Schrijvers and Leslie De Koninck
+
+```prolog
+
+```
+
+
 ## Extralogical features
 Database manipulation
+[swi](https://www.swi-prolog.org/pldoc/man?section=db)
 [sicstus database manip](https://sicstus.sics.se/sicstus/docs/latest4/html/sicstus.html/ref_002dmdb.html#ref_002dmdb)
 retract
 assert
 set_prolog_falg
+dynamic predicates. 
+recorded database
 
 
 cut
@@ -369,6 +388,13 @@ https://core.ac.uk/download/pdf/82649367.pdf Normalization for the Simply-Typed 
 It adds object oriented programming to prolog.
 <https://logtalk.org/2009/12/08/lambda-expressions-in-logtalk.html> lambdas
 
+# Linear Logic Programming
+See linear logic
+prolog rules destroy the body. Good for modeling state
+Chris martens
+[ceptre](https://github.com/chrisamaphone/interactive-lp)
+
+The interaction of linear logic and logic programming was very inlfluential on the concept of focusing
 
 # Coinductive Logic Programming
 Actually fairly unrelated to inductive logic programming.
@@ -380,6 +406,13 @@ popper https://arxiv.org/abs/2005.02259
 https://github.com/metagol/metagol metagol 
 http://andrewcropper.com/
 https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
+
+# Theorem Proving
+[Leantap](https://formal.iti.kit.edu/beckert/leantap/)
+Jens Otten
+[How to Build an Automated Theorem Prover. Invited Tutorial at TABLEAUX in London/UK](http://www.jens-otten.de/tutorial_tableaux19/)
+
+[A simple version of this implemented in tau prolog](https://www.philipzucker.com/javascript-automated-proving/) Prdocues proofs translated to bussproofs latex
 
 ### Stuff
 defeasible logic programming

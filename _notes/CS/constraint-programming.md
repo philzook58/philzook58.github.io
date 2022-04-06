@@ -8,6 +8,7 @@ title: Constraint Programming
 - [Picat](#picat)
 - [Answer Set Programming](#answer-set-programming)
   - [negation](#negation)
+  - [Frame Problem Default Logic](#frame-problem-default-logic)
     - [nqueens](#nqueens)
 - [Topics](#topics)
   - [Branch and Bound](#branch-and-bound)
@@ -165,6 +166,9 @@ bar,biz,foo  :- foo, !basefoo()
 nogood is a set of entries expressing that any solution containing is inadmissble
 
 
+## Frame Problem Default Logic
+can I use this to conveniently describe transtion systems?
+
 
 
 ```clingo
@@ -263,6 +267,10 @@ clasp is the solver - very SAT solver sounding. The options in help=3 talk about
 Is ASP an ackermannization stage kind of followed by SAT/CSP? Datalog followed by SAT/CSP? How intertwined are the stages?
 
 Hmm. All constraints are encodable to 
+
+Grounding with datalog?
+Ackermanizing in clingo?
+
 
 # Topics
 ## Branch and Bound
