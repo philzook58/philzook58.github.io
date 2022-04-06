@@ -1042,15 +1042,13 @@ I could make udf for normalization. And memoize into a choice domain?
 Combinators
 
 ## Parsing
+
+
+[CYK Parsing](https://en.wikipedia.org/wiki/CYK_algorithm) is an example of dynamic programming.
+Earley = magic set of CYK. Doing it on demand
+
 `substr` makes this feasible. This unfortuantely is going to reintern the string though. So hard to believe it'll ever be efficient.
 
-CYK Parsing is an example of dynamic programming.
-
-[earley parsing](https://github.com/souffle-lang/souffle/blob/master/tests/example/earley/earley.dl)
-
-[parser in datalog](https://homes.cs.washington.edu/~bodik/ucb/cs164/sp13/lectures/09-Datalog-CYK-Earley-sp13.pdf) bottom up parsing
-
-Earley = magic set of CYL
 
 ```souffle
 
@@ -1135,6 +1133,28 @@ parens(z) :- needparens(z), parens(x), parens(y), z = cat(x,y).
 
 ```
 
+```souffle
+#define cat3(x,y,z) cat(x,cat(y,z))
+.type parens =  Empty {} | Parens {x : parens} | Append {x : parens, y : parens} 
+.decl str(x : symbol)
+.decl needparse(x : symbol)
+.decl parses(x : symbol, p : parens)
+str("()(()())").
+needparse(y) :- str(x), i = range(0,strlen(x)), len = range(1,strlen(x) - i + 1), y = substr(x, i, len).
+parses("", $Empty()). // P --> eps
+parses(y, $Parens(p)) :- needparse(y), parses(x,p), y = cat3("(", x, ")"). // P --> (P)
+parses(z, $Append(px,py)) :- needparse(z), parses(x,px), parses(y,py), z = cat(x,y), // P --> PP
+                             px != $Empty(), py != $Empty(). // For termination
+.output parses(IO=stdout)
+/*x       p
+===============
+()(()())        $Append($Parens($Empty), $Parens($Append($Parens($Empty), $Parens($Empty))))
+                $Empty
+()              $Parens($Empty)
+(()())          $Parens($Append($Parens($Empty), $Parens($Empty)))
+()()            $Append($Parens($Empty), $Parens($Empty)) */
+```
+
 Easy way to regexp?
 If I want identifiers
 ```python
@@ -1169,8 +1189,10 @@ word(s,i,j) :- chars(s, i-1, c), alpha(c), word(s, i, j).
 ```
 
 
-
-
+- [earley parsing](https://github.com/souffle-lang/souffle/blob/master/tests/example/earley/earley.dl)
+- [parser in datalog](https://homes.cs.washington.edu/~bodik/ucb/cs164/sp13/lectures/09-Datalog-CYK-Earley-sp13.pdf) bottom up parsing
+- [parsing and generation as datalog queries](https://aclanthology.org/P07-1023.pdf)
+- [DCGs + memoizing = Packrat Parsing](https://mercurylang.org/documentation/papers/packrat.pdf)
 
 ## Hilog
 ```souffle
