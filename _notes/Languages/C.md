@@ -107,7 +107,13 @@ Csmith
 [DieHard](https://github.com/emeryberger/DieHard) error resitant allocator
 Ptmalloc
 mimalloc https://github.com/microsoft/mimalloc
-
+"The other allocators are Google's tcmalloc (tc, tag:gperftools-2.8.1) used in Chrome, Facebook's jemalloc (je, tag:5.2.1) by Jason Evans used in Firefox and FreeBSD, the Intel thread building blocks allocator (tbb, tag:v2020.3), rpmalloc (rp,tag:1.4.1) by Mattias Jansson, the original scalable Hoard (git:d880f72) allocator by Emery Berger [1], the memory compacting Mesh (git:67ff31a) allocator by Bobby Powers et al [8], and finally the default system allocator (glibc, 2.31) (based on PtMalloc2)."
+[tcmalloc](https://github.com/gperftools/gperftools)
+[jemalloc](https://github.com/jemalloc/jemalloc)
+[tbb allocator](https://github.com/intel/tbb)
+[rpmalloc](https://github.com/mjansson/rpmalloc)
+[hoard](https://github.com/emeryberger/Hoard)
+[mesh](https://github.com/plasma-umass/Mesh)
 
 
 [how debuggers work](https://eli.thegreenplace.net/2011/01/27/how-debuggers-work-part-2-breakpoints) int3 and ptrace

@@ -74,6 +74,7 @@ dlv2 maybe https://dlv.demacs.unical.it/
 dlvhex http://www.kr.tuwien.ac.at/research/systems/dlvhex/
 
 [seventh answer set competition](https://arxiv.org/pdf/1904.09134.pdf)
+[lifschitz prgraming with clingo](https://www.cs.utexas.edu/~vl/teaching/378/pwc.pdf)
 
 Disjunctive logic programming
 

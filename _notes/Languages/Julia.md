@@ -6,6 +6,8 @@ wordpress_id: 2987
 ---
 
 
+Metaheuristics.jl
+
 If you want just linear problems, you can also try Tulip (this is me self-advertising; I wrote it). It's pure Julia, and should give you decent performance.
 If you want nonlinear problems, among the open-source pure Julia solvers, you have:
 COSMO, which supports several cones & quadratic objective. It's based on ADMM, same as SCS/OSQP

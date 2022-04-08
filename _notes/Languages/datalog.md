@@ -6,6 +6,7 @@ title: Datalog
 - [What can you do with datalog?](#what-can-you-do-with-datalog)
   - [Program Analysis](#program-analysis)
 - [Implementations](#implementations)
+  - [Rel](#rel)
   - [Formulog](#formulog)
   - [Datafrog](#datafrog)
   - [Flix](#flix)
@@ -47,6 +48,7 @@ title: Datalog
     - [Patricia Tries](#patricia-tries)
     - [BDDs](#bdds)
   - [BogoSort](#bogosort)
+  - [CHR](#chr)
   - [Lambda representation](#lambda-representation)
   - [Parsing](#parsing)
   - [Hilog](#hilog)
@@ -113,6 +115,11 @@ topics:
 - [datafrog](https://github.com/rust-lang/datafrog) 
 - ascent https://dl.acm.org/doi/pdf/10.1145/3497776.3517779 <https://docs.rs/ascent/latest/ascent/> Rust macro based datalog.
 - uZ3 (mu z3) built into z3
+- logicblox
+- [flora2](http://flora.sourceforge.net/) ergo lite. Is this a datalog?
+## Rel
+[vid](https://www.youtube.com/watch?v=WRHy7M30mM4&t=136s&ab_channel=CMUDatabaseGroup)
+Relational AI
 
 ## Formulog
 SMT formulas as data. Interesting distinction with CHC where smt formula are predicates.
@@ -349,6 +356,29 @@ What about normalization? That's intriguing
 BitSets
 
 [souffle lib](https://github.com/souffle-lang/souffle-lib)
+
+Some experiments of mine
+
+- [souffle-z3](https://github.com/philzook58/souffle-z3) We can use the Z3 C bindings if we make a little helper function to generate a Z3 context.
+- [souffle-lua](https://github.com/philzook58/souffle-lua) We can ffi call into lua for easier more dynamic user defined functor writing. Maybe I should try using guile?
+
+For foreign data types you need to make your own external interning table, or the cheap prototyping thing to do is use serialization / deserialization to store as strings.
+In Z3 you can use pointers, but that is because Z3 is internally hash consing.
+You can briefly hold pointers as unsigned inside a rule, but you should probably compile souffle in 64 bit mode.
+
+gnu multiprecision
+Nah, this won't work. I need to do allocation. Unless I can call malloc?
+```
+.pragma "libraries" "gmp"
+.type mp_int <: unsigned
+.type mp_str <: symbol
+.functor mpz_get_str(unsigned,unsigned,mp_int):symbol
+.functor mpz_init(mp_int) // hmm. This won't work
+.functor mpz_set_str(mp_int, mp_str, ):number
+```
+
+
+
 lib_ldscript
 use `whereis` if ascii `cat` the file and include the things in group
 `souffle libc.dl -lm-2.31 -lmvec`
@@ -1028,6 +1058,16 @@ array(i-1,n) :- array(i,n), i > 0.
 // subsume bad possibilities...?
 array(i-1, n) <= array(i, n) :- i > 0, 
 ```
+What about building a relation of pairs
+```
+pair(a,b) <= pair(b,a) :- b <= a, a <= b
+```
+
+## CHR
+Constraint handling rules have some similarity to datalog with subsumption and sometimes you can translate programs.
+Datalog has set semantics, CHR has multiset semantics. Sometimes you add CHR rules to make set semantics
+subsumption allows some deletion.
+
 
 ## Lambda representation
 What is the most appropriate way? Probably we want to implement some kind of machine flavored implementation.
@@ -1040,6 +1080,8 @@ Could make user defined functor for substition.
 I could make udf for normalization. And memoize into a choice domain?
 
 Combinators
+
+lambda datalog. Pattern matching on ground lambda terms is good.
 
 ## Parsing
 
@@ -1178,6 +1220,31 @@ alpha(c) :- lower(c) ; upper(c).
 
 ```
 
+
+Earley parsing. Put the carefullness in needparse instead
+```souffle
+#define cat3(x,y,z) cat(x,cat(y,z))
+#define FIRST(rem) substr(rem,0,1)
+#define LAST(rem) substr(rem,strlen(rem)-1,1)
+
+.type parens =  Empty {} | Parens {x : parens} | Append {x : parens, y : parens} 
+.decl str(x : symbol)
+.decl needparse(x : symbol)
+.decl parses(x : symbol, p : parens)
+needparse("()(()())").
+needparse(y) :- needparse(x), FIRST(x) = "(", LAST(x) = ")", y = substr(x,1,strlen(x)-2).
+// only one iterator so that's nice I guess. And only because it's such a nasty rule
+needparse(y), needparse(z) :- needparse(x), i = range(0,strlen(x)), y = substr(x,0,i), z = substr(x,i,strlen(x)-i). 
+
+
+
+parses("", $Empty()). // P --> eps
+parses(y, $Parens(p)) :- needparse(y), parses(x,p), y = cat3("(", x, ")"). // P --> (P)
+parses(z, $Append(px,py)) :- needparse(z), parses(x,px), parses(y,py), z = cat(x,y), // P --> PP
+                             px != $Empty(), py != $Empty(). // For termination
+.output parses(IO=stdout)
+```
+
 ```souffle
 
 .type list_sexp = [hd : sexp, tl : list_sexp]
@@ -1187,6 +1254,39 @@ word(s,i,j) :- chars(s, i-1, c), alpha(c), word(s, i, j).
 
 
 ```
+
+
+DCG
+parser combinator
+We need like a whole stack then. Blugh
+```souffle
+#define NEXT(rem) substr(rem,1,strlen(rem1)-1)
+#define FIRST(rem) substr(rem1,0,1)
+parse(x,NEXT(rem)) :- parse(x,rem1), FIRST(rem) = ")".
+
+
+// regexp
+#define NEXT(rem) substr(rem,1,strlen(rem1)-1)
+#define FIRST(rem) substr(rem1,0,1)
+#define FIRST(rem, c) substr(rem1,0,1) = c
+
+#define STAR(class) parse(x,NEXT(rem)) :- parse(x,rem1), FIRST(rem) = c, class(c).
+starupper(x,NEXT(rem)) :- starupper(x,rem1), FIRST(rem) = c, upper(c).
+
+// as transition system
+recog("nextstate",x, rem) :- recog("upper", x, rem) , FIRST(rem) = c, !upper(c), 
+
+// as transition system. don't need x really. uhhh. Yes we do. We need a bottom up transform then.
+recog("nextstate", rem) :- recog("upper", rem) , FIRST(rem) = c, !upper(c), 
+
+
+
+```
+So it seems like this is a general transfomation. I can exchange a global context parameter x that I dig into with substr for a need predicate.
+The two are uncoupled. Recurse over the thing first to reak it up, then bottom up the pieces. Don't do in one pass.
+
+
+
 
 
 - [earley parsing](https://github.com/souffle-lang/souffle/blob/master/tests/example/earley/earley.dl)
@@ -1282,6 +1382,8 @@ simplify(t, a) :- term(t), t = $Add($Lit(0), a).
 
 // should have the analog of "edge" here
 simplify(t,t2) :- simplify(t,t1), simplify(t1,t2).
+//simplify(t0,a) :- simplify(t0,t), t = $Add($Lit(0),a).
+
 
 simplify(t,t) :- term(t).
 
@@ -1573,6 +1675,8 @@ Could block composition rule on Id. Kind of a cheap shot
 See Lean paper Tabling Typeclasses
 See Chalk (which uses datafrog?)
 
+See ascent paper which compares itself with datafrog based polonius
+
 ## Type checking / inferring
 Related of course to the above.
 
@@ -1587,14 +1691,14 @@ Related of course to the above.
 
 //| $GNil {} $GCons { t :term, ty : type, ctx } 
 
-.decl hastype(t : term , ty : type) // mode++ sort of
+
 /*
 hastype($TT(), $Unit()).
 hastype($TInt(n), $Int()) :- n = range(1,10). // cheating a little
 hastype($True(),$Bool()).
 hastype($False(), $Bool()).
 */
-
+.decl hastype(t : term , ty : type) // mode++ sort of
 .decl infertype(t : term) // mode -+ top down
 .decl checktype(t : term, ty : type) // mode -- topdown
 .decl prove(ty:type) // mode +-

@@ -35,9 +35,11 @@ wordpress_id: 1865
   - [Coroutines](#coroutines)
   - [Definite Clauses Grammars (DCG)](#definite-clauses-grammars-dcg)
   - [CHR](#chr)
+    - [Compiling](#compiling)
   - [Extralogical features](#extralogical-features)
   - [Lambda](#lambda)
 - [Semantics](#semantics)
+- [Expert Systems](#expert-systems)
 - [Lambda Prolog](#lambda-prolog)
   - [LF](#lf)
 - [LogTalk](#logtalk)
@@ -239,6 +241,8 @@ Attaching extra info to variables. This can be be used to implement CLP as a lib
 - CLP(FD)
 - CLP(Z)
 
+[Anne Ogborn's tutorial](https://github.com/Anniepoo/swiplclpfd)
+
 [Indexing dif/2](https://arxiv.org/abs/1607.01590)
 `reif` `if_/` `tfilter/3`
 
@@ -266,16 +270,31 @@ delay
 
 ## Definite Clauses Grammars (DCG)
 
+[Anne Ogborn tutorial](https://github.com/Anniepoo/swipldcgtut)
+
 
 ## CHR
 [swipl manual section](https://www.swi-prolog.org/pldoc/man?section=chr)
+[Anne Ogborn's tutorial](https://github.com/Anniepoo/swiplchrtut)
+[Schrijver's ICLP tutorial](https://dtai.cs.kuleuven.be/CHR/files/tutorial_iclp2008.pdf)
+
 Constraint handling rules
 A question I never had an answer for https://twitter.com/notjfmc/status/1422215450675535877?s=20&t=RyHMtBS3ySaALLC9MuGmUA . CHR afaik are a way of integrating eager rewriting into prolog https://en.wikipedia.org/wiki/Constraint_Handling_Rules 
 
 I'm not sure this is even persay a prolog topic. But the prolog community is the most engaged
 
 http://www.informatik.uni-ulm.de/pm/fileadmin/pm/home/fruehwirth/constraint-handling-rules-book.html
+[chr.js](https://github.com/fnogatz/CHR.js/)
 [chr what else](https://arxiv.org/pdf/1701.02668.pdf)
+
+
+
+[Where is the CHR constraint store?](https://stackoverflow.com/questions/59234770/constraint-handling-rules-in-swi-prolog-does-the-constraint-store-exists-only?rq=1)
+
+
+
+https://github.com/brog45/chrplay
+
 
 compiler to sql statements. Makes sense.
 Multiset rewriting?
@@ -287,14 +306,88 @@ Man what hope is there of compiling a 7 year old haskell project?
 
 [yihong's egraph in chr. awesome](https://github.com/yihozhang/cchr/blob/master/experiment/egraph.cchr)
 
+[chr parsing](https://stackoverflow.com/questions/65647409/parsing-with-chr-constraint-handling-rules)
 
 CHR parsing
 “Analysing graph transformation systems through Constraint Handling Rules” by Frank Raiser and Thom Frühwirth
 “As time goes by: Constraint Handling Rules — A survey of CHR research from 1998 to 2007” by Jon Sneyers, Peter Van Weert, Tom Schrijvers and Leslie De Koninck
 
+
+https://stackoverflow.com/questions/67771845/prolog-get-a-list-of-all-the-rules-an-entity-verifies
+```prolog
+:- use_module(library(chr)).
+
+:- chr_constraint snore/1, sleep/1, breathe/1.
+:- chr_constraint eat/1, live/1, rest/1, collect/2, pull/2.
+
+snore(X) ==> breathe(X).
+snore(X) ==> sleep(X).
+sleep(X) ==> rest(X).
+
+breathe(X) ==> live(X).
+eat(X)     ==> live(X).
+sleep(X)   ==> live(X).
+
+live(X) \ live(X) <=> true.  % eliminates duplicates
+
+collect(Who,L),snore(Who)   <=> collect(Who,[snore|L]).
+collect(Who,L),sleep(Who)   <=> collect(Who,[sleep|L]).
+collect(Who,L),breathe(Who) <=> collect(Who,[breathe|L]).
+collect(Who,L),eat(Who)     <=> collect(Who,[eat|L]).
+collect(Who,L),live(Who)    <=> collect(Who,[live|L]).
+collect(Who,L),rest(Who)    <=> collect(Who,[rest|L]).
+
+pull(Who,L) \ collect(Who2,L2) <=> Who = Who2, L = L2.
+```
+
+[sicstus examples](https://sicstus.sics.se/sicstus/docs/4.2.0/html/sicstus/CHR-Examples.html#CHR-Examples)
+[swi examples](https://www.swi-prolog.org/pldoc/man?section=chr-examples)
 ```prolog
 
+:- module(leq,[leq/2]).
+:- use_module(library(chr)).
+
+:- chr_constraint leq/2.
+reflexivity  @ leq(X,X) <=> true.
+antisymmetry @ leq(X,Y), leq(Y,X) <=> X = Y.
+idempotence  @ leq(X,Y) \ leq(X,Y) <=> true.
+transitivity @ leq(X,Y), leq(Y,Z) ==> leq(X,Z).
+/*
+?- leq(X,Y), leq(Y,Z).
+leq(X, Z),
+leq(Y, Z),
+leq(X, Y).
+*/
 ```
+
+finite domain solver. 
+```prolog
+:- module(dom,[dom/2]).
+:- use_module(library(chr)).
+
+:- chr_constraint dom(?int,+list(int)).
+:- chr_type list(T) ---> [] ; [T|list(T)].
+
+dom(X,[]) <=> fail.
+dom(X,[Y]) <=> X = Y.
+dom(X,L) <=> nonvar(X) | memberchk(X,L).
+dom(X,L1), dom(X,L2) <=> intersection(L1,L2,L3), dom(X,L3).
+% ?- dom(A,[1,2,3]), dom(A,[3,4,5]).
+% A = 3.
+```
+
+[CHR debugging](https://www.swi-prolog.org/pldoc/man?section=chr-debugging)
+chr tracing
+chr_show_store
+
+https://www.swi-prolog.org/pldoc/man?section=chr-guidelines
+Don't bind rules in head
+mode declarations of chr affect performance. Huh
+c \ c <=> true is often desirable. Set semantics instead of multiset.
+
+### Compiling
+[KU leuven system : implementation and application](https://lirias.kuleuven.be/retrieve/33588). Hmm. Is CHR compiled into prolog code?
+[CCHR: the fastest CHR Implementation, in C](https://lirias.kuleuven.be/retrieve/22123)  
 
 
 ## Extralogical features
@@ -341,6 +434,13 @@ HiLog - My impression is this is a bit like "first order functional" programming
 Completion semantics
 Well-founded
 Completion semantics
+
+# Expert Systems
+See Also:
+- Databases
+Knowledge Representation
+https://en.wikipedia.org/wiki/Rete_algorithm
+
 
 # Lambda Prolog
 [lambda prolog page](https://www.lix.polytechnique.fr/~dale/lProlog/)
@@ -415,6 +515,15 @@ Jens Otten
 [A simple version of this implemented in tau prolog](https://www.philipzucker.com/javascript-automated-proving/) Prdocues proofs translated to bussproofs latex
 
 ### Stuff
+
+.type Lifted = Lit {x : symbol} | Y {x : Lifted, y : Lifted}
+
+.decl r(x : Lifted, y : Lifted)
+.decl a(x : Lifted)
+r(x1, $Y(x1,x2)), a($Y(x1,x2)) :- r(x1,x2).
+
+
+
 defeasible logic programming
 
 [O-keefe - An Elementary Prolog Library](http://www.cs.otago.ac.nz/staffpriv/ok/pllib.htm) some suggestions about unicode and other test stuff. Higher order operators

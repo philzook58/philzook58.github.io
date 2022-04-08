@@ -8,6 +8,7 @@ title: Databases
   - [Query Optimization](#query-optimization)
   - [The Chase](#the-chase)
 - [Ontology Formats](#ontology-formats)
+- [Optimal Joins](#optimal-joins)
 - [Streaming](#streaming)
   - [Schema](#schema-1)
   - [SQL](#sql)
@@ -107,7 +108,12 @@ shacl -
 semantic web
 
 [Knowdlege representation handbook](https://dai.fmph.uniba.sk/~sefranek/kri/handbook/handbook_of_kr.pdf)
+Course https://web.stanford.edu/class/cs227/Lectures/lec02.pdf very similar to bap knoweldge base
 
+# Optimal Joins
+[worst case optimal join algorithm](https://cs.stanford.edu/people/chrismre/papers/paper49.Ngo.pdf)
+[leapfrog triejoin](https://arxiv.org/pdf/1210.0481v5.pdf)
+https://github.com/frankmcsherry/blog/blob/master/posts/2018-05-19.md
 # Streaming
 [streaming 101](https://www.oreilly.com/radar/the-world-beyond-batch-streaming-101/)
 unbounded data
