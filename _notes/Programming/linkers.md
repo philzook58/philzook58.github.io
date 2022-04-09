@@ -74,6 +74,9 @@ Debug info
 unwind tables
 [Reliable and Fast DWARF-Based Stack Unwinding](https://hal.inria.fr/hal-02297690/document)
 <https://fzn.fr/projects/frdwarf/>
+[How debuggers work: Part 3 - Debugging information](https://eli.thegreenplace.net/2011/02/07/how-debuggers-work-part-3-debugging-information)
+
+
 C++ uses drawf unwind tables to implement exceptions
 
 - `.debug_line` maps addresses to source code lines
@@ -95,7 +98,33 @@ https://github.com/emersion/dareog
 [dwarf debug format](https://developer.ibm.com/articles/au-dwarf-debug-format/)
 .loc directive outputs into debug_lines table
 
+[pyelftools](https://github.com/eliben/pyelftools/) can read dwarf data
+
 [Introduction to the DWARF Debugging Format](https://dwarfstd.org/doc/Debugging%20using%20DWARF-2012.pdf)
+
+[dwarf standard](https://dwarfstd.org/doc/DWARF5.pdf)
+
+DIE - debugging information entry
+.debug_info field
+Tons of possible tags
+
+
+Dwarf expressions are stack machine based. They give the ability to compute values based on machine state.
+The mapping of dwarf registers to machine registers is archtecture specific
+
+Each DIE has a tag and attributes
+
+Chapter 4
+- `DW_TAG_variable` 
+-  `DW_TAG_formal_parameter` function call parameters
+-  `DW_TAG_constant`
+
+These have attribtures 
+`DW_AT_name` `DW_AT_type` `DW_AT_location` which are the most interesting
+
+
+You can get line number and column info from dwarf
+
 # Resources
 ld - linker editor
 

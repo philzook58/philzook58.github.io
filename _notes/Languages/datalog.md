@@ -6,19 +6,21 @@ title: Datalog
 - [What can you do with datalog?](#what-can-you-do-with-datalog)
   - [Program Analysis](#program-analysis)
 - [Implementations](#implementations)
+  - [Rel](#rel)
   - [Formulog](#formulog)
+  - [Datafrog](#datafrog)
   - [Flix](#flix)
   - [dr lojekyl](#dr-lojekyl)
 - [Souffle](#souffle)
   - [intrinsic functors](#intrinsic-functors)
-    - [Parsing](#parsing)
-    - [BitSets](#bitsets)
-      - [Bitset reflection](#bitset-reflection)
   - [Souffle proofs](#souffle-proofs)
-  - [Magic Set](#magic-set)
+  - [Emulating Prolog](#emulating-prolog)
+    - [Need Sets](#need-sets)
+    - [Magic Set](#magic-set)
   - [Examples](#examples)
   - [User Defined Functors](#user-defined-functors)
   - [ADTs](#adts)
+    - [Contexts are King](#contexts-are-king)
     - [field accessors](#field-accessors)
     - [Vectors](#vectors)
     - [Use ADT instead of autoinc()](#use-adt-instead-of-autoinc)
@@ -34,15 +36,45 @@ title: Datalog
       - [Provenance](#provenance)
       - [max min](#max-min)
       - [Equivalence relations](#equivalence-relations)
+      - [Negation](#negation)
       - [Choice domain](#choice-domain)
   - [Choice Domain](#choice-domain-1)
+  - [Negation](#negation-1)
   - [Souffle source](#souffle-source)
 - [Examples](#examples-1)
+  - [Reflection](#reflection)
+    - [BitSets](#bitsets)
+      - [Bitset reflection](#bitset-reflection)
+    - [Patricia Tries](#patricia-tries)
+    - [BDDs](#bdds)
+  - [BogoSort](#bogosort)
+  - [CHR](#chr)
   - [Lambda representation](#lambda-representation)
+  - [Parsing](#parsing)
+  - [Hilog](#hilog)
+  - [meta circular interpreter](#meta-circular-interpreter)
   - [Equality Saturation](#equality-saturation)
+  - [Term Rewriting](#term-rewriting)
+  - [Graph Algorithms](#graph-algorithms)
+  - [Translating Imperative Programs](#translating-imperative-programs)
+  - [Translating functional programs](#translating-functional-programs)
+  - [Model Checking](#model-checking)
+  - [Timestamping](#timestamping)
   - [Theorem Proving](#theorem-proving)
+    - [Skolemization for Existential Heads](#skolemization-for-existential-heads)
+    - [Goals / Queries](#goals--queries)
+    - [Uncurrying](#uncurrying)
+    - [Higher Order Clauses](#higher-order-clauses)
+    - [Universal Quantifier](#universal-quantifier)
+    - [Categorical Example](#categorical-example)
   - [Typeclass resolution.](#typeclass-resolution)
   - [Type checking / inferring](#type-checking--inferring)
+  - [Datalog Decompilers](#datalog-decompilers)
+- [Topics](#topics)
+  - [Datalog+- and the chase](#datalog--and-the-chase)
+  - [Tabling](#tabling)
+  - [Descriptive Complexity and Least Fiexed Point Logic](#descriptive-complexity-and-least-fiexed-point-logic)
+  - [Push based Datalog](#push-based-datalog)
 - [Resources](#resources)
 - [class(slotname : f(x,y) , ) :-](#classslotname--fxy----)
   - [building souffle emscripten](#building-souffle-emscripten)
@@ -51,8 +83,14 @@ title: Datalog
 When I say datalog, I might mean a couple intertwined different things. I might be referring to bottom up execution of logic programs.
 Or I might be concentrating on 
 
+
+Maybe part of what I like about datalog compared to prolog is
+1. complete search strategy
+2. logically pure. Kind of like Haskell's laziness kept it pure, Datalog's operation ordering is not obvious after compilation. This means extralogical stuff doesn't fly. 
+3. simple execution semantics. Pattern match over database
+
 # What can you do with datalog?
-Well, anything you can do with ordinary database queries. What do you do with those? I dunno. Search for patterns
+Well, just about anything you can do with ordinary database queries. What do you do with those? I dunno. Search for patterns?
 
 But then on top of that you can use recursive queries. And that is where things get more interesting.
 Program analysis.
@@ -63,7 +101,7 @@ topics:
 
 ## Program Analysis
 [Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
-
+[hash consed points to sets](https://yuleisui.github.io/publications/sas21.pdf)
 
 
 # Implementations
@@ -74,11 +112,26 @@ topics:
 - [differential datalog](https://github.com/vmware/differential-datalog)
 - dr lojekyll
 - formulog
-- datafrog
-- ascent https://dl.acm.org/doi/pdf/10.1145/3497776.3517779 <https://docs.rs/ascent/latest/ascent/>
+- [datafrog](https://github.com/rust-lang/datafrog) 
+- ascent https://dl.acm.org/doi/pdf/10.1145/3497776.3517779 <https://docs.rs/ascent/latest/ascent/> Rust macro based datalog.
+- uZ3 (mu z3) built into z3
+- logicblox
+- [flora2](http://flora.sourceforge.net/) ergo lite. Is this a datalog?
+## Rel
+[vid](https://www.youtube.com/watch?v=WRHy7M30mM4&t=136s&ab_channel=CMUDatabaseGroup)
+Relational AI
+
 ## Formulog
 SMT formulas as data. Interesting distinction with CHC where smt formula are predicates.
 Refinement type checker.
+Symbolic Execution
+
+## Datafrog
+Engine behind polonius?
+A kind of unsugared rust dsl
+[Description](https://github.com/frankmcsherry/blog/blob/master/posts/2018-05-19.md)
+I remember this being totally incomprehensible. I guess I must have lost my mind becaus it seems kind of nice now.
+
 
 ## Flix
 [online playground](https://play.flix.dev/)
@@ -107,7 +160,7 @@ Defined at relation level. Makes check before any insertion to see if something 
 `--show=initial-ram` and other options are quite interesting. The RAM is quite readable at least for small examples.
 
 
-as(a, number) I can cast ADTs to numbers?
+`as(a, number)` I can cast ADTs to numbers?
 https://github.com/yihozhang/souffle/blob/conglog/tests/congruence/math.dl  interesting
 
 
@@ -145,139 +198,6 @@ max min + * % ^
 
 `f(@g()) :- true` Sometimes you need to put true in the rhs position.
 
-### Parsing
-`substr` makes this feasible. This unfortuantely is going to reintern the string though. So hard to believe it'll ever be efficient.
-
-CYK Parsing is an example of dynamic programming.
-
-### BitSets
-```souffle
-.type bitset <: unsigned
-// Operations
-#define BOT 0x0
-//assuming 32 bit
-#define TOP  0xFFFFFFFF 
-#define SING(x) (0x1 bshl x)
-#define UNION(x,y) (x bor y)
-#define ADD(x,set) UNION(SING(x), set)
-#define INTER(x,y) (x band y)
-#define COMP(x) (TOP bxor x)
-#define DIFF(x,y) (x bxor INTER(x,y))
-
-// Predicates
-#define ISEMPTY(x) (x = 0)
-#define NONEMPTY(x) (x != 0)
-#define SUBSET(x,y) ISEMPTY(DIFF(x,y))
-#define ELEM(x, set) NONEMPTY(INTER(SING(x), set))
-
-.decl test(l : symbol, b : bitset)
-test("ex1", SING(1)).
-test("ex1", SING(2)).
-test("ex2", DIFF(set, SING(2))) :- test("ex1", set).
-test(l,UNION(s1,s2)) :- test(l, s1), test(l,s2).
-test(l,s1) <= test(l,s2) :- SUBSET(s1,s2).
-
-.output test(IO=stdout)
-
-```
-```
-#define FLAG0 0x0
-#define FLAG1 0x2
-#define FLAG2 0x4
-```
-
-#### Bitset reflection
-Can I use bitsets to reflect? Yes. Up to 32 entries allows.
-More if we use records of bitsets, n  * 32 element sets.
-
-
-```souffle
-.type bitset <: unsigned
-// Operations
-#define SING(x) (0x1 bshl x)
-#define UNION(x,y) (x bor y)
-#define INTER(x,y) (x band y)
-#define DIFF(x,y) (x bxor INTER(x,y))
-
-// Predicates
-#define ISEMPTY(x) (x = 0)
-#define NONEMPTY(x) (x != 0)
-#define SUBSET(x,y) ISEMPTY(DIFF(x,y))
-#define ELEM(x, set) NONEMPTY(INTER(SING(x), set))
-
-.type findomain = A {} | B {} | C {}
-.decl foo(a : findomain)
-foo($A()).
-foo($C()).
-
-// reflection
-.decl refl_foo(a : bitset)
-refl_foo(SING(as(x, unsigned))) :- foo(x).
-refl_foo(UNION(s1,s2)) :- refl_foo(s1), refl_foo(s2).
-refl_foo(s1) <= refl_foo(s2) :- SUBSET(s1,s2).
-
-// reify
-.decl reify_foo(x : findomain)
-reify_foo(as(x, findomain)) :- x = range(0,3), refl_foo(s), ELEM(x,s). // could make range 32 without hurting anything
-.output reify_foo(IO=stdout)
-.output refl_foo(IO=stdout)
-```
-
-Could we perhaps use sparse bitsets? If there are universes of 2^n we can encode into a record with unsigned representing if we a priori know limit of sparsity.
-Possibly better is to use a lattice approximate reflection. Like factored over approximation.
-
-```
-factor_reflect(sing(arg1), sing(arg2)) :- rel(arg1, arg2).
-```
-The cartesian product of these sets over approximates `rel`. Rather reminds me of relational division.
-
-Speculative idea: Could have reflection as a true primitive. User defined functors? Don't really get access to relations. 
-We need persitent set data structures if we want to do this. Garbage collection? We could mark them as special reflective relations `.decl foo() reflective`
-`reflect("rel_foo")`
-Something like this.
-```
-rel reflect(string name){
-   program.get_relation(name)
-}
-```
-Oh, user defined functors woould support this `store(k,v, oldmap)` or `add(v, oldset)`. It would be nice if we could somehow just make sets pointers to souffle's structure themselves, or projections thereof? I mean what can you really do in that case?
-
-
-Reflection by grouping.
-```
-reflect(group : unsigned, bitset)
-reflect(n / 32, sing(n % 32)) :- rel(n)
-```
-Can the process be iterated?
-
-We could build a binary search tree ADT and reflect to that. What does that really do though? Uhhh. Yeah That makes sense. ADTs are persistent data structures. Maybe something other than binary tree is most appropriate? It would make sense to make sure we have a canonical representation of a particular set. I don't think the record table gets garbage collected. So we might build a set for every subset of the relation. Not good.
-
-Another possibility, reflect into a bloom filter via hashing. Kind of a fun "lattice"? Yeah it is right?
-
-Reifying back into a relation
-n lg n overhead:
-need to define split macro. to split set in two. Maybe it takes the upper and lower range.
-
-```
-#define split(upper,lower,bs) ((-1 << lower) & (-1 >> upper) & bs)
-.decl reify(size : unsigned, offset: unsigned, set : bitset)
-reify(32, 0, n) :- bitset(n).
-reify(n/2, m, bs1), reify(n/2,m + n/2, bs2) :- reify(n,m, bs), n > 1, bs1 = split(m, m + n/2 bs), bs2 = split(m+n/2, m + n, bs)
-done(v) :- reify(1, v, bs), NONEMPTY(b)
-```
-
-Oh, of course you could straight up unroll it
-```
-#REIFY(r2, r1, n) r2(1) :- r1(bs), ELEM(n,bs)
-// done(1) :- bitset(bs), ELEM(1,bs). 
-REIFY(done,bitset,1).
-REIFY(done,bitset,2).
-REIFY(done,bitset,3).
-// and so on
-```
-
-Or it could be componentized.
-
 
 ## Souffle proofs
 Manual exploration of just dump it. Does the dump memoize?
@@ -293,7 +213,52 @@ exit
 
 You can emulate proof production using subsumption. See below.
 
-## Magic Set
+## Emulating Prolog
+Datalog is bottom up and prolog is top down. In a sense datalog feels “push” and prolog feels “pull”. These viewpoints can be translated to some degree to each other. Prolog can gain some benefits of datalog via tabling, which is a memoization technique. Likewise datalog can become goal driven via the “magic set transformation”, The following is a simplified but intuitive presentation I believe of the vague idea.
+
+Relations in prolog can be used in different [modes](https://www.swi-prolog.org/pldoc/man?section=modes) (this is prolog terminology btw. An interesting concept). It’s part of the beauty of prolog that relations are sometimes reversible or generative if written to be so. Sometimes prolog programs are written to only behave correctly if used as if they were essentially a function.
+
+### Need Sets
+
+
+If you find yourself needing what is essentially a function call on a relation, you can define “need” relation for that relation that takes the arguments. Then the regular clauses producing that relation also take the need relation to push in the actually needed instantiations of the clause. Here is an example for factorial. We examine the body of fact to see that we need the recursive call evaluated in order to evaluate.
+
+```souffle
+.decl fib(n : unsigned, m : unsigned) //choice-domain n
+.decl need_fib(n : unsigned)
+
+fib(0,0).
+fib(1,1).
+fib(n, i + j) :- need_fib(n), fib(n-1,i), fib(n-2,j), n > 1.
+need_fib(n-1), need_fib(n-2) :- need_fib(n), n > 1.
+
+need_fib(6).
+.output fib(IO=stdout)
+.output need_fib(IO=stdout)
+```
+
+We have the expense of the extra table but we have gained pull based evaluation. Bottom up evaluation of fact would not terminate without an a priori bound on the argument. We could use subsumption to reduce the size of this table in this case.
+
+Choice domain may present an optimization. It is marking the relation as functional in character, which in principle could allow soufflé to use an optimized data structure. I hope it makes things faster and doesn’t just add unnecessary checks on insert.
+I a little bit suspect it will just make things slower.
+
+Basically the idea is, you need to pick which top down modes you want to support, i.e. which of the prolog fields you expect to be grounded and which you don't. Then you can make a new relation that holds only the grounded fields. You make clauses that push down the need for every recursive call.
+When you're translating typical functional algorithms, there is typically only the one functional mode required `-+`.
+
+If you are using ADTs then perhaps one should consider the flattened version of the adt? ADTs only support some particular modes in the first place either ---+ or +++-. Give all args or give term and get args.
+
+
+We could possibly subsume to reclaim need_fib? Hardly seems worth it.
+```
+need_fib(n) <= need_fib(m) :- fib(n,_). // doesn't do anything. Subsumption bug?
+need_fib(n) <= need_fib(m) :- fib(n,_), n < m. // this one works. I don't know why n < m is required.
+```
+
+In what sense is need_set representing the call stack?
+
+### Magic Set
+
+
 
 Specializes datalog program to a particular query / output.
 Query answer transfomation
@@ -306,8 +271,64 @@ In prolog SLD resolution, there are program points. We could create relations de
 For annotated predicates we could move the annotations as extra fields of the predicates instead of as annotations. This feels more natural when interpreting as a dataflow analysis. Annotations are a describing the binding state? (annotations are lattice? Maybe so but not in the right way)
 
 "It is a form of partial evaluation: at query time, rewrite (specialize) the entire program to an equivalent one, then evaluate it bottom-up. A binding-time analysis identifies which predicates benefit from specialization. Sideways-information passing strategy guides the rewrite."
+
 "I see it as a way to "hack" a bottom-up execution (from facts) into computing top-down (from queries). John Gallagher's query-answer transformation is related to that and used for program analysis https://arxiv.org/pdf/1405.3883.pdf, https://bishoksan.github.io/papers/scp18.pdf"
 
+
+
+Emulating clp evaluation of prolog. The constraint store. Dif constraint into egglog.
+What matters in a prolog context.
+Order of goals hypothetically doesn’t matter? We want to hash cons to unique representatives of stuff that doesn't matter.
+Scoping of fresh vars? Maybe a list of clauses that produced fresh vars. Does that order matter in principle? It might because unification can
+Dif kind of lets us do a piece of scope escape prevention. Doesn’t contain.
+What causes unification vars to exists? Presence fresh in a rule.
+De bruin as cause. The binders cause variables to exist. Hence de bruin is close to a canonical rep.
+Varmap says usage sites cause to exist?
+Existential var in body. We can choose to ignore in datalog. Or we can say it would have been grounded eventually by some grounding site. (Or terminated on a ground fact.) yeah. A non ground fact could be seen as a new kind of constant?
+
+[magic set slides](http://users.informatik.uni-halle.de/~brass/lp07/c7_magic.pdf)
+- tail recursion is more efficient in sld resolution.
+- metainterpeter. partial evaluation of metainterpeter with respect ot program and query, but not database. "sldmagic"
+
+[A Framework for Bottom-Up Simulation of SLD-Resolution](https://users.informatik.uni-halle.de/~brass/push/publ/iclp14.pdf) bottom up metainterpeters
+SLDMagic
+"Sniped! I have never understood it but have wanted to. The output has always looked to me like constprop (bottom-up) and specialization (top-down), repeating." - Goodman
+Resprenting sets of goals.
+
+
+binding patterns using Option. Could also allow options in fields of adts.
+```
+.comp Option<T> {
+  .type t = None {} | Some {x : t} 
+}
+
+fib()
+```
+What about `foo(X,X,1)`? `foo(None, None, Some(1))` is an over approximation of this case, losing the equivalence info. Well, therse constraints are also probably finitely enumerable.
+
+
+sideways information passing strategy - SIPS. I think this is kind of picking an equivalent prolog evaluation order
+
+[Efficient bottom-up computation of queries on stratified databases 1991](https://www.sciencedirect.com/science/article/pii/074310669190030S)
+
+[Query evaluation in recursive databases: bottom-up and top-down reconciled bry](https://www.sciencedirect.com/science/article/abs/pii/0169023X90900178)
+
+
+[Abstract Interpretation of Logic Programs Using Magic Transformations](https://www2.cs.arizona.edu/~debray/Publications/magic.pdf)
+
+[Demand transformation](https://arxiv.org/pdf/1909.08246.pdf)
+Is this he proper term for "need set"?
+[More Efficient Datalog Queries: Subsumptive Tabling Beats Magic Sets∗](http://epilog.stanford.edu/logicprogramming/readings/tekle.pdf)
+Is this saying need_sets may transfer to each other? Or subsume each other?
+Can't even express this i don't think
+p(x,y) <= p(x) :- 
+Unless you use the $Var | $Lit wrapper
+But this isn't even right.
+p($Var(), $Var()) <= p($Lit(), $Lit())
+
+
+KT Tekle
+Liu
 
 ## Examples
 
@@ -335,6 +356,29 @@ What about normalization? That's intriguing
 BitSets
 
 [souffle lib](https://github.com/souffle-lang/souffle-lib)
+
+Some experiments of mine
+
+- [souffle-z3](https://github.com/philzook58/souffle-z3) We can use the Z3 C bindings if we make a little helper function to generate a Z3 context.
+- [souffle-lua](https://github.com/philzook58/souffle-lua) We can ffi call into lua for easier more dynamic user defined functor writing. Maybe I should try using guile?
+
+For foreign data types you need to make your own external interning table, or the cheap prototyping thing to do is use serialization / deserialization to store as strings.
+In Z3 you can use pointers, but that is because Z3 is internally hash consing.
+You can briefly hold pointers as unsigned inside a rule, but you should probably compile souffle in 64 bit mode.
+
+gnu multiprecision
+Nah, this won't work. I need to do allocation. Unless I can call malloc?
+```
+.pragma "libraries" "gmp"
+.type mp_int <: unsigned
+.type mp_str <: symbol
+.functor mpz_get_str(unsigned,unsigned,mp_int):symbol
+.functor mpz_init(mp_int) // hmm. This won't work
+.functor mpz_set_str(mp_int, mp_str, ):number
+```
+
+
+
 lib_ldscript
 use `whereis` if ascii `cat` the file and include the things in group
 `souffle libc.dl -lm-2.31 -lmvec`
@@ -435,6 +479,11 @@ as($A(), number)
 
 You can access the "id" associated with a value also `as([1,2,3],number)` for devious ends
 
+### Contexts are King
+a very useful thing to note is that you should use
+contexts, delimited continuations, goal stack, zippers, to implement control flow.
+Datalog is bottom up. In a sense it's a giant while loop. When you bottom upify or loopify recursive algorithms, sometimes you need to reify the call stack (or whatever else you might call it). See defunctionalize the continuation talk.
+These contexts are expressible as 
 
 ### field accessors
 It is a pain that there isn't a good way to make trustworthy fresh variables using `mcpp` due to lack of `__COUNTER__`. Best I can figure is hacks using `__LINE__` and concatenation. Otherwise insist on variables coming from outside into macro.
@@ -470,12 +519,24 @@ I am in no way endorsing this. Actual representation of vectors have size field 
 .type vector = [size : unsigned, key : unsigned]
 ```
 
-safer alternaitve
+safer alternative: We can make finite sized vectors as an adt
 ```
 .comp Vector<T>{
 .type vector = V0 {} | V1 {x1 : T} | V2 {x1 : T, x2 : T} | V3 {x1 : T, x2 : T, x3 : T} | V4 {x1 : T, x2 : T, x3 : T, x4 : T}
 }
+
 ```
+
+Or we can partially unroll a linked list to avoid so much indirection cost.
+
+```
+.comp Vector<T>{
+.type vector = V0 {} | V1 {x1 : T} | V2 {x1 : T, x2 : T} | V3 {x1 : T, x2 : T, x3 : T} | V4 {x1 : T, x2 : T, x3 : T, x4 : T}
+     | Cons {x1 : T, x2 : T, x3 : T, x4 : T, tail : vector}  
+}
+```
+
+
 
 ### Use ADT instead of autoinc()
 autoinc() is a generative counter. It is nice because it is efficient. However, the stratification requirements on it are gnarly. It is too imperative, not declarative enough andyou get in trouble.
@@ -508,6 +569,9 @@ You get the C preprocessor run by default over souffle files. I find this incred
 
 ### Lattices
 See also bitset lattice above
+
+Lattices can be sometimes encoded into finite sets. Consider the 4 valued lattice of unknonw, true, false, conflict. These are the power sets of a set of size 2. This can be represented as two tables which can be in different states of full. Because of stratified negation, it is not always possible to observe things. You shouldn't really observe anything other than filter questions anyhow though. Anf you're always above unknown.
+true(a), false(a)
 
 You often need 1 rule to combine pieces with the join of the lattice and 1 rule for subsumption. This is probably not efficient, but it is works.
 It would be be nice to have a construct that did both at once efficiently. We should be immeditaly erasing a and b when we compute their join.
@@ -749,6 +813,20 @@ canon("x","y").
 canon("y","z").
 .output canon(IO=stdout)
 ```
+#### Negation
+Can I emulate negation using subsumption? Maybe remove negated clauses from rule, and later delete them?
+
+Need to duplicate all clauses to negated versions?
+
+f(a,b) <= f(dummy,dummy) :- not_f(a,b)
+not_f() <= not_f() :- f(a,b).
+
+f(a,b) :- g(a,b)
+not_g(a,b) :- not_f(a,b)
+
+
+
+But f(a,b) does damage we need to undo?
 
 #### Choice domain
 
@@ -761,6 +839,21 @@ Can I combine choice domain and lattice. But choice domain once you pick you're 
 well. I can recover lattice style via an explicit congruence closure. So. it doesn't matter I guess.
 
 
+## Negation
+Stratification
+
+See answer set programming and stable model semantics
+
+What about
+
+foo(x) :- biz, !foo(z).
+
+and making it stratified by deleting all negative atoms (an overpapproximation?) And then using the overapproximation of !.
+
+foo1(x) :- biz.
+foo(x) :- biz, !foo1(z)
+
+
 
 ##  Souffle source
 - synthesizer - actual code printers
@@ -771,16 +864,499 @@ well. I can recover lattice style via an explicit congruence closure. So. it doe
 
 
 # Examples
+## Reflection
+### BitSets
+```souffle
+.type bitset <: unsigned
+// Operations
+#define BOT 0x0
+//assuming 32 bit
+#define TOP  0xFFFFFFFF 
+#define SING(x) (0x1 bshl x)
+#define UNION(x,y) (x bor y)
+#define ADD(x,set) UNION(SING(x), set)
+#define INTER(x,y) (x band y)
+#define COMP(x) (TOP bxor x)
+#define DIFF(x,y) (x bxor INTER(x,y))
+
+// Predicates
+#define ISEMPTY(x) (x = 0)
+#define NONEMPTY(x) (x != 0)
+#define SUBSET(x,y) ISEMPTY(DIFF(x,y))
+#define ELEM(x, set) NONEMPTY(INTER(SING(x), set))
+
+.decl test(l : symbol, b : bitset)
+test("ex1", SING(1)).
+test("ex1", SING(2)).
+test("ex2", DIFF(set, SING(2))) :- test("ex1", set).
+test(l,UNION(s1,s2)) :- test(l, s1), test(l,s2).
+test(l,s1) <= test(l,s2) :- SUBSET(s1,s2).
+
+.output test(IO=stdout)
+
+```
+```
+#define FLAG0 0x0
+#define FLAG1 0x2
+#define FLAG2 0x4
+```
+
+#### Bitset reflection
+Can I use bitsets to reflect? Yes. Up to 32 entries allows.
+More if we use records of bitsets, n  * 32 element sets.
+
+
+```souffle
+.type bitset <: unsigned
+// Operations
+#define SING(x) (0x1 bshl x)
+#define UNION(x,y) (x bor y)
+#define INTER(x,y) (x band y)
+#define DIFF(x,y) (x bxor INTER(x,y))
+
+// Predicates
+#define ISEMPTY(x) (x = 0)
+#define NONEMPTY(x) (x != 0)
+#define SUBSET(x,y) ISEMPTY(DIFF(x,y))
+#define ELEM(x, set) NONEMPTY(INTER(SING(x), set))
+
+.type findomain = A {} | B {} | C {}
+.decl foo(a : findomain)
+foo($A()).
+foo($C()).
+
+// reflection
+.decl refl_foo(a : bitset)
+refl_foo(SING(as(x, unsigned))) :- foo(x).
+refl_foo(UNION(s1,s2)) :- refl_foo(s1), refl_foo(s2).
+refl_foo(s1) <= refl_foo(s2) :- SUBSET(s1,s2).
+
+// reify
+.decl reify_foo(x : findomain)
+reify_foo(as(x, findomain)) :- x = range(0,3), refl_foo(s), ELEM(x,s). // could make range 32 without hurting anything
+.output reify_foo(IO=stdout)
+.output refl_foo(IO=stdout)
+```
+
+Could we perhaps use sparse bitsets? If there are universes of 2^n we can encode into a record with unsigned representing if we a priori know limit of sparsity.
+Possibly better is to use a lattice approximate reflection. Like factored over approximation.
+
+```
+factor_reflect(sing(arg1), sing(arg2)) :- rel(arg1, arg2).
+```
+The cartesian product of these sets over approximates `rel`. Rather reminds me of relational division.
+
+Speculative idea: Could have reflection as a true primitive. User defined functors? Don't really get access to relations. 
+We need persitent set data structures if we want to do this. Garbage collection? We could mark them as special reflective relations `.decl foo() reflective`
+`reflect("rel_foo")`
+Something like this.
+```
+rel reflect(string name){
+   program.get_relation(name)
+}
+```
+Oh, user defined functors woould support this `store(k,v, oldmap)` or `add(v, oldset)`. It would be nice if we could somehow just make sets pointers to souffle's structure themselves, or projections thereof? I mean what can you really do in that case?
+
+
+Reflection by grouping.
+```
+reflect(group : unsigned, bitset)
+reflect(n / 32, sing(n % 32)) :- rel(n)
+```
+Can the process be iterated?
+
+We could build a binary search tree ADT and reflect to that. What does that really do though? Uhhh. Yeah That makes sense. ADTs are persistent data structures. Maybe something other than binary tree is most appropriate? It would make sense to make sure we have a canonical representation of a particular set. I don't think the record table gets garbage collected. So we might build a set for every subset of the relation. Not good.
+
+Another possibility, reflect into a bloom filter via hashing. Kind of a fun "lattice"? Yeah it is right?
+
+Reifying back into a relation
+n lg n overhead:
+need to define split macro. to split set in two. Maybe it takes the upper and lower range.
+
+```
+#define split(upper,lower,bs) ((-1 << lower) & (-1 >> upper) & bs)
+.decl reify(size : unsigned, offset: unsigned, set : bitset)
+reify(32, 0, n) :- bitset(n).
+reify(n/2, m, bs1), reify(n/2,m + n/2, bs2) :- reify(n,m, bs), n > 1, bs1 = split(m, m + n/2 bs), bs2 = split(m+n/2, m + n, bs)
+done(v) :- reify(1, v, bs), NONEMPTY(b)
+```
+
+Oh, of course you could straight up unroll it
+```
+#REIFY(r2, r1, n) r2(1) :- r1(bs), ELEM(n,bs)
+// done(1) :- bitset(bs), ELEM(1,bs). 
+REIFY(done,bitset,1).
+REIFY(done,bitset,2).
+REIFY(done,bitset,3).
+// and so on
+```
+
+Or it could be componentized.
+
+### Patricia Tries
+[fillaitre](https://www.lri.fr/~filliatr/ftp/ocaml/ds/ptset.ml.html)
+```souffle
+.type ptrie = Nil {} 
+            | Leaf {x : unsigned} 
+            | Branch {prefix : unsigned, branchbit : unsigned, l : ptrie, r : ptrie}
+
+.type Bool = False {} | True {}
+/*
+.decl mem(x : unsigned, t : ptrie, tf : Bool)
+mem($Nil(), _, $False()). // not valid
+*/
+.decl add(x : unsigned, t : ptrie, t2 : ptrie)
+add(x, $Empty(), $Leaf(x)).
+add(x, $Leaf(x)), $Leaf(x)).
+
+```
+### BDDs
+bddbdddb is a datalog that used binary decision diagrams as it's backing store. It's an interesting idea. BDDs are very powerful.
+
+BDDs are a relaitve of hash consing.See [type safe modular hash consing](https://www.lri.fr/~filliatr/ftp/publis/hash-consing2.pdf) section 3.3
+
+Souffle ADTs are a variety of hash cons.
+
+```souffle
+.type BDD = True {} | False {} | ITE {c : number, t : BDD , e : BDD}
+
+bdd_and(x : BDD, y : BDD, z : BDD)
+//bdd_and($True(), $True(), $True()).
+//bdd_and($True(), $False(), $False()).
+//bdd_and($False(), $True(), $False()).
+//bdd_and($False(), $False(), $False()).
+bdd_and(x,y, $False()) :- need_bdd_and(x, y), {y = $False() ; x = $False()}.
+bdd_and(x,y, x) :- need_bdd_and(x, y), y = $True().
+bdd_and(x,y, y) :- need_bdd_and(x, y), x = $True().
+//bdd_and(x,y, $ITE( cx , ) ) :- need_bdd_and($ITE(cx, tx, ex), $ITE(cy,ty,ey)), cx < cy, bdd_and(tx,   ) .
+//bdd_and(x,y, $ITE( cx , ) ) :- need_bdd_and($ITE(cx, tx, ex), $ITE(cy,ty,ey)), cx < cy, bdd_and(  ) .
+bdd_and(x,x,x) :- need_bdd_and(x,x).
+bdd_and(x,y,z) :- need_bdd_and(x,y), x = $ITE(cx, tx, ex), y = $ITE(cy,ty,ey), x != y,
+      {
+        cx < cy, bdd_and(tx, y, zx), bdd_and(xe, y, ze), zc = xc;
+        cx = cy, bdd_and(tx, ty, zx), bdd_and(xe, ye, ze), zc = $ITE(cx, zt, ze);
+        cx > xy, bdd_and(x, yt, zt), bdd_and(x, ye, ze), zc = yc
+      }, z = $ITE(zc,zt,ze).
+```
+
+Wait... are bdds of the bits kind of like hash consed patricia trees?
+
+## BogoSort
+Hmmmm... Can I do this?
+
+```souffle
+.decl array(index : unsigned, n : number)
+array(0,14)
+array(1,934).
+array(2,49).
+array(3,-23209).
+
+// permute
+array(i+1,n) :- array(i,n), i < 3.
+array(i-1,n) :- array(i,n), i > 0.
+
+// subsume bad possibilities...?
+array(i-1, n) <= array(i, n) :- i > 0, 
+```
+What about building a relation of pairs
+```
+pair(a,b) <= pair(b,a) :- b <= a, a <= b
+```
+
+## CHR
+Constraint handling rules have some similarity to datalog with subsumption and sometimes you can translate programs.
+Datalog has set semantics, CHR has multiset semantics. Sometimes you add CHR rules to make set semantics
+subsumption allows some deletion.
+
+
 ## Lambda representation
 What is the most appropriate way? Probably we want to implement some kind of machine flavored implementation.
 Or maybe a graph like representation.
 
-I could literally do hash cons modulo alpha. I can dor xor trick.
+I could literally do hash cons modulo alpha. I can dor xor trick. Hmm. PosTree is a trie.
 
 Could make user defined functor for substition.
 
 I could make udf for normalization. And memoize into a choice domain?
 
+Combinators
+
+lambda datalog. Pattern matching on ground lambda terms is good.
+
+## Parsing
+
+
+[CYK Parsing](https://en.wikipedia.org/wiki/CYK_algorithm) is an example of dynamic programming.
+Earley = magic set of CYK. Doing it on demand
+
+`substr` makes this feasible. This unfortuantely is going to reintern the string though. So hard to believe it'll ever be efficient.
+
+
+```souffle
+
+.decl str(x : symbol)
+.type char <: symbol
+.decl chars(x : symbol, i : number, c : symbol )
+chars(x, i, c) :- str(x), i = range(0, strlen(x)), c = substr(x, i, 1).
+
+str("())()").
+str("()()").
+str("((()))").
+//.output chars(IO=stdout)
+
+
+.decl parens(x : symbol, i : number, j : number)
+parens(x, i, i) :- str(x), i = range(0, strlen(x)+1).
+
+//parens(x, i-1, j+1) :- i >= 1, "(" = substr(x,i-1,1), parens(x, i, j), ")" = substr(x,j,1).
+parens(x, i-1, j+1) :- i >= 1, chars(x,i-1,"("), parens(x, i, j), chars(x, j, ")").
+
+// pretty expensive
+#define cat3(x,y,z) cat(x,cat(y,z))
+#define cat4(x,y,z,w) cat(x, cat3(y,z,w))
+parens(x, i-1,j+1) :- i >= 1, parens(x,i,j), substr(x,i-1,j-i+2) = cat3("(", substr(x,i,j-i) , ")").
+
+parens(x, i, k) :- parens(x,i,j), parens(x,j,k).
+.output parens(IO=stdout)
+.decl parsed(x : symbol)
+parsed(x) :- parens(x, 0, strlen(x)).
+.output parsed(IO=stdout)
+
+.type myparens = Append {x :myparens , y : myparens} | Parens {x : myparens} | Empty {}
+
+.decl parens2(x : symbol, i : number, j : number, p : myparens)
+// P --> eps
+parens2(x, i, i, $Empty()) :- str(x), i = range(0, strlen(x)+1).
+// P --> (P)
+parens2(x, i-1, j+1, $Parens(a)) :- i >= 1, chars(x,i-1,"("), parens2(x, i, j, a), chars(x, j, ")").
+// P --> PP
+parens2(x, i, k, $Append(a,b)) :- parens2(x,i,j, a), parens2(x,j,k, b), a != $Empty(), b != $Empty().
+
+.decl parsed2(x : symbol, p : myparens)
+parsed2(x, a) :- parens2(x, 0, strlen(x), a).
+.output parsed2(IO=stdout)
+
+
+
+```
+
+
+
+
+Chomsky normal form. Only allow epsilon at start
+
+Magic set. The query we actuall want in `parsed(x)`.
+needparens(x,i,j) guard predicate in front. But so what
+
+
+I
+```souffle
+#define cat3(x,y,z) cat(x,cat(y,z))
+#define cat4(x,y,z,w) cat(x, cat3(y,z,w))
+.decl str(x : symbol)
+.decl needparens(x : symbol)
+.decl parens(x : symbol)
+str("()()").
+str("()(()())").
+// inefficient, but cleaner to write. Don't have to track i,j
+// Maybe it's not even that inefficient when you consider semi naive
+// We get sharing between different parses also.
+needparens(y) :- str(x), i = range(0,strlen(x)), len = range(1,strlen(x) - i + 1), y = substr(x, i, len).
+parens("").
+parens(y) :- needparens(y), parens(x), y = cat3("(", x, ")").
+parens(z) :- needparens(z), parens(x), parens(y), z = cat(x,y).
+.output parens(IO=stdout)
+
+// Could also make more efficient if we use smarter needsparens.
+// should only propagate needs parens if the first and last characters are parens or something.
+// We're also filling up our symbol table here. Eh.
+
+// If I donthave the needsparens guard, this wouldn't terminate. cat3 would keep making new strings.
+
+```
+
+```souffle
+#define cat3(x,y,z) cat(x,cat(y,z))
+.type parens =  Empty {} | Parens {x : parens} | Append {x : parens, y : parens} 
+.decl str(x : symbol)
+.decl needparse(x : symbol)
+.decl parses(x : symbol, p : parens)
+str("()(()())").
+needparse(y) :- str(x), i = range(0,strlen(x)), len = range(1,strlen(x) - i + 1), y = substr(x, i, len).
+parses("", $Empty()). // P --> eps
+parses(y, $Parens(p)) :- needparse(y), parses(x,p), y = cat3("(", x, ")"). // P --> (P)
+parses(z, $Append(px,py)) :- needparse(z), parses(x,px), parses(y,py), z = cat(x,y), // P --> PP
+                             px != $Empty(), py != $Empty(). // For termination
+.output parses(IO=stdout)
+/*x       p
+===============
+()(()())        $Append($Parens($Empty), $Parens($Append($Parens($Empty), $Parens($Empty))))
+                $Empty
+()              $Parens($Empty)
+(()())          $Parens($Append($Parens($Empty), $Parens($Empty)))
+()()            $Append($Parens($Empty), $Parens($Empty)) */
+```
+
+Easy way to regexp?
+If I want identifiers
+```python
+import string
+print(" ".join([f"lower(\"{c}\")." for c in string.ascii_lowercase  ]))
+print(" ".join([f"upper(\"{c}\")." for c in string.ascii_uppercase  ]))
+print(" ".join([f"digit(\"{c}\")." for c in range(10)  ]))
+```
+
+```souffle
+.decl lower(c : symbol)
+.decl upper(c : symbol)
+.decl char(c : symbol)
+.decl digit(c : symbol)
+lower("a"). lower("b"). lower("c"). lower("d"). lower("e"). lower("f"). lower("g"). lower("h"). lower("i"). lower("j"). lower("k"). lower("l"). lower("m"). lower("n"). lower("o"). lower("p"). lower("q"). lower("r"). lower("s"). lower("t"). lower("u"). lower("v"). lower("w"). lower("x"). lower("y"). lower("z").
+upper("A"). upper("B"). upper("C"). upper("D"). upper("E"). upper("F"). upper("G"). upper("H"). upper("I"). upper("J"). upper("K"). upper("L"). upper("M"). upper("N"). upper("O"). upper("P"). upper("Q"). upper("R"). upper("S"). upper("T"). upper("U"). upper("V"). upper("W"). upper("X"). upper("Y"). upper("Z").
+digit("0"). digit("1"). digit("2"). digit("3"). digit("4"). digit("5"). digit("6"). digit("7"). digit("8"). digit("9").
+
+alpha(c) :- lower(c) ; upper(c).
+
+
+```
+
+
+Earley parsing. Put the carefullness in needparse instead
+```souffle
+#define cat3(x,y,z) cat(x,cat(y,z))
+#define FIRST(rem) substr(rem,0,1)
+#define LAST(rem) substr(rem,strlen(rem)-1,1)
+
+.type parens =  Empty {} | Parens {x : parens} | Append {x : parens, y : parens} 
+.decl str(x : symbol)
+.decl needparse(x : symbol)
+.decl parses(x : symbol, p : parens)
+needparse("()(()())").
+needparse(y) :- needparse(x), FIRST(x) = "(", LAST(x) = ")", y = substr(x,1,strlen(x)-2).
+// only one iterator so that's nice I guess. And only because it's such a nasty rule
+needparse(y), needparse(z) :- needparse(x), i = range(0,strlen(x)), y = substr(x,0,i), z = substr(x,i,strlen(x)-i). 
+
+
+
+parses("", $Empty()). // P --> eps
+parses(y, $Parens(p)) :- needparse(y), parses(x,p), y = cat3("(", x, ")"). // P --> (P)
+parses(z, $Append(px,py)) :- needparse(z), parses(x,px), parses(y,py), z = cat(x,y), // P --> PP
+                             px != $Empty(), py != $Empty(). // For termination
+.output parses(IO=stdout)
+```
+
+```souffle
+
+.type list_sexp = [hd : sexp, tl : list_sexp]
+.type sexp = List {x : list_sexp} | Atom {x : symbol}
+
+word(s,i,j) :- chars(s, i-1, c), alpha(c), word(s, i, j).
+
+
+```
+
+
+DCG
+parser combinator
+We need like a whole stack then. Blugh
+```souffle
+#define NEXT(rem) substr(rem,1,strlen(rem1)-1)
+#define FIRST(rem) substr(rem1,0,1)
+parse(x,NEXT(rem)) :- parse(x,rem1), FIRST(rem) = ")".
+
+
+// regexp
+#define NEXT(rem) substr(rem,1,strlen(rem1)-1)
+#define FIRST(rem) substr(rem1,0,1)
+#define FIRST(rem, c) substr(rem1,0,1) = c
+
+#define STAR(class) parse(x,NEXT(rem)) :- parse(x,rem1), FIRST(rem) = c, class(c).
+starupper(x,NEXT(rem)) :- starupper(x,rem1), FIRST(rem) = c, upper(c).
+
+// as transition system
+recog("nextstate",x, rem) :- recog("upper", x, rem) , FIRST(rem) = c, !upper(c), 
+
+// as transition system. don't need x really. uhhh. Yes we do. We need a bottom up transform then.
+recog("nextstate", rem) :- recog("upper", rem) , FIRST(rem) = c, !upper(c), 
+
+
+
+```
+So it seems like this is a general transfomation. I can exchange a global context parameter x that I dig into with substr for a need predicate.
+The two are uncoupled. Recurse over the thing first to reak it up, then bottom up the pieces. Don't do in one pass.
+
+
+
+
+
+- [earley parsing](https://github.com/souffle-lang/souffle/blob/master/tests/example/earley/earley.dl)
+- [parser in datalog](https://homes.cs.washington.edu/~bodik/ucb/cs164/sp13/lectures/09-Datalog-CYK-Earley-sp13.pdf) bottom up parsing
+- [parsing and generation as datalog queries](https://aclanthology.org/P07-1023.pdf)
+- [DCGs + memoizing = Packrat Parsing](https://mercurylang.org/documentation/papers/packrat.pdf)
+
+## Hilog
+```souffle
+.type binreltag = Edge {} | Star {r : binreltag}
+// Closure is a bad name for this example
+
+.decl binrel( r : binreltag, x : number, y : number)
+binrel($Star(r), x, y) :- needstar(r), binrel(r, x, y). // hmm this'll never stop becaus we'll keep starring stars. Perhaps needs to be predicated upon need.
+binrel($Star(r), x, z) :- needstar(r), binrel(r, x, y), binrel($Star(r), y, z).
+
+.decl needstar(r : binreltag)
+needstar($Edge()).
+
+binrel($Edge(), 1, 2).
+binrel($Edge(), 2, 3).
+binrel($Edge(), 3, 4).
+
+.output binrel(IO=stdout)
+```
+It may also be nice to make a universal type (for which number actually serves pretty well?).
+
+
+## meta circular interpreter
+See extensive prolog literature on meta circular intepreters
+https://www.metalevel.at/acomip/
+
+```souffle
+//.type Pred = [name : symbol, args : TList]
+//.type Clause = {head : }
+.type pat = Var {x : symbol} | Lit { x : number}
+.type relpat = R0 { rel : symbol } | R1 {rel : symbol, x : pat} // | R2 {}
+.type body = [ hd : relpay, tl : body ]
+
+// .type body = Conj {a : body, b : body} | Pat {p : relpat}
+// or inline 
+
+// alternatively make clause a data structure. But whatever. clause becomes a global object.
+.decl clause(hd : relpat, body : body)
+clause(hd, body).
+// clause(program, hd, body) for multiple programs
+
+.type ctx = [ snoc : body, cons : body ]
+
+
+// Probably shouldn't be so controlling about match
+match(   nextctx) :- match($R1(r, $Lit(x)), ctx), unaryrel(r, x)
+headstate(   ) :- pat_in(body, $R1($Var(x)) ), headstate($R1(r, $Var(x)) , body)
+// no but you need more state than just what's in the head. edge(x,y), path(y,z) needs y around for consistency
+
+// eq( body , , ). for union find? 
+
+:- match(_snoc, nil)
+           :- $R1
+
+.type varbind = [x : number , vbind ; varbind ]
+index( varbind, n : unsigned, x : number)
+index()
+// require labelling variables in order they appear to simplify
+// Pre Normalize out unification?
+(  ctx, $R1(r, $Var())  ,varbind), unrel(r,y), index(varbind ,n,$Var())
+(  ctx, $R1(r, $Var(n))  ,varbind), index( ,n,$Lit(y)), unrel(r, y).
+
+
+```
 
 ## Equality Saturation
 See blog posts
@@ -806,6 +1382,8 @@ simplify(t, a) :- term(t), t = $Add($Lit(0), a).
 
 // should have the analog of "edge" here
 simplify(t,t2) :- simplify(t,t1), simplify(t1,t2).
+//simplify(t0,a) :- simplify(t0,t), t = $Add($Lit(0),a).
+
 
 simplify(t,t) :- term(t).
 
@@ -814,6 +1392,13 @@ term(t) :- start(t).
 term(a), term(b) :- term($Add(a,b)).
 
 ```
+
+
+
+## Graph Algorithms
+Graph form of monoidal category in soufflé?
+Graph rewriting? We have graph matching. How do we say some subgraph is better than some other.
+Graph combinator reduction?
 
 ## Translating Imperative Programs
 similar to translating to functional style.
@@ -866,12 +1451,100 @@ For ADTs this ends up being a table of all subterms.
 
 Is needed a representation of call frames maybe?
 
-## Timestamping
+
+## Model Checking
+See Chapter 8 State-Space Search with Tabled Logic Programs
+
+Farmer puzzle
+
+Die Hard puzzle
+```souffle
+.pragma "provenance" "explain"
+.decl reach(big : unsigned, small : unsigned)
+reach(0,0).
+// move water small to big
+reach(big + small, 0) :- reach(big,small), big + small <= 5.
+reach(5,  small - (5 - big)) :- reach(big,small), !big + small <= 5.
+// move water big to small
+reach(0, big + small) :- reach(big,small), big + small <= 3.
+reach(big  - (3 - small),  3) :- reach(big,small), !big + small <= 3.
+// empty big
+reach(0, small) :- reach(_,small).
+// empty small
+reach(big,0) :- reach(big,_).
+// fill big
+reach(5, small) :- reach(_,small).
+// fill small
+reach(big,3) :- reach(big,_).
+
+.decl big_is_4(small : unsigned)
+big_is_4(small) :- reach(4,small).
+.output big_is_4(IO=stdout)
+/*
+---------------
+big_is_4
+small
+===============
+0
+3
+===============
+Explain is invoked.
+Enter command > setdepth 10
+Depth is now 10
+Enter command > explain big_is_4(3)
+reach(0, 0)                          
+--------(R8)                         
+reach(5, 0)  5 > 3                   
+---------------(R5)                  
+    reach(2, 3)                      
+----------------(R7)                 
+    reach(2, 0)      2 <= 3          
+------------------------(R4)         
+        reach(0, 2)                  
+-------------------------(R8)        
+         reach(5, 2)          7 > 3  
+--------------------------------(R5) 
+            reach(4, 3)              
+---------------------------------(R1)
+             big_is_4(3)             
+*/
+```
+
+
+## Timestamping 
 Transtion systems. All possible executions. Model Checking.
+Dedalus
+```souffle
+.decl foo(a : number, b : number, time : unsigned)
+foo(a,b,t) <= foo(a1,b1,t2) :- t < t2. //possibly allow subsumption of new states only. This won't build all possible paths though.
+foo(x,y,t) :- bar(x,t1), biz(y, t2), t = max(t1,t2) + 1.
+
+reached(a,b) :- foo(a,b,t). // how will this interact with subsumption? Why even bother timestamping if you just want reached.
+```
+
+Using datalog to control reactive systems
+
+```souffle
+//.pragma "libraries" "libc.so.6"
+.functor time(): unsigned // unix system call
+.decl timestamp(t : unsigned)
+timestamp(@time()) :- true.
+.output timestamp(IO=stdout)
+```
+Ah I see 
+<https://github.com/souffle-lang/souffle/blob/d1522e06c6e99c259951dc348689a77fa5f5c932/src/interpreter/Engine.cpp#L381>
+I can't open libc.so.6 because this string is being made in this way. libc.so is not the right kind of file.
+
+[Integrity Constraints for Microcontroller Programming in Datalog](https://users.informatik.uni-halle.de/~brass/micrologS/) arduino timestamping, external pin relations. pretty cool.
+[Microlog - A Datalog for Microcontrollers and other Interactive Systems](https://dbs.informatik.uni-halle.de/microlog/)
+
+
 
 ## Theorem Proving
 A lot of these techniques are taken from interpeting the Lambda Prolog rules.
 Question: Is it possible to consider static analysis over lambda prolog to systematically understand some of these tricks?
+
+Consider Jens Otten tutorial
 
 ### Skolemization for Existential Heads
 $ \forall x, \psi(x) \implies \exists y, \phi(x,y)$ can be replaced with 
@@ -999,19 +1672,164 @@ Mayybe it's worth it to do Comp { symbol, morph} list style. Hard to do.
 Could block composition rule on Id. Kind of a cheap shot
 
 ## Typeclass resolution.
+See Lean paper Tabling Typeclasses
+See Chalk (which uses datafrog?)
+
+See ascent paper which compares itself with datafrog based polonius
 
 ## Type checking / inferring
 Related of course to the above.
 
 ```souffle
 .type type = Unit {} | Int {} | Bool {} | List {a : type} | Maybe {a : type} | Sum {a : type, b : type} | Prod {a : type, b : type}
+.type term = TT {} | TInt { x : number} | True {} | False {} | Nil {} | Cons { hd : term, tl : term } | None {} | Some {x : term}
+   | Annot {t : term, ty : type} | Var { n : unsigned} | Lam {body : term} | App {f : term, x : term}
+
+//.type ctx = [ t : term, t:type, g : ctx ] 
+.type ctx = [ ty:type, g : ctx ]   // don't need variable if we're doing de bruijn
 
 
+//| $GNil {} $GCons { t :term, ty : type, ctx } 
+
+
+/*
+hastype($TT(), $Unit()).
+hastype($TInt(n), $Int()) :- n = range(1,10). // cheating a little
+hastype($True(),$Bool()).
+hastype($False(), $Bool()).
+*/
+.decl hastype(t : term , ty : type) // mode++ sort of
+.decl infertype(t : term) // mode -+ top down
+.decl checktype(t : term, ty : type) // mode -- topdown
+.decl prove(ty:type) // mode +-
+// the proof provenance of hastype() will basically mirror the lambda term anyhow.
+// This perhaps shows the parameter is unnecessary / inefficient.
+// We could instead record the rule used and subsumption to shortest one.
+
+// The only bottom up mode is ++ since we don't have non ground terms.
+
+
+hastype(t, $Int()) :- infertype(t), t = $TInt(_).
+
+// annotation rule
+checktype(t, ty) :- infertype($Annot(t,ty)).
+
+// Sub rule. Doesn't hurt anything
+infertype(t) :- checktype(t,_).
+hastype(t,b) :- hastype(t,a) , eq(a,b).
+
+
+hastype($TT(), $Unit()) :- checktype($TT(), $Unit()).
+
+checktype([ a , ctx], body, b) :- checktype(ctx, $Lam(body), $Arr(a,b)).
+
+// Var=> rule
+hastype( ctx, $Var(0), t) :- infertype(ctx, $Var(0)), ctx = [t,_].
+// This is probably not how to do it.
+hastype() :- infertype(ctx, $Var(n)), index(ctx, n, t).
+needindex(ctx,n) :- infertype(ctx, $Var(n)).
+infertype(ctx, $Var(n-1)) :- infertype([_, ctx], $Var(n)), n != 0.
+
+// Can we reify the ctx into a relation? possibly
+// and insert immediately alos when we create the context.
+inctx([a,ctx], a) :- checktype($Lam(body), )
+inctx([a,ctx], x) :- inctx([a,ctx], _ ), inctx(ctx, x).
+
+index([a,ctx], 0. a) :- checktype($Lam(body), )
+index([a,ctx], n + 1, x) :- index([a,ctx], _, _), index(ctx, n, x).
+
+// This part is a mess. Would not using debruijn be better somehow?
 
 ```
+[bidirectional typing](https://arxiv.org/pdf/1908.05839.pdf)
+I suppose bidi checking feels nice because we are already used to thinking of the different modes as different predicates. We also need to make these distinctions for magic set transform
 
- 
+[Rust lifetime analysis written in souffle](https://github.com/rljacobson/lifetimes)
+
+
+eqrel for hindley milner? Yihong had something like this
+souffle-z3 for refinement typing?
+
+
+## Datalog Decompilers
+[gigahorse](https://github.com/nevillegrech/gigahorse-toolchain) - decompiler for smart contracts based on souffle
+
+# Topics
+## Datalog+- and the chase
+[Datalog+-](https://dl.acm.org/doi/pdf/10.1145/1514894.1514897) A Unified Approach to Ontologies and Integrity Constraints. Integraes datalog with equality and tuple generating dependencies. 
+[Datalog+- questions and answers](https://www.aaai.org/ocs/index.php/KR/KR14/paper/viewFile/7965/7972)
+- weakly acyclic
+- guarded - one relation holds all atoms
+- sticky
+
+
+[DLV](https://en.wikipedia.org/wiki/DLV) datalog with disjunction. 
+https://www.dlvsystem.it/dlvsite/dlv-user-manual/ 
+constraints - empty headed rules...? I've also seen them as `! :- ` in dglp
+some funky features here. I wonder what the execution semantics is. Maybe disjunctive heads go in constraint store?
+
+negation as failure vs stable model
+
+## Tabling
+See prolog tabling
+Tabling in prolog leads to something very similar in power to the memoizing datalog. however, you still have unification and logic variables, so it is not clear it is truly equivalent.
+
+## Descriptive Complexity and Least Fiexed Point Logic
+
+[https://en.wikipedia.org/wiki/Fixed-point_logic#Least_fixed-point_logic](https://en.wikipedia.org/wiki/Fixed-point_logic#Least_fixed-point_logic) descriptive complexity theory says datalog is same thing as first order logic with fixpoints. Curious because datalog is also in some sense restricted horn clauses whereas this is saying in another sense it is full FO + fixpoint. 
+
+## Push based Datalog
+[Brass's website](https://users.informatik.uni-halle.de/~brass/)
+[push based datalog](https://users.informatik.uni-halle.de/~brass/push/talks/inap17.pdf)
+[push method](https://users.informatik.uni-halle.de/~brass/push/)
+push method ~ like seminaive of only one fact? Hmm. Interesting.
+function calls correpond to heads. They memoize. Then they push themselves to any location predicate appears in body. Cute.
+This gets you something like seminaive eval.
+hmm. binding patterns are related to map vs set vs iterator storage.
+This might lend itself really nicely to an embedded datalog. datakanren.
+minikanren makes the horn clause aspect more hidden. It heavily uses the function call mechanisms of the host language for heads.
+This uses host languae mechanism for bodys. It kind of has an object oriented feel for some reason to me. relations need to support call and iterate.
+There's this big fixpoint.
+Many language already support some kind of auto memoization.
+```
+class Rel():
+  def __init__(self,name,arity):
+  def __call__():
+  def __iter__():
+    # register as usage site here?
+ @memo
+ def f(x,y):
+  
+class Rule():
+
+```
 # Resources
+If you wrote a decompiler or compiler in datalog, provenance becoes something more concrete to talk about
+
+
+Compare and contrast datalog vs CHR. subsumption allows us some of the deletion of CHR. Proapgation rules of chr are similar to datalog rules. We could possibly emulate multisets using subsumption by adding extra multiplicty parameter to realtions.
+
+
+[datalog : concept history outlook 2018](https://dl.acm.org/doi/10.1145/3191315.3191317)
+[declarative logic programming](https://www.google.com/books/edition/Declarative_Logic_Programming/CMatvAEACAAJ?hl=en)
+
+
+
+
+`call/N` is emulatable clause by clause in prolog.
+Is there an analogous meta predicate?
+foo(a,b) :- push(["foo", a,b]).
+bar(a) :- push(["bar", a]).
+
+
+
+What about interfacing with prolog?
+What about interfacing with lua or python? ocaml haskell, minizinc.
+
+
+
+
+[Synthesizing Datalog Programs Using Numerical Relaxation](https://arxiv.org/abs/1906.00163) difflog
 [provenance based synthesis of datalog programs](https://www.youtube.com/watch?v=cYAjOGhclcM&ab_channel=ACMSIGPLAN)
 Building a compiler in datalog. I can parse. I can do program analysis. How do I backend? Backend takes arbitrary non monotonic choices.
 Use choice domain? that could work. I could force an ordering through the program.
@@ -1056,7 +1874,7 @@ So an object oriented datalog.
 [So You Want To Analyze Scheme Programs With Datalog?](http://webyrd.net/scheme_workshop_2021/scheme2021-final2.pdf)
 [parser in datalog](https://homes.cs.washington.edu/~bodik/ucb/cs164/sp13/lectures/09-Datalog-CYK-Earley-sp13.pdf) bottom up parsing
 
-[Rust lifetime analysis written in souffle](https://github.com/rljacobson/lifetimes)
+
 [analysis are arrows](https://luctielen.com/posts/analyses_are_arrows/)
 
 [Static analysis in datalog slides](http://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf)
@@ -1130,11 +1948,11 @@ It's in that Nelson book
 
 olin shivers
 
-https://dl.acm.org/doi/10.1145/2926697.2926698 - chloe paper
+https://dl.acm.org/doi/10.1145/2926697.2926698 - chloe paper Liveness-based garbage collection for lazy languages
 
 https://www.youtube.com/watch?v=7fDfWBsiqok&ab_channel=ACMSIGPLAN - visualzing abstract absract machines
 
-https://github.com/nevillegrech/gigahorse-toolchain - decompiler for smart contracts based on souffle
+
 https://yanniss.github.io/
 Points to analysis. Doop
 https://yanniss.github.io/M221/

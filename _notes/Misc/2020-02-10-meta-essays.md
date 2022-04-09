@@ -72,6 +72,11 @@ foo(3).
 .output foo(IO=stdout)
 ```
 
+```
+
+npm install –g vsce
+vsce package
+```
 # Is a PhD Good
 My opinions are informed by my history and background, as anyone's is.
 

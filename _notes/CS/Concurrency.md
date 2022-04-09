@@ -76,6 +76,11 @@ Lock Mutex Semaphore
 ### Double Locking 
 [The "Double-Checked Locking is Broken" Declaration](http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html)
 
+
+# Misc
+
+
+
 Barriers
 Lock free
 

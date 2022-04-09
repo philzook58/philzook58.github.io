@@ -25,3 +25,7 @@ Seems very reasonable for max sat too?
 [AWS automated reasoning frontier](https://www.amazon.science/blog/automated-reasonings-scientific-frontiers)
 [mallob-mono](https://github.com/domschrei/mallob)
 Good sat solver enabled "Seshia" tehcnique for smt? https://github.com/awslabs/rust-smt-ir bounds integers and turns to bitvectors + ackermannization
+
+[beyond SAT](https://simons.berkeley.edu/workshops/schedule/14087)
+quantified boolean. Combining SAT and comuter aogebra
+model counting

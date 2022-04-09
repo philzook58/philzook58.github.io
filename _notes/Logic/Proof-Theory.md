@@ -2,6 +2,56 @@
 layout: post
 title: Proof Theory
 ---
+
+- [What are Proofs?](#what-are-proofs)
+- [Consistency](#consistency)
+- [Completeness](#completeness)
+- [Soundness](#soundness)
+- [Structural Proof](#structural-proof)
+- [Cut Elimination](#cut-elimination)
+- [Interpolation](#interpolation)
+- [Reverse Mathematics](#reverse-mathematics)
+- [Proof Calculi](#proof-calculi)
+    - [Axioms](#axioms)
+      - [Axiom Schemes](#axiom-schemes)
+    - [Rules of Inference](#rules-of-inference)
+  - [Hilbert systems](#hilbert-systems)
+  - [Sequent Calculus](#sequent-calculus)
+  - [Natural Deduction](#natural-deduction)
+- [Things](#things)
+  - [Peano Arithmetic](#peano-arithmetic)
+  - [Heyting Arithmetic](#heyting-arithmetic)
+  - [PRA (Primitive Reucrsive Arithemtic)](#pra-primitive-reucrsive-arithemtic)
+  - [Second Order Arithmetic](#second-order-arithmetic)
+  - [Robinson Arithmetic (Q)](#robinson-arithmetic-q)
+  - [Primitive Recursive Arithmetic](#primitive-recursive-arithmetic)
+  - [Set Theory](#set-theory)
+    - [ZFC](#zfc)
+    - [NBG](#nbg)
+    - [Arithmetic Hierarchy](#arithmetic-hierarchy)
+    - [](#)
+    - [Undefinability of Truth](#undefinability-of-truth)
+    - [Godel Completeness](#godel-completeness)
+    - [Godel Incompleteness](#godel-incompleteness)
+- [Interpetability](#interpetability)
+    - [Uhhhh](#uhhhh)
+    - [Computability theory](#computability-theory)
+  - [Binders](#binders)
+    - [Mu operator](#mu-operator)
+    - [epsilon operator](#epsilon-operator)
+    - [forall](#forall)
+    - [exists](#exists)
+    - [exists unique](#exists-unique)
+    - [Bounded quantification](#bounded-quantification)
+    - [lambda](#lambda)
+  - [recursion/fixpoint binder](#recursionfixpoint-binder)
+    - [comprehesion](#comprehesion)
+    - [modal operators](#modal-operators)
+    - [Of a different character?](#of-a-different-character)
+- [Model thoery](#model-thoery)
+  - [Finite Model Theory](#finite-model-theory)
+
+
 - <https://en.wikipedia.org/wiki/Proof_theory>
 - <https://plato.stanford.edu/entries/proof-theory/>
 - <https://plato.stanford.edu/entries/proof-theory-development/>
@@ -168,3 +218,6 @@ If I understand the history, Boole arithmetized logic and the exists and forall 
 Model theory is more informal?
 I have thought model theory is finding what logic looks like in informal set theory
 A more general notion and precise notion may be finding homomorphisms between . A way of mapping statements to each other such that theorems in one theory are theorems in the other.
+
+[finite model theory notes dan suciu](https://courses.cs.washington.edu/courses/cse599c/18sp/lectures/unit3-handout.pdf)
+## Finite Model Theory

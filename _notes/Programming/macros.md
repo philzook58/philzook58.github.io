@@ -2,6 +2,9 @@
 title: Macros
 ---
 
+[paper describing different generative programming systems]
+["micros"](https://twitter.com/ShriramKMurthi/status/1507398991033606189?s=20&t=GsM8M-fHdbvp9M4n5S4-kg)
+
 - [Hygienic Macros](https://en.wikipedia.org/wiki/Hygienic_macro)
 - [Beautiful Racket explainer](https://beautifulracket.com/explainer/hygiene.html)
 - [Beyond Notations: Hygienic Macro Expansion for Theorem Proving Languages](https://arxiv.org/abs/2001.10490) [video](https://www.youtube.com/watch?v=34jZTv0Gla8&ab_channel=IJCAR-FSCD2020)

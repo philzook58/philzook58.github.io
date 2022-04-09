@@ -46,6 +46,7 @@ I should renamed this article to Mathematical Programming / Operations Research 
   - [Encoding boolean functions/relations](#encoding-boolean-functionsrelations)
   - [Piecewise linear encodings](#piecewise-linear-encodings)
   - [Unrolling time](#unrolling-time)
+- [Extended Mathemtical Programming](#extended-mathemtical-programming)
 - [Stochastic programming](#stochastic-programming)
 - [Robust Optimization](#robust-optimization)
 - [Complementarity Problems](#complementarity-problems)
@@ -53,6 +54,9 @@ I should renamed this article to Mathematical Programming / Operations Research 
 - [Bilevel programming](#bilevel-programming)
   - [method 1 KKT condition](#method-1-kkt-condition)
   - [Duality](#duality-1)
+- [Tools](#tools)
+  - [Gams](#gams)
+  - [Ampl](#ampl)
 - [Resources](#resources-1)
 
 # Linear Programming
@@ -287,7 +291,20 @@ Techniques papers from the COAT slack
 
 [https://docs.mosek.com/modeling-cookbook/index.html](https://docs.mosek.com/modeling-cookbook/index.html)
 
+
+# Extended Mathemtical Programming
+[extended mathemtical programming](https://en.wikipedia.org/wiki/Extended_Mathematical_Programming)
+
+disjunctive programming
+
 # Stochastic programming
+https://en.wikipedia.org/wiki/Stochastic_programming
+The parameters of the future stage program are unknown. You need to optimize with respect to their expectation
+
+
+Determinisitc equivalent
+
+statistical sampling / monte carlo
 
 # Robust Optimization
 
@@ -309,6 +326,35 @@ Bilevel programming is a natural idea of modelling nested optimization problems.
 For example, suppose you want to optimize a trajectory for worst case error forces. You minimize a cost while errors are trying to maximize it.
 Or the two problems can have unrelated objectives
 
+[GAMS](https://www.gams.com/latest/docs/UG_EMP_Bilevel.html)
+
+[Mathematical programming with equilibrium constraints](https://en.wikipedia.org/wiki/Mathematical_programming_with_equilibrium_constraints) a 
+
+[modeling bilevel programs in pyomo](https://www.osti.gov/servlets/purl/1526125)
+
+Game Theory
+Nash equilbirium
+
+Follower leader problems
+[interdiction problem](https://www.usna.edu/Users/math/traves/papers/interdiction.pdf)
+
+[pyomo bilevel](https://cfwebprod.sandia.gov/cfdocs/CompResearch/docs/pyomo_bilevel_sandreport.pdf) deprecated?
+
+```python
+from pyomo.environ import *
+from pyomo.bilevel import *
+model = ConcreteModel()
+model.x = Var(bounds=(1,2))
+model.v = Var(bounds=(1,2))
+model.sub = SubModel()
+model.sub.y = Var(bounds=(1,2))
+model.sub.w = Var(bounds=(-1,1))
+model.o = Objective(expr=model.x + model.sub.y + model.v)
+model.c = Constraint(expr=model.x + model.v >= 1.5)
+model.sub.o = Objective(expr=model.x+model.sub.w, sense=maximize)
+model.sub.c = Constraint(expr=model.sub.y + model.sub.w <= 2.5)
+```
+
 
 ## method 1 KKT condition
 Optimal points of the lower problem hav KKT conditions ~ gradient = 0. These are equality constraints. This turns it into a nonlinear optimization problem.
@@ -319,6 +365,10 @@ KKT conditions include complementarity conditions, converting into a complementa
 ## Duality
 You can reformulate to the dual problem. This will cause xy terms in the inner objective. Not awesweom
 
+
+# Tools
+## Gams
+## Ampl
 
 
 # Resources
@@ -336,3 +386,10 @@ You can reformulate to the dual problem. This will cause xy terms in the inner o
 - cvxpy
 - pyomo
 - coin-or
+
+[resotta opf](https://github.com/lanl-ansi/rosetta-opf) AC optimal power flow model
+Power flow is a place where mathemtical optimization is pretty interesting
+
+[Gekko](https://gekko.readthedocs.io/en/latest/quick_start.html)
+
+cvxpygen

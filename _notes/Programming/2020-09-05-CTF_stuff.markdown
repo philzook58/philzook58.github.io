@@ -9,6 +9,16 @@ title: CTF stuff
 wordpress_id: 2960
 ---
 
+
+Fuzzing
+[Fuzzy-sat](https://arxiv.org/pdf/2102.06580.pdf) running smt queries through a fuzzer
+Angora
+SLF eclipser
+
+Qsym
+
+
+
 <https://twitter.com/peter_a_goodman/status/1503016499824537600?s=20&t=1Z4ew6rnGnFiMTSrQJSmKw> goodman on binary rewriting
 binrec - lift program merge lifted bytecode into debloated
 egalito 

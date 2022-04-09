@@ -87,36 +87,7 @@ Guard pages - try to access an overflow and hit unmapped page, you'll crash
 fat pointers - make pointer a struct
 tagged pointer - use unused bits in pointer. 64 bits is too many. ALignment makes low bits unused
 
-# C++
 
-Cherno 
-Cyril Stachniss https://www.youtube.com/c/CyrillStachniss/videos
-
-[nice C++ cheat sheets](https://hackingcpp.com/cpp/cheat_sheets.html) 
-
-Class vs struct
-Smart pointers
-new/delete ~ malloc + constructor caling
-static
-const
-virtual 
-interfaces - classes that are all virtual methods
-name mangling
-
-precompiled headers (pch)
-
-```cpp
-#include <iostream>
-int main(){
-    std::cout << "hello world" << std::endl;
-    std::cout << [](int x){ return x * 42; }(2); // lambda
-
-
-    return 0; // don't have to though
-}
-```
-
-[fmt library](https://github.com/fmtlib/fmt) C++20 has this in `#include<format>` ?
 
 ## Build Systems
 Shake
@@ -136,3 +107,13 @@ Csmith
 [DieHard](https://github.com/emeryberger/DieHard) error resitant allocator
 Ptmalloc
 mimalloc https://github.com/microsoft/mimalloc
+"The other allocators are Google's tcmalloc (tc, tag:gperftools-2.8.1) used in Chrome, Facebook's jemalloc (je, tag:5.2.1) by Jason Evans used in Firefox and FreeBSD, the Intel thread building blocks allocator (tbb, tag:v2020.3), rpmalloc (rp,tag:1.4.1) by Mattias Jansson, the original scalable Hoard (git:d880f72) allocator by Emery Berger [1], the memory compacting Mesh (git:67ff31a) allocator by Bobby Powers et al [8], and finally the default system allocator (glibc, 2.31) (based on PtMalloc2)."
+[tcmalloc](https://github.com/gperftools/gperftools)
+[jemalloc](https://github.com/jemalloc/jemalloc)
+[tbb allocator](https://github.com/intel/tbb)
+[rpmalloc](https://github.com/mjansson/rpmalloc)
+[hoard](https://github.com/emeryberger/Hoard)
+[mesh](https://github.com/plasma-umass/Mesh)
+
+
+[how debuggers work](https://eli.thegreenplace.net/2011/01/27/how-debuggers-work-part-2-breakpoints) int3 and ptrace
