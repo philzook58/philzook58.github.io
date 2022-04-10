@@ -8,7 +8,8 @@ title: Datalog
     - [Available Expressions](#available-expressions)
     - [Very Busy Expressions](#very-busy-expressions)
     - [Reaching Definitions](#reaching-definitions)
-    - [](#)
+    - [Liveness](#liveness)
+    - [Zippers For Program Points](#zippers-for-program-points)
 - [Implementations](#implementations)
   - [Rel](#rel)
   - [Formulog](#formulog)
@@ -207,11 +208,60 @@ avail(l,e) :- label(l), expr(e), !notavail_exit(l,e).
 So what do I need to do to extend this to equivalent expressions?
 
 ### Very Busy Expressions
-
+Expressions that are needed on every path
+Intersection
 
 ### Reaching Definitions
 
-### 
+
+### Liveness
+Variables that will be needed on at least one path
+A backwards analysis
+Union
+
+### Zippers For Program Points
+It is possible to generate program points from the Imp AST via using zippers
+
+```souffle
+.type Expr = Lit { x : number }
+           | Var { x : symbol }
+           | Add {e_1 : Expr, e_2 :Expr}
+.type Stmt = Set { x : symbol, e : Expr}
+           | Seq {s_1 : Stmt, s_2 : Stmt}
+.type StmtHole = LSeq {s : Stmt} | RSeq {s : Stmt}
+.type Zipper = Cons { hd : StmtHole , rest : Zipper} | Nil {}
+.type Label =  [ctx : Zipper, stmt : Stmt] 
+// Do I need this? .decl label(; : Label, ctx : Zipper, stmt : Stmt)
+.decl prog(s : Stmt)
+
+.decl stmt(ctx : Zipper, s : Stmt)
+stmt($Nil(), s) :- prog(s).
+stmt($Cons($LSeq(r), ctx), l), stmt($Cons($RSeq(l) , ctx), r) :- stmt(ctx, $Seq(l,r)).
+
+.decl expr(ctx : Zipper, e : Expr)
+expr(ctx, e) :- stmt(ctx, $Set(_,e)).
+expr(ctx, y), expr(ctx, x) :- expr(ctx, $Add(x,y)).
+
+.decl next(ctx : Zipper, s : Stmt, ctx2 : Zipper, s2 : Stmt)
+
+next($Cons($LSeq(r), ctx), l, $Cons($RSeq(l), ctx), r) :- stmt(ctx, $Seq(l,r)).
+next($Cons($RSeq(l), ctx), r, ctx2, s2) :- next(ctx, $Seq(l,r), ctx2, s2).
+
+prog(
+  $Seq($Set("x", $Lit(0)),
+  $Seq($Set("y", $Add($Var("x"),$Lit(1))),
+       $Set("x", $Var("y"))
+      ))
+).
+
+
+.decl hasvar(e : Expr, x : symbol)
+hasvar($Var(v), v) :- expr(_, $Var(v)).
+hasvar($Add(x,y), v) :- expr(_,$Add(x,y)), (hasvar(x,v) ; hasvar(y,v)).
+```
+
+
+
 
 # Implementations
 - Souffle
