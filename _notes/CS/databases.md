@@ -36,6 +36,7 @@ SELECT a,b FROM edge;
 
 ```
 
+https://en.wikipedia.org/wiki/Materialized_view
 
 ## indices
 
@@ -114,6 +115,71 @@ Course https://web.stanford.edu/class/cs227/Lectures/lec02.pdf very similar to b
 [worst case optimal join algorithm](https://cs.stanford.edu/people/chrismre/papers/paper49.Ngo.pdf)
 [leapfrog triejoin](https://arxiv.org/pdf/1210.0481v5.pdf)
 https://github.com/frankmcsherry/blog/blob/master/posts/2018-05-19.md
+Dovetail join - relational ai unpublished. Julia specific ish? https://relational.ai/blog/dovetail-join
+use sparsity of all relations to narrow down search
+Worst case optiomal join Ngo pods 2012
+leapfrog triejoin simpel worst case icdt 2015
+worst case optimal join for sparql
+worst case optimal graph joins in almost no space
+Correlated subqueries:
+unnesting arbitrary queries
+How materializr and other databases optimize sql subqueries
+
+
+
+
+# Relational AI
+https://www.youtube.com/watch?v=WRHy7M30mM4&ab_channel=CMUDatabaseGroup
+
+snowflake
+databricks
+bigquery
+dbt 
+fivetran
+
+data apps - dapps
+
+lookml
+sigma
+legend
+
+Resposnive compilter - matsakis
+salsa.jl
+umbra/leanstore
+
+incremental
+COnvergence of datalog over presmeirings
+differential dataflor cidr2013
+reconciling idfferences 2011 Green
+F-IVM incrmenetal view mantinance with triple lock fotrization benefits
+
+systemml vecame apache systemds https://systemds.apache.org/
+
+Semantic optimization
+FAW question asked frequence : Ngo Rudra PODS 2016
+What do shannon type ineuqlaities submodular width and disjunctive datalog have to do with one another pods 2017
+precise complexity analysis for efficient datalog queries ppdp 2010
+functional aggregate queries with additive inequalities
+convergence of dtalog over pr-esemirign
+
+Relational machine learning
+Layered aggregate engine for analystics worloads schelich olteanu khamis
+leanring models over relational data using sparse tenosrs
+The relational data borg is learning olteanu vldb keynote
+sturcture aware machine learning over multi relational database
+relational know graphs as the ofundation for artifical intelligence
+km-means: fast clustering for relational data
+https://arxiv.org/abs/1911.06577 Learning Models over Relational Data: A Brief Tutorial
+
+
+duckdb for sql support
+calcite
+postgresql parser
+
+Fortress library traits. OPtimization and parallelism
+https://relational.ai/blog/categories/research
+
+https://arxiv.org/abs/2004.03716 triangle view mantenance
 # Streaming
 [streaming 101](https://www.oreilly.com/radar/the-world-beyond-batch-streaming-101/)
 unbounded data

@@ -97,7 +97,9 @@ Program analysis.
 
 topics:
 - incremental datalog
-- differential datalog
+- differential datalog https://github.com/frankmcsherry/blog/blob/master/posts/2016-06-21.md
+
+[big datalog on spark]http://yellowstone.cs.ucla.edu/~yang/paper/sigmod2016-p958.pdf
 
 ## Program Analysis
 [Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
@@ -117,6 +119,12 @@ topics:
 - uZ3 (mu z3) built into z3
 - logicblox
 - [flora2](http://flora.sourceforge.net/) ergo lite. Is this a datalog?
+- [dynamic datalog](https://github.com/frankmcsherry/dynamic-datalog)
+
+- yedalog
+- EVE
+- datomic
+
 ## Rel
 [vid](https://www.youtube.com/watch?v=WRHy7M30mM4&t=136s&ab_channel=CMUDatabaseGroup)
 Relational AI
@@ -136,6 +144,7 @@ I remember this being totally incomprehensible. I guess I must have lost my mind
 ## Flix
 [online playground](https://play.flix.dev/)
 Also install as a vs code plugin. very nice.
+[Fixpoints for the masses: programming with first-class Datalog constraints](https://dl.acm.org/doi/abs/10.1145/3428193)
 ## dr lojekyl
 https://blog.trailofbits.com/2022/01/05/toward-a-best-of-both-worlds-binary-disassembler/
 https://www.petergoodman.me/docs/dr-lojekyll.pdf
@@ -1068,6 +1077,16 @@ Constraint handling rules have some similarity to datalog with subsumption and s
 Datalog has set semantics, CHR has multiset semantics. Sometimes you add CHR rules to make set semantics
 subsumption allows some deletion.
 
+Timestamps and water marks?
+max(t1,t2)+1  :- foo( , t1), bar(t2) 
+
+:- watermark(t), foo(t1), , t1 < t
+foo() <= foo() :- watermark(t)
+
+deletion watermark?
+
+DDlog has a multiset thing. Seems reasonable this is better for chr.
+
 
 ## Lambda representation
 What is the most appropriate way? Probably we want to implement some kind of machine flavored implementation.
@@ -1538,7 +1557,8 @@ I can't open libc.so.6 because this string is being made in this way. libc.so is
 [Integrity Constraints for Microcontroller Programming in Datalog](https://users.informatik.uni-halle.de/~brass/micrologS/) arduino timestamping, external pin relations. pretty cool.
 [Microlog - A Datalog for Microcontrollers and other Interactive Systems](https://dbs.informatik.uni-halle.de/microlog/)
 
-
+[Dedalus](https://www2.eecs.berkeley.edu/Pubs/TechRpts/2009/EECS-2009-173.pdf) http://bloom-lang.net/faq/
+Timely dataflow
 
 ## Theorem Proving
 A lot of these techniques are taken from interpeting the Lambda Prolog rules.
@@ -1804,6 +1824,26 @@ class Rule():
 
 ```
 # Resources
+unsafe stratification:
+strata_finish(), !query_strata.
+Timestamps can d something similar
+watermark(t), !query(t1), t1 < t 
+or safe deletion
+delete(t).
+
+[QL: Object-oriented Queries on Relational Data](https://drops.dagstuhl.de/opus/volltexte/2016/6096/pdf/LIPIcs-ECOOP-2016-2.pdf)
+
+[datalog reloaded](https://link.springer.com/book/10.1007/978-3-642-24206-9?page=2#toc) a datalog compendiium 2011
+ 
+[algerbaic modelling in datalog](https://dynresmanagement.com/uploads/3/5/2/7/35274584/datalog_warrenbookchapter.pdf)
+Some logicblox stuff. Datalog meets mathemtical programming?
+
+Generic Join
+
+[expressing crdts as queries using datalog](https://speakerdeck.com/ept/data-structures-as-queries-expressing-crdts-using-datalog)
+https://github.com/frankmcsherry/dynamic-datalog/blob/master/problems/crdt/query.dl souffle example
+https://github.com/frankmcsherry/dynamic-datalog
+
 If you wrote a decompiler or compiler in datalog, provenance becoes something more concrete to talk about
 
 

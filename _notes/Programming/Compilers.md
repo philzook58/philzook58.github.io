@@ -254,7 +254,15 @@ See also:
 
 # JIT
 de-optimization paths
+[mir](https://github.com/vnmakarov/mir) an intermiedtae representation for JIT
+[qbe](https://c9x.me/compile/)
+[libjit](https://www.gnu.org/software/libjit/)
+[ryujit](https://github.com/dotnet/coreclr/blob/master/Documentation/botr/ryujit-overview.md)
+[libfirm](https://github.com/libfirm/libfirm)
+[cranelift](https://github.com/CraneStation/cranelift)
+[nanojit](https://github.com/dibyendumajumdar/nanojit)
 
+[libgccjit](https://gcc.gnu.org/onlinedocs/jit/)
 # Garbage Collector
 ## Conservative vs Exact
 

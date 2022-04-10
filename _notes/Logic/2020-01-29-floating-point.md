@@ -79,6 +79,8 @@ Proofs about
 multiple proof output modes
 -B latex -Bcoq
 
+[Implementing Cosine in C from Scratch (2020) (](https://news.ycombinator.com/item?id=30844872)
+[musl __cos](https://github.com/ifduyue/musl/blob/master/src/math/__cos.c)
 Boldo
 [Formal Verification of Scientific Computing Programs icfp 19](https://www.youtube.com/watch?v=d38KO5UgHv8&ab_channel=ACMSIGPLAN)
 
