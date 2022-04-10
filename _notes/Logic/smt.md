@@ -407,3 +407,35 @@ model based projection
 
 muz has: datalog, bmc, and spacer mode, and xform?
 :print-certificatie fives "inductive invataint" even in datalog?
+
+
+```python
+from z3 import *
+Num = DeclareSort("Num")
+add = Function("add", Num, Num, Num)
+num = Function("num", IntSort(), Num)
+
+from functools import reduce
+import random
+print(reduce(add, [num(n) for n in range(10)]))
+
+x,y,z = Consts("x y z", Num)
+axioms = [
+  ForAll([x,y], add(x,y) == add(y,x)),
+  ForAll([x,y,z], add(add(x,y),z) == add(x,add(y,z)))
+]
+
+
+import timeit
+for N in range(5,17):
+  s = Solver()
+  s.add(axioms)
+  e1 = reduce(add, [num(n) for n in range(N)])
+  perm = list(range(N))
+  random.shuffle(perm)
+  e2 = reduce(add, [num(n) for n in perm])
+
+  s.add(e1 != e2)
+  print(N, timeit.timeit(lambda: s.check(), number = 1))
+
+```

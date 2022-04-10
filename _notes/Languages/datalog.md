@@ -5,6 +5,10 @@ title: Datalog
 - [What is datalog?](#what-is-datalog)
 - [What can you do with datalog?](#what-can-you-do-with-datalog)
   - [Program Analysis](#program-analysis)
+    - [Available Expressions](#available-expressions)
+    - [Very Busy Expressions](#very-busy-expressions)
+    - [Reaching Definitions](#reaching-definitions)
+    - [](#)
 - [Implementations](#implementations)
   - [Rel](#rel)
   - [Formulog](#formulog)
@@ -101,10 +105,115 @@ topics:
 
 [big datalog on spark]http://yellowstone.cs.ucla.edu/~yang/paper/sigmod2016-p958.pdf
 
+Maybe just jump on down the the examples section. Or I should move them up here?
+
 ## Program Analysis
 [Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
 [hash consed points to sets](https://yuleisui.github.io/publications/sas21.pdf)
 
+
+
+### Available Expressions 
+[Lecture notes on static analysis in datalog](https://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf)
+https://courses.cs.washington.edu/courses/csep501/18sp/lectures/T-dataflow.pdf
+
+The expression is computed and/or the connection between expression and store state is not severed by subsequent write. on every path 
+Not that available expressions _does not_ mean expression is available.
+```
+x = a + b
+x = 0
+```
+AE says `a+b` is available at the ned of this snippet. So it's a bit subtler what AE means. It means that with a little fiddling the expression _could be_ available.
+
+
+Every path means we need an intersection. Datalog does unions more naturally, so we need to work wth the inverse relation notavailable. The intersection of available is the union of notavailable
+
+Program
+```
+start:
+  x = readinput
+  a = readinput
+  b = readinput
+  br x, l1, l2
+l1:
+  z = a + b
+  br l3
+l2:
+  z = b + a
+  br l3
+l3:
+  print a + b // if a + b is available we don't have to recompute
+```
+
+```souffle
+
+
+.type blk <: symbol 
+.type Expr  = Add {x : Expr, y : Expr}| Var {x : symbol}
+.decl gen(blk : blk, e : Expr)
+
+gen("l1" , $Add($Var("a"),$Var("b"))).
+//gen("l2" , $Add($Var("a"),$Var("b"))). // uncomment to see a + b in l3 avail expr
+gen("l2" , $Add($Var("b"),$Var("a"))).
+
+.decl expr(e : Expr)
+expr(e) :- gen(_,e).
+expr(a), expr(b) :- expr($Add(a,b)).
+
+.decl var(v : symbol)
+var("z").
+var("x").
+var("b").
+var("a").
+
+.decl free(v : symbol, e : Expr)
+free(x, e) :- expr(e), e = $Var(x).
+free(x, e) :- expr(e), e = $Add(a,b), (free(x,a); free(x,b)).
+
+
+.decl kill(b : blk, e : Expr)
+kill("start",e ) :- expr(e), (free("x", e) ; free("a", e) ; free("b", e)).
+kill("l1",e ) :- expr(e), free("z",e).
+kill("l2",e ) :- expr(e), free("z",e).
+
+//?x + ?y <-> ?y + ?z.
+/*
+gen(l,e2) :- gen(l,e1), eq(e1,e2).
+but don't do the same for kill? This feels like cheating.
+We can supercharge gen but we also supercharge kill. Eh?
+Well maybe not.
+*/
+
+
+.decl next(blk1:blk, blk2:blk)
+next("l1","l3").
+next("l2","l3").
+next("start","l1").
+next("start","l2").
+
+.decl label(b : blk)
+label(l) :- next(l,_) ; next(_,l).
+
+.decl notavail_entry(b : blk, e : Expr)
+.decl notavail_exit(b : blk, e : Expr)
+notavail_entry("start", e) :- expr(e).
+
+notavail_exit(l, e) :- (notavail_entry(l, e) ; kill(l,e)), !gen(l, e).
+notavail_entry(L2,e) :- notavail_exit(L1,e), next(L1,L2).
+
+.decl avail(l : blk, e  : Expr)
+avail(l,e) :- label(l), expr(e), !notavail_exit(l,e).
+.output avail
+```
+
+So what do I need to do to extend this to equivalent expressions?
+
+### Very Busy Expressions
+
+
+### Reaching Definitions
+
+### 
 
 # Implementations
 - Souffle
