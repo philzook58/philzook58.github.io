@@ -6,6 +6,18 @@ wordpress_id: 2987
 ---
 
 
+```julia
+println("hello world")
+#using Plots
+#using JuMP
+using LinearAlgebra
+x = [1,2,3,4]
+print(x)
+using Metatheory
+```
+
+[packagecompiler](https://julialang.github.io/PackageCompiler.jl/dev/index.html) make sys images so that packages load faster
+
 Metaheuristics.jl
 
 If you want just linear problems, you can also try Tulip (this is me self-advertising; I wrote it). It's pure Julia, and should give you decent performance.

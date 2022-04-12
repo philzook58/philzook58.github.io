@@ -11,6 +11,7 @@ wordpress_id: 1865
 
 - [Systems](#systems)
 - [History](#history)
+  - [Ciao](#ciao)
 - [Examples](#examples)
   - [Things that are prolog](#things-that-are-prolog)
     - [Hello World](#hello-world)
@@ -36,11 +37,13 @@ wordpress_id: 1865
   - [Definite Clauses Grammars (DCG)](#definite-clauses-grammars-dcg)
   - [CHR](#chr)
     - [Compiling](#compiling)
-  - [Extralogical features](#extralogical-features)
+  - [Answer Set Programming s(CASP)](#answer-set-programming-scasp)
+  - [Extral(ogical features](#extralogical-features)
   - [Lambda](#lambda)
 - [Semantics](#semantics)
 - [Expert Systems](#expert-systems)
 - [Lambda Prolog](#lambda-prolog)
+- [Rust Chalk Harrop](#rust-chalk-harrop)
   - [LF](#lf)
 - [LogTalk](#logtalk)
 - [Linear Logic Programming](#linear-logic-programming)
@@ -83,6 +86,8 @@ Relatives:
 - Hilog
 - Godel
 - Hyprolog - abduction
+- ergo AI, flora2
+- guan https://github.com/microsoft/Guan c# prolog?
 # History
 Resolution in automatc theorem provers came earlier.
 Kowalski and Colmerauer
@@ -108,6 +113,22 @@ Prolog III
 CLP Jaffar Lassez 1987
 
 
+## Ciao
+[ciao manual](http://ciao-lang.org/ciao/build/doc/ciao.html/ciaofulltoc.html)
+
+```ciao
+main(_) :- format("hellow world").
+```
+
+```ciao
+main(_) :- print([1,2,3]),
+  append(A,A,A), print(A)
+.
+```
+
+[assertions and auto documetation](http://ciao-lang.org/ciao/build/doc/ciao.html/AssrtLang.html)
+[ciao and design philosphy](http://cliplab.org/papers/hermenegildo11:ciao-design-tplp.pdf)
+ciaopp - preprocessor and veirfier? PLAI
 # Examples
 ## Things that are prolog
 - Typeclasses
@@ -248,6 +269,7 @@ Attaching extra info to variables. This can be be used to implement CLP as a lib
 
 
 eclipse talks to minizinc?
+[clp examples](https://swish.swi-prolog.org/example/examples.swinb)
 
 ### Prolog II, III IV.
 Cyclic terms. Rational terms. See Condicutive logic programming
@@ -257,6 +279,10 @@ Cyclic terms. Rational terms. See Condicutive logic programming
 [prolog and infinite trees](http://www.softwarepreservation.org/projects/prolog/marseille/doc/Colmerauer-InfTree-1982.pdf)
 
 ## Parallel 
+https://en.wikipedia.org/wiki/Parlog
+50 years of datalog talks about stuff.
+
+
 ## Coroutines
 [swi manual](https://www.swi-prolog.org/pldoc/man?section=coroutining)
 - `dif/2` ? Test is delyed until terms are sfufcient different or have become identical
@@ -274,6 +300,8 @@ delay
 
 
 ## CHR
+[forward chaining, chr comes up](https://swi-prolog.discourse.group/t/forward-chaining-like-rete-algorithm-in-rule-engine/5137/28)
+
 [swipl manual section](https://www.swi-prolog.org/pldoc/man?section=chr)
 [Anne Ogborn's tutorial](https://github.com/Anniepoo/swiplchrtut)
 [Schrijver's ICLP tutorial](https://dtai.cs.kuleuven.be/CHR/files/tutorial_iclp2008.pdf)
@@ -385,12 +413,27 @@ Don't bind rules in head
 mode declarations of chr affect performance. Huh
 c \ c <=> true is often desirable. Set semantics instead of multiset.
 
+
+
+
 ### Compiling
 [KU leuven system : implementation and application](https://lirias.kuleuven.be/retrieve/33588). Hmm. Is CHR compiled into prolog code?
 [CCHR: the fastest CHR Implementation, in C](https://lirias.kuleuven.be/retrieve/22123)  
 
+## Answer Set Programming s(CASP)
+https://swish.swi-prolog.org/example/scasp.swinb
+"Tabling and s(CASP) are quite different beasts. They both address reasoning in cyclic domains including negation. Tabling provides Well Founded Semantics where s(CASP) provides Stable Model Semantics. s(CASP) stresses creating an explanation. Tabling does not. Tabling scales a lot better than s(CASP). It all depends …"
 
-## Extralogical features
+https://gitlab.software.imdea.org/ciao-lang/sCASP
+[Constraint Answer Set Programming without Grounding](https://arxiv.org/abs/1804.11162)
+[Justifications for Goal-Directed Constraint Answer Set Programming](http://www.cliplab.org/papers/sCASP-ICLP2020/TC-explainCASP.pdf) ERGO AI uses justification trees  https://coherentknowledge.com/ using XSB
+
+s(ASP) was just ASP https://personal.utdallas.edu/~gupta/ . S(CASP) includes constraints
+[tutorial slides](http://platon.etsii.urjc.es/~jarias/slides/gde21-tutorial.pdf)
+[tutorail paper](http://ceur-ws.org/Vol-2970/gdepaper1.pdf)
+
+[event calculus](https://swi-prolog.discourse.group/t/event-calculus-in-swi-prolog/5233)
+## Extral(ogical features
 Database manipulation
 [swi](https://www.swi-prolog.org/pldoc/man?section=db)
 [sicstus database manip](https://sicstus.sics.se/sicstus/docs/latest4/html/sicstus.html/ref_002dmdb.html#ref_002dmdb)
@@ -464,6 +507,16 @@ Some built in elpi files
 
 [a tutorial on lambda prolog and is applications to theorem provin - Amy Felty](https://www.site.uottawa.ca/~afelty/dist/lprolog97.pdf)
 [thesis implementing lambda prolog in ciao prolog](https://www.yumpu.com/en/document/view/39502786/university-of-minnesota-this-is-to-certify-that-i-employers)
+
+
+# Rust Chalk Harrop
+https://github.com/rust-lang/chalk
+https://rust-lang.github.io/chalk/book/
+
+http://smallcultfollowing.com/babysteps/blog/2017/01/26/lowering-rust-traits-to-logic/#type-checking-generic-functions-beyond-horn-clauses
+https://internals.rust-lang.org/t/blog-series-lowering-rust-traits-to-logic/4673/12 internals thread
+
+http://smallcultfollowing.com/babysteps/blog/2017/04/23/unification-in-chalk-part-2/ how chalk handles type normalization
 
 
 ## LF

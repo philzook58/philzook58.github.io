@@ -9,6 +9,58 @@ title: Rust
 wordpress_id: 1849
 ---
 
+- [Formal methods](#formal-methods)
+  - [RustBelt](#rustbelt)
+  - [RustHorn](#rusthorn)
+  - [RustHornBelt](#rusthornbelt)
+  - [Prusti](#prusti)
+  - [Creusot](#creusot)
+- [Macros](#macros)
+  - [Declarative macros aka macro_rules!](#declarative-macros-aka-macro_rules)
+  - [Proc Macros](#proc-macros)
+  - [Hygiene](#hygiene)
+- [Webassembly](#webassembly)
+- [Resources](#resources)
+
+See Also:
+- Prolog and Datalog for Polonius and Chalk info
+
+
+
+```rust
+fn main(){
+    println!("hello world!");
+}
+```
+
+```rust
+
+fn main(){
+    let foo = |x : i64| {x + 1};
+    let i = 7;
+    fn foo2(x : i64) -> i64 {
+        x + i
+    }
+    dbg!(foo2(4));
+}
+
+```
+
+```python
+def my_func():
+    a = 1
+    return lambda: a
+
+print(my_func()())
+
+funcs = ([(lambda a: a*x) for x in range(10)])
+
+for func in funcs:
+    print(func(5))
+    print(id(func))
+```
+
+
 # Formal methods
 ## RustBelt
 ## RustHorn
@@ -46,9 +98,34 @@ Hygiene is dealing with what environment variables in your macro refer to. The s
 
 This kind of isn't what you want though. You almost certainly want to refer to libraries in scope at macro definition. If for example a function `foo` gets shadowed at the callsite.
 
+# Webassembly
+
+[https://rustwasm.github.io/](https://rustwasm.github.io/) The general webassembly site
+
+There is a web assembly tutorial
+
+[https://rustwasm.github.io/docs/book/introduction.html](https://rustwasm.github.io/docs/book/introduction.html)
+
+wasm-bindgen is a crate that auto builds javacript bindings given a macro annotation. This guide has the most stuff in it. web-sys and js-sys give useful bindings to things.
+
+[https://rustwasm.github.io/docs/wasm-bindgen/](https://rustwasm.github.io/docs/wasm-bindgen/)
+
+wasm-pack is a tool for building rust to webassembly projects
+
+[https://rustwasm.github.io/docs/wasm-pack/introduction.html](https://rustwasm.github.io/docs/wasm-pack/introduction.html)
+
+println! does not work unfortunately. You need to custom bind to console.log or use the web-sys bindings. It's kind of a pain in the ass [https://rustwasm.github.io/docs/wasm-bindgen/examples/console-log.html](https://rustwasm.github.io/docs/wasm-bindgen/examples/console-log.html)
+
+[https://www.nalgebra.org/](https://www.nalgebra.org/) nalgebra and ndarray are crates that give matrix and numerical stuff. They can bind to blas but also a lot of functionality is in pure rust, so it can be compiled to the web.
+
+Getting a webpage up that runs webassembly seems like an involved process. I thnk there is some preference to using web-pack. There is a lot of modern javascript features being used that I'm not familiar with. Guess I'm a grandpa. [https://javascript.info/](https://javascript.info/) Most importantly is the ES6 module system. Also some examples use await/async syntax to initialize the rust built webassembly.  [https://rustwasm.github.io/docs/wasm-bindgen/examples/without-a-bundler.html](https://rustwasm.github.io/docs/wasm-bindgen/examples/without-a-bundler.html)
+
+Serde seems like a useful route to getting stuff into and out of javascript. It is a serialization deserialization library.
 
 # Resources
-
+- timely dataflow
+- lalrpop nom
+- [rust script](https://rust-script.org/) I power my inline blogging with this.
 - [cyclone](https://pling.jondgoodwin.com/post/cyclone/) Interesting breakdown of some history
 - [little book of rust macros](https://danielkeep.github.io/tlborm/book/README.html)
 * https://news.ycombinator.com/item?id=25222750 - risp a rust lisp
@@ -84,7 +161,7 @@ It helps that you can use smart constructors that do the Box::new. That takes aw
 
 // https://stackoverflow.com/questions/51182640/is-it-possible-to-represent-higher-order-abstract-syntax-in-rust interesting example of HOAS
 
-    
+    ```
     <code>    #[derive(Debug, Eq, PartialEq, Clone)]
         pub enum Lambo {
             Lam(Box<Lambo>),
@@ -126,29 +203,7 @@ It helps that you can use smart constructors that do the Box::new. That takes aw
             );
         }</code>
 
-### Webassembly
-
-[https://rustwasm.github.io/](https://rustwasm.github.io/) The general webassembly site
-
-There is a web assembly tutorial
-
-[https://rustwasm.github.io/docs/book/introduction.html](https://rustwasm.github.io/docs/book/introduction.html)
-
-wasm-bindgen is a crate that auto builds javacript bindings given a macro annotation. This guide has the most stuff in it. web-sys and js-sys give useful bindings to things.
-
-[https://rustwasm.github.io/docs/wasm-bindgen/](https://rustwasm.github.io/docs/wasm-bindgen/)
-
-wasm-pack is a tool for building rust to webassembly projects
-
-[https://rustwasm.github.io/docs/wasm-pack/introduction.html](https://rustwasm.github.io/docs/wasm-pack/introduction.html)
-
-println! does not work unfortunately. You need to custom bind to console.log or use the web-sys bindings. It's kind of a pain in the ass [https://rustwasm.github.io/docs/wasm-bindgen/examples/console-log.html](https://rustwasm.github.io/docs/wasm-bindgen/examples/console-log.html)
-
-[https://www.nalgebra.org/](https://www.nalgebra.org/) nalgebra and ndarray are crates that give matrix and numerical stuff. They can bind to blas but also a lot of functionality is in pure rust, so it can be compiled to the web.
-
-Getting a webpage up that runs webassembly seems like an involved process. I thnk there is some preference to using web-pack. There is a lot of modern javascript features being used that I'm not familiar with. Guess I'm a grandpa. [https://javascript.info/](https://javascript.info/) Most importantly is the ES6 module system. Also some examples use await/async syntax to initialize the rust built webassembly.  [https://rustwasm.github.io/docs/wasm-bindgen/examples/without-a-bundler.html](https://rustwasm.github.io/docs/wasm-bindgen/examples/without-a-bundler.html)
-
-Serde seems like a useful route to getting stuff into and out of javascript. It is a serialization deserialization library.
+```
 
 * * *
 
@@ -162,7 +217,7 @@ Simpler forms of the eliminator can be used based on the situation. Singletons -
 
 The two layer design gives kind of a type level witness to the branch you are in. If the only way to Access the TTBool type is in the context of the TBool enum constructor, then you know you are in that branch of a pattern match in your have access to such a thing. Then you can use a typeclass predictaed pon that type to do a simple eimination. Or you could have a leibnitz class that let's you cast s. The inner construcotrs also gfive a reasonable place to put existentiual variables?
 
-    
+    ```
     <code>
     struct TTBool<S> {bool, phantom<S>}
     
@@ -203,7 +258,7 @@ The two layer design gives kind of a type level witness to the branch you are in
     
     
     </code>
-
+```
 This pattern of giving each in an enum constructor it's own struct data type has the flavor of something oner might call an associated type constructor. If you wanted to associate a constructor with a type, you could give this tpye name as an associated type . Nvm. This is not what is meant by the term in rust. 
 
 This is trash. i hate this
@@ -247,12 +302,12 @@ map_or_else is exactly the eliminator form.
 Similarly 
 
 [https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else)
-
-#### `pub fn [map_or_else](https://doc.rust-lang.org/std/option/enum.Option.html#method.map_or_else)<U, D, F>(self, default: D, f: F) -> U where  
+```
+pub fn [map_or_else](https://doc.rust-lang.org/std/option/enum.Option.html#method.map_or_else)<U, D, F>(self, default: D, f: F) -> U where  
 D: [FnOnce](https://doc.rust-lang.org/std/ops/trait.FnOnce.html)() -> U,  
 F: [FnOnce](https://doc.rust-lang.org/std/ops/trait.FnOnce.html)(T) -> U, `
-
-    
+```
+   ``` 
     <code>
     fn elimOption<A,B>(x:Option<A>, some : Fn(A) -> B, none : B) -> B {
       match x {
@@ -260,6 +315,7 @@ F: [FnOnce](https://doc.rust-lang.org/std/ops/trait.FnOnce.html)(T) -> U, `
         None => none 
        }
     }</code>
+```
 
 The extra power of the GADT match is that somehow it knows how to handle every possible type parameter that might show up and the result can depend on that type parameter.
 
@@ -272,7 +328,7 @@ Rust does not have great support for higher-kinded-types. In order to talk about
 A related trick that I think works the best is defunctionalization. You need to make a new type that means VecTag. Then we can make a typelevel function using a trait with associated types to apply it.
 
     
-    <code>// every use site of gmatch reuqires an instance of App1 connected to a function symbol.
+   ```// every use site of gmatch reuqires an instance of App1 connected to a function symbol.
     trait App1<A> {
         type T;
     }
@@ -309,7 +365,7 @@ A related trick that I think works the best is defunctionalization. You need to 
     
     impl<A> App1<A> for Id{
         type T = A; 
-    }</code>
+    }```
 
 Having to define a new impl for App every time you want to eliminate is _literally_ the worst, it's merely pretty bad.
 

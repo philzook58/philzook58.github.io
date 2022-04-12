@@ -10,6 +10,7 @@ my_array:
   - Misc
   - Physics
   - Programming
+  - Engineering
 ---
 More fluid than posts. Unfinished thoughts. Link Dumps. I will hopefully continually rearrange and crosslink these.
 

@@ -5,6 +5,7 @@ title: Category Theory
 
 EPR?
 
+[Resources on Lenses](https://github.com/bgavran/Lens_Resources)
 
 Doctrines
 

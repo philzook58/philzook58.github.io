@@ -12,6 +12,8 @@ title: Datalog
     - [Zippers For Program Points](#zippers-for-program-points)
 - [Implementations](#implementations)
   - [Rel](#rel)
+  - [DDlog](#ddlog)
+  - [IncA](#inca)
   - [Formulog](#formulog)
   - [Datafrog](#datafrog)
   - [Flix](#flix)
@@ -53,6 +55,8 @@ title: Datalog
     - [Patricia Tries](#patricia-tries)
     - [BDDs](#bdds)
   - [BogoSort](#bogosort)
+  - [Dynamic Programming](#dynamic-programming)
+    - [Q learning](#q-learning)
   - [CHR](#chr)
   - [Lambda representation](#lambda-representation)
   - [Parsing](#parsing)
@@ -73,13 +77,18 @@ title: Datalog
     - [Universal Quantifier](#universal-quantifier)
     - [Categorical Example](#categorical-example)
   - [Typeclass resolution.](#typeclass-resolution)
+  - [Borrow Checker](#borrow-checker)
   - [Type checking / inferring](#type-checking--inferring)
   - [Datalog Decompilers](#datalog-decompilers)
+  - [CRDTs](#crdts)
 - [Topics](#topics)
+  - [Provenance](#provenance-1)
+  - [Semi Naive Eavluation](#semi-naive-eavluation)
   - [Datalog+- and the chase](#datalog--and-the-chase)
   - [Tabling](#tabling)
   - [Descriptive Complexity and Least Fiexed Point Logic](#descriptive-complexity-and-least-fiexed-point-logic)
   - [Push based Datalog](#push-based-datalog)
+  - [Incremental / Differential Datalog](#incremental--differential-datalog)
 - [Resources](#resources)
 - [class(slotname : f(x,y) , ) :-](#classslotname--fxy----)
   - [building souffle emscripten](#building-souffle-emscripten)
@@ -100,16 +109,16 @@ Well, just about anything you can do with ordinary database queries. What do you
 But then on top of that you can use recursive queries. And that is where things get more interesting.
 Program analysis.
 
-topics:
-- incremental datalog
-- differential datalog
-
 Maybe just jump on down the the examples section. Or I should move them up here?
 
 ## Program Analysis
 [Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
 [hash consed points to sets](https://yuleisui.github.io/publications/sas21.pdf)
 
+[graspan](http://web.cs.ucla.edu/~wangkai/papers/asplos17)
+
+Points to analysis tutorial
+Doop
 
 
 ### Available Expressions 
@@ -267,18 +276,75 @@ hasvar($Add(x,y), v) :- expr(_,$Add(x,y)), (hasvar(x,v) ; hasvar(y,v)).
 - Souffle
 - Flix
 - Rel
+- IncA
+- [LADDDER](https://www.pl.informatik.uni-mainz.de/files/2021/04/inca-whole-program.pdf) differential dataflowq sequel to Inca
 - [Datafun](http://www.rntz.net/datafun/). lambda calculus with type system for tracking lattice monotonicity. and built in set type with comprehensions.
-- [differential datalog](https://github.com/vmware/differential-datalog)
+- [differential datalog](https://github.com/vmware/differential-datalog) DDlog
 - dr lojekyll
 - formulog
-- [datafrog](https://github.com/rust-lang/datafrog) 
+- [datafrog](https://github.com/rust-lang/datafrog) - kind of a manual datalog library in rust. Powers polonius, the experimental rust borrow checker
 - ascent https://dl.acm.org/doi/pdf/10.1145/3497776.3517779 <https://docs.rs/ascent/latest/ascent/> Rust macro based datalog.
 - uZ3 (mu z3) built into z3
 - logicblox
 - [flora2](http://flora.sourceforge.net/) ergo lite. Is this a datalog?
+- [dynamic datalog](https://github.com/frankmcsherry/dynamic-datalog)
+
+- yedalog
+- EVE
+- datomic
+
+- bigdatalog - some kind of big data datalog. 
+- [XTDB](https://xtdb.com/) XTDB is a general-purpose bitemporal database for SQL, Datalog & graph queries. What the hell does that mean
+- percival https://percival.ink/
+
 ## Rel
 [vid](https://www.youtube.com/watch?v=WRHy7M30mM4&t=136s&ab_channel=CMUDatabaseGroup)
 Relational AI
+
+
+
+## DDlog
+Incremental datalog. You can assert and unassert facts.
+Datalog compiler in haskell. Produces rust project. Rust project uses differential dataflow which in turn uses timely dataflow.
+
+```ddlog
+typedef UUID = bit<128>
+input relation Host(id : UUID, name : string, ip : IP4)
+
+// syntax to pick named fields
+Host(.id=host_id)
+
+"${x}" // string interpolation
+// newtype wrapper / structs
+typedef ip_addr_t = IPAddr{addr: bit<32>}
+// match
+var strs = match(value) {
+    Some(s) -> string_split(s, ":")
+}
+
+//FlatMap to make generative functors.
+[1,2,3] //vec litreral
+["foo" -> 0] //map literals
+
+extern functions
+@ to pattern match and have name
+
+groupby
+
+Ref<>
+Intern<> - istring. intern(), ival()
+
+MultiSets
+Streams
+variants
+typedef paylod = Eth1 {} | Eth2 {} | Eth3 {}
+
+modules
+```
+
+## IncA
+An incremental datalog for program analysis. Incremental can be a big deal in terms of developer interactivity. Also supports lattices
+
 
 ## Formulog
 SMT formulas as data. Interesting distinction with CHC where smt formula are predicates.
@@ -293,8 +359,12 @@ I remember this being totally incomprehensible. I guess I must have lost my mind
 
 
 ## Flix
+Supports lattices.
+Has a full programming language to.
+
 [online playground](https://play.flix.dev/)
 Also install as a vs code plugin. very nice.
+[Fixpoints for the masses: programming with first-class Datalog constraints](https://dl.acm.org/doi/abs/10.1145/3428193)
 ## dr lojekyl
 https://blog.trailofbits.com/2022/01/05/toward-a-best-of-both-worlds-binary-disassembler/
 https://www.petergoodman.me/docs/dr-lojekyll.pdf
@@ -376,6 +446,14 @@ You can emulate proof production using subsumption. See below.
 Datalog is bottom up and prolog is top down. In a sense datalog feels “push” and prolog feels “pull”. These viewpoints can be translated to some degree to each other. Prolog can gain some benefits of datalog via tabling, which is a memoization technique. Likewise datalog can become goal driven via the “magic set transformation”, The following is a simplified but intuitive presentation I believe of the vague idea.
 
 Relations in prolog can be used in different [modes](https://www.swi-prolog.org/pldoc/man?section=modes) (this is prolog terminology btw. An interesting concept). It’s part of the beauty of prolog that relations are sometimes reversible or generative if written to be so. Sometimes prolog programs are written to only behave correctly if used as if they were essentially a function.
+
+What is and isn't datalog?
+
+What is and isn't function symbols? Function symbols are a subtle thing. You can encode function symbols into flat relations with different powers. Functions are a subset of relations after all. Existentials and gensyms
+
+What is and isn't ground?
+
+What is and isn't pattern matching vs unification. In some sense datalog is a pattern matching language, not unifying language.
 
 ### Need Sets
 
@@ -488,6 +566,55 @@ p($Var(), $Var()) <= p($Lit(), $Lit())
 
 KT Tekle
 Liu
+
+
+```souffle
+.type UList = UL {n : number} | Cons {a : symbol, b : UList} | Nil {}
+.type UNum = UL {n : symbol} | Lit {n : number}
+
+// append([],A,A). 
+// append([A | X], Y, Z) :- append(X,Y,Z1), Z = [A | Z1].
+
+.decl append(x : UList, y : UList, z : UList)
+.decl d_append(x : UList, y : UList, z : UList) // demand. Flow down.
+append($Nil(), $UL(n), $UL(n) ) :- d_append($Nil(), $UL(n), $UL(_)). // or pick max?
+append($Nil(), x, x ) :- d_append($Nil(), $UL(_), x).
+append($Nil(), x, x ) :- d_append($Nil(), x, $UL(_)).
+
+d_append(x,y,z) :- d_append($Cons(_,x), y, z).
+
+// We need a pattern matching case? What if two UL alias?
+d_append($Nil(), y,z) :- d_append($UL(m),y,z). // d_append($Nil(), y,z) should be another case. This isn't even right anyway
+
+
+append($Cons(a,x), y, z) :- d_append($Cons(a,x), y, z), append(x,y,z1), z = $Cons(a,z1).
+
+d_append($UL(0), $UL(1), $Cons("a", $Nil())).
+
+.output append
+```
+
+Do immediate unification ahead of time?
+Alternatively use explicit eq
+
+```souffle
+.type UList = UL {n : number} | Cons { }
+.type UNum = U {n : symbol}
+
+// append([],A,A). 
+// append([A | X], Y, Z) :- append(X,Y,Z1), Z = [A | Z1].
+
+.decl append(x : UList, y : UList, z : UList)
+eq(y,z) :- append($Nil(), y, z), (y = $UL(_) ; z = $UL(_)).
+// structural unification
+eq(a,a1), eq(b,b1):- eq( $Cons(a,b), $Cons(a1,b1)).
+
+// how do we have eq handle the two branching cases.
+
+
+```
+
+Need to carry an explicit union find field to thread? Slash an explicit substition mapping (slash homomorphism which is insane terminology)
 
 ## Examples
 
@@ -972,6 +1099,8 @@ canon("x","y").
 canon("y","z").
 .output canon(IO=stdout)
 ```
+
+
 #### Negation
 Can I emulate negation using subsumption? Maybe remove negated clauses from rule, and later delete them?
 
@@ -1222,11 +1351,65 @@ What about building a relation of pairs
 pair(a,b) <= pair(b,a) :- b <= a, a <= b
 ```
 
+
+bubble sort
+```
+// could use max over input iindices instead of N
+#define N 4
+.decl in(index : number, v : symbol)
+in(2 , "a").
+in(0 , "b").
+in(1 , "c").
+in(3 , "d").
+
+proc(i, x1, t + 1), proc(i+1,y1, t + 1):- proc(i, x,t), proc(i+1, y, t), t%2 = i%2 , t < N * N, 
+   (  x < y, x1 =x,y1 = y;  x >= y, x1 = y, y1 = x).
+
+out(i,x) :- proc( i, x, N).
+```
+
+path based. Take shortest oriented edges. Graph is then 
+```
+v(1)
+v(2)
+v(3)
+
+// shortest edges
+edge(i,j) :- v(i), v(j), i < j.
+edge(i,j) <= edge(i,k) :- k <= j.
+
+//edge(i,i) :- min().
+//edge(i,j) :-  edge(i,j)
+
+path(0,i,i) :- min(i : v(i) ).
+path(n+1,i,k) :- path(n, i,j), edge(j,k).
+
+out(i,x) :- path(i,_,x).
+
+```
+
+Radix sort?
+
+## Dynamic Programming
+### Q learning
+Grid world + subsumption / lattice.
+
 ## CHR
 Constraint handling rules have some similarity to datalog with subsumption and sometimes you can translate programs.
 Datalog has set semantics, CHR has multiset semantics. Sometimes you add CHR rules to make set semantics
 subsumption allows some deletion.
 
+Timestamps and water marks?
+max(t1,t2)+1  :- foo( , t1), bar(t2) 
+
+:- watermark(t), foo(t1), , t1 < t
+foo() <= foo() :- watermark(t)
+
+deletion watermark?
+
+DDlog has a multiset thing. Seems reasonable this is better for chr.
+
+You can have multiset if you include justification/provenance fields. This also revents refirings.
 
 ## Lambda representation
 What is the most appropriate way? Probably we want to implement some kind of machine flavored implementation.
@@ -1243,7 +1426,7 @@ Combinators
 lambda datalog. Pattern matching on ground lambda terms is good.
 
 ## Parsing
-
+What about good error parsing? It feels like the flexibility of a datalog could be nice. It's sort of why-not provenance.
 
 [CYK Parsing](https://en.wikipedia.org/wiki/CYK_algorithm) is an example of dynamic programming.
 Earley = magic set of CYK. Doing it on demand
@@ -1697,7 +1880,8 @@ I can't open libc.so.6 because this string is being made in this way. libc.so is
 [Integrity Constraints for Microcontroller Programming in Datalog](https://users.informatik.uni-halle.de/~brass/micrologS/) arduino timestamping, external pin relations. pretty cool.
 [Microlog - A Datalog for Microcontrollers and other Interactive Systems](https://dbs.informatik.uni-halle.de/microlog/)
 
-
+[Dedalus](https://www2.eecs.berkeley.edu/Pubs/TechRpts/2009/EECS-2009-173.pdf) http://bloom-lang.net/faq/
+Timely dataflow
 
 ## Theorem Proving
 A lot of these techniques are taken from interpeting the Lambda Prolog rules.
@@ -1832,10 +2016,99 @@ Could block composition rule on Id. Kind of a cheap shot
 
 ## Typeclass resolution.
 See Lean paper Tabling Typeclasses
-See Chalk (which uses datafrog?)
+See Chalk (which uses datafrog?) https://github.com/rust-lang/chalk
 
+Write typeclass rules as datalog/prolog clauses. The provenance tree is enough to actually construct the type class instances.
+
+
+## Borrow Checker
+Hmm the borrow checker is seperate from the trait engine chalk probably
 See ascent paper which compares itself with datafrog based polonius
+Polonius https://www.youtube.com/watch?v=_agDeiWek8w
+switches polonius from diff dataflow to datafrog https://github.com/rust-lang/polonius/pull/36#issuecomment-390393717
+https://github.com/frankmcsherry/blog/blob/master/posts/2018-05-19.md datafrog blog post
+[An alias-based formulation of the borrow checker](http://smallcultfollowing.com/babysteps/blog/2018/04/27/an-alias-based-formulation-of-the-borrow-checker/) soufle datalog rules
+[rust board discussion](https://internals.rust-lang.org/t/blog-post-an-alias-based-formulation-of-the-borrow-checker/7411)
+"NLL"? Non lexical liftetimes https://stackoverflow.com/questions/50251487/what-are-non-lexical-lifetimes
+This is perhaps related to alias analysis? But maybe not.
+Also perhaps to subtyping.
 
+region variables.
+lifetimes
+```souffle
+// just collected up from post above
+
+.decl cfg_edge(P:point, Q:point)
+.input cfg_edge
+
+
+.decl subset(R1:region, R2:region, P:point)
+// Rule subset1
+subset(R1, R2, P) :- base_subset(R1, R2, P).
+// Rule subset2
+subset(R1, R3, P) :- subset(R1, R2, P), subset(R2, R3, P).
+// Rule subset3 (version 1)
+subset(R1, R2, Q) :- subset(R1, R2, P), cfg_edge(P, Q).
+
+.decl borrow_region(R:region, L:loan, P:point)
+.input borrow_region
+
+.decl region_live_at(R:region, P:point)
+.input region_live_at
+
+.decl requires(R:region, L:loan, P:point)
+// Rule requires1
+requires(R, L, P) :- borrow_region(R, L, P).
+// Rule requires2
+requires(R2, L, P) :- requires(R1, L, P), subset(R1, R2, P).
+// Rule requires3 (version 1)
+requires(R, L, Q) :-
+  requires(R, L, P),
+  !killed(L, P),
+  cfg_edge(P, Q).
+
+.decl killed(L:loan, P:point)
+.input killed
+
+.decl invalidates(P:point, L:loan)
+.input invalidates
+
+.decl loan_live_at(R:region, P:point)
+
+// Rule loan_live_at1
+loan_live_at(L, P) :-
+  region_live_at(R, P),
+  requires(R, L, P).
+
+.decl error(P:point)
+
+// Rule error1
+error(P) :-
+  invalidates(P, L),
+  loan_live_at(L, P).
+
+// Rule subset3 (version 2)
+subset(R1, R2, Q) :-
+  subset(R1, R2, P),
+  cfg_edge(P, Q),
+  region_live_at(R1, Q), // new 
+  region_live_at(R2, Q). // new
+
+// Rule requires3 (version 2)
+requires(R, L, Q) :-
+  requires(R, L, P),
+  !killed(L, P),
+  cfg_edge(P, Q),
+  region_live_at(R, Q). // new
+```
+
+[polonius and region errors](http://smallcultfollowing.com/babysteps/blog/2019/01/17/polonius-and-region-errors/)
+A sequel to the above post with other souffle rules
+
+[Polonius and the case of the hereditary harrop predicate](http://smallcultfollowing.com/babysteps/blog/2019/01/21/hereditary-harrop-region-constraints/)
+Hmm... So he's mixing harrop, lifetimes, datalog. My kinda guy.
+
+[lifetimes.lifetime inference in souffle ](https://github.com/rljacobson/lifetimes)
 ## Type checking / inferring
 Related of course to the above.
 
@@ -1912,8 +2185,43 @@ souffle-z3 for refinement typing?
 
 ## Datalog Decompilers
 [gigahorse](https://github.com/nevillegrech/gigahorse-toolchain) - decompiler for smart contracts based on souffle
+grammatech
+Dr lojekyll
+
+
+
+## CRDTs
+CRDT are a latticy based structure. It makes sense that it might be realted or modellable in datalog
+
+[expressing crdts as queries using datalog](https://speakerdeck.com/ept/data-structures-as-queries-expressing-crdts-using-datalog)
+https://github.com/frankmcsherry/dynamic-datalog/blob/master/problems/crdt/query.dl souffle example
+https://github.com/frankmcsherry/dynamic-datalog
 
 # Topics
+## Provenance
+[Explaining Outputs in Modern Data Analytics∗](http://www.vldb.org/pvldb/vol9/p1137-chothia.pdf) prvoencnace in differential dataflow <https://github.com/frankmcsherry/explanation> <https://github.com/frankmcsherry/blog/blob/master/posts/2016-03-27.md>
+
+[decalarative datalog debugging for mere mortals](https://yanniss.github.io/DeclarativeDebugging.pdf)
+
+## Semi Naive Eavluation
+I remember a time when semi naive seemed pretty cryptic to me. I still amnot sure I understand it perfectly, but I have crossed the threshld 
+
+Naive evaluations only needs one table per relation. You can keep track of if there is anything to do by checking whether you find new tuples as you go along.
+You could do it instead with two tables
+- old
+- new
+  
+And then at the final step, take the set `old \ new` , see if it is empty for termination check, and add it into old
+
+
+For every logical relation you need to keep 3 tables
+- old (stable)
+- delta (recent)
+- new (to_add)
+You need these three because you need a place to put new facts, but also you want to keep the most recent updated tuples as a seperate thing.
+`delta = new \ old`
+
+
 ## Datalog+- and the chase
 [Datalog+-](https://dl.acm.org/doi/pdf/10.1145/1514894.1514897) A Unified Approach to Ontologies and Integrity Constraints. Integraes datalog with equality and tuple generating dependencies. 
 [Datalog+- questions and answers](https://www.aaai.org/ocs/index.php/KR/KR14/paper/viewFile/7965/7972)
@@ -1936,6 +2244,8 @@ Tabling in prolog leads to something very similar in power to the memoizing data
 ## Descriptive Complexity and Least Fiexed Point Logic
 
 [https://en.wikipedia.org/wiki/Fixed-point_logic#Least_fixed-point_logic](https://en.wikipedia.org/wiki/Fixed-point_logic#Least_fixed-point_logic) descriptive complexity theory says datalog is same thing as first order logic with fixpoints. Curious because datalog is also in some sense restricted horn clauses whereas this is saying in another sense it is full FO + fixpoint. 
+
+
 
 ## Push based Datalog
 [Brass's website](https://users.informatik.uni-halle.de/~brass/)
@@ -1962,7 +2272,59 @@ class Rel():
 class Rule():
 
 ```
+
+## Incremental / Differential Datalog
+See DDlog.
+See Database/Streaming
+
+[differential dataflow v datalog](https://github.com/frankmcsherry/blog/blob/master/posts/2016-06-21.md) Uses magic sets in incrmenetal system in a cool way. Datalog is dataflow system with giant fixpoint around it. Generic join in a rust macro
+
+Szabo https://szabta89.github.io/publications.html  [thesis](https://openscience.ub.uni-mainz.de/handle/20.500.12030/5617)
+
 # Resources
+[bag datalog](https://twitter.com/NickSmit_/status/1510832523701456896?s=20&t=5y91-I1SPrIGomAWSqs69w) https://arxiv.org/pdf/1803.06445.pdf
+bag rewriting. derivation tree. rule(reason1,reason2) :- R(reason).R(reason)
+No subsumption.
+What about making these things the same thing. We have an equiavalence class of proofs. We extract a smallest one.
+How do you record eq? downcast ids to integers
+eq(i, i, reason)
+proof extraction becomesan egrtaph extraction
+We get the hash consing property for free.
+
+
+
+topics:
+- incremental datalog
+- differential datalog https://github.com/frankmcsherry/blog/blob/master/posts/2016-06-21.md
+
+[big datalog on spark]http://yellowstone.cs.ucla.edu/~yang/paper/sigmod2016-p958.pdf
+
+[Modern Datalog systems at sigmod and vldb](https://github.com/frankmcsherry/blog/blob/master/posts/2019-09-06.md)
+[Scaling-Up In-Memory Datalog Processing: Observations and Techniques]() Recstep
+
+
+
+
+unsafe stratification:
+strata_finish(), !query_strata.
+Timestamps can d something similar
+watermark(t), !query(t1), t1 < t 
+or safe deletion
+delete(t).
+You can partial evaluate to satisfy rel_0 rel_1 rel_2... it is annoying though and not very scalable
+
+
+[QL: Object-oriented Queries on Relational Data](https://drops.dagstuhl.de/opus/volltexte/2016/6096/pdf/LIPIcs-ECOOP-2016-2.pdf)
+
+[datalog reloaded](https://link.springer.com/book/10.1007/978-3-642-24206-9?page=2#toc) a datalog compendiium 2011
+ 
+[algerbaic modelling in datalog](https://dynresmanagement.com/uploads/3/5/2/7/35274584/datalog_warrenbookchapter.pdf)
+Some logicblox stuff. Datalog meets mathemtical programming?
+
+Generic Join
+
+
+
 If you wrote a decompiler or compiler in datalog, provenance becoes something more concrete to talk about
 
 

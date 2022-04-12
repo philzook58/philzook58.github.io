@@ -268,6 +268,8 @@ Barrier method
 
 
 # Mixed Integer
+
+
 ## Big-M
 ## Encoding boolean functions/relations
 Any boolean function/relation is a convex polytope subset of the hypercube + integer constraints.
@@ -278,6 +280,8 @@ Any boolean function/relation is a convex polytope subset of the hypercube + int
 
 
 ## Unrolling time
+[Products of Variables in Mixed Integer Programming Gurobi tutorial](https://www.youtube.com/watch?v=HS5HVCMORbo)
+Mccormick relaxation
 
 Techniques papers from the COAT slack
 

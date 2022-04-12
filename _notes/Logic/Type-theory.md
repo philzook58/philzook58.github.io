@@ -2,6 +2,8 @@
 layout: post
 title: Type Theory
 ---
+
+
 # Syntax and Semantics
 
 Type theory takes syntax more seriously than I ever realize.
@@ -243,7 +245,7 @@ Parametricity is supposedly an example also
 
 # Realizability
 
-
+[andrej notes on realizability](https://github.com/andrejbauer/notes-on-realizability)
 
 [Cody's suggested book TOC](https://twitter.com/codydroux/status/1470121974655500293?s=20)
 Extensional vs Intensional models?

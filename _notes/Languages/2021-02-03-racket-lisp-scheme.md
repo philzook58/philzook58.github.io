@@ -8,6 +8,17 @@ title: Scheme Racket Lisp
 Gambit vs Chez vs Guile scheme. Me dunno
 Gerbil is a system on top of Gambit approximately similar to racket
 
+
+```scheme
+(print "hello world")
+(print "~a foo" 'bar)
+```
+
+```racket
+#lang racket
+(print "hello world")
+```
+
 ### Gambit compiling to javascript
 [old gist](https://gist.github.com/roman01la/1d2f84357a2aef8ef053dd6ba4f0aad1)
 [discussion](https://mailman.iro.umontreal.ca/pipermail/gambit-list/2019-July/009132.html)

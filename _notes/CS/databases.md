@@ -9,15 +9,25 @@ title: Databases
   - [The Chase](#the-chase)
 - [Ontology Formats](#ontology-formats)
 - [Optimal Joins](#optimal-joins)
+- [Relational AI](#relational-ai)
 - [Streaming](#streaming)
-  - [Schema](#schema-1)
+- [CRDTs](#crdts)
+- [Big Data](#big-data)
+  - [hadboop](#hadboop)
+  - [Spark](#spark)
+  - [Message brokrs](#message-brokrs)
+  - [Services](#services)
+- [Graph systems](#graph-systems)
   - [SQL](#sql)
   - [sqlite](#sqlite)
 - [Resources](#resources)
+  - [Conferences](#conferences)
+  - [Misc](#misc)
 
 
 See also:
 - Datalog
+- concurrency
 
 
 https://en.wikipedia.org/wiki/Database_normalization
@@ -36,6 +46,7 @@ SELECT a,b FROM edge;
 
 ```
 
+https://en.wikipedia.org/wiki/Materialized_view
 
 ## indices
 
@@ -114,9 +125,76 @@ Course https://web.stanford.edu/class/cs227/Lectures/lec02.pdf very similar to b
 [worst case optimal join algorithm](https://cs.stanford.edu/people/chrismre/papers/paper49.Ngo.pdf)
 [leapfrog triejoin](https://arxiv.org/pdf/1210.0481v5.pdf)
 https://github.com/frankmcsherry/blog/blob/master/posts/2018-05-19.md
+Dovetail join - relational ai unpublished. Julia specific ish? https://relational.ai/blog/dovetail-join
+use sparsity of all relations to narrow down search
+Worst case optiomal join Ngo pods 2012
+leapfrog triejoin simpel worst case icdt 2015
+worst case optimal join for sparql
+worst case optimal graph joins in almost no space
+Correlated subqueries:
+unnesting arbitrary queries
+How materializr and other databases optimize sql subqueries
+
+
+
+
+# Relational AI
+https://www.youtube.com/watch?v=WRHy7M30mM4&ab_channel=CMUDatabaseGroup
+
+snowflake
+databricks
+bigquery
+dbt 
+fivetran
+
+data apps - dapps
+
+lookml
+sigma
+legend
+
+Resposnive compilter - matsakis
+salsa.jl
+umbra/leanstore
+
+incremental
+COnvergence of datalog over presmeirings
+differential dataflor cidr2013
+reconciling idfferences 2011 Green
+F-IVM incrmenetal view mantinance with triple lock fotrization benefits
+
+systemml vecame apache systemds https://systemds.apache.org/
+
+Semantic optimization
+FAW question asked frequence : Ngo Rudra PODS 2016
+What do shannon type ineuqlaities submodular width and disjunctive datalog have to do with one another pods 2017
+precise complexity analysis for efficient datalog queries ppdp 2010
+functional aggregate queries with additive inequalities
+convergence of dtalog over pr-esemirign
+
+Relational machine learning
+Layered aggregate engine for analystics worloads schelich olteanu khamis
+leanring models over relational data using sparse tenosrs
+The relational data borg is learning olteanu vldb keynote
+sturcture aware machine learning over multi relational database
+relational know graphs as the ofundation for artifical intelligence
+km-means: fast clustering for relational data
+https://arxiv.org/abs/1911.06577 Learning Models over Relational Data: A Brief Tutorial
+
+
+duckdb for sql support
+calcite
+postgresql parser
+
+Fortress library traits. OPtimization and parallelism
+https://relational.ai/blog/categories/research
+
+https://arxiv.org/abs/2004.03716 triangle view mantenance
 # Streaming
 [streaming 101](https://www.oreilly.com/radar/the-world-beyond-batch-streaming-101/)
 unbounded data
+
+https://en.wikipedia.org/wiki/Stream_processing
 
 lambda architecture - low latency inaccurate, then batch provides accurate
 
@@ -130,11 +208,67 @@ millwheel
 spark streaming
 
 
+# CRDTs
+Conflict Free replicated datatypes
+<https://crdt.tech/> martin Kleppmann
 
-## Schema
+[automerge: library of data structures for collab applications in javascript](https://github.com/automerge/automerge) https://mobiuk.org/abstract/S4-P5-Kleppmann-Automerge.pdf
+[isabelle crdt](https://github.com/trvedata/crdt-isabelle)
 
 
+[Conflict-free Replicated Data Types”](https://arxiv.org/pdf/1805.06358.pdf)
+[“A comprehensive study of Convergent and Commutative Replicated Data Types](https://hal.inria.fr/inria-00555588/document)
 
+Operational Transformation
+
+delta-based vs state-based
+
+# Big Data
+Spark
+Hadoop
+MapReduce
+Dask
+Flink
+Storm
+
+Mahout
+Vowpal Wabbit
+## hadboop
+
+Giraph
+
+
+## Spark
+https://en.wikipedia.org/wiki/Apache_Spark
+Databricks - company
+bigdatalog https://www.cis.upenn.edu/~susan/cis700/Papers/BigDataAnalyticsSPARK.pdf https://github.com/ashkapsky/BigDatalog
+MLlib
+spark streaming
+graphx
+
+
+## Message brokrs
+RabbitMQ
+Kafka
+
+## Services
+BigQuery
+Snowflake
+Azure AWS 
+
+
+# Graph systems
+It isn't that relational systems can't express graph problems. But maybe graph systems are more optimized for the problem
+neo4j
+Giraph
+Powergraph
+graphrex
+graphx
+myria
+graphchi
+xsteam
+gridgraph
+graphlab
 
 
 
@@ -158,6 +292,21 @@ spark streaming
 
 
 # Resources
+## Conferences
+- SIGMOD PODS https://sigmod.org/pods-home/ pods uutorials https://sigmod.org/pods-home/pods-tutorials/ [Testy of time awards](https://sigmod.org/pods-home/acm-pods-alberto-o-mendelzon-test-of-time-award/) Cool stuff in here.
+- VLDB
+- HYTRADBOI https://www.hytradboi.com/ also very cool stuff.
+## Misc
+
+[https://xtdb.com/](XTDB is a general-purpose bitemporal database for SQL, Datalog & graph queries.)
+
+[Conjunctive-query containment and constraint satisfaction](https://dl.acm.org/doi/10.1145/275487.275511)
+
+Designing Data intensive systems martin kleppmann
+
+[scalability but at what cost?](http://www.frankmcsherry.org/assets/COST.pdf) big systems vs laptops.
+
+
 [Data integration the relational logic approach](http://logic.stanford.edu/dataintegration/)
 
 [postgres indexes for newbies](https://blog.crunchydata.com/blog/postgres-indexes-for-newbies)

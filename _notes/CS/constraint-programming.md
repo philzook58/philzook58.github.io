@@ -63,9 +63,16 @@ table annotions include lattice type stuff "mode-directed tabling"
 action rules
 loops
 # Answer Set Programming
+[Arntzenius disccision](https://twitter.com/arntzenius/status/1264570390849949696?s=20&t=5y91-I1SPrIGomAWSqs69w) "How are Datalog, SAT/SMT, and answer set programming related? Is ASP basically the generalisation of SAT to first order logic, plus recursion? And Datalog restricts ASP to Horn clauses and stratified recursion?
+
 <https://en.wikipedia.org/wiki/Answer_set_programming>
 
+[transpiling PCF to ASP](https://arxiv.org/pdf/1808.07770.pdf)
+[temporal answer set programming](https://deepai.org/publication/temporal-answer-set-programming) TELINGO
 [Potassco, the Potsdam Answer Set Solving Collection](https://potassco.org/)
+
+[Possivbe worlds explorer](https://github.com/idaks/PW-explorer) demos https://github.com/idaks/PWE-demos . Qlearning? Sure. https://ischool.illinois.edu/people/bertram-ludascher datalog debugging. Prevoenance. 
+[martens Generating Explorable Narrative Spaces with Answer Set Programming](https://drive.google.com/file/d/1CKDOsT9FIGW3SNyW5u5heIxbx_ZLCAP5/view)
 
 Clingo
 dlv2 maybe https://dlv.demacs.unical.it/

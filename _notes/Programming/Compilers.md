@@ -58,6 +58,8 @@ Context Free Grammars
 LL
 LALR
 
+[How do you get good error messages](https://twitter.com/SandMouth/status/1513173009976147975?s=20&t=5y91-I1SPrIGomAWSqs69w)
+
 ## Algorithms
 [List of algorithms - parsing](https://en.wikipedia.org/wiki/List_of_algorithms#Parsing)
 Recursive Descent
@@ -78,7 +80,7 @@ parsec
 Flex
 yacc/bison
 antlr
-Menhir
+Menhir [error handling the new way](http://cambium.inria.fr/~fpottier/menhir/manual.html#sec68)
 Sam's coq stuff <https://github.com/slasser/AllStar> <https://github.com/slasser/CoStar>
 
 
@@ -243,6 +245,10 @@ Live means that the variable has been made and someone still needs to use it now
 In this example, if we assume v1 v2 & v3 are live at the beginning, v1 is live for all 3 instructions, v3 is live for all three and at the output, but v2 is only live at the first instruction since it is never used again.
 
 [dsatur graph coliring heurisitc](https://en.wikipedia.org/wiki/DSatur)
+
+[RL4ReAl: Reinforcement Learning for Register Allocation](https://twitter.com/johnregehr/status/1513561374873464833?s=20&t=NBROMONLYyqlU8uerfss0A)
+Compiler gym
+
 ## Instruction Scheduling
 ## Assembly Production
 You need to produce actual binary, actual 1s and 0s
@@ -254,7 +260,15 @@ See also:
 
 # JIT
 de-optimization paths
+[mir](https://github.com/vnmakarov/mir) an intermiedtae representation for JIT
+[qbe](https://c9x.me/compile/)
+[libjit](https://www.gnu.org/software/libjit/)
+[ryujit](https://github.com/dotnet/coreclr/blob/master/Documentation/botr/ryujit-overview.md)
+[libfirm](https://github.com/libfirm/libfirm)
+[cranelift](https://github.com/CraneStation/cranelift)
+[nanojit](https://github.com/dibyendumajumdar/nanojit)
 
+[libgccjit](https://gcc.gnu.org/onlinedocs/jit/)
 # Garbage Collector
 ## Conservative vs Exact
 
