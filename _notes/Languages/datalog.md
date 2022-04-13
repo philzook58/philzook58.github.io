@@ -81,6 +81,7 @@ title: Datalog
   - [Type checking / inferring](#type-checking--inferring)
   - [Datalog Decompilers](#datalog-decompilers)
   - [CRDTs](#crdts)
+  - [MultiSet Semantics](#multiset-semantics)
 - [Topics](#topics)
   - [Provenance](#provenance-1)
   - [Semi Naive Eavluation](#semi-naive-eavluation)
@@ -1395,6 +1396,8 @@ Radix sort?
 Grid world + subsumption / lattice.
 
 ## CHR
+See note on prolog for more on CHR
+
 Constraint handling rules have some similarity to datalog with subsumption and sometimes you can translate programs.
 Datalog has set semantics, CHR has multiset semantics. Sometimes you add CHR rules to make set semantics
 subsumption allows some deletion.
@@ -1409,7 +1412,45 @@ deletion watermark?
 
 DDlog has a multiset thing. Seems reasonable this is better for chr.
 
-You can have multiset if you include justification/provenance fields. This also revents refirings.
+You can have multiset if you include justification/provenance fields. See section below. This also prevents refirings.
+
+```
+a() \ b(1) <=> guard | b(2)
+\\ is similar to
+b(2) :- a(), b(1), guard.
+b(1) <=  b(2) :- a(), guard.
+
+```
+
+```souffle
+/*
+CHR: 
+  a() \ b(1) <=> guard | b(2) 
+is similar to
+Datalog:
+  b(2) :- a(), b(1), guard.
+  b(1) <=  b(2) :- a(), guard.
+
+Merge Sort in CHR, given values as next(start,Value)
+next(A,B) \ next(A,C) <=> A<B,B<C | next(B,C).
+*/
+.decl next(a : number, b : number)
+next(b,c) :- next(a,b), a < b, b < c, next(a,c).
+next(a,c) <= next(b,c) :- next(a,b), a < b, b < c.
+
+next(0,7). next(0,4). next(0,3).
+.output next
+/*
+---------------
+next
+a       b
+===============
+0       3
+3       4
+4       7
+===============
+*/
+```
 
 ## Lambda representation
 What is the most appropriate way? Probably we want to implement some kind of machine flavored implementation.
@@ -2196,6 +2237,27 @@ CRDT are a latticy based structure. It makes sense that it might be realted or m
 [expressing crdts as queries using datalog](https://speakerdeck.com/ept/data-structures-as-queries-expressing-crdts-using-datalog)
 https://github.com/frankmcsherry/dynamic-datalog/blob/master/problems/crdt/query.dl souffle example
 https://github.com/frankmcsherry/dynamic-datalog
+
+## MultiSet Semantics
+If you give a reason for each tuple, you can get multiset semantics.
+
+paths in a dag
+```souffle
+.type reason = Base {n : number} | Trans { x : reason, y : reason}
+
+.decl edge(n : number, m : number, r : reason)
+edge(1,2, $Base(0)).
+edge(2,3, $Base(1)).
+edge(1,3, $Base(2)).
+.decl path(n : number, m : number, r : reason)
+path(i,j, r) :- edge(i,j,r).
+path(i,k,$Trans(x,y)) :- edge(i,j,x), path(j,k,y).
+
+.output path
+
+```
+
+If you start subsumpting these reasons you get something similar to provenance as explained above in subsumption.
 
 # Topics
 ## Provenance

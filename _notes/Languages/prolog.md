@@ -36,6 +36,16 @@ wordpress_id: 1865
   - [Coroutines](#coroutines)
   - [Definite Clauses Grammars (DCG)](#definite-clauses-grammars-dcg)
   - [CHR](#chr)
+      - [Basics](#basics)
+      - [Pairing](#pairing)
+      - [Paths from edges](#paths-from-edges)
+      - [Minimum](#minimum)
+      - [GCD](#gcd)
+      - [Sort](#sort)
+      - [Fibonacci](#fibonacci)
+      - [Boolean Propagators](#boolean-propagators)
+      - [Lattice](#lattice)
+      - [Assignment](#assignment)
     - [Compiling](#compiling)
   - [Answer Set Programming s(CASP)](#answer-set-programming-scasp)
   - [Extral(ogical features](#extralogical-features)
@@ -319,7 +329,7 @@ http://www.informatik.uni-ulm.de/pm/fileadmin/pm/home/fruehwirth/constraint-hand
 
 [Where is the CHR constraint store?](https://stackoverflow.com/questions/59234770/constraint-handling-rules-in-swi-prolog-does-the-constraint-store-exists-only?rq=1)
 
-
+[Some cool examples](https://dtai.cs.kuleuven.be/CHR/examples.shtml). Gaussian, fourier, rational trees, equation solvers
 
 https://github.com/brog45/chrplay
 
@@ -413,8 +423,157 @@ Don't bind rules in head
 mode declarations of chr affect performance. Huh
 c \ c <=> true is often desirable. Set semantics instead of multiset.
 
+You can ignore the 
+```
+:- initialization(main,main).
+main(_) :- whatever
+```
+as noise that I do to make my prolog programs run from the command line instead of interactively.
+
+#### Basics
+
+```prolog
+:- use_module(library(chr)).
+:- chr_constraint rain/0, wet/0, umbrella/0.
+
+rain ==> wet.
+rain ==> umbrella.
+
+:- initialization(main,main).
+main(_) :- rain, chr_show_store(true).
+```
+
+```prolog
+:- use_module(library(chr)).
+:- chr_constraint rain/0, wet/0, umbrella/0.
+
+rain <=> wet.
+rain <=> umbrella.
+
+:- initialization(main,main).
+main(_) :- rain, chr_show_store(true).
+% just wet
+```
+
+```prolog
+:- use_module(library(chr)).
+:- chr_constraint left/0, right/0, forward/0, backward/0.
+
+left,right  <=> true.
+forward, backward <=> true.
+
+:- initialization(main,main).
+main(_) :- forward, left, right, backward, left, chr_show_store(true).
+% just left
+```
+
+#### Pairing
+```prolog
+:- use_module(library(chr)).
+:- chr_constraint male/1, female/1, pair/2.
+
+% <=> makes a pairing
+% this makes all pairs
+% male(X),female(Y)  ==> pair(X,Y).
+male(X) \ female(Y)  <=> pair(X,Y).
+% hmm cransto gets farbus.
+
+:- initialization(main,main).
+main(_) :- male(gary), female(zirkin),  male(cransto), female(farbus), chr_show_store(true).
+```
 
 
+#### Paths from edges
+```prolog
+:- use_module(library(chr)).
+:- chr_constraint edge/2, path/2.
+
+base  @ edge(X,Y) ==> path(X,Y).
+trans @ edge(X,Y), path(Y,Z) ==> path(X,Z).
+pset  @ path(X,Y) \ path(X,Y) <=> true.
+
+:- initialization(main,main).
+main(_) :- edge(1,2), edge(3,4), edge(3,2), edge(1,3), chr_show_store(true).
+```
+
+#### Minimum
+```prolog
+:- use_module(library(chr)).
+:- initialization(main,main).
+:- chr_constraint min/1, findmin/1.
+
+findmin(_), min(N) \ min(M) <=> N < M | true.
+findmin(Min), min(N) <=> Min = N.
+main(_) :- min(7), min(14), min(13), findmin(Min), print(Min), chr_show_store(true).
+```
+#### GCD
+```prolog
+:- use_module(library(chr)).
+:- initialization(main,main).
+:- chr_constraint gcd/1.
+
+gcd(N) \ gcd(M) <=> 0 < N, M>=N | Z is M - N, gcd(Z).
+% hmm not working
+main(_) :- gcd(15), gcd(5), chr_show_store(true).
+```
+
+
+#### Sort
+
+bubble sort
+```prolog
+:- use_module(library(chr)).
+:- initialization(main,main).
+:- chr_constraint a/2.
+
+a(I,V), a(J,W) <=> I>J, V<W | a(I,W), a(J,V).
+main(_) :- a(1,6), a(2,4), a(3,14), chr_show_store(true).
+```
+
+merge sort
+```prolog
+:- use_module(library(chr)).
+:- initialization(main,main).
+:- chr_constraint next/2.
+
+next(A,B) \ next(A,C) <=> A < B, B < C | next(B,C).
+main(_) :- next(0,7), next(0,2), next(0,5), chr_show_store(true).
+```
+#### Fibonacci
+merge sort
+```prolog
+:- use_module(library(chr)).
+:- initialization(main,main).
+:- chr_constraint fib/2.
+
+fib(0,M) <=> M = 1.
+fib(1,M) <=> M = 1.
+fib(N,M) <=> N >= 2 | fib(N-1, M1), fib(N-2, M2), M is M1 + M2.
+
+main(_) :- fib(3,M), print(M), chr_show_store(true).
+```
+
+#### Boolean Propagators
+
+
+#### Lattice
+```
+lat(A), lat(B) <=> lat(join(A,B))
+```
+
+#### Assignment
+
+####
+
+```prolog
+:- use_module(library(chr)).
+:- initialization(main,main).
+:- chr_constraint eclass/2.
+fcong @ eclass(f(X), E1) \ eclass(f(X), E2) <=> E1 = E2.
+acong @ eclass(a, E1) \ eclass(a, E2) <=> E1 = E2.
+
+main(_) :- eclass(a, A), eclass(f(A), FA), eclass(f(FA), FFA), FA=A, chr_show_store(true).
+```
 
 ### Compiling
 [KU leuven system : implementation and application](https://lirias.kuleuven.be/retrieve/33588). Hmm. Is CHR compiled into prolog code?
