@@ -3,14 +3,14 @@ date: 2022-04-14
 layout: post
 title: "Embedding E-graph Rewriting and Egglog in Constraint Handling Rules"
 tags: prolog chr egraph
-description: I embed e-graph rwriting into SWI prolog constraint handling rules
+description: I embed e-graph rewriting into SWI prolog constraint handling rules
 ---
 
 Pretty stoked about this!
 
 E-graph rewriting is all the rage. You may have encountered the famed [egg](https://egraphs-good.github.io/), the rust e-graph library.
 
-E-graphs are a compact representation of terms related through equality. It does this by both sharing subterms, but also sharing parents of terms in a sense through the eclass indirection. It is something like a [hashcons mixed with a union find](https://www.philipzucker.com/egraph-1/). In the equality saturation approach to rewriting, you don't destructive rewrite your terms, instead you store all the equalities you learn in the egraph. This was you don't have to worry about rewriting yourself into a corner, you just have to worry about running out of memory.
+E-graphs are a compact representation of terms related through equality. It does this by both sharing subterms, but also sharing parents of terms in a sense through the eclass indirection. It is something like a [hashcons mixed with a union find](https://www.philipzucker.com/egraph-1/). In the equality saturation approach to rewriting, you don't destructive rewrite your terms, instead you store all the equalities you learn in the egraph. This way you don't have to worry about rewriting yourself into a corner, you just have to worry about running out of memory.
 
 I've made a couple posts about embedding egraph rewriting in souffle datalog 
  - [Naive E-graph Rewriting in Souffle Datalog](https://www.philipzucker.com/datalog-egraph-deux/)
@@ -24,7 +24,7 @@ A common idiom in CHR is to turn on "set semantics" by making an explicit rule t
 
 The basic encoding is extremely related to the one that can be found in chapter 6 of the [CHR book](http://www.informatik.uni-ulm.de/pm/fileadmin/pm/home/fruehwirth/constraint-handling-rules-book.html) for embedding term rewriting. In fact it's so similar it isn't clear that maybe this is what the book is getting at?
 
-I define a constraint `eclass/2` that relates an enode to it's eclass id. Eclass ids I can represent using prolog unification variables, since these are already a union find. We put ground terms into the egraph by flattening them into their eclass costraints. For example `f(f(a))` gets expanded to `eclass(a,A), eclass(f(A), FA), eclass(f(FA), FFA)`
+I define a constraint `eclass/2` that relates an enode to its eclass id. Eclass ids I can represent using prolog unification variables, since these are already a union find. We put ground terms into the egraph by flattening them into their eclass costraints. For example `f(f(a))` gets expanded to `eclass(a,A), eclass(f(A), FA), eclass(f(FA), FFA)`
 
 The congruence rule is very simple. It is related to the "set semantics" rules above, but also to a hash consing transformation mentioned in the book
 
@@ -70,7 +70,7 @@ eclass(f(_62808),_62922)
 
 We see here we end up with 2 eclasses and 3 enodes. This is correct.
 
-To embed egraph rewriting was a bit trickier. It turns out CHR has a pretty rigid execution order semantics. It appears that it grabs off the top of th constraint store and applies the rules in order. For egraph rewriting this is a problem. We don't in general expect egraph ewriting to finish. We need to early stop it. In addition, the naive way of doing this was just churning in a loop on the first rules and the top of the constraint store.
+To embed egraph rewriting was a bit trickier. It turns out CHR has a pretty rigid execution order semantics. It appears that it grabs off the top of th constraint store and applies the rules in order. For egraph rewriting this is a problem. We don't in general expect egraph rewriting to finish. We need to early stop it. In addition, the naive way of doing this was just churning in a loop on the first rules and the top of the constraint store.
  
 What I decided to do was batch the rewrites together. Instead of directly writing into `eclass`, instead I generate `eclass2/2` constraints. I then collect these up into a list using `collect/1`. This completes a single ematching run. Then if I want to continue `process` converts this list back into `eclass` constraints that can trigger more rewriting rules firing.
 
@@ -78,6 +78,7 @@ What I decided to do was batch the rewrites together. Instead of directly writin
 ```prolog
 :- use_module(library(chr)).
 :- initialization(main,main).
+:- chr_option(optimize,full). % Thanks Tom Schrijvers for the tip
 :- chr_constraint eclass(?,-), eclass2(?,-), collect/1, kill/0, count/1.
 
 cong @ eclass(T, E1) \ eclass(T, E2) <=> E1 = E2.
@@ -141,7 +142,7 @@ N=5 is under a second. Not good scaling.
 
 Pretty, pretty, pretty good.
 
-The good news: We have full prolog available at our fingertips. We can express full  [egglog](http://www.philipzucker.com/egglog/) also, we are not constrained to just simple rewrite rules.
+The good news: We have full prolog available at our fingertips. We can express full  [egglog](http://www.philipzucker.com/egglog/) also, we are not constrained to just simple rewrite rules. We can also mix and match egraph and destructive egraph rewriting for efficiency. I don't know of another system that supports that.
 
 The bad news: egg utterly destroys this code in terms of speed. Egg can handle the associative commutative benchmark at 10 nodes in under a second. This CHR embedding stack overflows after a good couple minutes at N = 7 or so.
 
