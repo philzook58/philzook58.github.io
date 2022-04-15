@@ -8,7 +8,7 @@ description: I embed e-graph rwriting into SWI prolog constraint handling rules
 
 Pretty stoked about this!
 
-Egraph rewriting is all the rage. You may have encountered [egg](https://egraphs-good.github.io/), the rust e-graph library. 
+E-graph rewriting is all the rage. You may have encountered the famed [egg](https://egraphs-good.github.io/), the rust e-graph library.
 
 E-graphs are a compact representation of terms related through equality. It does this by both sharing subterms, but also sharing parents of terms in a sense through the eclass indirection. It is something like a [hashcons mixed with a union find](https://www.philipzucker.com/egraph-1/). In the equality saturation approach to rewriting, you don't destructive rewrite your terms, instead you store all the equalities you learn in the egraph. This was you don't have to worry about rewriting yourself into a corner, you just have to worry about running out of memory.
 
@@ -18,7 +18,7 @@ I've made a couple posts about embedding egraph rewriting in souffle datalog
 
 Way back in August when I was talking about [egglog](http://www.philipzucker.com/egglog/), a type of datalog built on top of egg, [Jose Morales](https://twitter.com/notjfmc/status/1422215450675535877?s=20&amp;t=RyHMtBS3ySaALLC9MuGmUA) asked about the relationship to Constraint Handling Rules (CHR). I had basically no idea what CHR was, so I looked it up and gave a weak negative answer. However, he was right. It turns out it is quite easy to embed egraph rewriting into CHR. [Yihong](https://github.com/yihozhang/cchr/blob/master/experiment/egraph.cchr) I think had also twigged onto this notion at a point.
 
-Constraint handling rules are a multiset rewriting language. You can perform both destructive and non destructive rewriting. Nondestructive Propagation rules look like `foo, biz ==> bar.`, destructive rules like `foo, biz <=> bar` and a rule that removes biz but keeps foo is `foo \ biz <=> bar`. For more on CHR, see the [CHR book](http://www.informatik.uni-ulm.de/pm/fileadmin/pm/home/fruehwirth/constraint-handling-rules-book.html), [Anne Ogborn's tutorials](https://github.com/Anniepoo/swiplchrtut/blob/master/basics.adoc), the [ICLP tutorial](https://dtai.cs.kuleuven.be/CHR/files/tutorial_iclp2008.pdf), and the [SWI prolog docs](https://www.swi-prolog.org/pldoc/man?section=chr).
+Constraint handling rules are a multiset rewriting language. You can perform both destructive and non destructive rewriting. Nondestructive Propagation rules look like `foo, biz ==> bar.`, destructive rules like `foo, biz <=> bar` and a rule that removes biz but keeps foo is `foo \ biz <=> bar`. For more on CHR, see the [CHR book](http://www.informatik.uni-ulm.de/pm/fileadmin/pm/home/fruehwirth/constraint-handling-rules-book.html), the very friendly [Anne Ogborn's tutorials](https://github.com/Anniepoo/swiplchrtut/blob/master/basics.adoc), the [ICLP tutorial](https://dtai.cs.kuleuven.be/CHR/files/tutorial_iclp2008.pdf), and the [SWI prolog docs](https://www.swi-prolog.org/pldoc/man?section=chr).
 
 A common idiom in CHR is to turn on "set semantics" by making an explicit rule to delete duplicates `foo \ foo <=> true.`. In this case `==>` becomes basically the same as datalog's `:-`. Vice versa, you can encode some destructive CHR rewriting rules in datalog if you have subsumption or lattices. The two systems are rather similar. Hence it makes sense that if one can encode egglog/egraphs into souffle, one can also encode them into CHR.
 
