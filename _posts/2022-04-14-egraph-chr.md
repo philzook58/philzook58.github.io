@@ -1,16 +1,16 @@
 ---
 date: 2022-04-14
 layout: post
-title: "Embedding Egraph Rewriting and Egglog in Constraint Handling Rules"
+title: "Embedding E-graph Rewriting and Egglog in Constraint Handling Rules"
 tags: prolog chr egraph
-description: I embed egraph rwriting into prolog constraint handling rules
+description: I embed e-graph rwriting into SWI prolog constraint handling rules
 ---
 
 Pretty stoked about this!
 
 Egraph rewriting is all the rage. You may have encountered [egg](https://egraphs-good.github.io/), the rust e-graph library. 
 
-E-graphs are a compact representation of terms related through equality. It does this by both sharing subterms, but also sharing parents of terms in a sense through the eclass indirection. It is something like a hashcons mixed with a union find. In the eequality saturation approach to rewriting, you don't destructive rewrite your terms, instead you store all the equalities you learn in the egraph. This was you don't have to worry about rewriting yourself into a corner, you just have to worry about running out of memory.
+E-graphs are a compact representation of terms related through equality. It does this by both sharing subterms, but also sharing parents of terms in a sense through the eclass indirection. It is something like a [hashcons mixed with a union find](https://www.philipzucker.com/egraph-1/). In the equality saturation approach to rewriting, you don't destructive rewrite your terms, instead you store all the equalities you learn in the egraph. This was you don't have to worry about rewriting yourself into a corner, you just have to worry about running out of memory.
 
 I've made a couple posts about embedding egraph rewriting in souffle datalog 
  - [Naive E-graph Rewriting in Souffle Datalog](https://www.philipzucker.com/datalog-egraph-deux/)
@@ -59,7 +59,7 @@ insert( T , E) :-
 
 
 main(_) :-  insert(f(f(a)), FFA), insert(a, A), FFA = A,  insert(f(f(f(f(a)))), _FFFFA),
-           chr_show_store(true).
+            chr_show_store(true).
 /*
 Output:
 eclass(a,_62922)
@@ -70,8 +70,9 @@ eclass(f(_62808),_62922)
 
 We see here we end up with 2 eclasses and 3 enodes. This is correct.
 
-
-To embed egraph rewriting was a bit trickier. It turns out CHR has a pretty rigid execution order semantics. It appears that it grabs off the top of th constraint store and applies the rules in order. For egraph rewriting this is a problem. What I decided to do was batch the rewrites together. Instead of directly writing into `eclass`, instead I generate `eclass2` constraints. I then collect these up into a list using `collect`. This completes a single ematching run. Then if I want to continue `process` converts this list back into `eclass` constraints that can trigger more rewriting rules firing.
+To embed egraph rewriting was a bit trickier. It turns out CHR has a pretty rigid execution order semantics. It appears that it grabs off the top of th constraint store and applies the rules in order. For egraph rewriting this is a problem. We don't in general expect egraph ewriting to finish. We need to early stop it. In addition, the naive way of doing this was just churning in a loop on the first rules and the top of the constraint store.
+ 
+What I decided to do was batch the rewrites together. Instead of directly writing into `eclass`, instead I generate `eclass2/2` constraints. I then collect these up into a list using `collect/1`. This completes a single ematching run. Then if I want to continue `process` converts this list back into `eclass` constraints that can trigger more rewriting rules firing.
 
 
 ```prolog
@@ -140,7 +141,7 @@ N=5 is under a second. Not good scaling.
 
 Pretty, pretty, pretty good.
 
-The good news: We have full prolog available at our fingertips. We can express full egglog also, we are not constrained to just simple rewrite rules.
+The good news: We have full prolog available at our fingertips. We can express full  [egglog](http://www.philipzucker.com/egglog/) also, we are not constrained to just simple rewrite rules.
 
 The bad news: egg utterly destroys this code in terms of speed. Egg can handle the associative commutative benchmark at 10 nodes in under a second. This CHR embedding stack overflows after a good couple minutes at N = 7 or so.
 
