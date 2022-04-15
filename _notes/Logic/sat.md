@@ -29,3 +29,5 @@ Good sat solver enabled "Seshia" tehcnique for smt? https://github.com/awslabs/r
 [beyond SAT](https://simons.berkeley.edu/workshops/schedule/14087)
 quantified boolean. Combining SAT and comuter aogebra
 model counting
+
+[Soos proof traces for sat solvers FRAT](https://twitter.com/SoosMate/status/1513985102941982720?s=20&t=-ertSPtY87GogVCFq4f-Rw)

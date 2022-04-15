@@ -3,6 +3,8 @@ layout: post
 title: Lean
 ---
 
+[Theorem prover lab: applications in programming languages ](https://github.com/IPDSnelting/tba-2021)
+
 [Lambda the Ultimate SSA: Optimizing Functional Programs in SSA](https://arxiv.org/abs/2201.07272)
 
 Numerical packages in lean

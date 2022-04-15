@@ -125,6 +125,8 @@ These have attribtures
 
 You can get line number and column info from dwarf
 
+[gcc flags related to debugging](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html#Debugging-Options)
+- `-Og`
 # Resources
 ld - linker editor
 

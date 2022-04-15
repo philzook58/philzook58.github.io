@@ -30,7 +30,7 @@ Maybe maps any type `a` to the the  `Maybe a`
 
 ## Free Monads
 
-## F-Algebras and Recursion Schemes
+## Recursion Schemes and F-Algebras
 
 A different category
 
@@ -60,3 +60,6 @@ http://www.scs.stanford.edu/11au-cs240h/notes/ghc-slides.html#(1) crazy slides o
 https://hackage.haskell.org/package/stgi stg interpeter. but also a good read
 --ddump-ds
 --ddump-stg
+
+# Resources
+[native delim contby alexis king](https://twitter.com/lexi_lambda/status/1511315589020753929?s=20&t=-ertSPtY87GogVCFq4f-Rw)

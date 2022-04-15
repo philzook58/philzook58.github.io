@@ -3,6 +3,18 @@ layout: post
 title: Coq
 ---
 
+- [Kernel](#kernel)
+  - [VM](#vm)
+- [Ocaml](#ocaml)
+- [Plugins](#plugins)
+- [misc](#misc)
+  - [Iris](#iris)
+- [Compcert](#compcert)
+- [Coq hackthan 2022](#coq-hackthan-2022)
+  - [dune](#dune)
+- [Examples](#examples)
+- [Resources](#resources)
+
 See also:
 - Type theory
 - Proof theory
@@ -234,3 +246,6 @@ src/dune_rules
 {% include_relative coq/test.v %}
 ```
 
+# Resources
+[Modular pre-processing for automated reasoning in dependent type theory](https://arxiv.org/abs/2204.02643) processing for smtcoq
+[The pro-PER meaning of "proper"](https://blog.poisson.chat/posts/2022-04-07-pro-per-proper.html)

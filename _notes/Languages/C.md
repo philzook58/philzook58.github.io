@@ -88,7 +88,11 @@ fat pointers - make pointer a struct
 tagged pointer - use unused bits in pointer. 64 bits is too many. ALignment makes low bits unused
 
 
-
+[The state of static analysis in the GCC 12 compiler](https://developers.redhat.com/articles/2022/04/12/state-static-analysis-gcc-12-compiler)
+- [-fanalyzer](https://gcc.gnu.org/onlinedocs/gcc/Static-Analyzer-Options.html#index-fanalyzer)
+- -Wanalyzer-tainted-array-index
+- -Wanalyzer-null-dereference
+- 
 ## Build Systems
 Shake
 https://www.microsoft.com/en-us/research/uploads/prod/2018/03/build-systems.pdf build systems a la carte

@@ -4,12 +4,6 @@ title: Datalog
 ---
 - [What is datalog?](#what-is-datalog)
 - [What can you do with datalog?](#what-can-you-do-with-datalog)
-  - [Program Analysis](#program-analysis)
-    - [Available Expressions](#available-expressions)
-    - [Very Busy Expressions](#very-busy-expressions)
-    - [Reaching Definitions](#reaching-definitions)
-    - [Liveness](#liveness)
-    - [Zippers For Program Points](#zippers-for-program-points)
 - [Implementations](#implementations)
   - [Rel](#rel)
   - [DDlog](#ddlog)
@@ -49,6 +43,12 @@ title: Datalog
   - [Negation](#negation-1)
   - [Souffle source](#souffle-source)
 - [Examples](#examples-1)
+  - [Program Analysis](#program-analysis)
+    - [Available Expressions](#available-expressions)
+    - [Very Busy Expressions](#very-busy-expressions)
+    - [Reaching Definitions](#reaching-definitions)
+    - [Liveness](#liveness)
+    - [Zippers For Program Points](#zippers-for-program-points)
   - [Reflection](#reflection)
     - [BitSets](#bitsets)
       - [Bitset reflection](#bitset-reflection)
@@ -82,6 +82,8 @@ title: Datalog
   - [Datalog Decompilers](#datalog-decompilers)
   - [CRDTs](#crdts)
   - [MultiSet Semantics](#multiset-semantics)
+  - [Access Control Policies](#access-control-policies)
+  - [Make](#make)
 - [Topics](#topics)
   - [Provenance](#provenance-1)
   - [Semi Naive Eavluation](#semi-naive-eavluation)
@@ -112,164 +114,6 @@ Program analysis.
 
 Maybe just jump on down the the examples section. Or I should move them up here?
 
-## Program Analysis
-[Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
-[hash consed points to sets](https://yuleisui.github.io/publications/sas21.pdf)
-
-[graspan](http://web.cs.ucla.edu/~wangkai/papers/asplos17)
-
-Points to analysis tutorial
-Doop
-
-
-### Available Expressions 
-[Lecture notes on static analysis in datalog](https://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf)
-https://courses.cs.washington.edu/courses/csep501/18sp/lectures/T-dataflow.pdf
-
-The expression is computed and/or the connection between expression and store state is not severed by subsequent write. on every path 
-Not that available expressions _does not_ mean expression is available.
-```
-x = a + b
-x = 0
-```
-AE says `a+b` is available at the ned of this snippet. So it's a bit subtler what AE means. It means that with a little fiddling the expression _could be_ available.
-
-
-Every path means we need an intersection. Datalog does unions more naturally, so we need to work wth the inverse relation notavailable. The intersection of available is the union of notavailable
-
-Program
-```
-start:
-  x = readinput
-  a = readinput
-  b = readinput
-  br x, l1, l2
-l1:
-  z = a + b
-  br l3
-l2:
-  z = b + a
-  br l3
-l3:
-  print a + b // if a + b is available we don't have to recompute
-```
-
-```souffle
-
-
-.type blk <: symbol 
-.type Expr  = Add {x : Expr, y : Expr}| Var {x : symbol}
-.decl gen(blk : blk, e : Expr)
-
-gen("l1" , $Add($Var("a"),$Var("b"))).
-//gen("l2" , $Add($Var("a"),$Var("b"))). // uncomment to see a + b in l3 avail expr
-gen("l2" , $Add($Var("b"),$Var("a"))).
-
-.decl expr(e : Expr)
-expr(e) :- gen(_,e).
-expr(a), expr(b) :- expr($Add(a,b)).
-
-.decl var(v : symbol)
-var("z").
-var("x").
-var("b").
-var("a").
-
-.decl free(v : symbol, e : Expr)
-free(x, e) :- expr(e), e = $Var(x).
-free(x, e) :- expr(e), e = $Add(a,b), (free(x,a); free(x,b)).
-
-
-.decl kill(b : blk, e : Expr)
-kill("start",e ) :- expr(e), (free("x", e) ; free("a", e) ; free("b", e)).
-kill("l1",e ) :- expr(e), free("z",e).
-kill("l2",e ) :- expr(e), free("z",e).
-
-//?x + ?y <-> ?y + ?z.
-/*
-gen(l,e2) :- gen(l,e1), eq(e1,e2).
-but don't do the same for kill? This feels like cheating.
-We can supercharge gen but we also supercharge kill. Eh?
-Well maybe not.
-*/
-
-
-.decl next(blk1:blk, blk2:blk)
-next("l1","l3").
-next("l2","l3").
-next("start","l1").
-next("start","l2").
-
-.decl label(b : blk)
-label(l) :- next(l,_) ; next(_,l).
-
-.decl notavail_entry(b : blk, e : Expr)
-.decl notavail_exit(b : blk, e : Expr)
-notavail_entry("start", e) :- expr(e).
-
-notavail_exit(l, e) :- (notavail_entry(l, e) ; kill(l,e)), !gen(l, e).
-notavail_entry(L2,e) :- notavail_exit(L1,e), next(L1,L2).
-
-.decl avail(l : blk, e  : Expr)
-avail(l,e) :- label(l), expr(e), !notavail_exit(l,e).
-.output avail
-```
-
-So what do I need to do to extend this to equivalent expressions?
-
-### Very Busy Expressions
-Expressions that are needed on every path
-Intersection
-
-### Reaching Definitions
-
-
-### Liveness
-Variables that will be needed on at least one path
-A backwards analysis
-Union
-
-### Zippers For Program Points
-It is possible to generate program points from the Imp AST via using zippers
-
-```souffle
-.type Expr = Lit { x : number }
-           | Var { x : symbol }
-           | Add {e_1 : Expr, e_2 :Expr}
-.type Stmt = Set { x : symbol, e : Expr}
-           | Seq {s_1 : Stmt, s_2 : Stmt}
-.type StmtHole = LSeq {s : Stmt} | RSeq {s : Stmt}
-.type Zipper = Cons { hd : StmtHole , rest : Zipper} | Nil {}
-.type Label =  [ctx : Zipper, stmt : Stmt] 
-// Do I need this? .decl label(; : Label, ctx : Zipper, stmt : Stmt)
-.decl prog(s : Stmt)
-
-.decl stmt(ctx : Zipper, s : Stmt)
-stmt($Nil(), s) :- prog(s).
-stmt($Cons($LSeq(r), ctx), l), stmt($Cons($RSeq(l) , ctx), r) :- stmt(ctx, $Seq(l,r)).
-
-.decl expr(ctx : Zipper, e : Expr)
-expr(ctx, e) :- stmt(ctx, $Set(_,e)).
-expr(ctx, y), expr(ctx, x) :- expr(ctx, $Add(x,y)).
-
-.decl next(ctx : Zipper, s : Stmt, ctx2 : Zipper, s2 : Stmt)
-
-next($Cons($LSeq(r), ctx), l, $Cons($RSeq(l), ctx), r) :- stmt(ctx, $Seq(l,r)).
-next($Cons($RSeq(l), ctx), r, ctx2, s2) :- next(ctx, $Seq(l,r), ctx2, s2).
-
-prog(
-  $Seq($Set("x", $Lit(0)),
-  $Seq($Set("y", $Add($Var("x"),$Lit(1))),
-       $Set("x", $Var("y"))
-      ))
-).
-
-
-.decl hasvar(e : Expr, x : symbol)
-hasvar($Var(v), v) :- expr(_, $Var(v)).
-hasvar($Add(x,y), v) :- expr(_,$Add(x,y)), (hasvar(x,v) ; hasvar(y,v)).
-```
-
 
 
 
@@ -277,8 +121,7 @@ hasvar($Add(x,y), v) :- expr(_,$Add(x,y)), (hasvar(x,v) ; hasvar(y,v)).
 - Souffle
 - Flix
 - Rel
-- IncA
-- [LADDDER](https://www.pl.informatik.uni-mainz.de/files/2021/04/inca-whole-program.pdf) differential dataflowq sequel to Inca
+- IncA, [LADDDER](https://www.pl.informatik.uni-mainz.de/files/2021/04/inca-whole-program.pdf) differential dataflow sequel to Inca
 - [Datafun](http://www.rntz.net/datafun/). lambda calculus with type system for tracking lattice monotonicity. and built in set type with comprehensions.
 - [differential datalog](https://github.com/vmware/differential-datalog) DDlog
 - dr lojekyll
@@ -301,8 +144,6 @@ hasvar($Add(x,y), v) :- expr(_,$Add(x,y)), (hasvar(x,v) ; hasvar(y,v)).
 ## Rel
 [vid](https://www.youtube.com/watch?v=WRHy7M30mM4&t=136s&ab_channel=CMUDatabaseGroup)
 Relational AI
-
-
 
 ## DDlog
 Incremental datalog. You can assert and unassert facts.
@@ -493,6 +334,12 @@ need_fib(n) <= need_fib(m) :- fib(n,_), n < m. // this one works. I don't know w
 ```
 
 In what sense is need_set representing the call stack?
+
+A common pattern when working with ADTs is I need a predicate of all subterms. This can be viewed as part of the need_set pattern. Recursive Functions that fold over terms are capable of sharing need sets. `terms` is really the need set of `fold`. That's interesting. So if you use combinators / recursion schemes to abstract over the recursion, you can use a `cata` need set. In some sense perhaps datalog can only express anamorphisms. `fold` is often seen a a fundamental combinator, capable of expressing anything (if you have highr order functions too).
+
+A lot of what I'm doing is defunctionalizing a continuation
+
+CHR also has need sets. Things that unlock computation.
 
 ### Magic Set
 
@@ -1142,6 +989,7 @@ and making it stratified by deleting all negative atoms (an overpapproximation?)
 foo1(x) :- biz.
 foo(x) :- biz, !foo1(z)
 
+What about guarded negation? For example if you turn off stratification but are able to supply an explicit `strata(n)` guard. This could be useful for 
 
 
 ##  Souffle source
@@ -1150,9 +998,172 @@ foo(x) :- biz, !foo1(z)
 - ram, relational abstract machine
 - 
 
-
-
 # Examples
+
+## Program Analysis
+[Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
+[hash consed points to sets](https://yuleisui.github.io/publications/sas21.pdf)
+
+[graspan](http://web.cs.ucla.edu/~wangkai/papers/asplos17)
+
+Points to analysis tutorial
+Doop
+
+
+### Available Expressions 
+[Lecture notes on static analysis in datalog](https://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf)
+https://courses.cs.washington.edu/courses/csep501/18sp/lectures/T-dataflow.pdf
+
+The expression is computed and/or the connection between expression and store state is not severed by subsequent write. on every path 
+Not that available expressions _does not_ mean expression is available.
+```
+x = a + b
+x = 0
+```
+AE says `a+b` is available at the ned of this snippet. So it's a bit subtler what AE means. It means that with a little fiddling the expression _could be_ available.
+
+
+Every path means we need an intersection. Datalog does unions more naturally, so we need to work wth the inverse relation notavailable. The intersection of available is the union of notavailable
+
+Program
+```
+start:
+  x = readinput
+  a = readinput
+  b = readinput
+  br x, l1, l2
+l1:
+  z = a + b
+  br l3
+l2:
+  z = b + a
+  br l3
+l3:
+  print a + b // if a + b is available we don't have to recompute
+```
+
+```souffle
+
+
+.type blk <: symbol 
+.type Expr  = Add {x : Expr, y : Expr}| Var {x : symbol}
+.decl gen(blk : blk, e : Expr)
+
+gen("l1" , $Add($Var("a"),$Var("b"))).
+//gen("l2" , $Add($Var("a"),$Var("b"))). // uncomment to see a + b in l3 avail expr
+gen("l2" , $Add($Var("b"),$Var("a"))).
+
+.decl expr(e : Expr)
+expr(e) :- gen(_,e).
+expr(a), expr(b) :- expr($Add(a,b)).
+
+.decl var(v : symbol)
+var("z").
+var("x").
+var("b").
+var("a").
+
+.decl free(v : symbol, e : Expr)
+free(x, e) :- expr(e), e = $Var(x).
+free(x, e) :- expr(e), e = $Add(a,b), (free(x,a); free(x,b)).
+
+
+.decl kill(b : blk, e : Expr)
+kill("start",e ) :- expr(e), (free("x", e) ; free("a", e) ; free("b", e)).
+kill("l1",e ) :- expr(e), free("z",e).
+kill("l2",e ) :- expr(e), free("z",e).
+
+//?x + ?y <-> ?y + ?z.
+/*
+gen(l,e2) :- gen(l,e1), eq(e1,e2).
+but don't do the same for kill? This feels like cheating.
+We can supercharge gen but we also supercharge kill. Eh?
+Well maybe not.
+*/
+
+
+.decl next(blk1:blk, blk2:blk)
+next("l1","l3").
+next("l2","l3").
+next("start","l1").
+next("start","l2").
+
+.decl label(b : blk)
+label(l) :- next(l,_) ; next(_,l).
+
+.decl notavail_entry(b : blk, e : Expr)
+.decl notavail_exit(b : blk, e : Expr)
+notavail_entry("start", e) :- expr(e).
+
+notavail_exit(l, e) :- (notavail_entry(l, e) ; kill(l,e)), !gen(l, e).
+notavail_entry(L2,e) :- notavail_exit(L1,e), next(L1,L2).
+
+.decl avail(l : blk, e  : Expr)
+avail(l,e) :- label(l), expr(e), !notavail_exit(l,e).
+.output avail
+```
+
+So what do I need to do to extend this to equivalent expressions?
+
+### Very Busy Expressions
+Expressions that are needed on every path
+Intersection
+
+### Reaching Definitions
+
+
+### Liveness
+Variables that will be needed on at least one path
+A backwards analysis
+Union
+
+### Zippers For Program Points
+It is possible to generate program points from the Imp AST via using zippers
+
+```souffle
+.type Expr = Lit { x : number }
+           | Var { x : symbol }
+           | Add {e_1 : Expr, e_2 :Expr}
+.type Stmt = Set { x : symbol, e : Expr}
+           | Seq {s_1 : Stmt, s_2 : Stmt}
+.type StmtHole = LSeq {s : Stmt} | RSeq {s : Stmt}
+.type Zipper = Cons { hd : StmtHole , rest : Zipper} | Nil {}
+.type Label =  [ctx : Zipper, stmt : Stmt] 
+// Do I need this? .decl label(; : Label, ctx : Zipper, stmt : Stmt)
+.decl prog(s : Stmt)
+
+.decl stmt(ctx : Zipper, s : Stmt)
+stmt($Nil(), s) :- prog(s).
+stmt($Cons($LSeq(r), ctx), l), stmt($Cons($RSeq(l) , ctx), r) :- stmt(ctx, $Seq(l,r)).
+
+.decl expr(ctx : Zipper, e : Expr)
+expr(ctx, e) :- stmt(ctx, $Set(_,e)).
+expr(ctx, y), expr(ctx, x) :- expr(ctx, $Add(x,y)).
+
+.decl next(ctx : Zipper, s : Stmt, ctx2 : Zipper, s2 : Stmt)
+
+next($Cons($LSeq(r), ctx), l, $Cons($RSeq(l), ctx), r) :- stmt(ctx, $Seq(l,r)).
+next($Cons($RSeq(l), ctx), r, ctx2, s2) :- next(ctx, $Seq(l,r), ctx2, s2).
+
+prog(
+  $Seq($Set("x", $Lit(0)),
+  $Seq($Set("y", $Add($Var("x"),$Lit(1))),
+       $Set("x", $Var("y"))
+      ))
+).
+
+
+.decl hasvar(e : Expr, x : symbol)
+hasvar($Var(v), v) :- expr(_, $Var(v)).
+hasvar($Add(x,y), v) :- expr(_,$Add(x,y)), (hasvar(x,v) ; hasvar(y,v)).
+```
+
+From another perspective, this is a relative of "need sets" and magic sets.
+The zipper here represents the implicit stack of an ordinary Imp interpreter. We also may need a first class map to actually run programs precisely
+The transformation foo(firstclassmap) -> foo(i), map(i, k,v) is lossy in the presence of multiple executions. From an abstract interp persepctive this is not so bad.
+
+
+
 ## Reflection
 ### BitSets
 ```souffle
@@ -1465,6 +1476,9 @@ I could make udf for normalization. And memoize into a choice domain?
 Combinators
 
 lambda datalog. Pattern matching on ground lambda terms is good.
+
+Yihong's let and fresh.
+Might still need first class maps for environements.
 
 ## Parsing
 What about good error parsing? It feels like the flexibility of a datalog could be nice. It's sort of why-not provenance.
@@ -2259,6 +2273,31 @@ path(i,k,$Trans(x,y)) :- edge(i,j,x), path(j,k,y).
 
 If you start subsumpting these reasons you get something similar to provenance as explained above in subsumption.
 
+## Access Control Policies
+
+[Is Datalog a good language for authorization?](https://neilmadden.blog/2022/02/19/is-datalog-a-good-language-for-authorization/)
+[open policy language rego](https://www.openpolicyagent.org/docs/latest/policy-language/)
+[polar and oso](https://docs.osohq.com/learn/polar-foundations.html#the-search-procedure)
+[biscuit](https://www.biscuitsec.org/)
+[Datalog with Constraints: A Foundation for Trust Management Languages](https://crypto.stanford.edu/~ninghui/papers/cdatalog_padl03.pdf)
+[Specifying and Reasoning about Dynamic Access-Control Policies Daniel J. Dougherty,1 Kathi Fisler,1 and Shriram Krishnamurthi 2](https://web.cs.wpi.edu/~dd/publications/ijcar06.pdf)
+googlew "access control datalog" you get a bunch of hits. The references in these paper
+
+description logics https://www.cs.man.ac.uk/~ezolin/dl/
+
+AWS zelkova is not datalog
+
+Differential dataflow useful?
+vs alloy vs tla+ vs smt?
+
+[souffle example](https://github.com/souffle-lang/souffle/blob/master/tests/example/access-policy/access-policy.dl)
+## Make
+Build systems like make a logic programing rukles
+[lpmake for ciao](https://github.com/ciao-lang/lpmake/blob/master/examples/latex/Makefile.pl)
+[Propositions as Filenames, Builds as Proofs: The Essence of Make](https://bentnib.org/posts/2015-04-17-propositions-as-filenames-essence-of-make.html)
+
+CSS is prolog
+https://twitter.com/soundly_typed/status/1513500166359298048?s=20&t=-ertSPtY87GogVCFq4f-Rw 
 # Topics
 ## Provenance
 [Explaining Outputs in Modern Data Analytics∗](http://www.vldb.org/pvldb/vol9/p1137-chothia.pdf) prvoencnace in differential dataflow <https://github.com/frankmcsherry/explanation> <https://github.com/frankmcsherry/blog/blob/master/posts/2016-03-27.md>
@@ -2342,6 +2381,28 @@ See Database/Streaming
 [differential dataflow v datalog](https://github.com/frankmcsherry/blog/blob/master/posts/2016-06-21.md) Uses magic sets in incrmenetal system in a cool way. Datalog is dataflow system with giant fixpoint around it. Generic join in a rust macro
 
 Szabo https://szabta89.github.io/publications.html  [thesis](https://openscience.ub.uni-mainz.de/handle/20.500.12030/5617)
+
+[Incremental Datalog with Differential Dataflows blog](https://www.nikolasgoebel.com/2018/09/13/incremental-datalog.html)
+3df https://github.com/comnik/declarative-dataflow https://www.youtube.com/watch?v=CuSyVILzGDQ
+
+https://www.clockworks.io/en/blog/ I guess this is a company / consulting service associated with differential dataflow.
+
+
+Differential Dataflow is kind of semi naive on steroids. Instead of just having a totally ordered iteration time, it keeps a partially ordered set of previous times. This means we have to store more than just good, new, delta. We have to store a bunch of deltas until we can coalesce them.
+
+Timestamps kind of are like reference counts or arena cleanup. They can trigger caolascing, compaction, or gabarge collection events.
+
+Incrmenetal dataflow is semi naive without the fixpoint. Instead the deltas are coming in from outside in a streaming like situation.
+
+Hmm. Do queries go backwards? A lens? holy shit is magic set a lens?
+
+
+Adaptive function programming
+Self adjusting computation https://www.umut-acar.org/research#h.x3l3dlvx3g5f
+adapton
+incremnetal  https://blog.janestreet.com/introducing-incremental/
+
+Man I really need to decided where this stuff should go.
 
 # Resources
 [bag datalog](https://twitter.com/NickSmit_/status/1510832523701456896?s=20&t=5y91-I1SPrIGomAWSqs69w) https://arxiv.org/pdf/1803.06445.pdf

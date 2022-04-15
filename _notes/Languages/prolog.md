@@ -34,7 +34,7 @@ wordpress_id: 1865
     - [Prolog II, III IV.](#prolog-ii-iii-iv)
   - [Parallel](#parallel)
   - [Coroutines](#coroutines)
-  - [Definite Clauses Grammars (DCG)](#definite-clauses-grammars-dcg)
+  - [DCG - Definite Clauses Grammars (DCG)](#dcg---definite-clauses-grammars-dcg)
   - [CHR](#chr)
       - [Basics](#basics)
       - [Pairing](#pairing)
@@ -42,19 +42,24 @@ wordpress_id: 1865
       - [Minimum](#minimum)
       - [GCD](#gcd)
       - [Sort](#sort)
+      - [Get foo](#get-foo)
       - [Fibonacci](#fibonacci)
       - [Boolean Propagators](#boolean-propagators)
       - [Lattice](#lattice)
       - [Assignment](#assignment)
+      - [EGraphs](#egraphs)
     - [Compiling](#compiling)
+    - [Embedding into CHR](#embedding-into-chr)
   - [Answer Set Programming s(CASP)](#answer-set-programming-scasp)
   - [Extral(ogical features](#extralogical-features)
   - [Lambda](#lambda)
 - [Semantics](#semantics)
 - [Expert Systems](#expert-systems)
 - [Lambda Prolog](#lambda-prolog)
-- [Rust Chalk Harrop](#rust-chalk-harrop)
+    - [HO Unification](#ho-unification)
   - [LF](#lf)
+    - [Twelf](#twelf)
+  - [Rust Chalk Harrop](#rust-chalk-harrop)
 - [LogTalk](#logtalk)
 - [Linear Logic Programming](#linear-logic-programming)
 - [Coinductive Logic Programming](#coinductive-logic-programming)
@@ -304,10 +309,10 @@ call_residue_vars
 delay
 [block](https://www.swi-prolog.org/pldoc/doc_for?object=block_directive%3A(block)/1)
 
-## Definite Clauses Grammars (DCG)
+## DCG - Definite Clauses Grammars (DCG)
 
 [Anne Ogborn tutorial](https://github.com/Anniepoo/swipldcgtut)
-
+[hakank picat](https://twitter.com/hakankj/status/1508321812261871616?s=20&t=-ertSPtY87GogVCFq4f-Rw)
 
 ## CHR
 [forward chaining, chr comes up](https://swi-prolog.discourse.group/t/forward-chaining-like-rete-algorithm-in-rule-engine/5137/28)
@@ -345,6 +350,8 @@ Man what hope is there of compiling a 7 year old haskell project?
 [yihong's egraph in chr. awesome](https://github.com/yihozhang/cchr/blob/master/experiment/egraph.cchr)
 
 [chr parsing](https://stackoverflow.com/questions/65647409/parsing-with-chr-constraint-handling-rules)
+
+[parallel chr](https://github.com/KaiSta/Parallel_CHR)
 
 CHR parsing
 “Analysing graph transformation systems through Constraint Handling Rules” by Frank Raiser and Thom Frühwirth
@@ -539,6 +546,9 @@ merge sort
 next(A,B) \ next(A,C) <=> A < B, B < C | next(B,C).
 main(_) :- next(0,7), next(0,2), next(0,5), chr_show_store(true).
 ```
+
+#### Get foo
+
 #### Fibonacci
 merge sort
 ```prolog
@@ -548,9 +558,39 @@ merge sort
 
 fib(0,M) <=> M = 1.
 fib(1,M) <=> M = 1.
-fib(N,M) <=> N >= 2 | fib(N-1, M1), fib(N-2, M2), M is M1 + M2.
+%fib(N,M) <=> N >= 2, ground(N) | fib(N-1, M1), fib(N-2, M2), when((ground(M1),ground(M2)), M is M1 + M2).
+fib(N,M) <=> N >= 2, ground(N) | N1 is N - 1, N2 is N - 2, fib(N1, M1), fib(N2, M2), M is M1 + M2.
 
-main(_) :- fib(3,M), print(M), chr_show_store(true).
+main(_) :- fib(5,M), print(M), chr_show_store(true).
+```
+
+```prolog
+:- use_module(library(chr)).
+:- use_module(library(clpfd)).
+:- initialization(main,main).
+:- chr_constraint fib/2.
+
+fib(0,M) <=> M #= 1.
+fib(1,M) <=> M #= 1.
+fib(N,M) <=> ground(N), N #>= 2 | N1 #= N - 1, N2 #= N - 2, fib(N1, M1), fib(N2, M2), M #= M1 + M2.
+
+main(_) :- fib(5,M), print(M), chr_show_store(true).
+```
+
+top down memo
+```prolog
+:- use_module(library(chr)).
+:- use_module(library(clpfd)).
+:- initialization(main,main).
+:- chr_constraint fib/2.
+
+cong @ fib(N,M1) \ fib(N,M1) <=> M1 #= M2.
+fib(0,M) ==> M #= 1.
+fib(1,M) ==> M #= 1.
+fib(N,M) ==> ground(N), N #>= 2 | N1 #= N - 1, N2 #= N - 2, fib(N1, M1), fib(N2, M2), M #= M1 + M2.
+
+main(_) :- fib(5,M), print(M), chr_show_store(true).
+% store is not empty. Contains memoized fib entries.
 ```
 
 #### Boolean Propagators
@@ -561,9 +601,13 @@ main(_) :- fib(3,M), print(M), chr_show_store(true).
 lat(A), lat(B) <=> lat(join(A,B))
 ```
 
+Propagators are monotonic functions between lattices. CHR was built for propagation
+BitSet CHRs?
+Other fast propagators?
+
 #### Assignment
 
-####
+#### EGraphs
 
 ```prolog
 :- use_module(library(chr)).
@@ -575,9 +619,145 @@ acong @ eclass(a, E1) \ eclass(a, E2) <=> E1 = E2.
 main(_) :- eclass(a, A), eclass(f(A), FA), eclass(f(FA), FFA), FA=A, chr_show_store(true).
 ```
 
+```prolog
+:- use_module(library(chr)).
+:- initialization(main,main).
+:- chr_constraint eclass/2, gas/2.
+pcong @ eclass(X + Y, E1) \ eclass(X + Y, E2) <=> E1 = E2.
+% nothing should produce this? Well...
+% ncong @ eclass(num(X), E1) \ eclass(num(X), E2) <=> E1 = E2.
+% pcong @ eclass(T, E1) \ eclass(T, E2) <=> E1 = E2.
+
+gas(_, 0) <=> true.
+comm @ eclass(X + Y, E) \ gas(comm, N) <=> N > 0 | N1 is N - 1, gas(assocl, N1), eclass(Y + X, E).
+assocl @ eclass(X + YZ, E), eclass(Y + Z, YZ) \ gas(assocl, N) <=> N > 0 | N1 is N - 1, gas(assocr, N1), eclass(X + Y, XY), eclass(XY + Z, E).
+assocr @ eclass(X + Y, XY), eclass(XY + Z, E) \ gas(assocr, N) <=> N > 0 | N1 is N - 1, gas(comm, N1), eclass(X + YZ, E), eclass(Y + Z, YZ).
+
+
+main(_) :- eclass(1, E1), eclass(2,E2), eclass(3,E3), eclass(E1 + E2, E12), eclass(E12 + E3, E123), gas(comm,5), chr_show_store(true).
+% hmm we're only getting to the first rule... I see. We can of course get around this. but not elegantly.
+% hmm we're also not runnign fairly on deeper facts. Cripes.
+```
+
+pcong is only one step away from structure sharin? No. it really is just structure sharing... Hmm.
+
+Hmm. gas is yet another form of demand based pulling. but only in CHR
+
+A list of all things to retain in gas. Delete anything that fires. No we don't have to delete.
+ok ok ok. This isn't so bad.
+We just need to batch.
+reassert when done.
+Difference list useful?
+gas(L) <=> L = [X | L1], gas(L1),
+But now is there a fair chance for the rules?
+Maybe if we scramble the list. it's a mess.
+
+```prolog
+:- use_module(library(chr)).
+:- initialization(main,main).
+:- chr_constraint eclass(?,-), eclass2(?,-), col/1, kill/0, count/1.
+
+cong @ eclass(T, E1) \ eclass(T, E2) <=> E1 = E2.
+
+% rewrite rules.
+comm @ eclass(X + Y, E) ==> eclass2(Y + X, E).
+assocl @ eclass(X + YZ, E), eclass(Y + Z, YZ) ==> eclass2(X + Y, XY), eclass2(XY + Z, E).
+assocr @ eclass(X + Y, XY), eclass(XY + Z, E) ==> eclass2(X + YZ, E), eclass2(Y + Z, YZ).
+
+% To collect up new eclasses
+collect @ eclass2(T,E), col(L) <=> L = [eclass3(T,E) | L1], col(L1).
+done @ col(L) <=> L = [].
+
+% helpers to cleanup eclass2
+kill @ kill \ eclass2(_,_) <=> true.
+killdone @ kill <=> true.
+
+% helper to count eclasses
+count @ count(N), eclass(_,_) <=> N1 is N + 1, count(N1).
+
+% Take rhs list and inject them as CHR constraints 
+process([]).
+process([eclass3(T, E)| L]) :- eclass(T,E), process(L).
+
+
+% Do N rewriting runs
+batch() :- col(L), process(L). % print(L)
+batch(0).
+batch(N) :- batch(), N1 is N -1, batch(N1).
+
+
+init_add(N) :- eclass(N,E), N1 is N - 1, init_add_aux(N1,E).
+init_add_aux(0,_).
+init_add_aux(N,E) :-
+  eclass(N, EN), eclass(EN + E, E2), N1 is N-1, init_add_aux(N1, E2).
+
+
+insert( T , E) :-
+ ground(T),
+ var(E),
+ T =.. [F | Args],
+ length(Args, N), length(Es, N),
+ T2 =.. [F | Es],
+ eclass(T2, E),
+ maplist(insert, Args, Es).
+
+
+main(_) :- 
+
+          insert(f(a), Fa), insert(a, A), Fa = A, insert(f(f(a)), FFa),
+           chr_show_store(true).
+         % eclass(1, E1), eclass(2,E2), eclass(3,E3), eclass(E1 + E2, E12), eclass(E12 + E3, E123),
+       /*
+          N = 5,
+          init_add(N),
+          Num is 3**(N) - 2**(N+1) + 1 + N, print(Num),
+          BNum is N,
+          time(batch(BNum)), kill, count(0), chr_show_store(true).
+          
+          */
+```
+
+
+```prolog
+%rhs([]).
+%rhs([T | L]) :- flatten(T), rhs(L).
+:- use_module(library(chr)).
+:- initialization(main,main).
+:- chr_constraint eclass(?,-), eclass2(?,-), col/1, kill/0, count/1.
+
+
+insert( T , E) :-
+ ground(T),
+ var(E),
+ T =.. [F | Args],
+ length(Args, N), length(Es, N),
+ T2 =.. [F | Es],
+ eclass(T2, E),
+ maplist(insert, Args, Es).
+
+main(_) :- insert(1 + 2 + 3 + 4, E), chr_show_store(true).
+
+
+```
+
+We can also perform rules like
+find(t1), find(t2) ==> E1 = E2.
+These will always finish since they only compress egraph.
+
+It is quite possible that translating to integers and using CHR union find is faster.
+
 ### Compiling
 [KU leuven system : implementation and application](https://lirias.kuleuven.be/retrieve/33588). Hmm. Is CHR compiled into prolog code?
 [CCHR: the fastest CHR Implementation, in C](https://lirias.kuleuven.be/retrieve/22123)  
+Idle thoughts, what about time dataflow.
+
+### Embedding into CHR
+- TRS
+- Prolog and CLP
+- Graph trasnfomation 
+- Petri nets
+
+GAMMA general abstract mnodel for multiset manipulation
 
 ## Answer Set Programming s(CASP)
 https://swish.swi-prolog.org/example/scasp.swinb
@@ -658,17 +838,102 @@ Install as `opam install elpi`. Run as `elpi -test` to run with main query
 main :- print "hello world".
 ```
 
+```elpi
+
+type rain prop.
+type wet prop.
+type umbrella prop.
+%mode (rain i).
+%mode (wet i).
+%mode (umbrella i).
+rain :- !, declare_constraint rain [_].
+wet :- !, declare_constraint wet [_].
+umbrella :- !, declare_constraint umbrella [_].
+
+main :- std.append [] [] X, print X,
+        std.length [1,3,4] L, print L,
+        std.take 2 [1,2,3,4] L1, print L1,
+        std.map [1,2,3] (x\ y\ y is 2 * x) L2, print L2,
+        std.iota 10 L3, print L3, % range of numbers
+        true,
+        Z is 1 i+ 2, print Z,
+        Z1 is (cos 3.0) + (int_to_real ((rhc "a") + (size "hello"))), print Z1,
+        fst (pr 1 2) One, print One,
+        dprint (pr (some 3)),
+        var V, var (V1 3) A B, print A, print B, % so it destructures a vairable application
+        some T == some T,
+        trace.counter "foo" I, print I, trace.counter "foo" I1, print I1,
+        %print app [lam (x \ const "a"), const "b"],
+        declare_constraint wet [W],
+        declare_constraint rain [R],
+        declare_constraint umbrella [U],
+        R = 7,
+        print "ok"
+.
+
+constraint rain wet {
+  rule rain <=> wet.
+}
+```
+
 Some built in elpi files
 - [builtin](https://github.com/LPCIC/elpi/blob/master/src/builtin.elpi) surprising that even very basic stuff is defined in here.
+  - i+ i- r+ mod div infix operations. + is overloaded it looks le
+  - regular expresions rex. Like Str module
+  - print dprint raw terms?
+  - quotation? https://github.com/LPCIC/elpi/blob/master/src/elpi-quoted_syntax.elpi lam, app, const, clause, arg
+  - same_term same_var var name - geiventbaraibe, ground_term, closed_term, constant, 
+  - if/3
+  - random.int
+  - int.map, std.string.map, std.string.set, std.map takes in a comp function, 
+  - gc functions. trace,counter
 - [stdlib](https://github.com/LPCIC/elpi/blob/master/src/builtin_stdlib.elpi)
+  - mem, exsits, map2, filter, fold, zip, unzip, intersperse, max, findall 
+
+[examples in test](https://github.com/LPCIC/elpi/tree/master/tests/sources)
+- named clauses `:clausename`
+- namespaces
+- typeabbrev
+- seperate compilation?
+- w.elpi algorithm W?
+- ndprover
 
 `external` fields. Interesting
 
 [a tutorial on lambda prolog and is applications to theorem provin - Amy Felty](https://www.site.uottawa.ca/~afelty/dist/lprolog97.pdf)
 [thesis implementing lambda prolog in ciao prolog](https://www.yumpu.com/en/document/view/39502786/university-of-minnesota-this-is-to-certify-that-i-employers)
 
+[Implementing Type Theory in Higher Order Constraint Logic Programming](https://hal.inria.fr/hal-01410567v2/document) longer elpi paper. describes chr.
+- macro directives
+- delay directives
+### HO Unification
+forall exists forall problems
+Raising vs Skolemization
 
-# Rust Chalk Harrop
+
+## LF
+LF is of some relation to lambda prolog (being a prologish system with lambdas in it) although with some different aims. It is dependently typed (pi 2 I think?) in a way different from coq etc.
+
+Twelf.
+dedukti. lambda - pi
+[beluga](http://complogic.cs.mcgill.ca/beluga/) is this kind of twelf? [beluga paper](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.188.3950&rep=rep1&type=pdf)
+abella.
+These are all related I guess? abella might not be LF
+
+Logical frameworks is a general vague concept I think. It is a system in which it is easy to model logical language nad inference rules.
+but ELF the edburgh logical fraemwork is more specific.
+Related to Pi2 a corner of the lambda cube.
+
+[The Next 700 Challenge Problems for Reasoning with Higher-Order Abstract Syntax Representations](https://link.springer.com/article/10.1007/s10817-015-9327-3)
+### Twelf
+http://twelf.plparty.org/live/
+http://twelf.org/wiki/About_The_Twelf_Project 
+
+Twelf is a depnedelty typed landguage that is also a logic programming langfuage. Because it has a totality checker and termination checker, prolog clauses can be considered proofs.
+
+https://core.ac.uk/download/pdf/82649367.pdf Normalization for the Simply-Typed Lambda-Calculus in Twelf
+
+## Rust Chalk Harrop
 https://github.com/rust-lang/chalk
 https://rust-lang.github.io/chalk/book/
 
@@ -678,20 +943,7 @@ https://internals.rust-lang.org/t/blog-series-lowering-rust-traits-to-logic/4673
 http://smallcultfollowing.com/babysteps/blog/2017/04/23/unification-in-chalk-part-2/ how chalk handles type normalization
 
 
-## LF
-LF is of some relation to lambda prolog (being a prologish system with lambdas in it) although with some different aims. It is dependently typed (pi 2 I think?) in a way different from coq etc.
 
-Twelf.
-dedukti. lambda - pi
-beluga
-abella.
-These are all related I guess? abella might not be LF
-
-Logical frameworks is a general vague concept I think. It is a system in which it is easy to model logical language nad inference rules.
-but ELF the edburgh logical fraemwork is more specific
-Twelf is a depnedelty typed landguage that is also a logic programming langfuage. Because it has a totality checker and termination checker, prolog clauses can be considered proofs.
-
-https://core.ac.uk/download/pdf/82649367.pdf Normalization for the Simply-Typed Lambda-Calculus in Twelf
 
 # LogTalk
 

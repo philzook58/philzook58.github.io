@@ -10,6 +10,8 @@ See Also:
 - computer architecture
 - operating systems
 - assembly
+- parallel
+- concurrency
 
 ## Easyperf
 Performance matters, it unlocks new applications, important for business

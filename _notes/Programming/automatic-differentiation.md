@@ -45,3 +45,5 @@ mlir
 egraphs useful for finding BIG patterns
 ad 
 tapinade - low level imlet
+
+[ Automatic Differentiation Handbook.](https://github.com/bob-carpenter/ad-handbook)

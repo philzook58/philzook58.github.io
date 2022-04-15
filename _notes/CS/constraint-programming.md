@@ -35,6 +35,8 @@ Verification
 [tutorial](https://www.minizinc.org/doc-2.6.2/en/part_2_tutorial.html)
 [202 autumn school](https://www.youtube.com/watch?v=lQi3b-sxt1s&ab_channel=AutumnSchoolonLogicandConstraintProgramming)
 
+[Exploring a shipping puzzle, part 3](https://kevinlynagh.com/notes/shipping-puzzle/part-3/)
+
 ```minizinc
 var int : x;
 solve satisfy;

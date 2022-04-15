@@ -207,6 +207,7 @@ Apache Beam
 millwheel
 spark streaming
 
+https://materialize.com/blog
 
 # CRDTs
 Conflict Free replicated datatypes

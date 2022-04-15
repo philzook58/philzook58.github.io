@@ -36,9 +36,10 @@ These numbers matter, because it was difficult to get this hacked souffle progra
 
 You can find Remy's encoding of an initial approach that hacked the Souffle generated C++ code [here](https://github.com/remysucre/egg.dl). What this did is replace the dynamic linking mechanism of souffle with an include file that contained _macros_ defining the user defined functor `eqfind`.
 
-```
+```C++
 #define eqfind(x) rel_1_myeq->ind.findNode(x)
 ```
+
  In this way, one could get access to the actual souffle equivalence relation `rel_1_myeq` (the macros are important because the `rel_1_myeq` isn't even in scope outside of the file). You can find my notes on this hack [here](https://gist.github.com/philzook58/b3e8f8ad5d465b384da8474eea841e34) This also required threading the `findNode` function up through the EquivalenceRelation class in souffle itself.
 
 A second version [here](https://gist.github.com/philzook58/428c313f6e23672ba0b05110d254f225) instead made a global variable containing a souffle `SparseDisjointSet`. This is a bit less hacky and you don't need to edit C++ code (regular dynamic linking works fine) and can use stock souffle. The idea was that one problem with the previous encoding is that 
@@ -107,6 +108,7 @@ I don't really know how to do better than this encoding and I'm confused why it 
 - Souffle has no idea that `eqfind` is dependent in any way upon `eq`, and doesn't schedule accordingly. This also messes up souffles stratification analysis. In the second encoding
 - The naivest operational reading of datalog code is inaccurate. Multiple right hand sides are merely syntax sugar for completely separate rules. It is within souffle's rights to decouple these completely. What this means is that the adding to the union find is temporally very separate from adding new terms. these terms will therefore often be pretty stale with respect to the union find.
 - It feels like somehow `$Add` and `add` getting out of sync with each other may be the problem.
-- 
+- Without more control over scheduling, it feels like one can't count on many invariants, invariants which are necessary for efficiency. In the second encoding, that the worst possible join was the one that worked best is evidence of this.
+
 # Bits and Bobbles
 User defined functors really could be used for some cool stuff. For example bitsets, or an external intern store that is keyed into by ints. This feature is so powerful and pretty easy to use once you give it a shot.

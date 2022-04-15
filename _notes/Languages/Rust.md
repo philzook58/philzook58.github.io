@@ -9,6 +9,7 @@ title: Rust
 wordpress_id: 1849
 ---
 
+- [Timely Dataflow](#timely-dataflow)
 - [Formal methods](#formal-methods)
   - [RustBelt](#rustbelt)
   - [RustHorn](#rusthorn)
@@ -59,7 +60,67 @@ for func in funcs:
     print(func(5))
     print(id(func))
 ```
+# Timely Dataflow
+This stuff is scattered over both datalog and databases notes.
 
+[shipping puzzle in differential dataflow](https://www.nikolasgoebel.com/2018/12/22/shipping-puzzle.html)
+Frank mcsherry also has sudoku examples on youtube
+
+[Life in Differential Dataflow](https://materialize.com/life-in-differential-dataflow/) blog post. interesecting lists. fizzbuzz. Game of life.
+
+https://materialize.com/blog
+
+```rust
+// cargo-deps: timely
+extern crate timely;
+
+use timely::dataflow::operators::*;
+
+fn main() {
+    timely::example(|scope| {
+        (0..10).to_stream(scope)
+               .inspect(|x| println!("seen: {:?}", x));
+    });
+}
+```
+
+`-w2` gets 2 workers.
+```rust
+// cargo-deps: timely
+extern crate timely;
+
+use timely::dataflow::{InputHandle, ProbeHandle};
+use timely::dataflow::operators::{Input, Exchange, Inspect, Probe};
+
+fn main() {
+    // initializes and runs a timely dataflow.
+    timely::execute_from_args(std::env::args(), |worker| {
+
+        let index = worker.index();
+        let mut input = InputHandle::new();
+        let mut probe = ProbeHandle::new();
+
+        // create a new input, exchange data, and inspect its output
+        worker.dataflow(|scope| {
+            scope.input_from(&mut input)
+                 .exchange(|x| *x)
+                 .inspect(move |x| println!("worker {}:\thello {}", index, x))
+                 .probe_with(&mut probe);
+        });
+
+        // introduce data and watch!
+        for round in 0..10 {
+            if index == 0 {
+                input.send(round);
+            }
+            input.advance_to(round + 1);
+            while probe.less_than(input.time()) {
+                worker.step();
+            }
+        }
+    }).unwrap();
+}
+```
 
 # Formal methods
 ## RustBelt

@@ -20,3 +20,5 @@ Metalevel is a syntax for describing inference rules
 - `%x.` is meta level lambda?
 
 [typeclasses vs locales](https://twitter.com/LawrPaulson/status/1506603400267505669?s=20&t=y2AWW1GNA8vyxsWqTXmKPQ)
+
+[Sledgehammer: some history, some tips](https://lawrencecpaulson.github.io/2022/04/13/Sledgehammer.html)
