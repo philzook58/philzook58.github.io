@@ -90,7 +90,8 @@ See also:
 - B-prolog
 - ECLiPSe - can talk to minizinc
 - Qu-prolog
-- 
+
+
 Relatives:
 - Minikanren
 - minizinc
@@ -103,29 +104,6 @@ Relatives:
 - Hyprolog - abduction
 - ergo AI, flora2
 - guan https://github.com/microsoft/Guan c# prolog?
-# History
-Resolution in automatc theorem provers came earlier.
-Kowalski and Colmerauer
-
-Flotd nondeterminstic algorithms 9167
-PLANNER Hewitt
-
-Prolog 0
-Prolog 1
-
-metamorphisis grammars -> DCG
-Dec-10 prolog
-Ediburgh prolog
-
-structure copying vs structure sharing
-
-fifth generation computing
-
-Extensions to unification
-prolog II
-Prolog III
-
-CLP Jaffar Lassez 1987
 
 
 ## Ciao
@@ -144,18 +122,21 @@ main(_) :- print([1,2,3]),
 [assertions and auto documetation](http://ciao-lang.org/ciao/build/doc/ciao.html/AssrtLang.html)
 [ciao and design philosphy](http://cliplab.org/papers/hermenegildo11:ciao-design-tplp.pdf)
 ciaopp - preprocessor and veirfier? PLAI
+
 # Examples
-## Things that are prolog
-- Typeclasses
-- Inductive data types
-- Inference rules
-- 
-### Hello World
+## Hello World
 
 ```prolog
 :- initialization(main,main).
 main(_) :- format("hello world ~p\n", [foo(8)]).
 ```
+
+## Things that are prolog
+- Typeclasses
+- Inductive data types
+- Inference rules
+- CSS?
+
 
 ## Lists
 ```prolog
@@ -181,8 +162,8 @@ append([H | X], Y, [H | Z]) :- append(X, Y, Z).
 `=..` destructures a term
 
 ## Imperative analogies
-Unification variables are pointers
-Unification is bidirecitonal pattern matching
+Unification variables are pointers. Unifying them is aliasing them.
+Unification is bidirectional pattern matching
 
 
 
@@ -205,6 +186,10 @@ Original Dec-10 prolog paper
 
 
 ## Modes
+In some ideal world, it's great if every predicate is reversible, but it isn't the case. Different variable positions can be used in different ways, input, output, both. They can also have total functional character (exactly one answer), partial functional character (one or zero), of nondeterminisitc (many answers). 
+Modes are required to use predicates correctly. Annotating them may allow the compiler to be more efficient. The compiler may infer them. They are conceptually interesting also in theorem proving contexts. See bidirectional typing.
+
+
 mercury
 ciao prolog
 
@@ -816,6 +801,30 @@ HiLog - My impression is this is a bit like "first order functional" programming
 Completion semantics
 Well-founded
 Completion semantics
+
+# History
+Resolution in automatc theorem provers came earlier.
+Kowalski and Colmerauer
+
+Flotd nondeterminstic algorithms 9167
+PLANNER Hewitt
+
+Prolog 0
+Prolog 1
+
+metamorphisis grammars -> DCG
+Dec-10 prolog
+Ediburgh prolog
+
+structure copying vs structure sharing
+
+fifth generation computing
+
+Extensions to unification
+prolog II
+Prolog III
+
+CLP Jaffar Lassez 1987
 
 # Expert Systems
 See Also:

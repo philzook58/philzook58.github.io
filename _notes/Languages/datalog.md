@@ -136,6 +136,7 @@ Maybe just jump on down the the examples section. Or I should move them up here?
 - yedalog
 - EVE
 - datomic
+- [cascalog](https://github.com/nathanmarz/cascalog) - clojure runs on hadoop 
 
 - bigdatalog - some kind of big data datalog. 
 - [XTDB](https://xtdb.com/) XTDB is a general-purpose bitemporal database for SQL, Datalog & graph queries. What the hell does that mean
@@ -484,6 +485,19 @@ comp() :- typ(), comp
 
 
 ```
+## Aggregates
+min, max, count, sum.
+
+Aggregates require stratification
+
+Aggregates can be emulated using subsumption (see subsumption section). This technique avoids the stratification requirement.
+
+The witness problem
+
+Aggregates by key correspond to something like a mapreduce computation or a groupby computation.
+
+ 
+
 
 ## User Defined Functors
 What about normalization? That's intriguing
@@ -1000,6 +1014,60 @@ What about guarded negation? For example if you turn off stratification but are 
 
 # Examples
 
+## Path Reachability
+The #1 example is reachability from edges. It's doofy, but it is a simple recursive query and is my go to for experimenting on a new system or implementing some datalog technique
+
+```souffle
+.decl edge(x : number, y : number)
+edge(1,2).
+edge(2,3).
+edge(3,4).
+
+.decl edge(x : number, y : number)
+path(x,y) :- edge(x,y).
+path(x,z) :- edge(x,y), path(y,z).
+.output edge(IO=stdout)
+```
+
+Even in this example there are some things to ask.
+What about:
+```
+path(x,z) :- path(x,y), path(y,z).
+```
+
+```
+path(x,z) :- path(x,y), edge(y,z).
+```
+
+What if we want to express undirected edges. This becomes an equivalence relation
+```
+.decl path(x : number, y : number) eqrel
+// or
+path(x,y) :- path(y,x).
+```
+
+
+
+### Magic Set
+Do we need all node reachability? What if we are only interested in 
+`path(1,4)` or we only want all nodes reachable from 1 `path(1,X)`. Or what if we want strongly connected components
+`path(X,Y), path(Y,X)`
+
+It feels like we should be able to do something more limitted and efficient in the context of these queries and this is the case.
+
+
+How do we write this query raw in other systems?
+### SQL recursive expressions
+
+### Python
+
+#### Naive
+
+#### Semi-naive
+Semi naive evaluation of corresponds to the intuition that we only need to consider the current frontier of reachable nodes to find the next frontier of reachable nodes.
+
+
+
 ## Program Analysis
 [Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
 [hash consed points to sets](https://yuleisui.github.io/publications/sas21.pdf)
@@ -1024,7 +1092,7 @@ AE says `a+b` is available at the ned of this snippet. So it's a bit subtler wha
 
 
 Every path means we need an intersection. Datalog does unions more naturally, so we need to work wth the inverse relation notavailable. The intersection of available is the union of notavailable
-
+ 
 Program
 ```
 start:
@@ -1406,6 +1474,98 @@ Radix sort?
 ### Q learning
 Grid world + subsumption / lattice.
 
+
+## Mandelbrot
+Translated from the [SQLlite docs on recursive ctes](https://www.sqlite.org/lang_with.html)
+```sql
+WITH RECURSIVE
+  xaxis(x) AS (VALUES(-2.0) UNION ALL SELECT x+0.05 FROM xaxis WHERE x<1.2),
+  yaxis(y) AS (VALUES(-1.0) UNION ALL SELECT y+0.1 FROM yaxis WHERE y<1.0),
+  m(iter, cx, cy, x, y) AS (
+    SELECT 0, x, y, 0.0, 0.0 FROM xaxis, yaxis
+    UNION ALL
+    SELECT iter+1, cx, cy, x*x-y*y + cx, 2.0*x*y + cy FROM m 
+     WHERE (x*x + y*y) < 4.0 AND iter<28
+  ),
+  m2(iter, cx, cy) AS (
+    SELECT max(iter), cx, cy FROM m GROUP BY cx, cy
+  ),
+  a(t) AS (
+    SELECT group_concat( substr(' .+*#', 1+min(iter/7,4), 1), '') 
+    FROM m2 GROUP BY cy
+  )
+SELECT group_concat(rtrim(t),x'0a') FROM a;
+```
+
+
+
+```souffle
+#define dx 0.05
+#define dy 0.0625
+.decl xaxis(x : float)
+.decl yaxis(y : float)
+.decl m(iter:unsigned, cx : float, cy : float, x : float, y : float)
+.decl m2(iter:unsigned, cx : float, cy : float)
+.decl collect(cx:float, cy:float, line:symbol)
+.decl a(cy:float, line:symbol)
+
+xaxis(-2).
+yaxis(-1.00000001).
+xaxis(x + dx) :- xaxis(x), x < 1.2.
+yaxis(y + dy) :- yaxis(y), y < 1.
+
+m(0,x,y, 0,0) :- xaxis(x), yaxis(y).
+m(iter+1, cx, cy, x*x-y*y + cx, 2.0*x*y + cy ) :- m(iter, cx,cy,x,y),iter < 28, x*x + y*y < 4.0.
+m2(iter, cx,cy) :- xaxis(cx), yaxis(cy), iter = max i : m(i, cx,cy, _,_).
+
+collect(-2.00,cy,"") :- yaxis(cy).
+collect(cx+dx,cy,line2) :- m2(iter,cx+dx,cy), collect(cx,cy,line), line2 = cat(line,c), 
+                         ( iter < 16 , c = " " ; iter >= 16,  c = "#" ).
+a(1+cy,line) :- cx = max x : xaxis(x), collect(cx,cy,line).
+
+.output a(IO=stdout)
+/*
+---------------
+a
+cy      line
+===============
+-9.9999999392252903e-09                                        #                        
+0.062499990000000061                                         #                          
+0.12499999000000006                                         ##                          
+0.18749999000000006                                       ######                        
+0.24999999000000006                                       ######                        
+0.31249999000000006                                #       ####                         
+0.37499999000000006                                ###  ########### #                   
+0.43749999000000006                                 ####################                
+0.49999999000000006                                 ###################                 
+0.56249999000000006                               #####################                 
+0.62499999000000006                              ########################               
+0.68749999000000006                    ##  #     #######################                
+0.74999999000000006                     ######   ######################                 
+0.81249999000000006                    ################################                 
+0.87499999000000006                #  #################################                 
+0.93749999000000006                 ###################################                 
+0.99999999000000006     #############################################                   
+1.0624999900000001                  ###################################                 
+1.1249999900000001                 #  #################################                 
+1.1874999900000001                     ################################                 
+1.2499999900000001                      ######   ######################                 
+1.3124999900000001                     ##  #     #######################                
+1.3749999900000001                               ########################               
+1.4374999900000001                                #####################                 
+1.4999999900000001                                  ###################                 
+1.5624999900000001                                  ####################                
+1.6249999900000001                                 ###  ########### #                   
+1.6874999900000001                                 #       ####                         
+1.7499999900000001                                        ######                        
+1.8124999900000001                                        ######                        
+1.8749999900000001                                          ##                          
+1.9374999900000001                                           #                          
+1.9999999900000001                                             #                        
+2.0624999900000001                                                                      
+===============
+*/
+```
 ## CHR
 See note on prolog for more on CHR
 
@@ -1797,6 +1957,36 @@ Graph form of monoidal category in soufflé?
 Graph rewriting? We have graph matching. How do we say some subgraph is better than some other.
 Graph combinator reduction?
 
+Flow problems?
+Ford fulkerson
+```
+// Tinkering. This isn't right.
+/ Maybe I can't do this. Need to track paths?
+
+
+// start data
+cap(i,j,c).
+
+pathcap(x,z,c3), flow(x,y,c3) :- cap(x,y, c), flow(x,y,f), pathcap(y,z, c2), c3 = min(c - f, c2)
+flow(i,j,f) <= flow(i,j,f2) :-  f <= f2.
+pathcap(i,j,f) <= flow(i,j,f2) :-  f2 <= f2.
+
+```
+### Reachability
+### Shortest Path
+A*
+
+Provenance of reachability _is_ the path.
+### Spanning Tree
+
+### Clique
+### Cycle
+
+### Subgraph Matching
+Doesn't really require datalog. No recursion.
+You can write patterns as queries. You can do this in sql. This is what graph databases do.
+
+
 ## Translating Imperative Programs
 similar to translating to functional style.
 Figure out the state. Make them all parameters to relation
@@ -1986,7 +2176,7 @@ part_rule1(x) :- p(x)
 r(z) :- part_rule(x), q()
 ```
 
-### Higher Order Clauses
+### Higher Order Clauses (Harrop)
 $ (p \implies q) \implies r$ is a different animal from the above.
 I'm not super sure how to deal with these.
 I'd suggest that predicates need to be extended with a notion of context. Higher order rules like these are interpetted as something like
@@ -1998,6 +2188,84 @@ r(ctx_without_p) :- q(ctx_with_p)
 What precisely I mean by ctx is unclear here. It seems like I'd need to internalize relations and or clauses into the language of datalog itself.
 Contexts do have a partial order. Derivations in weaker contexts can subsume strong ones.
 I suspect we are running into serious problems where we are just lacking the appropriate primitive to do this efficiently.
+
+
+Consider
+```
+bar(x,y) -> (biz(x) -> baz(x,y)) -> foo(x) / rule7
+```
+We can curry / materialize the subquery
+```
+bar(x,y) -> need_bizbaz(x,y)
+```
+
+This defunctionalize thing becomes the need set / magic set of a contextual query.
+We can partially evaluate the ctx to be part of the rules or not
+```
+.type Ctx = Glob {} | BizBaz {x : number, y : number}
+```
+
+We 
+```
+//insert the body of the higher order rule.
+biz($BizBaz(x,y), x) :- need_bizbaz(x,y).
+// maybe we can fuse need_bizbaz out and just directly have biz($BizBaz(x,y), x) :- bar(x,y).
+
+// finally if we succeed we can lower back into the global context.
+foo($Glob(), x) :- baz($BizBaz(x,y), x, y).
+
+// ordinary rules just carry the context along
+far(ctx, 7).
+
+// or we can lift any rule to a higher context
+far($BizBaz(x,y), z) :- ctx($BizBaz(x,y)), far(Glob(), z)
+
+// or we can just use the lower context in rules with the needset
+
+// need_bizbaz(x,y), 
+
+```
+
+We can make context arbitrarily deep, but we have to make a cutoff. Probably going higher than 2 is gonna not be so good. 
+This is similar feeling to k-CFA.
+
+Anything that can be produced from biz needs a contextual verision. bar(x,y) can be considered the same as bar(Glob(),x,y). That's a different convention. Instead of adding context everything have bar and bar_ctx, where implicilty bar is Glob.
+
+### Existenial Queries
+Existentials in bodies and toplevel query are interpreted as pattern matching.
+
+Possible alternative: contextual eq relation.
+If there aren't that many variables at play, can encode into integer. And also if they can't get grounded. Hmmm.
+
+```
+foo(X,X,Y).
+//foo(7,A).
+foo(X,Y,X).
+foo(d,Y,Z).
+
+?- foo(a,B,C).
+```
+emulate this in datalog.
+
+```
+need_foo(empty_uf, $A_const(), $B(), $C()).
+foo(ADD(x,y,ctx) ,x,y,z) :- need_foo(eq, x,y,z), can_unif(eq,x,y).
+foo(ADD(x,z,ctx) ,x,y,z) :- need_foo(eq, x,y,z), can_unif(eq,x,z).
+```
+
+```
+.type Lift = A_const {} | B {} | C {} | D_const{} // | Lit {n : number}
+```
+
+
+A canonical notion of first class equiv rel is mapping from elements to maximum element of their eq class.
+or set. should always make constants higher than unif variables
+Bitset map is just ordered assoc list. 32 bits can support 9 -> 9 mappings. 8 -> 8 is easier. every 4 bits.
+234222.
+A tuple set take n^2 bits. Uh we can order them. n(n-1)/2 bits = 32. Hmm. So that is also 8 elements. Annoying to update though. I guess the other one is annoying to update too. THe canonicalization is annoying.
+
+
+
 
 ### Universal Quantifier
 $\forall x, foo(x)$ is not a probem in unification based prolog, but it is in pattern matching based datalog where everything needs to be grounded in the head by the body of a clause.
@@ -2291,6 +2559,12 @@ Differential dataflow useful?
 vs alloy vs tla+ vs smt?
 
 [souffle example](https://github.com/souffle-lang/souffle/blob/master/tests/example/access-policy/access-policy.dl)
+
+## Networks
+[Checking Beliefs in Dynamic Networks](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/nod.pdf)
+[Efficient network configuration verification using optimized datalog](https://ieeexplore.ieee.org/document/8406876)
+[An Operational Semantics for Network Datalog](https://www.andrew.cmu.edu/user/liminjia/research/papers/ndlogsemans-tr.pdf) [NDlog thesis](https://digitalassets.lib.berkeley.edu/techreports/ucb/text/EECS-2006-177.pdf)
+[declarative netowrking book](https://ieeexplore.ieee.org/document/6813052?arnumber=6813052)
 ## Make
 Build systems like make a logic programing rukles
 [lpmake for ciao](https://github.com/ciao-lang/lpmake/blob/master/examples/latex/Makefile.pl)
@@ -2304,7 +2578,7 @@ https://twitter.com/soundly_typed/status/1513500166359298048?s=20&t=-ertSPtY87Go
 
 [decalarative datalog debugging for mere mortals](https://yanniss.github.io/DeclarativeDebugging.pdf)
 
-## Semi Naive Eavluation
+## Semi Naive Evaluation
 I remember a time when semi naive seemed pretty cryptic to me. I still amnot sure I understand it perfectly, but I have crossed the threshld 
 
 Naive evaluations only needs one table per relation. You can keep track of if there is anything to do by checking whether you find new tuples as you go along.
@@ -2322,6 +2596,26 @@ For every logical relation you need to keep 3 tables
 You need these three because you need a place to put new facts, but also you want to keep the most recent updated tuples as a seperate thing.
 `delta = new \ old`
 
+## Lattices
+Lattices give a natural way to "fix" broken functional dependencies of the tables.
+
+Flix, Ascent many others support a notion of relation fields being defined as lattices with a special "merge" operation.
+
+Datalog is declarative. You don't really control the order in which things happen. Lattices are an algebraic structure that supports a conveninent notion of merging. 
+1. Merging order doesn't matter (commutative and associative)
+2. Merging twice doesn't matter (idempotence)
+
+
+Datalog itself can be considered as a expansive operator operating over the space of powersets of tuples. Powersets of tuples form a lattice with subset inclusion being the order, union being join and intersection being meet. Somehow this notion of lattice operates at more of a "metalevel" than the internal notion of lattice. 
+
+It is possible, for example, to allow first class sets as elements of your datalog relation. Then 
+
+Other common lattices include MinInt, MaxInt, sets, Intervals, polyhedra, octagons, unknown-true-false-inconsistent, `Option<a>`,
+
+This lattice notion of "join" has no connection to the relational database word "join". This is infortunately confusing.
+
+## Semiring Semantics
+[Convergence of Datalog over (Pre-) Semirings](https://arxiv.org/abs/2105.14435)
 
 ## Datalog+- and the chase
 [Datalog+-](https://dl.acm.org/doi/pdf/10.1145/1514894.1514897) A Unified Approach to Ontologies and Integrity Constraints. Integraes datalog with equality and tuple generating dependencies. 
@@ -2390,7 +2684,9 @@ https://www.clockworks.io/en/blog/ I guess this is a company / consulting servic
 
 Differential Dataflow is kind of semi naive on steroids. Instead of just having a totally ordered iteration time, it keeps a partially ordered set of previous times. This means we have to store more than just good, new, delta. We have to store a bunch of deltas until we can coalesce them.
 
-Timestamps kind of are like reference counts or arena cleanup. They can trigger caolascing, compaction, or gabarge collection events.
+Yihong described it as "2d seminaive". 1 dimension is datalog iteration number, and the other dimension is incoming user data time.
+
+Timestamps kind of are like reference counts or arena cleanup. They can trigger caolascing, compaction, or gabarge collection events. Watermarks are garbage collecting events
 
 Incrmenetal dataflow is semi naive without the fixpoint. Instead the deltas are coming in from outside in a streaming like situation.
 
@@ -2403,6 +2699,8 @@ adapton
 incremnetal  https://blog.janestreet.com/introducing-incremental/
 
 Man I really need to decided where this stuff should go.
+
+
 
 # Resources
 [bag datalog](https://twitter.com/NickSmit_/status/1510832523701456896?s=20&t=5y91-I1SPrIGomAWSqs69w) https://arxiv.org/pdf/1803.06445.pdf

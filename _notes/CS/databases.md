@@ -42,6 +42,19 @@ VALUES
     (2,3),
     (3,4);
 SELECT a,b FROM edge;
+
+CREATE TABLE path(a INTEGER, b INTEGER);
+--INSERT INTO path
+--SELECT * FROM edge;
+
+-- path(x,z) :- edge(x,y), path(y,z).
+WITH RECURSIVE
+  path0(x,y) AS
+    -- SELECT 1,2
+    (SELECT a,b FROM edge UNION SELECT edge.a, path0.y FROM edge, path0 WHERE path0.x = edge.b )
+  INSERT INTO path SELECT x,y FROM path0;
+      
+SELECT a,b FROM path;
 .quit
 
 ```
@@ -213,6 +226,14 @@ https://materialize.com/blog
 Conflict Free replicated datatypes
 <https://crdt.tech/> martin Kleppmann
 
+CRDT of string - consider fractional positions. Tie breaking. Bad interleaving problem
+unique identifiers
+
+- LSeq
+- RGA
+- TreeSeq
+
+
 [automerge: library of data structures for collab applications in javascript](https://github.com/automerge/automerge) https://mobiuk.org/abstract/S4-P5-Kleppmann-Automerge.pdf
 [isabelle crdt](https://github.com/trvedata/crdt-isabelle)
 
@@ -220,9 +241,11 @@ Conflict Free replicated datatypes
 [Conflict-free Replicated Data Types”](https://arxiv.org/pdf/1805.06358.pdf)
 [“A comprehensive study of Convergent and Commutative Replicated Data Types](https://hal.inria.fr/inria-00555588/document)
 
-Operational Transformation
+Operational Transformation - sequences of insert and delete. Moves possibly.
 
 delta-based vs state-based
+
+counters
 
 # Big Data
 Spark
