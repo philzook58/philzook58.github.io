@@ -90,7 +90,8 @@ See also:
 - B-prolog
 - ECLiPSe - can talk to minizinc
 - Qu-prolog
-- 
+
+
 Relatives:
 - Minikanren
 - minizinc
@@ -103,29 +104,6 @@ Relatives:
 - Hyprolog - abduction
 - ergo AI, flora2
 - guan https://github.com/microsoft/Guan c# prolog?
-# History
-Resolution in automatc theorem provers came earlier.
-Kowalski and Colmerauer
-
-Flotd nondeterminstic algorithms 9167
-PLANNER Hewitt
-
-Prolog 0
-Prolog 1
-
-metamorphisis grammars -> DCG
-Dec-10 prolog
-Ediburgh prolog
-
-structure copying vs structure sharing
-
-fifth generation computing
-
-Extensions to unification
-prolog II
-Prolog III
-
-CLP Jaffar Lassez 1987
 
 
 ## Ciao
@@ -144,18 +122,21 @@ main(_) :- print([1,2,3]),
 [assertions and auto documetation](http://ciao-lang.org/ciao/build/doc/ciao.html/AssrtLang.html)
 [ciao and design philosphy](http://cliplab.org/papers/hermenegildo11:ciao-design-tplp.pdf)
 ciaopp - preprocessor and veirfier? PLAI
+
 # Examples
-## Things that are prolog
-- Typeclasses
-- Inductive data types
-- Inference rules
-- 
-### Hello World
+## Hello World
 
 ```prolog
 :- initialization(main,main).
 main(_) :- format("hello world ~p\n", [foo(8)]).
 ```
+
+## Things that are prolog
+- Typeclasses
+- Inductive data types
+- Inference rules
+- CSS?
+
 
 ## Lists
 ```prolog
@@ -181,8 +162,8 @@ append([H | X], Y, [H | Z]) :- append(X, Y, Z).
 `=..` destructures a term
 
 ## Imperative analogies
-Unification variables are pointers
-Unification is bidirecitonal pattern matching
+Unification variables are pointers. Unifying them is aliasing them.
+Unification is bidirectional pattern matching
 
 
 
@@ -205,6 +186,10 @@ Original Dec-10 prolog paper
 
 
 ## Modes
+In some ideal world, it's great if every predicate is reversible, but it isn't the case. Different variable positions can be used in different ways, input, output, both. They can also have total functional character (exactly one answer), partial functional character (one or zero), of nondeterminisitc (many answers). 
+Modes are required to use predicates correctly. Annotating them may allow the compiler to be more efficient. The compiler may infer them. They are conceptually interesting also in theorem proving contexts. See bidirectional typing.
+
+
 mercury
 ciao prolog
 
@@ -661,10 +646,15 @@ Maybe if we scramble the list. it's a mess.
 
 cong @ eclass(T, E1) \ eclass(T, E2) <=> E1 = E2.
 
+
 % rewrite rules.
 comm @ eclass(X + Y, E) ==> eclass2(Y + X, E).
 assocl @ eclass(X + YZ, E), eclass(Y + Z, YZ) ==> eclass2(X + Y, XY), eclass2(XY + Z, E).
 assocr @ eclass(X + Y, XY), eclass(XY + Z, E) ==> eclass2(X + YZ, E), eclass2(Y + Z, YZ).
+
+% made it way worse
+% eclass(T,E) \ eclass2(T,E) <=> true.
+% eclass2(T,E) \ eclass2(T,E) <=> true.
 
 % To collect up new eclasses
 collect @ eclass2(T,E), col(L) <=> L = [eclass3(T,E) | L1], col(L1).
@@ -706,17 +696,17 @@ insert( T , E) :-
 
 main(_) :- 
 
-          insert(f(a), Fa), insert(a, A), Fa = A, insert(f(f(a)), FFa),
-           chr_show_store(true).
+        %  insert(f(a), Fa), insert(a, A), Fa = A, insert(f(f(a)), FFa),
+        %   chr_show_store(true).
          % eclass(1, E1), eclass(2,E2), eclass(3,E3), eclass(E1 + E2, E12), eclass(E12 + E3, E123),
-       /*
+       
           N = 5,
           init_add(N),
           Num is 3**(N) - 2**(N+1) + 1 + N, print(Num),
           BNum is N,
           time(batch(BNum)), kill, count(0), chr_show_store(true).
           
-          */
+          
 ```
 
 
@@ -747,6 +737,73 @@ find(t1), find(t2) ==> E1 = E2.
 These will always finish since they only compress egraph.
 
 It is quite possible that translating to integers and using CHR union find is faster.
+#### Semi naive?
+
+eclass2 is somewhat like new_eclass
+We could perhaps find delta_eclass
+
+```prolog
+:- use_module(library(chr)).
+:- initialization(main,main).
+:- chr_constraint eclass(?,-), declass/2, eclass2(?,-), col/1, kill/0, count/1.
+
+% Take rhs list and inject them as CHR constraints 
+process([]).
+process([eclass3(T, E)| L]) :- declass(T,E), process(L).
+
+% Do N rewriting runs
+batch() :- col(L), process(L). % print(L)
+batch(0).
+batch(N) :- batch(), N1 is N -1, batch(N1).
+
+init_add(N) :- eclass(N,E), declass(N,E), N1 is N - 1, init_add_aux(N1,E).
+init_add_aux(0,_).
+init_add_aux(N,E) :- eclass(N, EN), eclass(EN + E, E2), declass(N, EN), declass(EN + E, E2), N1 is N-1, init_add_aux(N1, E2).
+
+insert( T , E) :- ground(T), var(E), T =.. [F | Args], length(Args, N), length(Es, N),  T2 =.. [F | Es],
+ eclass(T2, E),  maplist(insert, Args, Es).
+
+
+cong @ declass(T, E1), eclass(T, E2) ==> E1 = E2.
+cong2 @ eclass(T, E1) \ eclass(T, E2) <=> E1 = E2, declass(T,E1).
+
+% rewrite rules.
+comm @ declass(X + Y, E) ==> eclass2(Y + X, E).
+assocl1 @ declass(X + YZ, E), eclass(Y + Z, YZ) ==> eclass2(X + Y, XY), eclass2(XY + Z, E).
+assocl2 @ declass(Y + Z, YZ), eclass(X + YZ, E) ==> eclass2(X + Y, XY), eclass2(XY + Z, E).
+assocr1 @ declass(X + Y, XY), eclass(XY + Z, E) ==> eclass2(X + YZ, E), eclass2(Y + Z, YZ).
+assocr2 @ declass(XY + Z, E), eclass(X + Y, XY)  ==> eclass2(X + YZ, E), eclass2(Y + Z, YZ).
+
+% made it way worse
+% eclass(T,E) \ eclass2(T,E) <=> true.
+% eclass2(T,E) \ eclass2(T,E) <=> true.
+
+% To collect up new eclasses
+collect @ eclass2(T,E), col(L) <=> L = [eclass3(T,E) | L1], col(L1).
+collect @  col(_) \ declass(_,_) <=> true.
+done @ col(L) <=> L = [].
+
+% helpers to cleanup eclass2
+kill @ kill \ eclass2(_,_) <=> true.
+kill2 @ kill \ declass(_,_) <=> true.
+killdone @ kill <=> true.
+
+% helper to count eclasses
+count @ count(N), eclass(_,_) <=> N1 is N + 1, count(N1).
+
+
+
+
+main(_) :- 
+          N = 2,
+          init_add(N),
+          Num is 3**(N) - 2**(N+1) + 1 + N, print(Num),
+          BNum is N,
+          time(batch(BNum)), % kill(), count(0),
+           chr_show_store(true).
+          
+          
+```
 
 Is there a way to encode seminaive eval maybe? Even for datalog this is not clear you can. The folding of delta back into the main relationseems problematic.
 
@@ -780,16 +837,18 @@ s(ASP) was just ASP https://personal.utdallas.edu/~gupta/ . S(CASP) includes con
 [tutorail paper](http://ceur-ws.org/Vol-2970/gdepaper1.pdf)
 
 [event calculus](https://swi-prolog.discourse.group/t/event-calculus-in-swi-prolog/5233)
-## Extral(ogical features
-Database manipulation
+## Extralogical features
+### Database manipulation
 [swi](https://www.swi-prolog.org/pldoc/man?section=db)
 [sicstus database manip](https://sicstus.sics.se/sicstus/docs/latest4/html/sicstus.html/ref_002dmdb.html#ref_002dmdb)
-retract
-assert
+retract - take out of database
+assert - put into database/
 set_prolog_falg
 dynamic predicates. 
 recorded database
 
+`A = A, assert(foo(A)), A = x` what does this do. Does it make a clause `foo(A).` or does it make `foo(x).` Ah ok. The term is copied. So it makes the first on
+### Cuts and Such
 
 cut
 green cut
@@ -801,6 +860,7 @@ findall bagor setof are aggregation of solutions. They are reifying predicates k
 
 
 [ Finding all Solutions to a Goal](https://www.swi-prolog.org/pldoc/man?section=allsolutions)
+
 
 
 
@@ -824,6 +884,30 @@ HiLog - My impression is this is a bit like "first order functional" programming
 Completion semantics
 Well-founded
 Completion semantics
+
+# History
+Resolution in automatc theorem provers came earlier.
+Kowalski and Colmerauer
+
+Flotd nondeterminstic algorithms 9167
+PLANNER Hewitt
+
+Prolog 0
+Prolog 1
+
+metamorphisis grammars -> DCG
+Dec-10 prolog
+Ediburgh prolog
+
+structure copying vs structure sharing
+
+fifth generation computing
+
+Extensions to unification
+prolog II
+Prolog III
+
+CLP Jaffar Lassez 1987
 
 # Expert Systems
 See Also:

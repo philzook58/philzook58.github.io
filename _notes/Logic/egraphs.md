@@ -19,3 +19,15 @@ A union find is a data structure useful for finding connected components in a gr
 # Misc
 What would be a mvp egraph in C specialized for the comm/assoc problem look like.
 Use reference based union find with tag bits?
+
+
+Is ematching a wam? I suppose so. Ematching over a fixed egraph is easily expressible in prolog.
+We could implement egraph as `assert`
+We can't use unification vars?
+Does tabling help?
+```
+f(1,2,3).
+g(1,2,3).
+
+-? plus(A,B,AB), plus(AB,C,ABC)
+```
