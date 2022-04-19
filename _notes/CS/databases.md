@@ -214,6 +214,9 @@ Conflict Free replicated datatypes
 <https://crdt.tech/> martin Kleppmann
 
 [automerge: library of data structures for collab applications in javascript](https://github.com/automerge/automerge) https://mobiuk.org/abstract/S4-P5-Kleppmann-Automerge.pdf
+local first. use local persistent storage. git for your app's data. rust implementation?
+
+
 [isabelle crdt](https://github.com/trvedata/crdt-isabelle)
 
 
@@ -223,6 +226,12 @@ Conflict Free replicated datatypes
 Operational Transformation
 
 delta-based vs state-based
+
+json crdt for vibes patches?
+
+Tree move op. Create delete subtrees.
+
+
 
 # Big Data
 Spark

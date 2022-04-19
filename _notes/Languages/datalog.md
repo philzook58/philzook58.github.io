@@ -2401,6 +2401,8 @@ Adaptive function programming
 Self adjusting computation https://www.umut-acar.org/research#h.x3l3dlvx3g5f
 adapton
 incremnetal  https://blog.janestreet.com/introducing-incremental/
+[salsa](https://github.com/salsa-rs/salsa)
+salsa.jl
 
 Man I really need to decided where this stuff should go.
 

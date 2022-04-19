@@ -65,7 +65,7 @@ wordpress_id: 1865
 - [Coinductive Logic Programming](#coinductive-logic-programming)
 - [inductive logic programmingh](#inductive-logic-programmingh)
 - [Theorem Proving](#theorem-proving)
-    - [Stuff](#stuff)
+- [Misc](#misc)
   - [2019](#2019)
   - [Notes from 2017 -Resolution and unification](#notes-from-2017--resolution-and-unification)
 
@@ -234,6 +234,8 @@ When you
 
 [swipl manual entry](https://www.swi-prolog.org/pldoc/man?section=delcont)
 [schrivers et al](https://www.swi-prolog.org/download/publications/iclp2013.pdf)
+[disjunctive delimited control](https://arxiv.org/pdf/2108.02972.pdf)
+
 
 - effect handlers - implicit state
 - definite clause grammars
@@ -746,6 +748,12 @@ These will always finish since they only compress egraph.
 
 It is quite possible that translating to integers and using CHR union find is faster.
 
+Is there a way to encode seminaive eval maybe? Even for datalog this is not clear you can. The folding of delta back into the main relationseems problematic.
+
+leansmt
+egraph + clp(R) + clp(FD) + clp(B). How far from SMT is that?
+
+
 ### Compiling
 [KU leuven system : implementation and application](https://lirias.kuleuven.be/retrieve/33588). Hmm. Is CHR compiled into prolog code?
 [CCHR: the fastest CHR Implementation, in C](https://lirias.kuleuven.be/retrieve/22123)  
@@ -978,7 +986,10 @@ Jens Otten
 
 [A simple version of this implemented in tau prolog](https://www.philipzucker.com/javascript-automated-proving/) Prdocues proofs translated to bussproofs latex
 
-### Stuff
+
+[a pearl on SAT and SMT solving in prolog](https://www.sciencedirect.com/science/article/pii/S030439751200165X) [code](http://www.staff.city.ac.uk/~jacob/solver/index.html)
+
+# Misc
 
 .type Lifted = Lit {x : symbol} | Y {x : Lifted, y : Lifted}
 

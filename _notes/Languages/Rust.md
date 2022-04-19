@@ -184,6 +184,9 @@ Getting a webpage up that runs webassembly seems like an involved process. I thn
 Serde seems like a useful route to getting stuff into and out of javascript. It is a serialization deserialization library.
 
 # Resources
+- [salsa](https://github.com/salsa-rs/salsa) rust incremental computation library
+- [maturin](https://github.com/PyO3/maturin) publish pyo3 rust packages on pip
+- [automerge-rs](https://github.com/automerge/automerge-rs)
 - timely dataflow
 - lalrpop nom
 - [rust script](https://rust-script.org/) I power my inline blogging with this.
