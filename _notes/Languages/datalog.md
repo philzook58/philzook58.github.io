@@ -200,6 +200,28 @@ A kind of unsugared rust dsl
 [Description](https://github.com/frankmcsherry/blog/blob/master/posts/2018-05-19.md)
 I remember this being totally incomprehensible. I guess I must have lost my mind becaus it seems kind of nice now.
 
+## Ascent
+Rust macro based datalog. Good integration with rust for that reason. Supports lattices
+
+rust-script 
+```rust
+// cargo-deps: ascent
+use ascent::ascent;
+ascent!{
+   relation edge(i32, i32);
+   relation path(i32, i32);
+      
+   path(x, y) <-- edge(x, y);
+   path(x, z) <-- edge(x, y), path(y, z);
+}
+
+fn main() {
+   let mut prog = AscentProgram::default();
+   prog.edge = vec![(1, 2), (2, 3), (3,4),(4,5)];
+   prog.run();
+   println!("path: {:?}", prog.path);
+}
+```
 
 ## Flix
 Supports lattices.
@@ -2014,6 +2036,26 @@ line3("y", x *3) :- line2("x",x).
 Note the big difference here though. We have _factored_ the old line3 relation. The new version is not capable of storing seperate runs without dataloss. We no longer would know which "x" corresponded to which "y".
 This is of some relation to lossless joins and things in database theory.
 This factoring can be useful as an overapproximation technique.
+
+### Iteration 
+This is related to timestamping.
+See mandelbrot example.
+Iteration isn't quite as silly as you'd think. Semi naive means we only work on the frontier of the loop.
+Loop counters are the state of the loop.
+
+```souffle
+/*
+acc = 0;
+for(i = 0; i < 10; i++){
+  acc += i;
+}
+*/
+.decl sumn(iter : number, acc : number)
+sumn(0,0).
+sumn(i+1, s + i) :- sumn(i,s), i < 10.
+.output sumn(IO=stdout)
+
+```
 
 ## Translating functional programs 
 Lift function to relation by making return value part of relation

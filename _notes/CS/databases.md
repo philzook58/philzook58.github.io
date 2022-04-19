@@ -34,6 +34,9 @@ https://en.wikipedia.org/wiki/Database_normalization
 
 everything is foreign keys? Interning
 
+Recusrive tables.
+https://www.sqlite.org/lang_with.html
+
 ```sql
 CREATE TABLE edge(a INTEGER, b INTEGER);
 INSERT INTO edge(a,b)
@@ -59,7 +62,39 @@ SELECT a,b FROM path;
 
 ```
 
+UF
+```
+WITH RECURSIVE 
+  parent(x,y) AS
+  SELECT a, min(b) (SELECT (a,b) FROM eq UNION eq, parent)
+```
+
+[python sqlite3 in stdlib](https://docs.python.org/3/library/sqlite3.html)
+```python
+import sqlite3
+con = sqlite3.connect(':memory:')
+cur = con.cursor()
+# Create table
+cur.execute('''CREATE TABLE stocks
+               (date text, trans text, symbol text, qty real, price real)''')
+
+# Insert a row of data
+cur.execute("INSERT INTO stocks VALUES ('2006-01-05','BUY','RHAT',100,35.14)")
+
+#cur.executemany("insert into characters(c) values (?)", theIter)
+for row in cur.execute('SELECT * FROM stocks ORDER BY price'):
+  print(row)
+```
+
+adapters to python types
 https://en.wikipedia.org/wiki/Materialized_view
+
+[sqlite loadable extensions](https://www.sqlite.org/loadext.html)
+
+```python
+
+
+```
 
 ## indices
 
@@ -233,17 +268,23 @@ unique identifiers
 - RGA
 - TreeSeq
 
+https://www.inkandswitch.com/peritext/ crdt rich text
+
+https://github.com/josephg/diamond-types
+https://josephg.com/blog/crdts-go-brrr/
+
+https://github.com/yjs/yjs
 
 [automerge: library of data structures for collab applications in javascript](https://github.com/automerge/automerge) https://mobiuk.org/abstract/S4-P5-Kleppmann-Automerge.pdf
 [isabelle crdt](https://github.com/trvedata/crdt-isabelle)
-
+[I was wrong. CRDTs are the future](https://news.ycombinator.com/item?id=31049883)
 
 [Conflict-free Replicated Data Types”](https://arxiv.org/pdf/1805.06358.pdf)
 [“A comprehensive study of Convergent and Commutative Replicated Data Types](https://hal.inria.fr/inria-00555588/document)
 
 Operational Transformation - sequences of insert and delete. Moves possibly.
 
-delta-based vs state-based
+delta-based vs state-based https://bartoszsypytkowski.com/the-state-of-a-state-based-crdts/
 
 counters
 

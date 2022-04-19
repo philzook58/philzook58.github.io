@@ -122,6 +122,39 @@ fn main() {
 }
 ```
 
+# Ascent
+```rust
+// cargo-deps: ascent
+use ascent::ascent;
+ascent!{
+   relation edge(i32, i32);
+   relation path(i32, i32);
+      
+   path(x, y) <-- edge(x, y);
+   path(x, z) <-- edge(x, y), path(y, z);
+}
+
+fn main() {
+   let mut prog = AscentProgram::default();
+   prog.edge = vec![(1, 2), (2, 3), (3,4),(4,5)];
+   prog.run();
+   println!("path: {:?}", prog.path);
+}
+```
+
+So if I could make a trait that mutates a global uf...
+
+<https://docs.rs/union-find/latest/union_find/>
+<https://docs.rs/ena/latest/ena/>
+
+No. nevermind. That isn't good enough.
+## Globals Variables
+
+[Rust global variables demystified](https://morestina.net/blog/1774/rust-global-variables-demystified)
+[Idiomatically use global variables in rust](https://www.sitepoint.com/rust-global-variables/)
+`static` which may not mean what you t5hink
+
+Lazy and once_cell are in nightly rust and std https://github.com/rust-lang/rust/issues/74465
 # Formal methods
 ## RustBelt
 ## RustHorn
@@ -184,6 +217,7 @@ Getting a webpage up that runs webassembly seems like an involved process. I thn
 Serde seems like a useful route to getting stuff into and out of javascript. It is a serialization deserialization library.
 
 # Resources
+- [crossbeam](https://github.com/crossbeam-rs/crossbeam)
 - timely dataflow
 - lalrpop nom
 - [rust script](https://rust-script.org/) I power my inline blogging with this.
