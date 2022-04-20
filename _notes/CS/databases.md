@@ -30,6 +30,44 @@ See also:
 - concurrency
 
 
+
+log structured storage
+a log is a append only store
+LSM - log structured merge trees. In memory table for writes. Flushed to disk. Multiple read only written to disk, coalesced in background.
+sstable
+Tombstone records for deletes.
+https://www.igvita.com/2012/02/06/sstable-and-log-structured-storage-leveldb/
+
+[wide-column store](https://en.wikipedia.org/wiki/Wide-column_store)
+[key/value store](https://en.wikipedia.org/wiki/Key%E2%80%93value_database)
+
+- [bigtable](https://en.wikipedia.org/wiki/Bigtable) google internal 
+- [dynamo](https://en.wikipedia.org/wiki/Dynamo_(storage_system))
+
+- [cassandra](https://en.wikipedia.org/wiki/Apache_Cassandra) 
+- [hbase](https://en.wikipedia.org/wiki/Apache_HBase)
+
+
+- [leveldb](https://en.wikipedia.org/wiki/LevelDB)
+- [redis](https://en.wikipedia.org/wiki/Redis)
+- [rocksdb](https://en.wikipedia.org/wiki/RocksDB)
+
+- indexeddb
+- [riak](https://en.wikipedia.org/wiki/Riak)
+
+B-trees
+
+
+OLTP online transaction processing
+OLAP online analytical processing
+
+
+hyperloglog
+bloom filters
+cuckoo filter
+
+
+
 https://en.wikipedia.org/wiki/Database_normalization
 
 everything is foreign keys? Interning
@@ -256,6 +294,8 @@ millwheel
 spark streaming
 
 https://materialize.com/blog
+
+
 
 # CRDTs
 Conflict Free replicated datatypes
