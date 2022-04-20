@@ -1047,7 +1047,7 @@ two F :- F = f\ x\ f (f x).
 add X Y Z :- Z = f\ x\ (X f (Y f x)).
 
 main :- two(T), one(O), add T T Z, print Z,
-        % add Q T T, print Q. % unification problem outside patern fragment
+        % add Q T T, print Q. % unification problem outside patern fragment. Flex-flex?
         add T Q T, print Q. % no prob
 
 ```

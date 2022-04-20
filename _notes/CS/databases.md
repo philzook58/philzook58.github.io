@@ -200,6 +200,7 @@ graph database
 OWL
 RDF
 [sparql](https://en.wikipedia.org/wiki/SPARQL)
+[sparql slides](https://twitter.com/tayebM/status/1516531076885266432?s=20&t=hmaJXnp6Mp_aUsdRpkOMcQ)
 shacl - 
 
 semantic web
@@ -411,6 +412,10 @@ graphlab
 - VLDB
 - HYTRADBOI https://www.hytradboi.com/ also very cool stuff.
 ## Misc
+[Datavases, types, and the relational model The third manifesto](https://www.dcs.warwick.ac.uk/~hugh/TTM/DTATRM.pdf)
+
+
+[duckdb](https://twitter.com/teej_m/status/1516864922784702469?s=20&t=hmaJXnp6Mp_aUsdRpkOMcQ) embedded like sqlite?
 
 [https://xtdb.com/](XTDB is a general-purpose bitemporal database for SQL, Datalog & graph queries.)
 
