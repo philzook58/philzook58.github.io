@@ -3,6 +3,12 @@ layout: post
 title: Haskell
 ---
 
+
+```haskell
+main :: IO ()
+main = println "hello world"
+```
+
 # Monad
 
 ```haskell

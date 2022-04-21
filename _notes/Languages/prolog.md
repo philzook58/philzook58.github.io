@@ -1160,6 +1160,8 @@ Jens Otten
 
 # Misc
 
+https://github.com/mthom/scryer-prolog/pull/838 scryer as a library?
+
 .type Lifted = Lit {x : symbol} | Y {x : Lifted, y : Lifted}
 
 .decl r(x : Lifted, y : Lifted)

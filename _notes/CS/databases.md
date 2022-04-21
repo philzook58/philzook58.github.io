@@ -3,6 +3,14 @@ layout: post
 title: Databases
 ---
 
+- [Key Value Store](#key-value-store)
+- [Algorithms](#algorithms)
+- [SQL](#sql)
+  - [indices](#indices)
+  - [views](#views)
+  - [triggers](#triggers)
+  - [Aggregate functions](#aggregate-functions)
+  - [Window Functions](#window-functions)
 - [Schema](#schema)
   - [Functional Dependencies](#functional-dependencies)
   - [Query Optimization](#query-optimization)
@@ -18,7 +26,7 @@ title: Databases
   - [Message brokrs](#message-brokrs)
   - [Services](#services)
 - [Graph systems](#graph-systems)
-  - [SQL](#sql)
+  - [SQL](#sql-1)
   - [sqlite](#sqlite)
 - [Resources](#resources)
   - [Conferences](#conferences)
@@ -31,6 +39,7 @@ See also:
 
 
 
+# Key Value Store
 log structured storage
 a log is a append only store
 LSM - log structured merge trees. In memory table for writes. Flushed to disk. Multiple read only written to disk, coalesced in background.
@@ -55,25 +64,25 @@ https://www.igvita.com/2012/02/06/sstable-and-log-structured-storage-leveldb/
 - indexeddb
 - [riak](https://en.wikipedia.org/wiki/Riak)
 
-B-trees
 
+
+
+# Algorithms
+B-trees
 
 OLTP online transaction processing
 OLAP online analytical processing
-
-
 hyperloglog
 bloom filters
 cuckoo filter
 
 
+# SQL
 
-https://en.wikipedia.org/wiki/Database_normalization
-
+sql injection https://ctf101.org/web-exploitation/sql-injection/what-is-sql-injection/
 everything is foreign keys? Interning
 
-Recusrive tables.
-https://www.sqlite.org/lang_with.html
+[Recursive tables](https://www.sqlite.org/lang_with.html) let you do datalog like stuff.
 
 ```sql
 CREATE TABLE edge(a INTEGER, b INTEGER);
@@ -145,7 +154,12 @@ This is interesting
 
 ## Window Functions
 
+
 # Schema
+
+
+https://en.wikipedia.org/wiki/Database_normalization
+
 ## Functional Dependencies
 Armstrong axioms
 
@@ -431,7 +445,7 @@ Designing Data intensive systems martin kleppmann
 [postgres indexes for newbies](https://blog.crunchydata.com/blog/postgres-indexes-for-newbies)
 [postgres tutorial](https://www.postgresqltutorial.com/)
 [raytracer in sql](https://github.com/chunky/sqlraytracer)
-
+[advent of code sql(https://news.ycombinator.com/item?id=29467671)]
 [sqllancer](https://github.com/sqlancer/sqlancer) detecting lgoic bugs in dbms
 
  - Differential Datalog
