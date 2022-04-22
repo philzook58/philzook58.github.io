@@ -1,6 +1,5 @@
 Hatching a Datalog: Horn Clauses Modulo Equality with Egg
 Hatching a Datalog: Horn Clauses Modulo Congruence with Egg
-
 Egglog0: Adapting Egraph Rewriting to Horn Clauses
 Extending Egraphs
 Datalogs are all around you

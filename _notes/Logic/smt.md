@@ -29,6 +29,7 @@ See also:
 
 [Fuzzy-sat](https://arxiv.org/pdf/2102.06580.pdf) running smt queries through a fuzzer
 
+natural domain smt
 
 # Solvers
 W: What options are actualy worth fiddling with

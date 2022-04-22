@@ -3,6 +3,12 @@ layout: post
 title: Haskell
 ---
 
+
+```haskell
+main :: IO ()
+main = println "hello world"
+```
+
 # Monad
 
 ```haskell
@@ -63,3 +69,4 @@ https://hackage.haskell.org/package/stgi stg interpeter. but also a good read
 
 # Resources
 [native delim contby alexis king](https://twitter.com/lexi_lambda/status/1511315589020753929?s=20&t=-ertSPtY87GogVCFq4f-Rw)
+[ recursion schemes and comonads - Tielen](https://twitter.com/luctielen/status/1516719551131574274?s=20&t=7564nBvc82Jdkz_E3ccZbA)

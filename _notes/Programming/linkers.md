@@ -3,6 +3,21 @@ layout: post
 title: Linkers
 ---
 
+- [Sections](#sections)
+- [Segments](#segments)
+- [Symbol Table](#symbol-table)
+- [Relocations](#relocations)
+- [Dynamic Linking](#dynamic-linking)
+- [Compilation Units](#compilation-units)
+- [Link Time Optimization](#link-time-optimization)
+- [ELF](#elf)
+- [Objcopy](#objcopy)
+- [ld](#ld)
+  - [Linker scripts](#linker-scripts)
+- [DWARF](#dwarf)
+- [Resources](#resources)
+    - [JT's notes](#jts-notes)
+
 # Sections
 # Segments
 # Symbol Table

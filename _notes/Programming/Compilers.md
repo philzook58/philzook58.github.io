@@ -269,6 +269,9 @@ de-optimization paths
 [nanojit](https://github.com/dibyendumajumdar/nanojit)
 
 [libgccjit](https://gcc.gnu.org/onlinedocs/jit/)
+
+[copy and patch compilation](https://twitter.com/cfbolz/status/1516418354579394566?s=20&t=7564nBvc82Jdkz_E3ccZbA)
+
 # Garbage Collector
 ## Conservative vs Exact
 

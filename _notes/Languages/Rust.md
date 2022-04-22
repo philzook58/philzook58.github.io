@@ -10,6 +10,8 @@ wordpress_id: 1849
 ---
 
 - [Timely Dataflow](#timely-dataflow)
+- [Ascent](#ascent)
+  - [Globals Variables](#globals-variables)
 - [Formal methods](#formal-methods)
   - [RustBelt](#rustbelt)
   - [RustHorn](#rusthorn)
@@ -217,6 +219,9 @@ Getting a webpage up that runs webassembly seems like an involved process. I thn
 Serde seems like a useful route to getting stuff into and out of javascript. It is a serialization deserialization library.
 
 # Resources
+- [salsa](https://github.com/salsa-rs/salsa) rust incremental computation library
+- [maturin](https://github.com/PyO3/maturin) publish pyo3 rust packages on pip
+- [automerge-rs](https://github.com/automerge/automerge-rs)
 - [crossbeam](https://github.com/crossbeam-rs/crossbeam)
 - timely dataflow
 - lalrpop nom

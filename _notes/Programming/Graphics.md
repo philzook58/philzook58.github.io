@@ -9,3 +9,5 @@ title: Graphics
 <https://www.youtube.com/playlist?list=PLQ3UicqQtfNuBjzJ-KEWmG1yjiRMXYKhh> Justin Solomon
 
 [Line art from images cvpr](https://twitter.com/ak92501/status/1507163038666919941?s=20&t=y2AWW1GNA8vyxsWqTXmKPQ)
+
+[Shane's shadertoys. well documented](https://www.shadertoy.com/user/Shane/sort=popular)

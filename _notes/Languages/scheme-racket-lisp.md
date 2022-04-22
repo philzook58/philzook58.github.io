@@ -5,6 +5,18 @@ layout: post
 title: Scheme Racket Lisp
 ---
 
+I'm really going to put scheme and common lisp in the same category?
+
+# Implementations
+- Racket
+- Chez
+- Guile
+- Gambit
+- Chicken
+
+- SBCL
+
+
 Gambit vs Chez vs Guile scheme. Me dunno
 Gerbil is a system on top of Gambit approximately similar to racket
 
@@ -18,6 +30,71 @@ Gerbil is a system on top of Gambit approximately similar to racket
 #lang racket
 (print "hello world")
 ```
+# Scheme
+[https://schemers.org/](https://schemers.org/)
+
+
+### Minikanren
+http://minikanren.org/
+
+https://github.com/michaelballantyne/faster-minikanren
+`raco pkg install minikanren`
+
+```racket
+#lang racket
+(require minikanren)
+(run 1 (q) (fresh (x y z) (== x q) (== 3 y)))
+```
+[http://io.livecode.ch/](http://io.livecode.ch/) more minikanren examples [implementing microkanren (https://www.youtube.com/watch?v=0FwIwewHC3o) 
+
+[http://tca.github.io/veneer/examples/editor.html](http://tca.github.io/veneer/examples/editor.html) minikanren examples. 
+
+https://www.philipzucker.com/aop-minikanren/
+
+[lambda kanren](https://www.youtube.com/watch?v=iUZasa7wzW4) assume all
+[A New Higher-order Unification Algorithm for 𝜆Kanren](http://minikanren.org/workshop/2021/minikanren-2021-final8.pdf)
+
+# Racket
+https://docs.racket-lang.org/index.html
+
+[Creating Languages in Racket (2011)](https://news.ycombinator.com/item?id=26008869)
+
+https://school.racket-lang.org/2019/plan/
+
+https://beautifulracket.com/
+
+
+https://github.com/wilbowma/cur a curious dependently typed proof assistant
+
+
+### Rosette
+https://docs.racket-lang.org/rosette-guide/index.html
+
+
+Rosette - should be a confluence of my interests. 
+I feel like I want some kind of macro engine for smtlib.
+Perhaps it makes intermiedtae queries, perhaps not.
+stage0 would be "just" a macro expander for smtlib.
+
+```racket
+#lang rosette
+(define-symbolic b boolean?)
+(assert #t)
+(assume b)
+(verify b)
+
+(define-symbolic b boolean?)
+
+```
+
+# Compilation
+[http://home.pipeline.com/~hbaker1/CheneyMTA.html](http://home.pipeline.com/~hbaker1/CheneyMTA.html)
+
+Lisp in easy pieces
+
+[http://cs.brown.edu/~sk/Publications/Books/ProgLangs/2007-04-26/](http://cs.brown.edu/~sk/Publications/Books/ProgLangs/2007-04-26/)
+
+
 
 ### Gambit compiling to javascript
 [old gist](https://gist.github.com/roman01la/1d2f84357a2aef8ef053dd6ba4f0aad1)
@@ -85,10 +162,6 @@ lisp class system
 
 
 
-Rosette - should be a confluence of my interests. 
-I feel like I want some kind of macro engine for smtlib.
-Perhaps it makes intermiedtae queries, perhaps not.
-stage0 would be "just" a macro expander for smtlib.
 
 
 
@@ -138,11 +211,7 @@ macros
 
 What is the deal.
 
-https://news.ycombinator.com/item?id=26008869
 
-https://school.racket-lang.org/2019/plan/
-
-https://beautifulracket.com/
 
 
 https://github.com/namin/inc incremental compilter construction

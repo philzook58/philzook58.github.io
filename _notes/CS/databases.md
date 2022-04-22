@@ -3,6 +3,14 @@ layout: post
 title: Databases
 ---
 
+- [Key Value Store](#key-value-store)
+- [Algorithms](#algorithms)
+- [SQL](#sql)
+  - [indices](#indices)
+  - [views](#views)
+  - [triggers](#triggers)
+  - [Aggregate functions](#aggregate-functions)
+  - [Window Functions](#window-functions)
 - [Schema](#schema)
   - [Functional Dependencies](#functional-dependencies)
   - [Query Optimization](#query-optimization)
@@ -18,7 +26,7 @@ title: Databases
   - [Message brokrs](#message-brokrs)
   - [Services](#services)
 - [Graph systems](#graph-systems)
-  - [SQL](#sql)
+  - [SQL](#sql-1)
   - [sqlite](#sqlite)
 - [Resources](#resources)
   - [Conferences](#conferences)
@@ -30,12 +38,51 @@ See also:
 - concurrency
 
 
-https://en.wikipedia.org/wiki/Database_normalization
 
+# Key Value Store
+log structured storage
+a log is a append only store
+LSM - log structured merge trees. In memory table for writes. Flushed to disk. Multiple read only written to disk, coalesced in background.
+sstable
+Tombstone records for deletes.
+https://www.igvita.com/2012/02/06/sstable-and-log-structured-storage-leveldb/
+
+[wide-column store](https://en.wikipedia.org/wiki/Wide-column_store)
+[key/value store](https://en.wikipedia.org/wiki/Key%E2%80%93value_database)
+
+- [bigtable](https://en.wikipedia.org/wiki/Bigtable) google internal 
+- [dynamo](https://en.wikipedia.org/wiki/Dynamo_(storage_system))
+
+- [cassandra](https://en.wikipedia.org/wiki/Apache_Cassandra) 
+- [hbase](https://en.wikipedia.org/wiki/Apache_HBase)
+
+
+- [leveldb](https://en.wikipedia.org/wiki/LevelDB)
+- [redis](https://en.wikipedia.org/wiki/Redis)
+- [rocksdb](https://en.wikipedia.org/wiki/RocksDB)
+
+- indexeddb
+- [riak](https://en.wikipedia.org/wiki/Riak)
+
+
+
+
+# Algorithms
+B-trees
+
+OLTP online transaction processing
+OLAP online analytical processing
+hyperloglog
+bloom filters
+cuckoo filter
+
+
+# SQL
+
+sql injection https://ctf101.org/web-exploitation/sql-injection/what-is-sql-injection/
 everything is foreign keys? Interning
 
-Recusrive tables.
-https://www.sqlite.org/lang_with.html
+[Recursive tables](https://www.sqlite.org/lang_with.html) let you do datalog like stuff.
 
 ```sql
 CREATE TABLE edge(a INTEGER, b INTEGER);
@@ -107,7 +154,12 @@ This is interesting
 
 ## Window Functions
 
+
 # Schema
+
+
+https://en.wikipedia.org/wiki/Database_normalization
+
 ## Functional Dependencies
 Armstrong axioms
 
@@ -162,6 +214,7 @@ graph database
 OWL
 RDF
 [sparql](https://en.wikipedia.org/wiki/SPARQL)
+[sparql slides](https://twitter.com/tayebM/status/1516531076885266432?s=20&t=hmaJXnp6Mp_aUsdRpkOMcQ)
 shacl - 
 
 semantic web
@@ -257,6 +310,8 @@ spark streaming
 
 https://materialize.com/blog
 
+
+
 # CRDTs
 Conflict Free replicated datatypes
 <https://crdt.tech/> martin Kleppmann
@@ -276,6 +331,9 @@ https://josephg.com/blog/crdts-go-brrr/
 https://github.com/yjs/yjs
 
 [automerge: library of data structures for collab applications in javascript](https://github.com/automerge/automerge) https://mobiuk.org/abstract/S4-P5-Kleppmann-Automerge.pdf
+local first. use local persistent storage. git for your app's data. rust implementation?
+
+
 [isabelle crdt](https://github.com/trvedata/crdt-isabelle)
 [I was wrong. CRDTs are the future](https://news.ycombinator.com/item?id=31049883)
 
@@ -287,6 +345,12 @@ Operational Transformation - sequences of insert and delete. Moves possibly.
 delta-based vs state-based https://bartoszsypytkowski.com/the-state-of-a-state-based-crdts/
 
 counters
+
+json crdt for vibes patches?
+
+Tree move op. Create delete subtrees.
+
+
 
 # Big Data
 Spark
@@ -362,6 +426,10 @@ graphlab
 - VLDB
 - HYTRADBOI https://www.hytradboi.com/ also very cool stuff.
 ## Misc
+[Datavases, types, and the relational model The third manifesto](https://www.dcs.warwick.ac.uk/~hugh/TTM/DTATRM.pdf)
+
+
+[duckdb](https://twitter.com/teej_m/status/1516864922784702469?s=20&t=hmaJXnp6Mp_aUsdRpkOMcQ) embedded like sqlite?
 
 [https://xtdb.com/](XTDB is a general-purpose bitemporal database for SQL, Datalog & graph queries.)
 
@@ -377,7 +445,7 @@ Designing Data intensive systems martin kleppmann
 [postgres indexes for newbies](https://blog.crunchydata.com/blog/postgres-indexes-for-newbies)
 [postgres tutorial](https://www.postgresqltutorial.com/)
 [raytracer in sql](https://github.com/chunky/sqlraytracer)
-
+[advent of code sql(https://news.ycombinator.com/item?id=29467671)]
 [sqllancer](https://github.com/sqlancer/sqlancer) detecting lgoic bugs in dbms
 
  - Differential Datalog

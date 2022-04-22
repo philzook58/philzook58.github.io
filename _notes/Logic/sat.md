@@ -31,3 +31,5 @@ quantified boolean. Combining SAT and comuter aogebra
 model counting
 
 [Soos proof traces for sat solvers FRAT](https://twitter.com/SoosMate/status/1513985102941982720?s=20&t=-ertSPtY87GogVCFq4f-Rw)
+
+[sat solver for factorio](https://github.com/R-O-C-K-E-T/Factorio-SAT)

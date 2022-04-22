@@ -10,11 +10,10 @@ wordpress_id: 1865
 ---
 
 - [Systems](#systems)
-- [History](#history)
   - [Ciao](#ciao)
 - [Examples](#examples)
+  - [Hello World](#hello-world)
   - [Things that are prolog](#things-that-are-prolog)
-    - [Hello World](#hello-world)
   - [Lists](#lists)
   - [Difference Lists](#difference-lists)
   - [Rewriting in prolog](#rewriting-in-prolog)
@@ -48,12 +47,16 @@ wordpress_id: 1865
       - [Lattice](#lattice)
       - [Assignment](#assignment)
       - [EGraphs](#egraphs)
+      - [Semi naive?](#semi-naive)
     - [Compiling](#compiling)
     - [Embedding into CHR](#embedding-into-chr)
   - [Answer Set Programming s(CASP)](#answer-set-programming-scasp)
-  - [Extral(ogical features](#extralogical-features)
+  - [Extralogical features](#extralogical-features)
+    - [Database manipulation](#database-manipulation)
+    - [Cuts and Such](#cuts-and-such)
   - [Lambda](#lambda)
 - [Semantics](#semantics)
+- [History](#history)
 - [Expert Systems](#expert-systems)
 - [Lambda Prolog](#lambda-prolog)
     - [HO Unification](#ho-unification)
@@ -65,7 +68,7 @@ wordpress_id: 1865
 - [Coinductive Logic Programming](#coinductive-logic-programming)
 - [inductive logic programmingh](#inductive-logic-programmingh)
 - [Theorem Proving](#theorem-proving)
-    - [Stuff](#stuff)
+- [Misc](#misc)
   - [2019](#2019)
   - [Notes from 2017 -Resolution and unification](#notes-from-2017--resolution-and-unification)
 
@@ -73,6 +76,7 @@ See also:
 - Datalog
 - Constrained Horn Clauses
 - Constraint Programming (Answer Set programming in particular)
+- Scheme (Minikanren)
 
 # Systems
 [50 years of prolog](https://arxiv.org/pdf/2201.10816.pdf)
@@ -219,6 +223,8 @@ When you
 
 [swipl manual entry](https://www.swi-prolog.org/pldoc/man?section=delcont)
 [schrivers et al](https://www.swi-prolog.org/download/publications/iclp2013.pdf)
+[disjunctive delimited control](https://arxiv.org/pdf/2108.02972.pdf)
+
 
 - effect handlers - implicit state
 - definite clause grammars
@@ -803,6 +809,12 @@ main(_) :-
           
 ```
 
+Is there a way to encode seminaive eval maybe? Even for datalog this is not clear you can. The folding of delta back into the main relationseems problematic.
+
+leansmt
+egraph + clp(R) + clp(FD) + clp(B). How far from SMT is that?
+
+
 ### Compiling
 [KU leuven system : implementation and application](https://lirias.kuleuven.be/retrieve/33588). Hmm. Is CHR compiled into prolog code?
 [CCHR: the fastest CHR Implementation, in C](https://lirias.kuleuven.be/retrieve/22123)  
@@ -840,6 +852,19 @@ dynamic predicates.
 recorded database
 
 `A = A, assert(foo(A)), A = x` what does this do. Does it make a clause `foo(A).` or does it make `foo(x).` Ah ok. The term is copied. So it makes the first on
+
+[a declarative alternative to assert in logic programming](https://www.cs.cmu.edu/~fp/papers/ilps91.pdf)
+
+```prolog
+fib(0,1).
+fib(1,1).
+fib(M,N) :- M > 1, M1 is M - 1, M2 is M - 2, fib(M2, N2), asserta(fib(M2,N2)), 
+            fib(M1, N1), asserta(fib(M1,N1)), N is N1 + N2.
+% hmm. Infinite answers...
+
+```
+
+Program reflection. Partial evaluation.
 ### Cuts and Such
 
 cut
@@ -922,6 +947,42 @@ Install as `opam install elpi`. Run as `elpi -test` to run with main query
 main :- print "hello world".
 ```
 
+A little bit of an odd encoding. Why `fact`? Oh I see. Because they have an outer loop that is inserting facts.
+
+```elpi
+kind entry type.
+type fact entry -> o.
+%type false o.
+
+kind person type.
+type kim,dana person.
+type finished person -> int -> entry.
+type cs_major, graduates person -> entry.
+
+fact (finished kim 102) & fact (finished dana 101).
+fact (finished kim 210) & fact (finished dana 250).
+
+fact (cs_major X) :- (fact (finished X 101); fact (finished X 102)),
+        fact (finished (X 250)), fact (finished X 301).
+
+false :- fact (finished X 210), fact (finished X 250).
+
+```
+
+```elpi
+kind jar, bug type.
+type j jar.
+type sterile, heated jar -> o.
+type dead, bugs bug -> o.
+type in bug -> jar -> o.
+
+sterile J :- pi x\ bugs x => in x J => dead x.
+dead B :- heated J, in B J, bugs B.
+heated j.
+
+main :- sterile J, print J.
+```
+
 ```elpi
 
 type rain prop.
@@ -959,6 +1020,38 @@ constraint rain wet {
   rule rain <=> wet.
 }
 ```
+
+```elpi
+kind unit type.
+type tt unit.
+type lam  (unit -> unit) -> unit.
+
+main :- (x\ x) = (y\ F y), print F,
+     (x\ x) = (y\ y),
+     % fails (x\ x) = (y\ F), % this is exists F, \x x = y\ F. Which is not solvable
+     % pi (y\ X = y) % fails
+      (x\ tt) = (y\ F2), print F2
+. 
+```
+
+
+```elpi
+% church encoding
+kind i type.
+type zero, one, two ((i -> i) -> i -> i) -> o.
+type add ((i -> i) -> i -> i) -> ((i -> i) -> i -> i) -> ((i -> i) -> i -> i) -> o.
+
+zero F :- F = f\ x\ x.
+one F :- F = f\ x\ f x.
+two F :- F = f\ x\ f (f x).
+add X Y Z :- Z = f\ x\ (X f (Y f x)).
+
+main :- two(T), one(O), add T T Z, print Z,
+        % add Q T T, print Q. % unification problem outside patern fragment. Flex-flex?
+        add T Q T, print Q. % no prob
+
+```
+
 
 Some built in elpi files
 - [builtin](https://github.com/LPCIC/elpi/blob/master/src/builtin.elpi) surprising that even very basic stuff is defined in here.
@@ -1062,7 +1155,12 @@ Jens Otten
 
 [A simple version of this implemented in tau prolog](https://www.philipzucker.com/javascript-automated-proving/) Prdocues proofs translated to bussproofs latex
 
-### Stuff
+
+[a pearl on SAT and SMT solving in prolog](https://www.sciencedirect.com/science/article/pii/S030439751200165X) [code](http://www.staff.city.ac.uk/~jacob/solver/index.html)
+
+# Misc
+
+https://github.com/mthom/scryer-prolog/pull/838 scryer as a library?
 
 .type Lifted = Lit {x : symbol} | Y {x : Lifted, y : Lifted}
 
@@ -1623,11 +1721,10 @@ Difference lists are cool. They really are similar ot hughes lists. Or al ist th
 
 Using it for theorem proving is cool. Where are those examples? The lambda prolog book has some exmaples. There is a propsitional satisfiabilioty prover in art of prolog. Propositional solver in powr of prolog [https://www.metalevel.at/prolog/theoremproving](https://www.metalevel.at/prolog/theoremproving) [http://vidal-rosset.net/g4i_prover.html](http://vidal-rosset.net/g4i_prover.html)   http://jens-otten.de/tutorial_cade19/slides/prover_tutorial_CADE19_2.pdf
 
-[http://tca.github.io/veneer/examples/editor.html](http://tca.github.io/veneer/examples/editor.html) minikanren examples. 
 
-[http://io.livecode.ch/](http://io.livecode.ch/) more minikanren examples [https://www.youtube.com/watch?v=0FwIwewHC3o](https://www.youtube.com/watch?v=0FwIwewHC3o) implementing microkanren 
 
-https://www.youtube.com/watch?v=0FwIwewHC3o
+
+
 
 nomial logic programming [https://arxiv.org/pdf/cs/0609062.pdf](https://arxiv.org/pdf/cs/0609062.pdf) alphaprolog. Chris mentioned this nominal thing as nother way of dealing with binders
 
@@ -1637,13 +1734,7 @@ Datalog - souffle.  Reading gorup paper [https://arxiv.org/pdf/1207.5384.pdf](ht
 
 What is the deal with scheme and racket? i just don't have the  revelation.
 
-[http://home.pipeline.com/~hbaker1/CheneyMTA.html](http://home.pipeline.com/~hbaker1/CheneyMTA.html)
 
-Lisp in easy pieces
-
-[http://cs.brown.edu/~sk/Publications/Books/ProgLangs/2007-04-26/](http://cs.brown.edu/~sk/Publications/Books/ProgLangs/2007-04-26/)
-
-[https://schemers.org/](https://schemers.org/)
 
 I was looking at disjoint set data structures again [https://en.wikipedia.org/wiki/Disjoint-set_data_structure#cite_note-Conchon2007-9](https://en.wikipedia.org/wiki/Disjoint-set_data_structure#cite_note-Conchon2007-9)
 
@@ -1787,7 +1878,7 @@ One place used dup as the adjunction to max.
 
 There may be more to galois connections than adjunctions, since they are assuming a meet and join operation. Some interesting doncturctions like the porduct of galois connections.
 
-[https://www.youtube.com/watch?v=KxeHGcbh-4c](https://www.youtube.com/watch?v=KxeHGcbh-4c)  
+[- Edward Kmett - Logic Programming à la Carte](https://www.youtube.com/watch?v=KxeHGcbh-4c)  
 
 minikanren is strongly unification based. it is using search for the unification map. In simplest form [UniMap]
 
@@ -1799,7 +1890,7 @@ https://www.msully.net/blog/2015/02/26/microkanren-%CE%BCkanren-in-haskell/
 
 [http://dev.stephendiehl.com/fun/006_hindley_milner.html#unification](http://dev.stephendiehl.com/fun/006_hindley_milner.html#unification) unification.
 
-[http://webyrd.net/arithm/arithm.pdf](http://webyrd.net/arithm/arithm.pdf)
+[Pure, Declarative, and Constructive Arithmetic Relations (Declarative Pearl)](http://webyrd.net/arithm/arithm.pdf)
 
 [https://ro-che.info/articles/2017-06-17-generic-unification](https://ro-che.info/articles/2017-06-17-generic-unification) unification-fd . 
 

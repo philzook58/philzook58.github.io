@@ -82,6 +82,7 @@ CPS piggybacks other control flow on closure creation mechanisms.
 [Ocaml is getting an effect system](https://pldi21.sigplan.org/details/pldi-2021-papers/14/Retrofitting-Effect-Handlers-onto-OCaml) 
 See my ocaml notes for more.
 
+* [Efficient compilation of algebraic effect handlers](https://dl.acm.org/doi/abs/10.1145/3485479)
 * [effectfuljs. a javascrpt transpiler for effects](https://github.com/awto/effectfuljs) very cool. multi prompt delim conitautiona too?
 * https://www.stephendiehl.com/posts/exotic03.html effect systems are off to the side, but do they help explain lifetimes?  https://news.ycombinator.com/item?id=25178437 interesting commments. Oleg talk. Frank language
 * divergence as an effect. But also is memory usage an effect 
