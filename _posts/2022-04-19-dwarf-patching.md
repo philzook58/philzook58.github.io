@@ -22,11 +22,9 @@ Table of Contents:
 
 # High and Low
 
-At work (HEY DRAPER IS HIRING! HELLLLLO???? [Formal Methods Engineer Jobs at all levels](https://careers-draper.icims.com/jobs/search?ss=1&searchKeyword=formal)) we've been been tinkering away on [VIBES](https://github.com/draperlaboratory/VIBES) for over a year at this point. We've been building a neat [constraint](https://www.minizinc.org/doc-2.6.2/en/index.html) based patching [compiler](https://unison-code.github.io/) that deserves many blog posts of it's own.
+At work (HEY DRAPER IS HIRING! HELLLLLO???? [Formal Methods Engineer Jobs at all levels](https://careers-draper.icims.com/jobs/search?ss=1&searchKeyword=formal+methods)) We've been building a neat [constraint](https://www.minizinc.org/doc-2.6.2/en/index.html) based, CEGIS driven patching [compiler](https://unison-code.github.io/) called [VIBES](https://github.com/draperlaboratory/VIBES) that deserves many blog posts of it's own. The idea is that you could do tiny intra function patches to fix security vulnerabilities post hoc.
 
-Something that has driven me insane with despair is how to talk about the connection between high and low level code in a way precise enough that we can correctly patch in code.
-
-The team and I have some thoughts and ideas on what we info we need and how we could get it. One promising approach that [Sergey Bratus](https://www.cs.dartmouth.edu/~sergey/) has been a big proponent of is using and extending DWARF debug data. We cannot, however, do it alone, so I thought maybe a nice little blog post might help raise some discussion.
+The team and I have some thoughts and ideas on what we info we need to do this and how we could get it. One promising approach for describing the necessary data that [Sergey Bratus](https://www.cs.dartmouth.edu/~sergey/) has been a big proponent of is using and extending the DWARF debug format. We cannot, however, do it alone, so I thought maybe a nice little blog post might help raise some discussion.
 
 But first, what even is the relationship between high and low level programs?
 
@@ -34,27 +32,29 @@ I've got bad news.
 
 ## Programs Are Delusions
 
-In a naive picture of what a compiler does, it looks at programs chunk by chunk and outputs some assembly tha corresponds in a reasonable way to that code. Maybe `foo` goes in `R0`, `bar` goes on the stack, etc. This assignment `:=` becomes a `mov` here, this `+` expression becomes an `add` assembly instruction there.
+Something that has driven me insane with despair is how to talk about the connection between high and low level code in a way precise enough that we can correctly patch in code.
+
+In a naive picture of what a compiler does, it looks at high level programs (In C for example. Yes, C is high level for our purposes here) chunk by chunk and outputs some low level assembly that corresponds in a reasonable way to that code. Maybe `foo` goes in `R0`, `bar` goes on the stack, etc. This assignment `:=` becomes a `mov` here, this `+` expression becomes an `add` assembly instruction there.
 
 This is a completely false picture and banish it from your mind.
 
-High level programs are _delusions_. Optimizing compilers make surprisingly few guarantees about what what correspondences must exist between high and low level code. They may inline code, reorder assignments, rematerialize and copy variables, fuse loops. One could say the _goal_ of an optimizing compiler is to mangle code as much as it can to eke out performance. It is a perfectly _antagonistic_ situation if you want to keep good correspondences between high and low. 
+High level programs are _delusions_. Optimizing compilers make surprisingly few guarantees about what what correspondences must exist between high and low level code. They may inline code, reorder assignments, rematerialize and copy variables, fuse loops. One could say the _goal_ of an optimizing compiler is to mangle slow code as much as it can to eke out performance. It is a perfectly _antagonistic_ situation if you want to keep good correspondences between high and low. 
 
 Optimizing compiler writers want to make my life hell and I take it personally.
 
 The main thing compilers try to guarantee is that the high and low level code should have the same [observable behavior](https://en.cppreference.com/w/cpp/language/as_if). This amounts to some memory access, IO and some function calls must actually happen. The entire rest of your code, all those clever loops and bit tricks and such, are essentially functional specs. They are hints at best of what the compiler should output.
 
-This topic is related to that of [concurrency](https://www.philipzucker.com/notes/CS/Concurrency/). In concurrent code, there is a secret window by which other processes see things that were never meant to be seen. At minimum, intermediate states of shared variables become observable. Reads and writes to these variables should no longer be reordered or inlined or done in pieces. In a sense everything done to these variables becomes observable behavior. The was a crisis of sorts when people started realizing that the mechanisms they vaguely felt made sense, didn't actually make sense in concurrent situations. Straightening this out was quite a lot of work (See memory models).
+This delusion is of central interest in [concurrent](https://www.philipzucker.com/notes/CS/Concurrency/) code. In concurrent code, there is a secret window by which other processes see things that were never meant to be seen. At minimum, intermediate states of shared variables become observable. Reads and writes to these variables should no longer be reordered or inlined or done in pieces. In a sense everything done to these variables becomes observable behavior. The was a crisis of sorts when people started realizing that the mechanisms they vaguely felt made sense, didn't actually make sense in concurrent situations. Straightening this out was quite a lot of work (see [memory models](https://en.wikipedia.org/wiki/Memory_model_(programming)) for example. Interesting but complicated.).
 
-I can't deny however, that despite the compiler only guaranteeing correspondence of high and low at specific points in limited ways, it just so happens that we can usually intuitively see that this region of assembly vaguely corresponds to this region of high level code, and that this high level variable here is stored in that low level variable there. So how is one supposed to proceed when there is clearly an intuitive correspondence that you needmake  precise enough to post hoc patch in code? How do you even describe this correspondence? What is the _schema_ of this correspondence?
+I can't deny however, that despite the compiler only guaranteeing correspondence of high and low at specific points in limited ways, it just so happens that we can usually intuitively see that this region of assembly vaguely corresponds to this region of high level code, and that this high level variable here is stored in that low level variable there. So how is one supposed to proceed when there is clearly an intuitive correspondence that you need to make precise enough to post hoc patch in code? How do you even describe this correspondence? What is the _schema_ of this correspondence? Are there multiple incompatible notions of correspondence?
 
 Now, it just so happens that our task is not to post hoc patch the original source, but instead decompiled source, output say by Ghidra or Binary Ninja. This task is perhaps a bit easier than the optimizing compiler case. A goal of a decompiler is to keep the correspondence understandable.
 
 ## Debugging and DWARF
 
-I've heard it described that one way to think about the concurrency problem is to think of concurrent code as having sort of a debugger level view of the assembly. Debugging is actually a very interesting thing to examine for this problem. Debugging info tries to maintain the connection between high and low data in such away as to be understandable enough to a human operator.
+I've heard it described that one way to think about the concurrency problem is to think of concurrent code as having sort of a debugger level view of the assembly. Debugging is actually a very interesting thing to examine for inspiration and solutions to this high/low problem. Debugging info tries to maintain the connection between high and low data in such away as to be understandable enough to a human operator.
 
-DWARF is a standardized ubiquitous debugging format. It is expressive and open ended. It structured and tree like, kind of like XML or JSON (variables are scoped in subprograms which are scope in compilation units for example). The nodes of the tree are called DIEs (DWARF information entries) and they contain DWARF attributes as children.
+DWARF is a standardized ubiquitous debugging format. It is expressive and open ended. It structured and tree like, kind of like XML or JSON (for example variables are scoped in subprograms which are scope in compilation units). The nodes of the tree are called DIEs (DWARF information entries) and they contain DWARF attributes as children.
 
 DWARF has built in ways to talk about
 - Function names, stack frames
@@ -80,14 +80,14 @@ readelf --debug-dump a.out | grep -C 10 foo
 
 ## Communicating with Decompilers
 
-A difficulty we've faced on VIBES is how to communicate with between tools that decompile and tools that compile patches. There are `N` tools that decompile and `M` tools that patch. Each one has it's own interfaces and it is outside both the desires and probably people-hours to figure out how to build the `N*M` different interface combinations. I don't want to impose the burden of writing our VIBES config files on others, and also I want the freedom to change the format as I understand more without making people want to kill me.
+A difficulty we've faced on VIBES is how to communicate with between tools that decompile and tools that compile patches. There are `N` tools that decompile and `M` tools that patch. Each one has it's own interfaces and it is outside both the desires and people-hours to figure out how to build the `N*M` different interface combinations. I don't want to impose the burden of writing our VIBES config files on others, and also I want the freedom to change the format as I understand more without making people want to kill me.
 
 DWARF has some aspects that make it seem like a partial solution to this problem:
 
 - It is standardized.
 - It is language universal. Decompiler output is not really valid C or anything, so this is good.
-- It gets in the ballpack of expressing the information we need.
-- There is utility in exporting it anyway for other users so they can see their annotated decompilation in gdb. I take that people have made export plugins for [IDA](https://github.com/ALSchwalm/dwarfexport), [Ghidra](https://github.com/cesena/ghidra2dwarf) and [Binary Ninja](https://github.com/immunant/dwarf-writer) as evidence for this. These plugins are all close but no cigar for out purposes AFAIK.
+- It gets us in the ballpack of expressing the information we need.
+- There is utility in exporting it anyway for other users so they can see their annotated decompilation in gdb. I take that people have made export plugins for [IDA](https://github.com/ALSchwalm/dwarfexport), [Ghidra](https://github.com/cesena/ghidra2dwarf) and [Binary Ninja](https://github.com/immunant/dwarf-writer) as evidence for this. These plugins are all close but no cigar for our purposes AFAIK.
 
 The downsides of DWARF:
 
@@ -102,7 +102,7 @@ See the extensions sections below for suggestions on how to fix some of these pr
 
 VIBES works on JSON config files that describe the patches. We've sort of grown this config file as the need has arised to get at th information we need in the most direct way possible. It has not been desirable to spend months pondering what is the most general way to describe the relationship between high and low. In fact, it is my belief that this is not how problems are solved anyway. You solve problems by working at it and seeing what you learn.
 
-Here's an example config json for a [simple patch](https://github.com/draperlaboratory/VIBES/tree/main/resources/exes/arm-null-check).
+Here's an example config json for a [simple patch](https://github.com/draperlaboratory/VIBES/tree/main/resources/exes/arm-null-check). It contains:
 
 - A comparative SMTLIB specification for correct patch behavior
 - `patch-point` describes the address at which to hijack control flow into our code
@@ -161,29 +161,31 @@ Here's an example config json for a [simple patch](https://github.com/draperlabo
 
 I think that we can use already existent DWARF DIEs to approximate or improve these fields.
 
-- `DW_TAG_variable` `DW_TAG_formal_parameter` are two DIEs that describe variables. They have attributes. This is similar to our `patch-vars` field. It is both more and less expressive
+- `DW_TAG_variable` `DW_TAG_formal_parameter` are two DIEs that describe variables. They have attributes. This is similar to our `patch-vars` field. It is both more and less expressive. DWARF is missing a notion of 
+"at-exit"  "at-entry" but can express ranges where variable correspondence hold and use dwarf expressions.
 - `DW_TAG_label` seems like a reasonable choice to encode both the patch entry and patch exit points. It is very possibly for a patch to have multiple exits (and maybe multiple entries?) so it would be nice for a human to be able to annotate these points in the high level code which we could then read off. 
 - `DW_TAG_lexical_block` gives us a way to talk about regions in the high code. We can use this to describe what code we are replacing, i.e. deadcode.
-- DWARF type descriptors. We don't yet have the ability to import struct definitions. Now actually, BAP, our underlying framework can already import C headers and decompilers also already export those. So maybe that is a better way to go. But DWARF is an all in one stop for info.
+- DWARF type descriptors. We don't yet have the ability to import struct definitions. Now actually, [BAP](https://github.com/BinaryAnalysisPlatform/bap), our underlying binary analysis framework can already import C headers and decompilers also already export those. So maybe that is a better way to go. But DWARF is an all in one stop for such info if we so desire.
 
 
 # High-Low Relational Program Analysis
 
 VIBES is a compiler, but an unusual one. Hence we need all traditional program analyses, but with a twist.
 
-Traditional compilers subsequently lower high level code to low, doing analysis and transformations at each stage.
-In a certain sense, one could see our task as a vertical slicing of this approach. Suppose a compiler did all stages of analysis and assignment on a subset of the basic blocks in a function. Then what information would the compiler need to compile the remaining blocks such that they remain consistent with the register choices and layout choices already made in the other blocks?
+Traditional compilers subsequently lower high level code to low, doing analysis and transformations independently at each stage.
+In a certain sense, one could see our task as a vertical slicing of this approach. Suppose a compiler did all stages of analysis and assignment on a subset of the basic blocks in a function. Then what information would the compiler need to compile the remaining blocks such that they remain consistent with the register choices and layout choices already made in the other blocks? This has some of the flavor of the patching problem.
 
-We don't have the whole function available to us. We only have what information the decompilers can export to us. I would suggest that we need any traditional compiler dataflow analysis you can give us at the boundaires of the patch. We can the propagate this information inside of the patch as we see fit.
+We don't have the whole function available to us. We only have what information the decompilers can export to us. I would suggest that we need any traditional compiler dataflow analysis you can give us at the boundaries of the patch. We can the propagate this information inside of the patch as we see fit.
 
-In the traditional compiler approach, you can consider each IR in isolation for analysis. I suggest this is no longer acceptable and that every analysis should proceed in a deeply high/low relational way, never separating the two. To make a database analogy, I do not think the relational join of a hypothetical `(high_label,low_address)` table with the in isolation produced analyses (liveness,availability,reaching definitions, available expressions) is sufficient to express the full range of possibilities. That schema is wrong. Projecting the information in that way is lossy.
+In the traditional compiler approach, you can consider each IR in isolation for analysis. I suggest this is no longer acceptable and that every analysis should proceed in a deeply high/low relational way, never separating the two. To make a database analogy, I do not think the relational join of a hypothetical `related_point(high_label,low_address)` table with the in isolation produced analyses (liveness,availability,reaching definitions,available expressions, etc) is sufficient to express the full range of possibilities. That schema is wrong. Projecting and reconstituting the information in that way is lossy.
 
 "The" relationship between high variables and low variables is at least multivalued, partial, and address dependent. I suspect that even the very language I am using here leads to false thinking. I don't even think there _is_ a single "correspondence" relationship between high and low variables but instead many.
 
-What about "the" relationship addresses and high level program points? This is also very scattered by the rearrangement of statements of the high level code. This relationship is also partial, multivalued, and does not transfer nicely along the control flow of either.
+What about "the" relationship addresses and high level program points? This is very scattered and unordered by the rearrangement of statements of the high level code. To say two points are in correspondence wouldn't we have to say their entire states correspond at those points? This seems like too much to ask. This relationship is also partial, multivalued, and does not transfer nicely along the control flow of either.
 
 Here are two tables that might make sense and translate to useful notions for us. 
-An available high/low relation says that at this high program position, the high variable can be read at this low level position from this low level location.
+
+An available high/low relation says that at this high program position, this high variable can be read at this low level address from this low level storage location.
 
 Live means that high variables writes at this high label need to be written to these (possibly multiple) low level locations at these low level program addresses.
 
@@ -204,7 +206,8 @@ Note, I consider this entire section to be vague and incomplete. Please help.
 
 ## Program Analyses
 
-How could program anlysis like the above be encoded into DWARF? I would claim it's actually pretty close.
+How could program analysis like the above be encoded into DWARF? I would claim it's actually pretty close.
+
 Currently DWARF is capable of expressing some kind of location aware relationship between variables in high an low level code.
 An extra DWARF flag attribute `DW_AT_live` and `DW_AT_available` in the `DW_TAG_variable` DIE may be sufficient to extend DWARF expressivity to these more precise notions.
 
@@ -212,13 +215,17 @@ It would also be helpful to have flags `DW_AT_precise` to know what information 
 
 ## Verification conditions
 
-DWARF expressions are [shockingly expressive](https://www.youtube.com/watch?v=nLH7ytOTYto). They are described via Turing complete stack machine programs. So this is already a good base to work from.
+DWARF expressions are [shockingly expressive](https://www.youtube.com/watch?v=nLH7ytOTYto). They are described via Turing complete stack machine programs. So this is already a convenient base to work from expressivity wise.
 
-It is completely possible to interpret common simple DWARF expressions into SMTLIB. This means that it is possible to describe verification asserts and assumes in DWARF. I would suggest two new DIEs `DW_TAG_assert` and `DW_TAG_assume`. I think this is generally pretty interesting.
+It is completely possible to easily interpret simple DWARF expressions into SMTLIB. This means that it is possible to describe verification asserts and assumes in DWARF. I would suggest perhaps two new DIEs `DW_TAG_assert` and `DW_TAG_assume`. 
 
-It would allow for zero cost assert statements in high level languages that are preserved for any subsequent verification you might wish to do. Binaries become "spec-carrying code". Typically, languages insert dynamics checks into code for asserts, and the code is recompiled if you want to turn these off for production. However, with DWARF asserts, if you want to run the binary dynamically in assertion mode, you could run it in GDB, where it places interrupts at any assertion point.
+I think this is generally pretty interesting.
 
-These assert statements could be used for bounds checks, control flow integrity checks, etc, all at no runtime cost when you turn them off.
+It would allow for zero cost assert statements in high level languages that are preserved alongside the binary for any subsequent verification you might wish to do. Binaries become "spec-carrying code". Typically, languages insert dynamics checks into code for asserts, and the code is recompiled if you want to turn these off for production. However, with DWARF asserts, if you want to run the binary dynamically in assertion mode, you could run it in GDB, where it places interrupts at any assertion point.
+
+Maybe you don't trust the code. You could require it to carry a spec, and helpful assert/assume statements and verify it with automated tooling before you run it. At a certain point, enough assert and assume statements start to become a proof. See [Dafny](https://github.com/dafny-lang/dafny) for example.
+
+These assert statements could be used for bounds checks, control flow integrity checks, etc, all at no runtime cost when you turn them off with no recompilation required.
 
 They would be language agnostic.
 
@@ -233,7 +240,7 @@ As I mentioned, backing out high code semantic information from the line table i
 
 There are some language agnostic commonalities you see in many high level languages. These are sketched out in the pedagogocial languages IMP and WHILE you'll see in books and course notes.
 
-A significant burden of binary verification is reconstructing high level control flow expections from the low code.
+A significant burden of binary verification is reconstructing high level control flow expectations from the low code. This information in some sense exists in the compiler and is thrown away. Things don't have to be so hard.
 
 - `DW_TAG_assign`
 - `DW_TAG_while`
@@ -249,12 +256,11 @@ On the other hand, the _relational_ characterization of high level constructs to
 
 ## DWARF JSON
 
-DWARF is a pain to read and write in it's low level format. libdwarf is great, but difficult and confusing. A standard human readable format would be awesome. There are a number of projects for reading dwarf into YAML or JSON. There is a desire for this. They are fragmented, in languages du jour, and unmaintained.
-
+DWARF is a pain to read and write in it's low level format. [libdwarf](https://www.prevanders.net/dwarf.html) is great, but difficult and confusing. A standardized human readable format would be awesome. There are a number of projects for reading dwarf into YAML or JSON. There is a desire for this. These projects are fragmented, in languages du jour, and unmaintained.
 
 # Bits and Bobbles
 
-Thanks to Chris Casinghino, Cody Roux, JT Paasch, Ben Mourad, Ivan Gotovchits, Chloe Fortuna, AMP, and Sergey Bratus. Any ideas herein that are bad I claim as my own.
+Thanks to Chris Casinghino, Cody Roux, JT Paasch, Ben Mourad, Chloe Fortuna, Ivan Gotovchits, the AMP performers, and Sergey Bratus. Any ideas herein that are bad I claim as my own.
 
 I'd suggest that somehow the decompiler tools need to enforce or guide people to put patches only in high and low level positions where patches can make sense. If you randomly pick a character or even AST node in high level source, odds are it is not a sufficiently self contained notion to talk about replacing it.
 
