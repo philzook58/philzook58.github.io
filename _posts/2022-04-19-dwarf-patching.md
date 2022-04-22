@@ -1,7 +1,7 @@
 ---
 date: 2022-04-22
 layout: post
-title: "The mighty DWARF: A Trojan Horse for Program Analysis, Verification, and Recompilation"
+title: "The Almighty DWARF: A Trojan Horse for Program Analysis, Verification, and Recompilation"
 tags: binary analysis dwarf
 description: DWARF exists, is ubiquitous, and is powerful. It seems like a small step to package more information into it, opening big opportunities for cool PL applications.
 ---
@@ -36,7 +36,7 @@ High level programs are _delusions_. Optimizing compilers make surprisingly few 
 
 The main thing compilers try to guarantee is that the high and low level code should have the same [observable behavior](https://en.cppreference.com/w/cpp/language/as_if). This amounts to some memory access, IO and some function calls must actually happen. The entire rest of your code, all those clever loops and bit tricks and such, are essentially functional specs. They are hints at best of what the compiler should output.
 
-This topic is related to that of concurrency. In concurrent code, there is a secret window by which other processes see things that were never meant to be seen. At minimum, intermediate states of shared variables become observable. Reads and writes to these variables should no longer be reordered or inlined or done in pieces. In a sense everything done to these variables becomes observable behavior. The was a crisis of sorts when people started realizing that the mechanisms they vaguely felt made sense, didn't actually make sense in concurrent situations. Straightening this out was quite a lot of work (See memory models).
+This topic is related to that of [concurrency](https://www.philipzucker.com/notes/CS/Concurrency/). In concurrent code, there is a secret window by which other processes see things that were never meant to be seen. At minimum, intermediate states of shared variables become observable. Reads and writes to these variables should no longer be reordered or inlined or done in pieces. In a sense everything done to these variables becomes observable behavior. The was a crisis of sorts when people started realizing that the mechanisms they vaguely felt made sense, didn't actually make sense in concurrent situations. Straightening this out was quite a lot of work (See memory models).
 
 I can't deny however, that despite the compiler only guaranteeing correspondence of high and low at specific points in limited ways, it just so happens that we can usually intuitively see that this region of assembly vaguely corresponds to this region of high level code, and that this high level variable here is stored in that low level variable there. So how is one supposed to proceed when there is clearly an intuitive correspondence that you needmake  precise enough to post hoc patch in code? How do you even describe this correspondence? What is the _schema_ of this correspondence?
 
@@ -169,8 +169,15 @@ We don't have the whole function available to us. We only have what information 
 
 In the traditional compiler approach, you can consider each IR in isolation for analysis. I suggest this is no longer acceptable and that every analysis should proceed in a deeply high/low relational way, never separating the two. To make a database analogy, I do not think the relational join of a hypothetical `(high_label,low_address)` table with the in isolation produced analyses (liveness,availability,reaching definitions, available expressions) is sufficient to express the full range of possibilities. That schema is wrong. Projecting the information in that way is lossy.
 
-Here are two tables that translate to useful notions for us. Available says that at this high program position, the high variable can be read at this low level position from this low level location.
+"The" relationship between high variables and low variables is at least multivalued, partial, and address dependent. I suspect that even the very language I am using here leads to false thinking. I don't even think there _is_ a single "correspondence" relationship between high and low variables but instead many.
+
+What about "the" relationship addresses and high level program points? This is also very scattered by the rearrangement of statements of the high level code. This relationship is also partial, multivalued, and does not transfer nicely along the control flow of either.
+
+Here are two tables that might make sense and translate to useful notions for us. 
+An available high/low relation says that at this high program position, the high variable can be read at this low level position from this low level location.
+
 Live means that high variables writes at this high label need to be written to these (possibly multiple) low level locations at these low level program addresses.
+
 The two tables tell us how to read incoming variables at patch entry, and what we need to have written at patch exit.
 
 ```
@@ -180,24 +187,21 @@ The two tables tell us how to read incoming variables at patch entry, and what w
 
 Reaching definitions analysis seems useful in that if a definition in the code we're overwriting reaches the exit points of our patch, we need to replace it's value. If we aren't overwriting a reaching definition, we need to instead _preserve_ values that occur in both available at the beginning of the patch and live at the end of the patch, possibly by spilling.
 
+Basically, we could probably use any analysis you can hand us profitably.
+
 # Extensions to DWARF
 
 ## Program Analyses
-"The" relationship between high variables and low variables is multivalued, partial, and address dependent. I suspect that even the very language I am using here leads to false thinking. I don't even think there _is_ a single "correspondence" relationship between high and low variables but instead many.
-
-What about "the" relationship addresses and high level program points? This is also very scattered by the rearrangement of statements of the high level code. This relationship is also partial, multivalued, and does not transfer nicely along the control flow of either.
-
-In fact I think this is the wrong way to talk about the problem.
 
 How could program anlysis like the above be encoded into DWARF? I would claim it's actually pretty close.
 Currently DWARF is capable of expressing some kind of location aware relationship between variables in high an low level code.
-An extra DWARF flag attribute `DW_attr_live` and `DW_attr_available` in the `DW_TAG_variable` DIE may be sufficient to extend DWARF expressivity to these more precise notions.
+An extra DWARF flag attribute `DW_AT_live` and `DW_AT_available` in the `DW_TAG_variable` DIE may be sufficient to extend DWARF expressivity to these more precise notions.
 
-It would also be helpful to have flags `DW_attr_precise` to know what information is absolutely trusted and what may be somewhat approximate.
+It would also be helpful to have flags `DW_AT_precise` to know what information is absolutely trusted and what may be somewhat approximate.
 
 ## Verification conditions
 
-DWARF expressions are shockingly expressive. They are described via Turing complete stack machine programs. So this is already a good base to work from.
+DWARF expressions are [shockingly expressive](https://www.youtube.com/watch?v=nLH7ytOTYto). They are described via Turing complete stack machine programs. So this is already a good base to work from.
 
 It is completely possible to interpret common simple DWARF expressions into SMTLIB. This means that it is possible to describe verification asserts and assumes in DWARF. I would suggest two new DIEs `DW_TAG_assert` and `DW_TAG_assume`. I think this is generally pretty interesting.
 
