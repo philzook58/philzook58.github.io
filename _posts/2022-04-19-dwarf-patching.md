@@ -22,9 +22,9 @@ Table of Contents:
 
 # High and Low
 
-At work we've been been tinkering away on [VIBES](https://github.com/draperlaboratory/VIBES) for over a year at this point. VIBES is a part of the [DARPA Assured Micropatching](https://www.darpa.mil/program/assured-micropatching) (AMP) program. We've been building a neat [constraint](https://www.minizinc.org/doc-2.6.2/en/index.html) based patching [compiler](https://unison-code.github.io/) that deserves many blog posts of it's own.
+At work (HEY DRAPER IS HIRING! HELLLLLO???? [Formal Methods Engineer Jobs at all levels](https://careers-draper.icims.com/jobs/search?ss=1&searchKeyword=formal)) we've been been tinkering away on [VIBES](https://github.com/draperlaboratory/VIBES) for over a year at this point. We've been building a neat [constraint](https://www.minizinc.org/doc-2.6.2/en/index.html) based patching [compiler](https://unison-code.github.io/) that deserves many blog posts of it's own.
 
-Something that has driven me insane with despair during this program is how to talk about the connection between high and low level code in a way precise enough that we can correctly patch in code.
+Something that has driven me insane with despair is how to talk about the connection between high and low level code in a way precise enough that we can correctly patch in code.
 
 The team and I have some thoughts and ideas on what we info we need and how we could get it. One promising approach that [Sergey Bratus](https://www.cs.dartmouth.edu/~sergey/) has been a big proponent of is using and extending DWARF debug data. We cannot, however, do it alone, so I thought maybe a nice little blog post might help raise some discussion.
 
@@ -38,7 +38,9 @@ In a naive picture of what a compiler does, it looks at programs chunk by chunk 
 
 This is a completely false picture and banish it from your mind.
 
-High level programs are _delusions_. Optimizing compilers make surprisingly few guarantees about what what correspondences must exist between high and low level code. They may inline code, reorder assignments, rematerialize and copy variables, fuse loops. One could say the _goal_ of an optimizing compiler is to mangle code as much as it can to eke out performance. It is a perfectly _antagonistic_ situation if you want to keep good correspondences between high and low. Optimizing compiler writers want to make my life hell and I take it personally.
+High level programs are _delusions_. Optimizing compilers make surprisingly few guarantees about what what correspondences must exist between high and low level code. They may inline code, reorder assignments, rematerialize and copy variables, fuse loops. One could say the _goal_ of an optimizing compiler is to mangle code as much as it can to eke out performance. It is a perfectly _antagonistic_ situation if you want to keep good correspondences between high and low. 
+
+Optimizing compiler writers want to make my life hell and I take it personally.
 
 The main thing compilers try to guarantee is that the high and low level code should have the same [observable behavior](https://en.cppreference.com/w/cpp/language/as_if). This amounts to some memory access, IO and some function calls must actually happen. The entire rest of your code, all those clever loops and bit tricks and such, are essentially functional specs. They are hints at best of what the compiler should output.
 
@@ -78,7 +80,7 @@ readelf --debug-dump a.out | grep -C 10 foo
 
 ## Communicating with Decompilers
 
-A difficulty we've faced on the AMP program is how to communicate with between tools that decompile and tools that compile patches. There are `N` tools that decompile and `M` tools that patch. Each one has it's own interfaces and it is outside both the desires and probably people-hours to figure out how to build the `N*M` different interface combinations. I don't want to impose the burden of writing our VIBES config files on others, and also I want the freedom to change the format as I understand more without making people want to kill me.
+A difficulty we've faced on VIBES is how to communicate with between tools that decompile and tools that compile patches. There are `N` tools that decompile and `M` tools that patch. Each one has it's own interfaces and it is outside both the desires and probably people-hours to figure out how to build the `N*M` different interface combinations. I don't want to impose the burden of writing our VIBES config files on others, and also I want the freedom to change the format as I understand more without making people want to kill me.
 
 DWARF has some aspects that make it seem like a partial solution to this problem:
 
@@ -89,11 +91,12 @@ DWARF has some aspects that make it seem like a partial solution to this problem
 
 The downsides of DWARF:
 
-- DWARF is not meant for last word precision. It is meant to get human debugging in the ballpark.
-- The concepts of high low correspondence is not sufficiently refined even in DWARF.
-- DWARF
-- DWARF does not express some information we still need like verification conditions. See extension suggestions below.
-- The binary format is a pain in the butt for no reason for us. I said DWARF is in essence something like a JSON. I'd suggest we literally export a JSONified DWARF.
+- DWARF is not meant for precision. It is meant to get human debugging in the ballpark. Now, surprisingly, DWARF is used to implement exception handling, so that fragment is precise.
+- The high low correspondence in DWARF is still not completely sufficiently refined for our needs.
+- DWARF does not express at all some information we need like verification conditions. 
+- The low level DWARF binary format is a pain in the butt for no gain in our use case. I said DWARF is in essence something like a JSON. I'd suggest we literally export a JSONified DWARF.
+
+See the extensions sections below for suggestions on how to fix some of these problems.
 
 ## VIBES Config files and DWARF
 
@@ -194,6 +197,8 @@ The two tables tell us how to read incoming variables at patch entry, and what w
 Reaching definitions analysis seems useful in that if a definition in the code we're overwriting reaches the exit points of our patch, we need to replace it's value. If we aren't overwriting a reaching definition, we need to instead _preserve_ values that occur in both available at the beginning of the patch and live at the end of the patch, possibly by spilling.
 
 Basically, we could probably use any analysis you can hand us profitably.
+
+Note, I consider this entire section to be vague and incomplete. Please help.
 
 # Extensions to DWARF
 
