@@ -24,7 +24,7 @@ Table of Contents:
 
 At work (HEY DRAPER IS HIRING! HELLLLLO???? [Formal Methods Engineer Jobs at all levels](https://careers-draper.icims.com/jobs/search?ss=1&searchKeyword=formal+methods)) We've been building a neat [constraint](https://www.minizinc.org/doc-2.6.2/en/index.html) based, CEGIS driven patching [compiler](https://unison-code.github.io/) called [VIBES](https://github.com/draperlaboratory/VIBES) that deserves many blog posts of it's own. The idea is that you could do tiny intra function patches to fix security vulnerabilities post hoc.
 
-The team and I have some thoughts and ideas on what we info we need to do this and how we could get it. One promising approach for describing the necessary data that [Sergey Bratus](https://www.cs.dartmouth.edu/~sergey/) has been a big proponent of is using and extending the DWARF debug format. We cannot, however, do it alone, so I thought maybe a nice little blog post might help raise some discussion.
+The team and I have some thoughts and ideas on what we info we need to do this and how we could get it. One promising approach for describing the necessary data that [Sergey Bratus](https://www.cs.dartmouth.edu/~sergey/) has been a big proponent of is using and extending the DWARF debug format. We cannot, however, do it alone, so I thought maybe a little blog post might help raise some discussion.
 
 But first, what even is the relationship between high and low level programs?
 
@@ -48,7 +48,7 @@ This delusion is of central interest in [concurrent](https://www.philipzucker.co
 
 I can't deny however, that despite the compiler only guaranteeing correspondence of high and low at specific points in limited ways, it just so happens that we can usually intuitively see that this region of assembly vaguely corresponds to this region of high level code, and that this high level variable here is stored in that low level variable there. So how is one supposed to proceed when there is clearly an intuitive correspondence that you need to make precise enough to post hoc patch in code? How do you even describe this correspondence? What is the _schema_ of this correspondence? Are there multiple incompatible notions of correspondence?
 
-Now, it just so happens that our task is not to post hoc patch the original source, but instead decompiled source, output say by Ghidra or Binary Ninja. This task is perhaps a bit easier than the optimizing compiler case. A goal of a decompiler is to keep the correspondence understandable.
+Now, it just so happens that our task is not to post hoc patch the original source, but instead decompiled source, output say by [Ghidra](https://ghidra-sre.org/) or [Binary Ninja](https://binary.ninja/). This task is perhaps a bit easier than the optimizing compiler case. A goal of a decompiler is to keep the correspondence understandable.
 
 ## Debugging and DWARF
 
@@ -161,9 +161,8 @@ Here's an example config json for a [simple patch](https://github.com/draperlabo
 
 I think that we can use already existent DWARF DIEs to approximate or improve these fields.
 
-- `DW_TAG_variable` `DW_TAG_formal_parameter` are two DIEs that describe variables. They have attributes. This is similar to our `patch-vars` field. It is both more and less expressive. DWARF is missing a notion of 
-"at-exit"  "at-entry" but can express ranges where variable correspondence hold and use dwarf expressions.
-- `DW_TAG_label` seems like a reasonable choice to encode both the patch entry and patch exit points. It is very possibly for a patch to have multiple exits (and maybe multiple entries?) so it would be nice for a human to be able to annotate these points in the high level code which we could then read off. 
+- `DW_TAG_variable` `DW_TAG_formal_parameter` are two DIEs that describe variables. They have attributes. This is similar to our `patch-vars` field. It is both more and less expressive. DWARF is missing a notion of "at-exit" and  "at-entry" but can express ranges where variable correspondence hold and use dwarf expressions.
+- `DW_TAG_label` seems like a reasonable choice to encode both the patch entry and patch exit points. It is very possible for a patch to have multiple exits (and maybe multiple entries?) so it would be nice for a human to be able to annotate these points in the high level code which we could then read off. 
 - `DW_TAG_lexical_block` gives us a way to talk about regions in the high code. We can use this to describe what code we are replacing, i.e. deadcode.
 - DWARF type descriptors. We don't yet have the ability to import struct definitions. Now actually, [BAP](https://github.com/BinaryAnalysisPlatform/bap), our underlying binary analysis framework can already import C headers and decompilers also already export those. So maybe that is a better way to go. But DWARF is an all in one stop for such info if we so desire.
 
@@ -233,7 +232,7 @@ These assert statements could be used for bounds checks, control flow integrity 
 
 They would be language agnostic.
 
-Now for our particular use case, we'd also like some extensions to DWARF expressions. We desire the ability to talk about the original and modified program, because our tool CBAT does ocmparative verification. Comparativie verification is nice because it eases the burden of specification on the user and in principle is easier to verify too. All the user has to say is under what conditions should the program do what it used to do, and when should it do something different, instead of specifying what the program does in absolute terms.
+Now for our particular use case, we'd also like some extensions to DWARF expressions. We desire the ability to talk about the original and modified program, because our tool CBAT does comparative verification. Comparative verification is nice because it eases the burden of specification on the user and in principle is easier to verify too. All the user has to say is under what conditions should the program do what it used to do, and when should it do something different, instead of specifying what the program does in absolute terms.
 
 We'd desire DWARF expression modifiers `DW_OP_orig` and `DW_OP_mod` to differentiate between R0 in the original and modified program for example.
 
@@ -242,9 +241,11 @@ We'd desire DWARF expression modifiers `DW_OP_orig` and `DW_OP_mod` to different
 Another suggestion that I think could aid verification and patching burden is to increase the abilities of DWARF to describe the imperative skeleton of code.
 As I mentioned, backing out high code semantic information from the line table is nontrivial work. I don't see why you would store this information in this way if you need it.
 
-There are some language agnostic commonalities you see in many high level languages. These are sketched out in the pedagogocial languages IMP and WHILE you'll see in books and course notes.
+There are some language agnostic commonalities you see in many high level languages. These are sketched out in the pedagogical languages IMP and WHILE you'll see in books and course notes.
 
 A significant burden of binary verification is reconstructing high level control flow expectations from the low code. This information in some sense exists in the compiler and is thrown away. Things don't have to be so hard.
+
+Some suggested DIEs that should describe both the high level and low level pieces. High level conditions should probably be DWARF expressions. Possibly DWARF expressions should be extended to be able to reference high level variables:
 
 - `DW_TAG_assign`
 - `DW_TAG_while`
