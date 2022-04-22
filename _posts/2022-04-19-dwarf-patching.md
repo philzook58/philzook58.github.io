@@ -26,6 +26,12 @@ At work we've been been tinkering away on [VIBES](https://github.com/draperlabor
 
 Something that has driven me insane with despair during this program is how to talk about the connection between high and low level code in a way precise enough that we can correctly patch in code.
 
+The team and I have some thoughts and ideas on what we info we need and how we could get it. One promising approach that [Sergey Bratus](https://www.cs.dartmouth.edu/~sergey/) has been a big proponent of is using and extending DWARF debug data. We cannot, however, do it alone, so I thought maybe a nice little blog post might help raise some discussion.
+
+But first, what even is the relationship between high and low level programs?
+
+I've got bad news.
+
 ## Programs Are Delusions
 
 In a naive picture of what a compiler does, it looks at programs chunk by chunk and outputs some assembly tha corresponds in a reasonable way to that code. Maybe `foo` goes in `R0`, `bar` goes on the stack, etc. This assignment `:=` becomes a `mov` here, this `+` expression becomes an `add` assembly instruction there.
