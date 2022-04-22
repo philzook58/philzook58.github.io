@@ -22,7 +22,7 @@ Table of Contents:
 
 # High and Low
 
-At work (HEY DRAPER IS HIRING! HELLLLLO???? [Formal Methods Engineer Jobs at all levels](https://careers-draper.icims.com/jobs/search?ss=1&searchKeyword=formal+methods)) We've been building a neat [constraint](https://www.minizinc.org/doc-2.6.2/en/index.html) based, CEGIS driven patching [compiler](https://unison-code.github.io/) called [VIBES](https://github.com/draperlaboratory/VIBES) that deserves many blog posts of it's own. The idea is that you could do tiny intra function patches to fix security vulnerabilities post hoc.
+At work (HEY DRAPER IS HIRING! HELLLLLO???? [Formal Methods Engineer Jobs at all levels](https://careers-draper.icims.com/jobs/search?ss=1&searchKeyword=formal+methods)) We've been building a neat [constraint](https://www.minizinc.org/doc-2.6.2/en/index.html) based, CEGIS driven patching [compiler](https://unison-code.github.io/) called [VIBES](https://github.com/draperlaboratory/VIBES) that deserves many blog posts of it's own. The idea is that you could do tiny verified intra function patches to fix security vulnerabilities post hoc.
 
 The team and I have some thoughts and ideas on what we info we need to do this and how we could get it. One promising approach for describing the necessary data that [Sergey Bratus](https://www.cs.dartmouth.edu/~sergey/) has been a big proponent of is using and extending the DWARF debug format. We cannot, however, do it alone, so I thought maybe a little blog post might help raise some discussion.
 
@@ -283,6 +283,8 @@ A different mode of creating patches. Watching the patch being made. Edit sequen
 
 Two projects which certainly have to tackle a concrete notion of the relation between high and low are Compcert and sel4.
 <https://www.cs.cmu.edu/~15811/papers/compcert-journal.pdf> I should more deeply understand what is going on here, but I suspect it doesn't work for our use case. I suspect Bisimulation over observable behavior is a trap.
+
+The easiest way of writing DWARF that I know if is to just use an assembler. Is there a better way?
 
 Look more into prior work on recompilation
 
