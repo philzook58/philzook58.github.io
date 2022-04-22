@@ -10,7 +10,7 @@ Table of Contents:
 - [High and Low](#high-and-low)
   - [Programs Are Delusions](#programs-are-delusions)
   - [Debugging and DWARF](#debugging-and-dwarf)
-  - [Communicating with Decompilers](#communicating-with-decompilers)
+  - [Communicating with Decompilers via DWARF](#communicating-with-decompilers-via-dwarf)
   - [VIBES Config files and DWARF](#vibes-config-files-and-dwarf)
 - [High-Low Relational Program Analysis](#high-low-relational-program-analysis)
 - [Extensions to DWARF](#extensions-to-dwarf)
@@ -78,7 +78,7 @@ gcc -g -c foo.c
 readelf --debug-dump a.out | grep -C 10 foo
 ```
 
-## Communicating with Decompilers
+## Communicating with Decompilers via DWARF
 
 A difficulty we've faced on VIBES is how to communicate with between tools that decompile and tools that compile patches. There are `N` tools that decompile and `M` tools that patch. Each one has it's own interfaces and it is outside both the desires and people-hours to figure out how to build the `N*M` different interface combinations. I don't want to impose the burden of writing our VIBES config files on others, and also I want the freedom to change the format as I understand more without making people want to kill me.
 
@@ -202,6 +202,10 @@ Basically, we could probably use any analysis you can hand us profitably.
 
 Note, I consider this entire section to be vague and incomplete. Please help.
 
+- Should these analyses be underapproximations or overapproximations?
+- Does even this make sense?
+- Am I too pessimistic about disentangled analyses?
+
 # Extensions to DWARF
 
 ## Program Analyses
@@ -274,7 +278,7 @@ I have grown accustomed to the SSA style of making writes happen to a unique var
 A different mode of creating patches. Watching the patch being made. Edit sequences. Like operation transform of google docs or what have you.
 
 Two projects which certainly have to tackle a concrete notion of the relation between high and low are Compcert and sel4.
-<https://www.cs.cmu.edu/~15811/papers/compcert-journal.pdf> I should more deeply understand what is going on here, but I suspect it doesn't work for our use case. Bisimulation over observable behavior is a trap.
+<https://www.cs.cmu.edu/~15811/papers/compcert-journal.pdf> I should more deeply understand what is going on here, but I suspect it doesn't work for our use case. I suspect Bisimulation over observable behavior is a trap.
 
 Look more into prior work on recompilation
 
