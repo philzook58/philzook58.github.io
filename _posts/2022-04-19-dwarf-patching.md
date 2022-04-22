@@ -263,9 +263,12 @@ On the other hand, the _relational_ characterization of high level constructs to
 
 DWARF is a pain to read and write in it's low level format. [libdwarf](https://www.prevanders.net/dwarf.html) is great, but difficult and confusing. A standardized human readable format would be awesome. There are a number of projects for reading dwarf into YAML or JSON. There is a desire for this. These projects are fragmented, in languages du jour, and unmaintained.
 
+
 # Bits and Bobbles
 
 Thanks to Chris Casinghino, Cody Roux, JT Paasch, Ben Mourad, Chloe Fortuna, Ivan Gotovchits, the AMP performers, and Sergey Bratus. Any ideas herein that are bad I claim as my own.
+
+Drop me a line if you've got big ideas.
 
 I'd suggest that somehow the decompiler tools need to enforce or guide people to put patches only in high and low level positions where patches can make sense. If you randomly pick a character or even AST node in high level source, odds are it is not a sufficiently self contained notion to talk about replacing it.
 
