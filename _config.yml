@@ -15,9 +15,8 @@
 # in the templates via {{ site.myvariable }}.
 title: Hey There Buddo!
 tagline: Hot Leaves in a Cold Worlds.
-email: philzook58@gmail.com
-description: > # this means to ignore newlines until "baseurl:"
-  A blog about life, programming, math, logic, and physics.
+# email: philzook58@gmail.com
+description: A blog about life, programming, math, logic, and physics.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://www.philipzucker.com" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: sandmouth
@@ -28,9 +27,9 @@ google_analytics: G-EBC4529QNG
 feed:
   tags: true
 
-author:
-  name: Philip Zucker
-  url: https://www.philipzucker.com
+#author:
+#  name: Philip Zucker
+#  url: https://www.philipzucker.com
 
 logo: /assets/logo.png
 twitter:
