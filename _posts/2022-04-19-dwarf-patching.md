@@ -44,7 +44,7 @@ Optimizing compiler writers want to make my life hell and I take it personally.
 
 The main thing compilers try to guarantee is that the high and low level code should have the same [observable behavior](https://en.cppreference.com/w/cpp/language/as_if). This amounts to some memory access, IO and some function calls must actually happen. The entire rest of your code, all those clever loops and bit tricks and such, are essentially functional specs. They are hints at best of what the compiler should output.
 
-This delusion is of central interest in [concurrent](https://www.philipzucker.com/notes/CS/Concurrency/) code. In concurrent code, there is a secret window by which other processes see things that were never meant to be seen. At minimum, intermediate states of shared variables become observable. Reads and writes to these variables should no longer be reordered or inlined or done in pieces. In a sense everything done to these variables becomes observable behavior. The was a crisis of sorts when people started realizing that the mechanisms they vaguely felt made sense, didn't actually make sense in concurrent situations. Straightening this out was quite a lot of work (see [memory models](https://en.wikipedia.org/wiki/Memory_model_(programming)) for example. Interesting but complicated.).
+This delusion is of central interest in [concurrent](https://www.philipzucker.com/notes/CS/Concurrency/) code. In concurrent code, there is a secret window by which other processes see things that were never meant to be seen. At minimum, intermediate states of shared variables become observable. Reads and writes to these variables should no longer be reordered or inlined or done in pieces. In a sense everything done to these variables becomes observable behavior. The was a crisis of sorts when people started realizing that the mechanisms they vaguely felt made sense, didn't actually make sense in concurrent situations. Straightening this out was quite a lot of work (see [memory models](https://en.wikipedia.org/wiki/Memory_model_(programming)) for example. Interesting but complicated.). As a side note, assembly is also a delusion. The microarchitecture of CPUs is insane highly parallel stuff. See Spectre, Meltdown, and this [nightmare bug on the XBOX](https://randomascii.wordpress.com/2018/01/07/finding-a-cpu-design-bug-in-the-xbox-360/).
 
 I can't deny however, that despite the compiler only guaranteeing correspondence of high and low at specific points in limited ways, it just so happens that we can usually intuitively see that this region of assembly vaguely corresponds to this region of high level code, and that this high level variable here is stored in that low level variable there. So how is one supposed to proceed when there is clearly an intuitive correspondence that you need to make precise enough to post hoc patch in code? How do you even describe this correspondence? What is the _schema_ of this correspondence? Are there multiple incompatible notions of correspondence?
 
@@ -201,7 +201,7 @@ Basically, we could probably use any analysis you can hand us profitably.
 
 Note, I consider this entire section to be vague and incomplete. Please help.
 
-- Should these analyses be underapproximations or overapproximations?
+- Should these analyses be underapproximations or overapproximations (may/must)? Maybe both are useful `live_must` `live_may`. VIBES can span the gap if we know this. We can always write to `live_must` but try different combos of `live_may` in our CEGIS loop. Similarly for available.
 - Does even this make sense?
 - Am I too pessimistic about disentangled analyses?
 
@@ -214,7 +214,7 @@ How could program analysis like the above be encoded into DWARF? I would claim i
 Currently DWARF is capable of expressing some kind of location aware relationship between variables in high an low level code.
 An extra DWARF flag attribute `DW_AT_live` and `DW_AT_available` in the `DW_TAG_variable` DIE may be sufficient to extend DWARF expressivity to these more precise notions.
 
-It would also be helpful to have flags `DW_AT_precise` to know what information is absolutely trusted and what may be somewhat approximate.
+It would also be helpful to have flags `DW_AT_precise` to know what information is absolutely trusted and what may be somewhat approximate. `DW_AT_must` and `DW_AT_may` could be useful for representing whether these are under and over approximations of the variables that can be read at that point. 
 
 ## Verification conditions
 
