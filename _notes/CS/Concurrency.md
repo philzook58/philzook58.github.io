@@ -55,12 +55,12 @@ VLIW processors for example can schemes for having streams of concurrent operati
 
 ### x86
 
-https://stackoverflow.com/questions/20316124/does-it-make-any-sense-to-use-the-lfence-instruction-on-x86-x86-64-processors
+<https://stackoverflow.com/questions/20316124/does-it-make-any-sense-to-use-the-lfence-instruction-on-x86-x86-64-processors>
 
 
 ### Arm
-https://developer.arm.com/documentation/dui0489/c/arm-and-thumb-instructions/miscellaneous-instructions/dmb--dsb--and-isb
-https://stackoverflow.com/questions/15491751/real-life-use-cases-of-barriers-dsb-dmb-isb-in-arm
+<https://developer.arm.com/documentation/dui0489/c/arm-and-thumb-instructions/miscellaneous-instructions/dmb--dsb--and-isb>
+<https://stackoverflow.com/questions/15491751/real-life-use-cases-of-barriers-dsb-dmb-isb-in-arm>
 - dmb loadload barrier. Can't move loads across this
 - dsb 
 - isb
@@ -118,47 +118,47 @@ Data Race Freedom
 Mapping variables to histories
 Each thread can pick arbitrary values out of histories given timestamp constraints
 
-[thin air problem - Sewell Batty](https://www.cl.cam.ac.uk/~pes20/cpp/notes42.html)
-[Sewell Weak Memory page](https://www.cl.cam.ac.uk/~pes20/weakmemory/)
-[multicodre semantics - making sense of weak memory](https://www.cl.cam.ac.uk/~pes20/slides-acs-2020.pdf)
-[The Problem of Programming Language Concurrency Semantics](https://www.cl.cam.ac.uk/~jp622/the_problem_of_programming_language_concurrency_semantics.pdf)
-[A Primer on Memory Consistency and Cache Coherence,](https://www.morganclaypool.com/doi/abs/10.2200/S00962ED2V01Y201910CAC049)
+- [thin air problem - Sewell Batty](https://www.cl.cam.ac.uk/~pes20/cpp/notes42.html)
+- [Sewell Weak Memory page](https://www.cl.cam.ac.uk/~pes20/weakmemory/)
+- [multicodre semantics - making sense of weak memory](https://www.cl.cam.ac.uk/~pes20/slides-acs-2020.pdf)
+- [The Problem of Programming Language Concurrency Semantics](https://www.cl.cam.ac.uk/~jp622/the_problem_of_programming_language_concurrency_semantics.pdf)
+- [A Primer on Memory Consistency and Cache Coherence,](https://www.morganclaypool.com/doi/abs/10.2200/S00962ED2V01Y201910CAC049)
 
-<https://www.youtube.com/watch?v=N07tM7xWF1U&ab_channel=CppCon> abusing your memory model for fun and profit
-<https://news.ycombinator.com/item?id=29109156> what memory model should rust use
+- <https://www.youtube.com/watch?v=N07tM7xWF1U&ab_channel=CppCon> abusing your memory model for fun and profit
+- <https://news.ycombinator.com/item?id=29109156> what memory model should rust use
 
 People
 - Hans Boehm
 - Peter Sewell
 
-[diy](http://diy.inria.fr/) a design and testing thing for weak memory models. Litmus7, herd7
+- [diy](http://diy.inria.fr/) a design and testing thing for weak memory models. Litmus7, herd7
 
-John regehr thread <https://twitter.com/johnregehr/status/1451355617583460355?s=20> Really good
-[Is Parallel Programming Hard, And, If So, What Can You Do About It? ](https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html)
-[deadlock empire](https://deadlockempire.github.io/) Gives a false sense of sequential consistency?
-[list of kernel data races](https://github.com/BIT-SYS/KDR)
+- John regehr thread <https://twitter.com/johnregehr/status/1451355617583460355?s=20> Really good
+- [Is Parallel Programming Hard, And, If So, What Can You Do About It? ](https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html)
+- [deadlock empire](https://deadlockempire.github.io/) Gives a false sense of sequential consistency?
+- [list of kernel data races](https://github.com/BIT-SYS/KDR)
 Herlihy is discussed as a given? <https://www.amazon.com/Art-Multiprocessor-Programming-Revised-Reprint/dp/0123973376>
-<https://www.amazon.com/-/en/dp/0470093552> concurrency state models and jabva programsd
-<https://www.manning.com/books/c-plus-plus-concurrency-in-action-second-edition>
-<https://leanpub.com/concurrencywithmodernc>
-[little book of semaphores](https://greenteapress.com/wp/semaphores/) 
-[kernel memory corruption bug from data race prokject zero](https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html)
+- <https://www.amazon.com/-/en/dp/0470093552> concurrency state models and jabva programsd
+- <https://www.manning.com/books/c-plus-plus-concurrency-in-action-second-edition>
+- <https://leanpub.com/concurrencywithmodernc>
+- [little book of semaphores](https://greenteapress.com/wp/semaphores/) 
+- [kernel memory corruption bug from data race prokject zero](https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html)
 Concurrent Programming (Andrews) -- uses pseudo-code with synchronization/concurrency notation.
-Transactional Memory (Harris) -- for non-lock based concurrency.
-[LWN an introduction to lockless algorithms ](https://lwn.net/Articles/844224/ )
-"Shared-Memory Synchronization" by Michael Scott
-<https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/>
-http://plv.mpi-sws.org/gps/paper.pdf GPS: Navigating Weak Memory with Ghosts, Protocols, and Separation
+- Transactional Memory (Harris) -- for non-lock based concurrency.
+- [LWN an introduction to lockless algorithms ](https://lwn.net/Articles/844224/ )
+- "Shared-Memory Synchronization" by Michael Scott
+- <https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/>
+- http://plv.mpi-sws.org/gps/paper.pdf GPS: Navigating Weak Memory with Ghosts, Protocols, and Separation
 Weak memory models?
-<https://pvk.ca/Blog/2019/01/09/preemption-is-gc-for-memory-reordering/> - 
-<https://pvk.ca/Blog/2020/07/07/flatter-wait-free-hazard-pointers/>
-<https://www.cs.rochester.edu/u/scott/papers/1991_TOCS_synch.pdf> algorithms for scababe synchronization on shared-memory. Same Michiael Scott. BBN butterfly?
-https://arxiv.org/abs/1106.5730 HOGWILD - parallizingf lock free SGD
-[A Primer on Memory Consistency and Cache Coherence](https://course.ece.cmu.edu/~ece847c/S15/lib/exe/fetch.php?media=part2_2_sorin12.pdf)
-[cooperating seauentail prcoesses by dikstra](https://pure.tue.nl/ws/files/4279816/344354178746665.pdf)
-http://www0.cs.ucl.ac.uk/staff/p.ohearn/papers/concurrency.pdf ohearn resources concurrency and local reasoning
-http://pascal.hansotten.com/uploads/pbh/Monitors%20and%20Concurrent%20Pascal.pdf monitors and concrurent pacscal hitsotry - per brinch hansen https://twitter.com/PeterOHearn12/status/1452240719725346827?s=20 " atomic "release and sleep" is the key as far as I'm concerned, it's so easy to invent bad solutions without that primitive"
-https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.227.3871&rep=rep1&type=pdf the 12 commandments of synchrnonizatiojn
+- <https://pvk.ca/Blog/2019/01/09/preemption-is-gc-for-memory-reordering/> - 
+- <https://pvk.ca/Blog/2020/07/07/flatter-wait-free-hazard-pointers/>
+- <https://www.cs.rochester.edu/u/scott/papers/1991_TOCS_synch.pdf> algorithms for scababe synchronization on shared-memory. Same Michiael Scott. BBN butterfly?
+- https://arxiv.org/abs/1106.5730 HOGWILD - parallizingf lock free SGD
+- [A Primer on Memory Consistency and Cache Coherence](https://course.ece.cmu.edu/~ece847c/S15/lib/exe/fetch.php?media=part2_2_sorin12.pdf)
+- [cooperating seauentail prcoesses by dikstra](https://pure.tue.nl/ws/files/4279816/344354178746665.pdf)
+- <http://www0.cs.ucl.ac.uk/staff/p.ohearn/papers/concurrency.pdf> ohearn resources concurrency and local reasoning
+- <http://pascal.hansotten.com/uploads/pbh/Monitors%20and%20Concurrent%20Pascal.pdf> monitors and concrurent pacscal hitsotry - per brinch hansen <https://twitter.com/PeterOHearn12/status/1452240719725346827?s=20?> " atomic "release and sleep" is the key as far as I'm concerned, it's so easy to invent bad solutions without that primitive"
+- <https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.227.3871&rep=rep1&type=pdf> the 12 commandments of synchrnonizatiojn
 
 
 Concurrency
@@ -167,24 +167,24 @@ Lock
 Concurrent hash table https://en.wikipedia.org/wiki/Concurrent_hash_table
 barriers
 
- https://www.youtube.com/watch?v=80ifzK3b8QQ&list=PL1835A90FC78FF8BE&index=1&ab_channel=BartoszMilewski - bartosz on c++11 concurrency
+- https://www.youtube.com/watch?v=80ifzK3b8QQ&list=PL1835A90FC78FF8BE&index=1&ab_channel=BartoszMilewski - bartosz on c++11 concurrency
 
 pthread vs std::thread
 Arc in rust
 condition variables
 
-https://www.manning.com/books/c-plus-plus-concurrency-in-action-second-edition
+- https://www.manning.com/books/c-plus-plus-concurrency-in-action-second-edition
 
-https://www.coursera.org/learn/concurrent-programming-in-java
+- https://www.coursera.org/learn/concurrent-programming-in-java
 
 
 C++/Java/Ocaml memory models
-https://github.com/herd/CoqCat - interesting thesis too
-https://github.com/herd/herdtools7
-https://github.com/ocamllabs/ocaml-memory-model
-https://en.wikipedia.org/wiki/Memory_model_(programming) 
-https://www.hboehm.info/c++mm/ hans boehm link farm - "impossible as a library"
-http://www.cl.cam.ac.uk/~pes20/cpp/popl085ap-sewell.pdf - mathematizzing C++ memory model, kodkod, isabelle
+- https://github.com/herd/CoqCat - interesting thesis too
+- https://github.com/herd/herdtools7
+- https://github.com/ocamllabs/ocaml-memory-model
+- https://en.wikipedia.org/wiki/Memory_model_(programming) 
+- https://www.hboehm.info/c++mm/ hans boehm link farm - "impossible as a library"
+- http://www.cl.cam.ac.uk/~pes20/cpp/popl085ap-sewell.pdf - mathematizzing C++ memory model, kodkod, isabelle
 
 Various kinds of relations.
 
@@ -198,7 +198,7 @@ https://www.stateright.rs/
 
 Leslie lamport
 
-Lindsey kuper has a dist sys course
+- Lindsey kuper has a dist sys course
 It's probably pretty good
 https://www.youtube.com/playlist?list=PLNPUF5QyWU8O0Wd8QDh9KaM1ggsxspJ31
 
@@ -229,19 +229,19 @@ max delay d. max process time r. cn't really do this
 asynchronous network - no max 
 Palvaro - partiasl failure + unbounded latency
 
-https://people.ucsc.edu/~palvaro/ - dedalus - datalog in time and space. https://www.youtube.com/watch?v=R2Aa4PivG0g&ab_channel=StrangeLoopConference bloom blazes, data lineage multiple proofs are fault tolerant. lineage. Why did happen: produce explanation / proof. Cegis? concolic kind of? observability.
+-  https://people.ucsc.edu/~palvaro/ - dedalus - datalog in time and space. https://www.youtube.com/watch?v=R2Aa4PivG0g&ab_channel=StrangeLoopConference bloom blazes, data lineage multiple proofs are fault tolerant. lineage. Why did happen: produce explanation / proof. Cegis? concolic kind of? observability.
 
-https://martin.kleppmann.com/  https://www.youtube.com/playlist?list=PLeKd45zvjcDFUEv_ohr_HdUFe97RItdiB
+-  https://martin.kleppmann.com/  https://www.youtube.com/playlist?list=PLeKd45zvjcDFUEv_ohr_HdUFe97RItdiB
 
-https://github.com/aphyr/distsys-class
-https://www.distributedsystemscourse.com/
+-  https://github.com/aphyr/distsys-class
+-  https://www.distributedsystemscourse.com/
 
-kyle kingsbury
+-  kyle kingsbury
 
-chaos engineering - nora jones netflix
+-  chaos engineering - nora jones netflix
 
-http://book.mixu.net/distsys/
-https://www.youtube.com/watch?v=cQP8WApzIQQ&list=PLrw6a1wE39_tb2fErI4-WkMbsvGQk9_UB&ab_channel=MIT6.824%3ADistributedSystems
+-  http://book.mixu.net/distsys/
+-  https://www.youtube.com/watch?v=cQP8WApzIQQ&list=PLrw6a1wE39_tb2fErI4-WkMbsvGQk9_UB&ab_channel=MIT6.824%3ADistributedSystems
 
 
 ### Lecture 2 - kuper
