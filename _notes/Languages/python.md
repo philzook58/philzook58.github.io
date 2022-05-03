@@ -100,3 +100,5 @@ async def root():
 ```
 
 [Memray is a memory profiler for Python](https://github.com/bloomberg/memray)
+
+[cupy](https://github.com/cupy/cupy)

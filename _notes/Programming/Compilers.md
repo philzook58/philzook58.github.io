@@ -95,6 +95,7 @@ http://ssabook.gforge.inria.fr/latest/book.pdf SSA bookv
 
 [compcertssa](http://compcertssa.gforge.inria.fr/) verified ssa
 
+[bril](https://github.com/sampsyo/bril) educational IR. ocaml and rust bindings.
 ## LLVM IR
 See LLVM section
 
@@ -286,6 +287,8 @@ The boehm garbage collector seems easy to use. Also you can just malloc and neve
 Making a simple garbage collector [https://maplant.com/gc.html](https://maplant.com/gc.html)
 
 # Misc
+
+[cs6120 adrian sampson](https://www.cs.cornell.edu/courses/cs6120/2022sp/lesson/) Looks like a nice syllabus
 
 [rose compiler](https://en.wikipedia.org/wiki/ROSE_(compiler_framework)) source to source compiler? Makes sense.
 

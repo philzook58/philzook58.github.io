@@ -3,6 +3,13 @@ layout: post
 title: Coq
 ---
 
+- [Coq is Normal](#coq-is-normal)
+    - [Interesting commands](#interesting-commands)
+  - [Inductive Types](#inductive-types)
+  - [Coindcutive Types](#coindcutive-types)
+  - [Reflection](#reflection)
+  - [What are Proofs](#what-are-proofs)
+    - [match annotations](#match-annotations)
 - [Kernel](#kernel)
   - [VM](#vm)
 - [Ocaml](#ocaml)
@@ -21,13 +28,32 @@ See also:
 - HOTT
 - Higher order unification
 
+# Coq is Normal
+Coq has all sorts of crazy stuff in it, but the core of it can be used as a normal-ish functional programming language.
 
+See my [Coq in Y Minutes tutorial](https://learnxinyminutes.com/docs/coq/)
 
 ### Interesting commands
 - `Drop` vernacular - srops you into an ocaml toplevel
 - [Register](https://coq.github.io/doc/master/refman/proof-engine/vernacular-commands.html#coq:cmd.Register)
 - [Primitive] - register an ocaml primitive
 
+
+## Inductive Types
+Inductive types are prolog
+
+Eliminators and pattern matching
+
+What should be primitive anyway?
+
+## Coindcutive Types
+
+
+## Reflection
+You can use domain specific ADTs to describe a class of problems. You can use coq as an ordinary programming language
+
+
+## What are Proofs
 
 ### match annotations
 The `as` annotation is a realtive of the ocaml `as` annotation. It is a binding form.
@@ -246,6 +272,13 @@ src/dune_rules
 {% include_relative coq/test.v %}
 ```
 
+Equality eliminator is rewriting.
+```coq
+
+```
+
 # Resources
+[talia ringer thesis](https://homes.cs.washington.edu/~djg/theses/ringer_dissertation.pdf) really good explanations
+
 [Modular pre-processing for automated reasoning in dependent type theory](https://arxiv.org/abs/2204.02643) processing for smtcoq
 [The pro-PER meaning of "proper"](https://blog.poisson.chat/posts/2022-04-07-pro-per-proper.html)

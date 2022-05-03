@@ -5,6 +5,16 @@ layout: post
 title: Scheme Racket Lisp
 ---
 
+- [Implementations](#implementations)
+- [Scheme](#scheme)
+    - [Minikanren](#minikanren)
+- [Racket](#racket)
+    - [Rosette](#rosette)
+- [Common Lisp](#common-lisp)
+- [Compilation](#compilation)
+    - [Gambit compiling to javascript](#gambit-compiling-to-javascript)
+- [Misc](#misc)
+
 I'm really going to put scheme and common lisp in the same category?
 
 # Implementations
@@ -33,7 +43,7 @@ Gerbil is a system on top of Gambit approximately similar to racket
 # Scheme
 [https://schemers.org/](https://schemers.org/)
 
-
+[ribbit scheme](https://news.ycombinator.com/item?id=31096771)
 ### Minikanren
 http://minikanren.org/
 
@@ -87,6 +97,21 @@ stage0 would be "just" a macro expander for smtlib.
 
 ```
 
+# Common Lisp
+[common lisp resources](https://news.ycombinator.com/item?id=31120359)
+
+Lisp-2 - seperate namespace for functions and vasriables -Common lisp
+Condition system
+lisp class system CLOS
+
+https://letoverlambda.com/index.cl/guest/chap2.html
+let over lambda. Let in common lisp makes a ref cell?
+
+SLIME
+
+[coalton](https://github.com/coalton-lang/coalton)
+
+[alive vscode extension](https://github.com/nobody-famous/alive)
 # Compilation
 [http://home.pipeline.com/~hbaker1/CheneyMTA.html](http://home.pipeline.com/~hbaker1/CheneyMTA.html)
 
@@ -120,7 +145,7 @@ hello!
 [contrib/try repl](https://gitter.im/gambit/gambit?at=60aed31d0ff6de262b2e9f4a) 
 [gambit in the browwser](https://feeley.github.io/gambit-in-the-browser/) experiment using emscripten. Different from try.scheme.org using universal backend
 
-
+# Misc
 
 [Papers on writing virtual machines for scheme? ](https://old.reddit.com/r/scheme/comments/r5rn1s/papers_on_writing_virtual_machines_for_scheme/)
 3 implementation models 
@@ -156,9 +181,7 @@ https://turtleware.eu/ common lisp essay
 
 https://www.cs.utah.edu/plt/publications/macromod.pdf composable and compileable macros - you want in whe?
 
-Lisp-2 - seperate namespace for functions and vasriables -Common lisp
-Condition system
-lisp class system
+
 
 
 
@@ -198,8 +221,7 @@ call/cc let's you pretend you were writing in CPS the whole time.
 - search
 - amb
 
-https://letoverlambda.com/index.cl/guest/chap2.html
-let over lambda. Let in common lisp makes a ref cell?
+
 
 
 https://felleisen.org/matthias/7480-s21/lectures.html

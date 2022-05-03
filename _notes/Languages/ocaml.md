@@ -717,6 +717,7 @@ MLTon
 [MLTon first class threads](https://twitter.com/shwestrick/status/1506291833621688320?s=20&t=-ertSPtY87GogVCFq4f-Rw)
 
 # Misc Resources
+[magic trace](https://github.com/janestreet/magic-trace)
 
 [Prefetching in functional languages](https://www.cl.cam.ac.uk/~tmj32/papers/docs/ainsworth20-ismm.pdf)
 - "resource programming in ocaml" linearity [Resource polymorphism](https://arxiv.org/abs/1803.02796) Is it this? Yes probably [linear types in ocaml](https://stackoverflow.com/questions/15620411/linear-types-in-ocaml) using type state basically? [kiselyov monadic regions](https://okmij.org/ftp/Haskell/regions.html)
