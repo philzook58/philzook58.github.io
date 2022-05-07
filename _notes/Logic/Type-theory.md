@@ -2,7 +2,38 @@
 layout: post
 title: Type Theory
 ---
-
+- [Syntax and Semantics](#syntax-and-semantics)
+- [Judgement](#judgement)
+- [Inference Rules](#inference-rules)
+- [Computation Rules](#computation-rules)
+    - [Conversion vs Reduction vs Expansion](#conversion-vs-reduction-vs-expansion)
+    - [Decidability of type checking](#decidability-of-type-checking)
+    - [Consistency](#consistency)
+    - [Progress](#progress)
+    - [Preservation, Subject Reduction](#preservation-subject-reduction)
+    - [Normalization](#normalization)
+    - [Completeness](#completeness)
+    - [Soundness](#soundness)
+    - [Head Normal Form](#head-normal-form)
+    - [Value](#value)
+      - [Neutral](#neutral)
+      - [Canonical](#canonical)
+    - [Reducible Expression](#reducible-expression)
+    - [Curry vs Church style](#curry-vs-church-style)
+- [Equality](#equality)
+    - [Extensional vs Intensional](#extensional-vs-intensional)
+    - [Judgemental/Definitional / Propositional](#judgementaldefinitional--propositional)
+    - [Sorts](#sorts)
+      - [Impredicative vs Predicative](#impredicative-vs-predicative)
+      - [Proof Irrelevance](#proof-irrelevance)
+      - [Universes](#universes)
+    - [Extensionality](#extensionality)
+    - [Univalence](#univalence)
+  - [Books:](#books)
+- [System T](#system-t)
+- [Logical Relations](#logical-relations)
+- [Realizability](#realizability)
+- [Misc](#misc)
 
 # Syntax and Semantics
 
@@ -101,6 +132,8 @@ Evaluation does not cause types to change.
 
 
 # Equality
+
+[carette definitional equality](https://twitter.com/jjcarett2/status/1522973680241946625?s=20&t=kBQ6NNrdoK-tcIkhvRqktQ)
 ### Extensional vs Intensional
 Extensional equality collapses definitional and propositional equality.
 
@@ -283,9 +316,20 @@ Chapter 5: Inconsistent combinations of rules
 5. Other universe issues
 
 
+# Misc
+
 [smalltt](https://github.com/AndrasKovacs/smalltt) a demo for high performance type theory elaboration. Really good readme too
 [elboration seminar](https://www.youtube.com/playlist?list=PL2ZpyLROj5FOt99f_KCxARvd1hDqKns5b)
 [learn type theory](https://github.com/jozefg/learn-tt)
 [simple observationsl type theory](https://github.com/bobatkey/sott)
 
 regular propositions are basically the "constructive-content-free" parts of propositions
+
+[introductory type theory resources](https://twitter.com/GabriellaG439/status/1520793063467102208?s=20&t=kBQ6NNrdoK-tcIkhvRqktQ) https://www.haskellforall.com/2022/05/introductory-resources-to-type-theory.html
+
+[what is a type paulson](https://twitter.com/LawrPaulson/status/1521787594622783488?s=20&t=kBQ6NNrdoK-tcIkhvRqktQ)
+[What is a type](https://twitter.com/sliminality/status/1521546506452447233?s=20&t=kBQ6NNrdoK-tcIkhvRqktQ)
+"The question "What is a type?" has no useful answers. The correct question is "What is a type theory?" – and the answer is: it is a mathematical theory of a system of constructions. The types classify the  constructions supported by the theory." - Bauer
+
+[What We Talk About When We Talk About Types - Nick Benton](https://nickbenton.name/whatwetalkabout4web.pdf)
+[types are not sets - Morris classic](https://dl.acm.org/doi/pdf/10.1145/512927.512938)
