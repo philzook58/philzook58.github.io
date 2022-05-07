@@ -1992,7 +1992,7 @@ has([ty,ctx], $Var(n), ty2) :- infer([ty,ctx], $Var(n)), has(ctx, $Var(n-1), ty2
 infer(ctx,t) :- check(ctx,t,_ty).
 
 // subtyping or equality rule
-// has(ctx, t, ty) :- check(ctx,t,ty), has(ctx,t,ty2), sub(ty,ty2) or eq(ty,t2).
+// has(ctx, t, ty) :- check(ctx,t,ty), has(ctx,t,ty2), sub(ty,ty2).
 
 // annotation rule
 check(ctx, t, ty) :- infer(ctx, $Annot(t,ty)).
@@ -2005,17 +2005,21 @@ check([a, ctx], body, b) :- check(ctx, $Lam(body), $Arr(a,b)).
 has(ctx, $Lam(body), $Arr(a,b)) :- check(ctx, $Lam(body), $Arr(a,b)), has([a, ctx], body, b).
 
 // App case.
-infer(ctx, f) :- infer(ctx, $App(f,x)).
-check(ctx, x, a) :- infer(ctx, $App(f,x)), has(ctx, f, $Arr(a,b)).
+infer(ctx, f) :- infer(ctx, $App(f,_x)).
+check(ctx, x, a) :- infer(ctx, $App(f,x)), has(ctx, f, $Arr(a,_b)).
 has(ctx, $App(f,x), b) :- infer(ctx, $App(f,x)), has(ctx, f, $Arr(a,b)), has(ctx, x, a).
 
+check(nil, $Lam($Lam($App($Var(1),$Var(0)))), 
+      $Arr($Arr($Unit(), $Unit()), $Arr($Unit(), $Unit()))).
 
+.output has(IO=stdout)
+/*
 .decl check_top(t : term, ty : type)
 check(nil,t,ty):- check_top(t,ty).
 .decl has_top(t : term, ty : type)
 has_top(t,ty ):- has(nil, t, ty).
 
-/*
+
 check_top($TT(), $Unit()).
 check_top($Lam($Var(0)), $Arr($Unit(),$Unit())).
 check_top($Lam($Lam($Var(0))), $Arr($Unit(),$Unit())).
@@ -2023,14 +2027,14 @@ check_top($Lam($Lam($Var(0))), $Arr($Unit(),$Arr($Unit(),$Unit()))).
 check_top($Lam($Lam($Var(1))), $Arr($Unit(),$Arr($Unit(),$Unit()))).
 check_top($Lam($Lam($Var(2))), $Arr($Unit(),$Arr($Unit(),$Unit()))).
 check_top($App($Lam($Var(0)), $TT()), $Unit()).
-*/
+
 check_top($Lam($Lam($App($Var(1),$Var(0)))), 
       $Arr($Arr($Unit(), $Unit()), $Arr($Unit(), $Unit()))).
-
-.output check(IO=stdout)
-.output infer(IO=stdout)
-.output has(IO=stdout)
-.output has_top(IO=stdout)
+*/
+//.output check(IO=stdout)
+//.output infer(IO=stdout)
+//.output has(IO=stdout)
+//.output has_top(IO=stdout)
 ```
 
 Hmm. Infer and has can be collapsed?

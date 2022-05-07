@@ -25,7 +25,13 @@ Godbolt compiler explorer is also very useful
 # Assemblers
 gas - gnu assembler
 [llvm-as](https://llvm.org/docs/CommandGuide/llvm-as.html)
+https://www.xorpd.net/pages/links.html
 
+[yasm](http://yasm.tortall.net/)
+nasm
+fasm https://board.flatassembler.net/
+
+[terse](http://www.terse.com/)
 command line flag
 
 
@@ -183,10 +189,18 @@ https://marz.utk.edu/my-courses/cosc230/book/example-risc-v-assembly-programs/
   * https://www.ic.unicamp.br/~pannain/mc404/aulas/pdfs/Art%20Of%20Intel%20x86%20Assembly.pdf Art of Assembly DOS version. Good stuff in here. Some ways of implementing function calls I'd never considered
 
 # Misc
+[bootstrapping a c compiler](https://news.ycombinator.com/item?id=31244150)
 <https://learnxinyminutes.com/docs/mips/>
 
+[bootsector games](https://gist.github.com/XlogicX/8204cf17c432cc2b968d138eb639494e)
 Introduction to 80x86 Assembly Language and Computer Architecture" by R. C. Detmer, 2.
 ed. 2006.
+
+[xorpd](https://www.xorpd.net/index.html)
+[xchg rax rax](https://www.xorpd.net/pages/xchg_rax/snip_00.html)
+[reversing hero](https://www.reversinghero.com/)
+[flatassembler](http://flatassembler.net/) 
+
 
 boot sector means they got the code under 512 bytes
 
