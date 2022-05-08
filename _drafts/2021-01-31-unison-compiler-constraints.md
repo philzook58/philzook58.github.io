@@ -71,6 +71,10 @@ The box model
 Christian Schulte course
 
 
+```minizinc
+
+
+```
 
 simple
 ```minizinc
