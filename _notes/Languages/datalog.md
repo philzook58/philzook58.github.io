@@ -27,6 +27,7 @@ title: Datalog
     - [Patricia Tries](#patricia-tries)
     - [BDDs](#bdds)
   - [BogoSort](#bogosort)
+  - [Lists](#lists)
   - [Dynamic Programming](#dynamic-programming)
     - [Q learning](#q-learning)
   - [Mandelbrot](#mandelbrot)
@@ -743,6 +744,82 @@ out(i,x) :- path(i,_,x).
 ```
 
 Radix sort?
+
+## Lists
+
+```souffle
+.comp List<A>{
+  .type t = [hd : A, tl : t]
+  .decl _length(l : t)
+  .decl length(l : t, res : unsigned)
+  
+  _length(tl) :- _length([_hd,tl]).
+  length(nil,0).
+  length([hd,tl], n+1) :- _length([hd,tl]), length(tl,n).
+
+  .decl _nth(l : t, n : unsigned)
+  .decl nth(l : t, n : unsigned , res : A)
+  _nth(tl, n - 1) :- _nth([_hd,tl], n), n > 0.
+  nth([hd,tl],0,hd) :- _nth([hd,tl], 0).
+  nth([hd,tl], n, res):- _nth([hd, tl], n), nth(tl, n-1, res).
+
+  .decl _rev(l : t)
+  .decl __rev(l : t, rem : t, acc : t)
+  .decl rev(l : t, res : t)
+  __rev(l, l, nil) :- _rev(l).
+  __rev(l, tl, [hd,acc]) :- __rev(l, [hd, tl], acc).
+  rev(l, acc) :- __rev(l, nil, acc).
+
+  .decl _append(x : t, y : t)
+  .decl append(x : t, y : t, z : t)
+  _append(tl, y) :- _append([_hd, tl], y).
+  append(nil, y, y) :- _append(nil, y).
+  append([hd,tl], y, [hd, z]) :- _append([hd,tl], y), append(tl, y, z).
+
+
+  // https://stackoverflow.com/questions/33566414/ocaml-mergesort-and-time
+  
+  .decl _merge(x : t, y : t)
+  .decl merge(x : t, y : t, res : t)
+  merge(nil, y, y) :- _merge(nil, y).
+  merge(x, nil, x) :- _merge(x, nil).
+  _merge(xs, [y,ys]) :- _merge([x,xs], [y,ys]), x < y.
+  _merge([x,xs], ys) :- _merge([x,xs], [y,ys]), x >= y.
+  merge([x,xs], [y,ys], [x,z]):- _merge([x,xs], [y,ys]), merge(xs,[y,ys],z), x < y.
+  merge([x,xs], [y,ys], [y,z]):- _merge([x,xs], [y,ys]), merge([x,xs],ys,z), x >= y.
+
+  .decl _split(l : t)
+  .decl __split(l : t, rem : t, x : t, y : t)
+  .decl split(l : t, x : t, y : t)
+  __split(l,l,nil,nil):- _split(l).
+  __split(l, tl, y, [hd,x]) :- __split(l, [hd,tl], x, y).
+  split(l, x ,y) :- __split(l, nil, x, y).
+
+
+  .decl _sort(l : t)
+  .decl sort(l : t, res : t)
+  sort(nil,nil) :- _sort(nil).
+  sort([x,nil], [x,nil]) :- _sort([x,nil]).
+  _split(l) :- _sort(l).
+  _sort(x), _sort(y) :- _sort(l), split(l, x, y).
+  _merge(x1, y1) :- _sort(l), split(l, x, y),  sort(x,x1), sort(y,y1).
+  sort(l, z) :- _sort(l), split(l, x, y), sort(x,x1), sort(y,y1), merge(x1, y1, z).
+
+  //_sort(l), split(l, x, y),  sort(x,x1), sort(y,y1).
+
+}
+
+.init NumList = List<number>
+
+NumList._rev([1,[2,[3,nil]]]).
+.output NumList.rev(IO=stdout)
+
+NumList._append([1,[2,[3,nil]]], [4,[5,nil]]).
+.output NumList.append(IO=stdout)
+
+NumList._sort([134,[23,[344,[1,[63,[5,nil]]]]]]).
+.output NumList.sort(IO=stdout)
+```
 
 ## Dynamic Programming
 ### Q learning
