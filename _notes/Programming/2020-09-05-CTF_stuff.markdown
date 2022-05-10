@@ -67,6 +67,16 @@ BAP
 ANGR
 
 
+Speculative disssembly https://ieeexplore.ieee.org/document/7745279 decode every offset. Refine blocks. Spedi, open source spcualtive disassembler https://github.com/abenkhadra/spedi
+Nucleus paper https://mistakenot.net/papers/eurosp-2017.pdf Compiler-Agnostic Function Detection in Binaries
+
+superset disassembler kenneth https://personal.utdallas.edu/~hamlen/bauman18ndss.pdf
+civuentes thesis
+
+probablistic disassembly using proabablistic datalog?
+bap mc + datalog?
+
+
 ### Interactive
 IDA
 Ghidra
@@ -91,6 +101,7 @@ integer overflow https://cwe.mitre.org/data/definitions/190.html
 [null pointer dereference](https://cwe.mitre.org/data/definitions/476.html)
 ## Mitigations
 Control Flow integrity is a broad term for many of these 
+[CONFIRM: Evaluating Compatibility and Relevance of Control-flow Integrity Protections for Modern Software](https://personal.utdallas.edu/~hamlen/xu19-confirm.pdf)
 
 DEP - data execution prevention [executable space protection](https://en.wikipedia.org/wiki/Executable_space_protection) This says DEP is Windows terminology?
 [NX bit](https://en.wikipedia.org/wiki/NX_bit)
@@ -121,6 +132,7 @@ gcc options
 -z execstack makes stack executable 
 
 RELRO - relocation read only. GOT table becomes read only. Prevents relocation attacks
+
 # Exploits
 
 ## Buffer Overflows

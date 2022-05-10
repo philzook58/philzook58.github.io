@@ -27,6 +27,7 @@ title: Datalog
     - [Patricia Tries](#patricia-tries)
     - [BDDs](#bdds)
   - [BogoSort](#bogosort)
+  - [Translating functional programs](#translating-functional-programs)
   - [Lists](#lists)
   - [Dynamic Programming](#dynamic-programming)
     - [Q learning](#q-learning)
@@ -49,9 +50,9 @@ title: Datalog
   - [Emulating Prolog](#emulating-prolog)
     - [Need Sets](#need-sets)
     - [Magic Set](#magic-set-1)
+    - [First class union find](#first-class-union-find)
   - [Translating Imperative Programs](#translating-imperative-programs)
     - [Iteration](#iteration)
-  - [Translating functional programs](#translating-functional-programs)
   - [Model Checking](#model-checking)
   - [Timestamping](#timestamping)
   - [Theorem Proving](#theorem-proving)
@@ -638,19 +639,32 @@ Or it could be componentized.
 
 ### Patricia Tries
 [fillaitre](https://www.lri.fr/~filliatr/ftp/ocaml/ds/ptset.ml.html)
+[fast mergable maps okasaki gill](https://ittc.ku.edu/~andygill/papers/IntMap98.pdf)
 ```souffle
-.type ptrie = Nil {} 
+.type ptrie = Empty {} 
             | Leaf {x : unsigned} 
             | Branch {prefix : unsigned, branchbit : unsigned, l : ptrie, r : ptrie}
 
 .type Bool = False {} | True {}
+
+#define ZERO_BIT(k,m) = (k band m)
+
+.decl _mem(x : unsigned, t : ptrie)
+.decl mem(x : unsigned, t : ptrie, res : Bool)
+mem(x, $Empty(), $False()) :- _mem(x, $Empty()).
+mem(x, t, $True()) :- _mem(x, t), t = $Leaf(x).
+mem(x, t, $False()) :- _mem(x, t), t = $Leaf(y), x != y.
+_mem(k, l) :- _mem(k, $Branch(_,m,l,r)), k band m = 0.
+_mem(k, r) :- _mem(k, $Branch(_,m,l,r)), k band m != 0
+.
+
 /*
 .decl mem(x : unsigned, t : ptrie, tf : Bool)
-mem($Nil(), _, $False()). // not valid
+mem($Empty(), _, $False()). // not valid
 */
-.decl add(x : unsigned, t : ptrie, t2 : ptrie)
-add(x, $Empty(), $Leaf(x)).
-add(x, $Leaf(x)), $Leaf(x)).
+//.decl add(x : unsigned, t : ptrie, t2 : ptrie)
+//add(x, $Empty(), $Leaf(x)).
+//add(x, $Leaf(x)), $Leaf(x)).
 
 ```
 ### BDDs
@@ -745,6 +759,29 @@ out(i,x) :- path(i,_,x).
 
 Radix sort?
 
+## Translating functional programs 
+Lift function to relation by making return value part of relation
+fib(n) becomes fib(b,ret)
+
+Datalog is bottom up. You need to rip apart all the recursive calls. What is the most principled way to see this? Principled transformation to bottom up call?
+```souffle
+fact(0,1).
+fact(1,1).
+fact(n + 1, (n+1) * m) :- fact(n, m), n < 10.
+```
+
+I like the build a table of all possible arguments.
+```souffle
+needed(n).
+needed(n - 1) :- needed(n), n > 0. 
+fact(0,1).
+fact(1,1).
+fact(n + 1, (n+1) * m) :- fact(n, m), needed(n).
+```
+For ADTs this ends up being a table of all subterms.
+
+Is needed a representation of call frames maybe?
+
 ## Lists
 
 ```souffle
@@ -778,7 +815,7 @@ Radix sort?
 
 
   // https://stackoverflow.com/questions/33566414/ocaml-mergesort-and-time
-  
+
   .decl _merge(x : t, y : t)
   .decl merge(x : t, y : t, res : t)
   merge(nil, y, y) :- _merge(nil, y).
@@ -807,6 +844,22 @@ Radix sort?
 
   //_sort(l), split(l, x, y),  sort(x,x1), sort(y,y1).
 
+
+  // insert element x into sorted list
+  .decl _insort(x : A , l : t)
+  .decl insort(x : A , l : t, res : t)
+  insort(x,nil, [x,nil]) :- _insort(x,nil).
+  _insort(x, tl) :- _insort(x, [hd,tl]), x > hd.
+  insort(x, [hd,tl], [x,[hd,tl]]) :- _insort(x, [hd,tl]), x <= hd.
+  insort(x, [hd,tl], [hd,res]) :- _insort(x, [hd,tl]), x > hd, insort(x, tl, res).
+
+  .decl _mem(x : A, l : t)
+  .decl mem(x : A, l : t, res : number)
+  mem(x, nil, 0) :- _mem(x, nil).
+  mem(x, [hd,tl], 1) :- _mem(x, [hd,tl]), x = hd.
+  _mem(x, tl) :- _mem(x, [hd,tl]), x != hd.
+  mem(x, [hd,tl], res) :- _mem(x, [hd,tl]), x != hd, mem(x, tl, res).
+
 }
 
 .init NumList = List<number>
@@ -819,7 +872,24 @@ NumList._append([1,[2,[3,nil]]], [4,[5,nil]]).
 
 NumList._sort([134,[23,[344,[1,[63,[5,nil]]]]]]).
 .output NumList.sort(IO=stdout)
+
+
+NumList._insort(10, [1,[2,[14,[18,nil]]]]).
+.output NumList.insort(IO=stdout)
+
 ```
+
+What is the best sort in the presence of memoization? Is tail recursion still good? It seems to allow less sharing of computation
+
+Is there a macro or construct I could add to datalog that would make these functional expressions less verbose?
+
+Note that sorted lists are a canonical set representation. merge is set union. insort adds. mem is elem
+
+Really all of the above are functions and it is a plum shame that I am materializing the intermediate states. _maybe_ it's ok to materialize the result but even then.
+
+A linear datalog that consumes the _pred might be nice.
+Could destroy them with subsumption.
+
 
 ## Dynamic Programming
 ### Q learning
@@ -990,6 +1060,20 @@ lambda datalog. Pattern matching on ground lambda terms is good.
 
 Yihong's let and fresh.
 Might still need first class maps for environements.
+
+https://github.com/AndrasKovacs/elaboration-zoo/blob/master/01-eval-closures-debruijn/Main.hs
+
+```souffle
+.type term = Lam {body : term} | Var {i : unsigned} | App {f : term, x : term}
+.type value = Closure {t : term, e : env}
+.type env = [hd : value , tl : env]
+
+.decl eval(e : env, t : term, v : value)
+eval([hd,tl], $Var(0), hd).
+
+```
+
+Krivine machine.
 
 ## Parsing
 What about good error parsing? It feels like the flexibility of a datalog could be nice. It's sort of why-not provenance.
@@ -1271,6 +1355,8 @@ See blog posts
 
 egglog
 
+See also perhaps first class union find
+
 ## Term Rewriting
 It's similar to "path" in some respects.
 
@@ -1390,6 +1476,11 @@ What is and isn't function symbols? Function symbols are a subtle thing. You can
 What is and isn't ground?
 
 What is and isn't pattern matching vs unification. In some sense datalog is a pattern matching language, not unifying language.
+
+
+
+
+
 
 ### Need Sets
 
@@ -1556,8 +1647,25 @@ eq(a,a1), eq(b,b1):- eq( $Cons(a,b), $Cons(a1,b1)).
 
 ```
 
+### First class union find
 Need to carry an explicit union find field to thread? Slash an explicit substition mapping (slash homomorphism which is insane terminology)
 
+eqrel gives _global_ union find. Sort of the question is how to have local consistent union finds.
+reflecting local to global when it is good?
+
+```
+.type uf_num = {Ref {id : number, parent : uf_num}} | Lit {n : number} | UnBound {id : number}
+// vs
+.type uf_num = Ref {id : number} | Lit {n : number}
+// vs
+KV<number,Option<number>> // even more first class
+```
+
+ Inside scope of a single relation, we can keep things self correlated. To join uncorrelated predicates.
+To some degree datalog is like a message passing system. The operational guarantees of ordering are quite low. Each relational entry is like a message. I can send a message requesting some information and then recieve a response saying what the result was.
+
+A curried notation would be nice for functional patterns where we send demand and then receive.
+( ( res :- continue  , recv)   , send :- start )
 
 ## Translating Imperative Programs
 similar to translating to functional style.
@@ -1607,28 +1715,7 @@ sumn(i+1, s + i) :- sumn(i,s), i < 10.
 
 ```
 
-## Translating functional programs 
-Lift function to relation by making return value part of relation
-fib(n) becomes fib(b,ret)
 
-Datalog is bottom up. You need to rip apart all the recursive calls. What is the most principled way to see this? Principled transformation to bottom up call?
-```souffle
-fact(0,1).
-fact(1,1).
-fact(n + 1, (n+1) * m) :- fact(n, m), n < 10.
-```
-
-I like the build a table of all possible arguments.
-```souffle
-needed(n).
-needed(n - 1) :- needed(n), n > 0. 
-fact(0,1).
-fact(1,1).
-fact(n + 1, (n+1) * m) :- fact(n, m), needed(n).
-```
-For ADTs this ends up being a table of all subterms.
-
-Is needed a representation of call frames maybe?
 
 
 ## Model Checking
@@ -1823,6 +1910,7 @@ This is similar feeling to k-CFA.
 
 Anything that can be produced from biz needs a contextual verision. bar(x,y) can be considered the same as bar(Glob(),x,y). That's a different convention. Instead of adding context everything have bar and bar_ctx, where implicilty bar is Glob.
 
+Can use subsumption if you learn fact should go in database.
 
 #### Stack database
 You can organizing your database into a stack. You can refactor this in a number of ways. 
@@ -2206,6 +2294,56 @@ grammatech
 Dr lojekyll
 
 [dr. disassembler](https://github.com/lifting-bits/dds) and blog post
+
+
+```souffle
+.type reg = R0 {} | R1 {} | R2 {}
+.type insn = Mov {dst : reg, src : reg}
+           | Imm {dst : reg, v : number}
+           | ILoad { dst : reg, src : number }
+           | IStore { dst : number, src : reg}
+           | Add {dst : reg , src : reg}
+           | Jmp {dst : number}
+           | BZ { c : reg, dst : number }
+           | IJmp {dst : reg}
+           | Store {dst : reg, src : reg}
+           | Load {dst : reg, src : reg}
+
+.decl insns(addr : number, i : insn)
+.decl next(addr: number, addr2 : number)
+
+next(addr, addr+1) :- insns(addr, $Mov(_,_)).
+next(addr, addr2) :- insns(addr, $Jmp(addr2)).
+
+// if can have exactly one value. Constant propagation
+.decl oneval(addr: number, r : reg, v : number)
+oneval(addr+1, r, v) :- insns(addr, Imm(r,v)).
+oneval(addr+1, r1, v1 + v2) :- insns(addr, Add(r1,r2)), oneval(addr,r1, v1), oneval(addr, r2,v2).
+// Things mostly just propagate.
+
+.decl isdata(addr : number)
+.decl iscode(addr : number)
+
+// insns(addr, @dis(bits)):- iscode(addr), raw(addr, bits).
+
+```
+
+
+
+What makes disassembly hard?
+data and code can be intermixed.
+
+There is a strata of different assembly instructions to consider
+
+- straight line code: mov, binop, unop, ILoad and IStore, Jmp
+- BZ becomes more complex. This is still essentialy a CFG though
+- indirect jumps IJmp makes things very hard. Part of the goal of disassembly is undertsnading these
+- Store and Load makes aliasing analysis difficult.
+
+Registers vs memory. What difference does it make? It doesn't really (for analysis purposes) until you start to have indirect accesses. The other real difference between registers and memory is speed. You typically don't have indirect register access in a cpu?
+
+
+
 
 ## CRDTs
 CRDT are a latticy based structure. It makes sense that it might be realted or modellable in datalog
