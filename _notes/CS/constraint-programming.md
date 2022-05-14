@@ -5,6 +5,7 @@ title: Constraint Programming
 
 - [What is it for?](#what-is-it-for)
 - [Minizinc](#minizinc)
+    - [Embedding datalog into minizinc](#embedding-datalog-into-minizinc)
 - [Picat](#picat)
 - [Answer Set Programming](#answer-set-programming)
   - [negation](#negation)
@@ -55,6 +56,35 @@ mov("a","b");
 
 var vs par is compile vs runtime distinction in type system
 it would be cool if minizinc could support adts or records.
+
+### Embedding datalog into minizinc
+
+```minizinc
+set of int : verts = 1..3;
+array[verts,verts] of bool : edge;
+%array[int,int] of verts : edge0;
+array[verts,verts] of var bool : path;
+
+%edge0 = [|1,2 | 2,3];
+% check if in edges list
+function bool: edge0(int : i, int : j) = 
+    i = 1 /\ j = 2 \/
+    i = 2 /\ j = 3;
+edge = array2d(verts,verts, [ edge0(i,j) | i,j in verts]);
+
+constraint forall(i,k in verts)(
+    path[i,k] <-     % <-> ? 
+    edge[i,k] \/ exists(j in verts)(edge[i,j] /\ path[j,k])
+);
+
+%output ["\(edge)"];
+
+solve satisfy;
+```
+
+Note that `-a` or `--all-solutions` will show all solutions. 
+
+Non negated datalog should have a unique solution. Datalog with negation is a different ballgame.
 
 # Picat
 [website](http://www.picat-lang.org/)

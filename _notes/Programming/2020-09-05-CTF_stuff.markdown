@@ -24,6 +24,7 @@ wordpress_id: 2960
   - [Automated Exploit Generation (AEG)](#automated-exploit-generation-aeg)
 - [CTF](#ctf)
 - [Misc](#misc)
+  - [GDB](#gdb)
 - [nmap](#nmap)
       - [Digital forensics](#digital-forensics)
       - [pwn.college](#pwncollege)
@@ -163,6 +164,28 @@ https://acmccs.github.io/papers/geometry-ccs07.pdf geometry of innocent flesh on
 
 https://github.com/sashs/Ropper
 
+[rop emporium](https://ropemporium.com/)
+
+[rop ftw](https://www.exploit-db.com/docs/english/28479-return-oriented-programming-(rop-ftw).pdf)
+
+pop_gadget ; value ; nextgadget  loads from stack into register
+
+pure buffer overflow from command line:
+```C
+#include <stdio.h>
+int main(int argc, char *argv[])
+{
+    char buf[256];
+    memcpy(buf, argv[1],strlen(argv[1]));
+    printf(buf);
+}
+```
+
+[ropeme](https://github.com/packz/ropeme)
+
+[angrop](https://github.com/angr/angrop)
+
+
 ## Data Oriented Programming (DOP)
 
 [Block Oriented Programming](https://arxiv.org/pdf/1805.04767.pdf)
@@ -187,6 +210,19 @@ https://heap-exploitation.dhavalkapil.com/
 
 advanced doug lea malloc - phreak post
 
+glibc.
+`ldd /bib/ls`
+libc.so.6 - symbolic link probably
+glibc 2.27
+libc-2.31.so actually
+pie
+You can run it? `/lib/x86_64-linux-gnu/libc.so.6`
+
+malloc
+chunks of memory
+new/delete make_unique
+
+
 
 ## Automated Exploit Generation (AEG)
 
@@ -203,6 +239,13 @@ usenix security
 # CTF
 
 # Misc
+
+## GDB
+pwndbg
+gef
+
+
+
 
 <https://twitter.com/peter_a_goodman/status/1503016499824537600?s=20&t=1Z4ew6rnGnFiMTSrQJSmKw> goodman on binary rewriting
 binrec - lift program merge lifted bytecode into debloated
