@@ -2765,9 +2765,10 @@ Tabling in prolog leads to something very similar in power to the memoizing data
 
 
 ## Push based Datalog
-[Brass's website](https://users.informatik.uni-halle.de/~brass/)
-[push based datalog](https://users.informatik.uni-halle.de/~brass/push/talks/inap17.pdf)
-[push method](https://users.informatik.uni-halle.de/~brass/push/)
+- [Brass's website](https://users.informatik.uni-halle.de/~brass/)
+- [push based datalog](https://users.informatik.uni-halle.de/~brass/push/talks/inap17.pdf)
+- [push method](https://users.informatik.uni-halle.de/~brass/push/)
+
 push method ~ like seminaive of only one fact? Hmm. Interesting.
 function calls correpond to heads. They memoize. Then they push themselves to any location predicate appears in body. Cute.
 This gets you something like seminaive eval.
@@ -2793,13 +2794,57 @@ class Rule():
 
 Maybe the way to look at this is to reorganize your clauses. I find this style repetitive and slightly unnatural, but maybe I'm just not used to it.
 
-path(i,j) -> ( edge(j,k) -> path(j,k))
+path(i,j) -> (edge(j,k) -> path(j,k))
 edge(i,j) -> (path(j,k) -> path(i,j) ; path(i,j))
+
+```python
+class PushRel(set):
+  def __init__(self,func):
+    super(PushRel,self).__init__()
+    self.func = func
+  def __call__(self,*args,**kwargs):
+    if args not in self:
+      self.add(args)
+      self.func(*args, **kwargs)
+  def __iter__(self):
+    # To deal with RuntimeError: Set changed size during iteration.
+    # This is kind of a shame. Probably there is a better way
+    return iter(self.copy())
+
+# I'm a little surprised this is working? Is it? The mutally recursvie definition is weird
+@PushRel
+def edge(i,j):
+  path(i,j)
+  for j1,k in path:
+    if j == j1:
+      path(i,k)
+
+@PushRel
+def path(j,k):
+  for i,j1 in edge:
+    if j1 == j:
+      path(i,k)
+
+edge(1,2)
+edge(2,3)
+edge(3,4)
+edge(4,1)
+print(edge)
+print(path)
+
+#PushRel({(2, 3), (1, 2), (1, 3)})
+
+
+```
+
+Call master fixpoint function?
+Shadow the local ones?
 
 ```python
 import functools
 
 '''
+nah this sucks
 def push_rel(func):
 
 
@@ -2815,39 +2860,7 @@ def push_rel(func):
   wrapper.__iter__ = lambda self: iter(self.data)
   return wrapper
 '''
-class PushRel(set):
-  def __init__(self,func):
-    super(PushRel,self).__init__()
-    self.func = func
-  def __call__(self,*args,**kwargs):
-    self.add(args)
-    self.func(*args, **kwargs)
 
-@PushRel
-def edge(i,j):
-  path(i,j)
-  for j1,k in path:
-    #print(j1,k)
-    if j == j1:
-      path(i,k)
-
-@PushRel
-def path(j,k):
-  for i,j1 in edge:
-    print(i,j,j1,k)
-    if j1 == j:
-      path(i,k)
-
-edge(1,2)
-edge(2,3)
-print(edge)
-print(path)
-#PushRel({(2, 3), (1, 2)})
-#PushRel({(2, 3), (1, 2), (1, 3)})
-
-```
-
-```python
 @rel
 def path(i,j):
   for j1,k in edge:
@@ -2874,6 +2887,22 @@ def edge(i,j):
 
 function()for push , index[] for lookup.
 
+If I made a total fixpoint function, could this be put into naive style?
+
+```python
+def loop():
+  for i,j in edge:
+    path(i,j)
+  for i,j in edge:
+    for j1,k in path:
+      if j == j1:
+        path(j,k)
+
+edge = PushRel(loop)
+path = PushRel(loop)
+```
+
+This is stupid though, right? We run way too many loops in a silly way.
 
 ## Incremental / Differential Datalog
 See 
