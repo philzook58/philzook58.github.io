@@ -1,9 +1,12 @@
 ---
 layout: post
-title: Bidirectional Typing
+title: Type Checking
 ---
 
 
+Simple typechecking - nate.
+
+# Bidirectional Typing
 Notes on Bidirectional Typing and the Meaning of Horizontal Lines
 
 

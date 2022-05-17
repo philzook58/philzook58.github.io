@@ -72,6 +72,14 @@ Frank mcsherry also has sudoku examples on youtube
 
 https://materialize.com/blog
 
+Timely associates timestamps with data. That enables more complex operations. A similar thing occurs with computer state, where the program counter exists and enables more powerful programs than pure combinatorial circuitry (~dataflow programming).
+
+Timestamps are extending from simple integers into more complex partially ordered thingies. This may be familiar from lamport clocks for example, but also makes sense from a loopy scope perspective.
+
+Just as importantly you need a notion of frontier or watermark. Things tha are accumulating data may need to know nothing else may come in. How do you describe "nothing else may come in" in a complex notion of time? Antichains is apparently an answer. 
+
+
+
 ```rust
 // cargo-deps: timely
 extern crate timely;

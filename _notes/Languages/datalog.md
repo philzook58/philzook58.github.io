@@ -60,7 +60,7 @@ title: Datalog
     - [Goals / Queries](#goals--queries)
     - [Uncurrying](#uncurrying)
     - [Higher Order Clauses (Harrop)](#higher-order-clauses-harrop)
-      - [Stack database](#stack-database)
+      - [Stack database / Harrop Datalog / Tentative Datalog](#stack-database--harrop-datalog--tentative-datalog)
     - [Existenial Queries](#existenial-queries)
     - [Universal Quantifier](#universal-quantifier)
     - [Geometry](#geometry)
@@ -1913,7 +1913,7 @@ Anything that can be produced from biz needs a contextual verision. bar(x,y) can
 
 Can use subsumption if you learn fact should go in database.
 
-#### Stack database
+#### Stack database / Harrop Datalog / Tentative Datalog
 You can organizing your database into a stack. You can refactor this in a number of ways. 
 In seminaive you have a old, new, and delta table per  relation. You can make old into `[old]` and only commit into the top of the stack. 
 You could also factor the entore `[database]` into a stack of databases instead of per relation.
@@ -1921,7 +1921,20 @@ You could also add an extra stack height key into every row and then call `DELET
 
 `a :- (b :- a)` is an idiom for "suppose a. If I find b, commit to a.
 
+hypothetical predicate a's variables need to be grounded by other predicates in the body of the clause, in the datalog style.
+
 Note that egglog + stack database gives similar power to scoped union find. And extra parameter in all rows is similar to explicit scope parameter.
+
+Taking inspriation from scoped union find:
+We don't need it to be a stack. It can be a tree of databases. We may need provenance information on the edges between parent and child to avoid rederivation. Commutativty of hypotehticals can be quite wasteful. The first fact that goes in the new child would be the hypothetical fact. Before doing hypothetical, one should check if fact already exists or not. If so, (b <- a) is effectlively b by modus ponens.
+
+Does commutativity mean that it isn't a tree of databases, but a dag?
+
+Termination seems questionable even with requirement of atomic terms.
+
+One should maintain that deeper tree leaves are set differenced from their parents. Maintain "triggers" that say what fact needs to be derived to remerge up into their parents. This remerging may require a set diffing on the parent's other children.
+
+Is this diff-tree a general pattern over lattices / posets?
 
 
 ### Existenial Queries
@@ -2828,7 +2841,7 @@ def path(j,k):
 edge(1,2)
 edge(2,3)
 edge(3,4)
-edge(4,1)
+#edge(4,1)
 print(edge)
 print(path)
 
