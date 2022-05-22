@@ -13,6 +13,7 @@ wordpress_id: 2960
   - [Disassembly](#disassembly)
     - [Interactive](#interactive)
   - [Fuzzing](#fuzzing)
+  - [Symbolic Execution](#symbolic-execution)
   - [Vulnerabilities](#vulnerabilities)
   - [Mitigations](#mitigations)
 - [Exploits](#exploits)
@@ -77,6 +78,7 @@ civuentes thesis
 probablistic disassembly using proabablistic datalog?
 bap mc + datalog?
 
+[Formally Verified Lifting of C-Compiled x86-64 Binaries](https://www.ssrg.ece.vt.edu/papers/pldi22.pdf)
 
 ### Interactive
 IDA
@@ -90,9 +92,57 @@ Mayhem
 Angora
 SLF eclipser
 
-Qsym
+
+
+[fuzzing challeneges and reflection](https://mboehme.github.io/paper/IEEESoftware20.pdf)
 
 [fuzzing 22](https://twitter.com/c_cadar/status/1521828920869404677?s=20&t=kBQ6NNrdoK-tcIkhvRqktQ)
+
+[google fuzzbench](https://google.github.io/fuzzbench/)
+
+oss-fuzz
+
+[rode0day](https://rode0day.mit.edu/) rolling fuzzing competition
+
+Greybox
+- AFL.  [AFL++](https://aflplus.plus/) fork of afl [tutorials](https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/tutorials.md). compile using afl-clang-fast++ or use qemu mode.
+- [libfuzzer](https://llvm.org/docs/LibFuzzer.html) `clagg++ -fsantizer=address,fuzzer myfile.cc` [tutorial](https://github.com/google/fuzzing/blob/master/tutorial/libFuzzerTutorial.md)
+- honggfuzz
+
+whitebox
+- klee
+- sage
+
+[Qsym](https://www.usenix.org/conference/usenixsecurity18/presentation/yun) hybrid fuzzing. concolic execution.
+
+[syzkaller](https://github.com/google/syzkaller) kernel fuzzer
+go-fuzz
+fuzzili
+winafl
+
+Fuzzers compile in extra information to give coverage guidance
+
+Fuzzers use a corpus of input
+
+Using fuzzer to solve csp.
+Write checker. Fuzz it. It's randomized search
+
+[Fuzzgym](https://arxiv.org/abs/1807.07490) makes a lot of sense to put neural heuristics in there
+
+## Symbolic Execution
+https://github.com/eurecom-s3/symcc
+[symqemu](https://github.com/eurecom-s3/symqemu)
+
+[unicorn](https://www.unicorn-engine.org/) - ripped out the heart of qemu and made it programmatically accessible. Based on an old version of qemu though
+
+KLEE
+
+
+primus - bap's emulator framework
+
+panda https://github.com/panda-re/panda - built on qemu. record and replay executions
+
+[](https://github.com/analysis-tools-dev/dynamic-analysis)
 
 ## Vulnerabilities
 [CWE](https://cwe.mitre.org/index.html) - common weakenss enumeration
@@ -133,6 +183,8 @@ gcc options
 -z execstack makes stack executable 
 
 RELRO - relocation read only. GOT table becomes read only. Prevents relocation attacks
+
+binary diversification - compiler differently every time. code reuse becomes way harder [diversification](http://www.diva-portal.org/smash/get/diva2:1232129/FULLTEXT01.pdf) make many versions of binary to make code reuse attacks harder. disunison
 
 # Exploits
 
@@ -222,7 +274,7 @@ malloc
 chunks of memory
 new/delete make_unique
 
-
+[heap history viewer](https://github.com/thomasdullien/heap_history_viewer)
 
 ## Automated Exploit Generation (AEG)
 
@@ -241,8 +293,11 @@ usenix security
 # Misc
 
 ## GDB
-pwndbg
-gef
+- [pwndbg](https://browserpwndbg.readthedocs.io/en/docs/) 
+- heap commands. For exminging heap structur
+
+
+- gef can track malloc and free. That makes sense
 
 
 
@@ -260,6 +315,8 @@ cfi directives - call frame information
 
 joern.io 
 https://github.com/RUB-SysSec/EvilCoder automatic bug insertion using joern
+phaser
+slither
 
 Hiding instructions in instructions
 https://lucris.lub.lu.se/ws/portalfiles/portal/78489284/nop_obfs.pdf

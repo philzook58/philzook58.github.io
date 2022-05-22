@@ -32,6 +32,8 @@ active learning
 
 
 - Try trivial modifications. Adding a case to some data type for example.
+
+- colin - use gdb and just watch it go.
 # Blogging
 
 https://www.gwern.net/

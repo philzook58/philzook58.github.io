@@ -7,6 +7,7 @@ title: Assembly
   - [Directives](#directives)
 - [x86](#x86)
 - [BMI1 BMI2](#bmi1-bmi2)
+  - [nasm](#nasm)
   - [memory barrier](#memory-barrier)
   - [CET control enforcement technology](#cet-control-enforcement-technology)
 - [ARM](#arm)
@@ -133,6 +134,17 @@ hello:
   .ascii "Hello world\n"
   len = . - hello
 
+```
+## nasm
+
+```nasm
+_start:
+  mov rdi, 0
+  ret
+```
+```cmd
+#!/usr/bin/python
+print("hello world")
 ```
 
 ## memory barrier

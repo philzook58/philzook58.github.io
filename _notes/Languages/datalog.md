@@ -12,6 +12,7 @@ title: Datalog
     - [SQL recursive common table subexpressions](#sql-recursive-common-table-subexpressions)
     - [Ocaml](#ocaml)
       - [Naive](#naive-1)
+    - [Rust](#rust)
     - [Magic Set](#magic-set)
   - [Program Analysis](#program-analysis)
     - [Reaching Definitions](#reaching-definitions)
@@ -20,12 +21,17 @@ title: Datalog
     - [Available Expressions](#available-expressions)
     - [Very Busy Expressions](#very-busy-expressions)
     - [Zippers For Program Points](#zippers-for-program-points)
+    - [Doop](#doop)
+    - [Datalog Diassembly / Decompilers](#datalog-diassembly--decompilers)
+    - [Bap](#bap)
     - [Resources](#resources)
-  - [Reflection](#reflection)
+  - [First Class Sets & Reflection](#first-class-sets--reflection)
     - [BitSets](#bitsets)
       - [Bitset reflection](#bitset-reflection)
     - [Patricia Tries](#patricia-tries)
     - [BDDs](#bdds)
+    - [Call](#call)
+    - [Meta circular interpreter](#meta-circular-interpreter)
   - [BogoSort](#bogosort)
   - [Translating functional programs](#translating-functional-programs)
   - [Lists](#lists)
@@ -36,7 +42,6 @@ title: Datalog
   - [Lambda representation](#lambda-representation)
   - [Parsing](#parsing)
   - [Hilog](#hilog)
-  - [meta circular interpreter](#meta-circular-interpreter)
   - [Equality Saturation](#equality-saturation)
   - [Term Rewriting](#term-rewriting)
   - [Graph Algorithms](#graph-algorithms)
@@ -68,7 +73,6 @@ title: Datalog
   - [Typeclass resolution.](#typeclass-resolution)
   - [Borrow Checker](#borrow-checker)
   - [Type checking](#type-checking)
-  - [Datalog Decompilers](#datalog-decompilers)
   - [CRDTs](#crdts)
   - [MultiSet Semantics](#multiset-semantics)
   - [Access Control Policies](#access-control-policies)
@@ -313,6 +317,39 @@ let path =
 
 let () = List.iter (Set.to_list path) ~f:(fun (x,y) -> printf "%d %d; " x y)
 ```
+### Rust
+Probably using HashSet is not a great idea.
+
+```rust
+use std::collections::HashSet;
+fn main(){
+  let edge : Vec<(usize,usize)>= vec![(1,2), (2,3)];
+  let mut path  : HashSet<(usize,usize)> = edge.into_iter().collect();
+  let mut dpath : HashSet<(usize,usize)> = edge.into_iter().collect();
+  /* for e in edge{
+    dpath.insert(e);
+    path.insert(e);
+  } */
+  while !dpath.is_empty() {
+    let mut newpath = HashSet::new();
+    for (i,j) in edge{
+      for (j1,k) in dpath{
+        if j == j1 {
+            newpath.insert((i,k));
+        }
+      }
+    }
+    dpath = path.difference(&newpath).collect();
+    for p in newpath.drain(){
+      path.insert(p);
+    }
+  }
+
+
+}
+```
+
+
 ### Magic Set
 Do we need all node reachability? What if we are only interested in 
 `path(1,4)` or we only want all nodes reachable from 1 `path(1,X)`. Or what if we want strongly connected components
@@ -499,6 +536,141 @@ From another perspective, this is a relative of "need sets" and magic sets.
 The zipper here represents the implicit stack of an ordinary Imp interpreter. We also may need a first class map to actually run programs precisely
 The transformation foo(firstclassmap) -> foo(i), map(i, k,v) is lossy in the presence of multiple executions. From an abstract interp persepctive this is not so bad.
 
+### Doop
+I should probably know more about this but I don't.
+Java.
+
+
+### Datalog Diassembly / Decompilers
+- [grammatech - Datalog Disassembly](https://www.usenix.org/system/files/sec20fall_flores-montoya_prepub_0.pdf)
+- [gigahorse](https://github.com/nevillegrech/gigahorse-toolchain) - decompiler for smart contracts based on souffle
+- Dr lojekyll [dr. disassembler](https://github.com/lifting-bits/dds) and blog post
+
+
+```souffle
+.type reg = R0 {} | R1 {} | R2 {}
+.type insn = Mov {dst : reg, src : reg}
+           | Imm {dst : reg, v : number}
+           | ILoad { dst : reg, src : number }
+           | IStore { dst : number, src : reg}
+           | Add {dst : reg , src : reg}
+           | Jmp {dst : number}
+           | BZ { c : reg, dst : number }
+           | IJmp {dst : reg}
+           | Store {dst : reg, src : reg}
+           | Load {dst : reg, src : reg}
+
+.decl insns(addr : number, i : insn)
+.decl next(addr: number, addr2 : number)
+
+next(addr, addr+1) :- insns(addr, $Mov(_,_)).
+next(addr, addr2) :- insns(addr, $Jmp(addr2)).
+
+// if can have exactly one value. Constant propagation
+.decl oneval(addr: number, r : reg, v : number)
+oneval(addr+1, r, v) :- insns(addr, Imm(r,v)).
+oneval(addr+1, r1, v1 + v2) :- insns(addr, Add(r1,r2)), oneval(addr,r1, v1), oneval(addr, r2,v2).
+// Things mostly just propagate.
+
+.decl isdata(addr : number)
+.decl iscode(addr : number)
+
+// insns(addr, @dis(bits)):- iscode(addr), raw(addr, bits).
+
+```
+
+
+
+What makes disassembly hard?
+data and code can be intermixed.
+
+There is a strata of different assembly instructions to consider
+
+- straight line code: mov, binop, unop, ILoad and IStore, Jmp
+- BZ becomes more complex. This is still essentialy a CFG though
+- indirect jumps IJmp makes things very hard. Part of the goal of disassembly is undertsnading these
+- Store and Load makes aliasing analysis difficult.
+
+Registers vs memory. What difference does it make? It doesn't really (for analysis purposes) until you start to have indirect accesses. The other real difference between registers and memory is speed. You typically don't have indirect register access in a cpu?
+
+### Bap
+
+Should I use `symbol` to represent simple enum adts? They are syntactically a bit more convenient. It would be a bit more uniform to use souffle adts.
+
+```souffle
+
+
+
+// http://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Bil/index.html#type-exp
+
+.type cast <: symbol
+.type var <: symbol // need more info? Size? id?
+.type binop <: symbol
+.type unop <: symbol
+
+.type exp =
+    Load { mem : exp, addr : exp , endian : endian, size: size}
+  | Store {}
+  | BinOp { op : binop , a : exp, b : exp}
+  | UnOp { op: unop, a : exp}
+  | Var {v : var}
+  | Int {i : unsigned} // possibly with bitwidth?
+  | Cast {} // TODO
+  | Let {v : var, e : exp, b : exp}
+  | Unknown {s : symbol, t : typ}
+  | Ite {cond : exp, then : exp, else : exp}
+  | Extract {lo : unsigned, hi : unsigned, e : exp}
+  | Concat {a : exp , b : exp}
+
+.type typ =
+    Imm {width : unsigned}
+  | Mem {a : addr_size, s : size}
+  | Unk {}
+
+.type stmts = [hd : stmt, tl : stmts]
+.type stmt =
+    Move { v: var, e : exp}
+  | Jmp {e : exp}
+  | Special {s : symbol}
+  | While {e : exp, s : stmts}
+  | If {c : exp, t : stmts, e : stmts}
+  | CpuExn {n : unsigned}
+
+
+.type endian <: symbol
+// http://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Size/index.html#type-all
+// 8 - 256
+.type size <: unsigned
+.type addr_size <: unsigned 
+
+// helpers
+#define ADD(x,y) $BinOp("Add", x, y)
+
+#define LittleEndian "LittleEndian"
+#define BigEndian "BigEndian"
+
+
+#define BINOP(op, a, b, c) (op = "Add", c = a + b; op = "Sub", c = a - b ; ... )
+
+
+
+// .decl insn(addr : unsigned, sem : stmts)
+// flatten()
+// .decl may_fallthrough(From, To)
+// .decl must_fallthrough(From, To)
+//
+```
+
+Does / what does bap's C api look like? https://github.com/BinaryAnalysisPlatform/bap-bindings
+If we want to do specualtive disassembly, this might be the way to go.
+If we want to just analyze what bap already finds, we can print souffle database using a plugin.
+
+[alias analysis for disassembly](http://reports-archive.adm.cs.cmu.edu/anon/2006/CMU-CS-06-180R.pdf)
+[Holmes: Binary Analysis Integration Through Datalog](https://kilthub.cmu.edu/articles/thesis/Holmes_Binary_Analysis_Integration_Through_Datalog/7571519)
+
+
+use pcode?
+
 ### Resources
 [Using Datalog for Fast and Easy Program Analysis](https://yanniss.github.io/doop-datalog2.0.pdf) A Doop paper
 [Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
@@ -509,7 +681,10 @@ The transformation foo(firstclassmap) -> foo(i), map(i, k,v) is lossy in the pre
 
 [codeql](https://codeql.github.com/docs/ql-language-reference/about-the-ql-language/) semmle
 
-## Reflection
+## First Class Sets & Reflection
+
+
+
 ### BitSets
 ```souffle
 .type bitset <: unsigned
@@ -668,6 +843,7 @@ mem($Empty(), _, $False()). // not valid
 //add(x, $Leaf(x)), $Leaf(x)).
 
 ```
+
 ### BDDs
 bddbdddb is a datalog that used binary decision diagrams as it's backing store. It's an interesting idea. BDDs are very powerful.
 
@@ -698,6 +874,192 @@ bdd_and(x,y,z) :- need_bdd_and(x,y), x = $ITE(cx, tx, ex), y = $ITE(cy,ty,ey), x
 ```
 
 Wait... are bdds of the bits kind of like hash consed patricia trees?
+
+### Call
+
+Prolog has a notion `call` which let's you call data as predicates.
+It is emulatable by manually lifting https://www.metalevel.at/prolog/metapredicates
+
+We can make an adt called `rel` which has one constructor for every relation. In principle this could be compiler magic that doesn't require actually duplicating (or worse) the data, but oh well
+
+```souffle
+
+.type rel = Edge {i : number, j : number} | Path {i : number, j : number} | Call {p : rel}
+
+.decl edge(i : number, j : number)
+.decl path(i: number, j : number)
+
+.decl call(p : rel)
+
+// arguably maybe these different modes of call should be differen predicates?
+// push and pull?
+// find?
+// different binding patterns?
+edge(i,j) :- call($Edge(i,j)).
+call($Edge(i,j)):- edge(i,j).
+
+path(i,j) :- call($Path(i,j)).
+call($Path(i,j)):- path(i,j).
+
+call(p) :- call($Call(p)).
+// eh. I dunno about this one. call($Call(p)):- call(p).
+
+
+```
+
+
+
+### Meta circular interpreter
+See extensive prolog literature on meta circular intepreters
+https://www.metalevel.at/acomip/
+
+This appears to be annoying to achieve. You have to manually manipulate the variable binding context and substitute. There doesn't seem to be a good way to piggy back on datalog's variables
+
+Maybe first write you program in normal form with one conjunction (invent new per rule predicates that store intermediate variable bindings). Then it isn't quite as hard?
+
+```souffle
+
+.type pnum = Var {x : symbol} | Lit {n : number}
+.type rel = Path {pnum, pnum} | Edge {pnum, pnum}
+// alternaitve: normalize that only concrete stuff appears in eq
+// This is the flavor of manual datalog with if checks.
+// .type rel = Path {symnbol, symbol} | Eq1 {symbol, number} | Eq2 {symbol, symbol}
+.type body = [p : rel, tl : body]
+//or .type body = Rel {p : rel} | Conj {body, body} | True.
+.type head <: rel
+.type clause = [head, body]
+
+// assoc list
+.type ctx = [ x : symbol, n : number, tl : ctx]
+// add or merge contexts.
+
+
+pull(r)
+
+// every possible pattern? 2^n? Ugh
+// add really needs to be dealt with using functional magic set style
+add(ctx,x,x1) :- call($Path($Var(x), $Num(i)), ctx), path(x1, i).
+
+
+```
+
+What about going point free? only binary relations?
+
+foo :- Comp(f,g) | Par {} | Fst | Id
+.type tup =     Tup {tup, tup} | 
+eval($Comp(f,g), fin, gout) :- _eval($Comp(f,g)), eval(f,fin,fout), eval(g,ga,gb), fout = gin.
+https://www.philipzucker.com/aop-minikanren/ similar to this
+
+eval($Edge, i, j) :- edge(i,j)
+eval($Path, i, j) :- path(i,j)
+
+
+$Clause($Path, $Edge)
+$Clause($Path , $Comp($Edge, $Path))
+
+```souffle
+.type rel =
+    Lit {name : symbol}
+  | Sing {x : val, y : val}
+  | Comp {p : rel, q : rel}
+  | Conv {p : rel}
+  // | Fst {} | Snd {} | Dup {} | Dump {} | Id {}
+  | Proj1 {p : rel}
+  | Proj2 {p : rel}
+  | Trans {p : rel}
+.type val =
+    Num {n : number}
+  | Sym {s : symbol}
+  | UNum {u : unsigned}
+  | Rel {r : rel}
+  | Unit {}
+  | Tup {x : val, y : val}
+
+.decl _eval(r : rel)
+.decl eval(r : rel, i : val, j : val)
+
+.decl clause(head : symbol, body : rel)
+// reflection into actual relations
+// call(head, i, j):- clause(head, body), eval(body, i, j).
+eval($Lit(head), i, j):- clause(head, body), eval(body, i, j).
+_eval(body) :- clause(_head,body).
+
+eval(t, i, j):- _eval(t), t = $Sing(i,j).
+
+_eval(p), _eval(q) :- _eval(t), t = $Comp(p,q).
+eval(t, i, k) :- _eval(t), t = $Comp(p,q), eval(p,i,j), eval(q,j,k).
+
+_eval(p) :- _eval(t), (t = $Conv(p); t = $Proj1(p); t = $Proj2(p); t = $Trans(p) ).
+eval(t, j, i) :- _eval(t), t = $Conv(p), eval(p,i,j).
+eval(t, i, j) :- _eval(t), t = $Proj1(p), eval(p,i,$Tup(j,_)).
+eval(t, i, j) :- _eval(t), t = $Proj2(p), eval(p,i,$Tup(_,j)).
+eval(t, $Tup(i,j), k) :- _eval(t), t = $Trans(p), eval(p,i,$Tup(j,k)).
+
+// Hmm. fst and such are not so straightforward actually.
+// ? :- _eval($Fst())
+// Could merge with comp
+// maybe don't make i, j so special?
+//eval(t, c, a) :- _eval(t), t = $Comp(p, $Fst()), eval(p, c, $Tup(a,b))
+
+
+
+clause("edge", $Sing($Num(1), $Num(2))).
+clause("edge", $Sing($Num(2), $Num(3))).
+clause("edge", $Sing($Num(3), $Num(4))).
+clause("path", $Lit("edge")).
+clause("path", $Comp($Lit("path"), $Lit("path"))).
+
+.output eval(IO=stdout)
+#define EDGE $Lit("Edge")
+#define PATH $Lit("Path")
+
+.decl path(i : number, j : number)
+path(i,j) :- eval($Lit("path"), $Num(i), $Num(j)).
+.output path(IO=stdout)
+```
+
+
+Could also use n-ary combinators instead of binary categorical combinators. Relation algerbra I guess?
+
+
+```souffle
+//.type Pred = [name : symbol, args : TList]
+//.type Clause = {head : }
+.type pat = Var {x : symbol} | Lit { x : number}
+.type relpat = R0 { rel : symbol } | R1 {rel : symbol, x : pat} // | R2 {}
+.type body = [ hd : relpay, tl : body ]
+
+// .type body = Conj {a : body, b : body} | Pat {p : relpat}
+// or inline 
+
+// alternatively make clause a data structure. But whatever. clause becomes a global object.
+.decl clause(hd : relpat, body : body)
+clause(hd, body).
+// clause(program, hd, body) for multiple programs
+
+.type ctx = [ snoc : body, cons : body ]
+
+
+// Probably shouldn't be so controlling about match
+match(   nextctx) :- match($R1(r, $Lit(x)), ctx), unaryrel(r, x)
+headstate(   ) :- pat_in(body, $R1($Var(x)) ), headstate($R1(r, $Var(x)) , body)
+// no but you need more state than just what's in the head. edge(x,y), path(y,z) needs y around for consistency
+
+// eq( body , , ). for union find? 
+
+:- match(_snoc, nil)
+           :- $R1
+
+.type varbind = [x : number , vbind ; varbind ]
+index( varbind, n : unsigned, x : number)
+index()
+// require labelling variables in order they appear to simplify
+// Pre Normalize out unification?
+(  ctx, $R1(r, $Var())  ,varbind), unrel(r,y), index(varbind ,n,$Var())
+(  ctx, $R1(r, $Var(n))  ,varbind), index( ,n,$Lit(y)), unrel(r, y).
+
+
+```
 
 ## BogoSort
 Hmmmm... Can I do this?
@@ -1308,48 +1670,7 @@ binrel($Edge(), 3, 4).
 It may also be nice to make a universal type (for which number actually serves pretty well?).
 
 
-## meta circular interpreter
-See extensive prolog literature on meta circular intepreters
-https://www.metalevel.at/acomip/
 
-```souffle
-//.type Pred = [name : symbol, args : TList]
-//.type Clause = {head : }
-.type pat = Var {x : symbol} | Lit { x : number}
-.type relpat = R0 { rel : symbol } | R1 {rel : symbol, x : pat} // | R2 {}
-.type body = [ hd : relpay, tl : body ]
-
-// .type body = Conj {a : body, b : body} | Pat {p : relpat}
-// or inline 
-
-// alternatively make clause a data structure. But whatever. clause becomes a global object.
-.decl clause(hd : relpat, body : body)
-clause(hd, body).
-// clause(program, hd, body) for multiple programs
-
-.type ctx = [ snoc : body, cons : body ]
-
-
-// Probably shouldn't be so controlling about match
-match(   nextctx) :- match($R1(r, $Lit(x)), ctx), unaryrel(r, x)
-headstate(   ) :- pat_in(body, $R1($Var(x)) ), headstate($R1(r, $Var(x)) , body)
-// no but you need more state than just what's in the head. edge(x,y), path(y,z) needs y around for consistency
-
-// eq( body , , ). for union find? 
-
-:- match(_snoc, nil)
-           :- $R1
-
-.type varbind = [x : number , vbind ; varbind ]
-index( varbind, n : unsigned, x : number)
-index()
-// require labelling variables in order they appear to simplify
-// Pre Normalize out unification?
-(  ctx, $R1(r, $Var())  ,varbind), unrel(r,y), index(varbind ,n,$Var())
-(  ctx, $R1(r, $Var(n))  ,varbind), index( ,n,$Lit(y)), unrel(r, y).
-
-
-```
 
 ## Equality Saturation
 See blog posts
@@ -1806,7 +2127,8 @@ I can't open libc.so.6 because this string is being made in this way. libc.so is
 [Microlog - A Datalog for Microcontrollers and other Interactive Systems](https://dbs.informatik.uni-halle.de/microlog/)
 
 [Dedalus](https://www2.eecs.berkeley.edu/Pubs/TechRpts/2009/EECS-2009-173.pdf) http://bloom-lang.net/faq/
-Timely dataflow
+
+Timely dataflow - modelling frontiers in datalog? What frontiers reach where is kind of a static analysis
 
 ## Theorem Proving
 A lot of these techniques are taken from interpeting the Lambda Prolog rules.
@@ -2082,6 +2404,9 @@ https://github.com/frankmcsherry/blog/blob/master/posts/2018-05-19.md datafrog b
 This is perhaps related to alias analysis? But maybe not.
 Also perhaps to subtyping.
 
+[the move borrow checker](https://twitter.com/b1ackd0g/status/1526251533758738432?s=20&t=bg0gpKH5p3kCZWau-XE4ng) some kind of smart contract borrow checker
+
+
 region variables.
 lifetimes
 ```souffle
@@ -2302,59 +2627,7 @@ eqrel for hindley milner? Yihong had something like this
 souffle-z3 for refinement typing?
 
 
-## Datalog Decompilers
-[gigahorse](https://github.com/nevillegrech/gigahorse-toolchain) - decompiler for smart contracts based on souffle
-grammatech
-Dr lojekyll
 
-[dr. disassembler](https://github.com/lifting-bits/dds) and blog post
-
-
-```souffle
-.type reg = R0 {} | R1 {} | R2 {}
-.type insn = Mov {dst : reg, src : reg}
-           | Imm {dst : reg, v : number}
-           | ILoad { dst : reg, src : number }
-           | IStore { dst : number, src : reg}
-           | Add {dst : reg , src : reg}
-           | Jmp {dst : number}
-           | BZ { c : reg, dst : number }
-           | IJmp {dst : reg}
-           | Store {dst : reg, src : reg}
-           | Load {dst : reg, src : reg}
-
-.decl insns(addr : number, i : insn)
-.decl next(addr: number, addr2 : number)
-
-next(addr, addr+1) :- insns(addr, $Mov(_,_)).
-next(addr, addr2) :- insns(addr, $Jmp(addr2)).
-
-// if can have exactly one value. Constant propagation
-.decl oneval(addr: number, r : reg, v : number)
-oneval(addr+1, r, v) :- insns(addr, Imm(r,v)).
-oneval(addr+1, r1, v1 + v2) :- insns(addr, Add(r1,r2)), oneval(addr,r1, v1), oneval(addr, r2,v2).
-// Things mostly just propagate.
-
-.decl isdata(addr : number)
-.decl iscode(addr : number)
-
-// insns(addr, @dis(bits)):- iscode(addr), raw(addr, bits).
-
-```
-
-
-
-What makes disassembly hard?
-data and code can be intermixed.
-
-There is a strata of different assembly instructions to consider
-
-- straight line code: mov, binop, unop, ILoad and IStore, Jmp
-- BZ becomes more complex. This is still essentialy a CFG though
-- indirect jumps IJmp makes things very hard. Part of the goal of disassembly is undertsnading these
-- Store and Load makes aliasing analysis difficult.
-
-Registers vs memory. What difference does it make? It doesn't really (for analysis purposes) until you start to have indirect accesses. The other real difference between registers and memory is speed. You typically don't have indirect register access in a cpu?
 
 
 

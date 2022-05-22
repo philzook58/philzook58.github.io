@@ -28,6 +28,7 @@ wordpress_id: 1865
   - [meta circular interpreters](#meta-circular-interpreters)
   - [Delimitted Continuations](#delimitted-continuations)
   - [Tabling](#tabling)
+    - [XSB](#xsb)
   - [Attributed Variables](#attributed-variables)
   - [Constraint Logic Programming (CLP)](#constraint-logic-programming-clp)
     - [Prolog II, III IV.](#prolog-ii-iii-iv)
@@ -259,6 +260,9 @@ Hmm. Tabling comes _from_ earley parsing historically. That's interesting.
 
 tabling and packrat parsing [DCGs + Memoing = Packrat Parsing But is it worth it?](https://mercurylang.org/documentation/papers/packrat.pdf)
 tabling vs memoing
+
+### XSB
+XSB prolog has some unsusual features and supposedly the most advanced implementation of tabling. 
 
 ## Attributed Variables
 Attaching extra info to variables. This can be be used to implement CLP as a library
@@ -1148,6 +1152,8 @@ https://github.com/metagol/metagol metagol
 http://andrewcropper.com/
 https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
 
+[Abductive Reasoning in Intuitionistic Propositional Logic via Theorem Synthesis](https://arxiv.org/abs/2205.05728v1). Includes a g4ip
+
 # Theorem Proving
 [Leantap](https://formal.iti.kit.edu/beckert/leantap/)
 Jens Otten
@@ -1163,6 +1169,10 @@ Jens Otten
 [PRESS: PRolog Equation Solving System](https://github.com/maths/PRESS) as described in the art of prolog book. also has an lp solver?
 Pretty interesting tehcniques. If a variable is in a single position, you can unfold the expression. 2. you can apply quadratic equations and stuff 3. 
 Is it kind of a zipper to isolate a variable?
+
+[tarau Formula Transformers and Combinatorial Test Generators for Propositional Intuitionistic Theorem Provers](https://arxiv.org/abs/1910.01775)
+
+Dyckhoff g4ip
 
 # Misc
 

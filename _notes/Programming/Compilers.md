@@ -28,6 +28,9 @@ wordpress_id: 2913
   - [Link Time Optimization (LTO)](#link-time-optimization-lto)
   - [Profile Guided Optimization (PGO)](#profile-guided-optimization-pgo)
 - [Code Gen](#code-gen)
+  - [Declarative](#declarative)
+    - [Unison](#unison)
+    - [Other](#other)
   - [Instruction Selection](#instruction-selection)
   - [Register Allocation](#register-allocation)
   - [Instruction Scheduling](#instruction-scheduling)
@@ -59,6 +62,8 @@ LL
 LALR
 
 [How do you get good error messages](https://twitter.com/SandMouth/status/1513173009976147975?s=20&t=5y91-I1SPrIGomAWSqs69w)
+
+[sy brand paper on how compilter diagnostics could be imporved](https://twitter.com/TartanLlama/status/1527327581464567809?s=20&t=C_oktCkKA7nprGoHnJpglQ)
 
 ## Algorithms
 [List of algorithms - parsing](https://en.wikipedia.org/wiki/List_of_algorithms#Parsing)
@@ -147,6 +152,74 @@ A relative of omega?
 ## Profile Guided Optimization (PGO)
 
 # Code Gen
+## Declarative
+### Unison
+- [Unison](https://unison-code.github.io/)
+
+[diversification](http://www.diva-portal.org/smash/get/diva2:1232129/FULLTEXT01.pdf) make many versions of binary to make code reuse attacks harder. disunison
+
+
+Toy Program:
+
+
+If you do liveness analysis ahead of time, it really does become graph coloring, with an edge between every temporary that is live at the same time.
+
+You cannot do liveness ahead of time if you integrate instruction scheduling with allocation. It needs to be internalized.
+
+If you do SSA ahead of time, you have more flexibility to change colors/register at overwrite points
+
+How to communicate to minizinc:
+- Serialized files or C bindings
+- Parameters or constraints. In some sense, you a writing a constraint interpreter over the parameters. Why not cut out the middleman? 1: less clear what the structure is. 2. It forces your hand with the bundling of different pieces. Many things need to be bundled into the `insn` predicate unless you reify the `insn` predicate to a variable, in which case you are rebuilding the parameter version.
+
+
+
+```minizinc
+enum reg_t = {R0, R1, R2};
+enum temp_t = {T0, T1, T2, T3};
+int MAXID = 2;
+set of int : id = {0..MAXID};
+
+predicate insn(operation_t : id, list of temp_t : lhs, string : opcode, list of temp_t : rhs) = 
+% https://en.wikipedia.org/wiki/Live_variable_analysis
+
+% since we don't record the gen kill sets we need to do this in here.
+constraint forall(t in temp_t)(    %, i in id)(
+  if (t in rhs) % in gen set
+    live[t, i] = true;
+  elseif (t in lhs) % not in gen set, in kill set
+    live[t,i] = false;
+  else % propagate
+    live[t,i] <- live[t, i + 1]
+  endif
+);
+
+
+constraint forall(t in temp_t)( live[t, MAXID] = false);
+
+constraint 
+  insn(0, [T1], "mov", [T0]) /\
+  insn(1, [T2], "mov", [T0, T1]) /\
+  insn(2, [T3], "mov", [T0, T1]) /\
+;
+
+array[temp_t, id] of var bool : live;
+array[temp_t] of var reg_t : reg;
+% if we're not in ssa, maybe 
+% array[temp_t, id] of var reg_t; 
+% since register can change as reuse site.
+
+
+```
+
+
+### Other
+- [Relational Processing for Fun and Diversity](https://personal.utdallas.edu/~hamlen/lundquist19minikanren.pdf) minikanren
+- [Denali - a goal directed super optimizer](https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf) egraph based optimization of assembly
+- [PEG](https://cseweb.ucsd.edu/~lerner/papers/popl09.pdf) egraph cfg
+- [RVSDG](https://github.com/egraphs-good/egg/discussions/106)
+- [minimips minikanren mips assembler/disassembler](https://github.com/orchid-hybrid/minimips)
+
 ## Instruction Selection
 Subgraph isomorphism problem
 VF2 algorithm
@@ -230,6 +303,7 @@ Hash cons dags can have many input and output edges. However the output edges of
 Operads
 
 You could take a relational perspective on operations, having neither input not output.
+
 ## Register Allocation
 <https://arxiv.org/abs/1804.02452>
 
@@ -251,6 +325,14 @@ In this example, if we assume v1 v2 & v3 are live at the beginning, v1 is live f
 Compiler gym
 
 ## Instruction Scheduling
+The pure instruction scheduling problem might occur even at the IR level. We can imagine an imperative IR. Certain operations commute and others don't. We may want to minimize the liveness time of variables for example. This would make sense as a pre-processing step to a sequence input language to an instruction selector.
+
+
+Instruction scheduling can be parametrized as:
+1. an embedding into actual time (cycle issue time probably). This is important if you are optimizing for runtime and can get estimates of how long each instruction takes.
+2. a ranking as integers
+3. next(i,j) relation which is basically integers. Allows for partial order. after(i,j) :- next(i,k), after(). after is path connected in temporal dag. Possibly this is mappable into a lattice notion of time (i,j,k,etc)?
+
 ## Assembly Production
 You need to produce actual binary, actual 1s and 0s
 See also:

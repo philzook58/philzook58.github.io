@@ -18,6 +18,11 @@ title: SMT Solvers
 - [EPR](#epr)
 - [Z3 source spelunking](#z3-source-spelunking)
   - [src - most of the goodies are here.](#src---most-of-the-goodies-are-here)
+  - [Z3 Add Commutative Benchmark](#z3-add-commutative-benchmark)
+  - [Interactive Proof](#interactive-proof)
+    - [Hilbert Proof](#hilbert-proof)
+    - [Backwards Proof](#backwards-proof)
+    - [Manual Proof System](#manual-proof-system)
 
 See also:
 - SAT solvers
@@ -410,6 +415,8 @@ muz has: datalog, bmc, and spacer mode, and xform?
 :print-certificatie fives "inductive invataint" even in datalog?
 
 
+## Z3 Add Commutative Benchmark
+
 ```python
 from z3 import *
 Num = DeclareSort("Num")
@@ -440,3 +447,237 @@ for N in range(5,17):
   print(N, timeit.timeit(lambda: s.check(), number = 1))
 
 ```
+
+## Interactive Proof
+
+### Hilbert Proof
+Hilbert style proofs where the only inference rule is Z3_check.
+Register known theorems to central repository. Refer to them later.
+There are some basic theorems with quantifiers I couldn't get Z3 to do even the most basic step of, so this idea feels sunk.
+I guess I could also admit vampire.
+
+```python
+from z3 import *
+class Kernel():
+    def __init__(self):
+        self._formula = {}
+        self._schema = {}
+        self._explanations = {}
+    def axiom(self, name, formula):
+        assert name not in self._formula
+        self._formula[name] = (formula, None)
+        return name
+    def add_schema(self, name, schema):
+        assert name not in self._schema
+        self._schema[name] = schema
+        return name
+    def instan_schema(self, schema, name, *args):
+        #name = self.fresh(name)
+        self._formula[name] = (self._schema[schema](*args), ("schema", schema))
+        return name
+    def theorem(self, name, formula, *reasons, timeout=1):
+        assert name not in self._formula
+        s = Solver()
+        #s.set("timeout", timeout)
+
+        s.add([ self._formula[reason][0] for reason in reasons])
+        # snity check here. s.check(). should return unknown. If returns unsat, we have an incosisitency
+        # Even if we have inconsistency but z3 isn't finding it, that is a small comfort. 
+        s.add(Not(formula))
+        status = s.check()
+        if status == unsat:
+            self._formula[name] = (formula, reasons)
+            print(f"Accepted {name}")
+        elif status == sat:
+            print(f"Counterexample : {s.model()}")
+        elif status == unknown:
+            print("Failed: reason unknown")
+        else:
+            print(f"unexpected status {status}")
+    #def calc(self):
+    #    pass
+    #def definition: # is definition distinct from axiom?
+
+t = Kernel()
+p = Real("p")
+t.axiom("p_def", p*p == 2)
+m,n = [ToReal(x) for x in Ints("m n")]
+
+#t.theorem("p irrational", p != m / n)
+#(m / n == p)
+def even(x):
+    y = FreshInt()
+    return Exists([y], 2 * y == x)
+def odd(x):
+    y = FreshInt()
+    return Exists([y], 2 * y + 1 == x)
+r,w = Ints("r w")
+t.theorem("even odd", ForAll([r], even(r) != odd(r)))
+def rational(p):
+    m = FreshInt("m")
+    n = FreshInt("n")
+    return Exists([m,n], And(n != 0, p == ToReal(m) / ToReal(n) ))
+rational(p)
+
+#t.theorem("mndef", Implies(rational(p), p == m / n) )
+
+#t.theorem( Implies( p == m / n, Exists([r,w], And(p == r / w,  Or(And(even(r), odd(w)), And(odd(r), even(w)) ) ))))
+# how do you use this exists?
+
+#t.theorem(   )
+def evenodd(n,m):
+    return even(n) != even(m)
+
+t.theorem(0, Implies(  And(p == m / n, n != 0) , p * n == m  ))
+t.theorem(1, Implies(  And(p == m / n, n != 0, evenodd(m,n)) , p * n == m  ))
+#t.theorem(2, Implies(  And(p == m / n, n != 0, evenodd(m,n)) , 2 * n * n == m * m , "p_def"))
+t.theorem(3, even(r) != odd(r))
+#t.theorem(4, even(r * r) != odd(r * r))
+t.theorem(5, Implies(r == 2 * w, even(r*r) ))
+t.theorem(6, Implies(r == 2 * w, r*r == 4 * w * w ))
+
+#t.theorem(7, Implies(r == 2 * w, even(r) ))
+#t.theorem(8, Implies(even(r), even(r*r)), 5, 6, 7)
+t.theorem("even or odd", Or(even(r), odd(r)))
+#t.theorem("even or odd r*r", Or(even(r*r), odd(r*r)))
+t.theorem(8, ForAll([r], even(r) != odd(r)))
+t.theorem(9, even(r*r) != odd(r*r), 8)
+# I dunno. This idea is sunk. I can't even get this to work?
+# I could try not using the built in stuff I guess and wwork in FOL.
+
+
+#t.theorem(5, odd(r) == odd(r * r), 3, 4)
+#t.theorem(3, Implies(even(r * r), even(r) ))
+#t.theorem(3, Implies(  And(2 * n * n == m * m), even(m)))
+
+
+
+
+#t.theorem(0, Implies(  p == m / n , m * m == 2 * n * n   ), "p_def" )
+even(r * r) != odd(r * r)
+```
+
+
+
+```python
+t = Hilbert()
+
+Nat = Datatype('Nat')
+Nat.declare('Zero')
+Nat.declare('Succ', ('pred', Nat))
+# Create the datatype
+Nat = Nat.create()
+Zero = Nat.Zero
+Succ = Nat.Succ
+
+n,m = Consts("n m", Nat)
+plus = Function("+", Nat,Nat,Nat)
+DatatypeRef.__add__ = lambda self, rhs : plus(self, rhs)
+#type(n)
+plus_zero = t.axiom("plus_zero", ForAll([m], Zero + m == m))
+plus_succ = t.axiom("plus_succ", ForAll([n,m], Succ(n) + m == Succ(n + m)))
+plus_def = [plus_zero, plus_succ]
+def induction_schema(P):
+    return  Implies(
+                And(P(Zero), 
+                    ForAll([n], Implies(P(n), P(Succ(n))))) ,
+                ForAll([n], P(n))
+    )
+induction = t.add_schema("induction", induction_schema)
+
+t.theorem( "plus_zero'",  ForAll([m], Zero + m == m , patterns=[Zero + m]), plus_zero) # guardedc version of the axiom
+mylemma = t.instan(induction, "mylemma", lambda m : Zero + m == m + Zero )
+
+t.theorem( "n_plus_zero", ForAll([m], Zero + m == m + Zero) ,  plus_zero, plus_succ,  mylemma )
+t.theorem("test guarding", Zero + Zero == Succ(Zero), "plus_zero")
+
+lte = Function("<=", Nat, Nat, BoolSort())
+DatatypeRef.__le__ = lambda self, rhs : lte(self, rhs)
+
+t.axiom("zero lte", ForAll([n], Zero <= n))
+t.axiom("succ lte", ForAll([n,m], (Succ(n) <= Succ(m)) == (n <= m) ))
+lte_def = ["zero lte", "succ lte"]
+
+
+t.theorem("example",  (Zero + Zero) <= Zero,  *plus_def, *lte_def  )
+
+
+reflect = Function("reflect", Nat  , IntSort())
+x = Int("x")
+t.axiom( "reflect succ", ForAll([x, n], (reflect(Succ(n)) == 1 + x) == (reflect(n) == x) ))
+t.axiom( "reflect zero", reflect(Zero) == 0) 
+
+t.formula
+
+```
+
+### Backwards Proof
+<https://www.philipzucker.com/programming-and-interactive-proving-with-z3py>
+At the end of this blog post I had kind of a neat system mimicking how coq feels.
+Keep a goal stack. Allow usage of Z3 tactics.
+I was trying to enforce every step as being sound by requiring Z3 to confirm what I though I was doing.
+I don't think systems tend to make the backwards proof process part of their core. They use a tactic system which calls forward.
+Probably sunk for the same reasons that Z3 just will not accept certain quanitifier proofs.
+
+### Manual Proof System
+Guidance from Harrison.
+
+Reuse the Z3 syntax tree but build custom
+
+https://en.wikipedia.org/wiki/Sequent_calculus
+
+```python
+from z3 import *
+class Proof(): # Sequent?
+  # private internal methods
+  __hyps = []
+  __concs = None # None means uninitialized.
+
+  def smt(formula):
+    s = Solver()
+    s.add(Not(formula))
+    status = s.check()
+    if status == sat:
+      raise s.model()
+    elif status != unsat:
+      raise status
+    p = Proof()
+    p.__concs = [formula]
+    return p
+  def hyps(self):
+    return self.__hyps.copy()
+  @property
+  def concs(self):
+    return self.__concs.copy()
+  def __repr__(self):
+    return f"{self.__hyps} |- {self.__concs}"
+  def copy(self):
+    p = Proof()
+    p.__hyps = self.__hyps.copy()
+    p.__concs = self.__concs.copy()
+    return p
+  def add_hyp(self, hyp): # strengthen hypothesis. Weaken Left (WL)
+    p = self.copy()
+    p.__hyps.append(hyp)
+    return p
+  def add_conc(self, hyp): # weaken conclusion. Weaken Right (WR)
+    p = self.copy()
+    p.__hyps.append(hyp)
+    return p
+
+a,b,c = Bools("a b c")
+tt = BoolVal(True)
+ff = BoolVal(False)
+p = Proof.smt(tt)
+# p.__hyps # results in attribute error
+# print(p.concs) # can access attribute to look
+# p.concs = [] error
+print(p) #opaque
+print(p.add_hyp(a))
+print(p)
+#print(Proof())
+print(Proof())
+```
+
+
+
