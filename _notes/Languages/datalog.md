@@ -967,6 +967,7 @@ $Clause($Path , $Comp($Edge, $Path))
   | Proj1 {p : rel}
   | Proj2 {p : rel}
   | Trans {p : rel}
+  // Union {rel, rel} (basicaly a ';' or, which isn't necessary in stock datalog)
 .type val =
     Num {n : number}
   | Sym {s : symbol}
@@ -1016,6 +1017,9 @@ clause("path", $Comp($Lit("path"), $Lit("path"))).
 .decl path(i : number, j : number)
 path(i,j) :- eval($Lit("path"), $Num(i), $Num(j)).
 .output path(IO=stdout)
+
+// dynamic typecheck
+// typefail() :- eval($Lit("path"), a,b), (a != $Num(_),; b != $Num(_)
 ```
 
 

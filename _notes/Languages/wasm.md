@@ -218,3 +218,32 @@ pyiodide
 [webvm](https://medium.com/leaningtech/webvm-client-side-x86-virtual-machines-in-the-browser-40a60170b361) JIT compilation of stock x86 in the brwoser. Apparently higher perfomance than bessard's jslinux [hacker news discussion](https://news.ycombinator.com/item?id=30167403)
 
 [virtual x86](https://copy.sh/v86/) a similar open source project but slower?
+
+
+# Minizinc
+It just worked. Incredible
+Runnnig the file didn't do anything.
+I needed to do 
+```
+const lib = require("./minizinc.js");
+//var MINIZINC = {arguments: ["--help"]};
+console.log(lib());
+```
+on node
+
+It seems like it was grabbing my node parameters.
+
+In the browser, I was able to load in and pass in a Module object 
+MINIZINC({arguments : ["--help"]})
+
+Trying to build gecode
+emcconfigure ../configure
+emmake make -j8
+
+gecode build suggestions for emscripten
+https://github.com/Gecode/gecode/issues/67
+Hmm. They build a minizinc for wasm somewhere
+https://gitlab.com/minizinc/minizinc-js
+https://www.npmjs.com/package/minizinc/v/1.0.4-alpha.77
+
+Ah I need release/6.3.0 branch which has the const fix.

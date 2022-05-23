@@ -626,11 +626,29 @@ Reuse the Z3 syntax tree but build custom
 
 https://en.wikipedia.org/wiki/Sequent_calculus
 
+It is alarming it feels like i can't use instantiation of proven theorems. What am I missing.
+
+We could explicilty maintain the signature and check when new stuff comes in to add to it
+
+https://ncatlab.org/nlab/show/sequent+calculus
+
+https://github.com/jonsterling/lcf-sequent-calculus-example
+
 ```python
 from z3 import *
+def z3_contains(t1, x):
+  print(t1)
+  if x.eq(t1):
+    return True
+  else:
+    for c in t1.children():
+      if contains(c,x):
+        return True
+  return False
+
 class Proof(): # Sequent?
   # private internal methods
-  __hyps = []
+  __hyps = [] # Would dictionary or set be nice?
   __concs = None # None means uninitialized.
 
   def smt(formula):
@@ -643,6 +661,25 @@ class Proof(): # Sequent?
       raise status
     p = Proof()
     p.__concs = [formula]
+    return p
+  def smt_cut(p,q):
+    assert isinstance(p, Proof) and isinstance(q, Proof)
+    s = Solver()
+    s.add(Implies(And(p.concs), Or(q.hyps)))
+    assert s.check() == unsat
+    r = Proof()
+    r.__hyps = p.__hyps
+    r.__concs = q.__concs
+    return r
+  def axiom(hyps,concs):
+    p = Proof()
+    p.__hyps = hyps
+    p.__concs = concs
+    return p
+  def id(q):
+    p = Proof()
+    p.__hyps = [q]
+    p.__concs = [q]
     return p
   def hyps(self):
     return self.__hyps.copy()
@@ -664,6 +701,24 @@ class Proof(): # Sequent?
     p = self.copy()
     p.__hyps.append(hyp)
     return p
+  def forall_l(self,x):
+    f = self.__hyps[0]
+    p = self.copy() 
+    p.__hyps.append(ForAll([x], f))
+    return p
+  def forall_r(self,x): 
+    if any(z3_contains(t, x) for t in self.__hyps):
+      raise BaseException("hypothesis contains x")
+    elif any(z3_contains(t,x) for ti in self.__concs[1:]):
+      raise BaseException("conclusions contains x")
+    f = self.__hyps[0]
+    p = self.copy()
+    p.__concs.append(ForAll([x], f))
+    return p
+  def refl(self, t): # right equality rule
+    p = self.copy()
+    p.__concs.append(t == t)
+    return p
 
 a,b,c = Bools("a b c")
 tt = BoolVal(True)
@@ -677,7 +732,59 @@ print(p.add_hyp(a))
 print(p)
 #print(Proof())
 print(Proof())
+
+print(Proof.id(a).forall_l(a))
+
+def induction_schema(p):
+  i = FreshInt("i")
+  j = FreshInt("j")
+  base_case = p(IntVal(0))
+  induction_case = Implies(And(p(i), i >= 0), p(i+1))
+  hyp = And(base_case, induction_case)
+  conc = Implies(j >= 0, p(j))
+  return Proof.axiom([hyp],[conc])
+
 ```
 
+```python
+from z3 import *
+x = Int("x")
+
+print(dir(Exists([x], x >= 0).body().arg(0)))
+
+#print(Exists([x], x >= 0).body().arg(0).)
+
+print(substitute(Exists([x], x >= 0).body(), (x, IntVal(3))))
+
+def z3_contains(t1, x):
+  print(t1)
+  if x.eq(t1):
+    return True
+  else:
+    for c in t1.children():
+      if contains(c,x):
+        return True
+  return False
+
+print(contains(x + x, IntVal(3)))
+print(contains(x + x, x))
+print(contains(x + x >= 14, x))
+print(contains(Exists([x], x >= 0), x))
+  ''' instan is not a rule?
+  def instan(self, t): 
+    p = self.copy()
+    forall = p.hyps[0]
+    if not forall.is_forall() or notor 
+      raise "Not a Forall"
+    elif  forall.num_vars() != 0 :
+      raise "not single arg quantifier"
+    elif forall.num_sort(0) != t.sort():
+      raise "wrong sort"
+    else:
+      p.hyps += substitute(forall.body(),Const(forall.var_name(), t.sort()), t)
+      return p
+  '''
+
+```
 
 

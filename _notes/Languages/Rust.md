@@ -78,7 +78,10 @@ Timestamps are extending from simple integers into more complex partially ordere
 
 Just as importantly you need a notion of frontier or watermark. Things tha are accumulating data may need to know nothing else may come in. How do you describe "nothing else may come in" in a complex notion of time? Antichains is apparently an answer. 
 
+modelling purely functionally
 
+frontier -> frontier - can/should be static matrix? Port by port?
+[(T, x)] -> [(T, y)]
 
 ```rust
 // cargo-deps: timely
