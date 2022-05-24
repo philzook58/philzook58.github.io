@@ -36,6 +36,8 @@ fcntl
 - `fork` - make new process. 
 
 - `futex` fast userspace mutex <https://www.collabora.com/news-and-blog/blog/2022/02/08/landing-a-new-syscall-part-what-is-futex/> <https://news.ycombinator.com/item?id=30271902>
+[futex tutorial](https://github.com/tchajed/futex-tutorial)
+
 
 - `epoll`
 - `dnotify` / `inotify` - be told when certain events happen

@@ -24,6 +24,10 @@ wordpress_id: 2960
   - [Heap](#heap)
   - [Automated Exploit Generation (AEG)](#automated-exploit-generation-aeg)
 - [CTF](#ctf)
+- [What is Binary Analysis](#what-is-binary-analysis)
+    - [Program Analysis](#program-analysis)
+    - [How are binaries made](#how-are-binaries-made)
+- [Disassembly](#disassembly-1)
 - [Misc](#misc)
   - [GDB](#gdb)
 - [nmap](#nmap)
@@ -81,10 +85,15 @@ bap mc + datalog?
 [Formally Verified Lifting of C-Compiled x86-64 Binaries](https://www.ssrg.ece.vt.edu/papers/pldi22.pdf)
 
 ### Interactive
-IDA
-Ghidra
-Binary Ninja
-Cutter
+- IDA
+- Ghidra
+- Binary Ninja
+- Cutter
+
+https://github.com/GrammaTech/gtirb-vscode
+
+[decompiler explorer](https://github.com/mborgerson/mdec) Hmm. too bad it's not a web service
+
 
 ## Fuzzing
 Mayhem
@@ -290,7 +299,89 @@ usenix security
 
 # CTF
 
+
+
+# What is Binary Analysis
+
+Dynamic - It feels like you're running the binary in some sense. Maybe on an emulated environment
+Static - It feels like you're not running the binary
+
+Fuzzing is definitely dynamic.
+Dataflow analysis on a CFG is static
+There are greys areas. Symbolic execution starts to feel like a grey area. I would consider it to be largely dynamic, but you are executing in a rather odd way.
+
+Trying to understand a binary
+Why?
+- Finding vulnerabilities for defense or offense
+  + buffer overflows
+  + double frees
+  + use after frees
+  + memory leaks - just bad performance
+  + info leaks - bad security
+- Verification - Did your compiler produce a thing that does what your code said?
+- Reversing/Cracking closed source software. 
+- Patching and Code injection. Finding Bugs for use in speed runs. Game Genie.
+- Auditing
+- Aids for manual RE work. RE is useful because things may be undocumented intentionally or otherwise. You want to reuse a chip, or turn on secret functionality, or reverse a protocol.
+- Discovery of patent violation or GPL violations
+- Comparing programs. Discovering what has been patched.
+
+I don't want my information stolen or held ransom. I don't want people peeping in on my conversations. I don't want my computer wrecked. These are all malicious actors
+We also don't want our planes and rockets crashing. This does not require maliciousness on anyone's part persay.
+
+
+
+- Symbol recovery
+- Disassembly
+- CFG recovery
+- Taint tracking
+- symbolic execution
+
+<https://github.com/analysis-tools-dev/dynamic-analysis> A list of tools
+https://analysis-tools.dev/
+[CSE597: Binary-level program analysis	Spring 19 Gang Tan](http://www.cse.psu.edu/~gxt29/teaching/cse597s19/schedule.html)
+
+### Program Analysis
+What's the difference? Binaries are less structured than what you'll typically find talked about in program analysis literature.
+
+Binaries are tough because we have tossed away or the coupling has become very loose between high level intent and constructs and what is there. 
+
+### How are binaries made
+
+
+C preprocessor -> Maintains file number information isn't that interesting
+
+C compiler -> assembly. You can ask for this assembly with `-S`. You can also 
+Or more cut up
+C -> IR
+IR -> MIR (what does gcc do? RTL right? )
+MIR -> Asm
+
+# Disassembly
+- Linear
+- Recursive
+- Shingled
+- 
+
+[Disasm.Driver](https://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Disasm/Driver/index.html)
+[](https://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Disasm/index.html)
+
+Delay slots are an annoyance. Some architectures allow instructions to exist in the shadow of jump instructions that logically execute beofre the jump instruction. This makes sense from a micro architectural perspective, but it is bizarre to disassemble
+
+
+
 # Misc
+
+https://twitter.com/33y0re/status/1528719776142475264?s=20&t=vcTgXMu6ZeZRjj7LiSMcFg kernel exploitation brwoser exploitation blog posts
+
+- Arbitrary code guard
+- Code interity guard
+- hypervisor protected code integrity (HVCI) "the acg of kernel mode"
+- vistualization based security VBS. credential guard
+- local privilege escalation (LPE)
+- 
+
+
 
 ## GDB
 - [pwndbg](https://browserpwndbg.readthedocs.io/en/docs/) 

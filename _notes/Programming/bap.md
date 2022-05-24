@@ -3,10 +3,49 @@ layout: post
 title: Gettin' Bappin' with Bap
 ---
 
-- [What is Binary Analysis](#what-is-binary-analysis)
-    - [Program Analysis](#program-analysis)
-    - [How are binaries made](#how-are-binaries-made)
-- [Disassembly](#disassembly)
+- [Let's Bap](#lets-bap)
+  - [Installing](#installing)
+  - [A toy program for you to try](#a-toy-program-for-you-to-try)
+  - [The `bap` command](#the-bap-command)
+  - [Bap equivalents of binutils](#bap-equivalents-of-binutils)
+  - [Giving Bap C info](#giving-bap-c-info)
+    - [Saving and restoring the knowledge base](#saving-and-restoring-the-knowledge-base)
+    - [Recipes](#recipes)
+    - [Interesting Places to Look](#interesting-places-to-look)
+- [IRs](#irs)
+  - [BIL](#bil)
+  - [BIR](#bir)
+  - [Core Theory](#core-theory)
+- [Disassembler](#disassembler)
+- [Primus Lisp](#primus-lisp)
+- [Primus](#primus)
+  - [Primus](#primus-1)
+  - [Ocaml](#ocaml)
+    - [Systems](#systems)
+    - [State](#state)
+    - [Forking](#forking)
+    - [Components](#components)
+    - [Observations](#observations)
+    - [Linker](#linker)
+- [Ocaml Stuff](#ocaml-stuff)
+    - [Finding Stuff](#finding-stuff)
+    - [Bap is not a library.](#bap-is-not-a-library)
+  - [Plugins vs Commands vs Passes vs Scripts](#plugins-vs-commands-vs-passes-vs-scripts)
+    - [Commands](#commands)
+    - [Plugins](#plugins)
+    - [Scripts](#scripts)
+    - [Registries](#registries)
+    - [Bap Lifecycle](#bap-lifecycle)
+  - [Bap Project Directory Structure](#bap-project-directory-structure)
+    - [Bap Plugins](#bap-plugins)
+      - [Bap api](#bap-api)
+    - [Bap Disassemble](#bap-disassemble)
+    - [Saving and restoring the knowledge base](#saving-and-restoring-the-knowledge-base-1)
+    - [Bap Analyze](#bap-analyze)
+    - [Bap Passes](#bap-passes)
+    - [Bap.Std](#bapstd)
+  - [OCaml and Registries](#ocaml-and-registries)
+  - [The Knowledge Base](#the-knowledge-base)
 - [Knowledge Base](#knowledge-base)
     - [Classes, Slots](#classes-slots)
     - [Objects and Values](#objects-and-values)
@@ -14,53 +53,40 @@ title: Gettin' Bappin' with Bap
     - [Promises](#promises)
     - [`Record.t` = `Dict.t` + Domains](#recordt--dictt--domains)
     - [Value = Record + Sorts](#value--record--sorts)
-- [Core Theory](#core-theory)
+- [Core Theory Blithering](#core-theory-blithering)
     - [Universal Types, Existentials and Packing](#universal-types-existentials-and-packing)
     - [Typed Keys](#typed-keys)
-- [Bap Lisp](#bap-lisp)
 - [Project Structure](#project-structure)
 - [Binary / Program Analysis](#binary--program-analysis)
   - [Other tidbits](#other-tidbits)
   - [Universal Values](#universal-values)
+- [Misc](#misc)
 
+# Let's Bap
 
-[JT's Bap 2.0 Notes](https://github.com/draperlaboratory/cbat_tools/tree/master/bap-notes)
-
-`--print-missing` flag for missing instruction semantics https://github.com/BinaryAnalysisPlatform/bap/pull/1409
-
-
-
-https://watch.ocaml.org/videos/watch/8dc2d8d3-c140-4c3d-a8fe-a6fcf6fba988
-JVM and C support in the futute
-primus lisp - common lisp like
-C and python ctypes bindings
-
-semantics - either in
-ocaml dsl or primus lisp dsl
-
-(defun rTST (rn rm _ _ )
-  "tst rn, rm"
-  (let ((rd (logand rn rm))
-  (set ZF (is-zero rd))))
-  (set NF ())
-)
-
-dependency injection
-dynamic linking 
-
-
-framework
-inital style insufficient because need to update
-extensible variants (GADTS)? no
-not abstract. Heavyweight. 
-Not serializable
-higher kinded
-
-
+Bap, the binary analysis platform, is a framework that disassembles binary code in a variety of formats and for a variety of architectures and lifts them into a common representation. It then supplies analysis you may perform and tools with which to build your own custom analysis
 
 Bap is quite the beast.
 
 To me starting out there was a lot to swallow. First I had to learn Ocaml, second I knew even less about program analysis and binary stuff than I do now.
+
+You may also want to look at [JT's Bap 2.0 Notes](https://github.com/draperlaboratory/cbat_tools/tree/master/bap-notes)
+
+Come on down the the [BAP gitter](https://gitter.im/BinaryAnalysisPlatform/bap). It is a friendly place and basically the only way to use bap sometimes is to ask questions there
+
+## Installing
+
+`opam` is the standard ocaml package manager. Long story short:
+
+```
+opam depext --install bap # installs bap and its dependencies
+```
+
+More details here <https://github.com/BinaryAnalysisPlatform/bap#from-sources>
+
+## A toy program for you to try
+
+You really should get bap running on your machine and just try dumping out this program with the various options.
 
 ```C
 int main(){
@@ -73,8 +99,446 @@ gcc foo.c
 objdump -d a.out
 ```
 
+## The `bap` command
+
+After installing, if you type `bap` you will get a list of information
+
+Typing `bap` on my system gets me. You should actually take a minute to read this. For serious. The `bap` command line itself is some of the best documentation of what bap has.
+
+```
+Usage:
+  bap <COMMAND> [<OPTIONS>]
+
+Common options:
+  --version                prints the version number and exits;
+  --plugin-path <DIR>      adds <DIR> to the plugins search path;
+  --logdir <DIR>           creates a log file in <DIR>;
+  --recipe <VAL>           extracts command line arguments from the recipe.
+
+Commands:
+  objdump                  disassembles and prints a binary using the linear sweep algorithm
+  mc                       disassembles a (human readable) string of bytes
+  primus-observations      prints a list of Primus observations
+  primus-components        prints a list of Primus components
+  primus-systems           prints a list of Primus systems
+  compare                  compares several alternative versions of the binary with the base
+  disassemble              disassembles and analyzes the input file
+  print-recipes            prints available recipes
+  recipes                  provides commands to manipulate the recipe subsystem
+  list                     explores various BAP facilities
+  .                        does nothing and prints nothing
+  cache                    provides options to control cache size and cache garbage collector
+  analyze                  analyses the knowledge base
+  eval-lisp                runs the Primus lisp program
+  show-lisp                shows the static semantics of Primus Lisp definitions
+  primus-lisp-documentation no description provided
+  dependencies             outputs program dependencies such as libraries and symbols
+  specification            displays information about the binary
 
 
+Plugins:
+  abi                      apply abi information to a project
+  analyze                  implements the analyze command
+  api                      add parameters to subroutines based on known API
+  arm                      the target support package that enables support for the ARM family of
+  beagle                   microx powered obfuscated string solver
+  bil                      provides bil optimizations
+  byteweight               find function starts using Byteweight algorithm
+  cache                    provide caching services
+  callgraph-collator       compares projects by their callgraphs
+  callsites                annotate callsites with subroutine's arguments
+  constant-tracker         constant Tracking Analysis based on Primus
+  cxxfilt                  provide c++filt based demangler
+  demangle                 demangle subroutine names
+  dependencies             analyses the binary dependencies
+  disassemble              implements the disassemble command
+  dump-symbols             dump symbol information as a list of blocks
+  elf-loader               read ELF and DWARF formats in a pure OCaml
+  flatten                  flattens (unrolls) BIR expressions into a trivial form
+  frontc-parser            parse c files with FrontC
+  glibc-runtime            enables ad-hoc support for glibc runtime code
+  llvm                     provide loader and disassembler using LLVM library
+  map-terms                map terms using BML DSL
+  mc                       bAP Core Library
+  mips                     provide MIPS lifter
+  objdump                  this plugin provides a symbolizer based on objdump
+  optimization             automatically removes dead code and propagates consts
+  phoenix                  output project information in a phoenix format
+  powerpc                  provide PowerPC lifter
+  primus-dictionary        provides a key-value storage
+  primus-exploring         evaluates all machines, prioritizing the least visited
+  primus-greedy            evaluates all machines in the DFS order
+  primus-limit             ensures termination by limiting Primus machines
+  primus-lisp              install and load Primus lisp libraries
+  primus-loader            generic program loader for Primus
+  primus-mark-visited      registers the bap:mark-visited component
+  primus-powerpc           powerpc support package
+  primus-print             prints Primus states and observations
+  primus-promiscuous       enables the promiscuous mode of execution
+  primus-propagate-taint   a compatibility layer between different taint analysis frameworks
+  primus-random            provides components for Primus state randomization and controls their
+  primus-region            interval sets
+  primus-round-robin       evaluates all machines in the BFS order
+  primus-symbolic-executor enables symbolic execution in Primus
+  primus-systems           loads Primus systems and registers them in the system repository
+  primus-taint             a taint analysis control interface
+  primus-test              primus Program Testing and Verification Kit
+  primus-wandering         evaluates all machines while
+  primus-x86               x86 support package
+  print                    print project in various formats
+  propagate-taint          propagate taints through a program
+  raw                      provides a loader for raw binaries
+  read-symbols             provides functions addresses and (optionally) names from a
+  recipe-command           manipulates bap recipes
+  relocatable              extracts symbolic information from the program relocations
+  report                   reports program status
+  riscv                    provide Riscv target
+  run                      a pass that will run a program
+  specification            prints the specification of the binary (like readelf)
+  ssa                      translates a program into the SSA form
+  strings                  find strings of characters
+  stub-resolver            identifies functions that are stubs and redirects calls to stubs to
+  systemz                  provide Systemz lifter
+  taint                    taint specified terms
+  thumb                    provide Thumb lifter
+  trace                    manage execution traces
+  trivial-condition-form   eliminates complex conditionals in branches
+  warn-unused              warn about unused results of certain functions
+  x86                      provide x86 lifter
+```
+
+I have no idea what many of these do. A majority of the commands are just ways to query for available capabilities of different kinds
+
+Here are the highlights in my opinion.
+- Commands
+  + primus-observations      prints a list of Primus observations
+  + primus-components        prints a list of Primus components
+  + primus-systems           prints a list of Primus systems
+  + list                     explores various BAP facilities. Especially helpful for finding slots in the knowledge base
+  + cache                    provides options to control cache size and cache garbage collector
+  + analyze                  analyses the knowledge base
+  + eval-lisp                runs the Primus lisp program
+  + show-lisp                shows the static semantics of Primus Lisp definitions
+  + primus-lisp-documentation no description provided
+
+- Plugins
+  + print
+  + run
+  + api
+  + primus-lisp
+
+Typing `bap list` on my system gives
+
+```
+  entities                 prints this message
+  plugins                  installed BAP plugins
+  commands                 bap utility commands
+  recipes                  installed recipes
+  features                 plugin capabilities
+  passes                   disassembler passes
+  formats                  data output formats
+  classes                  knowledge representation classes
+  theories                 installed theories
+  agents                   knowledge providers
+  rules                    knowledge base rules
+  collators                project collators (comparators)
+```
+
+all of which can be further queries to `bap list`. Of particular interest are `bap list theories` and `bap list classes` which are important information about the knowledge base (listing the available "theories" which are like different interpretations or analysis of the code. `classes` lists the registered classes and their slots in the knowledge base, aka interesting fields of data you can query bap for).
+
+`bap -dbir -dbil -dknowledge -dasm -dcfg` are different options to dump different representations of the code. BIR and BIL are two ba intermediatre representations. `-dknowledge` dumps the knowledge base which is kind of everything bap could figure out about the binary.
+
+
+`bap --help` is an overwhelming amount of information. Typically you need to try to `grep` for an appropriate keyword. `bap --help | grep -C 10 keyword` will show a context of 10 lines around the found keyword. The keyword I use is often the name of bap plugin from the big list above. 
+
+
+The `bap` command is the same as `bap disassemble`. The code can be found here <https://github.com/BinaryAnalysisPlatform/bap/tree/97fb7fa6a8a90faeae2b077d8ad59b8b882d7c32/plugins/disassemble>
+
+## Bap equivalents of binutils
+
+`objdump` let's you see various outputs about a binary.
+- assembly `-d`
+- symbol `-t` or `--syms`
+- sections & segments  `-x`
+
+`readelf` has some overlap.
+
+`bap -dasm` is like `objdump -d`
+
+`bap specification` is kind of like `readelf --all`
+
+`bap dependencies` is similar to `ldd` I think.
+
+
+## Giving Bap C info
+
+In order for bap to recover high level function arguments you can supply a header file.
+If you know this plugin is called `api` you can find the options available by 
+`bap --help | grep -C 4 api`
+
+- `--api-path=somefolder` where somefolder has a folder called C in it.
+- `--api-show`
+- `--api-list-paths`
+
+### Saving and restoring the knowledge base
+You can have bap save it's info and restore it. `bap a.out -k my_knowledge_base --update` will build a knowledge base. Leaving out `--update` is useful for read only access to the KB. This is used for example with `bap analyze -k my_knowledge_base`, which gives a kind of repl for exploring some pieces (but not all) of the knowledge base. Try typing `help` at the prompt for more info.
+
+### Recipes
+
+Recipes are bundles of command line flags I think. Well, they are at least that. This can save copying ad pasting some huge command a bunch. <https://github.com/BinaryAnalysisPlatform/bap-toolkit>  Has some interesting example recipes
+
+### Interesting Places to Look
+- Ivan's gists - https://gist.github.com/ivg
+- Tests
+- Defining instruction semantics using primus lisp tutorial https://github.com/BinaryAnalysisPlatform/bap/wiki/Defining-instructions-semantics-using-Primus-Lisp-(Tutorial)
+- https://github.com/BinaryAnalysisPlatform/bap-toolkit Has examples recipes
+
+# IRs
+## BIL
+## BIR
+## Core Theory
+
+# Disassembler
+Bap has a experimental ghidra backend now btw.
+
+The semantics of the disassembler can be extended via Primus Lisp.
+
+# Primus Lisp
+It may seem odd to mention Primus Lisp before Primus, but it has outgrown it's original intended use case there. It is interesting in and of itself.
+
+Primus Lisp is the language by which you may add new instruction semantics to BAP lifters. See this [tutorial](http://binaryanalysisplatform.github.io/2021/09/15/writing-lifters-using-primus-lisp/) by Ivan.
+
+It is also the language you can use you script the Primus interpreter.
+
+There is an introduction documentation to the language [here](http://binaryanalysisplatform.github.io/bap/api/master/bap-primus/Bap_primus/Std/Primus/Lisp/index.html)
+
+`bap --help | grep -C 10 lisp` to see what bap has to sayis available as options. Note `--primus-lisp-add` to add directories and `--primus-lisp-load` to actually load particular primus files. Leave off the ".lisp" suffix when you give the file to `load`
+
+`bap primus-lisp-documentation` will make an org mode file of all registered primus lisp functions. You can add ocaml functions as new primitives to primus lisp. It's also online [here](http://binaryanalysisplatform.github.io/bap/api/lisp/index.html)
+
+
+
+You can run primus lisp functions by making a file demo.lisp filled with the content
+
+```lisp
+(defun mymain ()
+    (declare (external 'mymain))
+    (msg "hello world"))
+```
+
+And invoke it via `bap eval-lisp mymain --primus-lisp-load=demo --primus-print-obs=lisp-message,exception`. Note that you have to turn on printing for primus observations to see anything. I always turn on message and exception at minimum.
+
+loading into semantics primus lisp
+`bap show-lisp foo --primus-lisp-load=demo -tarmv5+le`
+
+```lisp
+foo:
+((core:eff ((set R0 1)))
+ (bap:ir-graph "00000009:
+                0000000a: R0 := 1")
+ (bap:insn-dests (()))
+ (bap:bir (%00000009))
+ (bap:bil "{
+             R0 := 1
+           }")
+ (core:value ((core:val (1)) (bap:static-value (0x1)) (bap:exp 1))))
+```
+
+# Primus
+
+Primus is an extensible interpreter/emulator. It can execute code lifted from binaries.
+You may mix and match Primus Components
+
+The simplest way to run it is
+
+`bap /bin/true --run --run-entry-points=main --primus-print-observations=exception,pc-change`
+
+For more options
+`bap --help | grep -C 10 run`
+
+There is a built in taint tracking functionality and symbolic executor for primus.
+
+You can script the primus interpreter using Primus Lisp files
+
+
+## Primus
+
+Primus is an extensible interpreter. You can use it for fuzzing, symbolic execution, taint tracking, and more.
+
+The pieces of functionality are implemented by components. They can be mixed and matched.
+
+To see the list of available components type
+
+`bap primus-components`
+
+Prepackaged combos of components are called "systems". You can see the available systems by typing
+
+`bap primus-systems`
+
+On my system this returns
+
+```
+- bap:constant-tracker:
+  Uses promiscuous-executor for constant tracking.
+
+- bap:microexecutor-base:
+  The base system for microexecution systems.
+
+- bap:symbolic-executor:
+  Uses symbolic execution to analyze all feasible and
+  linearly independent paths.
+
+- bap:base-taint-analyzer:
+  Uses promiscuous-executor for taint analysis.
+  No policy is specified
+
+- bap:binary-executor:
+  Executes a binary program.
+
+- bap:taint-analyzer:
+  Uses promiscuous-executor for taint analysis.
+  The default taint propagation policy is selected
+  using the --primus-taint-select-default-policy
+  option (defaults to propagate-by-computation)
+
+- bap:reflective-taint-analyzer:
+  A taint analyzer that reflects taints to/from BIR terms
+
+- bap:stubbed-executor:
+  Executes a binary together with the Lisp Machine
+
+- bap:legacy-main:
+  The legacy Primus system that contains all components registered with the
+  Machine.add_component function.
+
+- bap:base-lisp-machine:
+  Executes Primus Lisp program.
+
+- bap:promiscuous-executor:
+  Executes all linearly independent paths and never fails.
+
+- bap:terminating-stubbed-executor:
+  Executes a binary together with the Lisp Machine that
+  is guaranteed to terminate.
+
+- bap:multi-analyzer:
+  Runs several analyses in parallel.
+
+- bap:exact-taint-analyzer:
+  Uses promiscuous-executor for taint analysis.
+  Propagates taint exactly.
+
+- bap:string-deobfuscator:
+  Uses promiscuous-executor to find obfuscated strings.
+```
+
+To use primus in the simplest way, you can use the bap `run` plugin. Using the `run` plugin can be confusing because key command line options are supplied to other plugins.
+
+
+Now try reading the basic documentation of Primus
+https://binaryanalysisplatform.github.io/bap/api/master/bap-primus/Bap_primus/Std/index.html
+
+
+Under the hood, primus is extensible because you can register callbacks to certain events called "observations". This is reminscent of register event listers in a browser for example.
+
+To see the list of available observations type
+
+`bap primus-observations`
+
+
+
+
+## Ocaml
+
+Primus is written as a generic monad transformer. You should ignore that. Do not look in the `Machine` module. You actually want `Analysis.t` which is this monad transformer specialized to the knowledge base monad.
+
+https://binaryanalysisplatform.github.io/bap/api/master/bap-primus/Bap_primus/Std/Primus/Analysis/index.html
+
+
+### Systems
+There is significant descriptive documentation of the primus machine execution cycle in the `System` module. You should read it.
+https://binaryanalysisplatform.github.io/bap/api/master/bap-primus/Bap_primus/Std/Primus/System/index.html
+
+You may write `.asd` files to describe systems. `.asd` is borrowed from the common lisp world. You can find the definition of the built in systems here
+https://github.com/BinaryAnalysisPlatform/bap/blob/97fb7fa6a8a90faeae2b077d8ad59b8b882d7c32/plugins/primus_systems/systems/core.asd
+
+There is a short tutorial in the wiki here https://github.com/BinaryAnalysisPlatform/bap/wiki/Tutorial:-writing-a-symbolic-taint-analyzer on how to make a new one.
+
+### State
+
+You can add new kinds of state. You need to register the state globally with a unique uuid (it's odd). It looks like this to declare state
+
+```ocaml
+let state =
+  Primus.Machine.State.declare
+    ~name:"unchecked-return-value"
+    ~uuid:"7390b60d-fac6-42f7-b13b-94b85bba7586"
+    (fun _ -> {addrs = Set.empty (module Addr); verbose=false})
+```
+### Forking
+
+### Components
+
+To make a component, write a function in the `Analysis.t` monad that registers the callbacks to the events you care about. Pass this `unit Analysis.t` to `Component.register`. That's it.
+
+### Observations
+
+Most observations of interest are in the `Primus.Interprete` module https://binaryanalysisplatform.github.io/bap/api/master/bap-primus/Bap_primus/Std/Primus/Interpreter/index.html
+
+### Linker
+It may surprise you that really important functionality is in the `Linker` module.
+
+https://binaryanalysisplatform.github.io/bap/api/master/bap-primus/Bap_primus/Std/Primus/Linker/index.html
+
+
+# Ocaml Stuff
+
+### Finding Stuff
+I use a combination of Merlin, Github Search.
+
+The most interesting folders are `lib` and `plugins`
+
+- https://github.com/ivg/bap/blob/master/lib/bap/bap.mli the bap std library
+- https://github.com/ivg/bap/tree/master/lib/bap_types many bap types are actually defined here
+
+### Bap is not a library.
+
+Bap is organized is an extensible kind of decentralized way that I find very confusing. I am constantly tempted to treat it as a library and shoot my foot off.
+
+
+## Plugins vs Commands vs Passes vs Scripts
+
+There are at least 3 different ways you might extend bap.
+### Commands 
+Commands do something different than the default bap command at the top level.
+- <https://binaryanalysisplatform.github.io/bap/api/master/bap-main/Bap_main/Extension/Command/index.html> This describes how to build commands with a nice example at the bottom
+### Plugins
+
+> And this is the whole idea of BAP as a framework instead of a library. There are extension points, which enable you to extend bap without having to worry about how to create a project, how to properly find the file, how to specify the architecture and other parameters. You just register a pass that takes a ready project and focus on your analysis instead of writing all this boilerplate. E.g., in the example above it is rightful to assume that you want to get the project before starting enqueing jobs, so you can register a pass that will be called once the project is ready and if the pass is selected,
+
+- <https://binaryanalysisplatform.github.io/bap/api/master/bap-main/Bap_main/index.html> The bap main documentation. This describes extensions and building using `bapbuild` and `bapbundle`
+
+- https://gitter.im/BinaryAnalysisPlatform/bap?at=610c3e322453386b6c373696
+- https://en.wikipedia.org/wiki/Dependency_injection
+Plugins are meant to be mixed and matched. They extend the functionality of other bap commands.
+
+You make plugins by building and installing it
+
+```
+bapbuild comment.plugin
+bapbundle install comment.plugin
+```
+Any side effects of setting up the plugin should happen inside an `Extension.declare`. It consistently causes problem that bap requires certain things to happen at certain stages, and if you go off the reservation, you'll probably eat shit.
+
+```
+let () =
+  Bap_main.Extension.declare (fun _ctx -> dostuff)
+```
+
+The stuff you might do might involve declaring new slots in the knowledge base, declaring new interpetations, declaring new primus components, stuff like that.
+
+### Scripts
+"Scripts" are a thing I've made up and am not sure are actually recommended. You can make a standalone binary using that call Bap_main.init.
 To make a basic file to explore some binary, first make a dune file
 
 ```lisp
@@ -93,7 +557,9 @@ open Bap.Std
 include Self()
 
 (* Must call init before everything*)
-let _ : (unit, Bap_main.error) Stdlib.result = Bap_main.init ()
+let () = match Bap_main.init () with
+        | Ok _ -> ()
+        | Error s -> failwith s
 
 (* Load a file as a project *)
 let myfile = "/home/philip/Documents/ocaml/a.out"
@@ -104,17 +570,26 @@ let state = Toplevel.current ()
 
 ```
 
-You can view information available about a file by
+### Registries
 
+A ubiquitous programming pattern in the implementation of bap is to define global level registries for various constructs.
 
-The bap command line has some stock features available + some plugins.
+- Plugins
+- Commands
+- Knowledge Base Classes
+- Knowledge Base Slots
+- Core Theory implementations
+- Primus Components
+- Primus Observations
+
+To learn about the contents of these registries, and hence the available capaibilities, the best way is to find the appropriate way to ask the `bap` command line tool. I then use the github search feature on the bap repo to search for a important string in question.
 
 Ivan has an Ascii Cinema here
 
 Get some info from the Knowledge Base. 
 `bap list`
 
-## Bap Lifecycle
+### Bap Lifecycle
 We open Bap.Std
 open Self()
 
@@ -131,15 +606,6 @@ https://github.com/BinaryAnalysisPlatform/bap/blob/ef6afa455a086fdf6413d2f32db98
 Bil.reify
 What is this. Why is this in plugins
 
-## The Bap Command
-After installing, if you type `bap` you will get a list of information
-- Commands
-- Plugins
-
-`bap --help` is an overwhelming amount of information.
-
-Useful flags
-
 ## Bap Project Directory Structure
 
 It may be the case that the easiest thing to do sometimes is some source code spelunking.
@@ -151,8 +617,6 @@ It may be the case that the easiest thing to do sometimes is some source code sp
 
 Github search
 odoc
-
-
 
 
 
@@ -185,7 +649,7 @@ You can use it similar to objdump
 `--print-symbol` lets you print just a particular function
 
 [where print flags are defined](https://github.com/BinaryAnalysisPlatform/bap/blob/master/plugins/print/print_main.ml)
--d is dump options to bap diassemble. currently I see 
+-d is dump options to bap diassemble. currently I see:
 - knowledge
 - cfg
 - graph
@@ -199,8 +663,11 @@ You can use it similar to objdump
 - bir
 - ogre
 
+for example
+`bap -dogre a.out`
 
-### Saving and restroing the knowledge base
+
+### Saving and restoring the knowledge base
 -k
 --project
 --update
@@ -234,73 +701,6 @@ It is also kind of a
 The knowledge base is backed by global tables.
 New keys to these tables are generated
 
-
-# What is Binary Analysis
-
-Dynamic - It feels like you're running the binary in some sense. Maybe on an emulated environment
-Static - It feels like you're not running the binary
-
-Fuzzing is definitely dynamic.
-Dataflow analysis on a CFG is static
-There are greys areas. Symbolic execution starts to feel like a grey area. I would consider it to be largely dynamic, but you are executing in a rather odd way.
-
-Trying to understand a binary
-Why?
-- Finding vulnerabilities for defense or offense
-  + buffer overflows
-  + double frees
-  + use after frees
-  + memory leaks - just bad performance
-  + info leaks - bad security
-- Verification - Did your compiler produce a thing that does what your code said?
-- Reversing/Cracking closed source software. 
-- Patching and Code injection. Finding Bugs for use in speed runs. Game Genie.
-- Auditing
-- Aids for manual RE work. RE is useful because things may be undocumented intentionally or otherwise. You want to reuse a chip, or turn on secret functionality, or reverse a protocol.
-- Discovery of patent violation or GPL violations
-- Comparing programs. Discovering what has been patched.
-
-I don't want my information stolen or held ransom. I don't want people peeping in on my conversations. I don't want my computer wrecked. These are all malicious actors
-We also don't want our planes and rockets crashing. This does not require maliciousness on anyone's part persay.
-
-
-
-- Symbol recovery
-- Disassembly
-- CFG recovery
-- Taint tracking
-- symbolic execution
-
-<https://github.com/analysis-tools-dev/dynamic-analysis> A list of tools
-https://analysis-tools.dev/
-[CSE597: Binary-level program analysis	Spring 19 Gang Tan](http://www.cse.psu.edu/~gxt29/teaching/cse597s19/schedule.html)
-
-### Program Analysis
-What's the difference? Binaries are less structured than what you'll typically find talked about in program analysis literature.
-
-Binaries are tough because we have tossed away or the coupling has become very loose between high level intent and constructs and what is there. 
-
-### How are binaries made
-
-
-C preprocessor -> Maintains file number information isn't that interesting
-
-C compiler -> assembly. You can ask for this assembly with `-S`. You can also 
-Or more cut up
-C -> IR
-IR -> MIR (what does gcc do? RTL right? )
-MIR -> Asm
-
-# Disassembly
-- Linear
-- Recursive
-- Shingled
-- 
-
-[Disasm.Driver](https://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Disasm/Driver/index.html)
-[](https://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Disasm/index.html)
-
-Delay slots are an annoyance. Some architectures allow instructions to exist in the shadow of jump instructions that logically execute beofre the jump instruction. This makes sense from a micro architectural perspective, but it is bizarre to disassemble
 
 # Knowledge Base
 
@@ -356,7 +756,7 @@ Another common case is to merge a field that is a set by using the union or inte
 
 [Jt's notes](https://github.com/jtpaasch/bap-kb)
 
-# Core Theory
+# Core Theory Blithering
 
 Dumping the concrete syntax of core theory <https://gitter.im/BinaryAnalysisPlatform/bap?at=61fd525703f27047821b4c08>
 `bap /bin/true --core-theory-herbrand -dknowledge`
@@ -367,7 +767,7 @@ To describe the operations of different machines, bap lifts into a common interm
 
 The main form representation in previous version of bap was an algebraic data type, BIL. This is to some degree still the case for some purposes, but now there is a different programming construct intended as the primary source. This thing is called the the Core Theory of bap. The word "theory", strange as it sounds to some ears, refers to a common set of typed apis that analysis need to implement to receive lifted code. A "theory" in the context of logic is a set of types, functions/constants, and axioms. We don't really have axioms expressible in ocaml, but we can certainly talk about types and functions.
 
-Instead of having analysis receive a normal ocaml algebraic data type, instead they implement a finally tagless style type signature of core_theory. Instead of registering as a pass to receive the adt, they register their cor_theory instance with a global database that is typically automatically called by other parts of bap.
+Instead of having analysis receive a normal ocaml algebraic data type, instead they implement a finally tagless style type signature of core_theory. Instead of registering as a pass to receive the adt, they register their core_theory instance with a global database that is typically automatically called by other parts of bap.
 
 There is a confusing intertwining of the concepts of the knowledge base and core_theory. This is done I think so that there is a possibility of using arbitrary data tucked away in the knowledge base, which operates as a kind of global state monad. In principle, it is possible to construct an analog of core_theory that has nothing to do with the knowledge base.
 
@@ -719,26 +1119,7 @@ end
 module Join( : Fst)( : Snd) =
 
 
-# Bap Lisp
-You can run primus lisp functions by making a file demo.lisp filled with the content
-```(defun mymain ()  (declare (external 'mymain))    (msg "hello world"))`
-And invoke it via `bap eval-lisp mymain --primus-lisp-load=demo --primus-print-obs=lisp-message,exception`
 
-loading into semantics primus lisp
-`bap show-lisp foo --primus-lisp-load=demo -tarmv5+le`
-
-```lisp
-foo:
-((core:eff ((set R0 1)))
- (bap:ir-graph "00000009:
-                0000000a: R0 := 1")
- (bap:insn-dests (()))
- (bap:bir (%00000009))
- (bap:bil "{
-             R0 := 1
-           }")
- (core:value ((core:val (1)) (bap:static-value (0x1)) (bap:exp 1))))
-```
 
 # Project Structure
 
@@ -807,3 +1188,35 @@ Forkers decide how and when to fork
 primus-limit = limit the number of somethigns a machine can do before being killed. depth limited search
 primus-print - just print various observations when they get fired
 
+# Misc
+[Brumley's old bap notes](https://github.com/dbrumley/bap-plugin-book/blob/master/bap-plugin-book.org)
+
+`--print-missing` flag for missing instruction semantics https://github.com/BinaryAnalysisPlatform/bap/pull/1409
+
+
+
+https://watch.ocaml.org/videos/watch/8dc2d8d3-c140-4c3d-a8fe-a6fcf6fba988
+JVM and C support in the futute
+primus lisp - common lisp like
+C and python ctypes bindings
+
+semantics - either in
+ocaml dsl or primus lisp dsl
+
+(defun rTST (rn rm _ _ )
+  "tst rn, rm"
+  (let ((rd (logand rn rm))
+  (set ZF (is-zero rd))))
+  (set NF ())
+)
+
+dependency injection
+dynamic linking 
+
+
+framework
+inital style insufficient because need to update
+extensible variants (GADTS)? no
+not abstract. Heavyweight. 
+Not serializable
+higher kinded
