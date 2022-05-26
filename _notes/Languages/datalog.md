@@ -3316,6 +3316,10 @@ Has a full programming language to.
 Also install as a vs code plugin. very nice.
 [Fixpoints for the masses: programming with first-class Datalog constraints](https://dl.acm.org/doi/abs/10.1145/3428193)
 
+[comments](https://news.ycombinator.com/item?id=31448889)
+
+First class datalog programs. Macros for datalog? Is this different than having a datalog AST data type?
+
 ## dr lojekyl
 https://blog.trailofbits.com/2022/01/05/toward-a-best-of-both-worlds-binary-disassembler/
 https://www.petergoodman.me/docs/dr-lojekyll.pdf
@@ -3671,6 +3675,12 @@ What about guarded negation? For example if you turn off stratification but are 
 
 
 # Resources
+[Neural Datalog through time](https://arxiv.org/pdf/2006.16723.pdf)
+
+
+[semipositive datalog](https://drops.dagstuhl.de/opus/volltexte/2020/11943/pdf/LIPIcs-ICDT-2020-19.pdf) The theory of removing negation? I guess that makes sense as a pursuit. It's what I always try to trick my way into.
+
+[survey of deductive databases ullam nramakrishnan 1993](https://core.ac.uk/download/pdf/82655241.pdf)
 
 Stefania Gabriela Dumbrava - verified datalog https://web4.ensiie.fr/~stefania.dumbrava/ https://hal.archives-ouvertes.fr/hal-01745566/document datalogcert
 

@@ -6,6 +6,8 @@ wordpress_id: 2987
 ---
 
 
+[bare metal julia arduino](https://news.ycombinator.com/item?id=31481895)
+
 ```julia
 println("hello world")
 using Plots

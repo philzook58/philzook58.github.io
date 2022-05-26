@@ -45,11 +45,30 @@ https://kth.instructure.com/courses/6414/files
 
 
 
+In any case we are embedding a liveness analysis into minizinc.
+live(t,i) = true/false
+next(i1,i2) = true/false
+next forms total order.
+
+
+[after(i,k)  <- next(i,j), after(j,k) for i,j,k in insns]
+[after(i,k) <-> exists(j in insn)( next(i,j) /\  after(j,k)) \/ next(i,k) forall i,k ]
+[live[insn, temp] <- ]
+
+
+
 
 
 # Instruction Scheduling
 
 The pure instruction scheduling problem might occur even at the IR level. We can imagine an imperative IR. Certain operations commute and others don't. We may want to minimize the liveness time of variables for example. This would make sense as a pre-processing step to a sequence input language to an instruction selector.
+
+
+Instruction scheduling can be parametrized as:
+1. an embedding into actual time (cycle issue time probably). This is important if you are optimizing for runtime and can get estimates of how long each instruction takes.
+2. a ranking as integers
+3. next(i,j) relation which is basically integers. Allows for partial order. after(i,j) :- next(i,k), after(). after is path connected in temporal dag. Possibly this is mappable into a lattice notion of time (i,j,k,etc)?
+
 
 
 Instruction matching as an SMT problem
@@ -88,7 +107,7 @@ array[temp_t] of var instr_t : death;
 There is a possible off by one error
 is death at the last use site, or is it the instruction after
 Let's say it is the last use site.
-Or rasther should we be thinking of program points between instructions
+Or rather should we be thinking of program points between instructions
 
 
 */
@@ -168,4 +187,15 @@ array[temp_t] of int : death =
 constraint forall( i in instr_t)(
     alldifferent(  [ reg[t]   | t in temp_t where i <= death[t] /\  def[t] < i ]    )
 );
+```
+
+Something like a finally tagless style encoding of block?
+But I'd also like the same of insn
+Side effectful functions?
+Ok. So I want
+
+```minizinc
+
+predicate block(string : name, set[temp_t] : ins, set of [temp_t] : outs, array[int] of insn : data, array[int of insns : data] : ctrl)
+
 ```

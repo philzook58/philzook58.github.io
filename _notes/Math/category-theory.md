@@ -99,6 +99,7 @@ Use functions instead of a notion of element being member of set.
 functions can essentially select elements.
 functions into "truth value" set (indicator functions) are analogs of subsets.
 
+https://jonsterling.notion.site/Topoi-inside-and-out-7b0b86e39eeb43aeaee3c3af1dd91f2a jon sterling blog post
 # Processes
 Time
 
@@ -115,11 +116,12 @@ Mappings between schema describe
 Rising Sea
 
 A proof of `A |- B` is the basic "morphism". A proof is a tree. We can perhaps annotated this sequent with free variables and unification variables in play (signature). This makes this morphism floating over some kind of variable set, something sheafy.
-Objects are propositions.
-Cut is compose.
-Axiom is id.
-Different proofs are different morphisms between the same objects.
-Existentials and universals as adjunctions
+- Objects are propositions.
+- Cut is compose.
+- Axiom is id.
+- Existentials and universals as adjunctions
+  Different proofs are different morphisms between the same objects.
+
 
 
 

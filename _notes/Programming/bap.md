@@ -295,13 +295,26 @@ Recipes are bundles of command line flags I think. Well, they are at least that.
 
 # IRs
 ## BIL
+BIL is a simple imperative language bap lifts to with unstructured control flow.
 ## BIR
+BIR is a refinement of BIL into a CFG. Each block of BIR contains BIL statements.
 ## Core Theory
+The inextensibility of the two above IRs has chaffed the developer's of BAP. So underneath these IRs is the Core Theory language, which is quite a machine.
+
+Looking at the "herbrand theory" https://github.com/BinaryAnalysisPlatform/bap/blob/master/plugins/core_theory/core_theory_main.ml can help to understand core theory
+
+I discussed this some in this blog post https://www.philipzucker.com/bap-chc/
+
+
 
 # Disassembler
+Loader, Image.
+
 Bap has a experimental ghidra backend now btw.
 
 The semantics of the disassembler can be extended via Primus Lisp.
+
+
 
 # Primus Lisp
 It may seem odd to mention Primus Lisp before Primus, but it has outgrown it's original intended use case there. It is interesting in and of itself.

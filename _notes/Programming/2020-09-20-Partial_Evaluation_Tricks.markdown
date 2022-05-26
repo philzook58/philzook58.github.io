@@ -105,6 +105,11 @@ let lit i : int code = string_of_int i
 
 Cross Stage Persistence
 
+[peridot](https://github.com/eashanhatti/peridot) two level lambda 
+calc prottype
+
+[rompf staging algerbaic effects](https://dl.acm.org/doi/10.1145/3428232)
+
 [scheme bibliogrphy](https://github.com/schemedoc/bibliography/blob/master/page10.md)
 
 

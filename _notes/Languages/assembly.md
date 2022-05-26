@@ -4,9 +4,11 @@ title: Assembly
 ---
 
 - [Assemblers](#assemblers)
+  - [Debuggers](#debuggers)
   - [Directives](#directives)
 - [x86](#x86)
-- [BMI1 BMI2](#bmi1-bmi2)
+  - [BMI1 BMI2](#bmi1-bmi2)
+  - [GAS](#gas)
   - [nasm](#nasm)
   - [memory barrier](#memory-barrier)
   - [CET control enforcement technology](#cet-control-enforcement-technology)
@@ -35,7 +37,14 @@ fasm https://board.flatassembler.net/
 [terse](http://www.terse.com/)
 command line flag
 
+## Debuggers
+I've come to realize that even forplaying around in assmbly, a debugger is pretty clutch
 
+- gdb - See notes in C.
+- [cemu](https://github.com/hugsy/cemu) an ide of sorts for writing assembly and running it
+- [ollydbg]
+- [edb](https://github.com/eteran/edb-debugger) an ollydbg for linux. Seems nice. A graphical debugger.
+- [x64dbg](https://github.com/x64dbg/x64dbg) windows only
 
 ## Directives
 [gas](https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_chapter/as_7.html) gas directives
@@ -53,7 +62,7 @@ De facto standard for desktops
 
 https://en.wikipedia.org/wiki/INT_(x86_instruction) int3 is a breakpoint instruction 
 https://twitter.com/pkhuong/status/1507790343151960073?s=20&t=GsM8M-fHdbvp9M4n5S4-kg
-# BMI1 BMI2
+## BMI1 BMI2
 Bit manipulation instructions https://twitter.com/geofflangdale/status/1502481857375793153?s=20&t=j5MN13cFOkc3qH8tpATyNA
 apparently people can do crazy stuff with this https://twitter.com/pkhuong/status/1497332651891515395?s=20&t=j5MN13cFOkc3qH8tpATyNA
 
@@ -62,6 +71,7 @@ pext
 pdep
 
 
+## GAS
 <https://cs.lmu.edu/~ray/notes/gasexamples/> Seems like really good intro to assembly
 <https://jameshfisher.com/2018/03/10/linux-assembly-hello-world/>
 ```x86
@@ -137,15 +147,19 @@ hello:
 ```
 ## nasm
 
-```nasm
+```edb
+global _start
 _start:
-  mov rdi, 0
+  mov rdi, 10 ; mov 10 into rdi.
+  int3   ; interrupt for debugger
+  add rsi, rdi ; 
   ret
 ```
-```cmd
-#!/usr/bin/python
-print("hello world")
-```
+
+
+
+
+
 
 ## memory barrier
 ## CET control enforcement technology

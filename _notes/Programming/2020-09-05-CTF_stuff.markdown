@@ -27,7 +27,6 @@ wordpress_id: 2960
 - [What is Binary Analysis](#what-is-binary-analysis)
     - [Program Analysis](#program-analysis)
     - [How are binaries made](#how-are-binaries-made)
-- [Disassembly](#disassembly-1)
 - [Misc](#misc)
   - [GDB](#gdb)
 - [nmap](#nmap)
@@ -50,6 +49,7 @@ wordpress_id: 2960
 ## Disassembly
 disassembler 
 linear sweep
+Shingled
 recusrive traversal 
 anti-disassembly 
 https://github.com/AppleReer/Anti-Disassembly-On-Arm64
@@ -72,6 +72,7 @@ rellic makes C like code
 BAP
 ANGR
 
+gtirb ddisasm grammatech
 
 Speculative disssembly https://ieeexplore.ieee.org/document/7745279 decode every offset. Refine blocks. Spedi, open source spcualtive disassembler https://github.com/abenkhadra/spedi
 Nucleus paper https://mistakenot.net/papers/eurosp-2017.pdf Compiler-Agnostic Function Detection in Binaries
@@ -83,6 +84,29 @@ probablistic disassembly using proabablistic datalog?
 bap mc + datalog?
 
 [Formally Verified Lifting of C-Compiled x86-64 Binaries](https://www.ssrg.ece.vt.edu/papers/pldi22.pdf)
+
+- Linear
+- Recursive
+
+- 
+
+[Disasm.Driver](https://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Disasm/Driver/index.html)
+[](https://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Disasm/index.html)
+
+Delay slots are an annoyance. Some architectures allow instructions to exist in the shadow of jump instructions that logically execute beofre the jump instruction. This makes sense from a micro architectural perspective, but it is bizarre to disassemble
+
+https://rev.ng/
+[rev.ng paper](https://hexhive.epfl.ch/publications/files/17CC.pdf)
+osr - offset shift range. I;ve seen this called value set analysis?
+[rev.ng thesis](https://www.politesi.polimi.it/bitstream/10589/139255/1/main.pdf)
+
+[deepvsa](https://www.usenix.org/system/files/sec19-guo.pdf)
+
+[Analyzing Memory Accesses in x86 Executables Reps and Balakrishnnan](https://research.cs.wisc.edu/wpis/papers/cc04.pdf)
+
+byteweight - bap neural network thing identifies function starts
+
+
 
 ### Interactive
 - IDA
@@ -356,18 +380,6 @@ Or more cut up
 C -> IR
 IR -> MIR (what does gcc do? RTL right? )
 MIR -> Asm
-
-# Disassembly
-- Linear
-- Recursive
-- Shingled
-- 
-
-[Disasm.Driver](https://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Disasm/Driver/index.html)
-[](https://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Disasm/index.html)
-
-Delay slots are an annoyance. Some architectures allow instructions to exist in the shadow of jump instructions that logically execute beofre the jump instruction. This makes sense from a micro architectural perspective, but it is bizarre to disassemble
-
 
 
 # Misc
