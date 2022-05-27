@@ -2,11 +2,24 @@
 layout: post
 title: Type Theory
 ---
+- [What Are Types? What is Type Theory?](#what-are-types-what-is-type-theory)
+- [Type Checking](#type-checking)
+  - [Bidirectional Typing](#bidirectional-typing)
+  - [Hindley Milner](#hindley-milner)
+- [Systems](#systems)
+  - [Simply Typed lambda Calculus (STLC)](#simply-typed-lambda-calculus-stlc)
+  - [System T](#system-t)
+  - [System F](#system-f)
+- [Subtyping](#subtyping)
+- [Intersection Types](#intersection-types)
+- [Refinement Types](#refinement-types)
+- [Dependent Types](#dependent-types)
 - [Syntax and Semantics](#syntax-and-semantics)
 - [Judgement](#judgement)
 - [Inference Rules](#inference-rules)
 - [Computation Rules](#computation-rules)
     - [Conversion vs Reduction vs Expansion](#conversion-vs-reduction-vs-expansion)
+- [Metatheory](#metatheory)
     - [Decidability of type checking](#decidability-of-type-checking)
     - [Consistency](#consistency)
     - [Progress](#progress)
@@ -29,11 +42,113 @@ title: Type Theory
       - [Universes](#universes)
     - [Extensionality](#extensionality)
     - [Univalence](#univalence)
-  - [Books:](#books)
-- [System T](#system-t)
+  - [HOTT](#hott)
+    - [Older](#older)
 - [Logical Relations](#logical-relations)
 - [Realizability](#realizability)
+- [Bidirectional Typing Old](#bidirectional-typing-old)
 - [Misc](#misc)
+  - [Books:](#books)
+
+# What Are Types? What is Type Theory?
+There isn't a good answer.
+
+Type Theory is what a type theorist does. Useless answer but most honest. What is physics vs chemistry? There are things firmly in one subject (colliders, tylenol), but others in grey areas (nuclear, atomic spectra). Depends on what the person considers themselves, what journals they submit to.
+
+Some goes for type theory. What is proof theory? Computer Science? Logic? It's somewhere in all of there.
+
+
+
+
+ -[what is a type paulson](https://twitter.com/LawrPaulson/status/1521787594622783488?s=20&t=kBQ6NNrdoK-tcIkhvRqktQ)
+- [What is a type](https://twitter.com/sliminality/status/1521546506452447233?s=20&t=kBQ6NNrdoK-tcIkhvRqktQ)
+ + "The question "What is a type?" has no useful answers. The correct question is "What is a type theory?" – and the answer is: it is a mathematical theory of a system of constructions. The types classify the  constructions supported by the theory." - Bauer
+- [What We Talk About When We Talk About Types - Nick Benton](https://nickbenton.name/whatwetalkabout4web.pdf)
+- [types are not sets - Morris classic](https://dl.acm.org/doi/pdf/10.1145/512927.512938)
+- [What is a type on zulip](https://typ.zulipchat.com/#narrow/stream/279113-general/topic/What.20is.20a.20type.3F/near/230769268)
+ + [On the Relationship Between Static Analysis and Type Theory - Neel Krishnaswami](https://semantic-domain.blogspot.com/2019/08/on-relationship-between-static-analysis.html) "Anyway, my main thoughts on Li-Yao’s question are in a blog post I wrote a few years ago. Ravi Mangal wanted to know what the difference between static analysis and type theory were, and my answer was that you distinguish the two based on how sad you feel if you can’t prove a substitution theorem."
+
+
+# Type Checking
+
+https://discuss.ocaml.org/t/writing-type-inference-algorithms-in-ocaml/8191
+[PL zoo](https://plzoo.andrej.com/)
+[ grow your own type system](https://github.com/tomprimozic/type-systems)
+[inferno a library for unification in type systems](https://gitlab.inria.fr/fpottier/inferno) [hindley miler in applicative style](http://gallium.inria.fr/~fpottier/publis/fpottier-elaboration.pdf)
+[How OCaml type checker works -- or what polymorphism and garbage collection have in common](https://okmij.org/ftp/ML/generalization.html)
+[The Simple Essence of Algebraic Subtyping: Principal Type Inference with Subtyping Made Easy](https://infoscience.epfl.ch/record/278576)
+## Bidirectional Typing
+
+mckinna mcbride gundry. tye inferencei n context
+https://adam.gundry.co.uk/pub/type-inference-in-context/#:~:text=We%20consider%20the%20problems%20of,for%20implementing%20type%20inference%20algorithms.
+
+Complete and easy Complete and Easy Bidirectional Typechecking for Higher-Rank Polymorphism. Dunfield Krishnaswami
+https://arxiv.org/pdf/1306.6032.pdf
+
+FreezeML
+https://www.pure.ed.ac.uk/ws/portalfiles/portal/142279783/FreezeML_EMRICH_DOA21022020_AFV.pdf
+
+Nice simple tutorial
+http://davidchristiansen.dk/tutorials/bidirectional.pdf
+
+pfenning lecture notes
+https://www.cs.cmu.edu/~fp/courses/15312-f04/handouts/15-bidirectional.pdf
+
+## Hindley Milner
+[wikipedia](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system)
+
+# Systems
+
+## Simply Typed lambda Calculus (STLC)
+typechecking stlc does not have the binding issues you might expect of a lambda calc
+
+
+
+## System T
+- [Harper Class notes](https://www.andrew.cmu.edu/course/15-312/recitations/rec3-notes.pdf)
+- [Girard Proofs and Types](http://www.paultaylor.eu/stable/prot.pdf)
+- <https://gregorulm.com/godels-system-t-in-agda/>
+- [Avigad Feferman Dialectica](https://www.andrew.cmu.edu/user/avigad/Papers/dialect.pdf)
+
+"Quantifier free theory of functionals of finite type"
+
+## System F
+
+# Subtyping
+Supposedly is kind of a shit show.
+# Intersection Types
+# Refinement Types
+[Refinement Types: A tutorial](https://arxiv.org/abs/2010.07763)
+
+- FStar
+- Liquid Haskell
+
+- PVS?
+# Dependent Types
+See also 
+- Coq
+- lean
+
+Sometimes we get hung up on that types in some systems are compile time (static) and values are run-time (dynamic).
+Certainly dynamic typed languages put the types at runtime. Some statically typed languages persist the type information somewhere at runtime so you can reflect to it if need be,
+It is a little more subtle that you can pull values back into compile time. Really, programs themselves are compile time things that are talking about abstract runtime values. The variable `x` is kind-of sort-of a value (I am using terminology in a highly loose non-technical colloquial sense here).
+
+Dependent types let you mention abstract runtime variables and concrete values in the types. It's sort of a natural box in the compile-runtime, type-value grid.
+
+calculus of constructions
+
+
+
+- http://math.andrej.com/2012/11/08/how-to-implement-dependent-type-theory-i/
+- [a tutorial implementation of dependtly typed lambda calc](https://www.andres-loeh.de/LambdaPi/LambdaPi.pdf ) http://lambda-the-ultimate.org/node/2340 discussion Simply Easy
+- http://augustss.blogspot.com/2007/10/simpler-easier-in-recent-paper-simply.html
+- https://eb.host.cs.st-andrews.ac.uk/writings/thesis.pdf - Brady thesis
+- https://asset-pdf.scinapse.io/prod/2145108549/2145108549.pdf - idris design and implementation
+- [mini-tt](http://www.cse.chalmers.se/~bengt/papers/GKminiTT.pdf)
+- Weirich OPLSS 2013
+- [easy as pie](https://www.seas.upenn.edu/~sweirich/papers/tfp07.pdf)
+- [elaboration zoo](https://github.com/AndrasKovacs/elaboration-zoo)
+
 
 # Syntax and Semantics
 
@@ -97,7 +212,8 @@ We can encode data types into functions using church like encodings.
 `match` can be encoded by positing a special function that has a computation rule like match.
 
 
-
+# Metatheory
+Many type systems talk about lambda calculus, so the metatheory is intertwined with the rewrite theory of lambda calc.
 
 ### Decidability of type checking
 type checking is the question of whether given all the pieces going into the judgement under line of the inference rule, is it decidable to construct a typing tree that produces such a thing. Even this seemingly simple question can be undecidable in some type systems, because higher up in the typing tree you may ask questions that are very difficult. In the presence of nontermination, you probably are encountering a variant of the halting problem. Undecidability of type checking is typically considered to be an undesriable property, but people are willing to entertain the notion.
@@ -129,7 +245,7 @@ Evaluation does not cause types to change.
 
 
 ### Curry vs Church style
-
+Extrinsic vs Instrinsic types
 
 # Equality
 
@@ -179,8 +295,10 @@ Tests. Example `Definition mytest : tt = tt := eq_refl.` See if coq accepts it <
 
 `Prop` `SProp` `Set`
 `SProp` is Prop with proof irrelevance
+
 #### Impredicative vs Predicative
 This is describing allowing some kind of form of self reference I think.
+
 #### Proof Irrelevance
 Propositional extensionality implies proof irrelevance
 https://coq.inria.fr/library/Coq.Logic.ProofIrrelevance.html
@@ -238,35 +356,310 @@ Example `unit' = unit`
 Isomorphisms
 
 
+## HOTT
+
+- [Escardo notes](https://www.cs.bham.ac.uk/~mhe/HoTT-UF-in-Agda-Lecture-Notes/)
+- [The HoTT game](https://thehottgameguide.readthedocs.io/en/latest/getting-started/index.html)
+- [Introduction to Cubical Type Theory (Part I) youtube](https://www.youtube.com/watch?v=6cLUwAiQU6Q&ab_channel=Favonia)
+- [CSCI 8980 Higher-Dimensional Type Theory](https://favonia.org/courses/hdtt2020/)
 
 
 
-- <https://counterexamples.org/title.html> Counterexamples in Type Systems. Really cool resources of problems that can show up in type systems
-- <https://github.com/FStarLang/FStar/issues/360> Examples that show paradoxes when using combinations of impredicative polymorphism + excluded middle + large elimination -- can only choose two <https://cstheory.stackexchange.com/questions/21836/why-does-coq-have-prop/21878#21878> Berardi's paradox
-<https://github.com/coq/coq/issues/9458> future of impredicative set
+- [cubical paper](https://arxiv.org/pdf/1611.02108.pdf)
+### Older
+2018
+
+https://epit2020cnrs.inria.fr/ spring school
+Type/Space        A type
+Elekemntn/Point   t:A
+type and point may depend on other points
+x:A1, x2:A2 |-  B(x1,,x2) type
+
+R^n depends on n. n : N |- R^n type
+[a,b] depends on a,b, and a <= b
+a:R, b:R, p :(a<= b) |- [a,b]
+Equality judgemental equal
+A === B equal types
+s ===_A t  equal points
+
+Type theory as formal system
+Gam |- A type
+t A
+A === B
+s ===_A t
+
+rules of inference
+
+Base space A
+a:A |- B(x)
+fiber at x.
+ttoal space - dpeendent sum
+
+Basic constructions
+
+dependent sum
 
 
-Amusingly, by mixing the type level and value level, do we end up with a situation akin to dynamic types where we often need
-to carry types a runtime? Or is that mistaken?
+https://fplab.wordpress.com/2015/05/09/hott-for-lazy-functional-programmers/
+
+The most straightforward computational attack on homotopy is usuing a trinagulated mesh that I think is fairly intuitive to computer people
+
+Computerizing something involes:
+- how to you even represent the thing you want to talk about
+- howw do you actually compute answers to interesting questions. I divide these into differewnt classes 1. Just recognize something, i.e.e proof checking or 2. Calculate or find something, i.e. actual numerical computations or proof finding or what have you. 1. Is often an interesting thing to start with since it is easier even if what you really want is 2.
+
+
+Paths are lists of adjacent vertices.
+
+Using haskell gadts for example, we can encode all the paths and then use the types to enforce that the path is actually connected.
+
+
+Another persepctive on this is to encopde the proerties of the mesh in logic, like first order logic.
+Z3 is a way to make this conrete
+
+
+From the perspective of systems like Coq or agda, these two pictures become the same thing. There systems have the notion of inductive predicates that boil down to defining a datatype like that in Haskell.
+
+
+It sucks to work with this stuff though.
+
+
+
+A second straightforward attack to model homotopy would be to directly model functions from the interval
+R -> R.
+Reals are floats.
+
+
+We might try to directly model these things in functions and use functional programming
+def homo1():
+
+```python
+def composepath(p1,p2):
+  assert(p1(1) == p2(0) )
+  def res(t):
+    if t < 0.5:
+      return p1(2 * t)
+    else:
+      return p2(2*t-1)
+  return res
+```
+
+Skeletonizing this path with an open cover.
+1 open cover = [0,1) and (0,1]
+
+
+Or we might try to take a more symbolic approach, like using sympy or some custom dsl.
+The difference here is tha6t in many languages, lambdas are basically totally opaque. There are advantages and disadvenmtages to 
+this rule. It does not have to be so. Languages with strong metaprogramming paradigms 
+(and I include lisps, Julia, and coq here) let you poke around in the guts to varying degrees.
+
+Reals as floats may be objectionable to your sensibiliuties. Then perhaps a preferable approach may be to use exact reals, numbers that retain the capacity to be computed to arbitrary precision upon request.
+
+
+Maybe there is more connection to my path thing than I realezied
+
+
+
+
+Higher inductive types are where it is actually at I guess.
+
+https://www.youtube.com/watch?v=A6hXn6QCu0k emily reihl - inifnity categroeis for undergrads, but really it's about homotopy type thoery
+
+11/2020 
+https://github.com/HoTT-Intro/Agda
+I screwed up my emacs agda by having a rotten tuareg in it. I think
+https://github.com/martinescardo/HoTT-UF-Agda-Lecture-Notes
+
+https://pure.itu.dk/portal/files/84649948/icfp19main_p164_p.pdf - ICFP cubical agda, a depdently typed programming language with higher inductive types. Interestingly, from Mertberg's demo, I feel like the emphasis was not on cubical itself. More interested in standard HoTT they just want it to be better
+
+
+HoTT - quotients supposedly? Fractions? Integers vs naturals. I guess that's the zeroth.
+Or maybe True / False modulo True = False?
+Anders Morberg - cubical agda  https://vimeo.com/459020971
+
+data _===_ {A : Set} (x : A) : A -> Set where
+  refl : x == x
+
+funExt
+
+replcace inductive === with paths
+
+{-# OPTIONS -- cubical #-}
+open import Cubival.Foundations.Prelude
+                        Equiv
+                         Isomorphism
+                         Univalence
+                         Cubical.Data.Int
+                         Cubical.Data.prod
+
+-- I , npoitns i0, i1
+apply0 : (A; Type ) -> (p : I -> A) -> A
+apply0 A p = p i0
+
+refl' : {A : Type} (x : A) -> x \== x -- PathP (\ _ -> A) x x
+refl' x = \i -> x
+
+-- x \== x  h means PathP (\ _ -> A) x y
+-- path over path. depednent paths
+
+cong' : {A B : Type} (f : A -> B) {x y : A} -> x == y -> f x == f y
+cong' f p = \ i -> f ( p i )
+
+funext'  : {A B : Type} (f g : A -> B) {x y : A} -> ( p: x : A ->  f x == g y ) -> f == g
+funext p i = \x -> p x i
+
+transport' : {A B : Type} -> A == B -> A -> B
+trasnport' p x = transp (\i -> p i) i0 x
+
+-- another primitive called hcomp
+
+ua' :  {A B : Type} -> A ~ B -> A == B
+ua' e = ua e
+
+isToEquiv' : {A B :type} -> Iso A B -> A ~ B
+isToEquiv' e =  isoToEquiv e
+
+isoToPath : Iso A B -> A == B
+isoToPath e = ua (isoToEquiv e) 
+
+data Bool : Type where
+   false : Bool
+   true : Bool
+
+not : Bool -> Bool
+not false = true
+not true = false
+
+notPath : Bool === Bool
+notPath = isoToPath' (iso  not not rem rem)
+  where 
+  rem : (x : Bool) -> not (not x) == x
+  rem false = refl
+  rem true = refl 
+
+transport notPath true -- false
+
+sucPath : Int === Int
+sucPath = (isoToPath' (iso sucInt predInt sucPred redSuc)
+
+transport ( sucPath . sucPath) (pos 4) 
+
+-- multisets
+
+data FMSet (A : Type) : Type where
+   [] : FMSet A
+   _::_ : A -> FMSet A -> FMSet A
+   comm : ( x y : A) (xs : FMSet A) -> 
+         x :: y :: xs == y :: x :: xs
+    trunc : isSet (FMSet A) -- UIP
+
+_++_ : {A : Type} -> FMSet A -> FMSet A -> FMSet A
+[] ++ ys = ys
+(x :: xs) ++ ys = x :: (xs ++ ys)
+(comm x y xs i) ++ ys = comm x y (xs ++ ys) i
+
+-- can prove all kinds of things : xs ++ [] == xs ...
+
+Cubical.HITs.FiniteMultiSet
+
+unitr-++ : {A : Type} (xs : FMSet) -> xs ++ [] == xs
+unitr++ [] = refl
+unitr++ (x :: xs) =    
+
+SIP structure idenity principle
+Cubical.Algerba.Monoid.Base -- reflection
+
+queues, matrices. Huh. representiation independence transportiung proofs.
+
+
+
+https://arxiv.org/abs/1701.04391 - de moura selsam. good explanation of equality type
+John Major equality - conor mcbride
+Doing raw recursor proofs. Can I do it? I feel like it's kind of straightforward.
+Begin able to write out exactly where I want the equality applied via a lambda. 
+Could Axiomatize equality rather than use Inductive definition.
+The pattern match of a HIT must desguar into recursors?
+
+
+Types are spaces.
+values are points
+dependent types are fibrations
+identity types are paths
+
+
+Other weirdness:
+Observational type theory
+
+Describing a concrete simplex as a gadt.
+How do you make a correct by construction data structure of a path?
+A list of vertices. Fine. But is there a path between each of them?
+Ok, list of edges. Do those edges meet?
 
 
 
 
 
-## Books:
-- TAPL
-- Programming Language Foundations - Harper
-- Programming in Martin Lof Type Theory
-- Software Foundations
-- PLFA
+9/2018
 
-# System T
-- [Harper Class notes](https://www.andrew.cmu.edu/course/15-312/recitations/rec3-notes.pdf)
-- [Girard Proofs and Types](http://www.paultaylor.eu/stable/prot.pdf)
-- <https://gregorulm.com/godels-system-t-in-agda/>
-- [Avigad Feferman Dialectica](https://www.andrew.cmu.edu/user/avigad/Papers/dialect.pdf)
+univalence let's you turn isomorphisms into equality and get isomorphisms out of equalities.
 
-"Quantifier free theory of functionals of finite type"
+HIT - Higher inductive types. Instead of always needing the data constructor to end with the type itself A , now it can end with =_A also. You can do this using
+
+recursors. Patrern matching is cool,. but it can be desgared into something else. A function that takes a continuation for each case of the type.
+
+focus on inclusion and projection maps of the basic simplex
+
+Cubical Sets.
+
+of of the basic interval.
+
+Simpilical Sets.
+
+By using the basic simplex with its inclusion maps as sort of a index into your complex, you can grab all n-simplices at once. This is a Functor relation.
+
+$latex
+
+Great intro
+
+https://arxiv.org/pdf/0809.4221
+
+You can use a postulate methodology where you slam out all the pieces of your type as axioms
+
+Dan Licata explaining how to use hiding to implement HIT. You export an interface. This let's you postulate less
+
+https://homotopytypetheory.org/2011/04/23/running-circles-around-in-your-proof-assistant/
+
+Homotopy group of circle is Z
+
+https://homotopytypetheory.org/2012/06/07/a-simpler-proof-that-%CF%80%E2%82%81s%C2%B9-is-z/
+
+https://www.cs.cmu.edu/~drl/pubs/ls13pi1s1/ls13pi1s1.pdf
+
+You always need streicher K and rewriting turned on. What do these do?
+
+https://homotopytypetheory.org/2011/04/10/just-kidding-understanding-identity-elimination-in-homotopy-type-theory/
+
+https://stackoverflow.com/questions/39239363/what-is-axiom-k/39256457
+
+Axiom K is Uniqeness of Identity Proofs. Default pattern matching allows this. Modified pattern matching doesn't. The recursor form doesn't seem to have this problem
+
+    
+    uip : {A : Set} -> {a : A} -> (p q : a ≡ a) -> p ≡ q
+    uip refl refl = refl
+
+https://github.com/HoTT/HoTT-Agda
+
+Kind of hard to navigate. Like the std-lib but harder.
+
+Useful start in core. Check out univalence, check out the types folder. Look at the normal types like Bool, Nat, List. Now check out Circle, Torus,
+
+Interesting lectures using cubicaltt
+
+https://github.com/mortberg/cubicaltt/tree/master/lectures
+
+
+
+
 
 # Logical Relations
 - [History of programming course](https://felleisen.org/matthias/7480-s21/22.pdf) <https://felleisen.org/matthias/7480-s21/lectures.html> Mentions Amal thesis as being good
@@ -275,6 +668,9 @@ to carry types a runtime? Or is that mistaken?
 Tait proved strong normalization using them 1967.
 
 Parametricity is supposedly an example also
+
+
+
 
 # Realizability
 
@@ -316,6 +712,418 @@ Chapter 5: Inconsistent combinations of rules
 5. Other universe issues
 
 
+
+
+# Bidirectional Typing Old
+Notes on Bidirectional Typing and the Meaning of Horizontal Lines
+
+
+```ocaml
+type var = string
+type typ = Unit | Arr of typ * typ
+type expr = Var of var | Lam of var * expr |
+     App of (expr * expr) | TT | Annot of (expr * typ)
+type typ_ctx = (var * typ) list
+
+let rec type_check gamma e t = match e,t with
+  (* | Var v, t -> (List.assoc v gamma) = t *)
+  | TT , Unit -> true
+  | Lam(x,e), Arr(a1,a2) -> type_check ((x,a1) :: gamma) e a2
+  | _,  _  -> let t' = type_infer gamma e in
+              t = t'
+and type_infer gamma e = match e with
+  | Var v -> List.assoc v gamma
+  | Annot(e, t) -> let c = type_check gamma e t in
+                  if c then t else failwith "Bad annotation"
+  | App(f, x) -> let Arr (a,b) = type_infer gamma f in
+                let c = type_check gamma x a in
+                if c then b else failwith "App typecheck failed"
+  | _ -> failwith "can't infer"
+
+(* #use bidi.ml;;
+type_check [] TT Unit;;
+type_infer [] (Annot (Lam ("x", App(Var "x", TT)), Arr(Arr(Unit,Unit),Unit)));;
+type_infer [] (Annot (Lam ("x", TT), Arr(Unit,Unit)));;
+*)
+
+
+```
+
+```prolog
+
+% It works but it is not well moded
+
+type(G, var(X), A) :- member( X - A  , G ). % member is a little wrong.
+type(G, ann( E, T), T) :- type(G, ann(E,T), T).
+type(G, tt, unit).
+type(G, lam(X,E), arr(A1,A2)) :- type([X - A1 | G], E, A2 ).
+type(G, app(E1,E2), B) :- type(G, E1, arr(A,B)), type(G, E2, A).
+
+%?- type([], lam(x,lam(y,var(y))), T).
+%T = arr(_6662, arr(_6680, _6680)) 
+```
+
+```coq
+
+Require Import String.
+Inductive type :=
+    | unit
+    | arr : type -> type -> type
+    .
+Inductive expr :=
+    | var : string -> expr
+    | lam : string -> expr -> expr
+    | ap : expr -> expr -> expr
+    | tt : expr
+    | ann : expr -> type -> expr.
+
+Fixpoint type_eq a b :=
+     match a,b with
+     | unit, unit => true
+     | (arr x y), (arr z w) => andb (type_eq x z) ( type_eq y w)
+     | _, _ => false
+     end.
+
+Definition ctx := list (string * type).
+Require Import List.
+Import ListNotations.
+
+Search app.
+
+Fixpoint lookup k l := match l with 
+| (t,v) :: ls => if String.eqb k t then v else lookup k ls 
+| [] => unit (* chris mocked me for this *)
+end.
+(** adequacy *)
+Inductive hastype (gamma : ctx) : expr -> type -> Type :=
+   | Var : forall x A, lookup x gamma = A -> hastype gamma (var x) A
+   | UnitI : hastype gamma tt unit
+   | ArrI :  forall e x A1 A2, hastype ((x, A1) :: gamma) e A2 -> 
+             hastype gamma (lam x e) (arr A1 A2)
+   | ArrE :  forall A B e2 e1, 
+             hastype gamma e1 (arr A B) ->
+             hastype gamma e2 A ->
+             hastype gamma (ap e1 e2) B
+    | Anno : forall a b e, 
+        hastype gamma e a -> 
+        type_eq a b = true -> 
+        hastype gamma (ann e a) b
+           .
+
+Inductive inferstype (g : ctx) : expr -> type -> Type :=
+| Varinf : forall x A, lookup x g = A -> inferstype g (var x) A
+| ArrEInf :  forall A B e2 e1, 
+            inferstype g e1 (arr A B) ->
+            checkstype g e2 A ->
+            inferstype g (ap e1 e2) B
+| AnoInf : forall a e, checkstype g e a -> 
+           inferstype g (ann e a) a
+
+with checkstype (g : ctx) : expr -> type -> Type :=
+| UnitIc : checkstype g tt unit
+| ArrIc :  forall e x A1 A2, checkstype ((x, A1) :: g) e A2 -> 
+          checkstype g (lam x e) (arr A1 A2)
+| Subc : forall A e B, inferstype g e A -> type_eq A B = true -> checkstype g e B
+.
+
+Goal checkstype [] tt unit. eauto using checkstype. Qed.
+Goal hastype [] tt unit. eauto using hastype. Qed.
+Goal {t & hastype [] tt t}. eauto using hastype. Qed.
+Goal checkstype [] (lam "x" tt) (arr unit unit).
+eauto using checkstype. Qed.
+Goal hastype [] (lam "x" tt) (arr unit unit).
+eauto using hastype. Qed.
+Goal hastype [] (ap (lam "x" tt) tt) unit.
+eauto using hastype. Qed.
+Goal inferstype [] (ap 
+                   (lam "x" tt)
+                   tt) unit.
+                   eauto using inferstype, checkstype. Abort.
+
+Goal inferstype [] (ap 
+                   (ann (lam "x" tt) (arr unit unit)) 
+                   tt) unit.
+                   eauto using inferstype, checkstype. Qed.
+(* eapply ArrEInf. 
+- eapply AnoInf.
+apply ArrIc. apply UnitIc.
+- apply UnitIc.
+Qed. *)  
+
+
+
+
+(* Decision procedures. 
+
+Fixpoint inferstype (g:ctx) (e : expr) : option {t : type | inferstype g e t} :=
+Fixpoint checkstype (g:ctx) (e : expr) (t : type) : option (checkstype g e t) :=
+
+sound : checkstype -> hastype
+complete : hastype -> checkstype \/ inferstype
+*)
+
+From elpi Require Import elpi.
+
+
+
+
+
+
+```
+
+I picked bidirectional typechecking for reading group this week. A lovely survey paper.
+
+Bidirectional typing is a methodology for taking piles of typing rules and making them more algorithmic.
+This gets into my strike zone, as an outsider to type theory and logic, the notion of inference rules bends me in knots. I don't know what they mean. I do have some notion of computer programs having meaning. C, python, C++, ocaml, even Coq mean something to me because they create artifacts that exist and live outside of myself. They run. Their execution becomes fact regardless if I understand them or not. Executable programs become a part of the physical world.
+I do not feel the same about mathematics or computer science written down in papers. It is static and only moves in the minds of people. I do not feel compelled to consider what is written in a paper as fact, a fait accompli, if I do not personally understand it. I don't think many people are trying to willfully deceive me in the academic literature, but there is always the possibility and that of self deception.
+
+So for me, a pile of cryptic symbols with horizontal lines is unacceptable and contains almost no meaning. It begins to have meaning when I know how to translate the concepts into an executable programming language.
+
+These concepts also being to have meaning if I personally know how to manipulate them with paper and pencil.
+
+
+To put symbolic mathematical stuff in a computer, a standard methodology is to consider expressions as trees. We then want to manipulate those trees in programs or produce new trees.
+
+
+Something that gives me conniptions is that implication $$\rimpl$$, turnstile $\vdash$, And horizontal bars are all some kind of notion of logic implication, albeit with the subtlest conceptual and mechanical distinctions. Somehow it the interplay of pushing things around between these three similar things encapsulates a notion of logical deduction. Super bizarre.
+
+
+B is mangetic field, Gamma is a context
+
+
+
+
+
+What are types?
+
+
+
+
+
+
+Checking is easy?
+Inference is hard?
+
+Is this always true?
+Checking of application is hard
+f x : b  because it needs to invent an inner type. 
+
+We can make checking always go through with intense annotations. 
+
+infertype below the line is good. It is producing information
+infertype above the line is bad. It needs a information producing process to output
+
+It almost feels like a constraint satisfaction problem to me.
+Perhaps the more flexible notion of a prolog search with pruning.
+
+We want to pick an ordering and infer/check for the rules such that 
+they are well moded.
+We want as many infers below lines and checks above lines as possible. These may be weighted by some notion of painfulness of annotation. Freqeuncy of usage * annotation size perhaps.
+To require a synethsizing derivation is bad. To produce a synthesizing derivation is good.
+
+The Pfenning recipe is a heuristic
+
+Well moded : premise known.
+
+The rules aren't independent of each other though? How does that hjapen?
+Yes. The rules need to match up to each other.
+Maybe really the cost is every annotation. which happens when there is a form that infers up top but checks below the line.
+
+Of course, a language designer is not constrained to a fixed system. Adding extra forms,, or interesintg new
+contexts or ways of thinkgin about things.
+
+
+
+elimination forms are often in inference because there is an invented type
+
+type-directed synthesis of programs is proof search.
+
+
+1. principal judgement
+2. elimination synethesize, introduction check. Elimination is usually above and introuducion usually below.
+  This is counterintuitive, we have to step backward to step forward. WWe don't want synthesis above and check below.
+
+
+A pile of introductions should just check? Carry the top level information through
+
+
+subtyping :< often has input mode. It's easy to tell if things are subtypes than to come up with a maximal type persay
+
+
+We don't want to dump information
+
+The simply typed lambda calculus is kind of a bad example. It is so simple that really the nonbidirectional version does a pretty dang good job in raw prolog.
+
+
+Inference rules: What is their computational reading/encoding?
+The notation is extremely vague if this is your desire.
+
+
+1. The expression below the line defines a relation.
+
+Relations may be represented different ways
+R a b c
+Am I mixing types and expressions
+1. [(a, b, c)] - explicit list (possibly infinite)
+2. a -> b -> c -> bool  (decidable or partial depending on language) indicator function
+3. Halfsies. a -> [(b,c)], a -> b -> [c],  in this sense a -> b -> c -> bool is really a -> b -> c -> [()]
+3. type Rel a b c = a -> b -> c -> Prop -- a formula
+5. explicit data type. data Rel = | True | False | And (Rel) (Rel) | Or |
+4. R(A,B,C). -- prolog
+5. C C++, Java, Python? Do they give any new ideas?
+
+
+Ok but what about _Rules_. Different but related question.
+1. Prolog clause. Problems
+2. Coq Inductive data type
+3. Cases in recursive function definitions
+4. a pile of switch cases or whatever
+5. Tactics -  th below -> ( [ th above ], [Pf above] -> Pf below ) 
+6. LCF Recognizers - typ rule = [Pf up top] -> theore below -> Pf below - sometimes yuou need to give the shape of the thing you want below. Even all the above parts and the label of the rule might be insufficient. It is possible for this function to be partial / undecidable. Proof terms are a deep DSL recording these shallow moves.
+7. You could make an argument for an inference rule being a relation of relations? A meta lifting.
+8. rules with single things up top = executions of abstract machines
+
+
+Inference rules are relations on syntactic forms?
+
+
+
+This notion of modes is essentially the "Halfsies" notion.
+Bidirectional typechecking defines the relation not between
+
+A typing judgement is a relation between contexts, expressions, and types.
+Expressions have types. Values have types. These are distinct notions.
+Value as a meta notion vs Value as a subclass of expressions.
+
+
+(tenv, expr, typ ) -> true
+(tenv, expr) -> Maybe typ
+
+
+type var = string
+type expr = Var of var | Lam of var * expr | App of (expr * expr) | TT | Annot of (expr * typ)
+type typ = Unit | Arr of typ * typ
+type typ_ctx = (var * typ) list
+
+type_check gamma = function
+| Var v, 
+| TT , Unit -> true
+| e, t  -> let t' = type_infer gamma e in
+           t = t'
+and
+type_infer gamma = function
+| Var v -> lookup gamma v
+| Annot e t -> let c = type_check gamma e t in
+               if c then t else failwith "Bad annotation"
+| App f x -> let Arr (a,b) = infer_type gamma f in
+             let c = type_check gamma x a in
+             if c then b else fail 
+| _ -> failwith
+
+Does it matter that we should return errors? I guess it does.
+
+type_judge(Gamma, e,  type).
+type_judge(Gamma, tt, unit).
+type_judge(Gamma, lam(V,Body) , arr(A,B)) :- type_judge([ V -> A  | Gamma], Body , B ).
+type_judge(Gamma, app(F,X) ,    )    :- 
+
+
+
+He mentioned thaty a computational interpretation of inference rules requirtes modes
+Symntax directed rules can be considered as checkers, since we can pattern match on the syntax and know what to do
+
+What interesting problem can I use?
+Well, interleaved moded predicates is interesting.
+
+
+Mode correctness - not a notion of bidirectional type checking.
+
+This is an interesting idea.
+Take a prolog program that is ill formed.
+Consider all possible modal forms. In recursiove calls, consider all possible modes to recrusviely call. Consider all orderings of right side preds too.
+This is all mechanical enough it could be considered mode synthesis.
+Perhaps + some test cases
+
+
+rel(A,B) :- rel(A,C), rel(C,B).
+
+rel+-(-A,+B) :- rel--, rel--
+
+Trim all non well moded
+
+Maybe I hsould use mercury?
+Or swipl has a mode chekcing thing probably?
+https://www.swi-prolog.org/pldoc/man?section=modes
+
+
+
+
+The fool.
+
+
+It has something to do with focusing? Hmm The review paper says explicitly it does not.
+
+https://twitter.com/rob_rix/status/1379966266723680256?s=20 rob rix dicssuion polarity
+sterling says look at sequent. negative have noninvertible left rules, positive has noninvertible right
+Substructural logic (like linear)
+What about bunched logic like seperation? Does that add any clairty? What is the polarity of seperating conjunction?
+
+https://github.com/jonsterling/dreamtt "pedagogical" binrectional dependent tpye implentation
+
+https://astampoulis.github.io/blog/taksim-modes-makam/ - huh makam has modes inspired by the bidi survey
+
+
+https://twitter.com/puffnfresh/status/1377474203444637701?s=20
+
+http://noamz.org/thesis.pdf
+
+https://consequently.org/papers/dggl.pdf
+
+https://personal.cis.strath.ac.uk/neil.ghani/papers/ghani-jfcs09.pdf
+
+Positive and negative types
+
+Focusing
+
+The two G and D categories in Harrop/Horn formula
+
+Positivityv checking
+
+Covaraince and contravaraince
+
+hmm. Harper seems to suggest a positive v neagtive product type is a lazy vs strict distinction
+https://ncatlab.org/nlab/show/product+type - 
+
+https://ncatlab.org/nlab/show/sum+type - need multiple sequents for 
+
+
+Linear logic.
+
+Positive is "charactersize " by introductions. Plays nice with eager evaluation
+Negative is "characterized" by eliminations. Plays "nice" with lazy evaluation
+
+Introduction rules, elimination rules AND computation rules?
+
+Proof search vs Preoof normalization semantics.
+
+focussing and prolog
+
+hmm harper actually has a chapter on classical logic dynamics
+
+Bidrectional typing
+Type synthesis can be interleaved with type checking
+
+
+Session types to understand linear logic vs memory management
+Types are things that can be attached to terms. Terms are expressions
+Process calculi are some kind of terms.
+https://homepages.inf.ed.ac.uk/wadler/papers/propositions-as-sessions/propositions-as-sessions.pdf
+
+tactics are perhaps another operational interpetation of inference rules
+https://hackage.haskell.org/package/refinery
+https://reasonablypolymorphic.com/blog/towards-tactics/
+https://www.youtube.com/watch?v=S0HvfXq3454&ab_channel=Z%C3%BCrichFriendsofHaskell
+
 # Misc
 
 [smalltt](https://github.com/AndrasKovacs/smalltt) a demo for high performance type theory elaboration. Really good readme too
@@ -325,11 +1133,22 @@ Chapter 5: Inconsistent combinations of rules
 
 regular propositions are basically the "constructive-content-free" parts of propositions
 
+- <https://counterexamples.org/title.html> Counterexamples in Type Systems. Really cool resources of problems that can show up in type systems
+- <https://github.com/FStarLang/FStar/issues/360> Examples that show paradoxes when using combinations of impredicative polymorphism + excluded middle + large elimination -- can only choose two <https://cstheory.stackexchange.com/questions/21836/why-does-coq-have-prop/21878#21878> Berardi's paradox
+<https://github.com/coq/coq/issues/9458> future of impredicative set
+
 [introductory type theory resources](https://twitter.com/GabriellaG439/status/1520793063467102208?s=20&t=kBQ6NNrdoK-tcIkhvRqktQ) https://www.haskellforall.com/2022/05/introductory-resources-to-type-theory.html
 
-[what is a type paulson](https://twitter.com/LawrPaulson/status/1521787594622783488?s=20&t=kBQ6NNrdoK-tcIkhvRqktQ)
-[What is a type](https://twitter.com/sliminality/status/1521546506452447233?s=20&t=kBQ6NNrdoK-tcIkhvRqktQ)
-"The question "What is a type?" has no useful answers. The correct question is "What is a type theory?" – and the answer is: it is a mathematical theory of a system of constructions. The types classify the  constructions supported by the theory." - Bauer
+Amusingly, by mixing the type level and value level, do we end up with a situation akin to dynamic types where we often need
+to carry types a runtime? Or is that mistaken?
 
-[What We Talk About When We Talk About Types - Nick Benton](https://nickbenton.name/whatwetalkabout4web.pdf)
-[types are not sets - Morris classic](https://dl.acm.org/doi/pdf/10.1145/512927.512938)
+
+
+
+
+## Books:
+- TAPL
+- Programming Language Foundations - Harper
+- Programming in Martin Lof Type Theory
+- Software Foundations
+- PLFA

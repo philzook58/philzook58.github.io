@@ -14,6 +14,8 @@ https://en.cppreference.com/w/c/language/eval_order eval order
 
 # Misc
 
+[exceptions under the hood](https://monoinfinito.wordpress.com/series/exception-handling-in-c/)
+
 Cherno 
 Cyril Stachniss https://www.youtube.com/c/CyrillStachniss/videos
 

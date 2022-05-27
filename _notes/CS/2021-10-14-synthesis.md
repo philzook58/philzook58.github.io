@@ -39,9 +39,32 @@ https://github.com/TyGuS/suslik syntheiss of heap maniuplation programs from sep
 https://www.youtube.com/watch?v=mFjSbxV_1vw&ab_channel=Fastly Synthesis in reverse engineering
 Synesthesia
 
-Alternating Quantifiers
+# Alternating Quantifiers
 
-inductive logic programming
+Exists forall problems
+
+There exists instanitations of holes in your program such that for all possible inputs, the program is correct.
+Vaguely speaking:
+$$\exists H \forall x \phi(x)$$
+
+However, what is phi? One approach would be to define it using weakest precondition semantics. Or strongest postcondition
+
+$$\exists H \psi(H) \land \forall x pre(x) \rightarrow WP(Prog,post(x))$$
+
+$$\forall$$ is kind of like an infinite conjunction. For finite types you're quantifying it over, you can expand it into conjunction.
+$$\forall c \phi(c) = \phi(red) \land \phi(blue) \land \phi(green)$$
+
+You can also attempt to partially expand these quantifiers as a method to solve the alternating quantifier problem. This is CEGIS
+
+$$\exists  H. finite expansion $$
+
+
+In some sense, constraint solvers/smt/mathematical programming solvers are solving problems with implicit existential quantification over all the free variables. 
+
+Fixing the synthesis parameters, we 
+
+
+# inductive logic programming
 
 # Syntax Guided Synthesis (Sygus)
 [Sygus](https://sygus.org/) - syntax guided synthesis

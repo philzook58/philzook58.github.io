@@ -21,6 +21,17 @@ Continuous and discrete dynamics
 # Control
 Funnels
 
+# Dynamics verification and program verification
+There are deep analogies between programs and dynamical systems.
+
+Invariants
+
+Lyapunov functins and termination functions
+
+Weakest precondition / strongest precondition
+
+Abstract interpretation
+
 
 # Verification
 MIP

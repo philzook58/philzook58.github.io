@@ -28,6 +28,13 @@ wordpress_id: 2913
   - [Link Time Optimization (LTO)](#link-time-optimization-lto)
   - [Profile Guided Optimization (PGO)](#profile-guided-optimization-pgo)
 - [Code Gen](#code-gen)
+  - [Declarative](#declarative)
+    - [Unison](#unison)
+    - [Fixed Instruction Order](#fixed-instruction-order)
+    - [Scheduling and Allocation](#scheduling-and-allocation)
+    - [Multiple Blocks](#multiple-blocks)
+    - [Register Packing](#register-packing)
+    - [Other](#other)
   - [Instruction Selection](#instruction-selection)
   - [Register Allocation](#register-allocation)
   - [Instruction Scheduling](#instruction-scheduling)
@@ -59,6 +66,8 @@ LL
 LALR
 
 [How do you get good error messages](https://twitter.com/SandMouth/status/1513173009976147975?s=20&t=5y91-I1SPrIGomAWSqs69w)
+
+[sy brand paper on how compilter diagnostics could be imporved](https://twitter.com/TartanLlama/status/1527327581464567809?s=20&t=C_oktCkKA7nprGoHnJpglQ)
 
 ## Algorithms
 [List of algorithms - parsing](https://en.wikipedia.org/wiki/List_of_algorithms#Parsing)
@@ -147,6 +156,117 @@ A relative of omega?
 ## Profile Guided Optimization (PGO)
 
 # Code Gen
+## Declarative
+### Unison
+- [Unison](https://unison-code.github.io/)
+
+[diversification](http://www.diva-portal.org/smash/get/diva2:1232129/FULLTEXT01.pdf) make many versions of binary to make code reuse attacks harder. disunison
+
+
+Toy Program:
+
+
+If you do liveness analysis ahead of time, it really does become graph coloring, with an edge between every temporary that is live at the same time.
+
+You cannot do liveness ahead of time if you integrate instruction scheduling with allocation. It needs to be internalized.
+
+If you do SSA ahead of time, you have more flexibility to change colors/register at overwrite points
+
+How to communicate to minizinc:
+- Serialized files or C bindings
+- Parameters or constraints. In some sense, you a writing a constraint interpreter over the parameters. Why not cut out the middleman? 1: less clear what the structure is. 2. It forces your hand with the bundling of different pieces. Many things need to be bundled into the `insn` predicate unless you reify the `insn` predicate to a variable, in which case you are rebuilding the parameter version.
+
+There is a spectrum of more or less complex models you can use.
+
+### Fixed Instruction Order
+This makes a DSL in minizinc that looks like a somewhat reasonable IR. It uses a predicate function `insn` that takes in the lhs and rhs temporaries. It assigns a register to each temporary such that it never clobbers a live variable.
+
+I could do the liveness analysis completely statically, but I choose to internalize it into the model for ease.
+
+```minizinc
+enum reg_t = {R0, R1, R2, R3};
+enum temp_t = {T0, T1, T2, T3, T4, T5};
+int : MAXID = 5;
+set of int : operation_t = 0..MAXID;
+
+predicate insn(operation_t : id, list of temp_t : lhs, string : opcode, list of temp_t : rhs) = 
+  % https://en.wikipedia.org/wiki/Live_variable_analysis
+  forall(t in temp_t)(
+    if (t in rhs) % in gen set
+      then live_in[t, id] = true
+    elseif (t in lhs) % not in gen set, in kill set
+      then live_in[t,id] = false
+    else % propagate
+      live_in[t,id] <- live_in[t, id + 1] 
+    endif) /\
+  % Assignments need to go to different registers than live variables of next instruction.
+  forall(t1 in lhs)(
+    forall(t2 in temp_t where t1 != t2)(
+      live_in[t2,id+1] -> reg[t1] != reg[t2]
+  ));
+
+% Nothing is live at end of block
+constraint forall(t in temp_t)( live_in[t, MAXID] = false);
+
+constraint 
+  insn(0, [T1], "mov", [T0])     /\
+  insn(1, [T2], "add", [T0, T1]) /\
+  insn(2, [T3], "sub", [T0, T1]) /\
+  insn(3, [T4], "mul", [T1, T2]) /\
+  insn(4, [T5], "inc", [T4]) ;
+
+array[temp_t, operation_t] of var bool : live_in; %live_in
+array[temp_t] of var reg_t : reg;
+%reg = [T0: R2, T1: R0, T2: R1, T3: R2, T4: R0, T5: R0];
+%live_in = 
+%[|         0:     1:     2:     3:     4:     5: 
+% | T0:  true,  true,  true, false, false, false
+% | T1: false,  true,  true,  true, false, false
+% | T2: false, false,  true,  true, false, false
+% | T3: false, false, false, false, false, false
+% | T4: false, false, false, false,  true, false
+% | T5: false, false, false, false, false, false
+% |];
+%----------
+
+% if we're not in ssa, maybe 
+% array[temp_t, id] of var reg_t; 
+% since register can change as reuse site.
+
+% Registers don't allocate to same spot
+%constraint forall (id in operation_t)(
+%  forall(t1 in temp_t)(
+%    forall(t2 in temp_t)(
+%      (live_in[t1,id] /\ live_in[t2,id] /\ t1 != t2) ->
+%      reg[t1] != reg[t2]
+%    )));
+
+
+```
+
+How do you want to talk about the solution space.
+- a next(id1,id2) matrix
+- live[id,t] matrix vs start end cycle integers.
+
+ % since we don't record the gen kill sets we need to do this in here.
+`% next[i,j]` where you see `id + 1` 
+I was assuming SSA, but maybe it can handle non ssa? Noo. It probably can't.
+
+### Scheduling and Allocation
+We can also use a next[i,j] matrix or change live to a start end cycle parameter.
+
+
+### Multiple Blocks
+### Register Packing
+Using the rectangle packing constraint for register modelling
+
+### Other
+- [Relational Processing for Fun and Diversity](https://personal.utdallas.edu/~hamlen/lundquist19minikanren.pdf) minikanren
+- [Denali - a goal directed super optimizer](https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf) egraph based optimization of assembly
+- [PEG](https://cseweb.ucsd.edu/~lerner/papers/popl09.pdf) egraph cfg
+- [RVSDG](https://github.com/egraphs-good/egg/discussions/106)
+- [minimips minikanren mips assembler/disassembler](https://github.com/orchid-hybrid/minimips)
+
 ## Instruction Selection
 Subgraph isomorphism problem
 VF2 algorithm
@@ -230,6 +350,7 @@ Hash cons dags can have many input and output edges. However the output edges of
 Operads
 
 You could take a relational perspective on operations, having neither input not output.
+
 ## Register Allocation
 <https://arxiv.org/abs/1804.02452>
 
@@ -251,6 +372,14 @@ In this example, if we assume v1 v2 & v3 are live at the beginning, v1 is live f
 Compiler gym
 
 ## Instruction Scheduling
+The pure instruction scheduling problem might occur even at the IR level. We can imagine an imperative IR. Certain operations commute and others don't. We may want to minimize the liveness time of variables for example. This would make sense as a pre-processing step to a sequence input language to an instruction selector.
+
+
+Instruction scheduling can be parametrized as:
+1. an embedding into actual time (cycle issue time probably). This is important if you are optimizing for runtime and can get estimates of how long each instruction takes.
+2. a ranking as integers
+3. next(i,j) relation which is basically integers. Allows for partial order. after(i,j) :- next(i,k), after(). after is path connected in temporal dag. Possibly this is mappable into a lattice notion of time (i,j,k,etc)?
+
 ## Assembly Production
 You need to produce actual binary, actual 1s and 0s
 See also:

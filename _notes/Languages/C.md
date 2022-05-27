@@ -1,6 +1,6 @@
 ---
 layout: post
-title: C/C++
+title: C
 ---
 [Beej's Guide to C](https://beej.us/guide/bgc/)
 
@@ -121,3 +121,20 @@ mimalloc https://github.com/microsoft/mimalloc
 
 
 [how debuggers work](https://eli.thegreenplace.net/2011/01/27/how-debuggers-work-part-2-breakpoints) int3 and ptrace
+
+# GDB
+
+[beej's quick guide to gdb](https://beej.us/guide/bggdb/)
+
+help command. lots of stuff
+
+- ni next instruction. next / nexti
+- si step stepi
+- info all-registers registers
+- where
+- jump
+- display $rax - always print rax. display/10i *$rip
+- x/10i $pc - next 10 instructions
+- x/10x $sp  look at stack. x/s look at string
+- list *$rip shows you a few lines before and after
+- layout split asm src. tui disable. tui enable

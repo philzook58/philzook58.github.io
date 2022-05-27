@@ -116,6 +116,9 @@ These are often presented as something like a sequence of steps, each being dign
 ## Sequent Calculus
 <https://en.wikipedia.org/wiki/Sequent_calculus>
 
+Left and Right rules.
+You are breaking down formula going up the inference rule
+
 ## Natural Deduction
 
 

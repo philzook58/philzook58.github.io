@@ -6,15 +6,39 @@ wordpress_id: 2987
 ---
 
 
+[bare metal julia arduino](https://news.ycombinator.com/item?id=31481895)
+
 ```julia
 println("hello world")
-#using Plots
-#using JuMP
+using Plots
+using JuMP
 using LinearAlgebra
-x = [1,2,3,4]
+x = [1,2,3,5]
 print(x)
 using Metatheory
 ```
+
+hmm if I want julia to work good, I need to make a command that is valid julia but also valid bash
+
+#= =# multiline julia is not a bash comment
+
+```
+#= 
+bash code julia won't run
+# =# julia code bash won't run
+```
+
+```
+#= 
+julia
+# =# julia code bash won't run
+```
+
+```
+"julia": "#=\njulia\n# =#\ninclude($dir * \"$fileName\")",
+```
+
+Yes, that's right, Mr. Vice President. I _am_ a genius.
 
 [packagecompiler](https://julialang.github.io/PackageCompiler.jl/dev/index.html) make sys images so that packages load faster
 

@@ -320,6 +320,7 @@ The obj module holds all kinds of nasty introspective goodies. Possibly physical
 [bounding data races in space and time](https://kcsrk.info/papers/pldi18-memory.pdf)
  Interesting formalization of shared memory.
 
+[a tutorial on parallel programming in ocaml 5](https://discuss.ocaml.org/t/a-tutorial-on-parallel-programming-in-ocaml-5/9896)
 ### Domains
 For parallelism not concurrency
 Uses system threads. You don't want more domains than cores

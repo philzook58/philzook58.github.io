@@ -3,6 +3,27 @@ layout: post
 title: Functional Languages Implementation
 ---
 
+- [Abstract Machines](#abstract-machines)
+- [CEK](#cek)
+- [SECD](#secd)
+- [Krivine](#krivine)
+- [ZAM](#zam)
+- [G-machine](#g-machine)
+- [Combinators](#combinators)
+- [HVM](#hvm)
+- [Graph combinators](#graph-combinators)
+- [Misc](#misc)
+      - [Why Abstract Machines?](#why-abstract-machines)
+      - [Why Stacks?](#why-stacks)
+      - [The RPN Calculator](#the-rpn-calculator)
+      - [Defunctionalizing an Arithmetic Evaluator](#defunctionalizing-an-arithmetic-evaluator)
+      - [Adding Bools](#adding-bools)
+      - [Adding Let Bindings](#adding-let-bindings)
+      - [Adding Print Commands](#adding-print-commands)
+      - [Named Functions](#named-functions)
+      - [Currying and Closures.](#currying-and-closures)
+
+
 See also notes on:
 - binding forms
 - continuations
