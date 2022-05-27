@@ -9,15 +9,188 @@ title: CTF stuff
 wordpress_id: 2960
 ---
 
+- [Reversing](#reversing)
+  - [Disassembly](#disassembly)
+    - [Interactive](#interactive)
+  - [Fuzzing](#fuzzing)
+  - [Vulnerabilities](#vulnerabilities)
+  - [Mitigations](#mitigations)
+- [Exploits](#exploits)
+  - [Buffer Overflows](#buffer-overflows)
+  - [Primitives](#primitives)
+  - [Return Oriented Programming (ROP)](#return-oriented-programming-rop)
+  - [Data Oriented Programming (DOP)](#data-oriented-programming-dop)
+  - [Heap](#heap)
+  - [Automated Exploit Generation (AEG)](#automated-exploit-generation-aeg)
+- [CTF](#ctf)
+- [Misc](#misc)
+- [nmap](#nmap)
+      - [Digital forensics](#digital-forensics)
+      - [pwn.college](#pwncollege)
+  - [Intro](#intro)
+    - [binary files](#binary-files)
+    - [process loading](#process-loading)
+- [shellcode](#shellcode)
+  - [Protection](#protection)
+  - [pwntools](#pwntools)
+  - [Examples from pwn.college](#examples-from-pwncollege)
 
-Fuzzing
+
+# Reversing 
+
+
+
+
+## Disassembly
+disassembler 
+linear sweep
+recusrive traversal 
+anti-disassembly 
+https://github.com/AppleReer/Anti-Disassembly-On-Arm64
+
+[relative disassembler performance](https://twitter.com/richinseattle/status/1468418790006267910?s=20)
+
+capstone http://www.capstone-engine.org/ - disassembler. converse of key
+zydis
+xed
+distrom
+iced
+bddisasm
+yaxpeax
+
+McSema - older trail of bits lifter. Uses llvm as IR
+[remill](https://github.com/lifting-bits/remill) lift to llvm bitcode
+anvill processing remill
+rellic makes C like code
+
+BAP
+ANGR
+
+
+### Interactive
+IDA
+Ghidra
+Binary Ninja
+Cutter
+
+## Fuzzing
+Mayhem
 [Fuzzy-sat](https://arxiv.org/pdf/2102.06580.pdf) running smt queries through a fuzzer
 Angora
 SLF eclipser
 
 Qsym
 
+[fuzzing 22](https://twitter.com/c_cadar/status/1521828920869404677?s=20&t=kBQ6NNrdoK-tcIkhvRqktQ)
 
+## Vulnerabilities
+[CWE](https://cwe.mitre.org/index.html) - common weakenss enumeration
+
+integer overflow https://cwe.mitre.org/data/definitions/190.html
+
+[null pointer dereference](https://cwe.mitre.org/data/definitions/476.html)
+## Mitigations
+Control Flow integrity is a broad term for many of these 
+
+DEP - data execution prevention [executable space protection](https://en.wikipedia.org/wiki/Executable_space_protection) This says DEP is Windows terminology?
+[NX bit](https://en.wikipedia.org/wiki/NX_bit)
+
+shadow stack
+
+stack canary https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_cjh1548250046139.htm -fstack-protector. Guard variable put on stack
+SSP stack smashing protection. Stackguard, Propolice. https://embeddedartistry.com/blog/2020/05/18/implementing-stack-smashing-protection-for-microcontrollers-and-embedded-artistrys-libc/
+[Buffer overflow protection](https://en.wikipedia.org/wiki/Buffer_overflow_protection)
+
+ASLR ASLP A [Address Space Layout Randomization](https://en.wikipedia.org/wiki/Address_space_layout_randomization). Libraries are linked in at a different location. This make code reuse in an exploit more difficult.
+
+Fat pointers 
+
+[endbr](https://stackoverflow.com/questions/56905811/what-does-the-endbr64-instruction-actually-do) intel control flow enforcement technology (CET). Valid locations for indirect jumps.
+
+ASLR - Addresses are randomized
+cat /proc/mem/self ? To look at what actually loaded
+Also ldd shows were libraries get loaded in memory
+Stack canaries - set once per binary run, so with forking you can brute force them or maybe leak them?
+
+[checksec](https://github.com/slimm609/checksec.sh) tells you about which things are enabled. https://opensource.com/article/21/6/linux-checksec which also has a rundown of the different things and how you could check them manually. Can output into xml, json, csv
+
+gcc options
+-no-pie -pie -fpie 
+-no-stack-protection
+-fstack-protector-all
+-z execstack makes stack executable 
+
+RELRO - relocation read only. GOT table becomes read only. Prevents relocation attacks
+# Exploits
+
+## Buffer Overflows
+[buffer overflow](https://en.wikipedia.org/wiki/Buffer_overflow)
+When a buffer overflow occurs you are writing to memory that possibly had a different purpose. Maybe other stack variables, maybe return address pointers, maybe over heap metadata.
+
+Sanitization of user input
+Off by one errors
+String termination
+
+
+## Primitives
+AWP Arbitrary write primitive [CWE-123: Write-what-where Condition](https://cwe.mitre.org/data/definitions/123.html)
+ARP arbitrary read primitive
+
+
+## Return Oriented Programming (ROP)
+[return to libc](https://en.wikipedia.org/wiki/Return-to-libc_attack) libc is very common and
+you can weave together libc calls. "Solar Designer"
+[solar designer](https://en.wikipedia.org/wiki/Solar_Designer) 1997
+
+[ropc-llvm](https://github.com/programa-stic/ropc-llvm)
+[ropc](https://github.com/pakt/ropc)
+
+[smashing the stack for fun and profit](http://phrack.org/issues/49/14.html) - stacks are no longer executable
+
+https://acmccs.github.io/papers/geometry-ccs07.pdf geometry of innocent flesh on the bone. ROP
+
+https://github.com/sashs/Ropper
+
+## Data Oriented Programming (DOP)
+
+[Block Oriented Programming](https://arxiv.org/pdf/1805.04767.pdf)
+
+## Heap
+Heap layout problem
+Heap layout manipulation
+
+Metadata
+
+Double free
+Use after free
+
+http://phrack.org/issues/61/6.html advanced doug lea malloc hacking
+
+
+https://milianw.de/blog/heaptrack-a-heap-memory-profiler-for-linux.html
+valgrind massif
+perf-mem, valgrind massif, and heaptrack
+
+https://heap-exploitation.dhavalkapil.com/
+
+advanced doug lea malloc - phreak post
+
+
+## Automated Exploit Generation (AEG)
+
+[sean heelan](https://sean.heelan.io/) [thesis](https://seanhn.files.wordpress.com/2020/11/heelan_phd_thesis.pdf)
+
+usenix security
+[heaphopper](https://www.usenix.org/conference/usenixsecurity18/presentation/eckert) angr symbolic analysis for heap exploits?
+[archeap](https://github.com/sslab-gatech/ArcHeap)
+[maze toward heap feng shui](https://www.usenix.org/system/files/sec21fall-wang-yan.pdf)
+[backward search from heaphopper](https://scholar.google.com/scholar?start=0&hl=en&as_sdt=40000005&sciodt=0,22&cites=5560685275836890680&scipsc=)
+[teerex](https://www.youtube.com/watch?v=HrrPDyHy7v8&list=PLbRoZ5Rrl5leqxwFLw3lAQ9on-fK5xLea&index=48&ab_channel=USENIX) discover of memory corrupton vulen
+[symcc]
+
+# CTF
+
+# Misc
 
 <https://twitter.com/peter_a_goodman/status/1503016499824537600?s=20&t=1Z4ew6rnGnFiMTSrQJSmKw> goodman on binary rewriting
 binrec - lift program merge lifted bytecode into debloated
@@ -25,22 +198,17 @@ egalito
 BOLT
 lifting bits/grr
 
-[endbr](https://stackoverflow.com/questions/56905811/what-does-the-endbr64-instruction-actually-do) intel control flow enforcement technology (CET). Valid locations for indirect jumps.
+
 
 cfi directives - call frame information
 
-shadow stack
 
 joern.io 
 https://github.com/RUB-SysSec/EvilCoder automatic bug insertion using joern
 
 Hiding instructions in instructions
 https://lucris.lub.lu.se/ws/portalfiles/portal/78489284/nop_obfs.pdf
-disassembler 
-linear sweep
-recusrive traversal 
-anti-disassembly 
-https://github.com/AppleReer/Anti-Disassembly-On-Arm64
+
 
 Thomas stars https://github.com/bsoddreams?tab=stars
 
@@ -56,13 +224,7 @@ opaque preciates - one branch always taken
 chris domas https://github.com/xoreaxeaxeax/movfuscator
 tom 7
 
-usenix security
-[heaphopper](https://www.usenix.org/conference/usenixsecurity18/presentation/eckert) angr symbolic analysis for heap exploits?
-[archeap](https://github.com/sslab-gatech/ArcHeap)
-[maze toward heap feng shui](https://www.usenix.org/system/files/sec21fall-wang-yan.pdf)
-[backward search from heaphopper](https://scholar.google.com/scholar?start=0&hl=en&as_sdt=40000005&sciodt=0,22&cites=5560685275836890680&scipsc=)
-[teerex](https://www.youtube.com/watch?v=HrrPDyHy7v8&list=PLbRoZ5Rrl5leqxwFLw3lAQ9on-fK5xLea&index=48&ab_channel=USENIX) discover of memory corrupton vulen
-[symcc]
+
 
 
 [firmadyne](https://github.com/firmadyne/firmadyne) emulating and analyzing firmware
@@ -89,6 +251,7 @@ nmap nse - nmap scriping engine. There is a folder of scripts
 p0f - passive sniffing. fingerprinting
 
 
+
 [malware reversing class](https://class.malware.re/)
 [live overflow youtube](https://www.youtube.com/watch?v=iyAyN3GFM7A)
 [](https://guyinatuxedo.github.io/00-intro/index.html)
@@ -110,7 +273,7 @@ synesthesia
 FLIRT
 https://github.com/avast/retdec
 
-[relative disassembler performance](https://twitter.com/richinseattle/status/1468418790006267910?s=20)
+
 
 <https://github.com/grimm-co/NotQuite0DayFriday> exploit examples
 
@@ -124,15 +287,9 @@ Implementing Effective Code Review
 
 Hacking:
 http://langsec.org/papers/Bratus.pdf sergey weird machine paper
-smashing the stack for fun and profit - stacks are no longer executable
-return to libc https://en.wikipedia.org/wiki/Return-to-libc_attack - libc is very common and
-you can weave together libc calls. "Solar Designer"
-https://en.wikipedia.org/wiki/Return-to-libc_attack
-https://acmccs.github.io/papers/geometry-ccs07.pdf geometry of innocent flesh on the bone. ROP
-http://phrack.org/issues/61/6.html advanced doug lea malloc hacking
-https://github.com/sashs/Ropper
+
 https://github.com/sashs/filebytes
-http://www.capstone-engine.org/ - disassembler. converse of key
+
 blackhat
 defcon
 bluehat
@@ -149,11 +306,7 @@ Huh.
 
 
 
-#### Heap
 
-https://milianw.de/blog/heaptrack-a-heap-memory-profiler-for-linux.html
-valgrind massif
-perf-mem, valgrind massif, and heaptrack
 
 #### Digital forensics 
 
@@ -196,9 +349,7 @@ Best CTFs. I probably don't want the most prestigious ones? They'll be too high 
 
 https://ctf101.org/ - check out the heap exploitation github thing
 
-https://heap-exploitation.dhavalkapil.com/
 
-advanced doug lea malloc - phreak post
 
 pwntools
 
@@ -287,7 +438,7 @@ https://github.com/zardus/ctf-tools
      - symbols - 
     - segments - where to load
 
-    readelf, objdump, nm - reads symbols, patcheld, objcopy, strip, kaitai struct https://www.intezer.com/blog/malware-analysis/executable-linkable-format-101-part-2-symbols/
+    readelf, objdump, nm - reads symbols, patchelf, objcopy, strip, kaitai struct https://www.intezer.com/blog/malware-analysis/executable-linkable-format-101-part-2-symbols/
 
 ### process loading
 https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-4.html

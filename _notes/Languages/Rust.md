@@ -162,10 +162,12 @@ Lazy and once_cell are in nightly rust and std https://github.com/rust-lang/rust
 ## RustHorn
 Prophetic encoding. Mutable borrows are modelled as pairs of current and final values.
 ## RustHornBelt
+https://www.lri.fr/~xldenis/paper/rusthornbelt.pdf
+
 ## Prusti
 ## Creusot
 https://hal.inria.fr/hal-03526634/document
-buolt in why3
+built in why3
 pearlite - specification language
 
 This toggle thing is very surpising to me

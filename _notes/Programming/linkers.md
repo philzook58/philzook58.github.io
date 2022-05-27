@@ -91,6 +91,7 @@ unwind tables
 <https://fzn.fr/projects/frdwarf/>
 [How debuggers work: Part 3 - Debugging information](https://eli.thegreenplace.net/2011/02/07/how-debuggers-work-part-3-debugging-information)
 
+[gimli](https://docs.rs/gimli/latest/gimli/) a rust library for reading and writing dwarf
 
 C++ uses drawf unwind tables to implement exceptions
 

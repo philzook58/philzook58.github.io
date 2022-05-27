@@ -58,6 +58,7 @@ title: Datalog
     - [Goals / Queries](#goals--queries)
     - [Uncurrying](#uncurrying)
     - [Higher Order Clauses (Harrop)](#higher-order-clauses-harrop)
+      - [Stack database](#stack-database)
     - [Existenial Queries](#existenial-queries)
     - [Universal Quantifier](#universal-quantifier)
     - [Geometry](#geometry)
@@ -1744,6 +1745,18 @@ We can make context arbitrarily deep, but we have to make a cutoff. Probably goi
 This is similar feeling to k-CFA.
 
 Anything that can be produced from biz needs a contextual verision. bar(x,y) can be considered the same as bar(Glob(),x,y). That's a different convention. Instead of adding context everything have bar and bar_ctx, where implicilty bar is Glob.
+
+
+#### Stack database
+You can organizing your database into a stack. You can refactor this in a number of ways. 
+In seminaive you have a old, new, and delta table per  relation. You can make old into `[old]` and only commit into the top of the stack. 
+You could also factor the entore `[database]` into a stack of databases instead of per relation.
+You could also add an extra stack height key into every row and then call `DELETE where stack >= N` when you want to pop (even pop far).
+
+`a :- (b :- a)` is an idiom for "suppose a. If I find b, commit to a.
+
+Note that egglog + stack database gives similar power to scoped union find. And extra parameter in all rows is similar to explicit scope parameter.
+
 
 ### Existenial Queries
 Existentials in bodies and toplevel query are interpreted as pattern matching.

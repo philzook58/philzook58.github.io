@@ -1158,7 +1158,15 @@ Jens Otten
 
 [a pearl on SAT and SMT solving in prolog](https://www.sciencedirect.com/science/article/pii/S030439751200165X) [code](http://www.staff.city.ac.uk/~jacob/solver/index.html)
 
+[Backjumping is Exception Handling](https://arxiv.org/abs/2008.04720) throw and catch implement backjumping for a sat solver
+
+[PRESS: PRolog Equation Solving System](https://github.com/maths/PRESS) as described in the art of prolog book. also has an lp solver?
+Pretty interesting tehcniques. If a variable is in a single position, you can unfold the expression. 2. you can apply quadratic equations and stuff 3. 
+Is it kind of a zipper to isolate a variable?
+
 # Misc
+
+
 
 https://github.com/mthom/scryer-prolog/pull/838 scryer as a library?
 

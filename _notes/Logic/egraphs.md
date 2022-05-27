@@ -16,6 +16,8 @@ Their VM is quire similar to WAM.
 A union find is a data structure useful for finding connected components in a graph. The "proof" that two vertices are connected is the path between them. We need to maintain an incremental spanning tree of some kind.
 
 
+# PEG
+
 # Misc
 What would be a mvp egraph in C specialized for the comm/assoc problem look like.
 Use reference based union find with tag bits?
@@ -31,3 +33,6 @@ g(1,2,3).
 
 -? plus(A,B,AB), plus(AB,C,ABC)
 ```
+
+YOGO koppel
+[Sketch-Guided Equality Saturation Scaling Equality Saturation to Complex Optimizations in Languages with Bindings](https://arxiv.org/pdf/2111.13040.pdf) de buijn indexes with extraction. Rise compiler
