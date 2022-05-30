@@ -6,7 +6,7 @@ title: Coq
 - [Coq is Normal](#coq-is-normal)
     - [Interesting commands](#interesting-commands)
   - [Inductive Types](#inductive-types)
-  - [Coindcutive Types](#coindcutive-types)
+  - [Coinductive Types](#coinductive-types)
   - [Reflection](#reflection)
   - [What are Proofs](#what-are-proofs)
     - [match annotations](#match-annotations)
@@ -14,13 +14,14 @@ title: Coq
   - [VM](#vm)
 - [Ocaml](#ocaml)
 - [Plugins](#plugins)
-- [misc](#misc)
-  - [Iris](#iris)
+- [Iris](#iris)
+- [SSReflect](#ssreflect)
+- [Stdlibs](#stdlibs)
 - [Compcert](#compcert)
-- [Coq hackthan 2022](#coq-hackthan-2022)
+  - [Coq hackthan 2022](#coq-hackthan-2022)
   - [dune](#dune)
 - [Examples](#examples)
-- [Resources](#resources)
+- [Misc](#misc)
 
 See also:
 - Type theory
@@ -33,11 +34,20 @@ Coq has all sorts of crazy stuff in it, but the core of it can be used as a norm
 
 See my [Coq in Y Minutes tutorial](https://learnxinyminutes.com/docs/coq/)
 
+[Cody's intro to coq](https://www.youtube.com/watch?v=5e7UdWzITyQ) https://github.com/codyroux/broad-coq-tutorial
+
+```coq
+Inductive weekday :=
+ | monday
+ | tuesday.
+```
+
 ### Interesting commands
 - `Drop` vernacular - srops you into an ocaml toplevel
-- [Register](https://coq.github.io/doc/master/refman/proof-engine/vernacular-commands.html#coq:cmd.Register)
+- [Register](https://coq.github.io/doc/master/refman/proof-engine/vernacular-commands.html#coq:cmd.Register) making names accessible to ocaml
 - [Primitive] - register an ocaml primitive
-
+- [`Show`](https://coq.inria.fr/refman/proofs/writing-proofs/proof-mode.html#requesting-information) gives infromation during proof. `Show Proof` shows intermediate stuff.
+- `Search`. Very important. Lots of features.
 
 ## Inductive Types
 Inductive types are prolog
@@ -46,7 +56,7 @@ Eliminators and pattern matching
 
 What should be primitive anyway?
 
-## Coindcutive Types
+## Coinductive Types
 
 
 ## Reflection
@@ -91,18 +101,17 @@ I don't know that any of this is documented except in these tutorials
 coqpp is the tool that turns .mlg into .ml files
 
 
-# misc
-- [coq-ceres](https://github.com/Lysxia/coq-ceres) coq sexp stuff
-- QED does something serious.
-- Surface coq is desugared
-- match annnotations are 
-- Note that the judgement `a : A, b : B, c : C |- f : F` is sort of getting Coq to accept `Definition foo (a : A) (b : B) (c : C) : F := f.` It sort of reorders the pieces and make you give a name to the whole judgement `foo`. That's an interesting way of looking at it anyway. Of course the more usual way is that `foo` is a function definition.
 
-
-[Leroy and Appell caonical binary trees](https://github.com/xavierleroy/canonical-binary-tries) 
-
-## Iris
+# Iris
 Higher order separation logic. Kind of modelling concurrent ML in Coq I think? 
+
+# SSReflect
+SSReflect emphasizes proof by reflection. It is a really succinct inscrutable looking syntax.
+
+
+
+# Stdlibs
+
 
 # Compcert
 <https://github.com/AbsInt/CompCert>
@@ -120,21 +129,7 @@ Individual folders for each architecture. Interesting.
 - backend
 
 
-[autosubst](https://github.com/coq-community/autosubst)
-VCFloat
-gappa
-flocq
-mathematical components
-coq platform
-
-[Verified software Toolchain](https://vst.cs.princeton.edu/) higher order separation logic for C
-[certigraph](https://github.com/CertiGraph/CertiGraph) graph manipulation programs
-[certigc](https://github.com/CertiGraph/CertiGC) verified garbage collector
-
-[Axioms to consider enabling](https://github.com/coq/coq/wiki/CoqAndAxioms)
-
-[ringer pluin tutorial](https://github.com/tlringer/plugin-tutorial)
-# Coq hackthan 2022
+## Coq hackthan 2022
 https://github.com/coq/coq/tree/master/dev/doc
 https://github.com/coq/coq/wiki/DevelSetup coq devel setup
 
@@ -277,7 +272,30 @@ Equality eliminator is rewriting.
 
 ```
 
-# Resources
+# Misc
+- [coq-ceres](https://github.com/Lysxia/coq-ceres) coq sexp stuff
+- QED does something serious.
+- Surface coq is desugared
+- match annnotations are 
+- Note that the judgement `a : A, b : B, c : C |- f : F` is sort of getting Coq to accept `Definition foo (a : A) (b : B) (c : C) : F := f.` It sort of reorders the pieces and make you give a name to the whole judgement `foo`. That's an interesting way of looking at it anyway. Of course the more usual way is that `foo` is a function definition.
+
+
+[Leroy and Appell caonical binary trees](https://github.com/xavierleroy/canonical-binary-tries) 
+
+[autosubst](https://github.com/coq-community/autosubst)
+VCFloat
+gappa
+flocq
+mathematical components
+coq platform
+
+[Verified software Toolchain](https://vst.cs.princeton.edu/) higher order separation logic for C
+[certigraph](https://github.com/CertiGraph/CertiGraph) graph manipulation programs
+[certigc](https://github.com/CertiGraph/CertiGC) verified garbage collector
+
+[Axioms to consider enabling](https://github.com/coq/coq/wiki/CoqAndAxioms)
+
+[ringer pluin tutorial](https://github.com/tlringer/plugin-tutorial)
 [talia ringer thesis](https://homes.cs.washington.edu/~djg/theses/ringer_dissertation.pdf) really good explanations
 
 [Modular pre-processing for automated reasoning in dependent type theory](https://arxiv.org/abs/2204.02643) processing for smtcoq

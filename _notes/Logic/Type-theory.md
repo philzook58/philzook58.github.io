@@ -33,14 +33,15 @@ title: Type Theory
       - [Canonical](#canonical)
     - [Reducible Expression](#reducible-expression)
     - [Curry vs Church style](#curry-vs-church-style)
+    - [Large Elimination](#large-elimination)
+    - [Excluded Middle](#excluded-middle)
+    - [Sorts  & Universes](#sorts---universes)
+    - [Impredicative vs Predicative](#impredicative-vs-predicative)
+    - [Proof Irrelevance](#proof-irrelevance)
+    - [Extensionality](#extensionality)
 - [Equality](#equality)
     - [Extensional vs Intensional](#extensional-vs-intensional)
     - [Judgemental/Definitional / Propositional](#judgementaldefinitional--propositional)
-    - [Sorts](#sorts)
-      - [Impredicative vs Predicative](#impredicative-vs-predicative)
-      - [Proof Irrelevance](#proof-irrelevance)
-      - [Universes](#universes)
-    - [Extensionality](#extensionality)
     - [Univalence](#univalence)
   - [HOTT](#hott)
     - [Older](#older)
@@ -247,6 +248,113 @@ Evaluation does not cause types to change.
 ### Curry vs Church style
 Extrinsic vs Instrinsic types
 
+### Large Elimination
+pattern matching on a value to construct a value of Type
+https://cstheory.stackexchange.com/questions/40339/what-exactly-is-large-elimination
+```coq
+bool_to_type : bool -> Type := fun b =>
+     match b with
+         | true => Unit
+         | false => Empty
+```
+
+[impredicative polymorphism  + exlcuded middle + large elimination can only choose 2](https://github.com/FStarLang/FStar/issues/360)
+
+### Excluded Middle
+```coq
+Axiom classic : forall P:Prop, P \/ ~ P.
+```
+
+### Sorts  & Universes
+<https://coq.inria.fr/refman/language/core/sorts.html>
+- Prop vs Type vs Set - Prop is impredicative. Prop and Set are deleted during extraction? Which make them interestingly different from a metaprogramming perspective.
+
+`Prop` `SProp` `Set`
+`SProp` is Prop with proof irrelevance
+
+Prop is erased at extraction.
+Prop doesn't have large elimination. But it is impredicative and can support excluded middle.
+```coq
+Inductive Bool : Prop := T : Bool | F : Bool.
+
+Definition two_elements_Bool (H : T = F) : False :=
+  match H in (_ = y0) return (match y0 with
+                                | T => True
+                                | F => False
+                              end) with
+    | eq_refl => I
+  end.
+(* Error: *)
+(* Incorrect elimination of "y0" in the inductive type "Bool": *)
+(* the return type has sort "Type" while it should be "Prop". *)
+(* Elimination of an inductive object of sort Prop *)
+(* is not allowed on a predicate in sort Type *)
+(* because proofs can be eliminated only to build proofs. *)
+```
+
+
+[why does coq have prop(https://cstheory.stackexchange.com/questions/21836/why-does-coq-have-prop)]
+
+Is there a difference between Sorts and Universes?
+<https://github.com/jdolson/hott-notes/blob/pdfs/pdfs/notes_week5.pdf>
+Universes are 
+
+Algerbaic universes - If the levels of type are a DAG, they can be ordered. So one doesn't eagerly pick integer levels for Type. Instead you maintain contraints like max{l1,l2} etc.
+
+### Impredicative vs Predicative
+This is describing allowing some kind of form of self reference I think.
+
+Impredicative types allow quantification over themselves.
+Prop
+
+### Proof Irrelevance
+Propositional extensionality implies proof irrelevance
+https://coq.inria.fr/library/Coq.Logic.ProofIrrelevance.html
+Axiom proof_irrelevance : forall (P:Prop) (p1 p2:P), p1 = p2.
+
+https://github.com/coq/ceps/pull/32 RFC: Disentangling erasure and proof irrelevance
+
+It feels like proof irrelevance and erasure are related concepts, but like almost everything in type theory there is probably a time and place and level of sophistication to consider them as distinct
+
+[Irrelevance, Polymorphism, and Erasure in Type Theory](https://pdxscholar.library.pdx.edu/open_access_etds/2674/)
+
+
+
+[ Berardi's paradox which says that in the calculus of constructions, excluded middle (EM) and axiom of choice (AC) imply proof irrelevance (PI).](https://coq.inria.fr/library/Coq.Logic.Berardi.html)
+
+
+
+
+
+### Extensionality
+Extensionality is a notion that applies to more than just function and equality types.
+https://cstheory.stackexchange.com/questions/17636/%CE%B7-conversion-vs-extensionality-in-extensions-of-lambda-calculus
+
+forall x, f x = g x -> f = g
+forall A B : Prop, A <-> B -> A = B
+forall x, x = match x with () -> ()
+
+Consider 
+fun x -> x = fun x -> tt
+Is this provable?
+
+Some of these are provable
+
+alpha
+beta
+eta
+iota
+
+
+
+Computational Content
+
+Heterogenous vs Homogenous equality
+
+Eta equivalence - The dumb expansion? Observational Equivalence
+
+Reduction vs Equivalence
+
 # Equality
 
 [carette definitional equality](https://twitter.com/jjcarett2/status/1522973680241946625?s=20&t=kBQ6NNrdoK-tcIkhvRqktQ)
@@ -289,65 +397,7 @@ Tests. Example `Definition mytest : tt = tt := eq_refl.` See if coq accepts it <
 
 
 
-### Sorts 
-<https://coq.inria.fr/refman/language/core/sorts.html>
-- Prop vs Type vs Set - Prop is impredicative. Prop and Set are deleted during extraction? Which make them interestingly different from a metaprogramming perspective.
 
-`Prop` `SProp` `Set`
-`SProp` is Prop with proof irrelevance
-
-#### Impredicative vs Predicative
-This is describing allowing some kind of form of self reference I think.
-
-#### Proof Irrelevance
-Propositional extensionality implies proof irrelevance
-https://coq.inria.fr/library/Coq.Logic.ProofIrrelevance.html
-Axiom proof_irrelevance : forall (P:Prop) (p1 p2:P), p1 = p2.
-
-https://github.com/coq/ceps/pull/32 RFC: Disentangling erasure and proof irrelevance
-
-It feels like proof irrelevance and erasure are related concepts, but like almost everything in type theory there is probably a time and place and level of sophistication to consider them as distinct
-
-[Irrelevance, Polymorphism, and Erasure in Type Theory](https://pdxscholar.library.pdx.edu/open_access_etds/2674/)
-
-
-#### Universes
-<https://github.com/jdolson/hott-notes/blob/pdfs/pdfs/notes_week5.pdf>
-Universes are 
-
-Algerbaic universes - If the levels of type are a DAG, they can be ordered. So one doesn't eagerly pick integer levels for Type. Instead you maintain contraints like max{l1,l2} etc.
-
-
-
-
-### Extensionality
-Extensionality is a notion that applies to more than just function and equality types.
-https://cstheory.stackexchange.com/questions/17636/%CE%B7-conversion-vs-extensionality-in-extensions-of-lambda-calculus
-
-forall x, f x = g x -> f = g
-forall A B : Prop, A <-> B -> A = B
-forall x, x = match x with () -> ()
-
-Consider 
-fun x -> x = fun x -> tt
-Is this provable?
-
-Some of these are provable
-
-alpha
-beta
-eta
-iota
-
-
-
-Computational Content
-
-Heterogenous vs Homogenous equality
-
-Eta equivalence - The dumb expansion? Observational Equivalence
-
-Reduction vs Equivalence
 
 
 ### Univalence

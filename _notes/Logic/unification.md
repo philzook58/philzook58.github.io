@@ -8,6 +8,47 @@ title: Unification
 # Higher Order Unification
 [efficient full higher order unification](https://arxiv.org/abs/2011.09507) zipperposition
 
+[Unification Under a Mixed Prefix  - miller](https://repository.upenn.edu/cgi/viewcontent.cgi?article=1470&context=cis_reports)
+
+equality over lambda terms is similar to universalc quantification
+[unification of stlc as logic programming](https://www.lix.polytechnique.fr/Labo/Dale.Miller/papers/iclp91.pdf)
+This is really interesting. Interpretting lambda unificatsion as a harrop program. This is similar to what I was suggesting in harrop egglog. forall ((x = y) -> p = q) -> \x p = \y q
+structural vs generic equality.
+
+Anti abstracting - if F is only applied to things it can't contain.
+
+[Functions-as-constructors higher-order uniﬁcation:extended pattern uniﬁcatio](https://www.researchgate.ne
+t/publication/354972147_Functions-as-constructors_higher-order_unification_extended_pattern_unification)
+DSP mathing. FCU unification 
+hamana sol https://www.cs.gunma-u.ac.jp/~hamana/
+
+What is the problem with pure alpha matching? de Bruijn indexing makes it feel like it should just be ordinary structural matching.
+Here's the problem though. What is the scope of the pattern variables?
+If you only use the pattern variable once, maybe not a problem. Ok linear patterns. But then if you're matching in order to instantiate this variable into something
+
+match `\ F` with `\0`. If we make `F = 0` that's ok
+`\ F F` with `\ 0 0` is ok also becaoue both instances of F are in scope of the same thing
+The rewrite rule
+`\ F -> \ F` is highly fishy though.  
+Perhaps it is best to use named variables
+rule : `\x F -> \y F`
+matched with `\z. z`
+First off match fails since `\x. _ != \z. _`
+ok but then what about alpha renaming matchee to
+`\x. x`
+Then we get `F = x`. Fine.
+But then the other side gets \y. x where x wasn't even in scope?
+
+If everything is under the binder somehow (and it isn't entirely clear what this means. We internalize rules as bodies of lambdas? Rules here are not implications. Maybe they are pseudo equalities?)
+\x. (F -> F)
+
+Logically, the pattern variables could be considered existentially quantified on the exterior of the rule
+ex F. \x F -> \y F. This is possibly to match. F can only match things that already are around (in the signature) as the point of ex F.
+
+
+Raising
+
+
 # Pattern Matching
 Arguably pattern matching should be it's own article.
 Depending on which you see first, you may consider unification two way pattern matching or pattern matching as one way unification. I think pattern matching is the much simpler topic

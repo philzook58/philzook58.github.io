@@ -276,6 +276,13 @@ int main(int argc, char *argv[])
 [Block Oriented Programming](https://arxiv.org/pdf/1805.04767.pdf)
 
 ## Heap
+
+If you can overwrite a struct that contains a pointer, you can use this to obtain reads or writes when that pointer is read or written.
+If the struct contains a code pointer, you get control flow execution.
+
+
+
+
 Heap layout problem
 Heap layout manipulation
 
@@ -308,6 +315,14 @@ chunks of memory
 new/delete make_unique
 
 [heap history viewer](https://github.com/thomasdullien/heap_history_viewer)
+
+pwndbg `vis` let's you see allocated chunks. How do it do it?
+vmmap also shows memory regions classified
+top chunk. I think the top chunk is resized to hand out new memory.
+Metadata - size field. prev_in_use flag. 
+Allocator hands out in discrete sizes, not arbitrarily flexible
+
+[hacktheheap.io](https://twitter.com/wootsecurity/status/1529893232557142037?s=20&t=6BI9d8LKn2fVprDrNxITOw)
 
 ## Automated Exploit Generation (AEG)
 

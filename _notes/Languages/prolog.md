@@ -1037,7 +1037,11 @@ main :- (x\ x) = (y\ F y), print F,
       (x\ tt) = (y\ F2), print F2
 . 
 ```
+```elpi
+main :- (x \ x) = (x \ F_ x),
+        (x \ y \ x y) = (z \ G z), print G.
 
+```
 
 ```elpi
 % church encoding
@@ -1087,6 +1091,8 @@ Some built in elpi files
 [Implementing Type Theory in Higher Order Constraint Logic Programming](https://hal.inria.fr/hal-01410567v2/document) longer elpi paper. describes chr.
 - macro directives
 - delay directives
+
+
 ### HO Unification
 forall exists forall problems
 Raising vs Skolemization

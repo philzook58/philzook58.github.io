@@ -189,6 +189,9 @@ enum temp_t = {T0, T1, T2, T3, T4, T5};
 int : MAXID = 5;
 set of int : operation_t = 0..MAXID;
 
+array[temp_t, operation_t] of var bool : live_in;
+array[temp_t] of var reg_t : reg;
+
 predicate insn(operation_t : id, list of temp_t : lhs, string : opcode, list of temp_t : rhs) = 
   % https://en.wikipedia.org/wiki/Live_variable_analysis
   forall(t in temp_t)(
@@ -215,8 +218,7 @@ constraint
   insn(3, [T4], "mul", [T1, T2]) /\
   insn(4, [T5], "inc", [T4]) ;
 
-array[temp_t, operation_t] of var bool : live_in; %live_in
-array[temp_t] of var reg_t : reg;
+
 %reg = [T0: R2, T1: R0, T2: R1, T3: R2, T4: R0, T5: R0];
 %live_in = 
 %[|         0:     1:     2:     3:     4:     5: 

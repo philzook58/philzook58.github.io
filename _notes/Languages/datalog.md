@@ -1477,9 +1477,22 @@ https://github.com/AndrasKovacs/elaboration-zoo/blob/master/01-eval-closures-deb
 .type value = Closure {t : term, e : env}
 .type env = [hd : value , tl : env]
 
+.decl _eval(e : env, t : term)
 .decl eval(e : env, t : term, v : value)
-eval([hd,tl], $Var(0), hd).
+// Lookup
+eval([hd,tl], $Var(0), hd) :- _eval([hd,tl], $Var(0)).
+_eval(tl, $Var(n-1))      :- _eval([_hd,tl], $Var(n)), n > 0.
+eval([hd,tl], $Var(n), v) :- _eval([hd,tl], $Var(n)), n > 0, eval(tl, $Var(n-1), v).
 
+eval(ctx, $Lam(b), $Closure(b,ctx)) :- _eval(ctx, $Lam(b)).
+
+_eval(ctx, x), _eval(ctx, f) :- _eval(ctx, $App(f,x)).
+_eval([x1 , ctx2] , b) :- _eval(ctx, $App(f,x)), eval(ctx, f, $Closure(b,ctx2)), eval(ctx, x, x1).
+eval(ctx, $App(f,x), v) :- _eval(ctx, $App(f,x)), eval(ctx, f, $Closure(b,ctx2)), eval(ctx, x, x1), eval([x1 , ctx2] , b, v).
+
+//_eval(nil, $App($Lam($Var(0)), $Lam($Var(0)))).
+_eval(nil, $Lam($App($Lam($Var(0)), $Var(1)))).
+.output eval(IO=stdout)
 ```
 
 Krivine machine.
