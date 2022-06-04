@@ -269,6 +269,8 @@ Using the rectangle packing constraint for register modelling
 - [RVSDG](https://github.com/egraphs-good/egg/discussions/106)
 - [minimips minikanren mips assembler/disassembler](https://github.com/orchid-hybrid/minimips)
 
+[scheduling using unimodular modelling](https://twitter.com/taktoa1/status/1531386684876632064?s=20&t=-IHVNfpCMKlhva0T8ctWXA)
+
 ## Instruction Selection
 Subgraph isomorphism problem
 VF2 algorithm
@@ -418,6 +420,9 @@ The boehm garbage collector seems easy to use. Also you can just malloc and neve
 Making a simple garbage collector [https://maplant.com/gc.html](https://maplant.com/gc.html)
 
 # Misc
+
+Compilers as databases
+[Query-based compiler architectures](https://ollef.github.io/blog/posts/query-based-compilers.html)
 
 [cs6120 adrian sampson](https://www.cs.cornell.edu/courses/cs6120/2022sp/lesson/) Looks like a nice syllabus
 

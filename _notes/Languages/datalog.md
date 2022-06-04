@@ -3751,7 +3751,7 @@ What about guarded negation? For example if you turn off stratification but are 
 [Neural Datalog through time](https://arxiv.org/pdf/2006.16723.pdf)
 
 
-[semipositive datalog](https://drops.dagstuhl.de/opus/volltexte/2020/11943/pdf/LIPIcs-ICDT-2020-19.pdf) The theory of removing negation? I guess that makes sense as a pursuit. It's what I always try to trick my way into.
+[Datalog with Negation and Monotonicity semipositive datalog](https://drops.dagstuhl.de/opus/volltexte/2020/11943/pdf/LIPIcs-ICDT-2020-19.pdf) The theory of removing negation? I guess that makes sense as a pursuit. It's what I always try to trick my way into.
 
 [survey of deductive databases ullam nramakrishnan 1993](https://core.ac.uk/download/pdf/82655241.pdf)
 

@@ -17,8 +17,7 @@ structural vs generic equality.
 
 Anti abstracting - if F is only applied to things it can't contain.
 
-[Functions-as-constructors higher-order uniﬁcation:extended pattern uniﬁcatio](https://www.researchgate.ne
-t/publication/354972147_Functions-as-constructors_higher-order_unification_extended_pattern_unification)
+[Functions-as-constructors higher-order uniﬁcation:extended pattern uniﬁcatio](https://www.researchgate.net/publication/354972147_Functions-as-constructors_higher-order_unification_extended_pattern_unification)
 DSP mathing. FCU unification 
 hamana sol https://www.cs.gunma-u.ac.jp/~hamana/
 
@@ -47,6 +46,12 @@ ex F. \x F -> \y F. This is possibly to match. F can only match things that alre
 
 
 Raising
+
+[A Logic Programming Language with Lambda-Abstraction,  Function Variables, and Simple Unification - Miller](http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=FDA9E2A5EE322005C1B35D2394E6B3CA?doi=10.1.1.54.8958&rep=rep1&type=pdf)
+
+[Higher-Order Dynamic Pattern Unification for Dependent Types and Records - Andreas Abel and Brigitte Pientka](https://www.cse.chalmers.se/~abela/unif-sigma-long.pdf)
+
+MLTS
 
 
 # Pattern Matching

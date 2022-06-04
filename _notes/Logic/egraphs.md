@@ -105,6 +105,7 @@ https://github.com/jameysharp/optir/
 
 Loops in egraphs and Landin's knot.
 
+[Equality Saturation: a New Approach to Optimization](https://cseweb.ucsd.edu/~lerner/papers/popl09.pdf)
 # Misc
 What would be a mvp egraph in C specialized for the comm/assoc problem look like.
 Use reference based union find with tag bits?
@@ -123,3 +124,5 @@ g(1,2,3).
 
 l
 [Sketch-Guided Equality Saturation Scaling Equality Saturation to Complex Optimizations in Languages with Bindings](https://arxiv.org/pdf/2111.13040.pdf) de buijn indexes with extraction. Rise compiler
+
+[denali](https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf)

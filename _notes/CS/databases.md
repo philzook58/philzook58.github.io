@@ -236,7 +236,7 @@ Correlated subqueries:
 unnesting arbitrary queries
 How materializr and other databases optimize sql subqueries
 
-
+[genlteish intro to worst case optimal joins](https://twitter.com/justinjaffray/status/1531312730824536064?s=20&t=-IHVNfpCMKlhva0T8ctWXA)
 
 
 # Relational AI

@@ -300,3 +300,5 @@ coq platform
 
 [Modular pre-processing for automated reasoning in dependent type theory](https://arxiv.org/abs/2204.02643) processing for smtcoq
 [The pro-PER meaning of "proper"](https://blog.poisson.chat/posts/2022-04-07-pro-per-proper.html)
+
+[magmide](https://github.com/magmide/magmide)

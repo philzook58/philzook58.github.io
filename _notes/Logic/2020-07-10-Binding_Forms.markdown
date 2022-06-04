@@ -106,3 +106,11 @@ weirich [https://www.youtube.com/watch?v=j2xYSxMkXeQ](https://www.youtube.com/wa
 
 In locally nameless we don't have to shift on the term we're substituting in since the free variables in the term have names.
 
+# Nominal
+Explicit fresh and swap things. 
+
+alphaprolog
+alphakanren
+mlts
+freshml
+

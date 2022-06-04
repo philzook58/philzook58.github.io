@@ -238,3 +238,8 @@ https://www.lulu.com/shop/oscar-toledo-gutierrez/programming-boot-sector-games/p
 sectorlisp
 
 x86 forth 
+
+[easy 6502 assembly](https://news.ycombinator.com/item?id=31548311) in browser assembler an emulator ebook
+
+
+

@@ -68,6 +68,8 @@ https://en.wikipedia.org/wiki/Single_Compilation_Unit
 
 # ELF
 
+[tmp.out](https://tmpout.sh/)
+https://github.com/tmpout/awesome-elf
 # Objcopy
 Not linking persay. But some useful stuff for manipulating object files
 

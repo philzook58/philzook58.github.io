@@ -45,6 +45,15 @@ Network
 
 
 ## Stuff
+[how fast are linux pipes anyway](https://mazzo.li/posts/fast-pipes.html)
+pv - pipe viewer. pipe thorughput http://www.ivarch.com/programs/pv.shtml
+
+
+really cool blog posts https://mazzo.li/archive.html
+
+[how to allocate huge tables](https://twitter.com/trascendentale/status/1462916354453946371?s=20&t=p3cq_31MG7DBts7HVR_-lg)
+
+Software pipelining https://twitter.com/geofflangdale/status/1531858991336550400?s=20&t=geOHu86_aPOLlcz-y8fE0Q
 
 The Art of Writing Efficient Programs: An advanced programmer's guide to efficient hardware utilization and compiler optimizations using C++ examples - Pikus
 

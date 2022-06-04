@@ -23,6 +23,7 @@ wordpress_id: 2960
   - [Data Oriented Programming (DOP)](#data-oriented-programming-dop)
   - [Heap](#heap)
   - [Automated Exploit Generation (AEG)](#automated-exploit-generation-aeg)
+- [Elf stuff](#elf-stuff)
 - [CTF](#ctf)
 - [What is Binary Analysis](#what-is-binary-analysis)
     - [Program Analysis](#program-analysis)
@@ -324,6 +325,11 @@ Allocator hands out in discrete sizes, not arbitrarily flexible
 
 [hacktheheap.io](https://twitter.com/wootsecurity/status/1529893232557142037?s=20&t=6BI9d8LKn2fVprDrNxITOw)
 
+[Playing for K(H)eaps: Understanding and Improving Linux Kernel Exploit Reliability](https://www.usenix.org/system/files/sec22fall_zeng.pdf)
+defragmentation
+
+slake
+
 ## Automated Exploit Generation (AEG)
 
 [sean heelan](https://sean.heelan.io/) [thesis](https://seanhn.files.wordpress.com/2020/11/heelan_phd_thesis.pdf)
@@ -335,6 +341,12 @@ usenix security
 [backward search from heaphopper](https://scholar.google.com/scholar?start=0&hl=en&as_sdt=40000005&sciodt=0,22&cites=5560685275836890680&scipsc=)
 [teerex](https://www.youtube.com/watch?v=HrrPDyHy7v8&list=PLbRoZ5Rrl5leqxwFLw3lAQ9on-fK5xLea&index=48&ab_channel=USENIX) discover of memory corrupton vulen
 [symcc]
+
+[crax++](https://github.com/SQLab/CRAXplusplus)
+
+# Elf stuff
+See linker
+
 
 # CTF
 
@@ -408,6 +420,11 @@ https://twitter.com/33y0re/status/1528719776142475264?s=20&t=vcTgXMu6ZeZRjj7LiSM
 - local privilege escalation (LPE)
 - 
 
+
+
+People
+- elfmaster ryan oneill
+- 
 
 
 ## GDB

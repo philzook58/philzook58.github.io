@@ -35,3 +35,5 @@ model counting
 [sat solver for factorio](https://github.com/R-O-C-K-E-T/Factorio-SAT)
 
 [similiarty metric between solutions](https://twitter.com/ShriramKMurthi/status/1522580546005745664?s=20&t=Q_7w5cTcsscGpoie1QtnCg) model-core in cvc5
+
+[gimsatul](https://github.com/arminbiere/gimsatul) another armin biere experiment. parallel?
