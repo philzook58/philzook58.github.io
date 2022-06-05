@@ -35,6 +35,7 @@ wordpress_id: 2913
     - [Multiple Blocks](#multiple-blocks)
     - [Register Packing](#register-packing)
     - [Other](#other)
+  - [Rewrite Rules](#rewrite-rules)
   - [Instruction Selection](#instruction-selection)
   - [Register Allocation](#register-allocation)
   - [Instruction Scheduling](#instruction-scheduling)
@@ -216,7 +217,7 @@ constraint
   insn(1, [T2], "add", [T0, T1]) /\
   insn(2, [T3], "sub", [T0, T1]) /\
   insn(3, [T4], "mul", [T1, T2]) /\
-  insn(4, [T5], "inc", [T4]) ;
+  insn(4, [T5], "inc", [T4]);
 
 
 %reg = [T0: R2, T1: R0, T2: R1, T3: R2, T4: R0, T5: R0];
@@ -268,6 +269,13 @@ Using the rectangle packing constraint for register modelling
 - [PEG](https://cseweb.ucsd.edu/~lerner/papers/popl09.pdf) egraph cfg
 - [RVSDG](https://github.com/egraphs-good/egg/discussions/106)
 - [minimips minikanren mips assembler/disassembler](https://github.com/orchid-hybrid/minimips)
+
+## Rewrite Rules
+peephole optimization
+[cranelift isle](https://github.com/bytecodealliance/wasmtime/blob/918671316301306d653345cc3486f0a15de2aa50/cranelift/docs/isle-integration.md)
+[Verifying and Improving Halide’s Term Rewriting System with Program Synthesis](https://dl.acm.org/doi/pdf/10.1145/3428234)
+
+See: e-graphs
 
 ## Instruction Selection
 Subgraph isomorphism problem

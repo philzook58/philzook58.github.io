@@ -2,14 +2,26 @@
 
 # Axioms
 Encoding forall
+``\x P(x) = \x true` is saying that the predictae p is always true.
+
+
+
+# HOL
+
+- [cakeml](https://cakeml.org/) a verified implementation of an ML in HOL4
+- [holpy](https://github.com/bzhan/holpy) https://arxiv.org/abs/1905.05970
 
 # HOL light
-
+- [wikpedia](https://en.wikipedia.org/wiki/HOL_Light)
+- [Harrison's page](https://www.cl.cam.ac.uk/~jrh13/hol-light/)
+- [tutorial](https://www.cl.cam.ac.uk/~jrh13/hol-light/tutorial.pdf) quite good
+- [Thomas Hale - Formal Proof article](https://cmartinez.web.wesleyan.edu/documents/FP.pdf) Succinct summary of axioms
+- [](https://crypto.stanford.edu/~blynn/compiler/Hol.html)
 # 
 
 # Isabelle
 
-
+[sel4](https://sel4.systems/) - verified microkernel
 
 [](https://www.cse.unsw.edu.au/~cs4161/)
 

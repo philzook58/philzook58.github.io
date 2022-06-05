@@ -15,6 +15,7 @@ wordpress_id: 2960
   - [Fuzzing](#fuzzing)
   - [Symbolic Execution](#symbolic-execution)
   - [Vulnerabilities](#vulnerabilities)
+  - [Windows](#windows)
   - [Mitigations](#mitigations)
 - [Exploits](#exploits)
   - [Buffer Overflows](#buffer-overflows)
@@ -22,6 +23,9 @@ wordpress_id: 2960
   - [Return Oriented Programming (ROP)](#return-oriented-programming-rop)
   - [Data Oriented Programming (DOP)](#data-oriented-programming-dop)
   - [Heap](#heap)
+  - [Type Confusion](#type-confusion)
+  - [Kernel](#kernel)
+  - [Browser](#browser)
   - [Automated Exploit Generation (AEG)](#automated-exploit-generation-aeg)
 - [CTF](#ctf)
 - [What is Binary Analysis](#what-is-binary-analysis)
@@ -179,10 +183,22 @@ panda https://github.com/panda-re/panda - built on qemu. record and replay execu
 
 ## Vulnerabilities
 [CWE](https://cwe.mitre.org/index.html) - common weakenss enumeration
+https://attack.mitre.org/
 
 integer overflow https://cwe.mitre.org/data/definitions/190.html
 
 [null pointer dereference](https://cwe.mitre.org/data/definitions/476.html)
+
+[sophos - comprehensive exploit prevention 2018](https://www.sophos.com/en-us/medialibrary/Gated-Assets/white-papers/Sophos-Comprehensive-Exploit-Prevention-wpna.pdf)
+
+[Current State of Exploit Dev 2020](https://www.crowdstrike.com/blog/state-of-exploit-development-part-1/)
+
+
+
+## Windows
+[microsoft exploits and exploit kits](https://docs.microsoft.com/en-us/microsoft-365/security/intelligence/exploits-malware?view=o365-worldwide)
+
+
 ## Mitigations
 Control Flow integrity is a broad term for many of these 
 [CONFIRM: Evaluating Compatibility and Relevance of Control-flow Integrity Protections for Modern Software](https://personal.utdallas.edu/~hamlen/xu19-confirm.pdf)
@@ -323,6 +339,12 @@ Metadata - size field. prev_in_use flag.
 Allocator hands out in discrete sizes, not arbitrarily flexible
 
 [hacktheheap.io](https://twitter.com/wootsecurity/status/1529893232557142037?s=20&t=6BI9d8LKn2fVprDrNxITOw)
+
+## Type Confusion
+
+## Kernel
+## Browser
+
 
 ## Automated Exploit Generation (AEG)
 

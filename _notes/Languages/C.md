@@ -92,7 +92,9 @@ tagged pointer - use unused bits in pointer. 64 bits is too many. ALignment make
 - [-fanalyzer](https://gcc.gnu.org/onlinedocs/gcc/Static-Analyzer-Options.html#index-fanalyzer)
 - -Wanalyzer-tainted-array-index
 - -Wanalyzer-null-dereference
-- 
+
+https://security.googleblog.com/2022/05/retrofitting-temporal-memory-safety-on-c.html
+
 ## Build Systems
 Shake
 https://www.microsoft.com/en-us/research/uploads/prod/2018/03/build-systems.pdf build systems a la carte

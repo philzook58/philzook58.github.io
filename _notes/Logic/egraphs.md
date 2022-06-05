@@ -3,17 +3,53 @@ layout: post
 title: E-graphs
 ---
 
+- [E-Graph](#e-graph)
+- [My E-Graph Blog Posts](#my-e-graph-blog-posts)
 - [Union Finds](#union-finds)
   - [Reference union finds](#reference-union-finds)
   - [Union find arrays and ints](#union-find-arrays-and-ints)
   - [Variations](#variations)
 - [Hash Cons](#hash-cons)
-- [E-Graph](#e-graph)
 - [E-matching](#e-matching)
 - [Equality Saturation](#equality-saturation)
 - [Proof Production](#proof-production)
-- [PEG](#peg)
+- [Applications](#applications)
+- [PEG Program Expression Graphs](#peg-program-expression-graphs)
+- [Egglog](#egglog)
 - [Misc](#misc)
+
+
+
+# E-Graph
+What is an e-graph?
+
+What is a summer's day? A rainbow?
+
+E-graphs are a data structure that efficiently holds terms and equalities between terms.
+
+It is useful for algebraic simplification, program transformations and proving equivalences in equational reasoning
+
+Destructive term rewriting can be used in 
+
+
+
+# My E-Graph Blog Posts
+- [E-graphs in Julia (Part I)](https://www.philipzucker.com/egraph-1/)
+- [E-Graph Pattern Matching (Part II)](https://www.philipzucker.com/egraph-2/)
+- [Progress on Automated Reasoning for Catlab with Metatheory.jl Egraphs](https://www.philipzucker.com/metatheory-progress/)
+- [Rewriting Monoidal Categories in the Browser with Egg](https://www.philipzucker.com/rust-category/)
+- [Union Find Dicts: Dictionaries Keyed on Equivalence Classes](https://www.philipzucker.com/union-find-dict/)
+- [A Simplified E-graph Implementation](https://www.philipzucker.com/a-simplified-egraph/)
+- [Partial Evaluation of a Pattern Matcher for E-graphs](https://www.philipzucker.com/staging-patterns/)
+- [Encoding E-graphs to Souffle Datalog](https://www.philipzucker.com/egraph-datalog/)
+- [Egglog: a Prolog Syntax for Egg, Checkpoint I](https://www.philipzucker.com/egglog-checkpoint/)
+- [JuliaCon 2021 Talk on Metatheory.jl and Snippets From the Cutting Room Floor](https://www.philipzucker.com/juliacon-talk/)
+- [Egglog 2: Automatically Proving the Pullback of a Monic is Monic](https://www.philipzucker.com/egglog2-monic/)
+- [Egglog Examples: Pullbacks, SKI, Lists, and Arithmetic](https://www.philipzucker.com/egglog-3/)
+- [Naive E-graph Rewriting in Souffle Datalog](https://www.philipzucker.com/datalog-egraph-deux/)
+- [A Questionable Idea: Hacking findParent into Souffle with User Defined Functors](https://www.philipzucker.com/souffle-functor-hack/)
+- [Embedding E-graph Rewriting and Egglog in Constraint Handling Rules](https://www.philipzucker.com/egraph-chr/)
+
 
 # Union Finds
 Union finds are also called disjoint set datastructures.
@@ -26,6 +62,8 @@ At a level of fairly high abstraction, a union find is a contracting map. You it
 See coq post https://www.philipzucker.com/simple-coq-union-find/
 
 How essential is path compression? It is the thing that gets you that inverse ackermann complexity. It requires mutation so far as I know.
+
+[Union find dict](https://www.philipzucker.com/union-find-dict/)
 
 ## Reference union finds
 A chain of pointers that lead up to a root. Often the root is a pointer to itself.
@@ -47,7 +85,7 @@ Scoped Union find
 # Hash Cons
 
 
-# E-Graph
+
 
 
 
@@ -77,7 +115,20 @@ A union find is a data structure useful for finding connected components in a gr
 
 We also need to record "reasons" why each edge got added.
 
-# PEG
+# Applications
+- Denali https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf
+- Herbie - improve accuracy of floating point expressions
+- [Szalinksi](https://github.com/uwplse/szalinski) shrink 3d cad programs
+- [Vectorization for Digital Signal Processors via Equality Saturation](https://asplos-conference.org/abstracts/asplos21-paper142-extended_abstract.pdf)
+- [SPORES](https://arxiv.org/abs/2002.07951)
+
+
+- [High-performance symbolic-numerics via multiple dispatch](https://arxiv.org/abs/2105.03949)
+- 
+# PEG Program Expression Graphs
+
+<https://ztatlock.net/pubs/2009-popl-equality-saturation-optimizations-egraphs.pdf>
+https://rosstate.org/publications/eqsat/
 
 Control flow graph (CFG) is just like, a thing. Its denotational semantics are a bit confused. 
 
@@ -105,6 +156,8 @@ https://github.com/jameysharp/optir/
 
 Loops in egraphs and Landin's knot.
 
+# Egglog
+
 # Misc
 What would be a mvp egraph in C specialized for the comm/assoc problem look like.
 Use reference based union find with tag bits?
@@ -123,3 +176,8 @@ g(1,2,3).
 
 l
 [Sketch-Guided Equality Saturation Scaling Equality Saturation to Complex Optimizations in Languages with Bindings](https://arxiv.org/pdf/2111.13040.pdf) de buijn indexes with extraction. Rise compiler
+
+
+[Cheli Thesis](https://arxiv.org/abs/2112.14714)
+
+[EGRAPH 2022 workshop](https://pldi22.sigplan.org/home/egraphs-2022)

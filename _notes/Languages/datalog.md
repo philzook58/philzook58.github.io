@@ -16,12 +16,14 @@ title: Datalog
     - [Rust](#rust)
     - [Magic Set](#magic-set)
   - [Program Analysis](#program-analysis)
+    - [Constant Propagation](#constant-propagation)
     - [Reaching Definitions](#reaching-definitions)
     - [Liveness](#liveness)
     - [Points To](#points-to)
     - [Available Expressions](#available-expressions)
     - [Very Busy Expressions](#very-busy-expressions)
     - [Zippers For Program Points](#zippers-for-program-points)
+    - [Forall Emulation](#forall-emulation)
     - [Doop](#doop)
     - [Datalog Diassembly / Decompilers](#datalog-diassembly--decompilers)
     - [Bap](#bap)
@@ -142,7 +144,7 @@ From another perspective, it is a relative of the logic programming language Pro
 
 Maybe part of what I like about datalog compared to prolog is
 1. complete search strategy
-2. logically pure. Kind of like Haskell's laziness kept it pure, Datalog's operation ordering is not obvious after compilation. This means extralogical stuff doesn't fly. 
+2. logically pure. Kind of like Haskell's laziness kept it pure, Datalog's operation ordering is not obvious after compilation. This means extralogical stuff doesn't fly. Datalog makes control flow explicit. You do not get an implicit goal stack.
 3. simple and efficient execution semantics. Pattern match / query over database. Insert new facts accordingly
 
 # What can you do with datalog?
@@ -408,7 +410,7 @@ See
 - Souffle tutorial
 - 
 
-It is common to reduce your program into some kind of graph like form. One way to do this is to lbael program points (these may be machine addresses, stmt identifiers, or maybe line numbers) and state which points can follow other points in a relation `next(l1 : stmt, l2 : stmt)` .
+It is common to reduce your program into some kind of graph like form. One way to do this is to lbael program points (these may be machine addresses, stmt identifiers, or maybe line numbers) and state which points can follow other points in a relation `next(l1 : stmt, l2 : stmt)` . You may also want to collect statements into blocks.
 
 You will also need to summarize the effects of the constructs of your language into a relational form. 
 Some possibilities
@@ -416,8 +418,34 @@ Some possibilities
 - `reads(l:stmt, x:var)`
 
 
+### Constant Propagation
+```
+.type tid <: symbol
+.type blk = [tid : tid, data : defs, ctrl : ]
+.type def = [tid : tid, lhs : var, rhs : exp]
+.type defs = [hd : def, tl : defs]
+.type jmp = [tid : tid, cnd : exp, dst : , alt : ]
+.type jmp_kind = 
+  Call {} 
+  | Goto {}
+  | Ret {} 
+  | Int {}
+
+.type sub = [tid : tid, name : symbol, args : args, blks : blks]
+
+
+.decl blk( tid , nstmts : unsigned, )
+
+
+```
+
 ### Reaching Definitions
 
+```
+def_use(x : var, def : stmt, use : stmt) //reaches?
+def(x: var , label : stmt)
+use(x : var, label : stmt)
+```
 
 ### Liveness
 Variables that will be needed on at least one path
@@ -572,6 +600,10 @@ From another perspective, this is a relative of "need sets" and magic sets.
 The zipper here represents the implicit stack of an ordinary Imp interpreter. We also may need a first class map to actually run programs precisely
 The transformation foo(firstclassmap) -> foo(i), map(i, k,v) is lossy in the presence of multiple executions. From an abstract interp persepctive this is not so bad.
 
+### Forall Emulation
+https://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf
+
+
 ### Doop
 I should probably know more about this but I don't.
 Java.
@@ -633,6 +665,9 @@ Registers vs memory. What difference does it make? It doesn't really (for analys
 
 Should I use `symbol` to represent simple enum adts? They are syntactically a bit more convenient. It would be a bit more uniform to use souffle adts.
 
+[bap in souffle](https://github.com/philzook58/bap-notes/blob/main/souffle/bap.dl)
+
+
 ```souffle
 
 
@@ -690,7 +725,7 @@ Should I use `symbol` to represent simple enum adts? They are syntactically a bi
 
 
 
-// .decl insn(addr : unsigned, sem : stmts)
+// d.decl insn(addr : unsigned, sem : stmts)
 // flatten()
 // .decl may_fallthrough(From, To)
 // .decl must_fallthrough(From, To)
@@ -708,14 +743,17 @@ If we want to just analyze what bap already finds, we can print souffle database
 use pcode?
 
 ### Resources
-[Using Datalog for Fast and Easy Program Analysis](https://yanniss.github.io/doop-datalog2.0.pdf) A Doop paper
-[Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
-[hash consed points to sets](https://yuleisui.github.io/publications/sas21.pdf)
+- [Using Datalog for Fast and Easy Program Analysis](https://yanniss.github.io/doop-datalog2.0.pdf) A Doop paper
+- [Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
+- [hash consed points to sets](https://yuleisui.github.io/publications/sas21.pdf)
+- [datalog for static analysis](https://prl.ccs.neu.edu/blog/static/datalog-for-static-analysis.pdf)
+- 
+- 
+- [graspan](http://web.cs.ucla.edu/~wangkai/papers/asplos17)
+- [Using Datalog with Binary Decision Diagrams for Program Analysis bddbddb](https://people.csail.mit.edu/mcarbin/papers/aplas05.pdf)
 
-[graspan](http://web.cs.ucla.edu/~wangkai/papers/asplos17)
-[Using Datalog with Binary Decision Diagrams for Program Analysis bddbddb](https://people.csail.mit.edu/mcarbin/papers/aplas05.pdf)
+- [codeql](https://codeql.github.com/docs/ql-language-reference/about-the-ql-language/) semmle
 
-[codeql](https://codeql.github.com/docs/ql-language-reference/about-the-ql-language/) semmle
 
 ## First Class Sets & Reflection
 
@@ -3748,6 +3786,12 @@ What about guarded negation? For example if you turn off stratification but are 
 
 
 # Resources
+[the expressive power of higher order datalog](https://arxiv.org/pdf/1907.09820.pdf)
+
+[Overview of Datalog Extensions with Tuples and Sets (1998)](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.39.9904)
+LDL. Hilog. COL. Relationlog. Datalog with set objects and grouping is an old idea.
+
+
 [Neural Datalog through time](https://arxiv.org/pdf/2006.16723.pdf)
 
 
