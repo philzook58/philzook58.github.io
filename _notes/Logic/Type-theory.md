@@ -19,6 +19,7 @@ title: Type Theory
 - [Inference Rules](#inference-rules)
 - [Computation Rules](#computation-rules)
     - [Conversion vs Reduction vs Expansion](#conversion-vs-reduction-vs-expansion)
+- [Pattern Matching](#pattern-matching)
 - [Metatheory](#metatheory)
     - [Decidability of type checking](#decidability-of-type-checking)
     - [Consistency](#consistency)
@@ -214,6 +215,16 @@ In some sense functions are very special datatypes. They are not defined via an 
 We can encode data types into functions using church like encodings.
 `match` can be encoded by positing a special function that has a computation rule like match.
 
+
+# Pattern Matching
+There is a choice whether to consider pattern matching primitive or not
+Eliminators
+dependent pattern matching
+
+Conor Mcbride thesis
+
+[a few constructions on constructors](http://www.cs.ru.nl/~james/RESEARCH/types2004.pdf)
+[Pattern Matching Without K](https://jesper.sikanda.be/files/pattern-matching-without-K.pdf)
 
 # Metatheory
 Many type systems talk about lambda calculus, so the metatheory is intertwined with the rewrite theory of lambda calc.
@@ -1195,6 +1206,7 @@ Amusingly, by mixing the type level and value level, do we end up with a situati
 to carry types a runtime? Or is that mistaken?
 
 
+[Type Theory in Color](https://dl.acm.org/doi/abs/10.1145/2500365.2500577) internalizes parametricity results
 
 
 
