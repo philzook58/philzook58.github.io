@@ -106,3 +106,17 @@ weirich [https://www.youtube.com/watch?v=j2xYSxMkXeQ](https://www.youtube.com/wa
 
 In locally nameless we don't have to shift on the term we're substituting in since the free variables in the term have names.
 
+# Nominal
+Explicit fresh and swap things. 
+
+alphaprolog
+alphakanren
+mlts
+freshml
+
+
+https://www.cl.cam.ac.uk/~amp12/agda/choudhury/choudhury-dissertation.pdf constructive representation of nominal sets in agda
+
+https://www.youtube.com/watch?v=3Zreblm0Ux0&t=8374s&ab_channel=EdwardKmett ed kmett. permutations as trees a trie of permuations.
+
+http://ozark.hendrix.edu/~yorgey/pub/GCBP-author-version.pdf yorgey foner  What’s the Difference? A Functional Pearl on Subtracting Bijections

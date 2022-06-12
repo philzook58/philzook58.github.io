@@ -46,3 +46,6 @@ int main(){
 [fmt library](https://github.com/fmtlib/fmt) C++20 has this in `#include<format>` ?
 
 `extern "C"` blocks prevent name mangling for ffi purposes.
+
+
+[embracing modern c++ safely](https://news.ycombinator.com/item?id=31559118)

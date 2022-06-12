@@ -21,12 +21,14 @@ wordpress_id: 2960
   - [Buffer Overflows](#buffer-overflows)
   - [Primitives](#primitives)
   - [Return Oriented Programming (ROP)](#return-oriented-programming-rop)
+    - [JOP COP](#jop-cop)
   - [Data Oriented Programming (DOP)](#data-oriented-programming-dop)
   - [Heap](#heap)
   - [Type Confusion](#type-confusion)
   - [Kernel](#kernel)
   - [Browser](#browser)
   - [Automated Exploit Generation (AEG)](#automated-exploit-generation-aeg)
+- [Elf stuff](#elf-stuff)
 - [CTF](#ctf)
 - [What is Binary Analysis](#what-is-binary-analysis)
     - [Program Analysis](#program-analysis)
@@ -208,6 +210,11 @@ DEP - data execution prevention [executable space protection](https://en.wikiped
 
 shadow stack
 
+control flow guard - windows
+reverse flow guard
+extreme flow guard
+kernel data protection
+
 stack canary https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_cjh1548250046139.htm -fstack-protector. Guard variable put on stack
 SSP stack smashing protection. Stackguard, Propolice. https://embeddedartistry.com/blog/2020/05/18/implementing-stack-smashing-protection-for-microcontrollers-and-embedded-artistrys-libc/
 [Buffer overflow protection](https://en.wikipedia.org/wiki/Buffer_overflow_protection)
@@ -252,6 +259,13 @@ ARP arbitrary read primitive
 
 
 ## Return Oriented Programming (ROP)
+[rp](https://github.com/0vercl0k/rp)
+[ropper](https://github.com/sashs/Ropper)
+[pwntool]
+
+[ropgadget](https://github.com/JonathanSalwan/ROPgadget)
+[ropium](https://github.com/Boyan-MILANOV/ropium) supports semantics queries. hmm in cpp. V impressive.
+
 [return to libc](https://en.wikipedia.org/wiki/Return-to-libc_attack) libc is very common and
 you can weave together libc calls. "Solar Designer"
 [solar designer](https://en.wikipedia.org/wiki/Solar_Designer) 1997
@@ -286,6 +300,21 @@ int main(int argc, char *argv[])
 
 [angrop](https://github.com/angr/angrop)
 
+[rop prevention by binary rewriting](https://github.com/GrammaTech/gtirb-stack-stamp)
+[ropguard](https://github.com/ivanfratric/ropguard)
+
+[stack pivoting](https://ir0nstone.gitbook.io/notes/types/stack/stack-pivoting) moving over to a different stack.
+
+ret2libc
+ret2dlresolve
+ret2csu
+ret2plt
+
+https://medium.com/cyber-unbound/buffer-overflows-ret2libc-ret2plt-and-rop-e2695c103c4c
+### JOP COP
+jop rocket. blackhat talk
+https://i.blackhat.com/asia-21/Thursday-Handouts/as-21-Brizendine-Babcock-Prebuilt-Jop-Chains-With-The-Jop-Rocket-wp.pdf  
+https://github.com/Bw3ll/JOP_ROCKET
 
 ## Data Oriented Programming (DOP)
 
@@ -314,7 +343,7 @@ https://milianw.de/blog/heaptrack-a-heap-memory-profiler-for-linux.html
 valgrind massif
 perf-mem, valgrind massif, and heaptrack
 
-https://heap-exploitation.dhavalkapil.com/
+https://heap-exploitation.dhavalkapil.com/ https://github.com/DhavalKapil/heap-exploitation
 
 advanced doug lea malloc - phreak post
 
@@ -340,11 +369,37 @@ Allocator hands out in discrete sizes, not arbitrarily flexible
 
 [hacktheheap.io](https://twitter.com/wootsecurity/status/1529893232557142037?s=20&t=6BI9d8LKn2fVprDrNxITOw)
 
+[Playing for K(H)eaps: Understanding and Improving Linux Kernel Exploit Reliability](https://www.usenix.org/system/files/sec22fall_zeng.pdf)
+defragmentation
+
+slake
+
+[libheap](https://github.com/cloudburst/libheap) examine glibc heap in gdb. seems like there is a python model of heap in here.
+
+[how2heap](https://github.com/shellphish/how2heap)
+
+https://ir0nstone.gitbook.io/notes/types/heap/bins
+
+chunks - has prev size, size, info bits. Free chunks have pointers in content
+top chunk - large piece of memory new chunks are carved out of
+last remainder chunk
+tcache
+fastbin - last in first out. a stacklike structure
+
+large bins - varying size. chunks put in order
+
+
+printf("%p") is your friend
+
 ## Type Confusion
 
 ## Kernel
+double free ps4 https://github.com/Cryptogenic/Exploit-Writeups/blob/master/FreeBSD/PS4%205.05%20BPF%20Double%20Free%20Kernel%20Exploit%20Writeup.md
+
 ## Browser
 
+https://twitter.com/5aelo?lang=en
+[Attacking JavaScript Engines: A case study of JavaScriptCore and CVE-2016-4622](http://www.phrack.org/issues/70/3.html#article)
 
 ## Automated Exploit Generation (AEG)
 
@@ -358,10 +413,17 @@ usenix security
 [teerex](https://www.youtube.com/watch?v=HrrPDyHy7v8&list=PLbRoZ5Rrl5leqxwFLw3lAQ9on-fK5xLea&index=48&ab_channel=USENIX) discover of memory corrupton vulen
 [symcc]
 
+[crax++](https://github.com/SQLab/CRAXplusplus)
+
+# Elf stuff
+See linker
+elfmaster
+elf reverse
+
 # CTF
-
-
-
+[yolo space hacker. steam game of ctf stuff](https://store.steampowered.com/app/1341450/Yolo_Space_Hacker/)
+[exploit_me](https://github.com/bkerler/exploit_me) very vulnerable example applications
+[pwntools](https://github.com/Gallopsled/pwntools)
 # What is Binary Analysis
 
 Dynamic - It feels like you're running the binary in some sense. Maybe on an emulated environment
@@ -430,6 +492,11 @@ https://twitter.com/33y0re/status/1528719776142475264?s=20&t=vcTgXMu6ZeZRjj7LiSM
 - local privilege escalation (LPE)
 - 
 
+
+
+People
+- elfmaster ryan oneill
+- 
 
 
 ## GDB

@@ -250,3 +250,6 @@ https://gitlab.com/minizinc/minizinc-js
 https://www.npmjs.com/package/minizinc/v/1.0.4-alpha.77
 
 Ah I need release/6.3.0 branch which has the const fix.
+
+
+sqlite fiddle

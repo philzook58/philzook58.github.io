@@ -2814,6 +2814,18 @@ https://twitter.com/soundly_typed/status/1513500166359298048?s=20&t=-ertSPtY87Go
 
 [decalarative datalog debugging for mere mortals](https://yanniss.github.io/DeclarativeDebugging.pdf)
 
+Provenance can be done by tagging the rule that applied.
+You can either give rules names or
+Master provenance can be done by reflecting the rules themselve into an AST al la metainterpeters
+
+```souffle
+.type val = Sym {s : symbol} | Num {n : number}
+.type vallist = [hd : ]
+.type rel = [name : symbol, args : vallist]
+.type rule = [head : , body]
+
+```
+
 ## Semi Naive Evaluation
 I remember a time when semi naive seemed pretty cryptic to me. I still amnot sure I understand it perfectly, but I have crossed the threshld 
 
@@ -2833,6 +2845,16 @@ You need these three because you need a place to put new facts, but also you wan
 `delta = new \ old`
 
 ## Algebraic Data Types
+
+
+Termination is no longer guaranteed. How do you guarantee termination?
+Well one way is perhaps to only produce _new_ terms "smaller" than ones discovered. This is like termination in functional programming with the caveat that you may recursively not make progress.
+`foo (x : xs) = foo (x : xs)` is non terminating in haskell
+`foo([x,xs]) :- foo( [x,xs]).` is perfectly fine terminating in datalog.
+
+You may also use any terms discovered whole hog.
+
+One way to treat existential is to search for them in the already known database.
 
 ## Lattices
 Lattices give a natural way to "fix" broken functional dependencies of the tables.
@@ -3311,6 +3333,53 @@ See
   - DDlog.
   - note on Databases Streaming
 
+Seminaive evaluation is a canonical example of incremental computation already.
+
+While souffle does not support incrementality, you can manually do it by semi naive transforming your program yourself? Put the incrmenetality at the bash level
+Make every relation duplicated rel -> rel, drel. 
+drel is an input delta relation.
+```
+
+.decl dedge(x : number, y : number)
+.decl edge(x : number, y : number)
+.decl path(x : number, y : number)
+
+.input path
+.input edge // you don't even need edge in this case
+.input dedge
+path(x,y) :- dedge(x,y).
+path(x,y) :- dedge(x,y), path(x,y). // is this ok to look over all of path? I think so.
+
+edge(x,y) :- dedge(x,y).
+
+.output path
+.output edge
+```
+ You can also output deltas if you want to manually feed seminaive between differetn souffle subprograms.
+
+meta-seminaive
+Is this the multi time differential dataflow?
+Inner seminaive is douffle program
+outer is bash loop
+
+
+Multiset semantics
+
+edge path query
+```python
+
+edge = [(i,j,t,delta)]
+t = (period, iter)
+
+```
+
+A_t = \sum_{s<t} \delta A_s
+At certain points you can coalesce these sums?
+
+retracting facts feels important?
+You could just run semi-naive again if you're only adding in.
+provenance required to retract? just counting the ways?
+:- edge(), path()
 
 # Implementations
 - Souffle
@@ -3795,7 +3864,7 @@ LDL. Hilog. COL. Relationlog. Datalog with set objects and grouping is an old id
 [Neural Datalog through time](https://arxiv.org/pdf/2006.16723.pdf)
 
 
-[semipositive datalog](https://drops.dagstuhl.de/opus/volltexte/2020/11943/pdf/LIPIcs-ICDT-2020-19.pdf) The theory of removing negation? I guess that makes sense as a pursuit. It's what I always try to trick my way into.
+[Datalog with Negation and Monotonicity semipositive datalog](https://drops.dagstuhl.de/opus/volltexte/2020/11943/pdf/LIPIcs-ICDT-2020-19.pdf) The theory of removing negation? I guess that makes sense as a pursuit. It's what I always try to trick my way into.
 
 [survey of deductive databases ullam nramakrishnan 1993](https://core.ac.uk/download/pdf/82655241.pdf)
 

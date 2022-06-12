@@ -276,6 +276,7 @@ peephole optimization
 [Verifying and Improving Halide’s Term Rewriting System with Program Synthesis](https://dl.acm.org/doi/pdf/10.1145/3428234)
 
 See: e-graphs
+[scheduling using unimodular modelling](https://twitter.com/taktoa1/status/1531386684876632064?s=20&t=-IHVNfpCMKlhva0T8ctWXA)
 
 ## Instruction Selection
 Subgraph isomorphism problem
@@ -364,6 +365,8 @@ You could take a relational perspective on operations, having neither input not 
 ## Register Allocation
 <https://arxiv.org/abs/1804.02452>
 
+[cranelift regalloc](https://cfallin.org/blog/2022/06/09/cranelift-regalloc2/) great blog post
+
 The typical starting point of register allocation is support you've been given as assembly program that doesn't have registers filled in like
 ```assembly
 # input v1 v2 v3
@@ -426,6 +429,9 @@ The boehm garbage collector seems easy to use. Also you can just malloc and neve
 Making a simple garbage collector [https://maplant.com/gc.html](https://maplant.com/gc.html)
 
 # Misc
+
+Compilers as databases
+[Query-based compiler architectures](https://ollef.github.io/blog/posts/query-based-compilers.html)
 
 [cs6120 adrian sampson](https://www.cs.cornell.edu/courses/cs6120/2022sp/lesson/) Looks like a nice syllabus
 

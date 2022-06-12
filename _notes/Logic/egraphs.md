@@ -156,6 +156,7 @@ https://github.com/jameysharp/optir/
 
 Loops in egraphs and Landin's knot.
 
+[Equality Saturation: a New Approach to Optimization](https://cseweb.ucsd.edu/~lerner/papers/popl09.pdf)
 # Egglog
 
 # Misc
@@ -181,3 +182,7 @@ l
 [Cheli Thesis](https://arxiv.org/abs/2112.14714)
 
 [EGRAPH 2022 workshop](https://pldi22.sigplan.org/home/egraphs-2022)
+[denali](https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf)
+
+[Yihong trick to make ematching faster](http://effect.systems/blog/ematch-trick.html)
+

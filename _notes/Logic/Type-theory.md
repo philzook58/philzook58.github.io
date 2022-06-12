@@ -98,6 +98,8 @@ https://www.cs.cmu.edu/~fp/courses/15312-f04/handouts/15-bidirectional.pdf
 ## Hindley Milner
 [wikipedia](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system)
 
+http://dev.stephendiehl.com/fun/006_hindley_milner.html
+
 # Systems
 
 ## Simply Typed lambda Calculus (STLC)
@@ -1199,6 +1201,6 @@ to carry types a runtime? Or is that mistaken?
 ## Books:
 - TAPL
 - Programming Language Foundations - Harper
-- Programming in Martin Lof Type Theory
-- Software Foundations
+- [Programming in Martin Lof Type Theory](https://www.cse.chalmers.se/research/group/logic/book/book.pdf)
+- [Software Foundations](https://softwarefoundations.cis.upenn.edu/)
 - PLFA
