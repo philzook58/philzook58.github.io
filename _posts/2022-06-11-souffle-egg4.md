@@ -5,17 +5,17 @@ title: "E-Graphs in Souffle IV: It's actually kind of fast this time"
 description: Finally a reasonably fast embedding of egraphs into souffle datalog
 ---
 
-Based on the insights of [relational e-matching](https://arxiv.org/abs/2108.02290) and [egglog0](www.philipzucker.com/egglog), I've been attempting to embed e-graphs into Souffle on and off for over a year. Here's some relevant previous posts in that direction:
+Based on the insights of [relational e-matching](https://arxiv.org/abs/2108.02290) and [egglog0](www.philipzucker.com/egglog), I've been attempting to embed [e-graphs](https://www.philipzucker.com/notes/Logic/egraphs/) into [Souffle datalog](https://souffle-lang.github.io/) on and off for over a year. Here's some relevant previous posts in that direction:
 
 - [Encoding E-graphs to Souffle Datalog](https://www.philipzucker.com/egraph-datalog/) Points out that datalog easy expressed some subproblems in equality saturation. Rebuilding (congruence closure and canonicalization) is clearly some kind of fixed point operation. E-matching is a kind of graph matching and datalog is one of the most convenient languages for graph matching I know. Looking back at this post, it seems like I understood a lot of things even back then. I'm not sure why it has taken so long for this idea to work. I grew discouraged and switched to overlaying datalog on top of egg (egglog0)
 - [Naive E-graph Rewriting in Souffle Datalog](https://www.philipzucker.com/datalog-egraph-deux/) Naive encoding using ADTs - Very straightforward, however does not at all properly share pieces the way egraphs do. Nice for conceptual modelling, but this is ultimately unacceptable.
-- [A Questionable Idea: Hacking findParent into Souffle with User Defined Functors](https://www.philipzucker.com/souffle-functor-hack/) - The first attempt at hacking a union find primitive into Souffle as an awkward backdoor. In this last encoding, using ADTs somewhat clunked up the representation. ADTs are in general to better way to generate new objects in datalog as compared to the `autoinc()` counter. This is because ADTs hash cons themselves, so you won't generate the same ADT twice. This improves termination and database size significantly.
+- [A Questionable Idea: Hacking findParent into Souffle with User Defined Functors](https://www.philipzucker.com/souffle-functor-hack/) - The first attempt at hacking a union find primitive into Souffle as an awkward untrustworthy backdoor. In this last encoding, using ADTs somewhat clunked up the representation. ADTs are in general to better way to generate new objects in datalog as compared to the `autoinc()` counter. This is because ADTs hash cons themselves, so you won't generate the same ADT twice. This improves termination and database size significantly. This intuition seems to have failed me here. autoinc() is now ok, but only because of the unusual stratified datalog encoding.
 
 The toy benchmark problem that I've been using is associativity and commutativity of ``1 + 2 + ... 9`. These embeddings were ultimately failures, because they were just plain too slow, like a minute or nonterminating.
 
 But I have a different encoding which is slightly different. And it is competitive with egg itself in speed I think!
 
-Here is the output running in souffle compiled mode with parallel `-j 4`
+Here is the output of the latest encoding running in souffle compiled mode with parallel `-j 4`
 
 ```
 phil:~/Documents/prolog/soffule/egraphexist$ time ./run_comp.sh 
@@ -98,7 +98,7 @@ To be fully honest, I fiddled with where to put `dirty`s until it worked well. I
 
 If you want a more complete rebuild, it is possible to tag `dirty(x,iter)` with extra integers in such a way that you can double dirty. It is not clear that even this technique is fully congruence closing, so buyer beware.
 
-### Idea 4: Separate autoinc() and rewrite
+### Idea 4: Separate autoinc() rules and rewrite rules
 
 Still rebuilding is leaky and needs to be nursed, so we need to go out of our way to not put unnecessary pressure on it.
 
@@ -126,6 +126,8 @@ add(x,y,autoinc() + mid) :- add0(x,yz,_xyz), add0(y,_z,yz), 0 = count : add0(x,y
 add(x,yz,xyz) :- add0(x,y,xy), add0(xy,z,xyz), add0(y,z,yz).
 add(xy,z,xyz) :- add0(x,yz,xyz), add0(y,z,yz), add0(x,y,xy).
 ```
+
+It is not entirely clear this idea is 100% crucial. Perhaps the other ideas are enough to make rebuilding strong enough to handle unnecssary autoinc here.
 
 Note also the `maxid0` predicate which is shown below, which is necessary because we need to generate fresh ids and autoinc's state is not retained between souffle runs.
 
