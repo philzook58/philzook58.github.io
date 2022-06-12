@@ -430,8 +430,29 @@ Making a simple garbage collector [https://maplant.com/gc.html](https://maplant.
 
 # Misc
 
-Compilers as databases
+[Compilers are databases](https://www.youtube.com/watch?v=WxyyJyB_Ssc&ab_channel=Java)
+
+[c-pit-claudel relational compilation](https://people.csail.mit.edu/cpitcla/thesis/relational-compilation.html)
+
+```prolog
+% This looks like a job for difference lists
+compile(lit(n), [push(n) | TS]).
+compiler(opp(T),  ).
+compile(add(X,Y), [Z | TS] :- compile(X,X1), compile(Y,Y2), append(X1,Y1,Z), append(Z,Rest,TS).
+```
+prolog using coq.
+
+
+
+
+
 [Query-based compiler architectures](https://ollef.github.io/blog/posts/query-based-compilers.html)
+
+[Anders Hejlsberg on Modern Compiler Construction](https://www.youtube.com/watch?v=wSdV1M7n4gQ&ab_channel=Googol)
+
+incremental compilation
+
+[Calculating correct compilers](https://www.cs.nott.ac.uk/~pszgmh/ccc.pdf)
 
 [cs6120 adrian sampson](https://www.cs.cornell.edu/courses/cs6120/2022sp/lesson/) Looks like a nice syllabus
 

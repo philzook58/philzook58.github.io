@@ -166,3 +166,4 @@ Processes are a timey database.
 
 - [Seven Sketches in Compositionality: An Invitation to Applied Category Theory](https://arxiv.org/abs/1803.05316)
 
+- [pattern matching as sheaves thesis](https://escholarship.org/content/qt3t59q0pp/qt3t59q0pp_noSplash_8827b78a6461f58bc090a563888ef7fe.pdf)
