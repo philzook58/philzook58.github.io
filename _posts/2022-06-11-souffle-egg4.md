@@ -5,7 +5,7 @@ title: "E-Graphs in Souffle IV: It's actually kind of fast this time"
 description: Finally a reasonably fast embedding of egraphs into souffle datalog
 ---
 
-Based on the insights of [relational e-matching](https://arxiv.org/abs/2108.02290) and [egglog0](www.philipzucker.com/egglog), I've been attempting to embed [e-graphs](https://www.philipzucker.com/notes/Logic/egraphs/) into [Souffle datalog](https://souffle-lang.github.io/) on and off for over a year. Here's some relevant previous posts in that direction:
+Based on the insights of [relational e-matching](https://arxiv.org/abs/2108.02290) and [egglog0](https://www.philipzucker.com/egglog), I've been attempting to embed [e-graphs](https://www.philipzucker.com/notes/Logic/egraphs/) into [Souffle datalog](https://souffle-lang.github.io/) on and off for over a year. Here's some relevant previous posts in that direction:
 
 - [Encoding E-graphs to Souffle Datalog](https://www.philipzucker.com/egraph-datalog/) Points out that datalog easy expressed some subproblems in equality saturation. Rebuilding (congruence closure and canonicalization) is clearly some kind of fixed point operation. E-matching is a kind of graph matching and datalog is one of the most convenient languages for graph matching I know. Looking back at this post, it seems like I understood a lot of things even back then. I'm not sure why it has taken so long for this idea to work. I grew discouraged and switched to overlaying datalog on top of egg (egglog0)
 - [Naive E-graph Rewriting in Souffle Datalog](https://www.philipzucker.com/datalog-egraph-deux/) Naive encoding using ADTs - Very straightforward, however does not at all properly share pieces the way egraphs do. Nice for conceptual modelling, but this is ultimately unacceptable.
