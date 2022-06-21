@@ -10,21 +10,18 @@ title: Compilers
 wordpress_id: 2913
 ---
 
-- [Lexing](#lexing)
-  - [Regular Expressions](#regular-expressions)
-- [Parsing](#parsing)
-  - [Algorithms](#algorithms)
-  - [Parser Combinators](#parser-combinators)
-  - [Parser Generators](#parser-generators)
+- [Parsing and Lexing](#parsing-and-lexing)
 - [Intermediate Representations](#intermediate-representations)
   - [SSA](#ssa)
   - [LLVM IR](#llvm-ir)
   - [CPS](#cps)
   - [RTL](#rtl)
   - [Misc](#misc)
+  - [Tensor Stuff](#tensor-stuff)
 - [Analysis](#analysis)
   - [Dataflow](#dataflow)
 - [Optimizations](#optimizations)
+  - [Polyhedral](#polyhedral)
   - [Link Time Optimization (LTO)](#link-time-optimization-lto)
   - [Profile Guided Optimization (PGO)](#profile-guided-optimization-pgo)
 - [Code Gen](#code-gen)
@@ -50,53 +47,10 @@ wordpress_id: 2913
 - [Misc](#misc-1)
   - [LLVM](#llvm)
 - [JVM](#jvm)
-# Lexing
-
-## Regular Expressions
-
-https://regex101.com/
-https://regexr.com/
-
-# Parsing
-I personally do not enjoy front end issues as much as back end. And yet a front to back compiler course starts there. Kind of off putting.
-
-BNF
-Context Free Grammars
-[Parsing Expression Grammar](https://en.wikipedia.org/wiki/Parsing_expression_grammar)
-LL
-LALR
-
-[How do you get good error messages](https://twitter.com/SandMouth/status/1513173009976147975?s=20&t=5y91-I1SPrIGomAWSqs69w)
-
-[sy brand paper on how compilter diagnostics could be imporved](https://twitter.com/TartanLlama/status/1527327581464567809?s=20&t=C_oktCkKA7nprGoHnJpglQ)
-
-## Algorithms
-[List of algorithms - parsing](https://en.wikipedia.org/wiki/List_of_algorithms#Parsing)
-Recursive Descent
-Earley parser
-Pratt Parser
-LL Parser
-LR Parser
-packrat
-allstar
-
-## Parser Combinators
-`String -> [(a,String)]` A non deterministic search that consumes a prefix of the input.
-parsec
-
-## Parser Generators
 
 
-Flex
-yacc/bison
-antlr
-Menhir [error handling the new way](http://cambium.inria.fr/~fpottier/menhir/manual.html#sec68)
-Sam's coq stuff <https://github.com/slasser/AllStar> <https://github.com/slasser/CoStar>
-
-
-Semantic Actions
-
-
+# Parsing and Lexing
+- See note on parsing
 
 # Intermediate Representations
 ## SSA
@@ -114,6 +68,7 @@ See LLVM section
 ## RTL
 
 ## Misc
+## Tensor Stuff
 ILang
 Tiramisu http://tiramisu-compiler.org/Comparison.html
 MLIR
@@ -123,6 +78,7 @@ BYOC bring your own codegen https://tvm.apache.org/2020/07/15/how-to-bring-your-
 
 [esolang VM](https://github.com/shinh/elvm) - C compiler to simple virtual machine for compiling to esolangs
 
+[exo-lang.dev] exocompilation
 # Analysis
 ## Dataflow
 Dataflow analysis
@@ -140,6 +96,11 @@ Must/May and intersection vs union. Least fixed point vs greatest
 Reassociate to lessen tree height - less dependencies
 Expand expressions with care - less dependencies
 
+
+
+[liveness analysis for ssa form program](https://hal.inria.fr/inria-00558509v2/document)
+
+## Polyhedral
 [Polyhedral model](https://en.wikipedia.org/wiki/Polytope_model)
 [Foundations of Fine Grain Parallelism](https://www.cs.colostate.edu/~cs560/Fall2015/). Recurrence equations. Analyze them
 [granulairty](https://en.wikipedia.org/wiki/Granularity_(parallel_computing)) 
@@ -149,7 +110,7 @@ Expand expressions with care - less dependencies
 isl and presburger arithmetic.
 A relative of omega?
 
-[liveness analysis for ssa form program](https://hal.inria.fr/inria-00558509v2/document)
+FPL - fast presburger arithmetic
 
 ## Link Time Optimization (LTO)
 - See note on Linker
@@ -428,7 +389,10 @@ The boehm garbage collector seems easy to use. Also you can just malloc and neve
 
 Making a simple garbage collector [https://maplant.com/gc.html](https://maplant.com/gc.html)
 
+
+
 # Misc
+
 
 [Compilers are databases](https://www.youtube.com/watch?v=WxyyJyB_Ssc&ab_channel=Java)
 

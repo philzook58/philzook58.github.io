@@ -146,6 +146,8 @@ You can get line number and column info from dwarf
 [gcc flags related to debugging](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html#Debugging-Options)
 - `-Og`
 # Resources
+[redbean](https://news.ycombinator.com/item?id=31764521) justine. Cosmopolitan. APE
+
 ld - linker editor
 
 [oracle linker guide](https://docs.oracle.com/cd/E23824_01/html/819-0690/index.html)

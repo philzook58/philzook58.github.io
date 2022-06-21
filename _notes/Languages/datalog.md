@@ -10,6 +10,7 @@ title: Datalog
       - [Naive](#naive)
       - [Semi-Naive](#semi-naive)
       - [Indexing](#indexing)
+      - [Lattice](#lattice)
     - [SQL recursive common table subexpressions](#sql-recursive-common-table-subexpressions)
     - [Ocaml](#ocaml)
       - [Naive](#naive-1)
@@ -292,6 +293,50 @@ edge = {(1,2), (2,3), (3,4)}
 path = strata1(edge)
 ```
 
+####  Lattice
+```python
+# min lattice using && as join
+class Min():
+  def __init__(self, x):
+    self.val = x
+  def __and__(self,rhs):
+    return Min(min(self.val, rhs.val))
+  def __le__(self,rhs):
+    return self.val <= rhs.val
+  def __ge__(self,rhs):
+    return self.val >= rhs.val
+  def __add__(self,rhs): # plus is not lattice generic. It just so happens min lat supports it and its monotonic
+    return Min(self.val + rhs.val)
+  def __repr__(self):
+    return repr(self.val)
+
+def strata1(edge):
+  # path(x,y) :- edge(x,y)
+  path = {(x,y) : Min(1) for (x,y) in edge}
+  while True:
+    # path(x,y) :- edge(x,y), path(y,z).
+    newpath = {(x,z) : d + Min(1) for (x,y) in edge for (y1,z), d in path.items() if y == y1}
+    # if we have not discovered any new tuples return
+    if all( [ k in path and path[k] <= d for k, d in newpath.items()] ):
+      return path
+    else:
+      # merge new tuples into path for next iteration
+      for k,d in newpath.items():
+        if k in path:
+          path[k] = path[k] & d 
+        else:
+          path[k] = d
+
+edge = {(1,2), (2,3), (3,4)}
+path = strata1(edge)
+print(path)
+# {(2, 3): 1, (1, 2): 1, (3, 4): 1, (2, 4): 2, (1, 3): 2, (1, 4): 3}
+```
+
+Other examples to consider:
+- Subsumption
+- Semiring
+- Provenance
 
 ### SQL recursive common table subexpressions
 ```sql
@@ -3381,6 +3426,83 @@ You could just run semi-naive again if you're only adding in.
 provenance required to retract? just counting the ways?
 :- edge(), path()
 
+
+
+
+
+```python
+scope = 0
+edger = {}
+pathr = {}
+def push():
+  global scope
+  scope += 1
+def pop():
+  global scope, edger, pathr
+  # we could index this better
+  # non destructive version:
+  edger = {k : s for k,s in edger.items() if s < scope}
+  pathr = {k : s for k,s in pathr.items() if s < scope}
+  ''' # error: dictionary changed size during iteration. hmm.
+  for k,s in edger.items():
+    if s < scope:
+      del edger[k]
+
+  deledge = {k : s for k,s in edger.items() if s >= scope}
+  edger.delete(deledge)
+  '''
+  scope -= 1
+
+def add_edge(x,y):
+  if (x,y) not in edger:
+    edger[(x,y)] = scope
+
+def strata():
+  for k, s in  edger.items():
+    if k not in pathr:
+      pathr[k] = s
+  #path = {(x,y) : s for (x,y), s in edger.items()}
+  while True:
+    newpath = {(x,z) for (x,y) in edger.keys() for (y1,z) in pathr.keys() if y == y1}
+    if newpath.issubset(pathr.keys()):
+      return
+    for (x,y) in newpath:
+      if (x,y) not in pathr:
+        pathr[(x,y)] = scope
+
+
+  #for (x,y) in edger.keys():
+  #  for (y1,z) in path.keys():
+  #    if y == y1:
+  #      add_path(x,z)
+
+add_edge(1,2)
+add_edge(2,3)
+add_edge(4,5)
+strata()
+print(pathr)
+push()
+add_edge(3,4)
+strata()
+print(pathr)
+pop()
+print(pathr)
+
+
+```
+There's way too much inefficiency here, but it has the bones of the point.
+I need to be doing semi naive before
+Also indexing on scope so that pop becomes fast.
+We could also lazily pop by just saying to ignore anything with a higher scope during search. That's kind of nice.
+But then we need to clean out before we push again. So that's not nice.
+
+Scopes can be related to the min lattice for scope. Yeah. Huh. So you don't even need to run to saturation before you push.
+
+But at the same time, it is the same thing as contextual datalog, just contexts are numbers / totally ordered instead or partially ordered. 
+
+
+
+
 # Implementations
 - Souffle
 - Flix
@@ -3855,6 +3977,13 @@ What about guarded negation? For example if you turn off stratification but are 
 
 
 # Resources
+automatic differentiation like chr?
+
+[initial limite datalog](https://research-information.bris.ac.uk/en/publications/initial-limit-datalog-a-new-extensible-class-of-decidable-constra) extension of datalog Z?
+
+datalog ilp? Using FLP?
+
+
 [the expressive power of higher order datalog](https://arxiv.org/pdf/1907.09820.pdf)
 
 [Overview of Datalog Extensions with Tuples and Sets (1998)](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.39.9904)

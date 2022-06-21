@@ -263,3 +263,76 @@ Here is just spitballing some plausible syntax.
 .decl myeq(x : number, y : number) eqrel
 foo(myeq.find(3)).
 ```
+
+# Addendum: 6/20/22
+Actually subsumption based union find works good too. This maintains a root relation that relates an eclass id to the minimum id in it's equivalence class. This is faster and requires no external library. The essential point seems to be the external fixed point and careful stratification.
+
+```souffle
+.decl add0(x:number, y : number, z : number)
+.decl add(x:number, y : number, z : number)
+.decl add1(x : number, y : number, z : number)
+.decl maxid0(x : number)
+.decl id0(x : number)
+.decl root(x : number, y : number)
+
+// should go in separate file
+
+add0(1,2,12).
+add0(12,3,123).
+add0(123,4,1234).
+add0(1234,5,12345).
+add0(12345,6,123456).
+add0(123456,7,1234567).
+add0(1234567,8,12345678).
+add0(12345678,9,123456789).
+//add0(123456789,10,12345678910).
+//add0(12345678910,11,1234567891011).
+
+.input add0
+
+// calculate fresh id offset
+id0(x) :- add0(x,_,_).
+id0(y) :- add0(_,y,_).
+id0(z) :- add0(_,_,z).
+
+maxid0(x) :- x = 1 + max t : id0(t).
+
+// generate new ids needed for certain rules
+add(y,z,autoinc() + mid) :- add0(_x,y,xy), add0(xy,z,_xyz), 0 = count : add0(y,z,_yz), maxid0(mid).
+add(x,y,autoinc() + mid) :- add0(x,yz,_xyz), add0(y,_z,yz), 0 = count : add0(x,y,_xy), maxid0(mid).
+add(x,y,z) :- add0(x,y,z).
+
+// Ematch for rewrites
+add(y,x,xy) :- add0(x,y,xy).
+add(x,yz,xyz) :- add0(x,y,xy), add0(xy,z,xyz), add0(y,z,yz).
+add(xy,z,xyz) :- add0(x,yz,xyz), add0(y,z,yz), add0(x,y,xy).
+
+// Hmm. A little awkward I can't use add0?
+root(x,x) :- add0(x,_,_).
+root(y,y) :- add0(_,y,_).
+root(z,z) :- add0(_,_,z).
+
+add(x1,y1,z1) :- add(x,y,z), root(x,x1), root(y,y1), root(z,z1).
+root(z,z1) :- add(x,y,z), add(x,y,z1), z1 < z.
+// canonical element is minimum number in equiv class
+root(x, y) <= root(x, y1) :- y1 <= y.
+
+// way slower. Huh.
+//add(x, y, z) <= add(x1, y1, z1) :- root(x,x1), root(y,y1), root(z,z1).
+
+//add1 is projection of only roots
+// allow through if not in union find at all also
+add1(x,y,z) :- add(x,y,z), ((root(x,x) ; !root(x,_)), (root(y,y); !root(y,_)), (root(z,z) ; !root(z,_))).
+
+/* 
+alternatively include fresh ids in root
+root(x,x) :- add(x,_,_).
+root(y,y) :- add(_,y,_).
+root(z,z) :- add(_,_,z).
+add1(x,y,z) :- add(x,y,z), root(x,x), root(y,y), root(z,z).
+
+*/
+
+.output add1(filename="add0.facts")
+.printsize add1
+```

@@ -12,6 +12,7 @@ wordpress_id: 2960
 - [Reversing](#reversing)
   - [Disassembly](#disassembly)
     - [Interactive](#interactive)
+  - [Patching](#patching)
   - [Fuzzing](#fuzzing)
   - [Symbolic Execution](#symbolic-execution)
   - [Vulnerabilities](#vulnerabilities)
@@ -124,6 +125,9 @@ https://github.com/GrammaTech/gtirb-vscode
 
 [decompiler explorer](https://github.com/mborgerson/mdec) Hmm. too bad it's not a web service
 
+
+## Patching
+https://github.com/GJDuck/e9patch
 
 ## Fuzzing
 Mayhem

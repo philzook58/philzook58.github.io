@@ -15,6 +15,7 @@ title: E-graphs
 - [Proof Production](#proof-production)
 - [Applications](#applications)
 - [PEG Program Expression Graphs](#peg-program-expression-graphs)
+  - [Tree Automata](#tree-automata)
 - [Egglog](#egglog)
 - [Misc](#misc)
 
@@ -157,7 +158,104 @@ https://github.com/jameysharp/optir/
 Loops in egraphs and Landin's knot.
 
 [Equality Saturation: a New Approach to Optimization](https://cseweb.ucsd.edu/~lerner/papers/popl09.pdf)
+
+Quiche [quiche](https://github.com/riswords/quiche) python egraph for manipulating python AST
+## Tree Automata
+
+https://github.com/ondrik/libvata
+https://remy.wang/reports/dfta.pdf
+https://en.wikipedia.org/wiki/Tree_automaton
+
 # Egglog
+
+
+```python
+# I should try souffle using subsumption UF. Maybe it'll work now?
+
+class BadUF():
+  # no path compression. no depth stroage.
+  def __init__(self):
+    self.parent = []
+  def find(self,i):
+    p = self.parent[i]
+    while p != self.parent[p]: # walrus?
+      p = self.parent[p]
+    return p
+  def makeset(self):
+    x = len(self.parent) # right? 
+    self.parent.append(x)
+    return x
+  def set_size(self,n):
+    while len(self.parent) < n:
+      self.makeset()
+    return
+  def union(self,i,j):
+    i = self.find(i)
+    j = self.find(j)
+    self.parent[i] = j
+    return j
+
+uf = BadUF()
+uf.set_size(5)
+
+
+'''
+add = {(0,1,2), (1,0,3), (0,1,4)} # x + y, y + x
+while True:
+  newadd = {(y,x,xy) for (x,y,xy) in add if (y,x,xy) not in add}
+  if newadd.issubset(add):
+    break
+  add.update(newadd)
+  # rebuild
+  while True:
+    # normalize
+    add = {(uf.find(x), uf.find(y), uf.find(xy)) for (x,y,xy) in add}
+    # congruence close
+    fresh = { (x,y,uf.union(xy,xy1))  for (x,y,xy) in add for (x1,y1,xy1) in add if x == x1 and y == y1 and xy != xy1}
+    if len(fresh) == 0:
+      break
+print(add)
+'''
+
+add = {(0,1,2), (1,0,3), (0,1,4)} # x + y, y + x
+while True:
+  newadd = {(y,x,xy) for (x,y,xy) in add if (y,x,xy) not in add}
+  if newadd.issubset(add):
+    break
+  add.update(newadd)
+  # rebuild
+  while True:
+    # normalize
+    add = {(uf.find(x), uf.find(y), uf.find(xy)) for (x,y,xy) in add}
+    addind = {(x,y) : xy for (x,y,xy) in add}
+    # congruence close
+    fresh = [uf.union(xy,addind[(x,y)]) for (x,y,xy) in add if addind[(x,y)] != xy]
+    if len(fresh) == 0:
+      break
+print(add)
+
+'''
+add = {(0,1) : 2, (1,0) : 3 , (0,1) : 4} # x + y, y + x
+while True:
+  newadd = {(y,x,xy) for (x,y),xy in add.items() if (y,x) not in add or add[(y,x)] != xy}
+  if newadd.issubset(add):
+    break
+  add.update(newadd)
+  # rebuild
+  while True:
+    # normalize
+    add = {(uf.find(x), uf.find(y), uf.find(xy)) for (x,y,xy) in add}
+    # congruence close
+    fresh = { (x,y,uf.union(xy,xy1))  for (x,y,xy) in add for (x1,y1,xy1) in add if x == x1 and y == y1 and xy != xy1}
+    if len(fresh) == 0:
+      break
+'''
+print(add)
+
+```
+
+
+
 
 # Misc
 What would be a mvp egraph in C specialized for the comm/assoc problem look like.
@@ -185,4 +283,8 @@ l
 [denali](https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf)
 
 [Yihong trick to make ematching faster](http://effect.systems/blog/ematch-trick.html)
+
+[oliver egraph intersection](https://www.oflatt.com/egraph-union-intersect.html)
+
+[wasm mutate - fuzzing wasm with egraphs](https://www.jacarte.me/assets/pdf/wasm_mutate.pdf)
 
