@@ -264,7 +264,9 @@ Here is just spitballing some plausible syntax.
 foo(myeq.find(3)).
 ```
 
-# Addendum: 6/20/22
+# Addendum
+Edit: 6/20/22
+
 Actually subsumption based union find works good too. This maintains a root relation that relates an eclass id to the minimum id in it's equivalence class. This is faster and requires no external library. The essential point seems to be the external fixed point and careful stratification.
 
 ```souffle
