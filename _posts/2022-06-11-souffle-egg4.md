@@ -269,6 +269,8 @@ Edit: 6/20/22
 
 Actually subsumption based union find works good too. This maintains a root relation that relates an eclass id to the minimum id in it's equivalence class. This is faster and requires no external library. The essential point seems to be the external fixed point and careful stratification.
 
+I mentioned the subsumption based union find in this tweet <https://twitter.com/SandMouth/status/1489397285784113157?s=20&t=pKfRAZm2ntOBujJccw8eUg> This tweet is also I think what put me in contact with the egg folks. It alllll comes around.
+
 ```souffle
 .decl add0(x:number, y : number, z : number)
 .decl add(x:number, y : number, z : number)
