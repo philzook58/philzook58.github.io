@@ -128,6 +128,8 @@ print(pathr)
 ```
 
 # Bits and Bobbles
+You could also perhaps arrange for a stack of databases, to literally push or pop. This would be a pain to deal with and you'd have to scan and join across them. Rearranging a stack of databases into a single database with a scope column is one of those classic product type rearrangement transformations.
+
 As a further extension, you don't need to have integers to index your scopes, you could have your scopes labelled by nodes of a tree of scopes, or really an arbitrary lattice of scope labels. The deletion command can then accept a scope label for which to delete any scope which is greater according to the partial order of scopes.
 
 I wonder what you could use that for :)
