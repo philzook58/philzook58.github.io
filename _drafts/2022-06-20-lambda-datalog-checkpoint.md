@@ -66,10 +66,71 @@ So there you have it. In the Miller fragment, you annotate pattern variables exp
 
 
 ### Harrop
+Harrop Formula allow some extra constructs compared to horn clauses.
+
+The two most interesting things are they allow implication and forall quantifiers in the body of rules.
+
+Forall is interpreted as introducing fresh symbols. Implication is interpreted as adding a temporary assumption to the context.
+
+For prolog there is one extra thing to take care of that you need to pay attention to the scope of your unification variables. They can't unify with a term freshly created in a deeper scope than they had.
+
+For datalog, there is no unification. Datalog patterns matches.
 
 
-## Lambda Datalog
+`r :- forall x, p(x) => q(x).`
+
+`r :- forall x, p(x).` will never be proven
+
+
+```souffle
+
+.type bug <: symbol // Fresh {i : number} | Lit {s : symbol}
+.type Jar <: symbol
+.type Ctx = True {} | In {b : bug, j : Jar}
+.decl sterile(j : Jar, ctx : Ctx)
+.decl heated(j : Jar, ctx : Ctx)
+.decl in(b : bug, j : Jar, ctx : Ctx)
+.decl dead(b : bug, ctx : Ctx)
+
+.decl jar(j : Jar)
+jar("j").
+
+
+// sterile j :- pi x \ bug x => in x j => dead x.
+in("fresh",j, $In("fresh", j)) :- jar(j). // The key is that the fresh name is correlated between context and field.
+sterile(j, $True()) :- dead("fresh" , $In("fresh", j)).
+
+// specializing ctx join by cases
+dead(b, ctx) :- heated(j, $True()), in(b,j,ctx).
+dead(b, ctx) :- heated(j, ctx), in(b,j,ctx), ctx = $In(_x,_y).
+
+heated("j", $True()).
+
+.output sterile
+
+//.decl ctxjoin(ctx : Ctx, ctx2 : Ctx, ctx3 : Ctx)
+//ctxjoin($True(), $True(). $True()).
+//dead(b, @join(ctx1,ctx2)) :- heated(j, ctx1), in(b,j,ctx2).
+```
+
+```
+in($SterileRuleBug(j), j) :- jar(j).
+in($SterileRuleBug()) 
+
+```
+
+```run
+
+
+
+in("fresh", autoinc())
+
+
+```
+
+
 ### Context Lattice
+
 
 
 `ctx2 |- bar :-  ctx1 |- foo`

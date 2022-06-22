@@ -234,6 +234,7 @@ When you
 ## Tabling
 [Tabling as a Library with Delimited Control](https://biblio.ugent.be/publication/6880648/file/6885145.pdf)
 [Swi prolog manual](https://www.swi-prolog.org/pldoc/man?section=tabling)
+[Programming in Tabled Prolog - Warren](https://www3.cs.stonybrook.edu/~warren/xsbbook/book.html)
 
 ```prolog
 :- table path/2.

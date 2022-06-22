@@ -13,10 +13,13 @@ title: E-graphs
 - [E-matching](#e-matching)
 - [Equality Saturation](#equality-saturation)
 - [Proof Production](#proof-production)
+- [E Graph Tactics](#e-graph-tactics)
 - [Applications](#applications)
 - [PEG Program Expression Graphs](#peg-program-expression-graphs)
   - [Tree Automata](#tree-automata)
 - [Egglog](#egglog)
+- [Lambda Encoding](#lambda-encoding)
+- [Contextual EGraphs](#contextual-egraphs)
 - [Misc](#misc)
 
 
@@ -54,6 +57,7 @@ Destructive term rewriting can be used in
 
 # Union Finds
 Union finds are also called disjoint set datastructures.
+
 You can take a set an group it into equivalence classes. One place this is useful is finding the connected components of a graph.
 
 There are different styles of union finds and both make one thing in different and interesting ways.
@@ -64,10 +68,38 @@ See coq post https://www.philipzucker.com/simple-coq-union-find/
 
 How essential is path compression? It is the thing that gets you that inverse ackermann complexity. It requires mutation so far as I know.
 
-[Union find dict](https://www.philipzucker.com/union-find-dict/)
+
+
 
 ## Reference union finds
 A chain of pointers that lead up to a root. Often the root is a pointer to itself.
+
+```python
+# no path compression
+# `is` is python reference equality
+class BadUF():
+  def __init__(self):
+    self.parent = self
+  def find(self):
+    x = self
+    while x.parent is not x:
+      x = x.parent
+    return x
+  def union(self,rhs):
+    p = self.find()
+    p2 = rhs.find()
+    p.parent = p2
+    return p2
+
+x = BadUF()
+y = BadUF()
+z = BadUF()
+
+x.union(y)
+print(x.find() is y.find())
+print(x.find() is z.find())
+
+```
 
 ## Union find arrays and ints
 What is a pointer but an index? What is an index but a pointer?
@@ -75,12 +107,50 @@ In some sense your ram is just a giant array that you hand out. And vice versa y
 
 In some languages you don't have access to raw pointers easily. The array style also makes it easier/more natural to copy union finds. This style also makes it more clear how to talk about the union find in a purely functional way.
 
-## Variations
-[Union Find Dicts: Dictionaries Keyed on Equivalence Classes](https://www.philipzucker.com/union-find-dict/)
+```python
+class BadUF():
+  # no path compression. no depth stroage.
+  def __init__(self):
+    self.parent = []
+  def find(self,i):
+    p = self.parent[i]
+    while p != self.parent[p]: # walrus?
+      p = self.parent[p]
+    return p
+  def makeset(self):
+    x = len(self.parent) # right? 
+    self.parent.append(x)
+    return x
+  def set_size(self,n):
+    while len(self.parent) < n:
+      self.makeset()
+    return
+  def union(self,i,j):
+    i = self.find(i)
+    j = self.find(j)
+    self.parent[i] = j
+    return j
 
-Union find with group elements on edges.
+uf = BadUF()
+x = uf.makeset()
+y = uf.makeset()
+z = uf.makeset()
+
+uf.union(x,y)
+assert(uf.find(x) == uf.find(y))
+assert(uf.find(x) != uf.find(z))
+```
+
+## Variations
+[persistent union find](https://www.lri.fr/~filliatr/ftp/publis/puf-wml07.pdf)
+
+[Union Find Dicts: Dictionaries Keyed on Equivalence Classes](https://www.philipzucker.com/union-find-dict/). You can make a dict from union find to lattices. It needs to know how to merge stuff in the range. Relatedly, you could also have union find keyed on union find. 
+
+Union find with group elements on edges. [kmett talk](https://youtu.be/KxeHGcbh-4c?t=1254). Yihong points out <http://poj.org/problem?id=2492> as a competitive programming exercise that can use this.
 
 Scoped Union find
+
+Colored Union find
 
 
 # Hash Cons
@@ -112,9 +182,23 @@ Their VM is quire similar to WAM.
 
 # Proof Production
 [Proof producing congruence closure](https://www.cs.upc.edu/~roberto/papers/rta05.pdf)
+
 A union find is a data structure useful for finding connected components in a graph. The "proof" that two vertices are connected is the path between them. We need to maintain an incremental spanning tree of some kind.
 
-We also need to record "reasons" why each edge got added.
+We also need to record "reasons" why each edge got added. Reasons may be rewrite rules, or congruence closure.
+
+A proof might be:
+- a term rewriting sequence
+- a grounded confluent terminating term rewriting system
+- The ground equalities to assert to an egraph that are enough to push the proof through with no egraph rewrite rules
+  
+See also Z3's proof production
+
+
+# E Graph Tactics
+
+- Samuel Gruetter and Dustin Jamner - Coq. `congruence` tactic is an egraph. Too slow?
+- Lean? [lean tatic](https://pldi22.sigplan.org/details/egraphs-2022-papers/6/Equality-Saturation-as-a-Tactic-for-Proof-Assistants)
 
 # Applications
 - Denali https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf
@@ -163,7 +247,10 @@ Quiche [quiche](https://github.com/riswords/quiche) python egraph for manipulati
 ## Tree Automata
 
 https://github.com/ondrik/libvata
-https://remy.wang/reports/dfta.pdf
+
+[E-Graphs, VSAs, and Tree Automata: a Rosetta Stone](https://remy.wang/reports/dfta.pdf) [slides](https://docs.google.com/presentation/d/1oDNmzxJpsdLE51lmybcfzzzv4jRLDdrVpmMhMpFEoFk/edit?usp=sharing) [merge only rules](https://gist.github.com/remysucre/1788cf0153d7db240e751fb698f74d99)
+
+
 https://en.wikipedia.org/wiki/Tree_automaton
 
 # Egglog
@@ -256,6 +343,23 @@ print(add)
 
 
 
+# Lambda Encoding
+Might work:
+- Combinators. SKI or categorical. Many projects are doing something like this. Relational Algebra or matrix algebra are the same thing.
+- Succ lifting. [pavel](https://pavpanchekha.com/blog/egg-bindings.html) [oleg](https://okmij.org/ftp/tagless-final/ski.pdf). Do de bruijn but let Succ float out of Var. Let's you do de bruijn index lifting as local rewrite rule. Succ has interpretation as a higher order function.
+
+Arguable:
+- Co de-bruijn. Hash Cons modulo alpha. Mcbride's Do Be doo be doo. Doesn't seem to work. Correlated rewrites required
+- Graph compilation. Optimal graph reduction
+
+
+# Contextual EGraphs
+No one know what this means. Everyone wants it. 
+
+[colored egraphs](https://docs.google.com/presentation/d/16fpJiVfAaNasCp3rgPusiRl7GD-18fq6aMBkDnVfsco/edit?usp=sharing)
+[colored egg](https://github.com/eytans/egg)
+
+Perhaps related to backtracking
 
 # Misc
 What would be a mvp egraph in C specialized for the comm/assoc problem look like.
@@ -273,13 +377,17 @@ g(1,2,3).
 -? plus(A,B,AB), plus(AB,C,ABC)
 ```
 
-l
 [Sketch-Guided Equality Saturation Scaling Equality Saturation to Complex Optimizations in Languages with Bindings](https://arxiv.org/pdf/2111.13040.pdf) de buijn indexes with extraction. Rise compiler
 
 
 [Cheli Thesis](https://arxiv.org/abs/2112.14714)
 
 [EGRAPH 2022 workshop](https://pldi22.sigplan.org/home/egraphs-2022)
+[youtube feed](https://www.youtube.com/watch?v=dbgZJyw3hnk&ab_channel=ACMSIGPLAN)
+
+
+[chasing an egg](https://effect.systems/doc/pldi-2022-egraphs/abstract.pdf)
+
 [denali](https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf)
 
 [Yihong trick to make ematching faster](http://effect.systems/blog/ematch-trick.html)
@@ -288,3 +396,10 @@ l
 
 [wasm mutate - fuzzing wasm with egraphs](https://www.jacarte.me/assets/pdf/wasm_mutate.pdf)
 
+[abstract interp for egraphs](https://arxiv.org/pdf/2203.09191.pdf) improving interval boounds
+
+
+
+[](https://github.com/lifting-bits/eqsat)
+
+[sketch guided equality satruation](https://arxiv.org/abs/2111.13040) Give sketches (~ patterns?) which one the ergaph reaches, transition to a new set of rewriting rules / clear the egraphs.

@@ -3487,9 +3487,8 @@ strata()
 print(pathr)
 pop()
 print(pathr)
-
-
 ```
+
 There's way too much inefficiency here, but it has the bones of the point.
 I need to be doing semi naive before
 Also indexing on scope so that pop becomes fast.
