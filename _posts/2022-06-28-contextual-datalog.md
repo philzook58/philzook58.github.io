@@ -6,7 +6,7 @@ description: Encoding partial Harrop clauses in Datalog with first class sets
 tags: datalog
 ---
 
-- [First Class Sets and Vectors](#first-class-sets-and-vectors)
+- [First Class Sets](#first-class-sets)
     - [Vectors](#vectors)
       - [Comments](#comments)
 - [Contexts](#contexts)
@@ -34,7 +34,7 @@ But now I think I've got a runtime encoding that works in regular datalog (Souff
 
 [code of post](https://github.com/philzook58/souffle-vector)
 
-# First Class Sets and Vectors
+# First Class Sets
 
 There is something enticing about internalizing the notions of sets or relations into datalog as first class objects. As Cody said, going meta is the one move.
 
@@ -122,10 +122,6 @@ Here is the code for indexing into the vector for example. You need to open up t
     }
 ```
 
-You can also use `Lists` <https://www.philipzucker.com/notes/Languages/datalog/#lists> but they are honestly kind of awkward to use. They wouldn't be so bad if I implemented a list library using external functors, but the mental cost of encoding functions into relations and all the other wacky stuff I'm doing is too much.
-
-I could also box all values into a universal type ADT instead of using `number` as my universal type.
-
 Here's some example usage of the vector. Inspecting the contents is annoying, becuase souffle doesn't know how this print this in a useful way. You need to explicitly index into the vector to look at stuff.
 
 ```
@@ -176,7 +172,11 @@ biz("t6", @is_subset(VEC2, VEC3)) :- true.
 ```
 
 #### Comments 
+You can also use `Lists` <https://www.philipzucker.com/notes/Languages/datalog/#lists> but they are honestly kind of awkward to use. They wouldn't be so bad if I implemented a list library using external functors, but the mental cost of encoding functions into datalog relations plus all the other wacky stuff I'm doing here is too much.
+
 A quite nice approach for sets is that of Patricia tries. Patricia tries are a commonly used functional data structure for intsets. They are canonical for a given set (unlike ordinary binary search trees). See for example the Haskell or ocaml libraries.
+
+I could also box all values into a universal type ADT instead of using `number` as my universal type.
 
 I'll note there is a history of internalizing sets as objects in datalog, but many of these systems seem like they have died off. See  LDL, Hilog, COL, relationlog.
 - [Overview of Datalog Extensions with Tuples and Sets (1998)](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.39.9904) 
@@ -597,6 +597,8 @@ We'll get there.
 I have internalized lambda terms as objects and Miller matching HOAS. I haven't done it in souffle yet. Another blog post.
 
 [ELPI tabling](https://github.com/LPCIC/elpi/pull/118)
+
+How logically complete is any of this?
 
 What does this have to do with egglog?
 
