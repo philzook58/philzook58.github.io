@@ -126,3 +126,6 @@ l
 [Sketch-Guided Equality Saturation Scaling Equality Saturation to Complex Optimizations in Languages with Bindings](https://arxiv.org/pdf/2111.13040.pdf) de buijn indexes with extraction. Rise compiler
 
 [denali](https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf)
+
+
+[tactic lean](https://github.com/opencompl/egg-tactic-code)

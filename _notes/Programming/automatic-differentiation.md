@@ -47,3 +47,6 @@ ad
 tapinade - low level imlet
 
 [ Automatic Differentiation Handbook.](https://github.com/bob-carpenter/ad-handbook)
+
+
+[Systematically Differentiating Parametric Discontinuities - gilbert](https://people.csail.mit.edu/sbangaru/projects/teg-2021/)

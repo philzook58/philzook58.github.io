@@ -21,6 +21,7 @@ wordpress_id: 2913
   - [LLVM IR](#llvm-ir)
   - [CPS](#cps)
   - [RTL](#rtl)
+  - [](#)
   - [Misc](#misc)
 - [Analysis](#analysis)
   - [Dataflow](#dataflow)
@@ -112,13 +113,20 @@ See LLVM section
 ## CPS
 ## RTL
 
-## Misc
+## 
 ILang
 Tiramisu http://tiramisu-compiler.org/Comparison.html
 MLIR
 Halide
 TVM
 BYOC bring your own codegen https://tvm.apache.org/2020/07/15/how-to-bring-your-own-codegen-to-tvm
+
+
+http://www.gilbertbernstein.com/resources/LiuPOPL2022.pdf ATL verified "scheduling" rewrites in coq - Gilbert. Gilbert works on coolstuff  http://www.gilbertbernstein.com/
+
+[exo](https://github.com/exo-lang/exo)
+
+## Misc
 
 [esolang VM](https://github.com/shinh/elvm) - C compiler to simple virtual machine for compiling to esolangs
 

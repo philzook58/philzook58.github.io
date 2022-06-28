@@ -85,7 +85,7 @@ probablistic disassembly using proabablistic datalog?
 bap mc + datalog?
 
 [Formally Verified Lifting of C-Compiled x86-64 Binaries](https://www.ssrg.ece.vt.edu/papers/pldi22.pdf)
-
+[Scalable validation of binary lifters](https://dl.acm.org/doi/10.1145/3385412.3385964)
 - Linear
 - Recursive
 
@@ -108,6 +108,11 @@ osr - offset shift range. I;ve seen this called value set analysis?
 byteweight - bap neural network thing identifies function starts
 
 
+Ghidra repackaging:
+[lifting bits sleigh](https://github.com/lifting-bits/sleigh)
+[pypcode](https://github.com/angr/pypcode)
+https://github.com/StarCrossPortal/sleighcraft
+https://github.com/black-binary/sleigh
 
 ### Interactive
 - IDA
