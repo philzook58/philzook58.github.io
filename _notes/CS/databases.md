@@ -457,4 +457,13 @@ Designing Data intensive systems martin kleppmann
 - Byzantine Eventual Consistency
 - Self-renewable hash chains
 - Binary pebbling
-- 
+
+https://github.com/dbuenzli/rel
+
+Ezra Cooper. The Script-Writer’s Dream: How to Write Great SQL in Your Own Language, and Be Sure It Will Succeed. 2009. Full text
+
+James Cheney et al. A practical theory of language-integrated query. 2013. Full text
+
+Suzuki et al. Finally, safely-extensible and efficient language-integrated query. 2016. Full text
+
+Oleg Kiselyov et al. Sound and Efficient Language-Integrated Query -- Maintaining the ORDER. 2017. Full text

@@ -76,6 +76,8 @@ https://beautifulracket.com/
 
 https://github.com/wilbowma/cur a curious dependently typed proof assistant
 
+[racketscript](http://play.racketscript.org/)
+
 
 ### Rosette
 https://docs.racket-lang.org/rosette-guide/index.html

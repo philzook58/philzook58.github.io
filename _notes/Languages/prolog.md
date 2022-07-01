@@ -234,6 +234,7 @@ When you
 ## Tabling
 [Tabling as a Library with Delimited Control](https://biblio.ugent.be/publication/6880648/file/6885145.pdf)
 [Swi prolog manual](https://www.swi-prolog.org/pldoc/man?section=tabling)
+[Programming in Tabled Prolog - Warren](https://www3.cs.stonybrook.edu/~warren/xsbbook/book.html)
 
 ```prolog
 :- table path/2.
@@ -257,9 +258,19 @@ a :- a.
 ```
 
 Hmm. Tabling comes _from_ earley parsing historically. That's interesting.
+"Earley deduction"
 
 tabling and packrat parsing [DCGs + Memoing = Packrat Parsing But is it worth it?](https://mercurylang.org/documentation/papers/packrat.pdf)
 tabling vs memoing
+
+[Memoisation: Purely, Left-recursively, and with (Continuation Passing) Style](https://arxiv.org/abs/1707.04724)
+[More declarative tabling in Prolog using multi-prompt delimited control](https://arxiv.org/abs/1708.07081)
+
+
+Queries and Answers as separate concepts.
+
+Variant Tabling - lookup in the table only allows for renaming of variables in the query
+Subsumptive tabling - lookup can also succeed on anything that is 
 
 ### XSB
 XSB prolog has some unsusual features and supposedly the most advanced implementation of tabling. 
@@ -347,6 +358,11 @@ Man what hope is there of compiling a 7 year old haskell project?
 [chr parsing](https://stackoverflow.com/questions/65647409/parsing-with-chr-constraint-handling-rules)
 
 [parallel chr](https://github.com/KaiSta/Parallel_CHR)
+
+
+[Automatic Differentiation using Constraint Handling Rules in Prolog](https://arxiv.org/abs/1706.00231)
+Build up dataflow graph. Huh.
+
 
 CHR parsing
 “Analysing graph transformation systems through Constraint Handling Rules” by Frank Raiser and Thom Frühwirth
@@ -1182,7 +1198,7 @@ Dyckhoff g4ip
 
 # Misc
 
-
+[pyswip](https://github.com/yuce/pyswip)
 
 https://github.com/mthom/scryer-prolog/pull/838 scryer as a library?
 

@@ -10,22 +10,19 @@ title: Compilers
 wordpress_id: 2913
 ---
 
-- [Lexing](#lexing)
-  - [Regular Expressions](#regular-expressions)
-- [Parsing](#parsing)
-  - [Algorithms](#algorithms)
-  - [Parser Combinators](#parser-combinators)
-  - [Parser Generators](#parser-generators)
+- [Parsing and Lexing](#parsing-and-lexing)
 - [Intermediate Representations](#intermediate-representations)
   - [SSA](#ssa)
   - [LLVM IR](#llvm-ir)
   - [CPS](#cps)
   - [RTL](#rtl)
-  - [](#)
   - [Misc](#misc)
+  - [Tensor Stuff](#tensor-stuff)
+  - [Misc](#misc-1)
 - [Analysis](#analysis)
   - [Dataflow](#dataflow)
 - [Optimizations](#optimizations)
+  - [Polyhedral](#polyhedral)
   - [Link Time Optimization (LTO)](#link-time-optimization-lto)
   - [Profile Guided Optimization (PGO)](#profile-guided-optimization-pgo)
 - [Code Gen](#code-gen)
@@ -36,6 +33,7 @@ wordpress_id: 2913
     - [Multiple Blocks](#multiple-blocks)
     - [Register Packing](#register-packing)
     - [Other](#other)
+  - [Rewrite Rules](#rewrite-rules)
   - [Instruction Selection](#instruction-selection)
   - [Register Allocation](#register-allocation)
   - [Instruction Scheduling](#instruction-scheduling)
@@ -47,56 +45,13 @@ wordpress_id: 2913
   - [Concurrent](#concurrent)
   - [mark and Sweep](#mark-and-sweep)
   - [Generational](#generational)
-- [Misc](#misc-1)
+- [Misc](#misc-2)
   - [LLVM](#llvm)
 - [JVM](#jvm)
-# Lexing
-
-## Regular Expressions
-
-https://regex101.com/
-https://regexr.com/
-
-# Parsing
-I personally do not enjoy front end issues as much as back end. And yet a front to back compiler course starts there. Kind of off putting.
-
-BNF
-Context Free Grammars
-[Parsing Expression Grammar](https://en.wikipedia.org/wiki/Parsing_expression_grammar)
-LL
-LALR
-
-[How do you get good error messages](https://twitter.com/SandMouth/status/1513173009976147975?s=20&t=5y91-I1SPrIGomAWSqs69w)
-
-[sy brand paper on how compilter diagnostics could be imporved](https://twitter.com/TartanLlama/status/1527327581464567809?s=20&t=C_oktCkKA7nprGoHnJpglQ)
-
-## Algorithms
-[List of algorithms - parsing](https://en.wikipedia.org/wiki/List_of_algorithms#Parsing)
-Recursive Descent
-Earley parser
-Pratt Parser
-LL Parser
-LR Parser
-packrat
-allstar
-
-## Parser Combinators
-`String -> [(a,String)]` A non deterministic search that consumes a prefix of the input.
-parsec
-
-## Parser Generators
 
 
-Flex
-yacc/bison
-antlr
-Menhir [error handling the new way](http://cambium.inria.fr/~fpottier/menhir/manual.html#sec68)
-Sam's coq stuff <https://github.com/slasser/AllStar> <https://github.com/slasser/CoStar>
-
-
-Semantic Actions
-
-
+# Parsing and Lexing
+- See note on parsing
 
 # Intermediate Representations
 ## SSA
@@ -106,6 +61,10 @@ http://ssabook.gforge.inria.fr/latest/book.pdf SSA bookv
 [compcertssa](http://compcertssa.gforge.inria.fr/) verified ssa
 
 [bril](https://github.com/sampsyo/bril) educational IR. ocaml and rust bindings.
+
+[Simple and Efficient Construction of Static Single
+Assignment Form](https://pp.info.uni-karlsruhe.de/uploads/publikationen/braun13cc.pdf) https://twitter.com/peter_a_goodman/status/1541105429215936513?s=20&t=Id3zoB1xCWLA5QQIrPNHVA
+
 ## LLVM IR
 See LLVM section
 
@@ -113,7 +72,8 @@ See LLVM section
 ## CPS
 ## RTL
 
-## 
+## Misc
+## Tensor Stuff
 ILang
 Tiramisu http://tiramisu-compiler.org/Comparison.html
 MLIR
@@ -126,10 +86,12 @@ http://www.gilbertbernstein.com/resources/LiuPOPL2022.pdf ATL verified "scheduli
 
 [exo](https://github.com/exo-lang/exo)
 
+https://princetonuniversity.github.io/isca22-ila-tutorial/ ILAlang
 ## Misc
 
 [esolang VM](https://github.com/shinh/elvm) - C compiler to simple virtual machine for compiling to esolangs
 
+[exo-lang.dev] exocompilation
 # Analysis
 ## Dataflow
 Dataflow analysis
@@ -147,6 +109,11 @@ Must/May and intersection vs union. Least fixed point vs greatest
 Reassociate to lessen tree height - less dependencies
 Expand expressions with care - less dependencies
 
+
+
+[liveness analysis for ssa form program](https://hal.inria.fr/inria-00558509v2/document)
+
+## Polyhedral
 [Polyhedral model](https://en.wikipedia.org/wiki/Polytope_model)
 [Foundations of Fine Grain Parallelism](https://www.cs.colostate.edu/~cs560/Fall2015/). Recurrence equations. Analyze them
 [granulairty](https://en.wikipedia.org/wiki/Granularity_(parallel_computing)) 
@@ -156,7 +123,7 @@ Expand expressions with care - less dependencies
 isl and presburger arithmetic.
 A relative of omega?
 
-[liveness analysis for ssa form program](https://hal.inria.fr/inria-00558509v2/document)
+FPL - fast presburger arithmetic
 
 ## Link Time Optimization (LTO)
 - See note on Linker
@@ -224,7 +191,7 @@ constraint
   insn(1, [T2], "add", [T0, T1]) /\
   insn(2, [T3], "sub", [T0, T1]) /\
   insn(3, [T4], "mul", [T1, T2]) /\
-  insn(4, [T5], "inc", [T4]) ;
+  insn(4, [T5], "inc", [T4]);
 
 
 %reg = [T0: R2, T1: R0, T2: R1, T3: R2, T4: R0, T5: R0];
@@ -277,6 +244,12 @@ Using the rectangle packing constraint for register modelling
 - [RVSDG](https://github.com/egraphs-good/egg/discussions/106)
 - [minimips minikanren mips assembler/disassembler](https://github.com/orchid-hybrid/minimips)
 
+## Rewrite Rules
+peephole optimization
+[cranelift isle](https://github.com/bytecodealliance/wasmtime/blob/918671316301306d653345cc3486f0a15de2aa50/cranelift/docs/isle-integration.md)
+[Verifying and Improving Halide’s Term Rewriting System with Program Synthesis](https://dl.acm.org/doi/pdf/10.1145/3428234)
+
+See: e-graphs
 [scheduling using unimodular modelling](https://twitter.com/taktoa1/status/1531386684876632064?s=20&t=-IHVNfpCMKlhva0T8ctWXA)
 
 ## Instruction Selection
@@ -366,6 +339,8 @@ You could take a relational perspective on operations, having neither input not 
 ## Register Allocation
 <https://arxiv.org/abs/1804.02452>
 
+[cranelift regalloc](https://cfallin.org/blog/2022/06/09/cranelift-regalloc2/) great blog post
+
 The typical starting point of register allocation is support you've been given as assembly program that doesn't have registers filled in like
 ```assembly
 # input v1 v2 v3
@@ -427,7 +402,10 @@ The boehm garbage collector seems easy to use. Also you can just malloc and neve
 
 Making a simple garbage collector [https://maplant.com/gc.html](https://maplant.com/gc.html)
 
+
+
 # Misc
+
 
 [Compilers are databases](https://www.youtube.com/watch?v=WxyyJyB_Ssc&ab_channel=Java)
 

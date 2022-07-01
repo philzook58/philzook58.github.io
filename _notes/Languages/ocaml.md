@@ -718,6 +718,8 @@ MLTon
 [MLTon first class threads](https://twitter.com/shwestrick/status/1506291833621688320?s=20&t=-ertSPtY87GogVCFq4f-Rw)
 
 # Misc Resources
+[rel: database lib](https://github.com/dbuenzli/rel)
+
 [magic trace](https://github.com/janestreet/magic-trace)
 
 [Prefetching in functional languages](https://www.cl.cam.ac.uk/~tmj32/papers/docs/ainsworth20-ismm.pdf)

@@ -10,18 +10,21 @@ title: Datalog
       - [Naive](#naive)
       - [Semi-Naive](#semi-naive)
       - [Indexing](#indexing)
+      - [Lattice](#lattice)
     - [SQL recursive common table subexpressions](#sql-recursive-common-table-subexpressions)
     - [Ocaml](#ocaml)
       - [Naive](#naive-1)
     - [Rust](#rust)
     - [Magic Set](#magic-set)
   - [Program Analysis](#program-analysis)
+    - [Constant Propagation](#constant-propagation)
     - [Reaching Definitions](#reaching-definitions)
     - [Liveness](#liveness)
     - [Points To](#points-to)
     - [Available Expressions](#available-expressions)
     - [Very Busy Expressions](#very-busy-expressions)
     - [Zippers For Program Points](#zippers-for-program-points)
+    - [Forall Emulation](#forall-emulation)
     - [Doop](#doop)
     - [Datalog Diassembly / Decompilers](#datalog-diassembly--decompilers)
     - [Bap](#bap)
@@ -142,7 +145,7 @@ From another perspective, it is a relative of the logic programming language Pro
 
 Maybe part of what I like about datalog compared to prolog is
 1. complete search strategy
-2. logically pure. Kind of like Haskell's laziness kept it pure, Datalog's operation ordering is not obvious after compilation. This means extralogical stuff doesn't fly. 
+2. logically pure. Kind of like Haskell's laziness kept it pure, Datalog's operation ordering is not obvious after compilation. This means extralogical stuff doesn't fly. Datalog makes control flow explicit. You do not get an implicit goal stack.
 3. simple and efficient execution semantics. Pattern match / query over database. Insert new facts accordingly
 
 # What can you do with datalog?
@@ -290,6 +293,50 @@ edge = {(1,2), (2,3), (3,4)}
 path = strata1(edge)
 ```
 
+####  Lattice
+```python
+# min lattice using && as join
+class Min():
+  def __init__(self, x):
+    self.val = x
+  def __and__(self,rhs):
+    return Min(min(self.val, rhs.val))
+  def __le__(self,rhs):
+    return self.val <= rhs.val
+  def __ge__(self,rhs):
+    return self.val >= rhs.val
+  def __add__(self,rhs): # plus is not lattice generic. It just so happens min lat supports it and its monotonic
+    return Min(self.val + rhs.val)
+  def __repr__(self):
+    return repr(self.val)
+
+def strata1(edge):
+  # path(x,y) :- edge(x,y)
+  path = {(x,y) : Min(1) for (x,y) in edge}
+  while True:
+    # path(x,y) :- edge(x,y), path(y,z).
+    newpath = {(x,z) : d + Min(1) for (x,y) in edge for (y1,z), d in path.items() if y == y1}
+    # if we have not discovered any new tuples return
+    if all( [ k in path and path[k] <= d for k, d in newpath.items()] ):
+      return path
+    else:
+      # merge new tuples into path for next iteration
+      for k,d in newpath.items():
+        if k in path:
+          path[k] = path[k] & d 
+        else:
+          path[k] = d
+
+edge = {(1,2), (2,3), (3,4)}
+path = strata1(edge)
+print(path)
+# {(2, 3): 1, (1, 2): 1, (3, 4): 1, (2, 4): 2, (1, 3): 2, (1, 4): 3}
+```
+
+Other examples to consider:
+- Subsumption
+- Semiring
+- Provenance
 
 ### SQL recursive common table subexpressions
 ```sql
@@ -408,7 +455,7 @@ See
 - Souffle tutorial
 - 
 
-It is common to reduce your program into some kind of graph like form. One way to do this is to lbael program points (these may be machine addresses, stmt identifiers, or maybe line numbers) and state which points can follow other points in a relation `next(l1 : stmt, l2 : stmt)` .
+It is common to reduce your program into some kind of graph like form. One way to do this is to lbael program points (these may be machine addresses, stmt identifiers, or maybe line numbers) and state which points can follow other points in a relation `next(l1 : stmt, l2 : stmt)` . You may also want to collect statements into blocks.
 
 You will also need to summarize the effects of the constructs of your language into a relational form. 
 Some possibilities
@@ -416,8 +463,34 @@ Some possibilities
 - `reads(l:stmt, x:var)`
 
 
+### Constant Propagation
+```
+.type tid <: symbol
+.type blk = [tid : tid, data : defs, ctrl : ]
+.type def = [tid : tid, lhs : var, rhs : exp]
+.type defs = [hd : def, tl : defs]
+.type jmp = [tid : tid, cnd : exp, dst : , alt : ]
+.type jmp_kind = 
+  Call {} 
+  | Goto {}
+  | Ret {} 
+  | Int {}
+
+.type sub = [tid : tid, name : symbol, args : args, blks : blks]
+
+
+.decl blk( tid , nstmts : unsigned, )
+
+
+```
+
 ### Reaching Definitions
 
+```
+def_use(x : var, def : stmt, use : stmt) //reaches?
+def(x: var , label : stmt)
+use(x : var, label : stmt)
+```
 
 ### Liveness
 Variables that will be needed on at least one path
@@ -572,6 +645,10 @@ From another perspective, this is a relative of "need sets" and magic sets.
 The zipper here represents the implicit stack of an ordinary Imp interpreter. We also may need a first class map to actually run programs precisely
 The transformation foo(firstclassmap) -> foo(i), map(i, k,v) is lossy in the presence of multiple executions. From an abstract interp persepctive this is not so bad.
 
+### Forall Emulation
+https://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf
+
+
 ### Doop
 I should probably know more about this but I don't.
 Java.
@@ -633,6 +710,9 @@ Registers vs memory. What difference does it make? It doesn't really (for analys
 
 Should I use `symbol` to represent simple enum adts? They are syntactically a bit more convenient. It would be a bit more uniform to use souffle adts.
 
+[bap in souffle](https://github.com/philzook58/bap-notes/blob/main/souffle/bap.dl)
+
+
 ```souffle
 
 
@@ -690,7 +770,7 @@ Should I use `symbol` to represent simple enum adts? They are syntactically a bi
 
 
 
-// .decl insn(addr : unsigned, sem : stmts)
+// d.decl insn(addr : unsigned, sem : stmts)
 // flatten()
 // .decl may_fallthrough(From, To)
 // .decl must_fallthrough(From, To)
@@ -708,14 +788,17 @@ If we want to just analyze what bap already finds, we can print souffle database
 use pcode?
 
 ### Resources
-[Using Datalog for Fast and Easy Program Analysis](https://yanniss.github.io/doop-datalog2.0.pdf) A Doop paper
-[Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
-[hash consed points to sets](https://yuleisui.github.io/publications/sas21.pdf)
+- [Using Datalog for Fast and Easy Program Analysis](https://yanniss.github.io/doop-datalog2.0.pdf) A Doop paper
+- [Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
+- [hash consed points to sets](https://yuleisui.github.io/publications/sas21.pdf)
+- [datalog for static analysis](https://prl.ccs.neu.edu/blog/static/datalog-for-static-analysis.pdf)
+- 
+- 
+- [graspan](http://web.cs.ucla.edu/~wangkai/papers/asplos17)
+- [Using Datalog with Binary Decision Diagrams for Program Analysis bddbddb](https://people.csail.mit.edu/mcarbin/papers/aplas05.pdf)
 
-[graspan](http://web.cs.ucla.edu/~wangkai/papers/asplos17)
-[Using Datalog with Binary Decision Diagrams for Program Analysis bddbddb](https://people.csail.mit.edu/mcarbin/papers/aplas05.pdf)
+- [codeql](https://codeql.github.com/docs/ql-language-reference/about-the-ql-language/) semmle
 
-[codeql](https://codeql.github.com/docs/ql-language-reference/about-the-ql-language/) semmle
 
 ## First Class Sets & Reflection
 
@@ -2776,6 +2859,18 @@ https://twitter.com/soundly_typed/status/1513500166359298048?s=20&t=-ertSPtY87Go
 
 [decalarative datalog debugging for mere mortals](https://yanniss.github.io/DeclarativeDebugging.pdf)
 
+Provenance can be done by tagging the rule that applied.
+You can either give rules names or
+Master provenance can be done by reflecting the rules themselve into an AST al la metainterpeters
+
+```souffle
+.type val = Sym {s : symbol} | Num {n : number}
+.type vallist = [hd : ]
+.type rel = [name : symbol, args : vallist]
+.type rule = [head : , body]
+
+```
+
 ## Semi Naive Evaluation
 I remember a time when semi naive seemed pretty cryptic to me. I still amnot sure I understand it perfectly, but I have crossed the threshld 
 
@@ -2795,6 +2890,16 @@ You need these three because you need a place to put new facts, but also you wan
 `delta = new \ old`
 
 ## Algebraic Data Types
+
+
+Termination is no longer guaranteed. How do you guarantee termination?
+Well one way is perhaps to only produce _new_ terms "smaller" than ones discovered. This is like termination in functional programming with the caveat that you may recursively not make progress.
+`foo (x : xs) = foo (x : xs)` is non terminating in haskell
+`foo([x,xs]) :- foo( [x,xs]).` is perfectly fine terminating in datalog.
+
+You may also use any terms discovered whole hog.
+
+One way to treat existential is to search for them in the already known database.
 
 ## Lattices
 Lattices give a natural way to "fix" broken functional dependencies of the tables.
@@ -3273,6 +3378,129 @@ See
   - DDlog.
   - note on Databases Streaming
 
+Seminaive evaluation is a canonical example of incremental computation already.
+
+While souffle does not support incrementality, you can manually do it by semi naive transforming your program yourself? Put the incrmenetality at the bash level
+Make every relation duplicated rel -> rel, drel. 
+drel is an input delta relation.
+```
+
+.decl dedge(x : number, y : number)
+.decl edge(x : number, y : number)
+.decl path(x : number, y : number)
+
+.input path
+.input edge // you don't even need edge in this case
+.input dedge
+path(x,y) :- dedge(x,y).
+path(x,y) :- dedge(x,y), path(x,y). // is this ok to look over all of path? I think so.
+
+edge(x,y) :- dedge(x,y).
+
+.output path
+.output edge
+```
+ You can also output deltas if you want to manually feed seminaive between differetn souffle subprograms.
+
+meta-seminaive
+Is this the multi time differential dataflow?
+Inner seminaive is douffle program
+outer is bash loop
+
+
+Multiset semantics
+
+edge path query
+```python
+
+edge = [(i,j,t,delta)]
+t = (period, iter)
+
+```
+
+A_t = \sum_{s<t} \delta A_s
+At certain points you can coalesce these sums?
+
+retracting facts feels important?
+You could just run semi-naive again if you're only adding in.
+provenance required to retract? just counting the ways?
+:- edge(), path()
+
+
+
+
+
+```python
+scope = 0
+edger = {}
+pathr = {}
+def push():
+  global scope
+  scope += 1
+def pop():
+  global scope, edger, pathr
+  # we could index this better
+  # non destructive version:
+  edger = {k : s for k,s in edger.items() if s < scope}
+  pathr = {k : s for k,s in pathr.items() if s < scope}
+  ''' # error: dictionary changed size during iteration. hmm.
+  for k,s in edger.items():
+    if s < scope:
+      del edger[k]
+
+  deledge = {k : s for k,s in edger.items() if s >= scope}
+  edger.delete(deledge)
+  '''
+  scope -= 1
+
+def add_edge(x,y):
+  if (x,y) not in edger:
+    edger[(x,y)] = scope
+
+def strata():
+  for k, s in  edger.items():
+    if k not in pathr:
+      pathr[k] = s
+  #path = {(x,y) : s for (x,y), s in edger.items()}
+  while True:
+    newpath = {(x,z) for (x,y) in edger.keys() for (y1,z) in pathr.keys() if y == y1}
+    if newpath.issubset(pathr.keys()):
+      return
+    for (x,y) in newpath:
+      if (x,y) not in pathr:
+        pathr[(x,y)] = scope
+
+
+  #for (x,y) in edger.keys():
+  #  for (y1,z) in path.keys():
+  #    if y == y1:
+  #      add_path(x,z)
+
+add_edge(1,2)
+add_edge(2,3)
+add_edge(4,5)
+strata()
+print(pathr)
+push()
+add_edge(3,4)
+strata()
+print(pathr)
+pop()
+print(pathr)
+```
+
+There's way too much inefficiency here, but it has the bones of the point.
+I need to be doing semi naive before
+Also indexing on scope so that pop becomes fast.
+We could also lazily pop by just saying to ignore anything with a higher scope during search. That's kind of nice.
+But then we need to clean out before we push again. So that's not nice.
+
+Scopes can be related to the min lattice for scope. Yeah. Huh. So you don't even need to run to saturation before you push.
+
+But at the same time, it is the same thing as contextual datalog, just contexts are numbers / totally ordered instead or partially ordered. 
+
+
+
 
 # Implementations
 - Souffle
@@ -3748,6 +3976,19 @@ What about guarded negation? For example if you turn off stratification but are 
 
 
 # Resources
+automatic differentiation like chr?
+
+[initial limite datalog](https://research-information.bris.ac.uk/en/publications/initial-limit-datalog-a-new-extensible-class-of-decidable-constra) extension of datalog Z?
+
+datalog ilp? Using FLP?
+
+
+[the expressive power of higher order datalog](https://arxiv.org/pdf/1907.09820.pdf)
+
+[Overview of Datalog Extensions with Tuples and Sets (1998)](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.39.9904)
+LDL. Hilog. COL. Relationlog. Datalog with set objects and grouping is an old idea.
+
+
 [Neural Datalog through time](https://arxiv.org/pdf/2006.16723.pdf)
 
 

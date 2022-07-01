@@ -397,3 +397,7 @@ Power flow is a place where mathemtical optimization is pretty interesting
 [Gekko](https://gekko.readthedocs.io/en/latest/quick_start.html)
 
 cvxpygen
+
+[Yet Another Math Programming Consultant](https://yetanothermathprogrammingconsultant.blogspot.com/)
+
+[Max cut](https://twitter.com/parubin/status/1537815438368858114?s=20&t=Id3zoB1xCWLA5QQIrPNHVA)

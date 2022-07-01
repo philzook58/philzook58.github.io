@@ -17,6 +17,7 @@ wordpress_id: 1849
   - [RustHorn](#rusthorn)
   - [RustHornBelt](#rusthornbelt)
   - [Prusti](#prusti)
+  - [Aeneas](#aeneas)
   - [Creusot](#creusot)
 - [Macros](#macros)
   - [Declarative macros aka macro_rules!](#declarative-macros-aka-macro_rules)
@@ -176,8 +177,11 @@ Prophetic encoding. Mutable borrows are modelled as pairs of current and final v
 https://www.lri.fr/~xldenis/paper/rusthornbelt.pdf
 
 ## Prusti
+## Aeneas
+https://arxiv.org/abs/2206.07185
 ## Creusot
-https://hal.inria.fr/hal-03526634/document
+[creusat](https://news.ycombinator.com/item?id=31780128) https://twitter.com/xldenis/status/1537578878364921856?s=20&t=Id3zoB1xCWLA5QQIrPNHVA
+https://hal.inria.fr/hal-03526634/document 
 built in why3
 pearlite - specification language
 
