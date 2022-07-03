@@ -376,6 +376,15 @@ extern "C" {
 
 }
 ```
+# Bits and Bobbles
+This isn't totally satisfactory, but there is enough here for an interesting post and I'm kind of stalled out. I'm a big believer in low standards for blog posts.
+
+I suspect I am not handling both 32-64 bit souffle correctly. It's like... confusing, man.
+
+Zach showed me a good example but the photo is totally blurry.
+`1/(x+1) - 1/x ---> ? `
+
+
 
 ## An Aside: Datalog Modulo X
 Max has invented a fun terminology.
