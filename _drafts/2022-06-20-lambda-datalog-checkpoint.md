@@ -119,6 +119,11 @@ in($SterileRuleBug())
 
 ```
 
+If we can guess the guessed facts, we can give the contexts a label.
+Can we handle fresh vars then?
+
+
+
 ```run
 
 

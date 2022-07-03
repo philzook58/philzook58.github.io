@@ -9,6 +9,14 @@ See also notes on:
 - datalog
 
 
+# Term Indexing
+Discrimination Trees
+Substitution trees
+
+[Simple and Efficient Clause Subsumption with Feature Vector Indexing](http://wwwlehre.dhbw-stuttgart.de/~sschulz/PAPERS/Schulz2013-FVI.pdf)
+
+
+
 - <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7324010/> Teaching Automated Theorem Proving by Example: PyRes 1.2
 - <https://logictools.org/> neat online ATP interface
 - TPTP
@@ -51,3 +59,5 @@ Dedam: A Kernel of Data Structures and Algorithms for
                     Automated Deduction with Equality Clauses
 
 [efficient full higher order unification](https://arxiv.org/abs/2011.09507) zipperposition
+
+

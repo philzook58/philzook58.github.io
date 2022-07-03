@@ -18,8 +18,11 @@ title: E-graphs
 - [PEG Program Expression Graphs](#peg-program-expression-graphs)
   - [Tree Automata](#tree-automata)
 - [Egglog](#egglog)
+  - [First class sets](#first-class-sets)
+  - [GATs](#gats)
 - [Lambda Encoding](#lambda-encoding)
 - [Contextual EGraphs](#contextual-egraphs)
+- [CHR egraphs](#chr-egraphs)
 - [Misc](#misc)
 
 
@@ -247,6 +250,8 @@ Quiche [quiche](https://github.com/riswords/quiche) python egraph for manipulati
 ## Tree Automata
 
 https://github.com/ondrik/libvata
+[Tree Automata Techniques and Applications](https://jacquema.gitlabpages.inria.fr/files/tata.pdf)
+
 
 [E-Graphs, VSAs, and Tree Automata: a Rosetta Stone](https://remy.wang/reports/dfta.pdf) [slides](https://docs.google.com/presentation/d/1oDNmzxJpsdLE51lmybcfzzzv4jRLDdrVpmMhMpFEoFk/edit?usp=sharing) [merge only rules](https://gist.github.com/remysucre/1788cf0153d7db240e751fb698f74d99)
 
@@ -254,6 +259,9 @@ https://github.com/ondrik/libvata
 https://en.wikipedia.org/wiki/Tree_automaton
 
 # Egglog
+## First class sets
+
+## GATs
 
 
 ```python
@@ -361,6 +369,105 @@ No one know what this means. Everyone wants it.
 
 Perhaps related to backtracking
 
+
+# CHR egraphs
+
+
+```prolog
+:- use_module(library(chr)).
+:- initialization(main,main).
+% hmm are these annotations ok?
+:- chr_constraint make(+int), find(+int,-), root(+int,+int), union(+int,+int), 
+                  link(+int,+int), pto(+int,+int), counter(+int).
+
+make(A), counter(N) <=> N = A, N1 is N + 1, counter(N1), root(A,0).
+union(A,B) <=> find(A,X), find(B,Y), link(X,Y).
+pto(A, B), find(A,X) <=> find(B,X), pto(A,X).
+root(A,_) \ find(A,X) <=> X=A.
+link(A,A) <=> true.
+link(A,B), root(A,N), root(B,M) <=> N>=M | pto(B,A), K is max(N,M+1), root(A,K).
+link(B,A), root(A,N), root(B,M) <=> N>=M | pto(B,A), K is max(N,M+1), root(A,K).
+
+main(_) :- counter(0), make(A), make(B), make(C), union(A,B), find(B,X), find(C,Y), 
+    print(X),print(Y), union(A,B), chr_show_store(true).
+```
+
+```
+
+
+norm @ pto(A, A1), pto(B,B1), pto(E,E1) \ eclass(A + B, E) <=> eclass(A1 + B1, E1).
+
+cong @ eclass(T,E1) \ eclass(T, E2) <=> E1 < E2 | pto(E2, E1).
+
+
+```
+
+```prolog
+:- use_module(library(chr)).
+:- initialization(main,main).
+:- chr_option(optimize,full). % Thanks Tom Schrijvers for the tip
+:- chr_constraint eclass(?,-), eclass2(?,-), collect/1, kill/0, count/1.
+
+cong @ eclass(T, E1) \ eclass(T, E2) <=> E1 = E2.
+
+% rewrite rules.
+% how can we run only once?
+% How can we not make a counter inc if already exists? Maybe that doesn't matter much.
+comm @ eclass(X + Y, E) ==> eclass2(Y + X, E).
+assocl @ eclass(X + YZ, E), eclass(Y + Z, YZ) ==> eclass2(X + Y, XY), eclass2(XY + Z, E). % if I put counter(N) in here, can refire?
+assocr @ eclass(X + Y, XY), eclass(XY + Z, E) ==> eclass2(X + YZ, E), eclass2(Y + Z, YZ).
+
+% To collect up new eclasses
+collect @ eclass2(T,E), collect(L) <=> L = [eclass3(T,E) | L1], collect(L1).
+done @ collect(L) <=> L = [].
+
+% helpers to cleanup eclass2
+kill @ kill \ eclass2(_,_) <=> true.
+killdone @ kill <=> true.
+
+% helper to count eclasses
+count @ count(N), eclass(_,_) <=> N1 is N + 1, count(N1).
+
+% Take rhs list and inject them as CHR constraints 
+process([]).
+process([eclass3(T, E)| L]) :- eclass(T,E), process(L).
+
+% Do N rewriting runs
+batch() :- collect(L), process(L).
+batch(0).
+batch(N) :- batch(), N1 is N -1, batch(N1).
+
+init_add(N) :- eclass(N,E), N1 is N - 1, init_add_aux(N1,E).
+init_add_aux(0,_).
+init_add_aux(N,E) :-
+  eclass(N, EN), eclass(EN + E, E2), N1 is N-1, init_add_aux(N1, E2).
+
+
+insert( T , E) :-
+ ground(T),
+ var(E),
+ T =.. [F | Args],
+ length(Args, N), length(Es, N),
+ T2 =.. [F | Es],
+ eclass(T2, E),
+ maplist(insert, Args, Es).
+
+
+main(_) :- 
+          N = 6,
+          init_add(N),
+          Num is 3**(N) - 2**(N+1) + 1 + N, print(Num),
+          BNum is N,
+          time(batch(BNum)), kill, count(0), chr_show_store(true).
+/*
+Output:
+608
+% 397,754,165 inferences, 41.712 CPU in 41.732 seconds (100% CPU, 9535677 Lips)
+count(608)
+
+N=5 is under a second. Not good scaling.
+*/
+```
 # Misc
 What would be a mvp egraph in C specialized for the comm/assoc problem look like.
 Use reference based union find with tag bits?
