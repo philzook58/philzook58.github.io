@@ -180,8 +180,8 @@ https://www.lri.fr/~xldenis/paper/rusthornbelt.pdf
 ## Aeneas
 https://arxiv.org/abs/2206.07185
 ## Creusot
-[creusat](https://news.ycombinator.com/item?id=31780128)
-https://hal.inria.fr/hal-03526634/document
+[creusat](https://news.ycombinator.com/item?id=31780128) https://twitter.com/xldenis/status/1537578878364921856?s=20&t=Id3zoB1xCWLA5QQIrPNHVA
+https://hal.inria.fr/hal-03526634/document 
 built in why3
 pearlite - specification language
 

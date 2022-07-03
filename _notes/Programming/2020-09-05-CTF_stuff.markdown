@@ -91,7 +91,7 @@ probablistic disassembly using proabablistic datalog?
 bap mc + datalog?
 
 [Formally Verified Lifting of C-Compiled x86-64 Binaries](https://www.ssrg.ece.vt.edu/papers/pldi22.pdf)
-
+[Scalable validation of binary lifters](https://dl.acm.org/doi/10.1145/3385412.3385964)
 - Linear
 - Recursive
 
@@ -114,6 +114,11 @@ osr - offset shift range. I;ve seen this called value set analysis?
 byteweight - bap neural network thing identifies function starts
 
 
+Ghidra repackaging:
+[lifting bits sleigh](https://github.com/lifting-bits/sleigh)
+[pypcode](https://github.com/angr/pypcode)
+https://github.com/StarCrossPortal/sleighcraft
+https://github.com/black-binary/sleigh
 
 ### Interactive
 - IDA
@@ -425,9 +430,20 @@ elfmaster
 elf reverse
 
 # CTF
+commando vm
+
+
 [yolo space hacker. steam game of ctf stuff](https://store.steampowered.com/app/1341450/Yolo_Space_Hacker/)
 [exploit_me](https://github.com/bkerler/exploit_me) very vulnerable example applications
 [pwntools](https://github.com/Gallopsled/pwntools)
+
+
+
+pwndbg
+
+cyclic_gen
+
+
 # What is Binary Analysis
 
 Dynamic - It feels like you're running the binary in some sense. Maybe on an emulated environment

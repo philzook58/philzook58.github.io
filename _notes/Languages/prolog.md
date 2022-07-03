@@ -1574,7 +1574,7 @@ Dyckhoff g4ip
 
 # Misc
 
-
+[pyswip](https://github.com/yuce/pyswip)
 
 https://github.com/mthom/scryer-prolog/pull/838 scryer as a library?
 

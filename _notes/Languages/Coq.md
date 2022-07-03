@@ -310,3 +310,5 @@ coq platform
 [The pro-PER meaning of "proper"](https://blog.poisson.chat/posts/2022-04-07-pro-per-proper.html)
 
 [magmide](https://github.com/magmide/magmide)
+
+[rewriter](https://github.com/mit-plv/rewriter)

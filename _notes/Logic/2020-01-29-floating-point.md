@@ -209,3 +209,10 @@ https://www.youtube.com/watch?v=RxOkV3wmEik&ab_channel=ACMSIGPLANACMSIGPLAN Gene
 https://www.youtube.com/watch?v=B_J7DSX_ZXM&ab_channel=ACMSIGPLAN  λS: Computable Semantics for Diff'ble Programming with HO Functions and Datatypes (full)
 
 [Verified Compilation and Optimization of Floating-Point Programs in CakeML](https://cakeml.org/ecoop22.pdf)
+
+
+## FPBench
+http://fpbench.org/talks/fptalks20.html
+https://fpbench.org/talks/fptalks21.html
+
+

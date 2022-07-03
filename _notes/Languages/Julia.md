@@ -5,6 +5,7 @@ title: Julia
 wordpress_id: 2987
 ---
 
+[LiftedTrajectoryGames](https://github.com/lassepe/LiftedTrajectoryGames.jl)
 
 [bare metal julia arduino](https://news.ycombinator.com/item?id=31481895)
 

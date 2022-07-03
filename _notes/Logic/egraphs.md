@@ -486,6 +486,10 @@ g(1,2,3).
 
 [Sketch-Guided Equality Saturation Scaling Equality Saturation to Complex Optimizations in Languages with Bindings](https://arxiv.org/pdf/2111.13040.pdf) de buijn indexes with extraction. Rise compiler
 
+[denali](https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf)
+
+
+[tactic lean](https://github.com/opencompl/egg-tactic-code)
 
 [Cheli Thesis](https://arxiv.org/abs/2112.14714)
 
@@ -510,3 +514,15 @@ g(1,2,3).
 [](https://github.com/lifting-bits/eqsat)
 
 [sketch guided equality satruation](https://arxiv.org/abs/2111.13040) Give sketches (~ patterns?) which one the ergaph reaches, transition to a new set of rewriting rules / clear the egraphs.
+
+[beam search](https://github.com/jwtag/egg-csep590d-project)
+
+[Caviar: an e-graph based TRS for automatic code optimization](https://dl.acm.org/doi/pdf/10.1145/3497776.3517781) halide
+
+[Automatic Datapath Optimization using E-Graphs](https://arxiv.org/abs/2204.11478) Samuel Coward, George A. Constantinides, Theo Drane 
+
+[Cranelift egraph rfc](https://github.com/bytecodealliance/rfcs/pull/27)
+
+https://en.wikipedia.org/wiki/E-graph
+
+[Equality-Based Translation Validator for LLVM](https://link.springer.com/chapter/10.1007/978-3-642-22110-1_59)

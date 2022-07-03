@@ -18,6 +18,7 @@ wordpress_id: 2913
   - [RTL](#rtl)
   - [Misc](#misc)
   - [Tensor Stuff](#tensor-stuff)
+  - [Misc](#misc-1)
 - [Analysis](#analysis)
   - [Dataflow](#dataflow)
 - [Optimizations](#optimizations)
@@ -44,7 +45,7 @@ wordpress_id: 2913
   - [Concurrent](#concurrent)
   - [mark and Sweep](#mark-and-sweep)
   - [Generational](#generational)
-- [Misc](#misc-1)
+- [Misc](#misc-2)
   - [LLVM](#llvm)
 - [JVM](#jvm)
 
@@ -60,6 +61,10 @@ http://ssabook.gforge.inria.fr/latest/book.pdf SSA bookv
 [compcertssa](http://compcertssa.gforge.inria.fr/) verified ssa
 
 [bril](https://github.com/sampsyo/bril) educational IR. ocaml and rust bindings.
+
+[Simple and Efficient Construction of Static Single
+Assignment Form](https://pp.info.uni-karlsruhe.de/uploads/publikationen/braun13cc.pdf) https://twitter.com/peter_a_goodman/status/1541105429215936513?s=20&t=Id3zoB1xCWLA5QQIrPNHVA
+
 ## LLVM IR
 See LLVM section
 
@@ -75,6 +80,14 @@ MLIR
 Halide
 TVM
 BYOC bring your own codegen https://tvm.apache.org/2020/07/15/how-to-bring-your-own-codegen-to-tvm
+
+
+http://www.gilbertbernstein.com/resources/LiuPOPL2022.pdf ATL verified "scheduling" rewrites in coq - Gilbert. Gilbert works on coolstuff  http://www.gilbertbernstein.com/
+
+[exo](https://github.com/exo-lang/exo)
+
+https://princetonuniversity.github.io/isca22-ila-tutorial/ ILAlang
+## Misc
 
 [esolang VM](https://github.com/shinh/elvm) - C compiler to simple virtual machine for compiling to esolangs
 
