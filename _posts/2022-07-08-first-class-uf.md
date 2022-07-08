@@ -6,7 +6,7 @@ description: Another step towards Lambda Datalog
 tags: datalog theorem proving
 ---
 
-I've been knocking my brains trying to figure out what is the difference between [datalog](https://www.philipzucker.com/notes/Languages/datalog/) and [prolog](https://www.philipzucker.com/notes/Languages/prolog/), what is "Lambda Datalog" in analogy to [lambda prolog](https://www.lix.polytechnique.fr/~dale/lProlog/), and how to support lambdas in egraphs.
+I've been knocking my brains trying to figure out what is the difference between [datalog](https://www.philipzucker.com/notes/Languages/datalog/) and [prolog](https://www.philipzucker.com/notes/Languages/prolog/), what is "Lambda Datalog" in analogy to [lambda prolog](https://www.lix.polytechnique.fr/~dale/lProlog/), and how to support lambdas in egraphs. This blog post is hints in those directions.
 
 I think an important concept along the way is first class union finds, so I built a prototype for [Souffle datalog](https://souffle-lang.github.io/). My code for this post is tucked away [here](https://github.com/philzook58/souffle-vector)
 
@@ -14,7 +14,7 @@ This post is independent but very much connected to [my previous post](https://w
 
 # Datalog vs Prolog
 
-The relationship between datalog and prolog has been puzzling to me for a while. Like many questions, there are layers of sophistication to which approach it.
+The relationship between datalog and prolog has been puzzling to me for a while. Like many questions, there are layers of sophistication in how one approaches it.
 
 At the initial layer, one describes what datalog is. It is prolog with no compound terms (`a` but not `cons(x,cons(y,z)))`. It is bottom up executed and can be implemented using database query techniques. Datalog has superior termination properties and is more declarative in this sense than prolog.
 
@@ -53,11 +53,11 @@ How do we deal with `forall` in datalog? A direction I went down is trying to ad
 
 I now think this is a wrong fit for pure datalog. I suspect this is a partial "magic setting" of some more natural mechanism.
 
-In a forward reasoning system, it is usually the case that free variables are implicitly universally quantified. You may freely substitute the free variable in any proven theorem with any term and receive another theorem.
+In a forward reasoning system, it is usually the case that free variables are implicitly universally quantified. You may freely substitute the free variable in any proven theorem with any term and receive another theorem. I have seen things in Isabelle and HOLs that have more of this flavor
 
 Long story short, to support universal quantification considering datalog as a theorem prover, I think you need a notion of first class union find.
 
-This is what an inference rule replacing a free variable with a de bruijn bound forall variable would look like. This is a way to build more logical connectives into datalog in the style of my previous blog post, where I discussed implication. `forall` is a kind of reification of the notion of metavariable like how implication `hyp => foo)` was a reification of the notion of context `hyp |- foo`.
+This is what an inference rule replacing a free variable with a de bruijn bound forall variable would look like. This is a way to build more logical connectives into datalog in the style of my [previous blog post](https://www.philipzucker.com/contextual-datalog/), where I discussed the analogous construction for implication. `forall` is a kind of reification of the notion of metavariable like how implication `hyp => foo)` was a reification of the notion of context `hyp |- foo`.
 
 ```
 /*
@@ -70,12 +70,13 @@ forall, foo(bvar(0))
 forall_foo($BVar(0)) :- foo($Var()).
 ```
 
-How do we support metavariables in datalog? That brings us to:
+How do we support metavariables in datalog? That brings us to terms.
 
 # Terms
 We need to reexamine the terms and data objects offered by default by souffle datalog. We need to have enough room in them to discuss metavariables (non grounded things).
 
 This quickly brings us to start reading up on term indexing.
+
 ##  Term Indexing
 Term indexing is an old problem. Tabled prolog and resolution provers need to be able to search over very large sets of terms.
 
@@ -88,26 +89,29 @@ You may try to do perfect or approximate indexing. In perfect indexing, you get 
 
 An approach of attack is to ask how to canonically represent terms.
 
-An important question is how to store or index terms with variables in them. Giving variables explicit names like `foo(X,Y,X)` is base because it is the same thing as `foo(A,B,A)`, but now your index will miss that. This is the alpha equivalence / dummy index problem.
+An important question is how to store or index terms with variables in them. Giving variables explicit names like `foo(X,Y,X)` is bad because it is the same thing as `foo(A,B,A)`, but now your index will miss that. This is the alpha equivalence / dummy index problem.
 
 There are at least two mechanisms by which to approach this.
 
-- You can over approximate with an imperfect "shape index". `foo(A,B,A)` can be over approximated by the shape `foo(VAR,VAR,VAR)`, but so can `foo(A,B,B)` or `foo(A,B,C)`.
-- You can uniquely number variables in some traversal order. For example a preorder traversal. `foo(A,B,A)`, `foo(X,Y,X)` becomes `foo(Var(0),Var(1),Var(0))`. This is not information losing.
+- You can over approximate with an imperfect "shape index". `foo(A,B,A)` can be over approximated by the shape `foo(VAR,VAR,VAR)`, but so can `foo(A,B,B)` or `foo(A,B,C)`. 
+- You can uniquely number variables in some traversal order. This canonicalizes variables names. For example a preorder traversal. Both `foo(A,B,A)`, `foo(X,Y,X)` becomes `foo(Var(0),Var(1),Var(0))`. This is not information losing.
 
-Bundling the term shape `foo(VAR,VAR,VAR)` with the vector `[0,1,0]` ia an alternative factoring of this information. This is what I chose to go with. It is not the unique solution to the problem.
+Bundling the term shape `foo(VAR,VAR,VAR)` next to the vector `[0,1,0]` ia an alternative factoring of this information. This is what I chose to go with. It is not the unique solution to the problem.
 
 #### Notes
-It is also possible to implement this by bundling the tags at some intermediate location. 
+This shape abstraction form is also very reminiscent of "co de bruijn" syntax [ Do be do be do.](https://arxiv.org/abs/1611.09259) [hash cons modulo alpha](https://arxiv.org/abs/2105.02856) where they enhance binding sites with maps. We are not yet really talking about binding sites, but we will.
+
+It is also possible to bundle the tags at some intermediate location. 
 This feels a little bit like we have a special kind of implicit binder out front of the term. Note One could also implement lambda terms in the preorder traversal style. It is a different style of canonical naming from de Bruijn indices. De Bruijn indices seem most related to path indexing, whereas this style is related to discrimination trees.
-I kind of think maybe the first style and defining a `norm_term1(t)` `norm_term2(t,t2)` ... might have been nice. There is something pleasing about making the union find appear in the same place as the context of the previous post.
+
+I kind of think maybe the first style and defining a `norm_term1(t)` `norm_term2(t,t2)` functors ... might have been nice. There is something pleasing about making the union find appear in the same place as the context of the previous post.
 
 
 ## Generic Souffle Terms
 
 As part of this, I really need to be able to count the number of variables in subterms to be able to manipulate the union find.
 
-I need my terms to support `$Var` constructors. I could ask a user (me) to do add this for every datatype of interest, but this is difficult/impossible to do in a generic way with the current state of Souffle foreign functors.
+I need my terms to support `$Var` constructors. I could ask a user (me) to do add this for every datatype of interest, but this is difficult/impossible to do in a generic way with the current state of Souffle foreign functors. It is hard to know which constructor is which from the C++ side. Perhaps an interface to request this information might help. There is an issue for it on the souffle github.
 
 Instead what I chose to do is build a generic boxed `term` type. It supports everything expressible in souffle at the cost of a boxing. It would be possible to lower this cost for primitive types by using bit tagging tricks (reserving some bits of RamDomain to tell me if something is a symbol vs number vs unsigned), but I didn't do that for the moment.
 
@@ -215,7 +219,7 @@ Union finds are also called disjoint set datastructures.
 
 Mathematically speaking, these things are trying to represent equivalence relations, which can be thought of as isomorphic to partitions of sets.
 
-In particular, I think that _partial_ equivalence relations are a nice fit for the realities of the union find. Implicitly a int based union find is a partial equivalence relation over the integers. Anything not in the union find at all can be considered in it's own personal equivalence class
+In particular, I think that _partial_ equivalence relations are a nice fit for the realities of the union find. Implicitly a int based union find is a partial equivalence relation over the integers. Anything not in the union find at all can be considered in it's own personal equivalence class or equivalently not in the partial relation.
 
 The typical union find is the equivalence kernel of a function implicitly defined as the the fixpoint of a contracting map. As you are finding these fixpoint values, you can mutate to a map with the same equivalence kernel that is more more rapidly contracting.
 
@@ -235,7 +239,14 @@ I initially was thinking I'd need to use the souffle vector type from my previou
 Souffle symbols are interned strings. You can ask for the string in the C++ interface. Strings are null terminated char arrays. In other words, this is already a kind of vector supported by Souffle natively.
 
 For manipulating these union finds, souffle has the built in functors `cat(a,b)`, `subst(str, ind, length)` and `strlen(a)`.
+
 In addition to these capabilities, I need to be able to normalize the string into a canonical form when it is being considered as a union find, and I need to be able to call `union` on elements of the union find.
+
+The canonical form I choose is to label the eq classes by ascii characters starting from '0' traversing the uf structure from left to right.
+
+In other words, the string "bcaabc" normalizes to "012201".
+
+The is the equivalence kernel formulation, not the typcial contracting map formulation of an equivalence relation. The domain of the map I am represent is the integer index of the string. The codomain is the characters [0-z]. 
 
 ```souffle
 .type str_uf <: symbol
@@ -296,6 +307,34 @@ It keeps a running counter of what is the next "fresh" character and maintains a
 
 
 # Append Example
+Append in prolog can work on non ground lists.
+
+```prolog
+append([],Y,Y).
+append([X|Xs], Ys, [X |Zs]) :- append(Xs,Ys,Zs). 
+```
+
+It should be able to generate a sequence of lists of increasing size with variable contents.
+
+```prolog
+?- append(X,Y,Z).
+X = [],
+Y = Z ;
+X = [_A],
+Z = [_A|Y] ;
+X = [_A, _B],
+Z = [_A, _B|Y] ;
+X = [_A, _B, _C],
+Z = [_A, _B, _C|Y] ;
+X = [_A, _B, _C, _D],
+Z = [_A, _B, _C, _D|Y] ;
+```
+
+These are non ground results. Stock datalog does not even have a way to represent these really.
+
+With first class union finds, this datalog program emulates this behavior in some respects. You can see how painful and error prone the explicit unionfind manipulation. With metaprogramming or deeper datalog compiler introspection, this is automatable. There is a mismatch between datalog's notion of variable and the term notion of variable.
+
+
 ```souffle
 #include "term.dl"
 #include "uf.dl"
@@ -312,16 +351,9 @@ append(CONS($Var(), x),   y,   CONS($Var(), z),   @norm_str_uf(ufres)) :-
         ufz = substr(uf,nx+ny,nz),
         ufres = cat(fresh, cat(ufx, cat(ufy, cat(fresh, ufz)))).
 
-.limitsize append(n=2)
+.limitsize append(n=5)
 
 .output append(IO=stdout)
-
-// Variant tabling
-// vs
-// Subsumptive tabling
-
-// append(a,b,c,coarse) <= append(a,b,c,fine) :- 1 = @str_uf_sub(fine, coarse).
-
 
 /*
 ---------------
@@ -345,6 +377,12 @@ We can support something similar to subsumptive tabling via souffle subsumption.
 
 append(a,b,c,coarse) <= append(a,b,c,fine) :- 1 = @str_uf_sub(fine, coarse).
 ```
+
+Having a global union find and small local canonicalized union finds may be a good trade off.
+
+We could also try to encode the local union finds with shared substructure. That might be good.
+
+Scoped Union Finds.
 
 # More C++ Code
 
