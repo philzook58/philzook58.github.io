@@ -1,7 +1,7 @@
 ---
 date: 2022-07-08
 layout: post
-title: "Chocolate in Peanut Butter: Prolog-ish Unification in Datalog with first class union finds"
+title: "Chocolate in Peanut Butter: Prolog-ish Unification in Datalog with First Class Union Finds"
 description: Another step towards Lambda Datalog
 tags: datalog theorem proving
 ---
