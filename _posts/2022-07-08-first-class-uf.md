@@ -378,6 +378,8 @@ We can support something similar to subsumptive tabling via souffle subsumption.
 append(a,b,c,coarse) <= append(a,b,c,fine) :- 1 = @str_uf_sub(fine, coarse).
 ```
 
+We can compose this with contextual datalog and that gets us a long way to Lambda Datalog. Contexts can also be traversed and have their variables labelled. Unbundling the union find breaks the chicken and egg problem of sorting the context to canonicalize it. Contexts become multisets of terms.
+
 Having a global union find and small local canonicalized union finds may be a good trade off.
 
 We could also try to encode the local union finds with shared substructure. That might be good.
