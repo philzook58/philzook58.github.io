@@ -65,6 +65,9 @@ How do you put suggested hand written invariants in?
 ```
 
 # Resources
+[Analysis and Transformation of Constrained Horn Clauses for Program Verification∗](https://arxiv.org/pdf/2108.00739.pdf) Good review article. Bottom up CHC = DMT?
+
+
 [higher order chc](https://github.com/penteract/HigherOrderHornRefinement) https://research-information.bris.ac.uk/ws/portalfiles/portal/142259264/popl18_p253.pdf
 
 [magic set for chc](https://bishoksan.github.io/papers/scp18.pdf) [tools for chc](https://arxiv.org/pdf/1405.3883.pdf)

@@ -44,6 +44,8 @@ Gerbil is a system on top of Gambit approximately similar to racket
 [https://schemers.org/](https://schemers.org/)
 
 [ribbit scheme](https://news.ycombinator.com/item?id=31096771)
+
+[scheme primer](https://spritely.institute/static/papers/scheme-primer.html)
 ### Minikanren
 http://minikanren.org/
 
@@ -71,7 +73,7 @@ https://docs.racket-lang.org/index.html
 
 https://school.racket-lang.org/2019/plan/
 
-https://beautifulracket.com/
+[beautiful racket](https://beautifulracket.com/)
 
 
 https://github.com/wilbowma/cur a curious dependently typed proof assistant
@@ -79,6 +81,19 @@ https://github.com/wilbowma/cur a curious dependently typed proof assistant
 [racketscript](http://play.racketscript.org/)
 
 
+[racket contest good links](https://racket.discourse.group/t/summer-lang-party/1128/2)
+
+Mythical Macros tutorial
+https://soegaard.github.io/mythical-macros/
+
+Macros and Languages in Racket book draft
+http://rmculpepper.github.io/malr/ 1
+
+Racket Guide: Creating Languages
+https://docs.racket-lang.org/guide/languages.html
+
+Racket Docs search for all languages:
+https://docs.racket-lang.org/search/index.html?q=H%3A
 ### Rosette
 https://docs.racket-lang.org/rosette-guide/index.html
 

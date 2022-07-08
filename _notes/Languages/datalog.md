@@ -2328,6 +2328,8 @@ Question: Is it possible to consider static analysis over lambda prolog to syste
 
 Consider Jens Otten tutorial
 
+When is the difference between an ATP system like Vampire and Datalog really? They are closer than you might think on first inspection. Both are bottom up systems. Datalog significantly restrict their clause structure. Datalog matches, but doesn't unify.
+
 ### Skolemization for Existential Heads
 $ \forall x, \psi(x) \implies \exists y, \phi(x,y)$ can be replaced with 
 $ \forall x, \psi(x) \implies \phi(x,y(x))$ where y is now the function that selects the approproate existential value. You can represent function symbols of this kind wtih ADTs. ADTs are great because they know if you've already made the symbol or not.
@@ -2749,6 +2751,101 @@ To build a trie in souffle, we'll need maps. Assoc vectors.
 Try using ascent? Why not.
 ref counted opauqe objects in souffle. But how would we call dec on ref count?
 
+Normalized Variables representation. See term indexing chapter pg 1889
+Could use polynomials to represent in souffle without branching.
+use min to represent unification
+
+```
+append($Var(0),$Nil(), $Var(0)).
+append($Cons($Var(0), x), y, $cons($Var(0), z) ) :-
+  append(x,y,z), lift(x,y,z).
+
+//memoized
+max($Var(0), 0).
+max($Var(1), 1).
+max($Cons(x,y), mz) :- max(x,mx), max(y,my), mz = max(mx,my).
+
+shift()
+
+```
+
+Man embdding this in souffle seems tough. We really need to destructure
+If however I use a custom term representation
+```souffle
+// type term = [head : symbol, args : vec]
+
+//.type term = [head : symbol, nargs : unsigned, args : number]
+// ambiguous record. This stinks.
+// #define ADD(x,y) ["add", 2, as([x,y], number)]
+
+//.type AExpr = Add {id : number, }
+.type term =  T0 {head : symbol} 
+            | T1 {head : symbol, x : term}
+            | T2 {head : symbol, x : term, y : term}
+            // binary terms is sufficient, but painful
+// we can detect T0 T1 from C++ side.
+#define ADD(x,y) $T2("add",x, y)
+
+.decl test(f : term)
+//test(nil).
+test(ADD($T0("x"),$T0("y"))).
+```
+
+First class union find [0,1,1,1]
+@perm3(uf, 2,1,1). returns uf of var [v2,v1,v1], which in this case would be [0,0,0]. since v2 and v1 point to each other. 
+Decouples naming variables from the data structure itself.
+Variant checking and a subclass of subsumption become easy.
+`foo(x,y,z, uf1) <= foo(x,y,z,uf2) :- @subuf(uf1,uf2).`
+
+Awkward and error prone to manually program with. Needs metadatalog.
+```
+.decl nvar(t : term, n : unsigned)
+#define GROUND(t) nvar(t,0)
+``` 
+Sometimes this may be necessary to step over unexpanded terms.
+
+Relative of co-de bruijn. Also relative of term indexing. Discrimination trees.
+Bad indexing for non concrete terms.
+We can tell the difference easily between `$Var()` and `a` in a pattern. 
+
+```
+#define NIL $Symbol("nil")
+#define T2(f,a,b) $App($App(f,a),b)
+#define CONS(x,xs) T2($Symbol("cons"), x, xs)
+
+
+append_a($Var(),$Symbol("nil"), $Var(), [0,0]).
+append_a(CONS($Var(), x), y, CONS($Var(), z), uf) :-
+  append_q(), append_a(x,y,z, uf1), nvar(x,nx), nvar(y,ny), nvar(z,nz), uf = @perm(uf, ???).
+append_q().
+```
+@nvars(t:term):unsigned
+The union find surgery is more complex than I thought. Go figure.
+@slice(uf, 0, nx)
+@swap(uf, i, j)
+@insert(uf, n, i) (may require shuffling)
+@concat(uf1, uf2)
+@makeset(uf)
+@union(uf, i, j)
+@find(uf, i) ??? Will I need this?
+Maybe append(x,ufx, y,ufy, z, ufz) is better convention? toplevel packing of uf with tree?
+We could bite the bullet and just traverse terms.
+
+For context we need first class map.  _multiset_ of (unmarked var) terms in context which . first class map from terms to number of them. UF should have some convention for breaking ties. Now it isn't 
+Otherwise same diff.
+
+This seems great.
+
+.type t1 = term
+.type t2 = [x : term, y : term]
+norm1():t1
+norm2(x:term,y:term):t2
+norm3()
+.type countterm = [nvar : unsigned, t : term]
+norm(t, offset):countterm
+norm(old:term, olduf:uf, new:term)
+
+
 ### Geometry
 
 ### Categorical Example
@@ -3050,6 +3147,9 @@ index([a,ctx], n + 1, x) :- index([a,ctx], _, _), index(ctx, n, x).
 // This part is a mess. Would not using debruijn be better somehow?
 
 ```
+
+Thinking in terms of tabling, there is a difference between query and answer. 
+
 [bidirectional typing](https://arxiv.org/pdf/1908.05839.pdf)
 I suppose bidi checking feels nice because we are already used to thinking of the different modes as different predicates. We also need to make these distinctions for magic set transform
 
@@ -3497,7 +3597,17 @@ negation as failure vs stable model
 ## Tabling
 See 
  - prolog#tabling
+
+
 Tabling in prolog leads to something very similar in power to the memoizing datalog. However, you still have unification and logic variables, so it is not clear it is truly equivalent.
+
+Datalog only works on ground terms.
+
+Semi-naive evaluation is like informing the consumers that a new answer is available.
+
+Datalog puts more at compile time than tabling does (naively?).
+
+"Query Answer Transformation"
 
 ## Descriptive Complexity and Least Fixed Point Logic
 

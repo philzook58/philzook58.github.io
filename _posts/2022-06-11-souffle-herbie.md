@@ -48,7 +48,7 @@ Given these candidate expressions we have a reasonable means to estimate their r
 ## Rationals
 How can we inject GNU multiprecision rationals into Souffle? The interface presented to the user of the library is opaque pointer types. I have toyed with just storing pointer values in 64bit souffle when I was binding Z3. Scary stuff. It doesn't really work here.
 
-Part of datalog's thing is it needs to know when two things are equal. If I put `7/4` into the relation `foo` multiple times, that should reduce to only one entry. Z3 hash cons internally expressions. GMP does not. We could perhaps use the pointers of the returned gmp values if we could overload hashing and equality. Actually, I could subsume possibly to remove duplicates. But then we'd also have a memory leak.
+Part of datalog's thing is it needs to know when two things are equal. If I put `7/4` into the relation `foo` multiple times, that should reduce to only one entry. Z3 internally hashconses expressions. GMP does not. We could perhaps use the pointers of the returned gmp values if we could overload hashing and equality. Actually, I could subsume possibly to remove duplicates. But then we'd also have a memory leak.
 
 As an inefficient but simple cheat, we can hash cons these numbers by serializing to and from souffle's built in symbol datatype, which is basically a string. Strings are the ultimate universal type and serialization/deserialization is packing and unpacking to this type. GMP uniquely normalizes and prints rationals.
 

@@ -216,3 +216,5 @@ http://fpbench.org/talks/fptalks20.html
 https://fpbench.org/talks/fptalks21.html
 
 
+
+https://rtca2023.github.io/pages_Lyon/m2.html workshop may 2023. Sounds cool. Certified ans Symbolic computation

@@ -439,6 +439,74 @@ To what degree can the parts of magic set be seen as analogs of tabling
 variant tabling - the magic predicates may be storage of tabling keys / queries
 
 
+Tabling is "memoized coroutines"
+Memoing
+
+There is more variation available in memoizing than I realized.
+```python
+
+fib_table = {0:1, 1:1}
+def fib(n):
+  if n in fib_table:
+    return fib_table[n]
+  res = fib(n-1) + fib(n-2)
+  fib_table[n] = res
+  return res
+
+print(fib(3))
+```
+
+There are _two_ very distinct sites of interaction with the table. Checking if a query is in the table, vs filling in the table once you know.
+
+If you're worried about a non terminating computation because you end up callign yourself in a loop, you can mark a question as already asked in the table. We lift a nonterminating query to and Option[int] returning query that for some examples of nontermination instead returns `None`.
+```python
+fib_table = {0:1, 1:1}
+def fob(n):
+  if n in fib_table:
+    #if fib_table[n] == None:
+    #  return None
+    return fib_table[n]
+  else:
+    fib_table[n] = None # mark question as asked
+  x = fob(n) # now this is an infinite loop
+  if x == None: # error handling
+    return None
+  y = fob(n-1)
+  if y == None:
+    return y
+  res = x + y
+  fib_table[n] = res
+  return res
+
+print(fob(3))
+```
+
+What about memoizing coroutines
+
+Above was tabling/memoizing a determinstic computation
+Tabling semideterminstic is easier than full nondeterminism.
+
+path query in semideterministic mode. Either fails or succeeds. Not multiple values.
+```python
+edge = {0:1, 1:2, 2:0}
+path_table = {(x,y) for i,j in edge.items()}
+def path(x,z):
+  if (x,z) in path_table:
+    return True
+  for y in edge[x]:
+    p = path(y,z)
+    if p == True:
+      return True
+  return False
+
+print(path(0,0))
+```
+    
+
+
+
+
+
 ### XSB
 XSB prolog has some unsusual features and supposedly the most advanced implementation of tabling. 
 
@@ -478,6 +546,11 @@ Weaker semantics and choosing semantics.
 ## Attributed Variables
 Attaching extra info to variables. This can be be used to implement CLP as a library
 
+https://www.metalevel.at/prolog/attributedvariables
+https://sicstus.sics.se/sicstus/docs/3.7.1/html/sicstus_17.html
+https://www.swi-prolog.org/pldoc/man?section=attvar
+
+Attributed variables are a union find dict?
 ## Constraint Logic Programming (CLP)
 - CLP(B) - constraint over boolean variables. Sometimes bdd based
 - CLP(FD)

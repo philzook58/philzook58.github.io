@@ -17,6 +17,7 @@ title: Databases
   - [The Chase](#the-chase)
 - [Ontology Formats](#ontology-formats)
 - [Optimal Joins](#optimal-joins)
+- [Vectorized Execution](#vectorized-execution)
 - [Relational AI](#relational-ai)
 - [Streaming](#streaming)
 - [CRDTs](#crdts)
@@ -238,6 +239,8 @@ How materializr and other databases optimize sql subqueries
 
 [genlteish intro to worst case optimal joins](https://twitter.com/justinjaffray/status/1531312730824536064?s=20&t=-IHVNfpCMKlhva0T8ctWXA)
 
+# Vectorized Execution
+[cmu adavanced course lecture](https://www.youtube.com/watch?v=7hgZKrFXYNs&ab_channel=CMUDatabaseGroup)
 
 # Relational AI
 https://www.youtube.com/watch?v=WRHy7M30mM4&ab_channel=CMUDatabaseGroup

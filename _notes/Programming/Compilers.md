@@ -337,6 +337,7 @@ Operads
 You could take a relational perspective on operations, having neither input not output.
 
 ## Register Allocation
+[flambda reg alloc](https://github.com/ocaml-flambda/flambda-backend/pull/678) points to an [appell paper - iterated register coalescing](https://dl.acm.org/doi/abs/10.1145/229542.229546) and tiger book
 <https://arxiv.org/abs/1804.02452>
 
 [cranelift regalloc](https://cfallin.org/blog/2022/06/09/cranelift-regalloc2/) great blog post

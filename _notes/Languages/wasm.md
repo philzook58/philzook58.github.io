@@ -5,6 +5,9 @@ title: Wasm/Emscripten
 
 sqlite fuzzler
 
+[simple web frontend stuff](https://news.ycombinator.com/item?id=32011439)
+cssbed
+htmx
 
 <https://medium.com/swlh/a-suduko-solving-serverless-endpoint-using-webassembly-and-or-tools-df9f7bb10044>
 https://github.com/google/or-tools/pull/2404

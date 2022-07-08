@@ -71,7 +71,11 @@ See coq post https://www.philipzucker.com/simple-coq-union-find/
 
 How essential is path compression? It is the thing that gets you that inverse ackermann complexity. It requires mutation so far as I know.
 
+Another way of constructing disjoint sets is to note that preimages of any map form disjoint sets.
 
+Is the inverse acckerman complxity a requirement for anything I might call a union find? I don't think so.
+
+Union finds can be fully normalized to flatness.
 
 
 ## Reference union finds
