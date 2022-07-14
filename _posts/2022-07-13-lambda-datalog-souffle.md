@@ -31,6 +31,8 @@ A standard way of implementing beta normalization is to use the locally nameless
 
 Pattern matching lambda terms properly is a less discussed topic (at least on the blog circuit). It ends up not being so bad. The key insight I think is that you should consider pattern variables to be parametrized by the bound variables they may include like `\x \y F(x)`. Then you pattern match as usual, you'll perhaps find a `F(x) = x x`. Throw a lambda on `F` and it is easy enough to go through this term and find all `x` and replace them with the new bound variable. `F = \z. z z`. Now F is a closed term. If you come across a bound variable that is not a parameter to F, fail.
 
+I must say. Something seems off about all this. Close but no cigar.
+
 [code of post here](https://github.com/philzook58/souffle-vector/blob/main/libterm.cpp)
 
 # Normalization
@@ -567,11 +569,19 @@ extern "C"
 ```
 
 # Bits and Bobbles
+Don't write patterns that can be beta reduced. Nothing goes into the database un beta reduced.
+
 When I throw metavariables back in, do I need higher order unification? Yikes.
 
 I've gone way too far without a concrete example. But you basically need all 3 capabilities to do anything. To traverse into lambdas, you want to generate metavariables.
 
 Something is off about traversing these terms in C++ only to then traverse them a different way in datalog. Hmm. Am I again not respecting the ethos of bottom up enough? Maybe slapping normalization on datalog isn't the right thing to do at all.
 
+Is what I really want is to directly expose varopen and varclose to datalog? I've been wrong every step of the way. I thought I wanted fresh vars, I wanted unification vars. I thought I wanted implication, I wanted contexts.
+
+Do beta normalization and free var normalization in same pass.
+
 It does seem possible to be more type safe from the souffle side. Require nil checking via giving back a wrapped answer. Have two related types closed_term and term to insist that you reabstract and avoid ruining scope.
+
+It's tempting to have preorder traversed freevars labels. But then how to have them in a context? Just accept the context as ordered? :(
 
