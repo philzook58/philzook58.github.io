@@ -1,7 +1,7 @@
 ---
 date: 2022-07-13
 layout: post
-title: "Lambda Normalization in Souffle Datalog"
+title: "Lambda Normalization for Souffle Datalog"
 description: Another step towards Lambda Datalog
 tags: datalog theorem proving
 ---
