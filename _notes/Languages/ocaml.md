@@ -718,6 +718,10 @@ MLTon
 [MLTon first class threads](https://twitter.com/shwestrick/status/1506291833621688320?s=20&t=-ertSPtY87GogVCFq4f-Rw)
 
 # Misc Resources
+[metapp](https://github.com/thierry-martinez/metapp) compile time ocaml production
+https://github.com/ocaml-community/cppo
+https://github.com/janestreet/ppx_optcomp
+
 [rel: database lib](https://github.com/dbuenzli/rel)
 
 [magic trace](https://github.com/janestreet/magic-trace)

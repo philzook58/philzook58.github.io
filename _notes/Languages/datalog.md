@@ -44,6 +44,7 @@ title: Datalog
     - [Q learning](#q-learning)
   - [Mandelbrot](#mandelbrot)
   - [Constraint handling Rules (CHR)](#constraint-handling-rules-chr)
+  - [Backprop](#backprop)
   - [Lambda representation](#lambda-representation)
   - [Parsing](#parsing)
   - [Hilog](#hilog)
@@ -1568,7 +1569,75 @@ a       b
 */
 ```
 
+## Backprop
+
+A difficulty of backprop is that you need to accumulate the backpropped value from all usage sites of a subexpression. This is an annoying thing to do in datalog. It is a non stratified summation, which _is_ possible using first class sets (although I'm not sure how it'll work out here). If we can guarantee all derivatives are _positive_, which is rare, it is a bit easier because we can prune for merely the largest summation value.
+
+A cute trick is to make every usage site of a subexpression _linear_ by using contructors `Dup1` and `Dup2`. I seriosly mean linear. If you use a `$Dup1` you have to use a `Dup2` somewhere or else it doesn't work
+
+This dup trick is reminiscent of <https://github.com/Kindelia/HVM> [Reverse Mode Differentiation is Kind of Like a Lens II](https://www.philipzucker.com/reverse-mode-differentiation-is-kind-of-like-a-lens-ii/). It is very important to pay attention to dups in reverse differentiation. There is something beautiful there
+
+Datalog is perfectly good at representing graphs. Many implementations of backprop push the values back along a back prop graph. The tagging here demonstrates how you could do a kind of distributed backprop, not that I know why you'd want to do such a thing. Seems very inefficient.
+
+Egraphs?
+
+
+```souffle
+.type expr = 
+  Add {x : expr, y : expr} 
+| Mul {x : expr, y : expr} 
+| Lit {x : float} 
+| Var {x : symbol}
+| Dup1 {x : expr}
+| Dup2 {x : expr}
+
+
+.decl term(n : unsigned, x : expr)
+term(n, x), term(n,y) :- term(n, $Add(x,y)) ; term(n, $Mul(x,y)).
+term(n, x) :- term(n, $Dup1(x)) ; term(n, $Dup2(x)).
+
+term(n,t) :- eval(n,t,_).
+term(n,t) :- diff(n,t,_).
+
+// evaluate forward
+.decl eval(n : unsigned, e : expr, v : float)
+eval(n, t, va + vb) :- term(n,t), t = $Add(a,b), eval(n, a, va), eval(n, b, vb).
+eval(n, t, va * vb) :- term(n,t), t = $Mul(a,b), eval(n, a, va), eval(n, b, vb).
+eval(n, t, va) :- term(n,t), (t = $Dup1(x) ; t = $Dup2(x)), eval(n, x, va).
+eval(n, t, v) :- term(n,t), t = $Lit(v).
+
+// propagate derivative backwards
+.decl diff(n : unsigned, e : expr, v : float)
+diff(n, a, dt ), diff(n, b, dt) :- diff(n, t, dt), t = $Add(a,b).
+diff(n, a, dt * vb), diff(n, b, va * dt) :- diff(n, t, dt), t = $Mul(a,b), eval(n, a, va), eval(n, b, vb).
+diff(n, x, dx1 + dx2) :- diff(n, $Dup1(x), dx1),  diff(n, $Dup2(x), dx2).
+
+#define X $Var("x")
+#define Y $Var("y")
+#define T0 $Mul($Dup1(X),$Dup2(X))
+#define T1 $Add($Dup1(X),$Dup2(X))
+
+eval(0, X, 3.0).
+diff(0, $Add(X,$Lit(1)), 1).
+
+eval(1, X, 3.0).
+diff(1, T1, 1).
+
+eval(2, X, 3.0).
+diff(2, T0, 1).
+.output eval(IO=stdout)
+//.output term(IO=stdout)
+.output diff(IO=stdout)
+
+
+// a fiendish macro. Never do this, but it is cute.
+#define DUP(x)  $Dup1(x),$Dup2(x)
+// could be used like this: x1 = DUP(foo) = x2
+```
 ## Lambda representation
+
+[Lambda Normalization for Souffle Datalog](https://www.philipzucker.com/lambda-datalog-souffle/)
+
 What is the most appropriate way? Probably we want to implement some kind of machine flavored implementation.
 Or maybe a graph like representation.
 
@@ -2844,6 +2913,36 @@ norm3()
 .type countterm = [nvar : unsigned, t : term]
 norm(t, offset):countterm
 norm(old:term, olduf:uf, new:term)
+
+Another representation: Use a set of location map trees. We don't care about order.
+```
+.type map = Left {map} | Right {map} | Here {} | Both {map, map}
+```
+Assume left associated form for things with more than 2 args.
+
+foo(Var,Var), { Both(Here,Here)  } vs {  Left(Here), Right(Here) }
+
+The trees are _disjoint_
+We then need to 
+This somehow is a unification tree or no?
+
+It's difficult to find the tree that corresponds to Something.
+Could have function that takes single path and returns entire tree.
+If trees are equal, vars are equal. Hmm.
+@map_left
+@map_right
+@map_both - add a both to every tree in set.
+
+Could be need to destruct every tree in set?
+match_left
+match_right
+
+Do beta and free var norm?
+@norm( $App($Sym("foo"), $App(x, y)))
+@norm1
+@norm2
+@norm3
+That is a nearly usable interface. Hmm.
 
 
 ### Geometry

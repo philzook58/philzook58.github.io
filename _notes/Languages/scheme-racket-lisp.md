@@ -163,6 +163,7 @@ hello!
 [gambit in the browwser](https://feeley.github.io/gambit-in-the-browser/) experiment using emscripten. Different from try.scheme.org using universal backend
 
 # Misc
+[tinylisp](https://github.com/Robert-van-Engelen/tinylisp) 99 lines of C. pretty cool
 
 https://github.com/nojb/ocs-ng ocaml scheme
 

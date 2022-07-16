@@ -15,6 +15,11 @@ title: Macros
 - [advanced scheme techniques](http://people.csail.mit.edu/jhbrown/scheme/macroslides04.pdf)
 - [petrofsky  An Advanced Syntax-Rules Primer for the Mildly Insane](http://www.eighty-twenty.org/~tonyg/Darcs/macromod/doc/reference/petrofsky/petrofsky-advanced-syntax-rules-primer-for-the-mildly-insane.txt)
 - [scheme bibiliography](https://github.com/schemedoc/bibliography/blob/master/page3.md)
+
+
+[A Third Perspective on Hygiene](https://blog.brownplt.org/2017/06/20/scope-inference-hygiene.html)
+
+
 See also: Partial Evaluation.
 
 Raw macros work on syntax. Hygienic macros pay more attention to scope. They attach scope identification data to the syntax tree.
