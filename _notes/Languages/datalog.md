@@ -1575,7 +1575,7 @@ A difficulty of backprop is that you need to accumulate the backpropped value fr
 
 A cute trick is to make every usage site of a subexpression _linear_ by using contructors `Dup1` and `Dup2`. I seriosly mean linear. If you use a `$Dup1` you have to use a `Dup2` somewhere or else it doesn't work
 
-This dup trick is reminiscent of <https://github.com/Kindelia/HVM> [Reverse Mode Differentiation is Kind of Like a Lens II](https://www.philipzucker.com/reverse-mode-differentiation-is-kind-of-like-a-lens-ii/). It is very important to pay attention to dups in reverse differentiation. There is something beautiful there
+This dup trick is reminiscent of <https://github.com/Kindelia/HVM> [Reverse Mode Differentiation is Kind of Like a Lens II](https://www.philipzucker.com/reverse-mode-differentiation-is-kind-of-like-a-lens-ii/) [The simple essence of automatic differentiation](http://conal.net/papers/essence-of-ad/). It is very important to pay attention to dups in reverse differentiation. There is something beautiful there
 
 Datalog is perfectly good at representing graphs. Many implementations of backprop push the values back along a back prop graph. The tagging here demonstrates how you could do a kind of distributed backprop, not that I know why you'd want to do such a thing. Seems very inefficient.
 
