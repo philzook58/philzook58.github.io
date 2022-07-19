@@ -18,6 +18,7 @@ title: E-graphs
 - [PEG Program Expression Graphs](#peg-program-expression-graphs)
   - [Tree Automata](#tree-automata)
 - [Egglog](#egglog)
+  - [Extraction as datalog](#extraction-as-datalog)
   - [First class sets](#first-class-sets)
   - [GATs](#gats)
 - [Lambda Encoding](#lambda-encoding)
@@ -263,6 +264,43 @@ https://github.com/ondrik/libvata
 https://en.wikipedia.org/wiki/Tree_automaton
 
 # Egglog
+
+
+## Extraction as datalog
+```souffle
+
+.decl add0(x:number, y : number, z : number)
+.decl num(x:number, y : number)
+.decl add(x:number, y : number, z : number)
+
+.type AExpr = Add {x : AExpr, y : AExpr} | Num {n : number}
+
+.input add0(filename="../subsumpt/add0.facts")
+
+// This is because of my sloppy previous encoding
+num(i, i) :- add0(i, _, _), ! add0(_,_,i).
+num(i, i) :- add0(_, i, _), ! add0(_,_,i).
+
+.decl depth(id : number, d : unsigned) 
+depth(i, 0) :- num(_,i).
+depth(z, max(dx,dy) + 1) :- add0(x,y,z), depth(x,dx), depth(y,dy).
+
+// min lattice
+depth(x,d) <= depth(x, d1) :- d1 <= d.
+
+// .output depth(IO=stdout)
+add(x,y,z) :- (num(_, x) ; add(_,_,x)), (num(_, y) ; add(_,_,y)),
+              d = min d1 : {add0(x,y,z1), depth(z1, d1)},  depth(z,d), add0(x,y,z).
+
+.decl tree(id: number, e : AExpr) choice-domain id
+tree(j, $Num(i)) :- num(i, j).
+tree(z, $Add(tx,ty)) :- tree(x,tx), tree(y,ty), add(x,y,z).
+
+.output tree(IO=stdout)
+
+```
+
+
 ## First class sets
 
 ## GATs

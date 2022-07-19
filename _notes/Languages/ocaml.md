@@ -718,6 +718,9 @@ MLTon
 [MLTon first class threads](https://twitter.com/shwestrick/status/1506291833621688320?s=20&t=-ertSPtY87GogVCFq4f-Rw)
 
 # Misc Resources
+[: A compiler and VM for a simple language, in 150 lines of code ](https://gist.github.com/p4bl0-/9f4e950e6c06fbba7e168097d89b0e46)
+https://news.ycombinator.com/item?id=32121846
+
 [metapp](https://github.com/thierry-martinez/metapp) compile time ocaml production
 https://github.com/ocaml-community/cppo
 https://github.com/janestreet/ppx_optcomp

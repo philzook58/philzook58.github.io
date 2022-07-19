@@ -21,6 +21,7 @@ wordpress_id: 2913
   - [Misc](#misc-1)
 - [Analysis](#analysis)
   - [Dataflow](#dataflow)
+- [Undefined behavior](#undefined-behavior)
 - [Optimizations](#optimizations)
   - [Polyhedral](#polyhedral)
   - [Link Time Optimization (LTO)](#link-time-optimization-lto)
@@ -69,6 +70,7 @@ Assignment Form](https://pp.info.uni-karlsruhe.de/uploads/publikationen/braun13c
 See LLVM section
 
 
+
 ## CPS
 ## RTL
 
@@ -97,6 +99,25 @@ https://princetonuniversity.github.io/isca22-ila-tutorial/ ILAlang
 Dataflow analysis
 Must/May and intersection vs union. Least fixed point vs greatest
 
+
+# Undefined behavior
+undefined vs implementation defined.
+
+undefined behavior:
+The compiler is allowed to do anything? Represents things that trap. Stuff like divide by zero
+The compiler may optimize code assuming undefined behavior never happens. It is free to make code more defined
+ int wraparound
+
+Poison undef
+llvm IR has some surprising values available in it's semantics. Varables can hold _sets_ and poison. Poison is a special marker value that infects things. undef creates a set of a all possible values
+
+[Towards Optimization-Safe Systems: Analyzing the Impact of Undefined Behavior](https://dl.acm.org/doi/pdf/10.1145/2517349.2522728)
+
+[What Every C Programmer Should Know About Undefined Behavior #1/3](http://blog.llvm.org/2011/05/what-every-c-programmer-should-know.html)
+[Undefined Behavior != Unsafe Programming](https://blog.regehr.org/archives/1467) "The essence of undefined behavior is the freedom to avoid a forced coupling between error checks and unsafe operations."
+
+Refinement checking
+alive2
 
 # Optimizations
 

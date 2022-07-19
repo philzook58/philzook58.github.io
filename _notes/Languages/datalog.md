@@ -24,6 +24,7 @@ title: Datalog
     - [Available Expressions](#available-expressions)
     - [Very Busy Expressions](#very-busy-expressions)
     - [Zippers For Program Points](#zippers-for-program-points)
+    - [Dominators](#dominators)
     - [Forall Emulation](#forall-emulation)
     - [Doop](#doop)
     - [Datalog Diassembly / Decompilers](#datalog-diassembly--decompilers)
@@ -118,6 +119,7 @@ title: Datalog
   - [Flix](#flix)
   - [dr lojekyl](#dr-lojekyl)
   - [Datafun](#datafun)
+  - [QL](#ql)
 - [Souffle](#souffle)
   - [intrinsic functors](#intrinsic-functors)
   - [Souffle proofs](#souffle-proofs)
@@ -646,6 +648,11 @@ hasvar($Add(x,y), v) :- expr(_,$Add(x,y)), (hasvar(x,v) ; hasvar(y,v)).
 From another perspective, this is a relative of "need sets" and magic sets.
 The zipper here represents the implicit stack of an ordinary Imp interpreter. We also may need a first class map to actually run programs precisely
 The transformation foo(firstclassmap) -> foo(i), map(i, k,v) is lossy in the presence of multiple executions. From an abstract interp persepctive this is not so bad.
+
+### Dominators
+https://pages.cs.wisc.edu/~fischer/cs701.f07/lectures/Lecture20.pdf
+https://twitter.com/taktoa1/status/1548109466620424193?s=20&t=G28jQnYTSb1KEI--BWennw
+https://codeql.github.com/codeql-standard-libraries/cpp/semmle/code/cpp/controlflow/Dominance.qll/module.Dominance.html
 
 ### Forall Emulation
 https://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf
@@ -1581,6 +1588,7 @@ Datalog is perfectly good at representing graphs. Many implementations of backpr
 
 Egraphs?
 
+[Automatic Differentiation using Constraint Handling Rules in Prolog](https://arxiv.org/abs/1706.00231)
 
 ```souffle
 .type expr = 
@@ -4017,6 +4025,8 @@ But at the same time, it is the same thing as contextual datalog, just contexts 
 - percival https://percival.ink/
 
 - Bloom
+
+- https://github.com/chessai/hsdatalog
 ## Rel
 [vid](https://www.youtube.com/watch?v=WRHy7M30mM4&t=136s&ab_channel=CMUDatabaseGroup)
 Relational AI
@@ -4117,6 +4127,43 @@ https://www.petergoodman.me/docs/dr-lojekyll.pdf
 ## Datafun
 [Seminaïve evaluation for a higher-order functional language](https://dl.acm.org/doi/abs/10.1145/3371090)
 
+## QL
+
+https://codeql.github.com/docs/ql-language-reference/recursion/#non-monotonic-recursion
+https://codeql.github.com/publications/
+[algebraic data types](https://codeql.github.com/publications/algebraic-data-types.pdf)
+[QL: Object-oriented Queries on Relational Data](https://drops.dagstuhl.de/opus/volltexte/2016/6096/pdf/LIPIcs-ECOOP-2016-2.pdf)
+pairty recursion - even number of negqtions is ok. Hmm. 
+ https://codeql.github.com/docs/ql-language-reference/recursion/#non-monotonic-recursion
+
+```
+ predicate isExtinct() {
+  this.isDead() and
+  not exists(Person descendant | descendant.getAParent+() = this |
+    not descendant.isExtinct()
+  )
+}
+```
+
+QL has semantics in datalog. 
+typing predicates.
+`this` is a parameter. fields are parameters.
+special result parameter for functions
+
+charcteristic predicates
+even(n) :- digit(n), n % 2 = 0.
+this varies over interection of  super types
+ember predicates have this vary over
+
+isSmall(this) :- digit(this)
+
+abstract classes hold union of all value of subclasses
+subtyping relationship. we can reify class names to runtime.
+
+codeql I could define a "functor" class with method `call`. this is some kind of lambda lifting thing.
+
+
+Classical correspondence a => b ==  not a or b. This is true. Doesn't allow hypohtetical reasoning though right? I feel like classical correspondences are not valid.
 # Souffle
 
 Souffle is a datalog implementation that is fast. It can be compiled to parallel C++ code. It also has a number of very intriguing datalog extensions available

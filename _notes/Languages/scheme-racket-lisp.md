@@ -94,6 +94,8 @@ https://docs.racket-lang.org/guide/languages.html
 
 Racket Docs search for all languages:
 https://docs.racket-lang.org/search/index.html?q=H%3A
+
+[Extensible Pattern Matching in an Extensible Language](https://arxiv.org/pdf/1106.2578.pdf)
 ### Rosette
 https://docs.racket-lang.org/rosette-guide/index.html
 
@@ -164,6 +166,9 @@ hello!
 
 # Misc
 [tinylisp](https://github.com/Robert-van-Engelen/tinylisp) 99 lines of C. pretty cool
+https://news.ycombinator.com/item?id=32100035  - interrsting comment about generic multiple dispatch. Is there a subsumption indexing issue here?
+
+[build your own lisp](https://www.buildyourownlisp.com/)
 
 https://github.com/nojb/ocs-ng ocaml scheme
 

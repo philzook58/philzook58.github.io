@@ -19,6 +19,7 @@ wordpress_id: 1865
   - [Rewriting in prolog](#rewriting-in-prolog)
 - [Topics](#topics)
   - [SLD resolution](#sld-resolution)
+  - [DIY Prolog](#diy-prolog)
   - [Interesting predicates](#interesting-predicates)
   - [Imperative analogies](#imperative-analogies)
     - [Manual Prolog](#manual-prolog)
@@ -160,6 +161,10 @@ append([H | X], Y, [H | Z]) :- append(X, Y, Z).
 
 # Topics
 ## SLD resolution
+
+## DIY Prolog
+https://github.com/photonlines/Python-Prolog-Interpreter
+https://curiosity-driven.org/prolog-interpreter
 
 
 ## Interesting predicates
