@@ -238,7 +238,9 @@ How materializr and other databases optimize sql subqueries
 
 [genlteish intro to worst case optimal joins](https://twitter.com/justinjaffray/status/1531312730824536064?s=20&t=-IHVNfpCMKlhva0T8ctWXA)
 
+[EmptyHeaded: A Relational Engine for Graph Processing](https://ppl.stanford.edu/papers/emptyheaded.pdf) "generalized hypertree decomposition" ? https://github.com/HazyResearch/EmptyHeaded
 
+[levelheaded](https://aberger.site/levelheaded.pdf) linear algerba stuff?
 # Relational AI
 https://www.youtube.com/watch?v=WRHy7M30mM4&ab_channel=CMUDatabaseGroup
 
@@ -350,6 +352,8 @@ json crdt for vibes patches?
 
 Tree move op. Create delete subtrees.
 
+[Synthesizing CRDTs from Sequential Data Types with Verified Lifting](https://twitter.com/ShadajL/status/1544375739046211584?s=20&t=-v_26IaEHywfZUA_4b8T8g)
+https://arxiv.org/abs/2205.12425
 
 
 # Big Data

@@ -104,12 +104,17 @@ Must/May and intersection vs union. Least fixed point vs greatest
 
 [Loop invariant code motion](https://en.wikipedia.org/wiki/Loop-invariant_code_motion) - aka hoisting. Move stuff that doesn't change out of the loop
 
+[value numbering](https://en.wikipedia.org/wiki/Value_numbering)
+hash consing kind of. Superlocal blocks. every block has only one predecessor. Not quite the same as loop free?
+
+loop unrolling
+
 [instruction level parallelism](https://link.springer.com/book/10.1007/978-1-4899-7797-7) Alex Aiken Utpal Banerjee Arun Kejariwal Alexandru Nicolau
 
 Reassociate to lessen tree height - less dependencies
 Expand expressions with care - less dependencies
 
-
+[Implementing a Toy Optimizer](https://twitter.com/cfbolz/status/1549376580912386051?s=12&t=2TzLXakPIAt6RPwcq4Qz9w)
 
 [liveness analysis for ssa form program](https://hal.inria.fr/inria-00558509v2/document)
 
@@ -390,6 +395,9 @@ de-optimization paths
 [copy and patch compilation](https://twitter.com/cfbolz/status/1516418354579394566?s=20&t=7564nBvc82Jdkz_E3ccZbA)
 
 # Garbage Collector
+https://github.com/mflatt/gc-demo
+https://www.youtube.com/playlist?list=PLbdXd8eufjyVCrWF-obj8_BbyU5vEF8Jw
+
 ## Conservative vs Exact
 
 The boehm garbage collector seems easy to use. Also you can just malloc and never free.

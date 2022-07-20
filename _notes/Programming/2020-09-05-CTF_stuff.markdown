@@ -11,8 +11,10 @@ wordpress_id: 2960
 
 - [Reversing](#reversing)
   - [Disassembly](#disassembly)
+  - [Decompiler](#decompiler)
     - [Interactive](#interactive)
   - [Patching](#patching)
+  - [Binary reversign](#binary-reversign)
   - [Fuzzing](#fuzzing)
   - [Symbolic Execution](#symbolic-execution)
   - [Vulnerabilities](#vulnerabilities)
@@ -120,6 +122,35 @@ Ghidra repackaging:
 https://github.com/StarCrossPortal/sleighcraft
 https://github.com/black-binary/sleigh
 
+[An Empirical Study on ARM Disassembly Tools](https://github.com/valour01/arm_disasssembler_study)
+
+## Decompiler
+
+relic - no more gotos
+
+a comb for decompiled C https://rev.ng/downloads/asiaccs-2020-presentation.pdf
+
+https://yurichev.com/mirrors/DCC_decompilation_thesis.pdf
+
+https://www2.cs.arizona.edu/~collberg/Teaching/620/1999/Handouts/rmeadows1.pdf
+ 
+Getting structured control flow from CFG
+Stackify https://gitlab.inria.fr/why3/why3/-/merge_requests/453
+
+https://icfp22.sigplan.org/details/icfp-2022-papers/1/Beyond-Relooper-Recursive-Translation-of-Unstructured-Control-Flow-to-Structured-Con
+
+https://zenodo.org/record/6727752#.YsxRw9rMI2w
+
+
+Also... egraphs
+
+
+webassembly is at the core of both of these
+Allllll things come around
+I wonder if webassembly would be a good universal disassembler ir
+someone should do that
+https://github.com/nforest/awesome-decompilation
+
 ### Interactive
 - IDA
 - Ghidra
@@ -133,6 +164,13 @@ https://github.com/GrammaTech/gtirb-vscode
 
 ## Patching
 https://github.com/GJDuck/e9patch
+
+## Binary reversign
+https://corte.si/posts/visualisation/binvis/index.html hilbert curves for binary vsiualization
+benford's law
+binwalk
+entropy visualization
+
 
 ## Fuzzing
 Mayhem
