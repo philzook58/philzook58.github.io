@@ -17,14 +17,16 @@ title: Datalog
     - [Rust](#rust)
     - [Magic Set](#magic-set)
   - [Program Analysis](#program-analysis)
+    - [Evaluation](#evaluation)
     - [Constant Propagation](#constant-propagation)
     - [Reaching Definitions](#reaching-definitions)
     - [Liveness](#liveness)
     - [Points To](#points-to)
+    - [Dominators](#dominators)
     - [Available Expressions](#available-expressions)
     - [Very Busy Expressions](#very-busy-expressions)
     - [Zippers For Program Points](#zippers-for-program-points)
-    - [Dominators](#dominators)
+    - [Dominators](#dominators-1)
     - [Forall Emulation](#forall-emulation)
     - [Doop](#doop)
     - [Datalog Diassembly / Decompilers](#datalog-diassembly--decompilers)
@@ -59,6 +61,7 @@ title: Datalog
     - [Cycle](#cycle)
     - [Subgraph Matching](#subgraph-matching)
     - [Coloring](#coloring)
+  - [Macros](#macros)
   - [Emulating Prolog](#emulating-prolog)
     - [Need Sets](#need-sets)
     - [Magic Set](#magic-set-1)
@@ -131,7 +134,7 @@ title: Datalog
     - [Vectors](#vectors)
     - [Use ADT instead of autoinc()](#use-adt-instead-of-autoinc)
     - [Record Packing](#record-packing)
-  - [Macros](#macros)
+  - [Macros](#macros-1)
   - [Components](#components)
   - [Choice Domain](#choice-domain-1)
   - [Negation](#negation-1)
@@ -467,7 +470,88 @@ Some possibilities
 - `reads(l:stmt, x:var)`
 
 
+
+
+### Evaluation
+
+What could be more primitive than evaluating a concrete state?
+There is still some interesting a subtlely. We need names to seperate apart runs. In skolem thinking, runs are labelled by an initial state record or map. Perhaps if you start a run at another point, the combo of the initial state and program point.
+
+```souffle
+.type Stmt = Move {x : symbol, y : symbol}
+.type Prog = [s : Stmt, tl : Prog]
+.type Ctx = Prog
+#define MYPROG [$Move("x", "y"), [$Move("y", "z"), nil]]
+#define ENDCTX [$Move("y", "z"), [$Move("x", "y"), nil]]
+.type pt = [todo : Prog, hist : Ctx] // program point
+#define START [MYPROG, nil]
+#define END   [nil, ENDCTX]
+
+.type run <: symbol
+.type value <: number
+.decl var_store(r : run, p : pt, x : symbol, v : value)
+var_store("run0", START, "x", 3).
+var_store("run0", START, "y", 4).
+var_store("run0", START, "z", 5).
+
+var_store("run1", START, "x", 657).
+var_store("run1", START, "y", 756).
+var_store("run1", START, "z", 324).
+
+
+
+
+
+var_store(run , [todo, [stmt, ctx]], x, v) :- var_store(run, [[stmt, todo], ctx], x, v), 
+    stmt = $Move(y,_z), x != y.
+var_store(run , [todo, [stmt, ctx]], x, v) :- var_store(run, pt, x, _), 
+    pt = [[stmt, todo], ctx],
+    stmt = $Move(x,z), var_store(run, pt, z, v).
+
+.output var_store(IO=stdout) 
+
+```
+
+You need a notion of first class map, but if you know at souffle compile time how many you need, you can name them. Then no problem. Or perhaps at a different strata is enough?
+
+
+```souffle
+
+.type AExpr = Add {x : AExpr, y : AExpr} | Lit {n : number} | Var {x : symbol}
+
+.decl aexpr(e : AExpr)
+aexpr(x), aexpr(y) :- aexpr($Add(x,y)).
+
+// can have seperate env relation if you'd like
+//.decl env(name : symbol, x : symbol, v : number)
+// eval(r, $Var(x), v) :- aexpr($Var(x)), env(r, x, v).
+
+
+.decl eval(name : symbol, e : AExpr, v : number)
+
+eval(r, e, vx + vy) :- aexpr(e), e = $Add(x,y), eval(r,x,vx), eval(r,y,vy).
+eval(r, e, n) :- aexpr(e), e = $Lit(n), runs(r).
+
+.decl runs(name : symbol)
+runs(r) :- eval(r,_,_).
+
+
+aexpr($Add($Var("x"),$Add($Lit(1),$Lit(2)))).
+eval("run0", $Var("x"), 42).
+
+.output eval(IO=stdout)
+
+
+```
+
 ### Constant Propagation
+Constant propagation is kind of like a partial evaluation. The evaluator above just stops if it can't progress. In a sense it is already a constant propagator.
+
+```
+.type AExpr = Lit {n : number} | Var {x : symbol}
+.type Stmt = Move {x : symbol, e : AExpr}
+```
+
 ```
 .type tid <: symbol
 .type blk = [tid : tid, data : defs, ctrl : ]
@@ -488,7 +572,43 @@ Some possibilities
 
 ```
 
+Purely functional constant propagation.
+
+```souffle
+
+.type AExpr = Add {x : AExpr, y : AExpr} | Lit {n : number} | Var {x : symbol}
+
+.decl aexpr(e : AExpr)
+aexpr(x), aexpr(y) :- aexpr($Add(x,y)).
+
+.decl const(e : AExpr, c : number)
+const(t,n ) :- aexpr(t) , t =  $Lit(n).
+const(t,n1 + n2) :- aexpr(t), t = $Add(x,y), const(x,n1), const(y,n2).
+
+.decl reduced(t : AExpr, t1 : AExpr)
+reduced(t, $Lit(n)) :- aexpr(t), const(t, n).
+reduced(t, $Add(x1,y1) ) :- aexpr(t), 0 = count : const(t,_n), t = $Add(x,y), reduced(x, x1), reduced(y,y1). 
+reduced(t, t) :- aexpr(t), t = $Var(_n).
+
+aexpr($Add($Var("x"),$Add($Lit(1),$Lit(2)))).
+
+.output reduced(IO=stdout)
+
+/*
+reduced
+t       t1
+===============
+$Var(x) $Var(x)
+$Lit(1) $Lit(1)
+$Lit(2) $Lit(2)
+$Add($Lit(1), $Lit(2))  $Lit(3)
+$Add($Var(x), $Add($Lit(1), $Lit(2)))   $Add($Var(x), $Lit(3))
+===============
+*/
+
+```
 ### Reaching Definitions
+<https://souffle-lang.github.io/examples#defuse-chains-with-composed-types>
 
 ```
 def_use(x : var, def : stmt, use : stmt) //reaches?
@@ -503,6 +623,7 @@ Union
 
 ### Points To
 
+### Dominators
 
 ### Available Expressions 
 [Lecture notes on static analysis in datalog](https://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf)
@@ -648,6 +769,9 @@ hasvar($Add(x,y), v) :- expr(_,$Add(x,y)), (hasvar(x,v) ; hasvar(y,v)).
 From another perspective, this is a relative of "need sets" and magic sets.
 The zipper here represents the implicit stack of an ordinary Imp interpreter. We also may need a first class map to actually run programs precisely
 The transformation foo(firstclassmap) -> foo(i), map(i, k,v) is lossy in the presence of multiple executions. From an abstract interp persepctive this is not so bad.
+
+<https://souffle-lang.github.io/examples#context-sensitive-flow-graph-with-records>
+
 
 ### Dominators
 https://pages.cs.wisc.edu/~fischer/cs701.f07/lectures/Lecture20.pdf
@@ -882,6 +1006,52 @@ test(l,s1) <= test(l,s2) :- SUBSET(s1,s2).
 #define FLAG1 0x2
 #define FLAG2 0x4
 ```
+
+
+A different kind of bitset. Strings are insanely versatile
+
+hmm. I can't get char codes easily
+
+string based vectors. Why not just use a list?
+```souffle
+
+.decl test(x : symbol, s : number)
+test("x", as(c,number)) :- c = "x".
+.output test(IO=stdout)
+
+
+
+```
+
+
+
+ 
+```souffle
+.decl test(x : symbol, s : number)
+test(to_string(32434901), to_number("000045")) :- true.
+.output test(IO=stdout)
+
+.decl zeropad(n : number, z : symbol)
+zeropad(0, "").
+zeropad(n+1, cat("0", z) ) :- zeropad(n, z), n <= 10. 
+
+// Max32 = 4294967296
+#define DIG32 10
+
+#define INDEX(x, i)  substr(x, i * DIG32, DIG32)
+#define PUSH(xs, x)  cat(xs, x)
+#define SLICE(xs, i, j)   substr(xs, i * DIG32, j * DIG32)
+#define PAD(x, px)   (tx ## x = to_string(x), zeropad(DIG32 - strlen(tx ## x), zp ## x), px = cat(zp ## x, tx ## x))
+
+// test(padx, 42 ) :- (tx42 = to_string(42), zeropad(10 - strlen(tx42), zp42), padx = cat(zp42, tx42)).
+
+test(padx, to_number(padx) ) :- PAD(42, padx).
+
+
+```
+Interesting metalevel skolemization. Very hacky
+
+
 
 #### Bitset reflection
 Can I use bitsets to reflect? Yes. Up to 32 entries allows.
@@ -1892,7 +2062,43 @@ So it seems like this is a general transfomation. I can exchange a global contex
 The two are uncoupled. Recurse over the thing first to reak it up, then bottom up the pieces. Don't do in one pass.
 
 
+Slices
+[i : unisnhged, n : unsigned, s : symbol] === substr(s, i , n)
+Can use as difference list.
 
+```souffle
+
+
+.decl str(s : symbol)
+.decl rparen(s : symbol, i: number, n : number)
+.decl lparen(s : symbol, i: number, n : number)
+.decl ws(s : symbol, i : number, n : number)
+
+lparen(s, i ,1) :- str(s), i = range(0, strlen(s)), substr(s,i,1) = "(".
+rparen(s, i ,1) :- str(s), i = range(0, strlen(s)), substr(s,i,1) = ")".
+ws(s, i ,0) :- str(s), i = range(0, strlen(s)).
+ws(s, i ,1) :- str(s), i = range(0, strlen(s)), substr(s,i,1) = " ".
+
+ws(s, i, k+n) :- ws(s, i, n), ws(s, i+n, k).
+str("(((((    )))   ))").
+
+
+.decl matched(s : symbol, i: number, n : number)
+matched(s,i,0) :- str(s), i = range(0,strlen(s)). 
+// matched(s, i, 1 + k + m + q + 1) :- lparen(s , i, 1), j = i + 1 , ws( s, j , k ), l = j + k, matched(s, l, m), l + m = p,  ws(s, p, q ), x = p + q, rparen(s, x, 1).
+
+// "difference list" formulation
+// This might strictly speaking have some unexpected results. what if difference is negative?
+matched(s, i, x + 1 - i) :- 
+lparen(s , i, j-i), ws(s, j , l-j ), matched(s, l, p-l), ws(s, p, x - p ), rparen(s, x, 1).
+// hmm seems ok
+str(")(").
+
+.output lparen(IO=stdout)
+.output ws(IO=stdout)
+.output matched(IO=stdout)
+
+```
 
 
 - [earley parsing](https://github.com/souffle-lang/souffle/blob/master/tests/example/earley/earley.dl)
@@ -2036,6 +2242,114 @@ Mod out color choice.
 same_color(x,y)
 diff_color(x,y) :- edge(x,y)
 ```
+
+## Macros
+
+```souffle
+
+// souffle already offers heador h1, h2 :- body.
+#define HEADOR(h1,h2,body)  h1 :- body. h2 :- body.
+
+// h :- b1 ; b2.
+#define BODYOR(h,b1,b2)  h :- b1. h :- b2.
+
+// Compositional bodyor? Harder. In fact very hard...?
+// h :- x, (b1 ; b2).
+
+
+// x ; y :- z
+//#define CALL(x,y,z)  x, z. y :- z.
+//#define CALL2(a,b,c,d) c :- d. a :- b,d.
+// How can these be chained?
+
+// Ugh this is GROSS. But it can be chained. It will make duplicate predicates at the tail, but these will be pruned?
+#define CALL(y, z)  z. y :- z
+
+.decl fact(n : number, f : number)
+.decl fact_q(n : number)
+
+fact(0,1) :- fact_q(0).
+fact(m,m * n1) :- fact(m-1, n1), CALL(fact_q(m-1), (fact_q(m) , m >= 0)).
+
+fact_q(3).
+.output fact(IO=stdout)
+
+.decl fib(n : number, f : number)
+.decl fib_q(n : number)
+fib(0,1). fib(1,1).
+fib(n, n1+n2) :- fib(n-2, n2), fib(n-1,n1)  , 
+   CALL( fib_q(n-2) , CALL( fib_q(n-1)  , (fib_q(n), n >= 1))). 
+
+
+//fib(n, n1+n2) :- fib(n-2, n2), fib(n-1,n1), 
+//   CALL( ( fib_q(n-2), fib_q(n-1) )  , (fib_q(n), n >= 1)). 
+// expands to:
+//fib(n, n1+n2) :- fib(n-2, n2), fib(n-1,n1),
+//   (fib_q(n), n >= 1). (fib_q(n-2), fib_q(n-1)) :- (fib_q(n), n >= 1).
+// Ah. Hmm. No parenthesis allowed in head. Hence no way to call multiple predicates.
+
+fib_q(4).
+.output fib(IO=stdout)
+```
+
+
+Counting varargs
+https://stackoverflow.com/questions/2308243/macro-returning-the-number-of-arguments-it-is-given-in-c
+```souffle
+#define NVARS(...) NVARS_(__VA_ARGS__, REV_NVARS())
+#define REV_NVARS() 4,3,2,1
+#define NVARS_(...) NVARS_N(__VA_ARGS__)
+#define NVARS_N(_1,_2,_3,_4,_N, ...) _N
+
+NVARS(x,y,z,w)
+
+```
+
+simpler. The idea is the the larger var args is, the 
+```souffle
+#define NVARS(...) NVARS_(__VA_ARGS__,4,3,2,1)
+#define NVARS_(_1,_2,_3,_4,_N, ...) _N
+
+NVARS(x,y,z,w)
+
+```
+
+Once you can count the number of vars you're good.
+
+Better list syntax in souffle using cpp macro.
+
+```souffle
+#define LIST_1(x) [x, nil]
+#define LIST_2(x,...) [x, LIST_1(__VA_ARGS__)]
+#define LIST_3(x,...) [x, LIST_2(__VA_ARGS__)]
+#define LIST_4(x,...) [x, LIST_3(__VA_ARGS__)]
+#define LIST_5(x,...) [x, LIST_4(__VA_ARGS__)]
+#define LIST_6(x,...) [x, LIST_5(__VA_ARGS__)]
+#define LIST_7(x,...) [x, LIST_6(__VA_ARGS__)]
+#define LIST_8(x,...) [x, LIST_7(__VA_ARGS__)]
+#define LIST_9(x,...) [x, LIST_8(__VA_ARGS__)]
+
+#define NVARS(...) NVARS_(__VA_ARGS__,9,8,7,6,5,4,3,2,1)
+#define NVARS_(_1,_2,_3,_4,_5,_6,_7,_8,_9,_N, ...) _N
+
+#define LIST(...) GLUE(LIST_, NVARS(__VA_ARGS__))(__VA_ARGS__) 
+#define GLUE(x,y) GLUE_I(x,y)
+#define GLUE_I(x,y) x ## y
+
+.type list = [hd : number, tl : list]
+.decl test(x : list)
+test(LIST(14,57,34,46,52,7,34)).
+.output test(IO=stdout)
+/*
+---------------
+test
+x
+===============
+[14, [57, [34, [46, [52, [7, [34, nil]]]]]]]
+===============
+*/
+```
+
 
 ## Emulating Prolog
 Datalog is bottom up and prolog is top down. In a sense datalog feels “push” and prolog feels “pull”. These viewpoints can be translated to some degree to each other. Prolog can gain some benefits of datalog via tabling, which is a memoization technique. Likewise datalog can become goal driven via the “magic set transformation”, The following is a simplified but intuitive presentation I believe of the vague idea.
@@ -4512,6 +4826,11 @@ What about guarded negation? For example if you turn off stratification but are 
 
 
 # Resources
+
+[Modular materialisation of Datalog programs](https://www.sciencedirect.com/science/article/pii/S0004370222000662?via%3Dihub) how to use foreign functions to implement datalog rules correctly?
+
+D/RED derive reduce - to delete a fact, delete any facts that _may_ have use that fact (reucrsively you need to delete any facts that may have used these derived facts and so on). Put these in a table. You can then check for still allowed ways to redeirve them. Because you know the head, that will filter the available bodies, so you don't _need_ to do a fully naive pass.
+
 vectors std::sort.
 
 
