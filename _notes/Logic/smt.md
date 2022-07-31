@@ -15,7 +15,12 @@ title: SMT Solvers
   - [Float](#float)
   - [test/regress](#testregress)
   - [options](#options)
-- [EPR](#epr)
+- [Quantifiers](#quantifiers)
+  - [Clark Completion for Datalog](#clark-completion-for-datalog)
+  - [Rewriting](#rewriting)
+  - [Pseudo Boolean](#pseudo-boolean)
+- [Finite Models](#finite-models)
+  - [EPR](#epr)
 - [Z3 source spelunking](#z3-source-spelunking)
   - [src - most of the goodies are here.](#src---most-of-the-goodies-are-here)
   - [Z3 Add Commutative Benchmark](#z3-add-commutative-benchmark)
@@ -72,7 +77,7 @@ User propagated theories
 
 delta debugging  - https://ddsmt.readthedocs.io/en/master/
 
-https://twitter.com/RanjitJhala/status/1391074098441187328 - jhala asks for 
+https://twitter.com/RanjitJhala/status/1391074098441187328 - jhala asks for help on a slowdown
 
 running `perf`
 `perf record -F 99  --call-graph dwarf ./z3 /tmp/review.smt2;  perf report |  c++filt | less`
@@ -100,21 +105,6 @@ https://arxiv.org/pdf/2010.07763.pdf refinement types tutorial
 
 fascinating that this paper internalizes the partial evaluation prcoess into the smt formula
 
-Amin Leino Rompf, Computing with an SMT Solver” https://www.microsoft.com/en-us/research/wp-content/uploads/2016/12/krml237.pdf
-They translate functions to versions that have fuel. They don't give them much fuel
-Lit marking. 
-Lit(x) + Lit(y) => Lit(x + y). This is another wya to encode constant propagation into egglog 
-
-Trigger whispering. Can I use Z3 as an egglog? Completely using the trigger system I can't trigger on equality can I?
-
-Michal Moskal's thesis - interesting
-
-Claire Dross, Sylvain Conchon, Johannes Kanig, and Andrei Paskevich. Reasoning with
-triggers. In Pascal Fontaine and Amit Goel, editors, 10th International Workshop on Satisfiability Modulo Theories, SMT 2012, EasyChair 2013 EPiC Series, pages 22–31, 2012. - a logical semantics of triggers
-
-http://www.rosemarymonahan.com/specsharp/papers/SAC_Final.pdf Reasoning about Comprehensions with
-First-Order SMT Solvers
-Duplicate functions. Trigger on only one version. Avoids things going off the rails.
 
 
 https://github.com/Z3Prover/z3/pull/5625/commits/ec792f64205a6aea5ab21d2859a632676726bedf user propagation of theories example
@@ -129,6 +119,15 @@ mbqi needs to saturate? epr
 Can I do it by explicitly gassing?
 
 Axiom schema
+
+
+[decision prcoesures book](http://www.decision-procedures.org/)
+[calculus of computation books](https://theory.stanford.edu/~arbrad/book.html)
+
+
+ford-fulkerson push relabelling for special relations?
+https://en.wikipedia.org/wiki/Push%E2%80%93relabel_maximum_flow_algorithm
+https://microsoft.github.io/z3guide/docs/theories/Special%20Relations
 
 # CVC5
 [Paper](https://homepages.dcc.ufmg.br/~hbarbosa/papers/tacas2022.pdf)
@@ -295,7 +294,273 @@ cvc --help
 -o learned-lits
 -o subs
 
-# EPR
+# Quantifiers
+[Alex Summers course quantifiers lecture](https://ethz.ch/content/dam/ethz/special-interest/infk/chair-program-method/pm/documents/Education/Courses/SS2017/Program%20Verification/04-Quantifiers.pdf)
+
+Amin Leino Rompf, [Computing with an SMT Solver”](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/12/krml237.pdf)
+They translate functions to versions that have fuel. They don't give them much fuel
+Lit marking. 
+Lit(x) + Lit(y) => Lit(x + y). This is another wya to encode constant propagation into egglog 
+
+Trigger whispering. Can I use Z3 as an egglog? Completely using the trigger system I can't trigger on equality can I?
+
+Michal Moskal's thesis - interesting
+[Moskal programming with triggers](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.161.4917&rep=rep1&type=pdf)
+
+Claire Dross, Sylvain Conchon, Johannes Kanig, and Andrei Paskevich. Reasoning with
+triggers. In Pascal Fontaine and Amit Goel, editors, 10th International Workshop on Satisfiability Modulo Theories, SMT 2012, EasyChair 2013 EPiC Series, pages 22–31, 2012. - a logical semantics of triggers
+
+http://www.rosemarymonahan.com/specsharp/papers/SAC_Final.pdf Reasoning about Comprehensions with
+First-Order SMT Solvers
+Duplicate functions. Trigger on only one version. Avoids things going off the rails.
+
+
+https://microsoft.github.io/z3guide/docs/logic/Quantifiers
+Stratified sorts fragment
+
+(set-option :smt.mbqi true)
+(set-option :model.compact true)
+
+What is compact models?
+
+[what's decidable about arrays](http://theory.stanford.edu/~arbrad/papers/arrays.pdf)
+
+Essentially (Almost) Uninterpreted Fragment
+[Complete instantiation for quantified formulas in Satisfiability Modulo Theories](https://leodemoura.github.io/files/ci.pdf)
+```z3
+
+(declare-sort MyInt)
+(declare-fun add (MyInt MyInt) MyInt)
+(declare-fun num (Int) MyInt)
+
+(assert (distinct (num 1) (num 2) (num 3)))
+
+(assert (forall ((x MyInt) (y MyInt)) 
+    (= (add x y) (add y x))
+))
+
+(check-sat)
+(get-model)
+; right. it can give me a trivial ish model
+
+
+```
+
+f-inv trick for injective function axiomatization
+
+
+Hmm. Z3 has `sin` built in? https://github.com/Z3Prover/z3/blob/f1bf660adc6f40cfdbd1c35de58c49b5f9960a9c/src/ast/arith_decl_plugin.h doesn't really seem so. It just recognizes it as defined. subpaving is interesting
+
+
+
+Using define-fun-rec as a bounded forall. Make the recursive function that enumarates the range. Probably it is a bad idea to
+```z3
+
+(define-fun-rec bforall ((low Int) (high Int) (pred (Array (Array Int Int) Bool)) Bool
+  true
+)
+```
+
+Quantify over bounded domains only. This might play nice with mbqi. Not so much with ematching. This is explicit parametrization of a finite subset of an infinite domain. Which might help. 
+
+```
+(forall (x0 (_ BitVec 8))   (let ((x (+ offset (bv2int x0))))   (yadayada x)   )   )
+```
+
+
+Finite model finding. Finitizing a set of axioms in such a way that the resulting model has a useful relationship to the actual infinite model. Just truncating isn't very satisfactory. 
+
+I guess I could stratify sorts? A lot of duplication. I can't make equalities across strata.
+I don't have counters in z3. Possibly we do have gas. things with different gas aren't equal though. hmm.
+
+depth metric? But that isn't stable across eclass.
+
+explicit eid labelling for fresh const.
+
+
+
+## Clark Completion for Datalog
+[clark completion](https://www.inf.ed.ac.uk/teaching/courses/lp/2012/slides/lpTheory8.pdf)
+Only things that are forced to be true are true.
+Take horn clause  head(x) :- b(x).
+Normalize by putting equalities in the body. This means ground facts become. `edge(1,2). ---> edge(X,Y) :- X = 1, Y = 2.`
+Now collect up all rules with heads. head == body1 \/ body2 \/ body3 \/
+
+
+```z3
+(declare-fun edge (Int Int) Bool)
+(declare-fun path (Int Int) Bool)
+(assert (forall ((x Int) (y Int))
+  (= (edge x y)
+     (or  (and (= x 1) (= y 2))
+          (and (= x 2) (= y 3))
+          (and (= x 3) (= y 4)))
+)))
+
+(assert (forall ((x Int) (y Int))
+  (= (path x y)
+     (or
+          (edge x y)
+          (exists ((z Int)) (and (edge x z) (path z y))))
+)))
+(check-sat)
+(get-model)
+```
+
+
+Closed world assumption. I guess that's simpler
+
+## Rewriting
+
+z3 `simplify` command. This only simplifies under the base theories though.
+
+```z3
+(declare-sort aexpr)
+(declare-fun add (aexpr aexpr aexpr) Bool)
+(declare-fun fadd (aexpr aexpr) aexpr)
+
+(declare-const x aexpr)
+(declare-const y aexpr)
+(declare-const z aexpr)
+
+(assert (add x y z))
+
+; reflection / functional dependency
+; (add x y (fadd x y))  is slightly different. This generates all fadd.
+(assert 
+  (forall ((x aexpr) (y aexpr) (z aexpr)) (=> (add x y z)  (= z (fadd x y) ) ))
+)
+
+; clark completion?
+(assert 
+  (forall ((x aexpr) (y aexpr) (z aexpr))  (= (add x y z) (add y x z)))
+)
+
+; we need something that says two aexpr are only equal if forced to be. There exists a reason.
+; clark completion works on atoms
+(= (= x y) (exists z (add x y z) ())
+
+
+; functional dependency
+; using implication. fishy?
+;(assert 
+;  (forall ((x aexpr) (y aexpr) (z aexpr) (z1 aexpr))  (=> (and (add x y z) (add x y z1))) (= z z1))
+;)
+
+
+(check-sat)
+(get-model)
+
+
+```
+
+
+```z3
+(declare-sort aexpr)
+(declare-fun add (aexpr aexpr aexpr) Bool)
+(declare-fun fadd (aexpr aexpr) aexpr)
+
+(declare-const x aexpr)
+(declare-const y aexpr)
+(declare-const z aexpr)
+
+(assert (add x y z))
+
+; reflection / functional dependency
+; (add x y (fadd x y))  is slightly different. This generates all fadd.
+(assert 
+  (forall ((x aexpr) (y aexpr) (z aexpr)) (=> (add x y z)  (= z (fadd x y) ) ))
+)
+
+; clark completion?
+(assert 
+  (forall ((x aexpr) (y aexpr) (z aexpr))  (= (add x y z) (add y x z)))
+)
+
+
+
+
+(check-sat)
+(get-model)
+
+
+```
+(not (= x y)) iff no functional dependency violation. 
+
+
+
+forall z1, z2, (not (= z1 z2)) iff (not (exists (x y) (add x y z1) (add x y z2)))
+what about simple constants
+(X x) (Y y) => x != y all pairs of constant tables?
+But why?
+
+forall z1, z2. z1 != z2 <->  (not (add(x,y,z1) /\ add(x,y,z2)) ) 
+forall z1, z2. z1 != z2 <->  (not (mul(x,y,z1) /\ mul(x,y,z2)) ) 
+forall z1, z2. z1 != z2 <->  (not (add(x,y,z1) /\ add(x,y,z2)) ) 
+forall z1, z2. z1 != z2 <->  (not (X z1 /\ X z2) ) 
+
+// No but this isn't right. We _might_ have these equal
+forall z1, z2. Y z1 /\ X z2 -> z1 != z2  // all pairs
+forall z1, z2. Y z1 /\ Z z2 -> z1 != z2 
+
+Yes some are existential head rules. hmm.
+exists z, X z.
+where does the exists go?
+Skolemize them I guess.
+forall x y, head(x, y) <-> \/  ( y = skolem(x) /\ body(x)  )
+
+
+so 
+exists z, X z. becomes 
+exists z, forall x, X x <-> x = z.
+
+exists z, f(y,z) :- f(x,y)
+
+f(a).
+f(f(X)) <- f(X).
+
+forall z y, f(y,z) = (z = f(y) /\ exists x, f(x,y)  \/  f(a,fa)   )
+
+
+algerbaic datatypes + datalog have the same problem
+
+
+Maybe if I know the big terms that are causing nontermination, I could cap them. Over approximate equality.
+Checking two terms can be done as a separate smt query.
+
+((depth (num 1)) = 1)
+
+(depth (add x y)) <= 1 + max(depth(x),depth(y))
+
+
+
+
+mbqi is a kind of like datalog isn't it?
+
+If we want things bounded, perhaps explicilty bound the state of eids? 
+n : _ BitVec 20
+(eid n)
+
+Logically there is nothing forcing it to have 3 universe elements here. Hmm. We need equality to be forced by some reason. clark semantics on the equality relation. (= x y) = 
+
+(eid n x) as a relation (eid bitvec aexpr)
+
+bounded skolem function?
+
+We could explicitly use three valued semantics. What about encoding an ASP query to smt?
+
+## Pseudo Boolean
+
+# Finite Models
+There is a sense in which getting a model returend is much more powerful and satisfying than merely getting `unsat`.
+When you start using quantifiers, it feels as though 
+Z3 can output finite models.
+
+Not all axioms have finite models.
+Is there a pile of tricks or systematic thing I can do to a set of axioms such that they have or may have a finite model and this model has some useful relationship to the infinite model.
+
+
+## EPR
 "Bernays Schonfinkel"
 A decidable fragment of first order logic.
 It relies on there being no function symbols, it's similar to datalog in this sense.
@@ -319,10 +584,18 @@ Can be turned into equisatisfiable propositional formula by:
 
 Herbrand universe saturation is sort of key. Can I achieve this with gas? I could artificially macroize sorts to do so.
 
+Using existentials is in a sense defining skolem function symbols
+Defining function symbols is in a sense invoking an implicit congruence and totality axiom which have scary quantifiers. 
+
+
+
 
 [interestting tidbit](https://stackoverflow.com/questions/24062292/most-efficient-way-to-represent-memory-buffers-in-z3) suggests not using array initialization using stores. Instead element by element. Also extensionality axiom for arrays can be turned off
 
 https://stackoverflow.com/questions/28149863/why-is-e-matching-for-conjunctions-sensitive-to-order-case-splitting-strategy
+
+
+
 
 # Z3 source spelunking
 
@@ -788,3 +1061,139 @@ print(contains(Exists([x], x >= 0), x))
 ```
 
 
+```python
+from z3 import *
+#help(substitute_vars)
+
+x = Int("x")
+y = Int("y")
+f = Function("f", IntSort(), BoolSort())
+
+t= Exists([x], And(f(x),Exists([y], f(x)) ))
+print(t)
+print(t.body())
+print(substitute(t.body(), (Var(0, IntSort()), IntVal(3))) )
+print(dir(t))
+print(t.var_name(0))
+
+
+```
+
+https://leanprover.github.io/logic_and_proof/natural_deduction_for_propositional_logic.html
+https://www.cs.cmu.edu/~fp/courses/atp/handouts/ch2-natded.pdf
+Use tuples instead of lists for immutability?
+
+```python
+from __future__ import annotations
+from z3 import *
+def z3_contains(t1, x):
+  print(t1)
+  if x.eq(t1):
+    return True
+  else:
+    for c in t1.children():
+      if z3_contains(c,x):
+        return True
+  return False
+
+class Proof():
+  # private internal methods
+  __hyps = () # Would dictionary or set be nice?
+  __conc = None # None means uninitialized.
+  def implI(self,n : int):
+    assert(0 <= n < len(self.__hyps))
+    p = Proof()
+    p.__hyps = self.__hyps[:n] +  self.__hyps[n+1:]
+    p.__conc = Implies(self.__hyps[n], self.__conc)
+    return p
+  def implE(self, x : Proof):
+    assert(isinstance(x, Proof))
+    assert(is_implies(self.conc))
+    assert(self.conc.num_args() == 2)
+    assert(self.conc.arg(0).eq(x))
+    p = Proof()
+    p.__hyps = x.__hyps + self.__hyps
+    p.__conc = self.__conc.arg(1)
+    return p
+  def conjI(*ps : Proof):
+    assert(all([isinstance(x, Proof) for x in ps]))
+    p = Proof()
+    p.__hyps = x.__hyps + self.__hyps
+    p.__conc = And(self.__conc, x.__conc)
+    return p
+  def disj1I(self, b : BoolRef):
+    p = Proof()
+    p.__hyps = self.__hyps
+    p.__conc = Or(self.__conc, b)
+    return p
+  def disjE(self, p1 : Proof, p2 : Proof):
+    assert(p1.__hyp[0].eq(self.__conc.arg(0)))
+    assert(p2.__hyp[1].eq(self.__conc.arg(1)))
+    assert(p1.__conc.eq(p2.__conc))
+    p = Proof()
+    p.__hyp = p1.__hyp[1:] + p2.__hyp[1:]
+    p.__conc = p1.__conc
+    return p
+  def forallI(self, x : ExprRef):
+    assert(is_const(x) and x.decl().kind() == Z3_OP_UNINTERPRETED)
+    assert(all([not z3_contains(hyp,x) for hyp in self.__hyps]))
+    p = Proof()
+    p.__hyps = self.__hyps
+    p.__conc = ForAll([x], self.__conc)
+    return p
+  def forallE(self, e : ExprRef):
+    assert(is_quantifier( self.__conc) and self.__conc.is_forall())
+    # test for number of bound vars?
+    p = Proof()
+    p.__hyps = self.__hyps
+    p.__conc = substitute( self.__conc.body(), (Var(0, e.sort()), e))
+    return p
+  def existsI(self, t, e):
+    assert(is_quantifier(e) and e.is_exists())
+    assert(substitute(e.body(), (Var(0, t.sort()), t)).eq(self.__conc))
+    p = Proof()
+    p.__hyps = self.__hyps
+    p.__conc = e
+    return p
+  def existsE(self,)
+  def refl(x : BoolRef):
+    assert(isinstance(x, BoolRef))
+    p = Proof()
+    p.__hyps = (x,)
+    p.__conc = x
+    return p
+  def smt(hyps, conc):
+    s = Solver()
+    formula = Implies(And(hyps), conc)
+    s.add(Not(formula))
+    status = s.check()
+    if status == sat:
+      raise Exception("Countermodel", s.model())
+    elif status != unsat:
+      raise Exception("Bad Z3 status", status)
+    p = Proof()
+    p.__hyps = tuple(hyps)
+    p.__conc = conc
+    return p
+  @property
+  def hyps(self):
+    return self.__hyps
+  @property
+  def conc(self):
+    return self.__conc
+  def eqI(x):
+    p = Proof()
+    p.conc = x == x
+    return p
+  #def eqE(self,t):
+  def __repr__(self):
+    return f"{self.__hyps} |- {self.__conc}"
+  
+x = Bool("x")
+z,y = Ints("z y")
+print(Proof.refl(x).implI(0))
+#print(Proof.smt([], Implies(x,False) ))
+print(Proof.smt([], z + y == y + z).forallI(z).forallI(y).forallE(z))
+
+
+```

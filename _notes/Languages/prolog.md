@@ -620,12 +620,17 @@ See also tabling
 
 ## DCG - Definite Clauses Grammars (DCG)
 
+https://www.youtube.com/watch?v=CvLsVfq6cks&t=3811&ab_channel=ThePowerofProlog
+
 [Anne Ogborn tutorial](https://github.com/Anniepoo/swipldcgtut)
 [hakank picat](https://twitter.com/hakankj/status/1508321812261871616?s=20&t=-ertSPtY87GogVCFq4f-Rw)
 [triska dcg primer](https://www.metalevel.at/prolog/dcg)
 [swi manual - comments are good too](https://www.swi-prolog.org/pldoc/man?section=DCG)
 
 DCGs look a bit like CFG grammars. They make threading an input and remainder list implicit. The input and remainder are considered a difference list.
+
+DCGs describe sequences.
+They can be used to serialize and deserialize, parse and pretty print.
 
 You call a DCG via `phrase/2`. `phrase/3` gives you access to the remainder. phrase/2 specializes phrase/3 with a [] terminator.  DCGs are annotated as double slashes `as//0`.
 
@@ -657,9 +662,12 @@ main(_) :- phrase(as, "aaaa"), print("passed").
 
 ```
 
+seqq describes concatenating a sequence of lists.
+
 - `seq`
 - semicontext
 - DCGs are useful also for implicilty carrying state.
+- State trasnformation is a _sequence_ of states when considered purely functionally.
 ```
 state(S), [S] --> [S].
 state(S0, S), [S] --> [S0].
@@ -672,8 +680,22 @@ This is showing context notation. Lists on the left hand sides of rules are push
 
 library [dcg/basics](https://www.swi-prolog.org/pldoc/man?section=basics), [dcg/high_order](https://www.swi-prolog.org/pldoc/man?section=highorder)
 
-library [pio](https://www.swi-prolog.org/pldoc/man?section=pio) - pure io.
+library [pio](https://www.swi-prolog.org/pldoc/man?section=pio) - pure io. phrase_from_file phrase_to_stream
 
+Triska shows an interesting trick to improve nontermination. You can parametrize your dcg such that it knows it is
+consuming the input stream. The recursion depth should be bounded by the stream size itself. Very reasonable. The decreasing argument is the stream itself.
+
+expr([_ | Rs], Rs) --> "1". shows that expr consumes one character
+Called via
+phrase(expr(Rs, _),Rs). 
+
+Or more easily, use tabling.
+
+Reporting errors - add error streat arguments to dcg
+
+regexp interpreter. dcg rexp//1
+
+Longest match firsat behavior - order rules for longest match
 ## CHR
 [forward chaining, chr comes up](https://swi-prolog.discourse.group/t/forward-chaining-like-rete-algorithm-in-rule-engine/5137/28)
 
