@@ -24,6 +24,7 @@ title: Datalog
     - [Available Expressions](#available-expressions)
     - [Very Busy Expressions](#very-busy-expressions)
     - [Zippers For Program Points](#zippers-for-program-points)
+    - [Dominators](#dominators)
     - [Forall Emulation](#forall-emulation)
     - [Doop](#doop)
     - [Datalog Diassembly / Decompilers](#datalog-diassembly--decompilers)
@@ -44,6 +45,7 @@ title: Datalog
     - [Q learning](#q-learning)
   - [Mandelbrot](#mandelbrot)
   - [Constraint handling Rules (CHR)](#constraint-handling-rules-chr)
+  - [Backprop](#backprop)
   - [Lambda representation](#lambda-representation)
   - [Parsing](#parsing)
   - [Hilog](#hilog)
@@ -106,6 +108,7 @@ title: Datalog
   - [Descriptive Complexity and Least Fixed Point Logic](#descriptive-complexity-and-least-fixed-point-logic)
   - [Push based Datalog](#push-based-datalog)
   - [Incremental / Differential Datalog](#incremental--differential-datalog)
+  - [Backtracking a Datalog](#backtracking-a-datalog)
 - [Implementations](#implementations)
   - [Rel](#rel)
   - [DDlog](#ddlog)
@@ -116,6 +119,7 @@ title: Datalog
   - [Flix](#flix)
   - [dr lojekyl](#dr-lojekyl)
   - [Datafun](#datafun)
+  - [QL](#ql)
 - [Souffle](#souffle)
   - [intrinsic functors](#intrinsic-functors)
   - [Souffle proofs](#souffle-proofs)
@@ -645,9 +649,45 @@ From another perspective, this is a relative of "need sets" and magic sets.
 The zipper here represents the implicit stack of an ordinary Imp interpreter. We also may need a first class map to actually run programs precisely
 The transformation foo(firstclassmap) -> foo(i), map(i, k,v) is lossy in the presence of multiple executions. From an abstract interp persepctive this is not so bad.
 
+### Dominators
+https://pages.cs.wisc.edu/~fischer/cs701.f07/lectures/Lecture20.pdf
+https://twitter.com/taktoa1/status/1548109466620424193?s=20&t=G28jQnYTSb1KEI--BWennw
+https://codeql.github.com/codeql-standard-libraries/cpp/semmle/code/cpp/controlflow/Dominance.qll/module.Dominance.html
+
 ### Forall Emulation
 https://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf
 
+[bicycle problem](https://github.com/souffle-lang/souffle/discussions/2256)
+
+```souffle
+.decl bicycle(id: symbol, tire_id: symbol)
+bicycle("B1", "T1").
+bicycle("B1", "T2").
+bicycle("B2", "T3").
+bicycle("B2", "T4").
+
+.decl tire(id: symbol, condition: symbol)
+tire("T1", "Good").
+tire("T2", "Good").
+tire("T3", "Good").
+tire("T4", "Flat").
+
+.decl safeBicycle(id: symbol)
+// Only safe if every tire in good condition
+// safeBicycle(id) :- bicycle(id, tid), tire(tid, "Good").
+
+// Should only output "B1"
+.output safeBicycle
+
+// Only safe if every tire in good condition
+safeBicycle(id) :- bicycle(id, _), !unsafeBicycle(id).
+
+// Should only output "B1"
+.output safeBicycle
+
+.decl unsafeBicycle(id: symbol)
+unsafeBicycle(id) :- bicycle(id, tid), tire(tid, "Flat").
+```
 
 ### Doop
 I should probably know more about this but I don't.
@@ -658,7 +698,7 @@ Java.
 - [grammatech - Datalog Disassembly](https://www.usenix.org/system/files/sec20fall_flores-montoya_prepub_0.pdf)
 - [gigahorse](https://github.com/nevillegrech/gigahorse-toolchain) - decompiler for smart contracts based on souffle
 - Dr lojekyll [dr. disassembler](https://github.com/lifting-bits/dds) and blog post
-
+- [securify2](https://github.com/eth-sri/securify2/tree/71c22dd3d6fc74fb87ed4c4118710642a0d6707e/securify/staticanalysis/souffle_analysis)
 
 ```souffle
 .type reg = R0 {} | R1 {} | R2 {}
@@ -1536,7 +1576,76 @@ a       b
 */
 ```
 
+## Backprop
+
+A difficulty of backprop is that you need to accumulate the backpropped value from all usage sites of a subexpression. This is an annoying thing to do in datalog. It is a non stratified summation, which _is_ possible using first class sets (although I'm not sure how it'll work out here). If we can guarantee all derivatives are _positive_, which is rare, it is a bit easier because we can prune for merely the largest summation value.
+
+A cute trick is to make every usage site of a subexpression _linear_ by using contructors `Dup1` and `Dup2`. I seriosly mean linear. If you use a `$Dup1` you have to use a `Dup2` somewhere or else it doesn't work
+
+This dup trick is reminiscent of <https://github.com/Kindelia/HVM> [Reverse Mode Differentiation is Kind of Like a Lens II](https://www.philipzucker.com/reverse-mode-differentiation-is-kind-of-like-a-lens-ii/) [The simple essence of automatic differentiation](http://conal.net/papers/essence-of-ad/). It is very important to pay attention to dups in reverse differentiation. There is something beautiful there
+
+Datalog is perfectly good at representing graphs. Many implementations of backprop push the values back along a back prop graph. The tagging here demonstrates how you could do a kind of distributed backprop, not that I know why you'd want to do such a thing. Seems very inefficient.
+
+Egraphs?
+
+[Automatic Differentiation using Constraint Handling Rules in Prolog](https://arxiv.org/abs/1706.00231)
+
+```souffle
+.type expr = 
+  Add {x : expr, y : expr} 
+| Mul {x : expr, y : expr} 
+| Lit {x : float} 
+| Var {x : symbol}
+| Dup1 {x : expr}
+| Dup2 {x : expr}
+
+
+.decl term(n : unsigned, x : expr)
+term(n, x), term(n,y) :- term(n, $Add(x,y)) ; term(n, $Mul(x,y)).
+term(n, x) :- term(n, $Dup1(x)) ; term(n, $Dup2(x)).
+
+term(n,t) :- eval(n,t,_).
+term(n,t) :- diff(n,t,_).
+
+// evaluate forward
+.decl eval(n : unsigned, e : expr, v : float)
+eval(n, t, va + vb) :- term(n,t), t = $Add(a,b), eval(n, a, va), eval(n, b, vb).
+eval(n, t, va * vb) :- term(n,t), t = $Mul(a,b), eval(n, a, va), eval(n, b, vb).
+eval(n, t, va) :- term(n,t), (t = $Dup1(x) ; t = $Dup2(x)), eval(n, x, va).
+eval(n, t, v) :- term(n,t), t = $Lit(v).
+
+// propagate derivative backwards
+.decl diff(n : unsigned, e : expr, v : float)
+diff(n, a, dt ), diff(n, b, dt) :- diff(n, t, dt), t = $Add(a,b).
+diff(n, a, dt * vb), diff(n, b, va * dt) :- diff(n, t, dt), t = $Mul(a,b), eval(n, a, va), eval(n, b, vb).
+diff(n, x, dx1 + dx2) :- diff(n, $Dup1(x), dx1),  diff(n, $Dup2(x), dx2).
+
+#define X $Var("x")
+#define Y $Var("y")
+#define T0 $Mul($Dup1(X),$Dup2(X))
+#define T1 $Add($Dup1(X),$Dup2(X))
+
+eval(0, X, 3.0).
+diff(0, $Add(X,$Lit(1)), 1).
+
+eval(1, X, 3.0).
+diff(1, T1, 1).
+
+eval(2, X, 3.0).
+diff(2, T0, 1).
+.output eval(IO=stdout)
+//.output term(IO=stdout)
+.output diff(IO=stdout)
+
+
+// a fiendish macro. Never do this, but it is cute.
+#define DUP(x)  $Dup1(x),$Dup2(x)
+// could be used like this: x1 = DUP(foo) = x2
+```
 ## Lambda representation
+
+[Lambda Normalization for Souffle Datalog](https://www.philipzucker.com/lambda-datalog-souffle/)
+
 What is the most appropriate way? Probably we want to implement some kind of machine flavored implementation.
 Or maybe a graph like representation.
 
@@ -2296,6 +2405,8 @@ Question: Is it possible to consider static analysis over lambda prolog to syste
 
 Consider Jens Otten tutorial
 
+When is the difference between an ATP system like Vampire and Datalog really? They are closer than you might think on first inspection. Both are bottom up systems. Datalog significantly restrict their clause structure. Datalog matches, but doesn't unify.
+
 ### Skolemization for Existential Heads
 $ \forall x, \psi(x) \implies \exists y, \phi(x,y)$ can be replaced with 
 $ \forall x, \psi(x) \implies \phi(x,y(x))$ where y is now the function that selects the approproate existential value. You can represent function symbols of this kind wtih ADTs. ADTs are great because they know if you've already made the symbol or not.
@@ -2396,6 +2507,8 @@ Anything that can be produced from biz needs a contextual verision. bar(x,y) can
 Can use subsumption if you learn fact should go in database.
 
 #### Stack database / Harrop Datalog / Tentative Datalog
+Blog post: [Contextual Datalog: Steps Towards Lambda Datalog](https://www.philipzucker.com/contextual-datalog/)
+
 You can organizing your database into a stack. You can refactor this in a number of ways. 
 In seminaive you have a old, new, and delta table per  relation. You can make old into `[old]` and only commit into the top of the stack. 
 You could also factor the entore `[database]` into a stack of databases instead of per relation.
@@ -2418,6 +2531,134 @@ One should maintain that deeper tree leaves are set differenced from their paren
 
 Is this diff-tree a general pattern over lattices / posets?
 
+We mostly don't want to index on context, so putting it out the outer level doesn't seem right.
+
+anti chain lattice
+
+```python
+class AntiChain():
+  def __init__(self, sets):
+    self.sets = sets
+    #for s in sets:
+    #  self = self.add(s)
+  # makign this not mutate was dumb
+  def add(self,s):
+    if any([s1.issubset(s) for s1 in self.sets]):
+      return self
+    else:
+      ac = AntiChain([ s1 for s1 in self.sets if not s.issubset(s1) ])
+      ac.sets.append(s)
+      return ac
+  def normalize(self):
+    a = AntiChain([])
+    for s in self.sets:
+      a = a.add(s)
+    return a
+  def __len__(self):
+    return len(self.sets)
+  def __repr__(self):
+    return repr(self.sets)
+  def bottom():
+    return AntiChain([])
+  def join(self, rhs):
+    if len(self) < len(rhs):
+      a = self.sets
+      b = rhs.sets
+    else:
+      a = rhs.sets
+      b = self.sets
+    a = AntiChain(a.copy())
+    for s in b:
+      a = a.add(s)
+    return a
+
+a = AntiChain([{1,2}, {2,3}])
+print(a)
+b = a.add({1})
+print(b)
+print(b.join(a))
+print(b.add(set()))
+a = AntiChain([{1,2}, {2,3}, {1}])
+print(a)
+print(a.normalize())
+'''
+[{1, 2}, {2, 3}]
+[{2, 3}, {1}]
+[{2, 3}, {1}]
+[set()]
+[{1, 2}, {2, 3}, {1}]
+[{2, 3}, {1}]
+'''
+```
+Could order sets by size. That could trim down on what to look at.
+s <= s1 only is possible if len(s) <= len(s1)
+
+heuristic: look at set size itself bucket (to try and find the set itself), then look from largest down.
+
+If we didn't use hashsets, instead some kind of trie set, we could have a set of sets.
+
+[set trie](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0245122) there is no way this should be a 2021 paper?
+Ah they use sorted lists as the sets. That's interesting. 
+
+https://github.com/KaiserKarel/set-trie
+
+```python
+class Trie():
+  def __init__(self, data=None):
+    self.data = data
+    self.children = dict()
+  def lookup(self,k):
+    if len(k) == 0:
+      return self.data
+    else if k[0] in self.children:
+      self.children[k[0]].lookup(k[1:])
+    else:
+      return None
+  def insert(self, k):
+    if len(k) == 0:
+      return
+    else if k[0] in self.children:
+      self.children[k[0]].insert(k[1:])
+    else:
+      c = Trie()
+      self.children[k[0]] = c
+      c.insert(k[1:])
+  def delete(self,k):
+    if k[0] in self.children:
+      if len(k) == 1:
+        del self.children[k[0]]
+      else if len(k) > 1:
+        self.children[k[0]].delete(k[1:])
+
+```
+
+Q : when are first class sets necessary and when can you get away with an external or tagged set? `myset(tag, x,y,z).`
+Presumably when you need to know something "global" about the set. But they have a lattice character? So like...?  Well the lattice is the antichain lattice, not the sets themselves. They kind of anti-cgrow. not_in_ctx(tag,x,y,z)?
+If I had every possible context in there to start. Sure. That's silly though. If I need a tag uniquelt derivable from the set itself... hashing a set with xor?
+// I can build tagged unions
+set(t1, ), not_set(t1, )
+not_set
+set(t3, a), set(t3,b) :- set(t1, a), union(t1,t2, t3), set(t2,b).
+not_subset(t1,t2, "true") :- set(t1,a), !set(t2,a). This isn't so good.
+not_eq(t1,t2) :- set(t1,a), not_set(t2,a).
+eq(t1,t2) :- forall a : set(t1,a), set(t2,a).
+ We can't derive set equality or diseqauality.
+
+The point of first class sets is closedness. Maybe this is a kind of peculiar stratification (partially ordered time?)? We need to ask aggregate questions of the set (forall, exists, count).
+
+Another kind of reflection. We can memoize if you like all operations.
+```
+set3(s, @myindex(s,0), @myindex(s,1), @myindex(s,2)) :- set(s), s = [3,_data]
+set2(s, @myindex(s,0), @myindex(s,1)) :- set(s), s = [2,_data]
+```
+
+We could use a bounded quantifier if we retain the size?
+:- set(size,tag), forall i : range(n): setind(tag,ind,a)
+for union size <= size1 + size2.
+So size would be a lowering quantity.
+explicit index fights the useful capability of deleting duplicates
+
+first class maps gives us first class eqclass. f(x) = min(y : eq(x,y))
 
 ### Existenial Queries
 Existentials in bodies and toplevel query are interpreted as pattern matching.
@@ -2475,6 +2716,242 @@ allsymbols(x) :- baz(x,_).
 
 
 Some foralls that are part of rules can just be dropped. $\forall x, \phi(x) \implies \phi(x)$. I suppose this could be considered an optimization of the `allsymbols` strategy.
+
+
+We can initialize the database with a set of "fresh" symbols. And carry around explicit signature
+`foo(sig,ctx) := sig ; ctx |- foo`
+ By making sig a first class set, we don't need to worry about permutations of elements inside sig.
+ We should worry about permutation inside fields of ctx. We will rederive essentially identical theorems for more names of fresh vars. :(
+ ctx needs to be free of a to derive forall
+ `forall_foo(sig \ {a}, ctx, bvar(0)) :- foo(sig, ctx, a), elem(a,sig), free(a, ctx).`
+
+ We need to seed predicates that a can be possible value of domain
+``` 
+For fresh vars:
+
+-------------------- Ax1
+a ; foo(a) |- foo(a)
+
+For actual "meaningful" (top level) values.
+
+    val(x)
+-------------------Ax2
+ {} ; foo(x) |- foo(x)
+```
+
+```
+values(SING(a), a).
+foo(ctx,SING($Foo(v))) :- values(SING(a), a).
+```
+We also may have subsumption of the signature in the same way as ctx. We need to assure the varable appears in neither ctx nor fields before we can delete it.
+
+If sig is nameless, when we combine/join sigs from separate relations, what do we get? All possible ways of matching up the two? Or maybe we just concat the sigs? That is the most general theorem. And we are always free to identify elements in the sigs? Is that a valid form of weakening the signature? We can also susbtitute?
+`foo({}, ctx, x) :- foo({a}, ctx, a), value(x)`
+From top down, the sig vars are fresh, very rigid. From bottom up they are the opposite. They can become anything, including a forall.
+We could only support linear production of sig vars. Then they are represented as Var. Connect via explicit =. Hmm. but they do have to connect in the context to the front. Ok, what about in the context they are position maps (einlcudng empty ) into the front of |-. That is a canonical order. exlicpit A = B in context can do some stuff. Can't have cnnectec variables in context that don't appear in head. Can represent refl rule. Head is a kind of binder?
+Can always I suppose add extra dummy predicates to place hold stuff. Kind of funky.
+When we transfer contexts `foo( ctx1 U ctx2, y) :- bar(ctx1, x), biz(ctx2,y).` this is now a much more invasive thing. We need to traverse the contexts and remap them. If we lost the reference to x, now ctx1 can't be genralized to things.
+Ok what if fresh vars can refer to var in the head _or_ to the explicit ordered sig list. We've lessened permutation problems at least.
+There isn't a problem giving vars in the head number label. Then we can have equality constraints in the head. Order them left to right. We can also use these numbers in the ctx. Don't need maps anymore.
+
+universal without contexts as simpler problem
+
+existentials causes skolems, universals cause frees? Kind of reversed feeling from my gut. turning a forall into a var in backward mode is making a fresh var. In forward mode it is sealing a flexible var, a unification variable of sorts.
+The subst rule of harrison.
+
+
+```souffle
+.type wrapnum =   Lit {n : number}
+                | Skolem {a : symbol, args : vec}  // | Skolem0 { a : symbol} | Skolem1{a :symbol, n : number}
+                | Free {k : unsig ned}
+                | BVar {k : unsigned}
+
+// instnating
+foo($Lit(n)) :- foo($Free(_)), vals(n).
+
+eq($Free(0), $Free(0)). // eq(X,X).
+forall_foo($BVar(0)) :- foo($Free(0)).
+
+foo($Free(0)) :- forall_foo($BVar(0)).
+// or
+foo(x) :- forall_foo($BVar(0)), val(x).
+// but really this is transitively true
+foo() :- foo($Free(0)).
+
+// The cases are finitely enumerable, since the relations are flat.
+bar(x,y) :- bar($Free(0), $Free(1)), val(x), val(y).
+bar(x,x) :- bar($Free(0), $Free(0)), val(x).
+
+// datalog is probably smart enough to deal with this.
+bar(x,y) :- bar($Free(n), $Free(n)), val(x), val(y), ((n = m, x = y); n != m).
+
+```
+forall x, foo(x) /\ bar(x).
+We need to defunctionalize foo_bar and/or forall_foo_bar.
+```
+forall x, foo(x) /\ bar(x)
+--------------------------
+foo(x) |- bar(x)      bar(x) |- foo(x)
+```
+
+Eh what's the point of this one. forall x, foo(x) /\ bar(x) ==> forall x, foo(x)
+forall x, foo(x)  /\ forall x, bar(x) ==> forall x, foo(x) /\ bar(x)
+So this is all fine. We don't need to worry about that shared predicate really.
+
+We're kind of locally namelessing but very shallowly? And we are canonically naming free variables by first appearance in depth first traversal of tree, so they may need to be renamed as substitutions screw that up. Not desirable in a lambda term.
+
+Free is kind of doing a union find. Maybe some kind of local union find could help?
+
+We have to do a ton of shifting of indices in the context.
+It really helps to ignore ADTs and just talk about forall for flat datalog-like things.
+
+Logic with these instantiable variables is a very primitive thing.
+
+
+Options:
+- Limit avaialable variable patterns
+- Discrimiination tree. At leaves point to actual variable names. Variable in tree are labelled or no.
+- Matching modulo permutation of variable names
+- 
+
+Clauses in ATP must have solved this problem. Deduplication of clauses, subsumption of clauses.
+Maybe universal is what makes it not datalog anymore
+prune context tables like rebuilding?
+Just ignore problem
+
+
+No I thought I had it, but there are still very serious permutation issues.
+The signature is somehow trying to capture a permutation invariance in the same way the set like character of the context is.
+
+A trie of tries. Tries themselves are trees.
+To build a trie in souffle, we'll need maps. Assoc vectors.
+Try using ascent? Why not.
+ref counted opauqe objects in souffle. But how would we call dec on ref count?
+
+Normalized Variables representation. See term indexing chapter pg 1889
+Could use polynomials to represent in souffle without branching.
+use min to represent unification
+
+```
+append($Var(0),$Nil(), $Var(0)).
+append($Cons($Var(0), x), y, $cons($Var(0), z) ) :-
+  append(x,y,z), lift(x,y,z).
+
+//memoized
+max($Var(0), 0).
+max($Var(1), 1).
+max($Cons(x,y), mz) :- max(x,mx), max(y,my), mz = max(mx,my).
+
+shift()
+
+```
+
+Man embdding this in souffle seems tough. We really need to destructure
+If however I use a custom term representation
+```souffle
+// type term = [head : symbol, args : vec]
+
+//.type term = [head : symbol, nargs : unsigned, args : number]
+// ambiguous record. This stinks.
+// #define ADD(x,y) ["add", 2, as([x,y], number)]
+
+//.type AExpr = Add {id : number, }
+.type term =  T0 {head : symbol} 
+            | T1 {head : symbol, x : term}
+            | T2 {head : symbol, x : term, y : term}
+            // binary terms is sufficient, but painful
+// we can detect T0 T1 from C++ side.
+#define ADD(x,y) $T2("add",x, y)
+
+.decl test(f : term)
+//test(nil).
+test(ADD($T0("x"),$T0("y"))).
+```
+
+First class union find [0,1,1,1]
+@perm3(uf, 2,1,1). returns uf of var [v2,v1,v1], which in this case would be [0,0,0]. since v2 and v1 point to each other. 
+Decouples naming variables from the data structure itself.
+Variant checking and a subclass of subsumption become easy.
+`foo(x,y,z, uf1) <= foo(x,y,z,uf2) :- @subuf(uf1,uf2).`
+
+Awkward and error prone to manually program with. Needs metadatalog.
+```
+.decl nvar(t : term, n : unsigned)
+#define GROUND(t) nvar(t,0)
+``` 
+Sometimes this may be necessary to step over unexpanded terms.
+
+Relative of co-de bruijn. Also relative of term indexing. Discrimination trees.
+Bad indexing for non concrete terms.
+We can tell the difference easily between `$Var()` and `a` in a pattern. 
+
+```
+#define NIL $Symbol("nil")
+#define T2(f,a,b) $App($App(f,a),b)
+#define CONS(x,xs) T2($Symbol("cons"), x, xs)
+
+
+append_a($Var(),$Symbol("nil"), $Var(), [0,0]).
+append_a(CONS($Var(), x), y, CONS($Var(), z), uf) :-
+  append_q(), append_a(x,y,z, uf1), nvar(x,nx), nvar(y,ny), nvar(z,nz), uf = @perm(uf, ???).
+append_q().
+```
+@nvars(t:term):unsigned
+The union find surgery is more complex than I thought. Go figure.
+@slice(uf, 0, nx)
+@swap(uf, i, j)
+@insert(uf, n, i) (may require shuffling)
+@concat(uf1, uf2)
+@makeset(uf)
+@union(uf, i, j)
+@find(uf, i) ??? Will I need this?
+Maybe append(x,ufx, y,ufy, z, ufz) is better convention? toplevel packing of uf with tree?
+We could bite the bullet and just traverse terms.
+
+For context we need first class map.  _multiset_ of (unmarked var) terms in context which . first class map from terms to number of them. UF should have some convention for breaking ties. Now it isn't 
+Otherwise same diff.
+
+This seems great.
+
+.type t1 = term
+.type t2 = [x : term, y : term]
+norm1():t1
+norm2(x:term,y:term):t2
+norm3()
+.type countterm = [nvar : unsigned, t : term]
+norm(t, offset):countterm
+norm(old:term, olduf:uf, new:term)
+
+Another representation: Use a set of location map trees. We don't care about order.
+```
+.type map = Left {map} | Right {map} | Here {} | Both {map, map}
+```
+Assume left associated form for things with more than 2 args.
+
+foo(Var,Var), { Both(Here,Here)  } vs {  Left(Here), Right(Here) }
+
+The trees are _disjoint_
+We then need to 
+This somehow is a unification tree or no?
+
+It's difficult to find the tree that corresponds to Something.
+Could have function that takes single path and returns entire tree.
+If trees are equal, vars are equal. Hmm.
+@map_left
+@map_right
+@map_both - add a both to every tree in set.
+
+Could be need to destruct every tree in set?
+match_left
+match_right
+
+Do beta and free var norm?
+@norm( $App($Sym("foo"), $App(x, y)))
+@norm1
+@norm2
+@norm3
+That is a nearly usable interface. Hmm.
+
 
 ### Geometry
 
@@ -2777,6 +3254,9 @@ index([a,ctx], n + 1, x) :- index([a,ctx], _, _), index(ctx, n, x).
 // This part is a mess. Would not using debruijn be better somehow?
 
 ```
+
+Thinking in terms of tabling, there is a difference between query and answer. 
+
 [bidirectional typing](https://arxiv.org/pdf/1908.05839.pdf)
 I suppose bidi checking feels nice because we are already used to thinking of the different modes as different predicates. We also need to make these distinctions for magic set transform
 
@@ -3224,7 +3704,17 @@ negation as failure vs stable model
 ## Tabling
 See 
  - prolog#tabling
+
+
 Tabling in prolog leads to something very similar in power to the memoizing datalog. However, you still have unification and logic variables, so it is not clear it is truly equivalent.
+
+Datalog only works on ground terms.
+
+Semi-naive evaluation is like informing the consumers that a new answer is available.
+
+Datalog puts more at compile time than tabling does (naively?).
+
+"Query Answer Transformation"
 
 ## Descriptive Complexity and Least Fixed Point Logic
 
@@ -3372,6 +3862,12 @@ path = PushRel(loop)
 
 This is stupid though, right? We run way too many loops in a silly way.
 
+What is the difference between push based datalog and tabling? Or rather can push based datalog be indentified with half of tabling? Calling a function is producing an answer for that predicate. The notion of query is missing.
+Does this tabling perspective lead to a clue on how to implement push based datalog cleanly.
+
+This also brings to mind Peter Goodman's communicating datalog servers and Warren's communicating machine model.
+
+
 ## Incremental / Differential Datalog
 See 
   - incremenetal notes
@@ -3500,7 +3996,8 @@ Scopes can be related to the min lattice for scope. Yeah. Huh. So you don't even
 But at the same time, it is the same thing as contextual datalog, just contexts are numbers / totally ordered instead or partially ordered. 
 
 
-
+## Backtracking a Datalog
+<https://philipzucker.com/backtracking-datalog/>
 
 # Implementations
 - Souffle
@@ -3528,6 +4025,8 @@ But at the same time, it is the same thing as contextual datalog, just contexts 
 - percival https://percival.ink/
 
 - Bloom
+
+- https://github.com/chessai/hsdatalog
 ## Rel
 [vid](https://www.youtube.com/watch?v=WRHy7M30mM4&t=136s&ab_channel=CMUDatabaseGroup)
 Relational AI
@@ -3628,6 +4127,43 @@ https://www.petergoodman.me/docs/dr-lojekyll.pdf
 ## Datafun
 [Seminaïve evaluation for a higher-order functional language](https://dl.acm.org/doi/abs/10.1145/3371090)
 
+## QL
+
+https://codeql.github.com/docs/ql-language-reference/recursion/#non-monotonic-recursion
+https://codeql.github.com/publications/
+[algebraic data types](https://codeql.github.com/publications/algebraic-data-types.pdf)
+[QL: Object-oriented Queries on Relational Data](https://drops.dagstuhl.de/opus/volltexte/2016/6096/pdf/LIPIcs-ECOOP-2016-2.pdf)
+pairty recursion - even number of negqtions is ok. Hmm. 
+ https://codeql.github.com/docs/ql-language-reference/recursion/#non-monotonic-recursion
+
+```
+ predicate isExtinct() {
+  this.isDead() and
+  not exists(Person descendant | descendant.getAParent+() = this |
+    not descendant.isExtinct()
+  )
+}
+```
+
+QL has semantics in datalog. 
+typing predicates.
+`this` is a parameter. fields are parameters.
+special result parameter for functions
+
+charcteristic predicates
+even(n) :- digit(n), n % 2 = 0.
+this varies over interection of  super types
+ember predicates have this vary over
+
+isSmall(this) :- digit(this)
+
+abstract classes hold union of all value of subclasses
+subtyping relationship. we can reify class names to runtime.
+
+codeql I could define a "functor" class with method `call`. this is some kind of lambda lifting thing.
+
+
+Classical correspondence a => b ==  not a or b. This is true. Doesn't allow hypohtetical reasoning though right? I feel like classical correspondences are not valid.
 # Souffle
 
 Souffle is a datalog implementation that is fast. It can be compiled to parallel C++ code. It also has a number of very intriguing datalog extensions available
@@ -3976,6 +4512,9 @@ What about guarded negation? For example if you turn off stratification but are 
 
 
 # Resources
+vectors std::sort.
+
+
 automatic differentiation like chr?
 
 [initial limite datalog](https://research-information.bris.ac.uk/en/publications/initial-limit-datalog-a-new-extensible-class-of-decidable-constra) extension of datalog Z?

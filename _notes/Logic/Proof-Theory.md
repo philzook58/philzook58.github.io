@@ -18,11 +18,13 @@ title: Proof Theory
   - [Hilbert systems](#hilbert-systems)
   - [Sequent Calculus](#sequent-calculus)
   - [Natural Deduction](#natural-deduction)
+- [Ordinal Analysis](#ordinal-analysis)
 - [Things](#things)
   - [Peano Arithmetic](#peano-arithmetic)
   - [Heyting Arithmetic](#heyting-arithmetic)
   - [PRA (Primitive Reucrsive Arithemtic)](#pra-primitive-reucrsive-arithemtic)
   - [Second Order Arithmetic](#second-order-arithmetic)
+  - [Second Order Logic](#second-order-logic)
   - [Robinson Arithmetic (Q)](#robinson-arithmetic-q)
   - [Primitive Recursive Arithmetic](#primitive-recursive-arithmetic)
   - [Set Theory](#set-theory)
@@ -122,6 +124,8 @@ You are breaking down formula going up the inference rule
 ## Natural Deduction
 
 
+# Ordinal Analysis
+
 # Things
 ## Peano Arithmetic
 ## Heyting Arithmetic
@@ -142,6 +146,9 @@ In a sense, because quantifier free, theorems are all universally quantified.
 ## Second Order Arithmetic
 "Analysis"
 Two sorts, natrual numbers a la peano and sets of natural numbers
+
+## Second Order Logic
+[](https://plato.stanford.edu/entries/logic-higher-order/)
 
 ## Robinson Arithmetic (Q)
 Weaker than Peano Airthemtic, Induction schema removed. Still a complex thing

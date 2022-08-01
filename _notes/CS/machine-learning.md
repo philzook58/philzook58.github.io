@@ -1,6 +1,40 @@
 
+
+- [Applications](#applications)
+- [Data](#data)
+- [Good Practice? What's the right word here](#good-practice-whats-the-right-word-here)
+- [Supervised](#supervised)
+  - [Linear in WHAT?](#linear-in-what)
+  - [Nearest neighbor](#nearest-neighbor)
+  - [SVM](#svm)
+  - [Kernel](#kernel)
+  - [decision trees](#decision-trees)
+- [Unsupervised](#unsupervised)
+- [Visualization](#visualization)
+- [Learning Theory](#learning-theory)
+- [Overfitting](#overfitting)
+- [Bayesian Shit](#bayesian-shit)
+  - [Regularization](#regularization)
+- [Deep Learning](#deep-learning)
+  - [Convolutional](#convolutional)
+  - [Recurrent](#recurrent)
+  - [tidbits](#tidbits)
+- [Verification](#verification)
+- [Famous Models](#famous-models)
+  - [Backprop Technqiues](#backprop-technqiues)
+  - [Frameworks](#frameworks)
+  - [Resources](#resources)
+- [Reinforcement Learning](#reinforcement-learning)
+- [Verification](#verification-1)
+  - [Resources](#resources-1)
+- [Old Reinforcement learning](#old-reinforcement-learning)
+
+
 See also:
 - Optimization
+
+[ml for proofs bibliography](https://github.com/tlringer/ml-for-proofs)
+
 
 # Applications
 - Speech recognition
@@ -175,6 +209,9 @@ Actor critic
 
 Monte-carlo search
 
+# Verification
+[Neural Network Verification with Proof Production](https://arxiv.org/pdf/2206.00512.pdf)
+
 ## Resources
 [openai spinning up](https://spinningup.openai.com/en/latest/index.html)
 Sutton and Barto
@@ -334,3 +371,5 @@ in global models the planning stage will tend to try to exploit regions that are
 maximum entropy. May want to have the most random solution that doesn't hurt cost?
 
 Local models try to avoid this by just modelling gradients? And simply. But use a contrained optimization problem to make sure the robot stays in a region where the local estimates still apply. Trust regions. Defined using how unlikely the current trajectory is
+
+

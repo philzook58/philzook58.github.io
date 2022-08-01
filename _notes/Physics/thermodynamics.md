@@ -23,3 +23,5 @@ Van der Waals equation
 # Chemsitry
 Wow. A whole section for chemsitry. How generous.
 Chemical potential
+
+https://blog.jessriedel.com/2017/06/28/legendre-transform/

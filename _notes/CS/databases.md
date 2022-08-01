@@ -17,6 +17,7 @@ title: Databases
   - [The Chase](#the-chase)
 - [Ontology Formats](#ontology-formats)
 - [Optimal Joins](#optimal-joins)
+- [Vectorized Execution](#vectorized-execution)
 - [Relational AI](#relational-ai)
 - [Streaming](#streaming)
 - [CRDTs](#crdts)
@@ -237,6 +238,21 @@ unnesting arbitrary queries
 How materializr and other databases optimize sql subqueries
 
 [genlteish intro to worst case optimal joins](https://twitter.com/justinjaffray/status/1531312730824536064?s=20&t=-IHVNfpCMKlhva0T8ctWXA)
+
+# Vectorized Execution
+[cmu adavanced course lecture](https://www.youtube.com/watch?v=7hgZKrFXYNs&ab_channel=CMUDatabaseGroup)
+[Rethinking SIMD Vectorization for In-Memory Databases](https://15721.courses.cs.cmu.edu/spring2019/papers/20-vectorization1/p1493-polychroniou.pdf)
+
+masked/selective load
+masked/selective store
+scatter 
+gather
+
+selection:
+branched vs branchless
+branched checks condition to see if should copy row out
+branchless writes but only increments index of storage by one if condition is met. I mean. There is a "branch" in this. But I see your point
+
 
 [EmptyHeaded: A Relational Engine for Graph Processing](https://ppl.stanford.edu/papers/emptyheaded.pdf) "generalized hypertree decomposition" ? https://github.com/HazyResearch/EmptyHeaded
 

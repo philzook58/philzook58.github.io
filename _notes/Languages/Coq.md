@@ -281,6 +281,11 @@ Equality eliminator is rewriting.
 ```
 
 # Misc
+[](https://github.com/stepchowfun/proofs/tree/main/proofs)
+https://github.com/stepchowfun/proofs/blob/main/proofs/Tutorial/Lesson5_Consistency.v in particular
+
+https://github.com/dwarfmaster/commutative-diagrams tactic for categroy proofs
+
 - [coq-ceres](https://github.com/Lysxia/coq-ceres) coq sexp stuff
 - QED does something serious.
 - Surface coq is desugared

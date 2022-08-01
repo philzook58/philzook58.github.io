@@ -95,6 +95,8 @@ table annotions include lattice type stuff "mode-directed tabling"
 action rules
 loops
 # Answer Set Programming
+[How to build your own ASP-based system ?! ](https://arxiv.org/pdf/2008.06692.pdf)
+
 [Arntzenius disccision](https://twitter.com/arntzenius/status/1264570390849949696?s=20&t=5y91-I1SPrIGomAWSqs69w) "How are Datalog, SAT/SMT, and answer set programming related? Is ASP basically the generalisation of SAT to first order logic, plus recursion? And Datalog restricts ASP to Horn clauses and stratified recursion?
 
 <https://en.wikipedia.org/wiki/Answer_set_programming>

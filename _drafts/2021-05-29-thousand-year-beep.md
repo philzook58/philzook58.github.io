@@ -1,4 +1,24 @@
 
+Thousand Year Beep
+
+
+[Ben's blog notes](http://blog.benwiener.com/electronics/projects/programming/2021/10/15/beep.html)
+
+There is a fun idea of making a nice little object that will beep sometime in the future. Probably not a thousand years. Instad more like 50. Isn't it fun thinking about having this thing and bringig your friends and family who aren't dead to watch it on the prescribed time.
+
+The humor of it is somehow that the beep is so short and anticlimatic. Not a long beep. More like a blip.
+
+
+This is somewhat inspired my the [clock of the long now](https://en.wikipedia.org/wiki/Clock_of_the_Long_Now)
+
+It turns out that a hobbiest getting an electronic clock to nominally run for 50 years is actually on the edge of challenging.
+
+Batteries come speced in amp-hours. So you need to get the standby current down of any device you are using.
+
+
+
+
+
 
 
 To get started we're investigating using a stock RTC module
@@ -25,5 +45,3 @@ by desoldering the led on the qt py we could lower the power by quite a bit. I b
 The qt py has a built in rtc.
 
 
-Ben's blog notes
-<http://blog.benwiener.com/electronics/projects/programming/2021/10/15/beep.html>

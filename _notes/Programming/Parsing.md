@@ -56,7 +56,15 @@ Menhir [error handling the new way](http://cambium.inria.fr/~fpottier/menhir/man
 Sam's coq stuff <https://github.com/slasser/AllStar> <https://github.com/slasser/CoStar>
 
 
+
 Semantic Actions
+
+menhir manual
+http://gallium.inria.fr/~fpottier/menhir/manual.html
+LR(1) parser
+menhir offers a coq mode?
+
+[Generating LR syntax error messages from examples](https://dl.acm.org/doi/10.1145/937563.937566)
 
 ## Shift Reduce Parsing
 See Appell's book

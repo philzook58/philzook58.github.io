@@ -10,10 +10,18 @@ title: Type Theory
   - [Simply Typed lambda Calculus (STLC)](#simply-typed-lambda-calculus-stlc)
   - [System T](#system-t)
   - [System F](#system-f)
+  - [CoC](#coc)
+    - [CiC](#cic)
+  - [PTS](#pts)
 - [Subtyping](#subtyping)
 - [Intersection Types](#intersection-types)
 - [Refinement Types](#refinement-types)
+- [Quotient Types](#quotient-types)
 - [Dependent Types](#dependent-types)
+- [Data Types](#data-types)
+  - [Inductive Types](#inductive-types)
+    - [Parameters vs indices](#parameters-vs-indices)
+  - [Induction Recursion](#induction-recursion)
 - [Syntax and Semantics](#syntax-and-semantics)
 - [Judgement](#judgement)
 - [Inference Rules](#inference-rules)
@@ -39,6 +47,7 @@ title: Type Theory
     - [Sorts  & Universes](#sorts---universes)
     - [Impredicative vs Predicative](#impredicative-vs-predicative)
     - [Proof Irrelevance](#proof-irrelevance)
+    - [Inconsistent Combinations](#inconsistent-combinations)
     - [Extensionality](#extensionality)
 - [Equality](#equality)
     - [Extensional vs Intensional](#extensional-vs-intensional)
@@ -118,6 +127,24 @@ typechecking stlc does not have the binding issues you might expect of a lambda 
 
 ## System F
 
+## CoC
+
+Equi vs iso recursive types
+
+[Strong Normalization for the Calculus of constructions - Casinghino](https://docslib.org/doc/4739017/strong-normalization-for-the-calculus-of-constructions)
+### CiC
+Whole different ball game
+[Luo's thesis - An Extended Calculus of Constructions ](https://era.ed.ac.uk/bitstream/handle/1842/12487/Luo1990.Pdf)
+[Proof on normalization of CIC and its consistency](https://coq.discourse.group/t/proof-on-normalization-of-cic-and-its-consistency/444)
+
+## PTS
+Pure Type Systems
+Sorts, axioms
+
+
+System U
+
+
 # Subtyping
 Supposedly is kind of a shit show.
 # Intersection Types
@@ -128,6 +155,8 @@ Supposedly is kind of a shit show.
 - Liquid Haskell
 
 - PVS?
+# Quotient Types
+Cody has alluded to there being accidental stumbling blocks into inconsistency here
 # Dependent Types
 See also 
 - Coq
@@ -152,6 +181,47 @@ calculus of constructions
 - Weirich OPLSS 2013
 - [easy as pie](https://www.seas.upenn.edu/~sweirich/papers/tfp07.pdf)
 - [elaboration zoo](https://github.com/AndrasKovacs/elaboration-zoo)
+
+
+# Data Types
+What makes "datatypes" different from the things above? They aren't. My organization is all fucked.
+
+Schema for allowable definitions.
+
+Introduction
+Elimination
+Computation Rule
+## Inductive Types
+[nlab](https://ncatlab.org/nlab/show/inductive+type)
+https://leanprover.github.io/theorem_proving_in_lean/inductive_types.html
+
+Curious restrictions on their form.
+positivity restrictions
+
+### Parameters vs indices
+https://leanprover.github.io/theorem_proving_in_lean/inductive_types.html#axiomatic-details
+
+parameters stay fixed / opaque in all definitions.
+ indices can be 
+
+
+```coq
+Inductive Vec a : nat -> Type :=
+ | VNil : Vec a 0
+ | VCons : forall n, a -> Vec a n -> Vec a (S n)
+. 
+```
+ n is index. a is argument
+
+
+
+
+Equi vs Iso recursive types - https://www.cs.cornell.edu/courses/cs4110/2012fa/lectures/lecture27.pdf Does equality hold on the nose in recursion (equi) or is there some unpacking to do (iso)
+Coinductive Types
+## Induction Recursion
+https://ncatlab.org/nlab/show/inductive-recursive+type
+[induction recursion](https://en.wikipedia.org/wiki/Induction-recursion)
+[induction induction](https://en.wikipedia.org/wiki/Induction-induction)
 
 
 # Syntax and Semantics
@@ -337,7 +407,10 @@ It feels like proof irrelevance and erasure are related concepts, but like almos
 
 
 
-
+### Inconsistent Combinations
+See counterexamples in type theory
+- Berardi's paradox above
+- Markov + ? https://ncatlab.org/nlab/show/Markov%27s+principle https://en.wikipedia.org/wiki/Markov%27s_principle
 
 ### Extensionality
 Extensionality is a notion that applies to more than just function and equality types.

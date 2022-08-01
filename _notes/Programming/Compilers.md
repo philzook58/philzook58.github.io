@@ -20,7 +20,10 @@ wordpress_id: 2913
   - [Tensor Stuff](#tensor-stuff)
   - [Misc](#misc-1)
 - [Analysis](#analysis)
+  - [Dominators](#dominators)
   - [Dataflow](#dataflow)
+  - [def-use chains](#def-use-chains)
+- [Undefined behavior](#undefined-behavior)
 - [Optimizations](#optimizations)
   - [Polyhedral](#polyhedral)
   - [Link Time Optimization (LTO)](#link-time-optimization-lto)
@@ -69,6 +72,7 @@ Assignment Form](https://pp.info.uni-karlsruhe.de/uploads/publikationen/braun13c
 See LLVM section
 
 
+
 ## CPS
 ## RTL
 
@@ -93,14 +97,68 @@ https://princetonuniversity.github.io/isca22-ila-tutorial/ ILAlang
 
 [exo-lang.dev] exocompilation
 # Analysis
+
+## Dominators
+
+Everyone talks about dominators.
+Graph algorithms over the coaurse structure of the cfg itself.
+
+https://llvm.org/devmtg/2017-10/slides/Kuderski-Dominator_Trees.pdf
+
+a node x domainates another y if every path through y goes through x
+
+postdominator, every path to exit has to pass throguh. Dual of domaintor
+
+every def must dominate use
+
+intersection of sets of dominators of your predecssors
+
+
+Dominator trees
+loop nesting forests
+
 ## Dataflow
 Dataflow analysis
+https://en.wikipedia.org/wiki/Data-flow_analysis
 Must/May and intersection vs union. Least fixed point vs greatest
 
+Kildall
+bitvector
+
+
+reaching definitions
+live variable
+very busy expressions
+available expressions
+
+## def-use chains
+https://en.wikipedia.org/wiki/Use-define_chain
+
+# Undefined behavior
+undefined vs implementation defined.
+
+undefined behavior:
+The compiler is allowed to do anything? Represents things that trap. Stuff like divide by zero
+The compiler may optimize code assuming undefined behavior never happens. It is free to make code more defined
+ int wraparound
+
+Poison undef
+llvm IR has some surprising values available in it's semantics. Varables can hold _sets_ and poison. Poison is a special marker value that infects things. undef creates a set of a all possible values
+
+[Towards Optimization-Safe Systems: Analyzing the Impact of Undefined Behavior](https://dl.acm.org/doi/pdf/10.1145/2517349.2522728)
+
+[What Every C Programmer Should Know About Undefined Behavior #1/3](http://blog.llvm.org/2011/05/what-every-c-programmer-should-know.html)
+[Undefined Behavior != Unsafe Programming](https://blog.regehr.org/archives/1467) "The essence of undefined behavior is the freedom to avoid a forced coupling between error checks and unsafe operations."
+
+Refinement checking
+alive2
 
 # Optimizations
 
 [Wikiepedia list of compiler optimizations](https://en.wikipedia.org/wiki/Optimizing_compiler)
+
+- Common subexpression elimination
+- Peephole
 
 [Loop invariant code motion](https://en.wikipedia.org/wiki/Loop-invariant_code_motion) - aka hoisting. Move stuff that doesn't change out of the loop
 
@@ -117,6 +175,8 @@ Expand expressions with care - less dependencies
 [Implementing a Toy Optimizer](https://twitter.com/cfbolz/status/1549376580912386051?s=12&t=2TzLXakPIAt6RPwcq4Qz9w)
 
 [liveness analysis for ssa form program](https://hal.inria.fr/inria-00558509v2/document)
+
+
 
 ## Polyhedral
 [Polyhedral model](https://en.wikipedia.org/wiki/Polytope_model)
@@ -342,6 +402,9 @@ Operads
 You could take a relational perspective on operations, having neither input not output.
 
 ## Register Allocation
+[regallo2 design doc](https://github.com/bytecodealliance/regalloc2/blob/main/doc/DESIGN.md)
+
+[flambda reg alloc](https://github.com/ocaml-flambda/flambda-backend/pull/678) points to an [appell paper - iterated register coalescing](https://dl.acm.org/doi/abs/10.1145/229542.229546) and tiger book
 <https://arxiv.org/abs/1804.02452>
 
 [cranelift regalloc](https://cfallin.org/blog/2022/06/09/cranelift-regalloc2/) great blog post
