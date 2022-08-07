@@ -115,8 +115,8 @@ dlv2 maybe https://dlv.demacs.unical.it/
 dlvhex http://www.kr.tuwien.ac.at/research/systems/dlvhex/
 
 [seventh answer set competition](https://arxiv.org/pdf/1904.09134.pdf)
-[lifschitz prgraming with clingo](https://www.cs.utexas.edu/~vl/teaching/378/pwc.pdf)
-
+[lifschitz prgraming with clingo short 35 page](https://www.cs.utexas.edu/~vl/teaching/378/pwc.pdf)
+[liftshift asp book 198pg](https://www.cs.utexas.edu/users/vl/teaching/378/ASP.pdf)
 Disjunctive logic programming
 
 Grounding - Figure out the term universe?
