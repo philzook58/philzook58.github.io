@@ -45,6 +45,12 @@ title: Differential Equations
   - [Laplace Box](#laplace-box)
   - [Analytic Functions](#analytic-functions)
   - [Circle](#circle)
+  - [Algebraic multigrid](#algebraic-multigrid)
+  - [Fast Multi pole method](#fast-multi-pole-method)
+  - [FFT](#fft)
+  - [Domain Decomposition](#domain-decomposition)
+  - [Finite Elements / Galerkin](#finite-elements--galerkin)
+  - [Boundary Element Method](#boundary-element-method)
 
 
 See also:
@@ -277,9 +283,10 @@ Crystal momentum.
 
 Morse and Feshbach
 
-https://github.com/pyamg/pyamg Algebraic multigrid
-Fast Multi pole method
-FFT
-Domain Decomposition
-Finite Elements / Galerkin
-Boundary Element Method
+## Algebraic multigrid
+https://github.com/pyamg/pyamg 
+## Fast Multi pole method
+## FFT
+## Domain Decomposition
+## Finite Elements / Galerkin
+## Boundary Element Method

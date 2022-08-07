@@ -13,16 +13,20 @@ title: SMT Solvers
   - [datatypes](#datatypes)
   - [Transcendentals](#transcendentals)
   - [Float](#float)
+  - [Rationals](#rationals)
   - [test/regress](#testregress)
   - [options](#options)
 - [Quantifiers](#quantifiers)
   - [Clark Completion for Datalog](#clark-completion-for-datalog)
   - [Rewriting](#rewriting)
+  - [Option datatype](#option-datatype)
   - [Pseudo Boolean](#pseudo-boolean)
 - [Finite Models](#finite-models)
   - [EPR](#epr)
-- [Z3 source spelunking](#z3-source-spelunking)
+- [Z3](#z3)
+  - [Z3 source spelunking](#z3-source-spelunking)
   - [src - most of the goodies are here.](#src---most-of-the-goodies-are-here)
+  - [paramaters, tactics, and commands](#paramaters-tactics-and-commands)
   - [Z3 Add Commutative Benchmark](#z3-add-commutative-benchmark)
   - [Interactive Proof](#interactive-proof)
     - [Hilbert Proof](#hilbert-proof)
@@ -45,19 +49,19 @@ natural domain smt
 W: What options are actualy worth fiddling with
 It is interesting to note what unusual characteristics solvers have.
 
-z3
-bitwuzla
-boolector
-cvc4
-cvc5
-yices2
-[smtinterpol](https://github.com/ultimate-pa/smtinterpol)
-alt-ergo
-veriT
-colibri
-mathsat (ultimate eliminator https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&tool=eliminator)
-smt-rat
-stp
+- z3
+- bitwuzla
+- boolector
+- cvc4
+- cvc5
+- yices2
+- [smtinterpol](https://github.com/ultimate-pa/smtinterpol)
+- alt-ergo
+- veriT
+- colibri
+- mathsat (ultimate eliminator https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&tool=eliminator)
+- smt-rat
+- stp
 
 
 vampire
@@ -258,6 +262,188 @@ Indexed operators
 (check-sat)
 (get-model)
 ```
+
+[smtlib float defs](https://smtlib.cs.uiowa.edu/theories-FloatingPoint.shtml)
+[z3guide](https://microsoft.github.io/z3guide/docs/theories/IEEE%20Floats)
+
+```z3
+(declare-const x Float64)
+(assert (fp.isNormal x))
+(check-sat)
+(get-model)
+(eval (fp.to_real x))
+```
+
+(closest(x,fp)  (forall fp2 (<= (abs (- x fp.to_real)  ) <= (abs (- x (fp.to_real fp2))  )     )
+
+http://smtlib.cs.uiowa.edu/papers/BTRW14.pdf
+https://www.lri.fr/~melquion/doc/17-cav-article.pdf
+
+(round x r)  log2(x)  <= x - r <=
+
+```z3
+; This is an under approximation of log2. Is that a problem? How can we be careful about this?
+(define-fun log2 ((x Real) (y Real)) Bool
+   (and true
+        (=> (and (<= 1 x) (< x 2)) (= y 0))
+        (=> (and (<= 2 x) (< x 4)) (= y 1))
+        (=> (and (<= 4 x) (< x 8)) (= y 2))
+   )
+)
+
+
+;(declare-const x Real)
+(declare-const y Real)
+
+(assert (log2 6 y))
+(check-sat)
+(get-model)
+```
+
+We should just directly compute eps from 
+
+```
+(define-fun eps32 ((x Real) (y Real))
+     (and true
+        (=> (and (<= 1 x) (< x 2)) (= y 0))
+        (=> (and (<= 2 x) (< x 4)) (= y 1))
+        (=> (and (<= 4 x) (< x 8)) (= y 2))
+   )
+)
+
+```
+
+remainder form
+
+sin(0) = 0
+-1 <= sin(x) <= 1
+forall x, sin x = x - x^3 / 3! + R_sin_5(x)
+R(x)
+
+
+## Rationals
+Rationals are kind of not an intrinsic. Reals are.
+```z3
+(declare-sort Rat)
+(declare-fun mkrat (Int Int) Rat)
+
+(assert 
+  (forall ((x Int) (y Int) (a Int) (b Int)) 
+    (=> (= (* x b) (* y a))  
+       (= (mkrat x y) (mkrat a b))
+     ) 
+   )
+)
+
+(declare-fun ratmul (Rat Rat) Rat)
+
+(assert
+(forall ((x Int) (y Int) (a Int) (b Int)) 
+    (= (ratmul (mkrat x y) (mkrat a b))
+       (mkrat (* x a) (* y b))
+    )
+    )
+)
+
+
+;(assert 
+;  (forall ((p Rat))
+;    (exists ((x Int) (y Int))
+;        (and (= p (mkrat x y))
+;              (not (= y 0))
+;    )
+;)
+
+; but skolemize it explicitly
+(declare-fun num (Rat) Int) ; picks arbitrary consistent num denom
+(declare-fun denom (Rat) Int)
+
+(assert 
+  (forall ((p Rat))
+        (and (= p (mkrat (num p) (denom p)))
+             (not (= (denom p) 0))
+        )
+    )
+)
+
+
+;(assert (exists ((p Rat)) 
+;        (= (ratmul p p) (mkrat 2 1))
+;        )
+;)
+
+
+(define-fun even ((x Int)) Bool
+  (exists ((c Int))  
+          (= x (* 2 c))
+  )
+)
+
+
+(define-fun odd ((x Int)) Bool
+  (exists ((c Int))  
+          (= x (+ 1 (* 2 c)))
+  )
+)
+
+;(assert (exists ((c Int)) 
+;        (and (even c) (odd c))
+;))
+; unsat. good.
+
+(assert 
+  (forall ((p Rat))
+             (not (and (even (num p)) (even (denom p))))
+    )
+)
+(assert (exists ((m Int) (n Int)) 
+        (let ((p (mkrat m n))) 
+        (and (= (ratmul p p) (mkrat 2 1))
+             (not (and (even m) (even n)))
+             (= (* m m) (* 2 (* n n)))
+
+        )
+        )
+        )
+)
+
+
+
+
+
+(check-sat)
+(get-model)
+```
+
+```z3
+(define-fun even ((x Int)) Bool
+  (exists ((c Int))  
+          (= x (* 2 c))
+  )
+)
+
+
+(define-fun odd ((x Int)) Bool
+  (exists ((c Int))  
+          (= x (+ 1 (* 2 c)))
+  )
+)
+
+;(declare-const m Int)
+;(declare-const n Int)
+
+;(assert (not (even m)))
+;(assert (not (even n)))
+
+;(assert (= m (* 2 n)))
+;(assert (= (* m m) (* 2 (* n n))))
+
+(assert (not (forall ((x Int)) (=> (even (* x x)) (even x)))))
+
+(check-sat)
+(get-model)
+```
+
 ## test/regress
 Looking at the test/regress folder, what sort of odd looking stuff is there?
 - (_ iand 4) what is this
@@ -295,6 +481,22 @@ cvc --help
 -o subs
 
 # Quantifiers
+[pointers to quantifiers on cvc5](https://github.com/cvc5/cvc5/discussions/8770)
+```
+(1) Bernays-Schönfinkel, when using the option --finite-model-find (https://homepage.divms.uiowa.edu/~ajreynol/cade24.pdf).
+
+(2) Quantified linear int/real arithmetic (with arbitrary nested quantification), where cvc5 uses techniques from https://homepage.divms.uiowa.edu/~ajreynol/fmsd17-instla.pdf by default.
+
+(3) Finite interpreted quantification, e.g. quantifiers over bitvectors (which also can be arbitrarily nested). See e.g. https://homepage.divms.uiowa.edu/~ajreynol/cav18.pdf for the techniques cvc5 uses; these techniques are used by default for quantifiers over e.g. BV when other theories are not present. They can be forced on using the option --cegqi-all.
+```
+
+
+- MBQI - model based quantifier instantiation. Consider quantified formula as opaque propositions. Upon getting prop assignment, ask for countermodel to proposition. Infer _term_ instantiation from countermodel
+- E-matching - syntactic trigger.s
+- enumeration
+
+[An Overview of Quantifier Instantiation in Modern SMT Solvers - Reynolds](http://homepage.divms.uiowa.edu/~ajreynol/pres-ssft2021.pdf)
+
 [Alex Summers course quantifiers lecture](https://ethz.ch/content/dam/ethz/special-interest/infk/chair-program-method/pm/documents/Education/Courses/SS2017/Program%20Verification/04-Quantifiers.pdf)
 
 Amin Leino Rompf, [Computing with an SMT Solver”](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/12/krml237.pdf)
@@ -549,6 +751,56 @@ bounded skolem function?
 
 We could explicitly use three valued semantics. What about encoding an ASP query to smt?
 
+
+= is explicitly a relation. We can't quantify the thing?
+One reason is refl. But we can't really talk about refl
+So we need to expand the forall and exlude the refl cases, which don't need to be dignified. 
+(= (= a b)  ((a = c) /\ (= b c)
+(skolem x) = a
+
+(= (= x y) (or (((exists a b) (= (add a b) x) and (= (add a b) y)
+            ((   exists a b     (= (add a b) x) (= (add b a) y)  ))
+            
+            )
+add(a,b) = add(b,a) if
+
+
+## Option datatype
+```z3
+(declare-datatypes (T) ((Option None (Some (val T)))))
+(declare-sort aexpr)
+(declare-fun add (aexpr aexpr) (Option aexpr))
+
+(declare-const x aexpr)
+(declare-const y aexpr)
+(declare-const z aexpr)
+
+(assert (is-Some (add x y)))
+(define-const xy aexpr 
+  (val (add x y))
+)
+
+;(assert (= (= x z)  
+;      (exists ((a aexpr) (b aexpr))
+;          (and (= (add a b) (Some x))
+;            (= (add a b) (Some z))
+;          )
+;      )
+;))
+
+(assert is-Some (add xy z))
+
+(assert 
+  (forall ((x aexpr) (y aexpr))
+   (= (add x y) (add y x)) 
+  )
+)
+
+(check-sat)
+(get-model)
+
+
+```
 ## Pseudo Boolean
 
 # Finite Models
@@ -558,6 +810,8 @@ Z3 can output finite models.
 
 Not all axioms have finite models.
 Is there a pile of tricks or systematic thing I can do to a set of axioms such that they have or may have a finite model and this model has some useful relationship to the infinite model.
+
+one suggestion. Try to use relational definitions, not functional definitions. total functions tend to lead to infinite models.
 
 
 ## EPR
@@ -596,8 +850,11 @@ https://stackoverflow.com/questions/28149863/why-is-e-matching-for-conjunctions-
 
 
 
+# Z3 
 
-# Z3 source spelunking
+
+
+## Z3 source spelunking
 
 Folders:
 - cmake, not that interesting
@@ -662,8 +919,12 @@ You know, it's a lot, but it isn't quite as overwhelming as I have felt in the p
 
  * cmd_context? This is where commands are defined. Might be secret ones.
 
-paramaters, tactics, and commands
-z3 -in  interactive mode
+## paramaters, tactics, and commands
+`z3 -in`  interactive mode
+
+SOme interesting looking commands:
+
+```
 (help) - gives commands?
 model based projection
 (query predicate) horn rules. there are an insane number of options to this
@@ -684,11 +945,28 @@ model based projection
 (apply tactic)
 (simplfiy) has a print-proofs option?
 
+(mbi <expr> <expr> (vars))
+    perform model based interpolation
+ (mbp <expr> (<vars>))
+    perform model based projection
+(get-proof)
+    retrieve proof
+ (get-proof-graph)
+    retrieve proof and print it in graphviz
+ (euf-project (exprs) (vars))
+    perform congruence projection
+ (eufi <expr> <expr> (vars))
+    perform model based interpolation
+```
+
 muz has: datalog, bmc, and spacer mode, and xform?
 :print-certificatie fives "inductive invataint" even in datalog?
 
 
 ## Z3 Add Commutative Benchmark
+This is making and abstract sort for which we are defining commutativity and associativity rules.
+Z3 is quite fast even here at proving some particularly rearrangement.
+
 
 ```python
 from z3 import *

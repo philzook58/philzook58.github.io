@@ -3,6 +3,43 @@ layout: post
 title: Category Theory
 ---
 
+
+- [Axioms](#axioms)
+- [Examples](#examples)
+  - [Groups and Monoids](#groups-and-monoids)
+  - [PoSet](#poset)
+  - [FinSet](#finset)
+  - [FinVect](#finvect)
+  - [FinRel](#finrel)
+  - [LinRel](#linrel)
+- [Categories and Polymorphism](#categories-and-polymorphism)
+- [Combinators](#combinators)
+- [Encodings](#encodings)
+- [Diagram Chasing](#diagram-chasing)
+- [Constructions](#constructions)
+  - [Products](#products)
+  - [CoProducts](#coproducts)
+  - [Initial Objects](#initial-objects)
+  - [Final](#final)
+  - [Equalizers](#equalizers)
+  - [Pullbacks](#pullbacks)
+  - [PushOuts](#pushouts)
+- [Functors](#functors)
+  - [Adjunctions](#adjunctions)
+- [Natural Transformations](#natural-transformations)
+- [Monoidal Categories](#monoidal-categories)
+- [String Diagrams](#string-diagrams)
+- [Higher Category](#higher-category)
+- [Topos](#topos)
+- [Processes](#processes)
+- [Categorical Databases](#categorical-databases)
+- [Sheaves](#sheaves)
+- [Profunctors](#profunctors)
+- [Optics](#optics)
+- [Logic](#logic)
+- [Computational Category Theory](#computational-category-theory)
+- [Resources](#resources)
+
 EPR?
 
 [Resources on Lenses](https://github.com/bgavran/Lens_Resources)
@@ -19,6 +56,8 @@ Finitely Generated Categories
 
 # Axioms
 Category is objects and morphisms. Morphisms have a partial operation called composition and there is an identity morphism for every object
+
+
 
 # Examples
 ## Groups and Monoids
@@ -42,6 +81,17 @@ vector spaces are objects (dimensionality or labelled). Linear maps are morphism
 ## LinRel
 
 
+# Categories and Polymorphism
+Part of the appeal of category theory comes from it's relationship to polymorphism. Polymorphism is counterintuitive really in regards to the simple model of types being sets.
+
+https://bartoszmilewski.com/2014/10/28/category-theory-for-programmers-the-preface/
+
+# Combinators
+https://en.wikipedia.org/wiki/Combinatory_logic
+
+Combinators are little functional pieces you can combine like lego blocks. When you have a language of combinators, variable binding issues are gone. They are hard to program with
+
+Combinators are not synonymous with categories, but categories can inform a particular style of combinators
 
 # Encodings
 Encoding category theory to first order, higher order logic, and dependent type theory. Generalized algebraic theories.
@@ -55,10 +105,21 @@ comp(F,G) = Some(H)
 Objects as Sort
 
 Blog posts
--  Egglog 2: Automatically Proving the Pullback of a Monic is Monic https://www.philipzucker.com/egglog2-monic/
+- Egglog 2: Automatically Proving the Pullback of a Monic is Monic https://www.philipzucker.com/egglog2-monic/
 - Egglog Examples: Pullbacks, SKI, Lists, and Arithmetic https://www.philipzucker.com/egglog-3/
-- [ Rewriting Monoidal Categories in the Browser with Egg](https://www.philipzucker.com/rust-category/)
+- [Rewriting Monoidal Categories in the Browser with Egg](https://www.philipzucker.com/rust-category/)
 # Diagram Chasing
+
+# Constructions
+
+## Products
+## CoProducts
+## Initial Objects
+## Final 
+## Equalizers
+## Pullbacks
+## PushOuts
+
 
 # Functors
 Functors are mappings between categories. This means they are a  tuple of map from objects to objects and morphism to morphism such that composition plays nice (commutes sort of) 
@@ -74,6 +135,9 @@ Representations of groups. Functor from group as a category to
 Free/Forgetful
 
 Galois Connections. Abstraction and concretization
+
+Closure/Rounding and lift
+
 Abstract interpretation
 Intervals <-> sets
 polytopes 
@@ -89,6 +153,16 @@ Vect
 
 
 # String Diagrams
+
+# Higher Category
+
+https://en.wikipedia.org/wiki/Higher_category_theory
+
+Morphisms go between objects
+2-morphisms go between morphisms
+
+An example I like is Rel. Morphisms are binary relations. binary relations can be compared via inclusion (they form a partial order themselves).
+
 
 
 # Topos
@@ -118,12 +192,16 @@ Mappings between schema describe
 
 # Sheaves
 
+# Profunctors
+# Optics
+
+
 # Logic
 
 
 Rising Sea
 
-A proof of `A |- B` is the basic "morphism". A proof is a tree. We can perhaps annotated this sequent with free variables and unification variables in play (signature). This makes this morphism floating over some kind of variable set, something sheafy.
+A proof of `A |- B` is the basic "morphism". A proof is a tree. We can perhaps annotated this sequent with free variables and unification variables in play (signature). This makes this morphism floating over some kind of variable set, something sheafy? Or a set floats of variables floats over the proof
 - Objects are propositions.
 - Cut is compose.
 - Axiom is id.

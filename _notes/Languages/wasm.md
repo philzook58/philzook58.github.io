@@ -3,11 +3,16 @@ layout: post
 title: Wasm/Emscripten
 ---
 
+- [Minizinc](#minizinc)
+
+
 sqlite fuzzler
 
 [simple web frontend stuff](https://news.ycombinator.com/item?id=32011439)
 cssbed
 htmx
+
+# WASM
 
 <https://medium.com/swlh/a-suduko-solving-serverless-endpoint-using-webassembly-and-or-tools-df9f7bb10044>
 https://github.com/google/or-tools/pull/2404
@@ -158,14 +163,116 @@ binaryen - an optmizing compiler that accepts some kind of cfg or wasm. Has C ap
 wasm-opt will optimize wasm for me
 wasm2js
 
-### Emscripten
+# Emscripten
 
 Finicky process.
 There are sections in the above books about this
 C++ exceptions and threads are something to look for.
 
 
-### Stuff
+Tips:
+- `emccmake cmake yada yada`
+
+
+You may need to puts flags into cmake projects.
+You may need to shield things in your code undo macros
+```
+#ifndef EMSCRIPTEN
+
+#endif
+```
+
+More often than not it is linking flags.
+
+Some things are easier or harder on node vs web. You should try both.
+
+Often you need to play with the filesystem FS to make sure stuff exists.
+
+### Command line Utility Conversion
+
+By default, emscripten refers to a global object called `Module`. You can create one with various flags and arguments.
+
+```
+<script>
+var Module = {
+   "print" : function(text){console.log(text)},
+   "printErr" : function(text){console.error(text)},
+   
+
+}
+</script>
+
+<script src="myemscrtipt.js"></script>
+```
+
+
+You can add arguments, add to the file system, etc.
+
+You may not want to thing to run as soon as the script tag is run. There is 
+
+`-sMODULARIZE` is a linking option
+
+
+### Souffle
+emcmake cmake -S . -B build_wasm -DSOUFFLE_USE_SQLITE=OFF -DSOUFFLE_USE_OPENMP=OFF -DSOUFFLE_USE_ZLIB=OFF -DSOUFFLE_USE_LIBFFI=OFF -DSOUFFLE_USE_CURSES=OFF -DSOUFFLE_ENABLE_TESTING=OFF -DSOUFFLE_TEST_EVALUATION=OFF
+
+-Wno-error
+
+-DCMAKE_BUILD_TYPE=MinSizeRel
+
+Needed to go into src/CMakeLists.txt and remove -Werror from 
+
+
+Is it actually using my flag?
+
+cd /home/philip/Documents/prolog/souffle/build_wasm/src && /usr/bin/cmake -E cmake_link_script CMakeFiles/souffle.dir/link.txt --verbose=1
+/home/philip/Documents/prolog/emsdk/upstream/emscripten/em++  -sMAIN_MODULE=2 -stdlib=libc++ -O3    -fuse-ld=lld -lc++abi @CMakeFiles/souffle.dir/objects1.rsp  -o souffle.js @CMakeFiles/souffle.dir/linklibs.rsp
+
+
+Todo:
+Support dlopen. MAIN_MODULE=2 somehow should work but maybe need -fpic on entire build?
+
+Modularize=1 was important to get multiple runs independent
+--no-proprocessor 
+-D -
+Exposing the filesystem
+
+It turns out link flags is where you put this stuff in cmake file. makes sense.
+
+I believe you can renamed the module
+https://stackoverflow.com/questions/33623682/how-to-use-fs-when-modularize-and-export-name-are-used-in-emscripten
+-s EXPORT_NAME="'SOUFFLE'"
+
+
+## Minizinc
+It just worked. Incredible
+Runnnig the file didn't do anything.
+I needed to do 
+```
+const lib = require("./minizinc.js");
+//var MINIZINC = {arguments: ["--help"]};
+console.log(lib());
+```
+on node
+
+It seems like it was grabbing my node parameters.
+
+In the browser, I was able to load in and pass in a Module object 
+MINIZINC({arguments : ["--help"]})
+
+Trying to build gecode
+emcconfigure ../configure
+emmake make -j8
+
+gecode build suggestions for emscripten
+https://github.com/Gecode/gecode/issues/67
+Hmm. They build a minizinc for wasm somewhere
+https://gitlab.com/minizinc/minizinc-js
+https://www.npmjs.com/package/minizinc/v/1.0.4-alpha.77
+
+Ah I need release/6.3.0 branch which has the const fix.
+
+# Misc
 
 <https://github.com/AlexAltea/capstone.js>
 <https://github.com/bordplate/js86>
@@ -240,33 +347,8 @@ pyiodide
 [virtual x86](https://copy.sh/v86/) a similar open source project but slower?
 
 
-# Minizinc
-It just worked. Incredible
-Runnnig the file didn't do anything.
-I needed to do 
-```
-const lib = require("./minizinc.js");
-//var MINIZINC = {arguments: ["--help"]};
-console.log(lib());
-```
-on node
 
-It seems like it was grabbing my node parameters.
-
-In the browser, I was able to load in and pass in a Module object 
-MINIZINC({arguments : ["--help"]})
-
-Trying to build gecode
-emcconfigure ../configure
-emmake make -j8
-
-gecode build suggestions for emscripten
-https://github.com/Gecode/gecode/issues/67
-Hmm. They build a minizinc for wasm somewhere
-https://gitlab.com/minizinc/minizinc-js
-https://www.npmjs.com/package/minizinc/v/1.0.4-alpha.77
-
-Ah I need release/6.3.0 branch which has the const fix.
 
 
 sqlite fiddle
+
