@@ -100,6 +100,14 @@ functions can essentially select elements.
 functions into "truth value" set (indicator functions) are analogs of subsets.
 
 https://jonsterling.notion.site/Topoi-inside-and-out-7b0b86e39eeb43aeaee3c3af1dd91f2a jon sterling blog post
+
+
+To say something is a topos is to say it is
+1. a category
+2. a special category with some special constructs
+
+Weird notions of truth value are fun.
+
 # Processes
 Time
 

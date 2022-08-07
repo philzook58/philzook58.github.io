@@ -106,6 +106,8 @@ Daisy
 
 Handbook of floating point
 
+Elementary Functions: Algorithms and Implementation by Muller
+
 Intervals arithmetic
 [interval mooc](https://www.ensta-bretagne.fr/jaulin/iamooc.html)
 

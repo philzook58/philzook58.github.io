@@ -107,6 +107,8 @@ C assignment is not imperative assignment really. The resulting code is not requ
 Caches. One model of the problem is to imagine your program runs literally, but then randomly flushes a store cache out to main memory.
 
 
+[Binary Translators for Weak Memory Model Architectures](https://binary-translation.github.io/index.html)
+
 Data Race Freedom
 - [rust atomics and memory ordering](https://www.youtube.com/watch?v=rMGWeSjctlY&ab_channel=JonGjengset)
 - [twitter question about atomics](https://twitter.com/Lucretiel/status/1496239049585086477?s=20&t=4esjK-MOGsuvJEiLsISA6Q)

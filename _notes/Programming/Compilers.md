@@ -458,16 +458,36 @@ de-optimization paths
 [copy and patch compilation](https://twitter.com/cfbolz/status/1516418354579394566?s=20&t=7564nBvc82Jdkz_E3ccZbA)
 
 # Garbage Collector
+<<<<<<< HEAD
 https://github.com/mflatt/gc-demo
 https://www.youtube.com/playlist?list=PLbdXd8eufjyVCrWF-obj8_BbyU5vEF8Jw
+=======
+
+[treadmill gabrage collector of baker](https://news.ycombinator.com/item?id=32233472) http://www.cofault.com/2022/07/treadmill.html
+
+[garbage collection handbook](https://gchandbook.org/ )
+[lua wiki](http://wiki.luajit.org/New-Garbage-Collector#gc-algorithms_quad-color-optimized-incremental-mark-sweep)
+
+real-time
+concurrent
+copying vs non-copying. Copying needs to adjust pointers. Can defragment
+incremental - does the garbage collection need to happen all at once
+
+bump allocation
+>>>>>>> fe1624db7dc1a0694fc2b47e2c96599873c1592f
 
 ## Conservative vs Exact
 
 The boehm garbage collector seems easy to use. Also you can just malloc and never free.
+https://en.wikipedia.org/wiki/Boehm_garbage_collector
+
+
 
 ## Parallel
 ## Concurrent
 ## mark and Sweep
+colors mark finished, seen but children not finished.
+white is unseen. black is swept. When finished anything white is no longer in use.
 ## Generational
 
 

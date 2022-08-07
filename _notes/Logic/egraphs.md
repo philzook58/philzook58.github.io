@@ -602,3 +602,6 @@ g(1,2,3).
 https://en.wikipedia.org/wiki/E-graph
 
 [Equality-Based Translation Validator for LLVM](https://link.springer.com/chapter/10.1007/978-3-642-22110-1_59)
+
+[Automatic Datapath Optimization using E-Graphs](https://arxiv.org/pdf/2204.11478.pdf) RTL optimization
+
