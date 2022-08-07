@@ -13,13 +13,20 @@ I should renamed this article to Mathematical Programming / Operations Research 
 - [Linear Programming](#linear-programming)
   - [Tricks](#tricks)
     - [Encoding equality in terms of inequality](#encoding-equality-in-terms-of-inequality)
-    - [Making the objective a variables](#making-the-objective-a-variables)
+    - [Making the objective a single variable](#making-the-objective-a-single-variable)
     - [Absolute value encoding](#absolute-value-encoding)
+    - [Sparsity Heuristic](#sparsity-heuristic)
     - [Minimax encoding](#minimax-encoding)
     - [Linear in _what_?](#linear-in-what)
-    - [Absolute values regularization tends to make solutions sparse.](#absolute-values-regularization-tends-to-make-solutions-sparse)
     - [Polytope inclusion](#polytope-inclusion)
   - [Applications](#applications)
+    - [Q Learning](#q-learning)
+    - [Denoising](#denoising)
+    - [Compressed sensing](#compressed-sensing)
+    - [Inverse Problems](#inverse-problems)
+    - [Polynomial Solutions](#polynomial-solutions)
+    - [Fitting floating point polynomials](#fitting-floating-point-polynomials)
+    - [Quantization](#quantization)
   - [Polyhedral Computation](#polyhedral-computation)
     - [Fourier Motzkin](#fourier-motzkin)
     - [Hrep Vrep](#hrep-vrep)
@@ -55,8 +62,22 @@ I should renamed this article to Mathematical Programming / Operations Research 
   - [method 1 KKT condition](#method-1-kkt-condition)
   - [Duality](#duality-1)
 - [Tools](#tools)
-  - [Gams](#gams)
-  - [Ampl](#ampl)
+  - [NEOS server](#neos-server)
+  - [COIN-OR](#coin-or)
+  - [CLP](#clp)
+  - [SCIP](#scip)
+  - [JuMP](#jump)
+  - [CVXPY](#cvxpy)
+  - [PYOMO](#pyomo)
+  - [YALMIP](#yalmip)
+  - [Commercial](#commercial)
+    - [Gams](#gams)
+    - [Ampl](#ampl)
+    - [Gurobi](#gurobi)
+    - [CPLEX](#cplex)
+    - [Mosek](#mosek)
+    - [Highs](#highs)
+    - [COPT](#copt)
 - [Resources](#resources-1)
 
 # Linear Programming
@@ -66,8 +87,8 @@ $$ Ax \le b $$
 
 ## Tricks
 ### Encoding equality in terms of inequality
-$$ Ax \le b $$ and Ax \ge b $$ gives a equality
-### Making the objective a variables
+$$ Ax \le b $$ and Ax \ge b $$ gives an equality
+### Making the objective a single variable
 Make a new variable $$ t $$ and add constraint $$ t = c^T x $$. Now you can minimize $$ t $$ instead.
 ### Absolute value encoding
 min \sum_i |c_i^T x|
@@ -77,7 +98,13 @@ replace with
 
 min \sum_i t_i
 \forall_i t_i <= c_i^T x <= t_i
+### Sparsity Heuristic
+Adding an absolute value regularization term $ \sum |c|$ has a tendency to for the c exactly to zero.
+You can tune the amount of sparsity you want. Then you can also force the sparsity as a new problem or as new linear constraintst c = 0, and resolve without the regulairization to finetune.
 
+
+- [Basis pursuit](https://en.wikipedia.org/wiki/Basis_pursuit)
+- [LASSO](https://en.wikipedia.org/wiki/Lasso_(statistics))
 ### Minimax encoding
 A similar feeling trick
 
@@ -93,9 +120,11 @@ This trick does not generalize as much as one might naively hope. Nested optimiz
 
 ### Linear in _what_?
 
-### Absolute values regularization tends to make solutions sparse.
 
 ### Polytope inclusion
+
+
+
 
 ## Applications
 - least absolute value optimization
@@ -103,6 +132,25 @@ This trick does not generalize as much as one might naively hope. Nested optimiz
 - Network flow
 - how do strings hang
 - Contact constraints
+
+### Q Learning
+### Denoising
+Total variation reconstruction https://en.wikipedia.org/wiki/Total_variation_denoising
+
+### Compressed sensing
+https://en.wikipedia.org/wiki/Compressed_sensing
+### Inverse Problems
+https://en.wikipedia.org/wiki/Inverse_problem
+Inverse problems are trying to determine stuff from observations.
+In particular, you're trying to infer the systems of equations that define a system from different solutions of the system. The system of equations of a wave system or laplace system will include the shape of objects in the system
+
+
+### Polynomial Solutions
+### Fitting floating point polynomials
+Floating point up to 32 bit is tractable via complete enumeration of the space.
+You can design polynomial approximations that directly use the tabulation of true floating point result.
+See Rlibm project.
+### Quantization
 
 ## Polyhedral Computation
 We have methods for really dominating polyhedra. You can answer a lot of difficult questions about them. However, linear programmig is cheap, polyhedral methods are expensive
@@ -371,8 +419,36 @@ You can reformulate to the dual problem. This will cause xy terms in the inner o
 
 
 # Tools
-## Gams
-## Ampl
+## NEOS server
+Online job submission to many solvers. Good place to find out about solvers
+https://neos-server.org/neos/
+## COIN-OR
+## CLP 
+Free and very fast linear programming solver.
+## SCIP
+## JuMP
+## CVXPY
+## PYOMO
+## YALMIP
+[yalmip](https://yalmip.github.io/) matlab toolbox for optimization. Lots of cool little things though. See tutorials for example
+## Commercial
+There's nothing wrong with wanting to make money off your hard work, but commercial solvers are less useful/interesting to me personally. They are annoying enough to even get free licences for.
+### Gams
+### Ampl
+
+### Gurobi
+### CPLEX
+### Mosek
+### Highs
+<https://ergo-code.github.io/HiGHS/index.html>
+Interesting. Rust, Julia, javascript bindings.
+MIP solver.
+Performance seems roughly competititive
+### COPT
+INteresting new performer
+https://www.shanshu.ai/copt
+LP, MIP, SOCP, SDP, convex QP and convex QCP
+Non free
 
 
 # Resources
@@ -382,14 +458,8 @@ You can reformulate to the dual problem. This will cause xy terms in the inner o
 - DTU summer school
 - [Advanced Optimization and Game Theory for Energy Systems](https://www.youtube.com/watch?v=Li5WZOeFeUQ&list=PLe7H9pun_r8YHoGv0TnYxUsgbj0xAJmMR&ab_channel=JalalKazempour)
 - [Hans Mittlemann benchmarks](http://plato.asu.edu/bench.html) This was kind of causing some drama
-- [yalmip](https://yalmip.github.io/) matlab toolbox for optimization. Lots of cool little things though. See tutorials for example
-- GAMS
-- AMPL
-- JuMP
-- CVX
-- cvxpy
-- pyomo
-- coin-or
+
+
 
 [resotta opf](https://github.com/lanl-ansi/rosetta-opf) AC optimal power flow model
 Power flow is a place where mathemtical optimization is pretty interesting

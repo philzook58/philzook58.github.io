@@ -112,7 +112,7 @@ Csmith
 # Allocators
 [DieHard](https://github.com/emeryberger/DieHard) error resitant allocator
 Ptmalloc
-mimalloc https://github.com/microsoft/mimalloc
+mimalloc https://github.com/microsoft/mimalloc https://www.microsoft.com/en-us/research/uploads/prod/2019/06/mimalloc-tr-v1.pdf
 "The other allocators are Google's tcmalloc (tc, tag:gperftools-2.8.1) used in Chrome, Facebook's jemalloc (je, tag:5.2.1) by Jason Evans used in Firefox and FreeBSD, the Intel thread building blocks allocator (tbb, tag:v2020.3), rpmalloc (rp,tag:1.4.1) by Mattias Jansson, the original scalable Hoard (git:d880f72) allocator by Emery Berger [1], the memory compacting Mesh (git:67ff31a) allocator by Bobby Powers et al [8], and finally the default system allocator (glibc, 2.31) (based on PtMalloc2)."
 [tcmalloc](https://github.com/gperftools/gperftools)
 [jemalloc](https://github.com/jemalloc/jemalloc)
@@ -122,9 +122,27 @@ mimalloc https://github.com/microsoft/mimalloc
 [mesh](https://github.com/plasma-umass/Mesh)
 
 
-[how debuggers work](https://eli.thegreenplace.net/2011/01/27/how-debuggers-work-part-2-breakpoints) int3 and ptrace
 
+Strategies
+- First fit - scan linked list
+- next fit - avoid having to scan head where you know you won't find a good block
+- best fit - scan entire list
+
+[A memory allocator - doug lea](https://gee.cs.oswego.edu/dl/html/malloc.html)
+
+Metadata is stored next to chunk
+- free,in use flags
+- size
+- pointers in free lists are often stored in same place user data would be
+
+
+Bins
+Coalescing
+
+Top chunk, "the wilderness"
 # GDB
+
+[how debuggers work](https://eli.thegreenplace.net/2011/01/27/how-debuggers-work-part-2-breakpoints) int3 and ptrace
 
 [beej's quick guide to gdb](https://beej.us/guide/bggdb/)
 

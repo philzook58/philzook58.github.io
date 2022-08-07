@@ -102,6 +102,7 @@ title: Datalog
         - [Maybe/Option lattice](#maybeoption-lattice)
         - [Intervals](#intervals)
       - [Widening](#widening)
+    - [Dyadic lattice](#dyadic-lattice)
       - [Equivalence relations](#equivalence-relations)
       - [Negation](#negation)
       - [Choice domain](#choice-domain)
@@ -4256,6 +4257,72 @@ widened(@wide(x,t)) :- widened(x), lat(t)
 
 At least this feels like it is offering a possibility for non commuativity.
 How do widened conflicts get resolved? The smallest one?
+
+
+### Dyadic lattice
+
+```souffle
+#define ROUND2(a,b) (a ## 0 = a - 1    ,a ## 1 = a ## 0 bor (a ## 0 bshr 1), \
+                    a ## 2 = a ## 1 bor (a ## 1 bshr 2),\
+                    a ## 4 = a ## 2 bor (a ## 2 bshr 4),\
+                    a ## 8 = a ## 4 bor (a ## 4 bshr 8),\
+                    a ## 16 = a ## 8 bor (a ## 8 bshr 16),\
+b = a ## 16 + 1) 
+
+.decl round2(x : unsigned, y : unsigned) inline
+round2(a, b) :- a0 = a - 1, 
+                a1 = a0 bor (a0 bshr 1), 
+                a2 = a1 bor (a1 bshr 2),
+                a4 = a2 bor (a2 bshr 4),
+                a8 = a4 bor (a4 bshr 8),
+                a16 = a8 bor (a8 bshr 16),
+                b = a16 + 1.
+
+.decl norm(u : unsigned, l : unsigned, u1: unsigned, l1: unsigned) inline
+norm(u, l, u1, l1) :-
+    u < 2^32,
+    d = u - l,
+    round2(d,d1),
+    //avg = (u + l) / 2,
+    //u1 = avg + d1/2,
+    //l1 = avg - d1/2.
+    l1 = (l / d1) * d1 ,
+    u1 = ((u - 1) / d1 + 1) * d1.
+
+// Hmm. Different choices. Keep same average or round to power of 2 points.
+// 
+
+.decl test(x : unsigned, round : unsigned)
+test(x,y) :- x = 5, ROUND2(x, y) .
+test(x,y) :- x = 343245, round2(x, y).
+test(x,y) :- x = 345, round2(x, y).
+//test(x,y) :- x = 343245, ROUND2(x, y) .
+.output test
+
+
+.decl test2(u : unsigned, l : unsigned, u1: unsigned, l1: unsigned) 
+test2(u,l,u1,l1) :- u = 3, l = 0, norm(u,l,u1,l1).
+test2(u,l,u1,l1) :- u = 12, l = 8, norm(u,l,u1,l1).
+test2(u,l,u1,l1) :- u = 17, l = 7, norm(u,l,u1,l1).
+
+
+.output test2
+
+
+.decl chain(u : unsigned, l : unsigned)
+chain(101,100).
+chain(u1, l1) :- chain(u,l), norm(max(u, u+1), min(l,l-1) , u1, l1). 
+
+.output chain
+```
+
+
+Simple Type checking
+```
+is_symbol(s : symbol) inline
+is_symbol(s) :- true.
+```
+This will accept any type below symbol too?
 
 #### Equivalence relations
 You can make a findParent relation to get a lot of the functionality of equivalence relations. Eq relations are already the same thing as

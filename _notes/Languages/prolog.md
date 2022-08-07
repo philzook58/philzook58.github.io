@@ -38,6 +38,8 @@ wordpress_id: 1865
   - [Coroutines](#coroutines)
   - [Indexing](#indexing)
   - [DCG - Definite Clauses Grammars (DCG)](#dcg---definite-clauses-grammars-dcg)
+    - [Bussproofs printing](#bussproofs-printing)
+      - [Categorical Prover](#categorical-prover)
   - [CHR](#chr)
     - [Compiling](#compiling)
     - [Examples](#examples-1)
@@ -696,6 +698,68 @@ Reporting errors - add error streat arguments to dcg
 regexp interpreter. dcg rexp//1
 
 Longest match firsat behavior - order rules for longest match
+
+
+### Bussproofs printing
+
+```prolog
+
+proof(bin(G, Rule, PX,PY)) --> proof(PX), proof(PY),
+              ,"\RightLabel{", rule(Rule) ,"}", "\BinaryInfC{", sequent(G), "}".
+proof(un(G, Rule, PX)) --> proof(PX),
+              ,"\RightLabel{", rule(Rule) ,"}", "\UnaryInfC{", sequent(G), "}".
+proof(ax(G, Rule)) --> 
+              ,"\RightLabel{", rule(Rule) ,"}", "\AxiomC{", sequent(G), "}".
+
+
+height(ax(_,_), 0).
+height(un(_,_,PX), N) :- N := NX+1, height(PX,NX).
+height(bin(_,_,PX,PY), N) :- N := max(NX,NY)+1, height(PX,NX), height(PY,NY).
+
+
+
+
+```
+
+#### Categorical Prover
+```prolog
+
+%sequent( Hyp, Conc, Var )
+
+:- use_module(library(clpfd)).
+%:- table prove/2.
+:- use_module(library(solution_sequences)).
+%:- op(600,	xfy,	i- ).
+
+prove(S, ax(S, id)) :- S = (A > A).
+prove(S, ax(S, fst)) :- S = (A /\ _B > A).
+prove( A /\ B > B, ax(A /\ B > B, snd)).
+prove( S, ax(S, inj1 )) :- S = (A > A \/ _B).
+prove( S, ax(S, inj2 )) :- S = (B > _A \/ B).
+prove( false > _ , initial ).
+prove( _ > true  , terminal ).
+prove( A > B /\ C, bin(A > B /\ C, pair, P1, P2)) :- prove(A > B, P1), prove(A > C, P2).
+prove( A \/ B > C , bin(A \/ B > C, case, P1, P2)) :- prove( A > B, P1), prove( A > C, P2).
+prove( A > C, bin(A > C, comp, P1, P2)) :- prove(A > B, P1), prove(B > C, P2).
+
+
+height(ax(_,_), 1).
+height(un(_,_,PX), N) :- N #> 1, N #= NX+1, height(PX,NX).
+height(bin(_,_,PX,PY), N) :- N #> 1, N #= max(NX , NY) + 1, height(PX,NX), height(PY,NY).
+
+% maybe explicilty taking proof steps off of a list. using length.
+% use dcg for proof recording?
+
+
+prove(A > C) --> [comp], prove(A > B), prove(B > C).
+prove(A /\ B > B) --> [snd].
+
+:- initialization(main).
+%main :- format("hello world", []).
+main :- between(1, 10, N), height(Pf, N), writeln(Pf), prove( w /\ x /\ y /\ z > w, Pf ), print(Pf), halt.
+main :- halt.
+```
+
 ## CHR
 [forward chaining, chr comes up](https://swi-prolog.discourse.group/t/forward-chaining-like-rete-algorithm-in-rule-engine/5137/28)
 
