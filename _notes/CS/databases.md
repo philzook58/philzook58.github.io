@@ -253,6 +253,10 @@ branched vs branchless
 branched checks condition to see if should copy row out
 branchless writes but only increments index of storage by one if condition is met. I mean. There is a "branch" in this. But I see your point
 
+
+[EmptyHeaded: A Relational Engine for Graph Processing](https://ppl.stanford.edu/papers/emptyheaded.pdf) "generalized hypertree decomposition" ? https://github.com/HazyResearch/EmptyHeaded
+
+[levelheaded](https://aberger.site/levelheaded.pdf) linear algerba stuff?
 # Relational AI
 https://www.youtube.com/watch?v=WRHy7M30mM4&ab_channel=CMUDatabaseGroup
 
@@ -364,6 +368,8 @@ json crdt for vibes patches?
 
 Tree move op. Create delete subtrees.
 
+[Synthesizing CRDTs from Sequential Data Types with Verified Lifting](https://twitter.com/ShadajL/status/1544375739046211584?s=20&t=-v_26IaEHywfZUA_4b8T8g)
+https://arxiv.org/abs/2205.12425
 
 
 # Big Data

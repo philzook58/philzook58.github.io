@@ -11,8 +11,11 @@ wordpress_id: 2960
 
 - [Reversing](#reversing)
   - [Disassembly](#disassembly)
+  - [Decompiler](#decompiler)
+    - [Loop recovery](#loop-recovery)
     - [Interactive](#interactive)
   - [Patching](#patching)
+  - [Binary reversign](#binary-reversign)
   - [Fuzzing](#fuzzing)
   - [Symbolic Execution](#symbolic-execution)
   - [Vulnerabilities](#vulnerabilities)
@@ -25,6 +28,8 @@ wordpress_id: 2960
     - [JOP COP](#jop-cop)
   - [Data Oriented Programming (DOP)](#data-oriented-programming-dop)
   - [Heap](#heap)
+    - [House of Force](#house-of-force)
+    - [fastbin dup](#fastbin-dup)
   - [Type Confusion](#type-confusion)
   - [Kernel](#kernel)
   - [Browser](#browser)
@@ -120,6 +125,46 @@ Ghidra repackaging:
 https://github.com/StarCrossPortal/sleighcraft
 https://github.com/black-binary/sleigh
 
+[An Empirical Study on ARM Disassembly Tools](https://github.com/valour01/arm_disasssembler_study)
+
+## Decompiler
+
+relic - no more gotos
+
+a comb for decompiled C https://rev.ng/downloads/asiaccs-2020-presentation.pdf
+
+https://yurichev.com/mirrors/DCC_decompilation_thesis.pdf
+
+https://www2.cs.arizona.edu/~collberg/Teaching/620/1999/Handouts/rmeadows1.pdf
+ 
+### Loop recovery
+Getting structured control flow from CFG
+Stackify https://gitlab.inria.fr/why3/why3/-/merge_requests/453
+
+https://icfp22.sigplan.org/details/icfp-2022-papers/1/Beyond-Relooper-Recursive-Translation-of-Unstructured-Control-Flow-to-Structured-Con
+
+[havlak and tarjan](https://www.researchgate.net/publication/220404846_Nesting_of_Reducible_and_Irreducible_Loops)
+testing redicibility with union find
+
+[A New Algorithm for Identifying Loops in
+Decompilation ](https://lenx.100871.net/papers/loop-SAS.pdf)
+
+dfs. label nodes. Intervals of labels are subsets of nodes. timestamp of first visit timestamp of last ivist. 
+backedge forward edge, cross edge
+
+
+https://zenodo.org/record/6727752#.YsxRw9rMI2w
+
+
+Also... egraphs
+
+
+webassembly is at the core of both of these
+Allllll things come around
+I wonder if webassembly would be a good universal disassembler ir
+someone should do that
+https://github.com/nforest/awesome-decompilation
+
 ### Interactive
 - IDA
 - Ghidra
@@ -133,6 +178,13 @@ https://github.com/GrammaTech/gtirb-vscode
 
 ## Patching
 https://github.com/GJDuck/e9patch
+
+## Binary reversign
+https://corte.si/posts/visualisation/binvis/index.html hilbert curves for binary vsiualization
+benford's law
+binwalk
+entropy visualization
+
 
 ## Fuzzing
 Mayhem
@@ -399,6 +451,43 @@ large bins - varying size. chunks put in order
 
 
 printf("%p") is your friend
+
+
+free lists
+when we call free memory 
+fastbin. hold free checks of a specific size
+set context-sections code
+b main
+vis to visualize heap
+fastbins command -x20 - 0x80
+arenas
+main arena - glibc data section
+pwndbg arena
+
+fd forward pointer
+
+### House of Force
+
+### fastbin dup
+arbitrary write
+double free
+fastbin will return twice.
+frame command to 
+context code
+
+immediate double free is prtoected
+
+free_hook
+
+find_fake_fast
+one_gadget - constraints https://github.com/david942j/one_gadget
+
+malloc_alloc
+
+
+
+
+
 
 ## Type Confusion
 

@@ -9,12 +9,13 @@ title: E-graphs
   - [Reference union finds](#reference-union-finds)
   - [Union find arrays and ints](#union-find-arrays-and-ints)
   - [Variations](#variations)
+  - [Applications](#applications)
 - [Hash Cons](#hash-cons)
 - [E-matching](#e-matching)
 - [Equality Saturation](#equality-saturation)
 - [Proof Production](#proof-production)
 - [E Graph Tactics](#e-graph-tactics)
-- [Applications](#applications)
+- [Applications](#applications-1)
 - [PEG Program Expression Graphs](#peg-program-expression-graphs)
   - [Tree Automata](#tree-automata)
 - [Egglog](#egglog)
@@ -154,12 +155,45 @@ assert(uf.find(x) != uf.find(z))
 
 [Union Find Dicts: Dictionaries Keyed on Equivalence Classes](https://www.philipzucker.com/union-find-dict/). You can make a dict from union find to lattices. It needs to know how to merge stuff in the range. Relatedly, you could also have union find keyed on union find. 
 
-Union find with group elements on edges. [kmett talk](https://youtu.be/KxeHGcbh-4c?t=1254). Yihong points out <http://poj.org/problem?id=2492> as a competitive programming exercise that can use this.
+Union find with group elements on edges. [kmett talk](https://youtu.be/KxeHGcbh-4c?t=1254). Yihong points out <http://poj.org/problem?id=2492> as a competitive programming exercise that can use this. "generalized union find" mentioned in CHR book
 
 Scoped Union find
 
 Colored Union find
 
+
+[Data Structures and Algorithms for
+Disjoint Set Union Problem](https://core.ac.uk/download/pdf/161439519.pdf) "deunions" and backtracking. hmm. 1989
+
+[concurrent union find](https://link.springer.com/article/10.1007/s00446-020-00388-x)
+
+## Applications
+connected components of graph
+
+reducibility of loops
+[Testing Flow Graph Reducibility  - tarjan]()
+
+https://www.cs.princeton.edu/courses/archive/spring07/cos226/lectures/01union-find.pdf
+"
+! Network connectivity.
+! Percolation.
+! Image processing.
+! Least common ancestor.
+! Equivalence of finite state automata.
+! Hinley-Milner polymorphic type inference.
+! Kruskal's minimum spanning tree algorithm.
+! Games (Go, Hex)
+! Compiling equivalence statements in Fortran
+"
+quick-find vs quick-union
+
+percolation. estimate percolation via monte carlo. quick test of connectivity between conducting edges. That's neat.
+
+https://en.wikipedia.org/wiki/Tarjan%27s_off-line_lowest_common_ancestors_algorithm
+
+
+
+value numbering
 
 # Hash Cons
 

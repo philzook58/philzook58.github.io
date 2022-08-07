@@ -20,7 +20,9 @@ wordpress_id: 2913
   - [Tensor Stuff](#tensor-stuff)
   - [Misc](#misc-1)
 - [Analysis](#analysis)
+  - [Dominators](#dominators)
   - [Dataflow](#dataflow)
+  - [def-use chains](#def-use-chains)
 - [Undefined behavior](#undefined-behavior)
 - [Optimizations](#optimizations)
   - [Polyhedral](#polyhedral)
@@ -95,10 +97,42 @@ https://princetonuniversity.github.io/isca22-ila-tutorial/ ILAlang
 
 [exo-lang.dev] exocompilation
 # Analysis
+
+## Dominators
+
+Everyone talks about dominators.
+Graph algorithms over the coaurse structure of the cfg itself.
+
+https://llvm.org/devmtg/2017-10/slides/Kuderski-Dominator_Trees.pdf
+
+a node x domainates another y if every path through y goes through x
+
+postdominator, every path to exit has to pass throguh. Dual of domaintor
+
+every def must dominate use
+
+intersection of sets of dominators of your predecssors
+
+
+Dominator trees
+loop nesting forests
+
 ## Dataflow
 Dataflow analysis
+https://en.wikipedia.org/wiki/Data-flow_analysis
 Must/May and intersection vs union. Least fixed point vs greatest
 
+Kildall
+bitvector
+
+
+reaching definitions
+live variable
+very busy expressions
+available expressions
+
+## def-use chains
+https://en.wikipedia.org/wiki/Use-define_chain
 
 # Undefined behavior
 undefined vs implementation defined.
@@ -123,16 +157,26 @@ alive2
 
 [Wikiepedia list of compiler optimizations](https://en.wikipedia.org/wiki/Optimizing_compiler)
 
+- Common subexpression elimination
+- Peephole
+
 [Loop invariant code motion](https://en.wikipedia.org/wiki/Loop-invariant_code_motion) - aka hoisting. Move stuff that doesn't change out of the loop
+
+[value numbering](https://en.wikipedia.org/wiki/Value_numbering)
+hash consing kind of. Superlocal blocks. every block has only one predecessor. Not quite the same as loop free?
+
+loop unrolling
 
 [instruction level parallelism](https://link.springer.com/book/10.1007/978-1-4899-7797-7) Alex Aiken Utpal Banerjee Arun Kejariwal Alexandru Nicolau
 
 Reassociate to lessen tree height - less dependencies
 Expand expressions with care - less dependencies
 
-
+[Implementing a Toy Optimizer](https://twitter.com/cfbolz/status/1549376580912386051?s=12&t=2TzLXakPIAt6RPwcq4Qz9w)
 
 [liveness analysis for ssa form program](https://hal.inria.fr/inria-00558509v2/document)
+
+
 
 ## Polyhedral
 [Polyhedral model](https://en.wikipedia.org/wiki/Polytope_model)
@@ -358,6 +402,8 @@ Operads
 You could take a relational perspective on operations, having neither input not output.
 
 ## Register Allocation
+[regallo2 design doc](https://github.com/bytecodealliance/regalloc2/blob/main/doc/DESIGN.md)
+
 [flambda reg alloc](https://github.com/ocaml-flambda/flambda-backend/pull/678) points to an [appell paper - iterated register coalescing](https://dl.acm.org/doi/abs/10.1145/229542.229546) and tiger book
 <https://arxiv.org/abs/1804.02452>
 
@@ -412,6 +458,10 @@ de-optimization paths
 [copy and patch compilation](https://twitter.com/cfbolz/status/1516418354579394566?s=20&t=7564nBvc82Jdkz_E3ccZbA)
 
 # Garbage Collector
+<<<<<<< HEAD
+https://github.com/mflatt/gc-demo
+https://www.youtube.com/playlist?list=PLbdXd8eufjyVCrWF-obj8_BbyU5vEF8Jw
+=======
 
 [treadmill gabrage collector of baker](https://news.ycombinator.com/item?id=32233472) http://www.cofault.com/2022/07/treadmill.html
 
@@ -424,6 +474,7 @@ copying vs non-copying. Copying needs to adjust pointers. Can defragment
 incremental - does the garbage collection need to happen all at once
 
 bump allocation
+>>>>>>> fe1624db7dc1a0694fc2b47e2c96599873c1592f
 
 ## Conservative vs Exact
 

@@ -10,6 +10,8 @@ title: Binding Forms
 wordpress_id: 2837
 ---
 
+[nbe in java 19](https://github.com/ekmett/nbe-in-java-19)
+
 <https://jesper.sikanda.be/posts/1001-syntax-representations.html>
 A better blog post on bindings forms in agda than i could write
 

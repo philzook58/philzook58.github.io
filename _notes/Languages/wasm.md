@@ -20,7 +20,21 @@ https://github.com/google/or-tools/pull/2404
 [walrus](https://docs.rs/walrus/latest/walrus/) webassembly transformation library in rust
 
 [awesome wasm tools](https://github.com/vshymanskyy/awesome-wasm-tools)
-- 
+
+
+[program analysis for web assembly](https://2022.ecoop.org/home/paw-2022#event-overview)
+
+https://bytecodealliance.org/
+
+wasmtime - run we assembly outside the 
+cranelift - optimized code generator for jit and aot. experimental backend to rust.
+wamr - webassembly micro runtime. interpeter for embedded and resource constrained
+enarx - trusted xecutin environment
+
+
+## WASI
+Webassembly system interface
+
 ### WABT
 (likely wascally wabbit) Web assembly binary toolkit
 sudo apt install wabt 

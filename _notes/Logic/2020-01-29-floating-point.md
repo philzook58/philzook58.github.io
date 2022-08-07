@@ -28,6 +28,8 @@ exp = 2^(log_2(e) * x)
 
 sin/cos don't matter modulo 2 pi. modulo pi for some signs.
 
+polynomial Approximations typically are only ok over small ranges
+
 # 2Sum and Fast2Sum
 https://en.wikipedia.org/wiki/2Sum
 Compensated summation
@@ -212,11 +214,72 @@ https://www.youtube.com/watch?v=B_J7DSX_ZXM&ab_channel=ACMSIGPLAN  λS: Computab
 
 [Verified Compilation and Optimization of Floating-Point Programs in CakeML](https://cakeml.org/ecoop22.pdf)
 
+Core-math library
+
+
+learning about floating point. fp triage
+
+libultim
+[fpvm floating point virtual machine](https://nickw.io/publication/hpdc22/) use virtual machine to do alternaitve fp semantics
+naN boxing - store pointers in Nans
+Nans trap, Some won't trap so they need to insert correctness traps
+garbage collection
+x1000 overhead
+
+fpdebug
+herbgrind
+fpsanitizer
+
+
+
+unbounded expoentn
+https://tcpp.cs.gsu.edu/curriculum/?q=peachy
+https://www.cl.cam.ac.uk/teaching/1011/FPComp/fpcomp10slides.pdf
+https://www.mccormick.northwestern.edu/computer-science/documents/2021-12-comparing-understanding-of-iee-floating-point1.pdf
+
+https://dl.acm.org/doi/10.1145/3410463.3414660 vp float
+
+https://www.amazon.com/Numerical-Computing-Floating-Point-Arithmetic/dp/0898714826 textbook
+
+Round to odd mode - double rounding?
+[When double rounding is odd](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.75.5554&rep=rep1&type=pdf)
+rlibm-all
+
+
+vscode -recisa
+
+
 
 ## FPBench
 http://fpbench.org/talks/fptalks20.html
 https://fpbench.org/talks/fptalks21.html
 
 
+
+bound error of (a + (b + c))
+
+## Brute Force Verification
+
+
+
+## Constructive / Exact Reals
+Constructive reals allow you to request an accuracy of the result, rather than specify the accuracy of the input.
+This ordering is reminsicent of epsilon delta definitions in analysis, which are often explained as exactly this kind of game. You ask for an epsilon, I need to figure out a delta.
+
+Constructive Reals are similar to automatic differentiation. 
+
+It is tempting, but maybe a red herring, to point out that differentiability is a stronger requirement than continuity, but the two are related mathemtically.
+More concretely, reverse mode differentiation asks something of th output of a function, which calculates something about the input by backpropagation. Exact reals need to do something similar. So implementation techniques for one often have analog in the other.
+
+- Making a dataflow graph
+- Wengert Tapes
+- Constructive Reals as a lens
+
+
+You can convert intervals arithmetic to constructive reals if you retain the ability to run the function over and over, searching for a small enough interval,
+
+Interval arithmetic has much of the implementation flavor of forward mode auto differentiation, both of which use an overloaded notion of number. Forward mode differentiation is kind of like infinitesimal ball arithmetic.
+
+# Misc
 
 https://rtca2023.github.io/pages_Lyon/m2.html workshop may 2023. Sounds cool. Certified ans Symbolic computation

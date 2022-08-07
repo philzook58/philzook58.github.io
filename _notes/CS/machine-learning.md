@@ -25,6 +25,7 @@
   - [Frameworks](#frameworks)
   - [Resources](#resources)
 - [Reinforcement Learning](#reinforcement-learning)
+- [Verification](#verification-1)
   - [Resources](#resources-1)
 - [Old Reinforcement learning](#old-reinforcement-learning)
 
@@ -207,6 +208,9 @@ Actor critic
 
 
 Monte-carlo search
+
+# Verification
+[Neural Network Verification with Proof Production](https://arxiv.org/pdf/2206.00512.pdf)
 
 ## Resources
 [openai spinning up](https://spinningup.openai.com/en/latest/index.html)

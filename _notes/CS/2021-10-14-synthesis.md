@@ -117,3 +117,6 @@ https://github.com/eionblanc/mini-sygus
 
 
 https://arxiv.org/pdf/2010.07763.pdf refinement types constrained horn lcauses. Describes using simple houdini algorithm,.
+
+
+https://dspace.mit.edu/bitstream/handle/1721.1/140167/Achour-sachour-PhD-EECS-2021-thesis.pdf?sequence=1&isAllowed=y Sara Achour synthesis/compilation for analog computation decided
