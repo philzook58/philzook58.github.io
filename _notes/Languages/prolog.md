@@ -76,6 +76,7 @@ wordpress_id: 1865
 - [Linear Logic Programming](#linear-logic-programming)
 - [Coinductive Logic Programming](#coinductive-logic-programming)
 - [inductive logic programmingh](#inductive-logic-programmingh)
+- [Abductive logic programming](#abductive-logic-programming)
 - [Theorem Proving](#theorem-proving)
 - [Misc](#misc)
   - [2019](#2019)
@@ -157,6 +158,17 @@ append([], X, X).
 append([H | X], Y, [H | Z]) :- append(X, Y, Z).
 ```
 ## Difference Lists
+Differece lists are related to singly-linked that maintain a pointer to the last element. 
+```
+// something like this.
+struct diff_list {
+  list * head;
+  list * end;  
+};
+```
+
+You have fast append because you don't have to traverse the list to find the end.
+
 ## Rewriting in prolog
 
 
@@ -751,15 +763,48 @@ height(bin(_,_,PX,PY), N) :- N #> 1, N #= max(NX , NY) + 1, height(PX,NX), heigh
 % use dcg for proof recording?
 
 
-prove(A > C) --> [comp], prove(A > B), prove(B > C).
-prove(A /\ B > B) --> [snd].
+prove(A > A)       --> [id].
+prove(A /\ _ > A)  --> [fst].
+prove(_ /\ B > B)  --> [snd].
+prove(A > A \/ _)  --> [inj1].
+prove(B > _ \/ B)  --> [inj2].
+prove(false > _)   --> [initial].
+prove( _ > true)   --> [terminal].
+prove(A > B /\ C)  --> [pair], prove(A > B),  prove(A > C).
+prove(A \/ B > C)  --> [case], prove(A > C),  prove(B > C).
+prove(A > C)       --> [comp], prove(A > B),  prove(B > C).
 
 :- initialization(main).
 %main :- format("hello world", []).
-main :- between(1, 10, N), height(Pf, N), writeln(Pf), prove( w /\ x /\ y /\ z > w, Pf ), print(Pf), halt.
+%main :- between(1, 10, N), height(Pf, N), writeln(Pf), prove( w /\ x /\ y /\ z > w, Pf ), print(Pf), halt.
+main :- length(Pf, _), phrase(prove(w /\ x /\ y /\ z > w \/ y),Pf), print(Pf), halt.
 main :- halt.
 ```
 
+Yes, the dcg form is very pretty. It's a writer monad of sorts. It is recording a minimal proof certificate that is reconstructable to the full thing pretty easily.
+
+`G --> [tag], D1, D2`
+Should be read as
+
+```
+  D1        D2
+------------------ tag
+       G
+```
+
+```
+
+prove(Sig , A > B) --> { insert(A,Sig,Sig1) }, [weaken(A)], prove(Sig1, A > B).
+prove(A > forall(X,B)) --> , prove(weak(X, A) > B).
+prove(A > forall(X,B)) --> {insert(X,Sig,Sig2) }, prove(Sig1, A > B).
+prove(Sig, forall(X,A) > ) --> , prove(weak(X, A) > B)
+
+```
+Maybe start with implication
+prove((A > (B > C)  ) --> [curry], prove( A /\ B > C).
+prove((A /\ (A > B) > B ) --> [eval].
+
+Catlog
 ## CHR
 [forward chaining, chr comes up](https://swi-prolog.discourse.group/t/forward-chaining-like-rete-algorithm-in-rule-engine/5137/28)
 
@@ -1431,7 +1476,12 @@ My impression is this is a bit like "first order functional" programming. All pr
 "`X(a, b)` is just an (external) shorthand for the Prolog compound term: `apply(X, a, b)` "
 # Semantics
 Completion semantics
+
 Well-founded
+[Well founed semantcis 1991](http://www.cse.unsw.edu.au/~cs4415/2010/resources/gelder91wellfounded.pdf)
+[Well-Founded Semantics, Generalized](http://www.melvinfitting.org/bookspapers/pdf/papers/WFGen.pdf) two different ordering realtions, truth and knowledge. We always move from unknown to more known.
+[well founded tutorial](https://users.soe.ucsc.edu/~avg/Papers/wftut.pdf)
+
 Completion semantics
 
 # History
@@ -1715,6 +1765,9 @@ https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
 [hakank examples](https://swi-prolog.discourse.group/t/popper-inductive-logic-programming-ilp-and-my-popper-page/3929) 
 
 [Abductive Reasoning in Intuitionistic Propositional Logic via Theorem Synthesis](https://arxiv.org/abs/2205.05728v1). Includes a g4ip
+
+# Abductive logic programming
+https://en.wikipedia.org/wiki/Abductive_logic_programming
 
 # Theorem Proving
 [Leantap](https://formal.iti.kit.edu/beckert/leantap/)

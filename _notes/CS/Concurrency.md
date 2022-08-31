@@ -3,6 +3,28 @@ layout: post
 title: Concurrency
 ---
 
+- [Memory Models](#memory-models)
+  - [Memory Order vs Program Order](#memory-order-vs-program-order)
+  - [Consistency vs Coherence](#consistency-vs-coherence)
+  - [Sequential Consistency (SC)](#sequential-consistency-sc)
+  - [Total Store Order (TSO)](#total-store-order-tso)
+  - [Relaxed Memory Models](#relaxed-memory-models)
+  - [Fence Instructions](#fence-instructions)
+    - [x86](#x86)
+    - [Arm](#arm)
+  - [Language Models](#language-models)
+    - [C++](#c)
+    - [Java](#java)
+    - [Ocaml](#ocaml)
+- [Data Structures](#data-structures)
+    - [Double Locking](#double-locking)
+- [Misc](#misc)
+  - [RCU](#rcu)
+  - [Epoch](#epoch)
+  - [Hazard Pointers](#hazard-pointers)
+  - [Lock free](#lock-free)
+    - [Lecture 2 - kuper](#lecture-2---kuper)
+
 See also notes on:
 - Computer Architecture
 - Operating Systems
@@ -57,7 +79,9 @@ VLIW processors for example can schemes for having streams of concurrent operati
 
 <https://stackoverflow.com/questions/20316124/does-it-make-any-sense-to-use-the-lfence-instruction-on-x86-x86-64-processors>
 
+https://stackoverflow.com/questions/62465382/how-do-modern-intel-x86-cpus-implement-the-total-order-over-stores/62480523#62480523
 
+[C concurrency model on x86 for dummies](https://databasearchitects.blogspot.com/2020/10/c-concurrency-model-on-x86-for-dummies.html) https://news.ycombinator.com/item?id=32520365
 ### Arm
 <https://developer.arm.com/documentation/dui0489/c/arm-and-thumb-instructions/miscellaneous-instructions/dmb--dsb--and-isb>
 <https://stackoverflow.com/questions/15491751/real-life-use-cases-of-barriers-dsb-dmb-isb-in-arm>
@@ -77,12 +101,42 @@ Lock Mutex Semaphore
 [The "Double-Checked Locking is Broken" Declaration](http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html)
 
 
+
+
 # Misc
 
+Arguably these are garbage collection topics?
+## RCU
+Read Copy Update
+https://en.wikipedia.org/wiki/Read-copy-update
+
+Kind of a functional approach. Make new nodes, keeep old ones around.
+## Epoch
+Very similar/identical to RCU?
+Maintain global epoch counter. Data is more read only than reference counting
+
+
+## Hazard Pointers
+https://en.wikipedia.org/wiki/Hazard_pointer
+
+ 
+
+## Lock free
+https://en.wikipedia.org/wiki/Non-blocking_algorithm
+https://www.youtube.com/watch?v=RWCadBJ6wTk&ab_channel=NDCConferences 
+[cliff click a lock free hash table](https://www.youtube.com/watch?v=HJ-719EGIts&ab_channel=GoogleTalksArchive)
+Compare and swap operations.
+lock -free - at least one thread is making progress. Consider schedulaers. Consider threads getting killed
+CAS loop
+wait free - all threadsmaking progress
+obstruction free
+ABA problem
+Lock-free linked list / stack.
+Pointers with counters so that you can detect reuse of freed memory
 
 
 Barriers
-Lock free
+
 
 
 Atomics are a way to mark thread shared variables in a sense. Many instances of variables in high level code are a delusion. Assignment to them is not supposed to be a real observable effect. Threads have a "debugger" view into your code.

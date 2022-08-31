@@ -127,6 +127,7 @@ title: Datalog
   - [QL](#ql)
 - [Souffle](#souffle)
   - [intrinsic functors](#intrinsic-functors)
+  - [floats](#floats)
   - [Souffle proofs](#souffle-proofs)
   - [Aggregates](#aggregates)
   - [User Defined Functors](#user-defined-functors)
@@ -1307,6 +1308,99 @@ See above for some List functions.
 ### Patricia Tries
 [fillaitre](https://www.lri.fr/~filliatr/ftp/ocaml/ds/ptset.ml.html)
 [fast mergable maps okasaki gill](https://ittc.ku.edu/~andygill/papers/IntMap98.pdf)
+
+Patricia tries have a canonical shape for any given set. Hence hash consing them makes sense. 
+
+Note that lookup shouldn't be just an `in(x,tree)` relation. We need to know when stuff isn't in the tree too. That's the beauty of first class sets. Really, it's more desirable to make external functors to do this stuff. We don't need to materialize these things. A nice property of patricia tries in this context is that lookup is memoizing on subtries, which are sets themselves, so the subqueries aren't necessarily wasted work.
+
+
+```souffle
+.type Bool = True {} | False {}
+// Patricia Trie
+.type Dict =
+   Empty{}
+ | Lf {x : number}
+ | Br {prefix : number, mask : number, l : Dict, r : Dict}
+
+.decl br(prefix:number, mask: number, l : Dict, r : Dict, res : Dict) inline
+// impossible br(_m, $Empty(), $Empty(), $Empty()).
+br(_p, _m, t, $Empty(), t) :- $Lf(_j) = t.
+br(_p, _m, $Empty(), t, t) :- $Lf(_j) = t.
+br(p, m, t0, t1, $Br(p, m, t0, t1)) :- t0 = $Lf(_j1), t1 = $Lf(_j2).
+
+
+
+.decl lookup(k : number, d : Dict, res : Bool)
+.decl lookup_q(k : number, d : Dict)
+lookup(k,d,res):- lookup_q(k,d), 
+                ( d = $Empty(), res = $False() ; 
+                  d = $Lf(j), (j = k, res = $True(); j!= k, res = $False()) ;
+                  d = $Br(prefix, mask, t0,t1), (
+                    prefix != k band (mask - 1), res = $False();
+                    prefix = k band (mask - 1), (k band mask = 0, lookup(k,t0,res) ; 
+                                                 k band mask != 0, lookup(k, t1,res))
+                    )
+                ).
+lookup_q(k,t) :- lookup_q(k,$Br(prefix, mask,t0,t1)), prefix = k band (mask - 1),
+                 (k band mask = 0,  t = t0; 
+                  k band mask != 0, t = t1).
+
+
+.decl join(p0 : number, t0 : Dict, p1 : number, t1 : Dict, res : Dict) inline
+join(p0,t0,p1,t1,res) :- branchingbit(p0,p1,m),
+    (
+        p0 band m = 0,   res = $Br(p0 band (m - 1), m, t0,t1);
+        p0 band m != 0,  res = $Br(p0 band (m - 1), m, t1,t0)
+    ).
+
+.decl branchingbit(p0 : number, p1 : number, res : number) inline
+branchingbit(p0,p1,res) :- x = p0 bxor p1, res = x band (- x).
+
+
+.decl insert(k : number, d : Dict, res : Dict)
+insert(k, t, res) :- insert_q(k,t),
+    (
+        t = $Empty(), res = $Lf(k);
+        t = $Lf(j), (j = k, res = t;
+                     j != k, join(k, $Lf(k), j, t, res));
+        t = $Br(p,m,t0,t1), 
+            ( p = m band (k - 1), (
+                 k band m = 0, insert(k , t0, res1), res = $Br(p,m, res1, t1);
+                 k band m != 0, insert(k , t1, res1), res = $Br(p,m, t0, res1)
+            );
+              p != m band (k - 1), join(k,$Lf(k), p,t, res) 
+            )
+    ).
+
+.decl insert_q(k : number, d : Dict)
+insert_q(k,t0) :- insert_q(k,$Br(p,m,t0,_t1)), p = m band (k - 1), k band m = 0.
+insert_q(k,t1) :- insert_q(k,$Br(p,m,_t0,t1)), p = m band (k - 1), k band m != 0.
+
+
+insert_q(10, $Empty()).
+insert_q(10, $Lf(20)).
+insert_q(10, $Lf(12)).
+insert_q(0, $Lf(0)).
+insert_q(1, $Lf(0)).
+insert_q(2, $Lf(0)).
+insert_q(3, $Lf(1)).
+insert_q(7, $Lf(15)).
+insert_q(15, $Lf(7)).
+insert_q(0, $Lf(2)).
+
+lookup_q(0, $Br(0, 2, $Lf(0), $Lf(2))).
+lookup_q(7, $Br(0, 2, $Lf(0), $Lf(2))).
+lookup_q(7, $Br(0, 2, $Lf(0), $Lf(2))).
+
+.output insert(IO=stdout)
+.output lookup(IO=stdout)
+
+.decl test(x : number)
+test(res) :- branchingbit(0,2,res).
+.output test(IO=stdout)
+```
+
+
 ```souffle
 .type ptrie = Empty {} 
             | Leaf {x : unsigned} 
@@ -1334,6 +1428,9 @@ mem($Empty(), _, $False()). // not valid
 //add(x, $Leaf(x)), $Leaf(x)).
 
 ```
+
+
+
 
 ### BDDs
 bddbdddb is a datalog that used binary decision diagrams as it's backing store. It's an interesting idea. BDDs are very powerful.
@@ -4920,6 +5017,8 @@ Convert string to relation. To avoid
 str(s, char, i) :- range(0, len(s)) = i, char = substr(i, i+1, s) 
 ```
 
+
+
 ## intrinsic functors
 `cat` `strlen` `substr(string,index,length)` `ord`
 
@@ -4931,6 +5030,26 @@ max min + * % ^
 
 `f(@g()) :- true` Sometimes you need to put true in the rhs position.
 
+
+## floats
+https://github.com/monadius/ocaml_simple_interval/blob/master/interval1.ml - very simple intervals
+
+
+```souffle
+.decl test(x : float, id : symbol)
+//test(nan).
+//test(inf).
+//test(-inf).
+test(-0, "-0").
+test(1/-0, "-inf").
+test(1/0, "inf").
+test(1/0 - 1/0, "-nan").
+test(1/0 + 1/0, "inf").
+test(1/0 + 1/(-0), "-nan"). 
+test(0, "0").
+.output test(IO=stdout)
+
+```
 
 ## Souffle proofs
 Manual exploration of just dump it. Does the dump memoize?

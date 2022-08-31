@@ -43,8 +43,17 @@ Network
 [napkin math](https://www.youtube.com/watch?v=IxkSlnrRFqc)
 # SIMD
 
+[Simd for C++ developers](http://const.me/articles/simd/simd.pdf)
 
 ## Stuff
+[cp algorithms](https://cp-algorithms.com/#navigation) competitive programming algorithsm
+
+[geoff langdale blog](https://branchfree.org/)
+
+[iterating over set bits](https://lemire.me/blog/2018/03/08/iterating-over-set-bits-quickly-simd-edition/)
+
+[Computing Adler32 Checksums at 41 GB/s ](https://news.ycombinator.com/item?id=32377597) https://wooo.sh/articles/adler32.html
+
 [how fast are linux pipes anyway](https://mazzo.li/posts/fast-pipes.html)
 pv - pipe viewer. pipe thorughput http://www.ivarch.com/programs/pv.shtml
 

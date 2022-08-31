@@ -96,6 +96,9 @@ Racket Docs search for all languages:
 https://docs.racket-lang.org/search/index.html?q=H%3A
 
 [Extensible Pattern Matching in an Extensible Language](https://arxiv.org/pdf/1106.2578.pdf)
+
+[Bowman how to hashlang](https://williamjbowman.com/tmp/how-to-hashlang/)
+[Macro-embedding Compiler Intermediate Languages in Racket](https://williamjbowman.com/tmp/wjb2022-hashlang-x64.pdf)
 ### Rosette
 https://docs.racket-lang.org/rosette-guide/index.html
 

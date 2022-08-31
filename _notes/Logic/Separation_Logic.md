@@ -5,6 +5,9 @@ layout: post
 title: Separation Logic
 ---
 
+
+https://blog.sigplan.org/2020/03/03/go-huge-or-go-home-popl19-most-influential-paper-retrospective/
+
 There is a theme that "special" logics are implicitly talking about something. The two examples are temporal logics, which are implicitly talking about some kind of notion of time, and separation logic. I suppose intuitionistic logic could be put on the same pedestal.
 
 

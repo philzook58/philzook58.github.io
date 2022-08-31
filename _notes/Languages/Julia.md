@@ -5,6 +5,8 @@ title: Julia
 wordpress_id: 2987
 ---
 
+https://github.com/sumiya11/Groebner.jl claims quite fast
+
 [LiftedTrajectoryGames](https://github.com/lassepe/LiftedTrajectoryGames.jl)
 
 [bare metal julia arduino](https://news.ycombinator.com/item?id=31481895)

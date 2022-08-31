@@ -3,6 +3,35 @@ layout: post
 title: Python
 ---
 
+# Venv
+Venv makes an isolated python environment
+
+```
+python3 -m venv .venv
+source ./venv/bin/activate 
+```
+
+# Django
+
+https://www.djangoproject.com/
+
+Models create database entries for you. There is mapping of fields to databae
+Many-to-one relatioships. You can talk back
+
+Views
+Templates
+Generic views
+
+
+
+Admin page
+
+Django rest framework
+Django channels
+
+
+
+
 # Generators
 
 # Collections

@@ -5,21 +5,28 @@ title: Databases
 
 - [Key Value Store](#key-value-store)
 - [Algorithms](#algorithms)
+- [Theory](#theory)
+  - [Conjunctive Queries](#conjunctive-queries)
+  - [Schema](#schema)
+  - [Functional Dependencies](#functional-dependencies)
+  - [Query Optimization](#query-optimization)
+  - [The Chase](#the-chase)
 - [SQL](#sql)
   - [indices](#indices)
   - [views](#views)
   - [triggers](#triggers)
   - [Aggregate functions](#aggregate-functions)
   - [Window Functions](#window-functions)
-- [Schema](#schema)
-  - [Functional Dependencies](#functional-dependencies)
-  - [Query Optimization](#query-optimization)
-  - [The Chase](#the-chase)
 - [Ontology Formats](#ontology-formats)
 - [Optimal Joins](#optimal-joins)
 - [Vectorized Execution](#vectorized-execution)
+- [Multi Version Concurrency Control](#multi-version-concurrency-control)
+- [Duckdb](#duckdb)
 - [Relational AI](#relational-ai)
 - [Streaming](#streaming)
+- [Data Structures](#data-structures)
+  - [B Tree](#b-tree)
+  - [Radix Trie](#radix-trie)
 - [CRDTs](#crdts)
 - [Big Data](#big-data)
   - [hadboop](#hadboop)
@@ -48,6 +55,8 @@ sstable
 Tombstone records for deletes.
 https://www.igvita.com/2012/02/06/sstable-and-log-structured-storage-leveldb/
 
+[What's the big deal about key-value databases like FoundationDB and RocksDB?](https://notes.eatonphil.com/whats-the-big-deal-about-key-value-databases.html) lobster comments https://lobste.rs/s/avljlh/what_s_big_deal_about_embedded_key_value#c_rx0oid
+
 [wide-column store](https://en.wikipedia.org/wiki/Wide-column_store)
 [key/value store](https://en.wikipedia.org/wiki/Key%E2%80%93value_database)
 
@@ -66,7 +75,11 @@ https://www.igvita.com/2012/02/06/sstable-and-log-structured-storage-leveldb/
 - [riak](https://en.wikipedia.org/wiki/Riak)
 
 
+- Foundationdb
+- cockroachdb sql database originally on rocksdb now on pebbledb https://www.cockroachlabs.com/blog/pebble-rocksdb-kv-store/
+- pebbledb
 
+Embedded key value store. Backing engines. MySql has support for many backing engines
 
 # Algorithms
 B-trees
@@ -77,6 +90,84 @@ hyperloglog
 bloom filters
 cuckoo filter
 
+
+
+# Theory
+
+## Conjunctive Queries
+Query containment
+
+- See finite model theory
+
+descriptive complexity
+NC^0 bounded fan in
+AC^0 https://en.wikipedia.org/wiki/AC0 unbounded fan in circuit. Constant height https://en.wikipedia.org/wiki/Circuit_complexity
+
+https://pages.cs.wisc.edu/~paris/cs838-s16/lecture-notes/lecture1.pdf
+
+Foundations of database
+
+## Schema
+
+
+https://en.wikipedia.org/wiki/Database_normalization
+
+schema is finite set of relation symbol names 
+an instance is a set of concrete relations with those symbol names. Sometimes also called a structure
+
+## Functional Dependencies
+Armstrong axioms
+
+Normal Formals
+
+Tuple Generating dependencies
+
+## Query Optimization
+[Cascades framework](https://www.cse.iitb.ac.in/infolab/Data/Courses/CS632/Papers/Cascades-graefe.pdf)
+https://github.com/egraphs-good/egg/discussions/189
+
+
+Zetasql
+calcite
+
+## The Chase
+Equality Generating Dependencies
+[The Chase Procedure and its Applications in Data Exchange](https://drops.dagstuhl.de/opus/volltexte/2013/4288/pdf/ch01-onet.pdf)
+
+Yisu:
+[query optimization](https://dl.acm.org/doi/10.1145/342009.335421)
+[data integration](https://drops.dagstuhl.de/opus/volltexte/2013/4288/pdf/ch01-onet.pdf)
+[querying incomplete databases](https://dl.acm.org/doi/abs/10.1016/j.is.2009.08.002)
+[benchmarking the chase](https://dl.acm.org/doi/abs/10.1145/3034786.3034796)
+[chasebench](https://dbunibas.github.io/chasebench/)
+
+Chasefun, DEMOo, Graal, llunatic, pdg, pegasus, dlv, e, rdfox
+
+Stratgeies - (restricted, unrestricted, parallel, skolem, fresh-null
+
+Chase Strategies vs SIPS
+
+[The power of the terminating chase](https://drops.dagstuhl.de/opus/volltexte/2019/10305/pdf/LIPIcs-ICDT-2019-3.pdf)
+
+
+Is the chase meant to be applied to actual databases, symbolic databases / schema, or other dependencies? 
+Is it fair the say that the restricted chase for full dependencies is datalog?
+
+Alice book chapter 8-11
+
+Graal - 
+https://github.com/hamhec/DEFT https://hamhec.github.io/DEFT/
+defeasible programming http://lidia.cs.uns.edu.ar/delp_client/ Something about extra negation power? Defeatable rules if something contradicts them
+Pure is part of graal
+
+llunatic - https://github.com/donatellosantoro/Llunatic
+
+RDfox - https://docs.oxfordsemantic.tech/
+
+dlgp - datalog plus format. Allows variables in head = existentials. Variables in facts.
+Notion of constraint `! :- ` and notion of query. Hmm.
+
+Direct modelling of union find in z3? homomorphism is union find
 
 # SQL
 
@@ -156,57 +247,7 @@ This is interesting
 ## Window Functions
 
 
-# Schema
 
-
-https://en.wikipedia.org/wiki/Database_normalization
-
-## Functional Dependencies
-Armstrong axioms
-
-Normal Formals
-
-Tuple Generating dependencies
-
-## Query Optimization
-[Cascades framework](https://www.cse.iitb.ac.in/infolab/Data/Courses/CS632/Papers/Cascades-graefe.pdf)
-
-## The Chase
-Equality Generating Dependencies
-
-
-Yisu:
-[query optimization](https://dl.acm.org/doi/10.1145/342009.335421)
-[data integration](https://drops.dagstuhl.de/opus/volltexte/2013/4288/pdf/ch01-onet.pdf)
-[querying incomplete databases](https://dl.acm.org/doi/abs/10.1016/j.is.2009.08.002)
-[benchmarking the chase](https://dl.acm.org/doi/abs/10.1145/3034786.3034796)
-[chasebench](https://dbunibas.github.io/chasebench/)
-
-Chasefun, DEMOo, Graal, llunatic, pdg, pegasus, dlv, e, rdfox
-
-Stratgeies - (restricted, unrestricted, parallel, skolem, fresh-null
-
-Chase Strategies vs SIPS
-
-[The power of the terminating chase](https://drops.dagstuhl.de/opus/volltexte/2019/10305/pdf/LIPIcs-ICDT-2019-3.pdf)
-
-
-Is the chase meant to be applied to actual databases, symbolic databases / schema, or other dependencies? 
-Is it fair the say that the restricted chase for full dependencies is datalog?
-
-Alice book chapter 8-11
-
-Graal - 
-https://github.com/hamhec/DEFT https://hamhec.github.io/DEFT/
-defeasible programming http://lidia.cs.uns.edu.ar/delp_client/ Something about extra negation power? Defeatable rules if something contradicts them
-Pure is part of graal
-
-llunatic - https://github.com/donatellosantoro/Llunatic
-
-RDfox - https://docs.oxfordsemantic.tech/
-
-dlgp - datalog plus format. Allows variables in head = existentials. Variables in facts.
-Notion of constraint `! :- ` and notion of query. Hmm.
 
 
 # Ontology Formats
@@ -239,6 +280,16 @@ How materializr and other databases optimize sql subqueries
 
 [genlteish intro to worst case optimal joins](https://twitter.com/justinjaffray/status/1531312730824536064?s=20&t=-IHVNfpCMKlhva0T8ctWXA)
 
+[Adopting Worst-Case Optimal Joins in Relational Database Systems](https://db.in.tum.de/~freitag/papers/p1891-freitag.pdf) tries
+[The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases](https://db.in.tum.de/~leis/papers/ART.pdf)
+[Persistent Storage of Adaptive Radix Trees in DuckDB](https://duckdb.org/2022/07/27/art-storage.html)
+
+
+[oltp indices 2](https://www.youtube.com/watch?v=N6rhECUjdaI&t=1045s&ab_channel=CMUDatabaseGroup)
+
+[umbra](https://db.in.tum.de/~freitag/papers/p29-neumann-cidr20.pdf) spiritual successor to hyper. Hybridizes an in memory system to also work off ssd.
+
+
 # Vectorized Execution
 [cmu adavanced course lecture](https://www.youtube.com/watch?v=7hgZKrFXYNs&ab_channel=CMUDatabaseGroup)
 [Rethinking SIMD Vectorization for In-Memory Databases](https://15721.courses.cs.cmu.edu/spring2019/papers/20-vectorization1/p1493-polychroniou.pdf)
@@ -257,6 +308,47 @@ branchless writes but only increments index of storage by one if condition is me
 [EmptyHeaded: A Relational Engine for Graph Processing](https://ppl.stanford.edu/papers/emptyheaded.pdf) "generalized hypertree decomposition" ? https://github.com/HazyResearch/EmptyHeaded
 
 [levelheaded](https://aberger.site/levelheaded.pdf) linear algerba stuff?
+
+# Multi Version Concurrency Control
+https://en.wikipedia.org/wiki/Multiversion_concurrency_control
+
+
+# Duckdb
+https://duckdb.org/
+sqlite for olap
+columnar
+```python
+import duckdb
+con = duckdb.connect(database=':memory:')
+import pandas as pd
+test_df = pd.DataFrame.from_dict({"i":[1, 2, 3, 4], "j":["one", "two", "three", "four"]})
+con.execute('SELECT * FROM test_df')
+#print(con.fetchall())
+print(con.fetchdf())
+
+add_df = pd.DataFrame(columns=["x","y","z"])
+print(add_df)
+counter = 0
+def add(x,y):
+  global counter, add_df
+  cond = add_df["x"] == x #& add_df["y"] == y
+  df = add_df[cond]
+  if not df.empty:
+    return add_df["z"][0]
+  else:
+    z = counter
+    add_df.append((x,y,z))
+    counter += 1
+    return z
+
+print(add(-1,-2))
+
+```
+
+catalog multiversion concrruncy control
+cimpressed execution binder
+
+
 # Relational AI
 https://www.youtube.com/watch?v=WRHy7M30mM4&ab_channel=CMUDatabaseGroup
 
@@ -328,6 +420,13 @@ spark streaming
 
 https://materialize.com/blog
 
+# Data Structures
+
+## B Tree
+Bw-tree
+[The B-Tree, LSM-Tree, and the Bw-Tree in Between](https://photondb.io/2022/08/15/bw-tree.html)
+[open bw-tree 2018](https://www.cs.cmu.edu/~huanche1/publications/open_bwtree.pdf)
+## Radix Trie
 
 
 # CRDTs
@@ -448,7 +547,6 @@ graphlab
 ## Misc
 [Datavases, types, and the relational model The third manifesto](https://www.dcs.warwick.ac.uk/~hugh/TTM/DTATRM.pdf)
 
-
 [duckdb](https://twitter.com/teej_m/status/1516864922784702469?s=20&t=hmaJXnp6Mp_aUsdRpkOMcQ) embedded like sqlite?
 
 [https://xtdb.com/](XTDB is a general-purpose bitemporal database for SQL, Datalog & graph queries.)
@@ -487,3 +585,21 @@ James Cheney et al. A practical theory of language-integrated query. 2013. Full 
 Suzuki et al. Finally, safely-extensible and efficient language-integrated query. 2016. Full text
 
 Oleg Kiselyov et al. Sound and Efficient Language-Integrated Query -- Maintaining the ORDER. 2017. Full text
+
+[DBSP: Automatic Incremental View Maintenance for Rich Query Languages - mcsherry et al](https://arxiv.org/abs/2203.16684)
+
+[pavlo advanced databases](https://15721.courses.cs.cmu.edu/spring2020/schedule.html)
+
+[awesome database learning](https://github.com/pingcap/awesome-database-learning)
+
+[database architects blogs](https://databasearchitects.blogspot.com/)
+
+https://www.reddit.com/r/databasedevelopment/
+
+https://twitter.com/phil_eaton
+
+[database internals](https://www.databass.dev/)
+
+[Ask HN: What could a modern database do that PostgreSQL and MySQL can't](https://news.ycombinator.com/item?id=28425379)
+
+[postgres internals book](https://postgrespro.com/blog/pgsql/5969682)

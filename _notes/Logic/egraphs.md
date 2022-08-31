@@ -605,3 +605,4 @@ https://en.wikipedia.org/wiki/E-graph
 
 [Automatic Datapath Optimization using E-Graphs](https://arxiv.org/pdf/2204.11478.pdf) RTL optimization
 
+[Fast equality saturation in Haskell](https://github.com/alt-romes/hegg)
