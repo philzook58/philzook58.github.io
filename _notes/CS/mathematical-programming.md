@@ -24,6 +24,7 @@ I should renamed this article to Mathematical Programming / Operations Research 
     - [Denoising](#denoising)
     - [Compressed sensing](#compressed-sensing)
     - [Inverse Problems](#inverse-problems)
+    - [](#)
     - [Polynomial Solutions](#polynomial-solutions)
     - [Fitting floating point polynomials](#fitting-floating-point-polynomials)
     - [Quantization](#quantization)
@@ -127,6 +128,8 @@ This trick does not generalize as much as one might naively hope. Nested optimiz
 
 
 ## Applications
+[cvxpy examples](https://www.cvxpy.org/examples/index.html)
+
 - least absolute value optimization
 - Relaxations of discrete optimization problems
 - Network flow
@@ -144,6 +147,23 @@ https://en.wikipedia.org/wiki/Inverse_problem
 Inverse problems are trying to determine stuff from observations.
 In particular, you're trying to infer the systems of equations that define a system from different solutions of the system. The system of equations of a wave system or laplace system will include the shape of objects in the system
 
+### 
+Naw. This doesn't work.
+
+```python
+import cvxpy as cvx
+edge = cvx.Variable((3,3), nonneg=True)
+path = cvx.Variable((3,3), nonneg=True)
+
+constraints = []
+constraints += [path[i,j] >= edge[i,j]  for i in range(3) for j in range(3)]
+constraints += [path[i,k] >= edge[i,j] + path[j,k] for i in range(3) for j in range(3) for k in range(3)]
+constraints += [edge[0,1] == 1, edge[1,2] == 1]
+
+prob = cvx.Problem(cvx.Minimize(cvx.sum(path) + cvx.sum(edge)), constraints)
+print(prob.solve())
+
+```
 
 ### Polynomial Solutions
 ### Fitting floating point polynomials
@@ -450,7 +470,12 @@ https://www.shanshu.ai/copt
 LP, MIP, SOCP, SDP, convex QP and convex QCP
 Non free
 
+https://github.com/oxfordcontrol
+- [Clarabel.rs](https://github.com/oxfordcontrol/Clarabel.rs) and julia version
+- [Cosmo](https://github.com/oxfordcontrol/COSMO.jl)
 
+
+[osqp](https://github.com/osqp/osqp) quadratic optimization solver
 # Resources
 - Stephen Boyd
 - MIP school
@@ -472,6 +497,7 @@ cvxpygen
 
 [Max cut](https://twitter.com/parubin/status/1537815438368858114?s=20&t=Id3zoB1xCWLA5QQIrPNHVA)
 
+<<<<<<< HEAD
 https://twitter.com/caglar_ee ths guy is tweeting a ton f courses
 
 [linear optimziation UW-madison](https://www.youtube.com/playlist?list=PLeO_PhASIA0Ot69TqANAnNxoykHGOQp2Y)
@@ -481,4 +507,3 @@ https://twitter.com/caglar_ee ths guy is tweeting a ton f courses
 [intro to optimization](https://laurentlessard.com/teaching/524-intro-to-optimization/) in julia
 
 
- 

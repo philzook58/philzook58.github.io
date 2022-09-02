@@ -161,6 +161,41 @@ tff(ax2,axiom,
       ( ( Y = Z )
       | ( read(write(X,Y,X1),Z) = read(X,Z) ) ) ).
 ```
+
+
+[vampire tutorial](https://github.com/vprover/ase17tutorial)
+
+```vampire
+fof(ground, axiom,
+    edge(1,2) & edge(2,3)
+).
+%fof(path1, axiom,
+%    ![X,Y]: (edge(X,Y) => path(X,Y))
+%).
+%fof(path2, axiom,
+%    ![X,Y,Z]:  ((edge(X,Y) & path(Y,Z)) => path(X,Z))
+%).
+fof(clark, axiom,
+    ![X,Z]: (((?[Y]: (edge(X,Y) & path(Y,Z))) | edge(X,Z)) <=> path(X,Z))
+).
+
+fof(myquery, conjecture,
+    ?[X,Y]: path(X,Y)
+   %path(1,2)
+).
+
+
+```
+vampire -av off --question_answering answer_literal
+
+```vampire
+fof(a,axiom,prover(vampire)).
+fof(a,axiom,prover(e)).
+fof(a,axiom,tutorial(vampire)).
+fof(a,axiom,tutorial(probabilistic)).
+fof(a,conjecture,?[X]: (prover(X) & tutorial(X))).
+```
+
 # Methodology 
 ## Unification
 Two way matching.

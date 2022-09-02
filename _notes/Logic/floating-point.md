@@ -3,6 +3,392 @@ layout: post
 title: Floating Point and Numerical verification
 ---
 
+
+# Numbers
+There are multiple ways of representing numbers in computers. There are different axes upon which to limit a pure mathemtical notion of number. You can finitize in magnitude and approximate.
+
+Computers can represent 0/1 as a bit.
+
+A small-ish set of numbers and operations on them can be represented by lookup table. 0b001101 is 893204.34234 when you look it up in the table.
+
+Finite integers are representable as primitives (64-bit / 32-bit) / as lists of 0/1
+
+Lists or arrays of integers can be used to make arbitrary sized integers
+
+Two integers (a tuple or struct) describes fractions. You can do +-*/ exactly for fractions
+
+You can decide to fix different aspects. You can limit choices of sizes
+
+Fixed point is gotten when the denominator is fixed at compile time. You can't perform arithemtic exactly anymore
+
+Intervals represent a number by giving an under and over approximation of the number
+
+Floating point numbers are mostly gotten by fixing the denominator to be a power of 2.
+
+# Core identities
+
+Normal floating points are of the form
+
+`x = m * 2 ^ e`
+`m` and `e` are bounded in size above and below.
+1 < m < 2 in regular float
+`x = M * 2 ^ {e - p + 1}
+
+2^{e} <= x < 2^{e+1}
+
+
+Every operation that floating point does has an implicit `rnd` operation.
+`x .+ y` is really `rnd(x + y)`
+
+`rnd` picks the closest representable value. This leads to the fact that
+`|rnd(x) - x| < 2^e`
+
+I'm being a little fuzzy here.
+
+32 bit float
+1.bbbbbb
+precision = 24 bits
+
+Theorem 2.2
+`err(x) < 2 ^ {1 - p} = 2 ^ - 23`
+`| x - rnd(x)| <= 2 ^ {e - p + 1}`
+
+e = 0 if 1 <= x < 2 
+e = 2 if 2 <= x < 4
+
+```z3
+;re
+
+; https://en.wikipedia.org/wiki/Machine_epsilon
+(define-const eps32 Real (^ 2 -23))
+
+
+
+; given eps > 0, abs-bound encodes |x| <= eps as conjunction of linear constraints
+(define-fun abs-bound ((x Real) (eps Real)) Bool
+    (and
+        (<= x eps)
+        (<= (- eps) x )
+))
+
+(declare-fun rnd-fun (Real) Real)
+
+; Describing operations relationally is nice because you can instantiate properties at use site.
+; We describe an overapproximation of the rounding operation
+(define-fun rnd ((x Real) (res Real)) Bool
+        (and (= res (rnd-fun x)) ; it is a functional relationship
+            (abs-bound (- x res) (* eps32 (abs x))) ; with |x - rnd(x)| <= eps32 * |x|
+        )
+)
+
+; floating point add is Real add then round.
+(define-fun fp-add ((x Real) (y Real) (res Real)) Bool
+    (rnd (+ x y) res)
+)
+
+(define-fun fp-mul ((x Real) (y Real) (res Real)) Bool
+    (rnd (* x y) res)
+)
+
+; box is useful shorthand for stating initial conditions
+(define-fun box ((x Real) (lower Real) (upper Real)) Bool
+    (and (<= lower x)
+         (<= x upper)
+    )
+)
+
+(declare-const x Real)
+(assert (box x 1 2))
+(declare-const y Real)
+(assert (box y 1 2))
+(declare-const y Real)
+(assert (box z 1 2))
+
+(declare-const xy Real)
+(assert (fp-add x y xy))
+(declare-const xyy Real)
+(assert (fp-add xy y xyy))
+
+(declare-const xyz Real)
+(assert (fp-mul xy z xyz))
+(check-sat)
+(get-model)
+(eval (abs -1))
+
+(push)
+(assert-not (<= (- xyy (+ x y y)) 0.0001))
+(check-sat)
+(pop)
+
+(push)
+(assert-not (>= (- xyy (+ x y y)) -0.00001))
+(check-sat)
+(pop)
+
+(push)
+(assert-not (>= (- xyy (+ x y y)) -0.001))
+(check-sat)
+(pop)
+
+;(get-model)
+;(eval (- xyy (+ x y y)))
+
+
+(define-fun myprog ((x Real) (y Real) (res Real)) Bool
+    (exists ; define local variables
+        ((xy Real) (fp73 Real))
+     (and ; res := 7/3 * (x + y)
+        (fp-add x y  xy)
+        (rnd (/ 7 3) fp73)
+        (fp-mul fp73 xy res)
+     )
+
+    )
+)
+
+(define-fun myprog-pre ((x Real) (y Real)) Bool
+
+)
+
+(define-fun myprog-post ((x Real) (y Real) (res Real))
+    
+)
+
+(assert-not (forall ((x Real) (y Real) (res Real))
+            (=> (myprog-pre x y)
+                (and (myprog x y res) (myprog-post x y res))
+            )
+))
+```
+
+
+```
+;re
+
+(define-fun is-normal ((x Real)) Bool
+    (or (and
+            (< x (^ 2 300))
+            (< (^ 2 -300) x)
+         )
+        (and
+            (< (- x) (^ 2 300))
+            (< (^ 2 -300) (- x))
+        )
+    )
+)
+
+(define-fun ulp ((x Real)) Real
+   
+)
+
+(declare-fun rnd (Real) Real)
+
+(assert (forall ((x Real)) 
+    (=> (is-normal x)
+         yada
+    ) 
+
+    (and (< (- (rnd x) x) (ulp x))
+            (< (- (ulp x)) (- (rnd x) x) (ulp x))
+))
+
+
+(assert (forall ((x Real))
+    (=>
+        (and (< 1 x)
+             (< x 2))
+        (=  ulp(x))
+    )
+)
+
+
+(define-fun-rec ulp ((x Real)) Real
+    (ite (and (< x 1) (< x 2)))
+         1
+    (ite (x < 1)
+        (/ (ulp (* x 2) 2)
+    (ite (x > 2)
+        (* 2 (ulp (/ x 2))
+    )
+)
+
+;(define-fun fp-mul ((x Real) (y Real))
+;    (rnd (* x y)))
+
+
+; better as a relation?
+; relations allow us to bundle in the lemmas we want
+; without resorting to forall
+
+; recipe: take a forall axiom, turn it into a define-fun
+; This is kind of taking a forall and making it an axiom schema.
+; You can still add the forall using (assert (forall ((x )) (my-pred x))
+; but it gives the ability to explicitly instantiate
+
+(define-fun rnd-ulp ((x Real)) Bool
+    (and (< (- (rnd x) x) (ulp x))
+        (< (- (ulp x)) (- (rnd x) x) (ulp x))
+)
+
+
+
+
+(define-fun rnd ((x Real) (res Real))
+    (and 
+        (= res (rnd-fun x))
+        (rnd-ulp x)
+    )
+)
+
+
+; that these are functions is almost a side feature
+; Sometimes the functional nature is useful to the proof.
+; probably not that often though
+
+(define-fun ulp ((x Real) (y Real))
+    (and
+        (= y (ulp-fun x)))
+)
+
+(define-fun ulp-def ((x Real)) Bool
+
+)
+
+(define-fun fp-mul ((x Real) (y Real) (z Real))
+    (let ((z1 (* x y)))
+    (and 
+        (= z z1)
+        (rnd-ulp z1)
+        (ulp-rel z1)
+
+    )
+
+(define-fun fp-sub ((x Real) (y Real) (res Real)) 
+    (and
+        ...
+        (sterbenz x y)
+    )
+
+)
+
+```
+
+```z3
+(define-sort Var () String)
+(define-sort Env () (Array Var Int))
+(declare-datatypes ()(
+  (Term
+    (Var (var1 Var))
+    (Lit (lit1 Real))
+    (Add (add1 Term) (add2 Term))
+    (Mul (add1 Term) (add2 Term))
+    (Sub (sub1 Term) (sub2 Term))
+    ; And so on
+  )
+))
+
+(define-fun-rec interp ((e Expr) (rho Env)) Bool
+    (match e (
+        ((Lit x) x)
+        ((Var x) (select rho x))
+        ((Add x y) (+ (interp x rho) (interp y rho))
+
+    )
+    
+    )
+
+)
+
+; outer exists (exists ((rho Env))) is the same as (exists a b c d)
+; So we don't get blocked going under an exists.
+
+```
+
+
+
+```python
+from z3 import *
+rnd = Function("rnd", RealSort(), RealSort)
+class MyFloat():
+    def __init__(self):
+        self.x = rnd(FreshReal())
+    def __add__(self,rhs):
+        return rnd(self.x * rhs.x)
+
+```
+
+```souffle
+
+.type interval = [l : float, u : float]
+.decl meet(x : interval , y : interval, z : interval) inline
+meet([lx,ux],[ly,uy],[max(lx,ly), min(ux,uy)]) :- true.
+
+.decl join(x : interval , y : interval, z : interval) inline
+join([lx,ux],[ly,uy],[min(lx,ly), max(ux,uy)]) :- true.
+
+.decl add(x : interval , y : interval, z : interval) inline
+add([lx,ux],[ly,uy],[lx + ly, ux + uy]) :- true.
+
+.decl sub(x : interval , y : interval, z : interval) inline
+sub([lx,ux],[ly,uy],[lx - uy, ux - ly]) :- true.
+
+.decl mul(x : interval , y : interval, z : interval) inline
+mul([lx,ux],[ly,uy],[min(a,b,c,d), max(a,b,c,d)]) :- a = lx * ly, b = ux * ly, c = lx * uy, d = ux * uy.
+
+.decl abs(x : interval , y : interval) inline
+abs([lx,ux],[lx,ux]) :- lx > 0.
+abs([lx,ux],[-ux, -lx]) :- ux < 0.
+abs([lx,ux],[0, max(-lx, ux)]) :- lx <= 0, ux >= 0.
+
+
+.decl test(x : interval)
+test(z) :- mul([2,4], [4,5],z).
+.output test(IO=stdout)
+
+
+.type Expr = 
+      Add {x : Expr, y : Expr}
+    | Sub {x : Expr, y : Expr}
+    | Mul {x : Expr, y : Expr}
+    | Rnd {x : Expr}
+    | Lit {x : float}
+    | Var {x : symbol}
+
+// Expression e is in interval i
+.decl BND(e : Expr, i : interval)
+// Absolute value of e is in interval i
+.decl ABS(e : Expr, i : interval) 
+// x = y * (1 + e) 
+.decl REL(x : Expr, y : Expr, i : interval)
+// 
+//.decl FIX(x : Expr, k)
+
+// The value of expression x is not zero.
+.decl NZR(x : Expr)
+.decl EQL(x : Expr, y : Expr) eqrel
+
+EQL(x,y) :- BND(x, [a,a]), BND(y, [a,a]).
+NZR(x) :- BND(x, [a,b]), (a > 0 ; b < 0).
+
+.decl exprs(e : Expr)
+EQL(x,x) :- exprs(x).
+
+BND(t, [a,a]) :- exprs(t), t = $Lit(a).
+BND(t, [0,0]) :- exprs(t), t = $Sub(a, a).
+
+BND(z, iz) :- exprs(z), BND(x,ix), BND(y,iy), (
+            (z = $Add(x,y), add(ix,iy,iz));
+            (z = $Sub(x,y), sub(ix,iy,iz));
+            (z = $Mul(x,y), mul(ix,iy,iz))).
+
+ABS(e, iy) :- BND(e, ix), abs(ix,iy).
+
+
+
+
+
+```
+
 # Fused multiply add
 [multiply accumlate](https://en.wikipedia.org/wiki/Multiply%E2%80%93accumulate_operation)
 
@@ -14,7 +400,7 @@ How to calculate things
 
 Dyadic rationals = $$ m \times 2^d $$. These are an idealized model of floating point. They can add, subtract, and multiply exactly.
 
-ULP - Unit in Last place. a measure of how accurate an fp calculation is. 0.5 ulp is the best you can do for approximating an antagonisitcally chosen number.
+ULP - Unit in Last place. a measure of how accurate an fp calculation is. 0.5 ulp is the best you can do for approximating an anagonisitcally chosen number.
 
 How and how not to compute matrix exponentials https://www.maths.manchester.ac.uk/~higham/talks/exp10.pdf
 19 dubious ways
@@ -77,6 +463,8 @@ Addition and subtraction are exact if the numbers are really close to each other
 # Gappa
 <https://gappa.gitlabpages.inria.fr/gappa/index.html>
 Proofs about 
+https://gappa.gitlabpages.inria.fr/gappa/theorems.html The rules that gappa uses.
+Woah. This could work
 
 multiple proof output modes
 -B latex -Bcoq

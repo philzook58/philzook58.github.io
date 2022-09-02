@@ -96,6 +96,11 @@ RAID 1 - mirroring. Just rwwrite the same thing to multiple disks
 
 Hypervisors - like OS for OSes
 
+
+https://twitter.com/Intel80x86/status/1560618407224963072?s=20&t=5ByjIVPCy80__MKWdWW1Aw
+[hypervisor from scratch](https://github.com/SinaKarvandi/Hypervisor-From-Scratch)
+[5 Days To Virtualization: A Series On Hypervisor Development](https://revers.engineering/7-days-to-virtualization-a-series-on-hypervisor-development/)
+
 How do programs start?
 
 Syscalls

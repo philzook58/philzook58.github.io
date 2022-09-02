@@ -146,6 +146,8 @@ You can get line number and column info from dwarf
 [gcc flags related to debugging](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html#Debugging-Options)
 - `-Og`
 # Resources
+[The ABI status of ELF hash tables](https://lwn.net/SubscriberLink/904892/62301a1cdfb55841/)
+
 [redbean](https://news.ycombinator.com/item?id=31764521) justine. Cosmopolitan. APE
 
 ld - linker editor

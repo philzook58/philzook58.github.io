@@ -61,6 +61,8 @@ Depending on which you see first, you may consider unification two way pattern m
 
 # Resources
 
+[adam gundry literate haskell](https://github.com/adamgundry/type-inference) "(for the free theory, abelian groups and higher-order pattern unification)" goes along with thesis
+
 [higher order pattern unification exampel in elaboration zoo](https://github.com/AndrasKovacs/elaboration-zoo/blob/master/03-holes/Main.hs)
 [Basic pattern unification in haskell](https://www.youtube.com/watch?v=trecCoxYbgM&ab_channel=Andr%C3%A1sKov%C3%A1cs)
 

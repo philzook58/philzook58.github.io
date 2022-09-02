@@ -605,4 +605,8 @@ https://en.wikipedia.org/wiki/E-graph
 
 [Automatic Datapath Optimization using E-Graphs](https://arxiv.org/pdf/2204.11478.pdf) RTL optimization
 
+
 [Improving MBA Deobfuscation using Equality Saturation](https://secret.club/2022/08/08/eqsat-oracle-synthesis.html)
+
+[Fast equality saturation in Haskell](https://github.com/alt-romes/hegg)
+

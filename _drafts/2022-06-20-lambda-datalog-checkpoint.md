@@ -25,12 +25,14 @@ eval x = x
 main = print (eval (App (Lam $ \x -> x) (Lit 3)))
 ```
 
-### Normalization
+# Normalization
 Normalization is ordinary. I chose to go for locally nameless style, where you turn de bruijn indices into gensymed fresh variables when you traverse under lambdas. This has the reputation of being the easiest to get right.
 
 Normalization should happen outside of any hash cons and we should only store normalized terms.
 
 Since I have no types on my lambda terms, there is no guarantee they will normalize if you're not careful. Probably it would be good to use a simply typed lambda calc as the object lang.
+
+##
 
 
 ### Miller Matching

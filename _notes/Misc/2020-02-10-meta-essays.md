@@ -34,6 +34,11 @@ active learning
 - Try trivial modifications. Adding a case to some data type for example.
 
 - colin - use gdb and just watch it go.
+
+[Ask HN: What are the ways you go about getting comfortable with a new codebase?](https://news.ycombinator.com/item?id=32365660)
+- Try to profile it. You might also be a hero for doing so.
+
+
 # Blogging
 
 https://www.gwern.net/
@@ -109,3 +114,11 @@ If people in your industry are interested, and you've actually investigated it a
 People who work in the field want you to think so. It is in their best interested in terms of prestige,
 Just because they use big fancy words and opine about the philosophical beauty 
 Just because it is in their best interest does not mean they are wrong.
+
+
+# Managing Time
+
+# How to Manage / Lead
+Project lead
+Focus blocks - https://frankgrecojr.medium.com/focus-time-saved-me-from-burnout-88cff1829276 hard rule set out tme
+1 on 1 meetings
