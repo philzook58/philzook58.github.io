@@ -158,3 +158,11 @@ help command. lots of stuff
 - x/10x $sp  look at stack. x/s look at string
 - list *$rip shows you a few lines before and after
 - layout split asm src. tui disable. tui enable
+
+
+https://twitter.com/moyix/status/1556037995169562624?s=20&t=yqv3psiW3ByDbnVTBLr_GA audit of list functions
+
+https://man7.org/linux/man-pages/man7/queue.7.html
+instrusive linked list
+
+[Some Were Meant for C The Endurance of an Unmanageable Language](https://www.humprog.org/~stephen/research/papers/kell17some-preprint.pdf)

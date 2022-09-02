@@ -35,7 +35,8 @@ That sounds fun
 - [lean 4 manual](https://leanprover.github.io/lean4/doc/)
 - [lean 3 logic and proof](https://leanprover.github.io/logic_and_proof/)
 
-
+- [functional programming in lean](https://leanprover.github.io/functional_programming_in_lean/hello-world.html) Christianson
+- [theorme prover lab](https://github.com/IPDSnelting/tba-2022)
 
 ### Build
 

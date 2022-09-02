@@ -45,7 +45,7 @@ See also:
 - recommender systems
 - Fluid sim accelerate
 - system identification
-- leanring program invariants http://pranav-garg.com/papers/cav14.pdf https://www.cs.purdue.edu/homes/suresh/papers/pldi18.pdf
+- learning program invariants http://pranav-garg.com/papers/cav14.pdf https://www.cs.purdue.edu/homes/suresh/papers/pldi18.pdf
 
 # Data
 outliers
@@ -215,6 +215,9 @@ Monte-carlo search
 ## Resources
 [openai spinning up](https://spinningup.openai.com/en/latest/index.html)
 Sutton and Barto
+
+
+[Machine intellgience course](https://www.youtube.com/playlist?list=PLPQUqhKcaBdUYQRyS_g3GFN4L5B-_asUt)
 
 # Old Reinforcement learning
 

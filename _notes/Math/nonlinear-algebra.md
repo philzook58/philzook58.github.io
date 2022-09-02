@@ -36,3 +36,5 @@ Linear algebra but wih rings instead of fields. You can't divide by scalars anym
 
 
 # Resources
+
+https://github.com/algebraic-solving/msolve msolve. a C library for grobner basis and root calculations. Intresting

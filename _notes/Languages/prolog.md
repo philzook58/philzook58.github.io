@@ -76,6 +76,7 @@ wordpress_id: 1865
 - [Linear Logic Programming](#linear-logic-programming)
 - [Coinductive Logic Programming](#coinductive-logic-programming)
 - [inductive logic programmingh](#inductive-logic-programmingh)
+- [Probablistic Logic Programming](#probablistic-logic-programming)
 - [Theorem Proving](#theorem-proving)
 - [Misc](#misc)
   - [2019](#2019)
@@ -1716,6 +1717,12 @@ https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
 
 [Abductive Reasoning in Intuitionistic Propositional Logic via Theorem Synthesis](https://arxiv.org/abs/2205.05728v1). Includes a g4ip
 
+[Hakank symbolic function induction picat](https://twitter.com/hakankj/status/1556344141994508288?s=20&t=yqv3psiW3ByDbnVTBLr_GA)
+
+# Probablistic Logic Programming
+
+
+
 # Theorem Proving
 [Leantap](https://formal.iti.kit.edu/beckert/leantap/)
 Jens Otten
@@ -1737,6 +1744,9 @@ Is it kind of a zipper to isolate a variable?
 Dyckhoff g4ip
 
 # Misc
+
+[ICLP proceedings](https://arxiv.org/abs/2208.02685) - lots of ASP stuff
+
 
 [pyswip](https://github.com/yuce/pyswip)
 

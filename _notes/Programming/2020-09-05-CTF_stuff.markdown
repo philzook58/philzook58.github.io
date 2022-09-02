@@ -30,6 +30,7 @@ wordpress_id: 2960
   - [Heap](#heap)
     - [House of Force](#house-of-force)
     - [fastbin dup](#fastbin-dup)
+    - [unsafe unlink](#unsafe-unlink)
   - [Type Confusion](#type-confusion)
   - [Kernel](#kernel)
   - [Browser](#browser)
@@ -485,9 +486,21 @@ one_gadget - constraints https://github.com/david942j/one_gadget
 malloc_alloc
 
 
+### unsafe unlink
+n
+vis
 
+unsorted bin
+doubly linked circular
+free unsorted chunks have forward and backward pointers.
+new free added to head. malloced from tail
 
+adjeacent chunks get considlated
+prev in use flags
+unlinking. chunks being removed from doubly linked list
 
+2000 solar designer
+voodoo malloc tricks
 
 ## Type Confusion
 
