@@ -3,19 +3,23 @@ layout: post
 title: SMT Solvers
 ---
 
-- [Solvers](#solvers)
-- [Regular Stuff](#regular-stuff)
+- [What is SMT?](#what-is-smt)
   - [SAT solving](#sat-solving)
   - [Bitvectors](#bitvectors)
   - [Integers](#integers)
   - [Reals](#reals)
+  - [Difference Logic](#difference-logic)
   - [Arrays](#arrays)
   - [Constraint problems](#constraint-problems)
 - [Datatypes](#datatypes)
-  - [Church / Recursors / Final](#church--recursors--final)
+  - [List](#list)
   - [Option datatype](#option-datatype)
-  - [Rationals](#rationals)
-  - [Intervals](#intervals)
+  - [Records](#records)
+    - [Rationals](#rationals)
+    - [Intervals](#intervals)
+    - [Modules](#modules)
+  - [Church / Recursors / Final](#church--recursors--final)
+- [Solvers](#solvers)
 - [Optimization](#optimization)
 - [Synthesis](#synthesis)
   - [Constrained Horn Clauses](#constrained-horn-clauses)
@@ -31,13 +35,14 @@ title: SMT Solvers
   - [Kripke Intuitionism](#kripke-intuitionism)
 - [Polymorphism](#polymorphism)
 - [Type Checking](#type-checking)
+  - [Refinement types](#refinement-types)
 - [Transcendentals](#transcendentals)
 - [Float](#float)
 - [Quantifiers](#quantifiers)
   - [Mechanisms for abstraction](#mechanisms-for-abstraction)
     - [`let`](#let)
     - [define](#define)
-    - [datatype](#datatype)
+    - [datatype DSL](#datatype-dsl)
   - [Quantifiers and define](#quantifiers-and-define)
     - [A Manual Proof Discipline](#a-manual-proof-discipline)
     - [Reflection](#reflection)
@@ -54,6 +59,7 @@ title: SMT Solvers
     - [Well founded](#well-founded)
   - [Rewriting](#rewriting)
   - [Pseudo Boolean](#pseudo-boolean)
+- [Parsing](#parsing)
 - [Finite Models](#finite-models)
   - [EPR](#epr)
 - [Query Containment](#query-containment)
@@ -84,35 +90,14 @@ See also:
 - automated theorem proving
 - Imperative Verification
 
+# What is SMT?
 
-# Solvers
-W: What options are actualy worth fiddling with
-It is interesting to note what unusual characteristics solvers have.
+SAT solvers search over boolean variables to make a formula true. SMT solvers allow these booleans to represent external facts like `p := x >= 7` and use other algorithms to determine things like if both `x >= 7` and `x <= 3` can both be true. These are kind of like secret extra constraints on the boolean variables.
 
-- z3
-- bitwuzla
-- boolector
-- cvc4
-- cvc5
-- yices2 https://yices.csl.sri.com/papers/manual.pdf yices has a `ef-solve` mode that synesthesia used for synthesis. Is this the analog of PBR solving?
-- [smtinterpol](https://github.com/ultimate-pa/smtinterpol)
-- alt-ergo
-- veriT
-- colibri - good at floats?
-- mathsat (ultimate eliminator https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&tool=eliminator)
-- smt-rat
-- stp
-- [dreal](http://dreal.github.io/)
+For more:
 
-Other systems
-- vampire
-- aprove
-- E
-
-# Regular Stuff
-
-- [Copy of Z3 rise 4 fun](https://www.philipzucker.com/z3-rise4fun/)
 - [Tutorial](https://github.com/philzook58/z3_tutorial)
+- [Copy of Z3 rise 4 fun](https://www.philipzucker.com/z3-rise4fun/)
 - [Z3 guide](https://microsoft.github.io/z3guide/)
 - [smtlib standard](https://smtlib.cs.uiowa.edu/language.shtml)
 
@@ -121,6 +106,7 @@ Other systems
 
 
 ## SAT solving
+If you just stick to boolean variables, SMT is just a SAT solver (albeit with a better input format).
 See notes on SAT
 
 ## Bitvectors
@@ -143,7 +129,13 @@ Some interesting ops
 ## Integers
 
 ## Reals
+## Difference Logic
+For special integer inequalities of the form `x - y <= 7`, you don't need a general linear arithemtic solver. You can use graph algorithms to determine if 
 
+https://users.aalto.fi/~tjunttil/2020-DP-AUT/notes-smt/diff_solver.html
+https://www.cs.upc.edu/~erodri/webpage/cps/theory/sat/SMT-DL/slides.pdf
+[ast and Flexible Difference Constraint Propagation for DPLL(T)](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.67.1781&rep=rep1&type=pdf)
+[Deciding Separation Logic Formulae by SAT and Incremental Negative Cycle Elimination](https://cpb-us-e1.wpmucdn.com/sites.usc.edu/dist/c/321/files/2019/03/Wang05SLICE-1txv47w.pdf)
 ## Arrays
 - https://microsoft.github.io/z3guide/docs/theories/Arrays
 - https://smtlib.cs.uiowa.edu/theories-ArraysEx.shtml
@@ -193,17 +185,11 @@ cvc5
 
 Datatypes are great. They let you bundle stuff into records.
 
-## Church / Recursors / Final
-To what degree can I go church / bohm-berarducci / recursor?
-We have arrays as higher order functions. Can used boxed universals to simulate forall.
 
-( P a -> (P a -> P a) -> P a)
+## List
+List already comes in Z3
+List vs Seq
 
-Dependent datatypes?
-
-
-Final style encodings using `define-fun` are great. 
-You can use a poor man's module system using `(include)` to import interpretations of these things
 
 ## Option datatype
 Option datatypes are a tempting way to model partial functions. I can't say I've had much success.
@@ -243,7 +229,8 @@ Option datatypes are a tempting way to model partial functions. I can't say I've
 
 
 ```
-## Rationals
+## Records
+### Rationals
 Rationals are kind of not an intrinsic. Reals are.
 
 Rationals are a tuple of ints with a notion of equivalence.
@@ -368,12 +355,124 @@ Rationals are a tuple of ints with a notion of equivalence.
 (check-sat)
 (get-model)
 ```
-## Intervals
+### Intervals
 Intervals are a tuple of reals.
+[CEGARing Exponentials into Z3 with Intervals and Python Coroutines](https://www.philipzucker.com/z3-cegar-interval/)
+### Modules
+Explicit record passing style. You nutter. But it is hard/impossible to pass types. Hmm.
+
+```z3
+;re
+(declare-datatype Pair (par (X Y) ((pair (first X) (second Y)))))
+
+(declare-datatype Any 
+(
+  (AnyInt (anyint Int))
+  (AnyBool (anybool Bool)) 
+  (AnyString (anystring String)) 
+  (AnyPair (anypair (Pair Any Any)))
+ ; (AnyArray (anyarray (Array Any Any))) ; (error "line 6 column 1: datatype is not co-variant"). Ruh roh.
+  ; Error
+))
+
+;(define-sort T () Int)
+(declare-datatype AExpr (par (T)
+  ((AExpr (add_ (Array (Pair T T) T)) 
+          (lit_ (Array Int T))))       
+))
+
+(define-fun example ((M (AExpr Int))) Int 
+  (let ((add_ (add_ M)) (lit_ (lit_ M))) ; "open" the module
+    (add_ (pair (lit_ 1) (lit_ 2)))
+  )
+)
+; polymorphism is weak enough I need to repeat myself
+(define-fun example_string ((M (AExpr String))) String 
+  (let ((add_ (add_ M)) (lit_ (lit_ M))) ; "open" the module
+    (add_ (pair (lit_ 1) (lit_ 2)))
+  )
+)
+
+(define-fun example_any ((M (AExpr Any))) Any
+  (let ((add_ (add_ M)) (lit_ (lit_ M))) ; "open" the module
+    (add_ (pair (lit_ 1) (lit_ 2)))
+  )
+)
+
+(define-const aexprlit (AExpr Int) 
+  (AExpr
+   (lambda ((x (Pair Int Int))) (+ (first x) (second x)))
+   (lambda ((x Int)) x)
+  ))
+(define-const aexprstring (AExpr String) 
+  (AExpr
+   (lambda ((x (Pair String String))) (str.++ "[" (first x) "+" (second x) "]" ))
+   (lambda ((x Int)) (str.from_int x))
+  ))
+
+; should use error producing "first" that uses a match.
+
+(define-const aexprlit2 (AExpr Any) 
+  (AExpr
+   (lambda ((x (Pair Any Any))) (AnyInt (+ (anyint (first x)) (anyint (second x)))))
+   (_ as-array AnyInt)  ;(lambda ((x Int)) (AnyInt x))
+  ))
+(define-const aexprstring2 (AExpr Any) 
+  (AExpr
+   (lambda ((x (Pair Any Any))) (AnyString (str.++ "[" (anystring (first x)) "+" (anystring (second x)) "]" )))
+   (lambda ((x Int)) (AnyString (str.from_int x)))
+  ))
+
+;(define-const astring (AExpr Any)
+;  (AExpr (AnyString aexprstring
+;)
+(simplify (example aexprlit))
+(simplify (example_string aexprstring))
+(simplify (example_any aexprlit2))
+(simplify (example_any aexprstring2))
+
+```
+Hmm. Phantom hoas?
+
+## Church / Recursors / Final
+To what degree can I go church / bohm-berarducci / recursor?
+We have arrays as higher order functions. Can used boxed universals to simulate forall.
+
+( P a -> (P a -> P a) -> P a)
+
+Dependent datatypes?
+
+
+Final style encodings using `define-fun` are great. 
+You can use a poor man's module system using `(include)` to import interpretations of these things
+
+# Solvers
+Q: What options are actualy worth fiddling with
+It is interesting to note what unusual characteristics solvers have.
+
+- z3
+- bitwuzla
+- boolector
+- cvc4
+- cvc5
+- yices2 https://yices.csl.sri.com/papers/manual.pdf yices has a `ef-solve` mode that synesthesia used for synthesis. Is this the analog of PBR solving?
+- [smtinterpol](https://github.com/ultimate-pa/smtinterpol)
+- alt-ergo
+- veriT
+- colibri - good at floats?
+- mathsat (ultimate eliminator https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&tool=eliminator)
+- smt-rat
+- stp
+- [dreal](http://dreal.github.io/)
+
+Other systems
+- vampire
+- aprove
+- E
 
 # Optimization
 Is Z3 good for classic optimization problems?
-I don't know. Without any data I'd guess probably not.
+I don't know. Without any data I'd guess probably not. It is an after thought to the system. If it beats systems built from the ground up for this purpose that's kind of embarassing.
 
 But minimization can be useful
 - Datalog models are minimal ones
@@ -429,6 +528,8 @@ Implementing datalog as a minsat problem. Minimal model.
 ```
 
 # Synthesis
+[aeval](https://github.com/grigoryfedyukovich/aeval/) quantifier elimination that also synthesizes
+
 ## Constrained Horn Clauses
 See note on CHC
 
@@ -809,19 +910,137 @@ SKI combinators. I've heard tale that F* compiles to ski combinators in some par
 # Models
 ## Separation logic
 <https://www.philipzucker.com/executable-seperation/> blog post modelling separation logic in Z3
-
+http://cvc4.cs.stanford.edu/wiki/Separation_Logic
 Can do the same sort of thing directly in define-fun
+
+Using the Option encoding seems to work very poorly
 ```z3
 ;re
-(declare-datatype Heap 
-  ((Heap (data (Array Int Int)) (valid (Array Int Bool))))
-)
-;(define-sort Heap () (Array Int Int))
+;(declare-datatype Heap 
+;  ((Heap (data (Array Int Int)) (valid (Array Int Bool))))
+;)
+(define-sort Ptr () (_ BitVec 4))
+(declare-datatype Option (par (T) (
+  (Some (some T))
+  (None)
+  )
+))
+(define-sort Heap () (Array Ptr (Option Ptr)))
 (define-sort Prop () (Array Heap Bool))
 
-(define-const emp Prop 
-  (lambda ((x Heap)) (const   false))
+(define-const empty-heap Heap (lambda ((p Ptr)) None))
+(define-const emp Prop (lambda ((h Heap)) (= h empty-heap)))
+(define-fun pto ((x Ptr) (y Int)) Prop
+  (lambda ((h Heap)) (= h (store empty-heap x (Some y)))))
+
+; regular connectives are just lifts
+(define-fun and_ ((a Prop) (b Prop)) Prop 
+  (lambda ((h Heap)) (and (a h) (b h))))
+(define-fun or_ ((a Prop) (b Prop)) Prop 
+  (lambda ((h Heap)) (or (a h) (b h))))
+(define-fun impl_ ((a Prop) (b Prop)) Prop 
+  (lambda ((h Heap)) (=> (a h) (b h))))
+
+(define-fun ** ((a Prop) (b Prop)) Prop 
+  (lambda ((h Heap)) 
+  (exists ((h1 Heap) (h2 Heap))
+  (and (a h1) (b h2)
+   (forall ((x Ptr))
+   (and
+    (match (select h x) (
+      (None (and (= None (select h1 x)) (= None (select h2 x))))
+      ((Some y)
+        (not (= (and (= (select h1 x) (Some y)) (= (select h2 x) None))
+                (and (= (select h1 x) None) (= (select h2 x) (Some y)))
+        
+        )))
+
+   ))
+  ))
+))))
+
+(declare-const heap Heap)
+;(assert (select (** emp (pto 3 4)) heap))
+;(assert (select (** emp emp) heap))
+;(assert (select (pto 3 4) heap))
+(assert (select (** emp (pto (_ bv3 4) 4)) heap))
+(check-sat)
+(get-model)
+
+
+
+```
+```
+  (lambda ((h Heap)) 
+    (exists ((h1 Heap))
+      (let ((h2 (lambda ((x Int))
+                (match (select h x) ( 
+                  (None None)
+                  ((Some x) (match (select h1 x) (
+                          (None (Some x))
+                          ((Some y) None)
+                          )))
+      )))))
+      (and
+          (= h1 (lambda ((x Int))
+            (match (select h x) ( 
+                  (None None)
+                  ((Some x) (match (select h2 x) (
+                           (None (Some x))
+                          ((Some y) None)
+                           )))
+      ))))
+        (a h1) (b h2)
+      )
+```
+
+Using a separate valid and data encoding, it goes much better. We can share the data everywhere, which is nice
+```z3
+;re
+(define-sort Ptr () (_ BitVec 64))
+(define-sort Mask () (Array Ptr Bool))
+(define-const empty-mask Mask (lambda ((p Ptr)) false))
+(declare-datatype Heap 
+  ((Heap (data (Array Ptr Int)) (valid Mask)))
 )
+
+(define-sort Prop () (Array Heap Bool))
+(define-const emp Prop (lambda ((h Heap)) (= (valid h) empty-mask)))
+(define-fun pto ((x Ptr) (y Int)) Prop
+  (lambda ((h Heap)) (and (= (select (data h) x) y) 
+                             (= (valid h) (store empty-mask x true)))))
+
+; regular connectives are just lifts
+(define-fun and_ ((a Prop) (b Prop)) Prop 
+  (lambda ((h Heap)) (and (a h) (b h))))
+(define-fun or_ ((a Prop) (b Prop)) Prop 
+  (lambda ((h Heap)) (or (a h) (b h))))
+(define-fun impl_ ((a Prop) (b Prop)) Prop 
+  (lambda ((h Heap)) (=> (a h) (b h))))
+
+(define-fun sep ((a Prop) (b Prop)) Prop 
+  (lambda ((h Heap)) 
+  (match h (
+    ((Heap data valid)
+      (exists ((h1 Mask) (h2 Mask))
+          (and (a (Heap data h1)) (b (Heap data h2))
+              (forall ((x Ptr))
+                (and (= (valid x) (or (h1 x) (h2 x)))
+                     (not (and (h1 x) (h2 x))))
+          ))
+      )
+  )))
+))
+
+(declare-const heap Heap)
+;(assert (select (** emp (pto 3 4)) heap))
+;(assert (select (** emp emp) heap))
+;(assert (select (pto (_ bv3 4) 4) heap))
+;(assert (select (** emp (pto (_ bv3 4) 4)) heap))
+(assert (select (sep (pto (_ bv4 64) 8) (pto (_ bv3 64) 42)) heap))
+;(assert (select (sep (pto (_ bv3 4) 8) (pto (_ bv3 4) 4)) heap))
+(check-sat)
+(get-model)
 
 ```
 
@@ -957,29 +1176,146 @@ https://cstheory.stackexchange.com/questions/37211/how-to-do-type-inference-usin
 
 (define-sort TEnv () (Array String Type))
 
-(define-fun-rec type ((e Env) (t Term) (ty Type)) Bool
+(define-fun-rec type ((e TEnv) (t Term) (ty Type)) Bool
   (match t (
-    ((Var v) (select e v))
-    ((App f x) (and
-                (type e )
-    ))
+    (TT (= ty Unit))
+    ((Var v) (= ty (select e v)))
+    ((App f x) (exists ((a Type)) 
+                (and
+                  (type e f (-> a ty))
+                  (type e x a)
+    )))
     ((Lambda v body) 
       (match ty
       (
           (Unit false)
           ((-> a b) (type (store e v a) body b))
       )
-      )
+      ))
+  )
+))
 
-  ))
+
+(declare-const ty Type)
+(define-const ex Term 
+  (Lambda "x" (Var "x"))
 )
+(define-const tempty TEnv ((_ const Var) Unit))
+(assert (type tempty ex ty))
+(check-sat)
+(get-model)
+```
+
+## Refinement types
+
+
+```z3
+;re
+(define-sort -> (A B) (Array A B))
+;(define-sort Pred (T) (-> T Bool))
+
+(declare-datatype Pair (par (T1 T2)
+  ((Pair (fst T1) (snd T2)))))
+
+(define-sort Var () String)
+(define-sort Env () (-> Var Int))
+(define-sort Pred () (-> (-> Var Int) Bool))
+;(define-sort Base () (Pair Var Pred))
+; predicates in refinement types refer to all introduced variables.
+(declare-datatype Type (
+  (Forall (forall_ (-> Var (Pair Type Type)))) ; (-> Var (Pair Type Type)) hoas?
+  (Base (base  (-> Var Pred)))
+))
+; types are a thing I check substyping on.
+
+; list of VCs. a meta conjunction
+; hughs list
+(define-sort Constraint () (-> (List Pred) (List Pred)))
+
+(define-sort TEnv () (-> Var Type))
+(define-sort Synth () (-> TEnv (Pair Constraint Type)))
+(define-sort Check () (-> (Pair TEnv Type) Constraint))
+
+(define-const fail Constraint (lambda ((tl (List Pred)) 
+  (insert (lambda ((rho Env)) false)) tl)))
+(define-fun var_ ((v Var)) Synth 
+  (lambda ((gam TEnv)) (Pair nil (gam v))))
+(define-fun lit_ ((c Int)) Synth
+  (lambda ((gam TEnv)) (Pair nil (Base "c" (lambda ((rho Env)) (= (rho "c") c))))))
+(define-fun app_ ((f Synth) (x Var)) Synth
+(lambda ((gam TEnv))
+  (match (f gam) (
+    ((Pair c ty) (match ty (
+          ((Forall f) 
+            (Pair 
+              (lambda ((tl (List Pred)) ((x (Pair gam a)) (c tl)))
+              (b v x) 
+            
+            ))
+         (Base  ??? (Pair fail )
+    ))
+  )
+)))
+
+;(define-fun lam_ ((v Var) (b Check)) Check)
+;(define-fun let_ ((v Var) (e1 Synth) (e2 Check)) Check
+
+
+
+
+;(define-const Int (Base (lambda ((rho Env)) true))
+
 
 
 
 ```
 
-Refinement types
+```
+; Little ideas 
+;global error variable. Could use these for IO?
+(declare-const error_msg String)
+(ite make-sense goeahead (str.substr error_msg "This property doesn't make sense."))
 
+; Well typed state is too hard.
+(declare-datatype State (T) (
+  (State (val Value)
+          (state T)
+  )
+))
+(define-sort State (T) (-> T (Tup Value T)))
+
+
+(define-fun bind ((x State) (f (-> Value State))
+  ((select f (val x)) (state x))
+)
+
+
+; (Tup a b) to store interior types?
+
+; how close can i get to smtlib3 as it stands
+
+(define-sort Code (T) T)
+; I can mark what I consider compile vs runtime
+; alternatively
+(declare-const Code (par (T) (
+  (Quote (unquote T))
+)))
+
+(declare-datype MultiEnv
+  (
+    (MultiEnv
+      (intenv (-> Var Int))
+      (boolenv (-> Var Bool))
+      (stringenv (-> Var String))
+    )
+  )
+)
+; or use untyped (Env Var Value)
+
+; basic implication.
+(Pair Pred Pred) --> (forall rho (=> (p rho) (q rho)))
+
+```
 
 # Transcendentals
 <https://cvc5.github.io/docs/cvc5-0.0.7/theories/transcendentals.html>
@@ -1189,14 +1525,16 @@ f-inv trick for injective function axiomatization
 Hmm. Z3 has `sin` built in? https://github.com/Z3Prover/z3/blob/f1bf660adc6f40cfdbd1c35de58c49b5f9960a9c/src/ast/arith_decl_plugin.h doesn't really seem so. It just recognizes it as defined. subpaving is interesting
 
 
+
 ## Mechanisms for abstraction
 
 ### `let`
 ### define
-### datatype
+### datatype DSL
+include and poor man module system
 
 ## Quantifiers and define
-Sometimes you can eliminate quantifiers by using define rather than
+Sometimes you can eliminate quantifiers by using define rather than a quantifier. Some quantifiers are turned into macros by macrofinders. `define-fun` is explicitly macro expanded.
 
 ```
 ;re
@@ -1616,6 +1954,12 @@ Hmm. minikanren is structured more like clark completion. Interesting.
 ;(get-model)
 ```
 
+```z3
+;re
+(declare-datatype Void ())
+; invalid datatype declaration, datatype does not have any constructors"
+```
+
 ## Relations vs Functions
 Sometims you may want to work relationally rather than functionally.
 
@@ -1685,10 +2029,10 @@ Quantify over bounded domains only. This might play nice with mbqi. Not so much 
 ### uZ3
 ```z3
 ;re
+
 (declare-sort A)
 
 (declare-rel add (A A A))
-;(declare-rel path (A A))
 (declare-var a A)
 (declare-var b A)
 (declare-var c A)
@@ -1697,12 +2041,8 @@ Quantify over bounded domains only. This might play nice with mbqi. Not so much 
 (declare-const x3 A)
 
 (rule (=> (add a b c) (add b a c)))
-;(declare-rel q3 (A))
-;(rule (=> (path #b001 b) (q3 b)))
 (rule (add x1 x2 x3))
 
-;(query q1)
-;(query q2)
 (query add :print-answer true)
 
 
@@ -1742,6 +2082,10 @@ Take horn clause  head(x) :- b(x).
 Normalize by putting equalities in the body. This means ground facts become. `edge(1,2). ---> edge(X,Y) :- X = 1, Y = 2.`
 Now collect up all rules with heads. head == body1 \/ body2 \/ body3 \/
 
+This example may be deceptive.
+`p :- p.` is an example rule that in clark completion allows self reinforcing of p. It justifies itself. Not good.
+So perhaps one way of thinking about this is you need some kind of termination argument, inductive type, or minimality restriction. 
+
 
 ```z3
 (declare-fun edge (Int Int) Bool)
@@ -1776,6 +2120,7 @@ My gut says this is a pretty nuanced statement.
 
 Simple obvious axioms actually express that it is an overapproximation of the theory. For example R(a,b) = True is a valid model of the transtivieity axioms
 
+[Some Remarks on the Definability of Transitive Closure in First-order Logic and Datalog](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.127.8266&rep=rep1&type=pdf)
 
 https://microsoft.github.io/z3guide/docs/theories/Special%20Relations#transitive-closures
 
@@ -1784,8 +2129,8 @@ expansion operator of database. This is a little nuts
 
 explicit
 
-deterministic transitive closure.
-http://cs.technion.ac.il/~shachari/dl/thesis.pdf tricking your way around these restrictions
+deterministic transitive closure. Transitive closure of a functional relationship is a little bit lesser.
+http://cs.technion.ac.il/~shachari/dl/thesis.pdf tricking your way around these restrictions. Kind of using an indirect minimality condition.
 
 
 
@@ -2057,6 +2402,37 @@ add(a,b) = add(b,a) if
 
 
 
+# Parsing
+This is not working.
+```z3
+;re
+(declare-datatype Tree (
+  (Leaf)
+  (Node (left Tree) (right Tree))
+  (Nest (nest Tree))
+))
+
+(define-fun-rec parse ((x String) (p Tree)) Bool
+  (match p (
+    ((Leaf) (= x ""))
+    ((Nest n)  (exists ((s String)) 
+        (and (= x (str.++ "(" s ")")) (parse s n))))
+    ((Node l r) 
+      (exists ((s1 String) (s2 String))
+        (and 
+         (= x (str.++ s1 s2))
+         (parse s1 l) (parse s2 r)
+    )))
+    )
+))
+
+(declare-const p Tree)
+(assert (parse "(())" p))
+;(assert (= "(())" (str.++ "(" "" ")" )))
+(check-sat)
+(get-model)
+
+```
 
 
 # Finite Models
@@ -2070,7 +2446,6 @@ Not all axioms have finite models.
 Is there a pile of tricks or systematic thing I can do to a set of axioms such that they have or may have a finite model and this model has some useful relationship to the infinite model.
 
 one suggestion. Try to use relational definitions, not functional definitions. total functions tend to lead to infinite models.
-
 
 Finite model finding. Finitizing a set of axioms in such a way that the resulting model has a useful relationship to the actual infinite model. Just truncating isn't very satisfactory. 
 
@@ -2220,6 +2595,7 @@ Any function defines equivalence classes based on it's preimages.
 
 Yeah, this is nonsensical. There aren't enough hooks to control what is equal and isn't. Externally, we could try to search
 # Weakest Precondition
+- [Weakest Precondition with Z3py](https://www.philipzucker.com/weakest-precondition-z3py/)
 
 ### Initial Style
 Deep embedding of weakest precondition
@@ -3693,3 +4069,5 @@ https://microsoft.github.io/z3guide/docs/theories/Special%20Relations
 # Resources
 
 https://ojs.aaai.org/index.php/AAAI/article/view/9755 sat modulo monotonic theories
+
+https://users.aalto.fi/~tjunttil/2020-DP-AUT/notes-smt/index.html

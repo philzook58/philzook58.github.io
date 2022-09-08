@@ -39,6 +39,7 @@ title: Databases
 - [Resources](#resources)
   - [Conferences](#conferences)
   - [Misc](#misc)
+- [postgres](#postgres)
 
 
 See also:
@@ -345,6 +346,61 @@ print(add(-1,-2))
 
 ```
 
+```python
+import duckdb
+con = duckdb.connect(database=':memory:')
+con.execute("CREATE TABLE root (x INTEGER, y INTEGER);")
+# "don't use execute many"
+con.executemany("INSERT INTO root VALUES (?, ?)", [(1,1),(2,2),(3,3),(1,2),(2,3)])
+con.execute("""
+SELECT x, max(y)
+    FROM root
+    GROUP BY x;""")
+print(con.fetchall())
+
+
+
+#con.execute("""
+#UPDATE root a
+#  INNER JOIN root b 
+#  ON a.y = b.x
+#  SET a.y = b.y""")
+#print(con.fetchall())
+
+#con.execute("""
+#UPDATE root c
+#  SET y = max(b.y)
+#    FROM root a
+#    INNER JOIN root b ON a.x = c.x AND a.y = b.x
+#    """)
+#print(con.fetchall())
+
+con.execute("""
+WITH root2(x1,y1) AS (
+  SELECT a.x, max(b.y)
+    FROM root a, root b
+    WHERE a.y = b.x
+    GROUP BY a.x
+)
+UPDATE root
+  SET y = max(b.y)
+  FROM root a
+  INNER JOIN root b
+  ON a.y = b.x
+  GROUP BY a.x;
+    """)
+print(con.fetchall())
+
+con.execute("""
+SELECT a.x, max(b.y)
+    FROM root a, root b
+    WHERE a.y = b.x
+    GROUP BY a.x;""")
+print(con.fetchall())
+
+
+```
+
 catalog multiversion concrruncy control
 cimpressed execution binder
 
@@ -545,6 +601,8 @@ graphlab
 - VLDB
 - HYTRADBOI https://www.hytradboi.com/ also very cool stuff.
 ## Misc
+[SQLite: Past, Present, and Future](https://www.vldb.org/pvldb/vol15/p3535-gaffney.pdf)
+
 [Datavases, types, and the relational model The third manifesto](https://www.dcs.warwick.ac.uk/~hugh/TTM/DTATRM.pdf)
 
 [duckdb](https://twitter.com/teej_m/status/1516864922784702469?s=20&t=hmaJXnp6Mp_aUsdRpkOMcQ) embedded like sqlite?
@@ -603,3 +661,93 @@ https://twitter.com/phil_eaton
 [Ask HN: What could a modern database do that PostgreSQL and MySQL can't](https://news.ycombinator.com/item?id=28425379)
 
 [postgres internals book](https://postgrespro.com/blog/pgsql/5969682)
+
+[advanced sql course](https://www.youtube.com/playlist?list=PL1XF9qjV8kH12PTd1WfsKeUQU6e83ldfc)
+
+[](https://modern-sql.com/)
+
+```sql
+SELECT 40 + 2;
+```
+
+```sql
+CREATE TABLE T (a int PRIMARY KEY, -- implies not null
+ b bool, c text, d int);
+
+-- CREATE TYPE mytype AS (a bool, b text);
+
+INSERT INTO T VALUES
+(1,true, "hi", 3),
+(2,true, "hi", 3)
+;
+
+-- INSERT INTO T TABLE T;
+
+SELECT myrow.* -- 2 returns row variable
+FROM T AS myrow;-- 1 binds myrow
+
+
+SELECT myrow.* -- 2 returns row variable
+FROM T AS myrow WHERE myrow.a = myrow.a;
+
+DROP TABLE IF EXISTS T;
+
+--SELECT * FROM T;
+
+-- can label columns
+SELECT 40 + 2 AS firstcol, "dog" || "store" AS secondcol;
+
+VALUES (10), (20); -- values may be used anywhere sql expects a table
+
+
+SELECT * FROM (VALUES (10,20), (0,10)) AS myrow(x,y); 
+```
+Scalar subqueries - subqueries that return a single row may be considered as scalar values
+
+From binds below, even though it's kind of a for loop.
+[row for row in table] I guess this also reverses order.
+
+Order by expressions. So we coukd have many more ordering constraints than columns for xample
+
+Select distinct on. Returns first row in each group.
+
+
+agregates bool_and bool_or (forall and exists)
+
+
+Group by - wadler. Changing type of row entry to bag(row entry) 
+
+ALL bag semantics, no all is set semantics
+
+```sql
+WITH RECURSIVE 
+  series(i) as (
+    VALUES (0)
+    UNION
+    SELECT t.i + 1 FROM
+      series as t where t.i < 10
+  )
+ SELECT * FROM series;
+
+```
+
+```sql
+WITH RECURSIVE
+  root(i,j) AS (
+    SELECT foo.i, max(foo.j) 
+    FROM (VALUES (1,1), (2,1), (3,3)) AS foo(i,j)
+          --UNION 
+          --(SELECT i, k FROM root AS (i,j), root as (j1,k) where j = j1))
+          )
+    SELECT * from root;
+
+```
+
+```sql
+SELECT *
+  FROM (VALUES (1,1), (2,1), (3,3)) AS foo(i,j);
+
+```
+
+# postgres
+`sudo -u postgres psql`

@@ -20,11 +20,15 @@ I should renamed this article to Mathematical Programming / Operations Research 
     - [Linear in _what_?](#linear-in-what)
     - [Polytope inclusion](#polytope-inclusion)
   - [Applications](#applications)
-    - [Q Learning](#q-learning)
+    - [Discrete Optimization Problems](#discrete-optimization-problems)
+    - [Control](#control)
+      - [Q Learning](#q-learning)
+    - [PDEs](#pdes)
     - [Denoising](#denoising)
     - [Compressed sensing](#compressed-sensing)
     - [Inverse Problems](#inverse-problems)
-    - [](#)
+    - [Min Path](#min-path)
+    - [Max flow](#max-flow)
     - [Polynomial Solutions](#polynomial-solutions)
     - [Fitting floating point polynomials](#fitting-floating-point-polynomials)
     - [Quantization](#quantization)
@@ -135,8 +139,29 @@ This trick does not generalize as much as one might naively hope. Nested optimiz
 - Network flow
 - how do strings hang
 - Contact constraints
+### Discrete Optimization Problems
+If an optimizaion problem has a poly time algorithm, there's a decent chance it isn't so bad to embed in linear programming
 
-### Q Learning
+### Control
+- [cvxpy control demo](https://colab.research.google.com/github/cvxgrp/cvx_short_course/blob/master/intro/control.ipynb)
+- [Categorical Combinators for Convex Optimization and Model Predictive Control using Cvxpy](https://www.philipzucker.com/categorical-combinators-for-convex-optimization-and-model-predictive-control-using-cvxpy/)
+- [2D Robot Arm Inverse Kinematics using Mixed Integer Programming in Cvxpy](https://www.philipzucker.com/2d-robot-arm-inverse-kinematics-using-mixed-integer-programming-in-cvxpy/)
+- [Boundcing a Ball with Mixed Integer Programming](https://www.philipzucker.com/bouncing-a-ball-with-mixed-integer-programming/)
+- [Trajectory Optimization of a Pendulum with Mixed Integer Linear Programming](https://www.philipzucker.com/trajectory-optimization-of-a-pendulum-with-mixed-integer-linear-programming/)
+- [Mixed Integer Programming & Quantization Error](https://www.philipzucker.com/mixed-integer-programming-quantization-error/)
+- [Model Predictive Control of CartPole in OpenAI Gym using OSQP](https://www.philipzucker.com/model-predictive-control-of-cartpole-in-openai-gym-using-osqp/)
+- [LQR with cvxpy](https://www.philipzucker.com/lqr-with-cvxpy/)
+- [Flappy Bird as a MIP](https://www.philipzucker.com/flappy-bird-as-a-mixed-integer-program/)
+#### Q Learning
+[More Reinforcement Learning with cvxpy](https://www.philipzucker.com/more-reinforcement-learning-with-cvxpy/)
+[Q learning with linear programming](https://www.philipzucker.com/q-learning-with-linear-programming-cvxpy-openai-gym-pendulum/)
+
+### PDEs
+
+You can encode some PDEs to mip to find the minimal energy ground state.
+[XY model with MIP](https://www.philipzucker.com/solving-the-xy-model-using-mixed-integer-optimization-in-python/)
+[Coulomb Gas as Mixed integer program](https://www.philipzucker.com/the-classical-coulomb-gas-as-a-mixed-integer-quadratic-program/)
+[Solving the Ising model with MIP](https://www.philipzucker.com/solving-the-ising-model-using-a-mixed-integer-linear-program-solver-gurobi/)
 ### Denoising
 Total variation reconstruction https://en.wikipedia.org/wiki/Total_variation_denoising
 
@@ -147,8 +172,8 @@ https://en.wikipedia.org/wiki/Inverse_problem
 Inverse problems are trying to determine stuff from observations.
 In particular, you're trying to infer the systems of equations that define a system from different solutions of the system. The system of equations of a wave system or laplace system will include the shape of objects in the system
 
-### 
-Naw. This doesn't work.
+### Min Path
+
 
 ```python
 import cvxpy as cvx
@@ -158,12 +183,17 @@ path = cvx.Variable((3,3), nonneg=True)
 constraints = []
 constraints += [path[i,j] >= edge[i,j]  for i in range(3) for j in range(3)]
 constraints += [path[i,k] >= edge[i,j] + path[j,k] for i in range(3) for j in range(3) for k in range(3)]
-constraints += [edge[0,1] == 1, edge[1,2] == 1]
+constraints += [edge[0,1] == 1, edge[1,2] == 1] # Plus all non existent edges have weight inifinty
 
 prob = cvx.Problem(cvx.Minimize(cvx.sum(path) + cvx.sum(edge)), constraints)
 print(prob.solve())
 
 ```
+
+Conversely, min-path algorithms can solve problems of this form.
+
+### Max flow
+https://en.wikipedia.org/wiki/Maximum_flow_problem
 
 ### Polynomial Solutions
 ### Fitting floating point polynomials
