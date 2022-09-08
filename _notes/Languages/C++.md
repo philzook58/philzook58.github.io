@@ -49,3 +49,18 @@ int main(){
 
 
 [embracing modern c++ safely](https://news.ycombinator.com/item?id=31559118)
+
+[hidden cost of C++ exceptions](https://grenouillebouillie.wordpress.com/2022/05/09/the-hidden-cost-of-exception-handling/) if you torture the compiler
+
+
+
+[Abseil](https://abseil.io/) - google C++ stdlib
+
+[Folly](https://github.com/facebook/folly) - something similar by facebook https://news.ycombinator.com/item?id=29841271
+
+[conan C/C++ pakcage manager](https://conan.io/)
+[vcpkg](https://vcpkg.io/en/index.html)
+
+Google test
+
+google bench

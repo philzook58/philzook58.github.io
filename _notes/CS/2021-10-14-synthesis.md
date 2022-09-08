@@ -39,6 +39,8 @@ https://github.com/TyGuS/suslik syntheiss of heap maniuplation programs from sep
 https://www.youtube.com/watch?v=mFjSbxV_1vw&ab_channel=Fastly Synthesis in reverse engineering
 Synesthesia
 
+[Program Syntehsis book](https://www.microsoft.com/en-us/research/wp-content/uploads/2017/10/program_synthesis_now.pdf)
+
 # Alternating Quantifiers
 
 Exists forall problems
