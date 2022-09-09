@@ -76,6 +76,7 @@ wordpress_id: 1865
 - [Linear Logic Programming](#linear-logic-programming)
 - [Coinductive Logic Programming](#coinductive-logic-programming)
 - [inductive logic programmingh](#inductive-logic-programmingh)
+- [Probablistic Logic Programming](#probablistic-logic-programming)
 - [Abductive logic programming](#abductive-logic-programming)
 - [Theorem Proving](#theorem-proving)
 - [Misc](#misc)
@@ -848,6 +849,11 @@ Man what hope is there of compiling a 7 year old haskell project?
 [Automatic Differentiation using Constraint Handling Rules in Prolog](https://arxiv.org/abs/1706.00231)
 Build up dataflow graph. Huh.
 
+[Pros and Cons of Using CHR for Type Inference](https://dtai.cs.kuleuven.be/CHR/papers/chr2012/02-Csorba-chr12.pdf) https://twitter.com/flippac/status/1567622246025383938?s=20&t=7jEZ-QlMkI3Jdw1l-LGSjg
+
+[Toward a First-Order Extension of Prolog’s Unification          using CHR](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.112.1661&rep=rep1&type=pdf)
+
+[satisfiability modulo chr](https://www.comp.nus.edu.sg/~gregory/papers/smchr.pdf)
 ### Compiling
 [KU leuven system : implementation and application](https://lirias.kuleuven.be/retrieve/33588). Hmm. Is CHR compiled into prolog code?
 [CCHR: the fastest CHR Implementation, in C](https://lirias.kuleuven.be/retrieve/22123)  
@@ -1766,6 +1772,11 @@ https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
 
 [Abductive Reasoning in Intuitionistic Propositional Logic via Theorem Synthesis](https://arxiv.org/abs/2205.05728v1). Includes a g4ip
 
+[Hakank symbolic function induction picat](https://twitter.com/hakankj/status/1556344141994508288?s=20&t=yqv3psiW3ByDbnVTBLr_GA)
+
+# Probablistic Logic Programming
+
+
 # Abductive logic programming
 https://en.wikipedia.org/wiki/Abductive_logic_programming
 
@@ -1790,6 +1801,12 @@ Is it kind of a zipper to isolate a variable?
 Dyckhoff g4ip
 
 # Misc
+[rethinking prolog - oleg](https://okmij.org/ftp/kakuritu/rethinking.pdf) unification variables are an optimization
+
+[An interactive semantics of logic programming](https://arxiv.org/abs/cs/0107022) https://twitter.com/davidad/status/1567780900284387329?s=20&t=jW6J2ukuizpdkb11CCe3bQ
+
+[ICLP proceedings](https://arxiv.org/abs/2208.02685) - lots of ASP stuff
+
 
 [pyswip](https://github.com/yuce/pyswip)
 

@@ -3,7 +3,17 @@ layout: post
 title: Wasm/Emscripten
 ---
 
-- [Minizinc](#minizinc)
+- [WASM](#wasm)
+  - [WASI](#wasi)
+    - [WABT](#wabt)
+    - [Running](#running)
+    - [Wasm modules](#wasm-modules)
+    - [Writing Wasm directly](#writing-wasm-directly)
+- [Emscripten](#emscripten)
+    - [Command line Utility Conversion](#command-line-utility-conversion)
+    - [Souffle](#souffle)
+  - [Minizinc](#minizinc)
+- [Misc](#misc)
 
 
 sqlite fuzzler
@@ -273,6 +283,7 @@ https://www.npmjs.com/package/minizinc/v/1.0.4-alpha.77
 Ah I need release/6.3.0 branch which has the const fix.
 
 # Misc
+[MSWasm: Soundly Enforcing Memory-Safe Execution of Unsafe Code](https://arxiv.org/pdf/2208.13583.pdf)
 
 <https://github.com/AlexAltea/capstone.js>
 <https://github.com/bordplate/js86>

@@ -527,3 +527,13 @@ cvxpygen
 
 [Max cut](https://twitter.com/parubin/status/1537815438368858114?s=20&t=Id3zoB1xCWLA5QQIrPNHVA)
 
+<<<<<<< HEAD
+https://twitter.com/caglar_ee ths guy is tweeting a ton f courses
+
+[linear optimziation UW-madison](https://www.youtube.com/playlist?list=PLeO_PhASIA0Ot69TqANAnNxoykHGOQp2Y)
+
+[integer optimization](https://www.youtube.com/playlist?list=PLeO_PhASIA0NlDNF9y-SsgVEYcvAMj2CY)
+
+[intro to optimization](https://laurentlessard.com/teaching/524-intro-to-optimization/) in julia
+
+

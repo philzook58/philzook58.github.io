@@ -811,3 +811,7 @@ Advanced functional programming
 
 
 ocamlfdo- https://github.com/gretay-js/ocamlfdo ocaml feedback directed optimizer
+
+[rank N types in ocaml](https://soap.coffee/~lthms/posts/RankNTypesInOCaml.html) - wrap in records and using unboxed annotations
+
+[PPX](https://ocaml.org/docs/metaprogramming) deriving_inline, astexplorer is in vscode

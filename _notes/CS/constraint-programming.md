@@ -95,6 +95,13 @@ table annotions include lattice type stuff "mode-directed tabling"
 action rules
 loops
 # Answer Set Programming
+https://arxiv.org/html/2208.02685v1/#rprlif19 iclp 2022
+[Transforming Gringo Rules into Formulas in a Natural Way](https://arxiv.org/html/2208.02685v1/#EPTCS364.13) translating gringo into First order logic
+
+[Verifying Tight Logic Programs with anthem and vampire](https://www.cambridge.org/core/journals/theory-and-practice-of-logic-programming/article/abs/verifying-tight-logic-programs-with-anthem-and-vampire/F8EDF1CABBEC7B5AC369B51D8BF90F7D) - using vampire to solveasp problems?
+
+[Transforming Gringo Rules into Formulas in a Natural Way](https://link.springer.com/chapter/10.1007/978-3-030-75775-5_28)
+
 [How to build your own ASP-based system ?! ](https://arxiv.org/pdf/2008.06692.pdf)
 
 [Arntzenius disccision](https://twitter.com/arntzenius/status/1264570390849949696?s=20&t=5y91-I1SPrIGomAWSqs69w) "How are Datalog, SAT/SMT, and answer set programming related? Is ASP basically the generalisation of SAT to first order logic, plus recursion? And Datalog restricts ASP to Horn clauses and stratified recursion?

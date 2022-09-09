@@ -62,6 +62,7 @@ Not sure how to arrange this hierarchy
 # Decompositions
 ### LU
 ### SVD
+https://peterbloem.nl/blog/pca-4
 ### Jordan
 ### QR
 ### Eigenvector

@@ -39,6 +39,7 @@ title: SMT Solvers
 - [Transcendentals](#transcendentals)
 - [Float](#float)
 - [Quantifiers](#quantifiers)
+  - [Gas](#gas)
   - [Mechanisms for abstraction](#mechanisms-for-abstraction)
     - [`let`](#let)
     - [define](#define)
@@ -64,6 +65,9 @@ title: SMT Solvers
   - [EPR](#epr)
 - [Query Containment](#query-containment)
 - [Weakest Precondition](#weakest-precondition)
+- [- Weakest Precondition with Z3py](#--weakest-precondition-with-z3py)
+- [Program Verification](#program-verification)
+  - [Weakest Precondition](#weakest-precondition-1)
     - [Initial Style](#initial-style)
     - [Final Style](#final-style)
 - [Proofs](#proofs)
@@ -528,7 +532,11 @@ Implementing datalog as a minsat problem. Minimal model.
 ```
 
 # Synthesis
+
 [aeval](https://github.com/grigoryfedyukovich/aeval/) quantifier elimination that also synthesizes
+
+
+[Synthesizing an Instruction Selection Rule Library from Semantic Specifications](https://pp.ipd.kit.edu/uploads/publikationen/buchwald18cgo.pdf)
 
 ## Constrained Horn Clauses
 See note on CHC
@@ -1160,6 +1168,8 @@ This often involves encoding the types into smtlib terms, the analog in some sen
 https://cstheory.stackexchange.com/questions/37211/how-to-do-type-inference-using-an-smt-solver
 [SMT-based Static Type Inference for Python 3](https://ethz.ch/content/dam/ethz/special-interest/infk/chair-program-method/pm/documents/Education/Theses/Mostafa_Hassan_BA_report.pdf)
 
+[Practical SMT-Based Type Error Localization](https://cs.nyu.edu/~wies/publ/practical_smt-based_type_error_localization.pdf)
+
 ```z3
 ;re
 (declare-datatype Type (
@@ -1524,6 +1534,56 @@ f-inv trick for injective function axiomatization
 
 Hmm. Z3 has `sin` built in? https://github.com/Z3Prover/z3/blob/f1bf660adc6f40cfdbd1c35de58c49b5f9960a9c/src/ast/arith_decl_plugin.h doesn't really seem so. It just recognizes it as defined. subpaving is interesting
 
+## Gas
+https://namin.seas.harvard.edu/files/krml237.pdf
+https://microsoft.github.io/z3guide/docs/logic/Quantifiers#patterns
+
+```z3
+; Nah. This isn't doing what I want it to
+;re
+(set-option :smt.auto-config false) ; disable automatic self configuration
+(set-option :smt.mbqi false) 
+(declare-datatype Gas (
+  (Z)
+  (S (prev Gas))
+))
+
+(declare-sort Num)
+(declare-fun add (Gas Num Num) Num)
+
+(assert
+  (forall ((g Gas) (x Num) (y Num))
+
+     (!   (= (add g y x) (add g y x)) ; (add g y x)
+    :pattern ((add (S g) x y))
+  )
+))
+
+; how to express gas transferrence?
+; (= (add g x y) (add g a b))
+; (add (S g) x y)) (add (S g) )
+
+(declare-const x Num)
+(declare-const y Num)
+(declare-const z Num)
+(assert 
+  (= (add (S Z) x (add (S Z) y z)) (add (S Z) x (add (S Z) z y)))
+)
+
+(check-sat)
+(get-model)
+
+
+```
+   ; (! (=> (= (add (S g) x y) e)
+
+```z3
+(define-sort Nat (T) (-> T (-> T T) -> T))
+
+
+
+```
+
 
 
 ## Mechanisms for abstraction
@@ -1532,6 +1592,8 @@ Hmm. Z3 has `sin` built in? https://github.com/Z3Prover/z3/blob/f1bf660adc6f40cf
 ### define
 ### datatype DSL
 include and poor man module system
+
+
 
 ## Quantifiers and define
 Sometimes you can eliminate quantifiers by using define rather than a quantifier. Some quantifiers are turned into macros by macrofinders. `define-fun` is explicitly macro expanded.
@@ -2594,8 +2656,19 @@ Any function defines equivalence classes based on it's preimages.
 ```
 
 Yeah, this is nonsensical. There aren't enough hooks to control what is equal and isn't. Externally, we could try to search
+<<<<<<< HEAD
 # Weakest Precondition
 - [Weakest Precondition with Z3py](https://www.philipzucker.com/weakest-precondition-z3py/)
+=======
+
+# Program Verification
+[jitterbug](https://unsat.cs.washington.edu/projects/jitterbug/)
+[serval](https://unsat.cs.washington.edu/projects/serval/)
+
+
+
+## Weakest Precondition
+>>>>>>> 21c7ba3d0ba389c6c923632f446a3283fa0174c8
 
 ### Initial Style
 Deep embedding of weakest precondition
@@ -3864,6 +3937,10 @@ You know, it's a lot, but it isn't quite as overwhelming as I have felt in the p
  * src/solver/solver.h check_sat, combined_solver.cpp. check_sat is like an overloadable class function though? Where does the solver get built?
 
  * cmd_context? This is where commands are defined. Might be secret ones.
+
+
+https://github.com/Z3Prover/z3/blob/master/src/smt/mam.h ematching machine
+
 
 ## paramaters, tactics, and commands
 `z3 -in`  interactive mode

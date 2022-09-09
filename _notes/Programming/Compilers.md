@@ -35,11 +35,11 @@ wordpress_id: 2913
     - [Scheduling and Allocation](#scheduling-and-allocation)
     - [Multiple Blocks](#multiple-blocks)
     - [Register Packing](#register-packing)
-    - [Other](#other)
   - [Rewrite Rules](#rewrite-rules)
   - [Instruction Selection](#instruction-selection)
   - [Register Allocation](#register-allocation)
   - [Instruction Scheduling](#instruction-scheduling)
+  - [SuperOptimizers](#superoptimizers)
   - [Assembly Production](#assembly-production)
 - [JIT](#jit)
 - [Garbage Collector](#garbage-collector)
@@ -174,7 +174,7 @@ Expand expressions with care - less dependencies
 
 [Implementing a Toy Optimizer](https://twitter.com/cfbolz/status/1549376580912386051?s=12&t=2TzLXakPIAt6RPwcq4Qz9w)
 
-[liveness analysis for ssa form program](https://hal.inria.fr/inria-00558509v2/document)
+[liveness analysis for ssa form program](https://hal.inria.fr/inria-00558509v2/document) 
 
 
 
@@ -197,6 +197,13 @@ FPL - fast presburger arithmetic
 
 # Code Gen
 ## Declarative
+- [Relational Processing for Fun and Diversity](https://personal.utdallas.edu/~hamlen/lundquist19minikanren.pdf) minikanren
+- [Denali - a goal directed super optimizer](https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf) egraph based optimization of assembly
+- [PEG](https://cseweb.ucsd.edu/~lerner/papers/popl09.pdf) egraph cfg
+- [RVSDG](https://github.com/egraphs-good/egg/discussions/106)
+- [minimips minikanren mips assembler/disassembler](https://github.com/orchid-hybrid/minimips)
+- [Parsing and compiling using Prolog](https://dl.acm.org/doi/abs/10.1145/22719.22946) There is also a chapter in the art of prolog
+
 ### Unison
 - [Unison](https://unison-code.github.io/)
 
@@ -302,12 +309,7 @@ We can also use a next[i,j] matrix or change live to a start end cycle parameter
 ### Register Packing
 Using the rectangle packing constraint for register modelling
 
-### Other
-- [Relational Processing for Fun and Diversity](https://personal.utdallas.edu/~hamlen/lundquist19minikanren.pdf) minikanren
-- [Denali - a goal directed super optimizer](https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf) egraph based optimization of assembly
-- [PEG](https://cseweb.ucsd.edu/~lerner/papers/popl09.pdf) egraph cfg
-- [RVSDG](https://github.com/egraphs-good/egg/discussions/106)
-- [minimips minikanren mips assembler/disassembler](https://github.com/orchid-hybrid/minimips)
+
 
 ## Rewrite Rules
 peephole optimization
@@ -318,6 +320,16 @@ See: e-graphs
 [scheduling using unimodular modelling](https://twitter.com/taktoa1/status/1531386684876632064?s=20&t=-IHVNfpCMKlhva0T8ctWXA)
 
 ## Instruction Selection
+Maximal munch parsing
+http://www.cs.cmu.edu/afs/cs/academic/class/15745-s07/www/lectures/lect9-instruction_selection_745.pdf
+Like parser generators / libraries, you can make instruction selection libraries / generators. Bottom up vs top down
+- TWIG BURG BEG bottom up generate instruction selectors
+- 
+
+
+[Synthesizing an Instruction Selection Rule Library
+from Semantic Specifications](https://pp.ipd.kit.edu/uploads/publikationen/buchwald18cgo.pdf)
+
 Subgraph isomorphism problem
 VF2 algorithm
 Very similar to "technology mapping" in the vlsi community.
@@ -435,6 +447,19 @@ Instruction scheduling can be parametrized as:
 2. a ranking as integers
 3. next(i,j) relation which is basically integers. Allows for partial order. after(i,j) :- next(i,k), after(). after is path connected in temporal dag. Possibly this is mappable into a lattice notion of time (i,j,k,etc)?
 
+## SuperOptimizers
+https://en.wikipedia.org/wiki/Superoptimization
+
+[Superoptimizer -- A Look at the Smallest Program ](https://web.stanford.edu/class/cs343/resources/superoptimizer.pdf) Massalin
+https://news.ycombinator.com/item?id=25196121 discussion
+
+- Souper https://github.com/google/souper https://arxiv.org/pdf/1711.04422.pdf
+- STOKE https://cs.stanford.edu/people/eschkufz/docs/asplos_13.pdf
+- TOAST an ASP based one?
+
+https://twitter.com/kripken/status/1564754007289057280?s=20&t=KWXpxw5bjeXiDnNeX75ogw Zakai binaryen superopitmizer
+
+
 ## Assembly Production
 You need to produce actual binary, actual 1s and 0s
 See also:
@@ -458,10 +483,10 @@ de-optimization paths
 [copy and patch compilation](https://twitter.com/cfbolz/status/1516418354579394566?s=20&t=7564nBvc82Jdkz_E3ccZbA)
 
 # Garbage Collector
-<<<<<<< HEAD
+
 https://github.com/mflatt/gc-demo
 https://www.youtube.com/playlist?list=PLbdXd8eufjyVCrWF-obj8_BbyU5vEF8Jw
-=======
+
 
 [treadmill gabrage collector of baker](https://news.ycombinator.com/item?id=32233472) http://www.cofault.com/2022/07/treadmill.html
 
@@ -474,7 +499,7 @@ copying vs non-copying. Copying needs to adjust pointers. Can defragment
 incremental - does the garbage collection need to happen all at once
 
 bump allocation
->>>>>>> fe1624db7dc1a0694fc2b47e2c96599873c1592f
+
 
 ## Conservative vs Exact
 

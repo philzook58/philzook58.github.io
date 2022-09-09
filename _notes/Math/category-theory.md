@@ -86,6 +86,8 @@ Part of the appeal of category theory comes from it's relationship to polymorphi
 
 https://bartoszmilewski.com/2014/10/28/category-theory-for-programmers-the-preface/
 
+https://arxiv.org/pdf/2209.01259.pdf Category Theory for Programming
+
 # Combinators
 https://en.wikipedia.org/wiki/Combinatory_logic
 

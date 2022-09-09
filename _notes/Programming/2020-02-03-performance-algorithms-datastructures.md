@@ -42,6 +42,15 @@ Network
 [latency numbers every programmer should know](https://colin-scott.github.io/personal_website/research/interactive_latency.html)
 [napkin math](https://www.youtube.com/watch?v=IxkSlnrRFqc)
 # SIMD
+[Filtering a vector with simd - rust](https://quickwit.io/blog/filtering%20a%20vector%20with%20simd%20instructions%20avx-2%20and%20avx-512/)
+
+# Memory
+dhat check for memory allocation sites that are worst
+https://en.wikipedia.org/wiki/Memory_pool
+https://en.wikipedia.org/wiki/Object_pool_pattern
+Can use vector to store fixed size chunks. Your own private malloc specialized for one size
+https://en.wikipedia.org/wiki/Slab_allocation
+
 
 [Simd for C++ developers](http://const.me/articles/simd/simd.pdf)
 

@@ -133,3 +133,5 @@ async def root():
 [cupy](https://github.com/cupy/cupy)
 
 pyiodide
+
+[taichi](https://github.com/taichi-dev/taichi) high performance programming in python

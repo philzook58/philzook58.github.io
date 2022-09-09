@@ -23,6 +23,7 @@ wordpress_id: 1849
   - [Declarative macros aka macro_rules!](#declarative-macros-aka-macro_rules)
   - [Proc Macros](#proc-macros)
   - [Hygiene](#hygiene)
+- [Optimization](#optimization)
 - [Webassembly](#webassembly)
 - [Resources](#resources)
 
@@ -210,6 +211,12 @@ I think macro_rules! is hygienic
 Hygiene is dealing with what environment variables in your macro refer to. The sort of easy version is to just paste in the code in the call site of the macro. 
 
 This kind of isn't what you want though. You almost certainly want to refer to libraries in scope at macro definition. If for example a function `foo` gets shadowed at the callsite.
+
+# Optimization
+flamegraph https://github.com/flamegraph-rs/flamegraph
+rust heap profiler dhat
+
+Make pools to improve performance?
 
 # Webassembly
 

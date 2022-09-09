@@ -56,3 +56,6 @@ model counting
 [similiarty metric between solutions](https://twitter.com/ShriramKMurthi/status/1522580546005745664?s=20&t=Q_7w5cTcsscGpoie1QtnCg) model-core in cvc5
 
 [gimsatul](https://github.com/arminbiere/gimsatul) another armin biere experiment. parallel?
+
+
+https://twitter.com/ArminBiere/status/1556292768607207425?s=20&t=yqv3psiW3ByDbnVTBLr_GA Kissat is domainting. The parallel and cloud solvers have really interesting things going on. mallob-ki. parkissat-rs is parallel winner
