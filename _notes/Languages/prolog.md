@@ -40,6 +40,7 @@ wordpress_id: 1865
   - [DCG - Definite Clauses Grammars (DCG)](#dcg---definite-clauses-grammars-dcg)
     - [Bussproofs printing](#bussproofs-printing)
       - [Categorical Prover](#categorical-prover)
+    - [Instruction selection](#instruction-selection)
   - [CHR](#chr)
     - [Compiling](#compiling)
     - [Examples](#examples-1)
@@ -64,6 +65,7 @@ wordpress_id: 1865
     - [Cuts and Such](#cuts-and-such)
   - [Lambda](#lambda)
     - [HiLog](#hilog)
+    - [Alpha prolog](#alpha-prolog)
 - [Semantics](#semantics)
 - [History](#history)
 - [Expert Systems](#expert-systems)
@@ -806,6 +808,34 @@ prove((A > (B > C)  ) --> [curry], prove( A /\ B > C).
 prove((A /\ (A > B) > B ) --> [eval].
 
 Catlog
+### Instruction selection
+A model of Instruction selection can be viewed as related to a parsing problem. A parse is building a tree out of a linearized sequence. Instruction selection is finding a linear sequence of machine instructions to represent an expression or sequence of high level statements.
+
+```prolog
+% isel(R0, select( ,A + B)) --> {B := }
+
+isel(R0, lit(A))    --> [mov(R0, A)]. % {integer(A)},
+isel(R0, A + A)     --> [lsl(R0, R1)], isel(R1, A).
+isel(R0, A + B * C) --> [fma(R0, RA,RB, RC)], isel(), sel().
+isel(R0, A + B)     --> [add(R0, R1, R2)], isel(R1, A), isel(R2, B).
+isel(R0, A * B)     --> [mul(R0, R1, R2)], isel(R1, A), isel(R2, B).
+%isel(R0, binop(Op, A, B))     --> [mul(R0, R1, R2)], isel(R1, A), isel(R2, B).
+
+% note storage restrictions.
+% isel(reg(R0), A + B)     --> [add(reg(R0), reg(R1), reg(R2))], isel(reg(R1), A), isel(reg(R2), B).
+% spill?
+% isel(R0, A) --> [mv(R0, R1)], isel(R1, A). %optional copy. Bad rule
+
+
+% liveness.
+% isel(LiveSet, ) --> [add(R0,R1,R2)], { Live1 = Live \ R0 + R1 + R2 } , isel(LiveSet)
+% maybe use bitvector?
+% No give varoables unique identifiers, skolem style? id(1, Expr), id(2, Expr), 
+
+:- initialization(main,main).
+main(_) :- phrase(isel(R0, lit(2) + lit(7)), Asm), print(Asm), halt.
+```
+
 ## CHR
 [forward chaining, chr comes up](https://swi-prolog.discourse.group/t/forward-chaining-like-rete-algorithm-in-rule-engine/5137/28)
 
@@ -854,6 +884,8 @@ Build up dataflow graph. Huh.
 [Toward a First-Order Extension of Prolog’s Unification          using CHR](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.112.1661&rep=rep1&type=pdf)
 
 [satisfiability modulo chr](https://www.comp.nus.edu.sg/~gregory/papers/smchr.pdf)
+
+[Extending Arbitrary Solvers with Constraint Handling Rules](https://www.comp.nus.edu.sg/~gregory/papers/ppdp03.pdf)
 ### Compiling
 [KU leuven system : implementation and application](https://lirias.kuleuven.be/retrieve/33588). Hmm. Is CHR compiled into prolog code?
 [CCHR: the fastest CHR Implementation, in C](https://lirias.kuleuven.be/retrieve/22123)  
@@ -1480,6 +1512,35 @@ My impression is this is a bit like "first order functional" programming. All pr
 
 
 "`X(a, b)` is just an (external) shorthand for the Prolog compound term: `apply(X, a, b)` "
+
+### Alpha prolog
+https://homepages.inf.ed.ac.uk/jcheney/programs/aprolog/
+
+Nominal logic
+https://arxiv.org/pdf/1012.4890.pdf nominal unification revsitied Urban
+
+https://johnwickerson.github.io/dissertation.pdf 
+"atoms" are a thing that are less free than unification vars but more free than ground terms. They are alpha renamable
+
+freshness constraint a # t says that a appears in no subterm in t.
+a # X when X is a variable can't be concluded.
+
+freshness judgement
+equational judgements
+
+nominal unification returns substitution and new freshness constrains
+
+A relative of miller pattern. They can be encoded into each other it says and gives references
+
+J. Cheney. Relating Nominal and Higher-Order Pattern Unification.
+J. Levy and M. Villaret. Nominal Unification from a Higher-Order Perspective
+
+==(A \ X, B \ Y) :- dif(A,B), X == swap(A,B,Y), A # Y.
+
+A # A \ Y.
+
+https://easychair.org/publications/preprint/DLVk Efficiency of a good but not linear nominal unification algorithm
+
 # Semantics
 Completion semantics
 

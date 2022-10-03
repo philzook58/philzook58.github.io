@@ -46,6 +46,7 @@ title: Datalog
   - [Dynamic Programming](#dynamic-programming)
     - [Q learning](#q-learning)
   - [Mandelbrot](#mandelbrot)
+  - [Sudoku](#sudoku)
   - [Constraint handling Rules (CHR)](#constraint-handling-rules-chr)
   - [Backprop](#backprop)
   - [Lambda representation](#lambda-representation)
@@ -371,6 +372,8 @@ SELECT a,b FROM path;
 .quit
 
 ```
+
+
 
 ### Ocaml
 #### Naive
@@ -1715,6 +1718,8 @@ out(i,x) :- path(i,_,x).
 Radix sort?
 
 ## Translating functional programs 
+https://drops.dagstuhl.de/opus/volltexte/2022/16235/pdf/LIPIcs-ECOOP-2022-7.pdf Functional Programming with Datalog
+
 Lift function to relation by making return value part of relation
 fib(n) becomes fib(b,ret)
 
@@ -1942,6 +1947,27 @@ cy      line
 ===============
 */
 ```
+## Sudoku
+
+```souffle
+
+.type bitset <: number
+.decl x(row : number, col : number, val : bitset)
+
+.decl digits(x : number) inline
+digits(x) :- x = range(1,10).
+
+#define FULL (2 ^ 9) - 1
+.decl union(x : bitset, y : bitset, res : bitset) inline
+union(x,y,res) :- res = x bor y.
+x(row, col, FULL):- digits(row), digits(col).
+.output x
+x(row,col,) :- digits(row), x(row,0,s0), x(row,1,s1), x(row,2,s2), x(row,3,s3), s = s0 bor s1 bor s2 bor s3.
+x(row,col2, s2 / s) :- x(row,col,s), SING(s), col != col2, x(row,col2,s2).
+
+
+```
+
 ## Constraint handling Rules (CHR)
 See note on prolog for more on CHR
 

@@ -601,9 +601,25 @@ graphlab
 - VLDB
 - HYTRADBOI https://www.hytradboi.com/ also very cool stuff.
 ## Misc
+[SQL/DB learning resources](https://twitter.com/craigkerstiens/status/1568269750693773313?s=20&t=Ed04dBodGtW0kFSYL76bNQ)
+
+[use the index luke](https://use-the-index-luke.com/)
+[sqlbolt](https://sqlbolt.com/) = interactive sql tutorial
+
+[the art of postgresql](https://theartofpostgresql.com/) a book.
+[select star sql](https://selectstarsql.com/)
+
+[schemaverse](https://schemaverse.com/) a space battle game written in sql
+  
 [SQLite: Past, Present, and Future](https://www.vldb.org/pvldb/vol15/p3535-gaffney.pdf)
 
 [Datavases, types, and the relational model The third manifesto](https://www.dcs.warwick.ac.uk/~hugh/TTM/DTATRM.pdf)
+
+[how query engines work](https://leanpub.com/how-query-engines-work) andy grove
+
+[database internals book](https://twitter.com/therealdatabass)
+
+[database design and implementation](https://link.springer.com/book/10.1007/978-3-030-33836-7)
 
 [duckdb](https://twitter.com/teej_m/status/1516864922784702469?s=20&t=hmaJXnp6Mp_aUsdRpkOMcQ) embedded like sqlite?
 
@@ -663,6 +679,9 @@ https://twitter.com/phil_eaton
 [postgres internals book](https://postgrespro.com/blog/pgsql/5969682)
 
 [advanced sql course](https://www.youtube.com/playlist?list=PL1XF9qjV8kH12PTd1WfsKeUQU6e83ldfc)
+
+[roaring bitmaps](https://twitter.com/phil_eaton/status/1567610292586045443?s=20&t=Ed04dBodGtW0kFSYL76bNQ) https://vikramoberoi.com/a-primer-on-roaring-bitmaps-what-they-are-and-how-they-work/
+Switches out storage method and different scales and density.
 
 [](https://modern-sql.com/)
 
@@ -748,6 +767,15 @@ SELECT *
   FROM (VALUES (1,1), (2,1), (3,3)) AS foo(i,j);
 
 ```
+
+```sql
+SELECT (SELECT 42) * 2; -- this works. There is broadcasting of sorts
+
+```
+
+[Does sql need help](https://news.ycombinator.com/item?id=32799920)
+
+Views
 
 # postgres
 `sudo -u postgres psql`

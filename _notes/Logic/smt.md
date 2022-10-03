@@ -58,16 +58,20 @@ title: SMT Solvers
     - [Transitive Closure](#transitive-closure)
     - [Explicit datalog iteration](#explicit-datalog-iteration)
     - [Well founded](#well-founded)
+    - [Proof Relevant](#proof-relevant)
+      - [First Class Union Find](#first-class-union-find)
   - [Rewriting](#rewriting)
   - [Pseudo Boolean](#pseudo-boolean)
 - [Parsing](#parsing)
 - [Finite Models](#finite-models)
   - [EPR](#epr)
 - [Query Containment](#query-containment)
-- [Weakest Precondition](#weakest-precondition)
-- [- Weakest Precondition with Z3py](#--weakest-precondition-with-z3py)
 - [Program Verification](#program-verification)
-  - [Weakest Precondition](#weakest-precondition-1)
+  - [Nand2Tetris Cpu](#nand2tetris-cpu)
+  - [Arm](#arm)
+  - [Forth](#forth)
+  - [WASM](#wasm)
+  - [Weakest Precondition](#weakest-precondition)
     - [Initial Style](#initial-style)
     - [Final Style](#final-style)
 - [Proofs](#proofs)
@@ -189,7 +193,9 @@ cvc5
 
 Datatypes are great. They let you bundle stuff into records.
 
+[cvc4 codatatypes](https://www.ijcai.org/Proceedings/16/Papers/631.pdf)
 
+datatypes add an infinite number of acyclicity conditions
 ## List
 List already comes in Z3
 List vs Seq
@@ -2147,6 +2153,8 @@ Now collect up all rules with heads. head == body1 \/ body2 \/ body3 \/
 This example may be deceptive.
 `p :- p.` is an example rule that in clark completion allows self reinforcing of p. It justifies itself. Not good.
 So perhaps one way of thinking about this is you need some kind of termination argument, inductive type, or minimality restriction. 
+This particular example got lucky
+
 
 
 ```z3
@@ -2242,6 +2250,174 @@ We can check if `(assert (!= (path N x y) (path (+ N 1) x y))` for whether we've
 
 ```
 
+This doesn't really help. Well founded semantics still has a minimality condition
+### Proof Relevant
+```z3
+;re
+(declare-datatype Vert (
+  (a)
+  (b)
+  (c)
+))
+; datatype is much faster. Interesting.
+;(declare-sort Vert)
+;(declare-const a Vert)
+;(declare-const b Vert)
+;(declare-const c Vert)
+;(assert (distinct a b c))
+(declare-datatype Proof (
+  (Edge)
+  (Trans (trans-y Vert) (trans-pf Proof))
+  )
+)
+(declare-datatype Option (
+  par (T) (
+    (None)
+    (Some (get-some T))
+  )
+))
+
+
+
+(define-fun edge ((x Vert) (y Vert)) Bool
+  (or
+    (and (= x a) (= y b))
+    (and (= x b) (= y c))
+  )
+)
+
+(declare-fun path (Vert Vert) (Option Proof))
+
+; forward inference
+(assert
+  (forall ((x Vert) (y Vert))
+    (=> (edge x y) (distinct None (path x y)))
+  )
+)
+
+(assert
+  (forall ((x Vert) (y Vert) (z Vert))
+    (=> (and (edge x y) (distinct None (path y z))) (distinct None (path x z)))
+  )
+)
+; backward direction. Every relation that is not None is justified.
+(assert
+  (forall ((x Vert) (y Vert))
+    (=> (= (Some Edge) (path x y)) (edge x y))
+  )
+)
+
+(assert
+  (forall ((x Vert) (y Vert) (z Vert) (pf Proof))
+    (=> (= (Some (Trans y pf)) (path x z)) 
+        (and (edge x y) (= (Some pf) (path y z))))
+  )
+)
+
+; alternative formulation. Meh.
+;(assert
+;  (forall ((x Vert) (y Vert))
+;    (match (path x y)
+;    (
+;      (None true)
+;      ((Some Edge) (edge x y))
+;      ((Some (Trans z pf)) (and (edge x z) (= (Some pf) (path z y))))
+;    )
+;)))
+
+
+(check-sat)
+(get-model)
+(eval (path a b))
+(eval (path a a))
+(eval (path a c))
+(eval (path c a))
+(eval (path b c))
+```
+In some sense, inductive datatypes are also a minimal fixed point. It seems that by making proof relevant relations, we can inherit this minimality?
+
+One might thing you could remove the arguments to Trans. You can't remove `pf`. That is what is guaranteeing well foundedness of the derivation / acyclicity.
+
+
+See also "Proof Objects" below.
+
+```z3
+
+;re
+(declare-datatype Vert (
+  (a)
+  (b)
+  (c)
+))
+(declare-datatype Proof (
+  (Edge)
+  (Trans (trans-y Vert) (level Int))
+  )
+)
+
+(assert 
+  (= (level Edge) 0)
+)
+
+(declare-datatype Option (
+  par (T) (
+    (None)
+    (Some (get-some T))
+  )
+))
+
+
+
+(define-fun edge ((x Vert) (y Vert)) Bool
+  (or
+    (and (= x a) (= y b))
+    (and (= x b) (= y c))
+  )
+)
+
+(declare-fun path (Vert Vert) (Option Proof))
+
+
+(forall ((x Vert) (y Vert) (g Int))
+ (=> (= (Some g) (path x y)) (>= (level g) 0))
+)
+
+
+; forward direction
+(assert
+  (forall ((x Vert) (y Vert))
+    (=> (edge x y) (distinct None (path x y)))
+  )
+)
+
+(assert
+  (forall ((x Vert) (y Vert) (z Vert))
+    (=> (and (edge x y) (distinct None (path y z))) (distinct None (path x z)))
+  )
+)
+; backward direction. Every relation that is not None is justified.
+(assert
+  (forall ((x Vert) (y Vert))
+    (=> (= (Some Edge) (path x y)) (edge x y))
+  )
+)
+
+(assert
+  (forall ((x Vert) (y Vert) (z Vert) (n Int) (pf Proof))
+    (=> (= (Some (Trans y n)) (path x z)) 
+        (and (edge x y) (= (level pf) (- n 1)) (= (Some pf) (path y z))))
+  )
+)
+
+(check-sat)
+(get-model)
+(eval (path a b))
+(eval (path a a))
+(eval (path a c))
+(eval (path c a))
+(eval (path b c))
+```
+
 Proof semantics / Provenance
 Do we cast to bool or not?
 There is a proof relevant thing that tells you which case of the `or` you're in in the completion semantics.
@@ -2291,6 +2467,107 @@ I need negation because I need == and !=?
 )
 
 ```
+
+#### First Class Union Find
+Hmm. Making an adt for spanning trees is difficult and annoying. Maybe using the notion of 
+x -> zipper. Because funion, it has unique spot in tree.
+
+Is this n*2 space though? with sharing it shouldn't be
+Using an order to tie break?
+a -> Int
+explain -> Explain i, reason
+
+binary tree. Ordered.
+
+SpanTree.
+
+root(x) = root(y)
+explain(x) = path between root(x) and x. = Trans(y,just_xy, pf)
+```z3
+;re
+(declare-datatype Vert (
+  (a) (b) (c) (d)))
+
+(declare-datatype Path (
+  (Refl)
+  (Trans (y Vert) (trans-pf Path))
+))
+(declare-fun root (Vert) Vert)
+(declare-fun explain (Vert) Path)
+
+(define-fun edge0 ((x Vert) (y Vert)) Bool
+  (or 
+    ;(and (= x a) (= y b))
+    (and (= x c) (= y d))
+    (and (= x c) (= y a))
+  )
+)
+(define-fun edge ((x Vert) (y Vert)) Bool
+  (or (edge0 x y) (edge0 y x)))
+
+; forward inference
+(assert (forall ((x Vert) (y Vert))
+      (=> (edge x y) (= (root x) (root y)))
+))
+
+; backwards justification
+(assert (forall ((x Vert))
+  (=> (= (explain x) Refl) (= (root x) x))
+))
+
+(assert (forall ((x Vert) (y Vert) (pf Path))
+  (=> (= (explain x) (Trans y pf))
+      (and (= (root x) (root y)) 
+           (= pf (explain y)) ; optional? This is what makes it a spanning tree
+           (edge x y)))))
+
+(check-sat)
+(get-model)
+
+
+```
+
+
+```z3
+;re
+(declare-datatype SpanTree (
+  ((x Vert) ()
+)
+)
+
+(declare-datatype Zipper
+  (Zippper (List ))
+)
+(define-fun-rec in-tree ((x Int) (t Tree))
+  (match t (
+
+  ))
+)
+(define-fun-rec all-jsutified (t Tree)
+
+)
+(declare-fun component (Int) SpanTree)
+(assert
+  (= (comp a) (comp b))
+)
+(assert
+  (= (comp b) (comp c))
+)
+
+(assert
+    (forall ((x Vert)) (and (in-tree (comp x)) (all-jusitified (comp x)))
+)
+
+
+(declare-fun parent (Vert) (Option Vert)) ; but acuyclic.
+(declare-fun parent (Vert) (Option SpanTree))
+(declare-fun root (Vert) SpanTree)
+(declare-fun root (Vert) Vert)
+(declare-fun explain (Vert))
+
+
+```
+
 
 ## Rewriting
 
@@ -2656,19 +2933,83 @@ Any function defines equivalence classes based on it's preimages.
 ```
 
 Yeah, this is nonsensical. There aren't enough hooks to control what is equal and isn't. Externally, we could try to search
-<<<<<<< HEAD
-# Weakest Precondition
-- [Weakest Precondition with Z3py](https://www.philipzucker.com/weakest-precondition-z3py/)
-=======
+
 
 # Program Verification
+Small scale and large scale choices:
+
+- Predicate transformers
+- Transition relation between state
+  + Use a transition function vs transition relation
+
+Modelling the state
+- explicit store Array
+- 
+Dealing with the frame problem
+
+- Bounded checking vs complete
+- Infer invariants or provide them
+- Termination. It kind of matters
+- Structure vs unstructured control flow
+- Use Constrained horn clauses for control flow
+- 
+
+
+
+
 [jitterbug](https://unsat.cs.washington.edu/projects/jitterbug/)
 [serval](https://unsat.cs.washington.edu/projects/serval/)
 
+## Nand2Tetris Cpu
+https://www.philipzucker.com/nand2tetris-chc/
 
+```z3
+;re
+(define-sort BV16 () (_ BitVec 16))
+(define-sort Addr () (_ BitVec 10))
+(define-sort -> (A B) (Array A B))
+(declare-datatype State (
+  (
+    (mem (Array Addr BV16))
+    (areg BV16)
+    (dreg BV16)
+    (pc BV16)
+  )
+))
+
+;(define-const ROM (Array BV16 Insn))
+
+(define-fun incpc ((s State)) State
+  ((_ update-field pc) s (bvadd (pc s) (_ bv1 16)))
+)
+
+
+(define-fun ainsn ((a BV16)) (-> State State) ; actualy zero extend bv15
+  (lambda ((s State))
+    (incpc ((_ update_field areg) s a))
+  )
+)
+
+
+
+(define-fun seq ((f (-> State State))))
+
+
+
+
+```
+
+## Arm
+## Forth
+## WASM
+
+```z3
+
+```
 
 ## Weakest Precondition
->>>>>>> 21c7ba3d0ba389c6c923632f446a3283fa0174c8
+- [Weakest Precondition with Z3py](https://www.philipzucker.com/weakest-precondition-z3py/)
+
 
 ### Initial Style
 Deep embedding of weakest precondition
@@ -4148,3 +4489,7 @@ https://microsoft.github.io/z3guide/docs/theories/Special%20Relations
 https://ojs.aaai.org/index.php/AAAI/article/view/9755 sat modulo monotonic theories
 
 https://users.aalto.fi/~tjunttil/2020-DP-AUT/notes-smt/index.html
+
+https://github.com/awslabs/rust-smt-ir hmm. This is an smt preprocessor
+
+http://reports-archive.adm.cs.cmu.edu/anon/2003/CMU-CS-03-210.pdf UCLID. Eager encoding to SAT

@@ -305,4 +305,39 @@ Dedam: A Kernel of Data Structures and Algorithms for
 
 [efficient full higher order unification](https://arxiv.org/abs/2011.09507) zipperposition
 
+[Thesis on Implementation of Higher-Order Superposition](https://research.vu.nl/en/publications/implementation-of-higher-order-superposition)
 
+[Coming to Terms with Quantified Reasoning](https://arxiv.org/abs/1611.02908)
+algerbaic datatypes require an infinite number of acyclicity axioms.
+
+https://www.ps.uni-saarland.de/Publications/documents/Treinen_tacs91.pdf FOL + datatypes is more powerful than just FOL.
+
+
+```python
+from pysmt.shortcuts import get_env
+from pysmt.logics import LOGICS
+from pysmt.shortcuts import Symbol, get_env, Solver
+env = get_env().factory.add_generic_solver("vampire", ["/home/philip/.local/bin/vampire", "--input_syntax", "smtlib2"], LOGICS)
+print("opening")
+with Solver(name="vampire", logic="QF_UFLRA") as s:
+  print("starting")
+  print(s.is_sat(Symbol("x"))) # True
+```
+
+```python
+from z3 import *
+s = Solver()
+x = Bool("x")
+s.add(And(x, Not(x)))
+#s.add(x)
+s.check()
+print(s.to_smt2())
+import tempfile
+import subprocess
+with tempfile.NamedTemporaryFile(suffix=".smt2") as fp:
+    fp.write(s.to_smt2().encode() + b"(get-model)")
+    fp.flush()
+    res = subprocess.run(["/home/philip/.local/bin/vampire", fp.name],  capture_output=True)
+    print(res.stdout.decode())
+
+```

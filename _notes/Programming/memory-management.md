@@ -45,3 +45,6 @@ Boehm garbage collector
 https://twitter.com/sickeningsprawl/status/1560817828411936770?s=20&t=5ByjIVPCy80__MKWdWW1Aw liballocs. Garbage collector that looks at dwarf data. Asiprataional?
 
 [memory management toolkit](https://www.mmtk.io/)
+
+
+[automemcpy: A Framework for Automatic Generation of Fundamental Memory Operations](https://twitter.com/johnregehr/status/1566780383416537088?s=20&t=Ed04dBodGtW0kFSYL76bNQ)

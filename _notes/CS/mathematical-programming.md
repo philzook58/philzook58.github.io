@@ -27,6 +27,8 @@ I should renamed this article to Mathematical Programming / Operations Research 
     - [Denoising](#denoising)
     - [Compressed sensing](#compressed-sensing)
     - [Inverse Problems](#inverse-problems)
+    - [Optimal Transport](#optimal-transport)
+    - [System Identification](#system-identification)
     - [Min Path](#min-path)
     - [Max flow](#max-flow)
     - [Polynomial Solutions](#polynomial-solutions)
@@ -58,11 +60,12 @@ I should renamed this article to Mathematical Programming / Operations Research 
   - [Encoding boolean functions/relations](#encoding-boolean-functionsrelations)
   - [Piecewise linear encodings](#piecewise-linear-encodings)
   - [Unrolling time](#unrolling-time)
-- [Extended Mathemtical Programming](#extended-mathemtical-programming)
+- [Extended Mathematical Programming](#extended-mathematical-programming)
 - [Stochastic programming](#stochastic-programming)
 - [Robust Optimization](#robust-optimization)
 - [Complementarity Problems](#complementarity-problems)
 - [Parametric Programming](#parametric-programming)
+- [Difference of Convex Programming](#difference-of-convex-programming)
 - [Bilevel programming](#bilevel-programming)
   - [method 1 KKT condition](#method-1-kkt-condition)
   - [Duality](#duality-1)
@@ -171,6 +174,14 @@ https://en.wikipedia.org/wiki/Compressed_sensing
 https://en.wikipedia.org/wiki/Inverse_problem
 Inverse problems are trying to determine stuff from observations.
 In particular, you're trying to infer the systems of equations that define a system from different solutions of the system. The system of equations of a wave system or laplace system will include the shape of objects in the system
+
+### Optimal Transport
+Discrete optimal transports problems can be encoded as an LP. Optimal transports is an idea with a long history (Monge) and a lot of work (fields medals and such). Kind of curious.
+
+Optimal transports is moving hunks of dirt from points A to points B. If these sites are discrete, you can encode how much went along each pathway and have a cost with that pathway associated with it's geometric distance.
+
+### System Identification
+<https://www.philipzucker.com/system-identification-of-a-pendulum-with-scikit-learn/>
 
 ### Min Path
 
@@ -394,8 +405,8 @@ Techniques papers from the COAT slack
 [https://docs.mosek.com/modeling-cookbook/index.html](https://docs.mosek.com/modeling-cookbook/index.html)
 
 
-# Extended Mathemtical Programming
-[extended mathemtical programming](https://en.wikipedia.org/wiki/Extended_Mathematical_Programming)
+# Extended Mathematical Programming
+[extended mathematical programming](https://en.wikipedia.org/wiki/Extended_Mathematical_Programming)
 
 disjunctive programming
 
@@ -419,6 +430,12 @@ Complementrarity Book
 If you pick which variables are 0, what remains is a convex optimization problem. So there is sort of a layered thing going on. 
 
 # Parametric Programming
+# Difference of Convex Programming
+[difference of convex programming](https://twitter.com/caglar_ee/status/1568899044520378369?s=20&t=Ed04dBodGtW0kFSYL76bNQ)
+http://www.lita.univ-lorraine.fr/~lethi/index.php/dca.html
+https://www.ceremade.dauphine.fr/~carlier/toland.pdf
+
+
 # Bilevel programming
 [Review on Bilevel optimization](https://arxiv.org/pdf/1705.06270)
 [Gentle and incomcplete introduction to bilevel optimization](http://www.optimization-online.org/DB_FILE/2021/06/8450.pdf)
@@ -507,6 +524,9 @@ https://github.com/oxfordcontrol
 
 [osqp](https://github.com/osqp/osqp) quadratic optimization solver
 # Resources
+
+
+
 - Stephen Boyd
 - MIP school
 - Operations research stack exchange
