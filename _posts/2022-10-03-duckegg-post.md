@@ -233,14 +233,14 @@ Here is an example working on the 0th argument `x0` of `plus`
 ```sql
 --step 1
 INSERT INTO temp_plus
-SELECT DISTINCT {args}
+SELECT DISTINCT duckegg_root.j, x1, x2
 FROM plus, duckegg_root
 WHERE x0 = duckegg_root.i
 
 --step 2
 DELETE FROM plus
 USING duckegg_root
-WHERE x{n}=duckegg_root.i
+WHERE x0=duckegg_root.i
 
 --step 3
 DELETE FROM plus
