@@ -1,7 +1,7 @@
 ---
 date: 2022-10-03
 layout: post
-title: "Duckegg: An Datalog / Egraph Implementation Built Around DuckDB"
+title: "Duckegg: A Datalog / Egraph Implementation Built Around DuckDB"
 description: Taking Yihong's egglite and putting some python and duck in it
 tags: egraph duckdb sql python
 ---
