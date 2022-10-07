@@ -8,7 +8,7 @@ tags: egraph duckdb sql python
 
 The [HYTRADBOI Jam](https://www.hytradboi.com/jam) gave me the little oomph I needed to go ahead and build something I've been thinking about for a couple months: Duckegg ([repo](https://github.com/philzook58/duckegg)). Duckegg is an embedded python datalog / egraph implementation built around duckdb to supply it's core functionality.
 
-Egraphs are a data structure for performing nondestructive term rewriting and equational reasoning. This graph can be represented and queried as tables (each enode becomes a row in the corresponding table of it's symbol where the last entry is the eclass of the enode itself, the "output" of the function). The various rebuilding operation can also be represented as SQL operations. The hope basically is that duckdb is so good that the translation cost into SQL is worth it.
+Egraphs are a data structure for performing nondestructive term rewriting and equational reasoning. This graph can be represented and queried as tables (each enode becomes a row in the corresponding table of it's symbol where the last column is the eclass of the enode itself, the "output" of the function). The various rebuilding operation can also be represented as SQL operations. The hope basically is that duckdb is so good that the translation cost into SQL is worth it.
 
 DuckDB is making waves as a performant, embedded, easy-to-deploy OLAP (analytical processing) database. SQLlite is a marvel, but it is meant for  OLTP workloads. This use case seems like a better fit for duckdb.
 
@@ -20,7 +20,7 @@ For more on egraphs and egglog
 - <https://www.hytradboi.com/2022/writing-part-of-a-compiler-in-datalog>
 - <https://www.philipzucker.com/notes/Logic/egraphs/>
 
-Yihong Zhang previously had the idea of building a [relational egglog around sqlite in racket](https://github.com/yihozhang/egraph-sqlite) [PLDI workshop paper](https://src.acm.org/binaries/content/assets/src/2022/yihong-zhang.pdf), and this implementation is very much related and inspired by that one. I think the main misstep here is using racket (no offense), as it severely limits the audience of such a thing.
+Yihong Zhang previously had the idea of building a [relational egglog around sqlite in racket](https://github.com/yihozhang/egraph-sqlite) ([PLDI workshop paper](https://src.acm.org/binaries/content/assets/src/2022/yihong-zhang.pdf)), and this implementation is very much related and inspired by that one. I think the main misstep here is using racket (no offense), as it severely limits the audience of such a thing.
 
 I tried to utilize DuckDB as much as possible to avoid writing too much code and because everything I write in python will be slow. The whole implementation is at about 300 lines right now. Not too bad.
 
