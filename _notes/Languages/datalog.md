@@ -46,6 +46,7 @@ title: Datalog
   - [Dynamic Programming](#dynamic-programming)
     - [Q learning](#q-learning)
   - [Mandelbrot](#mandelbrot)
+  - [Ball and Springs](#ball-and-springs)
   - [Sudoku](#sudoku)
   - [Constraint handling Rules (CHR)](#constraint-handling-rules-chr)
   - [Backprop](#backprop)
@@ -1947,6 +1948,41 @@ cy      line
 ===============
 */
 ```
+## Ball and Springs
+
+Balls and springs are a model of a partial differential equation. We can model the equations of motion, initial conditions, and boundary conditions using datalog. What fun!
+
+```souffle
+#define T 10
+.decl ball(t : number, n : number, x : float, v : float)
+// initial conditions
+
+ball(0, n, 0, 0) :- n = range(0,11), n != 5.
+ball(0, 5, 10, 0).
+
+// ball(0, n, x, v) :- n = range(1,10), x = to_float(n) * 0.1, v = 0.
+// ball(0,0,0,0).
+// ball(0,10,0,0).
+
+
+// Boundary condition. iniital and final ball fixed
+ball(t+1,0,0,0) :-  t = range(0,T).
+ball(t+1,10,0,0) :- t = range(0,T).
+
+// dynamics
+ball(t+1, n,  newx, newv) :- 
+  t < T, 
+  ball(t, n-1, x0, _v0), 
+  ball(t, n, x, v), 
+  ball(t, n+1, x2, _v2),
+  newx = x + 0.1 * v,
+  newv = v + 0.1 * (x0 - x + x2 - x).
+.output ball(IO=stdout)
+
+
+```
+
+
 ## Sudoku
 
 ```souffle

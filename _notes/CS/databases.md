@@ -21,6 +21,7 @@ title: Databases
 - [Optimal Joins](#optimal-joins)
 - [Vectorized Execution](#vectorized-execution)
 - [Multi Version Concurrency Control](#multi-version-concurrency-control)
+- [SQLite](#sqlite)
 - [Duckdb](#duckdb)
 - [Relational AI](#relational-ai)
 - [Streaming](#streaming)
@@ -35,7 +36,6 @@ title: Databases
   - [Services](#services)
 - [Graph systems](#graph-systems)
   - [SQL](#sql-1)
-  - [sqlite](#sqlite)
 - [Resources](#resources)
   - [Conferences](#conferences)
   - [Misc](#misc)
@@ -171,6 +171,110 @@ Notion of constraint `! :- ` and notion of query. Hmm.
 Direct modelling of union find in z3? homomorphism is union find
 
 # SQL
+The core SQL stuff is just a query of the form
+```
+SELECT columns and expressions FROM a as alias1, couple as alias2, tables as alias3 
+WHERE alias2.col1 = 7 AND alias4.col7 = alias1.foo
+```
+
+It really almost isn't a programming language. It just so happens that there are enough slightly off the beaten path features that you can do some neat stuff with it. This can ever be useful, because serializing results over the network is probably very bad performance wise.
+
+Sometimes you want to `INSERT INTO` or `DELETE FROM` these results rather than just returns them
+
+
+Some other weird stuff:
+
+You can use it as a calculator to just evaluate expressions.
+
+```sql
+SELECT 40 + 2;
+```
+
+Creating tables and adding concrete values.
+
+```sql
+CREATE TABLE T (a int PRIMARY KEY, -- implies not null
+ b bool, c text, d int);
+
+-- CREATE TYPE mytype AS (a bool, b text);
+
+INSERT INTO T VALUES
+(1,true, "hi", 3),
+(2,true, "hi", 3)
+;
+
+-- INSERT INTO T TABLE T;
+
+SELECT myrow.* -- 2 returns row variable
+FROM T AS myrow;-- 1 binds myrow
+
+
+SELECT myrow.* -- 2 returns row variable
+FROM T AS myrow WHERE myrow.a = myrow.a;
+
+DROP TABLE IF EXISTS T;
+
+--SELECT * FROM T;
+
+-- can label columns
+SELECT 40 + 2 AS firstcol, "dog" || "store" AS secondcol;
+
+VALUES (10), (20); -- values may be used anywhere sql expects a table
+
+
+SELECT * FROM (VALUES (10,20), (0,10)) AS myrow(x,y); 
+```
+Scalar subqueries - subqueries that return a single row may be considered as scalar values
+
+From binds below, even though it's kind of a for loop.
+[row for row in table] I guess this also reverses order.
+
+Order by expressions. So we coukd have many more ordering constraints than columns for xample
+
+Select distinct on. Returns first row in each group.
+
+
+agregates bool_and bool_or (forall and exists)
+
+
+Group by - wadler. Changing type of row entry to bag(row entry) 
+
+ALL bag semantics, no all is set semantics
+
+```sql
+WITH RECURSIVE 
+  series(i) as (
+    VALUES (0)
+    UNION
+    SELECT t.i + 1 FROM
+      series as t where t.i < 10
+  )
+ SELECT * FROM series;
+
+```
+
+```sql
+WITH RECURSIVE
+  root(i,j) AS (
+    SELECT foo.i, max(foo.j) 
+    FROM (VALUES (1,1), (2,1), (3,3)) AS foo(i,j)
+          --UNION 
+          --(SELECT i, k FROM root AS (i,j), root as (j1,k) where j = j1))
+          )
+    SELECT * from root;
+
+```
+
+```sql
+SELECT *
+  FROM (VALUES (1,1), (2,1), (3,3)) AS foo(i,j);
+
+```
+
+```sql
+SELECT (SELECT 42) * 2; -- this works. There is broadcasting of sorts
+
+```
 
 sql injection https://ctf101.org/web-exploitation/sql-injection/what-is-sql-injection/
 everything is foreign keys? Interning
@@ -237,6 +341,7 @@ https://en.wikipedia.org/wiki/Materialized_view
 ```
 
 ## indices
+Building good indices can be important for good query performance.
 
 ## views
 Saved queries that act as virtual tables
@@ -312,6 +417,27 @@ branchless writes but only increments index of storage by one if condition is me
 
 # Multi Version Concurrency Control
 https://en.wikipedia.org/wiki/Multiversion_concurrency_control
+
+
+
+
+# SQLite
+SQLite is an embedded in process database.
+Has a WASM version
+It's a single drop in C file with no dependencies. That means it's kind of available everywhere
+It isn't good for concurrent writers.
+
+Performance tips: WAL mode
+
+
+
+[sqlite commands](https://www.sqlitetutorial.net/sqlite-commands/) that are interesting 
+- `.help`
+- `.dump`
+- `.tables`
+- `.schema`
+- `.indexes`
+- `.expert` suggests indices?
 
 
 # Duckdb
@@ -583,14 +709,8 @@ graphlab
 - `select`
 - `vacuum` - defrag and gabrage collect the db
 - `begin transaction`
-## sqlite
-[sqlite commands](https://www.sqlitetutorial.net/sqlite-commands/) that are interesting 
-- `.help`
-- `.dump`
-- `.tables`
-- `.schema`
-- `.indexes`
-- `.expert` suggests indices?
+
+
 
 
 
@@ -685,93 +805,8 @@ Switches out storage method and different scales and density.
 
 [](https://modern-sql.com/)
 
-```sql
-SELECT 40 + 2;
-```
+[nocodb](https://news.ycombinator.com/item?id=33078798) It's like a spreadsheet that attaches to dbs. Open source airtable?
 
-```sql
-CREATE TABLE T (a int PRIMARY KEY, -- implies not null
- b bool, c text, d int);
-
--- CREATE TYPE mytype AS (a bool, b text);
-
-INSERT INTO T VALUES
-(1,true, "hi", 3),
-(2,true, "hi", 3)
-;
-
--- INSERT INTO T TABLE T;
-
-SELECT myrow.* -- 2 returns row variable
-FROM T AS myrow;-- 1 binds myrow
-
-
-SELECT myrow.* -- 2 returns row variable
-FROM T AS myrow WHERE myrow.a = myrow.a;
-
-DROP TABLE IF EXISTS T;
-
---SELECT * FROM T;
-
--- can label columns
-SELECT 40 + 2 AS firstcol, "dog" || "store" AS secondcol;
-
-VALUES (10), (20); -- values may be used anywhere sql expects a table
-
-
-SELECT * FROM (VALUES (10,20), (0,10)) AS myrow(x,y); 
-```
-Scalar subqueries - subqueries that return a single row may be considered as scalar values
-
-From binds below, even though it's kind of a for loop.
-[row for row in table] I guess this also reverses order.
-
-Order by expressions. So we coukd have many more ordering constraints than columns for xample
-
-Select distinct on. Returns first row in each group.
-
-
-agregates bool_and bool_or (forall and exists)
-
-
-Group by - wadler. Changing type of row entry to bag(row entry) 
-
-ALL bag semantics, no all is set semantics
-
-```sql
-WITH RECURSIVE 
-  series(i) as (
-    VALUES (0)
-    UNION
-    SELECT t.i + 1 FROM
-      series as t where t.i < 10
-  )
- SELECT * FROM series;
-
-```
-
-```sql
-WITH RECURSIVE
-  root(i,j) AS (
-    SELECT foo.i, max(foo.j) 
-    FROM (VALUES (1,1), (2,1), (3,3)) AS foo(i,j)
-          --UNION 
-          --(SELECT i, k FROM root AS (i,j), root as (j1,k) where j = j1))
-          )
-    SELECT * from root;
-
-```
-
-```sql
-SELECT *
-  FROM (VALUES (1,1), (2,1), (3,3)) AS foo(i,j);
-
-```
-
-```sql
-SELECT (SELECT 42) * 2; -- this works. There is broadcasting of sorts
-
-```
 
 [Does sql need help](https://news.ycombinator.com/item?id=32799920)
 

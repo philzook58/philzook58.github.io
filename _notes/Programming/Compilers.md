@@ -326,9 +326,9 @@ Like parser generators / libraries, you can make instruction selection libraries
 - TWIG BURG BEG bottom up generate instruction selectors
 - 
 
+[iburg](https://old.reddit.com/r/Compilers/comments/edgx5s/successors_to_iburg/) https://github.com/drh/iburg a code generator generator
 
-[Synthesizing an Instruction Selection Rule Library
-from Semantic Specifications](https://pp.ipd.kit.edu/uploads/publikationen/buchwald18cgo.pdf)
+[Synthesizing an Instruction Selection Rule Library from Semantic Specifications](https://pp.ipd.kit.edu/uploads/publikationen/buchwald18cgo.pdf)
 
 Subgraph isomorphism problem
 VF2 algorithm
@@ -420,6 +420,14 @@ You could take a relational perspective on operations, having neither input not 
 <https://arxiv.org/abs/1804.02452>
 
 [cranelift regalloc](https://cfallin.org/blog/2022/06/09/cranelift-regalloc2/) great blog post
+
+[Register Allocation: What Does the NP-Completeness Proof of Chaitin et al. Really Prove? Or Revisiting Register Allocation: Why and How](https://link.springer.com/chapter/10.1007/978-3-540-72521-3_21#:~:text=Abstract,graph%20associated%20to%20the%20variables.)
+
+[The Solid-State Register Allocator](https://twitter.com/impraxical/status/1577321303400452100?s=20&t=UJrepWvNkFpXFRNY8yoWDA) https://www.mattkeeter.com/blog/2022-10-04-ssra/
+Belady's OPT algorithm page faults
+
+[The Power of Belady’s Algorithm in Register Allocation for Long Basic Blocks](http://polaris.cs.uiuc.edu/publications/guo-2003-old.pdf)
+[efficient global register allocation](https://arxiv.org/abs/2011.05608)
 
 The typical starting point of register allocation is support you've been given as assembly program that doesn't have registers filled in like
 ```assembly
@@ -522,6 +530,7 @@ Making a simple garbage collector [https://maplant.com/gc.html](https://maplant.
 
 # Misc
 
+[UMD compiler course](https://www.cs.umd.edu/class/spring2021/cmsc838E/index.html)
 
 [Compilers are databases](https://www.youtube.com/watch?v=WxyyJyB_Ssc&ab_channel=Java)
 
