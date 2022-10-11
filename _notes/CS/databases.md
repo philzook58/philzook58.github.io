@@ -603,3 +603,7 @@ https://twitter.com/phil_eaton
 [Ask HN: What could a modern database do that PostgreSQL and MySQL can't](https://news.ycombinator.com/item?id=28425379)
 
 [postgres internals book](https://postgrespro.com/blog/pgsql/5969682)
+
+Sqlite virtual tables
+[osquery](https://osquery.readthedocs.io/en/stable/introduction/sql/) osquery 
+https://github.com/frabert/ClangQL qerying C++ databases

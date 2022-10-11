@@ -2643,6 +2643,7 @@ cvc5 supports a proof production
 So does Z3. They are hard to interpret
 - [State of Proof Checking](https://github.com/Z3Prover/z3/discussions/5981)
 - [On proof generation and proof checking ](https://github.com/Z3Prover/z3/discussions/4881)
+- [state of proofs slides](https://z3prover.github.io/slides/proofs.html)
 
 ## Proof Objects
 A la coq inductive datatypes. Searching for a proof object.

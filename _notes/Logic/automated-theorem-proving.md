@@ -306,3 +306,4 @@ Dedam: A Kernel of Data Structures and Algorithms for
 [efficient full higher order unification](https://arxiv.org/abs/2011.09507) zipperposition
 
 
+[auto2](https://arxiv.org/pdf/1605.07577.pdf) interesting system that combines egraphs and sturation proving https://github.com/bzhan/auto2 he alos mentions gowers as influence

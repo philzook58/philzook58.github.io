@@ -357,7 +357,7 @@ pyiodide
 
 [virtual x86](https://copy.sh/v86/) a similar open source project but slower?
 
-
+[postgres wasm](https://news.ycombinator.com/item?id=33067962) 
 
 
 

@@ -244,3 +244,5 @@ x86 forth
 
 
 [Some Assembly Required](https://github.com/hackclub/some-assembly-required) https://news.ycombinator.com/item?id=31909183
+
+[typed assembly language](https://www.cs.cmu.edu/~crary/papers/2003/talt/talt.pdf)

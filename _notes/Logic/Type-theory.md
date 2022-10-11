@@ -110,6 +110,7 @@ https://www.cs.cmu.edu/~fp/courses/15312-f04/handouts/15-bidirectional.pdf
 
 http://dev.stephendiehl.com/fun/006_hindley_milner.html
 
+[Hindley-Milner Elaboration in Applicative Style - Pottier](http://gallium.inria.fr/~fpottier/publis/fpottier-elaboration.pdf) https://gitlab.inria.fr/fpottier/inferno
 # Systems
 
 ## Simply Typed lambda Calculus (STLC)

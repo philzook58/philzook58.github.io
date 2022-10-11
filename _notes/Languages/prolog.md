@@ -27,7 +27,7 @@ wordpress_id: 1865
   - [Modes](#modes)
   - [Verification](#verification)
   - [Modules](#modules)
-  - [meta circular interpreters](#meta-circular-interpreters)
+  - [meta interpreters](#meta-interpreters)
   - [Delimitted Continuations](#delimitted-continuations)
   - [Tabling](#tabling)
     - [XSB](#xsb)
@@ -196,6 +196,8 @@ https://curiosity-driven.org/prolog-interpreter
 - [gensym](https://www.swi-prolog.org/pldoc/man?section=gensym) suggests using content based identifiers
 - [termhash](https://www.swi-prolog.org/pldoc/man?predicate=term_hash/2)
 - `variant_sha1` a cyrptographic hash? This is acceptable?
+
+[concurrent_forall](https://www.swi-prolog.org/pldoc/man?section=thread)
 ## Imperative analogies
 Unification variables are pointers. Unifying them is aliasing them.
 Unification is bidirectional pattern matching
@@ -282,7 +284,17 @@ Term indexing
 
 Original Dec-10 prolog paper
 
+[discussion on scryer forum](https://github.com/mthom/scryer-prolog/discussions/1457) 
 
+BAM - berkeley abstract machine [Can Logic Programming Execute as Fast as Imperative Programming?](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.68.9970&rep=rep1&type=pdf)
+
+[comparsion of WAM and ZIP](https://stackoverflow.com/questions/4478615/alternatives-to-the-wam/4504325#4504325)
+
+VAM 
+
+TOAM - tree oriented abstract machine
+
+[global optimization in a prolog compiler for TOAM](https://core.ac.uk/download/pdf/82489071.pdf)
 ## Modes
 In some ideal world, it's great if every predicate is reversible, but it isn't the case. Different variable positions can be used in different ways, input, output, both. They can also have total functional character (exactly one answer), partial functional character (one or zero), of nondeterminisitc (many answers). 
 Modes are required to use predicates correctly. Annotating them may allow the compiler to be more efficient. The compiler may infer them. They are conceptually interesting also in theorem proving contexts. See bidirectional typing.
@@ -297,7 +309,7 @@ ciao prolog
 
 
 
-## meta circular interpreters
+## meta interpreters
 
 [power of prolog - A Couple of Meta-interpreters in Prolog](https://www.metalevel.at/acomip/)
 
