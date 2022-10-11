@@ -239,8 +239,41 @@ See also Z3's proof production
 
 # E Graph Tactics
 
-- Samuel Gruetter and Dustin Jamner - Coq. `congruence` tactic is an egraph. Too slow?
+- Samuel Gruetter and Dustin Jamner - Coq. `congruence` tactic is an egraph. Too slow? [code of coq tactic](https://github.com/coq/coq/tree/master/plugins/cc). [Deciding Equality in the Constructor Theory](https://dl.acm.org/doi/10.5555/1789277.1789283)
 - Lean? [lean tatic](https://pldi22.sigplan.org/details/egraphs-2022-papers/6/Equality-Saturation-as-a-Tactic-for-Proof-Assistants)
+
+[de moura selsam](https://leanprover.github.io/papers/congr.pdf)
+
+```coq
+Axiom i64 : Type.
+Axiom add : i64 -> i64 -> i64.
+
+Axioms add_comm : forall x y, add x y = add y x.
+Axioms add_assoc : forall x y z, add (add x y) z = add x (add y z).
+
+Axioms a b c d : i64.
+Axiom num : nat -> i64.
+
+Definition add_rule_set := (add_comm , add_assoc).
+
+Fixpoint addl (n : nat) : i64 :=
+     match n with
+     | O => num 0
+     | S n => add (num (S n)) (addl n)
+     end.
+Fixpoint addr (n : nat) : i64 :=
+    match n with
+    | O => num 0
+    | S n => add (addr n) (num (S n))
+    end.
+
+Global Hint Rewrite add_assoc : base0. (* add_comm is no good. nonterminating as a rewrite*)
+Goal addl 10 = addr 10. simpl. 
+(* congruence with (add_comm (num 0) (num 1)). autorewrite with base0.  *)
+(* pose add_comm. pose add_assoc. *)
+pose add_rule_set as rs. destruct rs.
+congruence. Qed.
+```
 
 # Applications
 - Denali https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf

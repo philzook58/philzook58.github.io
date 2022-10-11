@@ -1,9 +1,4 @@
----
-author: philzook58
-date: 2020-12-06
-layout: post
-title: "EGraphs Part III "
----
+
 
 - [Applications and Ideas](#applications-and-ideas)
     - [Partial horn clauses](#partial-horn-clauses)

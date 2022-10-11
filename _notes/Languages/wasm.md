@@ -19,10 +19,14 @@ title: Wasm/Emscripten
 sqlite fuzzler
 
 [simple web frontend stuff](https://news.ycombinator.com/item?id=32011439)
+[simple css to look good everywhere](https://news.ycombinator.com/item?id=32972004) 
+[web design in 4 minutes](https://jgthms.com/web-design-in-4-minutes/)
 cssbed
 htmx
 
 # WASM
+
+[walloc](https://github.com/wingo/walloc) minimal malloc implementation for wasm. Makes for very small binary?
 
 <https://medium.com/swlh/a-suduko-solving-serverless-endpoint-using-webassembly-and-or-tools-df9f7bb10044>
 https://github.com/google/or-tools/pull/2404
@@ -222,6 +226,7 @@ You may not want to thing to run as soon as the script tag is run. There is
 
 `-sMODULARIZE` is a linking option
 
+emcmake cmake -DCMAKE_EXE_LINKER_FLAGS="-sEXPORTED_RUNTIME_METHODS=ccall,cwrap -sEXPORTED_FUNCTIONS=_main" 
 
 ### Souffle
 emcmake cmake -S . -B build_wasm -DSOUFFLE_USE_SQLITE=OFF -DSOUFFLE_USE_OPENMP=OFF -DSOUFFLE_USE_ZLIB=OFF -DSOUFFLE_USE_LIBFFI=OFF -DSOUFFLE_USE_CURSES=OFF -DSOUFFLE_ENABLE_TESTING=OFF -DSOUFFLE_TEST_EVALUATION=OFF

@@ -46,6 +46,7 @@ https://twitter.com/sickeningsprawl/status/1560817828411936770?s=20&t=5ByjIVPCy8
 
 [memory management toolkit](https://www.mmtk.io/)
 
+<<<<<<< HEAD
 [malloc and free are bad apis](https://www.foonathan.net/2022/08/malloc-interface/#content) store unnecessary metadata, waste space
 
 
@@ -56,3 +57,7 @@ https://twitter.com/sickeningsprawl/status/1560817828411936770?s=20&t=5ByjIVPCy8
 Garbage Collection Handbook
 
 [ Control Theory and Concurrent Garbage Collection ](https://twitter.com/MadhavJivrajani/status/1578778595581124609?s=20&t=0RcVYoA5aTg4AHeb5ncYzw) https://speakerdeck.com/madhavjivrajani/control-theory-and-concurrent-garbage-collection-a-deep-dive-into-the-go-gc-pacer
+=======
+
+[automemcpy: A Framework for Automatic Generation of Fundamental Memory Operations](https://twitter.com/johnregehr/status/1566780383416537088?s=20&t=Ed04dBodGtW0kFSYL76bNQ)
+>>>>>>> 6c17005b505078afb3988fe760abb5fcab4212a8

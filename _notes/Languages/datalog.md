@@ -46,6 +46,8 @@ title: Datalog
   - [Dynamic Programming](#dynamic-programming)
     - [Q learning](#q-learning)
   - [Mandelbrot](#mandelbrot)
+  - [Ball and Springs](#ball-and-springs)
+  - [Sudoku](#sudoku)
   - [Constraint handling Rules (CHR)](#constraint-handling-rules-chr)
   - [Backprop](#backprop)
   - [Lambda representation](#lambda-representation)
@@ -371,6 +373,8 @@ SELECT a,b FROM path;
 .quit
 
 ```
+
+
 
 ### Ocaml
 #### Naive
@@ -1721,6 +1725,8 @@ out(i,x) :- path(i,_,x).
 Radix sort?
 
 ## Translating functional programs 
+https://drops.dagstuhl.de/opus/volltexte/2022/16235/pdf/LIPIcs-ECOOP-2022-7.pdf Functional Programming with Datalog
+
 Lift function to relation by making return value part of relation
 fib(n) becomes fib(b,ret)
 
@@ -1948,6 +1954,62 @@ cy      line
 ===============
 */
 ```
+## Ball and Springs
+
+Balls and springs are a model of a partial differential equation. We can model the equations of motion, initial conditions, and boundary conditions using datalog. What fun!
+
+```souffle
+#define T 10
+.decl ball(t : number, n : number, x : float, v : float)
+// initial conditions
+
+ball(0, n, 0, 0) :- n = range(0,11), n != 5.
+ball(0, 5, 10, 0).
+
+// ball(0, n, x, v) :- n = range(1,10), x = to_float(n) * 0.1, v = 0.
+// ball(0,0,0,0).
+// ball(0,10,0,0).
+
+
+// Boundary condition. iniital and final ball fixed
+ball(t+1,0,0,0) :-  t = range(0,T).
+ball(t+1,10,0,0) :- t = range(0,T).
+
+// dynamics
+ball(t+1, n,  newx, newv) :- 
+  t < T, 
+  ball(t, n-1, x0, _v0), 
+  ball(t, n, x, v), 
+  ball(t, n+1, x2, _v2),
+  newx = x + 0.1 * v,
+  newv = v + 0.1 * (x0 - x + x2 - x).
+.output ball(IO=stdout)
+
+
+```
+
+
+## Sudoku
+
+```souffle
+
+.type bitset <: number
+.decl x(row : number, col : number, val : bitset)
+
+.decl digits(x : number) inline
+digits(x) :- x = range(1,10).
+
+#define FULL (2 ^ 9) - 1
+.decl union(x : bitset, y : bitset, res : bitset) inline
+union(x,y,res) :- res = x bor y.
+x(row, col, FULL):- digits(row), digits(col).
+.output x
+x(row,col,) :- digits(row), x(row,0,s0), x(row,1,s1), x(row,2,s2), x(row,3,s3), s = s0 bor s1 bor s2 bor s3.
+x(row,col2, s2 / s) :- x(row,col,s), SING(s), col != col2, x(row,col2,s2).
+
+
+```
+
 ## Constraint handling Rules (CHR)
 See note on prolog for more on CHR
 

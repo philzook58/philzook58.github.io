@@ -14,6 +14,7 @@ title: Assembly
   - [CET control enforcement technology](#cet-control-enforcement-technology)
 - [ARM](#arm)
     - [RISC V](#risc-v)
+- [FORTH](#forth)
 - [Misc](#misc)
 
 
@@ -214,6 +215,15 @@ https://marz.utk.edu/my-courses/cosc230/book/example-risc-v-assembly-programs/
   * https://en.wikibooks.org/wiki/Embedded_Systems
   * https://www.ic.unicamp.br/~pannain/mc404/aulas/pdfs/Art%20Of%20Intel%20x86%20Assembly.pdf Art of Assembly DOS version. Good stuff in here. Some ways of implementing function calls I'd never considered
 
+# FORTH
+https://en.wikipedia.org/wiki/Threaded_code
+
+- [Jonesforth](https://github.com/nornagon/jonesforth) super well annotated forth written in x86
+https://news.ycombinator.com/item?id=22801471
+- [moving forth series](https://www.bradrodriguez.com/papers/)
+- 
+
+
 # Misc
 [bootstrapping a c compiler](https://news.ycombinator.com/item?id=31244150)
 <https://learnxinyminutes.com/docs/mips/>
@@ -245,4 +255,11 @@ x86 forth
 
 [Some Assembly Required](https://github.com/hackclub/some-assembly-required) https://news.ycombinator.com/item?id=31909183
 
+<<<<<<< HEAD
 [typed assembly language](https://www.cs.cmu.edu/~crary/papers/2003/talt/talt.pdf)
+=======
+Metamath zero - is there some simpler thing one could do? Why did metamath _really_ have to be written in assembly? Is this a trusted computing base thing?
+
+
+
+>>>>>>> 6c17005b505078afb3988fe760abb5fcab4212a8

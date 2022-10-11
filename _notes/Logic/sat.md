@@ -5,6 +5,25 @@ title: SAT Solvers
 
 ## Encoding
 
+At most one constraints (AMO)
+Quadratic encoding. not x1 \/ not x2 \/ x3 /\ the other combos 
+logarithmic encoding. y is bitvector of which one is selected.
+heule encoding
+
+Graph constraints
+
+Tseitsin - encode subformulas into a variable
+
+Adders
+
+
+[pysat](https://pysathq.github.io/)
+[encoding into sat](https://www.cs.upc.edu/~erodri/webpage/cps/theory/sat/encodings/slides.pdf)
+http://www.cs.cmu.edu/~15414/s21/lectures/13-sat-encodings.pdf
+## Preprocessing
+aiger
+
+
 ## CDCL
 
 ## Stochastic local search solvers
