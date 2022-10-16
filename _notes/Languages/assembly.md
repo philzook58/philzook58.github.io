@@ -223,6 +223,7 @@ https://news.ycombinator.com/item?id=22801471
 - [moving forth series](https://www.bradrodriguez.com/papers/)
 - 
 
+https://en.wikipedia.org/wiki/Threaded_code
 
 # Misc
 [bootstrapping a c compiler](https://news.ycombinator.com/item?id=31244150)
@@ -255,11 +256,8 @@ x86 forth
 
 [Some Assembly Required](https://github.com/hackclub/some-assembly-required) https://news.ycombinator.com/item?id=31909183
 
-<<<<<<< HEAD
 [typed assembly language](https://www.cs.cmu.edu/~crary/papers/2003/talt/talt.pdf)
-=======
 Metamath zero - is there some simpler thing one could do? Why did metamath _really_ have to be written in assembly? Is this a trusted computing base thing?
 
 
 
->>>>>>> 6c17005b505078afb3988fe760abb5fcab4212a8

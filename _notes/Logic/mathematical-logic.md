@@ -1,4 +1,7 @@
-
+---
+layout: post
+title: Mathematical Logic
+---
 
 https://en.wikipedia.org/wiki/Mathematical_logic
 This whole subfolder is about mathematical logic

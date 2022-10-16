@@ -1,4 +1,7 @@
-
+---
+layout: post
+title: Machine Learning
+---
 
 - [Applications](#applications)
 - [Data](#data)
