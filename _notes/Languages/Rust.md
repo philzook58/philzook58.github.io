@@ -172,6 +172,7 @@ No. nevermind. That isn't good enough.
 Lazy and once_cell are in nightly rust and std https://github.com/rust-lang/rust/issues/74465
 # Formal methods
 ## RustBelt
+[RustBelt: Securing the Foundations of the Rust Programming Language](https://bobkonf.de/2022/dreyer.html)  
 ## RustHorn
 Prophetic encoding. Mutable borrows are modelled as pairs of current and final values.
 ## RustHornBelt
@@ -180,6 +181,7 @@ https://www.lri.fr/~xldenis/paper/rusthornbelt.pdf
 ## Prusti
 ## Aeneas
 https://arxiv.org/abs/2206.07185
+https://github.com/AeneasVerif/aeneas
 ## Creusot
 [creusat](https://news.ycombinator.com/item?id=31780128) https://twitter.com/xldenis/status/1537578878364921856?s=20&t=Id3zoB1xCWLA5QQIrPNHVA
 https://hal.inria.fr/hal-03526634/document 

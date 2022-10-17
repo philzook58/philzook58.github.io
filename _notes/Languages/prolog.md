@@ -19,15 +19,15 @@ wordpress_id: 1865
   - [Rewriting in prolog](#rewriting-in-prolog)
 - [Topics](#topics)
   - [SLD resolution](#sld-resolution)
-  - [DIY Prolog](#diy-prolog)
   - [Interesting predicates](#interesting-predicates)
   - [Imperative analogies](#imperative-analogies)
     - [Manual Prolog](#manual-prolog)
   - [Abstract Machines / Implementation](#abstract-machines--implementation)
   - [Modes](#modes)
+    - [DIY Prolog](#diy-prolog)
   - [Verification](#verification)
   - [Modules](#modules)
-  - [meta circular interpreters](#meta-circular-interpreters)
+  - [meta interpreters](#meta-interpreters)
   - [Delimitted Continuations](#delimitted-continuations)
   - [Tabling](#tabling)
     - [XSB](#xsb)
@@ -107,7 +107,7 @@ See also:
 - B-prolog
 - ECLiPSe - can talk to minizinc
 - Qu-prolog
-
+- [trealla](https://github.com/trealla-prolog/trealla) prolog interpreter in C. Not WAM based. tree-walking, structure-sharing, deep binding whatever that means
 
 Relatives:
 - Minikanren
@@ -179,9 +179,7 @@ You have fast append because you don't have to traverse the list to find the end
 # Topics
 ## SLD resolution
 
-## DIY Prolog
-https://github.com/photonlines/Python-Prolog-Interpreter
-https://curiosity-driven.org/prolog-interpreter
+
 
 
 ## Interesting predicates
@@ -198,6 +196,8 @@ https://curiosity-driven.org/prolog-interpreter
 - [gensym](https://www.swi-prolog.org/pldoc/man?section=gensym) suggests using content based identifiers
 - [termhash](https://www.swi-prolog.org/pldoc/man?predicate=term_hash/2)
 - `variant_sha1` a cyrptographic hash? This is acceptable?
+
+[concurrent_forall](https://www.swi-prolog.org/pldoc/man?section=thread)
 ## Imperative analogies
 Unification variables are pointers. Unifying them is aliasing them.
 Unification is bidirectional pattern matching
@@ -267,6 +267,41 @@ print(x.find() is z.find())
 ```
 
 
+```
+# a(Stuff) :- b(Stuff), c(Stuff).
+# a(Stuff) :- c(Stuff)
+def a(s):
+  for s in b(s.copy()):
+    for s in c(s.copy()):
+      yield s
+  for s in c(s.copy()):
+    yield s
+
+class Env(dict):
+  def find():
+  def __set__(self):
+    #calls find
+    #does unification.
+  def __get__(self):
+    #calls find.
+  def fresh(self):
+    self[len(self)] = len(self) 
+    return len(self)
+
+def append(x,y,z,s):
+  s1 = s.copy()
+  s1[x] = []
+  s1[y] = s1[z]
+  yield s1
+  a, b, c = freshes(s, 3)
+  s[x] = (a,b)
+  s[z] = (a,c)
+  yield from append(b,y,c,s)
+
+
+```
+Yeah. This amounts to a goofy minikanren where I've inlined combinators.
+
 
 
 ## Abstract Machines / Implementation
@@ -284,6 +319,22 @@ Term indexing
 
 Original Dec-10 prolog paper
 
+[discussion on scryer forum](https://github.com/mthom/scryer-prolog/discussions/1457) 
+
+BAM - berkeley abstract machine [Can Logic Programming Execute as Fast as Imperative Programming?](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.68.9970&rep=rep1&type=pdf)
+[Peter Van Yoy's thesis](https://www.info.ucl.ac.be/~pvr/Peter.thesis/Peter.thesis.html)
+http://lambda-the-ultimate.org/classic/message1618.html#11082
+[Andrew Taylor's thesis  - high performance prolog implementation](http://www.info.ucl.ac.be/people/PVR/Taylor.thesis.ps)
+
+[comparsion of WAM and ZIP](https://stackoverflow.com/questions/4478615/alternatives-to-the-wam/4504325#4504325)
+
+VAM 
+
+TOAM - tree oriented abstract machine
+
+[global optimization in a prolog compiler for TOAM](https://core.ac.uk/download/pdf/82489071.pdf)
+
+
 
 ## Modes
 In some ideal world, it's great if every predicate is reversible, but it isn't the case. Different variable positions can be used in different ways, input, output, both. They can also have total functional character (exactly one answer), partial functional character (one or zero), of nondeterminisitc (many answers). 
@@ -293,15 +344,31 @@ Modes are required to use predicates correctly. Annotating them may allow the co
 mercury
 ciao prolog
 
+
+### DIY Prolog
+[a python interpreter](https://github.com/photonlines/Python-Prolog-Interpreter)
+
+https://curiosity-driven.org/prolog-interpreter
+
+Prolog and es6 generators https://curiosity-driven.org/prolog-interpreter
+
+<https://news.ycombinator.com/item?id=2152570>
+
+<https://cs.stackexchange.com/questions/6618/how-to-implement-a-prolog-interpreter-in-a-purely-functional-language>
+
+[andrej bauer's pl zoo prolog](http://plzoo.andrej.com/language/miniprolog.html)
+
+[1985 pascal design and implementation of prolog interpreter](https://core.ac.uk/download/pdf/228674394.pdf)
+
 ## Verification
 
 ## Modules
 
 
 
-## meta circular interpreters
+## meta interpreters
 
-[power of prolog - A Couple of Meta-interpreters in Prolog](https://www.metalevel.at/acomip/)
+[power of prolog - A Couple of Meta-interpreters in Prolog](https://www.metalevel.at/acomip/) [video](https://www.youtube.com/watch?v=nmBkU-l1zyc&feature=youtu.be&ab_channel=ThePowerofProlog)
 
 
 [metapredicates](https://www.metalevel.at/prolog/metapredicates#call)
@@ -312,6 +379,61 @@ ciao prolog
 foo(7).
 main(_) :- call(foo(X)), print(X).
 ```
+Things you can do:
+
+- tracing parameter "proof"
+- Change evaluation order of goals or clauses
+- Change unification - occurs check, attributed vars
+- continuations
+- fair interleaving
+- abstract interpetation
+- partial evaluation
+
+absorption and reification
+
+
+```prolog
+:- initialization(main,main).
+% surprisingly raw Goal is implicit call/1
+mi0(Goal) :- Goal.
+
+main(_) :- mi0(mi0(append([12],[42],X))), print(X).
+```
+
+
+Advantages to _not_ using prolog syntax.
+
+metacircular interpeter - interpreter can interpret self
+https://news.ycombinator.com/item?id=19283803
+```prolog
+:- initialization(main,main).
+mi([]). % empty goal stack
+mi([G,Gs]) :- clause_(G,Body), mi(Body), mi(Gs).
+
+% define rules of metainterpreter itself
+clause_(mi([]), []).
+clause_(mi([G | Gs]), [clause_(G,Body), mi(Body), mi(Gs)]).
+
+% what does this mean? This is a weird one.
+clause_(clause_(G,Body), []) :- clause_(G,Body).
+
+```
+
+[Prolog meta-interpreter with difference lists](http://lambda-the-ultimate.org/node/2984#comment-43853)
+
+```prolog
+:- initialization(main,main).
+mi([]).
+mi([G|Gs]) :-
+        mi_clause(G, Rest, Gs),
+        mi(Rest).
+
+
+```
+Same idea but the body of a clause is represented as a difference list in clause_
+
+`clause/2` is a way to get the rules of a clause.
+
 
 ## Delimitted Continuations
 Continuations are a reification of a call stack. The call stack in prolog is a goal stack.

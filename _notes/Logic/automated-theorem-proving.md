@@ -307,6 +307,7 @@ Dedam: A Kernel of Data Structures and Algorithms for
 
 [Thesis on Implementation of Higher-Order Superposition](https://research.vu.nl/en/publications/implementation-of-higher-order-superposition)
 
+[auto2](https://arxiv.org/pdf/1605.07577.pdf) interesting system that combines egraphs and sturation proving https://github.com/bzhan/auto2 he alos mentions gowers as influence
 [Coming to Terms with Quantified Reasoning](https://arxiv.org/abs/1611.02908)
 algerbaic datatypes require an infinite number of acyclicity axioms.
 

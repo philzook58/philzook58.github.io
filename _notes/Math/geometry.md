@@ -1,3 +1,7 @@
+---
+layout: post
+title: Geometry
+---
 
 See also:
 - Graphics

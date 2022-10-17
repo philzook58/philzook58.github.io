@@ -3,6 +3,7 @@ layout: post
 title: Functional Languages Implementation
 ---
 
+- [Boxing](#boxing)
 - [Abstract Machines](#abstract-machines)
 - [CEK](#cek)
 - [SECD](#secd)
@@ -30,6 +31,14 @@ See also notes on:
 - ocaml
 - haskell
 - scheme / lisp
+
+
+# Boxing
+How is polymorphism represented
+[levity polymorphism](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/11/levity-pldi17.pdf) - related works is nice
+
+
+
 
 
 # Abstract Machines

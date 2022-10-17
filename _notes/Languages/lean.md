@@ -38,6 +38,8 @@ That sounds fun
 - [functional programming in lean](https://leanprover.github.io/functional_programming_in_lean/hello-world.html) Christianson
 - [theorme prover lab](https://github.com/IPDSnelting/tba-2022)
 
+[Aesop (Automated Extensible Search for Obvious Proofs) i](https://github.com/JLimperg/aesop)
+
 ### Build
 
 `elan` tool

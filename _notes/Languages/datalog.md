@@ -737,6 +737,12 @@ Union
 
 ### Points To
 
+https://yanniss.github.io/cclyzer-sas16.pdf 
+https://github.com/GaloisInc/cclyzerpp 
+https://github.com/plast-lab/cclyzer
+https://github.com/souffle-lang/souffle/pull/2231 
+https://galoisinc.github.io/cclyzerpp/implementation.html#unification-based-analysis-via-subsumption-and-choice 
+https://github.com/souffle-lang/souffle/issues/2302 
 
 ### Available Expressions 
 [Lecture notes on static analysis in datalog](https://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf)
@@ -5447,6 +5453,8 @@ What about guarded negation? For example if you turn off stratification but are 
 
 
 # Resources
+
+[A Datalog Engine for GPUs](https://www.dcc.fc.up.pt/~ricroc/homepage/publications/leap/2013-WFLP.pdf)
 
 [Modular materialisation of Datalog programs](https://www.sciencedirect.com/science/article/pii/S0004370222000662?via%3Dihub) how to use foreign functions to implement datalog rules correctly?
 

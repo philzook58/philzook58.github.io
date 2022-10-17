@@ -1,4 +1,7 @@
-
+---
+layout: post
+title: Game Theory
+---
 
 Nash equilibrium
 Bimatrix games

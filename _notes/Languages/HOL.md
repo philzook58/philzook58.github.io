@@ -1,4 +1,7 @@
-
+---
+layout: post
+title: HOL
+---
 
 # Axioms
 Encoding forall

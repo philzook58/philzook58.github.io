@@ -798,6 +798,9 @@ https://twitter.com/phil_eaton
 
 [postgres internals book](https://postgrespro.com/blog/pgsql/5969682)
 
+Sqlite virtual tables
+[osquery](https://osquery.readthedocs.io/en/stable/introduction/sql/) osquery 
+https://github.com/frabert/ClangQL qerying C++ databases
 [advanced sql course](https://www.youtube.com/playlist?list=PL1XF9qjV8kH12PTd1WfsKeUQU6e83ldfc)
 
 [roaring bitmaps](https://twitter.com/phil_eaton/status/1567610292586045443?s=20&t=Ed04dBodGtW0kFSYL76bNQ) https://vikramoberoi.com/a-primer-on-roaring-bitmaps-what-they-are-and-how-they-work/

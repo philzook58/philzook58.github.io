@@ -1,3 +1,7 @@
+---
+layout: post
+title: Why3
+---
 
 Standard library reference
 https://why3.lri.fr/stdlib/

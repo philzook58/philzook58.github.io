@@ -1,11 +1,7 @@
----
-author: philzook58
-date: 2020-12-06
-layout: post
-title: "EGraphs Part III "
----
+
 
 - [Applications and Ideas](#applications-and-ideas)
+    - [Unification modulo egraph](#unification-modulo-egraph)
     - [Partial horn clauses](#partial-horn-clauses)
   - [Grobner](#grobner)
   - [Gilbert Imp](#gilbert-imp)
@@ -349,7 +345,198 @@ The new sort functionlaity
 Collect insufficient type checking examples
 
 
+https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.145.7977&rep=rep1&type=pdf
+Type Checking with Open Type Functions
+https://www.microsoft.com/en-us/research/wp-content/uploads/2009/09/implication_constraints.pdf
 
+
+rete
+hierarchical rule schedular
+unification modulo egraph
+
+partial function being defined often implies something
+sqrt(x) being defied implies x >= 0
+
+freejoin
+leapfrom triejoin
+
+mobius inversion
+
+
+partial lattice
+homorophism function between consistent partial attices
+flix meet is eq-join
+
+
+lattice homomorphism
+Canonicalization is two separate things.
+
+You'd want to put the queries themselves in an egraph as a way to hash cons?
+Maaaaybe.
+
+### Unification modulo egraph
+unification modulo ground equalities
+unification modulo egraphs in a prolog metainterpreter
+
+
+e-matching as discussed in the bjorner de moura paper has a very strong feeling relationship to prolog abstract machines like the WAM
+
+
+For a _fixed_ egraph, we can encode the e-matching into prolog clauses
+
+For a fixed pattern?
+
+There are different partuial evaluations of this
+
+
+my egraph:
+a + b = b + a
+a = 0
+b = 1
+a + b = 2
+
+```prolog
+:- initialization(main,main).
+:- use_module(library(reif)).
+
+% alternative encoding
+% add(0,1,2)
+% add(1,0,2)
+% a(0)
+% b(1)
+
+egraph(2, 0 + 1).
+egraph(2, 1 + 0).
+egraph(0, a).
+egraph(1, b).
+
+% I could make this generic using Functor stuff.
+% functor(P, Op, N), length(Args, N), ENode ..= [Op | Args], egraph(E,ENode), map2(ematch, )  
+ematch(P1 + P2, E) :- egraph(E, A + B), ematch(P1, A), ematch(P2,B).
+ematch(a, E) :- egraph(E, a).
+ematch(b, E) :- egraph(E, b).
+ematch(+P, E) :- P = eclass(E).
+
+% is the enumerator of terms in enode the same function as ematch? 
+% Yeah, I think it is. That's cool.
+%extract(E, A + B) :-
+%extract(E, a) :- egraph(E, a).
+%extract(E, b) :- 
+%expand(E, A + B) :- egraph(E, A + B), expand(A, )
+
+eunif(A,B) :- if_(A = B, true, (ematch(A,E), ematch(B,E))).
+
+main(_) :- ematch(+P1 + +P2, E), ematch(+P2 + +P1, E), print(P1), print(P2), print(E), false.
+```
+
+Hmm. So an eclass varables is kind of a different thing from a unif var and a ground. We don't want to return 
+enode can give it's own class of inifinte terms that is less powerful from what uvar can express
+unification through the egraph is stictly weaker than regular unification. So a result that returns just unif variables subsumes one that returns and egraph result.
+They aren't strictly more or less powerful :/ . If a term is in the egraph, then p1 = p2 will always succeed as a structural unification if it succeeds as an ematch.
+Hmm. But actually, as I've written ematch, a var matches to `eclass(E)` an unknown eclass, so actually yes, structural unification strictly dominates ematching solutions.
+
+This says every term of the form A + B is in the egraph:
+egraph(? , A + B). But what could possible be the enode id here? The term itself?
+
+We have a closed universe egraph. If we had an interleaving eqsat process,          we'd need to save a continuation and trigger at every unification failur. Yikes.
+Mark some things as constructors that will NEVER be in the egraph
+
+mydif(cons(A), nil).
+mydif(nil, cons(A)).
+mydiff(succ(X), zero).
+
+if_(A = B, true, if_(mydif(A,B), false, ematch(). ematch())).
+if_(A = B, 
+  true, 
+  eunif2(A,B))
+eunif2([F|Args1],[F|GArgs1]) :- map2(eunif, ArgsA, ArgsB).
+eunif2(A,B) :- ematch( , E), ematch( ,E).
+
+If functors are equal, we need to try both eunif and ematch
+if they are differen, try just ematch
+if unifiable is an optimization?
+
+% case by case. closed universe of possible terms
+eunif(A, +B) :- A = B.
+eunif(+A, B) :- A = B.
+eunif(a,a).
+eunif(b,b).
+eunif(A + B, C + D) :- eunif(A,C), eunif(B,D).
+eunif(A + B, C + D) :- ematch(A + B,E), ematch(C+D,E).
+eunif(a,b) :-  ematch(a, E), ematch(b. E).  
+    ??? Should I be returning something?  
+    No I may have to backtrack
+
+if_()
+
+Hmm. If I explicilty marked egraph terms as seperate things, then the switch over to ematch because obvious.
+`+` vs ++
+
+type epat = EVar of string | ENode of string * epat list | EClass 
+type term = Term of string * term list | EPat of epat | Var of string | Eclass of id
+
+downcast : term -> epat
+downcast Var = EVar
+downcast 
+
+let unif : term -> term -> term Var.Map.t
+match t1, t2
+
++A ++ +B is an ematching pattern
+A + B is a term
+
++ 
+
+Maybe there is a reason to make unif return the eclass?
+```
+ematch(P1 + P2, E) :- egraph(E, A + B), ematch(P1, A), ematch(P2,B).
+ematch(a, E) :- egraph(E, a).
+ematch(b, E) :- egraph(E, b).
+ematch(+P, E) :- P = eclass(E).
+
+eunif3(A + B, C + D, E) :- eunif3(A,C,E1), eunif3(B,D,E2), 
+  egraph(E, E1 + E2).
+eunif3(a,A + B, E) :- ematch(a , E), ematch(A + B, E).
+```
+
+if_(functor(A,)  ))
+
+
+What if I asserta equalities to the dynamic database
+but then table ematch and include congruence searching in it. No...
+add(0,1,2) :-
+do subsumption encoding? but I need a condition. Maytbe xsb can do that
+Eh. Well, the question stands. Instead of CHR, can i us asserta to eqsat / assert equalities and have congruences propagate
+Shallowly using unif vars for the egraph is tough
+
+normalize() :-
+  egraph(E, A + B), egraph(E2, A + B), E1 /= E2,
+  asserta(E, E2)
+
+
+maybe I could use trie as first class egraph?
+
+```prolog
+ematch(p, egraph).
+
+pat1(,egraph) :-
+
+pat1_egraph1()
+```
+
+If 
+
+in lambda prolog, we could dynamically extend the egraph using implication. We don't have congruence closure though. This is not eqsat process, it's more like just asserting equalities.
+cool persepctive on backtrackable egraph. We have to backtrack because we're reasoning over a new signature
+
+x \ egraph(counter, x) => foo()
+
+You could also run eqsat up to some point, by an external agent (egg), then export this as a prolog database and just do what you can. This is flipped from my other picture of prolog first then eqsat or interleaved somehow.
+
+Iterative deepening. it is an optimization to save previosly unresolavble stuff. 
+
+What about backchaining _just_ using egraph matching.
+Then backchaining isn't finding anything that datalog mode wouldn't, because only succeeds for stuff in egraph. I guess loops could send it off the deep end.
 
 
 

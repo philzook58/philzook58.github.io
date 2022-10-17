@@ -1,4 +1,7 @@
-
+---
+layout: post
+title: Automata
+---
 
 
 https://github.com/ondrik/libvata

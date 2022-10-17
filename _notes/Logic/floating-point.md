@@ -668,6 +668,9 @@ You can convert intervals arithmetic to constructive reals if you retain the abi
 
 Interval arithmetic has much of the implementation flavor of forward mode auto differentiation, both of which use an overloaded notion of number. Forward mode differentiation is kind of like infinitesimal ball arithmetic.
 
+https://github.com/holgerthies/coq-aern
 # Misc
 
 https://rtca2023.github.io/pages_Lyon/m2.html workshop may 2023. Sounds cool. Certified ans Symbolic computation
+
+[seven sins of numerical linear algebra](https://nhigham.com/2022/10/11/seven-sins-of-numerical-linear-algebra/)
