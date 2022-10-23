@@ -30,7 +30,7 @@ You can try it yourself by pip installing the very beta library `pip3 install sn
 This is an example program.
 
 ```python
-from snakelog import *
+from snakelog.common import *
 from snakelog.litelog import Solver, TEXT
 s = Solver()
 x, y, z = Vars("x y z")
@@ -47,6 +47,11 @@ s.cur.execute("SELECT * FROM path")
 assert set(s.cur.fetchall()) == {("a", "b"), ("b", "c"), ("a", "c")}
 ```
 
+Also in this blog post I discuss adding these features to litelog
+- Timestamp based Provenance
+- Z3 Bindings a la Formulog
+- Compile time unification
+- 
 ## Why?
 
 Datalog is a pretty weak language. There are some tricks to encode patterns you might find in other languages. For example the query answer technique let's you mimic function calls. Abstracting over these idioms is not possible in bare datalog.
