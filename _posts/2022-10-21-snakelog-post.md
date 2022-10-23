@@ -1,7 +1,7 @@
 ---
 date: 2022-10-21
 layout: post
-title: "Snakelog - A python DSL for datalogs"
+title: "Snakelog: A Python DSL for Datalogs"
 description: Bundling up litelog and souffle into a package
 tags: datalog sql python
 ---
