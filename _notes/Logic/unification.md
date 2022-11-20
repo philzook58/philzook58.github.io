@@ -108,8 +108,9 @@ https://conservancy.umn.edu/bitstream/handle/11299/57268/Qi_umn_0130E_10758.pdf?
 See Miller and Nadathur book.
 
 
-
-
+https://hal.archives-ouvertes.fr/hal-02123709/document uniifcation modulo reverse. hmm but this says it's really hard
+related to unification modulo group action? https://youtu.be/35xgRnWsUsg?t=1929
+and the generalized union find?
 
 
 

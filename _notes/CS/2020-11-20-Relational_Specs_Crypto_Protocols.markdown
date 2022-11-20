@@ -10,6 +10,18 @@ title: Crypto, Protocols, Relational Specs, Concurrency
 wordpress_id: 3009
 ---
 
+[Benton Simple Relational Correctness Proofs for Static Analyses and Program Transformations ](https://nickbenton.name/correctnessfull.pdf) Relational Hoarse Logic.
+
+Program trasnformations can be treated under similr techiques to parametrcity and information flowq security, and partial evaluation. Example of poison/undef?
+
+[Proving Optimizations Correct using Parameterized Program Equivalence](https://homes.cs.washington.edu/~ztatlock/pubs/pec-kundu-pldi09.pdf)
+
+Rhodium https://wasp.cs.washington.edu/wasp_rhodium.html
+cobalt
+
+G Barthe
+[Product programs and relational program logics](https://www.sciencedirect.com/science/article/pii/S235222081630044X)
+
 Noniterference and seperation logic can be thought of as buddies?
 Seperation is kind of a high variable low variable split  <https://link.springer.com/chapter/10.1007/978-3-319-89722-6_4>
 I guess you could use taint tracking to find a seperation logic violation

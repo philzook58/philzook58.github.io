@@ -18,6 +18,16 @@ gcc flags
 - Wall -Werrer different warning flas https://stackoverflow.com/questions/399850/best-compiler-warning-level-for-c-c-compilers
 - -ffunction-sections 
 
+[suggestions for secure flags](https://twitter.com/kees_cook/status/1588007082288353281?s=20&t=udFq9u7zLY-5-Ae6VrdqeQ)
+```
+-Wall
+-D_FORTIFY_SOURCE=2
+-fsanitize=bounds fsanitize-undefined-trap-on-error
+-fstrict-flex-arrays
+```
+[Getting the maximum of your C compiler, for security](https://airbus-seclab.github.io/c-compiler-security/)
+[GCC's new fortification level: The gains and costs](https://developers.redhat.com/articles/2022/09/17/gccs-new-fortification-level)
+
 gcc -shared foo.o -o foo.so  - makes a dynamically linkable file. You actually have to make a object file first before you do this
 
 g++ _is_ gcc with some appropriate flags set for C++

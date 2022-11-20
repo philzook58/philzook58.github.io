@@ -10,6 +10,7 @@ title: Constraint Programming
 - [Answer Set Programming](#answer-set-programming)
   - [negation](#negation)
   - [Frame Problem Default Logic](#frame-problem-default-logic)
+    - [python](#python)
     - [nqueens](#nqueens)
 - [Topics](#topics)
   - [Branch and Bound](#branch-and-bound)
@@ -95,6 +96,10 @@ table annotions include lattice type stuff "mode-directed tabling"
 action rules
 loops
 # Answer Set Programming
+[Answer set programming (ASP) is the powerhouse technology you’ve never heard of](https://twitter.com/mgrnbrg/status/1589652522180153344?s=20&t=JfnzTQG-SeFdO1qYUwKkrw) http://www.weaselhat.com/2022/11/07/asp/
+Datalog provenance is explanations. Can be used as a monootnic theory in SMT search.
+
+
 https://arxiv.org/html/2208.02685v1/#rprlif19 iclp 2022
 [Transforming Gringo Rules into Formulas in a Natural Way](https://arxiv.org/html/2208.02685v1/#EPTCS364.13) translating gringo into First order logic
 
@@ -285,6 +290,36 @@ Clingo makes auxiliary predicates instead of dummy variables for `_` interesting
 
 grounding time and solving time.
 For slow ground: try enumerating better. symettry breaking. Rules with fewer variables.
+
+### python
+https://potassco.org/clingo/python-api/5.6/
+
+```python
+import clingo
+print(clingo.__version__)
+from clingo import *
+ctl = clingo.Control()
+
+one = clingo.Number(1)
+clingo.String("foo")
+print(parse_term("q(1,2,3)"))
+parse_program("q(X) :- p(X).", lambda prg: print(prg))
+p = clingo.Function("p", [one], positive=True)
+print(p)
+
+```
+
+```python
+import clingo
+ctl = clingo.Control()
+ctl.add("p", ["t"], "q(t).")
+parts = []
+parts.append(("p", [clingo.Number(1)]))
+parts.append(("p", [clingo.Number(2)]))
+ctl.ground(parts)
+ctl.solve(on_model=lambda m: print("Answer: {}".format(m)))
+```
+
 
 ### nqueens
 ```clingo

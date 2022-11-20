@@ -15,6 +15,17 @@ wordpress_id: 2960
     - [Loop recovery](#loop-recovery)
     - [Interactive](#interactive)
 - [Ghidra](#ghidra)
+  - [Patching](#patching)
+  - [Binary reversign](#binary-reversign)
+  - [Fuzzing](#fuzzing)
+  - [Symbolic Execution](#symbolic-execution)
+  - [Vulnerabilities](#vulnerabilities)
+  - [Windows](#windows)
+  - [Mitigations](#mitigations)
+- [Exploits](#exploits)
+  - [Buffer Overflows](#buffer-overflows)
+  - [Primitives](#primitives)
+  - [Return Oriented Programming (ROP)](#return-oriented-programming-rop)
     - [JOP COP](#jop-cop)
   - [Data Oriented Programming (DOP)](#data-oriented-programming-dop)
   - [Heap](#heap)
@@ -167,69 +178,7 @@ https://github.com/GrammaTech/gtirb-vscode
 [decompiler explorer](https://github.com/mborgerson/mdec) Hmm. too bad it's not a web service
 
 # Ghidra
-make decomp_dbg
-make doc
-<https://grant-h.github.io/docs/ghidra/decompiler/index.html>
-
-SLEIGHHOME=ghidra directroy
-
-```
-import ghidra
-f = getFunction("mufunname")
-f.getAllVariables
-f.localVariables
-
-
-## Commands
-load file /bin/true
-save mysavefile.xml
-restore
-addpath
-codedata init,target,,runnnnnnnnnn, dump hits, dump crossrefs - codedata.cc
-
-ifacedecomp.cc - this is where most of them are
-decompile
-dump
-force hex
-map hash
-load function
-source
-option
-loadfile
-print language
-print xml
-print C types
-prit C
-produce C
-list action
-print param
-
-entry point of function can also be given manually
-
-
-
-parse line - to give C prototypes?
-parse file foo.h
-
-
-
-load fine mytest
-read symbols
-load function main
-decomp
-print C
-disassemble
-rename param_1 argc
-print high iStack12
-
-
-pcode stuff: op.hh
-
-consolemain.cc
-funcdata.hh
-
-
-
+See ghidra notes
 
 ## Patching
 https://github.com/GJDuck/e9patch
@@ -561,11 +510,15 @@ voodoo malloc tricks
 ## Kernel
 double free ps4 https://github.com/Cryptogenic/Exploit-Writeups/blob/master/FreeBSD/PS4%205.05%20BPF%20Double%20Free%20Kernel%20Exploit%20Writeup.md
 
+https://twitter.com/sirdarckcat/status/1584846038866989056?s=20&t=udFq9u7zLY-5-Ae6VrdqeQ Joy of explooitation the kernel  http://slides.kernel.kitchen
 ## Browser
 
 https://twitter.com/5aelo?lang=en
 [Attacking JavaScript Engines: A case study of JavaScriptCore and CVE-2016-4622](http://www.phrack.org/issues/70/3.html#article)
 
+[How I started chasing speculative type confusion bugs in the kernel and ended up with 'real' ones](https://lpc.events/event/16/contributions/1211/)
+
+[Return to sender Detecting kernel exploits with eBPF](https://i.blackhat.com/USA-22/Wednesday/US-22-Fournier-Return-To-Sender.pdf) https://github.com/Gui774ume/krie
 ## Automated Exploit Generation (AEG)
 
 [sean heelan](https://sean.heelan.io/) [thesis](https://seanhn.files.wordpress.com/2020/11/heelan_phd_thesis.pdf)

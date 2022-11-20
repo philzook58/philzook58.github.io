@@ -38,6 +38,7 @@ fasm https://board.flatassembler.net/
 [terse](http://www.terse.com/)
 command line flag
 
+[SASM - simple crossplatform IDE for NASM, MASM, GAS and FASM assembly languages](https://github.com/Dman95/SASM) http://dman95.github.io/SASM/
 ## Debuggers
 I've come to realize that even forplaying around in assmbly, a debugger is pretty clutch
 

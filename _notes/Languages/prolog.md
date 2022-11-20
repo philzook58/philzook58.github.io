@@ -18,6 +18,7 @@ wordpress_id: 1865
   - [Difference Lists](#difference-lists)
   - [Rewriting in prolog](#rewriting-in-prolog)
 - [Typeclass](#typeclass)
+  - [Type checking / inference](#type-checking--inference)
 - [Topics](#topics)
   - [SLD resolution](#sld-resolution)
   - [Interesting predicates](#interesting-predicates)
@@ -156,6 +157,8 @@ main(_) :- format("hello world ~p\n", [foo(8)]).
 - CSS?
 
 
+
+
 ## Lists
 ```prolog
 append([], X, X).
@@ -209,6 +212,64 @@ dotcall( foo, tostring ) :- type(foo, T), traitfield(Trait, tostring), impl(Tran
 % from to
 
 % iterator
+```
+
+## Type checking / inference
+I probably have something like this somewhere else in my notes
+This has something of the flsvor of a declarative statement of the typing rules, readin `:-` as horizontal line.
+I'm not being careful about moding.
+Not that de bruijn isn't really necessary in the type checking process. Explicit names works ok because I'm not doing any substitution.
+
+
+
+```prolog
+type(Env, nat(X), int).
+type(Env, tt, unit).
+type(Env, var(X), TX) :- lookup(Env, X, TX).
+type(Env, lam(X, B), TA -> TB ) :- type([X - TA |Env], B, TB ).
+type(Env, app(F,X), TB ) :- type(Env, F, TA -> TB ), type(Env, X, TA).
+
+```
+
+
+Hmm. in the lambda prolog encdoing of this, thye use implication for var(X).
+So env is more of the form [ forall Env, type(E,X,TA) | Env]
+but actuall maybe we want to encode that only refining environments.
+
+type(Env-E, lam(X,B), TX -> TB) :- type( [forall E1, type(Env-E1, X, TX) | Env] - E,  )
+
+type(E,X,Tx) :- var(E), forallE_type(X,Tx).
+forallE_type(X,Tx) :- lookup(Env, forallE_type(X,Tx))
+forallE_type(X,Tx) :- type(E,X,Tx).
+
+
+
+fvar(X) onto the assertion environment list.
+
+strcturally recursive copy_term is pure and can produce fresh vars. Kindo f it builds new vars by refining a fhresness source
+var(X)
+
+
+
+[]
+
+instead of putting it in the type(var(X)) rule.
+
+
+Relationship to Hindley-Milner. We are using prolog uvars as type variables. This is tricky though.
+
+https://github.com/bertas/hm_prolog/blob/master/src/type.pl This is not right to my eye for example.
+Using var(A) is cheating.
+https://www.swi-prolog.org/pack/list?p=type_check a package for typechecking prolog itself with HM
+http://kyagrd.github.io/tiper/
+[Executable Relational Specifications of Polymorphic Type Systems Using Prolog](https://link.springer.com/chapter/10.1007/978-3-319-29604-3_8)
+Let generalization
+Is generalize even good prolog?
+```
+type(Env, let(X,E,B), TB) :- type(Env, E, T1), generalize(T1,T2), type([X - T2 | Env], B, TB).
+
+generalize(tVar(A), )
+generalize(A -> B)
 ```
 
 
@@ -1838,7 +1899,7 @@ Implementations
 
 [elpi: fast embeddable lmabda prolog interpreter](https://hal.inria.fr/hal-01176856/document)
 - using de bruijn _levels_ means pattern matching doesn't need to do anything?
-
+[elpi vs code extension](https://github.com/LPCIC/elpi-lang)
 
 Install as `opam install elpi`. Run as `elpi -test` to run with main query
 

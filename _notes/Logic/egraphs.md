@@ -654,3 +654,4 @@ https://en.wikipedia.org/wiki/E-graph
 
 [Fast equality saturation in Haskell](https://github.com/alt-romes/hegg)
 
+[naive egraph](https://github.com/StrongerXi/naive-egraph)

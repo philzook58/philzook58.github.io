@@ -815,3 +815,11 @@ ocamlfdo- https://github.com/gretay-js/ocamlfdo ocaml feedback directed optimize
 [rank N types in ocaml](https://soap.coffee/~lthms/posts/RankNTypesInOCaml.html) - wrap in records and using unboxed annotations
 
 [PPX](https://ocaml.org/docs/metaprogramming) deriving_inline, astexplorer is in vscode
+
+[sherlodoc](https://github.com/art-w/sherlodoc) hoogle like thing
+
+[wasmer](https://wasmer.io/posts/running-wasm-in-ocaml-with-wasmer)
+
+[modular macros](https://www.cl.cam.ac.uk/~jdy22/projects/modular-macros/)
+
+[lower kinded optics](https://github.com/polytypic/loko-ml)
