@@ -511,6 +511,17 @@ cong @ eclass(T,E1) \ eclass(T, E2) <=> E1 < E2 | pto(E2, E1).
 
 ```
 
+
+```prolog
+:- use_module(library(chr)).
+:- initialization(main,main).
+:- chr_option(optimize,full). % Thanks Tom Schrijvers for the tip
+:- chr_constraint eclass(?,-).
+
+
+
+```
+
 ```prolog
 :- use_module(library(chr)).
 :- initialization(main,main).

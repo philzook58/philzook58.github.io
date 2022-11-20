@@ -48,5 +48,7 @@ Infinite families of sentences
 # Consistency
 
 
+# Incompleteness Theorem
+https://news.ycombinator.com/item?id=33236447
 
 [Book list](https://github.com/jaalonso/Libros_de_Logica/blob/main/README.org)

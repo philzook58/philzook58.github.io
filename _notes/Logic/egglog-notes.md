@@ -1,7 +1,12 @@
 
 
 - [Applications and Ideas](#applications-and-ideas)
-    - [Unification modulo egraph](#unification-modulo-egraph)
+  - [first class when](#first-class-when)
+- [Prolog vs egglog](#prolog-vs-egglog)
+- [Resolution](#resolution)
+  - [Paper](#paper)
+    - [Reflection and Truth Values](#reflection-and-truth-values)
+- [Unification modulo egraph](#unification-modulo-egraph)
     - [Partial horn clauses](#partial-horn-clauses)
   - [Grobner](#grobner)
   - [Gilbert Imp](#gilbert-imp)
@@ -374,7 +379,723 @@ Canonicalization is two separate things.
 You'd want to put the queries themselves in an egraph as a way to hash cons?
 Maaaaybe.
 
-### Unification modulo egraph
+
+decompiler
+
+blogging/tweeting
+matrix example
+unification - resolution/prolog
+python datalog
+timestamp proofs
+
+examples 
+vec n example
+related work
+
+gappa
+hlint
+avail expr
+
+24 days deadline
+
+
+datalog modulo rewriting?
+
+eqrel + min leader finder. smart
+
+```
+eq eqrel
+leader
+leader :- eq
+
+```
+
+could encode resolution theorem prover into?
+
+
+You know, extraction and proofs are similar. They are doing a top down prolog-ish process over the final database.
+
+
+
+## first class when
+
+```egglog
+(define-dataype Proof (Yup)) ; sierp, liftedunit, semidec
+
+(function check (Env Term Type) Proof)
+
+(function when (Proof Proof) Proof) ; alternative |- , =>
+(= (when (Yup) (Yup)) (Yup)) ; when is also a bit like an and in a certain sense.
+; currying x :- y :- z is (rewrite z (when y x))
+; higher order rules can exist then.
+
+; or (rewrite (when Yup a) a) which is even better in some cases. Polymorphism would be real nice
+
+(function eq (A A) Proof)
+(rule ((= (eq a b) (Yup))) ((union a b)))
+(rewrite (eq a a) (Yup))
+
+
+
+(rewrite (check env t ty) (When ()))
+
+
+```
+When serves the double purpose of creating demand for the when condition.
+It is convenient, but may spray in a way you might  not like
+
+(Sig scope t)
+
+
+(rewrite (check env (VCons x xs) (Vec n a)
+  (when 
+    (check env x a)
+    (check env xs (Vec (- n 1) a)
+  )
+)
+
+(rewrite (check env (vecrec nilcase ) (Vec n a)
+  (when 
+    (check env x a)
+    (check env xs (Vec (- n 1) a)
+  )
+)
+
+Named lambdas only? More in haskell/agda equational def style type check?
+
+iso
+Iso f g
+f g x = x, g f y = y.
+hmm
+
+
+# Prolog vs egglog
+
+I feel like what prolog is doing is there is a fact under consideration of unknown truth exists x, append([], [1],x) .  This becomes append([],[1],X) . The truth of this fact remains unknown. I could model this as `(append  (nil) (cons 1 nil)  (skolem2 append (nil) [1] )
+
+
+A prolog goal is exists x, append([], [1], a).
+It is of unkown truth value.
+(function append (list list list) True)
+
+
+We skoelmize this goal and seed the question.
+(I guess we could global skoelm if this is a global question. this is similar to lambda lifting)
+(append (nil) (cons 1 nil) (skolem1))
+
+
+So here is an attempt to model prolog inside of egglog.
+I model prolog prodicates as functions to lifted unit.
+If it points to `(proven)`, this is an asserted fact.
+If doesn'y point to `(proven)` yet, this is a demand/question.
+
+In prolog question are asked at the repl prompt.
+Facts are asserted in the database.
+
+a(X,Y) :- b(), c().
+A normal form of prolog could require unique variables in the head, with explicit = in the body.
+What does a rule compile into in this model?
+
+(rewrite (head )
+         (conj   ,Eq(a,b),   ))
+
+(append [] a a)
+
+This asserts new _questions_ about equality.
+It does
+(rewrite (append a b c)  (conj  (eq nil a) (eq b c)))
+Hmm. Does this kind of do something funky with multiple rules?
+
+(rewrite (eq a a) (I)) is fine
+
+(define (append nil (Var "a") (var "b")))
+Given (var "a") = (var "b") this succeeds.
+You could extract (append a b c) to get different branche of the prolog search, and see if they have a unification solution. That's kind of interesting. It can extract all the prolog goal chains that don't egglog finish. Will anything block?
+
+This is egglog metaprogramming for prolog kind of. Pretty neat. Partial evaluation of prolog?
+But it fundamentally doesn't do unification.
+The branches interfere.
+But it does everything up to that.
+Is that useful?
+If extraction _knew_ that it needed structural unification under (Eq a b), that is kind of interesting.
+
+It's kind of a brother of the extract normalize methodology for lambda terms.
+It's extract, unify.
+
+
+Producing new vars... exists?
+
+prolog:
+path(x,z) :- edge(x,y), path(y,z).
+
+Where does y come from?
+(rewrite (path x z) (conj (edge x y) (path y z))
+
+ exists y, edge(x,y) /\ path(y,z) => path(x,z)
+
+?
+ (rewrite (path x z) (conj (edge x (trans x z)) (path (trans x z) z))
+
+But trans x z will never unify with anything. and it won't be in edge.
+
+rewrite (query env (path x z)) -> query env
+
+
+This is making prolog as multiset rewriting.
+The set is represented as conj.
+
+So what?
+
+
+
+
+Ok let's assume there _is_ a way to make this work. How?
+
+
+
+(union (Clone usize) (I))
+(rewrite (Clone (Vec A)) (Clone A))
+
+
+```
+((subst (fvar a) a b) )
+```
+Maybe the preprocess unin find is smart?
+
+A prolog query can be ?- append([], A, B) and prolog would return A = B . I can ask ?- append([], [1], [2])  and prolog will fail.
+
+ok
+(rewrite (append nil a) a). boom.
+ok.
+(= (cons a b) (cons b d)) (!= a b) defive constradiction boom.
+
+so is append fine because it is functional? So I need a non function example.
+
+append(A, B, [1,2,3]).
+I mean yes, I can derive all the solutions to append. Fine.
+
+length(a, N)
+
+lenght(nil , 0)
+length(cons(A,Xs), N+1) :- length() 
+
+
+(rule (length X) length()
+
+append(A,B,C).
+
+write rules for every modality of use.
+why is returning the abstracted result so important?
+
+
+Is the only difference that prolog can return a very big result very compactly if unification variables are left in the 
+But the same holds for datalog. How is this changing anything?
+magic set + includes sig and clauses?
+
+
+
+CHR + ELPI to get a union find.
+
+
+Unification variables are standins for something unknown but to be determined or perhaps representing an infinite class of all possible terms. Eclasses are standins for a constrained set of terms. 
+
+Perhaps one way of looking at it is that prolog unification vars in answers are universal quantification, whereas egglog eclassids are bounded (over all terms in that eclass) quantification in answers. Semantically, since everything in the eclass is equal, there isn't any quantifaction at all. It's a quantification over a thing of size 1. Prolog is quantifying over a _ton_ of stuff.
+
+uvars in queries are existentials, eclass ids in querie are... like term famillies??
+
+
+
+
+What about <= as an example? A true relation
+le(A,A).
+le(A, succ(B)) :- le(A,B).
+
+vs
+
+le(z,A).
+le(succ(A), succ(B)) :- le(A,B).
+
+
+Non destructive subsittitution.
+
+
+So Max shows that append in functional form is useful for demand on last argument. What about mutiple demand projectors.
+
+append(A,B,[1,2,3]) --> demand1([1,2,3]) demand2([1,2,3])
+eh. But there aren't unique solutions.
+
+Egglog can be subservient to prolog (carried egraph. CHR possibly)
+prolog subservient to egglog (called as FFI)
+interpreters can be embedded.
+
+ELPI CHR could get us a harrop enabled carried egraph.
+Is putting unification variables in there ok? Seems like no.
+It'll try to unify them to random garbage... uhhhh. we could guard on groundness. {ground(A)}
+Or store ungrounded separately
+unground(eid, X) <=> {}
+
+Or
+eclass(eid, uvar(X)). not eclass(eid, X). use a whatsy representation like triska says.
+uvar(X, eid) is the flat representation of this.
+uvar()
+We do _not_ want the rule `uvar(X,E), uvar(X, E2) <=> link(E,E2).`
+Detecting when X has been refined is tricky.
+uvar(X, E) <=> {nonvar(X)}, refine(X,E).
+
+The prolog to datalog translation:
+A query becomes a demand predicate. The pattern of variables is different demand predicates. Traditional datalog has a countable number of demand forms for a single predicate. Datalog with terms does not obviously have such a countable form. 
+D
+A prolog clause becomes demand propagation clauses and answer propagation clauses. They are different interleacvings of demand possible.
+Demand overapproximation is not a problem, although asking for more than needed. Answer underapproximation is not a problem, although hurt completeness.
+With datalog with lattcies and egglog, answer and demand relations can be collapsed somewhat (hmm maybe not). Maybe types can be useed in _just_ demand to collapse all different demands to one.
+Informatiobn passing strategies, One could imagine a prolog that executes all its goals in parallel rather than in sequence. Then it would merge them together in the asnwer pass. This is still a reasonable prolog variation.
+
+
+
+Without first class union find, there is no notion of variable in answer?
+If we can predict all possible shapes of answers, we can ahead of time make different answer predicates like we did for demand. Unlinked variables are fairly encodable as just a $Var.
+Egglog might enable first class uf keyed. This is reminscent of my failed attempts in z3 to make a first class uf using uniterpeted functions.
+uf(key,a) = uf(key,b) whre key is a label of the union find. Generating fresh keys is the job of skolemization.
+(sort ufkey)
+(function named_uf (String) ufkey)
+(function uf (ufkey List) List)
+
+(union (appendrule ufkey x) (uf (appendrule ufkey) y)) :- (demand )  (append ufkey x y z)
+% if intended to be accumulating. Is there some way to get this by congruence?
+(uf (appendrule ufkey) x) :- (uf ufkey x) = (uf ufkey y)
+uf is apply. This is the usual first order named function encoding stuff.
+Demand driven style
+(rewrite (eq (uf (succ k) x) (uf (succ k) y))  (when (eq (uf k x) (uf k y)))
+
+it is difficult or impossible to recover function extensionality
+forall x, f x = g x -> f = g
+That forall... maybe it's ok if the (partial) functions aren't going to become more defined. It isn't currently available though.
+
+first class sets at  (function fcset(key a) Proof). We guarantee we'll never add to them. Nah. That's not good enough
+
+These variabes _are_ branch local because we have a backtrackable egraph. The egraph operations will _never_ unify uvars.
+
+
+
+```
+
+
+```
+
+
+Ok so we can put only ground (including universal introduced guys) in.
+
+
+
+append([],X,Y) :- ground(X), ground(Y), X = Y.
+; This is kind of the analog of taking a prolog goal append([],x,x) and accepting it, but not append([], X, Y).
+(rewrite (append (nil) a a) (I))
+
+; I don't know what this is from a prolog perspective. It's like a retroactive conclusion from a succeeded goal.
+; it depends on the functional nature of append. This is not a general prolog feature.
+(rule (= (Proven) (append (nil) a b))  (union a b))
+
+; This is kind of like a prolog rule. It's not performing unification on the variable though.
+; congruence kind of performs some of unification, the destructuring part, from bttom up instead of top down.
+; 
+
+(rule (= q (append (nil) a b))   (set (append nil a a) (Proven))  
+                                (set(append nil b b) (Proven)))
+
+What egglog rule can take the _question_ (append nil [1] skolem) and (union [1] skolem) 
+(rule 
+  (append nil a (skolem b))
+  (union a (skolem b))
+  (append nil a (skolem b)) = true
+)
+No. I don't like this.
+I can write a purely functional intepreter of prolog. I can do this here. The question is can I do it shallowly
+
+(rule 
+  (append nil a (skolem b))
+  (union a (skolem b))
+  (append nil a (skolem b)) = true
+)
+
+
+First class UF. Max's bar napkin seemed to be saying :merge could do it.
+I said you can bounce between two UFs and converge if you have good properties.
+Do this internally to egglog?
+
+
+
+
+
+
+`(append  (nil) (cons 1 nil)  (skolem2 append [] [1]))
+
+
+If we expose < on eids, we could also make a set datatype that bubble sorts itself.
+Or really tree bubble sorts? (it doesn't have to be a list).
+Then it's somethign like an (unbalanced) binary tree.
+It at least won't 
+By the laws of egglog, we can't tell if something will nevr be in it, 
+but we can tell if something _is_ in it, and we can recoever set extensionality.
+
+It's pseudo canonicalization
+
+In addition
+
+a + (b + (c + d)) --> (a + b) + (c + d) 
+No. For assoc we could just right assoc.
+That's canonical.
+Commutativity then would bubble sort.
+Maybe useful in a hierarcical scheudling system. bubble sorting may be usefu.
+This all sounds like bullsht
+
+Is the first class union find stuff bettr really that just using built in Map?
+Eh. It canonicalizes.
+
+first class uf is simlar to first class set using keys.
+elem( x,s ) is similar to root.
+One could do an elem driven definition.
+A valid uf rule is (union i j (union k l uf)) = (union k l (union i j)) but I've nt rempted tov use that one.
+It produces a new union find (union i j uf) which sucks.
+union is analog of (add-elem x s)
+(elem x (add-elem x s)) (True)
+(elem x s) => (elem x (add-elem y s)) 
+
+A set is a map to true/false.
+A uf is a map to uf vals.
+a dict is a map to someting.
+So it's all kind of the same stuff.
+
+An assoc list is a map. Do we consider assoc lists extensionally? not usually. If so I'd compile it to a better (canonical) structure and compare those.
+
+
+egglog is knd of a functional programming language. You could designate roots and have a GC run durring rebuilding
+
+
+
+Egglog can emulate prolog. There is no question there. Egglog has pure functional programming as a subsystem, and you can write a purely functional prolog interpreter.
+A measure I think of how close egglog is to prolog is to attempt to build as shallow and simple intepreter of prolog as possible.
+When you write a prolog interpreter in prolog, you can borrow so many capabilities of the host language that it is trivial. You can make each of the capabilities in turn more or less explicit depending on how you want to modify the stock behavior.
+The two main things (the essential components of prolog) to try to borrow are unification and nondeterminism. Basically, you can't borrow both in egglog to achieve prolog behavior.
+
+Borrowing egglog nondeterminism, you can use non deterministic rewrite rules in the interpreter picking what search path to go down. However, now if you ever unify something it happens across all branches, which is incorrect. You can fix this by carrying around a first class union find.
+
+If you make the nondeterminism explicit by carrying around a choice point stack in the interpreter, you can use skolemization and egglog union to do some aspects 
+
+Prolog variables `X` are not just one thing. 
+Prolog consits of a query pass working backward from goals, searching for proofs. Upon finding the proof, there is an very implicit forward pass consisting of essentially return.
+A unification variable in a goal/query is attempting to find a proof to an existential question.
+A unification variable in the answer is the assertion of a universally quantified statement.
+A unification variable in the head of a program clause is a universal quantified variable for that axiom.
+A unification variable appearing only in the body of a program clause is a existentially quantified variablle.
+
+
+
+
+
+
+In any operational sense, the relations in the body of datalog rules are smantically very different from the predicates in the head, despite having the same syntax. The body is patterns, and the head is actions.
+
+
+So the choices are:
+- Use a backtrackable egraph controlled by an external process to acheve prolog backtracking. Then unification can be rolled back.
+- Use egglog nondeterministic rule application for prolog nondeterminism, then you can't use the raw global union find for prolog unification because it'll interfere across branches
+- 
+
+
+
+elem absoprtion + list association give us a close to extensional set.
+
+; elem def
+(rewrite (elem x (add y s)) (elem x s))
+; add absoprtion
+(rewrite (add x s) s  
+ :when (elem x s))
+; union is append
+(rewrite (union (add x s1) s))  (add x (union s1 s)))
+
+
+
+first class partial functions
+Maybe I can write a metainterpreter
+
+(datatype PFuc (Set x y PFun ) (Empty))
+
+(Set x y f)
+(Set x y f))
+
+(rewrite (Set x y f) (Set x (merge y z) f)
+ :when (= z (apply f x))
+)
+
+(rule (((= () (Set x y f)) (= z (apply f x)))
+   ((set (apply (Set x y f) x (merge y z))))
+))
+
+(rewrite (apply (Set x y f) x) (merge (apply f x) x))
+
+(rewrite (apply (Set x y f) x) (merge y x) 
+  :when (= z (apply f x))
+)
+(rewrite (apply (Set x y f) x) default)
+
+
+
+
+algerbaic theory of defaultdict
+and mergedict. These are not new entities you know. The union find dict
+
+
+
+Hmm. We can't detect when two intrinsic relations are "equal" either.
+That's what we're asking of our first class entities.
+Hmm. And I'm keeping the old one...
+
+
+(= (apply "foo" x) y)
+is not complicated. Almost too hokey
+
+(= (apply "edge" (tup2 x y) ()))
+(= (apply "path" (tup2 x y) ()))
+This style is "borrowing" egglog ematching.
+
+My fixatiom on this frst class set problem is dumb. What do I even want it for?
+It's a square peg for a round hole
+
+Theory of big sum
+
+; big commute / assoc
+(sum x (sum y e)) (sum y (sum x e))
+; big dist
+(rewrite (sum x (* (Lit c) e)) (* (Lit c) (sum x e))
+(sum x (+ y z)) (+ (sum x y) (sum x e)))
+
+(+ (sum x e1) (sum y e2)))  (sum y (+ (subst x y e1) e2))
+
+
+
+factor. This one is tough
+(sum x (sum y (* e1 e2))   (* (sum x (interp t1)) (sum y (interp t2)))
+:when (= t1 (free x e2)  (= t2 (free y e1)))
+
+Nah this doesn't work
+Kind of feels like that nbe example.
+
+; copy everything out.
+(rewrite (free x (Var y)) (TVar y))
+(rewrite ())
+
+
+(sum x (sum x e)) is factorable because it is shadowing
+
+(rewrite (sum x (Lit c)) (Lit (* N c)))
+(rewrite (sum x (Var x)))
+The rapier feels a lot like
+{x} |- t
+
+lift {s} (x)
+
+always have minimal thingo in context and explicit lifts to new contexts.
+{} |- zero
+
+{x} |- x
+
+union(a,b) |- a + b
+
+context really gets help from metaprogramming
+But of course I should go manual first.
+
+freevar(x) = {} _if_ we maintain lift discipline
+
+lift({a,b,c}, e)
+
+sum x (sum y (* (lift x e) (lift y e)))
+
+lift is an anti binding site.
+lifts will show up in all rules. v annoying.
+
+binomial coefficients and the knuth book
+
+
+
+exact reals...
+How do they fit in. Demand...
+(demand x eps)
+
+
+Push anythign interesting into public.
+Make separate egglog notes
+Suggest the mdbook
+
+
+# Resolution
+;(datatype Bool (True) (False))
+;(function PosOr (Bool Bool) Bool)
+;(function NegOr (Bool Bool) Bool)
+;(rewrite (PosOr True c) True)
+;(rewrite (NegOr False c) c)
+; assume normal form associated to right like a list.
+; False = Nil
+
+; "append"
+;(rewrite (Or (Or a b) c) (Or a (Or b c)))
+;(rewrite (Neg (Neg c)) c)
+
+;(rule ((= t1 (Or a b)) (= t2 (Or (Neg a) d)))
+;      = (Or t1 t2) (Or b d)
+;)
+;(check (!= False True))
+
+;(rewrite )
+
+;(run 10)
+
+; true is part of bool?
+; (assert (PosOr False Nil)) ; assert (NegOr False)
+;(datatype Clause (PosOr Prop Clause) (NegOr Prop Clause) (Nil) (True))
+;(rewrite (PosOr True c) True)
+;(rewrite (PosOr c True) True)
+;(rewrite (NegOr True c) c)
+
+;(function append (Clause Clause) Clause)
+;(rewrite (append (NegOr a b) c) (NegOr a (append b c))) 
+;(rewrite (append (PosOr a b) c) (PosOr a (append b c))) 
+;(rewrite (append Nil c) c)
+;(rewrite (append True c) True)
+
+;term indexing
+;(relation contains (Clause Prop) Bool)
+;(rule (= c (NegOr a b)) (contains (NegOr a b) a)
+;(rule (contains a b))
+
+; Try using (Set Bool)
+; Or just go for AC on clauses
+
+;(check (!= True Nil))
+;(relation axiom (Clause))
+
+;(function and (Bool Bool) Bool)
+;(function or (Bool Bool) Bool)
+;(function impl (Bool Bool) Bool)
+;(function not (Bool) Bool)
+;(union (not True) False)
+;(union (not False) True)
+;(rewrite (not (not a)) a)
+
+;(rule ((
+;    impl a b
+;)))
+
+
+;(datatype Clause (And Clause Clause) (Lit Bool))
+; if we attach a first class uf to clause, maybe we can have full resolution?
+
+
+## Paper
+
+An alternative to the standard SLD resolution of prolog is SLG resolution, also known as tabling. Tabling is a form of memoization for prolog. In tabling, as the top down search proceeds, when a new goal is found, it is registered as in a table and a continuation is saved to receive possible answers to this query. In this manner, loops in the execution can be detected and terminated.
+
+Tabling increases the completeness and improves the termination properties of the prolog search. Programs that fall within the datalog fragment will terminate under tabled resolution and in this sense tabling is similar to datalog. It is however, considered to be much more complicated to implement efficiently.
+
+In a sense, datalog is half of tabling, only producing the answer side and not the query side.
+
+
+
+
+
+### Reflection and Truth Values
+It can be useful to reflect facts in the egglog system into terms to be reasoned about, particularly equationally
+Boolean algebra is a familiar equational structure for reasoning about logical quantities. It is a natural algebraic system to consider in an equational egraph reasoner.
+
+(datatype Bool (True) (False))
+
+Indeed equality itself can be reflected into a predicate
+
+(function eq-math (Math Math) Bool)
+(rewrite (eq a a) True)
+(rule ((= True (eq a b)) (union a b)))
+
+
+It is an idiom in datalog to create two predicates, one representing the negation of the other, p and not_p. A tuple being in negative one is the positive assertion that the predicate does not hold, while a tuple being in neither represents an unknown state.
+
+In egglog this doubling of predicates can be represented more naturally by a function to Bool. 
+A lattice datalog can represent the lattice of (unknown true false)
+This has the extra expressivity of allowing two truth values to be of unknown but equal truth.
+
+Negation and falsehood in the context of datalog is a subtle topic. Just because a fact does not hold now, does not guarantee it will not be discovered to hold later unless the rule set has been saturated. Proving a relation to be definitely False is subjectively not a natural fit to a system with this character.
+
+An alternative notion of truth value that better reflects this feature of datalog is
+
+(datatype True (I))
+
+This datatype has analogs in dependent type theory and in the Marshall B system and is some sense "half" of a boolean. Any eclass of type True that is not in the eclass of (I) is not intepreted as false, but instead as unknown. This state can be useful for representing demand for it's derivation.
+
+Propositional extensionality is an axiom that allows translating logical implication to equational reasoning. The lifting rules 
+
+A rule of the form
+(rule ((a)) ((b)))
+(rule ((b)) ((a)))
+
+can be turned into a rewrite rule
+(rewrite ((a)) ((b)))
+(rewrite ((b)) ((a)))
+
+
+A rule of the form
+(rule ((a)) ((b)))
+can be reflected into an assertion
+(=> (a) (b))
+(rewrite (=> (I) b) b)
+
+These are the laws of a heyting algebra.
+https://en.wikipedia.org/wiki/Heyting_algebra
+
+(rewrite (=> a a) (I))
+(rewrite (conj a (=> a b)) b)
+(rewrite (conj b (=> a b)) b)
+(rewrite (=> a (conj b c)) (conj (=> a b) (=> a c))
+(rewrite (conj (=> a b) (=> a c))  (=> a (conj b c)))
+
+
+
+(rewrite (conj (I) (I)) (I))
+(rewrite (disj a I) I)
+(rewrite (disj I a) I)
+
+
+
+Rules can contain universal quantification. 
+(resolve fact (=> fact head))
+
+
+(rewrite (eq-prop a b) ()
+
+
+
+
+SHould first class maps take merge expressons? (Map String Expr :merge)
+
+
+
+# Unification modulo egraph
+I didn't appreciate that you can't use egglog for both unification and nondeterminism, but you can use it for one or the other.
+The unification example is just injecitivity axioms.
+a + b = c + d -> a = c /\ b + d is plain not true.
+You do have one sided injectivty
+
+You can, it seems, encode unification modul egraphs.
+_However_ do not run the equations rules at the same time as the injecitivty rules.
+Injecitvity applies to pattrns, but not to the underlying ground terms.
+
+Maybe we could make patterns and terms differetn syntatic objects.
+And ground up convert grounded patterns to
+
+patlift (Var )
+
+match (Var a) a
+
+
+
+
 unification modulo ground equalities
 unification modulo egraphs in a prolog metainterpreter
 
@@ -539,6 +1260,16 @@ What about backchaining _just_ using egraph matching.
 Then backchaining isn't finding anything that datalog mode wouldn't, because only succeeds for stuff in egraph. I guess loops could send it off the deep end.
 
 
+It seems to be generally a bad idea to put significant computation into unificatin. Unification in most applications is expected to be fast and deterministic.
+
+Hence the orginal conception of switching to ematching upon deifnite functor collision is reasonable, albeit incomplete for full unification modulo ground equalities
+
+Ok. What do you use it for?
+approximating modulo AC is out. :(
+
+Actual function calls? Recplaing is/2. CLP already does in a better way really. CLP for uninterpreted functions
+
+Using unif mod egraphs for resolution proofs modulo equality? What is paramodulation anyway?
 
 
 ### Partial horn clauses

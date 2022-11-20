@@ -17,6 +17,7 @@ wordpress_id: 1865
   - [Lists](#lists)
   - [Difference Lists](#difference-lists)
   - [Rewriting in prolog](#rewriting-in-prolog)
+- [Typeclass](#typeclass)
 - [Topics](#topics)
   - [SLD resolution](#sld-resolution)
   - [Interesting predicates](#interesting-predicates)
@@ -172,8 +173,43 @@ struct diff_list {
 
 You have fast append because you don't have to traverse the list to find the end.
 
+```
+append(X-Y,Y-Z,X-Z).
+```
+
 ## Rewriting in prolog
 
+
+# Typeclass
+
+```
+implements(clone,life(A,T))
+
+impl(tostring, life(A,i64)).
+impl(tostring, vec(T)) :- impl(tostring, T).
+
+% associate what trait owns fields
+traitfield(tostring, tostring).
+
+dotcall( foo, tostring ) :- type(foo, T), traitfield(Trait, tostring), impl(Trant, T). 
+% dotcall(TEnv, foo, tostring)
+
+
+
+
+% annotate everything with lifetimes?
+
+% https://stevedonovan.github.io/rustifications/2018/09/08/common-rust-traits.html
+% display, default, format, clone,
+
+% sized
+% borrow
+
+
+% from to
+
+% iterator
+```
 
 
 # Topics
@@ -433,6 +469,95 @@ mi([G|Gs]) :-
 Same idea but the body of a clause is represented as a difference list in clause_
 
 `clause/2` is a way to get the rules of a clause.
+
+
+```prolog
+
+:- initialization(main,main).
+clause_(append([],Y,Y), []).
+clause_([X | Xs],Ys, [X | Zs]), [append(Xs, Ys, Zs)]).
+
+%mi(Sig, all(X, Body)) :- X = fvar(Sig), Sig1 is Sig + 1, mi(Sig1, Body). 
+%mi(all(X, Body)) :- gensym(Sig), X = fvar(Sig), mi(Sig1, Body).
+%mi(P, S, A => Body) :- assertz(A), mi(Body), retract(A).
+%mi(Sig, ex(X, Body)) :- X = fvar(Sig), Sig1 is Sig + 1, mi(Sig1, Body).  
+
+mi(P,S,pi(X, Body)) :- gensym(fvar, Y), X = fvar(Y), mi(P, [X|S], Body). % could use numbering.
+mi(P,S,D => G) :- mi([D|P],S,G).
+mi(P,S,sigma(X,G)) :- mi(P,S,G), forall( subterm(X,fvar(Y)), member(fvar(Y),S)  ) 
+mi(P,S,+G) :-
+
+```
+
+This is wrong.
+```prolog
+
+:- initialization(main,main).
+:- use_module(library(occurs)).
+:- op(1200, xfx, \).
+:- op(900, xfy, =>).
+% copy_term?
+pi(X \ Body) :- gensym(fvar,Y), X = fvar(Y), fvar(Y) => Body.
+A => Body :- asserta(A), Body, retract(A).
+% https://www.swi-prolog.org/pldoc/man?section=occurs
+% https://www.swi-prolog.org/pldoc/man?section=forall2
+ex(X \ Body) :- Body, forall(fvar(Y), free_of_var(fvar(Y), X)). % this is checking the wrong thing right?
+A /\ B :- A, B.
+A \/ B :- A; B.
+
+% seperate the notions?
+goal_and().
+prog_and().
+
+sterile(J) :- pi(X \ (bug(X) => (in(X,J) => dead(X)))).
+dead(B) :- ex(J \ (heated(J) /\ in(B,J) /\ bug(B))).
+heated(j).
+
+main(_) :- sterile(j), \+ bug(_B), \+ fvar(_X).
+```
+
+Hmm. when I asserta with a variable, I'm asserting the universal thing, not something tied to the variables in scope. That seems really bad. 
+
+Oh wow. Also asserta doesn't cleanup on fail. asserta(bar(7)), fail. still leaves bar(7) asserted
+
+chr as the store of new facts.
+
+foo_q(X,Y,Z) \ foo(X,Y,Z) <=> true.
+foo_q(X,Y,Z) <=> { foo(x,y,z)}.
+foo_q(X,Y,Z) <=> {fail}.
+
+
+or turn it around
+
+foo(X) :- foo_q_chr(X). % see if chr query succeeds
+% else regular other clauses.
+
+CHR + 
+
+How can I automatically associate chr with
+
+assert_chr(foo, Args)
+retract_chr(foo, Args), assert(foo, Args) <=> true.
+assert_chr(T,Args) \ query_chr(T, Args) <=> true. % hmm. does this unify the stuff in the assert, destroying it's universal quantification?
+% https://www.swi-prolog.org/pldoc/man?section=compare
+assert(T) \ query(T1) <=> { unifiable(T1, T), copy_term(T, Tc), Tc = T1 }.
+This might fix that problem. Very ugly.
+
+Does this have proper backtracking semantics though? No. Probably not. I don't think chr makes choice points.
+If unificable fails, great it continutes, but if something _later_ fails it won't backtrack.
+We could try and control which rule applies via some kind of number, a choice point placed _before_ we call chr_query.
+Getting quite arcane.
+assert(T) \ query(T1) <=> { unifiable(T1, T), copy_term(T, Tc), Tc = T1 ; fail}.
+
+This is insanity.
+Wow, shallowly embedding harrop clauses in prolog is hard/impossible.
+
+
+
+Naw, why even seaprate out the args? Maybe better indexing, but screw it for now.
+assert_chr(foo(Args)).
+I might be building a prolog (meta?) interpreter in chr.
+
 
 
 ## Delimitted Continuations

@@ -196,6 +196,26 @@ fof(a,axiom,tutorial(probabilistic)).
 fof(a,conjecture,?[X]: (prover(X) & tutorial(X))).
 ```
 
+# E prover
+enormalizer is an interesting sounding program
+
+The e calculus is a bit puzzling. I haven't seen the analog for vampire
+
+I like how --answer mode works a little better for e.
+
+
+Database printing feature -S. Doesn't print stuff I would expect though?
+
+Early stopping conditions
+clause size
+
+
+# Datalog vs ATP
+What makes an ATP that different from a datalog? Both are saturating. If I could limit of prune clauses of size > N, that might emulate a datalog. Or perhaps protect rule-rule resolution from happening.
+
+
+
+
 # Methodology 
 ## Unification
 Two way matching.

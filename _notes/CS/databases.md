@@ -23,11 +23,15 @@ title: Databases
 - [Multi Version Concurrency Control](#multi-version-concurrency-control)
 - [SQLite](#sqlite)
 - [Duckdb](#duckdb)
+- [Postgres](#postgres)
 - [Relational AI](#relational-ai)
 - [Streaming](#streaming)
 - [Data Structures](#data-structures)
   - [B Tree](#b-tree)
   - [Radix Trie](#radix-trie)
+- [Meta Techniques](#meta-techniques)
+  - [Timestamps](#timestamps)
+  - [Tombstones](#tombstones)
 - [CRDTs](#crdts)
 - [Big Data](#big-data)
   - [hadboop](#hadboop)
@@ -39,7 +43,7 @@ title: Databases
 - [Resources](#resources)
   - [Conferences](#conferences)
   - [Misc](#misc)
-- [postgres](#postgres)
+- [postgres](#postgres-1)
 
 
 See also:
@@ -530,6 +534,18 @@ print(con.fetchall())
 catalog multiversion concrruncy control
 cimpressed execution binder
 
+# Postgres
+`sudo -u postgres psql`
+Very often you need to be the postgres user on the default install
+
+help
+\h for sql commands
+\? for 
+
+\c connect
+\dt look at tables
+
+
 
 # Relational AI
 https://www.youtube.com/watch?v=WRHy7M30mM4&ab_channel=CMUDatabaseGroup
@@ -609,6 +625,27 @@ Bw-tree
 [The B-Tree, LSM-Tree, and the Bw-Tree in Between](https://photondb.io/2022/08/15/bw-tree.html)
 [open bw-tree 2018](https://www.cs.cmu.edu/~huanche1/publications/open_bwtree.pdf)
 ## Radix Trie
+
+# Meta Techniques
+There are certain good ideas that I don't even know how to classify really
+## Timestamps
+https://en.wikipedia.org/wiki/Lamport_timestamp
+logical timestamps
+
+https://en.wikipedia.org/wiki/Logical_clock
+
+## Tombstones
+https://en.wikipedia.org/wiki/Tombstone_(data_store)
+
+https://docs.datastax.com/en/dse/5.1/dse-arch/datastax_enterprise/dbInternals/archTombstones.html
+
+Rather than deleting immediately, have a table that marks things as deleted.
+Or a deleted column. Perhaps with deletion time
+
+This goes some ways towards make a persistent data structure.
+/ Maybe you can keep some data read only
+
+https://dba.stackexchange.com/questions/14402/tombstone-table-vs-deleted-flag-in-database-syncronization-soft-delete-scenari
 
 
 # CRDTs

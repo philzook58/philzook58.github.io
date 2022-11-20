@@ -74,3 +74,12 @@ shift takes token off stream and puts onto stack
 reduce takes top of atxckc
 
 Shift reduce conflicts
+
+# Hand Rolled Parsers
+So the story goes, really good parsers with good error messaging are hand rolled.
+What is the structure. What are the good techniques
+
+# Recursive Descent
+
+# Recusrive Ascent
+https://en.wikipedia.org/wiki/Recursive_ascent_parser

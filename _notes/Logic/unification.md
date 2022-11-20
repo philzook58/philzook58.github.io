@@ -3,6 +3,33 @@ layout: post
 title: Unification
 ---
 
+# First Order
+First order is the good stuff.
+The first part in straightforward. zip down two thing
+
+
+Unification as a solving a set of equations. multiequations. We can extend unification to work on a system of equations. Doesn't really change much.
+
+Unification as a proof system
+
+# E-unification
+It is a natural (?) question to ask how to unify equations in the presence of equations.
+
+Unification is a raw equation solving algorithm. From our mathematics experience, we know that it isn't always easy to solve equations.
+
+For associativity and commutativity, you can brute force expand into every combination of AC and use regular unification. This can be expensive.
+
+A different approach is to try to normalize with respect to the underlying theory.
+
+It is not clear to me that e-unification is a very good idea, since it seems pretty hard.
+
+# Unification Hints
+
+[Hints in unification Andrea Asperti, Wilmer Ricciotti, Claudio Sacerdoti Coen, and Enrico Tassi](https://www.cs.unibo.it/~sacerdot/PAPERS/tphol09.pdf) interesting paper. Describes how typeclasses and canonical structures can be put under a similar umbrella as extesnible unification mechanisms.
+
+
+
+
 # Union Find
 
 # Higher Order Unification
