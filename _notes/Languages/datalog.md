@@ -1989,6 +1989,38 @@ ball(t+1, n,  newx, newv) :-
 ```
 
 
+```python
+#some plotting code
+from matplotlib import pyplot as plt
+from numpy import genfromtxt
+import pandas as pd
+import imageio
+df = pd.read_csv('ball.csv', delimiter=r"\s+", header=None)
+print(df.values)
+x = df.to_numpy()
+filenames = []
+for i in range(100):
+    t = x[11*i:11*(i+1)]
+    # print(t)
+    xs = t[:, 2]
+    vs = t[:, 3]
+    plt.figure()
+    plt.plot(xs, '--o', c='blue', mfc="red", )
+    ax = plt.gca()
+    #ax.set_xlim([xmin, xmax])
+    ax.set_ylim([-10, 10])
+    file = f"img/t{i}.png"
+    plt.savefig(file)
+    plt.close()
+    filenames.append(file)
+
+with imageio.get_writer('mygif.gif', mode='I') as writer:
+    for filename in filenames:
+        image = imageio.imread(filename)
+        writer.append_data(image)
+
+```
+
 ## Sudoku
 
 ```souffle
