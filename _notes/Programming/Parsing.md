@@ -74,3 +74,172 @@ shift takes token off stream and puts onto stack
 reduce takes top of atxckc
 
 Shift reduce conflicts
+
+
+[recursive acent parsing](https://en.wikipedia.org/wiki/Recursive_ascent_parser)
+
+
+
+Treesitter
+
+
+
+```python
+test = """ (hi there 
+    (my guy     
+((how's () it going ()))))"""
+
+stack = [[]]
+depth = 0
+tok = []
+for n, c in enumerate(test):
+    if c == "(":
+        depth += 1
+        stack.append([])
+    elif c == ")":
+        depth -= 1
+        if depth < 0:
+            raise Exception(f"Unbalanced paren at char {n}")
+        else:
+            e = stack.pop()
+            stack[-1].append(e)
+    elif c in " \t\n":
+        if len(tok) > 0:
+            stack[-1].append("".join(tok))
+            tok = []
+    else:
+        tok.append(c)
+if depth != 0:
+    raise Exception("unclosed paren")
+print(stack[0][0])
+
+# recursive descent parser
+def parse(n,s):
+    ns = len(s)
+    sexp = []
+    tok = []
+    while n < ns:
+        c = s[n]
+        n += 1
+        if c == "(":
+            n,x = parse(n,s)
+            sexp.append(x)
+        elif c == ")":
+            return n, sexp
+        elif c in " \t\n":
+            if len(tok) > 0:
+                sexp.append("".join(tok))
+                tok = []
+        else:
+            tok.append(c)
+    return n,sexp
+
+print(parse(0,test))
+```
+
+https://rosettacode.org/wiki/S-expressions#Python
+use regex. We will want to parse numbers and strings.
+
+
+## Antlr
+upper case are lexer rules, lower case are parse rules
+
+grammars can import other grammars
+
+
+Here is an antlr4 grammar of sexp
+
+```antlr4
+/*
+The MIT License
+
+Copyright (c) 2008 Robert Stehwien
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/
+
+/*
+Port to Antlr4 by Tom Everett
+*/
+grammar sexpression;
+
+sexpr
+   : item* EOF
+   ;
+
+item
+   : atom
+   | list_
+   | LPAREN item DOT item RPAREN
+   ;
+
+list_
+   : LPAREN item* RPAREN
+   ;
+
+atom
+   : STRING
+   | SYMBOL
+   | NUMBER
+   | DOT
+   ;
+
+STRING
+   : '"' ('\\' . | ~ ('\\' | '"'))* '"'
+   ;
+
+WHITESPACE
+   : (' ' | '\n' | '\t' | '\r')+ -> skip
+   ;
+
+NUMBER
+   : ('+' | '-')? (DIGIT)+ ('.' (DIGIT)+)?
+   ;
+
+SYMBOL
+   : SYMBOL_START (SYMBOL_START | DIGIT)*
+   ;
+
+LPAREN
+   : '('
+   ;
+
+RPAREN
+   : ')'
+   ;
+
+DOT
+   : '.'
+   ;
+
+fragment SYMBOL_START
+   : ('a' .. 'z')
+   | ('A' .. 'Z')
+   | '+'
+   | '-'
+   | '*'
+   | '/'
+   | '.'
+   ;
+
+fragment DIGIT
+   : ('0' .. '9')
+   ;
+```

@@ -49,6 +49,8 @@ fcntl
 
 - `io_ctl` device specific control calls
 
+[Porting OpenBSD pledge() to Linux](https://justine.lol/pledge/)
+
 ## Resources
 Linux Kernel Labs
 https://linux-kernel-labs.github.io/refs/heads/master/index.html
@@ -72,6 +74,28 @@ processes own resources
 pids. `ps`
 
 
+## Security
+seccomp
+
+LSM linux security module
+selinux and apparmor are based on lsm
+
+selinux is externally sandboxing a process. landlock is program developer voluntarily giving up access
+
+ebpf
+
+firejail? https://firejail.wordpress.com/
+
+https://twitter.com/kees_cook cool links
+
+[landlock](https://landlock.io/) restrict ambient rights, global file system access https://lwn.net/Articles/859908/ 
+https://news.ycombinator.com/item?id=27215563 discussion about landlock, incudes ocmparsion of some other features
+
+openbsd pledge, unveil
+
+[security things in Linux v...](https://outflux.net/blog/archives/category/security/)
+
+[kmsan](https://github.com/google/kmsan) KernelMemorySanitizer, a detector of uses of uninitialized memory in the Linux kernel
 ## Virtualization
 
 ## Concurrency

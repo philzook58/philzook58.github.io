@@ -50,3 +50,5 @@ tapinade - low level imlet
 
 
 [Systematically Differentiating Parametric Discontinuities - gilbert](https://people.csail.mit.edu/sbangaru/projects/teg-2021/)
+
+[A simple differentiable programming language - Abadi and plotkin](https://dl.acm.org/doi/10.1145/3371106)

@@ -490,6 +490,8 @@ de-optimization paths
 
 [copy and patch compilation](https://twitter.com/cfbolz/status/1516418354579394566?s=20&t=7564nBvc82Jdkz_E3ccZbA)
 
+[asmjit](https://github.com/asmjit/asmjit) https://asmjit.com/ lightweight library for machine code generation
+
 # Garbage Collector
 
 https://github.com/mflatt/gc-demo

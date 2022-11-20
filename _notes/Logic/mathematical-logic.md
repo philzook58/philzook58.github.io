@@ -50,3 +50,5 @@ Infinite families of sentences
 
 
 [Book list](https://github.com/jaalonso/Libros_de_Logica/blob/main/README.org)
+
+mathematical logic through python

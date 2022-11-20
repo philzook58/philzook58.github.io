@@ -5421,6 +5421,13 @@ What about guarded negation? For example if you turn off stratification but are 
 
 
 # Resources
+[Cozo](https://news.ycombinator.com/item?id=33518320) https://github.com/cozodb/cozo
+
+
+[treeedb](https://github.com/langston-barrett/treeedb) use tree sitter to get languages into souffle
+https://github.com/langston-barrett/tree-sitter-souffle souffle tree-sitter
+
+[cclyzerpp](https://github.com/GaloisInc/cclyzerpp)
 
 [A Datalog Engine for GPUs](https://www.dcc.fc.up.pt/~ricroc/homepage/publications/leap/2013-WFLP.pdf)
 

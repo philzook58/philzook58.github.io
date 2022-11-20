@@ -51,6 +51,7 @@ title: Differential Equations
   - [Domain Decomposition](#domain-decomposition)
   - [Finite Elements / Galerkin](#finite-elements--galerkin)
   - [Boundary Element Method](#boundary-element-method)
+- [Misc](#misc)
 
 
 See also:
@@ -290,3 +291,7 @@ https://github.com/pyamg/pyamg
 ## Domain Decomposition
 ## Finite Elements / Galerkin
 ## Boundary Element Method
+
+# Misc
+
+[json bramburger ode course](https://www.youtube.com/watch?v=UDUH58w4-5w&ab_channel=JasonBramburger)

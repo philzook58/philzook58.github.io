@@ -1,6 +1,15 @@
 
 
 - [Applications and Ideas](#applications-and-ideas)
+- [Logical models](#logical-models)
+    - [Chalk](#chalk)
+- [Egg Chatathon 2022-10-31](#egg-chatathon-2022-10-31)
+  - [attendees](#attendees)
+  - [notes](#notes)
+    - [The problem](#the-problem)
+  - [GATs](#gats)
+  - [](#)
+  - [potential roadblocks](#potential-roadblocks)
     - [Unification modulo egraph](#unification-modulo-egraph)
     - [Partial horn clauses](#partial-horn-clauses)
   - [Grobner](#grobner)
@@ -59,7 +68,7 @@
   - [Scoped union find](#scoped-union-find)
   - [Higher order rules](#higher-order-rules)
   - [Semantics of Egraphs](#semantics-of-egraphs)
-  - [/](#)
+  - [/](#-1)
   - [NE graph](#ne-graph)
   - [Egraphs over programs. Program analyiys](#egraphs-over-programs-program-analyiys)
   - [Metatheory and EGraphs](#metatheory-and-egraphs)
@@ -373,6 +382,235 @@ Canonicalization is two separate things.
 
 You'd want to put the queries themselves in an egraph as a way to hash cons?
 Maaaaybe.
+
+if x != 0 then 1/x else 0. 
+
+
+Generalized union find- szalinksi, mark functions as invariant? Could we end up in eckert territory? Symmettry reduction of functions
+
+groupoid. I don't really need totality. But equality modulo g-action has a unique arrow between. How can one deal with that? Attaching a set of groupoid elements (homset) between each object? path compression may then cartiesian expand these sets. Yikes. Porbably it's worth keeping as expanded as posisble or even defactoring.
+
+hom(a,b) * hom(b,c) has a meaning. so does hom(a,b) * hom(a,c)^-1
+
+
+Is congruence happening at an inner strata? Or rebuilding?
+
+
+
+I just had a totally crazy idea walk
+
+the generalized union find seems like it can be further generalized from annotations consisting of group elements to groupoid elements
+
+Similar to how lattices are an algerba with meet and join, or a partial order
+Groupoids are categories with reversible arrows or groups with _partial_ multiplication
+
+The idea of a lattice is generalized mechanically in egglog to merge and default annotations which can refer to egglog functions themselves.
+This enables symbolic lattices. These might actually be partial lattices as max has alluded to
+
+Similar I think the group annotations can be written as
+`(datatype MySort :compose :inv :id)`
+
+And these functions can refer to egglog functins themselves, not only primitives
+
+Groupoids are interesting because they are somehow related/generalize equality in the first place. They having something to do with HoTT like talia has been suggesting.
+
+A canonical example of a groupoid are paths in a graph and path composition. This means that groupoid annotations seem like they can be used to implement proof recording, as that is essentially what proofs are in a proof producing union find.
+
+These proofs can be reflected into an egglog datatype and the proofs may have their own interesting notion of equality or merging.
+
+The manner in which group annotations propagate through functions is reminiscent of the setoid rewriting system in coq https://coq.inria.fr/refman/addendum/generalized-rewriting.html by which you can add . The group anotations can be seen as talking about equivalence quotiented by some group action in some contexts. This is a methodology for dealing with quotients.
+
+
+
+
+
+
+# Logical models
+f(X) -> a
+f(X) -> b
+needs to find an f(X) before it can fire.
+X needs to be inhabited.
+
+expanded form
+forall X E, f(X) = E -> a = E
+
+Logic has bidirectional equaloty. It doesn't have a good univdirectional equality.
+forall X, f x = foo   does show there is something needed first  
+
+
+
+
+```
+tff(x_type, type, xty : $tType).
+tff(a_type, type, aty : $tType).
+tff(a_def, type, a : aty).
+tff(b_def, type, b : aty).
+tff(f_def, type, f : xty > aty).
+tff(ax1, axiom, ![X : xty] : (f(X) = a)).
+tff(ax2, axiom, ![X : xty] : (f(X) = b)).
+tff(goal, conjecture, a = b).
+
+
+Axiom X : Type.
+Axiom A : Type.
+Axiom a b : A.
+Axioms f : X -> A.
+
+Axiom ax1 : forall x : X, f x = a.
+Axiom ax2 : forall x : X, f x = b.
+
+Goal a = b.
+```
+
+### Chalk
+# Egg Chatathon 2022-10-31
+
+## attendees
+
+* elirosenthal
+* max willsey
+* remy wang
+* oliver flatt
+* philip zucker
+* niko, jack
+
+## notes
+
+Chalk: https://github.com/rust-lang/chalk/
+
+### The problem
+
+We have associated types and their a pain in the butt
+.
+
+
+```rust
+trait Iterator { type Item; }
+
+
+impl<T> Iterator for Vec<T> {
+    type Item = T;
+}
+//
+//
+// forall<T> { normalizes_to(<Vec<T> as Iterator>::Item => T) }
+```
+
+```
+X = <P0 as Trait<P1...Pn>>::Item
+---------------
+<P0 as Trait<P1...Pn>>::Item == X
+
+
+normalizes_to(<P0 as Trait<P1...Pn>>::Item, X)
+---------------
+<P0 as Trait<P1...Pn>>::Item == X
+```
+
+```rust
+
+```
+
+Leads to: https://github.com/rust-lang/chalk/issues/234
+One test: https://github.com/rust-lang/chalk/blob/cadaba9881d78c9814d966e595cc978e64a8b76e/tests/test/projection.rs#L163
+
+```
+fn foo<T: Iterator>()
+where
+    T: Iterator<Item = u32>,
+    T: Iterator<Item = <Vec<u32> as Iterator>::Item>
+{}
+```
+
+```rust
+trait Trait1 {
+    type Type;
+}
+trait Trait2<T> { }
+impl<T, U> Trait2<T> for U where U: Trait1<Type = T> {}
+
+struct u32 {}
+struct S {}
+impl Trait1 for S {
+    type Type = u32;
+}
+```
+
+```rust
+exists<U> {
+    S: Trait2<U>
+}
+```
+
+```rust
+impl<T> Foo for Bar<for<'a> fn(&'a T)>
+where
+    for<'a> T: Trait<'a>
+{
+    
+}
+```
+
+frex -- library in idris to extend normalization procedure done by type checker
+
+smt solvers do something related
+
+## GATs
+
+```
+normalizes_to(<P0 as Trait<P1..Pn>::Item<Pn..Pm>, T)
+normalizes_to_trait_item(P0..Pm, T)
+```
+
+## 
+
+```rust
+trait Foo<b> {
+    type Item;
+}
+
+impl<'a, 'b, T> Foo<b> for &'a T
+where
+    'b: 'a,
+{
+    type Item = u32;
+}
+
+fn main() {
+    let mut x: u32 = ...;
+    let p = &x;
+    x += 1;
+    ...
+}
+
+fn foo()
+where
+    for<'a, 'b> ('b: 'a => fn(&'a &'b u32))
+{
+    
+}
+
+
+```
+
+## potential roadblocks
+
+bottom-up vs top-down -- is it feasible? would it lead to infinite expansion?
+
+nested for-alls, implications
+
+negation?
+
+come to next meeting with:
+
+* torture tests?
+* working a-mir-formality-in-rust model?
+
+try to build a model in datalog??
+
+https://rust-lang.github.io/chalk/book/
+ - Glossary is helpful: https://rust-lang.github.io/chalk/book/glossary.html
+
 
 ### Unification modulo egraph
 unification modulo ground equalities
