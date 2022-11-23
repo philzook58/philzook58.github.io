@@ -724,6 +724,57 @@ These proofs can be reflected into an egglog datatype and the proofs may have th
 The manner in which group annotations propagate through functions is reminiscent of the setoid rewriting system in coq https://coq.inria.fr/refman/addendum/generalized-rewriting.html by which you can add . The group anotations can be seen as talking about equivalence quotiented by some group action in some contexts. This is a methodology for dealing with quotients.
 
 
+isomorphisms are groupoids. We could annotate edges with isomorphisms.
+
+Perhaps trying to model homotopy itself is clarifying
+
+permutations are  group - nominal sets. permutation as a model of commutativty
+
+add(x,y,z) = add(y,x,z)
+But this requires us to have the group act on the tuple.
+The eid of the add itself is a tuple? yesss. but this doesn't mesh
+The group has to act on elements?
+
+We can now express this.
+P cons(b,cons(a)) = cons(a,cons(b,))
+
+Before they are of no relation.
+Before I could say
+cons(a,cons(b,nil)) = cons(b, cons (a,nil))
+But now I have a new notion of "equals". But I don't dave anything?
+Well I can have permutation invariant functions without having them be literally equal.
+(P a)
+This is a sutble capability. But it is neato I guess.
+
+We get the sharing of uses of them, without having them become indistinguishable.
+"Benefits" of commutativity without actual requiring the axioms.
+Functions that "don't care" ca store only root eid but not group action offset.
+
+like a function
+length() : list -> nat
+contains() : list -> nat
+
+This generates all permutations
+rewrite cons(a,cons(b,xs))   swap * cons(b,(cons(a,xs)))
+
+add(x-gx,y-gy,z-gz) --->   add(x,y,z, gx*gy*gz) what if we stored only some combo of the group offsets, but not all of them individually
+Or some projection of and individual group annotation.
+
+These are all possible. why would you want that
+We can share all the orderings between mulitsets and lists.
+
+A multiset is a list quotiented by it's permutations.
+We can observe the ordering when we want to and ignore it when we don't
+
+G-sets. And we can talk about quotients
+
+if i idenitfy eids as objects, then there are sets of groupid arrows between.
+Am i annotating the edges (a = b) -> annot
+(a = b) * annot?
+annot -> a = b 
+
+
+
 
 
 
