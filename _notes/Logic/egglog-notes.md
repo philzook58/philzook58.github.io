@@ -762,6 +762,31 @@ Axiom ax2 : forall x : X, f x = b. (* ? (rewrite (f x) b) *)
 Goal a = b. (* (check (= a b)) *)
 ```
 
+
+?????
+assertion universal proprties
+(rewrite (foo a) (True)) is a meta level assertins of (forall a, foo a)
+(rule () (foo a)) is also, but doesn't work since a isn't bound.
+
+(forall x (foo x)) requires a binding form
+Kiselyov points out that unifcation variables were a way of performing lazy herbrand universe enumeration
+(rule ((univ a)) (foo a)) is a form of this.
+These are all assertions of universality, not discovery.
+We can perform a compile time shift like my category examples. Make fresh constant. If something is proven for this constant, for which the only assertion is that it is (univ fresh). This is performing meta level lambda prolog reduction though / intros backward reasoning.
+Or rather, you can embed this but it gets stuck at the first choice point. That's interesting.
+(rewrite (resolve ctx (forall x g))  
+  (define y (fresh g ctx))
+  (resolve (forall ctx) (subst y x g))
+)
+This is also alpha equivalent
+(resolve ctx (=> a b)
+    ()
+)
+
+Is embedding a full prolog intepreter including choice point really that bad? Maybe that's the way to do it. You do get a prolog that works modulo rewriting.
+
+
+
 ### Chalk
 # Egg Chatathon 2022-10-31
 
