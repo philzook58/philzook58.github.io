@@ -368,3 +368,8 @@ pyiodide
 
 sqlite fiddle
 
+[official sqlite](https://news.ycombinator.com/item?id=33374402)
+
+Wave - a verified wasi interface
+
+https://news.ycombinator.com/item?id=33385007 cowasm? another emscrtipen alternative based on zig somehw?

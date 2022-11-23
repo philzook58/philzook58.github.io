@@ -55,6 +55,7 @@ title: Datalog
   - [Hilog](#hilog)
   - [Equality Saturation](#equality-saturation)
   - [Term Rewriting](#term-rewriting)
+    - [Datalog Modulo Term Rewriting](#datalog-modulo-term-rewriting)
   - [Graph Algorithms](#graph-algorithms)
     - [Reachability](#reachability)
     - [Shortest Path](#shortest-path)
@@ -2518,7 +2519,47 @@ term(t) :- start(t).
 term(a), term(b) :- term($Add(a,b)).
 
 ```
+### Datalog Modulo Term Rewriting
+There is an interesting alternative design to egglog that has some of the same mouthfeel.
 
+Many rewrite rules are obvious simplification rules. 
+There really is not much reason not to take them eagerly.
+
+Better yet, rather than rewrite rules, consider merely a partial ordering relation on terms.
+`a <= a + 0`
+
+Using subsumption, any term that is less than another can be deleted. By attaching this notion to the _type_ rather than the relation, we get something that feels like datalog modulo term rewriting.  We can in fact use guarded subsumption and guarded rewrites.
+
+A rewrite rule `a | guard -> b` is translated/considered as a shorthand for the following rules for every entry of any relation `foo` that has a slot of term type.
+
+```
+foo(a) :- foo(b), guard.
+foo(a) <= foo(b), guard.
+```
+
+This is similar to how one can emulate lattices using subsumption.
+
+Being confluent and terminating are probably sufficiently good properties for one to make promies about the result database.
+
+If you aren't confluent, that isn't persay a problem, but you'd need to somehow guarantee you've applied every possible rule before deleting the subsumed terms. This is not a guarantee souffle subsumption is set up to do? Actually this would work I think. Add a guard on subsumption for every possible rule that could apply
+
+```
+foo(rule1) :- foo(subsumed).
+foo(rule2) :- foo(subsumed).
+foo(rule3) :- foo(subsumed).
+foo(subsumed) <= foo(rule1) :- foo(rule2), foo(rule3).
+```
+
+Nontermination isn't that bad. `a -> a + 0` is ok, you just won't terminate. Fine. We've become accustomed to nontermination in egglog. Hmm. But this rule should _not_ have subsumption semantics.
+
+Ah. You'll also want to be rewriting subterms. This requires a demand transformation. The souffle encoding starts to feel clunky.
+Well, we could just refuse to rewrite subterms?
+
+```
+foo(b) :- foo(a), replace(a,lhs,rhs,b)
+```
+
+This framework for example could encompass datalog modulo beta reduction.
 
 
 ## Graph Algorithms

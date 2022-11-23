@@ -75,6 +75,14 @@ reduce takes top of atxckc
 
 Shift reduce conflicts
 
+# Hand Rolled Parsers
+So the story goes, really good parsers with good error messaging are hand rolled.
+What is the structure. What are the good techniques
+
+# Recursive Descent
+
+# Recusrive Ascent
+https://en.wikipedia.org/wiki/Recursive_ascent_parser
 
 [recursive acent parsing](https://en.wikipedia.org/wiki/Recursive_ascent_parser)
 
@@ -83,6 +91,9 @@ Shift reduce conflicts
 Treesitter
 
 
+# Sexp
+
+S-expressions are a good example. They are kind of the core simple parse, easy enough to do basic ones by hand.
 
 ```python
 test = """ (hi there 

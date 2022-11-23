@@ -111,6 +111,32 @@ https://www.cs.cmu.edu/~fp/courses/15312-f04/handouts/15-bidirectional.pdf
 http://dev.stephendiehl.com/fun/006_hindley_milner.html
 
 [Hindley-Milner Elaboration in Applicative Style - Pottier](http://gallium.inria.fr/~fpottier/publis/fpottier-elaboration.pdf) https://gitlab.inria.fr/fpottier/inferno
+
+
+type inference as generation and then solving of constraints
+
+
+types are simple types + a var constructor
+type schema are forall wrappers around a type
+let allows you to generalize a type with vars into a schema.
+
+
+https://www.youtube.com/watch?v=NkAt9eApGSw&list=PLre5AT9JnKShBOPeuiD9b-I4XROIJhkIU&index=192&ab_channel=MichaelRyanClarkson
+
+env |- e : t -| C
+
+take in env and e, output t and C. Set of contraints.
+DCG might be nice for the constraints.
+
+% type(+, +, - , -).
+% constants
+type(E, int(X), int, []).
+type(E, bool(X), bool, []).
+type(E, var(X), Y, []) :- lookup(X,E,Y).
+type(E,ite(E1,E2,E3), tvar(T), C1 ++C2 ++ C3 ++ C) :- 
+  type(E, E1,T1,C1),  type(E, E2,T2,C2)
+
+
 # Systems
 
 ## Simply Typed lambda Calculus (STLC)
