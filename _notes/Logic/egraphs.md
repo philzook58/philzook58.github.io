@@ -19,6 +19,7 @@ title: E-graphs
 - [PEG Program Expression Graphs](#peg-program-expression-graphs)
   - [Tree Automata](#tree-automata)
 - [Egglog](#egglog)
+  - [Merging Database](#merging-database)
   - [Extraction as datalog](#extraction-as-datalog)
   - [First class sets](#first-class-sets)
   - [GATs](#gats)
@@ -332,6 +333,98 @@ https://en.wikipedia.org/wiki/Tree_automaton
 
 # Egglog
 
+
+## Merging Database
+It's interesting (to me) how similar this is to the union find dict. The difference is that all the tables share the same union find.
+This formulation of merge and default functions is not mine. Some mix of yihong, max, remy, or zach came up with it.
+
+```python
+class BadUF():
+  # no path compression. no depth stroage.
+  def __init__(self):
+    self.parent = []
+  def find(self,i):
+    p = self.parent[i]
+    while p != self.parent[p]: # walrus?
+      p = self.parent[p]
+    return p
+  def makeset(self):
+    x = len(self.parent) # right? 
+    self.parent.append(x)
+    return x
+  def set_size(self,n):
+    while len(self.parent) < n:
+      self.makeset()
+    return
+  def union(self,i,j):
+    i = self.find(i)
+    j = self.find(j)
+    self.parent[i] = j
+    return j
+
+
+class DB:
+  uf: BadUF
+  tables: Dict[str,Any]
+  merge: Dict[str,]
+  default:Dict[str,]
+
+  def set_(self, tablename, key, value):
+    table = self.tables[tablename]
+    if key in table:
+      table[key] = self.merge[tablename](table[key], value)
+    else:
+      table[key] = value
+  def union(self, x,y):
+    return self.uf.union(x,y)
+  def define(self, tablename, key):
+    table = self.tables[tablename]
+    if key in table:
+      return table[key]
+    else:
+      v = self[tablename].default(key)
+      table[key] = v
+      return v
+  def __get__(self, k):
+    tablename, *k = k
+    return self.tables[tablename][k]
+  def rebuild(self):
+    uf = self.uf
+    for tablename, table in self.tables.items():
+      temp = {}
+      for k,v in table.items():
+        temp[map(uf.find, k)] = uf.find(v)
+      # Is this mutation wise? maybe not.
+      self.tables[table] = temp
+        
+# struct of arrays ve array of structs
+
+# merge dict is a very natural extension of python's
+# built in defauldict
+# can capture uf in closures.
+class MergeDict():
+  table: Dict[K,V]
+  default: Callable[K,V]
+  merge: Callable[K,K,V]
+
+  def __set__(self, key, value):
+    if key in self.table:
+      self.table[key] = self.merge(self.table[key], value)
+    else:
+      self.table[key] = value
+    
+  def __get__(self,key):
+  # Is get memoized or not?
+    if key in self.table:
+      return self.table[key]
+    else:
+      v = self.default(key)
+      self.table[key] = v
+      return v 
+
+
+# merge dicts have their own definition of union
+```
 
 ## Extraction as datalog
 ```souffle

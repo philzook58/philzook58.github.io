@@ -10,6 +10,9 @@ title: Crypto, Protocols, Relational Specs, Concurrency
 wordpress_id: 3009
 ---
 
+[A Relational Logic for Higher-Order Programs](https://people.mpi-sws.org/~dg/papers/icfp17.pdf)
+[diriectional typing for relational properties](https://dl.acm.org/doi/pdf/10.1145/3314221.3314603)
+
 [Benton Simple Relational Correctness Proofs for Static Analyses and Program Transformations ](https://nickbenton.name/correctnessfull.pdf) Relational Hoarse Logic.
 
 Program trasnformations can be treated under similr techiques to parametrcity and information flowq security, and partial evaluation. Example of poison/undef?
