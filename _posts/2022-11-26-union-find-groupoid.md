@@ -68,7 +68,7 @@ In the situations a -> b <- c, we also seem to want a and c to be related via th
 
 Finally a is by default related to itself. There is some kind of notion of a null relationship, or identity. It is sometimes the case that the root of a union find is denoted by a self reference. Or it can be noted by a special marker.
 
-[Ed Kmett has given multiple talks about this idea](https://youtu.be/KxeHGcbh-4c?t=1254). In his presentation, the annotations are group elements which are interpreted as being a [group action](https://en.wikipedia.org/wiki/Group_action) upon the items of held in the union find. The orbits of elements under the group action will be the things related in the union find.
+[Ed Kmett has given multiple talks about this idea](https://youtu.be/KxeHGcbh-4c?t=1254). In his presentation, the annotations are group elements which are interpreted as being a [group action](https://en.wikipedia.org/wiki/Group_action) upon the items of held in the union find. The orbits of elements under the group action will be the things related in the union find. 
 
 Interesting groups include:
 - Addition of real or integers
@@ -80,15 +80,17 @@ Interesting groups include:
 - Affine transformations
 - Booleans under not.
 
+He mentions unification modulo group action is tractable apparently, even though many extensions to unification are't (general e-uniification and full higher order unification). It seems to be the case that you don't want significant search inside your unification algorithm for most applications. Keep it separate. You can have group annotations on every subterm like `(0+)f((8+)Y) = (0+)f((3+)X)` would have the solution `X = (5+)Y` using the addition group.
+
 Yihong points out <http://poj.org/problem?id=2492> as a competitive programming exercise that can use this trick. 
  
 The "generalized union find" is mentioned in chapter 10 of the CHR book. This has a slightly different perspective on the annotations. They speak of them as representing a relation between the items. Relations have a notion of composition, "inverse" (converse), and identity similar to that of a group. Although relational converse is more like a matrix transpose than a matrix inverse, which is kind of interesting as it leaves open the possibility of nonconservative things happening in the annotations. The standpoint there is that there is a relation algebra closed under these operations. The collapsing of this algebra (forgetting these annotations by taking the union of all the relations at play) is an equivalence relation. This notion does generalize the idea of group action annotations I believe. Objects in group action orbits are G-related to one another, with relational comp, inverse, and identity corresponding to the group notions. 
 
-I think an interesting 3rd standpoint is that a groupoids can also for the basis for an acceptable annotation. Groupoids can be characterized as partial groups or categories wth inverses. Interpreting the items in the union find as objects, this makes sense. The union find is then interpreted as representing the partial (dependent) function `forall a b : Ob, Hom(a,b)` rather than the partial function `X -> X -> G` like in the group annotation. Maybe since the groupoid has to play nice, we should describe the annotation union find as describing a functor from the equivalence relation considered as a category to the groupoid?  There might also be utility in storing a (finite?) _set_ of groupoid elements `forall a b : Ob, Set (Hom a b)`, but I'm not sure. The groupoid multiplication naturally lifts to set of groupoid multiplication. This set lifted version is non-conservative in a sense that the sets may grow under path compression.
+I think an interesting 3rd standpoint is that a groupoids can also for the basis for an acceptable union find annotation. Groupoids can be characterized as partial groups or categories wth inverses. Interpreting the items in the union find as objects, this makes sense. The union find is then interpreted as representing the partial (dependent) function `forall a b : Ob, Hom(a,b)` rather than the partial function `X -> X -> G` like in the group annotation. Maybe since the groupoid has to play nice/coherently with union find edges, we should describe the annotation union find as describing a functor from the equivalence relation considered as a category to the groupoid, which each edge picking out a groupoid element in such a way as that all transitive multiplications work.  
 
 This groupoid business is particularly intriguing on a couple fronts. The whole reason I've heard of groupoids is that they come up in models of the identity type in dependent type theory and in HoTT.
 
-The second reason is that simple example of a groupoid is paths on an undirected graph. These correspond to proof objects in the proof producing union find. If one hash-conses these proof objects, it isn't that bad to be storing "the entire path" as in the naive version below. The e-graph is already a natural hash-conser. By puncturing the barrier between these annotation and the egraph itself, we can gain a programmable notion of annotation.
+The second reason is that simple example of a groupoid is paths on an undirected graph. These correspond to proof objects in the [proof producing union find](https://www.cs.upc.edu/~roberto/papers/rta05.pdf). If one hash-conses these proof objects or allows an indirection, it isn't that bad to be storing "the entire path" as in the naive version below. The e-graph is already a natural hash-conser. By puncturing the barrier between these annotation and the egraph itself, we can gain a programmable notion of annotation. One downside might be that we are eagerly producing proofs rather than on demand?
 
 The third reasons is that egglog is all about partiality and groupoids have partial composition.
 
@@ -192,9 +194,11 @@ print(uf.annot)
 
 # Bits and Bobbles
 
-Minimum spanning tree.
+There might also be utility in storing a (finite?) _set_ of groupoid elements `forall a b : Ob, Set (Hom a b)` also, but I'm not sure. The groupoid multiplication naturally lifts to set of groupoid multiplication. This set lifted version is non-conservative in a sense that the sets may grow under path compression.
 
-Instead of insisting that the annotations are completely recoverable or invertible no matter the compression, we could insist that they are monotonic.
+Instead of insisting that the annotations are completely recoverable or invertible no matter the compression, we could insist that they are monotonic. There are certain advantages to ignoring compression entirely. Proof producing union finds sort of store both a compressed and uncompressed version
+
+We might want the union find tree to pick edges with minimum cost. There may be a way to use Minimum spanning tree algorithms to pick "good" union find trees. In the datalog context where annotations can be implicilty produce by rules this might make sense. Regular union find is a subcase of MST with 0 cost weight. Then all spanning trees are  equivalent. This might be a method to acheve "best" (weakest) contexts on eq edges. It's not particularly apparent different schemes of doing this converge to a unique fixed point.
 
 Starts to look like allegories.
 
@@ -203,16 +207,13 @@ We do probably want the annotations to mean the same thing regardless of the ord
 - Path Compression or no
 - tie breaking methods for union.
 
-
 A really convenient tie breaking method is to use max or min.
 
 Can this be used for contextual equalities? I know of no notion of context that forms a group structure
 
 Can this be used for equality modulo alpha equivalence (permutation group or isomorphisms) ? Nominal logic.
 
-Unification modulo group action is tractable?
+
 
 Egraph Functions that are group invariant can compress themselves by ignoring the group annotations.
-Functions that behave interestingly under group annotations can have custom congruence laws.
-
-Similarity to Coq Setoid system.
+Functions that behave interestingly under group annotations (like vector valued functions or $e^{ikx}$ under translation) can have custom congruence laws. These custom congruence rules feels similar to [Coq Setoid system](https://coq.inria.fr/refman/addendum/generalized-rewriting.html).
