@@ -80,7 +80,7 @@ Interesting groups include:
 - Affine transformations
 - Booleans under not.
 
-He mentions unification modulo group action is tractable apparently, even though many extensions to unification aren't (general e-uniification and full higher order unification are quite hard). It seems to be the case that you don't want significant search inside your unification algorithm for most applications. Keep it separate. You can have group annotations on every subterm like `(0+)f((8+)Y) = (0+)f((3+)X)` would have the solution `X = (5+)Y` using the addition group.
+He mentions unification modulo group action is tractable apparently, even though many extensions to unification aren't (_general_ [e-uniification](https://en.wikipedia.org/wiki/Unification_(computer_science)#E-unification) and _full_ higher order unification are quite hard. The trick seems to be finding the subcases of these problems that are tractable). It seems to be the case that you don't want significant search inside your unification algorithm for most applications. Keep it separate. You can have group annotations on every subterm like `(0+)f((8+)Y) = (0+)f((3+)X)` would have the solution `X = (5+)Y` using the addition group.
 
 Yihong points out <http://poj.org/problem?id=2492> as a competitive programming exercise that can use this trick. 
  
