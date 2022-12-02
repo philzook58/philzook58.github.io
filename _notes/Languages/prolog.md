@@ -17,6 +17,7 @@ wordpress_id: 1865
   - [Lists](#lists)
   - [Difference Lists](#difference-lists)
   - [Rewriting in prolog](#rewriting-in-prolog)
+  - [Copy Term and Structural Matching](#copy-term-and-structural-matching)
 - [Typeclass](#typeclass)
   - [Type checking / inference](#type-checking--inference)
 - [Topics](#topics)
@@ -181,6 +182,24 @@ append(X-Y,Y-Z,X-Z).
 ```
 
 ## Rewriting in prolog
+
+## Copy Term and Structural Matching
+copy_term is super useful, but questionable from a purist perspective. 
+<https://www.swi-prolog.org/pldoc/man?predicate=copy_term/2>
+
+I think the issue is moding? copy_term only works in one mode. "proper" prolog works in all modes, or at least has termination issues in some modes. https://www.metalevel.at/prolog/purity
+
+copy_term can in principle be define by cases however...? No wait. it can't. We can copy ground terms, which is almost meaningless.
+It's an equality predicate also. 
+
+copy_term1([],[]).
+copy_term1([X|Xs], [X|Ys]) :- copy_term(Xs,Ys). 
+
+
+eq([],[]).
+eq([X|Xs], [Y|Ys]) :- X=Y, eq(Xs,Ys). 
+
+
 
 
 # Typeclass
@@ -1763,6 +1782,12 @@ Oh sweet mysterious lambda
 The minikanren `evalo`
 
 [Oleg's lambda interpreter](https://okmij.org/ftp/Prolog/index.html#lambda-calc)
+
+```
+eval(E1*E2, R) :- eval(E1, E1R), eval(E2,E2R), copy_term(E1R,(E2R->Body)),
+                       eval(Body,R).
+eval(E,E).
+```
 
 One is tempted to attempt to use prolog variables for lambda variables. Requires extralogical copying primitives
 `copy_term`
