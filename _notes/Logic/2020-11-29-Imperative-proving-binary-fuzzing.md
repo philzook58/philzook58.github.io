@@ -2,21 +2,144 @@
 layout: post
 title: Imperative Proving
 ---
+- [Hoare Logic](#hoare-logic)
+- [Weakest Precondition](#weakest-precondition)
 - [Why3](#why3)
 - [Boogie](#boogie)
 - [Dafny](#dafny)
+- [KAT](#kat)
 - [Misc](#misc)
     - [Fun old timey books.](#fun-old-timey-books)
+
+See also notes on:
+- Model Checking
+- SMT
+- separation logic
+- CHC invariant generation
+
+# Hoare Logic
+https://en.wikipedia.org/wiki/Hoare_logic
+I have heard somewhere that actually we should distinguish Floyd's work on flow charts as something different. Maybe in a Lamport paper?
+
+Axiom schema
+
+
+# Weakest Precondition
+
+
 # Why3
 
 # Boogie
 <https://boogie-docs.readthedocs.io/en/latest/index.html>
 # Dafny
 
+# KAT
+
+https://link.springer.com/chapter/10.1007/978-3-030-81685-8_3 algerbaic program anlaysis
+graphs and paths can be represent by taking the letters of the alphabet to representedges in the graph. The paths from a to b can be represented as a regex
+Tarjan's algorithm http://i.stanford.edu/pub/cstr/reports/cs/tr/79/734/CS-TR-79-734.pdf "path expression problem"
+If you have the path expression, you can just intepret it to calculate program quantities.
+
+Kleene algerba with tests
+MOdelling language for 
+horn equational?
+Relative of Propositional Hoare Logic. Which is a neat idea on it's own
+
+tutorial https://alexandrasilva.org/files/talks/kat-tutorial.pdf https://popl20.sigplan.org/details/POPL-2020-tutorialfest/7/-T7-Programming-and-Reasoning-with-Kleene-Algebra-with-Tests
+https://www.cl.cam.ac.uk/events/ramics13/KozenTutorial1.pdf
+
+GKAT  guarded kleene with test https://arxiv.org/abs/1907.05920 https://www.youtube.com/watch?v=Dp68j9Wi_84&ab_channel=ACMSIGPLAN
+Kleene algebra modulo theories
+https://github.com/mgree/kmt
+https://arxiv.org/pdf/1707.02894.pdf
+https://github.com/mgree/katbury hmm. guess invariants
+
+[On the Coalgebraic Theory of Kleene Algebra with Tests](https://www.cs.cornell.edu/kozen/Papers/ChenPucella.pdf)
+Automatic proof generaton via derivatives? That sounds neat.
+Chen and Pucella - coalgerba theory of KAT
+
+[Automated Reasoning in Kleene Algebra](http://www.hoefner-online.de/home/pdfs_tr/trCS-07-04-Shef.pdf) Prover9/Mace4
+
+[Symbolic Algorithms for Language Equivalence and Kleene Algebra with Tests](https://dl.acm.org/doi/10.1145/2775051.2677007) bdds + union find for language equivalence
+
+topkat incorrectess logic and kat https://www.youtube.com/watch?v=gLLlrnxB5Jg&ab_channel=ACMSIGPLAN popl22
+
+NetKat - kat for network reasoning
+[Kleene Algebra with Tests and Coq Tools for While Programs](https://arxiv.org/abs/1302.1737)
+
+syntax are kleene expressions / logic is kleene algebra manipulation. logic is algebra on steroids
+semantics are strings
+
+algerbraic laws + leastness of fixed point
+
+hmm. 2x2 matrices have a schur complement representation theorem. hmmm.
+
+a <= b <-> a + b = b
+
+
+Well, this is basically doable
+
+```
+(datatype K 
+ (+ K K) ; choice
+ (* K) ; iterate
+ (Fail)
+ (Skip)
+ (# K K) ; sequence
+)
+(define a K)
+(define b K)
+(# (* a) b)
+(: (+ One a) (+ One b))
+(* (+ a b))
+
+; idempotent semiring
+(rewrite (+ e Fail) e)
+(rewrite (+ e f) (+ f e))
+(rewrite (+ e f)) ; assoc
+(rewrite (+ e e) e)
+
+(rewrite (: ))
+
+; star is least fix point
+
+(rewrite (: (+ One a) a) (* a))
+
+
+
+```
+
+efficient procesure - antichain doyen upto bis9mualtion bonchi-pous 2015
+
+kleene algerab with tests Add booleans as subset of kleene stuff
+
+if b then p else q = b;p + ~b;q
+while b do p = (b;p)* not b
+
+booleans commute under seq
+
+guarded semantics. a kleene command is every possible pre and post condition.
+sequence needs the bools to meet in the middle
+
+(Bool K Bool)
+
+propositional hoare logic.
+{b}p{c} = bp~c == 0
+what does that mean? oooooh. b p not(c). Ok that's neat.
+
+Models
+Language models - just actions
+Trace models - interspersed with states in btwee
+relation models - relation compose, relation closure
+tropical semiring and convex polyhedra
+matrices over another kleene algerba
+
+
 # Misc
 [jitterbug](https://unsat.cs.washington.edu/projects/jitterbug/)
 [serval](https://unsat.cs.washington.edu/projects/serval/)
 
+[Static Program Analysis](https://cs.au.dk/~amoeller/spa/) book. dataflow analysis etc.
 
 [modelling the heap](https://www.youtube.com/watch?v=AbiVYHVU0mQ&ab_channel=MicrosoftResearch)
 

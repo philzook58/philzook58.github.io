@@ -3,6 +3,20 @@ layout: post
 title: Coinduction / Bisimulation
 ---
 
+
+Coalgebra
+
+[coinduction he](https://paulhe.com/2019/04/17/coinduction.html) nice blog post. Greatest fixed point takes everything and prunes away stuff that can't be proven.
+Least fixed point starts with nothing an adds stuff that can be proven.
+
+bisimulation
+graph isomorphism between two systems is too strong. Why?
+it only requires that each system has some way of finding corresponding states.
+
+What is induction really?
+
+
+
 [[POPL'22] Coalgebra for the working programming languages researcher](https://www.youtube.com/watch?v=Qb0z1FWT5bw&ab_channel=ACMSIGPLAN)
 
 A pointery circular list is a labelled transition system if which node you're on is the state, and tail takes you to the nexxt state and head is an action that takes you to the same state.

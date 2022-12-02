@@ -6,9 +6,42 @@ title: Parsing and Lexing
 # Lexing
 
 ## Regular Expressions
+See also note on automata
+
+https://en.wikipedia.org/wiki/Regular_expression
 
 https://regex101.com/
 https://regexr.com/
+
+
+### Matching algorithms
+- backtracking search
+- convert to dfa
+Brzozowski derivatives https://www.ccs.neu.edu/home/turon/re-deriv.pdf
+
+Matching is state inference perhaps of traces.
+
+https://types.pl/web/@maxsnew/109422022028474251 Regular Expressions : Logic Programming :: DFA : Functional Programming 
+### equvialence
+regex equivalence can check containment of string. also regex containmnt a + b = a means b  <= a 
+https://www.drmaciver.com/2016/12/proving-or-refuting-regular-expression-equivalence/
+one he says do the dumb rewrite rules.
+hmm. We could egglog these hopcroft karp examples.
+
+
+### theory
+[pumping lemma](https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages) used to prove languages are not regular
+
+kleene algerba
+
+
+"In 1991, Dexter Kozen axiomatized regular expressions as a Kleene algebra, using equational and Horn clause axioms.[34] Already in 1964, Redko had proved that no finite set of purely equational axioms can characterize the algebra of regular languages.[35]"
+
+powerset construction
+
+
+[proof pearl regular expressions isabelle](https://www21.in.tum.de/~krauss/papers/rexp.pdf)
+
 
 # Parsing
 I personally do not enjoy front end issues as much as back end. And yet a front to back compiler course starts there. Kind of off putting.

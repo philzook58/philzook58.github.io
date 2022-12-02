@@ -28,6 +28,14 @@ analyzeHeadless PATH_TO_PROJECTS PROJECT_NAME -import /path/to/binary
 `-postScript scriptname` to actuallly run it. Also there is `-preScript`
 
 
+# general Workflow
+Figure out what functions are. Name them
+Correct types
+name variables
+
+bytes view allows hex editting
+
+
 
 ## Ghidra Scripting
 A lot of the juiciest stuff is in the FlatProgramAPI https://ghidra.re/ghidra_docs/api/ghidra/program/flatapi/FlatProgramAPI.html
