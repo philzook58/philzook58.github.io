@@ -13,6 +13,7 @@ title: Type Theory
   - [CoC](#coc)
     - [CiC](#cic)
   - [PTS](#pts)
+  - [LF](#lf)
 - [Subtyping](#subtyping)
 - [Intersection Types](#intersection-types)
 - [Refinement Types](#refinement-types)
@@ -44,7 +45,7 @@ title: Type Theory
     - [Curry vs Church style](#curry-vs-church-style)
     - [Large Elimination](#large-elimination)
     - [Excluded Middle](#excluded-middle)
-    - [Sorts  & Universes](#sorts---universes)
+    - [Sorts  \& Universes](#sorts---universes)
     - [Impredicative vs Predicative](#impredicative-vs-predicative)
     - [Proof Irrelevance](#proof-irrelevance)
     - [Inconsistent Combinations](#inconsistent-combinations)
@@ -139,6 +140,7 @@ type(E,ite(E1,E2,E3), tvar(T), C1 ++C2 ++ C3 ++ C) :-
 
 # Systems
 
+https://en.wikipedia.org/wiki/Lambda_cube is a way to classify different subsystems
 ## Simply Typed lambda Calculus (STLC)
 typechecking stlc does not have the binding issues you might expect of a lambda calc
 
@@ -153,8 +155,12 @@ typechecking stlc does not have the binding issues you might expect of a lambda 
 "Quantifier free theory of functionals of finite type"
 
 ## System F
+Lambda2
+Terms can depend on types. Big Lambda /\ 
+(al types can dpeend on types)
 
 ## CoC
+Calculus of constructions
 
 Equi vs iso recursive types
 
@@ -170,6 +176,22 @@ Sorts, axioms
 
 
 System U
+
+## LF
+http://www.cs.cmu.edu/~aldrich/sasylf/
+Twelf http://twelf.org/wiki/Main_Page https://www.cs.cmu.edu/~fp/papers/cade99.pdf
+
+Abella
+Beluga
+dedukti
+
+There is a claim that LF (which is a corner of the lambda cube?) has enough power to do lots of good stuff for progamming language metahtoery bu not so much that your life sucks.
+[A Framework for Defining Logics harper honsell plotkin 93](https://homepages.inf.ed.ac.uk/gdp/publications/Framework_Def_Log.pdf)
+judgements as types
+
+https://en.wikipedia.org/wiki/Logical_framework logical framework can refer to a general notion of a system you encode your logic into or a specific type theory
+lambda pi system https://en.wikipedia.org/wiki/Dependent_type#First_order_dependent_type_theory
+
 
 
 # Subtyping

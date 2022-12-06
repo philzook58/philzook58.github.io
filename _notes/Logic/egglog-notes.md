@@ -427,6 +427,8 @@ could encode resolution theorem prover into?
 
 You know, extraction and proofs are similar. They are doing a top down prolog-ish process over the final database.
 
+
+[oeirented equational clauses as a programming language](https://core.ac.uk/download/pdf/82591236.pdf)
 # Metaprogramming
 
 1. Simple macros. a form `(macro-rule    )` that pattern matches on essentially the rust Expr type or alternaitveky s-exp. There are 3 architectures for this 1. a simple new recursive expander. 2. reflecting the syntax of egglog into the egglog database as a `Syntax` sort and use egglog rewriting and extraction before running the extraction as regular egglog programs. This is an interesting feature that I feel like could open some cool weird stuff like runtime generation of rules, verification of rules, etc.

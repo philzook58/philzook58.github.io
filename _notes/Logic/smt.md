@@ -1469,6 +1469,8 @@ R(x)
 
 
 # Quantifiers
+[really good f* summar of z3 whispering](http://fstar-lang.org/tutorial/book/under_the_hood/uth_smt.html#understanding-how-f-uses-z3)
+
 [pointers to quantifiers on cvc5](https://github.com/cvc5/cvc5/discussions/8770)
 ```
 (1) Bernays-Schönfinkel, when using the option --finite-model-find (https://homepage.divms.uiowa.edu/~ajreynol/cade24.pdf).
