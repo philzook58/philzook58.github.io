@@ -168,6 +168,18 @@ Disjoint Set Union Problem](https://core.ac.uk/download/pdf/161439519.pdf) "deun
 
 [concurrent union find](https://link.springer.com/article/10.1007/s00446-020-00388-x)
 
+[concrruent union finds](https://arxiv.org/pdf/1911.06347.pdf)
+
+[simple union finds](https://algocoding.wordpress.com/2015/05/13/simple-union-find-techniques/) incudes description of Rem's algorithm
+
+[parwary thesis - Parallel Graph Algorithms for Combinatorial Scientific Computing](https://bora.uib.no/bora-xmlui/handle/1956/5118)
+Compression methods:
+- compress all to root
+- splitting - compress to grandparent
+- halving compress every other to grandparent
+
+Relationship to minimum spanning tree - Kruskal uses union find to determine whether you need an edge or not
+
 ## Applications
 connected components of graph
 

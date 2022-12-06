@@ -2108,6 +2108,15 @@ LF is of some relation to lambda prolog (being a prologish system with lambdas i
 
 Twelf.
 dedukti. lambda - pi
+https://www.youtube.com/watch?v=XnZTADrsiHQ&list=PL2IiUBbPiuoY22PjECQscRQ81LaR0lgdh&index=2&ab_channel=TYPES2022
+dedukti workshop
+Intermidate "assembly" for interchange between proof formats.
+Logical framework
+lambda pi - has dependent types. But not types that depend on types. Pi only quantifies over terms.
+kocheck - fast rust
+
+
+
 [beluga](http://complogic.cs.mcgill.ca/beluga/) is this kind of twelf? [beluga paper](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.188.3950&rep=rep1&type=pdf)
 abella.
 These are all related I guess? abella might not be LF
