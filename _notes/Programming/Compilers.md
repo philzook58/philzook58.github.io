@@ -164,6 +164,8 @@ alive2
 
 [value numbering](https://en.wikipedia.org/wiki/Value_numbering)
 hash consing kind of. Superlocal blocks. every block has only one predecessor. Not quite the same as loop free?
+[value numbering in gcc talk](https://www.youtube.com/watch?v=oNeAtmsDfK0&ab_channel=SUSELabs)
+
 
 loop unrolling
 
@@ -414,6 +416,15 @@ Operads
 You could take a relational perspective on operations, having neither input not output.
 
 ## Register Allocation
+[iterated register coalescing - appell and george](https://c9x.me/compile/bib/irc.pdf)
+move edges are considered special because the can be coalesced (collapse the node in the interference graph)
+nodes with less than number of register nighbors can be removed and you can construct a coloring
+conservative coalescing -
+constants can be spilled cheaply via rematerialization
+
+
+
+
 [regallo2 design doc](https://github.com/bytecodealliance/regalloc2/blob/main/doc/DESIGN.md)
 
 [flambda reg alloc](https://github.com/ocaml-flambda/flambda-backend/pull/678) points to an [appell paper - iterated register coalescing](https://dl.acm.org/doi/abs/10.1145/229542.229546) and tiger book
@@ -428,6 +439,8 @@ Belady's OPT algorithm page faults
 
 [The Power of Belady’s Algorithm in Register Allocation for Long Basic Blocks](http://polaris.cs.uiuc.edu/publications/guo-2003-old.pdf)
 [efficient global register allocation](https://arxiv.org/abs/2011.05608)
+
+[linear scan register allocation](http://web.cs.ucla.edu/~palsberg/course/cs132/linearscan.pdf)
 
 The typical starting point of register allocation is support you've been given as assembly program that doesn't have registers filled in like
 ```assembly

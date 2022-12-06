@@ -38,6 +38,7 @@ title: Category Theory
 - [Optics](#optics)
 - [Logic](#logic)
 - [Computational Category Theory](#computational-category-theory)
+- [Internal Language](#internal-language)
 - [Resources](#resources)
 
 EPR?
@@ -234,6 +235,11 @@ From a programming perspective I think there are a couple contributions:
 - Point free DSLs are really nice to work with as library/compiler writer. It makes optimizations way easier to recognize and implement correctly. Named references are phantom links attaching different points in a syntax tree and make it hard to manipulate them correctly. In slightly different (and vague) terms, category theory gives a methodology to turn abstract syntax graphs into trees by making all links very explicit.
 
 I can't comment much on what category theory contributes to mathematics, but I think there are similar points. I think category theory can make precise analogies between extremely disparate fields like logic, set theory, and linear algebra. I think categorical intuitions lead to clean definitions when specialized to some particular field. Combinatory categorical logic does make some aspects of logic less spooky.
+
+# Internal Language
+What is this? Cody talks about this a lot.
+
+
 
 # Resources
 

@@ -81,6 +81,7 @@ title: SMT Solvers
     - [Python Hilbert Proof](#python-hilbert-proof)
     - [Python Backwards Proof](#python-backwards-proof)
     - [Python Forward Proof](#python-forward-proof)
+  - [Hoare LCF](#hoare-lcf)
 - [Z3](#z3)
   - [Z3 source spelunking](#z3-source-spelunking)
   - [src - most of the goodies are here.](#src---most-of-the-goodies-are-here)
@@ -1468,6 +1469,8 @@ R(x)
 
 
 # Quantifiers
+[really good f* summar of z3 whispering](http://fstar-lang.org/tutorial/book/under_the_hood/uth_smt.html#understanding-how-f-uses-z3)
+
 [pointers to quantifiers on cvc5](https://github.com/cvc5/cvc5/discussions/8770)
 ```
 (1) Bernays-Schönfinkel, when using the option --finite-model-find (https://homepage.divms.uiowa.edu/~ajreynol/cade24.pdf).
@@ -4208,6 +4211,68 @@ print(Proof.smt([], z + y == y + z).forallI(z).forallI(y).forallE(z))
 
 
 ```
+
+## Hoare LCF
+A [hoare triple](https://en.wikipedia.org/wiki/Hoare_logic) is a judgement.$\{P\}C\{Q\}$ lives at the same level as $\Gamma \turnstile e : T$
+We can literally construct the proof tree as a data structure, or we can go lcf style whrere we have trusted functions.
+
+It would be fun (or confusing?) to use the python AST as our imperative program. Certainly I'm not going to actually.
+
+It might be fun to do this in javascript to make a webdemo that outputs a bussproof.
+
+```python
+
+class Triple():
+  def triple(self):
+    pass
+  def check(self):
+    pass
+
+class SkipAx():
+  prop:Bool
+  def triple(self):
+    return P, "skip", P
+
+class AssAx():
+  x:str
+  e:expr
+  P:Bool
+
+  def triple(self):
+     return substitute(P, x, E), x == e, P
+
+
+class ComposeAx():
+  trip1:Triple
+  trip2:Triple
+  def triple(self):
+    P,S,Q = self.trip1.triple()
+    Q1,T,R = self.trip2.triple()
+    assert Q1 == Q
+    return P, (S,T), R
+
+class CosnsAx():
+  P1:Bool
+  Q1:Bool
+  trip:Triple
+  def triple(self):
+    P2,S,Q2 = self.trip.triple()
+    prove(Impl(P1,P2))
+    prove(Impl(Q2,Q1))
+    return P1,S,Q1
+
+
+
+```
+
+Weakest precondition could be used to generate a particular hoare tree I think
+
+
+
+
+
+
+
 
 # Z3 
 

@@ -112,6 +112,8 @@ https://pages.cs.wisc.edu/~paris/cs838-s16/lecture-notes/lecture1.pdf
 
 Foundations of database
 
+[Conjunctive Query Fun](https://github.com/lorenzleutgeb/cqf) queures to solve NP problems. another angle on the bdd = gj thing
+ 
 ## Schema
 
 

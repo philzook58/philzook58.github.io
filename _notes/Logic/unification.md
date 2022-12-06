@@ -23,6 +23,8 @@ A different approach is to try to normalize with respect to the underlying theor
 
 It is not clear to me that e-unification is a very good idea, since it seems pretty hard.
 
+Unification modulo a group action is doable using the group union find. That's interesting.
+
 # Unification Hints
 
 [Hints in unification Andrea Asperti, Wilmer Ricciotti, Claudio Sacerdoti Coen, and Enrico Tassi](https://www.cs.unibo.it/~sacerdot/PAPERS/tphol09.pdf) interesting paper. Describes how typeclasses and canonical structures can be put under a similar umbrella as extesnible unification mechanisms.
@@ -31,6 +33,7 @@ It is not clear to me that e-unification is a very good idea, since it seems pre
 
 
 # Union Find
+
 
 # Higher Order Unification
 [efficient full higher order unification](https://arxiv.org/abs/2011.09507) zipperposition
@@ -80,10 +83,25 @@ Raising
 
 MLTS
 
+# Nominal Unification
+See nominal logic notes
+
 
 # Pattern Matching
 Arguably pattern matching should be it's own article.
 Depending on which you see first, you may consider unification two way pattern matching or pattern matching as one way unification. I think pattern matching is the much simpler topic
+
+# Anti unification
+https://en.wikipedia.org/wiki/Anti-unification_(computer_science)
+Least general anti-unifier
+
+eery variety of uniifcation has it's anti varierty: higher order, E, nominal
+
+[One or Nothing: Anti-unification over the Simply-Typed Lambda Calculus](https://arxiv.org/abs/2207.08918)
+babble egg stuff
+ruler i think uses anti-unification
+inductive logic programming
+
 
 
 # Resources

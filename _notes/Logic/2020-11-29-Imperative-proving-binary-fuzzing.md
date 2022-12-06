@@ -2,21 +2,44 @@
 layout: post
 title: Imperative Proving
 ---
+- [Hoare Logic](#hoare-logic)
+- [Weakest Precondition](#weakest-precondition)
 - [Why3](#why3)
 - [Boogie](#boogie)
 - [Dafny](#dafny)
 - [Misc](#misc)
     - [Fun old timey books.](#fun-old-timey-books)
+
+See also notes on:
+- Model Checking
+- SMT
+- separation logic
+- CHC invariant generation
+
+# Hoare Logic
+https://en.wikipedia.org/wiki/Hoare_logic
+I have heard somewhere that actually we should distinguish Floyd's work on flow charts as something different. Maybe in a Lamport paper?
+
+Axiom schema
+
+Prpositionbal hore logic - see KAT
+
+
+# Weakest Precondition
+
+
 # Why3
 
 # Boogie
 <https://boogie-docs.readthedocs.io/en/latest/index.html>
 # Dafny
 
+
 # Misc
 [jitterbug](https://unsat.cs.washington.edu/projects/jitterbug/)
 [serval](https://unsat.cs.washington.edu/projects/serval/)
 
+[Static Program Analysis](https://cs.au.dk/~amoeller/spa/) book. dataflow analysis etc.
 
 [modelling the heap](https://www.youtube.com/watch?v=AbiVYHVU0mQ&ab_channel=MicrosoftResearch)
 

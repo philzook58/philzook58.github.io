@@ -14,6 +14,7 @@ wordpress_id: 2960
   - [Decompiler](#decompiler)
     - [Loop recovery](#loop-recovery)
     - [Interactive](#interactive)
+    - [Binary Ninja](#binary-ninja)
 - [Ghidra](#ghidra)
   - [Patching](#patching)
   - [Binary reversign](#binary-reversign)
@@ -172,13 +173,18 @@ https://github.com/nforest/awesome-decompilation
 - Ghidra
 - Binary Ninja
 - Cutter
-
+- angr management
 https://github.com/GrammaTech/gtirb-vscode
 
 [decompiler explorer](https://github.com/mborgerson/mdec) Hmm. too bad it's not a web service
+### Binary Ninja
+
+
+
 
 # Ghidra
 See ghidra notes
+
 
 ## Patching
 https://github.com/GJDuck/e9patch

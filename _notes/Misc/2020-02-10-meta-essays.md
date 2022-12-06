@@ -115,6 +115,23 @@ People who work in the field want you to think so. It is in their best intereste
 Just because they use big fancy words and opine about the philosophical beauty 
 Just because it is in their best interest does not mean they are wrong.
 
+# Proxies
+Something I thought was very interesting from the machine learning course was to be careful of proxy/surrogate goals. At a certain point, you, or the alorithm for your team ends up over optimizing to the proxy. Every metric is gamed eventually.
+
+There is only as much a point to optimizing to a goal to the degree it is an accurate representation of what you're actually trying to do.
+
+From a different tact. operations research like MIP and CSP are a bit silly. The difference between a fast heuristic for solving these models and an exact opitmal solution may be irrelevant for applications. And the exact solution has a tendency to game the model in such a way that is not robust to model inaccuracy.
+
+This also occurs in compilers. We think we have a rough model of what a cpu cares about. Use less registers, don't touch memory unless you have to, use less instructions. Then finer grained models talk about dependencies between instructions affecting instruction level parallelsim, or cycle counts or resource usage of individual instructions. But in the end of the day these models are fairly coarse. Spending a _ton_ of compilation time may _never_ be worth it.
+
+This is not to say proxies are not extremely useful. The actual objectives of life are ultimately unknowable. But even if you think the goal is money the corporation makes, the connection between the decisions you can make or even what decision are available is not set in stone and _also_ unknowable. Proxies are a best effort attempt here to model what seem like reasonable effects.
+
+Sometimes we make proxies of proxies. We know we have a better model, but simplify it for analytic reasons or ease of measurement. This is all valid. We just need to remain aware of what we've done.
+
+- Training set is proxy for real world use
+- engineering Models are proxy for physical performance
+- LoC or pull requests or issues closed as engineering output. 
+
 
 # Managing Time
 

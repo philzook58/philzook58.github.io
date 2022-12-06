@@ -1,6 +1,7 @@
 
 
 - [Applications and Ideas](#applications-and-ideas)
+- [Metaprogramming](#metaprogramming)
   - [first class when](#first-class-when)
 - [Context](#context)
 - [Macros](#macros)
@@ -431,6 +432,12 @@ could encode resolution theorem prover into?
 You know, extraction and proofs are similar. They are doing a top down prolog-ish process over the final database.
 
 
+[oeirented equational clauses as a programming language](https://core.ac.uk/download/pdf/82591236.pdf)
+# Metaprogramming
+
+1. Simple macros. a form `(macro-rule    )` that pattern matches on essentially the rust Expr type or alternaitveky s-exp. There are 3 architectures for this 1. a simple new recursive expander. 2. reflecting the syntax of egglog into the egglog database as a `Syntax` sort and use egglog rewriting and extraction before running the extraction as regular egglog programs. This is an interesting feature that I feel like could open some cool weird stuff like runtime generation of rules, verification of rules, etc.
+2. Extended Type systems. It's really hard to build egglog libraries without some more magumbo. Maybe Hindley Milner, maybe typeclasses. Possibly a module system. Possibly manual `@i64` type annotations insetad of lways relying on inference. I think there is a possibility to do "dependent types lite" in a sense without Pi types and without lambdas. Something like `(datatype (BitVec Math))` and `(function zerovec ((n i64)) (BitVec (Lit n)))`
+3. Python metaprogramming using  
 
 ## first class when
 

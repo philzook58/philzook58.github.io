@@ -15,6 +15,7 @@ title: Assembly
 - [ARM](#arm)
     - [RISC V](#risc-v)
 - [FORTH](#forth)
+- [High level assemlby / macros](#high-level-assemlby--macros)
 - [Misc](#misc)
 
 
@@ -39,6 +40,9 @@ fasm https://board.flatassembler.net/
 command line flag
 
 [SASM - simple crossplatform IDE for NASM, MASM, GAS and FASM assembly languages](https://github.com/Dman95/SASM) http://dman95.github.io/SASM/
+
+
+Macro-11 https://en.wikipedia.org/wiki/MACRO-11 PDP-11 macro assembly. Interesting [manual](http://bitsavers.trailing-edge.com/pdf/dec/pdp11/rsx11m_s/RSX11M_V2/DEC-11-OIMRA-A-D_MACRO_75.pdf)
 ## Debuggers
 I've come to realize that even forplaying around in assmbly, a debugger is pretty clutch
 
@@ -225,6 +229,10 @@ https://news.ycombinator.com/item?id=22801471
 - 
 
 https://en.wikipedia.org/wiki/Threaded_code
+
+# High level assemlby / macros
+https://en.wikipedia.org/wiki/High-level_assembler
+
 
 # Misc
 [bootstrapping a c compiler](https://news.ycombinator.com/item?id=31244150)

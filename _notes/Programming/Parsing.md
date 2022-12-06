@@ -6,9 +6,8 @@ title: Parsing and Lexing
 # Lexing
 
 ## Regular Expressions
+See regex notes
 
-https://regex101.com/
-https://regexr.com/
 
 # Parsing
 I personally do not enjoy front end issues as much as back end. And yet a front to back compiler course starts there. Kind of off putting.
@@ -22,6 +21,14 @@ LALR
 [How do you get good error messages](https://twitter.com/SandMouth/status/1513173009976147975?s=20&t=5y91-I1SPrIGomAWSqs69w)
 
 [sy brand paper on how compilter diagnostics could be imporved](https://twitter.com/TartanLlama/status/1527327581464567809?s=20&t=C_oktCkKA7nprGoHnJpglQ)
+
+## Grammars
+https://en.wikipedia.org/wiki/Formal_grammar
+String rewrite rules. Distinguishes between terminal and non terminal
+
+Context free means the rules only have raw non terminals on left hand side
+
+https://en.wikipedia.org/wiki/Linear_grammar
 
 ## Algorithms
 [List of algorithms - parsing](https://en.wikipedia.org/wiki/List_of_algorithms#Parsing)

@@ -32,7 +32,7 @@ title: Datalog
     - [Datalog Diassembly / Decompilers](#datalog-diassembly--decompilers)
     - [Bap](#bap)
     - [Resources](#resources)
-  - [First Class Sets & Reflection](#first-class-sets--reflection)
+  - [First Class Sets \& Reflection](#first-class-sets--reflection)
     - [BitSets](#bitsets)
       - [Bitset reflection](#bitset-reflection)
     - [Sort Lists](#sort-lists)
@@ -77,6 +77,7 @@ title: Datalog
     - [Skolemization for Existential Heads](#skolemization-for-existential-heads)
     - [Goals / Queries](#goals--queries)
     - [Uncurrying](#uncurrying)
+    - [Contextual Datalog / Hypothetical Datalog](#contextual-datalog--hypothetical-datalog)
     - [Higher Order Clauses (Harrop)](#higher-order-clauses-harrop)
       - [Stack database / Harrop Datalog / Tentative Datalog](#stack-database--harrop-datalog--tentative-datalog)
     - [Existenial Queries](#existenial-queries)
@@ -3277,6 +3278,11 @@ A alternative approach to dealing with the same class of formula is "defunctiona
 part_rule1(x) :- p(x)
 r(z) :- part_rule(x), q()
 ```
+### Contextual Datalog / Hypothetical Datalog
+[hypothetical datalog](http://www.fdi.ucm.es/profesor/fernan/FSP/Sae13c.pdf) https://www.sciencedirect.com/science/article/pii/0304397590900116
+
+https://www.philipzucker.com/contextual-datalog/
+
 
 ### Higher Order Clauses (Harrop)
 $ (p \implies q) \implies r$ is a different animal from the above.

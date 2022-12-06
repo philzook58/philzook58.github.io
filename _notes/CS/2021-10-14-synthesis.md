@@ -25,16 +25,21 @@ People:
 - rahul sharma
 
 
+Hoare logic in +-+ mode?
 
 https://github.com/logic-and-learning-lab/Popper
 
 synquid - type driven program synthesis
 
 rosetta?
+Cosette - sql synthesis
+
+type inference is a form of synthesis
 
 Minikanren - barliman.   Inseven examples there is also an interpreter run backwards
 
 https://github.com/TyGuS/suslik syntheiss of heap maniuplation programs from seperation lgoic
+[Structuring the Synthesis of Heap-Manipulating Programs](https://arxiv.org/pdf/1807.07022.pdf)
 
 https://www.youtube.com/watch?v=mFjSbxV_1vw&ab_channel=Fastly Synthesis in reverse engineering
 Synesthesia
