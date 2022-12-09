@@ -3,6 +3,10 @@
 - [Applications and Ideas](#applications-and-ideas)
 - [Metaprogramming](#metaprogramming)
   - [first class when](#first-class-when)
+- [Context](#context)
+- [Macros](#macros)
+- [Modules](#modules)
+- [Proof relevance](#proof-relevance)
 - [Prolog vs egglog](#prolog-vs-egglog)
 - [These variabes _are_ branch local because we have a backtrackable egraph. The egraph operations will _never_ unify uvars.](#these-variabes-are-branch-local-because-we-have-a-backtrackable-egraph-the-egraph-operations-will-never-unify-uvars)
 - [Logical models](#logical-models)
@@ -527,6 +531,249 @@ iso
 Iso f g
 f g x = x, g f y = y.
 hmm
+
+# Context
+
+Datalog relations correspond to judgments. Datalog rules correspond to inference rules.
+
+$\Gamma \turnstile A$ is in it's entirety a judgement. Written in datalog notation this is `turnstile(gamma, a)`
+
+Two points of possible confusion here:
+
+Propositions that are derivable in empty contexts $ \{\} \turnstile A$ can be conflated with a judgement called $A$, but this may lead to confusion about the difference between propositions and judgements.
+
+It is very confusing that judgements are often written in multiple infix notation (something you barely ever see in computer science except `a ? b : c`) and using bizarre latex symbols.
+
+
+There are two encodings to talk about contextual equality. Contextual equality is a judgement that looks like this
+`\Gamma \turnstile a = b$. In datalog syntax this is `eq(gamma,a,b)`
+
+Egglog has a notion of in built global context free equality. This judgement is written `a == b`. It is not at all apparent how to encode. 
+
+Certainly it should be the case that.
+$a == b  \Gamma ctx  \BinaryInf \Gamma \turnstile a = b$
+
+In egglog this is written `(rule ((= a b) (ctx Gamma)) ((eq ctx a b)))`.
+
+Also if we derive in an empty context, that can be lifted to definitional equality.
+
+$ \{\} \turnstile a = b \UnaryInf a == b$
+
+In egglog this is written `(rule ((eq Empty a b)) ((union a b))`.
+
+This contextual equality judgement needs to be explicitly made transitive and reflexive with rules. It needs to be made congruent also via rules.
+It automatically normalizes by definitional equality though, so there is a big jump
+Contextual equalites can subsume each other. `eq(ctx1,a,b) <= eq(ctx2,a,b) :- ctx1 <= ctx2.` This says that you only need to keep around the weakest contexts. Contexts may be incomparable. They are partially ordered.
+
+It is clear that symmetric bnary relations, or relations that are symmettric under some permutations of arguments might fruitfully be deduplicated and joined a bit faster.
+
+It is less clear that transitive relations can have a fast join / be stored efficiently.
+
+
+The beauty of the union find is that the relations can be normalized and then joins can be performed modulo equality by just doing a regular join.
+
+We think we have thrown away the need for explicit eq-joins by doing this, but the clearest method dealing with contextual equality is to reatin them in the case of contextual equality. It is a small almost syntactic feature to enable flattening to work with it's joins mediated via arbitrary relations.
+
+
+
+
+There is a regular datalog model of everything we do explicitly representing $a == b$ as a relation `eq(a,b)`. Then we need to do our joins by flattening and making evey equality mediated by an `eq`, whic quickly blows up.
+
+The tagged encoding is a different judgement is $\Gamma_1 \turnstile a == \Gamma_1 \turnstile b$. This correspond to tagging. We may define a function `turnstile(gamma, a)`. The intent here though is that `a` is _recursively_ in the context gamma. So all the subterms are also of the form `turnstile(gamma, t_i)`. This is awkward. It does kind of make sense though for alpha equivalence ${x : a} \turnstile x == {y : a} \turnstile y$ does kind of make sense.
+
+# Macros
+
+# Modules
+
+Obj modules vs ocaml modules
+
+Hmm. Scoping at time of definition is annoying.
+
+There is a possiblity I should change many many identifiers to scoped identifiers
+
+Hmm. By accident I've put a union find and tables in each module.
+The tables _should_ be in there. (?) The module should own it's own tables.
+You can add to a modules tables. You can query them.
+
+But the union find being separate is odd and interesting.
+
+I have tree like mdule relatinships
+It's very common to allow dag like
+
+I can't refer to parent stuff. Is that a problem really?
+The parent can write it's rewrite rules that combine child and parent
+
+
+Ooof. Yeah, the timestamps and union finds and saturated markers in the scopes are super duper fishy.
+
+
+
+
+# Proof relevance
+
+`x : T` is this notation of proof relevance.
+`Gamma |- x : T` even more so.
+
+
+Options of "truthhood"
+(relation foo i64) is raw relation to unit. 
+`(function foo (i64) unit)`
+
+Proof irrelevant. Truthhood is reprented by being in the same eclass as `True`. A prop not in eclass True is considered unproven as of yet.
+```
+(datatype Prop (True))
+(function foo (i64) Prop)
+
+```
+
+Proof relevant encoding
+
+
+```
+(datatype Type)
+(function foo (i64) Type)
+(relation proof (Proof Type))
+
+(datatype Type)
+(function lte (i64 i64) Type)
+(datatype LTEProof)
+(relation elem (LTEProof Type))
+
+; rules and proofs are in 1-1
+
+(function PZero LteProof)
+(union (elem PZero (lte 0 0)))
+(function PSucc (LteProof) LteProof)
+(rule ((elem p (lte i j)))
+      ((elem (PSucc p) (lte (+ 1 i) (+ 1 j))))
+)
+; A little demand driven
+(function PZero2 LteProof)
+(rule (= t (lte 0 j)) ((elem PZero2 t)))
+
+
+
+(function elem (Proof) Type) ; This is type theory's `:`
+
+; the path query could be rewritten
+(elem p (path x y))
+
+; So a coq inductive types
+;Inductive le : nat → nat → Prop :=
+;  | le_n (n : nat) : le n n
+;  | le_S (n m : nat) (H : le n m) : le n (S m).
+(function le (i64 i64) Prop)
+; The following would be neat.
+; Could it possibly mean anything other than the next two rules?
+; (function le_n ((x i64)) (le x x))
+(function le_n (i64) Term)
+(rule ((i64 x)) ((elem (le_n n) (le n n))))
+(rule ((= p (le_n n)) ((elem p (le n n)))))
+
+; This is context free type theory
+; {} |- a : T 
+; but with inductive types? But no lambda?
+
+; can I 
+
+
+
+```
+Do we really care about all proofs?
+Not particularly. Do we care about all deductions? not particularly.
+
+Can I prove addition commutes?
+
+```
+; This is extensional type theory
+(rule (proof p (eq a b)) (union a b))
+
+(rule ((proof p (eq a b)) (proof  (f a))
+)
+```
+
+refl is the only constructor of eq. But, we can axiomatically asert new equalities. I mean, odds are they are inconsistent.
+
+(proof PZeroZero (Eq (plus zero zero) zero)))
+This is ok. because we also have a rule that makes it eventually true
+(rewrite (plus zero a) a)
+if we don't have that rule, I dunno.
+Other rules/constants that may be of interest. comp/trans,  sym, 
+They reduce to meaninglessness if defined in term of the eliminator
+subst(eq,pat_with_holes)
+
+context patterns?
+eq(a,b), f[a] -> f[b]
+first class contexts - somehow autoderive my zippers?
+This is kind of like
+
+Are contexts codata? There is this notion that maybe my lambda encoding shell (\x . foo x  and then set x = \x . foo x) game for alpha equiv could've worked if I had something that recognized isomorphisms in the graph. The game does kind of seem to work for let bindings, becuase let bindings have a canonical name. `let x = 1 in let y = 1 in 1` doesn't distinsuih between the inner and outer in this encoding. Which is fine in a sense. The landin's knot fails because it represents it finite expansions, not it's infinite expansion (stream, codata type).
+
+Ok, crazy talk, are contexts a good place for using the partition refinement data structure.https://en.wikipedia.org/wiki/Partition_refinement. We start in 
+Partitiona refinement is very greatest fixed point flavored.
+Something to do with the tree automata perspective? Arrows in the egraph are reversed. Reversed arrows is exactly how I define zippers.
+My zippers _are_ continuations, which are canonical codata. Our encodings are call-cc, turning continuations into data.
+Zippers are defunctionalized continuations?
+datalog is natural deduction (? Is that right? what makes something natural deduction? It's just a judgement system. That isn't the same is it?). WHat if instead it was sequent style
+
+
+https://en.wikipedia.org/wiki/Coffman%E2%80%93Graham_algorithm Hmm. Layered graph drawing. Breaking a partial order into layers.
+
+Hmm. Nadia and jimmy's presentation had a notion of equality that seemed like scoping forms but had something to do with automata.
+
+Hmm obervational type theory became quantitiative type theory? A notion of linear usage became importan
+Using eids for unification, diff lists, substitution destroys them.
+Using a lambda term in two locatins needs a copy made.
+eids are a resource.
+
+partition ids?
+You could take a thing and split it. Keep a tree of splits which you can traverse up to containment
+a and b are diseqal (partitioned) if they do not lie on the path of one another to the root (representing a <= b or b <= a)
+canonicalzatin is taking records with a, b->a<-c and making two records b and c. Destroig over eager equality. Probably we want to be lazier though.
+For set feeling contexts, the observations are is x in the context or not. This is eager expansion of power set. 
+
+https://en.wikipedia.org/wiki/Observational_equivalence C[M] C[N] evaluate to same value v for all C, then M and N are observationally equivalent.
+https://www.pls-lab.org/en/Observational_Equivalence. Holes are capturing rather than capture avoiding
+https://www.cl.cam.ac.uk/~amp12/papers/typor/typor.pdf Somehow this is related to logical relations. Great.
+
+Ok but contextual equivalence is a more concrete thing to target. A meta theoretic framework that can dirctly reason abut this stuff
+
+Varialble capture contexts.
+The zipper is a stack frame representation. The other representation is a top down one.
+
+Contextual equality vs contextual equivalence
+Contextual equivalence handles notions of references and other things that make sense from an mperative standpoint. That's good. We're squaring the circle between functional and imperative
+
+Delmitted Contexts a la delimittied contninuations. Could this be a way to make the diff list example work
+
+
+Compare to twelf. No need for terminatin checker. Everything is sound in datalog right?
+
+
+This thing of tagging vs recusrively tagging is an idea that keeps coming up.
+Recursviely tagging with logical context, recursively taggin with programmatic contxt
+recursiely taggin with proof
+
+https://pat.keldysh.ru/~grechanik/doc/indprover-eqsat-extended.pdf
+https://github.com/remysucre/egg/tree/minimize
+
+Maybe having both modules with database/function associated with them and
+modules without corresponds to 
+
+
+
+Wht is the meaning of a herbie expression?
+[[e]] : (V -> R) -> R 
+But sometimes they are partial.
+
+[[Gam |- e]] :  (V -> R) -> Option R
+[[x]] = \env -> env x
+[[sqrt(-1)]] : ?
+[[1/0]] : ?
+[[Gam]] : (V -> R) -> Bool
+
+Or is it the execution of a machine
+[[(a + b)]] : s -> Error (v, s)
 
 
 # Prolog vs egglog

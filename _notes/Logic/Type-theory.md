@@ -52,6 +52,7 @@ title: Type Theory
     - [Extensionality](#extensionality)
 - [Equality](#equality)
     - [Extensional vs Intensional](#extensional-vs-intensional)
+    - [Observational Type Theory](#observational-type-theory)
     - [Judgemental/Definitional / Propositional](#judgementaldefinitional--propositional)
     - [Univalence](#univalence)
   - [HOTT](#hott)
@@ -504,6 +505,12 @@ Gamma |- t : Id_Type A B
 Gamma |- A = B
 ```
 Notice that this is a transition from a typing judgement to a definitional equality judgement. Very different fellas.
+
+
+### Observational Type Theory
+[observational type theory](http://www.strictlypositive.org/ott.pdf) type theory has an equality type and refl. Extentional type theoru adds reflection, intentional adds eliminators
+
+[pavel summarizing some different choices](https://pavpanchekha.com/blog/itt-equality.html)
 
 ### Judgemental/Definitional / Propositional
 <https://coq.inria.fr/refman/language/core/conversion.html#conversion-rules> 
