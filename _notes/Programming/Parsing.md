@@ -95,7 +95,10 @@ https://en.wikipedia.org/wiki/Recursive_ascent_parser
 
 
 
-Treesitter
+[Treesitter](https://www.youtube.com/watch?v=Jes3bD6P0To&t=963s&ab_channel=StrangeLoopConference)
+graph tee sitter
+souffle tree-sitter
+
 
 
 # Sexp

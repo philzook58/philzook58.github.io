@@ -113,7 +113,7 @@ https://pages.cs.wisc.edu/~paris/cs838-s16/lecture-notes/lecture1.pdf
 Foundations of database
 
 [Conjunctive Query Fun](https://github.com/lorenzleutgeb/cqf) queures to solve NP problems. another angle on the bdd = gj thing
- 
+
 ## Schema
 
 
@@ -693,6 +693,10 @@ https://arxiv.org/abs/2205.12425
 
 
 # Big Data
+[SLOG: Serializable, Low-latency, Geo-replicated Transactions](http://www.vldb.org/pvldb/vol12/p1747-ren.pdf)
+spanner and calvin
+
+
 Spark
 Hadoop
 MapReduce

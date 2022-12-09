@@ -429,6 +429,48 @@ You know, extraction and proofs are similar. They are doing a top down prolog-is
 
 
 [oeirented equational clauses as a programming language](https://core.ac.uk/download/pdf/82591236.pdf)
+
+
+Should egglog have a (var ) form? Use var as entities in rules, but also in theorems.
+(calc (x y z)
+    foo
+    bar
+    biz
+)
+
+=>
+
+(push)
+(function a (unit) Sort)
+(define a (a))
+(assert)
+(check)
+(pop)
+
+
+
+(calc
+    a => b (introduce fresh vars, insert a, stop on b.)
+    b => c
+    c => d
+)
+
+Perform just the back chaining we can and terminate.
+
+(forall (x Biz) (=> a b))
+
+(calc ->
+  a
+  b
+  c
+
+)
+(prove (forall (x y z) (=> )) :assert)
+(assert (forall (x y z) ))
+(prove )
+
+
+
 # Metaprogramming
 
 1. Simple macros. a form `(macro-rule    )` that pattern matches on essentially the rust Expr type or alternaitveky s-exp. There are 3 architectures for this 1. a simple new recursive expander. 2. reflecting the syntax of egglog into the egglog database as a `Syntax` sort and use egglog rewriting and extraction before running the extraction as regular egglog programs. This is an interesting feature that I feel like could open some cool weird stuff like runtime generation of rules, verification of rules, etc.
