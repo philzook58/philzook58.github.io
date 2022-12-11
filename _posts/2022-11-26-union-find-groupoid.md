@@ -217,3 +217,5 @@ Can this be used for equality modulo alpha equivalence (permutation group or iso
 
 Egraph Functions that are group invariant can compress themselves by ignoring the group annotations.
 Functions that behave interestingly under group annotations (like vector valued functions or $e^{ikx}$ under translation) can have custom congruence laws. These custom congruence rules feels similar to [Coq Setoid system](https://coq.inria.fr/refman/addendum/generalized-rewriting.html).
+
+Kmett points out Rem's algorithm <https://algocoding.wordpress.com/2015/05/13/simple-union-find-techniques/> <https://news.ycombinator.com/item?id=33075752>
