@@ -178,6 +178,7 @@ https://github.com/GrammaTech/gtirb-vscode
 
 [decompiler explorer](https://github.com/mborgerson/mdec) Hmm. too bad it's not a web service
 ### Binary Ninja
+SCC- shellcde compiler. Why is this a top level thing?
 
 
 
