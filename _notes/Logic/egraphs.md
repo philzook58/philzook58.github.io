@@ -25,6 +25,7 @@ title: E-graphs
   - [GATs](#gats)
 - [Lambda Encoding](#lambda-encoding)
 - [Contextual EGraphs](#contextual-egraphs)
+- [Equational Logic](#equational-logic)
 - [CHR egraphs](#chr-egraphs)
 - [Misc](#misc)
 
@@ -583,6 +584,11 @@ No one know what this means. Everyone wants it.
 
 Perhaps related to backtracking
 
+# Equational Logic
+Maude
+[Goguen theorem proving and algebra](https://arxiv.org/abs/2101.02690)
+
+rigid e-uniifcation https://pure.uvt.nl/ws/portalfiles/portal/311063/80170.pdf Equational Proofs in Tableaux en Logic Programming de Kogel, E.A. Another fairly extnsive work that seems a lot like egglog.
 
 # CHR egraphs
 

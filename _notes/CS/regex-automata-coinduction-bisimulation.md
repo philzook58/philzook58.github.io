@@ -7,7 +7,9 @@ title: Automata, Regex, Coinduction, Bisimulation
     - [Matching algorithms](#matching-algorithms)
     - [equivalence](#equivalence)
     - [theory](#theory)
-  - [Automata](#automata)
+- [Automata](#automata)
+  - [Finite Automata](#finite-automata)
+  - [Tree Automata](#tree-automata)
 - [Kleene Algebra](#kleene-algebra)
   - [KAT](#kat)
 - [Bisimulation](#bisimulation)
@@ -104,22 +106,10 @@ powerset construction
 MOnadic second order logic
 
 
-## Automata
+# Automata
 See also note on Parsing regularexp
 
 Determinization - turn nondeterministic automaton to deterministic
-
-
-https://github.com/ondrik/libvata
-[Tree Automata Techniques and Applications](https://jacquema.gitlabpages.inria.fr/files/tata.pdf)
-
-
-[E-Graphs, VSAs, and Tree Automata: a Rosetta Stone](https://remy.wang/reports/dfta.pdf) [slides](https://docs.google.com/presentation/d/1oDNmzxJpsdLE51lmybcfzzzv4jRLDdrVpmMhMpFEoFk/edit?usp=sharing) [merge only rules](https://gist.github.com/remysucre/1788cf0153d7db240e751fb698f74d99)
-
-
-https://en.wikipedia.org/wiki/Tree_automaton
-
-
 
 Computing regex from automata
 Kleene's algorithm
@@ -142,6 +132,23 @@ Datalog partition refinement?
 Sets. Things definitely not in set.
 
 DAWG - transitions are single labelled edges. Transitions are
+
+## Finite Automata
+DFA NFA
+
+finite set of states. Labelled transitions between.
+
+
+## Tree Automata
+https://github.com/ondrik/libvata
+[Tree Automata Techniques and Applications](https://jacquema.gitlabpages.inria.fr/files/tata.pdf)
+
+
+[E-Graphs, VSAs, and Tree Automata: a Rosetta Stone](https://remy.wang/reports/dfta.pdf) [slides](https://docs.google.com/presentation/d/1oDNmzxJpsdLE51lmybcfzzzv4jRLDdrVpmMhMpFEoFk/edit?usp=sharing) [merge only rules](https://gist.github.com/remysucre/1788cf0153d7db240e751fb698f74d99)
+
+
+https://en.wikipedia.org/wiki/Tree_automaton
+
 
 
 

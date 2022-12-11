@@ -7,6 +7,8 @@
 - [Macros](#macros)
 - [Modules](#modules)
 - [Proof relevance](#proof-relevance)
+- [Contexts](#contexts)
+- [Backchaining](#backchaining)
 - [Prolog vs egglog](#prolog-vs-egglog)
 - [These variabes _are_ branch local because we have a backtrackable egraph. The egraph operations will _never_ unify uvars.](#these-variabes-are-branch-local-because-we-have-a-backtrackable-egraph-the-egraph-operations-will-never-unify-uvars)
 - [Logical models](#logical-models)
@@ -660,6 +662,7 @@ Other rules/constants that may be of interest. comp/trans,  sym,
 They reduce to meaninglessness if defined in term of the eliminator
 subst(eq,pat_with_holes)
 
+# Contexts 
 context patterns?
 eq(a,b), f[a] -> f[b]
 first class contexts - somehow autoderive my zippers?
@@ -732,6 +735,207 @@ But sometimes they are partial.
 
 Or is it the execution of a machine
 [[(a + b)]] : s -> Error (v, s)
+
+
+
+https://dl.acm.org/doi/pdf/10.1145/3428195
+cofunctional dependencies
+(cofunction foo)
+cid and eid
+If in all terms of use, the results are equal, then 
+(a -> b)
+
+(cofunction foo (a) b)
+if a cofunction maps to two different things, then it's arguments must also
+
+automata minimizatin
+
+(function eval (ctx term) value)
+functionall dependent on term
+cofunctionally dependent on ctx?
+
+No. doesn't make any sense.
+
+(term, value) -> ctx
+term -> ctx... I didn't understand this one from the paper.
+
+
+Sebastien Erdweg's group has good stuff https://www.pl.informatik.uni-mainz.de/publications/
+
+Very interesting. I somehow had never seen this one https://dl.acm.org/doi/10.1145/3428195 contexts and "co-functional" dependencies in datalog for typechecking (edited) 
+
+https://www.youtube.com/watch?v=1lL5KGVqMos&ab_channel=ACMSIGPLAN it has a video (edited) 
+
+I don't understand this cofunctional dependency thing, but it is tantalizing. It sounds like it jives with a lot of the vibe of egglog. "egglog with coterms". There's a set of vague and confusing ideas that if they could fall in place would be aesthetically appealing. Automata and observational equivalence, context/scope ids and eclass ids, partition refinement vs union find, terms and coterms, functional and cofunctional dependencies. (edited) 
+
+
+Max Willsey
+  10 hours ago
+vibe driven development
+
+yeaaa, it's an embarassing mantra. This mode of thinking has basically never actually worked for me. But it feels so good to think you're on the edge of something that I can't help myself. (edited) 
+
+It's kind of a road to crankhood.
+
+Max
+I am sympathetic for sure
+
+Lemme throw this one out there. (cofunction foo (A) B) . Maybe (observation foo (A) B) . It runs the contrapositive of congruence. If two rows of a cofunction map one partition to two different partitions, then the input partitions must be split/refined https://en.wikipedia.org/wiki/Partition_refinement. `f x != f y -> x != y` This seems like a thing that can be done. Not clear on it's utility (edited) 
+
+This meshes with the idea that the good way to discover disequality on two things is to find some analysis that maps them into two different bools or different constructors or disjoint intervals or transitively to disjoint things (edited) 
+
+I'm assuming partition ids (does that concept make sense?) and eclass ids are separate notions (edited) 
+
+cofunctional dependency violations expand rather than merge
+
+partitions of eids? (which would be a curious flavor of first class set) (edited) 
+
+Maybe this is almost the only notion of first class set that isn't terrible. You can only refer to sets for which you have a known separating observation. Primitive datatypes are all separable (decidable equality) so referring to any of their finite sets are conceptually unproblematic. (edited) 
+
+Canonicalization takes any record with a reference to a set that has been further partitioned and expands it into one record for each of it's partitions. Again, kind of dual to the egraph canonicalization. Expanding instead of contracting. Maybe the expansion should be lazy or implicit in some way, since expanding is bad. (edited) 
+
+If partitions of eids is the right thing, at least the number of partitions is bounded above by the number of eids. So maybe expansion isn’t so terrible
+
+I wonder if this could have any bearing on AC, since AC is about sets/observably distinct sums. Might as well pretend it does since I'm pretending to touch all the other big problems (disequality, sets, and context)
+
+Partitions of eids in this way gives semidecidable disequality. If two different eids are in the same partition, you can conclude nothing. If two eids are literally, equal, they're equal. If they are in distinct partitions, they are provably (observationally) disequal (edited) 
+
+:merge is like a fold or reduce. :expand is like an unfold
+
+Actually merge is fold not reduce. We sometimes are usefully asymmetric between old and new (like the choice domain example)
+
+But we don’t allow heterogenous typed merge?
+
+Nothing in the operational semantics prevents heterogenous merge afaik. It’s the type system that does.
+
+I wonder if Remy’s tree automata transformation could be literally performed internally in egglog by making rules transferring a function representation to a cofunction representation
+
+
+Another way of putting is is one can coresolve a function dependency violation by splitting/changing/deleting inputs rather than merging outputs
+
+I’m a little manic, but I’m pretty pleased with this idea
+
+
+A particular kind of weird special case that seems particularly useful is partition refinement, like how unionfind is a weird special case of merge
+
+Because they both cause this spooky action at a distance that is globally effecting things in a way unlike how lattice datalog is local
+
+A fairly generic way to resolve functional dependencies is to just give a method that takes in a set of violating tuples and returns a new set of non violating tuples
+
+
+parition refinement
+
+Abstract refinement via ids.
+Notions of compression? Forest?
+```python
+class Refiner():
+  def __init__(self):
+    self.parents = [0]
+    self.leaves = {0}
+    # self.left
+    # self.right
+  def split(self, x, N=2):
+    if x in self.leaves:
+      self.leaves.remove(i)
+      n = len(self.parents)
+      for i in range(N):
+        self.parents.append(x)
+        self.leaves.add(n+i)
+      return n
+  def subset(self, i, j):
+      if i == j:
+        return True
+      while self.parents[i] != i:
+        if i == j:
+          return True
+        i = self.parents[i]
+      return False
+  def expand(self,i): 
+    # expand a non root to all it's leaf children
+    # the analog of find.
+    # This could be "compressed" I guess.
+      if i in self.leaves:
+        return i 
+      else:
+        yield from self.expand(self.left[i])
+        yield from self.expand(self.right[i])
+
+```
+
+A partition _of_ eids needs
+```python
+class UF_partition():
+  def __init__(self):
+    self.parents = []
+    self.partitions = [[]]
+
+  def makeset(self):
+    x = len(self.parents)
+    self.parents.append(x)
+    self.partitions[0].append(x)
+    return x
+  def refine(x, ):
+
+
+```
+Is partitions a annotated BDD of sorts?
+Everything that points to the empty set of ids should be compressed.
+ZDDs?
+We need to pick an ordering to the questions. Hmm. Don't love that.
+The set only has N elements in it, so that limits how bad it can get.
+
+Or we could just label the partitions by their question signature vector.
+is_red = true
+smells = Unknown
+
+There is no notion of disequals.
+Or registering something as a cofunction allows iteration over all cofunctions
+
+Abstract partition id as domain of cofunctin. That might work.
+How to hook up x eqable, y splittable. The elem relation.
+The elem relation is many-to-many. If we can canonicalize saprtition id's, it is many to one, a function from object to partition.
+It's almost a master observation. A cofunctin for which there will never be a true conflict by design. 
+
+( should-fail )
+
+# Backchaining
+If you're willing to run forked or interleave coroutined databases in parallel you can lift or and exists to Goal.
+
+
+So what is the thing I'm avoiding? Ever actually performing resolution.
+
+Generative metaprogramming like metaocaml. THe thing I'm constructing is opaque. I don't pattern match on it.
+
+THere are layers of signatures
+sig1
+sig2
+prog1 - building up a rule
+prog2 - rule set
+
+---------------
+sig1, sig2, prog1, prog2  |- goal
+
+The egraph database itself holds sig1 sig2.
+Perhaps identifiers are living in sig1 and eids in sig2?
+
+The trick is to never have to look in the program set.
+I suppose I could have a hierarchy/tower of prog and sig?
+Hmm. Could I use hierarchcal scheduling for this?
+The context is structured. Which is interesintg. It's 
+G 0 := PrimGoal
+Prog 0 := G 0 => Prog 0, 
+G (S n) := 
+Prog (S n) := 
+
+Go up a layer?
+It's defintely a metaprogrammign feel to datalog.
+
+Is there a logic that reflects this? Maybe some kind of modal metaprogramming thing like pfenning
+
+I can definitely support existentials in the heads.
+So I'm not done.
+Barendregt convention.
+
 
 
 # Prolog vs egglog
