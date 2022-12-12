@@ -6,14 +6,14 @@ description:
 tags: datalog rust
 ---
 
-[Datalog](https://www.philipzucker.com/datalog-book/) is a really cool technology because it is both declarative, intuitive and high performance. The core algorithms can be accomplished using database technology for queries, which has become very refined ovr the years.
+[Datalog](https://www.philipzucker.com/datalog-book/) is a really cool technology because it is both declarative, intuitive and high performance. The core algorithms can be accomplished using database technology, which has become very refined over the years.
 
-Datalog is a relative of prolog. Prolog and Datalog programs are roughly described as being made of Horn clauses, which can be considered a subset of first order logic.
+Datalog is a relative of [prolog](https://www.metalevel.at/prolog). Prolog and Datalog programs are roughly described as being made of [Horn clauses](https://en.wikipedia.org/wiki/Horn_clause), which can be considered a subset of first order logic.
 
 Datalog as a theorem prover is discussed even less than prolog's character as a theorem prover.
-The Nadathur and Miller book [Programming with Higher Order Logic](https://www.google.com/books/edition/Programming_with_Higher_Order_Logic/xKsgAwAAQBAJ?hl=en&gbpv=1&printsec=frontcover) has an excellent discussion of the logical semantics of prolog. This book is a classic. It is a book so rich with insight, I'm hard pressed to think of book that it is's equal.
+The Nadathur and Miller book [Programming with Higher Order Logic](https://www.google.com/books/edition/Programming_with_Higher_Order_Logic/xKsgAwAAQBAJ?hl=en&gbpv=1&printsec=frontcover) has an excellent discussion of the logical semantics of prolog. This book is a classic. It is so rich with insight, I'm hard pressed to think of another book that is its equal.
 
-This blog post is trying to illuminate in the style presented in the book the class of formulas that Datalog or Datalog with light preprocessing is a prover for.
+This blog post is trying to illuminate the class of formulas that Datalog or Datalog with light preprocessing is a prover for.
 
 # Prolog
 Prolog works via what can be described as top-down, backwards, or goal-directed inference, trying to construct a proof tree backwards from a given goal formula. 
@@ -21,11 +21,11 @@ Prolog works via what can be described as top-down, backwards, or goal-directed 
 Prolog has a few pieces.
 - Clauses or rules which consist of a head and body.
 - A notion of query which you enter in at the repl. It's easy to forget about this part, but it is kind of crucial for what follows.
-- Unification variables, which are capitalized letter.
+- Unification variables, which are denoted by constants that start with a capitalized letter.
 
 Prolog works by maintaining a goal list state which is initialized by the user given query. It matches (unifies) these goals against the heads of rules, and if successful replaces that goal with the body of the rule in the state. It can choose a rule that leads down a blind alley, so it maintains the ability to backtrack these choices and try another rule.
 
-Prolog as described above kind of looks logical. `:-` is like implication. Unification variables are implicitly forall quantified in the program clauses and implicitly existentially quantified in the goal formula. But there is a slightly richer description available.
+Prolog as described above can be seen as logical. `:-` is like implication. Unification variables are implicitly forall quantified in the program clauses and implicitly existentially quantified in the goal formula. But there is a slightly richer logical formula representation.
 
 ## Horn Clauses
 
@@ -42,28 +42,27 @@ An operational interpretation can be given to breaking down the goal formula in 
 
 
 
-- `P |- G1 /\ G1` --> prove `P |- G1` and then `P |- G2`
+- to prove the goal `P |- G1 /\ G1`, prove `P |- G1` and then `P |- G2`
 
 In inference rule form this looks like ths right introduction rule
 
 ```
-`P ; S |- G1`           P ; S |- G2
------------------------------------ /\ R (I?)
-        P ; S |- G1 /\ G1`  
+`P |- G1`           P |- G2
+----------------------------------- /\ R
+        P |- G1 /\ G1`  
 ```
 
-- `P  |- G1 \/ G1` --> try proving `P |- G1` and if that doesn't work try `P |- G2`
+- to prove the goal `P  |- G1 \/ G1`, try proving `P |- G1` and if that doesn't work try `P |- G2`
 
-- `P |- exists X, G` introduce a fresh unification/metavariable X. 
+- `P |- exists X, G` introduce a fresh unification X. 
 
-This existential rule 
+These unification variables introduced here are really metavariables, standing for an as yet determined actual term.
 
 There is something a bit weird about not tracking existential metavariables in the sequent. They allow spooky action at a distance in the proof search, which can be disconcerting. Minikanren is more explicit on this point, purely functionally carrying a substitution dictionary.
 
-Prolog for free will prove a stronger theorem than the one asked for. A metavariable in the answer represents a universal quantification when all you asked for as an existential one. This is very cool.
+Prolog for free will prove a stronger theorem than the one asked for. A metavariable in the answer substitution represents a universal quantification when all you asked for as an existential one. This is very cool.
 
 A subtle point. If the answer is ungrounded, this is proving a universal quantification, but a universal only proves an existential if the sort in question is non empty, so actually it is returning a stronger theorem and a proof obligation for non emptiness.  In the unityped setting this is less apparent.
-
 
 # Harrop Clauses
  
@@ -75,32 +74,34 @@ G ::= True | A | G ∧ G | G ∨ G | ∃τ x G | D ⊃ G | ∀x G
 D ::= A | G ⊃ D | D ∧ D | ∀x D
 ```
 
-The additions compared to the above Horn clause structure is implication and forall are allowed in the goal formula.
+The additions compared to the above Horn clause structure is implication and forall are allowed in the goal formula. We now add a parameter `S` to the sequent to represent the signature.
 
-- `P ; S |- D -> G` puts a new program clause into the database ` (D :: P) ; S |- G`. 
+- `P ; S |- D -> G` puts a new program clause into the database `(D :: P) ; S |- G`. 
 
 - `P ; S |- forall x, G` introduce a new fresh constant `P ; (x :: S) |- G`
 
-We can see that implication and forall are related. In dependent type theory implication is just a forall where you ignore the argument in the rest of the type `A -> B = forall x : A, B`. Likewise bounded quantifiers $\forall_S x, P$ can be usefully expanded as $\forall x, S => P$ when you are modeling this construct in a first order theorem prover.
+We can see that implication and forall are related. In dependent type theory implication is just a forall where you ignore the argument in the rest of the type `A -> B = forall x : A, B`. Likewise bounded quantifiers $\forall_S x, P$ can be usefully expanded as $\forall x, S \rightarrow P$ when you are modeling this construct in a first order theorem prover.
 
-The forall rule also gives us a principled way to generate well scoped fresh names. This interplays with lambda prolog's ability to talk about lambda terms, which I won't touch on further today.
+The forall rule also gives us a principled way to generate well scoped fresh names. This interplays with lambda prolog's ability to talk about lambda terms.
 
-What's really beautiful and powerful seeming is that the program and goal formulas are mutually recursively defined. There is a certain symmetry and it is pleasing that 
+What's really beautiful and powerful seeming is that the program and goal formulas are mutually recursively defined.
 
 # Backchaining
 The above rules break down the goal formula, but eventually it becomes atomic. What then?
 Then comes the backchaining phase where the logic program selects a program clause to resolve against the goal.
 
-This has something to do with focsuing 
+This has something to do with [focusing](https://www.cs.cmu.edu/~fp/courses/15816-f16/lectures/18-focusing.pdf) 
+
 Prolog's default depth first search strategy hurts it's character as a theorem prover. There is much to be gained from this convention, as it increases it's predictable character as a operational programming language.
 
-Datalog is superior on this count. It breadth first searches trough forward inference and cannot get caught digging down as dusty alley. 
+Datalog is superior on this count. It breadth first searches through forward inference and cannot get caught digging down as dusty alley.
 
 # Datalog
+Datalog works via bottom up / forward inference.
 
-What  datalog support.
+What Datalog support.
 - We can assert facts to go right in the database like`edge(1,2).`. 
-- We can assert rules like `path(x,z) :- edge(x,y), path(y,z).`. Operationally speaking, the body is a SQL-like query matched (not unified!) against the database, for which the query result is used to fill out the head. Because of how this works, every variable occurring in the head must be bound in the body. If it isn't, what are you going to fill it out with? Well we can imagine some ideas (to be discussed), but that is not stock datalog.
+- We can assert rules like `path(x,z) :- edge(x,y), path(y,z).`. Operationally speaking, the body is a SQL-like query matched (not unified!) against the database, for which the query result is used to fill out the head. Because of how this works, every variable occurring in the head must be bound in the body. If it isn't, what are you going to fill it out with? Well we can imagine some ideas (to be discussed), but that is not stock Datalog.
 
 # Bounded Horn Clauses
 What is the set of formulas that Datalog can prove?
@@ -109,18 +110,17 @@ Datalog does not support Horn clauses in the sense described above. "Outrage!" y
 
 Datalog does not _really_ support either of Horn or Harrop, but can handle restrictions.
 
-The issue with horn clauses is the universal quantifier. It isn't a universal quantifier, really it is a  [Bounded Quantifiers](https://en.wikipedia.org/wiki/Bounded_quantifier) which is a much weaker notion. What s kind of interesting is that the bound reltation for the quantifier is mutaly recursively defined, and not necessarily some a priori fixed range.
+The issue with horn clauses is the universal quantifier in D formula. It isn't a full universal quantifier. It is more like a  [Bounded Quantifiers](https://en.wikipedia.org/wiki/Bounded_quantifier) which is a much weaker notion. What s kind of interesting is that the bound relation for the quantifier is mutually recursively defined, and not necessarily some a priori fixed range.
 
 ```
 G ::= True | A | G ∧ G | G ∨ G | ∃τ x, G
 D ::= A | G ⊃ D | D ∧ D | ∀x y z..:G, D
 ```
 
-This is all basically non surprising. D formula can be expanded into a normal form expected by a typical datalog engine. Souffle datalog supports the or operator in rule bodys as `;` and multiheaded conjunction rules `,`.
+This is all basically non surprising. D formula can be expanded into a normal form expected by a typical datalog engine. Souffle datalog supports the [disjunction operator](https://souffle-lang.github.io/rules#disjunction) in rule bodys as `;` and [multiheaded conjunction](https://souffle-lang.github.io/rules#multiple-heads) rules `,`.
 
 Goals correspond to reasonable queries you can make over a database. Existentials are variables in the query, and the query can be expanded into [disjunctive normal form](https://en.wikipedia.org/wiki/Disjunctive_normal_form).
-You can also turn goals into rules via introducing a `proven` predicate. Then
-Goals G can be expanded into 
+You can also turn goals into rules via introducing a `proven` predicate. Then a goal G can be expanded into clauses producing thi predicate
 
 ```souffle
 // exists x, g(x)
@@ -168,11 +168,12 @@ Perhaps less interesting and more optional are
 
 Note that despite the richness of G, this set of formula is _not_ mutually recursive. So it is weaker than Harrop clauses because the quantification.
 
-One way of describing what is happening here is we are permitting 1 pass of goal breakdown as generative metaprogramming of a datalog program. To get recursion we'd need
+One way of describing what is happening here is we are permitting 1 pass of goal breakdown as generative metaprogramming of a datalog program.
 
-Alternative suggested names: Bounded Harrop, Non-recursive Harrop
+The D rule `Q -> D` is redundant as it represents a bounded quantifier that does not use it's bound variables. 
+
 # Is that it?
-No, but this is essentially the set of formula that can be operationally interpreted in normal stock datalog without too much agony. By agony, I mean with the true bulk search occurring in the datalog engine itself and where the proving process proceeds va generative metaprogramming and not deeper matching on the structure of the program clauses.
+No, but this is essentially the set of formula that can be operationally interpreted in normal stock datalog without too much agony. By agony, I mean with the true bulk search occurring in the datalog engine itself and where the proving process proceeds via generative metaprogramming and not deeper matching on the structure of the program clauses.
 
 Going beyond that requires funky features or weird encodings and it appears thus far that the farther you go afield the harder the going is.
 
@@ -190,7 +191,10 @@ This can be encoded using gensym/autoinc counters to create fresh terms for the 
 
 - [Benchmarking the chase](https://www.cs.ox.ac.uk/boris.motik/pubs/bkmmpst17becnhmarking-chase.pdf)
 - [The chase revisited](https://dbucsd.github.io/paperpdfs/2008_8.pdf)
+
+
 ## Equality
+
 Equality is arguably part of the formula `A`. This is choice. These are called equality generating dependencies. Equality in the queries Q is unproblematic until you add equality to D. Now the two interplay and you've got some challenges.
 
 This is also the subject of the chase and egglog.
@@ -203,7 +207,7 @@ Q ::= True | A | Q ∧ Q | Q ∨ Q | ∃x Q | t1 = t2
 
 ## Hypotheses / Contexts
 
-Can `Q ⊃ D` becomes `G ⊃ D`? It'd be really nice.
+Can `Q ⊃ D` becomes `G ⊃ D`? It'd be really nice. That would get use back 
 
 This is one of the extensions that is most tempting and still pretty cloudy how to do it right or even _really_ what it is I even want. I currently have some reason to believe that I don't want set-like contexts but instead something more like evaluation contexts.
 Some terms for this are Contextual datalog, hypothetical datalog, or scoped datalog.
@@ -212,12 +216,16 @@ Some terms for this are Contextual datalog, hypothetical datalog, or scoped data
 - [Implementing Tabled Hypothetical Datalog](http://www.fdi.ucm.es/profesor/fernan/FSP/Sae13c.pdf)
 
 # Negation
+
 Negation is a whole thing and has sent the logic programming into fits since the beginning. There are stories about how to do it right, but it's nuanced.
+
 [Negation as failure](https://en.wikipedia.org/wiki/Negation_as_failure)
+
 Many datalog's support stratified negation. Under some situations, negation can be used to model swap and/or and forall/exists. This is a tricky topic.
 
 # Disjunction
-Disjunction in the head of rules (In the D formula) also requires more magumbo than a stock datalog allows. This is something like what [answer set programming](https://en.wikipedia.org/wiki/Answer_set_programming) supports. ASP is something akin to slamming a datalog ad SAT solver together.
+
+Disjunction in the head of rules (In the D formula) also requires more magumbo than a stock datalog allows. This is something like what [answer set programming](https://en.wikipedia.org/wiki/Answer_set_programming) ([notes](https://www.philipzucker.com/notes/CS/constraint-programming/#answer-set-programming)) supports. ASP is something akin to slamming a datalog ad SAT solver together.
 See also [DLV](https://www.dbai.tuwien.ac.at/proj/dlv/tutorial/), disjunctive datalog
 
 # Lambda Terms / Higher Order Logic
@@ -228,7 +236,7 @@ You can write static analyses _about_ lambda terms/scheme
 - [A Systematic Approach to Deriving Incremental Type Checkers](https://szabta89.github.io/publications/inca-typechecking.pdf)
 But these feel like encodings and don't quite satisfy me. I want the datalog itself to be doing more heavy lifting.
 
-Also how does nominal logic interact with datalog? Good, bad? Dunno. See [alpha prolog](https://homepages.inf.ed.ac.uk/jcheney/programs/aprolog/) and alpha kanren
+Also how does nominal logic interact with datalog? Good, bad? Dunno. See [alpha prolog](https://homepages.inf.ed.ac.uk/jcheney/programs/aprolog/) and alpha kanren for nominal logic in the prolog like setting.
 
 # Are formulas even the thing to be talking about
 I actually kind personally de-emphasize this perspective. Instead I like the think of datalog/prolog rules as corresponding to inference rules (the horizontal line) and datalog/prolog predicates correspond to judgements. See these [Pfenning notes](https://www.cs.cmu.edu/~fp/courses/15317-f17/lectures/18-datalog.pdf).
@@ -238,6 +246,10 @@ Datalog is an engine for breadth first exploration of forward inferences. Every 
 From a pragmatic standpoint, every datalog operation has an operational as well as logical character. Only inferring justifiable rules enables the datalog inference process to be more predictable and controllable in my experience than classical solvers. Perhaps as Zach put it "You can play computer".
 
 # Bits and Bobbles
+
+
+Alternative suggested names: Bounded Harrop formula, Non-recursive Harrop formula
+
 It seems plausible to me that harrop-lite can extended to a hierarchy that is still finite by deeper.
 
 An interplay of a stronger prolog process as a metaprogram or subprogram of the datalog program could be an interesting thing. Souffle's inline relatins can be seen as a weak terminating prolog metaprogram.
