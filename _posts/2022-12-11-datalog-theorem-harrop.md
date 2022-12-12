@@ -52,11 +52,11 @@ In inference rule form this looks like ths right introduction rule
         P |- G1 /\ G1`  
 ```
 
-- to prove the goal `P  |- G1 \/ G1`, try proving `P |- G1` and if that doesn't work try `P |- G2`
+- to prove the goal `P  |- G1 \/ G1`, try proving `P |- G1` and if that doesn't work try `P |- G2`. Ok this is kind of a backtracking step
 
 - `P |- exists X, G` introduce a fresh unification X. 
 
-These unification variables introduced here are really metavariables, standing for an as yet determined actual term.
+These unification variables introduced here are really metavariables, standing for an as yet undetermined actual term.
 
 There is something a bit weird about not tracking existential metavariables in the sequent. They allow spooky action at a distance in the proof search, which can be disconcerting. Minikanren is more explicit on this point, purely functionally carrying a substitution dictionary.
 
@@ -66,7 +66,7 @@ A subtle point. If the answer is ungrounded, this is proving a universal quantif
 
 # Harrop Clauses
  
-There is an extension of horn clauses called hereditary Harrop clauses which also have an operational character. [Lambda prolog](https://www.lix.polytechnique.fr/~dale/lProlog/) directly supports these. Enriching the set of formula you support is good. 
+There is an extension of Horn clauses called hereditary Harrop clauses which also have an operational character. [Lambda prolog](https://www.lix.polytechnique.fr/~dale/lProlog/) directly supports these. Enriching the set of formula you support is good. 
 
 
 ```
@@ -94,23 +94,23 @@ This has something to do with [focusing](https://www.cs.cmu.edu/~fp/courses/1581
 
 Prolog's default depth first search strategy hurts it's character as a theorem prover. There is much to be gained from this convention, as it increases it's predictable character as a operational programming language.
 
-Datalog is superior on this count. It breadth first searches through forward inference and cannot get caught digging down as dusty alley.
+Datalog is superior on this count. It breadth first searches through forward inference and cannot get caught digging down as dusty alley forever.
 
 # Datalog
 Datalog works via bottom up / forward inference.
 
 What Datalog support.
-- We can assert facts to go right in the database like`edge(1,2).`. 
-- We can assert rules like `path(x,z) :- edge(x,y), path(y,z).`. Operationally speaking, the body is a SQL-like query matched (not unified!) against the database, for which the query result is used to fill out the head. Because of how this works, every variable occurring in the head must be bound in the body. If it isn't, what are you going to fill it out with? Well we can imagine some ideas (to be discussed), but that is not stock Datalog.
+- We can assert facts in the database like`edge(1,2).`. 
+- We can assert rules like `path(x,z) :- edge(x,y), path(y,z).`. Operationally speaking, the body is a SQL-like query matched (not unified!) against the database, for which the query result is used to fill out the head. Because of how this works, every variable occurring in the head must be bound in the body. If it isn't, what are you going to fill it out with? Well we can imagine some ideas (to be discussed later), but that is not stock Datalog.
 
 # Bounded Horn Clauses
 What is the set of formulas that Datalog can prove?
 
-Datalog does not support Horn clauses in the sense described above. "Outrage!" you scream at me, readying to tear me apart limb from limb. 
+Datalog does not support Horn clauses. "Outrage!" you scream at me, readying to tear me apart limb from limb. 
 
 Datalog does not _really_ support either of Horn or Harrop, but can handle restrictions.
 
-The issue with horn clauses is the universal quantifier in D formula. It isn't a full universal quantifier. It is more like a  [Bounded Quantifiers](https://en.wikipedia.org/wiki/Bounded_quantifier) which is a much weaker notion. What s kind of interesting is that the bound relation for the quantifier is mutually recursively defined, and not necessarily some a priori fixed range.
+The issue with horn clauses is the universal quantifier in D formula. In Datalog, it isn't a full universal quantifier. It is more like a  [bounded quantifier](https://en.wikipedia.org/wiki/Bounded_quantifier) which is a much weaker notion. What is kind of interesting is that the bound relation for the quantifier is mutually recursively defined, and not necessarily some a priori fixed range.
 
 ```
 G ::= True | A | G ∧ G | G ∨ G | ∃τ x, G
@@ -119,7 +119,7 @@ D ::= A | G ⊃ D | D ∧ D | ∀x y z..:G, D
 
 This is all basically non surprising. D formula can be expanded into a normal form expected by a typical datalog engine. Souffle datalog supports the [disjunction operator](https://souffle-lang.github.io/rules#disjunction) in rule bodys as `;` and [multiheaded conjunction](https://souffle-lang.github.io/rules#multiple-heads) rules `,`.
 
-Goals correspond to reasonable queries you can make over a database. Existentials are variables in the query, and the query can be expanded into [disjunctive normal form](https://en.wikipedia.org/wiki/Disjunctive_normal_form).
+Goals correspond to reasonable queries you can make over a database. Existentials in G are variables in the query, and the query can be expanded into [disjunctive normal form](https://en.wikipedia.org/wiki/Disjunctive_normal_form).
 You can also turn goals into rules via introducing a `proven` predicate. Then a goal G can be expanded into clauses producing thi predicate
 
 ```souffle
@@ -166,7 +166,7 @@ Perhaps less interesting and more optional are
 - `G \/ G` is dealt with by forking the database search into two processes and seeing if one comes back proven
 
 
-Note that despite the richness of G, this set of formula is _not_ mutually recursive. So it is weaker than Harrop clauses because the quantification.
+Note that despite the richness of G, this set of formula is _not_ mutually recursive. So it is weaker than Harrop clauses because the constant generating universal quantification can only happen in G formula and not Q.
 
 One way of describing what is happening here is we are permitting 1 pass of goal breakdown as generative metaprogramming of a datalog program.
 
@@ -195,7 +195,7 @@ This can be encoded using gensym/autoinc counters to create fresh terms for the 
 
 ## Equality
 
-Equality is arguably part of the formula `A`. This is choice. These are called equality generating dependencies. Equality in the queries Q is unproblematic until you add equality to D. Now the two interplay and you've got some challenges.
+Equality is arguably part of the formula `A`. This is a modelling choice of how you want to define your formula. Sometimes, it is useful to consider equality so important as to lift it out of the atoms and put it on the same level as `/\` or `->`. These are called [equality generating dependencies](https://en.wikipedia.org/wiki/Equality-generating_dependency). Equality in the queries Q is unproblematic until you add equality to D. Now the two interplay and you've got some challenges.
 
 This is also the subject of the chase and egglog.
 
@@ -207,9 +207,10 @@ Q ::= True | A | Q ∧ Q | Q ∨ Q | ∃x Q | t1 = t2
 
 ## Hypotheses / Contexts
 
-Can `Q ⊃ D` becomes `G ⊃ D`? It'd be really nice. That would get use back 
+Can `Q ⊃ D` becomes `G ⊃ D`? It'd be really nice. That would get us back to something that is closer to full Harrop clauses.
 
 This is one of the extensions that is most tempting and still pretty cloudy how to do it right or even _really_ what it is I even want. I currently have some reason to believe that I don't want set-like contexts but instead something more like evaluation contexts.
+
 Some terms for this are Contextual datalog, hypothetical datalog, or scoped datalog.
 
 - [Blog post on contextual datalog](https://www.philipzucker.com/contextual-datalog/) First class sets and subsumption are useful features for modelling the frontier of weakest assumptions.
@@ -245,16 +246,22 @@ Datalog is an engine for breadth first exploration of forward inferences. Every 
 
 From a pragmatic standpoint, every datalog operation has an operational as well as logical character. Only inferring justifiable rules enables the datalog inference process to be more predictable and controllable in my experience than classical solvers. Perhaps as Zach put it "You can play computer".
 
+An alternative point made by Burak Emir is that Datalog should be thought of in terms of [first order logic + least fixed points](https://en.wikipedia.org/wiki/Fixed-point_logic). I don't get this one. I do understand that you can't really express a transitive closure using only (finite?) first order axioms. Writing down `path <- edge, path` actually allows models that over approximate the closure, which sometimes is unacceptable. I _think_ fol+lfp's relation to datalog has something to do more with model checking rather than proof search, but I'm not sure. It definitely has something to do with [descriptive complexity](https://en.wikipedia.org/wiki/Descriptive_complexity_theory)
 # Bits and Bobbles
 
 
 Alternative suggested names: Bounded Harrop formula, Non-recursive Harrop formula
+
+Constrained horn clause solvers are model finders, not provers like above.
 
 It seems plausible to me that harrop-lite can extended to a hierarchy that is still finite by deeper.
 
 An interplay of a stronger prolog process as a metaprogram or subprogram of the datalog program could be an interesting thing. Souffle's inline relatins can be seen as a weak terminating prolog metaprogram.
 
 Contexts also have a hierarchy that may be useful. 1-contexts, 2-contexts, and so on and then sut them off. This is remininscent of how context is treated in abstract interpretation
+
+
+
 
 Really a list of these, which represent the current leaves of a partially constructed proof tree.
 
