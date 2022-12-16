@@ -90,6 +90,7 @@ title: SMT Solvers
 - [CVC5](#cvc5)
   - [test/regress](#testregress)
   - [options](#options)
+- [user defined propagators](#user-defined-propagators)
 - [Resources](#resources)
 - [Resources](#resources-1)
 
@@ -4484,7 +4485,30 @@ cvc --help
 -o trigger - print selected triggers
 -o learned-lits
 -o subs
+# user defined propagators
+https://avm.sosy-lab.org/2022/prs/AVM22_Eisenhofer.pdf
+https://github.com/CEisenhofer/Z3-User-Propagator-Example
+
+[User-Propagation for Custom Theories in SMT Solving](https://ceur-ws.org/Vol-3185/extended6630.pdf)
+http://theory.stanford.edu/~nikolaj/z3navigate.html
+OpenSMT
+
+callbacks
+- push/pop
+- fixed
+- eq and diseq
+- final
+
+
+string solvers
+n-queens custom csp
+
+also can be used to watch quantifier instantion.
 # Resources
+
+
+[The Design and Implementation of the Model Constructing Satisfiability Calculus](https://www.cs.utexas.edu/users/hunt/FMCAD/FMCAD13/papers/71-Model-Construction-SAT-Calculus.pdf) MCSat
+
 [datalog based systems can us incremental smt solving ](https://cs.pomona.edu/~michael/papers/iclp2020_extabs.pdf) Nice trick to use (=> label clause). This trick also comes up in unsat cores. (check-sat-assuming label label) then. ALso consider doing minimal number of push pops or keep pool of solver contexts to find miniaml push pop
 
 [Fuzzy-sat](https://arxiv.org/pdf/2102.06580.pdf) running smt queries through a fuzzer

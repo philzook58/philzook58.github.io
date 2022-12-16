@@ -10,6 +10,9 @@ title: Crypto, Protocols, Relational Specs, Concurrency
 wordpress_id: 3009
 ---
 
+[barthe intro to relation program verifciation](https://software.imdea.org/~gbarthe/__introrelver.pdf)
+[jt notes](https://gist.github.com/jtpaasch/f6a15ecfa01dc2fc7829dd64e8b90026)
+
 [A Relational Logic for Higher-Order Programs](https://people.mpi-sws.org/~dg/papers/icfp17.pdf)
 [diriectional typing for relational properties](https://dl.acm.org/doi/pdf/10.1145/3314221.3314603)
 

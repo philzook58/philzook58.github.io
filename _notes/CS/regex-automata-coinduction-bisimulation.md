@@ -143,6 +143,7 @@ Sets. Things definitely not in set.
 
 DAWG - transitions are single labelled edges. Transitions are
 
+[Hopcroft and Karp’s algorithm for Non-deterministic Finite Automata](https://hal.archives-ouvertes.fr/file/index/docid/648587/filename/hkc.pdf)
 
 
 # Kleene Algebra
@@ -162,7 +163,8 @@ Relative of Propositional Hoare Logic. Which is a neat idea on it's own
 tutorial https://alexandrasilva.org/files/talks/kat-tutorial.pdf https://popl20.sigplan.org/details/POPL-2020-tutorialfest/7/-T7-Programming-and-Reasoning-with-Kleene-Algebra-with-Tests
 https://www.cl.cam.ac.uk/events/ramics13/KozenTutorial1.pdf
 
-GKAT  guarded kleene with test https://arxiv.org/abs/1907.05920 https://www.youtube.com/watch?v=Dp68j9Wi_84&ab_channel=ACMSIGPLAN
+GKAT  guarded kleene with test https://arxiv.org/abs/1907.05920 https://www.youtube.com/watch?v=Dp68j9Wi_84&ab_channel=ACMSIGPLAN - verifcation of uinverrpeted programs in nearly linear time. The choice operators leave evidence. A "fundemantal theorem of clauclus" for loops?
+
 Kleene algebra modulo theories
 https://github.com/mgree/kmt
 https://arxiv.org/pdf/1707.02894.pdf
@@ -250,6 +252,11 @@ matrices over another kleene algerba
 
 
 # Bisimulation
+[BisPy is a Python library for the computation of the maximum bisimulation of directed graphs.](https://bispy-bisimulation-in-python.readthedocs.io/en/latest/index.html)
+I'm confused. Is it partition refinment or union find?
+
+
+
 Of what relationship is bisimulation to non-interference proofs? Bisimulation is kind of a way of saying the state is unobservable from the actions/observations.
 
 Graph isomorphism - too striog?
