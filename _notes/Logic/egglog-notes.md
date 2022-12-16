@@ -1,6 +1,10 @@
 
 
 - [Applications and Ideas](#applications-and-ideas)
+  - [Looks like partial horn logic uparrow. Define as an assertion / judgement. That's the analog of](#looks-like-partial-horn-logic-uparrow-define-as-an-assertion--judgement-thats-the-analog-of)
+  - [or](#or)
+- [Puttting insertion into the equals operator.](#puttting-insertion-into-the-equals-operator)
+- [Timestamps](#timestamps)
 - [Metaprogramming](#metaprogramming)
   - [first class when](#first-class-when)
 - [Context](#context)
@@ -8,7 +12,8 @@
 - [Modules](#modules)
 - [Proof relevance](#proof-relevance)
 - [Contexts](#contexts)
-- [Backchaining](#backchaining)
+- [cofunctions](#cofunctions)
+- [Backchaining - harrop](#backchaining---harrop)
 - [Prolog vs egglog](#prolog-vs-egglog)
 - [These variabes _are_ branch local because we have a backtrackable egraph. The egraph operations will _never_ unify uvars.](#these-variabes-are-branch-local-because-we-have-a-backtrackable-egraph-the-egraph-operations-will-never-unify-uvars)
 - [Logical models](#logical-models)
@@ -476,6 +481,304 @@ Perform just the back chaining we can and terminate.
 (prove )
 
 
+Special symmettry reduction. add3(x,y,z)
+
+lambda lifting.
+(lambda )
+Can we support higher order harrop via context as timestamps. "forking the database"
+contexts are dags?
+(G -> D)
+
+G ::= True | Q | G ∧ G | G ∨ G | ∃x G | D ⊃ G | ∀x G
+D ::= A | | Q ⊃ D | D ∧ D | ∀x..:Q, D
+Q ::= True | A | Q ∧ Q | Q ∨ Q | ∃x Q
+
+
+G ::= True | Q | G ∧ G | G ∨ G | ∃x G | D ⊃ G | ∀x G
+D ::= A | | Q ⊃ D | D ∧ D | ∀x..:Q, D | G -> D 
+Q ::= True | A | Q ∧ Q | Q ∨ Q | ∃x Q
+
+What's the point?
+
+G ::= Q | D ⊃ G | ∀x G
+D ::= A | | Q ⊃ D | D ∧ D | ∀x..:Q, D | G -> D  
+Q ::= True | A | Q ∧ Q | Q ∨ Q | ∃x Q
+
+Maybe restricting some things to be propositional or monadic? That forall table is kind of interesting. It kind of feels like  the signature Sigma that nadathur and miller talk about.
+
+D ::= A | | Q ⊃ D | D ∧ D | ∀x..:Q, D | p -> D  
+
+include is idiot modules. Would be a nice little feature
+Wow. let is super goofy.
+Wildcards would be appreciated.
+A demand creating form for :when would be appreciated.
+overloadable regular functions would be appreciated.
+string concat
+refine command - (run extract) loop. (refine N M)
+sketch command (calc (forall (x ) (exists y)  t1 = t2 = t3  ))
+DOn't bother 
+exists! uniqueness / definite description
+
+D formula of Void can be translated to panic. They can also be backpropagated via gfp lp 
+D formula of true are pointless
+
+
+Sketch command, don't bother with the exists, just let insertion fail and ride.
+Hmm. If we eagerly pick an extract solution, it might be wrong...
+We really need to run them in parallel and intercommunicate.
+forall exists forall exists ( a = b /\ b = c /\ c = d /\ d = e /\ e = f)
+calc does exactly the same thing as this goal.
+We could dump it all in one egraph...? Interpret /\ as Q operators rather than G.
+Lexicographic ordering of quant depth, then term height.
+- we have to have solution with cost less than 2
+This is a logically motivated version of which constructors are allowed.
+The outer forall is stuff that's allowed everywhere
+forall do_include exists forall do_not_include
+birewrite should just warn on failure on one rule. fail on failur of both.
+
+Hmm. What about that idea of running grounded terminating prolog. Does that let me extend the G formula?
+Q formula?
+
+(generic-function cost )
+cost
+
+do program clauses have to worry about the quantification? Noooo...? 
+What if a program clause captures one? Yikes.
+
+exists x: Q, G 
+
+
+
+(function )
+(set quantifier_cost(a) 1) ; quantifier depth basically
+(set quantifier_cost(b) 2)
+(size)
+Both size and quantifier cost need overloading / are annoying to define.
+We might perform some pre-unification in the query... But unification happens in the query anyhow?
+
+I guess we're impliitly asserting the terms exist
+(define foo) /\ (define bar) -> foo = bar 
+Looks like partial horn logic uparrow. Define as an assertion / judgement. That's the analog of 
+--------
+Gam ctx,   ===>  (define Gam _ Context)  vs (ctx Gam)
+or 
+-------
+T Type     ====> (define T _ Type)  vs (Type T)
+
+
+In my presentatin of the rule T and Gam are metavraibles. In actual situtions they are some term that goes in the _
+THe existence of terms has to be justified.
+
+
+equation solving as a quantifier alternation
+ (exists x, x + y = 0) -> exists  
+
+forall x y, (x + y = 0) -> exists z, (x + z = 0) ->  
+exists z, forall w, ((exists x y, x + y = 0) ->  (z + w  =  0))
+Oh. No. For equation solving I don't want the answer to contain _itself_
+exists x, foral y, exists z, 
+exists x, forall y
+
+forall a (exists b )
+
+
+
+
+So there are restrictions of where lambda terms can go huh...
+Maybe we can only support them in G also?
+
+(calc (exists (forall ))) is also doable. That's synthesis. 
+exists-forall is synthesis. The pattern variables cannot include the forall variables.
+How many layers of nesting can we do? Well, basically it's a scoping issue. We can only extract exists terms that do not contain vars. Is this equation solving as a command? This scoping issue is exactly a thing...
+forall q, exists p, () /\ () /\ (). The forall are the variables to keep. Quantifier elimination is also a form of equation solving.
+Unification _is_ equation solving, just in the initial theory. It makes it easier, which is kind of counterintuitive. Full injectvity is a really powerful axiom.
+raising is skolemization on G formula
+skoemization is on D formula.
+
+forall exists -> forall become new constants, exists become, Gt the queries, filter them in order, need to extract.
+How do I reoncile this wth the dea that unification is done by gensyming? The existenstials are the ones that work?
+foral y, exists x {t = s},   exists becomes unifcation vars.Well, that could help seed.
+creating a fresh var is upcoverting an exists to a forall, which is a harder goal. But then we assert.
+(forall y, forall x, t = s -> exists x2, t[x2] = t[x1] )  -> forall y, exists x {t = s}
+
+
+
+
+(exists x)
+Is this higher order unification? (unify ...)
+Hmm. Even in my grammar I allowed nested exists forall in G.
+
+(calc )
+(synth ?)
+
+SHould checks seed? Queries? (check (= t1 t2)) if they are _ground_ posibly should add in t1 t2.
+the mixed quantifier problem already fits into harrop lite.
+Puttting insertion into the equals operator.  
+=
+:= (set)
+:=:
+The logical motivation for this is light.
+rewrite expands to
+(rule (lhs) (and when (rule when rhs)))
+
+
+
+
+(birewrite (compose (compose f g) h) (compose f (compose g h)) :when ((= (type A) Ob) (= (type B) Ob) (= (type C) Ob) (= (type D) Ob) (= (type f) (Hom A B)) (= (type g) (Hom B C)) (= (type h) (Hom C D))))
+(birewrite (compose f (id B)) f :when ((= (type A) Ob) (= (type B) Ob) (= (type f) (Hom A B))))
+(birewrite (compose (id A) f) f :when ((= (type A) Ob) (= (type B) Ob) (= (type f) (Hom A B))))
+This ought to be possible to infer
+
+[compositional preprocessing for smtcoq](https://arxiv.org/abs/2204.02643)
+
+tptp benchmarks
+import maude benchmarks?
+fstar and dafny? Prbably tougher? Liquid haskell?
+
+
+
+
+Yeah, there was this idea that (Set foo) already exists in GJ if the sets are treated last.
+GJ automatically does group by
+relation becomes
+(fuunction (a b) c) 
+is curried to (-> a (Map b c))
+(relation a b c) =
+ (function (a b c) unit) curri to (a b) (Map c unit). (Map _ unit) is Set
+
+
+Justified models. Define justification (proof) objects.
+Why is this not just proof theory? Well, we want to go modulo theories.
+
+Justified SAT - unit propagation and learned clauses.
+
+ATP and resolution SAT.
+vs
+datalog and ?
+
+ATP is inference spray. SMT is model driven.
+
+Just unit propagation of SAT is almost trivial. We can output learned clauses.
+THe goals are totally different. You don't _want_ to find sat models. you want to find "good" clauses / find maximal unit propagation power.
+Given a formula, fill in the bools that are tht value in every model.
+Record SAT models. If we see bools take on multiple values, they can never be forced
+Like a sudoku. Sudokus are nt solvable by pure unit prop. But they have unique solutions, so it is justified.
+This gives a new form of hypothetical or head disjunction.
+
+Hmm. But if I have a loop that takes the formula and forces the head vs it's negation, I can get the justified model.
+2N Sat calls. hmm.
+
+I could also enumrate the 2-formla for connected stuff. and 3-formula.
+This sounds a bit like an asp.
+(function foo (i64) SATVAR) as a new form of truth value compared to (relation foo) or (function foo bool)
+
+Oh really, I can ask for a sat model, and then force each var to it's negation.
+Depending on the interface that may be eaiser or harder. The model might need to be saved.
+Save the model, check if required.
+
+
+
+in SMT, SAT is the master, and the thepries are the salves, egraphs are the mediator
+Here, datalog/egraphs are the master, theories are slaves and bools/sat is just a theory
+We focus on theory propagation and not theory conflict. Conflict is not a notion since we're not doing refutation.
+
+Linear arithemtic as theory. Sure we can asert inequalities. We could ask smt a model.
+We could then see the stability of the values and concretize them
+enum SymInt = {Concrete(i64), Sym(z3Int)}
+Perhaps we can have justifiable observations?
+(observation gt (z3int i64) bool). It could co-merge that if somehow gt becomes >= 3 = true through some other means, we should assert this about the z3int in the comerge operation. And that _might_ concretize it. That's not co-merging. There isn't a functional dependency conflict.
+elem(x,p) --> elem(z3var, z3pred)
+
+We don't split the z3int..? Or do we.
+x1 >= 0 /\ (x0 = x1 \/ x0 = x2) /\ x2 < 0 - this is the analog of splitting part0 into part1 part2, s.t. part0 = part1 union part2
+Then the z3 variable represents a set??? The projected set of all integers in that position. A quantifier elimination.
+
+
+Is this method of querying the sat slver analogous to the iterative egraph expansion?
+QUery z3. Get model. Question every assumption. Is it consistent that x1 != x2? If so add it. Still, you can't trust the model ever.
+
+
+
+SATVAR = True | False | Var(n)
+"Canoniclization" checks a SAT solver wherher both true and false are still consistent. Very short timeout
+
+(assert (p and q))
+(assert (p or q))
+
+file:///home/philip/Downloads/Decision%20Procedures%20for%20Equationally%20Based%20Reasoning.pdf
+Decision procedures for equationally based reasnign
+order sorted theores - sort have inequalities on them/overloadin
+That sounds cursed.
+membership equatinal logic
+
+
+# Timestamps
+Bloom had timestamps for modelling dist systems. We have timestamps by default for seminaaive purposes. Blooom gives a syntax to access them
+ ctc  |- q  :-  
+Bloom
+
+
+```
+db = []
+db.append(("foo", 0,1)) # assert fact
+db.append(("+", 0, 1))
+db.append(("=", 0, 1))
+
+class DB():
+  def append(ctx, fact):
+    self.db.append(fact, time, ctx)
+    time += 1
+  def find(self, x, t, ctx):
+
+  def union(self,x,y,t,ctx,assume=False):
+    px = self.find(x, t, ctx)
+    py = self.find(y, t, ctx)
+    if px != py:
+      # is assume redundant? There is a distinction between a union that is a "guess" and one that follows from other rules
+      if assume:
+        ctx = ctx.add((=, x, y))
+      # one or both of these logs?
+      self.append( (x,y), t, ctx)
+      #self.append( (px,py, ) )
+
+class Context():
+  def __init__(self):
+    #?
+  def add_eq(self,x,y):
+    #?
+
+class Context_UF():
+  def __init__(self):
+    self.log = []
+    self.t = 0
+  def find(self, x, t, ctx):
+    for entry in self.log:
+      #?
+  def union(self, x ,y, t, ctx?, reason?):
+    px = self.find(x, t, ctx)
+    py = self.find(y, t, ctx)
+    if px != py:
+      #?
+```
+
+
+and yeah thinking of contexts as “labels” on rows I think is fine. The timestamps come in if you want to process everything incrementally: the contexts and timestamps have to interact in the “right” way to avoid recomputing everything.
+I wonder if, once you have support for contexts like this, you'd want to also want forall to live in a separate context as well. If all you had was forall, I think you'd be able to do something else.
+I think “compile-time” contexts sound cool, but is there a concrete concern you have with allowing contexts to be defined dynamically/based on rule evaluation? Is it harder to analyze?
+I think you definitely do want a hierarchy of contexts: basically you want to associate every context with a (potentially time-indexed) table of deltas from all contexts below it in the dag/partial order.
+"as for how to do this incrementally, I think the basic gist is you have your DAG of contexts (ste of function entries + equalities); this’d essentially be the Haas Diagram for subsumption (not sure how much of the full subset lattice you need to make traversals easy. Not too big I think).
+The root/bottom of each DAG is just the “real” empty-context DB. That marches along from time 0,1,…t
+Each node contains a full UF (we’d use functional data-structures here I think, along with a node-local log of new ids/equalities). It also contains all of the records that would have been introduced due to the assumptions in that context and not in any weaker one (i.e. lower-down the DAG). These are also ordered by timestamp; so time increases both “up” and “to the right.” Here’s a sketch of how to get the core operations to work:
+Queries: To perform a join against a function at a particular context and timestamp range, you join with each table below (inclusive) the function at that node in the DAG and union the results. The actions should all land as deltas at this context, once everything has been deduped.
+Maintenance: How do you maintain all of these precise deltas per-context? I think you take the same rules for seminaive but you run them for each node in the dag, at each node you interpret the “delta” relations as the relations at that node for the relevant ‘recent’ timestamp range. The stable relations are unions of all relevant relations at lower nodes; and you can do the joins pairwise (though we may want to build cross-delta indexes of some kind). This works because our DAG is “locally finite”: any given node has a finite number of nodes under it. The differential dataflow folks have the same requirement, for exactly the same reason (but they target groups not partial orders, so you may have to subtract values at lower nodes in the partial order to get the right answer, sound familiar?)
+Rebuilding: Rebuilding at the empty context works as before, except it also needs to rebuild/shrink the context DAG (e.g. if you proved one of the assumptions). Merging two nodes in the DAG unions all the deltas there.
+Rebuilding a function at nodes further up needs to first add any new unions from lower nodes, and then look at all the nodes at lower contexts and promote re-canonicalized versions to the current node.  (there’s some subtlety here in figuring out the Ids that are different at that level but I think keeping a set per node will suffice.
+I also think that you could join in non-canonical ids “by accident” if you aren’t careful here.)
+Anyways, I think this is the basic recipe. I hope it kind-of makes sense! I think there’s a good amount of overhead here compared to our current execution model, but, even if we can’t optimize this further:
+I think we can still batch updates to higher nodes over multiple iterations lower down. That will help amortize the O(|DAG|) portions of this.
+It’s the only option I see that allows us to “share” work between distinct contexts that share assumptions, which I think is neat. If it’s overkill, though, we still have the option of storing a “flat” structure with every unique context sitting above the empty context, with no extra structure.
+And this whole structure still feels fairly naive. I suspect there are ways to optimize and simplify too, such as avoiding O(|DAG|) lookups when seeing if something is in a context. Functional data-structures could help here I suspect.
+"
 
 # Metaprogramming
 
@@ -575,8 +878,6 @@ It is less clear that transitive relations can have a fast join / be stored effi
 The beauty of the union find is that the relations can be normalized and then joins can be performed modulo equality by just doing a regular join.
 
 We think we have thrown away the need for explicit eq-joins by doing this, but the clearest method dealing with contextual equality is to reatin them in the case of contextual equality. It is a small almost syntactic feature to enable flattening to work with it's joins mediated via arbitrary relations.
-
-
 
 
 There is a regular datalog model of everything we do explicitly representing $a == b$ as a relation `eq(a,b)`. Then we need to do our joins by flattening and making evey equality mediated by an `eq`, whic quickly blows up.
@@ -778,6 +1079,175 @@ But sometimes they are partial.
 Or is it the execution of a machine
 [[(a + b)]] : s -> Error (v, s)
 
+# cofunctions
+```
+(sort state i64)
+(sort action String)
+(codatatype part)
+(relation trans (state action state))
+; (function trans (state action) state) ; DFA
+; (observation transp (part action) part)
+; ; (observation transp (part part) action) ?
+(observaton observe (part part) action)
+(relation member (state part)) ; (function member (state part) bool) ?
+; (member (state) part)
+(function start (state) bool) ; relation?
+(function startp (part) bool)
+; likewise for final
+(rule ((trans s a s1) (member s p) (member s1 p1))
+  ((= a (observe p p1)) ) 
+)
+
+(rule  ((start s) (member s p)) ((startp p)))
+(rule ((start s)) ((member s p))
+
+
+(rule (= b (start s))  (set (startp (member s) b)))
+(rule ((= s1 (trans s a)) (set (transp (member s) a) (member s1)))
+
+(relation not-member (state part)) ; hmmmm.
+
+; The member functin is the problematics part
+; Ok, so partition refinement discovers a split
+; what happens to member? It keeps old id?
+; it gets both new ids?
+(function member (part) (Set state))
+
+
+.decl trans(s : state, a : action, s1 : state)
+.decl start(s : state)
+.decl neg_part(s : state, s1 : state) ;  not in same partition
+
+neg_part(a,b) :- start(a), states(b), !start(b).
+neg_part(s,t) :- trans(s,a,s1), trans(t,a,t1), neg_part(s1,t1). // cocongruence?
+// symmettry. this is redundant
+neg_part(s,t) :- neg_part(t,s).
+
+
+// gfp datalog?
+start(t) :- part(s,t), start(s), 
+part(s1, t1) :- part(s,t), trans(s,a,s1), trans(t,a,t1). // cocongruence?
+// equiv relation
+part(a,b) :- part(b,a).
+part(a,a).
+part(a,c) :- part(a,b), part(b,c).
+
+// true... are only linear rules relevant?
+// That seems weird.
+// Well the maximal eq relation is just everyting is equal to everything.
+neg_part(a,b) :- neg_part(a,c), part(b,c)
+
+```
+
+
+```souffle
+.type state = symbol
+.type action = number
+.decl states(s : state)
+.decl start(s : state)
+.decl accept(s : state)
+.decl trans(s : state, a : action, s1 : state)
+// https://en.wikipedia.org/wiki/DFA_minimization
+states("a"). states("b"). states("c"). states("d"). states("e"). states("f").
+start("a").
+accept("d"). accept("c"). accept("e").
+trans("a",0,"b").trans("a",1,"c").
+trans("b",0,"a").trans("b",1,"d").
+trans("c",1,"f").trans("c",0,"e").
+trans("d",0,"e").trans("d",1,"f").
+trans("e",0,"e").trans("e",1,"f").
+trans("f",0,"f").trans("f",1,"f").
+
+.decl distinct(s : state, t : state)
+distinct(a,b) :- accept(a), states(b), !accept(b).
+distinct(s,t) :- trans(s,a,s1), trans(t,a,t1), distinct(s1,t1). 
+distinct(s,t) :- distinct(t,s). //symmetry
+
+.decl eq(s : state, t : state)
+eq(a,b) :- states(a), states(b), !distinct(a,b).
+.output eq
+```
+neg_part(a,b) :- start(a), states(b), !start(b).
+neg_part(s,t) :- trans(s,a,s1), trans(t,a,t1), neg_part(s1,t1). // cocongruence?
+// symmettry. this is redundant
+neg_part(s,t) :- neg_part(t,s).
+
+
+```
+
+Copatterns
+
+```
+(codatatype Stream)
+(cofunction next (Stream) Stream)
+(cofunction val (Stream) i64)
+
+; does the family of obervations need to be closed?
+
+
+(codefine ((val ones) 1)
+            (next ones) ones
+) ; it searches, and if it doen't find anyhing it forks it.
+;(function ones () Stream)
+; (rule (= 1 (val a)) (= (next a) a))  
+;        (set ones a))
+; else
+; (set ones make-part)
+```
+
+
+(cofunction ones
+  (hd (ones) 1
+  (tl one)
+)
+cofunction repeat (i64) Stream
+  (hd (repeat n)) n
+  (tl (repeat n)) (repeat n)
+)
+;desugars to
+
+
+
+;(set (next ones) ones)
+
+(codefine one )
+
+(cofunction coeq () Prop
+  (eqhd (= (hd )) ())
+)
+
+
+```
+Hmm. This is more like the souffle theory of adts than like egglogs open universe.
+Which is maybe fine?
+Use expliit coinductive equaliy
+An open family of observations is a huge pain in the ass.
+
+partial cofunctions. Can that make sense? seems bad.
+
+```
+(codatatype coeq
+    (hd Stream )
+)
+(cofunction
+  ((hd a) (hd b)) 
+  ((tl a) (tl b))
+)
+
+```
+
+
+partition nodes are like loopy lists
+When do we make a new partition.
+Closed vs open
+
+
+
+
+Should partition refiement just be a 
+Should it just fit into merge? Well, the detection is different.
+
+
 
 
 https://dl.acm.org/doi/pdf/10.1145/3428195
@@ -940,7 +1410,20 @@ It's almost a master observation. A cofunctin for which there will never be a tr
 
 ( should-fail )
 
-# Backchaining
+
+What about a prcoess that is doscivering obervations (which may also be new states)
+And dfa minimizatin is performed on the database every iteration
+Thing end up in partition. Being in a partition does not mean observationall equal
+In different partitions does mean observationally disequal?
+what about evntually discovering a loop that makes it equal to an old loop?
+partial observations
+
+observe as an action / head of rule
+(observe e (foo a)) Looks a lot like define.
+(observe (foo a) e) looks like set
+
+
+# Backchaining - harrop
 If you're willing to run forked or interleave coroutined databases in parallel you can lift or and exists to Goal.
 
 
@@ -977,6 +1460,13 @@ Is there a logic that reflects this? Maybe some kind of modal metaprogramming th
 I can definitely support existentials in the heads.
 So I'm not done.
 Barendregt convention.
+
+
+Exists is not easy.
+Neither are implications.
+Both are doable in lambda prlog
+Is magic set the way out? Magic set is a partial evaluation of prolog to datalog.
+It is an abstract intrpretation of datalog also. a datalog analysis of a prolog program.
 
 
 

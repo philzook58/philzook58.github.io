@@ -172,6 +172,7 @@ One way of describing what is happening here is we are permitting 1 pass of goal
 
 The D rule `Q -> D` is redundant as it represents a bounded quantifier that does not use it's bound variables. 
 
+Edit: I glid right over `∃x G`. It is not clear how to implement this. What if this captured variable is in a D? If it isn't, it's basically a `∃x Q`. I suspect one way out of this conundrum is to insist on Q quantification here too. `∃x:Q, G`. Fork the database every time there is a suggestion coming out of Q. Kind of ludicrous. Maybe here is an opportunity for magic set since this is where prolog would introduce a unification variable?
 # Is that it?
 No, but this is essentially the set of formula that can be operationally interpreted in normal stock datalog without too much agony. By agony, I mean with the true bulk search occurring in the datalog engine itself and where the proving process proceeds via generative metaprogramming and not deeper matching on the structure of the program clauses.
 
@@ -329,6 +330,8 @@ slog
 
 # Example Rust Implementation for Egglog
 <https://github.com/mwillsey/egg-smol/pull/79>
+The Egraph data structure itself is holding P as `rules` and Sig as `functions`
+There are perhaps some seperated sig and fact data structures.
 
 ```rust
 use crate::*;

@@ -146,6 +146,18 @@ You can get line number and column info from dwarf
 [gcc flags related to debugging](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html#Debugging-Options)
 - `-Og`
 # Resources
+N. Glew and G. Morrisett. Type-Safe Linking and Modular Assembly Language
+
+
+[stephen kell - interopability](https://www.humprog.org/~stephen/blog/2022/12/12/#interoperability-c-rich-poor) ld has a plugin interface. Cool linker links
+
+[knit linking language](https://www.cs.utah.edu/flux/papers/knit-osdi00/)
+
+[flux ](http://www.flux.utah.edu/paper/eide-icse02) object files _are_ objects
+[statc and dynamic structures follow design patterns](http://www.flux.utah.edu/paper/eide-icse02)
+
+[newspeak](https://gbracha.blogspot.com/2008/02/cutting-out-static.html) cut out static state
+
 [The ABI status of ELF hash tables](https://lwn.net/SubscriberLink/904892/62301a1cdfb55841/)
 
 [redbean](https://news.ycombinator.com/item?id=31764521) justine. Cosmopolitan. APE

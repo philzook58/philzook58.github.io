@@ -133,6 +133,7 @@ Sets. Things definitely not in set.
 
 DAWG - transitions are single labelled edges. Transitions are
 
+[fado](https://pypi.org/project/fado/)
 ## Finite Automata
 DFA NFA
 
@@ -257,7 +258,10 @@ matrices over another kleene algerba
 
 
 # Bisimulation
+[alogirhtmics of bisimulation](https://www.ru.is/faculty/luca/PAPERS/algobisimchapter.pdf)
 Of what relationship is bisimulation to non-interference proofs? Bisimulation is kind of a way of saying the state is unobservable from the actions/observations.
+
+
 
 Graph isomorphism - too striog?
 Trace equivalence - Too strong?

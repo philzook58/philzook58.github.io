@@ -766,3 +766,5 @@ https://en.wikipedia.org/wiki/E-graph
 [Fast equality saturation in Haskell](https://github.com/alt-romes/hegg)
 
 [naive egraph](https://github.com/StrongerXi/naive-egraph)
+
+[Deep Reinforcement Learning for Equality Saturation](https://www.cl.cam.ac.uk/~ey204/pubs/MPHIL_P3/2022_Zak.pdf)
