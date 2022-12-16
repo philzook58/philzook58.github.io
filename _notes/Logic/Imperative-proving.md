@@ -55,6 +55,14 @@ cpachecker
 
 
 SV-comp https://sv-comp.sosy-lab.org/2022/
+Based on these results, given that I don't know shit, looks like cpachecker is a reasonable default if you're gonna pick one
+
+veriabs - wins in reachability. Can you even buy it?
+
+ADA Spark
+
+frama-C
+
 
 
 # Misc
@@ -143,14 +151,6 @@ class Block:
 
 
 
-
-
-Fuzzing is so fuckin useful. To not beusing dynamic techniques
-https://github.com/mykter/afl-training afl fuzzing training
-
-https://www.youtube.com/watch?v=sjLFf9q2NRc&ab_channel=FuzzingLabs-PatrickVentuzelo afl++ qemy
-libfuzzer vs afl vs honggfuzz
-corpus grammar based fuzzing, differential fuzzing
 
 
 
