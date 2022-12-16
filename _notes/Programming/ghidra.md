@@ -288,3 +288,4 @@ Also ghidra has built in diffing
 [Binary code coverage visualizer plugin for Ghidra](https://github.com/0ffffffffh/dragondance)
 
 
+[ghidra chatgpt](https://github.com/SourceDiver42/Ghidra-ChatGPT)

@@ -7,7 +7,10 @@ title: Automata, Regex, Coinduction, Bisimulation
     - [Matching algorithms](#matching-algorithms)
     - [equivalence](#equivalence)
     - [theory](#theory)
-  - [Automata](#automata)
+- [Automata](#automata)
+- [Hopcroft and Karp’s algorithm for Non-deterministic Finite Automata](#hopcroft-and-karps-algorithm-for-non-deterministic-finite-automata)
+  - [Finite Automata](#finite-automata)
+  - [Tree Automata](#tree-automata)
 - [Kleene Algebra](#kleene-algebra)
   - [KAT](#kat)
 - [Bisimulation](#bisimulation)
@@ -104,22 +107,10 @@ powerset construction
 MOnadic second order logic
 
 
-## Automata
+# Automata
 See also note on Parsing regularexp
 
 Determinization - turn nondeterministic automaton to deterministic
-
-
-https://github.com/ondrik/libvata
-[Tree Automata Techniques and Applications](https://jacquema.gitlabpages.inria.fr/files/tata.pdf)
-
-
-[E-Graphs, VSAs, and Tree Automata: a Rosetta Stone](https://remy.wang/reports/dfta.pdf) [slides](https://docs.google.com/presentation/d/1oDNmzxJpsdLE51lmybcfzzzv4jRLDdrVpmMhMpFEoFk/edit?usp=sharing) [merge only rules](https://gist.github.com/remysucre/1788cf0153d7db240e751fb698f74d99)
-
-
-https://en.wikipedia.org/wiki/Tree_automaton
-
-
 
 Computing regex from automata
 Kleene's algorithm
@@ -143,7 +134,28 @@ Sets. Things definitely not in set.
 
 DAWG - transitions are single labelled edges. Transitions are
 
+<<<<<<< HEAD
 [Hopcroft and Karp’s algorithm for Non-deterministic Finite Automata](https://hal.archives-ouvertes.fr/file/index/docid/648587/filename/hkc.pdf)
+=======
+[fado](https://pypi.org/project/fado/)
+## Finite Automata
+DFA NFA
+
+finite set of states. Labelled transitions between.
+
+
+## Tree Automata
+https://github.com/ondrik/libvata
+[Tree Automata Techniques and Applications](https://jacquema.gitlabpages.inria.fr/files/tata.pdf)
+
+
+[E-Graphs, VSAs, and Tree Automata: a Rosetta Stone](https://remy.wang/reports/dfta.pdf) [slides](https://docs.google.com/presentation/d/1oDNmzxJpsdLE51lmybcfzzzv4jRLDdrVpmMhMpFEoFk/edit?usp=sharing) [merge only rules](https://gist.github.com/remysucre/1788cf0153d7db240e751fb698f74d99)
+
+
+https://en.wikipedia.org/wiki/Tree_automaton
+
+
+>>>>>>> 8d961f86ab8371780fbdf4432228403137808ef3
 
 
 # Kleene Algebra
@@ -257,7 +269,10 @@ I'm confused. Is it partition refinment or union find?
 
 
 
+[alogirhtmics of bisimulation](https://www.ru.is/faculty/luca/PAPERS/algobisimchapter.pdf)
 Of what relationship is bisimulation to non-interference proofs? Bisimulation is kind of a way of saying the state is unobservable from the actions/observations.
+
+
 
 Graph isomorphism - too striog?
 Trace equivalence - Too strong?

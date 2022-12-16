@@ -105,6 +105,8 @@ See my ocaml notes for more.
 common lisp condition system is related? Is another example of resumable exceptions.
 
 # Resources
+[srfi 226: Control Features](https://srfi.schemers.org/srfi-226/srfi-226.html)
+
 [https://github.com/rain-1/continuations-study-group/wiki/Reading-List](https://github.com/rain-1/continuations-study-group/wiki/Reading-List)
 
 Coroutines and generators as effect systems. javascript cotuotines to conitations [https://gist.github.com/yelouafi/bbc559aef92f00d9682b8d0531a36503](https://gist.github.com/yelouafi/bbc559aef92f00d9682b8d0531a36503)

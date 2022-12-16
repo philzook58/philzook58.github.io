@@ -60,6 +60,7 @@ wordpress_id: 2913
 ## SSA
 http://ssabook.gforge.inria.fr/latest/book.pdf SSA bookv
 [mirror of ssa book](https://github.com/pfalcon/ssabook)
+[actually published?](https://link.springer.com/book/10.1007/978-3-030-80515-9)
 
 [compcertssa](http://compcertssa.gforge.inria.fr/) verified ssa
 

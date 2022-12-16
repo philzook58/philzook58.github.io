@@ -87,6 +87,8 @@ title: Datalog
   - [Typeclass resolution.](#typeclass-resolution)
   - [Borrow Checker](#borrow-checker)
   - [Type checking](#type-checking)
+- [Coinductive or Greatest Fixed Point Datalog](#coinductive-or-greatest-fixed-point-datalog)
+  - [DFA Minimization](#dfa-minimization)
   - [CRDTs](#crdts)
   - [MultiSet Semantics](#multiset-semantics)
   - [Access Control Policies](#access-control-policies)
@@ -4102,10 +4104,75 @@ eqrel for hindley milner? Yihong had something like this
 souffle-z3 for refinement typing?
 
 
+# Coinductive or Greatest Fixed Point Datalog
+
+Does this make sense?
+There is coinductive logic programming which is prolog
+
+In semantics of ASP, stable semantics, I seem to recall them talking about the ast and greatest model.
+
+LFP is the minimum 
+GFP is the maximal consistent set
+
+
+```
+// a co-fact
+:- foo().
+
+// can be translated into datalog. This is intuitionistic-ish negation
+neg_foo().
+
+// A co-axiom / co-rule
+bar() :- foo(), biz().
+// expands to 2 backwards derivation rules. Feels a bit like seminaive expansion
+// Also kind f demand-y. Maybe magic set-t
+neg_foo() :- biz(), neg_bar().
+neg_biz() :- neg_bar(), foo().
 
 
 
+```
+Datalog builds finite sets. Co-datalog builds co-finite sets.
 
+This _is_ a valid ASP program, but maybe we're targetting a subset that is treatble
+```clingo
+:- foo().
+bar() :- foo(), biz().
+```
+
+## DFA Minimization
+```
+.type state = symbol
+.type action = number
+.decl states(s : state)
+.decl start(s : state)
+.decl accept(s : state)
+.decl trans(s : state, a : action, s1 : state)
+// https://en.wikipedia.org/wiki/DFA_minimization
+states("a"). states("b"). states("c"). states("d"). states("e"). states("f").
+start("a").
+accept("d"). accept("c"). accept("e").
+trans("a",0,"b").trans("a",1,"c").
+trans("b",0,"a").trans("b",1,"d").
+trans("c",1,"f").trans("c",0,"e").
+trans("d",0,"e").trans("d",1,"f").
+trans("e",0,"e").trans("e",1,"f").
+trans("f",0,"f").trans("f",1,"f").
+
+.decl distinct(s : state, t : state)
+distinct(a,b) :- accept(a), states(b), !accept(b).
+distinct(s,t) :- trans(s,a,s1), trans(t,a,t1), distinct(s1,t1). 
+distinct(s,t) :- distinct(t,s). //symmetry
+
+.decl eq(s : state, t : state)
+eq(a,b) :- states(a), states(b), !distinct(a,b).
+
+//.decl root(s : state, t : state)
+//root(a,b) :- states(a), min b: eq(a,b).
+.output eq
+```
+
+[local and symbolic bisimlation using tabled constraint logic programming](https://www3.cs.stonybrook.edu/~cram/Papers/BMRRV_ICLP01/paper.pdf)
 
 ## CRDTs
 CRDT are a latticy based structure. It makes sense that it might be realted or modellable in datalog
