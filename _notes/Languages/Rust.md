@@ -20,7 +20,7 @@ wordpress_id: 1849
   - [Aeneas](#aeneas)
   - [Creusot](#creusot)
 - [Macros](#macros)
-  - [Declarative macros aka macro_rules!](#declarative-macros-aka-macro_rules)
+  - [Declarative macros aka macro\_rules!](#declarative-macros-aka-macro_rules)
   - [Proc Macros](#proc-macros)
   - [Hygiene](#hygiene)
 - [Optimization](#optimization)
@@ -245,6 +245,9 @@ Getting a webpage up that runs webassembly seems like an involved process. I thn
 Serde seems like a useful route to getting stuff into and out of javascript. It is a serialization deserialization library.
 
 # Resources 
+[deflect](https://github.com/jswrenn/deflect) runtime reflectin of types via dwarf https://jack.wrenn.fyi/blog/deflect/
+rust atmics book https://marabos.nl/atomics/
+
 - [implementing sage gc in rust](https://news.ycombinator.com/item?id=31166368)
 - [eyros](https://github.com/peermaps/eyros) interval database. box queries
 - [salsa](https://github.com/salsa-rs/salsa) rust incremental computation library

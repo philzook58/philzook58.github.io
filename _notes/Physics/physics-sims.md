@@ -11,7 +11,7 @@ title: Physics Sims
 
 [matter js](https://brm.io/matter-js/)
 [game physics from scratch](https://brm.io/game-physics-for-beginners/)
-
+[game physics in one weekend](https://gamephysicsweekend.github.io/)
 [box2d](https://box2d.org/)
 chipmunk
 
@@ -22,6 +22,8 @@ Impulse based
 Collision detection
 
 # Fluids
+[Fluid Simulation for Computer Animation](https://www.cs.ubc.ca/~rbridson/fluidsimulation/) bridson
+
 
 [Julia GMSH petsc fluid sim](https://twitter.com/francescverdugo/status/1487115027979063296?s=20&t=OSBR7Kcf7AOCicTAypA9yQ)
 

@@ -4140,6 +4140,112 @@ This _is_ a valid ASP program, but maybe we're targetting a subset that is treat
 bar() :- foo(), biz().
 ```
 
+
+Making a negatin relation is a good trick. It turns the union of datalog into an intersection.
+One could imagine a datalog that fills the database o start with and removes facts as they become inconsistent, but why not just list the facts that are known to not hold.
+
+The well founded semntics seems to be the best match here.
+
+
+
+has non terminating path is a kind of liveness property. It is analagous in some respects to reachability (vertex specialized path query).
+has-infinite-trace is another way of putting it.
+
+```souffle
+.type vert = number
+
+.decl no_cycle(v : vert)
+.decl edge(x : vert, y : vert)
+//.decl no_edge(x:vert, y:vert)
+
+edge(1,2). edge(2,3). edge(3,3).
+edge(3,4). edge(4,5). edge(3,5).
+
+edge(7,8). edge(8,7).
+verts(v) :- edge(v,_) ; edge(_, v).
+//no_edge(x,y) :- 
+
+.decl verts(x : vert)
+// This is out0
+no_cycle(v) :- verts(v), !edge(v, _). // no outgoing egde, can't have a cycle
+// no_cycle(x) :- forall y: edge(x,y), no_cycle(y).
+// finite expansiosn. no. Well, if we specialzied the rules to the particular graph.
+// in2 in3 in4
+.decl out1(v : vert)
+out1(v) :- verts(v), 1 = count : {edge(v,_)}.
+.decl out2(v : vert)
+out2(v) :- verts(v), 2 = count : {edge(v,_)}.
+.decl out3(v : vert)
+out3(v) :- verts(v), 3 = count : {edge(v,_)}.
+
+no_cycle(x) :- out1(x), edge(x,y), no_cycle(y).
+no_cycle(x) :- out2(x), edge(x,y1), no_cycle(y1),
+               y1 != y2, edge(x,y2), no_cycle(y2).
+no_cycle(x) :- out3(x), edge(x,y1), no_cycle(y1),
+               y1 != y2, edge(x,y2), no_cycle(y2),
+               y1 != y3, y3 != y3, edge(x,y3), no_cycle(y3).
+
+// maybe recursive count would work if that existed
+// Bounded quantification by edge in previous strata is in principle nonproblematic.
+// no_cycle(x) :- forall edge(x,y) : { no_cycle(y)  }
+// no_cycle(x) :- verts(x), count : { edge(x,y) } = count : { edge(x,y1), no_cycle(y1) }
+
+.output no_cycle()
+.output verts
+
+// Compare with this definition
+.decl cycle(v : vert)
+
+.decl path(x : vert, y : vert)
+path(x,y) :- edge(x,y).
+path(x,z) :- edge(x,y), path(y,z).
+cycle(x) :- path(x,x).
+
+cycle(x) :- edge(x,y), cycle(y).
+.output cycle
+// Ok this is a very natural encoding. Is it missing anything?
+
+
+// I ges finitely expanding the cycles is an extremely stupid idea.
+//cycle(x) :- edge(x,x).
+// Misses the 7,8 cycle
+// We could finitely expand the primitive cycle finder though up to N. Is this really worse than the finite expansion I did above?
+// cycle(x) :- edge(x,y), edge(y,x).
+// transitive closure to reach cycle
+```
+If there are multiple rules, they all have to fail to propagate a negation.
+The negation also plays into the quantifier structure.
+
+
+For co-datalog, this ought to be the only rule necessary.
+`inf_trace(x) :- edge(x,y), inf_trace(y)`
+start with all possiblites in inf_trave, run "backwards" through rule? Since this is linear, can see it, but what about nonlinear or mutually recursive ruls?
+forall x, (exists y, edge(x,y), t(y)) -> t(x)
+Has to be run "seminaive"?
+forall x, not (exists edge /\ t(y)) \/ t(x)
+forall x, (not not forall (not edge \/ not t(y)) \/ t(x)
+forall x, (not not forall (not edge \/ not t(y)) \/ t(x)
+
+forall x, not not t(x) \/ (exists edge, t(y))
+
+
+
+Hmm. Clingo is not panacea I pretended it might be.
+```clingo
+edge(1,2). 
+edge(2,3). 
+edge(3,3).
+edge(3,4). 
+edge(4,5). 
+edge(3,5).
+%vert(V) :- edge(V,_).
+%vert(V) :- edge(_, V).
+%inf_trace(X) :- vert(X), not edge(X,_).
+inf_trace(V) :- inf_trace(W), edge(V, W).
+
+```
+
+Maybe I need to construct all possible proofs and only remove somthing when there are no allowable extant proofs.
 ## DFA Minimization
 ```
 .type state = symbol

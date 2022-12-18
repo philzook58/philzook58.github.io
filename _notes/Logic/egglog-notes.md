@@ -1079,6 +1079,10 @@ But sometimes they are partial.
 Or is it the execution of a machine
 [[(a + b)]] : s -> Error (v, s)
 
+
+C = list of delimittation points? We could pattern match into that
+
+K framework has a notion of contexts. Confirugatons
 # cofunctions
 ```
 (sort state i64)
@@ -1418,10 +1422,54 @@ In different partitions does mean observationally disequal?
 what about evntually discovering a loop that makes it equal to an old loop?
 partial observations
 
+automatalog : Automata as a datalog database
+Set databases need deduplication
+Egraph as a database uses the hash consing action
+Hashlog
+Automata 
+
+A notion of compression, deduplication, propagation
+
+
 observe as an action / head of rule
 (observe e (foo a)) Looks a lot like define.
 (observe (foo a) e) looks like set
 
+
+Automatalog
+Automata Minimization at each stage. New observations fork states? They then get deduplicatin by automata minizmiation
+
+DFA is analog of Pathlog (unary constrcturo egglog)
+Tree automata is analog of Egglog?
+
+use python + ducklog as core?
+Use rust just for fun? Reuse parser
+
+There is state and you can pattern match into it?
+val (iter N) = N
+next (iter N) = iter (N + 1)
+
+States have names. But the system does coalesce them into observable equal partitions.
+ :-  7 = val s, (s is partition) 
+(iter (n + 1)) <- next (iter n)
+
+If we never called make-set it's straigtforward-ish
+But if we do, blegh.
+So once we build this index we can have known disequality.
+Mybe the diseq table is better?
+Can I get a stabe name of partitions between iterations?
+Hmm. Inequalities/Intervals don't work. Not without a programmable notion of what it means to be known disequal.
+Obervations are filters, monotonicity closed sets.
+
+We can support part(eid) != part(eid2).
+part(eid) = part(eid2) doesn't mean anything.
+
+ok.. 
+foo(1) foo(2).
+bar(foo(2)) = 7
+Is foo(1) observationally distinct? No. because we don't know what bar(foo(1)) might end up being.
+So there can't be a partition.
+So none of this makes sense
 
 # Backchaining - harrop
 If you're willing to run forked or interleave coroutined databases in parallel you can lift or and exists to Goal.
@@ -1469,7 +1517,11 @@ Is magic set the way out? Magic set is a partial evaluation of prolog to datalog
 It is an abstract intrpretation of datalog also. a datalog analysis of a prolog program.
 
 
+https://ncatlab.org/nlab/show/geometric+theory Hmm. Geometric theories look like Q formula
+Geometric theories are datalog? eh. naw. They allow Q formula in the head
+THe infinitary \/ is concerning
 
+ 
 # Prolog vs egglog
 
 I feel like what prolog is doing is there is a fact under consideration of unknown truth exists x, append([], [1],x) .  This becomes append([],[1],X) . The truth of this fact remains unknown. I could model this as `(append  (nil) (cons 1 nil)  (skolem2 append (nil) [1] )
