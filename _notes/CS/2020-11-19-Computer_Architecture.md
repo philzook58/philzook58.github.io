@@ -156,4 +156,5 @@ https://people.freebsd.org/~lstewart/articles/cpumemory.pdf what every programme
 <https://www.youtube.com/c/OnurMutluLectures/playlists> Onur Mutlu lectures, courses
 Should I do Gem5, verilog, vhdl, other?
 
+[Communication Locality in Computation: Software, Chip Multiprocessors and Brains - Greenfield thesis](https://www.cl.cam.ac.uk/~swm11/research/dd-daniel-greenfield.pdf)
 

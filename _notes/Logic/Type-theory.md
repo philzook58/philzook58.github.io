@@ -1345,3 +1345,5 @@ to carry types a runtime? Or is that mistaken?
 - [Programming in Martin Lof Type Theory](https://www.cse.chalmers.se/research/group/logic/book/book.pdf)
 - [Software Foundations](https://softwarefoundations.cis.upenn.edu/)
 - PLFA
+
+[Resources for Teaching with Formal Methods](https://avigad.github.io/formal_methods_in_education/) mostly type thoery based

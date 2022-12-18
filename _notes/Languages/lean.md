@@ -3,6 +3,9 @@ layout: post
 title: Lean
 ---
 
+[Logic and Mechanized Reasoning](https://avigad.github.io/lamr/logic_and_mechanized_reasoning.pdf)
+[](https://avigad.github.io/lamr/)
+
 [Theorem prover lab: applications in programming languages ](https://github.com/IPDSnelting/tba-2021)
 
 [Lambda the Ultimate SSA: Optimizing Functional Programs in SSA](https://arxiv.org/abs/2201.07272)

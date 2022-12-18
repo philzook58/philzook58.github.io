@@ -269,7 +269,7 @@ I'm confused. Is it partition refinment or union find?
 
 
 
-[alogirhtmics of bisimulation](https://www.ru.is/faculty/luca/PAPERS/algobisimchapter.pdf)
+[algorithmics of bisimulation](https://www.ru.is/faculty/luca/PAPERS/algobisimchapter.pdf)
 Of what relationship is bisimulation to non-interference proofs? Bisimulation is kind of a way of saying the state is unobservable from the actions/observations.
 
 
