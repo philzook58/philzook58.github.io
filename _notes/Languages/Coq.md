@@ -317,3 +317,5 @@ coq platform
 [magmide](https://github.com/magmide/magmide)
 
 [rewriter](https://github.com/mit-plv/rewriter)
+
+[Discrete Math in Coq](https://cs.pomona.edu/~michael/courses/csci054s18/book/)

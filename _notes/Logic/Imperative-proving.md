@@ -8,6 +8,8 @@ title: Imperative Proving
 - [Boogie](#boogie)
 - [Dafny](#dafny)
 - [Model Checking](#model-checking)
+  - [ESBMC](#esbmc)
+  - [cpachecker](#cpachecker)
 - [Misc](#misc)
     - [Fun old timey books.](#fun-old-timey-books)
 - [old model checking notes](#old-model-checking-notes)
@@ -33,6 +35,9 @@ Prpositionbal hoare logic - see KAT
 
 # Why3
 
+frama-C
+[why3 implemtnation of stackify](https://gitlab.inria.fr/why3/why3/-/merge_requests/453)
+Stackifty algorithm of llvm for wasm
 # Boogie
 <https://boogie-docs.readthedocs.io/en/latest/index.html>
 # Dafny
@@ -42,18 +47,6 @@ Prpositionbal hoare logic - see KAT
 # Model Checking
 https://github.com/kind2-mc/kind2 takes in lustre. Multiple smt backends. ocaml implementations of ic3 and invarait
 https://kind.cs.uiowa.edu/kind2_user_doc/1_techniques/1_techniques.html
-
-
-TLA
-
-Seahorn
-
-ESBMC
-
-
-cpachecker
-
-
 SV-comp https://sv-comp.sosy-lab.org/2022/
 Based on these results, given that I don't know shit, looks like cpachecker is a reasonable default if you're gonna pick one
 
@@ -61,7 +54,20 @@ veriabs - wins in reachability. Can you even buy it?
 
 ADA Spark
 
-frama-C
+
+
+
+TLA
+
+Seahorn
+
+## ESBMC
+
+
+## cpachecker
+
+
+
 
 
 
@@ -73,8 +79,7 @@ frama-C
 
 [modelling the heap](https://www.youtube.com/watch?v=AbiVYHVU0mQ&ab_channel=MicrosoftResearch)
 
-[why3 implemtnation of stackify](https://gitlab.inria.fr/why3/why3/-/merge_requests/453)
-Stackifty algorithm of llvm for wasm
+
 
 Why is structuring unstructured control flow so important?
 
@@ -100,6 +105,8 @@ Maybe verifying a pipelined processor (how hard could it be amirite?!?!) would b
 
 
 <https://dl.acm.org/doi/pdf/10.1145/3314221.3314601> instruction semantics for x86 in K
+https://kframework.org/index.html
+
 <https://cs.stanford.edu/people/eschkufz/docs/pldi_16.pdf> Synthesiszing automatically learning semantics of x86
 
 

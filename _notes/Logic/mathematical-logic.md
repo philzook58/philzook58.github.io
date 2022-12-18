@@ -3,6 +3,16 @@ layout: post
 title: Mathematical Logic
 ---
 
+- [Well formed formula](#well-formed-formula)
+- [Lowenheim Skolem](#lowenheim-skolem)
+- [Semantic entailment](#semantic-entailment)
+- [Soundness](#soundness)
+- [Completeness](#completeness)
+- [Compactness](#compactness)
+- [Consistency](#consistency)
+- [Incompleteness Theorem](#incompleteness-theorem)
+
+
 https://en.wikipedia.org/wiki/Mathematical_logic
 This whole subfolder is about mathematical logic
 
@@ -54,3 +64,5 @@ https://news.ycombinator.com/item?id=33236447
 [Book list](https://github.com/jaalonso/Libros_de_Logica/blob/main/README.org)
 
 mathematical logic through python
+
+[Mathematical Logic and Computation - Avigad](https://www.cambridge.org/core/books/mathematical-logic-and-computation/300504EAD8410522CE0C27595D2825A2)
