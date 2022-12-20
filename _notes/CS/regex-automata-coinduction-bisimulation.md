@@ -8,7 +8,6 @@ title: Automata, Regex, Coinduction, Bisimulation
     - [equivalence](#equivalence)
     - [theory](#theory)
 - [Automata](#automata)
-- [Hopcroft and Karp’s algorithm for Non-deterministic Finite Automata](#hopcroft-and-karps-algorithm-for-non-deterministic-finite-automata)
   - [Finite Automata](#finite-automata)
   - [Tree Automata](#tree-automata)
 - [Kleene Algebra](#kleene-algebra)
@@ -17,6 +16,7 @@ title: Automata, Regex, Coinduction, Bisimulation
   - [Codata](#codata)
   - [Coalgebra](#coalgebra)
   - [Coinduction](#coinduction)
+- [Misc](#misc)
 
 
 See also:
@@ -134,9 +134,7 @@ Sets. Things definitely not in set.
 
 DAWG - transitions are single labelled edges. Transitions are
 
-<<<<<<< HEAD
 [Hopcroft and Karp’s algorithm for Non-deterministic Finite Automata](https://hal.archives-ouvertes.fr/file/index/docid/648587/filename/hkc.pdf)
-=======
 [fado](https://pypi.org/project/fado/)
 ## Finite Automata
 DFA NFA
@@ -155,7 +153,6 @@ https://github.com/ondrik/libvata
 https://en.wikipedia.org/wiki/Tree_automaton
 
 
->>>>>>> 8d961f86ab8371780fbdf4432228403137808ef3
 
 
 # Kleene Algebra
@@ -175,8 +172,7 @@ Relative of Propositional Hoare Logic. Which is a neat idea on it's own
 tutorial https://alexandrasilva.org/files/talks/kat-tutorial.pdf https://popl20.sigplan.org/details/POPL-2020-tutorialfest/7/-T7-Programming-and-Reasoning-with-Kleene-Algebra-with-Tests
 https://www.cl.cam.ac.uk/events/ramics13/KozenTutorial1.pdf
 
-GKAT  guarded kleene with test https://arxiv.org/abs/1907.05920 https://www.youtube.com/watch?v=Dp68j9Wi_84&ab_channel=ACMSIGPLAN - verifcation of uinverrpeted programs in nearly linear time. The choice operators leave evidence. A "fundemantal theorem of clauclus" for loops?
-
+GKAT  guarded kleene with test https://arxiv.org/abs/1907.05920 https://www.youtube.com/watch?v=Dp68j9Wi_84&ab_channel=ACMSIGPLAN
 Kleene algebra modulo theories
 https://github.com/mgree/kmt
 https://arxiv.org/pdf/1707.02894.pdf
@@ -264,12 +260,13 @@ matrices over another kleene algerba
 
 
 # Bisimulation
+
 [BisPy is a Python library for the computation of the maximum bisimulation of directed graphs.](https://bispy-bisimulation-in-python.readthedocs.io/en/latest/index.html)
 I'm confused. Is it partition refinment or union find?
 
+[alogirhtmics of bisimulation](https://www.ru.is/faculty/luca/PAPERS/algobisimchapter.pdf)
 
 
-[algorithmics of bisimulation](https://www.ru.is/faculty/luca/PAPERS/algobisimchapter.pdf)
 Of what relationship is bisimulation to non-interference proofs? Bisimulation is kind of a way of saying the state is unobservable from the actions/observations.
 
 
@@ -314,6 +311,8 @@ it only requires that each system has some way of finding corresponding states.
 What is induction really?
 
 
+# Misc
+[higher dimensional automata pratt](http://boole.stanford.edu/pub/hda.pdf) woof. What even is this.
 
 [[POPL'22] Coalgebra for the working programming languages researcher](https://www.youtube.com/watch?v=Qb0z1FWT5bw&ab_channel=ACMSIGPLAN)
 
