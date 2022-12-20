@@ -1,5 +1,5 @@
 ---
-date: 2022-12-11
+date: 2022-12-20
 layout: post
 title: "Our Latest Ouvre: Dinty Finyins"
 description: 
