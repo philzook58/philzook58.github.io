@@ -15,9 +15,11 @@ wordpress_id: 2960
     - [Loop recovery](#loop-recovery)
     - [Interactive](#interactive)
     - [Binary Ninja](#binary-ninja)
-- [Ghidra](#ghidra)
+    - [Ghidra](#ghidra)
   - [Patching](#patching)
   - [Binary reversign](#binary-reversign)
+- [Debuggers](#debuggers)
+- [Emulation](#emulation)
   - [Fuzzing](#fuzzing)
   - [Symbolic Execution](#symbolic-execution)
   - [Vulnerabilities](#vulnerabilities)
@@ -85,9 +87,11 @@ anvill processing remill
 rellic makes C like code
 
 BAP
-ANGR
+ANGR - VEX which is valgrind's ir
 
 gtirb ddisasm grammatech
+https://grammatech.github.io/gtirb/
+https://github.com/GrammaTech/gtirb "GTIRB explicitly does NOT represent instructions or instruction semantics but does provide symbolic operand information and access to the bytes. "
 
 Speculative disssembly https://ieeexplore.ieee.org/document/7745279 decode every offset. Refine blocks. Spedi, open source spcualtive disassembler https://github.com/abenkhadra/spedi
 Nucleus paper https://mistakenot.net/papers/eurosp-2017.pdf Compiler-Agnostic Function Detection in Binaries
@@ -183,12 +187,14 @@ SCC- shellcde compiler. Why is this a top level thing?
 
 
 
-# Ghidra
+### Ghidra
 See ghidra notes
 
 
 ## Patching
 https://github.com/GJDuck/e9patch
+
+[Reassembly is Hard: A Reflection on Challenges and Strategies](https://softsec.kaist.ac.kr/~sangkilc/papers/kim-usenix23.pdf)
 
 ## Binary reversign
 https://corte.si/posts/visualisation/binvis/index.html hilbert curves for binary vsiualization
@@ -196,7 +202,16 @@ benford's law
 binwalk
 entropy visualization
 
+https://www.usenix.org/system/files/sec22-burk.pdf Decomperson: How Humans Decompile
+and What We Can Learn From It
 
+# Debuggers
+https://github.com/x64dbg/x64dbg
+https://rr-project.org/
+windbg
+
+# Emulation
+[qiling](https://qiling.io/)
 ## Fuzzing
 Mayhem
 [Fuzzy-sat](https://arxiv.org/pdf/2102.06580.pdf) running smt queries through a fuzzer
