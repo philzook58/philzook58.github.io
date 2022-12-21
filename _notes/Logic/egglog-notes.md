@@ -1,6 +1,8 @@
 
 
 - [Applications and Ideas](#applications-and-ideas)
+  - [ASP](#asp)
+  - [Command Ideas](#command-ideas)
   - [Looks like partial horn logic uparrow. Define as an assertion / judgement. That's the analog of](#looks-like-partial-horn-logic-uparrow-define-as-an-assertion--judgement-thats-the-analog-of)
   - [or](#or)
 - [Puttting insertion into the equals operator.](#puttting-insertion-into-the-equals-operator)
@@ -508,6 +510,15 @@ Maybe restricting some things to be propositional or monadic? That forall table 
 
 D ::= A | | Q ⊃ D | D ∧ D | ∀x..:Q, D | p -> D  
 
+## ASP
+ASP kind of has it's own notion of worlds or contexts.
+Branching. Sets of possibilities.
+ASP is justifiable according to greenberg. I'm not so sure.
+
+The choice cnstructor is compileable to negation?
+
+
+## Command Ideas
 include is idiot modules. Would be a nice little feature
 Wow. let is super goofy.
 Wildcards would be appreciated.
@@ -515,9 +526,25 @@ A demand creating form for :when would be appreciated.
 overloadable regular functions would be appreciated.
 string concat
 refine command - (run extract) loop. (refine N M)
+simplify command - run - extract. If not going down or satruated run again.
+
 sketch command (calc (forall (x ) (exists y)  t1 = t2 = t3  ))
 DOn't bother 
-exists! uniqueness / definite description
+exists! uniqueness qauntification / definite description
+
+What about a tactic or high levrl scripting language rather than macros.
+(for ... ())
+(chain )
+(define-command foo ())
+
+
+
+https://en.wikipedia.org/wiki/Tabu_search
+A*
+Hill Climbing
+
+Term distance metric - For proving, you want to extract 2 terms that are getting closer to each other.
+Or extract a term that is a closest to fixed term
 
 D formula of Void can be translated to panic. They can also be backpropagated via gfp lp 
 D formula of true are pointless

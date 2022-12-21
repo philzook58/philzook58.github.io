@@ -97,8 +97,117 @@ action rules
 loops
 # Answer Set Programming
 [Answer set programming (ASP) is the powerhouse technology you’ve never heard of](https://twitter.com/mgrnbrg/status/1589652522180153344?s=20&t=JfnzTQG-SeFdO1qYUwKkrw) http://www.weaselhat.com/2022/11/07/asp/
-Datalog provenance is explanations. Can be used as a monootnic theory in SMT search.
+Datalog provenance is explanations. Can be used as a monotonic theory in SMT search.
 
+[Comments on ASP](https://news.ycombinator.com/item?id=34071325)
+[Automating Commonsense Reasoning with ASP and s(CASP)*](https://personal.utdallas.edu/~gupta/csr-scasp.pdf)
+Constraints. Default rules. 5 truth values for p, not -p, not p not -p, not p, -p
+
+```clingo
+talk(X) :- people(X). % people talk in both worlds
+-talk(X) :- non_human_animal(X), rw. % non human animals do not talk in rw
+talk(X) :- human_like_cc(X), cw. % human-like cartoon char can talk in cw
+swim(X) :- fish(X). % fish swim in both worlds
+non_human_animal(X) :- fish(X), rw. % fish is a non-human-animal in rw
+human_like_cc(nemo) :- cw. % Nemo is a human-like cartoon char in cw
+fish(nemo). % Nemo is a fish in both worlds
+cw :- not rw. % cw and rw are two separate worlds
+rw :- not cw.
+
+```
+
+[easy answer set programming](https://www.youtube.com/watch?v=kDjmqycSy_o&list=PL7DBaibuDD9O4I05DiQfilqPUgpClMKYu&index=2&ab_channel=Potassco) [https://arxiv.org/abs/2111.06366](https://arxiv.org/abs/2111.06366)
+While ASP is usually introduced by talking about negation, negation is a complicated topic. If instead we take choice `{q}` as primitive, you can talk about a lot of stuff in a more easily understood style. It is a world branching datalog execution then.
+
+```clingo
+{a}.
+b :- a.
+:- not b.
+```
+"In order". Non recursive answer set programs are _still_ interesting. They are a set description language.
+You can run right down them. Go in topological order of appearance in heads / bodies
+```clingo
+{a}.
+b :- a.
+{c} :- not a.
+```
+Hmm. So backtracking search is still necessary for non recusrive? 
+
+```clingo
+n(1).
+{a(X)}:- n(X).
+b(X) :- a(X).
+:- n(X), not b(X).
+
+```
+Generate and test. Describe the space first. Then add implications, Then constraints.
+
+For positive recursive rules, it is nondeterministic guessing of choice rules, and then running datalog to execution
+```clingo
+{a}.
+b :- c.
+c :- a.
+a :- b.
+
+```
+
+```clingo
+{a}.
+{b} :- c.
+{c} :- a.
+{a} :- b.
+
+```
+
+Circumspection, autoepistemic
+Stable Models = Well-founded + branch
+
+No goods- constraints that can't hold. Leanred clauses?
+set of true atoms as the model
+
+The oracle guess Y. evaluate `not` with respect to this guess. The rest of the rules evaluate
+
+Reduct, removes the guess from the rules,
+fix(P^X) = X. Stable mdels are olutions to this equation
+Datalog can be used to confirm a guess, or propagate a partial guess. The P time check of a guess makes it NP
+Each atom in model has justificagion in _reduct_
+It is stabe model of reduct
+
+```clingo
+a.
+b :- a, not c.
+c :- b.
+```
+
+ASP is datalog with a prophetic negation
+ASP is datalog + branching (to deal with ) into multiple universes
+
+non monotnic. Adding a c fact doesn't just increase the model. It makes a totally incomparable model
+```clingo
+a :- not c.
+%c. 
+
+```
+
+Only 1 is possible
+```clingo
+b :- not a.
+a :- not b.
+```
+
+One of these possibilities.
+```clingo
+b :- not a, not c.
+a :- not b, not c.
+c :- not a, not b.
+```
+So you can compile {x} into 
+```clingo
+x :- not notx.
+notx :- not x.
+```
+
+Union, Intersevtion, projection of models
 
 https://arxiv.org/html/2208.02685v1/#rprlif19 iclp 2022
 [Transforming Gringo Rules into Formulas in a Natural Way](https://arxiv.org/html/2208.02685v1/#EPTCS364.13) translating gringo into First order logic
@@ -120,6 +229,7 @@ https://arxiv.org/html/2208.02685v1/#rprlif19 iclp 2022
 [Possivbe worlds explorer](https://github.com/idaks/PW-explorer) demos https://github.com/idaks/PWE-demos . Qlearning? Sure. https://ischool.illinois.edu/people/bertram-ludascher datalog debugging. Prevoenance. 
 [martens Generating Explorable Narrative Spaces with Answer Set Programming](https://drive.google.com/file/d/1CKDOsT9FIGW3SNyW5u5heIxbx_ZLCAP5/view)
 
+[Alviano, M., Faber, W., Greco, G., and Leone, N. 2012. Magic Sets for Disjunctive Datalog Programs](https://arxiv.org/abs/1204.6346)
 Clingo
 dlv2 maybe https://dlv.demacs.unical.it/
 [wasp](https://github.com/alviano/wasp)
@@ -173,12 +283,36 @@ guilty(harry).
 There is "constructive character". negation as failure. not guilty is assumed to hold unless is has to . This is innocent until proven guilty? Hmm. That's a fun constructive example. In the eyes of the law innocent = unknown and known guilty.
 This example is also valid stratified datalog.
 
+```clingo
+% instance
+eagle(eddy).
+penguin(tux).
+
+% encoding
+ fly(X) :- bird(X), not -fly(X).
+-fly(X) :- penguin(X).
+bird(X) :- penguin(X).
+bird(X) :- eagle(X).
+```
+Hmm. Explicit negation predicate.
+
+```clingo
+% This is unsat. :- p, -p. is there by default
+-p.
+p.
+```
+
+brave vs cautious modes? What the hell is that. https://stackoverflow.com/questions/55675488/brave-cautious-reasoning-in-clingo enumration modes. Non total. They converge towards minimal or maximal model?
+
 ## negation
 <https://en.wikipedia.org/wiki/Negation_as_failure>
 <https://en.wikipedia.org/wiki/Autoepistemic_logic>
 <https://en.wikipedia.org/wiki/Default_logic>
 <https://en.wikipedia.org/wiki/Stable_model_semantics>
 <https://en.wikipedia.org/wiki/Nonmonotonic_logic>
+
+Logic of here and thre
+Equilibrium logic
 
 stable models are not unique
 in prolog multiple model program do not terminate
@@ -280,6 +414,11 @@ Choice rules. pieces from the set. Cardniality constraints.
 % :- not p(1). % model has to have p(1). Combo gives unsat
 ```
 
+```clingo
+
+{p(a);q(b)} = 1. ; p or q
+```
+
 `{p(a); p(b)} 1` is the same as `{p(a); p(b)}. :- p(a), q(b).` We could enumerate every subset that can't be and exclude them with constraint.
 `1 {p(a); p(b)} ` is the same as `{p(a); p(b)}. :- p(X), q(X).`
 
@@ -290,6 +429,10 @@ Clingo makes auxiliary predicates instead of dummy variables for `_` interesting
 
 grounding time and solving time.
 For slow ground: try enumerating better. symettry breaking. Rules with fewer variables.
+
+Disjunction
+Conditional Literals.
+p :- q(X) : r(X).
 
 ### python
 https://potassco.org/clingo/python-api/5.6/
@@ -354,6 +497,8 @@ Hmm. All constraints are encodable to
 
 Grounding with datalog?
 Ackermanizing in clingo?
+
+[Beyond version solving: implementing general package solvers w Answer Set Programming Todd Gamblin](https://www.youtube.com/watch?v=bkY9mOyUaDA&ab_channel=PackagingCon)
 
 
 # Topics

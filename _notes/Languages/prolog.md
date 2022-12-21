@@ -2177,6 +2177,7 @@ https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
 
 [Hakank symbolic function induction picat](https://twitter.com/hakankj/status/1556344141994508288?s=20&t=yqv3psiW3ByDbnVTBLr_GA)
 
+[Louise](https://github.com/stassa/louise)
 # Probablistic Logic Programming
 
 

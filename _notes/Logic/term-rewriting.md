@@ -83,6 +83,10 @@ https://kframework.org/index.html
 intepreter, compiler, formal prover thing
 http://www.matching-logic.org/
 
+https://kframework.org/faq/ 
+Systems to compare to according to them
+Redex, Maude, Spoofax, OTT, [Rascal](https://www.rascal-mpl.org/),  ATL and model driven
+
 # Other Systems
 
 Pure
