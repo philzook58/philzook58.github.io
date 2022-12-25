@@ -768,3 +768,4 @@ https://en.wikipedia.org/wiki/E-graph
 [naive egraph](https://github.com/StrongerXi/naive-egraph)
 
 [Deep Reinforcement Learning for Equality Saturation](https://www.cl.cam.ac.uk/~ey204/pubs/MPHIL_P3/2022_Zak.pdf)
+[caviar](https://dl.acm.org/doi/pdf/10.1145/3497776.3517781?casa_token=mRVhbG5XlgsAAAAA:TtiJ8AOK2htAomYKldxl206wUoOXrCR_aP79biEAiA8jtgzQRIYJSu0FKPmEVaQvlV_NNO0ZLHsT) TRS system for proving optimizations applied to Halide.

@@ -2,7 +2,9 @@
 
 - [Applications and Ideas](#applications-and-ideas)
   - [ASP](#asp)
+- [Z3 triggering](#z3-triggering)
   - [Command Ideas](#command-ideas)
+- [Alternating quantifier](#alternating-quantifier)
   - [Looks like partial horn logic uparrow. Define as an assertion / judgement. That's the analog of](#looks-like-partial-horn-logic-uparrow-define-as-an-assertion--judgement-thats-the-analog-of)
   - [or](#or)
 - [Puttting insertion into the equals operator.](#puttting-insertion-into-the-equals-operator)
@@ -16,6 +18,7 @@
 - [Contexts](#contexts)
 - [cofunctions](#cofunctions)
 - [Backchaining - harrop](#backchaining---harrop)
+  - [Observational Disequality](#observational-disequality)
 - [Prolog vs egglog](#prolog-vs-egglog)
 - [These variabes _are_ branch local because we have a backtrackable egraph. The egraph operations will _never_ unify uvars.](#these-variabes-are-branch-local-because-we-have-a-backtrackable-egraph-the-egraph-operations-will-never-unify-uvars)
 - [Logical models](#logical-models)
@@ -518,6 +521,17 @@ ASP is justifiable according to greenberg. I'm not so sure.
 The choice cnstructor is compileable to negation?
 
 
+# Z3 triggering
+
+Intead of using equality in triggers, use a dummy uaxiliarlu predicate.
+
+x = y :- f(x) = g(y) 
+becomes
+
+(forall (x y)  (check (f x) (g y))
+(forall (x y)  (x = y) :trigger (check (f x) (f x)) (g y))
+
+
 ## Command Ideas
 include is idiot modules. Would be a nice little feature
 Wow. let is super goofy.
@@ -535,8 +549,25 @@ exists! uniqueness qauntification / definite description
 What about a tactic or high levrl scripting language rather than macros.
 (for ... ())
 (chain )
-(define-command foo ())
-
+(define-command foo (a b c) ??? what are the parameters here?
+(while cond
+  (begin
+  ;(or a b c) allow commands to fail
+  ;(not) turn failure into good
+  ;(and)
+  (if cond
+    command1
+    command2
+  )
+  )
+)
+)
+Tactics
+https://www.cl.cam.ac.uk/~gp351/moura-passmore-smt-strategy.pdf
+Hmm. In a sense, my G formula \/ is the par tactic.
+Guarden Commands
+(when c com)
+Cond => Com.
 
 
 https://en.wikipedia.org/wiki/Tabu_search
@@ -545,6 +576,11 @@ Hill Climbing
 
 Term distance metric - For proving, you want to extract 2 terms that are getting closer to each other.
 Or extract a term that is a closest to fixed term
+
+
+# Alternating quantifier
+
+
 
 D formula of Void can be translated to panic. They can also be backpropagated via gfp lp 
 D formula of true are pointless
@@ -609,7 +645,8 @@ exists x, forall y
 forall a (exists b )
 
 
-
+forall y, exists e, forall x, (x + y = 0) -> e = x
+e cannot contain x or else this is a scope escape
 
 So there are restrictions of where lambda terms can go huh...
 Maybe we can only support them in G also?
@@ -1033,6 +1070,16 @@ They reduce to meaninglessness if defined in term of the eliminator
 subst(eq,pat_with_holes)
 
 # Contexts 
+Is the frame problem related? ASP and K seem to be talking about the frame problem. An open notion of context requires frames? typing contexts kind of manually carry their shit through. Could use a frame-like system
+Does context put us into non-monotonic reasoning (which _isn't_ synonymous with bad reasoning)?
+Resources. Sometimes it feels like we need to _copy_ to make terms in new contexts, like freshening lambda terms. Separaton logic, linear logic, and so on. I dunno. Just spitballn.
+ASP + theories might be a good place to look for egglg
+
+ASP has ntion of partial model and well-founded model
+Cyclic proofs?
+
+
+
 context patterns?
 eq(a,b), f[a] -> f[b]
 first class contexts - somehow autoderive my zippers?
@@ -1548,7 +1595,65 @@ https://ncatlab.org/nlab/show/geometric+theory Hmm. Geometric theories look like
 Geometric theories are datalog? eh. naw. They allow Q formula in the head
 THe infinitary \/ is concerning
 
- 
+## Observational Disequality
+Some chewing on observational disequality
+
+Rolling back on the aggressiveness of the cofunction idea.
+
+The union find is good because it factors an `N^2` equality relation into the linear sized root relation. Also having the root relation baked in makes the system more performant and easier to use as compared to manual congruence rules and manual root relation maintenance rules.
+
+Factoring the `N^2` disequality relation seems desirable for the same reason. I think it is possible to factor this relation into a a relation mapping each eid to partitions of the eids. These partitions are ultimately grounded in primitive notions of disequality.
+
+Some combination of datatype + merge function has a notion of disequality. `Nil != Cons`. primitive true != primitive false. Shrinking intervals can be known to be disjoint `[0,1] != [2,3]`. More generally, lattice values can be known to be in disjoint filters. I think this is a reasonable core of from where disequality comes from.
+
+One function mapping into such a type produces a partition on it's input. `(function even (Math) bool)`
+
+A Math expression x either has 1. `even(x) = true` 2. `even(x) = false` 3. `even(x)` not filled in.
+
+If `even(x) = true` and `even(y) = false`, then x can never be equal to y. This is the contrapositive of congruence `f(x) != f(y) -> x != y`.
+
+Hence, `even` generates a partition of two options. The elements that do not have a binding must be associated with both options unfortunately.
+
+There may be multiple such functions of course. The combination of them produces many partitions.
+There may also be transitive disequality. A `(function neg (Math) Math)` also can pull back known disequality on the outputs to the inputs even though
+
+Multi-argument functions are a bit less powerful. The only inference in general you can produce is `f(x,y) != f(z,w), z = x -> y != w`.
+
+An approach to doing all this is to regenerate this partition table during each rebuild, in the style of the throwaway union-find version of egglog. It is probably possible to do incremenetally, but it is more confusing.
+
+The partition table is generated by a process very similar to the congruence propagation process. Because N binary observations lead to 2^N partitions being defined, it does not seem desirable to represent them explicilty. Instead using a variation of the partition refinement data structure that allows elements to stay in multiples of the partitions (in case of the observation being undefined) seems better. I am being vague here because such a data structure feels doable, but I'm not quite sure.
+
+Then when a user asks x != y in the query, it looks up the partitions x can be in, and the partitions y can be in, and see if there is any partition that both can be in. If not, then they are known disequal.
+
+Fresh eids could be in any of the partitions until they start gaining observations.
+
+The story could be a bit simpler if observation function were _total_. That during the introduction of a new eid, one has to specify a complete set of observations. But it seems to go against the philosophy of egglog to require this.
+
+
+A :disequal annotation for intervals?
+eids have the default notion
+primitives also have a default notion.
+
+This again parallels equality discussion, although we didn't need :equals annotions. I guess this might be a way of discussing alternative mediation strategies on a per function argument / result basis.
+
+The mediation needed for congruence vs query is different.
+
+
+Does this have bearing on observational _equality_? Things that are currently observationally equal can become not observationally equal unless the set of observations is closed. Hmm. What about some kind of default logic? Non mnonotnic.
+One could perhaps _require_ the set of observations to be closed. The root of the term is the only observation ofr example. 
+It might be easiest if New observations only come from users. And they need to state them all before they hit run.
+Or state them in a block with th introduction of terms. 
+
+closed vs open and partial vs total seems to matter a lot in terms of what makes sense.
+Also maybe strata / user given / metaness. The user is strata 0 in some sense. The most meta.
+
+
+Sorts also give a primitive seperator of eids. But we don't even allow you to ask if eid1 != eid2
+
+Side note, sorts also give you an a priori separator of eids. We don't even allow you to ask heterogenous a:S != b:T  but it's kind of intriguing.
+
+
+
 # Prolog vs egglog
 
 I feel like what prolog is doing is there is a fact under consideration of unknown truth exists x, append([], [1],x) .  This becomes append([],[1],X) . The truth of this fact remains unknown. I could model this as `(append  (nil) (cons 1 nil)  (skolem2 append (nil) [1] )
