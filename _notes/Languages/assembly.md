@@ -68,6 +68,8 @@ De facto standard for desktops
 
 https://en.wikipedia.org/wiki/INT_(x86_instruction) int3 is a breakpoint instruction 
 https://twitter.com/pkhuong/status/1507790343151960073?s=20&t=GsM8M-fHdbvp9M4n5S4-kg
+
+[asmtutor](https://asmtutor.com/)
 ## BMI1 BMI2
 Bit manipulation instructions https://twitter.com/geofflangdale/status/1502481857375793153?s=20&t=j5MN13cFOkc3qH8tpATyNA
 apparently people can do crazy stuff with this https://twitter.com/pkhuong/status/1497332651891515395?s=20&t=j5MN13cFOkc3qH8tpATyNA
@@ -175,8 +177,11 @@ x86 forth
 
 # ARM
 
+[](https://github.com/pkivolowitz/asm_book)
 Arm memory tagging extension
-
+[ARMv8 A64 Quick Reference](https://courses.cs.washington.edu/courses/cse469/19wi/arm64.pdf)
+[](https://github.com/below/HelloSilicon)
+[asm tutor port](https://github.com/lirorc/arm-asm-examples)
 ### RISC V
 [risc v J extesnions](https://news.ycombinator.com/item?id=30647151)
 
