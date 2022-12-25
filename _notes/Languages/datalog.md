@@ -4215,6 +4215,7 @@ cycle(x) :- edge(x,y), cycle(y).
 ```
 If there are multiple rules, they all have to fail to propagate a negation.
 The negation also plays into the quantifier structure.
+This is perhaps related to performing the (clark) completion of a program.
 
 
 For co-datalog, this ought to be the only rule necessary.
@@ -4230,7 +4231,7 @@ forall x, not not t(x) \/ (exists edge, t(y))
 
 
 
-Hmm. Clingo is not panacea I pretended it might be.
+Hmm. Clingo is not panacea I pretended it might be. Clingo is still very least fixpoint based.
 ```clingo
 edge(1,2). 
 edge(2,3). 
@@ -4238,12 +4239,20 @@ edge(3,3).
 edge(3,4). 
 edge(4,5). 
 edge(3,5).
-%vert(V) :- edge(V,_).
-%vert(V) :- edge(_, V).
-%inf_trace(X) :- vert(X), not edge(X,_).
-inf_trace(V) :- inf_trace(W), edge(V, W).
+vert(V) :- edge(V,_).
+vert(V) :- edge(_, V).
 
+%inf_trace(X) :- vert(X), not edge(X,_).
+%{inf_trace(V): edge(V, W)} :- inf_trace(W).
+%{-inf_trace(V)} :- vert(V). 
+%-inf_trace(Y) :- edge(X,Y), -inf_trace(X).
+
+-inf_trace(X) :- vert(X), -inf_trace(Y) : edge(X,Y).
+inf_trace(X) :- vert(X), not -inf_trace(X). %If it's not disprovable, it's true.
 ```
+
+I don't _really_ feel like clingo is necessary, but it does have some nice features.
+The conditional rule using bounded quantification to a previous strata is safe.
 
 Maybe I need to construct all possible proofs and only remove somthing when there are no allowable extant proofs.
 ## DFA Minimization
