@@ -2184,6 +2184,24 @@ https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
 # Abductive logic programming
 https://en.wikipedia.org/wiki/Abductive_logic_programming
 
+Infer ground facts given results
+
+https://stackoverflow.com/questions/41274692/discussion-about-abductive-logic-programming-vs-answer-set-programming
+"Any logic programing that supports hypothetical reasoning can support ALP"
+
+```
+assumez(P) :- assertz(P).
+assumez(P) :- retract(P), fail.
+abducible :- (assumez(amount(glucose,low));assumez(amount(glucose,medium))),
+         (assumez(amount(lactose,medium));assumez(amount(lactose,hi))).
+
+feed(lactose) :- amount(glucose,low), amount(lactose,hi).
+feed(lactose) :- amount(glucose,medium), amount(lactose,medium).
+
+% ?- abducible, feed(lactose), listing(amount/2).
+```
+
+[Abduction in Logic Programming - Denecker Kakas](https://web.stanford.edu/class/cs227/Readings/Abudction%20in%20LP.pdf)
 # Theorem Proving
 [Leantap](https://formal.iti.kit.edu/beckert/leantap/)
 Jens Otten

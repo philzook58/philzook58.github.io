@@ -129,3 +129,5 @@ Propagators have been described as "just" monotonic functions between lattices. 
 
 
 [constraint acquisition](https://twitter.com/grmenguy/status/1531879717376184320?s=20&t=-IHVNfpCMKlhva0T8ctWXA) inferring predoncitions for code?
+
+[Using and Understanding ortools' CP-SAT: A Primer and Cheat Sheet](https://github.com/d-krupke/cpsat-primer)

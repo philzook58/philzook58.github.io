@@ -234,7 +234,7 @@ You can make variables that correspond to turning rules on or off. And making th
 You can give positive and negative examples as integrity constraints. And then optimize for a minimum number of rules. Or maybe weight by rule complicatedness.
 So this infers a datalog program.
 
-
+https://github.com/stefano-bragaglia/XHAIL
 ## Junk
 
 ```clingo

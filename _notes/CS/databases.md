@@ -753,9 +753,8 @@ graphlab
 - `vacuum` - defrag and gabrage collect the db
 - `begin transaction`
 
-
-
-
+https://github.com/tobymao/sqlglot/blob/main/posts/python_sql_engine.md https://news.ycombinator.com/item?id=34233697
+	Writing a Python SQL engine from scratch
 
 
 # Resources

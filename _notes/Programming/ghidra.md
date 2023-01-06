@@ -289,3 +289,5 @@ Also ghidra has built in diffing
 
 
 [ghidra chatgpt](https://github.com/SourceDiver42/Ghidra-ChatGPT)
+
+[Ghidra script to export C pseudo-code on multiple files, including defined types](https://gist.github.com/borzacchiello/811288074a193fe571c8d6274f14f829)

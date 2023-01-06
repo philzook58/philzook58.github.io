@@ -10,6 +10,7 @@ title: Imperative Proving
 - [Model Checking](#model-checking)
   - [ESBMC](#esbmc)
   - [cpachecker](#cpachecker)
+- [Memory](#memory)
 - [Misc](#misc)
     - [Fun old timey books.](#fun-old-timey-books)
 - [old model checking notes](#old-model-checking-notes)
@@ -68,7 +69,13 @@ Seahorn
 
 
 
+# Memory
+Using SMT arrays.
+A big block of 2^84 addresses or different models.
+Tagged memory separating heap and stack. Chaos when gets confused. Does pointer arithmetic get it confused?
 
+[Synthesizing an Instruction Selection Rule Library from Semantic Specifications](https://pp.ipd.kit.edu/uploads/publikationen/buchwald18cgo.pdf)
+[A Formal Model of a Large Memory that Supports Efficient Execution](https://www.cs.utexas.edu/users/hunt/FMCAD/FMCAD12/014.pdf)
 
 
 # Misc
