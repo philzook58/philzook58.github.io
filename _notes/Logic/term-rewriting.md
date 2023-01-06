@@ -76,6 +76,34 @@ Brutal.
 https://github.com/fadoss/maude-bindings
 https://fadoss.github.io/maude-bindings/
 
+[Pure Type Systems in Rewriting Logic: Specifying Typed Higher-Order Languages in a First-Order Logical Framework](https://courses.engr.illinois.edu/cs522/sp2016/PureTypeSystemsInRewritingLogic.pdf)
+
+frozenness. could frozen survive rebuilding? survive hash consing?
+[20 years of rewriting logic](https://www.sciencedirect.com/science/article/pii/S1567832612000707)
+
+
+[Programming and symbolic computation in Maude 2020](https://www.sciencedirect.com/science/article/am/pii/S2352220818301135)
+[Theorem Proving for Maude Specifications Using Lean](https://link.springer.com/chapter/10.1007/978-3-031-17244-1_16)
+
+https://fadoss.github.io/maude-bindings/
+```python
+import maude
+maude.init()
+m = maude.getModule('NAT')
+t = m.parseTerm('2 * 3')
+t.reduce()
+print(t)
+```
+
+[Context-sensitive Rewriting Lucas](https://www.researchgate.net/publication/341029369_Context-Sensitive_Rewriting)
+
+There is a sense that we've already screwed up context even before we've done anything equational just because of hash consing. Hash consing makes trees into dags and now terms are not in unique contexts.
+Context tagging is a way to undo or prevent work that hash consing does.
+Maybe rebuilding and hash consing are a kind of rewriting step and therefore may need to be activated only in certain circumstances
+
+TPDB format for termination includes context sensitive anotations
+it affects termination, so that makes sense.
+
 
 Memo - can mark terms as memo so they memoize the normal form they write to.
 
@@ -96,6 +124,8 @@ http://www.matching-logic.org/
 https://kframework.org/faq/ 
 Systems to compare to according to them
 Redex, Maude, Spoofax, OTT, [Rascal](https://www.rascal-mpl.org/),  ATL and model driven
+
+[popl : matching logic: foundations of K framework](https://www.youtube.com/watch?v=Awsv0BlJgbo&ab_channel=ACMSIGPLAN)
 
 # Other Systems
 

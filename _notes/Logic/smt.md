@@ -579,6 +579,8 @@ Abduction -
 
 Given A and C, find some B such that. `A, B |- C` Super underconstrained. A and B should be consistent. Should generalize well. A is accepted axioms, C is observations.
 
+Or `A /\ ? => C` 
+
 Houdini
 
 - Planning. A = initial state, B is final state, C is plan
@@ -621,6 +623,9 @@ https://blog.sigplan.org/2020/03/03/go-huge-or-go-home-popl19-most-influential-p
 (assert (and (>= x 0) (< y 7)))
 (get-abduct A (>= y 5))
 ```
+
+
+Absduction andanswer set programming
 
 ## Syntax Guided Synthesis Sygus
 Semgus

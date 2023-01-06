@@ -236,6 +236,8 @@ path(X,Z) :- edge(X,Y), path(Y,Z).
 
 [Answer Set Programming for Regular Inference](https://www.mdpi.com/2076-3417/10/21/7700) inferring regular expressions from string examples
 
+https://github.com/stefano-bragaglia/XHAIL
+
 ## Default Reasoning
 ASP offers in a sense 5 truth values. True `a`, possibly true `not -a`, unknown `not a, not -a`, possibly false `not a`, false `-a`. You can add rules that collapse some of these values into the others, i.e. let's assume something possible true is in fact true `a :- not -a`.
 
@@ -576,6 +578,8 @@ rw(Start, N*fact(N-1), S+1) :- rw(Start, T, S), T = fact(N), N > 0.
 
 ```
 A graph without cycles can talk about longest path.
+
+
 
 ## Junk
 

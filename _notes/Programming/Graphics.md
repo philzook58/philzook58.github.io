@@ -14,5 +14,8 @@ title: Graphics
 
 [Shaders pt 1](https://www.youtube.com/watch?v=kfM-yu0iQBk&ab_channel=FreyaHolm%C3%A9r)
 
+
 [Draw SVG rope using JavaScript](https://muffinman.io/blog/draw-svg-rope-using-javascript/)
 [](https://muffinman.io/blog/js-libraries-for-generative-art/)
+
+[crazy generative audio stuff](https://news.ycombinator.com/item?id=34163559)
