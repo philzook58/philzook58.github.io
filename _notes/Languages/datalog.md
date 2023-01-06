@@ -87,14 +87,15 @@ title: Datalog
   - [Typeclass resolution.](#typeclass-resolution)
   - [Borrow Checker](#borrow-checker)
   - [Type checking](#type-checking)
-- [Coinductive or Greatest Fixed Point Datalog](#coinductive-or-greatest-fixed-point-datalog)
-  - [DFA Minimization](#dfa-minimization)
+  - [Coinductive or Greatest Fixed Point Datalog](#coinductive-or-greatest-fixed-point-datalog)
+    - [DFA Minimization](#dfa-minimization)
   - [CRDTs](#crdts)
   - [MultiSet Semantics](#multiset-semantics)
   - [Access Control Policies](#access-control-policies)
   - [Networks](#networks)
   - [Make](#make)
 - [Topics](#topics)
+  - [Answer Set Programmng](#answer-set-programmng)
   - [Provenance](#provenance)
   - [Semi Naive Evaluation](#semi-naive-evaluation)
   - [Algebraic Data Types](#algebraic-data-types)
@@ -103,6 +104,7 @@ title: Datalog
     - [Subsumption as a master feature](#subsumption-as-a-master-feature)
       - [Provenance](#provenance-1)
       - [max min](#max-min)
+  - [Recurusive Sum and Count](#recurusive-sum-and-count)
       - [Lattices](#lattices-1)
         - [Min/max lattice](#minmax-lattice)
         - [Maybe/Option lattice](#maybeoption-lattice)
@@ -152,6 +154,9 @@ title: Datalog
 - [class(slotname : f(x,y) , ) :-](#classslotname--fxy----)
   - [building souffle emscripten](#building-souffle-emscripten)
 
+See also notes on:
+- Prolog
+- Answer Sey Programming
 # What is datalog?
 Datalog is multifaceted. That's part of what it makes it so cool
 
@@ -4104,7 +4109,7 @@ eqrel for hindley milner? Yihong had something like this
 souffle-z3 for refinement typing?
 
 
-# Coinductive or Greatest Fixed Point Datalog
+## Coinductive or Greatest Fixed Point Datalog
 
 Does this make sense?
 There is coinductive logic programming which is prolog
@@ -4255,8 +4260,8 @@ I don't _really_ feel like clingo is necessary, but it does have some nice featu
 The conditional rule using bounded quantification to a previous strata is safe.
 
 Maybe I need to construct all possible proofs and only remove somthing when there are no allowable extant proofs.
-## DFA Minimization
-```
+### DFA Minimization
+```souffle
 .type state = symbol
 .type action = number
 .decl states(s : state)
@@ -4288,6 +4293,17 @@ eq(a,b) :- states(a), states(b), !distinct(a,b).
 ```
 
 [local and symbolic bisimlation using tabled constraint logic programming](https://www3.cs.stonybrook.edu/~cram/Papers/BMRRV_ICLP01/paper.pdf)
+
+```clingo
+obs(hd,a,3).
+obs(tl,a,b).
+obs(hd,b,4).
+obs(tl,b,a).
+eq(X,X) :- obs(hd, A, X).
+-eq(X,Y) :- obs(O,X,OX), obs(O,Y,OY). %not eq(OY,OX). % OX != OY. %-eq(OY,OX).
+
+
+```
 
 ## CRDTs
 CRDT are a latticy based structure. It makes sense that it might be realted or modellable in datalog
@@ -4351,6 +4367,37 @@ CSS is prolog
 https://twitter.com/soundly_typed/status/1513500166359298048?s=20&t=-ertSPtY87GogVCFq4f-Rw 
 
 # Topics
+
+## Answer Set Programmng
+Grounding is a form of provenance
+
+Conditional literals are a really good feature. If the condition appears ina previous strata, it is monotone and hence (?) actually a datalog feature.
+
+recursive Cardinality constraints with lower bound in the body are also a datalog feature. Upper bound and hence equality cardinality need to be stratified.
+
+Maybe with the double negation feature you could do it. https://twitter.com/taktoa1/status/1548109067855376385?s=20&t=mIwj8pQtmBh4ysUcnNC4vg . Parity-stratified negation in codeql
+https://www.swi-prolog.org/pldoc/man?predicate=forall/2 forall x:A, B = forall x, A -> B = not exists x (A /\ not B) = not exists x:A, not B. This is a classical correspondence. Intuitionisitically, you can go left to right but not right to left I suspect.
+
+```souffle
+// Not accepted because cyclic negation
+.decl foo(a : symbol)
+.decl bar(a : symbol)
+.decl cond(a : symbol)
+foo("a").
+cond(X) :- foo(X), !bar(X).
+bar("b").
+// bar("a") :- bar("b"), !cond(_X). //{foo(X), !bar(X)}.
+
+// recursive count not allowed.
+// bar("a") :- count : {foo(X), bar(X) } = count : {foo(X)}.
+
+.decl rec_count(n:number)
+rec_count(0,x) :- foo(x), bar(x).
+rec_count(n+1,x) :- rec_count(n,y), x > y, foo(x), bar(x). 
+rec_count(count : foo(x), max : foo(x)).
+
+```
+
 ## Provenance
 [Explaining Outputs in Modern Data Analytics∗](http://www.vldb.org/pvldb/vol9/p1137-chothia.pdf) prvoencnace in differential dataflow <https://github.com/frankmcsherry/explanation> <https://github.com/frankmcsherry/blog/blob/master/posts/2016-03-27.md>
 
@@ -4368,6 +4415,7 @@ Master provenance can be done by reflecting the rules themselve into an AST al l
 
 ```
 
+Timestamps are a form of provenance. 
 ## Semi Naive Evaluation
 I remember a time when semi naive seemed pretty cryptic to me. I still amnot sure I understand it perfectly, but I have crossed the threshld 
 
@@ -4458,6 +4506,7 @@ mymax(z) :- reltomax(z).
 mymax(z) <= mymax(z2) :- z1 <= z2.
 ```
 
+## Recurusive Sum and Count
 Can I do sum and count? Maybe not. Not without tracking what we've already used. You could do this with bitsets. Requires reflection I guess. c
 Ah, I don't need to require tracking the set of already used, only count. Oh. Wait. no.
 ```

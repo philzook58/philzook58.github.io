@@ -3,6 +3,7 @@
 - [Applications and Ideas](#applications-and-ideas)
   - [ASP](#asp)
 - [Z3 triggering](#z3-triggering)
+- [Lemma Command](#lemma-command)
   - [Command Ideas](#command-ideas)
 - [Alternating quantifier](#alternating-quantifier)
   - [Looks like partial horn logic uparrow. Define as an assertion / judgement. That's the analog of](#looks-like-partial-horn-logic-uparrow-define-as-an-assertion--judgement-thats-the-analog-of)
@@ -15,6 +16,7 @@
 - [Macros](#macros)
 - [Modules](#modules)
 - [Proof relevance](#proof-relevance)
+- [ASP](#asp-1)
 - [Contexts](#contexts)
 - [cofunctions](#cofunctions)
 - [Backchaining - harrop](#backchaining---harrop)
@@ -513,6 +515,10 @@ Maybe restricting some things to be propositional or monadic? That forall table 
 
 D ::= A | | Q ⊃ D | D ∧ D | ∀x..:Q, D | p -> D  
 
+
+Termination competition is another source of benchmarks. Again, it isn't clear these are good benchmarks.
+It would be a genuinely helpful thing for me the setup a CI benchmark suite
+
 ## ASP
 ASP kind of has it's own notion of worlds or contexts.
 Branching. Sets of possibilities.
@@ -532,15 +538,51 @@ becomes
 (forall (x y)  (x = y) :trigger (check (f x) (f x)) (g y))
 
 
+# Lemma Command
+If we make egglog solve a goal.
+And then assert that goal back as a rule
+
+Ok but can this be done. G and D are not the same.
+
+G ::= Q | G ∧ G | G ∨ G | ∃x G | D ⊃ G | ∀x G
+D ::= A | D ∧ D | ∀x..:PG, D | ∃x D
+Q ::= True | A | Q ∧ Q | Q ∨ Q | ∃x Q
+
+Q -> D
+A | Q ∧ Q | ∃x Q , but not Q ∨ Q... uhh, we need to know which branch worked. Ok. Interesting.
+
+G -> D
+Q  yes
+| D ⊃ G. Not really. Q -> G?
+| ∀x G
+
+Let's worry about these later
+| G ∧ G | G ∨ G | ∃x G |
+
+
+Is it `lemma` or `cut`?
+
+Hmm. Lemma is actually kind of relatedt to Maude memo.
+We are memoizing one particulr link of the rewrite system.
+Memo isn't hash consng a single term. It's mapping an unnomrliazed term to a normalized one
+
+
+
 ## Command Ideas
-include is idiot modules. Would be a nice little feature
+DONE - include is idiot modules. Would be a nice little feature~
 Wow. let is super goofy.
 Wildcards would be appreciated.
 A demand creating form for :when would be appreciated.
 overloadable regular functions would be appreciated.
 string concat
 refine command - (run extract) loop. (refine N M)
-simplify command - run - extract. If not going down or satruated run again.
+DONE simplify command - run - extract. If not going down or satruated run again.
+add scriping language / embedded interpreter
+extensible parsing. Extension points
+refactor main loop to have egraph callback
+Enable sorts to participate in canonization/propagation
+The sort interface sucks.
+
 
 sketch command (calc (forall (x ) (exists y)  t1 = t2 = t3  ))
 DOn't bother 
@@ -562,6 +604,22 @@ What about a tactic or high levrl scripting language rather than macros.
   )
 )
 )
+The database is a context.
+Goals are goals
+(lemma 
+   (foo -> bar -> biz)
+   :tactic
+   (begin
+    (intro)
+    (exists (foo x)) % hmm. But we don't assume things exists. so this tactic looks up that the term exists first?
+    
+   )
+)
+
+We could allow expression invarious positions and eval them. And they better eval to integers.
+
+
+
 Tactics
 https://www.cl.cam.ac.uk/~gp351/moura-passmore-smt-strategy.pdf
 Hmm. In a sense, my G formula \/ is the par tactic.
@@ -1069,6 +1127,9 @@ Other rules/constants that may be of interest. comp/trans,  sym,
 They reduce to meaninglessness if defined in term of the eliminator
 subst(eq,pat_with_holes)
 
+# ASP
+I could use foreign functions to implement external union find. With all the associated problems.
+
 # Contexts 
 Is the frame problem related? ASP and K seem to be talking about the frame problem. An open notion of context requires frames? typing contexts kind of manually carry their shit through. Could use a frame-like system
 Does context put us into non-monotonic reasoning (which _isn't_ synonymous with bad reasoning)?
@@ -1158,6 +1219,17 @@ C = list of delimittation points? We could pattern match into that
 
 K framework has a notion of contexts. Confirugatons
 # cofunctions
+We can't have identifiable objects.
+We can perhaps associate a notion of identity to an (incomplete?) set of observations.
+Adding an obsrvaton to an incomplete set forks it I guess? observations are edges that connect observation sets. Mostly that's just a product of maybe lattices?
+
+We could perhaps require complete observation at definition time. Or some form of stratification?
+Generating all possible objects. Explicitly representing all possible observations is bad seeming.
+Also the stream example. What is tail producing?
+
+Internal state? That's better than just an asbtract id. It's skolemized. But objects might be observationally equal even if their internal state isn't.
+
+
 ```
 (sort state i64)
 (sort action String)

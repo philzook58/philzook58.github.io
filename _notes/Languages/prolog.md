@@ -18,6 +18,7 @@ wordpress_id: 1865
   - [Difference Lists](#difference-lists)
   - [Rewriting in prolog](#rewriting-in-prolog)
   - [Copy Term and Structural Matching](#copy-term-and-structural-matching)
+  - [Term rewriting](#term-rewriting)
 - [Typeclass](#typeclass)
   - [Type checking / inference](#type-checking--inference)
 - [Topics](#topics)
@@ -200,7 +201,23 @@ eq([],[]).
 eq([X|Xs], [Y|Ys]) :- X=Y, eq(Xs,Ys). 
 
 
+## Term rewriting
+https://www.youtube.com/watch?v=b2Px7cu2a68
+The context technique is nice. It's a generic representation of context.
+This is showing a generic approach where rewrite rules are repreented as a data structure.
+But a specialization/partial evaluation is writing them directly in 
 
+```
+step(fact(0), 1).
+step(fact(N), N * fact(N')) :- N #> 0, N' #= N + 1.
+
+normal_form(T,T1) :- 
+  map(normal_form, Args),
+  step()
+
+
+conc(F,Ls,Rs)  is f(l3,l2,l1, _, r1, r2, r3)
+```
 
 # Typeclass
 

@@ -158,3 +158,5 @@ Should I do Gem5, verilog, vhdl, other?
 
 [Communication Locality in Computation: Software, Chip Multiprocessors and Brains - Greenfield thesis](https://www.cl.cam.ac.uk/~swm11/research/dd-daniel-greenfield.pdf)
 
+
+[visual computer architecture emulator for risc v](https://github.com/mortbopet/Ripes)

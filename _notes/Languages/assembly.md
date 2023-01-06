@@ -177,9 +177,32 @@ x86 forth
 
 Arm memory tagging extension
 
+[cpulator](https://cpulator.01xz.net/?sys=arm) online assembler and emulator for teaching pretty nice
+[Assembly Language Programming with ARM – Full Tutorial for Beginners](https://www.youtube.com/watch?v=gfmRrPjnEw4&t=1484s&ab_channel=freeCodeCamp.org)
+[INTRODUCTION TO ARM ASSEMBLY BASICS - Azeria](https://azeria-labs.com/writing-arm-assembly-part-1/)
+
+r7 is system call
+`mov r0, #0xa`
+
+```
+mov r7, #1
+swi 0
+
+mov r2, r1
+
+
+ldr r0,=mylist
+ldr r0,[r0]
+ldr r2,[r0,#4]
+.data
+mylist:
+  .word 4,5,6,7,42
+```
+
+
 ### RISC V
 [risc v J extesnions](https://news.ycombinator.com/item?id=30647151)
-
+[graphical assembler and cpu emulator](https://github.com/mortbopet/Ripes)
 
 https://www.cs.cornell.edu/courses/cs3410/2019sp/riscv/interpreter/# nice little interpeter to play with
 [risc v from scratch](https://twilco.github.io/riscv-from-scratch/2019/04/27/riscv-from-scratch-2.html)
