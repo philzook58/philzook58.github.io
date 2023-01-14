@@ -1,6 +1,7 @@
 
 
 - [Applications and Ideas](#applications-and-ideas)
+- [Datalog Modulo Term Rewritng / Named enodes](#datalog-modulo-term-rewritng--named-enodes)
   - [ASP](#asp)
 - [Z3 triggering](#z3-triggering)
 - [Lemma Command](#lemma-command)
@@ -519,10 +520,48 @@ D ::= A | | Q ⊃ D | D ∧ D | ∀x..:Q, D | p -> D
 Termination competition is another source of benchmarks. Again, it isn't clear these are good benchmarks.
 It would be a genuinely helpful thing for me the setup a CI benchmark suite
 
+
+# Datalog Modulo Term Rewritng / Named enodes
+A thoughtpile on terms.
+
+tid vs eid. 
+Why? If you don't union anything, eid are tid. (copying)
+
+datalog modulo term rewriting. Can set rewrite rules. any term is normalized accdording to rules before being entered in database.
+Why not egraph rewriting? The union find is bidirectional. Too much sharing. What if the union find wasn't bidirectional... Hmm. Everything would work? tids really are terms. But it still normalizes. Huh.
+The union find isn't bidirectional _really_ but the direction is unspecified.
+But queries can't find unnormalized terms. Which may be good.
+The terms _themselves_ don't canonicalize. Or at least their outputs don't canonicalize.
+But their usage sites do. Are usages in terms the same as usgae sits inside relations? literal vs modulo positions. And the direction the "union find" goes matters. The union find is the step* relation / normalization relation.
+This is very similar to giving an enode a name.
+What is an enode? It is a collectin of arguments + function symbol. args+symbol --> eid but eid --!> args + symbol.
+args + symbol -->tid/rowid , rowid --> args + symbol
+A term would have term inputs instead.
+
+Non normalizing ids is something I've talked about
+What happens when tids collide? tids don't canonize, but they do congruentify. Congruence doesn't de duplicate tids though.
+They _do_ canonicalize in the arguments (that is subterm rewriting) but this produces news records rather than updating the curretn record. Write only works this way anyhow. Then directed-union is called on the subterm rewrie. Ok ths is pretty different.
+
+Ok. So literally termids + caring about the directinality of the union find is enough. Or maybe... No there is only one solution to the query problem. Period. If I look for a non-normal form, I don't want to find it. Why?
+
+ematching is nondetemrinstics, term matching is semideterminstic
+
+So if I can mark functions as non-canonizing. That's it.
+
+
+PLT redex
+
+Normalization by evaluation. 
+
+
+
+
+
 ## ASP
 ASP kind of has it's own notion of worlds or contexts.
 Branching. Sets of possibilities.
 ASP is justifiable according to greenberg. I'm not so sure.
+
 
 The choice cnstructor is compileable to negation?
 
@@ -536,6 +575,7 @@ becomes
 
 (forall (x y)  (check (f x) (g y))
 (forall (x y)  (x = y) :trigger (check (f x) (f x)) (g y))
+
 
 
 # Lemma Command
@@ -612,7 +652,7 @@ Goals are goals
    (begin
     (intro)
     (exists (foo x)) % hmm. But we don't assume things exists. so this tactic looks up that the term exists first?
-    
+
    )
 )
 

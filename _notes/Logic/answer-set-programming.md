@@ -238,6 +238,29 @@ path(X,Z) :- edge(X,Y), path(Y,Z).
 
 https://github.com/stefano-bragaglia/XHAIL
 
+Abuduction
+```clingo
+{rainy; wet}.
+
+cloudy :- rainy.
+wet :- rainy.
+slippery :- wet.
+
+% it's cloudy any slippery
+:- not cloudy.
+:- not slippery.
+
+
+```
+
+Adbuction as loop invariant
+while(C) {}
+not C /\ ? => Q. get first hypothesis
+- is inductive
+- is invariant not inductive. strengthen loop C /\ I /\ ? => I. I is inductive realtive to I' 
+- is not invariant - backtrack. many abudction choices.
+
+
 ## Default Reasoning
 ASP offers in a sense 5 truth values. True `a`, possibly true `not -a`, unknown `not a, not -a`, possibly false `not a`, false `-a`. You can add rules that collapse some of these values into the others, i.e. let's assume something possible true is in fact true `a :- not -a`.
 
@@ -495,6 +518,8 @@ num(1..3).
 
 ```
 
+When the pinnacle of the lattice is selected, does that imply everything underneath is selected? That feels right.
+
 ## Tree 2 Graph
 
 In a sense this is doing very little, but perhaps that is only because the tree and graph reprsentations are so close to each other. In most other languages this would stink.
@@ -579,6 +604,68 @@ rw(Start, N*fact(N-1), S+1) :- rw(Start, T, S), T = fact(N), N > 0.
 ```
 A graph without cycles can talk about longest path.
 
+
+Datalog modulo term rewriting. I mean, I guess this is ASP modulo term rewriting.
+```clingo
+#script (python)
+import clingo
+
+import maude
+
+test_mod = """
+fmod TESTMOD is
+  sort Term .
+  op foo : Term -> Term .
+  ops x bar : -> Term .
+  eq foo(x) = bar .
+endfm
+
+"""
+maude.init()
+maude.input(test_mod)
+mod = maude.getModule('TESTMOD')
+
+
+def to_maude(x):
+    print(str(x))
+    return mod.parseTerm(str(x))
+
+def from_maude(t):
+    return clingo.Function(str(t.symbol()), map(from_maude,t.arguments()))
+
+def reduce(x):
+    t = to_maude(x)
+    print(t.reduce())
+    return from_maude(t)
+
+#end.
+
+test(@reduce(foo(x))).
+
+```
+
+```python
+# https://github.com/fadoss/maude-bindings/blob/master/tests/python/buildTerm.py
+import maude
+
+maude.init(advise=False)
+
+mod = maude.getModule('NAT')
+natk = mod.findSort('Nat').kind()
+
+splus  = mod.findSymbol('_+_', [natk, natk], natk)
+stimes = mod.findSymbol('_*_', [natk, natk], natk)
+
+onetwo = [mod.parseTerm('1'), mod.parseTerm('2')]
+three  = mod.parseTerm('3')
+
+# Constructs 4 + (3 * (1 + 2))
+#expr = splus.makeTerm((mod.parseTerm('4'),
+t = mod.parseTerm("4 + (3 * (1 + 2))")
+print(list(t.arguments()))
+print(dir(t))
+print(t.symbol())
+```
 
 
 ## Junk
