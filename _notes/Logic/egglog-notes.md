@@ -1,6 +1,7 @@
 
 
 - [Applications and Ideas](#applications-and-ideas)
+- [Proof formats](#proof-formats)
   - [ASP](#asp)
 - [Z3 triggering](#z3-triggering)
   - [Command Ideas](#command-ideas)
@@ -512,6 +513,37 @@ Q ::= True | A | Q ∧ Q | Q ∨ Q | ∃x Q
 Maybe restricting some things to be propositional or monadic? That forall table is kind of interesting. It kind of feels like  the signature Sigma that nadathur and miller talk about.
 
 D ::= A | | Q ⊃ D | D ∧ D | ∀x..:Q, D | p -> D  
+
+# Proof formats
+What do we want proof formats for:
+- Eye inspection
+- Putting the proof into coq or lean or isabelle
+- Extracting info from them. For example conflict explanation in SMT
+
+just have a list of terms and maybe rule annotations and you need to infer where it was applied
+(a trace of a trs kind of. Arguably a trs also)
+
+Embedding term rewriting into prolog gives clues as to a proof format via prolog provenance
+
+A "proof" format of equality is generating a specialized, perhaps context sensitive, confluent terminating rewrite that if you just run will get from source to target
+
+
+http://www.lix.polytechnique.fr/Labo/Dale.Miller/papers/rew-fpc.pdf
+
+Egg1
+- uses labelled rewrite rule in hole where it happens
+
+Dependent type proofs. Uses lambda term to describe where rewrite will happen. A thing that is interesting here is that one feels that you can have proofs  within proofs, equalities between equalities. Lambdas are very rich.
+
+Context, t1 , t2, rule-name as one step. Context vs lambda. Lambda can have multiple holes?
+
+The Goguen chapter.
+
+EUF proof
+[Walking through the Forest: Fast EUF Proof-Checking Algorithms](https://ceur-ws.org/Vol-878/paper5.pdf)
+Nieuwenhuis and oliveras
+oliver's paper
+
 
 ## ASP
 ASP kind of has it's own notion of worlds or contexts.

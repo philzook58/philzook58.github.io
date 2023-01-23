@@ -777,3 +777,5 @@ Constraints. Default rules. 5 truth values for p, not -p, not p not -p, not p, -
 [Potsdam publication list](https://www.cs.uni-potsdam.de/wv/publications/#DBLP:journals/ai/GebserKS12)
 
 [answer set planning a survey](https://www.cs.uni-potsdam.de/wv/publications/DBLP_journals/corr/abs-2202-05793.pdf)
+
+[interesting discussion](https://swi-prolog.discourse.group/t/non-monotonicity-defeasibility-strategies-and-other-stuff/6038/15)

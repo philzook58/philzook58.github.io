@@ -15,3 +15,5 @@ title: Graphics
 [Shaders pt 1](https://www.youtube.com/watch?v=kfM-yu0iQBk&ab_channel=FreyaHolm%C3%A9r)
 
 [crazy generative audio stuff](https://news.ycombinator.com/item?id=34163559)
+
+https://github.com/ricktu288/ray-optics 
