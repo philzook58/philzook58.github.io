@@ -85,6 +85,7 @@ title: SMT Solvers
 - [Z3](#z3)
   - [Z3 source spelunking](#z3-source-spelunking)
   - [src - most of the goodies are here.](#src---most-of-the-goodies-are-here)
+  - [Tactics](#tactics)
   - [paramaters, tactics, and commands](#paramaters-tactics-and-commands)
   - [Z3 Add Commutative Benchmark](#z3-add-commutative-benchmark)
 - [CVC5](#cvc5)
@@ -4286,6 +4287,14 @@ mindiff on arrays?
 
 https://github.com/Z3Prover/z3test tests repo
 
+https://t.co/ovrqsZR9sw
+
+[z3 internals](https://z3prover.github.io/papers/z3internals.html)
+
+[Z3 slides](https://z3prover.github.io/slides/)
+
+
+
 ## Z3 source spelunking
 
 Folders:
@@ -4353,6 +4362,19 @@ You know, it's a lot, but it isn't quite as overwhelming as I have felt in the p
 
 
 https://github.com/Z3Prover/z3/blob/master/src/smt/mam.h ematching machine
+
+## Tactics
+[Tactics](https://microsoft.github.io/z3guide/docs/strategies/tactics/)
+[Tactics summary](https://microsoft.github.io/z3guide/docs/strategies/summary)
+
+The entire assertion state is considered a goal?
+
+It can return multiple goals?
+
+Tactics can have:
+- under precision. goal may not have sat models even if original problem did
+- over precsion
+
 
 
 ## paramaters, tactics, and commands

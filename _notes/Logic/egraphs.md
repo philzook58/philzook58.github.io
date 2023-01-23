@@ -753,6 +753,7 @@ g(1,2,3).
 [Automatic Datapath Optimization using E-Graphs](https://arxiv.org/abs/2204.11478) Samuel Coward, George A. Constantinides, Theo Drane 
 
 [Cranelift egraph rfc](https://github.com/bytecodealliance/rfcs/pull/27)
+[aegraphs](https://docs.rs/cranelift-egraph/0.91.0/cranelift_egraph/)
 
 https://en.wikipedia.org/wiki/E-graph
 

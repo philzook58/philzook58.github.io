@@ -219,6 +219,67 @@ normal_form(T,T1) :-
 conc(F,Ls,Rs)  is f(l3,l2,l1, _, r1, r2, r3)
 ```
 
+What is demand driven egglog? It may have a relation to provenance.
+Naive equality proof search.
+
+Expect lots of loops and overlap. memoization is useful.
+
+DCG stye proof for depth control? But then 
+Ah answer subsumption tabling can keep just first answer. Yes.
+
+The rewrite proof reconstruction and this process are related.
+
+```
+--> [], .
+A == A --> !, [refl].
+
+add(X,Y) == add(Y,X) --> [add_comm].
+add(X,add(Y,Z) == add(Y,X) --> [add_assoc].
+
+% generic form
+A == B --> {rule(name, A ==> A1)}, [ruleL(name)], A1 == B.
+A == B --> {rule(name, B ==> B1)}, [ruleR(name)], A == B1.
+X == Y --> [eq_comm], Y == X.
+f(X) == f(A) --> [cong].
+T1 == T2 --> {T1 ..= [F | Args1], T2 ..= [F | Args2]}, [cong], map(==, Args1, Args2). 
+% If I used explicit context, this could be tail recursive?
+```
+
+
+```prolog
+
+:- initialization(main,main).
+:- op(900, xfx, user:(===)).
+
+rule(fact(N), fact(N-1)).
+
+```
+
+
+```prolog
+
+:- initialization(main,main).
+:- op(900, xfx, user:(===)).
+
+rule(A + B,  B + A, add_comm).
+
+birule(A + (B + C), (A + B) + C, add_assoc).
+
+A === A --> [refl].
+A === B --> {rule(A ,A1, R)}, [left(R)], A1 === B.
+% it is slightly simpler to just rewrite one side and leave the other as a stopping condition.
+
+%A === B --> {rule(A ,A1, R)}, [right(R)], A === B1.
+% A === B --> [eq_symm], B === A.
+
+println(X) :- format("~w\n", [X]).
+
+main(_) :- phrase(1 === 1, Pf), format("~w\n",Pf),
+           phrase(1 + 2 === 2 + 1, Pf2), println(Pf2),
+           length(Pf3, 0), phrase(1 + 2 === 3 + 1, Pf3), println(Pf3).
+
+```
+
 # Typeclass
 
 ```
@@ -706,6 +767,35 @@ main(_) :- path(1,4).
 
 a :- a.
 ```
+
+https://www.swi-prolog.org/pldoc/man?section=tabling-mode-directed. Mode difreced tabling. Can take minimum answer, first answer, etc. Good for dynamic programming
+
+Longest common subsequence
+
+```prolog
+%:- use_module(library(tabling)).
+:- table lcs(_,_,lattice(longest/3)).
+
+
+lcs([], _Ys, []).
+lcs(_Xs, [], []).
+lcs([X|XS], [X|YS], [X|Zs]) :- lcs(XS,YS,Zs).
+lcs([X|XS], [Y|YS], Zs) :- dif(X,Y), (lcs([X|XS],YS, Zs); lcs(XS,[Y|YS],Zs)).
+
+longest(P1, P2, P):-
+    length(P1, L1),
+    length(P2, L2),
+    (   L1 > L2
+    ->  P = P1
+    ;   P = P2
+    ).
+
+:- initialization(main,main).
+main(_) :- lcs([1,2,3], [2,7,1,4,2,3,6,5], LCS), print(LCS).
+           %lcs([1,2,3], Ys, LCS1), print(LCS1).
+
+```
+
 
 Hmm. Tabling comes _from_ earley parsing historically. That's interesting.
 "Earley deduction"
@@ -2240,6 +2330,7 @@ Is it kind of a zipper to isolate a variable?
 Dyckhoff g4ip
 
 # Misc
+[tar parsing in prolog](https://news.ycombinator.com/item?id=34427081)
 [rethinking prolog - oleg](https://okmij.org/ftp/kakuritu/rethinking.pdf) unification variables are an optimization
 
 [An interactive semantics of logic programming](https://arxiv.org/abs/cs/0107022) https://twitter.com/davidad/status/1567780900284387329?s=20&t=jW6J2ukuizpdkb11CCe3bQ

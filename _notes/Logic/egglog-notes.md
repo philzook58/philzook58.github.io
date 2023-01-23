@@ -1259,6 +1259,18 @@ C = list of delimittation points? We could pattern match into that
 
 K framework has a notion of contexts. Confirugatons
 # cofunctions
+
+
+https://people.csail.mit.edu/asolar/SynthesisCourse/Lecture3.htm
+Bottom up enumerative synthesis
+https://people.csail.mit.edu/asolar/SynthesisCourse/Lecture3.htm
+
+Observations go down, equalitie go up
+(rule ((forall samples s) (= (eval e2 s) (eval e1 s))  (union e1 e2))
+It's kind of a form of injectivity?
+Incremental botton up. We are increasing . We need to break some equalitis. 
+
+
 We can't have identifiable objects.
 We can perhaps associate a notion of identity to an (incomplete?) set of observations.
 Adding an obsrvaton to an incomplete set forks it I guess? observations are edges that connect observation sets. Mostly that's just a product of maybe lattices?
@@ -1268,6 +1280,7 @@ Generating all possible objects. Explicitly representing all possible observatio
 Also the stream example. What is tail producing?
 
 Internal state? That's better than just an asbtract id. It's skolemized. But objects might be observationally equal even if their internal state isn't.
+
 
 
 ```

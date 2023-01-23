@@ -46,6 +46,12 @@ Synesthesia
 
 [Program Syntehsis book](https://www.microsoft.com/en-us/research/wp-content/uploads/2017/10/program_synthesis_now.pdf)
 
+# Bottom Up Enumerative synthesis
+https://people.csail.mit.edu/asolar/SynthesisCourse/Lecture3.htm
+
+
+
+
 # Alternating Quantifiers
 
 Exists forall problems

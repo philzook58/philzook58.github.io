@@ -203,6 +203,26 @@ mylist:
   .word 4,5,6,7,42
 ```
 
+```python
+import tempfile
+import subproess
+def asm(code):
+  with tempfile.TemporaryFile() as fp:
+    fp.write(code)
+    fp.flush()
+    subprocess.run(["arm-linux-gnueabi-as", fp.name])
+    subprocess.run(["gdb", fp.name])
+
+
+
+
+```
+
+```python
+from unicorn import *
+mu = Uc(UC_ARCH_ARM64, UC_MODE_ARM)
+
+```
 
 
 [ARMv8 A64 Quick Reference](https://courses.cs.washington.edu/courses/cse469/19wi/arm64.pdf)
@@ -262,6 +282,7 @@ https://news.ycombinator.com/item?id=22801471
 
 https://en.wikipedia.org/wiki/Threaded_code
 
+https://gitlab.com/tsoding/porth
 # High level assemlby / macros
 https://en.wikipedia.org/wiki/High-level_assembler
 
@@ -301,4 +322,6 @@ x86 forth
 Metamath zero - is there some simpler thing one could do? Why did metamath _really_ have to be written in assembly? Is this a trusted computing base thing?
 
 
+[peachpy](https://github.com/Maratyszcza/PeachPy) an assembly dsl in python
+https://docs.micropython.org/en/latest/pyboard/tutorial/assembler.html inline assembler in micropython
 
