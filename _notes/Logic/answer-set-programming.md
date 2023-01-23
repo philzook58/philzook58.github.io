@@ -1795,3 +1795,6 @@ LP2mip
 
 
 [hakank's asp](http://www.hakank.org/answer_set_programming/)
+
+
+[interesting discussion](https://swi-prolog.discourse.group/t/non-monotonicity-defeasibility-strategies-and-other-stuff/6038/15)

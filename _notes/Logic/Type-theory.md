@@ -1337,7 +1337,7 @@ to carry types a runtime? Or is that mistaken?
 
 [Type Theory in Color](https://dl.acm.org/doi/abs/10.1145/2500365.2500577) internalizes parametricity results
 
-
+[Programming = proving? The Curry-Howard correspondence today Xavier Leroy](https://xavierleroy.org/CdF/2018-2019/) - so freakin good
 
 ## Books:
 - TAPL

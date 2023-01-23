@@ -2276,7 +2276,7 @@ Dealing with infinite terms and streams.
 # inductive logic programmingh
 popper https://arxiv.org/abs/2005.02259
 https://github.com/metagol/metagol metagol 
-http://andrewcropper.com/
+http://andrewcropper.com/ muggleton
 https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
 [hakank examples](https://swi-prolog.discourse.group/t/popper-inductive-logic-programming-ilp-and-my-popper-page/3929) 
 
@@ -2285,6 +2285,14 @@ https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
 [Hakank symbolic function induction picat](https://twitter.com/hakankj/status/1556344141994508288?s=20&t=yqv3psiW3ByDbnVTBLr_GA)
 
 [Louise](https://github.com/stassa/louise)
+https://github.com/stassa/louise/blob/09a06e081b8933bbdb999424bf1a62673e88a3d6/src/louise.pl line 465 for metainterpreter prove. multi clause inductive learning. "inductive"
+
+Metarules
+`P(A,B) :- Q(A,C), R(C,B)`. second order qauntified variables
+
+metainterpretive learning (MIL) - a prolgo metainterpreter
+
+
 # Probablistic Logic Programming
 
 
@@ -2309,6 +2317,16 @@ feed(lactose) :- amount(glucose,medium), amount(lactose,medium).
 ```
 
 [Abduction in Logic Programming - Denecker Kakas](https://web.stanford.edu/class/cs227/Readings/Abudction%20in%20LP.pdf)
+
+A different variation https://swi-prolog.discourse.group/t/non-monotonicity-defeasibility-strategies-and-other-stuff/6038/23
+```
+/* SWI-Prolog 9.1.0 */
+solve(true) --> !.
+solve((A,B)) --> !, solve(A), solve(B).
+solve(A) --> {abducible(A)}, !, [A].
+solve(H) --> {clause(H, B)}, solve(B).
+```
+
 # Theorem Proving
 [Leantap](https://formal.iti.kit.edu/beckert/leantap/)
 Jens Otten

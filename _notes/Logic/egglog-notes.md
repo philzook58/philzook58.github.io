@@ -1,6 +1,13 @@
 
 
 - [Applications and Ideas](#applications-and-ideas)
+<<<<<<< HEAD
+- [Proof formats](#proof-formats)
+=======
+- [Datalog Modulo Term Rewritng / Named enodes](#datalog-modulo-term-rewritng--named-enodes)
+>>>>>>> 16d994bde007fccbb8c44eaee6c10f121bd7f1eb
+- [Applications and Ideas](#applications-and-ideas)
+- [Proof formats](#proof-formats)
 - [Datalog Modulo Term Rewritng / Named enodes](#datalog-modulo-term-rewritng--named-enodes)
   - [ASP](#asp)
 - [Z3 triggering](#z3-triggering)
@@ -516,6 +523,35 @@ Maybe restricting some things to be propositional or monadic? That forall table 
 
 D ::= A | | Q ⊃ D | D ∧ D | ∀x..:Q, D | p -> D  
 
+# Proof formats
+What do we want proof formats for:
+- Eye inspection
+- Putting the proof into coq or lean or isabelle
+- Extracting info from them. For example conflict explanation in SMT
+
+just have a list of terms and maybe rule annotations and you need to infer where it was applied
+(a trace of a trs kind of. Arguably a trs also)
+
+Embedding term rewriting into prolog gives clues as to a proof format via prolog provenance
+
+A "proof" format of equality is generating a specialized, perhaps context sensitive, confluent terminating rewrite that if you just run will get from source to target
+
+
+http://www.lix.polytechnique.fr/Labo/Dale.Miller/papers/rew-fpc.pdf
+
+Egg1
+- uses labelled rewrite rule in hole where it happens
+
+Dependent type proofs. Uses lambda term to describe where rewrite will happen. A thing that is interesting here is that one feels that you can have proofs  within proofs, equalities between equalities. Lambdas are very rich.
+
+Context, t1 , t2, rule-name as one step. Context vs lambda. Lambda can have multiple holes?
+
+The Goguen chapter.
+
+EUF proof
+[Walking through the Forest: Fast EUF Proof-Checking Algorithms](https://ceur-ws.org/Vol-878/paper5.pdf)
+Nieuwenhuis and oliveras
+oliver's paper
 
 Termination competition is another source of benchmarks. Again, it isn't clear these are good benchmarks.
 It would be a genuinely helpful thing for me the setup a CI benchmark suite
