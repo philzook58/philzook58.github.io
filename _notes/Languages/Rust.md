@@ -245,8 +245,15 @@ Getting a webpage up that runs webassembly seems like an involved process. I thn
 Serde seems like a useful route to getting stuff into and out of javascript. It is a serialization deserialization library.
 
 # Resources 
+[embeddable interpeters](https://www.reddit.com/r/rust/comments/s63j6n/which_scripting_languages_work_well_embedded_with/)
+- rlua
+- [Rhai](https://github.com/rhaiscript/rhai)
+- [Rustpython](https://github.com/RustPython/RustPython) a python interpreter than can run in browser and be embedded
+
 [deflect](https://github.com/jswrenn/deflect) runtime reflectin of types via dwarf https://jack.wrenn.fyi/blog/deflect/
 rust atmics book https://marabos.nl/atomics/
+
+[easy-smt](https://github.com/elliottt/easy-smt)
 
 - [implementing sage gc in rust](https://news.ycombinator.com/item?id=31166368)
 - [eyros](https://github.com/peermaps/eyros) interval database. box queries

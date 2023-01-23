@@ -105,6 +105,16 @@ TPDB format for termination includes context sensitive anotations
 it affects termination, so that makes sense.
 
 
+Memo - can mark terms as memo so they memoize the normal form they write to.
+
+OPerator strategires - can mark which arguments must be evaluated before the total operator is evaluated. Functional modules only
+
+Frozen - can mark whether whole subterms are frozen. Is this that different?
+
+System modules vs functional modules. System modules specify concurrent rewrite systems. Functional modules are assumed church rosser and terminating
+
+
+
 ## K
 <https://dl.acm.org/doi/pdf/10.1145/3314221.3314601> instruction semantics for x86 in K
 https://kframework.org/index.html
@@ -150,7 +160,11 @@ Monoid presentation
 
 # Knuth Bendix
 
+# Termination
+https://github.com/TermCOMP/TPDB termination problem database
 
+https://termination-portal.org/wiki/Termination_Portal
+Termcomp 2022 https://termination-portal.org/wiki/Termination_Competition_2022
 
 # Higher order rewriting
 
