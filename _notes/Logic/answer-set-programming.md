@@ -25,6 +25,11 @@ title: Answer Set Programming
   - [Tree 2 Graph](#tree-2-graph)
   - [Intuitionistic Logic](#intuitionistic-logic)
   - [Rewriting](#rewriting)
+  - [SMT Theories](#smt-theories)
+    - [EUF Ackermanization](#euf-ackermanization)
+    - [Bitvectors](#bitvectors)
+    - [Theory of Arrays](#theory-of-arrays)
+    - [EPR](#epr)
   - [Junk](#junk)
 - [Constructs](#constructs)
   - [Integrity constraints](#integrity-constraints)
@@ -606,6 +611,8 @@ A graph without cycles can talk about longest path.
 
 
 Datalog modulo term rewriting. I mean, I guess this is ASP modulo term rewriting.
+The idea is that you can normalize datalog terms before they go in. What is unsatisfying is you may want guarded rewriting, for which the guards depend on datalog analyses. Then we need something subsumptive or lattice-like, which clingo doesn't offer?
+
 ```clingo
 #script (python)
 import clingo
@@ -631,7 +638,8 @@ def to_maude(x):
     return mod.parseTerm(str(x))
 
 def from_maude(t):
-    return clingo.Function(str(t.symbol()), map(from_maude,t.arguments()))
+    return clingo.parse_term(str(t))
+    #return clingo.Function(str(t.symbol()), map(from_maude,t.arguments()))
 
 def reduce(x):
     t = to_maude(x)
@@ -642,6 +650,30 @@ def reduce(x):
 
 test(@reduce(foo(x))).
 
+```clingo
+#script (python)
+import clingo
+import maude
+
+test_mod = """
+  fmod TESTMOD is
+    sort Term .
+    op foo : Term -> Term .
+    ops x bar : -> Term .
+    eq foo(x) = bar .
+  endfm"""
+maude.init()
+maude.input(test_mod)
+mod = maude.getModule('TESTMOD')
+
+def reduce(x):
+    t = mod.parseTerm(str(x))
+    t.reduce()
+    return clingo.parse_term(str(t))
+#end.
+
+test(@reduce(foo(x))).
+% Result: test(bar)
 ```
 
 ```python
@@ -666,6 +698,181 @@ print(list(t.arguments()))
 print(dir(t))
 print(t.symbol())
 ```
+
+```python
+from dataclasses import dataclass
+# https://en.wikipedia.org/wiki/Normalisation_by_evaluation
+
+# Hmm. I should just be using clingo terms if that is what I want this for.
+# Can clingo terms hold lambdas (even briefy?) ?
+class Term():
+  pass
+class Sem(Term): # Hmmm.
+  pass
+
+@dataclass
+class TLam(Term):
+  x:str
+  body:Term
+@dataclass
+class TApp(Term):
+  f:Term
+  x:Term
+@dataclass
+class TVar(Term):
+  x:Term
+
+@dataclass
+class SLam(Sem):
+  f:Callable[Sem,Sem]
+
+
+counter = 0
+def fresh():
+  global counter
+  counter += 1
+  return counter
+
+def reify(sem):
+  if isinstance(sem, SLam):
+    x = fresh()
+    return TLam(x, sem.f(x))
+  else:
+    #traverse children    
+
+
+
+def meaning(ctx, tm):
+  if isinstance(tm, TVar):
+    return ctx[tm.x]
+  elif isinstance(tm, TLam):
+    def res(y):
+      ctx2 = copy(ctx)
+      ctx2[tm.x] = y
+      interp(ctx2, tm.body)
+    return SLam(res)
+  elif isinstance(tm,TApp):
+    f1 = meaning(ctx, tm.f)
+    assert isinstance(f1, SLam)
+    return meaning(ctx,f1.f(x))
+
+
+  
+
+
+```
+
+## SMT Theories
+How many SMT theories (euf, arrays, sets) are encodable?
+
+ASP is kind of datalog metaprgramming for SAT.
+Many (quantifier free?) SMT problems can be bit blasted.
+
+
+### EUF Ackermanization
+Ackermanization in clingo?
+```clingo
+% congruence
+% generate using python probably.
+eq(f(X,Y), f(X1,Y1)) :- term(f(X,Y)), term(f(X1,Y1)), % demand to avoid infinity
+     eq(X,X1), eq(Y,Y1). 
+
+
+eq(A,A) :- term(A). % reflexivity
+
+%eq(f(A1,B), f(A,B)) :- term(f(A,B)), term(f(A1,B)), eq(A,A1). % subst
+%tygfeq(f(A,B1), f(A,B)) :- term(f(A,B)), term(f(A,B1)), eq(B,B1).
+
+eq(X,Y) :- eq(Y,X).
+eq(X,Z) :- eq(X,Y), eq(Y,Z).
+
+eq(f(a,a),a).
+eq(a,b).
+% convenience 
+term(A) :- eq(A,_).
+
+% however is there a non quadratic encoding?
+% how to do everything modulo equality?
+% foreign union find? Too fishy. The UF needs to be backtracked.
+
+```
+The information in a union find is not that big. There just aren't as many partitions as there are binary relations (2^(n^2)) power set of pairs. The number of partitions isn't that much bigger than 2^n
+But can one find a fixed parametrization of partitions that embeds into asp?
+
+root(a,b) doesn't work.
+
+at most n partitions. Could order them by partition size. But that's still quadratic
+How to identifty partitions? in a factored way?
+
+
+### Bitvectors
+```clingo
+{foo(0..3)}.
+{bar(0..3)}.
+
+foo(N) :- N = 0..3. %, (7 / (2 ** N)) mod 2 = 0.
+-bar(N) :- N = 1..3.
+bar(0).
+
+% An adder circuit
+carry(0).
+add(N) :- foo(N), not bar(N), not carry(N).
+add(N) :- not foo(N), bar(N), not carry(N).
+add(N) :- not foo(N), not bar(N), carry(N).
+add(N) :- foo(N), bar(N), carry(N).
+carry(N+1) :- foo(N), bar(N), carry(N).
+
+```
+
+```
+
+
+% bitwise operations are easy
+and(N) :- foo(N), bar(N).
+
+or(N) :- foo(N).
+or(N) :- bar(N).
+
+-neg(N) :- foo(N).
+
+% hmmm.
+{neg(0..4)}.
+-neg(N) :- foo(N).
+:- neg(N), foo(N)
+
+% shifting
+shift(N+1) :- foo(N), N < 4.
+
+% 
+
+
+```
+
+### Theory of Arrays
+Theory of arrays in clingo? Hmm.
+```clingo
+select(store(X,A,V), X, V).
+```
+
+
+A theory of sets is pretty cool
+```clingo
+
+elem(S, X) :- set(S), S = add(X,S1).
+elem(S, X) :- set(S), S = union(S1,S2), elem(S1, X).
+elem(S, X) :- set(S), S = union(S1,S2), elem(S2, X).
+elem(S, X) :- set(S), S = inter(S1,S2), elem(S2, X), elem(S1,X).
+elem(S, X) :- set(S), S = diff(S1,S2), elem(S1, X), neg elem(S2,X). %??? neg?
+
+sub(S1 ,S2) :- elem(S1, X) : elem(S2, X).
+eq(S1,S2) :- sub(S1,S2), sub(S2,S1).
+```
+
+
+
+### EPR
+What about this one huh. Kind of interesting.
+EPR and datalog are kind of related in that they both rely on something like finite herband universes for their termination/decidability.
 
 
 ## Junk
