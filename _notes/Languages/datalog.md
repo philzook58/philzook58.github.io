@@ -3796,6 +3796,65 @@ That is a nearly usable interface. Hmm.
 
 
 ### Geometry
+<http://www.mmrc.iss.ac.cn/~xgao/paper/jar-gdbase.pdf> see appendix
+
+Hmm they store canonical forms of relations. That's cool.
+
+equivalence classes to represent some predicates - collinear(l1,l2) is an equivalence relation.
+
+```souffle
+.type pt = symbol
+.decl coll(a : pt, b : pt, c : pt)
+
+// collinearity of points
+coll(a,c,b) :- coll(a,b,c).
+coll(b,a,c) :- coll(a,b,c).
+coll(c,d,a) :- coll(a,b,c), coll(a,b,d).
+
+
+// parallel lines
+.decl para(a : pt, b : pt, c : pt, d : pt)
+
+para(A, B, D, C):- para(A, B, C, D).
+para(C, D, A, B):- para(A, B, C, D). // symmettry of parallel
+para(A, B, E, F ):- para(A, B, C, D), para(C, D, E, F ). // transitivity of parallel
+
+// perpendicular lines
+.decl perp(a : pt, b : pt, c : pt, d : pt)
+
+perp(A, B, D, C):- perp(A, B, C, D).
+perp(C, D, A, B):- perp(A, B, C, D).
+para(A, B, E, F ):- perp(A, B, C, D), perp(C, D, E, F ). // two perps make a paralel
+perp(A, B, E, F ):- para(A, B, C, D), perp(C, D, E, F ).
+
+// rewriting in terms of lines feels somewhat natural.
+// .type Line = {a : pt, b : pt}
+// (= (Line a b) (Line b a))
+// (= (line a b) (line a c)) === coll(a,b,c). Collinearity of points is an equivalence relation over lines
+// collinear is the for real equality over lines
+// parallelism is a distinct equivalence class.
+// para(l1) = para(l2)
+// dot(l1,l2) = dot(l2,l1)
+// covers a lot of the above.
+
+// midpoint of lines
+.decl midp(mid : pt, a : pt, b : pt)
+midp(M, A, B):- midp(M, B, A).
+
+.decl cond(a : pt, b : pt, c : pt, d : pt)
+.decl circle(a : pt, b : pt, c : pt, d : pt)
+circle(O, A, B, C) :- cong(O, A, O, B), cong(O, A, O, C).
+
+// length being equal is a good descrption of cong.
+
+cyclic(A, B, C, D) :- cong(O, A, O, B), cong(O, A, O, C), cong(O, A, O, D).
+cyclic(A, B, D, C) :- cyclic(A, B, C, D).
+cyclic(A, C, B, D) :- cyclic(A, B, C, D).
+cyclic(B, A, C, D) :- cyclic(A, B, C, D).
+cyclic(B, C, D, E) :- cyclic(A, B, C, D), cyclic(A, B, C, E).
+
+
+```
 
 ### Categorical Example
 
