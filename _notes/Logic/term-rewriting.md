@@ -92,8 +92,11 @@ maude.init()
 m = maude.getModule('NAT')
 t = m.parseTerm('2 * 3')
 t.reduce()
-print(t)
+print(t)x
 ```
+
+
+
 
 [Context-sensitive Rewriting Lucas](https://www.researchgate.net/publication/341029369_Context-Sensitive_Rewriting)
 
@@ -112,6 +115,170 @@ OPerator strategires - can mark which arguments must be evaluated before the tot
 Frozen - can mark whether whole subterms are frozen. Is this that different?
 
 System modules vs functional modules. System modules specify concurrent rewrite systems. Functional modules are assumed church rosser and terminating
+
+https://fadoss.github.io/strat-examples/
+
+rewriting graphs can be model checked with respect to ltl formula. That's cool
+
+http://maude.cs.illinois.edu/w/images/0/0f/BMgrt_2003.pdf proof system
+
+
+http://maude.cs.uiuc.edu/maude1/tutorial/ tutorial for maude exampls
+
+
+```
+fmod A-GRAPH is
+   sorts Edge Node .
+   ops n1 n2 n3 n4 n5 : -> Node .
+   ops a b c d e f : -> Edge .
+   ops source target : Edge -> Node .
+
+   eq source(a) = n1 .  eq target(a) = n2 .
+   eq source(b) = n1 .  eq target(b) = n3 .
+   eq source(c) = n3 .  eq target(c) = n4 .
+   eq source(d) = n4 .  eq target(d) = n2 .
+   eq source(e) = n2 .  eq target(e) = n5 .
+   eq source(f) = n2 .  eq target(f) = n1 .
+endfm
+```
+
+path example. Shows  the subsorting technique. In the manual they show some weird "kind" example.
+```
+fmod PATH is
+   protecting NAT .
+   protecting A-GRAPH .
+
+   sorts Path Path? .
+   subsorts Edge < Path < Path? .
+   op _;_ : Path? Path? -> Path? [assoc] .
+   ops source target : Path -> Node .
+   op length : Path -> Nat .
+
+   var E : Edge .
+   var P : Path .
+
+   cmb (E ; P) : Path if target(E) == source(P) .
+
+   eq source(E ; P) = source(E) .
+   eq target(P ; E) = target(E) .
+   eq length(E) = s(0) .
+   eq length(E ; P) = s(0) + length(P) .
+endfm
+```
+
+This is cool. It's sequent proof search 
+
+```
+mod SEQUENT-RULES-PROP-LOG is
+  protecting PROP-LOG .
+  sort Configuration .
+  subsort Sequent < Configuration .
+  op empty : -> Configuration .
+  op __ : Configuration Configuration -> Configuration
+                                         [assoc comm id: empty] .
+  vars R S : PropSet .
+  vars P Q : Prop .
+
+  rl [Identity] :        empty
+                    => -----------
+                       |- (P, ~ P) .
+
+  rl [Cut] :           |- (R, P) |- (S, ~ P)
+                    => ---------------------
+                            |- (R, S) .
+
+  rl [Weakening] :       |- R
+                    => ---------
+                       |- (R, P) .
+
+  rl [Disjunction] :     |- (R, P, Q)
+                    => ----------------
+                       |- (R, (P \/ Q)) .
+
+  rl [Conjunction] :   |- (R, P) |- (S, Q)
+                    => -------------------
+                       |- (R, S, (P /\ Q)) .
+
+  rl [Truth] :          empty
+                    => -------
+                        |- tt .
+endm
+```
+
+
+### Equation Search
+
+
+```python
+import maude
+
+test_mod = """
+  mod SEARCH is
+    sort Num .
+ 
+    op _+_ : Num Num -> Num .
+    ops a b c d e f : -> Num .
+
+    vars n m p  : Num .
+    rl [lassoc] : (n + m) + p => n + (m + p) .
+    rl [rassoc] : n + (m + p) => (n + m) + p .
+    rl [comm] : n + m => m + n .
+
+  endm"""
+maude.init()
+maude.input(test_mod)
+mod = maude.getModule('SEARCH')
+
+t = mod.parseTerm("(a + b) + c")
+# t.search takes in parameters. I thnk the first one is no step, one step, *step
+for (sol, subst, seq, steps) in t.search(5, mod.parseTerm("c + (b + n)"), depth=2):
+    path = seq()
+    print(subst) # n = a
+    print(path) # an interleaved list of term and rule.
+
+```
+
+I do feel like there is way to hack cost into this. Define cost via computational equations... Hmm.
+
+### Category
+
+```python
+import maude
+
+test_mod = """
+  fmod TESTMOD is
+    sort Term .
+    op foo : Term -> Term .
+    ops x bar : -> Term .
+    eq foo(x) = bar .
+  endfm"""
+
+
+test_mod = """
+  fmod CATEGORY is
+    sort Ob Morph .
+    //subsort Morph < Morph? .
+    op comp : Morph Morph ~> Morph .
+    op id : Ob -> Morph .
+    vars f g h .
+    vars a b c .
+    eq comp(comp(f,g), h) = comp(f, comp(g, h)) .
+    eq comp(id(a),f) = f .
+    eq comp(f, id(a)) = f .
+    cmb comp(f,g) : Morph if type(f) = hom(A,B) /\ type(g) = hom(B,C) .
+
+  endfm"""
+maude.init()
+maude.input(test_mod)
+mod = maude.getModule('CATEGORY')
+
+t = mod.parseTerm("id(a)")
+print(t.reduce())
+print(t)
+
+```
+
+"matching equations" are multipatterns rather than guards
 
 
 
