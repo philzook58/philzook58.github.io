@@ -1,0 +1,5 @@
+
+```eggsmol
+(datatype Foo (Bar))
+
+```
