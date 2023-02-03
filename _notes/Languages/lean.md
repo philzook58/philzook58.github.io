@@ -3,8 +3,9 @@ layout: post
 title: Lean
 ---
 
-[Logic and Mechanized Reasoning](https://avigad.github.io/lamr/logic_and_mechanized_reasoning.pdf)
-[](https://avigad.github.io/lamr/)
+- [Logic and Mechanical Reasoning](https://avigad.github.io/lamr/) [Logic and Mechanized Reasoning](https://avigad.github.io/lamr/logic_and_mechanized_reasoning.pdf)
+- [Theorem proving in lean4](https://leanprover.github.io/theorem_proving_in_lean4/)
+- [functional programming in lean](https://leanprover.github.io/functional_programming_in_lean/hello-world.html) Christianson
 
 [Theorem prover lab: applications in programming languages ](https://github.com/IPDSnelting/tba-2021)
 
@@ -34,14 +35,18 @@ That sounds fun
 - [lean4 raytracer](https://github.com/kmill/lean4-raytracer)
 - [balance car](https://github.com/galoisinc/lean4-balance-car)
 - [lean 4 talk overview](https://www.youtube.com/watch?v=UeGvhfW1v9M) [second half](https://www.youtube.com/watch?v=vy4JWIiiXSY&ab_channel=leanprovercommunity)
-- [Theorem proving in lean4](https://leanprover.github.io/theorem_proving_in_lean4/)
+
 - [lean 4 manual](https://leanprover.github.io/lean4/doc/)
 - [lean 3 logic and proof](https://leanprover.github.io/logic_and_proof/)
 
-- [functional programming in lean](https://leanprover.github.io/functional_programming_in_lean/hello-world.html) Christianson
-- [theorme prover lab](https://github.com/IPDSnelting/tba-2022)
 
+- [theorme prover lab](https://github.com/IPDSnelting/tba-2022)
+- [MA 208: Proof and Programs ](http://math.iisc.ac.in/~gadgil/proofs-and-programs-2023/index.html)
+- [lean learning group](https://www.maths.ed.ac.uk/~pkinnear/leancourse/)
 [Aesop (Automated Extensible Search for Obvious Proofs) i](https://github.com/JLimperg/aesop)
+
+[lean for the curious mathmtician 2020](https://github.com/leanprover-community/lftcm2020)
+
 
 ### Build
 
@@ -49,8 +54,11 @@ That sounds fun
 
 `leanpkg`
 
-[`lake`](https://github.com/leanprover/lake) is a new build tool on the horizon
+[`lake`](https://github.com/leanprover/lake) is a new build tool on the horizon. analog of cargo
 
 Using nix is kind of a pain. I haven't done it.
 
 
+```lean
+{% include_relative lean/basics.lean %}
+```

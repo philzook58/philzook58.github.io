@@ -196,6 +196,13 @@ https://github.com/GJDuck/e9patch
 
 [Reassembly is Hard: A Reflection on Challenges and Strategies](https://softsec.kaist.ac.kr/~sangkilc/papers/kim-usenix23.pdf)
 
+<https://twitter.com/peter_a_goodman/status/1503016499824537600?s=20&t=1Z4ew6rnGnFiMTSrQJSmKw> goodman on binary rewriting
+binrec - lift program merge lifted bytecode into debloated
+[egalito](https://ethv.net/static/egalito.pdf)
+BOLT
+lifting bits/grr
+
+
 ## Binary reversign
 https://corte.si/posts/visualisation/binvis/index.html hilbert curves for binary vsiualization
 benford's law
@@ -568,6 +575,14 @@ See linker
 elfmaster
 elf reverse
 
+[example interesting elf files](https://github.com/tmpout/elfs) overlaying headers. smallest that doesn't voilate spec
+
+
+[binary golf workshop](https://github.com/netspooky/bgws)
+https://codegolf.stackexchange.com/ [size coding](http://www.sizecoding.org/wiki/Main_Page)
+[dead bytes](https://tmpout.sh/1/1.html) libgolf
+[UNIX ELF Parasites and virus - Silvio Cesare](https://ivanlef0u.fr/repo/madchat/vxdevl/vdat/tuunix02.htm)
+[Elf Binary Mangling Pt. 4: Limit Break](https://tmpout.sh/2/11.html)
 # CTF
 commando vm
 
@@ -670,11 +685,7 @@ https://github.com/HyperDbg/HyperDbg
 
 
 
-<https://twitter.com/peter_a_goodman/status/1503016499824537600?s=20&t=1Z4ew6rnGnFiMTSrQJSmKw> goodman on binary rewriting
-binrec - lift program merge lifted bytecode into debloated
-egalito 
-BOLT
-lifting bits/grr
+
 
 
 

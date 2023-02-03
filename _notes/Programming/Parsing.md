@@ -53,6 +53,7 @@ Just making a parse tree acceptor vs something that outputs something.
 Memoizing parser combinators
 tabling
 
+[Hammer](https://github.com/abiggerhammer/hammer) binary format parser combinators in C
 ## Parser Generators
 
 
@@ -264,3 +265,6 @@ fragment DIGIT
    : ('0' .. '9')
    ;
 ```
+
+
+[awesome binary parsing](https://github.com/dloss/binary-parsing)

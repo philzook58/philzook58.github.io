@@ -24,6 +24,7 @@ title: Datalog
     - [Liveness](#liveness)
     - [Points To](#points-to)
     - [Available Expressions](#available-expressions)
+    - [Intersection](#intersection)
     - [Very Busy Expressions](#very-busy-expressions)
     - [Zippers For Program Points](#zippers-for-program-points)
     - [Dominators](#dominators)
@@ -64,6 +65,10 @@ title: Datalog
     - [Cycle](#cycle)
     - [Subgraph Matching](#subgraph-matching)
     - [Coloring](#coloring)
+  - [Propagators](#propagators)
+    - [Boolean Constraint Propagation](#boolean-constraint-propagation)
+    - [Difference Logic](#difference-logic)
+    - [Finite Domain](#finite-domain)
   - [Macros](#macros)
   - [Emulating Prolog](#emulating-prolog)
     - [Need Sets](#need-sets)
@@ -847,6 +852,51 @@ avail(l,e) :- label(l), expr(e), !notavail_exit(l,e).
 ```
 
 So what do I need to do to extend this to equivalent expressions?
+
+### Intersection
+De morgan intersections into unions.
+
+```souffle
+.type var = symbol
+.type node = number
+.decl edge(x : node, y : node)
+.decl avail(x : node, v : var)
+.decl vars(v : var)
+.decl nodes(x : node)
+vars("x"). vars("y").
+avail(1,"x").
+nodes(n) :- edge(n,_); edge(_,n).
+edge(1,2).edge(1,3).edge(2,4).edge(3,4). // edge(5,4).
+/* The graph:
+    1
+  /   \
+  2   3  
+  \   /
+    4    */
+
+
+// Bounded forall method.
+// avail_cnt is a running count of predecessor nodes for which v is available.
+.decl avail_cnt(x : node, prev : node, v : var, n : number)
+avail_cnt(x, p, v, 1) :- nodes(x), p = min p1 : {edge(p1,x)}, avail(p,v).
+avail_cnt(x,p2, v, n + 1) :- edge(p1,x), avail_cnt(x,p1,v,n),
+                          edge(p2,x), p1 < p2, avail(p2,v).
+
+// If count of all predecessors with avialable equals total incoming edges
+// then all of them have it available
+avail(x, v) :- avail_cnt(x, _, v, c), c = count : { edge(_,x) }.
+
+
+// Method 2. De Morgan the intersection
+.decl not_avail(x : node, v : var)
+not_avail(1, "y").
+not_avail(x,v) :- not_avail(p,v), edge(p,x).
+.output not_avail(IO=stdout)
+
+```
+
+
+
 
 ### Very Busy Expressions
 Expressions that are needed on every path
@@ -2592,6 +2642,36 @@ pathcap(i,j,f) <= flow(i,j,f2) :-  f2 <= f2.
 ```
 ### Reachability
 ### Shortest Path
+```souffle
+
+.type vert = symbol
+.decl edge(x : vert, y : vert, cost : number)
+.decl path(x : vert, y : vert, cost : number)
+edge("x","y",2). edge("x","y",3). edge("x","y",4).
+edge("y","x",1).
+edge("y","z",5).
+
+.decl verts(x : vert)
+verts(x) :- edge(x,_,_); edge(_,x,_).
+edge(x,x,0) :- verts(x).
+
+
+path(x,y,c) :- edge(x,y,c).
+path(x,z,c1+c2) :- edge(x,y,c1), path(y,z,c2).
+
+
+
+path(x,y,c1) <= path(x,y,c2) :- c2 <= c1. 
+.output path(IO=stdout)
+```
+
+Note this is also useful for difference logic propagation.
+See difference logic in propagators
+
+
+
+
+
 A*
 
 Provenance of reachability _is_ the path.
@@ -2644,6 +2724,181 @@ Mod out color choice.
 same_color(x,y)
 diff_color(x,y) :- edge(x,y)
 ```
+
+## Propagators
+### Boolean Constraint Propagation
+
+```souffle
+// Boolean constraint propagation
+
+// 3-SAT encoding.
+// x \/ y \/ z
+
+.type var = number
+// negative number represents "not x" as in DIMACS
+.decl clause(x : var, y : var, z : var)
+
+false(-n) :- true(n).
+true(-n) :- false(n).
+
+true(z) :- clause(x,y,z), false(x), false(y).
+true(x) :- clause(x,y,z), false(y), false(z).
+true(z) :- clause(x,y,z), false(x), false(y).
+
+true(1). // 1 is true
+/*
+#define VAR(x) (as(x,number)+10000)
+.type formula = Var {n : number} | True {} | False {} | And {x : formula, y : formula} | Or {x : formula, y : formula}
+.decl assert(f : formula)
+true(n) :- assert($Var(n)).
+
+.decl assert(formula, ret : number)
+.decl _assert(formula) // demand relation
+_assert(x), _assert(y) :- _assert($And(x,y)).
+_assert(x), _assert(y) :- _assert($Or(x,y)).
+
+assert($Var(n), n) :- _assert($Var(n)).
+true(nx), true(ny) :- assert(x,nx), assert(y,ny), _assert(e), e = $And(x,y).
+assert() :- _assert(e), e = $Not(x).
+
+uhhhh, what am I doing?
+
+
+
+
+*/
+
+```
+
+### Difference Logic
+path(x,y,c) <=> x - y <= c
+
+can also encode equality and  x <= c constraints with zero node.
+
+```souffle
+.type var = symbol
+// this relation represents x - y <= c
+// It is interesting analogous to the relation path(x,y,cost)
+// https://users.aalto.fi/~tjunttil/2020-DP-AUT/notes-smt/diff_solver.html
+.decl diff_le(x : var, y : var, c : number)
+
+.decl vars(x : var)
+vars(x) :- diff_le(x,_,_); diff_le(_,x,_); diff_ge(x,_,_); diff_ge(_,x,_).
+diff_le(x,x,0) :- vars(x).
+
+// Helper definitions
+// x - y >= c
+.decl diff_ge(x : var, y : var, c : number)
+// x - y >= c -> y - x >= -c
+diff_le(y,x,-c) :- diff_ge(x,y,c).
+
+// x <= c
+.decl le(x : var, c : number)
+diff_le(x, "zero", c) :- le(x,c).
+
+// x >= c
+.decl ge(x : var, c : number)
+diff_ge(x, "zero", c) :- ge(x,c).
+
+// x - y = c
+.decl diff_eq(x : var, y : var, c : number)
+diff_ge(x,y,c), diff_le(x,y,c) :- diff_eq(x,y,c).
+
+// x = c
+.decl eq(x : var, c : number)
+ge(x,c), le(x,c) :- eq(x,c).
+
+// Transitivity.
+// x - y <= c1 /\ y - z <= c2  -> x - z <= c1 + c2
+diff_le(x,z,c1+c2) :- diff_le(x,y,c1), diff_le(y,z,c2).
+
+// tightest bound / shortest path
+diff_le(x,y,c1) <= diff_le(x,y,c2) :- c2 <= c1.
+
+/*
+diff_le("x","y",2). diff_le("x","y",3). diff_le("x","y",4).
+*/
+diff_le("y","x",1).
+diff_le("y","z",5).
+
+
+.output diff_le(IO=stdout)
+.output diff_ge(IO=stdout)
+
+eq("x",2).
+diff_eq("x","y", 5).
+
+// x - y <= c /\ y - x <= -c -> x - y = c
+diff_eq(x,y,c) :- diff_le(x, y, c), diff_le(y, x, -c).
+// x - 0 = c -> x = c
+eq(x, c):- diff_eq(x, "zero",c).
+.output eq(IO=stdout)
+
+
+// It is a choice whether to encode everything in term of diff_le
+//diff_ge(y,x,-c) :- diff_le(x,y,c).
+// diff_ge(x,x,0) :- vars(x).
+// x - y >= c1 /\ y - z >= c2  -> x - z >= c1 + c2
+//diff_ge(x,z,c1+c2) :- diff_ge(x,y,c1), diff_ge(y,z,c2).
+// diff_ge(x,y,c1) <= diff_ge(x,y,c2) :- c1 <= c2.
+```
+
+```
+(rule (<= (- x y) (Num c)) (<= (- y z) (Num c2)) ((<= (- x z) (Num (+ c1 c2)))))
+; but then we aren't getting the merge goodness.
+; so reflect the relational form into equational form (and back?)
+(rule (<= (- x y) (Num c)) (set (upbound (- x y) (Num c)))
+(rule (= (upbound (- x y)))
+
+; (diff-bound x y) = c
+
+; They do have different schema. But then we pollute the database with irrelevant facts. Hmm.
+; But modelling wise I want to use <=.
+; Either macros or inline relations. But only for some usages of <=
+; (<= (- x y) (Num c)) <---> 
+
+
+```
+### Finite Domain
+
+Use first class sets? Not necessarily
+alldifferent?
+
+```
+
+//not_num(n).
+num() :- num(i,j,n).
+
+```
+One hot encoding can be useful even if using not to represent sets
+
+
+```souffle
+// send more money
+
+.decl S(n : number)
+.decl not_S(n: number)
+
+
+singleton(2 bshl n) :- range(n)
+
+:- S(n), singleton(n)
+range(),
+
+
+```
+
+I mean surely hakank has done this in clingo
+```clingo
+
+{s(0..9)}. {e(0..9)}.
+{n(0..9)}. {d(0..9)}.
+
+
+```
+
+
+
 
 ## Macros
 
@@ -3841,18 +4096,45 @@ perp(A, B, E, F ):- para(A, B, C, D), perp(C, D, E, F ).
 .decl midp(mid : pt, a : pt, b : pt)
 midp(M, A, B):- midp(M, B, A).
 
-.decl cond(a : pt, b : pt, c : pt, d : pt)
+.decl cong(a : pt, b : pt, c : pt, d : pt)
+// circle is circle center + 2 points. Why?
 .decl circle(a : pt, b : pt, c : pt, d : pt)
 circle(O, A, B, C) :- cong(O, A, O, B), cong(O, A, O, C).
 
-// length being equal is a good descrption of cong.
+// length being equal is a good descrption of cong. len(seg1) = len(seg2)
 
+// cyclic is circle described by 4 points?
+.decl cyclic(a : pt, b : pt, c : pt, d : pt)
 cyclic(A, B, C, D) :- cong(O, A, O, B), cong(O, A, O, C), cong(O, A, O, D).
 cyclic(A, B, D, C) :- cyclic(A, B, C, D).
 cyclic(A, C, B, D) :- cyclic(A, B, C, D).
 cyclic(B, A, C, D) :- cyclic(A, B, C, D).
 cyclic(B, C, D, E) :- cyclic(A, B, C, D), cyclic(A, B, C, E).
 
+
+// two angles each of which described by two lines
+// angle(l1) = angle(l2)
+.decl eqangle(a : pt, b : pt, c : pt, d : pt, e:pt, f:pt, g : pt, h : pt)
+
+eqangle(B, A, C, D, P , Q, U, V ):- eqangle(A, B, C, D, P , Q, U, V ).
+eqangle(C, D, A, B, U, V , P , Q):- eqangle(A, B, C, D, P , Q, U, V ).
+eqangle(P , Q, U, V , A, B, C, D):- eqangle(A, B, C, D, P , Q, U, V ).
+eqangle(A, B, P , Q, C, D, U, V ):- eqangle(A, B, C, D, P , Q, U, V ).
+eqangle(A, B, C, D, E, F, G, H ):-
+  eqangle(A, B, C, D, P , Q, U, V ), eqangle(P , Q, U, V , E, F, G, H ). // transitivity
+```
+
+Hmm. Vector algebra is the method. Parametrize objects. Use trig identities. Logic is super algebra.
+Hmm.
+
+```egglog
+(rule (on (line a b) a))
+(rewrite (line a b) (line b a))
+(= (para l1) (para l2))
+(angle l1 l2)
+(line (seg a b))
+(seg a b) = (seg b c) is cong()
+(circle o a) = (circle o b)
 
 ```
 
