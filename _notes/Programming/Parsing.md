@@ -163,6 +163,19 @@ https://rosettacode.org/wiki/S-expressions#Python
 use regex. We will want to parse numbers and strings.
 
 
+## Flex Bison
+https://begriffs.com/posts/2021-11-28-practical-parsing.html
+Crazy stuff.
+
+lex creates yylex which lexes from a file handler
+Options can be made to not use globals
+
+the parser calls yylex, which returns if it wants t give bakc a token
+The tokens correspond to `define` integers
+
+global variables in the prelude.
+
+
 ## Antlr
 upper case are lexer rules, lower case are parse rules
 
@@ -265,6 +278,10 @@ fragment DIGIT
    : ('0' .. '9')
    ;
 ```
+
+# Misc
+
+[grammar zoo](http://slebok.github.io/zoo/index.html)
 
 
 [awesome binary parsing](https://github.com/dloss/binary-parsing)

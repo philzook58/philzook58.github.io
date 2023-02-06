@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Linkers
+title: Linkers and Loaders
 ---
 
 - [Sections](#sections)
@@ -10,7 +10,8 @@ title: Linkers
 - [Dynamic Linking](#dynamic-linking)
 - [Compilation Units](#compilation-units)
 - [Link Time Optimization](#link-time-optimization)
-- [ELF](#elf)
+- [Linking Formats](#linking-formats)
+  - [ELF](#elf)
 - [Objcopy](#objcopy)
 - [ld](#ld)
   - [Linker scripts](#linker-scripts)
@@ -18,8 +19,19 @@ title: Linkers
 - [Resources](#resources)
     - [JT's notes](#jts-notes)
 
+
+Linking is taking a bunch of library binaries and gluing them together into a new file.
+
+Loading is taking a binary or multiple binaries and loading it into memory so you can run it.
+
+They are related tasks (both are transferring binaries from one place to another and doing some hooking together), but to some degree it is conceptually unfortunate that the concepts run over each other.
+
 # Sections
+Sections are for linking.
+
+
 # Segments
+Segments are for loading.
 # Symbol Table
 A key value mapping
 
@@ -66,10 +78,32 @@ https://en.wikipedia.org/wiki/Single_Compilation_Unit
 
 # Link Time Optimization
 
-# ELF
+# Linking Formats
+Some of what makes linking formats so confusing is that they are binary representations of structured data. I am more used to thinking about the data structure and it's serialization more separately. So many of the fields are indices and sizes of other fields. It's also kind of flattened, in a similar way you might flatten to put something into a relational database.
+
+In a curious way, if you are accessing these formats from C, it's actually _easier_ to use them than a textual format. There is no parsing necessary. You memory map in the file and just immediately interpret bytes as their appropriate structs. This does seem fraught with peril to me though.
+
+- elf - linux
+- stabs - old?
+- PE - windows
+- Mach-o - mac
+## ELF
+`man elf` on your system will give you a whole spiel
+
+[The elf spec](https://refspecs.linuxfoundation.org/elf/elf.pdf)
+
+`#include <elf.h>` will bring in the elf header file from your system. It isn't persay that difficult to parse elf from within C. Everywhere else it sucks.
 
 [tmp.out](https://tmpout.sh/)
-https://github.com/tmpout/awesome-elf
+
+<https://github.com/tmpout/awesome-elf>
+
+[pyelftools](https://github.com/eliben/pyelftools/) can read elf from python.
+
+The [Lief](https://lief-project.github.io/) library is useful for manipulating formats
+
+A lot of stuff is powered by 
+
 # Objcopy
 Not linking persay. But some useful stuff for manipulating object files
 
@@ -89,8 +123,14 @@ LMA vs VMA load memoery address vs virtual memory address. Can differe when stor
 # DWARF
 Debug info
 unwind tables
+
+[ORC unwind tables in kernel](https://www.kernel.org/doc/html/latest/x86/orc-unwinder.html)
+
 [Reliable and Fast DWARF-Based Stack Unwinding](https://hal.inria.fr/hal-02297690/document)
 <https://fzn.fr/projects/frdwarf/>
+
+[dwarf too unreliable, back to frame pointers](https://rwmj.wordpress.com/2023/02/02/fedora-now-has-frame-pointers/) https://news.ycombinator.com/item?id=34632677
+
 [How debuggers work: Part 3 - Debugging information](https://eli.thegreenplace.net/2011/02/07/how-debuggers-work-part-3-debugging-information)
 
 [gimli](https://docs.rs/gimli/latest/gimli/) a rust library for reading and writing dwarf
@@ -107,8 +147,8 @@ FDE - frame description entity
 I suppose the dwarf bytecode is kind of a uniform abstraction of the code itself? Only replicating instructions that change frame information?
 
 I don't know what these are
-https://github.com/emersion/libdwarfw
-https://github.com/emersion/dareog
+<https://github.com/emersion/libdwarfw>
+<https://github.com/emersion/dareog>
 
 [Exploitng the hard working dwarf](https://www.cs.dartmouth.edu/~sergey/battleaxe/hackito_2011_oakley_bratus.pdf)
 [video](https://www.youtube.com/watch?v=nLH7ytOTYto&ab_channel=Dartmouth)
@@ -180,7 +220,7 @@ ld - linker editor
 
 <https://learnxinyminutes.com/docs/ru-ru/linker-ru/>
 
-https://github.com/AbsInt/CompCert/blob/d194e47a7d494944385ff61c194693f8a67787cb/common/Linking.v compcert linking file
+<https://github.com/AbsInt/CompCert/blob/d194e47a7d494944385ff61c194693f8a67787cb/common/Linking.v> compcert linking file
 This file follows "approach A" from the paper
        "Lightweight Verification of Separate Compilation"
     by Kang, Kim, Hur, Dreyer and Vafeiadis, POPL 2016. 
@@ -194,7 +234,7 @@ This file follows "approach A" from the paper
 <https://github.com/elfmaster>
 <https://www.amazon.com/Learning-Binary-Analysis-elfmaster-ONeill-ebook/dp/B01891X7V0>
 
-https://semantic-domain.blogspot.com/2012/11/in-this-post-ill-show-how-to-turn.html?m=1 geometry of interaction stuff. Neel Krinshnasawmi
+<https://semantic-domain.blogspot.com/2012/11/in-this-post-ill-show-how-to-turn.html?m=1> geometry of interaction stuff. Neel Krinshnasawmi
 
 
 Dwarf - it's like complicated. But there is a lot in there.
@@ -204,26 +244,26 @@ addr2line and other binutils
 libdwarf. dwarfdump
 
 
-https://twitter.com/stephenrkell/status/1448973963741339650?s=20
-https://www.humprog.org/~stephen//blog-all.html - lots of interesting stuff on linkers, elf, other
-https://github.com/stephenrkell/donald/ - his small linker. Uses ocaml?
-https://github.com/rems-project/linksem - generates ocaml?
+<https://twitter.com/stephenrkell/status/1448973963741339650?s=20>
+<https://www.humprog.org/~stephen//blog-all.html> - lots of interesting stuff on linkers, elf, other
+<https://github.com/stephenrkell/donald/> - his small linker. Uses ocaml?
+<https://github.com/rems-project/linksem> - generates ocaml?
 
-ld_preload hacking http://kev.pulo.com.au/publications/#lca2009_ld_preload
-http://jvns.ca/blog/2014/11/27/ld-preload-is-super-fun-and-easy/
-https://rafalcieslak.wordpress.com/2013/04/02/dynamic-linker-tricks-using-ld_preload-to-cheat-inject-features-and-investigate-programs/
+ld_preload hacking <http://kev.pulo.com.au/publications/#lca2009_ld_preload>
+<http://jvns.ca/blog/2014/11/27/ld-preload-is-super-fun-and-easy/>
+<https://rafalcieslak.wordpress.com/2013/04/02/dynamic-linker-tricks-using-ld_preload-to-cheat-inject-features-and-investigate-programs/>
 Hmm. So one thing you can do is mock out functions for testing. That's nice
 
 
 
-https://www.cl.cam.ac.uk/~pes20/rems/papers/oopsla-elf-linking-2016.pdf
+<https://www.cl.cam.ac.uk/~pes20/rems/papers/oopsla-elf-linking-2016.pdf>
 
 
-https://web.archive.org/web/20190421205537/http://www.cs.virginia.edu/~dww4s/articles/ld_linux.html referenced guide on how to write dynamic linker
+<https://web.archive.org/web/20190421205537/http://www.cs.virginia.edu/~dww4s/articles/ld_linux.html> referenced guide on how to write dynamic linker
 
 ryan oneill elfmaster
 silvio text segement padding
-SCOP padding secure cide oartitioning http://bitlackeys.org/papers/pocorgtfo20.pdf
+SCOP padding secure cide oartitioning <http://bitlackeys.org/papers/pocorgtfo20.pdf>
 PT_LOAD insertion - "learning linux binary analysis" book. 
 reverse text extension techniuqe
 github elfmaster - skeski virus, dt
@@ -238,11 +278,11 @@ https://commons.wikimedia.org/wiki/File:ELF_Executable_and_Linkable_Format_diagr
 
 ptrace , injecting a loader
 
-https://github.com/andrewhalle/byo-linker https://www.reddit.com/r/rust/comments/mdtsk5/build_your_own_linker/
+<https://github.com/andrewhalle/byo-linker<> <https://www.reddit.com/r/rust/comments/mdtsk5/build_your_own_linker/>
 
-https://www.toolchains.net/
+<https://www.toolchains.net/>
  - the author of gold, Ian Lance Taylor's 20 part Linker posts
-https://lwn.net/Articles/276782/
+<https://lwn.net/Articles/276782/>
 V good
 
 Symbols - Types and values?
@@ -251,7 +291,7 @@ Relocations - Bits of code that runs in general? Kind of bytecode?
 Executable config files -  dhall. Others. Kaitai has executable aspects. if then else, others.
 
 Functional models of linking
-
+```ocaml
 type fixups/relocs = Mov | Add | ?
 
 {
@@ -259,6 +299,7 @@ type fixups/relocs = Mov | Add | ?
     symbols: {name : string ; typ : typ;  value : value}list
     contents: { section : name; contents : string }
 }
+```
 
 bap's model 
 
@@ -305,8 +346,8 @@ ld has default linker script
 `ld --verbose` to see
 -T linker script
 
-https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_chapter/ld_3.html (manual)
-https://home.cs.colorado.edu/~main/cs1300/doc/gnu/ld_3.html
+<https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_chapter/ld_3.html> (manual)
+<https://home.cs.colorado.edu/~main/cs1300/doc/gnu/ld_3.html>
 
 SECTION :
 set current address. tell what sections from different files to include.

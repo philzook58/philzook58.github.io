@@ -135,6 +135,7 @@ https://github.com/black-binary/sleigh
 [An Empirical Study on ARM Disassembly Tools](https://github.com/valour01/arm_disasssembler_study)
 
 ## Decompiler
+[FoxDec - Formally verified x86-64 decompilation](https://ssrg-vt.github.io/FoxDec/)
 
 relic - no more gotos
 

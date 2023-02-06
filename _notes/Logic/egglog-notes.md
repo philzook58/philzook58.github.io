@@ -1,13 +1,9 @@
 
 
 - [Applications and Ideas](#applications-and-ideas)
-<<<<<<< HEAD
 - [Proof formats](#proof-formats)
-=======
-- [Datalog Modulo Term Rewritng / Named enodes](#datalog-modulo-term-rewritng--named-enodes)
->>>>>>> 16d994bde007fccbb8c44eaee6c10f121bd7f1eb
-- [Applications and Ideas](#applications-and-ideas)
-- [Proof formats](#proof-formats)
+- [Propagators](#propagators)
+- [Proveance Semirings and Truth Values](#proveance-semirings-and-truth-values)
 - [Datalog Modulo Term Rewritng / Named enodes](#datalog-modulo-term-rewritng--named-enodes)
   - [ASP](#asp)
 - [Z3 triggering](#z3-triggering)
@@ -556,6 +552,62 @@ oliver's paper
 Termination competition is another source of benchmarks. Again, it isn't clear these are good benchmarks.
 It would be a genuinely helpful thing for me the setup a CI benchmark suite
 
+
+# Propagators
+I'm confused where I'm confused, but I am definitely confused.
+
+Datalog is a fixed point of an expansive function on a database / herbrand universe.
+
+Each rule is monotonic, but not expansive (need implicit union with previous iteration).
+
+Egraphs have two processes, congruence closure aka rebuilding, and the eq-sat rewriting process.
+
+Eq-sat generates new nodes and hence can grow
+
+Congruence closure only shrinks the egraph. As an extensive equality relation, it grows the equality relation.
+
+Datalog rules do not refer to the entre database. They select elements out of the database and construct new elements.
+
+
+A finite domain propagator.
+sudoku:
+not-in(col,row, num)
+has-val(col,row,num)
+
+I mean, if you can come up with a datalog model, you can replace the implementation with something else
+
+I don't have a datalog model of polyhedra
+
+What is the interface of a propagator.
+
+
+not-in(point, poly)
+
+# Proveance Semirings and Truth Values
+Maybe truth as unit is the thing to roll back on. A programmable notion of truth or truth should be provenance. Relations are functions to provenance. There is implicit provenance construction akin to the implicit lattice meet in the query of flix. Then = needs to return something since it is a relation. Then ((a = b) = p1) = p2 (p1 is the provenance tree of a = b) becomes a thing one can state (?) and a hierarchy of equalities between proofs becomes a thing one can talk about. Not sure if I’m talking nonsense or something obvious.
+
+Another way to put this: let the user pick the output of the eq function for a given sort
+
+Yes, but also getting a programmable flix meet for truth values the way we have programmable merge akin to flix join
+
+All the values of the conjunctive query predicates are given to this thing. And implicitly tagged on anything going into the head. Or explicitly available as a bound object in the head?
+
+Maybe the eq output is the only thing that matters and the rest can be done manually.
+
+It’s kind of like overloading “and” aka overloading datalog “,”.
+
+A weak notion of “taint provenance” has come up a bunch of times over the last couple weeks (the z3 talk and for some decompiler stuff) Taint provenance is a set of the base facts and rules necessary to reach the conclusion. So in the path query, a set of edges rather than a path.
+
+Yes, I think the binding of it will be somewhat magic if we want to make it available to the action in the rule. But you could imagine that’s implicit as well.
+
+In that case, “provenance join” is a lattice join
+
+Similarly perhaps for “tree depth” provenance a la souffle
+
+Yeah, maybe we need overloading of the logical connectives = & ->
+If provenance is a semiring, we’re missing built in functionality for half of the ring ops.
+
+Overloading the meaning of eq also gives a way of stating custom equality mediated joins.
 
 # Datalog Modulo Term Rewritng / Named enodes
 A thoughtpile on terms.

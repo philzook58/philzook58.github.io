@@ -568,6 +568,7 @@ https://langston-barrett.github.io/notes/learning-llvm/
 # JVM
 
 # Misc
+[Proving the correctness of a compiler - Xavier Leroy](https://xavierleroy.org/courses/EUTypes-2019/) summer course
 
 [chibicc](https://github.com/rui314/chibicc) C compiler in nanopass style. Each commit is interesting! Written intentionally educationally.
 [lcc](https://drh.github.io/lcc/) a retagretable compiler for C. Has a book
