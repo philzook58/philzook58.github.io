@@ -212,6 +212,8 @@ entropy visualization
 https://www.usenix.org/system/files/sec22-burk.pdf Decomperson: How Humans Decompile
 and What We Can Learn From It
 
+[MATE](https://github.com/GaloisInc/MATE)
+
 # Debuggers
 https://github.com/x64dbg/x64dbg
 https://rr-project.org/
