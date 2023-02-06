@@ -3,6 +3,7 @@
 #eval if 1 > 2 then "yes" else "no"
 #eval (1 + 1 : Int)
 
+/- block comment -/
 def hello := "hello"
 def Str : Type := String
 
@@ -24,9 +25,16 @@ inductive MyBool where
 #check MyBool.MyTrue
 
 #eval Lean.versionString
-#eval Lean.
 
 #check fun (x : Nat) => x
 #check λ x => x
 #eval let y := 2; y + y
+
+theorem foo : p -> q -> p /\ q :=
+  by intros x y
+     apply And.intro
+     apply x
+     apply y
+     done
+
 

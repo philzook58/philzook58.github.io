@@ -5192,6 +5192,16 @@ Choice using subsumption, static or dynamic notion of "better".
 Can consider tensor calculations an example of datalog.
 Shortest path
 [provenance semirings](https://twitter.com/wilton_quinn/status/1516919665125036032?s=20&t=hmaJXnp6Mp_aUsdRpkOMcQ)
+
+Different kinds of semirings. Idempotent helps it look more like ordinary datalog
+Relations can be functions into some structured value than a bool.
+Ordered semirings
+
+`,` and  `;` are overloaded.
+
+
+
+
 ## Probability
 Perhaps related to semiring semantics
 [scallop](https://scallop-lang.github.io/) neurosymbolic datalog. Probablistic datalog. Uses provenance. topkrpoofs other methods. 

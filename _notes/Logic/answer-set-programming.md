@@ -29,6 +29,7 @@ title: Answer Set Programming
     - [EUF Ackermanization](#euf-ackermanization)
     - [Bitvectors](#bitvectors)
     - [Theory of Arrays](#theory-of-arrays)
+    - [Difference Logic](#difference-logic)
     - [EPR](#epr)
   - [Junk](#junk)
 - [Constructs](#constructs)
@@ -277,6 +278,8 @@ You can make variables that are true in particular worlds. A version I saw was c
 ## Compiler problems
 
 
+
+
 ```clingo
 
 prog(plus(a, b)).
@@ -292,6 +295,88 @@ isel(add(plus(A,B),A,B)) :- expr(plus(A,B)).
 alloc(R,T)
 
 %#show expr/1.
+```
+
+
+
+
+```clingo
+% re
+#script (python)
+import clingo
+
+def is_const(x):
+    print(x)
+    return x.type == clingo.SymbolType.Function and len(x.arguments) == 0
+def mkid(x):
+    if is_const(x):
+        return x
+    return clingo.Function("var", [clingo.Number(hash(x))])
+
+#end.
+
+% flatten
+expr(E) :- prog(E).
+expr(A) :- expr(plus(A,_)).
+expr(B) :- expr(plus(_,B)).
+
+% generate possible instruction outputs via pattern matching
+%insn(add(V, A1, B1)) :- expr(E), E = plus(A,B), V = @mkid(E), A1 = @mkid(A), B1 = @mkid(B). 
+
+pre_insn(add(E, A, B)) :- expr(E), E = plus(A,B).
+pre_insn(mov(E,A)) :-  expr(E), E = plus(A,0).
+pre_insn(mov(E,B)) :-  expr(E), E = plus(0,B).
+
+% do the id conversion all at once.
+insn(add(E1,A1,B1)) :- pre_insn(add(E,A,B)), E1 = @mkid(E), A1 = @mkid(A), B1 = @mkid(B).
+insn(mov(E1,A1)) :- pre_insn(mov(E,A)), E1 = @mkid(E), A1 = @mkid(A).
+
+% Is there really a reason to have separate insn and select?
+{select(I)} :- insn(I).
+
+defines(I,V) :- insn(I), I = add(V, A1, B1).
+defines(I,V) :- insn(I), I = mov(V, A).
+
+uses(I,A) :- insn(I), I = add(V, A, B).
+uses(I,B) :- insn(I), I = add(V, A, B).
+uses(I,A) :- insn(I), I = mov(V, A).
+
+% top level output is needed.
+used(P1) :- prog(P), P1 = @mkid(P). 
+{select(I) : defines(I,V)} = 1 :- used(V). % if used, need to select something that defines it.
+
+% if selected, things instruction uses are used. Again if selected 
+used(A) :- select(I), uses(I,A).
+
+%//{select(A) :- select(add(V,A,B)).
+%select
+
+%prog(plus(a, plus(b,c))).
+prog(plus(a, plus(plus(0,b),c))).
+defines(a,a; b,b; c,c).
+
+%#show expr/1.
+#show select/1.
+
+% if used, must be assigned register
+{assign(V, reg(0..9)) } = 1 :- used(V).
+
+le(X,Z) :- le(X,Y), le(Y,Z). % transitive
+:- le(X,Y), le(Y,X), X != Y. % antisymmettric
+le(X,X) :- le(X,_). % reflexive
+le(Y,Y) :- le(_,Y).
+
+% instructions must be ordered
+{le(I,J)} :- select(I), select(J).
+
+% definitions must become before uses.
+le(I,J) :- defines(I,A), used(J,A).
+
+% var is live at instructin I if I comes after definition J, but before a use K.
+% using instruction as program point is slight and therefore perhaps alarming conflation
+live(I, X) :- defines(J, X), le(J, I), J!=I, le(I,K), uses(K,X).
+
+#show assign/2.
 ```
 
 
@@ -384,6 +469,12 @@ id(@mkid(E),E) :- expr(E).
 
 
 ```
+
+```clingo
+biz.
+{foo; bar} = 2 :- biz.
+```
+
 Could use python parser to create code. That's kind of intriguing.
 
 
@@ -868,11 +959,13 @@ sub(S1 ,S2) :- elem(S1, X) : elem(S2, X).
 eq(S1,S2) :- sub(S1,S2), sub(S2,S1).
 ```
 
-
+### Difference Logic
+In the datalog notes, I talk about how difference logic propagator is th same as shortest path.
 
 ### EPR
 What about this one huh. Kind of interesting.
 EPR and datalog are kind of related in that they both rely on something like finite herband universes for their termination/decidability.
+The eager encoding of epr can be very bad though.
 
 
 ## Junk

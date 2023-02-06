@@ -48,6 +48,7 @@ That sounds fun
 [lean for the curious mathmtician 2020](https://github.com/leanprover-community/lftcm2020)
 
 
+[mathlib 4 docs](https://leanprover-community.github.io/mathlib4_docs/) but also std lib docs
 ### Build
 
 `elan` tool

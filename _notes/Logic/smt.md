@@ -69,6 +69,7 @@ title: SMT Solvers
 - [Program Verification](#program-verification)
   - [Nand2Tetris Cpu](#nand2tetris-cpu)
   - [Arm](#arm)
+  - [RiscV](#riscv)
   - [Forth](#forth)
   - [WASM](#wasm)
   - [Weakest Precondition](#weakest-precondition)
@@ -3010,6 +3011,107 @@ https://www.philipzucker.com/nand2tetris-chc/
 ```
 
 ## Arm
+## RiscV
+https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
+
+- Using define-fun-rec gives a first class handle on instructions.
+- To curry or not.
+- 
+
+```z3
+;re
+; let's just stick to 32 bit operations
+; 32 = 2^5 registers of 32 bits a piece
+(define-sort REG () (_ BitVec 5))
+(define-sort BV32 () (_ BitVec 32))
+(define-sort REGFILE () (Array REG BV32))
+(define-sort Addr () BV32)
+
+(define-const r0 REG (_ bv0 5))
+(define-const bv0 BV32 (_ bv0 32))
+(define-const bv1 BV32 (_ bv1 32))
+
+
+(declare-datatype State (
+ (State
+    (mem (Array Addr BV32))
+    (regfile REGFILE)
+    (pc BV32)
+  ))
+)
+
+; r0 is always all zeros
+(define-fun valid ((s State)) Bool
+  (= (select (regfile s) r0) bv0)
+)
+
+; similarly for sub,and,or,xor
+(define-fun add ((dst REG) (src1 REG) (src2 REG)) (Array REGFILE REGFILE Bool)
+  (lambda ((in REGFILE) (out REGFILE))
+      (= out (store in dst (bvadd (select in src1) (select in src2))))
+  )
+) 
+
+
+(define-fun nop () (Array REGFILE REGFILE Bool)
+  (lambda ((in REGFILE) (out REGFILE))
+      (= out in)
+  )
+) 
+
+```
+
+```python
+from z3 import *
+from dataclasses import dataclass
+REG = BitVecSort(5)
+BV32 = BitVecSort(32)
+MEM = ArraySort(BV32, BitVecSort(8))
+REGFILE = ArraySort(REG, BV32) # could make this a python list. statically structured.
+
+
+# Z3 records vs python records. An eternal battle.
+# The state record is total static though. Shouldn't be a problem.
+@dataclass
+class RVState:
+  mem: Array
+  regfile: Array
+  pc: BitVec
+
+def FreshState():
+  return RVState(FreshConst(MEM), FreshConst(REGFILE), FreshConst(BV32))
+
+def add(dst,src1,src2):
+  def res(in_,out):
+    return out == Store(in_,dst, in_[src1] + in_[src2])
+  return res
+
+# functional style.
+def add(dst,src1,src2):
+  def res(s):
+    return Store(s,dst, in_[src1] + in_[src2])
+  return res
+
+# relation composition.
+# temporal compositin.
+def comp(f,g):
+  def res(in_,out):
+    s = FreshState()
+    return Exists([s.mem, s.regfile, s.pc], And( f(in_,s), g(s, out)))
+  return res
+
+def hcomp(f,g):
+  def res(in_, out):
+    return And(f(in_out), g(in_,out))
+  return res
+
+#foo = Array("foo", IntSort(),IntSort())
+#print(foo["a"])
+```
+
+So what do I want to do with this model? WP? CHC? Model checking? Symbolic execution? Hoare Logic?
+Bit accurate assembly modelling can be interesting too.
+
 ## Forth
 ## WASM
 

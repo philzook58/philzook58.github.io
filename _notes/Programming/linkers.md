@@ -123,8 +123,14 @@ LMA vs VMA load memoery address vs virtual memory address. Can differe when stor
 # DWARF
 Debug info
 unwind tables
+
+[ORC unwind tables in kernel](https://www.kernel.org/doc/html/latest/x86/orc-unwinder.html)
+
 [Reliable and Fast DWARF-Based Stack Unwinding](https://hal.inria.fr/hal-02297690/document)
 <https://fzn.fr/projects/frdwarf/>
+
+[dwarf too unreliable, back to frame pointers](https://rwmj.wordpress.com/2023/02/02/fedora-now-has-frame-pointers/) https://news.ycombinator.com/item?id=34632677
+
 [How debuggers work: Part 3 - Debugging information](https://eli.thegreenplace.net/2011/02/07/how-debuggers-work-part-3-debugging-information)
 
 [gimli](https://docs.rs/gimli/latest/gimli/) a rust library for reading and writing dwarf
