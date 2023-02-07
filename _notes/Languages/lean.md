@@ -40,7 +40,7 @@ That sounds fun
 - [lean 3 logic and proof](https://leanprover.github.io/logic_and_proof/)
 
 
-- [theorme prover lab](https://github.com/IPDSnelting/tba-2022)
+- [theorem prover lab](https://github.com/IPDSnelting/tba-2022)
 - [MA 208: Proof and Programs ](http://math.iisc.ac.in/~gadgil/proofs-and-programs-2023/index.html)
 - [lean learning group](https://www.maths.ed.ac.uk/~pkinnear/leancourse/)
 [Aesop (Automated Extensible Search for Obvious Proofs) i](https://github.com/JLimperg/aesop)
