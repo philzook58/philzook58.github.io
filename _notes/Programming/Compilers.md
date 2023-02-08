@@ -693,6 +693,10 @@ Instruction Combiner
 
 [Learning to combine instructions in LLVM compiler](https://twitter.com/johnregehr/status/1501649959505985537?s=20&t=-ebjuD7WRIIQNgiBChK5cQ)
 <https://lowlevelbits.org/how-to-learn-compilers-llvm-edition/> 
+
+
+gllvm and wllvm - they dump the llvm bitcode files into object sections. Not a bad start if you are in a cooperative situation
+
 # JVM
 
 
