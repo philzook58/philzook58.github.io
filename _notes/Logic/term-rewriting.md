@@ -321,6 +321,9 @@ https://redex.racket-lang.org/
 
 [cafeobj](https://cafeobj.org/intro/en/)
 
+ 
+RMT - rewriting modfulo theories https://profs.info.uaic.ro/~stefan.ciobaca/inriaparis2017/pres.pdf https://github.com/ciobaca/rmt/
+
 # String rewriting systems
 Word problem
 Monoid presentation
@@ -339,4 +342,5 @@ Termcomp 2022 https://termination-portal.org/wiki/Termination_Competition_2022
 # Misc
 [Gershom Bazerman on "Homological Computations for Term Rewriting Systems" ](https://www.youtube.com/watch?v=WdawrT-6Qzk&ab_channel=PapersWeLove)
 
+[rewritng modulo SMT and open system analysis](https://shemesh.larc.nasa.gov/fm/papers/wrla2014-draft.pdf)
 

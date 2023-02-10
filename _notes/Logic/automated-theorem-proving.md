@@ -3,15 +3,30 @@ layout: post
 title: Automated Theorem Proving
 ---
 
+- [TPTP](#tptp)
+    - [Systems](#systems)
+  - [Vampire](#vampire)
+- [E prover](#e-prover)
+- [Prover9](#prover9)
+- [LeanTAP and ilk](#leantap-and-ilk)
+- [Datalog vs ATP](#datalog-vs-atp)
+- [Methodology](#methodology)
+  - [Unification](#unification)
+  - [Resolution](#resolution)
+  - [Subsumption](#subsumption)
+  - [Paramodulation](#paramodulation)
+- [Term Indexing](#term-indexing)
+  - [Path Indexing](#path-indexing)
+  - [Discrimination Trees](#discrimination-trees)
+  - [Substitution trees](#substitution-trees)
+  - [Feature Vectors](#feature-vectors)
+- [Misc](#misc)
+
+
 See also notes on:
 - SMT
 - prolog
 - datalog
-
-
-- Vampire
-- E Prover https://wwwlehre.dhbw-stuttgart.de/~sschulz/E/E.html
-- Zipperposition
 
 # TPTP
 [TPTP](https://www.tptp.org/) Thousands of Problems for Theorem Provers is an incredible resource
@@ -33,7 +48,15 @@ tff offers built in ints, which is cool.
 - DAT - datatypes
 
 
+### Systems
+- Vampire
+- E Prover https://wwwlehre.dhbw-stuttgart.de/~sschulz/E/E.html
+- Zipperposition
 
+
+## Vampire
+[First-Order Theorem Proving and VAMPIRE](https://publik.tuwien.ac.at/files/PubDat_225994.pdf)
+[vampire tutorial](https://github.com/vprover/ase17tutorial)
 
 ```vampire
 % https://www.tptp.org/TPTP/QuickGuide/Problems.html
@@ -163,7 +186,7 @@ tff(ax2,axiom,
 ```
 
 
-[vampire tutorial](https://github.com/vprover/ase17tutorial)
+
 
 ```vampire
 fof(ground, axiom,
@@ -208,6 +231,17 @@ Database printing feature -S. Doesn't print stuff I would expect though?
 
 Early stopping conditions
 clause size
+
+
+# Prover9
+[Prover9 and Mace4](https://www.cs.unm.edu/~mccune/prover9/)
+Prover9 is intriguing. It seems to have interaction modalities that other provers don't
+Mace
+
+# LeanTAP and ilk
+See prolog some
+[Build Your Own First-Order Prover](http://jens-otten.de/tutorial_cade19/)
+https://www.philipzucker.com/javascript-automated-proving/
 
 
 # Datalog vs ATP

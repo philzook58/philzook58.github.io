@@ -15,3 +15,5 @@ lean_exe «myproject» {
 }
 
 require std from git "https://github.com/leanprover/std4" @ "main"
+require mathlib4 from git
+  "https://github.com/leanprover-community/mathlib4" @ "master"

@@ -241,6 +241,11 @@ mu = Uc(UC_ARCH_ARM64, UC_MODE_ARM)
 
 https://www.cs.cornell.edu/courses/cs3410/2019sp/riscv/interpreter/# nice little interpeter to play with
 [risc v from scratch](https://twilco.github.io/riscv-from-scratch/2019/04/27/riscv-from-scratch-2.html)
+[A Multipurpose Formal RISC-V Specification](https://people.csail.mit.edu/bthom/riscv-spec.pdf) hs-2-coq based
+[compcert risc-v backend](https://github.com/AbsInt/CompCert/tree/master/riscV)
+
+[mini-rv32ima is a single-file-header riscv5 eumlator](https://github.com/cnlohr/mini-rv32ima)
+[instruction decoder in javascript? Why?](https://luplab.gitlab.io/rvcodecjs/)
 
 
 ```riscv
