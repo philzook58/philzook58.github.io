@@ -65,6 +65,10 @@ How do you put suggested hand written invariants in?
 ```
 
 # Resources
+[liquid fixpoint](https://github.com/ucsd-progsys/liquid-fixpoint) Not entirely sure what this is, but it is a solverified version of liquid haskell ish? Using liquid types as a horn clause problem specification language?
+
+[cartesian predciate abstraction](https://swt.informatik.uni-freiburg.de/berit/papers/boolean-and-cartesian-....pdf)
+
 [Analysis and Transformation of Constrained Horn Clauses for Program Verification∗](https://arxiv.org/pdf/2108.00739.pdf) Good review article. Bottom up CHC = DMT?
 
 

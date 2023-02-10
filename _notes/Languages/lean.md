@@ -14,7 +14,7 @@ title: Lean
 Numerical packages in lean
 - [numlean](https://github.com/arthurpaulino/NumLean)
 - [lean karray](https://github.com/lecopivo/lean4-karray)
-
+- https://github.com/lecopivo/SciLean
 Webserver example. Custom syntax
 https://github.com/leanprover/lean4/blob/master/tests/playground/webserver/Webserver.lean
 
@@ -49,6 +49,9 @@ That sounds fun
 
 
 [mathlib 4 docs](https://leanprover-community.github.io/mathlib4_docs/) but also std lib docs
+
+[lean forward](https://lean-forward.github.io/)
+[a hitchiker's guide to formal verification](https://lean-forward.github.io/logical-verification/2022/) Still on Lean 3 fyi
 ### Build
 
 `elan` tool
@@ -56,10 +59,38 @@ That sounds fun
 `leanpkg`
 
 [`lake`](https://github.com/leanprover/lake) is a new build tool on the horizon. analog of cargo
+Making a lake project is a way to get the standard lib?
+<https://github.com/leanprover-community/mathlib4/blob/master/lakefile.lean> mathlib4 lakefile
+
+```lake
+require std from git "https://github.com/leanprover/std4" @ "main"
+require Qq from git "https://github.com/gebner/quote4" @ "master"
+require aesop from git "https://github.com/JLimperg/aesop" @ "master
+```
 
 Using nix is kind of a pain. I haven't done it.
+
+Ah. I need to open my lake project in it's own window for vscode to work right resolving paths. That is weird. Hmm.
+
+LEAN_PATH for libraries? Probably I'm fighting the Lake experience which is bad.
+
 
 
 ```lean
 {% include_relative lean/basics.lean %}
+```
+
+```lean
+{% include_relative lean/myproject/Myproject.lean %}
+```
+
+
+# Typeclass
+```lean
+{% include_relative lean/myproject/typeclass.lean %}
+```
+
+# IMP
+```lean
+{% include_relative lean/myproject/IMP.lean %}
 ```
