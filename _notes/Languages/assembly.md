@@ -13,7 +13,8 @@ title: Assembly
   - [memory barrier](#memory-barrier)
   - [CET control enforcement technology](#cet-control-enforcement-technology)
 - [ARM](#arm)
-    - [RISC V](#risc-v)
+- [PowerPC](#powerpc)
+- [RISC V](#risc-v)
 - [FORTH](#forth)
 - [High level assemlby / macros](#high-level-assemlby--macros)
 - [Misc](#misc)
@@ -228,8 +229,13 @@ mu = Uc(UC_ARCH_ARM64, UC_MODE_ARM)
 [ARMv8 A64 Quick Reference](https://courses.cs.washington.edu/courses/cse469/19wi/arm64.pdf)
 [](https://github.com/below/HelloSilicon)
 [asm tutor port](https://github.com/lirorc/arm-asm-examples)
+# PowerPC
 
-### RISC V
+
+# RISC V
+[SAIL Risc V spec](https://github.com/riscv/sail-riscv)
+[riscv- coq](https://github.com/mit-plv/riscv-coq)
+
 [risc v J extesnions](https://news.ycombinator.com/item?id=30647151)
 [graphical assembler and cpu emulator](https://github.com/mortbopet/Ripes)
 
@@ -325,3 +331,5 @@ Metamath zero - is there some simpler thing one could do? Why did metamath _real
 [peachpy](https://github.com/Maratyszcza/PeachPy) an assembly dsl in python
 https://docs.micropython.org/en/latest/pyboard/tutorial/assembler.html inline assembler in micropython
 
+
+[isa specification link list](https://alastairreid.github.io/RelatedWork/notes/isa-specification/)

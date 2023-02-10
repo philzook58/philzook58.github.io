@@ -15,7 +15,10 @@ wordpress_id: 2960
     - [Loop recovery](#loop-recovery)
     - [Interactive](#interactive)
     - [Binary Ninja](#binary-ninja)
+      - [Types](#types)
+      - [IR Tower](#ir-tower)
     - [Ghidra](#ghidra)
+    - [Angr](#angr)
   - [Patching](#patching)
   - [Binary reversign](#binary-reversign)
 - [Debuggers](#debuggers)
@@ -185,12 +188,51 @@ https://github.com/GrammaTech/gtirb-vscode
 ### Binary Ninja
 SCC- shellcde compiler. Why is this a top level thing?
 
+Binary View
+Making a plugin - has remote denug to vs code https://docs.binary.ninja/dev/plugins.html
+
+`current_function`
+`bv.functions`
+
+f.callers
+f.callees
+
+#### Types
+https://docs.binary.ninja/guide/type.html#boolean
+` bv.parse_type_string("uint64_t") ` slow but convenient
+
+Type.bool
+Type.char
+
+```python
+#!/usr/bin/env python3
+import binaryninja
+with binaryninja.open_view("/bin/ls") as bv:
+    print(f"Opening {bv.file.filename} which has {len(list(bv.functions))} functions")
+
+```
+
+#### IR Tower
+
+Lifted IL
+
+LLIL
+
+
+HLIL
 
 
 
 ### Ghidra
 See ghidra notes
 
+### Angr
+
+```python
+import angr #, monkeyhex
+proj = angr.Project('/bin/true')
+state = proj.factory.entry_state()
+```
 
 ## Patching
 https://github.com/GJDuck/e9patch
@@ -212,6 +254,8 @@ entropy visualization
 
 https://www.usenix.org/system/files/sec22-burk.pdf Decomperson: How Humans Decompile
 and What We Can Learn From It
+
+[MATE](https://github.com/GaloisInc/MATE)
 
 # Debuggers
 https://github.com/x64dbg/x64dbg
@@ -272,6 +316,8 @@ libfuzzer vs afl vs honggfuzz
 corpus grammar based fuzzing, differential fuzzing
 
 ## Symbolic Execution
+[MAAT](https://maat.re/tutorials/get_started.html) Ttrail of bits using ghidra
+
 https://github.com/eurecom-s3/symcc
 [symqemu](https://github.com/eurecom-s3/symqemu)
 

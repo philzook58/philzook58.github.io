@@ -1,60 +1,94 @@
 -- From Coq Require Import Arith ZArith Psatz Bool String List Program.Equality.
 -- Require Import Sequences.
-
+/-   -/
 -- Local Open Scope string_scope.
 -- Local Open Scope Z_scope.
 -- Local Open Scope list_scope.
+
+-- import home.philip.Documents.lean.std4.Std.Data.Int.Basics
+-- import Std.Data.List.Basic
+import Std.Data.Int.Basic
+import Std.Data.Int.Lemmas
 #eval Lean.versionString
+#eval 1 + 1
+#check (1 : Int)
+#check "string"
+
 /-
 -- (** * 1. The source language: IMP *)
 -/
 -- (** ** 1.1 Arithmetic expressions *)
 
+
 def ident : Type := String
+#check String
+-- def mythree : Nat := 3
+-- type ident = string
 
 -- (** The abstract syntax: an arithmetic expression is either... *)
+def myid : forall {a :Type}, a -> a := fun x => x
+def myid2 : {a :Type} -> a -> a := fun x => x
+#check myid
 
-inductive aexp : Type :=
-  | CONST (n: Z) --                      (**r a constant, or *)
-  | VAR (x: ident) --                   (**r a variable, or *)
-  | PLUS (a1: aexp) (a2: aexp) --        (**r a sum of two expressions, or *)
-  | MINUS (a1: aexp) (a2: aexp) --      (**r a difference of two expressions *)
+inductive aexp where
+  | CONST : Int -> aexp --                      (**r a constant, or *)
+  | VAR : forall (_x : ident) , aexp --                   (**r a variable, or *)
+  | PLUS (a1 : aexp) (a2 : aexp) : aexp --        (**r a sum of two expressions, or *)
+  | MINUS (a1 : aexp) (a2 : aexp) : aexp --      (**r a difference of two expressions *)
 
-(** The denotational semantics: an evaluation function that computes
+
+/-(** The denotational semantics: an evaluation function that computes
   the integer value denoted by an expression.  It is parameterized by
   a store [s] that associates values to variables. *)
+-/
 
-Definition store : Type := ident -> Z.
 
-Fixpoint aeval (s: store) (a: aexp) : Z :=
+def store : Type := ident -> Int
+
+def aeval (s: store) (a: aexp) : Int :=
   match a with
-  | CONST n => n
-  | VAR x => s x
-  | PLUS a1 a2 => aeval s a1 + aeval s a2
-  | MINUS a1 a2 => aeval s a1 - aeval s a2
-  end.
+  | aexp.CONST n => n
+  | aexp.VAR x => s x
+  | aexp.PLUS a1 a2 => aeval s a1 + aeval s a2
+  | aexp.MINUS a1 a2 => aeval s a1 - aeval s a2
 
-(** Such evaluation functions / denotational semantics have many uses.
-    First, we can use [aeval] to evaluate a given expression in a given store. *)
 
-Compute (aeval (fun x => 2) (PLUS (VAR "x") (MINUS (VAR "x") (CONST 1)))).
+--(** Such evaluation functions / denotational semantics have many uses.
+--    First, we can use [aeval] to evaluate a given expression in a given store. *)
 
-(** Result is: [ = 3 : Z ]. *)
+#eval (aeval (fun _x => 2) (aexp.PLUS (aexp.VAR "x") (aexp.MINUS (aexp.VAR "x") (aexp.CONST 1))))
 
-(** We can also do partial evaluation with respect to an unknown store *)
+-- (** Result is: [ = 3 : Z ]. *)
 
-Eval cbn in (fun s => aeval s (PLUS (VAR "x") (MINUS (CONST 10) (CONST 1)))).
+-- (** We can also do partial evaluation with respect to an unknown store *)
+open aexp
+-- #eval (fun s => aeval s (PLUS (VAR "x") (MINUS (CONST 10) (CONST 1))))
 
-(** Result is: [ = fun s : store => s "x" + 9 ]. *)
 
-(** We can prove properties of a given expression. *)
+--(** Result is: [ = fun s : store => s "x" + 9 ]. *)
 
-Lemma aeval_xplus1:
-  forall s x, aeval s (PLUS (VAR x) (CONST 1)) > aeval s (VAR x).
+-- (** We can prove properties of a given expression. *)
+
+#print Int.lt_succ
+theorem aeval_xplus1 :
+  forall (s :store) (x :ident), aeval s (PLUS (VAR x) (CONST 1)) > aeval s (VAR x) := by 
+  intros s x
+  simp [aeval]
+  apply Int.lt_succ
+-- delta aeval
+
+#check "hi" 
+
+#check 10
+#check aeval_xplus1
+
+
+/-
 Proof.
   intros. cbn. lia.
 Qed.
-
+-/
+/-
 (** Finally, we can prove "meta-properties" that hold for all expressions.
   For example: the value of an expression depends only on the values of its
   free variables.

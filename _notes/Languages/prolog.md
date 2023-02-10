@@ -497,6 +497,36 @@ def append(x,y,z,s):
 Yeah. This amounts to a goofy minikanren where I've inlined combinators.
 
 
+```ocaml
+type goal = string (* Propsoitional *)
+type goalstack = goal list
+type state = goalstack list
+
+type clause = goal * (goals list) (*  (goal list) list String.Map.t  *)
+
+
+
+let rec sld_step prog = function
+  | [] -> failwith "fail" (* nothing more to try *)
+  | [] :: totry -> failwith "succeed" (* all goals cleared *)
+  | ( (g :: gs) :: todo) -> 
+            let bodies = lookup prog g (* Lookup also does unfication in real version *)
+            let newgoals = List.map bodies ~f:(fun body -> body :: gs)
+            sld_step prog (newgoals :: todo)
+
+type table = 
+
+let rec slg_step prog table resume_stack gen_stack
+ = match resume_stack with
+ | [] -> failwith "fail"
+ | (cnode, solution) :: rs -> 
+
+
+```
+SLD resolution in stack form. You have a stack of goal sets. It isn't that bad because you're actually sharing a lot of repeated goals. 
+
+SLD in tree search form? The stack is some kind of manifestation of the tree. We could perhaps store the tree as a zipper instead
+
 
 ## Abstract Machines / Implementation
 [Warren's Abstract Machine: A Tutorial Reconstruction.](http://wambook.sourceforge.net/wambook.pdf)

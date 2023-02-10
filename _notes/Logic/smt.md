@@ -3018,6 +3018,8 @@ https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
 - To curry or not.
 - 
 
+
+
 ```z3
 ;re
 ; let's just stick to 32 bit operations
@@ -3111,6 +3113,166 @@ def hcomp(f,g):
 
 So what do I want to do with this model? WP? CHC? Model checking? Symbolic execution? Hoare Logic?
 Bit accurate assembly modelling can be interesting too.
+
+https://github.com/mit-plv/riscv-coq/blob/master/src/riscv/Spec/Decode.v
+
+```z3
+;re
+(define-sort BV12 () (_ BitVec 12))
+(define-sort BV32 () (_ BitVec 32))
+(define-sort Reg  () (_ BitVec 5)) ; 32 = 2 ^ 5 registers
+(declare-datatype IOp (
+  (ADDI) (SLLI) (SLTI) (SLTIU) (XORI) (SRLI) (SRAI) (ORI) (ANDI)
+))
+
+(declare-datatype ROp (
+  (ADD) (SLL) (SLT) (SLTU) (XOR) (SRL) (SRA) (OR) (AND)
+))
+
+(declare-datatype Instruction (
+ (IInsn (opI IOp) (rdI Reg) (rs1I Reg) (immI BV12))
+ (RInsn (opR ROp) (rdR Reg) (rs1R Reg) (rs2R Reg))
+ ))
+
+;(simplify (IInsn AddI #b00000 #b00000 #b000000000000))
+
+(define-const opcode_OP_IMM (_ BitVec 7) #b0010011)
+(define-const opcode_OP  (_ BitVec 7) #b0110011)
+(define-fun funct3 ((op IOp)) (_ BitVec 3)
+ (match op (
+      (ADDI   #b000)
+      (SLLI   #b001)
+      (SLTI   #b010)
+      (SLTIU  #b011)
+      (XORI   #b100)
+      (SRLI   #b101)
+      (SRAI   #b101)
+      (ORI    #b110)
+      (ANDI   #b111)
+   ))
+)
+
+
+(define-fun funct3 ((op ROp)) (_ BitVec 3)
+ (match op (
+      (ADD   #b000)
+      (SUB   #b000)
+      (SLL   #b001)
+      (SLT   #b010)
+      (SLTU  #b011)
+      (XOR   #b100)
+      (SRL   #b101)
+      (SRA   #b101)
+      (OR    #b110)
+      (AND   #b111)
+   ))
+)
+
+(define-fun funct7 ((op ROp)) (_ BitVec 7)
+ (match op (
+      (ADD   #b0000000)
+      (SUB   #b0100000)
+      (SLL   #b0000000)
+      (SLT   #b0000000)
+      (SLTU  #b0000000)
+      (XOR   #b0000000)
+      (SRL   #b0000000)
+      (SRA   #b0100000)
+      (OR    #b0000000)
+      (AND   #b0000000)
+   ))
+)
+
+; encode is also decode since SMT is declarative. That's nices.
+(define-fun encode ((insn Instruction)) BV32
+  (match insn (
+    ((IInsn op dst src imm) (concat imm src (funct3 op) dst opcode_OP_IMM))
+    ((RInsn op rd rs1 rs2)  (concat (funct7 op) rs2 rs1 (funct3 op) rd opcode_OP))
+  ))
+)
+
+(define-sort REGFILE () (Array Reg BV32))
+(declare-datatype State (
+ (State
+    ;(mem (Array Addr BV32))
+    (regfile REGFILE)
+    (pc BV32)
+  ))
+)
+
+
+(define-fun execI ((op IOp) (rs1 BV32) (imm BV12)) BV32
+(let (
+       (imm ((_ zero_extend 20) imm))
+     )
+ (match op (
+  ; todo fill in correctly
+      (ADDI   (bvadd rs1 imm))
+      (SLLI   imm)
+      (SLTI   imm)
+      (SLTIU  imm)
+      (XORI   (bvxor rs1 imm))
+      (SRLI   imm)
+      (SRAI   imm)
+      (ORI    (bvor rs1 imm))
+      (ANDI   (bvand rs1 imm))
+   ))
+))
+
+(define-fun execR ((op ROp) (rs1 BV32) (rs2 BV32)) BV32
+ (match op (
+  ; todo fill in correctly
+      (ADD   (bvadd rs1 rs2))
+      (SUB   (bvsub rs1 rs2))
+      (SLL   rs1)
+      (SLT   rs1)
+      (SLTU  rs1)
+      (XOR   (bvxor rs1 rs2))
+      (SRL   rs1)
+      (SRA   rs1)
+      (OR    (bvor rs1 rs2))
+      (AND   (bvand rs1 rs2))
+   ))
+)
+
+(define-fun inc-pc ((st State)) State
+  ((_ update-field pc) st (bvadd (pc st) (_ bv1 32)))
+)
+
+(define-fun set-reg ((st State) (reg Reg) (v BV32)) State
+  ((_ update-field regfile) st (store (regfile st) reg v))
+)
+
+(define-fun get-reg ((st State) (reg Reg)) BV32
+  (select (regfile st) reg)
+)
+
+(define-fun execute ((insn Instruction) (st State)) State
+    (match insn (
+    ((IInsn op dst src imm)  (inc-pc (set-reg st dst (execI op (get-reg st src) imm))))
+    ((RInsn op rd rs1 rs2)   (inc-pc (set-reg st rd (execR op (get-reg st rs1) (get-reg st rs2)))))
+  ))
+)
+
+(define-const zero32 BV32 (_ bv0 32))
+
+(define-const init-regfile (Array Reg BV32)
+((as const (Array Reg BV32)) zero32))
+
+(define-const init-state State 
+  (State init-regfile (_ bv0 32))
+)
+
+(define-const r0 Reg #b00000)
+(define-const r1 Reg #b00001)
+(define-const r2 Reg #b00010)
+(simplify (execute (IInsn ADDI r2 r1 (_ bv4 12)) init-state))
+```
+
+```z3
+; scratch pad
+(simplify (concat #xf0 #x00))
+```
 
 ## Forth
 ## WASM

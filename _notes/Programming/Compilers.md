@@ -48,9 +48,11 @@ wordpress_id: 2913
   - [Concurrent](#concurrent)
   - [mark and Sweep](#mark-and-sweep)
   - [Generational](#generational)
-- [Misc](#misc-2)
-  - [LLVM](#llvm)
+- [LLVM](#llvm)
 - [JVM](#jvm)
+- [Misc](#misc-2)
+  - [LLVM](#llvm-1)
+- [JVM](#jvm-1)
 
 
 # Parsing and Lexing
@@ -492,7 +494,7 @@ See also:
 
 # JIT
 de-optimization paths
-[mir](https://github.com/vnmakarov/mir) an intermiedtae representation for JIT
+[mir](https://github.com/vnmakarov/mir) an intermiedtae representation for JIT [blog post](https://developers.redhat.com/blog/2021/04/27/the-mir-c-interpreter-and-just-in-time-jit-compiler)
 [qbe](https://c9x.me/compile/)
 [libjit](https://www.gnu.org/software/libjit/)
 [ryujit](https://github.com/dotnet/coreclr/blob/master/Documentation/botr/ryujit-overview.md)
@@ -542,10 +544,40 @@ white is unseen. black is swept. When finished anything white is no longer in us
 
 Making a simple garbage collector [https://maplant.com/gc.html](https://maplant.com/gc.html)
 
+# LLVM
+LLVM IR
 
+MIR
+
+Instruction Combiner
+
+  * [https://www.cs.cornell.edu/~asampson/blog/llvm.html](https://www.cs.cornell.edu/~asampson/blog/llvm.html)
+
+<https://jonathan2251.github.io/lbd/index.html>  Tutorial: Creating an LLVM Backend for the Cpu0 Architecturehttps://danielkeep.github.io/tlborm/book/README.html
+
+<https://www.youtube.com/watch?v=m8G_S5LwlTo&ab_channel=LLVM> LLVM IR tutorial
+
+[llvm-mca](https://llvm.org/docs/CommandGuide/llvm-mca.html) - static analysis of performance of code 
+
+<https://www.llvm.org/docs/ProgrammersManual.html>
+<https://mukulrathi.com/create-your-own-programming-language/llvm-ir-cpp-api-tutorial/>
+
+[Learning to combine instructions in LLVM compiler](https://twitter.com/johnregehr/status/1501649959505985537?s=20&t=-ebjuD7WRIIQNgiBChK5cQ)
+<https://lowlevelbits.org/how-to-learn-compilers-llvm-edition/> 
+
+https://langston-barrett.github.io/notes/llvm-ir/
+https://langston-barrett.github.io/notes/learning-llvm/
+# JVM
 
 # Misc
 [Proving the correctness of a compiler - Xavier Leroy](https://xavierleroy.org/courses/EUTypes-2019/) summer course
+
+[chibicc](https://github.com/rui314/chibicc) C compiler in nanopass style. Each commit is interesting! Written intentionally educationally.
+[lcc](https://drh.github.io/lcc/) a retagretable compiler for C. Has a book
+[tcc](https://bellard.org/tcc/) Fabrice Bellard's cmall C compiler
+
+
+[An Incremental Approach to Compiler Construction](http://scheme2006.cs.uchicago.edu/11-ghuloum.pdf) nanopass compiler
 
 [UMD compiler course](https://www.cs.umd.edu/class/spring2021/cmsc838E/index.html)
 
@@ -673,6 +705,7 @@ objdump -d -S -l
 
 valgrind and core dumps.
 
+
 ## LLVM
 LLVM IR
 
@@ -698,6 +731,7 @@ Instruction Combiner
 gllvm and wllvm - they dump the llvm bitcode files into object sections. Not a bad start if you are in a cooperative situation
 
 # JVM
+
 
 
 

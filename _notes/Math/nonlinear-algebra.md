@@ -5,6 +5,13 @@ title: Nonlinear Algebra
 
 By nonlinear algebra I mean things relating to multivariate polynomials
 
+# Applications
+- Kinematics
+- Optics
+- Thermodynamics, Legendre
+- Global optimization
+- 
+
 # Linear modelling of nonlinear systems
 ## Vandermonde Matrix
 The big question: Linear in what?
@@ -33,6 +40,27 @@ Fundamental theorem of algebra
 
 # Modules
 Linear algebra but wih rings instead of fields. You can't divide by scalars anymore.
+
+grobner for rings with inifitniely many variables
+
+## Free Resolution
+
+chain complex
+betti numbers
+
+
+schreyer's algorithm
+
+Koszul complex
+buchssbaum-rim complex
+eagon-northcott complex
+somethignbaum
+
+exterior powers
+symmettric produce
+tensor product
+hom
+
 
 
 # Resources
