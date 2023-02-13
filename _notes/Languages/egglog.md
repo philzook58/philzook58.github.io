@@ -277,3 +277,8 @@ tree(z, $Add(tx,ty)) :- tree(x,tx), tree(y,ty), add(x,y,z).
 .output tree(IO=stdout)
 
 ```
+
+
+# Misc
+
+https://www.mbid.me/eqlog-algorithm/ Martin E. Bidlingmaier basically developed a system similar or identical to egglog on completely parallel lines. Maybe that means it's a good/natural idea?

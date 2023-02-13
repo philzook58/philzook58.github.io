@@ -1,4 +1,7 @@
-
+---
+layout: post
+title: Hikes
+---
 
 # 2022
 
