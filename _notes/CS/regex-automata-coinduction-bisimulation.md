@@ -298,6 +298,24 @@ https://www.youtube.com/watch?v=-fhaZvgDaZk&ab_channel=OlafChitil altenrkirch co
 ## Coalgebra
 Rutten and Bart Jacobs
 
+A coalgebra ia a pair (X,a) where `a : X -> f X`. This is somehow modelling automata. Very weird right?
+Conceptually X is the set of states, F describes the schema of data/automata type, and `a` is a functional (dictionary) description of the transition graph. Modelling in this way is somehow stating that every node/state has a "uniform" structure/edges F associated with it. The dictionary is the "successor" map.
+But if X and a are considered opaque, how do you describe the automata in pure categorical terms? Well, the category ish way of talking about Set is to use morphisms from unit to pick out elements. So a particular automata will be described by a set of equations on the morphism `a`.
+Morphisms between coalgebras are automata mappings. (Simulations?)
+category theory in python 4.
+
+```python
+# x + x*x -> x
+# f(x) = x + x*x 
+alg = {
+  ("plus",1,2) : 3,
+  ("plus",4,5) : 9,
+  ("num", 4) : 4
+}
+
+```
+
+
 Jules Jacobs, Thorsten Wißmann - [https://dl.acm.org/doi/abs/10.1145/3571245](fast coalgebraic bisimulation minimization)
 Different automata types can be described by a Functor, meaning a function or dictionsry from states to something that may also involve states.
 
@@ -418,6 +436,7 @@ Rows ~ objects, observations ~ fields. Record vs copattern defnition of codata.
 Open automata that havn't been filled out, have incomplete observations, or observations with partial equality, or lattice observations. We cannot compress these. We must consider observations that could possibly be distinguishable as distinguishable.
 Can we force equalities?
 codeql is an object oriented shellac on datalog
+logtalk
 
 
 [higher dimensional automata pratt](http://boole.stanford.edu/pub/hda.pdf) woof. What even is this.
