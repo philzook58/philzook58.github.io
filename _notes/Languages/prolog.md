@@ -774,8 +774,31 @@ Tabling is a kind of auto-memoization. It can make queries terminate that no lon
 [Tabling with Sound Answer Subsumption](https://arxiv.org/pdf/1608.00787.pdf)
 [Fixing non-determinsim](https://lirias.kuleuven.be/retrieve/383155)
 
+[Linear Tabling Strategies and Optimizations](https://arxiv.org/abs/0705.3468) - kind of a combo of iterative deepening and tabling. Iterate top level goal and memoize true solutions. Just kill it on looping. Eventually, you'll stabilize
+```
+:-table p/2.
+p(X,Y):-p(X,Z),e(Z,Y).
+p(X,Y):-e(X,Y).
+The transformed predicate is as follows:
+p(X,Y):-p(X,Z),e(Z,Y),memo(p(X,Y)).
+p(X,Y):-e(X,Y),memo(p(X,Y)).
+p(X,Y):-check_completion(p(X,Y)).
+```
+calls memo on success. This is probably not how tabling is implemented in SWI, but it's interestign. Hmm. I don't really see how al this state tracking is possible/easy as user prolog.
+
+[A simple scheme for implementing tabled logic programming systems based on dynamic reordering of alternatives.](https://www.cs.nmsu.edu/~gupta/tabling/tab.pdf) DRA.
  Simplifying dynamic programming via mode-directed tabling
  Mode-directed tabling for dynamic programming, machine learning, and constraint solving
+
+OLDT vs SLG
+
+Memoization of prolog is two different issues: Dealing with metavariables and dealing with search
+WHat is the search space of prolog? Nodes are goal stacks, edges are rules. Using DFS to traverse a graph goes out of control, even a DAG does lots of retraversal.
+Memoizatin of prolog goals is differet to purely functional moemization. The metavariables matter and are in a sense return parameters a la C. So you have to memoize different metavairable paramters as different things, because they are in a sense different functions.
+
+Fib and Fact are terminating even if exponentially slow. It's hard to think of a simple high school math example that might be defined in a potentially non terminating way. THe edge-path query is an easy prolog example.
+
+
 
 ```prolog
 :- table path/2.

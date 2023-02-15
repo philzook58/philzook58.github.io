@@ -74,6 +74,18 @@ Ah. I need to open my lake project in it's own window for vscode to work right r
 
 LEAN_PATH for libraries? Probably I'm fighting the Lake experience which is bad.
 
+`[@inline]`
+`[@reduced]`
+`[@simp]`
+
+# Lean Src
+[simp tactic](https://github.com/leanprover/lean4/tree/master/src/Lean/Meta/Tactic/Simp)
+
+[discrimination tree](https://github.com/leanprover/lean4/blob/master/src/Lean/Meta/DiscrTree.lean)
+[disctree types](https://github.com/leanprover/lean4/blob/master/src/Lean/Meta/DiscrTreeTypes.lean)
+
+[Expr](https://github.com/leanprover/lean4/blob/master/src/Lean/Expr.lean)
+# Stuff
 
 
 ```lean

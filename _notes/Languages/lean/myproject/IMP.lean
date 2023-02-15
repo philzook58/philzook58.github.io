@@ -12,8 +12,9 @@ import Std.Data.Int.Basic
 import Std.Data.Int.Lemmas
 
 import Std.Data.List.Basic
+import Mathlib.Tactic.LibrarySearch
+import Mathlib.Tactic.Linarith
 
->>>>>>> 1aa6539a2d3aca00450a72493ee86d5f0325accd
 #eval Lean.versionString
 #eval 1 + 1
 #check (1 : Int)
@@ -36,18 +37,10 @@ def myid2 : {a :Type} -> a -> a := fun x => x
 #check myid
 
 inductive aexp where
-<<<<<<< HEAD
-  | CONST : Int -> aexp --                      (**r a constant, or *)
-  | VAR : forall (_x : ident) , aexp --                   (**r a variable, or *)
-  | PLUS (a1 : aexp) (a2 : aexp) : aexp --        (**r a sum of two expressions, or *)
-  | MINUS (a1 : aexp) (a2 : aexp) : aexp --      (**r a difference of two expressions *)
-=======
   | CONST (n : Int) : aexp --                      /-*r a constant, or -/
   | VAR (x : ident) : aexp --                   /-*r a variable, or -/
   | PLUS (a1 : aexp) (a2 : aexp) : aexp --        /-*r a sum of two expressions, or -/
   | MINUS (a1 : aexp) (a2 : aexp) : aexp --      /-*r a difference of two expressions -/
->>>>>>> 1aa6539a2d3aca00450a72493ee86d5f0325accd
-
 
 /- /- * The denotational semantics: an evaluation function that computes
   the integer value denoted by an expression.  It is parameterized by
@@ -90,7 +83,9 @@ theorem aeval_xplus1 :
   forall (s :store) (x :ident), aeval s (PLUS (VAR x) (CONST 1)) > aeval s (VAR x) := by 
   intros s x
   simp [aeval]
-  apply Int.lt_succ
+  --linarith -- huh merely importing Linarith makes simpe discharge this
+  -- library_search
+  -- apply Int.lt_succ
 -- delta aeval
 
 #check "hi" 
@@ -224,6 +219,7 @@ def OR (b1 b2: bexp) : bexp := NOT (AND (NOT b1) (NOT b2))
 
 lemma beval_OR :
   forall s b1 b2, beval s (OR b1 b2) = beval s b1 || beval s b2 := by
+  sorry
 /-
 Proof.
   intros; cbn.
@@ -238,12 +234,12 @@ Abort.
 /-* To complete the definition of the IMP language, here is the
   abstract syntax of commands, also known as statements. -/
 
-Inductive com: Type :=
+inductive com: Type :=
   | SKIP                                     /-*r do nothing -/
   | ASSIGN (x: ident) (a: aexp)              /-*r assignment: [v := a] -/
   | SEQ (c1: com) (c2: com)                  /-*r sequence: [c1; c2] -/
   | IFTHENELSE (b: bexp) (c1: com) (c2: com) /-*r conditional: [if b then c1 else c2] -/
-  | WHILE (b: bexp) (c1: com).               /-*r loop: [while b do c1 done] -/
+  | WHILE (b: bexp) (c1: com)               /-*r loop: [while b do c1 done] -/
 
 /-* We can write [c1 ;; c2] instead of [SEQ c1 c2], it is easier on the eyes. -/
 

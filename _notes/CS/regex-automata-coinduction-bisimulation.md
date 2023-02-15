@@ -298,6 +298,101 @@ https://www.youtube.com/watch?v=-fhaZvgDaZk&ab_channel=OlafChitil altenrkirch co
 ## Coalgebra
 Rutten and Bart Jacobs
 
+Jules Jacobs, Thorsten Wißmann - [https://dl.acm.org/doi/abs/10.1145/3571245](fast coalgebraic bisimulation minimization)
+Different automata types can be described by a Functor, meaning a function or dictionsry from states to something that may also involve states.
+
+FOr exmaple, labbleled transition systems might be `Map<State, Map<Action, State>>`, non deterministic systems.
+
+Or in other words (?) various kinds of automata graphs can be encoded as a functions from nodes to the outgoing edges.
+This isn't really saying all that much. But the structure/type of the function/dict can enforce certain regularity properties of the graph.
+
+
+Observational equivalence is obtained by considering the properties to be observable.
+```
+f(x) = 7
+g(x) = "foo"
+
+f(y) = 7
+g(y) = "foo"
+```
+If f and g are the only pieces of data obervable of these opaque objects, then x and y are observationally equvalent.
+Interestingly, by even posing the question, I was stating some meta sense in which x and y are not equivalent
+
+If the identifiers become observations, now x and y aren't equivalent
+
+```
+f(x) = 7
+g(x) = "foo"
+name(x) = "x"
+
+f(y) = 7
+g(y) = "foo"
+name(y) = "y"
+```
+
+It gets more interesting when we say that there are observations that are themselves the opaque objects.
+
+
+```
+f(x) = 7
+g(x) = "foo"
+next(x) = y
+
+f(y) = 7
+g(y) = "foo"
+next(y) = x
+```
+
+Now are they equivalent? It isn't so clear. A possible definition and method is to sort of back up obervable differences and propagate them. If two things map into two distinguishable things, they are also distinguishable. `ob(x) != obs(y) -> x != y`. This is the contrapositive of congruence.
+
+This process breaks identifiers into equivalence classes. The equivalence classes can be naturally labelled by the observations themselves.
+
+The map `id -> f id` describes the automata. `f` is a functor, hence has a notion of `map`. Because of this, given a `emap : id -> eqclass` mapping we can get `id -> f eqclass`.
+I am however suggesting that `eqclass` is some kind of fix of `f` applied to `()`. `eclass0 = ()`. `eclass1 = f ()`
+`emap0 = fun _ -> ()`. eclass is `Free f`.
+If we hash cons, `eclass ~ int`.
+
+```ocaml
+
+```
+
+Here's the simple naive algorithm. The paper covers essential optimizations. Something like the analog of seminiave evaluation and also good choice of eclass ids.
+```python
+
+ex1 = {
+  1 : (False, 2, 3),
+  2 : (False, 4, 3),
+  3 : (False, 5, 3),
+  4 : (True, 5, 4),
+  5 : (True, 4, 4)
+}
+
+def dfa_map(f,x):
+  return {n : (term, f[a], f[b])  for n, (term, a, b) in x.items()}
+
+eqclass = {i : () for i in range(1,6)}
+for _ in range(10):
+  print(eqclass)
+  eqclass = dfa_map(eqclass, ex1)
+  #eqclass = {k : hash(v) for k,v in eqclass.items()} # not quite right. hash could collide. But you get the idea
+  statelabel = { k : -i-1 for i,k in enumerate(set(eqclass.values()))} # negative just so I can see different between state and eqclass easier
+  eqclass = {k : statelabel[v] for k,v in eqclass.items()} 
+
+print(eqclass)
+
+'''
+def label_set(xs):
+  counter = 0
+  seen = {}
+  for x in xs:
+    if x not in seen:
+      seen[x] = counter
+      counter += 1
+  return seen
+'''
+
+```
+
 ## Coinduction
 Coinduction. What up? https://en.wikipedia.org/wiki/Coinduction
 
@@ -312,6 +407,19 @@ What is induction really?
 
 
 # Misc
+
+Automatalog
+partially built objects just can have fewer entries. But then how do we inform pointer to the objects they gave been 
+nondestructive update
+Monotonically, observations go down, equalities go up. observations go up, equalities go down.
+We can remove obserations and stay monotonic with respect to equality. Horizontal strtification. Relationship with subclassing? first strata of most fine-grained class rules.
+object oriented databases
+Rows ~ objects, observations ~ fields. Record vs copattern defnition of codata.
+Open automata that havn't been filled out, have incomplete observations, or observations with partial equality, or lattice observations. We cannot compress these. We must consider observations that could possibly be distinguishable as distinguishable.
+Can we force equalities?
+codeql is an object oriented shellac on datalog
+
+
 [higher dimensional automata pratt](http://boole.stanford.edu/pub/hda.pdf) woof. What even is this.
 
 [[POPL'22] Coalgebra for the working programming languages researcher](https://www.youtube.com/watch?v=Qb0z1FWT5bw&ab_channel=ACMSIGPLAN)

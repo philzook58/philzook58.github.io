@@ -18,11 +18,7 @@ title: Wasm/Emscripten
 
 sqlite fuzzler
 
-[simple web frontend stuff](https://news.ycombinator.com/item?id=32011439)
-[simple css to look good everywhere](https://news.ycombinator.com/item?id=32972004) 
-[web design in 4 minutes](https://jgthms.com/web-design-in-4-minutes/)
-cssbed
-htmx
+
 
 # WASM
 
