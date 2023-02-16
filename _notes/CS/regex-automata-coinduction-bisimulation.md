@@ -158,6 +158,16 @@ https://en.wikipedia.org/wiki/Tree_automaton
 # Kleene Algebra
 
 ## KAT
+http://perso.ens-lyon.fr/damien.pous/symbolickat/ symkat ocaml
+[Symbolic Algorithms for Language Equivalence and Kleene Algebra with Tests](http://doi.acm.org/10.1145/2676726.2677007) transition function using BDD. Generating automata using Brzowski's derivative and classical. bdds + union find for language equivalence
+https://hal.archives-ouvertes.fr/hal-01021497v2/document
+
+```ocaml
+#use "topfind";;
+#require "symkat";;
+print_endline "hello world";
+print_endline "yo MTV raps"
+```
 
 https://link.springer.com/chapter/10.1007/978-3-030-81685-8_3 algerbaic program anlaysis
 graphs and paths can be represent by taking the letters of the alphabet to representedges in the graph. The paths from a to b can be represented as a regex
@@ -177,6 +187,10 @@ Kleene algebra modulo theories
 https://github.com/mgree/kmt
 https://arxiv.org/pdf/1707.02894.pdf
 https://github.com/mgree/katbury hmm. guess invariants
+kat modulo rewriting?
+
+https://github.com/arlencox/mlbdd
+https://github.com/netkat-lang/idds
 
 [On the Coalgebraic Theory of Kleene Algebra with Tests](https://www.cs.cornell.edu/kozen/Papers/ChenPucella.pdf)
 Automatic proof generaton via derivatives? That sounds neat.
@@ -184,12 +198,14 @@ Chen and Pucella - coalgerba theory of KAT
 
 [Automated Reasoning in Kleene Algebra](http://www.hoefner-online.de/home/pdfs_tr/trCS-07-04-Shef.pdf) Prover9/Mace4
 
-[Symbolic Algorithms for Language Equivalence and Kleene Algebra with Tests](https://dl.acm.org/doi/10.1145/2775051.2677007) bdds + union find for language equivalence
+
 
 topkat incorrectess logic and kat https://www.youtube.com/watch?v=gLLlrnxB5Jg&ab_channel=ACMSIGPLAN popl22
 
 NetKat - kat for network reasoning
 [Kleene Algebra with Tests and Coq Tools for While Programs](https://arxiv.org/abs/1302.1737)
+https://opam.ocaml.org/packages/netkat/
+
 
 syntax are kleene expressions / logic is kleene algebra manipulation. logic is algebra on steroids
 semantics are strings
@@ -312,6 +328,8 @@ What is induction really?
 
 
 # Misc
+When a subobservation completes it splits the universe.
+
 [higher dimensional automata pratt](http://boole.stanford.edu/pub/hda.pdf) woof. What even is this.
 
 [[POPL'22] Coalgebra for the working programming languages researcher](https://www.youtube.com/watch?v=Qb0z1FWT5bw&ab_channel=ACMSIGPLAN)

@@ -11,6 +11,7 @@ title: Mathematical Logic
 - [Compactness](#compactness)
 - [Consistency](#consistency)
 - [Incompleteness Theorem](#incompleteness-theorem)
+- [Misc](#misc)
 
 
 https://en.wikipedia.org/wiki/Mathematical_logic
@@ -59,6 +60,9 @@ Infinite families of sentences
 
 
 # Incompleteness Theorem
+
+# Misc
+
 https://news.ycombinator.com/item?id=33236447
 
 [Book list](https://github.com/jaalonso/Libros_de_Logica/blob/main/README.org)
@@ -66,3 +70,8 @@ https://news.ycombinator.com/item?id=33236447
 mathematical logic through python
 
 [Mathematical Logic and Computation - Avigad](https://www.cambridge.org/core/books/mathematical-logic-and-computation/300504EAD8410522CE0C27595D2825A2)
+
+
+https://carnap.io/srv/doc/index.md
+forall x https://www.fecundity.com/logic/
+jscoq, lean-web-editor, sasylf, pie

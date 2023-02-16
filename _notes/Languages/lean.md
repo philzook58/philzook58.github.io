@@ -52,6 +52,10 @@ That sounds fun
 
 [lean forward](https://lean-forward.github.io/)
 [a hitchiker's guide to formal verification](https://lean-forward.github.io/logical-verification/2022/) Still on Lean 3 fyi
+
+[lean update ipam 2023](https://www.youtube.com/watch?v=BY78oZYMGCk&ab_channel=InstituteforPure%26AppliedMathematics%28IPAM%29)
+
+[lean chat](https://github.com/zhangir-azerbayev/lean-chat) openai codex tranlate natural language to lean statements
 ### Build
 
 `elan` tool
