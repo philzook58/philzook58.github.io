@@ -10,13 +10,27 @@ title: Automata, Regex, Coinduction, Bisimulation
 - [Automata](#automata)
   - [Finite Automata](#finite-automata)
   - [Tree Automata](#tree-automata)
+  - [Probablistic automata](#probablistic-automata)
+  - [Other](#other)
+    - [nominal automata](#nominal-automata)
 - [Kleene Algebra](#kleene-algebra)
   - [KAT](#kat)
+  - [Process Alegebras](#process-alegebras)
+  - [Modal u-calculus](#modal-u-calculus)
+  - [Petri Nets](#petri-nets)
+  - [Boolean Equation Systems](#boolean-equation-systems)
 - [Bisimulation](#bisimulation)
   - [Codata](#codata)
   - [Coalgebra](#coalgebra)
   - [Coinduction](#coinduction)
+- [Stuff](#stuff)
+  - [Applications](#applications)
+  - [Tools](#tools)
+    - [mCRL2](#mcrl2)
+  - [Partition Refinement](#partition-refinement)
+  - [Model Checking](#model-checking)
 - [Misc](#misc)
+  - [Options:](#options)
 
 
 See also:
@@ -152,12 +166,45 @@ https://github.com/ondrik/libvata
 
 https://en.wikipedia.org/wiki/Tree_automaton
 
+[Tree Automata as Algebras: Minimisation and Determinisation](https://arxiv.org/pdf/1904.08802.pdf)
 
+## Probablistic automata
+https://en.wikipedia.org/wiki/Probabilistic_automaton
+PFA
+Minimization vs reduction
+residual
 
+[APEX](https://apex.mpi-sws.org/apex/) online demo.
 
+PRISM
+[STORM](https://www.stormchecker.org/) [stormpy](https://moves-rwth.github.io/stormpy/index.html) [tutorial](https://www.stormchecker.org/tutorials.html)
+
+[ 2019 Comparison of Tools for the Analysis of Quantitative Formal Models](https://qcomp.org/competition/2019/)
+## Other
+Register automata
+nominal automata
+Timed automata
+[Symbolic automata](https://github.com/lorisdanto/symbolicautomata)
+quantum atuomata https://en.wikipedia.org/wiki/Quantum_finite_automaton
+### nominal automata 
+https://github.com/Jaxan/nominal-lstar Learning Nominal Automata
+ http://www.calf-project.org/talks.html
+ https://www.youtube.com/watch?v=b38uoZccGuU&ab_channel=SimonsInstitute
+Automata learning huh
+ALF - abstract lerarning framework
 # Kleene Algebra
 
 ## KAT
+http://perso.ens-lyon.fr/damien.pous/symbolickat/ symkat ocaml
+[Symbolic Algorithms for Language Equivalence and Kleene Algebra with Tests](http://doi.acm.org/10.1145/2676726.2677007) transition function using BDD. Generating automata using Brzowski's derivative and classical. bdds + union find for language equivalence
+https://hal.archives-ouvertes.fr/hal-01021497v2/document
+safa is a library for automata
+```ocaml
+#use "topfind";;
+#require "symkat";;
+module S = Safa.Make(Queues.BFS)
+Automata 
+```
 
 https://link.springer.com/chapter/10.1007/978-3-030-81685-8_3 algerbaic program anlaysis
 graphs and paths can be represent by taking the letters of the alphabet to representedges in the graph. The paths from a to b can be represented as a regex
@@ -177,6 +224,10 @@ Kleene algebra modulo theories
 https://github.com/mgree/kmt
 https://arxiv.org/pdf/1707.02894.pdf
 https://github.com/mgree/katbury hmm. guess invariants
+kat modulo rewriting?
+
+https://github.com/arlencox/mlbdd
+https://github.com/netkat-lang/idds
 
 [On the Coalgebraic Theory of Kleene Algebra with Tests](https://www.cs.cornell.edu/kozen/Papers/ChenPucella.pdf)
 Automatic proof generaton via derivatives? That sounds neat.
@@ -184,12 +235,14 @@ Chen and Pucella - coalgerba theory of KAT
 
 [Automated Reasoning in Kleene Algebra](http://www.hoefner-online.de/home/pdfs_tr/trCS-07-04-Shef.pdf) Prover9/Mace4
 
-[Symbolic Algorithms for Language Equivalence and Kleene Algebra with Tests](https://dl.acm.org/doi/10.1145/2775051.2677007) bdds + union find for language equivalence
+
 
 topkat incorrectess logic and kat https://www.youtube.com/watch?v=gLLlrnxB5Jg&ab_channel=ACMSIGPLAN popl22
 
 NetKat - kat for network reasoning
 [Kleene Algebra with Tests and Coq Tools for While Programs](https://arxiv.org/abs/1302.1737)
+https://opam.ocaml.org/packages/netkat/
+
 
 syntax are kleene expressions / logic is kleene algebra manipulation. logic is algebra on steroids
 semantics are strings
@@ -259,6 +312,34 @@ tropical semiring and convex polyhedra
 matrices over another kleene algerba
 
 
+## Process Alegebras
+- CCS Calculus of communicating systems - milner
+- CSP Communicating sequential systems - hoare
+- ACP ?
+- Pi-calculus
+
+## Modal u-calculus
+u-calc without the modal
+fixed point theory
+[backhouse - galois connections and fixed point calculus](https://link.springer.com/chapter/10.1007/3-540-47797-7_4)
+http://web.mit.edu/16.399/www/lecture_12-fixpoints2/Cousot_MIT_2005_Course_12_4-1.pdf
+
+rules
+minimal set
+solution to constraint system
+
+## Petri Nets
+
+## Boolean Equation Systems
+Boolean equations with fixed points.
+I don't get it.
+
+[SOLVING BOOLEAN EQUATION SYSTEMS](http://www.tcs.hut.fi/Publications/bibdb/HUT-TCS-A99.pdf) by translation to ASP?
+[Verification of Modal Properties Using Boolean Equation Systems](https://ris.utwente.nl/ws/portalfiles/portal/5128665/diss.pdf)
+
+mu and nu fixed oiutbs
+
+parametrized BES  kind of sounds like BES modulo theories. 
 # Bisimulation
 
 [BisPy is a Python library for the computation of the maximum bisimulation of directed graphs.](https://bispy-bisimulation-in-python.readthedocs.io/en/latest/index.html)
@@ -295,7 +376,18 @@ Are copatterns simple? They just explain what to do on every application of an a
 on a record. This is the same thing as giving the record explicility
 https://www.youtube.com/watch?v=-fhaZvgDaZk&ab_channel=OlafChitil altenrkirch coinduction in agda
 
+[Copatterns: programming infinite structures by observations](https://dl.acm.org/doi/10.1145/2480359.2429075)
 ## Coalgebra
+[](https://thorsten-wissmann.de/theses/dissertation-wissmann.pdf)
+[Coalgebra for the working programming languages researcher](https://www.youtube.com/watch?v=Qb0z1FWT5bw&ab_channel=ACMSIGPLAN)
+[Coalgebraic Semantics [1/4] - Alexandra Silva - OPLSS 2019](https://www.youtube.com/watch?v=MFUhTtsJNzE&ab_channel=OPLSS)
+Functor gives you syntax and semantics. denotationa and operational.
+Determinstic atuomatya F(X) = X^A = A -> X. so transition relation is X -> F(X) = X -> A -> X. If you icnlude termination (X->Bool,A -> X). Somehow the pieces of reg exp corespond to 
+Final coalgebra gives a denotational semantics
+Brzowsksi derivatives give operational semantics.
+https://cs.ru.nl/~jrot/coalg18/
+
+Arbib and Manes - algerbad approaches to program semantics
 Rutten and Bart Jacobs
 
 A coalgebra ia a pair (X,a) where `a : X -> f X`. This is somehow modelling automata. Very weird right?
@@ -303,6 +395,12 @@ Conceptually X is the set of states, F describes the schema of data/automata typ
 But if X and a are considered opaque, how do you describe the automata in pure categorical terms? Well, the category ish way of talking about Set is to use morphisms from unit to pick out elements. So a particular automata will be described by a set of equations on the morphism `a`.
 Morphisms between coalgebras are automata mappings. (Simulations?)
 category theory in python 4.
+What is finding the minimization of an automata categorically.
+
+
+An specific algebra is the analog of an intepretation. Some interpretations are models of the axioms and some aren't
+Consider finite groups.
+What are the equations of an algerbaic structure interpreted categorically.
 
 ```python
 # x + x*x -> x
@@ -318,6 +416,7 @@ alg = {
 
 Jules Jacobs, Thorsten Wißmann - [https://dl.acm.org/doi/abs/10.1145/3571245](fast coalgebraic bisimulation minimization)
 Different automata types can be described by a Functor, meaning a function or dictionsry from states to something that may also involve states.
+
 
 FOr exmaple, labbleled transition systems might be `Map<State, Map<Action, State>>`, non deterministic systems.
 
@@ -399,15 +498,14 @@ for _ in range(10):
 print(eqclass)
 
 '''
-def label_set(xs):
-  counter = 0
-  seen = {}
-  for x in xs:
-    if x not in seen:
-      seen[x] = counter
-      counter += 1
-  return seen
+
+Hmm.
+What if I Z3-ified this process? A symbolic transition map. eqclass(c) = a.
+Could use same justification tricks.
+
 '''
+
+
 
 ```
 
@@ -424,7 +522,100 @@ it only requires that each system has some way of finding corresponding states.
 What is induction really?
 
 
+# Stuff
+## Applications
+Verification
+Anything fun? Puzzles?
+Program alignment?
+
+## Tools
+boa tool
+[CoPaR](https://git8.cs.fau.de/software/copar) [Generic Partition Refinement and Weighted Tree Automata](https://link.springer.com/chapter/10.1007/978-3-030-30942-8_18) [CoPaR: An Efficient Generic Partition Refiner](https://arxiv.org/pdf/1811.08850v1.pdf)
+[DCPR]() are similar tools in some sense
+
+[CADP](https://cadp.inria.fr/tools.html) LOTOS format. Explicit vs implicit LTS [tutorial](http://convecs.inria.fr/doc/presentations/Lang-Serwe-AFADL-12.pdf) boolean equation systems. CAESAR tool
+
+[ltsmin](https://ltsmin.utwente.nl//)
+
+[VLTS](https://cadp.inria.fr/resources/vlts/) very large transition system bnenchmark suite 
+[BEEM: BEnchmarks for Explicit Model Checkers](https://paradise.fi.muni.cz/beem/)
+
+
+circ
+K
+### mCRL2
+[user manual](https://www.mcrl2.org/web/user_manual/introduction.html)
+[mCRL2](https://www.mcrl2.org/web/user_manual/index.html). Hmm. Impressive. ucrl2 language
+LPS format.
+- mcrl2-gui
+- ltsgraph tool to visualize
+- lpsim to simualte
+- ltsconvert - reduce an lts modulo equivalence
+
+parametrised boolean equation systems
+[modal u-calculus](https://en.wikipedia.org/wiki/Modal_%CE%BC-calculus)
+
+https://www.mcrl2.org/web/user_manual/tutorial/machine/index.html
+
+Vending machine
+```
+act
+  ins10, optA, acc10, putA, coin, ready ;
+proc
+  User = ins10 . optA . User ;
+  Mach = acc10 . putA . Mach ;
+init
+  allow(
+    { coin, ready },
+    comm(
+      { ins10|acc10 -> coin, optA|putA -> ready },
+      User || Mach
+  ) ) ;
+
+sort Nat;
+cons zero : Nat;
+successor : Nat —> Nat,
+```
+
+
+coursera course https://www.coursera.org/learn/automata-system-validation/home/welcome
+labelled transition system
+
+```python
+import os
+os.system("echo try this")
+```
+
+## Partition Refinement
+
+## Model Checking
+Should this be in here?
+See also:
+- imperative proving
+- constrained horn clauses
+
+
+https://en.wikipedia.org/wiki/List_of_model_checking_tools
+https://github.com/johnyf/tool_lists/blob/main/verification_synthesis.md
+
+- [SPIN](https://spinroot.com/spin/whatispin.html), promela
+- UPPAAL
+- TLA+
+- KIND
+- ProB
+- [FDR](https://cocotec.io/fdr/)
+- nusmv
+
+[divine](https://divine.fi.muni.cz/index.html)
+
+[modelc checking contest](https://mcc.lip6.fr/2023/) petri nets? Not seeing familiar systems here
+[ hardware model checkers contest](http://fmv.jku.at/hwmcc20/)
+
+- AVR https://github.com/aman-goel/avr
+- abc
+- Pono http://theory.stanford.edu/~barrett/pubs/MIL+21.pdf
 # Misc
+
 
 Automatalog
 partially built objects just can have fewer entries. But then how do we inform pointer to the objects they gave been 
@@ -437,6 +628,14 @@ Open automata that havn't been filled out, have incomplete observations, or obse
 Can we force equalities?
 codeql is an object oriented shellac on datalog
 logtalk
+weighted automata perform a merge like operation when states combine? "lumping"
+Options:
+  - 
+  - When a subobservation completes (if objects are stable) it splits the universe.
+  - when incompatbile observations occur, split.
+modal u-calc is a fixpoint algebra
+yihong said datalog is equation solving https://www.cs.cornell.edu/~kozen/Papers/Hopkins.pdf
+tree automata and egglog.
 
 
 [higher dimensional automata pratt](http://boole.stanford.edu/pub/hda.pdf) woof. What even is this.

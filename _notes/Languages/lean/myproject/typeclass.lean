@@ -1,5 +1,6 @@
 
-
+-- Use and abuse of instance parameters in the Lean mathematical library
+-- https://arxiv.org/pdf/2202.01629.pdf
 
 class GoodNum (n : Int) where
 
@@ -61,7 +62,7 @@ class Foo (a : Type) where
 class Biz (a : Type) where
 -- https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/quantified_constraints.html
 instance [Biz a] : Quant a where
-instance biz [forall a, Quant a] : Foo Int where
+instance biz [forall a, [Biz a] : Quant a] : Foo Int where
 #check biz
 #synth Foo Int
 
