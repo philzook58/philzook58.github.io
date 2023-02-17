@@ -3620,12 +3620,17 @@ Reuse z3 formula as formula
 
 
 # Proofs
+[Haniel Barbosa - Better SMT proofs for certifying compliance and correctness - IPAM at UCLA](https://www.youtube.com/watch?v=ygsY2LlWyQI&t=7s&ab_channel=InstituteforPure%26AppliedMathematics%28IPAM%29)
+
+
+
 How do you get proofs out of smt solvers?
 It's tough.
 
 cvc5 supports a proof production
 - [proof production](https://cvc5.github.io/docs/cvc5-1.0.2/proofs/proofs.html)
 - alethe, lfsc, dot
+- carcara checker for alethe
 
 ```cvc5
 (set-logic ALL)

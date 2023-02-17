@@ -10,13 +10,25 @@ title: Automata, Regex, Coinduction, Bisimulation
 - [Automata](#automata)
   - [Finite Automata](#finite-automata)
   - [Tree Automata](#tree-automata)
+  - [Probablistic automata](#probablistic-automata)
 - [Kleene Algebra](#kleene-algebra)
   - [KAT](#kat)
+  - [Process Alegebras](#process-alegebras)
+  - [Modal u-calculus](#modal-u-calculus)
+  - [Petri Nets](#petri-nets)
+  - [Boolean Equation Systems](#boolean-equation-systems)
 - [Bisimulation](#bisimulation)
   - [Codata](#codata)
   - [Coalgebra](#coalgebra)
   - [Coinduction](#coinduction)
+- [Stuff](#stuff)
+  - [Applications](#applications)
+  - [Tools](#tools)
+    - [mCRL2](#mcrl2)
+  - [Partition Refinement](#partition-refinement)
+  - [Model Checking](#model-checking)
 - [Misc](#misc)
+  - [Options:](#options)
 
 
 See also:
@@ -152,6 +164,17 @@ https://github.com/ondrik/libvata
 
 https://en.wikipedia.org/wiki/Tree_automaton
 
+[Tree Automata as Algebras: Minimisation and Determinisation](https://arxiv.org/pdf/1904.08802.pdf)
+
+## Probablistic automata
+PFA
+Minimization vs reduction
+residual
+
+[APEX](https://apex.mpi-sws.org/apex/) online demo.
+
+PRISM
+[STORM](https://www.stormchecker.org/) [stormpy](https://moves-rwth.github.io/stormpy/index.html) [tutorial](https://www.stormchecker.org/tutorials.html)
 
 
 
@@ -161,12 +184,12 @@ https://en.wikipedia.org/wiki/Tree_automaton
 http://perso.ens-lyon.fr/damien.pous/symbolickat/ symkat ocaml
 [Symbolic Algorithms for Language Equivalence and Kleene Algebra with Tests](http://doi.acm.org/10.1145/2676726.2677007) transition function using BDD. Generating automata using Brzowski's derivative and classical. bdds + union find for language equivalence
 https://hal.archives-ouvertes.fr/hal-01021497v2/document
-
+safa is a library for automata
 ```ocaml
 #use "topfind";;
 #require "symkat";;
-print_endline "hello world";
-print_endline "yo MTV raps"
+module S = Safa.Make(Queues.BFS)
+Automata 
 ```
 
 https://link.springer.com/chapter/10.1007/978-3-030-81685-8_3 algerbaic program anlaysis
@@ -275,6 +298,25 @@ tropical semiring and convex polyhedra
 matrices over another kleene algerba
 
 
+## Process Alegebras
+- CCS Calculus of communicating systems - milner
+- CSP Communicating sequential systems - hoare
+- ACP ?
+
+## Modal u-calculus
+
+## Petri Nets
+
+## Boolean Equation Systems
+Boolean equations with fixed points.
+I don't get it.
+
+[SOLVING BOOLEAN EQUATION SYSTEMS](http://www.tcs.hut.fi/Publications/bibdb/HUT-TCS-A99.pdf) by translation to ASP?
+[Verification of Modal Properties Using Boolean Equation Systems](https://ris.utwente.nl/ws/portalfiles/portal/5128665/diss.pdf)
+
+mu and nu fixed oiutbs
+
+parametrized BES  kind of sounds like BES modulo theories. 
 # Bisimulation
 
 [BisPy is a Python library for the computation of the maximum bisimulation of directed graphs.](https://bispy-bisimulation-in-python.readthedocs.io/en/latest/index.html)
@@ -311,8 +353,136 @@ Are copatterns simple? They just explain what to do on every application of an a
 on a record. This is the same thing as giving the record explicility
 https://www.youtube.com/watch?v=-fhaZvgDaZk&ab_channel=OlafChitil altenrkirch coinduction in agda
 
+[Copatterns: programming infinite structures by observations](https://dl.acm.org/doi/10.1145/2480359.2429075)
 ## Coalgebra
+[](https://thorsten-wissmann.de/theses/dissertation-wissmann.pdf)
+[Coalgebra for the working programming languages researcher](https://www.youtube.com/watch?v=Qb0z1FWT5bw&ab_channel=ACMSIGPLAN)
+Functor gives you syntax and semantics. denotationa and operational.
+Determinstic atuomatya F(X) = X^A = A -> X. so transition relation is X -> F(X) = X -> A -> X. If you icnlude termination (X->Bool,A -> X). Somehow the pieces of reg exp corespond to 
+Final coalgebra gives a denotational semantics
+Brzowsksi derivatives give operational semantics.
+
+Arbib and Manes - algerbad approaches to program semantics
 Rutten and Bart Jacobs
+
+A coalgebra ia a pair (X,a) where `a : X -> f X`. This is somehow modelling automata. Very weird right?
+Conceptually X is the set of states, F describes the schema of data/automata type, and `a` is a functional (dictionary) description of the transition graph. Modelling in this way is somehow stating that every node/state has a "uniform" structure/edges F associated with it. The dictionary is the "successor" map.
+But if X and a are considered opaque, how do you describe the automata in pure categorical terms? Well, the category ish way of talking about Set is to use morphisms from unit to pick out elements. So a particular automata will be described by a set of equations on the morphism `a`.
+Morphisms between coalgebras are automata mappings. (Simulations?)
+category theory in python 4.
+What is finding the minimization of an automata categorically.
+
+
+An specific algebra is the analog of an intepretation. Some interpretations are models of the axioms and some aren't
+Consider finite groups.
+What are the equations of an algerbaic structure interpreted categorically.
+
+```python
+# x + x*x -> x
+# f(x) = x + x*x 
+alg = {
+  ("plus",1,2) : 3,
+  ("plus",4,5) : 9,
+  ("num", 4) : 4
+}
+
+```
+
+
+Jules Jacobs, Thorsten Wißmann - [https://dl.acm.org/doi/abs/10.1145/3571245](fast coalgebraic bisimulation minimization)
+Different automata types can be described by a Functor, meaning a function or dictionsry from states to something that may also involve states.
+
+
+FOr exmaple, labbleled transition systems might be `Map<State, Map<Action, State>>`, non deterministic systems.
+
+Or in other words (?) various kinds of automata graphs can be encoded as a functions from nodes to the outgoing edges.
+This isn't really saying all that much. But the structure/type of the function/dict can enforce certain regularity properties of the graph.
+
+
+Observational equivalence is obtained by considering the properties to be observable.
+```
+f(x) = 7
+g(x) = "foo"
+
+f(y) = 7
+g(y) = "foo"
+```
+If f and g are the only pieces of data obervable of these opaque objects, then x and y are observationally equvalent.
+Interestingly, by even posing the question, I was stating some meta sense in which x and y are not equivalent
+
+If the identifiers become observations, now x and y aren't equivalent
+
+```
+f(x) = 7
+g(x) = "foo"
+name(x) = "x"
+
+f(y) = 7
+g(y) = "foo"
+name(y) = "y"
+```
+
+It gets more interesting when we say that there are observations that are themselves the opaque objects.
+
+
+```
+f(x) = 7
+g(x) = "foo"
+next(x) = y
+
+f(y) = 7
+g(y) = "foo"
+next(y) = x
+```
+
+Now are they equivalent? It isn't so clear. A possible definition and method is to sort of back up obervable differences and propagate them. If two things map into two distinguishable things, they are also distinguishable. `ob(x) != obs(y) -> x != y`. This is the contrapositive of congruence.
+
+This process breaks identifiers into equivalence classes. The equivalence classes can be naturally labelled by the observations themselves.
+
+The map `id -> f id` describes the automata. `f` is a functor, hence has a notion of `map`. Because of this, given a `emap : id -> eqclass` mapping we can get `id -> f eqclass`.
+I am however suggesting that `eqclass` is some kind of fix of `f` applied to `()`. `eclass0 = ()`. `eclass1 = f ()`
+`emap0 = fun _ -> ()`. eclass is `Free f`.
+If we hash cons, `eclass ~ int`.
+
+```ocaml
+
+```
+
+Here's the simple naive algorithm. The paper covers essential optimizations. Something like the analog of seminiave evaluation and also good choice of eclass ids.
+```python
+
+ex1 = {
+  1 : (False, 2, 3),
+  2 : (False, 4, 3),
+  3 : (False, 5, 3),
+  4 : (True, 5, 4),
+  5 : (True, 4, 4)
+}
+
+def dfa_map(f,x):
+  return {n : (term, f[a], f[b])  for n, (term, a, b) in x.items()}
+
+eqclass = {i : () for i in range(1,6)}
+for _ in range(10):
+  print(eqclass)
+  eqclass = dfa_map(eqclass, ex1)
+  #eqclass = {k : hash(v) for k,v in eqclass.items()} # not quite right. hash could collide. But you get the idea
+  statelabel = { k : -i-1 for i,k in enumerate(set(eqclass.values()))} # negative just so I can see different between state and eqclass easier
+  eqclass = {k : statelabel[v] for k,v in eqclass.items()} 
+
+print(eqclass)
+
+'''
+
+Hmm.
+What if I Z3-ified this process? A symbolic transition map. eqclass(c) = a.
+Could use same justification tricks.
+
+'''
+
+
+
+```
 
 ## Coinduction
 Coinduction. What up? https://en.wikipedia.org/wiki/Coinduction
@@ -327,8 +497,109 @@ it only requires that each system has some way of finding corresponding states.
 What is induction really?
 
 
+# Stuff
+## Applications
+Verification
+Anything fun? Puzzles?
+Program alignment?
+
+## Tools
+boa tool
+[CoPaR](https://git8.cs.fau.de/software/copar) [Generic Partition Refinement and Weighted Tree Automata](https://link.springer.com/chapter/10.1007/978-3-030-30942-8_18) [CoPaR: An Efficient Generic Partition Refiner](https://arxiv.org/pdf/1811.08850v1.pdf)
+[DCPR]() are similar tools in some sense
+
+[CADP](https://cadp.inria.fr/tools.html) LOTOS format. Explicit vs implicit LTS [tutorial](http://convecs.inria.fr/doc/presentations/Lang-Serwe-AFADL-12.pdf) boolean equation systems. CAESAR tool
+
+[ltsmin](https://ltsmin.utwente.nl//)
+
+[VLTS](https://cadp.inria.fr/resources/vlts/) very large transition system bnenchmark suite 
+[BEEM: BEnchmarks for Explicit Model Checkers](https://paradise.fi.muni.cz/beem/)
+
+### mCRL2
+[user manual](https://www.mcrl2.org/web/user_manual/introduction.html)
+[mCRL2](https://www.mcrl2.org/web/user_manual/index.html). Hmm. Impressive. ucrl2 language
+LPS format.
+- mcrl2-gui
+- ltsgraph tool to visualize
+- lpsim to simualte
+- ltsconvert - reduce an lts modulo equivalence
+
+parametrised boolean equation systems
+[modal u-calculus](https://en.wikipedia.org/wiki/Modal_%CE%BC-calculus)
+
+https://www.mcrl2.org/web/user_manual/tutorial/machine/index.html
+
+Vending machine
+```
+act
+  ins10, optA, acc10, putA, coin, ready ;
+proc
+  User = ins10 . optA . User ;
+  Mach = acc10 . putA . Mach ;
+init
+  allow(
+    { coin, ready },
+    comm(
+      { ins10|acc10 -> coin, optA|putA -> ready },
+      User || Mach
+  ) ) ;
+
+sort Nat;
+cons zero : Nat;
+successor : Nat —> Nat,
+```
+
+
+coursera course https://www.coursera.org/learn/automata-system-validation/home/welcome
+labelled transition system
+
+```python
+import os
+os.system("echo try this")
+```
+
+## Partition Refinement
+
+## Model Checking
+Should this be in here?
+See also:
+- imperative proving
+
+https://en.wikipedia.org/wiki/List_of_model_checking_tools
+https://github.com/johnyf/tool_lists/blob/main/verification_synthesis.md
+
+- [SPIN](https://spinroot.com/spin/whatispin.html), promela
+- UPPAAL
+- TLA+
+- KIND
+- ProB
+- [FDR](https://cocotec.io/fdr/)
+- nusmv
+
+[divine](https://divine.fi.muni.cz/index.html)
 # Misc
-When a subobservation completes it splits the universe.
+
+
+Automatalog
+partially built objects just can have fewer entries. But then how do we inform pointer to the objects they gave been 
+nondestructive update
+Monotonically, observations go down, equalities go up. observations go up, equalities go down.
+We can remove obserations and stay monotonic with respect to equality. Horizontal strtification. Relationship with subclassing? first strata of most fine-grained class rules.
+object oriented databases
+Rows ~ objects, observations ~ fields. Record vs copattern defnition of codata.
+Open automata that havn't been filled out, have incomplete observations, or observations with partial equality, or lattice observations. We cannot compress these. We must consider observations that could possibly be distinguishable as distinguishable.
+Can we force equalities?
+codeql is an object oriented shellac on datalog
+logtalk
+weighted automata perform a merge like operation when states combine? "lumping"
+Options:
+  - 
+  - When a subobservation completes (if objects are stable) it splits the universe.
+  - when incompatbile observations occur, split.
+modal u-calc is a fixpoint algebra
+yihong said datalog is equation solving https://www.cs.cornell.edu/~kozen/Papers/Hopkins.pdf
+tree automata and egglog.
+
 
 [higher dimensional automata pratt](http://boole.stanford.edu/pub/hda.pdf) woof. What even is this.
 

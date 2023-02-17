@@ -1708,7 +1708,7 @@ x :- not notx.
 notx :- not x.
 ```
 # Misc
-
+[clinguin](https://github.com/potassco/clinguin) specify a gui in asp
 
 ```clingo
 talk(X) :- people(X). % people talk in both worlds
