@@ -2325,6 +2325,9 @@ The interaction of linear logic and logic programming was very inlfluential on t
 Actually fairly unrelated to inductive logic programming.
 Dealing with infinite terms and streams.
 
+[LTL Model Checking using Coinductive Answer Set programming](http://platon.etsii.urjc.es/~jarias/GDE-2022/GDE-13.pdf)
+Completion + loop formula (external support) gives lfp.
+completion + ? give gfp?
 
 # inductive logic programmingh
 popper https://arxiv.org/abs/2005.02259

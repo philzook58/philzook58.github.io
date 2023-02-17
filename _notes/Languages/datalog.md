@@ -5644,6 +5644,8 @@ fn main() {
 ```
 
 ## Flix
+https://github.com/flix/book
+
 Supports lattices.
 Has a full programming language to.
 
@@ -6082,6 +6084,11 @@ What about guarded negation? For example if you turn off stratification but are 
 
 
 # Resources
+[Database Theory](https://github.com/pdm-book/community) book
+
+
+[Modern Datalog Engines](https://www.nowpublishers.com/article/Details/DBS-073) 68 page book 2022
+
 [Cozo](https://news.ycombinator.com/item?id=33518320) https://github.com/cozodb/cozo
 
 

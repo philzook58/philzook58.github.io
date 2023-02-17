@@ -11,6 +11,8 @@ title: Automata, Regex, Coinduction, Bisimulation
   - [Finite Automata](#finite-automata)
   - [Tree Automata](#tree-automata)
   - [Probablistic automata](#probablistic-automata)
+  - [Other](#other)
+    - [nominal automata](#nominal-automata)
 - [Kleene Algebra](#kleene-algebra)
   - [KAT](#kat)
   - [Process Alegebras](#process-alegebras)
@@ -167,6 +169,7 @@ https://en.wikipedia.org/wiki/Tree_automaton
 [Tree Automata as Algebras: Minimisation and Determinisation](https://arxiv.org/pdf/1904.08802.pdf)
 
 ## Probablistic automata
+https://en.wikipedia.org/wiki/Probabilistic_automaton
 PFA
 Minimization vs reduction
 residual
@@ -176,8 +179,19 @@ residual
 PRISM
 [STORM](https://www.stormchecker.org/) [stormpy](https://moves-rwth.github.io/stormpy/index.html) [tutorial](https://www.stormchecker.org/tutorials.html)
 
-
-
+[ 2019 Comparison of Tools for the Analysis of Quantitative Formal Models](https://qcomp.org/competition/2019/)
+## Other
+Register automata
+nominal automata
+Timed automata
+[Symbolic automata](https://github.com/lorisdanto/symbolicautomata)
+quantum atuomata https://en.wikipedia.org/wiki/Quantum_finite_automaton
+### nominal automata 
+https://github.com/Jaxan/nominal-lstar Learning Nominal Automata
+ http://www.calf-project.org/talks.html
+ https://www.youtube.com/watch?v=b38uoZccGuU&ab_channel=SimonsInstitute
+Automata learning huh
+ALF - abstract lerarning framework
 # Kleene Algebra
 
 ## KAT
@@ -302,8 +316,17 @@ matrices over another kleene algerba
 - CCS Calculus of communicating systems - milner
 - CSP Communicating sequential systems - hoare
 - ACP ?
+- Pi-calculus
 
 ## Modal u-calculus
+u-calc without the modal
+fixed point theory
+[backhouse - galois connections and fixed point calculus](https://link.springer.com/chapter/10.1007/3-540-47797-7_4)
+http://web.mit.edu/16.399/www/lecture_12-fixpoints2/Cousot_MIT_2005_Course_12_4-1.pdf
+
+rules
+minimal set
+solution to constraint system
 
 ## Petri Nets
 
@@ -357,10 +380,12 @@ https://www.youtube.com/watch?v=-fhaZvgDaZk&ab_channel=OlafChitil altenrkirch co
 ## Coalgebra
 [](https://thorsten-wissmann.de/theses/dissertation-wissmann.pdf)
 [Coalgebra for the working programming languages researcher](https://www.youtube.com/watch?v=Qb0z1FWT5bw&ab_channel=ACMSIGPLAN)
+[Coalgebraic Semantics [1/4] - Alexandra Silva - OPLSS 2019](https://www.youtube.com/watch?v=MFUhTtsJNzE&ab_channel=OPLSS)
 Functor gives you syntax and semantics. denotationa and operational.
 Determinstic atuomatya F(X) = X^A = A -> X. so transition relation is X -> F(X) = X -> A -> X. If you icnlude termination (X->Bool,A -> X). Somehow the pieces of reg exp corespond to 
 Final coalgebra gives a denotational semantics
 Brzowsksi derivatives give operational semantics.
+https://cs.ru.nl/~jrot/coalg18/
 
 Arbib and Manes - algerbad approaches to program semantics
 Rutten and Bart Jacobs
@@ -515,6 +540,9 @@ boa tool
 [VLTS](https://cadp.inria.fr/resources/vlts/) very large transition system bnenchmark suite 
 [BEEM: BEnchmarks for Explicit Model Checkers](https://paradise.fi.muni.cz/beem/)
 
+
+circ
+K
 ### mCRL2
 [user manual](https://www.mcrl2.org/web/user_manual/introduction.html)
 [mCRL2](https://www.mcrl2.org/web/user_manual/index.html). Hmm. Impressive. ucrl2 language
@@ -564,6 +592,8 @@ os.system("echo try this")
 Should this be in here?
 See also:
 - imperative proving
+- constrained horn clauses
+
 
 https://en.wikipedia.org/wiki/List_of_model_checking_tools
 https://github.com/johnyf/tool_lists/blob/main/verification_synthesis.md
@@ -577,6 +607,13 @@ https://github.com/johnyf/tool_lists/blob/main/verification_synthesis.md
 - nusmv
 
 [divine](https://divine.fi.muni.cz/index.html)
+
+[modelc checking contest](https://mcc.lip6.fr/2023/) petri nets? Not seeing familiar systems here
+[ hardware model checkers contest](http://fmv.jku.at/hwmcc20/)
+
+- AVR https://github.com/aman-goel/avr
+- abc
+- Pono http://theory.stanford.edu/~barrett/pubs/MIL+21.pdf
 # Misc
 
 

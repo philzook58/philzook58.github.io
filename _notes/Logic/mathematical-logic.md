@@ -75,3 +75,5 @@ mathematical logic through python
 https://carnap.io/srv/doc/index.md
 forall x https://www.fecundity.com/logic/
 jscoq, lean-web-editor, sasylf, pie
+https://github.com/RBornat/jape
+

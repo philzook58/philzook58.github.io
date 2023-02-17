@@ -85,6 +85,10 @@ sqlite
 Cython
 
 
+# Holpy
+
+
+
 # libraries
 
 
@@ -139,3 +143,5 @@ pyiodide
 [python decompiler](https://github.com/rocky/python-decompile3) why would you even want this?
 
 [Gooey](https://github.com/chriskiehl/Gooey) autoconvert cli to gui app
+
+[aesara](https://github.com/aesara-devs/aesara) Aesara is a Python library for defining, optimizing, and efficiently evaluating mathematical expressions involving multi-dimensional arrays.

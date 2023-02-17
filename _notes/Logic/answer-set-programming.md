@@ -31,6 +31,7 @@ title: Answer Set Programming
     - [Theory of Arrays](#theory-of-arrays)
     - [Difference Logic](#difference-logic)
     - [EPR](#epr)
+    - [Boolean Equation Systems](#boolean-equation-systems)
   - [Junk](#junk)
 - [Constructs](#constructs)
   - [Integrity constraints](#integrity-constraints)
@@ -966,6 +967,51 @@ In the datalog notes, I talk about how difference logic propagator is th same as
 What about this one huh. Kind of interesting.
 EPR and datalog are kind of related in that they both rely on something like finite herband universes for their termination/decidability.
 The eager encoding of epr can be very bad though.
+
+### Boolean Equation Systems
+<http://www.tcs.hut.fi/Publications/bibdb/HUT-TCS-A99.pdf>. See also mcrl2 groot book
+An intermediate problem for model checking modal u-calculus. Boolean equations with least and greatest fixed point operaors.
+`(sx=a)*`
+
+Dependency graph, edge if x_i appears in a_j
+Standard form. binary operations on rhs.
+
+If everything is using least fixed point, no prob. Direct translation.
+
+"Blocks" correspond to strata
+
+```clingo
+p1 :- p3. % u.x1=x3
+p2.  %  u.x2 = 1 
+p3 :- p4. p3 :- p5. % u.x3 = x4 \/ x5
+p4 :- p2,p1. %u.x4 = x2 /\ x1
+
+```
+
+If everythign is greatest fixed point, complement the system
+```clingo
+-p1 :- -p2. -p1 :- -p3. % v.x1 = x2 /\ x3
+-p2 :- -p3,-p4. % v.x2 = x3 \/ x4
+-p3 :- -p2,-p4. % v.x3 = x2 \/ x4
+-p4. %v.x4 = 0
+```
+
+Conjunctive and disjunctive systems allow alternation but only contain /\ or only contain \/
+
+Hmm. It might be possible to directly express the modal formula + transition systemcompilation in ASP
+```clingo
+trans(1,a,2; 1,a,4; 2,a,3; 3,a,2).
+
+
+```
+
+
+General translaion. Feels like they are building a parametrized system with rules turnining on and off. We're inferring some kind of graph.
+
+My first inclination was to use direct encoding + ASP priority. That seems like it ought to work?
+Add min p and max p as optimization objectives. Put them in the priority that the equations appear. Can I encode games in this way?
+I'm like mixing my metaphors. A max sat solver can probably do this also
+
 
 
 ## Junk
