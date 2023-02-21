@@ -148,6 +148,12 @@ https://yurichev.com/mirrors/DCC_decompilation_thesis.pdf
 
 https://www2.cs.arizona.edu/~collberg/Teaching/620/1999/Handouts/rmeadows1.pdf
  
+ [Static Single Assignment for Decompilation - Emmerik](https://yurichev.com/mirrors/vanEmmerik_ssa.pdf)
+ https://twitter.com/brightprogramer/status/1626841275801702400?s=20
+
+[Decompilers and beyond Ilfak Guilfanov, Hex-Rays SA, 2008](https://web.archive.org/web/20181014083034/https://www.hex-rays.com/products/ida/support/ppt/decompilers_and_beyond_white_paper.pdf)
+
+[Type-Based Decompilation? (or Program Reconstruction via Type Reconstruction)- Alan Mycroft](https://link.springer.com/content/pdf/10.1007/3-540-49099-X_14.pdf)
 ### Loop recovery
 Getting structured control flow from CFG
 Stackify https://gitlab.inria.fr/why3/why3/-/merge_requests/453

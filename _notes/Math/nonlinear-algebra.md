@@ -11,8 +11,9 @@ By nonlinear algebra I mean things relating to multivariate polynomials
 - Thermodynamics, Legendre
 - Global optimization
 - combinatorial optimization (sudoku and like)
-
-# Systems
+- Algebraic statistics https://en.wikipedia.org/wiki/Algebraic_statistics https://franknielsen.github.io/Books/CuratedBookLists.html
+- game theory
+# Systems 
 ## Singular
 ## macaulay2
 ## Sympy
