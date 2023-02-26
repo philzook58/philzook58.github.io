@@ -28,3 +28,8 @@ Visual differential geometry
 Functional differential geometry
 
 ## Curvature
+
+# Discrete Geometry
+
+# Convex Geometry
+- See convex optimization

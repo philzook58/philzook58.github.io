@@ -148,6 +148,7 @@ https://yurichev.com/mirrors/DCC_decompilation_thesis.pdf
 
 https://www2.cs.arizona.edu/~collberg/Teaching/620/1999/Handouts/rmeadows1.pdf
  
+ [Polymorphic Type Inference for Machine Code](https://arxiv.org/abs/1603.05495)
 ### Loop recovery
 Getting structured control flow from CFG
 Stackify https://gitlab.inria.fr/why3/why3/-/merge_requests/453
@@ -232,6 +233,60 @@ See ghidra notes
 import angr #, monkeyhex
 proj = angr.Project('/bin/true')
 state = proj.factory.entry_state()
+```
+
+```python
+
+code = '''
+int fact(int x){
+  int acc = 1;
+  while(x > 0){
+    acc *= x;
+    x--;
+  }
+  return acc;
+}
+'''
+import tempfile
+import subprocess
+import angr #, monkeyhex
+import os
+with tempfile.NamedTemporaryFile(suffix=".c") as fp:
+  with tempfile.TemporaryDirectory() as mydir:
+    fp.write(code.encode())
+    fp.flush()
+    fp.seek(0)
+    print(fp.readlines())
+    print(fp.name)
+    print(mydir)
+    outfile = mydir + "/fact"
+    print(outfile)
+    print(subprocess.run(["gcc",  "-g",  "-c","-O1", "-o",  outfile, fp.name], check=True))
+    print(os.listdir(mydir))
+    
+    print(subprocess.run(["objdump", "-d", outfile], check=True))
+
+    proj = angr.Project(outfile)
+    print(dir(proj))
+    print(proj.arch)
+    print(proj.entry)
+    print(proj.filename)
+    print(proj.loader)
+    block = proj.factory.block(proj.entry)
+    print(block.pp())
+    print(block)
+    print(block.vex)
+    print(block.instructions) # numebr of instryuctions
+    print(dir(proj.analyses))
+    state = proj.factory.entry_state()
+    print(dir(state))
+    print(proj.loader.find_symbol("fact"))
+    #state = proj.factory.entry_state()
+    print(state.step())
+    print(dir(state.solver))
+    print(state.solver.all_variables)
+
+
 ```
 
 ## Patching

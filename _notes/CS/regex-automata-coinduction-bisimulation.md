@@ -411,7 +411,31 @@ alg = {
   ("num", 4) : 4
 }
 
+def map_F(f,x):
+  match x:
+    case ("plus",x,y):
+      return ("plus", f[x],f[y])
+    case ("num",z):
+      return ("num",z)
+
+# lift map over dict also
+def map2(f,x):
+  return { map_F(f,k) : v  for k,v in x.items()}
+
+# start at minimally identified rather than maximally identified
+eqclass0 = {i:i for i in range(1000)}
+#eqclass0 = {} # or empty? Void -> Id rather than Id -> ()
+print(map2(eqclass0, alg))
+for n in range(10):
+  
+# (c -> a) -> (f a -> b) -> f c -> b
+#  f l = \fc -> l (map f fc) 
 ```
+The analog/dual of automata minimization is probably congruence closure. This jives nicely.
+The signature is the choice of functor.
+Refactoring the entire egraph into a _single_ dictionary. That's elegant.
+
+
 
 
 Jules Jacobs, Thorsten Wißmann - [https://dl.acm.org/doi/abs/10.1145/3571245](fast coalgebraic bisimulation minimization)

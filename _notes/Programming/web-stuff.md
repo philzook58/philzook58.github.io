@@ -41,6 +41,8 @@ Get some nicer default styling, often some kind of grid system for layout, mobil
 - engines - V8, spidermonkey, quickjs
 - JSON
 
+
+[Javascript without a build system](https://jvns.ca/blog/2023/02/16/writing-javascript-without-a-build-system/)
 ## Frameworks
 What do these even do for you? Well, they are ecosystems of widgets and opinionated ways of organizing a webpage, so that's nice.
 
@@ -70,7 +72,7 @@ Apache is super powerful.
 
 Modules are libraries that add functionality to apache
 ### Nginx
-
+[nginx playgroud](https://jvns.ca/blog/2021/09/24/new-tool--an-nginx-playground/)
 ## Databases
 - See database notes
 

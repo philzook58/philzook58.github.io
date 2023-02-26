@@ -1,7 +1,30 @@
 ---
 layout: post
-title: Floating Point and Numerical verification
+title: Computer Numbers
 ---
+- [Numbers](#numbers)
+- [Finite Precision](#finite-precision)
+- [Multiprecision Integers](#multiprecision-integers)
+- [Rationals](#rationals)
+- [Algebraic Numbers](#algebraic-numbers)
+- [Intervals](#intervals)
+- [Floats](#floats)
+  - [Multiprecision FLoats](#multiprecision-floats)
+  - [Core identities](#core-identities)
+  - [Fused multiply add](#fused-multiply-add)
+  - [Range reduction](#range-reduction)
+  - [2Sum and Fast2Sum](#2sum-and-fast2sum)
+  - [Veltkamp splitting](#veltkamp-splitting)
+  - [Dekker Multiplication](#dekker-multiplication)
+  - [Newton Raphson](#newton-raphson)
+  - [Multiplication by arbitrary precision number like pi](#multiplication-by-arbitrary-precision-number-like-pi)
+  - [Error Models](#error-models)
+  - [Sterbenz lemma](#sterbenz-lemma)
+  - [Gappa](#gappa)
+  - [FPBench](#fpbench)
+  - [Brute Force Verification](#brute-force-verification)
+- [Constructive / Exact Reals](#constructive--exact-reals)
+- [Misc](#misc)
 
 
 # Numbers
@@ -11,12 +34,6 @@ Computers can represent 0/1 as a bit.
 
 A small-ish set of numbers and operations on them can be represented by lookup table. 0b001101 is 893204.34234 when you look it up in the table.
 
-Finite integers are representable as primitives (64-bit / 32-bit) / as lists of 0/1
-
-Lists or arrays of integers can be used to make arbitrary sized integers
-
-Two integers (a tuple or struct) describes fractions. You can do +-*/ exactly for fractions
-
 You can decide to fix different aspects. You can limit choices of sizes
 
 Fixed point is gotten when the denominator is fixed at compile time. You can't perform arithemtic exactly anymore
@@ -25,7 +42,28 @@ Intervals represent a number by giving an under and over approximation of the nu
 
 Floating point numbers are mostly gotten by fixing the denominator to be a power of 2.
 
-# Core identities
+# Finite Precision
+Finite integers are representable as primitives (64-bit / 32-bit) / as lists of 0/1
+
+# Multiprecision Integers
+Lists or arrays of integers can be used to make arbitrary sized integers
+
+gmp
+limbs
+
+# Rationals
+Two integers (a tuple or struct) describes fractions. You can do `+-*/` exactly for fractions. That can be very powerful, since you can then analyze more complicated operations
+
+
+# Algebraic Numbers
+You can represent an exact number by stating an exact polynomial it is the solution of.
+
+# Intervals
+
+# Floats
+## Multiprecision FLoats
+mpfr
+## Core identities
 
 Normal floating points are of the form
 
@@ -389,7 +427,7 @@ ABS(e, iy) :- BND(e, ix), abs(ix,iy).
 
 ```
 
-# Fused multiply add
+## Fused multiply add
 [multiply accumlate](https://en.wikipedia.org/wiki/Multiply%E2%80%93accumulate_operation)
 
 [Remez algorithm](https://github.com/simonbyrne/Remez.jl) Find minimax optimal polynomial over range
@@ -407,7 +445,7 @@ How and how not to compute matrix exponentials https://www.maths.manchester.ac.u
 
 [interesting discussion of deriving a specific approximator](https://discourse.julialang.org/t/a-faster-pow-x-1-12-function-available-in-fast12throot-jl/10893/11)
 
-# Range reduction
+## Range reduction
 Powers of 2 are often easier to handle seperately, leaving behind a problem
 
 exp = 2^(log_2(e) * x)
@@ -416,7 +454,7 @@ sin/cos don't matter modulo 2 pi. modulo pi for some signs.
 
 polynomial Approximations typically are only ok over small ranges
 
-# 2Sum and Fast2Sum
+## 2Sum and Fast2Sum
 https://en.wikipedia.org/wiki/2Sum
 Compensated summation
 Exact roundoff in floating point addition.
@@ -460,7 +498,7 @@ e <= u
 ## Sterbenz lemma
 Addition and subtraction are exact if the numbers are really close to each other. (A factor of 2)
 
-# Gappa
+## Gappa
 <https://gappa.gitlabpages.inria.fr/gappa/index.html>
 Proofs about 
 https://gappa.gitlabpages.inria.fr/gappa/theorems.html The rules that gappa uses.
@@ -650,7 +688,7 @@ bound error of (a + (b + c))
 
 
 
-## Constructive / Exact Reals
+# Constructive / Exact Reals
 Constructive reals allow you to request an accuracy of the result, rather than specify the accuracy of the input.
 This ordering is reminsicent of epsilon delta definitions in analysis, which are often explained as exactly this kind of game. You ask for an epsilon, I need to figure out a delta.
 

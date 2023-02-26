@@ -124,6 +124,8 @@ LMA vs VMA load memoery address vs virtual memory address. Can differe when stor
 Debug info
 unwind tables
 
+[read-dwarf](https://github.com/rems-project/read-dwarf) use dwarf data and Sail / C symbolic execturo to establish bisimulation
+
 [ORC unwind tables in kernel](https://www.kernel.org/doc/html/latest/x86/orc-unwinder.html)
 
 [Reliable and Fast DWARF-Based Stack Unwinding](https://hal.inria.fr/hal-02297690/document)
@@ -186,6 +188,8 @@ You can get line number and column info from dwarf
 [gcc flags related to debugging](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html#Debugging-Options)
 - `-Og`
 # Resources
+[packer tutorial](https://github.com/frank2/packer-tutorial)
+
 N. Glew and G. Morrisett. Type-Safe Linking and Modular Assembly Language
 
 
