@@ -59,6 +59,7 @@ wordpress_id: 2913
 - See note on parsing
 
 # Intermediate Representations
+[Notes on IRs](https://cs.lmu.edu/~ray/notes/ir/)
 ## SSA
 http://ssabook.gforge.inria.fr/latest/book.pdf SSA bookv
 [mirror of ssa book](https://github.com/pfalcon/ssabook)

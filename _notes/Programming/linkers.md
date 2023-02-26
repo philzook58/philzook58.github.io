@@ -119,7 +119,6 @@ Not linking persay. But some useful stuff for manipulating object files
 LMA vs VMA load memoery address vs virtual memory address. Can differe when stored in romvs ram for example
 
 
-
 # DWARF
 Debug info
 unwind tables
@@ -129,7 +128,8 @@ unwind tables
 [ORC unwind tables in kernel](https://www.kernel.org/doc/html/latest/x86/orc-unwinder.html)
 
 [Reliable and Fast DWARF-Based Stack Unwinding](https://hal.inria.fr/hal-02297690/document)
-<https://fzn.fr/projects/frdwarf/>
+<https://fzn.fr/projects/frdwarf/> [](https://dl.acm.org/doi/abs/10.1145/3360572)
+
 
 [dwarf too unreliable, back to frame pointers](https://rwmj.wordpress.com/2023/02/02/fedora-now-has-frame-pointers/) https://news.ycombinator.com/item?id=34632677
 

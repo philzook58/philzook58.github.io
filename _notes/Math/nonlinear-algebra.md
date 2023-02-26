@@ -13,11 +13,16 @@ By nonlinear algebra I mean things relating to multivariate polynomials
 - Integer programming
 - combinatorial optimization (sudoku and like)
 - Circuits. Relational algebra parametrized by omega
-
-[](https://www3.risc.jku.at/publications/download/risc_333/1998-00-00-A.pdf)
+- Algebraic statistics https://en.wikipedia.org/wiki/Algebraic_statistics https://franknielsen.github.io/Books/CuratedBookLists.html
+- game theory
+[grobner bases and applications - buchberger](https://www3.risc.jku.at/publications/download/risc_333/1998-00-00-A.pdf)
 # Systems
 https://github.com/algebraic-solving/msolve msolve. a C library for grobner basis and root calculations. Intresting
 [msolve: A Library for Solving Polynomial Systems](https://arxiv.org/abs/2104.03572)
+
+
+
+# Systems 
 
 - [Axiom](http://www.axiom-developer.org/)
 - Maple
