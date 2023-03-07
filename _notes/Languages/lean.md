@@ -56,6 +56,8 @@ That sounds fun
 [lean update ipam 2023](https://www.youtube.com/watch?v=BY78oZYMGCk&ab_channel=InstituteforPure%26AppliedMathematics%28IPAM%29)
 
 [lean chat](https://github.com/zhangir-azerbayev/lean-chat) openai codex tranlate natural language to lean statements
+
+[](https://proofassistants.stackexchange.com/questions/1964/setting-up-lean-4-on-a-server) https://lean.math.hhu.de/ lean4 web editor
 ### Build
 
 `elan` tool

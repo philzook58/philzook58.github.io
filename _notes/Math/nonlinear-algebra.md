@@ -13,6 +13,7 @@ By nonlinear algebra I mean things relating to multivariate polynomials
 - combinatorial optimization (sudoku and like)
 - Algebraic statistics https://en.wikipedia.org/wiki/Algebraic_statistics https://franknielsen.github.io/Books/CuratedBookLists.html
 - game theory
+- Invariants?
 # Systems 
 ## Singular
 ## macaulay2
@@ -33,6 +34,8 @@ Fundamental theorem of algebra
 
 # Linear modelling of nonlinear systems
 [Numerical Polynomial Algebra by Hans Stetter](https://epubs.siam.org/doi/book/10.1137/1.9780898717976?mobileUi=0&)
+
+Resolvents
 
 ## Vandermonde Matrix
 The big question: Linear in what?
@@ -64,6 +67,8 @@ import pybertini
 
 Buchberger's algorithm
 S-polynomials
+completition
+comparison and application to linear solving
 
 
 

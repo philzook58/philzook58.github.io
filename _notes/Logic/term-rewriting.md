@@ -294,6 +294,7 @@ Redex, Maude, Spoofax, OTT, [Rascal](https://www.rascal-mpl.org/),  ATL and mode
 
 [popl : matching logic: foundations of K framework](https://www.youtube.com/watch?v=Awsv0BlJgbo&ab_channel=ACMSIGPLAN)
 
+[K vs. Coq as Language Verification Frameworks](https://runtimeverification.com/blog/k-vs-coq-as-language-verification-frameworks-part-1-of-3/)
 # Other Systems
 
 Pure

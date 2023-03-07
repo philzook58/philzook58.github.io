@@ -121,6 +121,9 @@ probalistic programming
 [diffrax](https://twitter.com/PatrickKidger/status/1493239723497857025?s=20&t=vnpYi0b4BbBHdrISb_Kxfw) JAX powered differential equations.
 
 # Deep Learning
+https://github.com/AUTOMATIC1111/stable-diffusion-webui
+
+
 ## Convolutional
 
 ## Recurrent
@@ -155,10 +158,13 @@ code2vec
 
 copilot
 gpt-3
+chatgpt
+llama
 
 wavenet
 DALL-E
-
+stable diffusion
+midjourney
 
 alexnet
 vgg

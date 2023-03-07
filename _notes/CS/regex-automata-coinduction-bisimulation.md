@@ -193,7 +193,7 @@ https://github.com/Jaxan/nominal-lstar Learning Nominal Automata
 Automata learning huh
 ALF - abstract lerarning framework
 # Kleene Algebra
-
+[Kleene Algebras and Applications - Alexandra Silva OPLSS](https://www.youtube.com/watch?v=TEFx5DG9ghE&ab_channel=OPLSS)
 ## KAT
 http://perso.ens-lyon.fr/damien.pous/symbolickat/ symkat ocaml
 [Symbolic Algorithms for Language Equivalence and Kleene Algebra with Tests](http://doi.acm.org/10.1145/2676726.2677007) transition function using BDD. Generating automata using Brzowski's derivative and classical. bdds + union find for language equivalence
