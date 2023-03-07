@@ -18,7 +18,3 @@ Machine learning
 
 
 # Number Theory
-# Abstract Algebra
-By nonlinear algebra I mostly meant multivariate polynomials.
-# Representation Theory
-# Group Theory

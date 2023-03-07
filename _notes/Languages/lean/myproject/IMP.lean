@@ -26,7 +26,7 @@ import Mathlib.Tactic.Linarith
 -- /-* ** 1.1 Arithmetic expressions -/
 
 
-def ident : Type := String
+abbrev ident : Type := String
 #check String
 -- def mythree : Nat := 3
 -- type ident = string
@@ -218,8 +218,17 @@ def OR (b1 b2: bexp) : bexp := NOT (AND (NOT b1) (NOT b2))
 -- /- * Show the expected semantics for the [OR] derived form: -/
 
 lemma beval_OR :
-  forall s b1 b2, beval s (OR b1 b2) = beval s b1 || beval s b2 := by
-  sorry
+  forall s b1 b2, beval s (OR b1 b2) = (beval s b1 || beval s b2) := by
+  intros s b1 b2
+  simp [beval]
+  --rw [Bool.not_and]
+  --library_search
+  cases (beval s b1) <;> cases (beval s b2) <;> simp
+  
+
+
+  
+  
 /-
 Proof.
   intros; cbn.
@@ -243,7 +252,7 @@ inductive com: Type :=
 
 /-* We can write [c1 ;; c2] instead of [SEQ c1 c2], it is easier on the eyes. -/
 
-Infix ";;" := SEQ (at level 80, right associativity).
+infixr:80 ";;" => com.SEQ -- (at level 80, right associativity).
 
 /-* Here is an IMP program that performs Euclidean division by
   repeated subtraction.  At the end of the program, "q" contains
@@ -255,34 +264,38 @@ Infix ";;" := SEQ (at level 80, right associativity).
 >>
   In abstract syntax:
 -/
-
+open com
 def Euclidean_division :=
   ASSIGN "r" (VAR "a") ;;
   ASSIGN "q" (CONST 0) ;;
   WHILE (LESSEQUAL (VAR "b") (VAR "r"))
     (ASSIGN "r" (MINUS (VAR "r") (VAR "b")) ;;
-     ASSIGN "q" (PLUS (VAR "q") (CONST 1))).
+     ASSIGN "q" (PLUS (VAR "q") (CONST 1)))
 
 /-* A useful operation over stores:
     [update x v s] is the store that maps [x] to [v] and is equal to [s] for
     all variables other than [x]. -/
-
-def update (x: ident) (v: Z) (s: store) : store :=
-  fun y => if string_dec x y then v else s y.
+#print ident
+#print store
+def update (x: ident) (v: Int) (s: store) : store :=
+  fun y => if x == y then v else s y
 
 /-* A naive approach to giving semantics to commands is to write an
   evaluation function [cexec s c] that runs the command [c] in initial
   store [s] and returns the final store when [c] terminates. -/
 
-Fail def cexec (s: store) (c: com) : store :=
+-- Lean accepts this deftion with the unsafe keyword
+unsafe def cexec' (s: store) (c: com) : store :=
   match c with
   | SKIP => s
   | ASSIGN x a => update x (aeval s a) s
-  | SEQ c1 c2 => let s' := cexec s c1 in cexec s' c2
-  | IFTHENELSE b c1 c2 => if beval s b then cexec s c1 else cexec s c2
+  | SEQ c1 c2 => let s' := cexec' s c1
+                 cexec' s' c2
+  | IFTHENELSE b c1 c2 => if beval s b then cexec' s c1 else cexec' s c2
   | WHILE b c1 =>
       if beval s b
-      then (let s' := cexec s c1 in cexec s' (WHILE b c1))
+      then (let s' := cexec' s c1
+            cexec' s' (WHILE b c1))
       else s
   
 
@@ -302,7 +315,7 @@ Fail def cexec (s: store) (c: com) : store :=
   a Coq inductive predicate:
 -/
 
-Inductive cexec: store -> com -> store -> Prop :=
+inductive cexec: store -> com -> store -> Prop where
   | cexec_skip: forall s,
       cexec s SKIP s
   | cexec_assign: forall s x a,
@@ -318,7 +331,7 @@ Inductive cexec: store -> com -> store -> Prop :=
       cexec s (WHILE b c) s
   | cexec_while_loop: forall b c s s' s'',
       beval s b = true -> cexec s c s' -> cexec s' (WHILE b c) s'' ->
-      cexec s (WHILE b c) s''.
+      cexec s (WHILE b c) s''
 
 /-* This style of semantics is known as natural semantics or big-step
   operational semantics.  The predicate [cexec s c s'] holds iff there
@@ -327,11 +340,14 @@ Inductive cexec: store -> com -> store -> Prop :=
   the computations performed by [c] in a tree-like manner.  The
   finiteness of the derivation guarantees that only terminating
   executions satisfy [cexec].  Indeed, [WHILE TRUE SKIP] does not
-  satisfy [cexec]: -/
+  satisfy [cexec]: 
+-/
+
 
 lemma cexec_infinite_loop:
-  forall s, ~ exists s', cexec s (WHILE TRUE SKIP) s'.
-Proof.
+  forall s, ¬ exists s', cexec s (WHILE TRUE SKIP) s':= by
+  sorry
+  /-
   assert (A: forall s c s', cexec s c s' -> c = WHILE TRUE SKIP -> False).
   { induction 1; intros EQ; inversion EQ.
   - subst b c. cbn in H. discriminate.
@@ -339,34 +355,35 @@ Proof.
   }
   intros s (s' & EXEC). apply A with (s := s) (c := WHILE TRUE SKIP) (s' := s'); auto.
 Qed.
+-/
 
 /-* Our naive idea of an execution function for commands was not
   completely off.  We can define an approximation of such a function
   by bounding a priori the recursion depth, using a [fuel] parameter
   of type [nat].  When the fuel drops to 0, [None] is returned,
   meaning that the final store could not be computed. -/
-
-def cexec_bounded (fuel: nat) (s: store) (c: com) : option store :=
+#check Option
+def cexec_bounded (fuel: Nat) (s: store) (c: com) : Option store :=
   match fuel with
-  | O => None
-  | S fuel' =>
+  | .zero => none
+  | .succ fuel' =>
       match c with
-      | SKIP => Some s
-      | ASSIGN x a => Some (update x (aeval s a) s)
+      | SKIP => some s
+      | ASSIGN x a => some (update x (aeval s a) s)
       | SEQ c1 c2 =>
           match cexec_bounded fuel' s c1 with
-          | None  => None
-          | Some s' => cexec_bounded fuel' s' c2
+          | none  => none
+          | some s' => cexec_bounded fuel' s' c2
           
       | IFTHENELSE b c1 c2 =>
           if beval s b then cexec_bounded fuel' s c1 else cexec_bounded fuel' s c2
       | WHILE b c1 =>
           if beval s b then
             match cexec_bounded fuel' s c1 with
-            | None  => None
-            | Some s' => cexec_bounded fuel' s' (WHILE b c1)
+            | none  => none
+            | some s' => cexec_bounded fuel' s' (WHILE b c1)
             
-          else Some s
+          else some s
       
   
 
@@ -374,20 +391,18 @@ def cexec_bounded (fuel: nat) (s: store) (c: com) : option store :=
     For example, let's compute the quotient and the remainder of 14 by
     3 using the Euclidean division program above. -/
 
-Eval compute in
-  (let s := update "a" 14 (update "b" 3 (fun _ => 0)) in
-   match cexec_bounded 100 s Euclidean_division with
-   | None => None
-   | Some s' => Some (s' "q", s' "r")
-   ).
+#eval (let s := update "a" 14 (update "b" 3 (fun _ => 0))
+       match cexec_bounded 100 s Euclidean_division with
+       | none => none
+       | some s' => some (s' "q", s' "r")
+   )
 
 /-* *** Exercise (3 stars, optional) -/
 /-* Relate the [cexec] relation with the [cexec_bounded] function by
   proving the following two lemmas. -/
 
 lemma cexec_bounded_sound:
-  forall fuel s c s', cexec_bounded fuel s c = Some s' -> cexec s c s'.
-Proof.
+  forall fuel s c s', cexec_bounded fuel s c = some s' -> cexec s c s' := by
   induction fuel as [ | fuel ]; cbn; intros.
 - discriminate.
 - destruct c.
@@ -413,7 +428,7 @@ Abort.
   the residual command, capturing all the computations that remain to
   be done.  -/
 
-Inductive red: com * store -> com * store -> Prop :=
+inductive red: com * store -> com * store -> Prop where
   | red_assign: forall x a s,
       red (ASSIGN x a, s) (SKIP, update x (aeval s a) s)
   | red_seq_done: forall c s,

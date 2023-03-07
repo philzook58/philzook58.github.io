@@ -282,3 +282,37 @@ tree(z, $Add(tx,ty)) :- tree(x,tx), tree(y,ty), add(x,y,z).
 # Misc
 
 https://www.mbid.me/eqlog-algorithm/ Martin E. Bidlingmaier basically developed a system similar or identical to egglog on completely parallel lines. Maybe that means it's a good/natural idea?
+
+
+## Modulo theories
+
+Grobner bases are ~ knuth bendix method. Completion algorithm.
+Modulo some a priori known equations.
+Do grobner as a preprocessing step. Akin to running knuth bendix as preprocesing step.
+= polynomials as objects modulo grobner. This is like datalog modulo term rewriting.
+
+
+relations vs objects vs rules.
+first class rules (rules as objects). first class sets (relations as objects). both blur the lines.
+rules as relations?
+(<=) : R -> R -> Bool
+vs (<=) : R^n -> Bool
+are pretty different.
+
+first class rules ~ contexts. Kind of like sequent is first class inference rule.
+
+Difference logic theory = theory of shortest path
+
+galois connction between octagons and polytopes. Can we compute the relaxation of a polytope? It is a bunch of linear programming query. Can we do better?
+
+maximize xi - xj s.t. polytyop
+best objective c is then a bound. xi-xj <= c
+
+likewise for intervals. Or any set of hyperplanes.
+
+linear objective subject to difference constraints? probably.
+Best interior octagon? Usually get a bunch of feasible points and construct convex hull. Can I build an octagon out of points? What are "best" points. Well, I could construct a polyhedra out of the points.
+
+## Propagators
+The whole database as a cell
+Each relation as a cell

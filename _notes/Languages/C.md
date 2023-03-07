@@ -176,3 +176,6 @@ https://man7.org/linux/man-pages/man7/queue.7.html
 instrusive linked list
 
 [Some Were Meant for C The Endurance of an Unmanageable Language](https://www.humprog.org/~stephen/research/papers/kell17some-preprint.pdf)
+
+[cerberus](https://www.cl.cam.ac.uk/~pes20/cerberus/) simulator of C semantics
+K semantics

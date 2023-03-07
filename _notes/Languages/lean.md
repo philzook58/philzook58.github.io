@@ -45,7 +45,7 @@ That sounds fun
 - [lean learning group](https://www.maths.ed.ac.uk/~pkinnear/leancourse/)
 [Aesop (Automated Extensible Search for Obvious Proofs) i](https://github.com/JLimperg/aesop)
 
-[lean for the curious mathmtician 2020](https://github.com/leanprover-community/lftcm2020)
+[lean for the curious mathematician 2020](https://github.com/leanprover-community/lftcm2020)
 
 
 [mathlib 4 docs](https://leanprover-community.github.io/mathlib4_docs/) but also std lib docs
@@ -58,6 +58,21 @@ That sounds fun
 [lean chat](https://github.com/zhangir-azerbayev/lean-chat) openai codex tranlate natural language to lean statements
 
 [](https://proofassistants.stackexchange.com/questions/1964/setting-up-lean-4-on-a-server) https://lean.math.hhu.de/ lean4 web editor
+[lean 4 metaprgramming book](https://github.com/arthurpaulino/lean4-metaprogramming-book)
+[metaprogramming in lean 4](https://www.youtube.com/watch?v=hxQ1vvhYN_U&ab_channel=leanprovercommunity)
+
+https://github.com/yatima-inc hmm. Lean company?
+
+https://github.com/search?q=language%3ALean&type=Repositories&ref=advsearch&l=Lean&l=
+
+[lean 4 tagged stuff on github](https://github.com/topics/lean4)
+[makig lean cli tools - arg parsing and whatnot](https://github.com/mhuisi/lean4-cli)
+https://github.com/GaloisInc/reopt-vcg
+https://github.com/opencompl/lean-mlir
+
+[do unchained](https://leanprover.github.io/papers/do.pdf) - a description of the extensions to monad syntax like for, break, mut that lean offer
+
+https://github.com/ccodel/verified-encodings
 ### Build
 
 `elan` tool
@@ -85,26 +100,122 @@ LEAN_PATH for libraries? Probably I'm fighting the Lake experience which is bad.
 `[@simp]`
 
 # Lean Src
+<https://leanprover-community.github.io/mathlib4_docs/Init/Prelude.html> prelude is interesting
+
 [simp tactic](https://github.com/leanprover/lean4/tree/master/src/Lean/Meta/Tactic/Simp)
 
 [discrimination tree](https://github.com/leanprover/lean4/blob/master/src/Lean/Meta/DiscrTree.lean)
 [disctree types](https://github.com/leanprover/lean4/blob/master/src/Lean/Meta/DiscrTreeTypes.lean)
 
 [Expr](https://github.com/leanprover/lean4/blob/master/src/Lean/Expr.lean)
+
+IR - somehow this is what I need to look at to implement new backend?
+
+
 # Stuff
+
 
 ```lean
 def main := IO.println "hello world"
-```
 
-```lean
-{% include_relative lean/basics.lean %}
+#eval 1 + 1 -- it's a nat
+#eval String.append "hello" "world"
+#eval if 1 > 2 then "yes" else "no"
+#eval (1 + 1 : Int)
+
+/- block comment -/
+def hello := "hello"
+def Str : Type := String
+
+abbrev N : Type := Nat
+#check 1.2
+
+structure Point where
+  x : Float
+  y : Float
+deriving Repr
+
+#check ({x := 1, y := 2} : Point)
+
+inductive MyBool where
+  | MyTrue : MyBool
+  | MyFalse : MyBool
+
+#check MyBool.MyTrue
+
+#eval Lean.versionString
+
+#check fun (x : Nat) => x
+#check λ x => x
+#eval let y := 2; y + y
+
+theorem foo : p -> q -> p /\ q :=
+  by intros x y
+     apply And.intro
+     apply x
+     apply y
+     done
+
+inductive aexp where
+    | Plus : aexp -> aexp -> aexp
+    | Lit : Nat -> aexp
+
+-- dot notation to go into aexp scope
+def interp : aexp -> Nat
+    | .Plus x y => interp x + interp y
+    | .Lit n => n
+
+#eval interp (aexp.Plus (aexp.Lit 4) (aexp.Lit 3))
+
+#check (("a",1) : Prod String Nat )
+#eval (1,(2,34,5)) == (1,2,34,5)
+
+
+#print axioms Nat.add_comm
+
+#eval ! true || (false && true)
+--example : True := by
+--    decide
 ```
 
 ```lean
 {% include_relative lean/myproject/Myproject.lean %}
 ```
 
+```lean
+{% include_relative lean/myproject/leanlog.lean %}
+```
+
+```lean
+-- Brzowksisksis derivatives for regex
+-- https://www.ccs.neu.edu/home/turon/re-deriv.pdf
+inductive regex where
+    | empty : regex
+    | eps : regex -- empty string
+    | lit : Char -> regex
+    | seq : regex -> regex -> regex
+    | and : regex -> regex -> regex
+    | star : regex -> regex
+
+#check regex.lit 'a'
+
+def null : regex -> regex
+    | .empty => .empty
+    | .eps => .eps
+    | .lit _ => .eps
+    | .seq a b => .and (null a) (null b)
+    | .and a b => .and (null a) (null b)
+    | .star _ => .eps
+
+def deriv a 
+    | .empty => .empty
+    | .eps => .eps
+    | .lit b => if a == b then .eps else .empty 
+    | .seq a' b => .alt (.seq (deriv a a') b) (.seq a' (deriv a b))
+    | .and a b => .and (null a) (null b)
+    | .star _ => .eps
+def main : IO Unit := pure ()
+```
 
 # Typeclass
 ```lean

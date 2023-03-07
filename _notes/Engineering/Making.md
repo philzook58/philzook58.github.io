@@ -11,8 +11,16 @@ title: Making
 
 
 # Parts
+GT2 Belt
+Screws
+
+
 
 # Motors
+Continuous
+Stepper
+Stepper drivers
+
 
 # Raspberry Pi
 

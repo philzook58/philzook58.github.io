@@ -145,16 +145,28 @@ relic - no more gotos
 
 a comb for decompiled C https://rev.ng/downloads/asiaccs-2020-presentation.pdf
 
-https://yurichev.com/mirrors/DCC_decompilation_thesis.pdf
+[Cifuentes thesis](https://yurichev.com/mirrors/DCC_decompilation_thesis.pdf) kind of a ludicrous amount of info
+"Decompiler compiler" references BB91 BB92 bbl91 bbl93 bow91 bow93
+[A Compendium of Formal Techniques for Software Maintenance](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=fdf743acbfa9052b4c8da81fc5d5def39a71e00b)
+[the redo project final report](https://www.researchgate.net/publication/2527720_The_REDO_Project_Final_Report/link/560e569a08ae6b29b498635f/download)
+
+[Decompilation: The Enumeration of Types and Grammars](https://dl.acm.org/doi/pdf/10.1145/186025.186093)
+[From programs to object code and back again using logic programming: Compilation and decompilation](https://onlinelibrary.wiley.com/doi/abs/10.1002/smr.4360050403)
+[The art of computer un-programming: Reverse engineering in Prolog](https://link.springer.com/chapter/10.1007/3-540-55930-2_20)
+[Generating Decompilers](https://www.researchgate.net/publication/2524264_Generating_Decompilers/link/0fcfd50c60fe6c4876000000/download)
+
 
 https://www2.cs.arizona.edu/~collberg/Teaching/620/1999/Handouts/rmeadows1.pdf
  
+ [Polymorphic Type Inference for Machine Code](https://arxiv.org/abs/1603.05495)
+
  [Static Single Assignment for Decompilation - Emmerik](https://yurichev.com/mirrors/vanEmmerik_ssa.pdf)
  https://twitter.com/brightprogramer/status/1626841275801702400?s=20
 
 [Decompilers and beyond Ilfak Guilfanov, Hex-Rays SA, 2008](https://web.archive.org/web/20181014083034/https://www.hex-rays.com/products/ida/support/ppt/decompilers_and_beyond_white_paper.pdf)
 
 [Type-Based Decompilation? (or Program Reconstruction via Type Reconstruction)- Alan Mycroft](https://link.springer.com/content/pdf/10.1007/3-540-49099-X_14.pdf)
+
 ### Loop recovery
 Getting structured control flow from CFG
 Stackify https://gitlab.inria.fr/why3/why3/-/merge_requests/453
@@ -239,6 +251,60 @@ See ghidra notes
 import angr #, monkeyhex
 proj = angr.Project('/bin/true')
 state = proj.factory.entry_state()
+```
+
+```python
+
+code = '''
+int fact(int x){
+  int acc = 1;
+  while(x > 0){
+    acc *= x;
+    x--;
+  }
+  return acc;
+}
+'''
+import tempfile
+import subprocess
+import angr #, monkeyhex
+import os
+with tempfile.NamedTemporaryFile(suffix=".c") as fp:
+  with tempfile.TemporaryDirectory() as mydir:
+    fp.write(code.encode())
+    fp.flush()
+    fp.seek(0)
+    print(fp.readlines())
+    print(fp.name)
+    print(mydir)
+    outfile = mydir + "/fact"
+    print(outfile)
+    print(subprocess.run(["gcc",  "-g",  "-c","-O1", "-o",  outfile, fp.name], check=True))
+    print(os.listdir(mydir))
+    
+    print(subprocess.run(["objdump", "-d", outfile], check=True))
+
+    proj = angr.Project(outfile)
+    print(dir(proj))
+    print(proj.arch)
+    print(proj.entry)
+    print(proj.filename)
+    print(proj.loader)
+    block = proj.factory.block(proj.entry)
+    print(block.pp())
+    print(block)
+    print(block.vex)
+    print(block.instructions) # numebr of instryuctions
+    print(dir(proj.analyses))
+    state = proj.factory.entry_state()
+    print(dir(state))
+    print(proj.loader.find_symbol("fact"))
+    #state = proj.factory.entry_state()
+    print(state.step())
+    print(dir(state.solver))
+    print(state.solver.all_variables)
+
+
 ```
 
 ## Patching

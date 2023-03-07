@@ -12,10 +12,13 @@ The Big 4
 ## Free Body Diagrams and Force Balance
 
 ## F = ma
+Friction
+Atwood machines
 
 ## Simple Harmonic Motion
 
 $$ F = -k x $$
+
 
 # Planetary Motion
 # Collisions
@@ -86,7 +89,19 @@ Basic form is kinetic energy minus potential energy.
 
 
 
+# Waves
+# Normal Modes
+# Fluids
+# Acoustics
+# Continuous Media
+# Stress Strain / Continuous Media / Strength of Materials
+Beam equation
+Young's modulus
+
 # Resources
 Landau Lectures
 Gold something
 SICM structure and interpretation of classical mechanics
+Fetter and Walecka
+Physics 1 textbooks. WHat do the kinds do these days?
+Feynman

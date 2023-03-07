@@ -10,6 +10,11 @@ The abstract question seems difficult to answer.
 
 
 ## Ideal Gas
+Pressure volume
+PV = nRT
+entropy
+
+
 ## Temperature
 ## Entropy
 Q/T. Where did this even come from. I associate it with Clausius.
