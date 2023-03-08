@@ -14,6 +14,7 @@ wordpress_id: 2913
 - [Intermediate Representations](#intermediate-representations)
   - [SSA](#ssa)
   - [LLVM IR](#llvm-ir)
+  - [Sea of nodes](#sea-of-nodes)
   - [CPS](#cps)
   - [RTL](#rtl)
   - [Misc](#misc)
@@ -43,16 +44,11 @@ wordpress_id: 2913
   - [Assembly Production](#assembly-production)
 - [JIT](#jit)
 - [Garbage Collector](#garbage-collector)
-  - [Conservative vs Exact](#conservative-vs-exact)
-  - [Parallel](#parallel)
-  - [Concurrent](#concurrent)
-  - [mark and Sweep](#mark-and-sweep)
-  - [Generational](#generational)
-- [LLVM](#llvm)
+  - [LLVM](#llvm)
 - [JVM](#jvm)
+- [Simple Compilation](#simple-compilation)
+  - [](#)
 - [Misc](#misc-2)
-  - [LLVM](#llvm-1)
-- [JVM](#jvm-1)
 
 
 # Parsing and Lexing
@@ -60,6 +56,8 @@ wordpress_id: 2913
 
 # Intermediate Representations
 [Notes on IRs](https://cs.lmu.edu/~ray/notes/ir/)
+
+
 ## SSA
 http://ssabook.gforge.inria.fr/latest/book.pdf SSA bookv
 [mirror of ssa book](https://github.com/pfalcon/ssabook)
@@ -72,8 +70,31 @@ http://ssabook.gforge.inria.fr/latest/book.pdf SSA bookv
 [Simple and Efficient Construction of Static Single
 Assignment Form](https://pp.info.uni-karlsruhe.de/uploads/publikationen/braun13cc.pdf) https://twitter.com/peter_a_goodman/status/1541105429215936513?s=20&t=Id3zoB1xCWLA5QQIrPNHVA
 
+Gated SSA
+
+
 ## LLVM IR
 See LLVM section
+
+## Sea of nodes
+https://www.researchgate.net/profile/Cliff-Click/publication/2394127_Combining_Analyses_Combining_Optimizations/links/0a85e537233956f6dd000000/Combining-Analyses-Combining-Optimizations.pdf
+
+https://darksi.de/d.sea-of-nodes/
+
+one ir graph for cfg and data. no explicit basic blocks
+[Cliff Click — The Sea of Nodes and the HotSpot JIT](https://www.youtube.com/watch?v=9epgZ-e6DUU&ab_channel=JPoint%2CJoker%D0%B8JUGru)
+
+[from quads to graphs - click](https://www.researchgate.net/publication/2746343_From_Quads_to_Graphs_An_Intermediate_Representation's_Journey)
+
+[a simple graph based interpediate representation](https://www.oracle.com/technetwork/java/javase/tech/c2-ir95-150110.pdf)
+optimistics analyses. That's interesting.
+```ocaml
+(* ref cell or rec knots. *)
+```
+
+```python
+# networkx
+```
 
 
 
@@ -81,6 +102,10 @@ See LLVM section
 ## RTL
 
 ## Misc
+- Universal function graph - Blindell.
+- PDG program dependence graph
+- PEGs
+- RVSDG - it's like structured loops?
 ## Tensor Stuff
 ILang
 Tiramisu http://tiramisu-compiler.org/Comparison.html
@@ -509,43 +534,33 @@ de-optimization paths
 
 [asmjit](https://github.com/asmjit/asmjit) https://asmjit.com/ lightweight library for machine code generation
 
+[](https://kipp.ly/blog/jits-intro/)
+[adnvetures in jit compilation](https://eli.thegreenplace.net/2017/adventures-in-jit-compilation-part-4-in-python/)
+
+Hotspots
+warm up
+
+pypy
+luajit
+
+method based
+tracing
+meta-tracing
+
+
+tiered
+
+Self
+Java JIT hotspot
+v8
+
 # Garbage Collector
 
-https://github.com/mflatt/gc-demo
-https://www.youtube.com/playlist?list=PLbdXd8eufjyVCrWF-obj8_BbyU5vEF8Jw
-
-
-[treadmill gabrage collector of baker](https://news.ycombinator.com/item?id=32233472) http://www.cofault.com/2022/07/treadmill.html
-
-[garbage collection handbook](https://gchandbook.org/ )
-[lua wiki](http://wiki.luajit.org/New-Garbage-Collector#gc-algorithms_quad-color-optimized-incremental-mark-sweep)
-
-real-time
-concurrent
-copying vs non-copying. Copying needs to adjust pointers. Can defragment
-incremental - does the garbage collection need to happen all at once
-
-bump allocation
-
-
-## Conservative vs Exact
-
-The boehm garbage collector seems easy to use. Also you can just malloc and never free.
-https://en.wikipedia.org/wiki/Boehm_garbage_collector
+See memory managements
 
 
 
-## Parallel
-## Concurrent
-## mark and Sweep
-colors mark finished, seen but children not finished.
-white is unseen. black is swept. When finished anything white is no longer in use.
-## Generational
-
-
-Making a simple garbage collector [https://maplant.com/gc.html](https://maplant.com/gc.html)
-
-# LLVM
+## LLVM
 LLVM IR
 
 MIR
@@ -566,9 +581,310 @@ Instruction Combiner
 [Learning to combine instructions in LLVM compiler](https://twitter.com/johnregehr/status/1501649959505985537?s=20&t=-ebjuD7WRIIQNgiBChK5cQ)
 <https://lowlevelbits.org/how-to-learn-compilers-llvm-edition/> 
 
+
+gllvm and wllvm - they dump the llvm bitcode files into object sections. Not a bad start if you are in a cooperative situation
+
 https://langston-barrett.github.io/notes/llvm-ir/
 https://langston-barrett.github.io/notes/learning-llvm/
 # JVM
+
+
+
+
+
+# Simple Compilation
+
+[Calculating correct compilers](https://www.cs.nott.ac.uk/~pszgmh/ccc.pdf) There's like 6 of these doing different stuff
+
+https://github.com/conal/talk-2020-calculating-compilers-categorically#readme conal elliot
+
+
+## 
+There is a fun functional programming game to play.
+We know we can describe a syntax tree / adt. And then interpret it. But you can deforest the tree and just make combinators. Somehow this simple trick feels fun and meaningful. Loosely I refer to this style as going finally tagless.
+
+
+```ocaml
+type store = string -> int
+type expr = store -> int
+let add x y = fun s -> x s + y s
+let lit x = fun s -> x
+let var x = fun s -> s x
+```
+
+The typical intepreter semantics of imp programs is as a function `store -> store`
+```ocaml
+type stmt = store -> store
+```
+
+Compilation is not usually viewed under this picture. It's interesting to try.
+The typical perspective of compilation is as a function `imp -> asm`. This is not a compositional semantics.
+Partial evaluation kind of gets close? Not obviously
+Compilers typically take a very imperative/operational picture of the construction of the assembly program. They transform into various graph representations, do analyses over them, etc.
+
+
+What we need (at minimum) is some notion of relationship of high level variables to low level ones and high level to low level program points.
+
+One choice is 
+```ocaml
+type store = string -> loc 
+```
+
+A blocks are more compositional notion of assembly.
+
+
+The compiler may also want a typing environment.
+
+
+The first subproblem to consider is that of compting expressions.
+
+
+Graphs are kind of a pain in functional programming. Why is that? You need to deeply embed them via functional maps s the main ways it's done, which is awkward. Shallow graph embedding uses mutable pointers.
+
+
+Compilers are also performing various analyses.
+Finally tagless style enables an open extensibility. 
+
+
+A nice trick is to consider is backwards program semantics. We aren't running the program in an ordinary way, we aren't constrained to go forward.
+https://www.mattkeeter.com/blog/2022-10-04-ssra/
+```ocaml
+
+type value = { storage ; addr : pgm_point}
+
+type 'a ctx = {cur_label : string;
+              blocks : insn list String.Map.t
+              live : Var.Set.t String.Var.t
+              }
+
+type 'a rev_ctx = () -> 
+
+let label (l : string) : unit ctx
+
+
+let* () = label "foo" in
+
+
+
+
+type loc = Reg of string | Mem of ??  | Stack of int
+type alloc = loc String.Map.t (* a mapping of variable to where to read/write them *)
+type high_low = loc list String.Map.t
+type write = high_low
+type read = high_low
+(* code is instruction list in reverse order for a sinlge block *)
+type code = insn list
+(* the semantics of expr are statements. For assembly this is true 
+   It takes in what registers are live and where.
+   a location to write the result to 
+*)
+
+type 'a comp = alloc -> 'a * alloc * code (* monadic form. I'm not sure this is a good idea. *) 
+type expr = alloc -> loc -> alloc * code
+
+let var x = fun a l -> (pick x a, [])
+let add a b = fun alloc l -> let va = pick acc in 
+                             let acc, codea = (a  acc va) in
+                             let vb = pick acc in
+                             let acc, codeb in
+                             (* if l is memory, do store. *)
+                             acc, "add {va} {vb}" ++ code a ++ codeb
+(*  
+Decompilation mode. If we reduce code with no leftovers, we have correctly "parsed"/"decompiled"/derived the code.
+let add a b insn = fun alloc l code ->   
+We have flipped the instruction selector to input mode rather than output mode
+
+type 'a expr could be used for omething akin to typed assembly language
+
+Carry proof conditions or proof objects.
+
+*)
+type stmt = alloc -> alloc * code
+let def x e = fun alloc -> 
+              let alloc = kill x alloc in
+              let loc = pick alloc in
+              (e alloc loc)
+let seq s1 s2 =
+   fun alloc ->
+      let alloc, code2 = s2 alloc in
+      let alloc, code1 = s1 alloc in
+      alloc, code2 + code1
+
+let ite cond t e =  fun alloc -> 
+      let alloc1, code1 = t alloc
+      let alloc1, code2 = e alloc
+      let alloc, mov = merge alloc1 alloc2 in
+      let = pick loc in 
+      let alloc, cond_code = cond alloc loc
+
+      (alloc, cond_code + mov + jmp + code1  + code2)
+
+(*
+Or we can do a uses pass to determine what variables they both need.
+Then do them and copy the choices of one over for variables they both need.
+
+
+*)
+let while c body =
+
+
+  (* 
+    ok this one is tougher.
+    We need a different semantics to go multiblock.
+    And we want t and e to pick the same registers for the same variables. If they pick different ones, we need to do something.
+    We could go multipass  (s -> (s, (b -> b))) , defer..., unification or constraint production.
+
+    type live = String.Set.t  hmm. No. Now we can't identify variable by name. since names may alias.
+    type constr = Disjoint of String.Set.t hmmm. 
+    type stmt = live -> live * code * constr
+    Intermediate steps, concretize constrants
+
+Always look for reasons names exist. Lambda terms. de bruijn refers to paths or contexts
+Serialization and escaping are the arts of flattening structure.
+
+
+Or, just if it guesses two inconsistent regs, put in a copy mov.
+Count on prescient choices.
+
+
+
+compositional constraint production is compelling thougnh.
+type live = constr_var String.Map.t
+type model = constr_var -> loc
+
+we're adding a pass and an implicit IR of sorts
+
+mk_temp 
+
+If we're allowed to reorder statements, we can maybe do the memoization strategy. But what do I memoize?
+type code = (cycle * insn) list 
+
+This is starting to get long enough I should make a record.
+type stmt = live -> (live * constr * (model -> conc_code))
+or
+type stmt = live -> (live * constr * abstr_code
+val instan : model -> asbtr_code -> conc_code
+
+Two flavors. The first feels more extensible and packages toegether model interpretaton with the thing taht produced the model. There isn't a hole for extensibility in either though.
+
+I guess conc_code could be functorized to make it an abstract finally tagless type?
+
+type expr = loc -> stmt (* Funny. Ths is emphasizing that expressions are statements. Expressions are anonymous statements. WHich is why their liveness is (kind of)easy to compute. Untl you want to share computation. *)
+
+Initial types are just OP for pattern matching.
+So I should pattern match expr and statements.
+stmt -> stmt'
+
+
+
+
+  *)
+type block = insn list
+type code' = block ImpCtxMap (* code is labelled by the imp context it comes from. *)
+
+
+
+
+(*
+monadic:
+writer of code, state of alloc
+loc is funny. It's almost a return value, but it's in the wrong spot. 
+
+
+*)
+
+
+(*
+Reuse and rematerialization
+
+
+type alloc = loc Expr.Map.t
+??? But then we're going initial. Hmm.
+Well, we could save code fragments and see if we're about the produce the same code frag.
+
+*)
+
+(*
+
+PatN. Use functor form of tree.
+type 'a exprf = Add of 'a * 'a | ...
+type 'a pat2 = 'a exprf exprf
+
+Meh.
+
+Hashcons <-> Memoization of the combinaors... Hmmm.
+like memoization scoped in a block.
+
+
+*)
+
+
+(*
+Totally niaive semantics.
+In olden times, the var decalarations might mean that they literally became stack or reg values forever (die at function scope).
+That's fine I guess.
+
+val var_declare : string -> alloc -> alloc (* either have implicit declaration at define site or explicit declaration 
+explicit declaration can optionally auto dealloc
+
+Even locals can be manually allocated and freed. Kind of interesting. I guess this is  kind of like alloca
+
+alloc_reg
+free_reg
+
+Could hijack ocaml let* feature as a way to use metavariables.
+
+scope e (fun x -> rest) = alloc temp; set temp e; rest; free temp 
+
+reflection
+
+let* x f = let v = unique () in set unique x; (f unique)
+
+
+
+
+*)
+
+type stmt = alloc -> alloc * code (* going forward now though *)
+type expr = alloc -> (* ??? Maybe this should still traverse backwards. We can't allocate expr forever.
+   or maybe use `loc Expr.Map.t` optionally clobberable available expressions.
+ *)
+
+(*
+More interesting patterns
+a * x + b = saxpy
+add (mul a x) b = 
+I guess the dynamc programming approach is easiest. Eh. Either pass pattern context down or push pattern leaves up.
+Super goofy.
+You do get compositionality, which is cool I guess.
+Generic pattern matching subst dict less boilerplate than building custom types? Saying where we are in a pattern is super annoying.
+host lan pattern matching only works over initial datatypes is kind of the problem.
+
+
+type code = (insn | partial_pattern ) list
+
+
+module USES = 
+module WRITES = 
+  let def x _ = 
+  let seq x y = Set.union x y
+
+
+
+Weak optimistic analyses.
+Optional allocations.
+It isn't phi spots so much as split spots that are annying in this backwards versin
+
+
+*)
+
+
+```
+
+```lean
+
+
+```
 
 # Misc
 [Proving the correctness of a compiler - Xavier Leroy](https://xavierleroy.org/courses/EUTypes-2019/) summer course
@@ -604,7 +920,9 @@ prolog using coq.
 
 incremental compilation
 
-[Calculating correct compilers](https://www.cs.nott.ac.uk/~pszgmh/ccc.pdf)
+[Calculating correct compilers](https://www.cs.nott.ac.uk/~pszgmh/ccc.pdf) There's like 6 of these doing different stuff
+
+https://github.com/conal/talk-2020-calculating-compilers-categorically#readme conal elliot
 
 [cs6120 adrian sampson](https://www.cs.cornell.edu/courses/cs6120/2022sp/lesson/) Looks like a nice syllabus
 
@@ -705,34 +1023,3 @@ gdb. Compile with -g flag. break main. step next print. tui enabe https://source
 objdump -d -S -l
 
 valgrind and core dumps.
-
-
-## LLVM
-LLVM IR
-
-MIR
-
-Instruction Combiner
-
-  * [https://www.cs.cornell.edu/~asampson/blog/llvm.html](https://www.cs.cornell.edu/~asampson/blog/llvm.html)
-
-<https://jonathan2251.github.io/lbd/index.html>  Tutorial: Creating an LLVM Backend for the Cpu0 Architecturehttps://danielkeep.github.io/tlborm/book/README.html
-
-<https://www.youtube.com/watch?v=m8G_S5LwlTo&ab_channel=LLVM> LLVM IR tutorial
-
-[llvm-mca](https://llvm.org/docs/CommandGuide/llvm-mca.html) - static analysis of performance of code 
-
-<https://www.llvm.org/docs/ProgrammersManual.html>
-<https://mukulrathi.com/create-your-own-programming-language/llvm-ir-cpp-api-tutorial/>
-
-[Learning to combine instructions in LLVM compiler](https://twitter.com/johnregehr/status/1501649959505985537?s=20&t=-ebjuD7WRIIQNgiBChK5cQ)
-<https://lowlevelbits.org/how-to-learn-compilers-llvm-edition/> 
-
-
-gllvm and wllvm - they dump the llvm bitcode files into object sections. Not a bad start if you are in a cooperative situation
-
-# JVM
-
-
-
-

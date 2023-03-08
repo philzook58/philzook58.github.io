@@ -79,6 +79,9 @@ open aexp
 -- /-* We can prove properties of a given expression. -/
 
 #print Int.lt_succ
+--set_option trace.Compiler.
+set_option trace.Compiler.simp true 
+--set_option pp.all true
 theorem aeval_xplus1 :
   forall (s :store) (x :ident), aeval s (PLUS (VAR x) (CONST 1)) > aeval s (VAR x) := by 
   intros s x

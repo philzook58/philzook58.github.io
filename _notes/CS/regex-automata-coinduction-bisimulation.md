@@ -359,6 +359,9 @@ There is a distinction between saying a given relation is a bisimulation and _de
 
 Least vs greatest fixed point
 
+Simulation
+Refinement of behavior https://en.wikipedia.org/wiki/Refinement_(computing)
+
 ## Codata
 [Data-Codata Symmetry and its Interaction with Evaluation Order](https://arxiv.org/pdf/2211.13004.pdf)
 https://blog.sigplan.org/2019/10/14/how-to-design-co-programs/

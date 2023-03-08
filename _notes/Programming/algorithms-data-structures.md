@@ -34,6 +34,15 @@ https://www.gnu.org/software/gperf/ - small sets ~1000.
 
 
 # Tries
+
+Hash array mapped tries https://hackage.haskell.org/package/unordered-containers-0.2.19.1/docs/Data-HashMap-Strict.html
+https://en.wikipedia.org/wiki/Hash_array_mapped_trie
+https://worace.works/2016/05/24/hash-array-mapped-tries/
+I think the basic idea is to use a trie as a mapping of the hash table rather than an array.
+[bagwell paper](https://lampwww.epfl.ch/papers/idealhashtrees.pdf)
+
+
+Patricia tries
 # Minimal Acyclic Finite State Automaton
 DAWG
 https://en.wikipedia.org/wiki/Deterministic_acyclic_finite_state_automaton

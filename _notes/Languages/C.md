@@ -179,3 +179,5 @@ instrusive linked list
 
 [cerberus](https://www.cl.cam.ac.uk/~pes20/cerberus/) simulator of C semantics
 K semantics
+
+https://en.wikipedia.org/wiki/Undefined_behavior

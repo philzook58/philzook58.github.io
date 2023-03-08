@@ -245,6 +245,8 @@ Getting a webpage up that runs webassembly seems like an involved process. I thn
 Serde seems like a useful route to getting stuff into and out of javascript. It is a serialization deserialization library.
 
 # Resources 
+[im](https://docs.rs/im/latest/im/#) immutable data structure / maps. Hash array mapped tries. HAMT. 
+
 [cargo-dist](https://blog.axo.dev/2023/02/cargo-dist)
 
 [embeddable interpeters](https://www.reddit.com/r/rust/comments/s63j6n/which_scripting_languages_work_well_embedded_with/)

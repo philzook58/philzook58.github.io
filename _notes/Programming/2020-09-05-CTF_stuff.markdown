@@ -318,6 +318,66 @@ BOLT
 lifting bits/grr
 
 
+```python
+
+code = '''
+int fact(int x){
+  int acc = 1;
+  while(x > 0){
+    acc *= x;
+    x--;
+  }
+  return acc;
+}
+'''
+def fragment(x, header, invars, outvars):
+  return f"""
+    vod cb();
+    {header}
+    void fragment(uint64_t r0, uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4){{ //varargs
+          // inavrs
+          {invars}
+          // patch code
+          {x}
+          // stack outvars{outvars}
+          cb({outvars});
+          return;
+    }}
+  """
+# Hmm. could verify the permutation
+def permute(asm, perm):
+  # simultaneous replacement
+  for k in perm.keys():
+    asm = asm.replace(k, "TEMPYTEMPY"+k)
+  for k,i in perm.items():
+    asm = asm.replace("TEMPYTEMPY"+k, i)
+  return asm
+
+def clip_ret(asm):
+
+def used_regs(asm, regs):
+  return [reg for reg in regs if asm.find(reg) != -1]
+
+
+  re.match
+import tempfile
+import subprocess
+import angr #, monkeyhex
+import os
+with tempfile.NamedTemporaryFile(suffix=".c") as fp:
+  with tempfile.TemporaryDirectory() as mydir:
+    fp.write(code.encode())
+    fp.flush()
+    fp.seek(0)
+    print(fp.readlines())
+    print(fp.name)
+    print(mydir)
+    outfile = mydir + "/fact"
+    print(outfile)
+    print(subprocess.run(["gcc",  "-g",  "-c","-O1", "-o",  outfile, fp.name], check=True))
+    print(os.listdir(mydir))
+```
+
 ## Binary reversign
 https://corte.si/posts/visualisation/binvis/index.html hilbert curves for binary vsiualization
 benford's law

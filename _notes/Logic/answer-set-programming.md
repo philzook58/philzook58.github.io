@@ -899,6 +899,38 @@ How to identifty partitions? in a factored way?
 
 ### Bitvectors
 ```clingo
+
+bitvec(a).
+size(a,3).
+
+bitvec(A) :- size(A,_).
+
+bit(b1, 0).
+:- bit(b0,0).
+
+b11 = concat(b1, b1).
+x0 = concat(b0,b0,b0,b0).
+
+size(concat(A,B), N + M) :- size(A,N), size(B,M), bitvec(concat(A,B)).
+%size(extract()) :- 
+
+% equation on extract/concat
+
+% bit blast. 
+% { bit(A,0..N) } :- size(A,N).
+
+% equal means bits are equal
+bit(B,N) :- bit(A,N), eq(A,B).
+
+% bit(bvadd(a,b), N) <-> bit(a)
+% size(a,N)
+% carry(a,b)
+
+
+```
+
+
+```clingo
 {foo(0..3)}.
 {bar(0..3)}.
 
@@ -967,6 +999,30 @@ In the datalog notes, I talk about how difference logic propagator is th same as
 What about this one huh. Kind of interesting.
 EPR and datalog are kind of related in that they both rely on something like finite herband universes for their termination/decidability.
 The eager encoding of epr can be very bad though.
+
+a(V) and e(V) for variables.
+```clingo
+
+; relation enumrating existential variables
+e(x;y;z).
+
+{rel(R, X, Y, Z)} :- rel(R,3), e(X), e(Y), e(Z).
+
+{ Query_expr  }.
+
+% hmm.
+A :- and(A,B).
+B :- and(A,B).
+and(A,B) :- A,B.
+rel(R, a)
+
+
+
+
+
+
+```
+
 
 ### Boolean Equation Systems
 <http://www.tcs.hut.fi/Publications/bibdb/HUT-TCS-A99.pdf>. See also mcrl2 groot book

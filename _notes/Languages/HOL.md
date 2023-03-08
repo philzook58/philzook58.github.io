@@ -26,7 +26,7 @@ https://kth-step.github.io/itppv-course/
 # 
 
 # Isabelle
-
+[from lcf to isabelle](https://dl.acm.org/doi/pdf/10.1007/s00165-019-00492-1)
 [sel4](https://sel4.systems/) - verified microkernel
 
 [](https://www.cse.unsw.edu.au/~cs4161/)

@@ -21,3 +21,8 @@ https://github.com/ricktu288/ray-optics
 [](https://muffinman.io/blog/js-libraries-for-generative-art/)
 
 [crazy generative audio stuff](https://news.ycombinator.com/item?id=34163559)
+
+
+attributes - sent to vertex shader
+uniform - paramters sent to shaders
+varying sent to fragment shader

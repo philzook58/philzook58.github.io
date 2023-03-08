@@ -300,3 +300,8 @@ pyiodide
 [Gooey](https://github.com/chriskiehl/Gooey) autoconvert cli to gui app
 
 [aesara](https://github.com/aesara-devs/aesara) Aesara is a Python library for defining, optimizing, and efficiently evaluating mathematical expressions involving multi-dimensional arrays.
+
+https://www.youtube.com/watch?v=DKns_rH8rrg&t=974s&ab_channel=EuroPythonConference jit compiler in 30 minutes.
+mmap huh.
+
+https://github.com/Maratyszcza/PeachPy

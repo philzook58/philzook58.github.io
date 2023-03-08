@@ -1878,7 +1878,7 @@ egraph + clp(R) + clp(FD) + clp(B). How far from SMT is that?
 ### Embedding into CHR
 - TRS
 - Prolog and CLP
-- Graph trasnfomation 
+- Graph trasnfomation - See term rewriting notes
 - Petri nets
 
 GAMMA general abstract mnodel for multiset manipulation
