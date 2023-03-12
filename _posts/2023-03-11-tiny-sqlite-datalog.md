@@ -221,9 +221,9 @@ It has come up before on egg-smol that there is a generalization of seminaive wh
 ### Rowid Filtering Where Clauses
 SQLite has a very cute feature of [rowids](https://www.sqlite.org/lang_createtable.html#rowid). Every row has an implicit unique id unless you explicitly turn this feature off. And in fact these ids monotonically increase inside a single table. By using this feature for our timestamps rather than adding a custom timestamp field, the impedance mismatch between the SQL and datalog worlds is reduced.
 
-While the most familiar timestamps we may be familiar with are a unix time, or an iteration number, timestamps with more structure are really interesting and useful. A [vector timestamp](https://en.wikipedia.org/wiki/Vector_clock) of the SQLite database can be made that is a tuple of the maximum rowids of every table. In principle this timestamps is not totally ordered, but because SQLite is sequentialized, no incomparable timestamps will ever be produced (I think). As an aside, it is interesting to consider what might happen or how to deal if this is nt the case.
+While the most familiar timestamps we may be familiar with are a unix time, or an iteration number, timestamps with more structure are really interesting and useful. A [vector timestamp](https://en.wikipedia.org/wiki/Vector_clock) of the SQLite database can be made that is a tuple of the maximum rowids of every table. In principle this timestamp is not totally ordered, but because SQLite is sequentialized, no incomparable timestamps will ever be produced (I think). As an aside, it is interesting to consider what might happen or how to deal with it if this is not the case.
 
-Typically seminaive is treated by splitting each rule into many rules  with a different instance of a relation replaced with it's delta version in each. For example `a(x) :- b(x),c(x).` gets split into two rules `a(x) :- delta_b(x), c(x).` & `a(x) :- b(x), delta_c(x).`. However, using rowids, we can place the constraint of having one new tuple instead in the `WHERE` clause, which is both simpler to write and possibly more efficient. The more we push into the database engine, the better off we are.
+Typically seminaive is treated by splitting each rule into many rules  with a different instance of a body relation replaced with it's delta version in each. For example `a(x) :- b(x),c(x).` gets split into two rules `new_a(x) :- delta_b(x), c(x).` & `new_a(x) :- b(x), delta_c(x).`. However, using rowids, we can place the constraint of having one new tuple instead in the `WHERE` clause, which is both simpler to write and possibly more efficient. The more we push into the database engine, the better off we are.
 
 The clause is a giant `OR` of the different ways we might include a new tuple.
 
@@ -348,6 +348,7 @@ Demonstrating the point of language independence, here is the same thing in ocam
 #use "topfind";;
 #require "sqlite3";;
 
+(* Eh, you get the idea I hope. Maybe I'll finish this later. This is what bits and bobbles is for *)
 let rule head select froms where = 
     let ts = ref (List.map (fun _ -> -1) body) in
     let sql = 
