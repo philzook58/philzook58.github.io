@@ -6,23 +6,11 @@ description: Simple Shallow Embedding of Seminaive Datalog into SQLite
 tags: datalog sqlite
 ---
 
-- [Datalog Transformations](#datalog-transformations)
-  - [Transitivity Query](#transitivity-query)
-  - [Step 1: Linearize the Pattern Variables](#step-1-linearize-the-pattern-variables)
-  - [Step 2: Structifying](#step-2-structifying)
-- [It's SQL time](#its-sql-time)
-  - [Naive SQL translation](#naive-sql-translation)
-  - [Embedding Naive Evaluation in SQLite Python](#embedding-naive-evaluation-in-sqlite-python)
-  - [Simple Seminaive](#simple-seminaive)
-    - [Seminaive with timestamps](#seminaive-with-timestamps)
-- [Bits and Bobbles](#bits-and-bobbles)
-
-
 There's just _something_ about datalog.
 
-If you want to know what you can do with datalog, I've got a [pile of stuff here](https://www.philipzucker.com/notes/Languages/datalog/)
+This blog post about is about a very lightweight encoding of datalog to [SQLite](https://www.sqlite.org/index.html). SQLite bindings exist in nearly every language so this light embedding makes it very easy to make a pretty decent datalog in any language of your choice.
 
-This blog post about is about a very lightweight encoding of datalog to SQLite. SQLite bindings exist in nearly every language so this light embedding makes it very easy to make a pretty decent datalog in any language of your choice.
+If you want to know what you can do with datalog, I've got a [pile of stuff here](https://www.philipzucker.com/notes/Languages/datalog/)
 
 I've previously explored using stock SQL engines to power a datalog in these posts:
 
@@ -30,17 +18,17 @@ I've previously explored using stock SQL engines to power a datalog in these pos
 - [Datalite: A Simple Datalog Built Around SQLite in Python](https://www.philipzucker.com/datalite/)
 - [Duckegg: A Datalog / Egraph Implementation Built Around DuckDB](https://www.philipzucker.com/duckegg-post/)
 
-But I think this is the cleanest simplest encoding yet. Part of the trick is a strategic retreat on the definition of datalog
+But I think this is the cleanest simplest encoding yet. Part of the trick is a strategic retreat on the definition of datalog.
 
-There are the impedance mismatches between SQL and datalog. These are crucial:
+There are a few impedance mismatches between SQL and datalog. These are the crucial features we cannot retreat on:
 - Recursion or Fixpoint support. This is part of the point of datalog. SQL has a feature [recursive common table expressons](https://www.sqlite.org/lang_with.html#recursive_common_table_expressions) which is clunky and limited. An important part of supporting the fixpoint is supporting the seminaive optimization, where highly redundant work is not done.
 - Set vs Bag (multiset) semantics. As noted in previous posts, the clean way to fix this in SQLite is to declare a table with all columns as primary keys `CREATE TABLE edge(x,y, PRIMARY KEY (x,y));` and use `INSERT INTO OR IGNORE`
 
 These differences are less crucial:
-- Nonlinear vs Linear patterns. Datalog allows us to bind variables twice as an implicit equality constraint
-- Named vs Unnamed style (See [section 3.2](http://webdam.inria.fr/Alice/pdfs/Chapter-3.pdf) of the [Alice](http://webdam.inria.fr/Alice/) book). SQL allows you to attach names to _rows_ (`FROM mytable AS myrow`) and refers to columns by label (`myrow.foo`). Datalog conventionally binds names to entries (`mytable(foo_entry,bar_entry)`) (a data item in a column of a particular row) and refers to columns by position (columns 1, 2, 3, 4, etc).
+- Nonlinear vs Linear patterns. Datalog allows us to bind variables twice as an implicit equality constraint like in `edge(x,y),path(y,z)`
+- Named vs Unnamed style (See [section 3.2](http://webdam.inria.fr/Alice/pdfs/Chapter-3.pdf) of the [Alice](http://webdam.inria.fr/Alice/) book). SQL allows you to bind variables to _rows_ (`FROM mytable AS myrow`) and refers to columns by label (`myrow.foo`). Datalog conventionally binds variables to entries `mytable(foo_entry,bar_entry)` and refers to columns by order.
 
-# Datalog Transformations
+# Transforming Datalog to SQLog
 So let's first take a datalog program and show how to rewrite it to strip out the less crucial differences such that it is easier to translate to SQL.
 
 ## Transitivity Query
@@ -75,7 +63,7 @@ A useful datalog normal form is to make sure every variable is bound only once a
 
 In the above, `path(x,z) :- edge(x,y), path(y,z).` becomes `path(x,z) :- edge(x,y), path(y1,z), y = y1.`
 
-This transformation is useful because many languages do not offer nonlinear patterns. For example, this transformation is needed in the for loop interpretation of rules.
+This transformation is useful because many languages do not offer nonlinear patterns. For example, this transformation is needed in the for-loop interpretation of rules.
 
 ```python
 for (x,y) in edge:
@@ -107,7 +95,7 @@ for (x,y) in edge:
 
 Now that we've normalized out the nonlinear patterns, the next transformation is to replace binding variables to row entries with instead binding variables to rows.
 
-We can show this struct convention in souffle. We make a type to encode the full row and now we bind variables `edge0` and `path0` to this full row struct and extract its fields.
+We can show this struct convention in souffle. We make a record type to encode the full row and now we bind variables `edge0` and `path0` to this full row record and extract its fields.
 
 ```souffle
 .type row = [a : number, b : number]
@@ -120,33 +108,34 @@ path([x,z]) :- edge(edge0), path(path0), edge0 = [x,y], path0 = [y1,z], y = y1.
 .output path(stdout=IO)
 ```
 
-This is a very bad thing to do in souffle, because it completely subverts souffle's indexing mechanisms. There is not conceptual issue however. Souffle so happens to not have field accessor notation, but does have structural pattern matching. This is not fundamental.
+This is a very bad thing to do in Souffle, because it completely subverts Souffle's indexing mechanisms. There is not conceptual issue however. Souffle so happens to not have field accessor notation, but does have structural pattern matching. This is not fundamental.
 
-If souffle had dot accessor notation the rule would look like
+If Souffle had dot accessor notation the rule would look like
 ```souffle
-path([edge0.a,path0.b]) :- edge(edge0), path(path0), edge0.b = path0.
+path([edge0.a,path0.b]) :- edge(edge0), path(path0), edge0.b = path0.a.
 ```
 
 # It's SQL time
-Ok, so judo move 1: just write your datalog program in the above form in the first place.
+Ok, so Judo move #1: just write your datalog program in the above form in the first place.
 
-"Standard" Datalog is not god given really. The point we are at is a perfectly reasonable (interesting even) struct-centric, column-named, linear patterned datalog.
+"Standard" Datalog is not god given really. The point we are at is a perfectly reasonable (interesting even), struct-centric, column-named, linear patterned datalog. 
 
-If you really insist on the features of standard datalog, you can add them one by one. I have shown how to do so in previous blog posts.
+This SQLog isn't _that_ much worse than regular datalog and the compilation burden of doing these translations is not worth it unless you're writing a lot of datalog and willing to maintain a significant library. 
 
-This SQLlog isn't _that_ much worse than regular datalog and the compilation burden of doing these translations is not worth it unless you're writing a lot of datalog or wiling to maintain a significant library. 
+It's admittedly a little ugly. If you really insist on the features of standard datalog, you can add them one by one. I have shown how to do so in the previous blog posts.
 
-And now it is easy to translate to SQL mechanically as a lightweight design pattern or library.
-We retain the essential points of set semantics, fixpoint calculation, and the seminaive optimization.
+Now it is easy to translate to SQL mechanically as a lightweight design pattern or library and to retain the essential points of set semantics, fixpoint calculation, and the seminaive optimization.
 
 ## Naive SQL translation
 
 It is simple to translate a single application of a rule to a SQL statement.
 
 - The head of a rule `path(edge0.a,path0.b)` becomes `INSERT OR IGNORE INTO path SELECT edge0.a, path0.b`
-- The body of the rule gets split into a binding part and a filtering part. `path(path0), edge(edge0)` becomes `FROM path AS path0, edge AS edge0` and `edge0.b = path0.a` goes into the `WHERE clause.
+- The body of the rule gets split into a binding part and a filtering part. `path(path0), edge(edge0)` becomes `FROM path AS path0, edge AS edge0` and `edge0.b = path0.a` goes into a `WHERE edge0.b = path0.a` clause.
 
-The SQLite [UPSERT semantics](https://www.sqlite.org/lang_UPSERT.html) give us the set semantics of datalog without explicit deduplication queries. We enable it by defining tables with every column as a primary key `CREATE TABLE edge(a INTEGER, b INTEGER, PRIMARY KEY (a,b));` and by using `INSERT OR IGNORE INTO` which will not inert new tuples if they violate the primary key constraint.
+The SQLite [UPSERT semantics](https://www.sqlite.org/lang_UPSERT.html) give us the set semantics of datalog without explicit deduplication statements. We enable it by defining tables with every column as a primary key `CREATE TABLE edge(a INTEGER, b INTEGER, PRIMARY KEY (a,b));` and by using `INSERT OR IGNORE INTO` which will not insert new tuples if they violate the primary key constraint.
+
+Here is a SQL program to runs each rule once.
 
 ```sql
 CREATE TABLE edge(a INTEGER, b INTEGER, PRIMARY KEY (a,b)); -- .decl edge(x : number, y : number)
@@ -167,15 +156,14 @@ WHERE edge0.b = path0.a; -- The body of the rule gives FROM and WHERE
 
 ## Embedding Naive Evaluation in SQLite Python
 
-In order to actually compute the fixpoint, we need to repeatedly apply these queries. It is useful to do this in a programming language. Python is not essential, but it is familiar and convenient. [SQLite](https://docs.python.org/3/library/sqlite3.html) ships in the standard library of python for example. The same thing can easily be done in the language of your choosing.
+In order to actually compute the fixpoint, we need to repeatedly apply these queries. It is convenient to do outer loop in a normal programming language. Python is not an essential choice, but it is familiar and convenient. [SQLite](https://docs.python.org/3/library/sqlite3.html) ships in the standard library of python for example. The same thing can easily be done in the language of your choosing.
 
-Basically the complicated looking format strings are just constructing the SQL queries above for you.
 
 ```python
 import sqlite3
 
 class Rule():
-  def __init__(self, head : str, selects, froms , where="TRUE"):
+  def __init__(self, head, selects, froms , where="TRUE"):
     from_str = ", ".join(f"{table} AS {row}" for table,row in froms)
     self.sql = f"""
     INSERT OR IGNORE INTO {head} SELECT DISTINCT {selects}  -- head
@@ -185,6 +173,7 @@ class Rule():
   def execute(self,cur):
     cur.execute(self.sql)  
 
+# Convenience function for creating set semantics tables.
 def create_rel(cur, name, *fields):
   fields = ", ".join(fields)
   sql = f"CREATE TABLE {name}({fields}, PRIMARY KEY ({fields}))" # set semantics
@@ -212,25 +201,31 @@ print("path", cur.execute("select * from path").fetchall())
 print("edge", cur.execute("select * from edge").fetchall())
 ```
 
+Basically the complicated looking format strings are just constructing the SQL queries above for you. I made the choice that the `selects` and `where` parameters are just pasted in SQL expressions, since their interiors are not important. This is a slightly odd thing to do to some people's taste, so perhaps you'd prefer to take in a python list of expressions and join them on `,` and `AND`. To each their own.
+
+Also note that SQL string pasting is not safe to expose to external users on say a web endpoint. That's how you get [SQL injection](https://en.wikipedia.org/wiki/SQL_injection) attacks.
+
 ## Simple Seminaive
 
 The essential idea of seminaive iteration is that in order to derive something new, a rule must select at least one new tuple to work on. Typically, you do this by maintaining a delta per relation of changes since the last iteration. One iteration is one application of all the rules.
 
-One way of organizing an embedded datalog is to make a master database object that remembers all the bits of metadata you may need, like delta relations, rules, and such and organizes each iteration.
+One way of organizing an embedded datalog is to make a master database object `db` that remembers all the bits of metadata you may need, like delta relations, rules, and timestamps and organizes each iteration.
 
 However, a nice way of separating concerns is to make rule objects that maintain their own timestamp state. Now rules do not need to know about the existence of other rules, nor of any relation they do not touch.
 
 
 ### Seminaive with timestamps
-I was discussing wth Langston Barrett their sqlite/duckdb based datalog and they mentioned that they were using timestamps.
+I was discussing wth Langston Barrett their sqlite/duckdb based datalog and they mentioned that they were using timestamps to achieve seminaive. Really that correspondance inspired writing this entire post.
 
-It has come up before on egg-smol that there is a generalization of seminaive where you don't need to structure your execution into iterations can be done if you maintain timestamps. The timestamps are stored per rule. You can filter the rule's query such that there must be at least one tuple since the last timestamp it was executed. Now you can run the rules in any order you want and maintain correctness.
+It has come up before on egg-smol that there is a generalization of seminaive where you don't need to structure your execution into iterations. This can can be done if you maintain timestamps. The timestamps are stored per rule. You can filter the rule's query such that there must be at least one tuple since the last timestamp it was executed. Now you can run the rules in any order you want and maintain correctness.
 
-While the most familiar timestamps we may be familiar with are a unix time, or an iteration number, timestamps with more structure are really interesting and useful. A [vector timestamp](https://en.wikipedia.org/wiki/Vector_clock) of the sqlite database can be made that is a tuple of the maximum rowids of every table. In principle this timestamps is not totally ordered, but because SQLite is sequentialized, no incomparable timestamps will ever be produced. As an aside, it is interesting to consider what might happen or how to deal if this is nt the case.
+SQLite has a very cute feature of [rowids](https://www.sqlite.org/lang_createtable.html#rowid). Every row has an implicit unique id unless you explicitly turn this feature off. And in fact these ids monotonically increase inside a single table. By using this feature for our timestamps rather than adding a custom timestamp field, the impedance mismatch between the SQL and datalog worlds is reduced.
 
-SQLite has a very cute feature of [rowids](https://www.sqlite.org/lang_createtable.html#rowid). Every table has an implicit unique id unless you explicitly turn this feature off. And in fact these ids monotonically increase. By using this feature rather than adding a custom timestamp field, the impedance mismatch between the SQL and datalog worlds is reduced.
+While the most familiar timestamps we may be familiar with are a unix time, or an iteration number, timestamps with more structure are really interesting and useful. A [vector timestamp](https://en.wikipedia.org/wiki/Vector_clock) of the SQLite database can be made that is a tuple of the maximum rowids of every table. In principle this timestamps is not totally ordered, but because SQLite is sequentialized, no incomparable timestamps will ever be produced (I think). As an aside, it is interesting to consider what might happen or how to deal if this is nt the case.
 
-Typically seminaive is treated by splitting each rule into many rules, with a different instance of a relation replaced with it's delta version in each. However, using rowids, we can place the constraint of having one new tuple instead in the `WHERE` clause
+Typically seminaive is treated by splitting each rule into many rules  with a different instance of a relation replaced with it's delta version in each. For example `a(x) :- b(x),c(x).` gets split into two rules `a(x) :- delta_b(x), c(x).` & `a(x) :- b(x), delta_c(x).`. However, using rowids, we can place the constraint of having one new tuple instead in the `WHERE` clause, which is both simpler to write and possibly more efficient. The more we push into the database engine, the better off we are.
+
+The clause is a giant `OR` of the different ways we might include a new tuple.
 
 ```sql
 WHERE (row1.rowid > timestamp1 OR row2.rowid > timestamp2 OR row3.rowid > timestamp3 ...)
@@ -254,6 +249,8 @@ class Rule():
 
     self.timestamp = tuple(-1 for _ in froms)
     select_str = ", ".join(f"MAX({row}.rowid)" for _,row in froms)
+
+    # This query updates the timestamp vector to the latest frontier
     self.ts_query = f""" 
     SELECT {select_str} FROM {from_str} 
     """
@@ -270,7 +267,7 @@ def fixpoint(cur, ruleset):
     for rule in ruleset:
       old_ts = rule.timestamp 
       rule.execute(cur)
-      done &= old_ts == rule.timestamp
+      done &= old_ts == rule.timestamp # if timestamp has changed, we've got a new tuple.
     
 def create_rel(cur, name, *fields):
   fields = ", ".join(fields)
@@ -280,16 +277,20 @@ def create_rel(cur, name, *fields):
 import sqlite3
 con = sqlite3.connect(":memory:")
 cur = con.cursor()
-create_rel(cur,"edge", "a", "b")
-create_rel(cur,"path", "a", "b")
+create_rel(cur,"edge", "a", "b") #.decl edge
+create_rel(cur,"path", "a", "b") #.decl path
 
+# path(x,y) :- edge(x,y).
 base = Rule("path", "edge0.a, edge0.b",
                      [("edge", "edge0")])
+# path(x,z) :- edge(x,y), path(y,z).
 trans = Rule("path", "edge0.a, path0.b",
                      [("path", "path0"), ("edge", "edge0")],
                      where="edge0.b = path0.a")
 ruleset = [base, trans]
-cur.executemany("INSERT INTO edge VALUES (?, ?)", [(1,2), (2,3), (3,4)]) # initialize
+
+# edge(1,2). edge(2,3). edge(3,4).
+cur.executemany("INSERT INTO edge VALUES (?, ?)", [(1,2), (2,3), (3,4)])
 fixpoint(cur,ruleset)
 
 print("path", cur.execute("SELECT * FROM path").fetchall())
@@ -319,7 +320,6 @@ Swapping in duckdb. Duckdb recently gained upsert semantics <https://duckdb.org/
 
 Langston pointed out:
 - Dynamism in the ability of sqlite to make it's query plan at runtime is one reason to be hopeful
-
 
 
 One really wants to reuse the engineering and ecosystem behind mature SQL engines but also clean and predictable interoperation of the Datalog world with SQL is really useful. Part of the point of this exercise is that sometimes one wants to break out of the rigid conventions of datalog to do something bespoke and interesting. SQL gives you a lot of less principled but powerful imperative control over the database.
