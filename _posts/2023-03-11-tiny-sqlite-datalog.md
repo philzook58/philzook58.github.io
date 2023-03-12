@@ -1,7 +1,7 @@
 ---
 date: 2023-03-11
 layout: post
-title: "MiniLitelog: Easy Breezy SQLite datalog"
+title: "MiniLitelog: Easy Breezy SQLite Datalog"
 description: Simple Shallow Embedding of Seminaive Datalog into SQLite
 tags: datalog sqlite
 ---
