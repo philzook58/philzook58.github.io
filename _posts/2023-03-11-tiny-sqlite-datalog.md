@@ -18,7 +18,7 @@ I've previously explored using stock SQL engines to power a datalog in these pos
 - [Datalite: A Simple Datalog Built Around SQLite in Python](https://www.philipzucker.com/datalite/)
 - [Duckegg: A Datalog / Egraph Implementation Built Around DuckDB](https://www.philipzucker.com/duckegg-post/)
 
-But I think this is the cleanest simplest encoding yet. Part of the trick is a strategic retreat on the definition of datalog.
+But I think this is the cleanest encoding yet. Part of the trick is a strategic retreat on the definition of datalog.
 
 There are a few impedance mismatches between SQL and datalog. These are the crucial features we cannot retreat on:
 - Recursion/Fixpoint support. This is part of the point of datalog. SQL has a feature [recursive common table expressons](https://www.sqlite.org/lang_with.html#recursive_common_table_expressions) which is clunky and limited. An important part of supporting the fixpoint is supporting the seminaive optimization, where highly redundant work is not done.
@@ -231,7 +231,8 @@ The clause is a giant `OR` of the different ways we might include a new tuple.
 WHERE (row1.rowid > timestamp1 OR row2.rowid > timestamp2 OR row3.rowid > timestamp3 ...)
 ```
 
-And here is an extension of the above python to record and filter on the timestamps. The rule object maintains the most recent timestamp upon which the rule was run.
+### Python
+Here is an extension of the above python to record and filter on the timestamps. The rule object maintains the most recent timestamp upon which the rule was run.
 
 ```python
 
