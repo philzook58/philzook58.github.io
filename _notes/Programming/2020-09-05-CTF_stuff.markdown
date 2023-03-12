@@ -318,6 +318,7 @@ binrec - lift program merge lifted bytecode into debloated
 BOLT
 lifting bits/grr
 
+{% raw %}
 
 ```python
 
@@ -378,6 +379,8 @@ with tempfile.NamedTemporaryFile(suffix=".c") as fp:
     print(subprocess.run(["gcc",  "-g",  "-c","-O1", "-o",  outfile, fp.name], check=True))
     print(os.listdir(mydir))
 ```
+
+{% endraw %}
 
 ## Binary reversign
 https://corte.si/posts/visualisation/binvis/index.html hilbert curves for binary vsiualization

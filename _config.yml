@@ -28,8 +28,8 @@ mastodon:
 
 google_analytics: G-EBC4529QNG
 
-feed:
-  tags: true
+#feed:
+#  tags: true
 
 #author:
 #  name: Philip Zucker

@@ -41,7 +41,7 @@ These differences are less crucial:
 - Named vs Unnamed style (See [section 3.2](http://webdam.inria.fr/Alice/pdfs/Chapter-3.pdf) of the [Alice](http://webdam.inria.fr/Alice/) book). SQL allows you to attach names to _rows_ (`FROM mytable AS myrow`) and refers to columns by label (`myrow.foo`). Datalog conventionally binds names to entries (`mytable(foo_entry,bar_entry)`) (a data item in a column of a particular row) and refers to columns by position (columns 1, 2, 3, 4, etc).
 
 # Datalog Transformations
-So let's first take a datalog program and show how to rewrite it  to strip out the less crucial differences such that it is easier to translate to SQL.
+So let's first take a datalog program and show how to rewrite it to strip out the less crucial differences such that it is easier to translate to SQL.
 
 ## Transitivity Query
 
@@ -105,7 +105,7 @@ for (x,y) in edge:
 
 ## Step 2: Structifying
 
-Now that we've normalized, the next transformation is to replace binding entries with instead binding rows.
+Now that we've normalized out the nonlinear patterns, the next transformation is to replace binding variables to row entries with instead binding variables to rows.
 
 We can show this struct convention in souffle. We make a type to encode the full row and now we bind variables `edge0` and `path0` to this full row struct and extract its fields.
 
@@ -121,6 +121,11 @@ path([x,z]) :- edge(edge0), path(path0), edge0 = [x,y], path0 = [y1,z], y = y1.
 ```
 
 This is a very bad thing to do in souffle, because it completely subverts souffle's indexing mechanisms. There is not conceptual issue however. Souffle so happens to not have field accessor notation, but does have structural pattern matching. This is not fundamental.
+
+If souffle had dot accessor notation the rule would look like
+```souffle
+path([edge0.a,path0.b]) :- edge(edge0), path(path0), edge0.b = path0.
+```
 
 # It's SQL time
 Ok, so judo move 1: just write your datalog program in the above form in the first place.
@@ -219,9 +224,9 @@ However, a nice way of separating concerns is to make rule objects that maintain
 ### Seminaive with timestamps
 I was discussing wth Langston Barrett their sqlite/duckdb based datalog and they mentioned that they were using timestamps.
 
-It has come up before that there is a generalization of seminaive where you don't need to structure your execution into iterations can be done if you maintain timestamps. The timestamps are stored per rule. You can filter the rule's query such that there must be at least one tuple since the last timestamp it was executed. Now you can run the rules in any order you want and maintain correctness.
+It has come up before on egg-smol that there is a generalization of seminaive where you don't need to structure your execution into iterations can be done if you maintain timestamps. The timestamps are stored per rule. You can filter the rule's query such that there must be at least one tuple since the last timestamp it was executed. Now you can run the rules in any order you want and maintain correctness.
 
-While the most familiar timestamps we may be familiar with are a unix time, or an iteration number, timestamps with more structure are really interesting and useful. A [vector timestamp](https://en.wikipedia.org/wiki/Vector_clock) of the sqlite database can be made that is a tuple of the maximum rowids of every table. In principle this timestamps is not totally ordered, but because sqlite is sequentialized, no incomparable timestamps will ever be produced. As an aside, it is interesting to consider what might happen or how to deal if this is nt the case.
+While the most familiar timestamps we may be familiar with are a unix time, or an iteration number, timestamps with more structure are really interesting and useful. A [vector timestamp](https://en.wikipedia.org/wiki/Vector_clock) of the sqlite database can be made that is a tuple of the maximum rowids of every table. In principle this timestamps is not totally ordered, but because SQLite is sequentialized, no incomparable timestamps will ever be produced. As an aside, it is interesting to consider what might happen or how to deal if this is nt the case.
 
 SQLite has a very cute feature of [rowids](https://www.sqlite.org/lang_createtable.html#rowid). Every table has an implicit unique id unless you explicitly turn this feature off. And in fact these ids monotonically increase. By using this feature rather than adding a custom timestamp field, the impedance mismatch between the SQL and datalog worlds is reduced.
 
@@ -293,7 +298,7 @@ print("edge", cur.execute("SELECT * FROM edge").fetchall())
 
 # Bits and Bobbles
 
-In addition, if we track the timestamps of the head before and after rule application and record them in a list, we get a lightweight provenance mechanism for free. This timestamp list get an explicit representation of which ranges of tuple were derived by this rule application (those with `rowid` between the timestamps occurring before and after the rule application) and when. When the time comes to figure out how a partcular tuple was derived, these breadcrumbs are enough to make the reconstruction search-free.
+In addition, if we track the timestamps of the head before and after rule application and record them in a list, we get a lightweight provenance mechanism for free similae to the one explained [here](https://www.philipzucker.com/snakelog-post/). This timestamp list get an explicit representation of which ranges of tuple were derived by this rule application (those with `rowid` between the timestamps occurring before and after the rule application) and when. When the time comes to figure out how a partcular tuple was derived, these breadcrumbs are enough to make the reconstruction search-free.
 
 Stratification of rulesets. You can avoid some unnecessary work... Wait... Is there even a point to this? The timestamps means that probably running a rule is negligible. Well, that was true in regular seminaive too. Hmm.
 
@@ -314,8 +319,6 @@ Swapping in duckdb. Duckdb recently gained upsert semantics <https://duckdb.org/
 
 Langston pointed out:
 - Dynamism in the ability of sqlite to make it's query plan at runtime is one reason to be hopeful
-
-
 
 
 
