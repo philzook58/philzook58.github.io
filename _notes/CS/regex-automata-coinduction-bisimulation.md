@@ -5,6 +5,7 @@ title: Automata, Regex, Coinduction, Bisimulation
 
 - [Regular Expressions](#regular-expressions)
     - [Matching algorithms](#matching-algorithms)
+    - [Brzozowski Derivatives](#brzozowski-derivatives)
     - [equivalence](#equivalence)
     - [theory](#theory)
 - [Automata](#automata)
@@ -50,7 +51,10 @@ https://regex101.com/
 https://regexr.com/
 
 https://en.wikipedia.org/wiki/Kleene%27s_algorithm
-https://en.wikipedia.org/wiki/Thompson%27s_construction
+
+[Thompson construction](https://en.wikipedia.org/wiki/Thompson%27s_construction)
+
+
 https://en.wikipedia.org/wiki/Glushkov%27s_construction_algorithm
 Finding minimum regex for given string (or set of strings). Identify groups within a given string https://cs.stackexchange.com/questions/109583/what-is-the-best-algorithm-known-to-learn-the-regular-expression-from-a-set-of-p  Is this related to invariant inference I wonder?
 
@@ -76,11 +80,45 @@ https://microsoft.github.io/z3guide/docs/theories/Regular%20Expressions
 ### Matching algorithms
 - backtracking search
 - convert to dfa
-Brzozowski derivatives https://www.ccs.neu.edu/home/turon/re-deriv.pdf
 
 Matching is state inference perhaps of traces.
 
 https://types.pl/web/@maxsnew/109422022028474251 Regular Expressions : Logic Programming :: DFA : Functional Programming 
+
+### Brzozowski Derivatives
+https://en.wikipedia.org/wiki/Brzozowski_derivative
+Oh, that's interesting u^-1 as a notation.
+
+`s in R <-> emp in s^-1 R` This gives us a matching algorithm.
+
+The final coalgebra is one that operates on sets of strings?
+from a regular expression, produce a regex for the family with one `a` stripped off. THis looks like a derivatve operation kind of because the sequence operator turns into a sum. Or a multiplicatve inverse.
+Brzozowski derivatives https://www.ccs.neu.edu/home/turon/re-deriv.pdf
+
+```ocaml
+type kleene = Lit of char | One | Zero | Star of kleene | Plus of kleene * kleene | Seq of kleene * kleene
+
+let deriv a = function
+| Lit a'  a' == a -> One
+| -> Zero
+| Star e -> Seq ((deriv e), Star e)
+| Plus a b -> 
+| Seq a b ->   
+
+```
+
+https://news.ycombinator.com/item?id=35053328
+Assoc, Comm, and idempotency necessary to actually make finite automata.
+flattening, sorting, and deleting duplicates is enough. `List.sort_uniq`
+Might be an interesting egglog example
+```
+type prods = One | Lit of char | Star of prods | Seq of kleene * kleene
+type kleene = seq list (* sum of product representation. Hmm. Is this actually possible? Star gets in the way *)
+
+```
+
+[parsing with derivatives](https://matt.might.net/papers/might2011derivatives.pdf)
+
 ### equivalence
 regex equivalence can check containment of string. also regex containmnt a + b = a means b  <= a 
 https://www.drmaciver.com/2016/12/proving-or-refuting-regular-expression-equivalence/
@@ -168,6 +206,8 @@ https://en.wikipedia.org/wiki/Tree_automaton
 
 [Tree Automata as Algebras: Minimisation and Determinisation](https://arxiv.org/pdf/1904.08802.pdf)
 
+Are tree automata kind of like finite state folds?
+
 ## Probablistic automata
 https://en.wikipedia.org/wiki/Probabilistic_automaton
 PFA
@@ -193,7 +233,7 @@ https://github.com/Jaxan/nominal-lstar Learning Nominal Automata
 Automata learning huh
 ALF - abstract lerarning framework
 # Kleene Algebra
-
+[Kleene Algebras and Applications - Alexandra Silva OPLSS](https://www.youtube.com/watch?v=TEFx5DG9ghE&ab_channel=OPLSS)
 ## KAT
 http://perso.ens-lyon.fr/damien.pous/symbolickat/ symkat ocaml
 [Symbolic Algorithms for Language Equivalence and Kleene Algebra with Tests](http://doi.acm.org/10.1145/2676726.2677007) transition function using BDD. Generating automata using Brzowski's derivative and classical. bdds + union find for language equivalence

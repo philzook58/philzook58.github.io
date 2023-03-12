@@ -25,6 +25,7 @@ wordpress_id: 2913
   - [Dataflow](#dataflow)
   - [def-use chains](#def-use-chains)
 - [Undefined behavior](#undefined-behavior)
+    - [undefining imp](#undefining-imp)
 - [Optimizations](#optimizations)
   - [Polyhedral](#polyhedral)
   - [Link Time Optimization (LTO)](#link-time-optimization-lto)
@@ -177,10 +178,124 @@ llvm IR has some surprising values available in it's semantics. Varables can hol
 [Towards Optimization-Safe Systems: Analyzing the Impact of Undefined Behavior](https://dl.acm.org/doi/pdf/10.1145/2517349.2522728)
 
 [What Every C Programmer Should Know About Undefined Behavior #1/3](http://blog.llvm.org/2011/05/what-every-c-programmer-should-know.html)
+[A Guide to Undefined Behavior in C and C++, Part 1](https://blog.regehr.org/archives/213)
+[](http://lucacardelli.name/Papers/TypeSystems.pdf) trapped vs untrapped erros
 [Undefined Behavior != Unsafe Programming](https://blog.regehr.org/archives/1467) "The essence of undefined behavior is the freedom to avoid a forced coupling between error checks and unsafe operations."
+
+[016 LLVM Developers’ Meeting: N. Lopes “Undefined Behavior: Long Live Poison!"](https://www.youtube.com/watch?v=_-3Iiads1EM&ab_channel=LLVM)
+
+[Top of lattice](https://youtu.be/9epgZ-e6DUU?t=1557) - dual to pessimistic unknown. Optimsitic unknown which can become any value that is convenient.
+
+[Defining the Undefinedness of C - grigore rosu](https://fsl.cs.illinois.edu/publications/hathhorn-ellison-rosu-2015-pldi.pdf)
 
 Refinement checking
 alive2
+
+DFA with missing transitions as a model? NFA as model of nondeterministic behavior also.
+
+Finite automata are not so different from step relations. The syntax is state. Somehow we are less inclined to draw the term rewriting as graphs. The state space is infinite often
+
+https://samuelgruetter.net/blog/2022/09/30/omnisemantics/
+
+backward simulation vs forward simulation. Forward is that there exists one trace in the compiled program that exists in source. If deterministic, this is fine. 
+
+
+Krebbers thesis [The C standard formalized in Coq](https://robbertkrebbers.nl/thesis.html) [](https://robbertkrebbers.nl/research/slides/c_next.pdf)
+- implementation defined - parametrized by record
+- imspecified by nondeterminsim
+- undefined behavior - undef state
+
+
+[Advanced C: The UB and optimizations that trick good programmers.](https://www.youtube.com/watch?v=w3_e9vZj7D8&t=2570s&ab_channel=EskilSteenberg)
+
+
+- int - size is implementation defined, overflow is undefined behavior
+
+### undefining imp
+imp + undef stmt
+`type stmt = st -> state option`
+`let seq s1 s2 = ` It goes backwards in time according to this semantics?
+`let undef : stmt = fun _ -> None`
+`let skip : stmt = fun st -> st`
+
+refinement `refines prog1 prog2 = forall s, some s1 = prog1 s -> some s1 = prog2 2`. But prog 2 may have more things defined.
+
+uninitialized memory = now we don't have to clear it out
+overflow
+
+```
+(* for possible uninitialized memory  *)
+type store = int option String.Map.t
+
+(* reading from an undefied var was already problably undefined behavior *)
+
+
+let agree s1 s2 = fun st -> do
+       st' <- s1 st
+       st'' <- s2 st
+       if st' == st'' then some st' else none
+(* for example if order of operations is undefined
+
+let funcall f x y = agree ( do x y) (do y x) 
+
+
+trapping vs non trapping calculations. Expressions are statements
+
+type expr = int option
+type expr = int * stmt
+type expr = int option * failable_stmt (* two different kinds of none. *) 
+
+
+uninitlaized values - maintain consistency or not.
+let var x = insert x random
+vs
+let var x = insert x none
+
+Modelling random
+type stmt = state -> [state]  possible
+type stmt = state -> [float * state]   numerical weights
+
+type expr = set int
+
+
+
+nontermination as undefined behavior
+
+
+unspecifified - nondeterminism between possibilities. 
+vs implementation defined. An open endded injection a la type classes or what have you
+
+type impl_spec = { handlecase0 : , handlecase1 :, .... , int_size = 4;  }
+
+type stmt = impl_spec -> stmt'
+
+undefined - destroy the world
+
+*)
+
+(*
+In this functional model, how does observability play in? Or how to extned the model to include observability
+
+Interaction trees?
+Something like oleg coroutines?
+*)
+
+type machine = Input i -> machine | Output o * machine | Done
+type stmt = state -> obs list * state
+
+(*
+Trace semantics,
+where the list is now not nondeterminim, but a record of all states that appeared
+*)
+type stmt = state -> state list
+let seq s1 s2 = fun s -> 
+                let s' :: trace  = s1 s in
+                let trace2 = s1 s' in
+                trace2 :: s' :: trace :: s
+
+
+```
+
 
 # Optimizations
 
@@ -351,6 +466,10 @@ See: e-graphs
 [scheduling using unimodular modelling](https://twitter.com/taktoa1/status/1531386684876632064?s=20&t=-IHVNfpCMKlhva0T8ctWXA)
 
 ## Instruction Selection
+[Automatically Generating Back Ends Using Declarative Machine Descriptions](https://www.cs.tufts.edu/~nr/pubs/gentileset-abstract.html) dias ramsey https://www.cs.tufts.edu/~nr/pubs/tiler-abstract.html
+
+[Hoopl](https://www.cs.tufts.edu/~nr/pubs/hoopl-abstract.html)
+
 Maximal munch parsing
 http://www.cs.cmu.edu/afs/cs/academic/class/15745-s07/www/lectures/lect9-instruction_selection_745.pdf
 Like parser generators / libraries, you can make instruction selection libraries / generators. Bottom up vs top down
@@ -554,6 +673,10 @@ Self
 Java JIT hotspot
 v8
 
+
+[A Brief History of Just-In-Time](http://eecs.ucf.edu/~dcm/Teaching/COT4810-Spring2011/Literature/JustInTimeCompilation.pdf)
+
+[dynamic recompilation](https://en.wikipedia.org/wiki/Dynamic_recompilation) is what emulators call it
 # Garbage Collector
 
 See memory managements

@@ -71,6 +71,9 @@ https://en.wikipedia.org/wiki/INT_(x86_instruction) int3 is a breakpoint instruc
 https://twitter.com/pkhuong/status/1507790343151960073?s=20&t=GsM8M-fHdbvp9M4n5S4-kg
 
 [asmtutor](https://asmtutor.com/)
+
+[box64](https://github.com/ptitSeb/box64) x86 emultator for arm
+[fex](https://fex-emu.com/)
 ## BMI1 BMI2
 Bit manipulation instructions https://twitter.com/geofflangdale/status/1502481857375793153?s=20&t=j5MN13cFOkc3qH8tpATyNA
 apparently people can do crazy stuff with this https://twitter.com/pkhuong/status/1497332651891515395?s=20&t=j5MN13cFOkc3qH8tpATyNA
@@ -247,7 +250,8 @@ https://www.cs.cornell.edu/courses/cs3410/2019sp/riscv/interpreter/# nice little
 [mini-rv32ima is a single-file-header riscv5 eumlator](https://github.com/cnlohr/mini-rv32ima)
 [instruction decoder in javascript? Why?](https://luplab.gitlab.io/rvcodecjs/)
 
-
+[risc v virtual machine](https://github.com/LekKit/RVVM)
+[rvemu](https://github.com/d0iasm/rvemu) [Writing a RISC-V Emulator in Rust book](https://book.rvemu.app/)
 ```riscv
 # it's the sum of 1 to n
 addi a0, x0, 4

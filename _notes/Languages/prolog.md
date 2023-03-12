@@ -1033,6 +1033,7 @@ mvd(john,child,bill)
 ```
 
 model checking
+[model checking using tabled logic programming](https://cs.uwaterloo.ca/~jmatlee/Teaching/CS745/PaperPres/XMC.pdf)
 
 term-sets {Var:Goal} let's you talk about the set that corresponds to Goal. 
 `{X : member(X,[a,b,c])}`

@@ -322,3 +322,10 @@ coq platform
 
 [](https://github.com/rikosellic/ZFC-prover-in-Coq)
 
+[metamatix](https://github.com/acorrenson/metamatix) verified implementatyion of metamath checker
+https://github.com/acorrenson/WiSE - verified bug finding
+https://github.com/acorrenson/minilog - verified implementation of mini prolog
+
+[defaultt](https://github.com/acorrenson/Defaultt) - default logic
+
+https://github.com/acorrenson/SATurne

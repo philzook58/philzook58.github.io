@@ -84,6 +84,9 @@ sqlite
 
 Cython
 
+# Pypy
+
+Huh. There's good stuff here. Yeah, it's a faster python intepreter. But it's a library too?
 # Hashcons
 
 ```python
@@ -301,7 +304,25 @@ pyiodide
 
 [aesara](https://github.com/aesara-devs/aesara) Aesara is a Python library for defining, optimizing, and efficiently evaluating mathematical expressions involving multi-dimensional arrays.
 
+
 https://www.youtube.com/watch?v=DKns_rH8rrg&t=974s&ab_channel=EuroPythonConference jit compiler in 30 minutes.
 mmap huh.
 
 https://github.com/Maratyszcza/PeachPy
+
+[hpy](https://hpyproject.org/) HPy provides a new API for extending Python in C. In other words, you use `#include <hpy.h>` instead of `#include <Python.h>`.
+
+[pypy talks](https://www.youtube.com/@cfbolz)
+
+[pydrofoil](https://github.com/pydrofoil/pydrofoil)
+
+https://github.com/JonnyWalker/PySNES
+
+https://github.com/bivab/eqsat
+
+https://github.com/bivab/pytri petri net model checker
+
+https://github.com/AntonLydike/riscemu risc v emulator
+
+[](https://github.com/hsinhaoyu/cont_frac) bill gosper's continued fractions
+

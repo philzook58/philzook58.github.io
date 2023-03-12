@@ -1,4 +1,7 @@
-
+---
+layout: post
+title: Control
+---
 
 See also:
 - Differential Equations

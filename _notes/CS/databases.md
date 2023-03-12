@@ -137,6 +137,7 @@ https://github.com/egraphs-good/egg/discussions/189
 Zetasql
 calcite
 
+[Inside the SQL Server Query Optimizer](https://www.amazon.com/Inside-SQL-Server-Query-Optimizer/dp/1906434603)
 ## The Chase
 Equality Generating Dependencies
 [The Chase Procedure and its Applications in Data Exchange](https://drops.dagstuhl.de/opus/volltexte/2013/4288/pdf/ch01-onet.pdf)

@@ -274,6 +274,14 @@ Paramodulation is dealing with equality pieces in clauses.
 http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.34.9958&rep=rep1&type=pdf
 
 # Term Indexing
+[Triemaps that match](https://arxiv.org/pdf/2302.08775.pdf) SPJ and Graf https://www.youtube.com/watch?v=cT8G6FS2v94&ab_channel=Konfy
+
+```ocaml
+type expr = Var of string | App of expr * expr
+type 'a exprmap = {var : 'a String.Map.t; app : 'a exprmap exprmap } (* I thing if we play that nested data structure stuff we're gonna have a bad time  in ocaml*)
+
+```
+
 See Automated reasoning handbook chapter 18
 https://www.cs.cmu.edu/~fp/courses/atp/lectures/22-indexing.html
 [towards efficient subsumption - Tammet](https://www.cs.cmu.edu/~fp/courses/atp/cmuonly/T98.pdf)

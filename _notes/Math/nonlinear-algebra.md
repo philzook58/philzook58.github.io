@@ -15,6 +15,7 @@ By nonlinear algebra I mean things relating to multivariate polynomials
 - Circuits. Relational algebra parametrized by omega
 - Algebraic statistics https://en.wikipedia.org/wiki/Algebraic_statistics https://franknielsen.github.io/Books/CuratedBookLists.html
 - game theory
+- Invariants?
 [grobner bases and applications - buchberger](https://www3.risc.jku.at/publications/download/risc_333/1998-00-00-A.pdf)
 # Systems
 https://github.com/algebraic-solving/msolve msolve. a C library for grobner basis and root calculations. Intresting
@@ -60,6 +61,8 @@ Fundamental theorem of algebra
 
 # Linear modelling of nonlinear systems
 [Numerical Polynomial Algebra by Hans Stetter](https://epubs.siam.org/doi/book/10.1137/1.9780898717976?mobileUi=0&)
+
+Resolvents
 
 ## Vandermonde Matrix
 The big question: Linear in what?
@@ -123,6 +126,9 @@ rewrite system:
 
 
 Buchberger's algorithm
+S-polynomials
+completition
+comparison and application to linear solving
 S-polynomials - any combination of polynomials that are zero is also zero. The s-polynimals try to eliminate the hghest monomials in the obvious way. This is a way to generate new identities that may have smaller coefficients or eliminate variables.
 
 Specialization: 

@@ -12,6 +12,7 @@ title: Proof Theory
 - [Interpolation](#interpolation)
 - [Reverse Mathematics](#reverse-mathematics)
 - [Proof Calculi](#proof-calculi)
+    - [](#)
     - [Axioms](#axioms)
       - [Axiom Schemes](#axiom-schemes)
     - [Rules of Inference](#rules-of-inference)
@@ -31,7 +32,7 @@ title: Proof Theory
     - [ZFC](#zfc)
     - [NBG](#nbg)
     - [Arithmetic Hierarchy](#arithmetic-hierarchy)
-    - [](#)
+    - [](#-1)
     - [Undefinability of Truth](#undefinability-of-truth)
     - [Godel Completeness](#godel-completeness)
     - [Godel Incompleteness](#godel-incompleteness)
@@ -52,16 +53,7 @@ title: Proof Theory
     - [Of a different character?](#of-a-different-character)
 - [Model thoery](#model-thoery)
   - [Finite Model Theory](#finite-model-theory)
-
-
-- <https://en.wikipedia.org/wiki/Proof_theory>
-- <https://plato.stanford.edu/entries/proof-theory/>
-- <https://plato.stanford.edu/entries/proof-theory-development/>
-- Intro to MetaMethemtaics - Kleene
-- Basic Proof Theory - Troelstra Schiwtchenberg
-- Boolos Burgess Jeffrey - Computability and Logic
-- Minksy - Computation: Finite and Infinite Machines
-Ask Cody.
+    - [Fixed point logic](#fixed-point-logic)
 
 Should I seperate this out into a computability, logic, model theory, and proof theory notes?
 
@@ -234,3 +226,136 @@ A more general notion and precise notion may be finding homomorphisms between . 
 https://courses.cs.washington.edu/courses/cse599c/18sp/calendar/lecturelist.html
 Finite model theory is actually interesting.
 Finite models are those for which Z3 can return results even in the prescence of quantifiers.
+
+query containment
+```python
+from z3 import *
+Sort("A")
+A = Function("A", BoolSort())
+B = 
+Q1 = And()
+Q2 = And()
+
+contains = ForAll([] , Implies(
+  Q1, Q2
+))
+
+prove(contains)
+```
+
+Directly solving for homomorphisms.
+The alice book is insane
+
+https://simons.berkeley.edu/workshops/logical-structures-computation-boot-camp/
+https://www.youtube.com/watch?v=rfvYLCixrdQ&ab_channel=SimonsInstitute
+
+### Fixed point logic
+https://en.wikipedia.org/wiki/Fixed-point_logic
+
+[Fixed-Point Logics and Computation - Dawar](https://www.cl.cam.ac.uk/~ad260/talks/oviedo.pdf)
+
+Horn clauses interpreted as implications are loose. More models obey than you want. You want the least model. You can fix this (sometimes?) by clark completion and loop formula.
+
+Fixed point logic binds both a second order variable and a et of tuples to it? And it returns another relation that can be applied.
+
+The least fixed point logic is good for datalog.
+Greatest fixed point logics include u-calculus.
+
+Thes are both model checking problems.
+
+Translation into datalog
+
+```python
+import clingo
+
+
+```
+
+```ocaml
+type prop =  Rel rel * term list
+type fof = Forall of fof | Exists of fof | Prop of prop | And | Or | Neg | ... 
+type form = Lfp of var list * rel * form | FOF of fof
+
+type rule = {head : prop ; body : prop list} 
+type datalog = rule list
+let interp : form -> datalog
+
+
+```
+
+Finite Model Theory and Its Applications - book
+
+
+Is the empty set a model of fixed point
+
+https://courses.cs.washington.edu/courses/cse344/13au/lectures/query-language-primer.pdf
+compiling first order logic model checking to sql or nonrecursive datalog
+
+Ok, but a prolog program might make sense.
+Or magic-set/ demand style pushing down seeds from existentials.
+
+Model checking first order logic is a strange thing to do. Model finding or proving are more common things to do I feel like. Although since datbase queries are in some sense model checking.. hmm.
+
+Prolog against a ground database.
+All the negation makes me queasy.
+```prolog
+:- initialization(main,main).
+
+check(and(P,Q)) :- check(P), check(Q).
+check(or(P,Q)) :- check(P) ; check(Q).
+check(not(P)) :- \+ check(P).
+check(forall(D, P)) :-  forall(D, check(P)). % \+ check(exists(X, not(P))).  % %https://www.swi-prolog.org/pldoc/man?predicate=forall/2
+check(exists(Y, P)) :- check(P). % , call(D). Perhaps we should check the 
+check(pred(P)) :- call(P).
+check(implies(P,Q)) :- check(or(not(P), Q)).
+
+% maybe with tabling I can demonstrate
+% check(mu(R,X,P)) :- ??
+p(1).
+q(2).
+
+dom(1).
+dom(2).
+% sort has to be specified when binding 
+main(_) :- print("hi"), check(forall(dom(X), pred(p(X)))).
+
+% This formulation rather than reflecting to primitive prolog at predicates would be literal translation of
+% the satisfactin relation
+% sat(Formula, Interp) :- 
+
+% models of separation logic required proof.
+
+%q1(X) :- check(exists(Y, and(likes(X,Y), forall(Z, implies(serves(Z,Y), frequents(X,Z)))))).
+
+
+
+```
+
+Also probably ASP makes this easier. Use - relation for negation. It's hard to write the interpreter though.
+
+```clingo
+% write down database facts
+
+And
+existsp(Y,Z) :- p(X,Y,Z).
+% forall rule
+forallp(Y,Z) :- { p(X,Y,Z) : dom(X) }
+
+negp(X,Y,Z) :- -p(X,Y,Z).
+
+```
+
+Hmm. EPR. But I want satisfiability of EPR, not model checking. Ok. amusing idea, but no.
+
+
+```sql
+-- NOT EXISTS in where clause with subquery.
+```
+
+
+model checking propsitional formula is easy. Plug it in
+model checking QBF is harder.
+
+datalog is really model producing. That's kind of the point.
+
+The lfp of lfp(FO) is kind of like the mu minimization operator. https://en.wikipedia.org/wiki/%CE%9C_operator

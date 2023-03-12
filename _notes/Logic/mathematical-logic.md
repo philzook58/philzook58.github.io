@@ -44,6 +44,9 @@ Set theory says there are uncountable sets, but set theory is expressed in count
 
 `G, not x |= {}` is unsat.
 
+Model's are often treated less carefully. We agree the integers are a thing. Formulas we are sticklers about
+Models are shallow embedded, formulas are deep embedded
+
 # Soundness
 G |- x  --> G |= x
 
@@ -76,4 +79,6 @@ https://carnap.io/srv/doc/index.md
 forall x https://www.fecundity.com/logic/
 jscoq, lean-web-editor, sasylf, pie
 https://github.com/RBornat/jape
+
+
 

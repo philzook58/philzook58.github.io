@@ -57,6 +57,7 @@ That sounds fun
 
 [lean chat](https://github.com/zhangir-azerbayev/lean-chat) openai codex tranlate natural language to lean statements
 
+[](https://proofassistants.stackexchange.com/questions/1964/setting-up-lean-4-on-a-server) https://lean.math.hhu.de/ lean4 web editor
 [lean 4 metaprgramming book](https://github.com/arthurpaulino/lean4-metaprogramming-book)
 [metaprogramming in lean 4](https://www.youtube.com/watch?v=hxQ1vvhYN_U&ab_channel=leanprovercommunity)
 
