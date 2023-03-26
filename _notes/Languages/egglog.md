@@ -252,11 +252,138 @@ let foo (a, froms, wheres) =
   "freshrow.res", (foo,"freshrow") :: ,  ("freshrow.x = " ^ a) :: wheres   
 ```
 
+It's a writer monad for froms and wheres. We should go top down to make biding pattern variables easy.
+
 ```python
+counter = 0
+def freshrow():
+  global counter
+  counter += 1
+  return "row" + str(counter)
+
+def foo(a):
+  def res():
+    (rid, froms, wheres) = a()
+    row = freshrow()
+    return (f"{row}.rowid",  [f"foo as {row}"] + froms, [f"{rid} = {row}.a"]+ wheres)
+  return res
+
+def x():
+  row = freshrow()
+  return (row + ".rowid" ,[f"x AS {row}"], [])
+
+def func(f):
+  def res(*args):
+    def res1():
+      args = [arg() for arg in args]
+      rids, froms, wheres = zip(*args)
+      row = freshrow()
+      (f"{row}.rowid",  [f"{f} as {row}"] + froms, [f"{rid} = {row}.arg{n}" for n,rid in enumerate(rids)] + wheres)
+    return res1
+  return res
+
+print(foo(foo(x))())
+
+```
+How do we deal with variables? It's like datalog problems but more so.
+`from foo as row, (select row.a) as x, ` does this work?
+analog of turn `let x = row.a` into `for x in [row.a]` where select plays role of []. Not really that much less complex. You still need to maintani a compile time env with a bool instead of a column.
+
+
+What about GJ. GJ is actually pretty simple.
+
+Trie. `(k, )` `dict[dict]
+[None] = data held
+```python
+def insert(trie, k, v):
+  node = trie
+  for n in k:
+    tnode = node.get(n)  
+    if tnode == None:
+      tnode = {}
+      node[n] = tnode
+    node = tnode
+  node[None] = v
+
+def lookup(trie, k):
+  node = trie
+  for n in k:
+    node = node.get(n)
+    if node == None:
+      return None  
+  return node.get(None)
+
+t1 = {}
+insert(t1,"aaa", "fred")
+insert(t1,"aab", "larry")
+insert(t1,"aac", "larry")
+insert(t1,"ac", "gary")
+print(lookup(t1, "aa"))
+print(t1)
+
+def of_keys(keys):
+  t = {}
+  for k in keys:
+    insert(t,k, ())
+  return t
+print(of_keys([(1,2), (3,4), (1,4)]))
+
+def rel2(table):
+  empty_row = ()
+  def res(nx,ny): # take in the order of where will appear?
+    return of_keys([ (empty_row[nx] := row[0])[ny] := row[n1]   for row in table]) # this is not valid python
+  # ok. We Have to address compression.
+  # Then the semantics is just sets over all variables in play in a particular order.
+  # path |= forall(lambda (x,y,z,w): (& & & &).proj(x,y))
+```
+
+```sql
+-- canonicalize
+insert into mytab select root(a), root(b), root(c) from mytab on conflict set c = union(c, excluded.c)
+```
+
+
+In the experiment, I tried internalizing the union find into sql. Maybe it is simpler not to
+
+Wasm based union find? Would that be fun?
+```python
+class BadUF():
+  # no path compression. no depth stroage.
+  def __init__(self):
+    self.parent = []
+  def find(self,i):
+    p = self.parent[i]
+    while p != self.parent[p]: # walrus?
+      p = self.parent[p]
+    return p
+  def makeset(self):
+    x = len(self.parent) # right? 
+    self.parent.append(x)
+    return x
+  def set_size(self,n):
+    while len(self.parent) < n:
+      self.makeset()
+    return
+  def union(self,i,j):
+    i = self.find(i)
+    j = self.find(j)
+    self.parent[i] = j
+    return j
+
+
+import sqlite3
+uf = UF()
+conn = sqlite3.connect(":memory:")
+cur = conn.cursor()
+conn.create_function("_union", 2, lambda (x,y): uf.union(x,y))
+conn.create_function("_find", 1, lambda (x): uf.find(x))
+
+cur.execute("create table add(a,b, unique fd (a,b))")
+cur.execute("insert into add select _root(a), _root(b) from add on conflict fd update set rowid = union(rowid, excluded.rowid)") 
+cur.execute("insert into add select a,b from add as l, add as r where _root(l.rowid) = _root(r.rowid) ON CONFLICT ")
 
 
 ```
-
 
 ## Extraction as datalog
 ```souffle
@@ -291,6 +418,7 @@ tree(z, $Add(tx,ty)) :- tree(x,tx), tree(y,ty), add(x,y,z).
 .output tree(IO=stdout)
 
 ```
+
 
 
 # Misc
@@ -330,3 +458,16 @@ Best interior octagon? Usually get a bunch of feasible points and construct conv
 ## Propagators
 The whole database as a cell
 Each relation as a cell
+
+
+
+
+
+Context
+R(x+y)
+R may have arbtrary extent.
+During term rewrting, we can track it. In egraphs we can't (unless I build it there)
+
+```
+let rewrite ctx t = 
+```

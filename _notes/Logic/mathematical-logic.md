@@ -59,6 +59,8 @@ G |= x --> G |- x
 # Compactness
 Infinite families of sentences
 
+Propositional compactness
+
 # Consistency
 
 

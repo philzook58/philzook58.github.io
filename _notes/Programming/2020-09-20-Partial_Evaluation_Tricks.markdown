@@ -5,6 +5,7 @@ title: Partial Evaluation
 
 [staging a symbolic executor with algerbaic effects](https://dl.acm.org/doi/10.1145/3428232)
 [Zero-cost Effect Handlers by Staging](http://ps.informatik.uni-tuebingen.de/publications/schuster19zero.pdf)
+[Designing Efficient Systems with Multi-Stage Programmig...](https://www.youtube.com/watch?v=ojT8WHLQ3Ug&ab_channel=JetBrainsResearch) squid, conext types, path dependent types, 
 # Code Combinators
 The most obvious way of code generation is to just print the code you'd write by hand. You can build up combinators to do this for you instead of directly manipulating strings all over your codebase.
 

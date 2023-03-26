@@ -12,6 +12,13 @@ title: Databases
   - [Query Optimization](#query-optimization)
   - [The Chase](#the-chase)
 - [SQL](#sql)
+  - [Functional Programming](#functional-programming)
+  - [Term Rewriting](#term-rewriting)
+  - [CHR](#chr)
+  - [Graph Matching](#graph-matching)
+  - [Graph Rewriting](#graph-rewriting)
+  - [Datalog](#datalog)
+  - [Model Checking](#model-checking)
   - [indices](#indices)
   - [views](#views)
   - [triggers](#triggers)
@@ -138,6 +145,8 @@ Zetasql
 calcite
 
 [Inside the SQL Server Query Optimizer](https://www.amazon.com/Inside-SQL-Server-Query-Optimizer/dp/1906434603)
+
+[Building Query Compilers (2023, under construction)](https://pi3.informatik.uni-mannheim.de/~moer/querycompiler.pdf)
 ## The Chase
 Equality Generating Dependencies
 [The Chase Procedure and its Applications in Data Exchange](https://drops.dagstuhl.de/opus/volltexte/2013/4288/pdf/ch01-onet.pdf)
@@ -347,6 +356,151 @@ https://en.wikipedia.org/wiki/Materialized_view
 
 ```
 
+```sql
+create table foo(a);
+insert into foo values (1),(2),(3);
+
+-- ok not allowed in sqlite
+-- select * from foo as f, (select f.a) as b;
+
+-- ok this won't work either. returning in subqueries is not supported
+--create view rule1(a) as select 0 from (insert into foo select a + 1 from foo returning 0);
+--select * from rule1;
+```
+
+
+```python
+import psycopg2
+conn = psycopg2.connect()
+cur = conn.cursor()
+cur.execute("create temp table foo(a integer)")
+cur.execute("insert into foo values (1), (3)")
+cur.execute("""
+    create or replace procedure rule1() language sql    
+    as $$
+    insert into foo select a + 1 from foo;
+    $$
+""")
+cur.execute("CALL rule1()")
+cur.execute("select * from foo");
+print(cur.fetchall())
+```
+
+## Functional Programming
+https://github.com/dbuenzli/rel ocaml 
+[Sound and Efficient Language-Integrated Query Maintaining the ORDER](https://okmij.org/ftp/meta-programming/Sqr/sqr.pdf)
+[A SQL to C compiler in 500 lines of code](https://www.cambridge.org/core/journals/journal-of-functional-programming/article/sql-to-c-compiler-in-500-lines-of-code/C38B40C78B6A9C55232D4A850587FC64)
+[Finally, safely-extensible and efficient language-integrated query](https://dl.acm.org/doi/abs/10.1145/2847538.2847542)
+[A practical theory of language-integrated query](https://dl.acm.org/doi/10.1145/2544174.2500586)
+[
+The Script-Writer’s Dream: How to Write Great SQL in Your Own Language, and Be Sure It Will Succeed - Cooper](https://link.springer.com/chapter/10.1007/978-3-642-03793-1_3) http://www.ezrakilty.net/pubs/dbpl-sqlizability.pdf
+
+## Term Rewriting
+Table flatteing. Maybe stord procedures could do better?
+```python
+counter = 0
+def freshrow():
+  global counter
+  counter += 1
+  return "row" + str(counter)
+
+def foo(a):
+  def res():
+    (rid, froms, wheres) = a()
+    row = freshrow()
+    return (f"{row}.rowid",  [f"foo as {row}"] + froms, [f"{rid} = {row}.a"]+ wheres)
+  return res
+
+def x():
+  row = freshrow()
+  return (row + ".rowid" ,[f"x AS {row}"], [])
+
+def func(f):
+  def res(*args0):
+    def res1():
+      args = [arg() for arg in args0]
+      rids, froms, wheres = zip(*args)
+      froms = sum(froms,[])
+      wheres = sum(wheres, [])
+      print(rids,froms,wheres)
+      row = freshrow()
+      return (f"{row}.rowid",
+          [f"{f} as {row}"] + froms, 
+          [f"{rid} = {row}.arg{n}" for n,rid in enumerate(rids)] + wheres)
+    return res1
+  return res
+
+print(foo(foo(x))())
+
+import sqlite3
+conn = sqlite3.connect(":memory:")
+cur = conn.cursor()
+cur.execute("create table cons(a,b)")
+cur.execute("create table nil(a)")
+cur.execute("create table hd(a)")
+
+cons = func("cons")
+nil = lambda: ("'nil'", [], [])
+hd = func("hd")
+def lit(n):
+  def res():
+    return str(n), [], []
+  return res
+
+print(cons(lit(8), cons(lit(4),lit(6)))())
+```
+## CHR
+```sql
+CREATE TABLE left(a);
+CREATE TABLE right(a);
+CREATE TABLE backward(a);
+CREATE TABLE forward(a);
+
+INSERT INTO left VALUES (NULL);
+INSERT INTO right VALUES (NULL), (NULL);
+INSERT INTO backward VALUES (NULL), (NULL);
+INSERT INTO forward VALUES (NULL);
+
+select *, right.rowid from right;
+create table env(left,right, UNIQUE(left), UNIQUE (right)); -- Use CTE? But then multiple statements?
+-- INSERT INTO env SELECT left.rowid, right.rowid FROM left,right LIMIT 1; -- hmm we're overselecting. LIMIT BY 1? Yuck
+INSERT OR IGNORE INTO env SELECT left.rowid, right.rowid FROM left,right;
+-- only update timestamp if env is empty.
+-- we could push env into the metalayer. Slow? Also the uniqueness filtering.
+select * from env;
+
+-- do rhs here if there was one. 
+-- INSERT INTO rhs FROM env, left, right WHERE left.rowid = env.left AND right.rowid = env.right
+DELETE FROM left where left.rowid IN (select env.left from env);
+DELETE FROM right where right.rowid IN (select env.right from env);
+DELETE FROM env;
+select *, rowid from right;
+select *, rowid from left;
+
+```
+## Graph Matching
+
+## Graph Rewriting
+Graph matching is part of graph rewriting
+## Datalog
+See blog posts
+Recstep https://github.com/Hacker0912/RecStep http://www.vldb.org/pvldb/vol12/p695-fan.pdf
+## Model Checking
+First order model checking
+
+automata minimizaion
+```sql
+create table trans(s1 state, a action, s2 state);
+-- primary key (s1,a) for Deterministic
+create table accept(s1 state, flag bool);
+
+-- insert into  trans
+from trans as t1, trans as t2, accept where t1.
+
+
+
+```
+
 ## indices
 Building good indices can be important for good query performance.
 
@@ -446,6 +600,16 @@ Performance tips: WAL mode
 - `.indexes`
 - `.expert` suggests indices?
 
+```sql
+create table edge(a,b);
+insert into edge values (1,2), (2,3);
+create view path(a,b) as
+ select * from edge
+ union
+ select edge.a, path.b from edge, path where edge.b = path.a;
+
+select * from path; -- error, circularly defined.
+```
 
 # Duckdb
 https://duckdb.org/
@@ -538,6 +702,7 @@ catalog multiversion concrruncy control
 cimpressed execution binder
 
 # Postgres
+https://www.postgresql.org/docs/current/index.html The manual
 `sudo -u postgres psql`
 Very often you need to be the postgres user on the default install
 
@@ -548,8 +713,71 @@ help
 \c connect
 \dt look at tables
 
+create user philip;
+
+Had to make user mapping to postgres
+
+pip install psycopg2-binary
+
+`createdb toydb`
+
+```python
+import psycopg2
+conn = psycopg2.connect("dbname=toydb user=philip")
+# Open a cursor to perform database operations
+cur = conn.cursor()
+
+# Execute a query
+cur.execute("SELECT * FROM pg_tables")
+# Retrieve query results
+records = cur.fetchall()
+
+print(cur.execute("Create table foo(x integer)"))
+cur.execute("insert into foo values (1), (2)")
+
+cur.execute("insert into foo SELECT * FROM generate_series(7,10)") #https://www.postgresql.org/docs/current/functions-srf.html
+cur.execute("SELECT * FROM foo")
+print(cur.fetchall())
 
 
+```
+
+
+Postgres features
+- operators
+- functions
+- procedures
+- https://www.postgresql.org/docs/current/plpython.html plpython
+- inheritance in tavbles. Weird
+https://www.postgresql.org/docs/15/ecpg.html embedded sql. like a preprcoessor that makes it easy to write sql 
+statements in C
+- schema - like a bunch of tables?
+- parition tables declarations
+- Returning clauses enable reutrnng deleted or updated rows. ok sqlite has this too
+- table functions
+- lateral
+- distinct on
+- with are basically let expressions
+- enum types
+- domain types are type + a check
+- create sequence
+- subquert expressions : Any, All, In
+- set returning functinons `generate_series`
+- indexed - create unque indexes n expressions, partial indexes. that's a weird onde
+- https://www.postgresql.org/docs/15/non-durability.html non durable settings. ANALYZE
+Interesting constraint system.
+Foreign key
+Check constraints allow dynamic checks. Can involve multiple columns
+
+https://www.percona.com/blog/an-overview-of-sharding-in-postgresql-and-how-it-relates-to-mongodbs/ old way. make trigger and constraints to parttion table into pieces
+
+https://edu.postgrespro.com/postgresql_internals-14_en.pdf
+
+Locks - https://twitter.com/hnasr/status/1637496781033603073?s=20
+
+https://www.crunchydata.com/blog/topic/fun-with-sql
+
+`Truncate Table` is faster than delete if you are removing everything?
 # Relational AI
 https://www.youtube.com/watch?v=WRHy7M30mM4&ab_channel=CMUDatabaseGroup
 
@@ -764,6 +992,14 @@ https://github.com/tobymao/sqlglot/blob/main/posts/python_sql_engine.md https://
 - VLDB
 - HYTRADBOI https://www.hytradboi.com/ also very cool stuff.
 ## Misc
+
+- Database Design and Implementation by Edward Sciore, 2020
+
+
+
+- Architecture of a Database System, Hellerstein and Stonebraker (2007)
+https://dsf.berkeley.edu/papers/fntdb07-architecture.pdf
+
 [SQL/DB learning resources](https://twitter.com/craigkerstiens/status/1568269750693773313?s=20&t=Ed04dBodGtW0kFSYL76bNQ)
 
 [use the index luke](https://use-the-index-luke.com/)

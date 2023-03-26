@@ -4,17 +4,25 @@ title: Automated Theorem Proving
 ---
 
 - [TPTP](#tptp)
-    - [Systems](#systems)
+  - [Puzzles](#puzzles)
+  - [Math](#math)
+- [Systems](#systems)
   - [Vampire](#vampire)
-- [E prover](#e-prover)
-- [Prover9](#prover9)
-- [LeanTAP and ilk](#leantap-and-ilk)
-- [Datalog vs ATP](#datalog-vs-atp)
+  - [E prover](#e-prover)
+  - [Prover9](#prover9)
+  - [Otter](#otter)
+  - [LeanTAP and ilk](#leantap-and-ilk)
+  - [PyRes](#pyres)
+  - [Zipperposition](#zipperposition)
+  - [Datalog vs ATP](#datalog-vs-atp)
+- [Strategies](#strategies)
 - [Methodology](#methodology)
   - [Unification](#unification)
   - [Resolution](#resolution)
   - [Subsumption](#subsumption)
+  - [Narrowing](#narrowing)
   - [Paramodulation](#paramodulation)
+  - [Superposition](#superposition)
 - [Term Indexing](#term-indexing)
   - [Path Indexing](#path-indexing)
   - [Discrimination Trees](#discrimination-trees)
@@ -48,11 +56,34 @@ tff offers built in ints, which is cool.
 - DAT - datatypes
 
 
-### Systems
+Automated reasoning book
+- puzzles
+- circuit design (other sythesis problems?)
+- program verification
+
+Using for higher order or typed systems
+
+## Puzzles
+
+## Math
+
+Groups
+Lattices
+
+Categories
+Set theory
+Geometry
+
+
+
+
+
+# Systems
 - Vampire
 - E Prover https://wwwlehre.dhbw-stuttgart.de/~sschulz/E/E.html
 - Zipperposition
-
+- https://github.com/tammet/gkc on an in memory database
+  
 
 ## Vampire
 [First-Order Theorem Proving and VAMPIRE](https://publik.tuwien.ac.at/files/PubDat_225994.pdf)
@@ -219,7 +250,7 @@ fof(a,axiom,tutorial(probabilistic)).
 fof(a,conjecture,?[X]: (prover(X) & tutorial(X))).
 ```
 
-# E prover
+## E prover
 enormalizer is an interesting sounding program
 
 The e calculus is a bit puzzling. I haven't seen the analog for vampire
@@ -233,45 +264,94 @@ Early stopping conditions
 clause size
 
 
-# Prover9
+## Prover9
 [Prover9 and Mace4](https://www.cs.unm.edu/~mccune/prover9/)
 Prover9 is intriguing. It seems to have interaction modalities that other provers don't
 Mace
+## Otter
+https://www.cs.unm.edu/~mccune/otter/
+otter lambda - dumping lambda terms in otter? http://www.michaelbeeson.com/research/otter-lambda/
+Otter seemed to offer more control over the resolution process
 
-# LeanTAP and ilk
+## LeanTAP and ilk
 See prolog some
 [Build Your Own First-Order Prover](http://jens-otten.de/tutorial_cade19/)
 https://www.philipzucker.com/javascript-automated-proving/
 
+## PyRes
+- <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7324010/> Teaching Automated Theorem Proving by Example: PyRes 1.2
+## Zipperposition
 
-# Datalog vs ATP
+## Datalog vs ATP
 What makes an ATP that different from a datalog? Both are saturating. If I could limit of prune clauses of size > N, that might emulate a datalog. Or perhaps protect rule-rule resolution from happening.
 
+# Strategies
+Relationship to focusing http://web4.ensiie.fr/~guillaume.burel/download/LFAT.pdf
 
+-Set of Support - Only infer on clauses that trace provenance to user specified set of support.
 
+https://www.doc.ic.ac.uk/~kb/MACTHINGS/SLIDES/2013Notes/7LControl4up13.pdf
+The Predicate Ordering Syntactic Refinement - order predicates. Only resolve on lowest
+Locking Refinement - mark each literal in clause and resolve only on lowest one
+atom ordering
 
+- Resonance Strategy
+- Weighting
+- 
 # Methodology 
+Given clause 
+Discount loop
+
 ## Unification
+- see note on unification
 Two way matching.
 Is there a substitution for variables that solves an equation. Yes
 
 Anti-unification is an interesting topic. Generalization.
+
 ## Resolution
 Put clauses in cnf. Each clause is an `\/` of positive and negative atoms.
 Take two clauses that have matching (unifiable) positive and negative pieces 
 
-Hyperresolution
+Hyperresolution https://www.doc.ic.ac.uk/~kb/MACTHINGS/SLIDES/8LHyper4up.pdf You are seeking clauses of only positive literals. Only use a "nuecleii" if it covers all of the negative literals.
+
+UR-resolution - unit-resulting resolution. Only perform resultion if it results in nw unit literal (all other chunks line up). UR is essentially datalog stye resolution. It does however allow universals in the unit facts.
+
+
+SLD resolution is ATP view of prolog.
+
+Factoring
+
 
 ## Subsumption
 Cleaning out the database.
 
 given C(X) ,  C(a) is redundant (subsumed). You can remove it from clause database. A question is how to do this quickly. See Term indexing.
 
+https://www.doc.ic.ac.uk/~kb/MACTHINGS/SLIDES/2013Notes/6LSub4up13.pdf
+https://www.cs.cmu.edu/~fp/courses/99-atp/lectures/lecture20.html
+
+encoding subusmption to SAT
+https://fmcad.org/FMCAD22/presentations/08%20-%20SAT%20and%20SMT%202/01_rath.pdf
+## Narrowing
+
 ## Paramodulation
+paramodulation is unification based equational substitution
+
 https://math.stackexchange.com/questions/865562/a-simple-yet-non-superficial-explanation-of-what-paramodulation-means-in-the
 
 Paramodulation is dealing with equality pieces in clauses.
 http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.34.9958&rep=rep1&type=pdf
+
+Demodulation - rewrite rules basically? destructively simplify terms using them
+
+## Superposition
+https://en.wikipedia.org/wiki/Superposition_calculus
+
+[ntroduction to Superposition calculus - Cruanes](https://www.youtube.com/watch?v=zja691VwfSA&ab_channel=JetBrainsResearch)
+
+Term orderings - see term rewriting
+
 
 # Term Indexing
 [Triemaps that match](https://arxiv.org/pdf/2302.08775.pdf) SPJ and Graf https://www.youtube.com/watch?v=cT8G6FS2v94&ab_channel=Konfy
@@ -315,10 +395,21 @@ A depth first traversal of the whole term
 
 
 # Misc
+[Set of Support, Demodulation, Paramodulation: A Historical Perspective](https://link.springer.com/article/10.1007/s10817-022-09628-0)
+[pfenning book](https://www.cs.cmu.edu/~fp/courses/atp/handouts/atp.pdf)
+
+loveland book
+fitting book
+theorem proving in otter
+
+wos summary https://ininet.org/automated-reasoning-and-resolution.html
+
+http://wp.doc.ic.ac.uk/kb/teaching/ autmated reasoning course krysia 
+
 Set of Support
 prio
 
-- <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7324010/> Teaching Automated Theorem Proving by Example: PyRes 1.2
+
 - <https://logictools.org/> neat online ATP interface
 - TPTP
 

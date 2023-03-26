@@ -91,6 +91,8 @@ https://discuss.ocaml.org/t/writing-type-inference-algorithms-in-ocaml/8191
 [How OCaml type checker works -- or what polymorphism and garbage collection have in common](https://okmij.org/ftp/ML/generalization.html)
 [The Simple Essence of Algebraic Subtyping: Principal Type Inference with Subtyping Made Easy](https://infoscience.epfl.ch/record/278576)
 ## Bidirectional Typing
+[Bidirectional Type Checking - jetbrains](https://www.youtube.com/watch?v=BL-OXeTtw1g&ab_channel=JetBrainsResearch)
+
 
 mckinna mcbride gundry. tye inferencei n context
 https://adam.gundry.co.uk/pub/type-inference-in-context/#:~:text=We%20consider%20the%20problems%20of,for%20implementing%20type%20inference%20algorithms.

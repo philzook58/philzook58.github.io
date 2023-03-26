@@ -63,6 +63,7 @@ wordpress_id: 1865
       - [EGraphs](#egraphs)
       - [Semi naive?](#semi-naive)
     - [Embedding into CHR](#embedding-into-chr)
+    - [SQL](#sql)
   - [Answer Set Programming s(CASP)](#answer-set-programming-scasp)
   - [Extralogical features](#extralogical-features)
     - [Database manipulation](#database-manipulation)
@@ -673,7 +674,10 @@ clause_([X | Xs],Ys, [X | Zs]), [append(Xs, Ys, Zs)]).
 mi(P,S,pi(X, Body)) :- gensym(fvar, Y), X = fvar(Y), mi(P, [X|S], Body). % could use numbering.
 mi(P,S,D => G) :- mi([D|P],S,G).
 mi(P,S,sigma(X,G)) :- mi(P,S,G), forall( subterm(X,fvar(Y)), member(fvar(Y),S)  ) 
-mi(P,S,+G) :-
+mi(P,S,+G) :- copy_term(E,P,E1,P1), do_goal(P,S,P1, G) % no this copy term isn't right. copy term hurts. Ah copy_term/4
+
+do_goal(P,S, [G :- B|Gs], G) :- mi(P,S,B).
+do_goal(P,S, [_|Gs], G) :- do_goal(P,S,Gs,G).
 
 ```
 
@@ -746,7 +750,202 @@ Naw, why even seaprate out the args? Maybe better indexing, but screw it for now
 assert_chr(foo(Args)).
 I might be building a prolog (meta?) interpreter in chr.
 
+locally nameless encoding of exists. do opening with X. no copy_term of program clauses.
+```
+open(evar(N),N,X,X).
+open(evar(M),N,X,evar(M)) :- dif(N,M).
 
+close(). Hmm. Maybe we never need to close.
+
+mi(S, P, all(B)) :- gensym(X), open(B,0,fvar(X), B1), mi([fvar(X)|S], P, B1).
+mi(S, P, ex(B)) :- open(B,0,X,B1), mi(S,P,B1), extrude_check(S,X).
+mi(S, P, D => G) :- mi(S,[D|P], G).
+mi(S, P, +G) :- 
+mi(S, P, +G) :- call(G). %native call
+
+% de bruijn the named rep. This is close I guess.
+bruijn(T,T1) :- number_var(T, T2), bruijn([], T2,T1)
+bruijn(Vars, var(N), var(I)) :- index(Vars, N, I).
+bruijn(Vars, ex(X,B), ex(T1)) :- bruijn([X|Vars], B, T1). 
+
+mi(Sig, Env, Prog, all(B)) :- gensym(X), mi([X | Sig], [X | Env], Prog, B).
+% if I distinguish avar(N) from evar(N), Sig is already an Env
+
+mi(Sig, Env, Prog, var(N)) :- lookup(N,Env,V). % and V goes where?
+mi(Sig, Env, Prog, +G ) :- subst(G,Env,Sig).
+
+% do subsitution lazily instead of eagerly.
+
+
+```
+normalization by evaluation.
+Hmm. What if I did use the lambda library
+https://www.swi-prolog.org/pldoc/man?section=yall
+
+```
+all(L) :- gensym(X), call(L, fvar(X)).
+ex(L) :- call(L, Y), extrude_check(Y).
+impl(D,G) :-  call(asserta(D), G) -> retract(D) ; retract(D), fail. 
+% ok but asserta loses track of current unification variables.
+% also problem if G produces multiple answers?
+% label_vars(D,D1). asserta(D :- subst(D1, )
+% pack it, then unpack it on other side.
+% number_vars, term_variables
+% https://www.cs.cmu.edu/~fp/papers/ilps91.pdf mentions the assert retract encoding. Mentions that variables are nasty.
+```
+
+
+```prolog
+right(_,_,true).
+right(S,P,and(B1,B2)) :- right(S,P,B1), right(S,P,B2).
+right(S,P,or(B1,_B2)) :- right(S,P,B1).
+right(S,P,or(_B1,B2)) :- right(S,P,B2).
+right(S,P,impl(B1,B2)) :- right(S,[B1|P], B2).
+right(S,P,ex(_X,B)) :- right(S,P,B). % maybe
+right(S,P,all(X,B)) :- gensym(X), right([X|S],P,B). % maybe
+right(S,P,+A) :- member(D,P), left(S,P,D,A). %decide
+
+% alternate name: clause deonstruct, focused.
+left(_,_,A,A).
+left(S,P,impl(G,D), A) :- left(S,P,D,A), right(S,P,G).
+left(S,P,and(D1,_D2), A) :- left(S,P,D1,A).
+left(S,P,and(_D1,D2), A) :- left(S,P,D2,A).
+left(S,P,all(_X,D), A) :- left(S,P,D,A). % maybe
+
+
+
+```
+Before unify throw signal (attrbuted var).
+WHy this is wrong:
+Generally, trying to use the wrong kind of variable is a road strife with peril.
+- When we use P, we destroy the universal quantifications within. If we copy, we destroy the connection to the existential variables. This is also one of the problems of using `asserta`. `copy_term` allows you to add variables to be renamed, but not the ones to be shared. This is the opposite of he behavior we want
+
+It is somewhat natural to expect that lambda terms might be useful. https://www.swi-prolog.org/pldoc/man?section=yall 
+https://www.swi-prolog.org/pack/list?p=lambda
+https://swi-prolog.discourse.group/t/yall-lambda-arguments-visibility/5112/2 This example is evidence that the implementation of yall may not scope as lambdas should.
+
+Let us go under the (quite possibly faulty) assumption that the story on lambdas is clear in prolog.
+One can manually lambda lift, defunctionalize, closure convert if you want to.
+
+
+Lambda's in `yall` only produce goals, so far as I can tell. So if you want them to produce terms, that needs to come in as another paramter by convention. This feels a bit like continuation passing or output parameter passing.
+
+```prolog
+:- use_module(library(yall)).
+:- use_module(library(apply)).
+:- use_module(library(apply_macros)).
+
+right(_,_,_,true).
+right(S,P,E,and(B1,B2)) :- right(S,P,E,B1), right(S,P,E,B2).
+right(S,P,E,or(B1,_B2)) :- right(S,P,E,B1).
+right(S,P,E,or(_B1,B2)) :- right(S,P,E,B2).
+right(S,P,E,impl(B1,B2)) :- right(S,[B1|P], E,B2).
+right(S,P,E,ex(L)) :- call(L,X,G), right(S,P,[X|E],G).
+right(S,P,E,all(L)) :- gensym(X), call(L,X,G), right([X|S],P,E,G).
+right(S,P,E,+A) :- member(D,P),  left(S,P,D,A). %decide
+
+% alternate name: clause deonstruct, focused.
+left(_,_,A,A).
+left(S,P,impl(G,D), A) :- left(S,P,D,A), right(S,P,G).
+left(S,P,and(D1,_D2), A) :- left(S,P,D1,A).
+left(S,P,and(_D1,D2), A) :- left(S,P,D2,A).
+left(S,P,all(L), A) :- call(L,X,D), left(S,P,D,A). % maybe
+
+```
+
+We could also implement scoping the usual way, not trying to pull a fast one by reusing prolog mechanisms.
+de bruijn indices or locally nameless
+This brings it's own peril. We are treated prolog as a functional or imperative language here.
+Oleg has an example where he uses pure constructs.
+If we want to make this generic
+[ndexing dif/2](https://arxiv.org/pdf/1607.01590.pdf)
+```prolog
+:- use_module(library(reif)).
+:- use_module(library(terms)).
+:- use_module(library(clpfd)).
+:- initialization(main,main).
+open_(X,N,T,T1) :- if_(T = lam(B), 
+                      (N1 #= N + 1, T1=lam(T2), open_(X,N1,B, T2)) ,
+                   if_( T = var(N), 
+                       T1 = X,
+                   mapargs(open_(X,N), T, T1) % https://www.swi-prolog.org/pldoc/doc_for?object=mapargs/3
+                   )).
+%close() maybe unecesaary?
+main(_) :- writeln(hi), open_(a, 0, lam(var(1)), T), writeln(T).
+
+```
+
+We don't need to open persay, since we mostly/entirely just need evaluation?
+It's the same as open except doing it eagerly vs lazily / batching the traversal.
+```prolog
+right(T1 = T2) --> {unify(T1,T2)}.
+eval(S,E,evar(N), V) :- lookup(E,N,V).
+eval(S,E,avar(N), V) :- lookup(S,N,V).
+eval(S, E, F, R) :- 
+unify(S,E,T1,T2) :-
+unify(S,E,apply(F,Args), )
+
+% hmm. keeeping E and S vars on same stack is useful because that says what is in scope
+
+```
+
+We still have a scope extrusion check.
+An exmample:
+????
+Existentials should really be being filled in with terms that exist at the time that binder is being opened. The unfication variable is a standin, delaying picking a term so that we can deduce at it should have been, but it is not protected from unifying with forall quantified variables that didn't exist at the time of it's creation. These would not have been legitimate concrete terms
+
+By analogy with the occurs_check, we might choose to just not worry about this and hope for some kind of systems magic flag to come along later.
+Attributed variables might also enable pushing unifiation
+The interpreter could also insist on treating `=` specially. It is difficult to avoid accidentally using native prolog unfication both in the interpreter, but also in the interpretted programs.
+
+```
+term_lam(X \ B) :- [G|X] \ (G = B). % does this make sense? Fishy. term_lam = \\ notation
+
+```
+
+So a natural question is how can we make this interpreter shallower? We are reusing prolog's search mechanisms and unification mechanisms. So that's nice.
+
+Implication is sticky though. One might be tempted to use `asserta` which make dynamic databases. Naive use of this is not right
+- asserta considers all unification variables to be universals. It breaks the correlation of the program database with the goal
+- retracting the implication once you leave the scope of it is tricky. Yes `retract` exists. But it is not clear to me
+
+assert and retract are manipulating a global database store. This is a leaky abstraction and somewhat doomed to failure IMO. Imagine trying to implement function calls using a global memory. Ok I guess you could do it by maintaining your own stack.
+
+By analogy with file handles, we may think some kind of bracketing expression may help. `setup_call_cleanup(asserta(D), G, retract(D))` <https://www.swi-prolog.org/pldoc/doc_for?object=setup_call_cleanup/3> No. This doesn't retract at the right point. The search may exit the implication but then return to it on backtracking. This doesn't retract until G won't be called anymore.
+
+Ok, well perhaps we never call retract, but instead key on an identifier of what branch we are in.
+And to deal with the sharing problem, we could replace all E vars in the program clause with keys that access them from a store.
+It really feels like we're plugging up hole after hole on a leaky ship.
+
+
+DCGs can be used to clean up the state carrying a bit, since so may rules do not involve state.
+https://www.swi-prolog.org/pack/list?p=edcg
+https://www.metalevel.at/prolog/dcg
+
+```prolog
+:- use_module(library(yall)).
+:- use_module(library(apply)).
+:- use_module(library(apply_macros)).
+
+right(true).
+right(and(B1,B2)) --> right(B1), right(B2).
+right(or(B1,_B2)) --> right(B1).
+right(or(_B1,B2)) --> right(B2).
+right(impl(B1,B2)), [s(_,_,P)] --> [s(_,_,[B1|P])], right(B2).
+right(ex(L)), [s(_,E,_)] --> [s(_,[X|E],_)], {call(L,X,G)}, right(S,P,[X|E],G).
+right(all(L)), [s(S,_,_)] --> [s([X|S],_,_)], {gensym(X), call(L,X,G)}, right([X|S],P,E,G).
+right(+A) --> member(D,P), left(D,A). %decide
+
+left(A,A).
+left(impl(G,D), A) --> left(D,A), right(G).
+left(and(D1,_D2), A) --> left(D1,A).
+left(and(_D1,D2), A) --> left(D2,A).
+left(all(L), A) --> {call(L,X,D)}, left(D,A).
+
+```
+
+Higher order unification is a separate issue. If we are already overloading unification, it is probably not that hard to treat.
+Miller pattern unification is a subcase of higher order unification that is easy. The idea is to restrict higher order unification to it's bones. 
 
 ## Delimitted Continuations
 Continuations are a reification of a call stack. The call stack in prolog is a goal stack.
@@ -755,16 +954,20 @@ When you
 [swipl manual entry](https://www.swi-prolog.org/pldoc/man?section=delcont)
 [schrivers et al](https://www.swi-prolog.org/download/publications/iclp2013.pdf)
 [disjunctive delimited control](https://arxiv.org/pdf/2108.02972.pdf)
-
+[Tabling as a Library with Delimited Control](https://biblio.ugent.be/publication/6880648/file/6885145.pdf) https://arxiv.org/pdf/1507.08087.pdf
+[intercept library](https://www.swi-prolog.org/pldoc/man?section=intercept)preferred because it plays nicer with cuts and things. I don't even understand what the difference is in contract between this and reset/shift.
 
 - effect handlers - implicit state
 - definite clause grammars
 - coroutines
 
+[DCGs implemented with delimited continuations](https://swi-prolog.discourse.group/t/dcgs-implemented-with-delimited-continuations/1921)
+[Conitnuations in prolog](https://occasionallycogent.com/continuations_in_prolog/index.html)
+[exmaple usage in prolog](https://github.com/kamahen/nerdle/blob/main/cw631.pl)
 ## Tabling
 Tabling is a kind of auto-memoization. It can make queries terminate that no longer did, and the caching can speed others up.
 
-[Tabling as a Library with Delimited Control](https://biblio.ugent.be/publication/6880648/file/6885145.pdf)
+[Tabling as a Library with Delimited Control](https://biblio.ugent.be/publication/6880648/file/6885145.pdf) https://arxiv.org/pdf/1507.08087.pdf
 [Swi prolog manual](https://www.swi-prolog.org/pldoc/man?section=tabling)
 [Programming in Tabled Prolog - Warren](https://www3.cs.stonybrook.edu/~warren/xsbbook/book.html)
 [Tabling as Concurrent Machines](https://www3.cs.stonybrook.edu/~warren/xsbbook/node15.html)
@@ -1349,11 +1552,9 @@ http://www.informatik.uni-ulm.de/pm/fileadmin/pm/home/fruehwirth/constraint-hand
 https://github.com/brog45/chrplay
 
 
-compiler to sql statements. Makes sense.
 Multiset rewriting?
 
-[sql](https://github.com/awto/chr2sql)
-Man what hope is there of compiling a 7 year old haskell project?
+
 
 [cchr](https://github.com/nickmain/cchr) efficient implementation in C
 
@@ -1883,6 +2084,90 @@ egraph + clp(R) + clp(FD) + clp(B). How far from SMT is that?
 - Petri nets
 
 GAMMA general abstract mnodel for multiset manipulation
+
+### SQL
+[sql](https://github.com/awto/chr2sql)
+Man what hope is there of compiling a 7 year old haskell project?
+compiler to sql statements. Makes sense.
+
+```prolog
+:- chr_constraint left/0, right/0, forward/0, backward/0.
+
+left,right  <=> true.
+forward, backward <=> true.
+
+:- initialization(main,main).
+main(_) :- forward, left, right, backward, left, chr_show_store(true).
+```
+```sql
+CREATE TABLE left(a);
+CREATE TABLE right(a);
+CREATE TABLE backward(a);
+CREATE TABLE forward(a);
+
+INSERT INTO left VALUES (NULL);
+INSERT INTO right VALUES (NULL), (NULL);
+INSERT INTO backward VALUES (NULL), (NULL);
+INSERT INTO forward VALUES (NULL);
+
+select *, right.rowid from right;
+create table env(left,right, UNIQUE(left), UNIQUE (right)); -- Use CTE? But then multiple statements?
+-- INSERT INTO env SELECT left.rowid, right.rowid FROM left,right LIMIT 1; -- hmm we're overselecting. LIMIT BY 1? Yuck
+INSERT OR IGNORE INTO env SELECT left.rowid, right.rowid FROM left,right;
+-- only update timestamp if env is empty.
+-- we could push env into the metalayer. Slow? Also the uniqueness filtering.
+select * from env;
+
+-- do rhs here if there was one. 
+-- INSERT INTO rhs FROM env, left, right WHERE left.rowid = env.left AND right.rowid = env.right
+DELETE FROM left where left.rowid IN (select env.left from env);
+DELETE FROM right where right.rowid IN (select env.right from env);
+DELETE FROM env;
+select *, rowid from right;
+select *, rowid from left;
+
+```
+
+Compred with datalog, sql multiset semantics is good match.
+Hmm. Can't make nullary tables?
+
+Hmm. The semantics of CHR are a problem. It seems unlikely I can do bulk matching. I'd have to just take the first match. That's putting a lot of control flow in the metalayer / not amoriziting well over sql statements.
+
+ooh, what about env(left,right, UNIQUE left, UNIQUE right). Yes. This seems safe enough and yet bulk. Nice.
+
+I can compromise on the sequential nature of chr, but th resource matching feels important.
+Explicit multiset semantics with a count field? That's a bummer. Feels complicated. ON CONFLICT UPDATE
+left -> 1, right -> 2 ---> left --> left -> 1 - min(1,2)), right -> 2 - min(1,2)
+Naw, not even this fixes it.
+The limit by 1 might be the best solution.
+
+The issue here that really requires an env is that we have multi-headed rules.
+
+```python
+left = {None : 1} # multisets as maps to integers
+right = {None : 2}
+
+for l, n in left.items():
+  if n > 0:
+    for r, m in right.items():
+      if m > 0:
+        if l == r:
+          left[l] -= min(n,m)
+          right[r] -= min(n,m) # Is this mutation ok?
+          #break or double break?
+print(left)
+print(right)
+
+# list as multiset
+left = [(,)]
+right = [(,), (,)]
+
+# mutating the collecton while iterating over it is irritating again
+```
+
+If my advice is to just use SWI for CHR, why is tabled SWI not my advice for datalog. No. That _is_ reasonable advice probably.
+Not unless you're doing something weird
+
 
 ## Answer Set Programming s(CASP)
 https://swish.swi-prolog.org/example/scasp.swinb

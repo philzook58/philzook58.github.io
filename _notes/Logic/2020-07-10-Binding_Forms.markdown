@@ -9,6 +9,18 @@ slug: Binding Forms
 title: Binding Forms
 wordpress_id: 2837
 ---
+de bruijn as summarization of eval/zipper context
+
+Weirdo maude mixed de bruijn and named. Structured identifiers `'x', 1` or both a name and de bruijn. You only need to lift when you cross a name clash.
+
+The rapier https://www.microsoft.com/en-us/research/wp-content/uploads/2002/07/inline.pdf
+[The Foil: Capture-Avoiding Substitution With No Sharp Edges](https://arxiv.org/abs/2210.04729)
+Named rep. Maintain overapproximation of possible variables in scope, can be aware of possible clashes. YOu traverse introductions as you go into terms.
+
+https://github.com/sweirich/lambda-n-ways
+[Stephanie Weirich - How to Implement the Lambda Calculus, Quickly](https://www.youtube.com/watch?v=uhGqJ1A_PRE&ab_channel=Konfy)
+
+See macros: set of scopes.
 
 [nbe in java 19](https://github.com/ekmett/nbe-in-java-19)
 

@@ -14,6 +14,7 @@ title: Datalog
     - [SQL recursive common table subexpressions](#sql-recursive-common-table-subexpressions)
     - [Naive SQL translation](#naive-sql-translation)
       - [Seminaive](#seminaive)
+      - [Lattices](#lattices)
     - [Ocaml](#ocaml)
       - [Naive](#naive-1)
     - [Rust](#rust)
@@ -107,13 +108,13 @@ title: Datalog
   - [Provenance](#provenance)
   - [Semi Naive Evaluation](#semi-naive-evaluation)
   - [Algebraic Data Types](#algebraic-data-types)
-  - [Lattices](#lattices)
+  - [Lattices](#lattices-1)
   - [Subsumption](#subsumption)
     - [Subsumption as a master feature](#subsumption-as-a-master-feature)
       - [Provenance](#provenance-1)
       - [max min](#max-min)
   - [Recurusive Sum and Count](#recurusive-sum-and-count)
-      - [Lattices](#lattices-1)
+      - [Lattices](#lattices-2)
         - [Min/max lattice](#minmax-lattice)
         - [Maybe/Option lattice](#maybeoption-lattice)
         - [Intervals](#intervals)
@@ -392,6 +393,8 @@ SELECT a,b FROM path;
 ```
 
 ### Naive SQL translation
+<https://www.philipzucker.com/tiny-sqlite-datalog/>
+
 Ok, so recursive common table subexpressons are wacky. Also they don't really support all forms of recursion.
 There is a way to translate a single application of a rule to a SQL statement.
 
@@ -556,6 +559,22 @@ Langston pointed out that metadata could be stored in a different table that you
 Retaining the timestamp _sequence_ is a form of lightweight provenance. It tells you exactly which tuples were derived using this rule.
 
 For every iteration, there are 3 timestamps at play. The last time the rule was run, the timestamp of the db before the rule, and the timestamp after the rule.
+
+#### Lattices
+Store either nullable lattice value at end
+Or in separate table. Every rule needs to deal with lattice value? That's annoying.
+```sql
+create table edge(a,b,w, unique (a,b));
+create table path(a,b,w, unique (a,b));
+
+INSERT INTO edge values (1,2,1), (2,3,1), (3,1,1);
+INSERT INTO path select * from edge;
+
+INSERT INTO path select (edge.a, path.b, edge.w + path.w) from edge,path where edge.b = path.a 
+ON CONFLICT UPDATE SET w = min(w, excluded.w); -- https://www.sqlite.org/lang_UPSERT.html
+
+```
+
 
 ### Ocaml
 #### Naive

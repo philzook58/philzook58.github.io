@@ -279,6 +279,18 @@ You can make variables that are true in particular worlds. A version I saw was c
 ## Compiler problems
 
 
+```python
+import clingo
+
+def Var(x):
+  
+def Add(e1,e2):
+
+def Set(v, e):
+
+
+
+```
 
 
 ```clingo

@@ -223,6 +223,8 @@ A more general notion and precise notion may be finding homomorphisms between . 
 
 [finite model theory notes dan suciu](https://courses.cs.washington.edu/courses/cse599c/18sp/lectures/unit3-handout.pdf)
 ## Finite Model Theory
+https://homepages.inf.ed.ac.uk/libkin/fmt/fmt.pdf finite model theory book
+
 https://courses.cs.washington.edu/courses/cse599c/18sp/calendar/lecturelist.html
 Finite model theory is actually interesting.
 Finite models are those for which Z3 can return results even in the prescence of quantifiers.

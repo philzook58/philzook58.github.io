@@ -30,6 +30,8 @@ See also notes on:
 - Operating Systems
 
 # Memory Models
+[Weak Memory Models 101](https://www.youtube.com/watch?v=bacvkX_Hyqs&ab_channel=JetBrainsResearch)
+
 What's the point?
 There is a mismatch between both
 1. High level languages (C/Java/Ocaml) and assembly

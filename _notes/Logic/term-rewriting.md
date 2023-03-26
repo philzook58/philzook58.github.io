@@ -7,6 +7,7 @@ title: Term Rewriting
 - [Completion](#completion)
 - [Term Orderings](#term-orderings)
 - [Termination](#termination)
+- [Implementation](#implementation)
 - [Higher order rewriting](#higher-order-rewriting)
 - [Egraph](#egraph)
 - [String rewriting systems](#string-rewriting-systems)
@@ -105,6 +106,18 @@ http://cime.lri.fr/ cime
 
 
 # Term Orderings
+
+rewrite ordering
+reduction ordering
+
+Interpretations
+f(x) -> a + x
+a counts occurrances of f basically
+f(f(f(X))) = 3a + x
+
+
+Simplification orderings
+homomorphism
 
 KBO
 RPO
@@ -218,6 +231,10 @@ Ok. Some things. My concern about nonlinearity for multiply composed functions. 
 
 sum(n, acc) -> sum(n - 1, acc+n)
 
+# Implementation
+[Terms for Efficient Proof Checking and Parsing](https://www.youtube.com/watch?v=SdB2hVIZ2nI&ab_channel=ACMSIGPLAN)
+Two different types for terms that are expected to live different amounts of time. Differ only in rust pointer type. short terms have borrowed reference to long terms. Kontroli
+
 # Higher order rewriting
 
 # Egraph
@@ -271,11 +288,36 @@ def naive_completion(rules):
     for (lhs,rhs) in old_rules:
         a = run_rules(lhs, rules)
         b = run_rules(rhs, rules)
+        if a == b:
+          break
         if a < b:
           rules.add((b,a))
         if a > b:
           rules.add((a,b))
   return rules
+
+# an incomplete reduction routine?
+# Triangular rewrite rules in some sense.
+# Is this right at all? This is like a chunk of Huet's. I think just moving R -> E might be ok even if not one of listed rules. No, if I could do that ths move + simplfy would give me a more powerful R-simplify.
+# I might be weakening my rules. That's not so bad imo.
+def reduce_rules(E):  
+  # worklist style
+  R = set()
+  # Sort E so smallest last probably. Most reduction power.
+  E = sorted(E, key=lambda k: len(k[0]), reverse=True)
+  while len(E) > 0:
+    (a,b) = E.pop()
+    a = run_rules(a, R) # simplify
+    b = run_rules(b, R)
+    print(a,b)
+    if a == b: #delete
+      continue
+    if (len(b), b) > (len(a), a): # len then lex ordering
+      R.add((b,a))
+    if (len(a), a) > (len(b), b):
+      R.add((a,b))
+  return R
+
 
 
 rules = {
@@ -293,6 +335,7 @@ rules = [
 
 print(run_rules("ffffffffffffa", rules))
 
+print(reduce_rules(rules))
 
 rules = [
   ("12+", "21+"), # an application of comm
@@ -300,6 +343,44 @@ rules = [
 ]
 # I am really going to want a notion of indirection or compression here.
 # Intern strings
+
+class RPN():
+  def __init__(self, s):
+    self.s = str(s)
+  def __add__(self,b):
+    return RPN(self.s + b.s + "+")
+  def __repr__(self):
+    return self.s
+
+b0 = RPN(0)
+b1 = RPN(1)
+b2 = RPN(2)
+b3 = RPN(3)
+
+
+E = [
+  (b1 + b0, b0 + b1),
+  (b0 + b1, b1),
+  (b1 + b2, b3),
+  (b2, b1 + b1) 
+]
+E = [
+  ("10+", "01+"),
+  ("01+", "1"),
+  ("12+", "3"),
+  ("2", "11+"),
+  ("00+", "0"),
+  ("00+1+1+1+", "3"),
+]
+
+print(reduce_rules(E))
+E = reduce_rules(E)
+print(run_rules("00+1+0+1+0+2+",E))
+
+E = [( str(i) + str(j) + "+" , str(i + j)) for i in range(4) for j in range(10) if i + j <= 9]
+print(E)
+print(reduce_rules(E))
+print(run_rules("00+1+0+1+0+2+",E))
 
 ```
 Ropes
@@ -353,6 +434,9 @@ def reduce_rules(rules): # a very simple reduction, reducing rhs, and removing d
   #reduce_rules
 ```
 Building a suffix tree might be a good way to find critical pairs.
+
+Lempel Ziv / Lzw is the analog of hash consing? Some kind of string compression is. That's fun.
+
 
 http://haskellformaths.blogspot.com/2010/05/string-rewriting-and-knuth-bendix.html
 
@@ -853,23 +937,27 @@ test_mod = """
 
 test_mod = """
   fmod CATEGORY is
-    sort Ob Morph .
-    //subsort Morph < Morph? .
-    op comp : Morph Morph ~> Morph .
+    sort Ob Morph Morph? TYPE .
+    subsort Morph < Morph? .
+    op comp : Morph? Morph? -> Morph? . *** [assoc]
     op id : Ob -> Morph .
-    vars f g h .
-    vars a b c .
-    eq comp(comp(f,g), h) = comp(f, comp(g, h)) .
+    ops cod dom : Morph -> Ob .
+    op hom : Ob Ob -> TYPE .
+    op typ : Morph -> TYPE . 
+    vars f g h : Morph .
+    vars a b c : Ob .
+    *** eq comp(comp(f,g), h) = comp(f, comp(g, h)) . 
     eq comp(id(a),f) = f .
     eq comp(f, id(a)) = f .
-    cmb comp(f,g) : Morph if type(f) = hom(A,B) /\ type(g) = hom(B,C) .
+    cmb comp(f,g) : Morph if hom(a,b) := typ(f) /\ hom(b,c) := typ(g)  . 
+    *** cmb comp(f,g) : Morph if dom(f) = cod(g) .
 
   endfm"""
 maude.init()
 maude.input(test_mod)
 mod = maude.getModule('CATEGORY')
 
-t = mod.parseTerm("id(a)")
+t = mod.parseTerm("comp(id(a),comp(id(a), id(a)))")
 print(t.reduce())
 print(t)
 
@@ -878,7 +966,7 @@ print(t)
 "matching equations" are multipatterns rather than guards
 
 
-
+ 
 ## K
 <https://dl.acm.org/doi/pdf/10.1145/3314221.3314601> instruction semantics for x86 in K
 https://kframework.org/index.html

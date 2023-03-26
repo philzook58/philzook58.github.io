@@ -30,6 +30,13 @@ Context free means the rules only have raw non terminals on left hand side
 
 https://en.wikipedia.org/wiki/Linear_grammar
 
+Context Sensitive Grammars
+Gneral 
+
+Lambek Grammars
+
+
+
 ## Algorithms
 [List of algorithms - parsing](https://en.wikipedia.org/wiki/List_of_algorithms#Parsing)
 Recursive Descent
@@ -54,6 +61,10 @@ Memoizing parser combinators
 tabling
 
 [Hammer](https://github.com/abiggerhammer/hammer) binary format parser combinators in C
+
+## Parsing as Deduction
+
+
 ## Parser Generators
 
 
@@ -74,6 +85,56 @@ menhir offers a coq mode?
 
 [Generating LR syntax error messages from examples](https://dl.acm.org/doi/10.1145/937563.937566)
 
+Parser generators as "compiler-compilers". It's easier for me to see them as intepreter generators.
+
+Parser generator as 
+```python
+import logging
+from lark import Lark, logger, Transformer
+
+logger.setLevel(logging.WARN)
+grammar = '''
+expr : 
+      | "0" "+" expr -> zero_left
+      | NUMBER -> number
+      | expr "+" expr -> add
+      | "("  expr ")"
+
+%import common.WS
+%ignore WS
+%import common.NUMBER
+'''
+grammar = '''
+expr : 
+      | "0" expr "+" -> zero_left
+      | NUMBER -> number
+      | expr expr "+" -> add
+
+%import common.WS
+%ignore WS
+%import common.NUMBER
+'''
+
+class Simple(Transformer):
+   def number(self,n):
+      (n,) = n
+      return n
+   def add(self,args):
+      (x,y) = args
+      return f"{x}+{y}"
+   def zero_left(self,x):
+      (x,) = x
+      return x
+
+parser = Lark(grammar, start="expr", parser="lalr", transformer=Simple())
+#print(parser.parse("1 + 0 + 2 + 0 + 3 + 4 + 2 + 0 + 1"))
+print(parser.parse("0 1 + 2 + 0 + 3 + 4 + 0 + 1 +"))
+#parser = Lark(grammar, start="expr")
+#print(Simple().transform(parser.parse("1 + 0 + 2 + 0 + 3 + 4 + 0 + 1 + 0")))
+
+
+
+```
 ## Shift Reduce Parsing
 See Appell's book
 <https://en.wikipedia.org/wiki/Shift-reduce_parser>
@@ -102,9 +163,49 @@ souffle tree-sitter
 
 
 
+
 # Sexp
 
 S-expressions are a good example. They are kind of the core simple parse, easy enough to do basic ones by hand.
+
+[Sweet expressions](https://readable.sourceforge.io/)
+
+ https://lark-parser.readthedocs.io/en/latest/json_tutorial.html
+```python
+from lark import Lark, Transformer
+grammar = 
+   """
+    exp:  "(" "+" exp*  ")" -> add
+         | SIGNED_NUMBER    -> lit
+
+    %import common.ESCAPED_STRING
+    %import common.SIGNED_NUMBER
+    %import common.WS
+    %ignore WS
+   """
+
+exp_parser = Lark(grammar, start='exp')
+e = exp_parser.parse("(+ (+ 1 2) 3)")
+print(e.pretty())
+
+
+class Calc(Transformer):
+   def add(self,args):
+      print(args)
+      return sum(args)
+   def lit(self,n):
+      (n,) = n
+      return float(n)
+
+print(Calc().transform(e))
+print(e)
+# immediate transformation with no tree
+exp_parser = Lark(grammar, start='exp', parser='lalr', transformer=Calc())
+print(exp_parser.parse("(+ 2 3)"))
+```
+
+
+
 
 ```python
 test = """ (hi there 
@@ -285,3 +386,5 @@ fragment DIGIT
 
 
 [awesome binary parsing](https://github.com/dloss/binary-parsing)
+
+[permutation parsing](https://recursion.ninja/blog/perm-parser) https://www.cambridge.org/core/journals/journal-of-functional-programming/article/functional-pearl-parsing-permutation-phrases/DB7B6AFE506CF84BBDBBF54306F28D38

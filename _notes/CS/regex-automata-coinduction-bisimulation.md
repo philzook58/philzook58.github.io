@@ -11,6 +11,7 @@ title: Automata, Regex, Coinduction, Bisimulation
 - [Automata](#automata)
   - [Finite Automata](#finite-automata)
   - [Tree Automata](#tree-automata)
+  - [pushdown automata](#pushdown-automata)
   - [Probablistic automata](#probablistic-automata)
   - [Other](#other)
     - [nominal automata](#nominal-automata)
@@ -18,6 +19,7 @@ title: Automata, Regex, Coinduction, Bisimulation
   - [KAT](#kat)
   - [Process Alegebras](#process-alegebras)
   - [Modal u-calculus](#modal-u-calculus)
+  - [Monadic Second Order Logic](#monadic-second-order-logic)
   - [Petri Nets](#petri-nets)
   - [Boolean Equation Systems](#boolean-equation-systems)
 - [Bisimulation](#bisimulation)
@@ -208,6 +210,20 @@ https://en.wikipedia.org/wiki/Tree_automaton
 
 Are tree automata kind of like finite state folds?
 
+https://courses.engr.illinois.edu/cs498mv/fa2018/TreeAutomata.pdf
+
+Compare with term rewrting fomrulation of regulr DFA. Special q marker
+`q1 a -> a q2` 
+Translated to term rewriting
+`q1(a(X)) -> a(q2(X))`
+Starts to look like a tree automata. Recognizing a string is a fold over it, big woop.
+
+## pushdown automata
+"recursive function with variables over finite domain"
+
+See also: 
+parsing
+
 ## Probablistic automata
 https://en.wikipedia.org/wiki/Probabilistic_automaton
 PFA
@@ -234,6 +250,7 @@ Automata learning huh
 ALF - abstract lerarning framework
 # Kleene Algebra
 [Kleene Algebras and Applications - Alexandra Silva OPLSS](https://www.youtube.com/watch?v=TEFx5DG9ghE&ab_channel=OPLSS)
+[Kleene Algebras: Theory and Applications](https://www.youtube.com/watch?v=FbYY4dlL_vs&ab_channel=JetBrainsResearch)
 ## KAT
 http://perso.ens-lyon.fr/damien.pous/symbolickat/ symkat ocaml
 [Symbolic Algorithms for Language Equivalence and Kleene Algebra with Tests](http://doi.acm.org/10.1145/2676726.2677007) transition function using BDD. Generating automata using Brzowski's derivative and classical. bdds + union find for language equivalence
@@ -368,6 +385,30 @@ rules
 minimal set
 solution to constraint system
 
+## Monadic Second Order Logic
+https://en.wikipedia.org/wiki/Monadic_second-order_logic
+Colorability
+Monadic = one entry of predicate
+We can quantify over them
+
+What even is the category I should put MSO under? Automata? Logic? Model theory? Model checking?
+
+https://courses.engr.illinois.edu/cs498mv/fa2018/ goo stuff
+
+Buchi-Elgot-Trakhtenbrot Theorem
+https://en.wikipedia.org/wiki/B%C3%BCchi-Elgot-Trakhtenbrot_theorem Iff string is describably in MSO, it is regular
+
+NP - existential monaid. For example graph coloring. Figuring out the collring given grahp is annoying.
+
+S1S The monadic second order theory of N under successor 
+
+S2S https://en.wikipedia.org/wiki/S2S_(mathematics)
+Tree width https://en.wikipedia.org/wiki/Treewidth,
+tree decompoistion https://en.wikipedia.org/wiki/Tree_decomposition
+courcelle's theorem - tree wsth graphs can have mso formula decided in time
+
+[Monadic Second-Order Logic on Finite Sequences](https://pages.cs.wisc.edu/~loris/papers/popl17sws1s.pdf) 
+[MSO for heap models](http://madhu.cs.illinois.edu/strand-popl11.pdf)
 ## Petri Nets
 
 ## Boolean Equation Systems
