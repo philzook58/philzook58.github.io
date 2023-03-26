@@ -263,6 +263,23 @@ Basically its
 - CBRANCH
 - and then a bunch of computational stuff like INT_ADD
 
+## SLEIGH
+[implementing new archtrcture is ghidra slides](https://guedou.github.io/talks/2019_BeeRump/slides.pdf)
+
+[processors](https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/Processors)
+
+[anltr grammar of sleigh](https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/Framework/SoftwareModeling/src/main/antlr/ghidra/sleigh/grammar)
+
+xml scheme https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/Framework/SoftwareModeling/data/languages
+
+[Specifying Representations of Machine Instructions](https://www.cs.tufts.edu/~nr/pubs/specifying.pdf) SLED paper, source of sleigh
+
+
+[The University of Queensland Binary Translator (UQBT) Framework](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.87.4982&rep=rep1&type=pdf)
+
+Huh, they called jit's "dynamic compilers"
+
+
 ## Diffing
 [patch diffing](https://ihack4falafel.github.io/Patch-Diffing-with-Ghidra/)
 https://www.zynamics.com/software.html bindiff binexport
@@ -293,3 +310,5 @@ Also ghidra has built in diffing
 [Ghidra script to export C pseudo-code on multiple files, including defined types](https://gist.github.com/borzacchiello/811288074a193fe571c8d6274f14f829)
 
 [ghidra golf](https://ghidra.golf/)
+
+[pypcode](https://pypi.org/project/pypcode/) How to bind to the lifter.

@@ -35,6 +35,41 @@ https://www.gnu.org/software/gperf/ - small sets ~1000.
 
 
 # Tries
+
+Hash array mapped tries https://hackage.haskell.org/package/unordered-containers-0.2.19.1/docs/Data-HashMap-Strict.html
+https://en.wikipedia.org/wiki/Hash_array_mapped_trie
+https://worace.works/2016/05/24/hash-array-mapped-tries/
+I think the basic idea is to use a trie as a mapping of the hash table rather than an array.
+[bagwell paper](https://lampwww.epfl.ch/papers/idealhashtrees.pdf)
+
+
+Patricia tries
+
+## Suffix Tries
+[ben langmead videos](https://www.youtube.com/playlist?list=PL2mpR0RYFQsDFNyRsTNcWkFTHTkxWREeb)
+
+Put all suffixed of a string into a trie.
+You can compress edges.
+Then you can represent the annotations on the compressed edges by reference to positions in original string.
+
+substring query - a prefix of a suffix is a substring
+
+
+Suffix links
+
+
+### suffix array
+sorted list of suffixes
+```python
+# possibly bad O(m^2)
+def suffix_array(s):
+    return sorted(range(len(s)), key=lambda n: s[n:])
+```
+things that share a prefix will be consecutive
+
+BUild by building suffix trie, then getting suffix array
+
+Two efficient algorithms for linar time suffix array construction SA-IS https://ieeexplore.ieee.org/document/5582081
 # Minimal Acyclic Finite State Automaton
 DAWG
 https://en.wikipedia.org/wiki/Deterministic_acyclic_finite_state_automaton

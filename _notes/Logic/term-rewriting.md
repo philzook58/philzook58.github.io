@@ -3,14 +3,575 @@ layout: post
 title: Term Rewriting
 ---
 
+- [Abstract Rewrite Systems](#abstract-rewrite-systems)
+- [Completion](#completion)
+- [Term Orderings](#term-orderings)
+- [Termination](#termination)
+- [Higher order rewriting](#higher-order-rewriting)
+- [Egraph](#egraph)
+- [String rewriting systems](#string-rewriting-systems)
+- [Graph Rewriting](#graph-rewriting)
+  - [Term Indexing](#term-indexing)
+- [Systems](#systems)
+  - [Maude](#maude)
+    - [Unification](#unification)
+    - [Equation Search](#equation-search)
+    - [Category](#category)
+  - [K](#k)
+- [Other Systems](#other-systems)
+- [2020 Term rewritng notes](#2020-term-rewritng-notes)
+- [Misc](#misc)
 
 https://www.stephendiehl.com/posts/exotic02.html 
 
 Term rewriting and all that
+Term rewriting - Terese
+
+# Abstract Rewrite Systems
+https://en.wikipedia.org/wiki/Abstract_rewriting_system
+This is sort of a study of relations and transitvitym, symmettry.
 
 confluence
 church rosser
-termination
+
+If the reduction relation is a subset of a well founded relation, it is terminating. This is kind of a definition of termination
+
+# Completion
+Knuth bendix
+
+Naive completion
+
+```python
+# Fig 7.1 in TRAAT
+
+# rewrites as tuples
+R = {("a", "b")}
+
+while not Rnew.issubset(R):
+  R = R.union(Rnew)
+  Rnew = {}
+  for (lhs,rhs) in R:
+    lhs1 = reduce(lhs)
+    rhs1 = reduce(rhs)
+    if lhs1 < rhs1:
+      Rnew.add((lhs1, rhs1))
+    else:
+      Rnew.add((rhs1, lhs1))
+
+# Could use maude to actuall perform reduction.
+```
+
+
+```python
+def init_eqs(E):
+  R = set()
+  return (E, R)
+
+def deduce(ER, u, s, t):
+  (E,R) = ER
+  # confirm u -> s, u -> t
+  return (E.union({(s,t)}), R)
+
+def delete(ER,s):
+  (E,R) = ER
+  assert s in E:
+  return (E.diff((s,s)), R)
+
+def 
+
+
+```
+
+Newman's lemma weak conlfuence + termination => strong confluence
+
+critical pair for terms - 1 is unifiable with the other.
+
+Similarity to grobner basis
+similarity to gaussian elimination
+
+Knuth Bendix asks a lot though. The more obvious approahc is to heuristically aspply rewrite to your actual problem rather than try to completely solve all possible problems up front. Why not do this fro grobner? It sounds stupid for gaussian though. Maybe. Just sort of greedily try to write your query polynomial in terms of the ones you have? This might be the analog of some iteraitve scheme like gauss jacobi.
+
+
+Finite state machines are rewrite systems with each state being a single simple constant
+
+
+
+
+https://github.com/bytekid/mkbtt - does knuth bendix completion. There is a web interface
+https://github.com/bytekid/maedmax ? 
+http://cime.lri.fr/ cime
+
+
+
+
+# Term Orderings
+
+KBO
+RPO
+LPO
+
+stable under subsitition
+stable under contect
+terminating
+
+kbo - maps all variables to number that is less than all actual symbols
+Then upon subsitution, the cost can only increase
+first check variabnle count is ok
+complicated tie breaking
+https://www.cs.miami.edu/home/geoff/Courses/TPTPSYS/FirstOrder/SyntacticRefinements.shtml
+
+# Termination
+https://github.com/TermCOMP/TPDB termination problem database
+
+https://termination-portal.org/wiki/Termination_Portal
+Termcomp 2022 https://termination-portal.org/wiki/Termination_Competition_2022
+
+2021- 02
+
+Coq and termination
+Accessibility relations, Sam's paper
+Bove-Capretta method - a Defunctionalization of the Acc method?
+Adding an accessibility parameter - delays the requirement of proof to when it receives this
+
+
+
+
+2020-12-07
+
+Polynomial interpetations - each function symbol goes to some polynomial. variable stay variables.
+f(g(x,y)) ->   yada yada
+If you bound you coefficents to integers and small, the nonlinearity of the coefficients from f and g aren't persay a problem
+
+RPO. recsurive path orderings.
+
+String rewriting termination. The simpler model.
+abc -> cdf
+assign each guy to an nonegative integer.
+a + b + c > c + d + f.
+
+This one is actually an ILP.
+
+This is polynomial interpetation where concat/cons symbol has intepretation of plus and each constant symbol has interpetation of a number.
+
+http://www.cs.tau.ac.il/~nachumd/papers/termination.pdf dershowitz termination review 1987
+
+The obviously terminating stuff always decreases
+Doesn't always decrease, but clearly we lose 3 aaa to make a c but only gain 2 a from a c. We're losing net a every time we make a step.
+c -> aa
+aaa -> c
+
+strategy : build string model of finite depth term rewriting system. See if it works.
+build ground terms instantiation on term rewrite system. Constrain somehow
+Possibly try to encode "good" thing in objective function.
+Find failure. iterate.
+This is a cegis.
+
+
+
+2020-03-09
+
+A Harmonic Oscillator. Prove that it is stable. Build lyapunov function. Can do with SDP. V >= 0, st. $latex \frac{d}{dt} xVx <= 0$. Or better yet $latex \frac{d}{dt} xVx <= \eps$ or $latex \frac{d}{dt} xVx <= eps (x V x)$.
+
+Also could consider breaking up space into polyhedral regions (quadrants for example. Find a piecewise linear lyapunov function.
+
+Another interesting problem is to prove escape from a region. Prove that osciallator eventually escapes x>=1. No prob. We also get a bound on the time it takes.  V(x) = cx. dot V = c xdt = c A x <= eps forall x >= 1.
+
+min eps,   forall x. c A x - eps <= lam (x - 1)  ... this is not possible. lam needs to become a positive polynomial. No, it is possible if lam = cA xhat  and eps <= lam.
+
+An interesting discrete analog of this system would be a swapper. x0 >= 1 implies x0' = x1, x1' = x2, x2' = x3, x3' = x0-1. The minus 1 gives us a small decay term.
+
+For a string rewriting system, the simplest thing is just look at some kind of count on the symbols. Maybe with some weighting. It may be that you are always decreasing. If just count doesn't work, you can try 2-grams or other features/combos. This feels something like a sherali-adams 
+
+For term rewriting, we could try to ignore the parse structure and use the count as string rewrite as above. Polynomial interpetation appears to want to interpret a term that is applied as a polynomial. This seems like it would create difficult nonlinear constraints for both verification and synthesis. Although if you constrain each polynomial to be bounded integers, it may make sense to pound them into a sat solver. Ok if each intepretation is only linear, then the combined would still be linear for verification.
+
+AProve [http://aprove.informatik.rwth-aachen.de/index.asp?subform=home.html](http://aprove.informatik.rwth-aachen.de/index.asp?subform=home.html) aachen
+
+TTT innsbruck [http://eptcs.web.cse.unsw.edu.au/paper.cgi?ThEdu19.4](http://eptcs.web.cse.unsw.edu.au/paper.cgi?ThEdu19.4)
+
+Integer and Polynomial Programs. This means something rather different from integer programming. The idea is that all variables are integer, but you still have a notion of time. Guarded transitions. It seems likely I could compile this into an integer program. Reify inequality conditions.
+
+Cegar loop. Can run program to get a bunch of traces. Use traces and find a decreasing function on all traces.
+
+[https://link.springer.com/chapter/10.1007/978-3-540-72788-0_33](https://link.springer.com/chapter/10.1007/978-3-540-72788-0_33) SAT solving for temrination checking. It does appear they slam nonlinear arithmetic problems into sat solver.s
+
+Dependency pair? What is this. People seem to think it is very important
+
+The control community has similar questions and similar yet different appproaches. They often want continuous state.
+
+[https://github.com/blegat/SwitchOnSafety.jl](https://github.com/blegat/SwitchOnSafety.jl)
+
+[https://github.com/blegat/HybridSystems.jl](https://github.com/blegat/HybridSystems.jl)
+
+SpaceEx. Platzer's stuff.  JuliaReach
+
+Barrier functions. I think the idea is the you put a function that is diverging at the region you're worried about. If you can guarantee that this function is not diverging. 
+
+Sum of Squares certificates. Describing sets as sublevel sets.
+
+The S-Procedure. I think this is that you can relax all inequalities using your assumptions $latex  f(x) >=0 implies g(x) >=0$ then $latex g(x) >= \lambda f(x)$ and $latex \lambda >= 0 $ is sufficient. Sometimes it is necessary I think.
+
+Hybrid Systems. Piecewise affine systems. 
+
+Reachability. We want to figure out how to rewrite one equation into another. Building an A* style lower bound distance could be quite helpful. A lower bound cost to get to some position. In terms of a control objective function S(x,x'), V(x,x'). In a small finite graph this could be computed. But suppose we didn't have enough flexibility. Finite graph, linear function of the features.
+
+Ok. Some things. My concern about nonlinearity for multiply composed functions. 1. you might interpet some things differently (as fixed polynomial interpretation). Makes sense for constructors and data structures, where we have some reasonable suggestions. Looking at HEADs seems to matter a lot / give important over approximations of the behavior of the system. integer transition system. We can pattern match on fixed integers. f(x, 1) = yada.   f(x,y) -> f(y+1,x).  This we can do with guards.  f(x) | x > 7 -> g(x + 7).  f ~ 1 + a x + bx^2 + ... and so for g. Then f(x) >= g(x) + lam guard is lyapunov condition. We want struct inequality, that is the point of the integer nature of the system.  f(x) | x < 7 -> f(x**2 -  ) 
+
+sum(n, acc) -> sum(n - 1, acc+n)
+
+# Higher order rewriting
+
+# Egraph
+See 
+- egraphs
+- egglog
+
+A form of nondestructive term rewriting
+
+
+# String rewriting systems
+[Semi-Thue systems](https://en.wikipedia.org/wiki/Semi-Thue_system)
+[Word problem](https://en.wikipedia.org/wiki/Word_problem_(mathematics))
+Monoid presentation
+
+converting to term rewriting system fff ---> f(f(f(X)))
+
+
+Term Rewriting using linux command line tools
+
+The string search and manipulation tools are very powerful and efficient. They compile queries like grep into simple machines and such I think.
+
+There's a big difference between ground and non ground terms. They appear subtly different when latexed, but the are way different beats
+Ground terms equation proving can be done through the e graph efficiently.
+
+Ground term rewriting seems to be identical to string rewriting. Just layout serially a traversal of the term.
+
+The implicit prefix and suffix are the context of the term
+
+```python
+
+rules = [
+  ("aa", "b"),
+  ("b", "c")
+]
+
+def run_rules(s,rules):
+  old_s = None
+  while s != old_s:
+    old_s = s
+    for lhs,rhs in rules:
+      s = s.replace(lhs,rhs)
+  return s
+
+print(run_rules("ababaaaaccaaa", rules))
+
+def naive_completion(rules):  
+  old_rules = None
+  while rules != old_rules:
+    old_rules = rules.copy()
+    for (lhs,rhs) in old_rules:
+        a = run_rules(lhs, rules)
+        b = run_rules(rhs, rules)
+        if a < b:
+          rules.add((b,a))
+        if a > b:
+          rules.add((a,b))
+  return rules
+
+
+rules = {
+  ("aaa", "a"),
+  ("aaa", "c")
+}
+
+print(naive_completion(rules))
+
+
+rules = [
+  ("ffa", "a"),
+  ("fa", "a")
+]
+
+print(run_rules("ffffffffffffa", rules))
+
+
+rules = [
+  ("12+", "21+"), # an application of comm
+  ("23+1+", "2+31+") # an application of assoc
+]
+# I am really going to want a notion of indirection or compression here.
+# Intern strings
+
+```
+Ropes
+
+
+
+
+
+
+We can of course compile a rule set to do better than this. In some sense every string represents a possibly infinite class of strings posible by running rules in reverse
+
+String rewriting systems are a bit easier to think about and find good stock library functionality for.
+
+string rewriting is unary term rewriting. A variable string pattern "aaaXbbbb" is a curious object from that perspective. While simple, it is a higher order pattern. `a(a(a(X(b(b(b(Y)))))))`. You can also finitize a bit. `foo(a)` can be made an atomic character. Or you can partially normalize a term rewriting system to string rewriting form
+
+String orderings
+Lexicographic comparison
+Length
+shortlex - first length, then lex
+symbol counts
+
+```python
+def critical_pairs(a,b):
+  assert len(a) > 0 and len(b) > 0
+  if len(b) <= len(a):
+    a,b = b,a # a is shorter
+  cps = []
+  if b.find(a) != -1: # b contains a
+   cps.append(b)
+  for n in range(1,len(a)): # check if overlapping concat is possible
+    if b[-n:] == a[:n]:
+      cps.append(b + a[n:])
+    if b[:n] == a[-n:]:
+      cps.append(a + b[n:])
+  return cps
+
+print(critical_pairs("aba", "ac"))
+print(critical_pairs("aba", "ca"))
+print(critical_pairs("abab", "ba"))
+  
+'''
+def reduce_rules(rules): # a very simple reduction, reducing rhs, and removing duplicate rules
+  rules1 = set()
+  for (lhs,rhs) in rules:
+    rhs = run_rules(rhs,rules)
+    rules1.add((lhs,rhs))
+  return rules1
+'''
+
+  #run_rules
+  #reduce_rules
+```
+Building a suffix tree might be a good way to find critical pairs.
+
+http://haskellformaths.blogspot.com/2010/05/string-rewriting-and-knuth-bendix.html
+
+It seems like named pattern string rewriting and variable term rewriting might be close enough
+
+You could imagine
+
+((x + 0) + 0 + 0) laid out as + + + x 0 0 0. and the found ground rewite rule + x 0 -> x being applied iteratively.
+
+Labelling shifts:
+f(g(a), b) ->   f +0 g +1 a -1 b -0
+
+the pattern 
+f(?x)  -> ?x
+ becoming
+ f +0 <x> -0 -> <x>
+ f +1 <x> -1 -> <x>
+ f +2 <x> -2 -> <x>
+and so on to some upper limit
+We could occasionally renormalize maybe if there are no +n -n pairs remaining.
+then shuffle all the above ones down.
+Ok but what about something that increases the depth
+x -> f(x)
+... hmmm.
+
+And if we number from the bottom?
+
+f +2 <X> -2 -> <X>
+
+and
+<X> -> ??? Well a raw pattern is pretty shitty
+f(x) -> f(f(x)) becomes
+f +n <X> -n -> f +(n+1) f +n <x> 
+Yeah. Numbering from the bottom is better. We don't have to 
+
+f(stuff,stuff)
+f +n <X> -n +n <Y> -n
+
+even without enumerating
+plus +<n1> <X> -<n1> +<n2> <Y> -<n2> 
+
+Oooh. We have to enumerate every combo of possible subterm depths.
+
+Hmm. This adjust levels
+
+http://matt.might.net/articles/sculpting-text/
+
+A unique terminator for the subexpression is the point. 
+f +2 (^ -2)* -2
+
+could have a counter per symbol. per symbol depth.
+f1 ( yadayada) \f1
+
+fa1 <X> fb1 <Y> fc1
+
+
+huh. What about the CPP? Won't that basically work?
+
+This is horribly inefficent because it'll expand out huge terms.
+And big backtracking jumps. Or rather big seeks while it tries to find the next spot to go to. The next argument of f.
+
+For ground term rewriting it seems actually reasonable and faster than having indirections. We can't have sharing though. That is a bummer.Maybe with zip.
+Unless our goal is simplifcation.
+
+
+using the rule 
+
+We could try to use the e-matching strategy where we iteratively instantiate fixed ground rewrite rules into the sed file itself?
+
+Instead of using parenthesis, one could use numbered enter level exit level. And then bound the number of levels.
+Each term rewriting becomes a string rewriting (with named regex holes ) replicated by the number of supported levels.
+
+using sed on itself we might be able to implement knuth bendix
+
+One could compile into a human unreadable huffman encoded like thing
+
+
+https://superuser.com/questions/1366825/how-to-recursively-replace-characters-with-sed looping in sed
+You can gnu parallel into chunks
+grep is much faster. If terms are rare, maybe find using grep first?
+
+Suffix trees can store every subterm of ground term with efficient query.
+
+https://spencermortensen.com/articles/serialize-a-binary-tree-in-minimal-space/ an interesting perspective on tree serialization
+catalan numbers. We know size of tree if we give elements. 
+https://www.educative.io/edpresso/what-is-morris-traversal woah. Bizarre. It mutates the true as it goes down it and store
+Kind of reminscent of dancing links in a way
+
+f 20 90 190 yada yada yada could desribe links to the approprate spots.
+This would be the analog of flatterms. 
+
+There is something like encoding lambda terms with de bruijn. vs unique signifiers.
+If we could encode the unique signifiers in a way such that they never collide.
+
+There is something to that we're kind of converting to rpn.
+https://github.com/GillesArcas/numsed
+https://github.com/shinh/sedlisp 
+# Graph Rewriting
+https://en.wikipedia.org/wiki/Graph_rewriting
+Handbook https://www.worldscientific.com/worldscibooks/10.1142/3303#t=aboutBook
+Graph rewriting is a mad old field
+Termgraph http://www.termgraph.org.uk/
+
+
+
+AGG, GROOVE, GP, PORGY, PROGRES,
+
+Compiling to Graph combinators
+CHR is a ready to go (destructive) graph rewriting system
+
+Terms are graphs. So are DAGs
+Graphs may come in ported vs non ported forms. Are edges equivalent?
+
+```prolog
+%re
+:- use_module(library(chr)).
+:- initialization(main,main).
+%:- chr_constraint s/0, s/1, s/2, i/0, i/1, k/0, k/1, k/2.
+
+:- chr_constraint ap/3.
+
+%flat(A + B,AB) <=> plus(A,B,C), flat(A), flat(B).
+%flat(s(I,J)) <=> {gensym(X), s(I,J,)
+
+main() :- print("hello"), term(s(i)).
+
+term(ap(X,Y), Id) :- gensym(Id), term(X, XId), term(Y,YId), ap(XId, YId, Id).
+
+ap(i, X, Id) <=> X = Id. %?
+ap(k, X, KX), ap(KX, Y, KXY) <=> ?
+
+
+/*
+term(i, Id) :- gensym(Id), i(Id).
+term(i(X), Id) :- gensym(Id), term(X, XId), i(XId, Id).
+term(k, Id) :- gensym(Id), k(Id).
+term(k(X), Id) :- gensym(Id), term(X, XId), k(XId, Id), 
+term(k(X,Y), Id) :- gensym(Id), term(X, XId), term(Y, YId), k(XId, YId, Id). 
+term(s, Id) :- gensym(Id), s(Id).
+term(s(X), Id) :- gensym(Id), term(X, XId), s(XId, Id), 
+term(s(X,Y), Id) :- gensym(Id), term(X, XId), term(Y, YId), s(XId, YId, Id). 
+
+
+
+ite()
+proj()
+proj()
+add(x,y,z)
+*/
+```
+
+```
+
+region(Id). % ~ blocks
+cfg_edge(Id1,Id2). %  edges between blocks.
+add(X,Y,Z) % dataflow edge
+data_region(Z, R) % what region data calculation is in. optional
+phi(X,Y,Z) % phi
+ite(InReg, Data, ThenReg, ElseRegion, )
+
+
+```
+
+A cool key trick is fork and join nodes
+
+Hash consing on a graph
+```prolog
+%re
+:- use_module(library(chr)).
+:- initialization(main,main).
+:- chr_constraint lit/2, add/3, var/2, split/3, fresh/1.
+
+
+dedup @ var(X,N) \ var(X,N) <=> true. 
+dedupadd @ add(X,Y,Z) \ add(X,Y,Z) <=> true. 
+
+% also congruence. Split could be called Eq
+share @ var(X,N), var(X,M), fresh(P) <=> P1 is P + 1 | fresh(P1), var(X,P), split(P,N,M).
+shareadd @ add(X,Y,Z), add(X,Y,Z1), fresh(P) <=> P1 is P + 1 | fresh(P1), add(X,Y,P), split(P,Z,Z1).
+
+
+norm1 @ split(N,Y,_) \ add(X,Y,Z)  <=> add(X,N,Z).
+norm2 @ split(N,_,Y) \ add(X,Y,Z)  <=> add(X,N,Z).
+norm3 @ split(N,X,_) \ add(X,Y,Z)  <=> add(N,Y,Z).
+norm4 @ split(N,_,X) \ add(X,Y,Z)  <=> add(N,Y,Z).
+
+% hmm. This is becoming an egraph
+% var(X,N) \ var(X,M) <=> link(N,M)
+% different style. In the split style, everything has one port connection, which is nice.
+
+% plus other ways of hooking up
+norm_share % add(X,Y,Z), add(X1,Y1,Z1), share(X0, X, X1), share(Y0, Y, Y1), fresh(P) <=>
+  P1 is P + 1 | add(X0,Y0,P), share(P, Z, Z1).
+
+% share is commutative. so always build and use it in pairs?
+% share(Z,X,Y) \ share(Z,Y,X)
+% if we had more share, it would also become apparent that share is associative.
+
+% X + Y -> Y + X as an egraph rule.
+% add_comm @ add(X,Y,Z) <=> add(X,Y,Z1), add(Y,X,Z2), join(Z1,Z2,Z)
+
+
+
+main() :- 
+% two copies of x + y
+var(x,1),
+var(y,2),
+add(1,2,3),
+
+var(x,4),
+var(y,5),
+add(4,5,6),
+fresh(7),
+chr_show_store(true).
+
+```
+
+## Term Indexing
+See automated theorem proving.
 
 # Systems
 
@@ -205,6 +766,42 @@ mod SEQUENT-RULES-PROP-LOG is
 endm
 ```
 
+manual rule application https://github.com/fadoss/maude-bindings/blob/master/tests/python/apply.py
+
+### Unification
+```python
+# https://github.com/fadoss/maude-bindings/blob/master/tests/python/unify.py
+import maude
+import itertools
+
+maude.init(advise=False)
+
+##### From Maude 3.1 manual, §13.4
+
+maude.input('''fmod UNIFICATION-EX1 is
+	protecting NAT .
+	op f : Nat Nat -> Nat .
+	op f : NzNat Nat -> NzNat .
+	op f : Nat NzNat -> NzNat .
+endfm''')
+
+uex1 = maude.getModule('UNIFICATION-EX1')
+
+uex1_t1 = uex1.parseTerm('f(X:Nat, Y:Nat) ^ B:NzNat')
+uex1_t2 = uex1.parseTerm('A:NzNat ^ f(Y:Nat, Z:Nat)')
+
+print('Unifiers for', uex1_t1, 'and', uex1_t2)
+
+for unifier in uex1.unify([(uex1_t1, uex1_t2)]):
+	print('Unifier', unifier)
+	print('X =', unifier.find('X'))
+	print('T =', unifier.find('T'))
+	print('B:NzNat =', unifier.find('B', uex1.findSort('NzNat')))
+	print('X:NzNat =', unifier.find('X', uex1.findSort('NzNat')))
+
+	print('σ({}) = {}'.format(uex1_t1, unifier.instantiate(uex1_t1)))
+	print('σ(3) =', unifier.instantiate(uex1.parseTerm('3')))
+```
 
 ### Equation Search
 
@@ -294,7 +891,10 @@ Redex, Maude, Spoofax, OTT, [Rascal](https://www.rascal-mpl.org/),  ATL and mode
 
 [popl : matching logic: foundations of K framework](https://www.youtube.com/watch?v=Awsv0BlJgbo&ab_channel=ACMSIGPLAN)
 
+[Generating Proof Certificates for a Language-Agnostic Deductive Program Verifier](https://xchen.page/assets/pdf/LCT+23-paper.pdf) encpdong matchng loic into metamath?
+
 [K vs. Coq as Language Verification Frameworks](https://runtimeverification.com/blog/k-vs-coq-as-language-verification-frameworks-part-1-of-3/)
+
 # Other Systems
 
 Pure
@@ -325,19 +925,89 @@ https://redex.racket-lang.org/
  
 RMT - rewriting modfulo theories https://profs.info.uaic.ro/~stefan.ciobaca/inriaparis2017/pres.pdf https://github.com/ciobaca/rmt/
 
-# String rewriting systems
-Word problem
-Monoid presentation
 
-# Knuth Bendix
 
-# Termination
-https://github.com/TermCOMP/TPDB termination problem database
 
-https://termination-portal.org/wiki/Termination_Portal
-Termcomp 2022 https://termination-portal.org/wiki/Termination_Competition_2022
 
-# Higher order rewriting
+
+
+# 2020 Term rewritng notes
+2020-12-07
+
+
+
+
+
+https://www.regular-expressions.info/recurse.html
+
+2020-07-17 from "Bash"
+There is a thing I've heard that bash and piping is shockingly performant for some tasks. Stream processing and stuff.
+
+You can kind of get database operations  
+
+  * wc - word count
+  * grep
+  * head
+  * sort - can sort of columns?
+  * uniq
+  * awk - all kinds of crap
+  * join
+  * seq 1 100
+
+http://williamslab.bscb.cornell.edu/?page_id=287
+
+Gnu parallel [https://www.youtube.com/watch?v=OpaiGYxkSuQ&list=PL284C9FF2488BC6D1&index=2&t=0s](https://www.youtube.com/watch?v=OpaiGYxkSuQ&list=PL284C9FF2488BC6D1&index=2&t=0s)
+
+2020-08-10
+
+Knuth Bendix completion is interesintg. It solves the word problem
+
+String rewriting can be use to normalize finitely presented categories sometimes. If we list the generating morphisms and the base equalities of composition, knuth bendix may be able to generate the closure, which we can use to figure out if two morphisms are the same with a guarantee.
+
+String matching algorithms are relevant.
+
+The Boyer Moore algorithm makes some jumps based on comparisons you've already made. These jumps can be calculated based on properties of the pattern
+
+[https://www.sciencedirect.com/science/article/pii/S1567832610001025](https://www.sciencedirect.com/science/article/pii/S1567832610001025) - efficiency issues in the kbmag procedure. Describes using suffix trees to find critical pairs
+
+[https://gap-packages.github.io/kbmag/doc/chap1.html#X7DFB63A97E67C0A1](https://gap-packages.github.io/kbmag/doc/chap1.html#X7DFB63A97E67C0A1) KBMAG gap package. Accessible through GAP.jl
+
+Are the SKI combinators expressible in string rewriting? They have a tree structure and are expressed as such ordinarily. Maybe parenthesis can be used as inhibitors? Or we could have a moving evaluation marker?
+
+    
+    <code>(S) -> S
+    (K) -> K
+    (I) -> I
+    IK -> K
+    IS -> S
+    II -> I
+    ... all concrete
+    Sxyz = xz(yz)
+    
+    </code>
+
+Building a turing machien out of a string rewrite system. Have special characters represent the state. and have the patterns include the surrounding context. Enumerate all the characters in state and tape characters.
+
+    
+    <code>aSb -> acS
+    aSb -> Scb</code>
+
+Computational group theory is a thing.
+
+Finite categories which have both finite morphisms and finite objects are approachable. It is clear that most questions one might ask about a finite category is approachable by brute force or maybe by encoding to some graph problems or SAT problem.
+
+Finitely presented categories are the next up the chain in complexity. In this case we take a free category generated by some morphisms and some equations identifying certain composition patterns. It is less clear whether natural questions are decidable or not.
+
+What questions do we care about:
+
+  * Are two morphisms expressions equal?
+  * Produce a morphism from object A to B
+  * Confirm some mapping is a Functor
+  * Confirm some functor mapping is a natural transformation.
+
+It is my belief that some questions about these can 
+
+The next level of category one might want to talk about is one for which you have guaranteed constructions, such as cartesian, closed, dagger, monoidal, etc. I'm not sure which of these qualifiers are compatible with being finite. [https://arxiv.org/abs/0908.3347](https://arxiv.org/abs/0908.3347)  To me, this feels analogous to being able to work with terms rather than just strings.
 
 
 # Misc
@@ -345,3 +1015,13 @@ Termcomp 2022 https://termination-portal.org/wiki/Termination_Competition_2022
 
 [rewritng modulo SMT and open system analysis](https://shemesh.larc.nasa.gov/fm/papers/wrla2014-draft.pdf)
 
+
+[tools in term rewriting for education](https://arxiv.org/pdf/2002.12554.pdf)
+
+http://www.cs.tau.ac.il/~nachum/papers/klop.pdf - Klop review on term Rewriting. Cody's RG pick
+
+[A Taste of Rewrite Systems](https://homepage.divms.uiowa.edu/~fleck/181content/taste-fixed.pdf)
+
+http://cl-informatik.uibk.ac.at/teaching/ws20/trs/content.php term rewriting course mitteldorp
+
+[REST: Integrating Term Rewriting with Program Verification](https://malyzajko.github.io/papers/ecoop2022b.pdf)

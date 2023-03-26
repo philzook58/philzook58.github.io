@@ -12,6 +12,8 @@ title: Datalog
       - [Indexing](#indexing)
       - [Lattice](#lattice)
     - [SQL recursive common table subexpressions](#sql-recursive-common-table-subexpressions)
+    - [Naive SQL translation](#naive-sql-translation)
+      - [Seminaive](#seminaive)
     - [Ocaml](#ocaml)
       - [Naive](#naive-1)
     - [Rust](#rust)
@@ -57,6 +59,7 @@ title: Datalog
   - [Equality Saturation](#equality-saturation)
   - [Term Rewriting](#term-rewriting)
     - [Datalog Modulo Term Rewriting](#datalog-modulo-term-rewriting)
+    - [Graph rewriting](#graph-rewriting)
   - [Graph Algorithms](#graph-algorithms)
     - [Reachability](#reachability)
     - [Shortest Path](#shortest-path)
@@ -388,7 +391,171 @@ SELECT a,b FROM path;
 
 ```
 
+### Naive SQL translation
+Ok, so recursive common table subexpressons are wacky. Also they don't really support all forms of recursion.
+There is a way to translate a single application of a rule to a SQL statement.
 
+```sql
+CREATE TABLE edge(a INTEGER, b INTEGER, PRIMARY KEY (a,b));
+INSERT OR IGNORE INTO edge(a,b)
+VALUES
+    (1,2),
+    (2,3),
+    (2,3),
+    (3,4);
+SELECT a,b FROM edge;
+
+CREATE TABLE path(a INTEGER, b INTEGER, PRIMARY KEY (a,b));
+
+-- path(X,Y) :- edge(X,Y).
+INSERT OR IGNORE INTO path SELECT DISTINCT edge0.a, edge0.b   -- the head of the rule gives the insert and select fields  
+FROM edge as edge0; -- The body of the rule gives FROM and WHERE  
+
+-- path(x,z) :- edge(x,y), path(y,z).
+INSERT OR IGNORE INTO path SELECT DISTINCT edge0.a, path0.b   -- the head of the rule gives the insert and select fields  
+FROM edge as edge0, path as path0
+WHERE edge0.b = path0.a; -- The body of the rule gives FROM and WHERE  
+
+SELECT *,rowid FROM path; -- there is an implicit row id. This can conceivably be used as a timestamp for smieniave
+SELECT MAX(rowid) FROM path;
+SELECT MAX(rowid) FROM edge;
+```
+#### Seminaive
+Either maintain explicit delta relations, or use timestamp tricks.
+Create a vector timestamp
+```sql
+CREATE TABLE edge(a INTEGER, b INTEGER, PRIMARY KEY (a,b));
+INSERT OR IGNORE INTO edge(a,b)
+VALUES
+    (1,2),
+    (2,3),
+    (2,3),
+    (3,4);
+SELECT a,b FROM edge;
+
+CREATE TABLE path(a INTEGER, b INTEGER, PRIMARY KEY (a,b));
+INSERT OR IGNORE INTO path SELECT DISTINCT edge0.a, edge0.b   -- the head of the rule gives the insert and select fields  
+FROM edge as edge0; -- The body of the rule gives FROM and WHERE  
+
+
+SELECT * FROM path;
+CREATE TABLE trans_rule(edge_time INTEGER, path_time INTEGER); -- the vector timestamp
+INSERT INTO trans_rule VALUES (0,0);
+
+INSERT INTO trans_rule SELECT MAX(edge.rowid), MAX(path.rowid) FROM edge, path;
+
+SELECT * FROM trans_rule;
+
+```
+`WHERE edgo0.rowid > prevedfe OR path0.ro
+
+```python
+
+
+class Rule():
+  """
+  Rule tracks the timestamps of the relations it depends on. At least one new tuple must appear to possibly derive a new fact.
+  """
+  def __init__(self, head : str, selects, froms , where="TRUE"):
+    """
+    head is a table name
+    selects is string of comma separated sql expressions. It goes in a select clause
+    froms is a list of tuples of (table_name, row_binder_name)
+    where is a filtering SQL expression
+    """
+
+    #select_str = ", ".join(selects)
+    from_str = ", ".join(f"{table} AS {row}" for table,row in froms)
+    seminaive_filter_str = " OR ".join( f"{row}.rowid > ?" for _,row in froms ) 
+    self.sql = f"""
+    INSERT OR IGNORE INTO {head} SELECT DISTINCT {selects}  -- head
+    FROM {from_str}  -- body
+    WHERE ({where})  -- body
+    AND ({seminaive_filter_str})  -- seminaive
+    """
+
+    self.timestamp = tuple(-1 for _ in froms)
+    select_str = ", ".join(f"MAX({row}.rowid)" for _,row in froms)
+    self.ts_query = f""" 
+    SELECT {select_str} FROM {from_str} 
+    """
+    
+
+    self.froms = froms
+    self.where = where
+    self.head = head
+    self.selects = selects
+  def update_timestamp(self,cur):
+    self.timestamp = cur.execute(self.ts_query).fetchone()
+
+  def execute(self,cur):
+    ts = self.timestamp # the last time this rule was run
+    print(self.sql, self.timestamp)
+    self.update_timestamp(cur) # update timestamp to now
+    cur.execute(self.sql, ts)  # 
+
+  def __repr__(self):
+    from_str = ", ".join(f"{table}({row})" for table,row in self.froms)
+    return  f"{self.head}([{self.selects}]) :- {from_str}, {self.where}."
+
+
+def dump_db():
+  print("path", cur.execute("select * from path").fetchall())
+  print("edge", cur.execute("select * from edge").fetchall())
+
+def fixpoint(cur, ruleset):
+  done = False
+  while not done:
+    done = True
+    dump_db()
+    for rule in ruleset:
+      old_ts = rule.timestamp 
+      rule.execute(cur)
+      done &= old_ts == rule.timestamp
+      print(old_ts, rule.timestamp)
+
+    
+
+def create_table(cur, name, *fields):
+  fields = ", ".join(fields)
+  sql = f"CREATE TABLE {name}({fields}, PRIMARY KEY ({fields}))"
+  print(sql)
+  cur.execute(sql) # Set semantics
+
+import sqlite3
+#import duckdb
+con = sqlite3.connect(":memory:")
+cur = con.cursor()
+create_table(cur,"edge", "a", "b")
+create_table(cur,"path", "a", "b")
+
+base = Rule("path", "edge0.a, edge0.b",
+                     [("edge", "edge0")])
+trans = Rule("path", "edge0.a, path0.b",
+                     [("path", "path0"), ("edge", "edge0")],
+                     where="edge0.b = path0.a")
+
+print(trans.sql)
+
+
+
+cur.executemany("insert into edge values (?, ?)", [(1,2), (2,3), (3,4)])
+base.execute(cur)
+
+dump_db()
+fixpoint(cur,[trans])
+
+dump_db()
+trans.execute(cur)
+dump_db()
+print(trans)
+print(trans.timestamp)
+```
+Langston pointed out that metadata could be stored in a different table that you join in when you need it. You just need defaults if it isn't there.
+
+Retaining the timestamp _sequence_ is a form of lightweight provenance. It tells you exactly which tuples were derived using this rule.
+
+For every iteration, there are 3 timestamps at play. The last time the rule was run, the timestamp of the db before the rule, and the timestamp after the rule.
 
 ### Ocaml
 #### Naive
@@ -2618,6 +2785,11 @@ foo(b) :- foo(a), replace(a,lhs,rhs,b)
 ```
 
 This framework for example could encompass datalog modulo beta reduction.
+
+### Graph rewriting
+Subsumption might enable one to snip out old regions if you use timestamps. We're kind of trying to mimic CHR in datalog
+See note on:
+- Term Rewriting
 
 
 ## Graph Algorithms

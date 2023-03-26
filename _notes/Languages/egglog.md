@@ -244,6 +244,20 @@ Could literally try to do embedded gj. The idea being it is in some sense simple
 
 Hmm. It's kind of an overloading of how subst dicts are merged... We could do normalization there?
 
+
+Flattening is related to compiling to assembly. Very related. Hmm.
+```ocaml
+type expr = loc * bindings
+let foo (a, froms, wheres) = 
+  "freshrow.res", (foo,"freshrow") :: ,  ("freshrow.x = " ^ a) :: wheres   
+```
+
+```python
+
+
+```
+
+
 ## Extraction as datalog
 ```souffle
 

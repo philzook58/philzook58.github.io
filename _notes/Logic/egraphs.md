@@ -644,3 +644,9 @@ https://en.wikipedia.org/wiki/E-graph
 [caviar](https://dl.acm.org/doi/pdf/10.1145/3497776.3517781?casa_token=mRVhbG5XlgsAAAAA:TtiJ8AOK2htAomYKldxl206wUoOXrCR_aP79biEAiA8jtgzQRIYJSu0FKPmEVaQvlV_NNO0ZLHsT) TRS system for proving optimizations applied to Halide.
 
 [WebAssembly Diversification for Malware Evasion](https://arxiv.org/pdf/2212.08427.pdf)
+
+[MCTS-GEB: Monte Carlo Tree Search is a Good E-graph Builder](https://arxiv.org/pdf/2303.04651.pdf)
+
+[risinglightdb query planner](https://github.com/risinglightdb/risinglight/tree/main/src/planner)
+
+[An Evaluation Algorithm for Datalog with Equality Martin E. Bidlingmaier](https://arxiv.org/pdf/2302.05792.pdf)

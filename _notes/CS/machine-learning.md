@@ -159,7 +159,7 @@ code2vec
 copilot
 gpt-3
 chatgpt
-llama
+llama https://news.ycombinator.com/item?id=35100086 llama weights leaked. 4 bt quantization
 
 wavenet
 DALL-E

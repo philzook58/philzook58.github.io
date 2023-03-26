@@ -10,6 +10,7 @@ title: Linkers and Loaders
 - [Dynamic Linking](#dynamic-linking)
 - [Compilation Units](#compilation-units)
 - [Link Time Optimization](#link-time-optimization)
+    - [Tree Shaking](#tree-shaking)
 - [Linking Formats](#linking-formats)
   - [ELF](#elf)
 - [Objcopy](#objcopy)
@@ -43,6 +44,18 @@ Some relocations look for the keys coming in from the symbol table and do someth
 
 
 [understanding relocations](https://stac47.github.io/c/relocation/elf/tutorial/2018/03/01/understanding-relocation-elf.html)
+
+[Relocating Machine Instructions by Currying](https://www.cs.tufts.edu/~nr/pubs/relocating-abstract.html) Norman Ramsey
+
+a instruction is a parametrized function that outputs binary.
+```
+type insn = params -> bytes
+```
+Defunctionalizing these lambdas produces the first order form of ordinary relocation data.
+
+
+
+
 # Dynamic Linking
 GOT global offset table - table holding global variables
 PLT - procedure linkage table - table holding function pointers
@@ -73,10 +86,30 @@ dlmopen
 - `LD_PRELOAD`
 `ldconfig`
 [`ld.so`](https://man7.org/linux/man-pages/man8/ld.so.8.html)
+
 # Compilation Units
 https://en.wikipedia.org/wiki/Single_Compilation_Unit
 
+A compilation unit is a large scale statement. Building a cu is a partial evaluation of a kind.
+```ocaml
+type env = ? String.Map.t (* symbol mappings *)
+type cu = stmt = env -> env * bin
+val interp: elf -> env -> env * bin
+```
+the linker is an interpreter over the elf format.
+
+Is `bin` free floating or anchored at particular addresses. position independent code or not.
+
 # Link Time Optimization
+
+### Tree Shaking
+https://en.wikipedia.org/wiki/Tree_shaking
+Debloating
+"smart linking"
+dead code elimination. Linking is "finishing" compilation, or it is compilation in the large
+
+debloating is framed as a cybersecurity hardening sometimes
+https://www.cesarsotovalero.net/software-debloating-papers.html
 
 # Linking Formats
 Some of what makes linking formats so confusing is that they are binary representations of structured data. I am more used to thinking about the data structure and it's serialization more separately. So many of the fields are indices and sizes of other fields. It's also kind of flattened, in a similar way you might flatten to put something into a relational database.
@@ -122,6 +155,8 @@ LMA vs VMA load memoery address vs virtual memory address. Can differe when stor
 # DWARF
 Debug info
 unwind tables
+
+[dwarfwrite](https://github.com/rhelmot/dwarfwrite) python
 
 [read-dwarf](https://github.com/rems-project/read-dwarf) use dwarf data and Sail / C symbolic execturo to establish bisimulation
 
@@ -339,6 +374,9 @@ type t = {
   addrs : int Addr.Map.t;
 }
 ```
+
+
+
 
 
 <https://github.com/ocaml/ocaml/blob/trunk/file_formats/cmo_format.mli> This is the ocaml data format of cmo files

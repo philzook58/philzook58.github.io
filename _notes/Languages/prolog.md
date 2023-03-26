@@ -1033,6 +1033,7 @@ mvd(john,child,bill)
 ```
 
 model checking
+[model checking using tabled logic programming](https://cs.uwaterloo.ca/~jmatlee/Teaching/CS745/PaperPres/XMC.pdf)
 
 term-sets {Var:Goal} let's you talk about the set that corresponds to Goal. 
 `{X : member(X,[a,b,c])}`
@@ -1878,7 +1879,7 @@ egraph + clp(R) + clp(FD) + clp(B). How far from SMT is that?
 ### Embedding into CHR
 - TRS
 - Prolog and CLP
-- Graph trasnfomation 
+- Graph trasnfomation - See term rewriting notes
 - Petri nets
 
 GAMMA general abstract mnodel for multiset manipulation
