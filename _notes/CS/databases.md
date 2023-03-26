@@ -24,8 +24,10 @@ title: Databases
 - [SQLite](#sqlite)
 - [Duckdb](#duckdb)
 - [Postgres](#postgres)
+- [MySQL](#mysql)
 - [Relational AI](#relational-ai)
 - [Streaming](#streaming)
+- [Replication](#replication)
 - [Data Structures](#data-structures)
   - [B Tree](#b-tree)
   - [Radix Trie](#radix-trie)
@@ -132,11 +134,16 @@ Tuple Generating dependencies
 ## Query Optimization
 [Cascades framework](https://www.cse.iitb.ac.in/infolab/Data/Courses/CS632/Papers/Cascades-graefe.pdf)
 https://github.com/egraphs-good/egg/discussions/189
+volcano
 
 
 Zetasql
 calcite
 
+[WeTune: Automatic Discovery and Verification of Query Rewrite Rules](https://dl.acm.org/doi/abs/10.1145/3514221.3526125?casa_token=g_KckUfvqGgAAAAA:zXBQO-xYLdioA3wHwHBlFJ859pBqYTCFylAlBk_FQ0Q7x_o90K3mvyUeaIptjpf8nU3kT_YBBwQwAA) superoptimizer for query rewrite rules. 
+
+[Cosette: An Automated SQL Solve](https://cosette.cs.washington.edu/)
+HottSQL https://homotopytypetheory.org/2016/09/26/hottsql-proving-query-rewrites-with-univalent-sql-semantics/
 ## The Chase
 Equality Generating Dependencies
 [The Chase Procedure and its Applications in Data Exchange](https://drops.dagstuhl.de/opus/volltexte/2013/4288/pdf/ch01-onet.pdf)
@@ -346,6 +353,41 @@ https://en.wikipedia.org/wiki/Materialized_view
 
 ```
 
+https://stackoverflow.com/questions/15104206/solving-a-crypt-arithmetic-puzzle-with-relational-database
+```sql
+
+create view digits(x) as select * from generate_series(0,9);
+select * from digits as s, digits as e, digits as n, digits as d, digits as m, digits as o, digits as r, digits as y where
+  (1000*s.x + 100*e.x + 10*n.x + d.x) + (1000*m.x + 100*o.x + 10*r.x + e.x) 
+   = (10000*m.x + 1000*o.x + 100*n.x + 10*e.x + y.x) -- send + more = money 
+   and s.x > 0 and m.x > 0 and -- non zero first digits
+   -- all different digits
+   s.x != e.x and s.x != n.x and s.x != d.x and s.x != m.x and s.x != o.x and s.x != r.x and s.x != y.x and
+                  e.x != n.x and e.x != d.x and e.x != m.x and e.x != o.x and e.x != r.x and e.x != y.x and
+                                 n.x != d.x and n.x != m.x and n.x != o.x and n.x != r.x and n.x != y.x and
+                                                d.x != m.x and d.x != o.x and d.x != r.x and d.x != y.x and
+                                                               m.x != o.x and m.x != r.x and m.x != y.x and
+                                                                              o.x != r.x and o.x != y.x and
+                                                                                             r.x != y.x
+
+   limit 1;
+-- sqlite time: 0.92s could be worse
+```
+```python
+for s in range(10):
+  if s > 0:
+    for e in range(10):
+      if s != e:
+        for n in range(10):
+            if n != s and n != e:
+          for d in range(10):
+            for m in range(10)
+              if m > 0:
+
+
+
+```
+
 ## indices
 Building good indices can be important for good query performance.
 
@@ -401,7 +443,7 @@ How materializr and other databases optimize sql subqueries
 
 [umbra](https://db.in.tum.de/~freitag/papers/p29-neumann-cidr20.pdf) spiritual successor to hyper. Hybridizes an in memory system to also work off ssd.
 
-
+[Free Join: Unifying Worst-Case Optimal and Traditional Joins](https://arxiv.org/pdf/2301.10841.pdf)
 # Vectorized Execution
 [cmu adavanced course lecture](https://www.youtube.com/watch?v=7hgZKrFXYNs&ab_channel=CMUDatabaseGroup)
 [Rethinking SIMD Vectorization for In-Memory Databases](https://15721.courses.cs.cmu.edu/spring2019/papers/20-vectorization1/p1493-polychroniou.pdf)
@@ -445,7 +487,8 @@ Performance tips: WAL mode
 - `.indexes`
 - `.expert` suggests indices?
 
-
+[	Strong Consistency with Raft and SQLite](https://news.ycombinator.com/item?id=35246228)
+https://rqlite.io/ The lightweight, easy-to-use, distributed relational database built on SQLite
 # Duckdb
 https://duckdb.org/
 sqlite for olap
@@ -548,6 +591,7 @@ help
 \dt look at tables
 
 
+# MySQL
 
 # Relational AI
 https://www.youtube.com/watch?v=WRHy7M30mM4&ab_channel=CMUDatabaseGroup
@@ -619,7 +663,10 @@ millwheel
 spark streaming
 
 https://materialize.com/blog
-
+# Replication
+Raft https://en.wikipedia.org/wiki/Raft_(algorithm)
+paxos https://en.wikipedia.org/wiki/Paxos_(computer_science)
+consensus https://en.wikipedia.org/wiki/Consensus_(computer_science)
 # Data Structures
 
 ## B Tree

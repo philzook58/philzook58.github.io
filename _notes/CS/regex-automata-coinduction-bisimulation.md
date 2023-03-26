@@ -17,6 +17,7 @@ title: Automata, Regex, Coinduction, Bisimulation
   - [KAT](#kat)
   - [Process Alegebras](#process-alegebras)
   - [Modal u-calculus](#modal-u-calculus)
+  - [Monadic Second Order Logic](#monadic-second-order-logic)
   - [Petri Nets](#petri-nets)
   - [Boolean Equation Systems](#boolean-equation-systems)
 - [Bisimulation](#bisimulation)
@@ -73,6 +74,7 @@ https://microsoft.github.io/z3guide/docs/theories/Regular%20Expressions
 (get-model)
 ```
 
+[](https://github.com/katef/libfsm) compile regexp to C
 ### Matching algorithms
 - backtracking search
 - convert to dfa
@@ -151,10 +153,17 @@ DAWG - transitions are single labelled edges. Transitions are
 [Hopcroft and Karp’s algorithm for Non-deterministic Finite Automata](https://hal.archives-ouvertes.fr/file/index/docid/648587/filename/hkc.pdf)
 [fado](https://pypi.org/project/fado/)
 ## Finite Automata
+https://github.com/leonardomso/awesome-fsm
+
 DFA NFA
 
 finite set of states. Labelled transitions between.
 
+https://en.wikipedia.org/wiki/%CE%A9-automaton omega automata - ru on infinite rather than finite strings
+Buchi - visit accepting state infinitely often
+Rabin
+
+https://github.com/Garvys/rustfst Rust implementation of Weighted Finite States Transducers. speech recognition and synthesis, machine translation, optical character recognition, pattern matching, string processing, machine learning, information extraction and retrieval
 
 ## Tree Automata
 https://github.com/ondrik/libvata
@@ -327,6 +336,11 @@ http://web.mit.edu/16.399/www/lecture_12-fixpoints2/Cousot_MIT_2005_Course_12_4-
 rules
 minimal set
 solution to constraint system
+
+## Monadic Second Order Logic
+S1S
+S2S
+
 
 ## Petri Nets
 
@@ -639,7 +653,23 @@ https://github.com/johnyf/tool_lists/blob/main/verification_synthesis.md
 - abc
 - Pono http://theory.stanford.edu/~barrett/pubs/MIL+21.pdf
 # Misc
+[Automata theory - An algorithmic approach](https://www7.in.tum.de/~esparza/autoskript.pdf) book. Wait this seems fantastic.
+BDD as a kind of automata. solving presburger arith by reduction to automata? Bizarre.
+https://owl.model.in.tum.de/ https://github.com/owl-toolkit/owl
 
+[Automata : From Logics to Algorithms - Vardi and Wilke](https://www.cs.rice.edu/~vardi/papers/wal07.pdf)
+
+Hopcroft and Ullman book
+wolfgang thomas
+autmata logic and games
+
+
+
+https://github.com/ravenbeutner/FsOmegaLib
+
+https://github.com/topics/automata
+
+https://github.com/nppoly/cyac High performance Trie and Ahocorasick automata (AC automata) Keyword Match & Replace Tool for python
 
 Automatalog
 partially built objects just can have fewer entries. But then how do we inform pointer to the objects they gave been 

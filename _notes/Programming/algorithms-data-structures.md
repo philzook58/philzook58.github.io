@@ -8,6 +8,7 @@ See also:
 
 
 [distibuted algoryhtms course](https://www.youtube.com/playlist?list=PL2RY7P3JxZN8g9hFCasNqzuDhZbIbAj54)
+[Algorithms for Competitive Programming](https://cp-algorithms.com/)
 
 # Functional Data Structures
 Okasaki
@@ -46,3 +47,20 @@ Acyclic means automata is way more structured than usual
 http://stevehanov.ca/blog/index.php?id=115
 https://docs.rs/fst/latest/fst/raw/struct.Fst.html#bibliography
 Finite State transducer. What is this term getting at?
+
+# Strings
+https://en.wikipedia.org/wiki/String-searching_algorithm
+https://www.geeksforgeeks.org/algorithms-gq/pattern-searching/
+Aho-corasick
+KMP - partial evaluation
+Z algorithm
+robin karp
+boyer moore https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string-search_algorithm
+https://en.wikipedia.org/wiki/Two-way_string-matching_algorithm
+
+# Graph
+
+
+# Geometry
+
+
