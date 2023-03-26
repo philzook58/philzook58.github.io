@@ -266,3 +266,5 @@ Processes are a timey database.
 [category theory carlo youtube](https://twitter.com/carloangiuli/status/1587467571737120769?s=20&t=rPY3oIv7e70HfT_mJgeYuA)
 
 [topology a category theory approach](https://topology.mitpress.mit.edu/) https://news.ycombinator.com/item?id=33601318
+
+[Category Theory Illustrated](https://github.com/abuseofnotation/category-theory-illustrated)

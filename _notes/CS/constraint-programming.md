@@ -30,6 +30,7 @@ Plannning
 Reachability
 Verification
 # Minizinc
+[webassembly playground](https://github.com/MiniZinc/minizinc-playground)
 [tutorial](https://www.minizinc.org/doc-2.6.2/en/part_2_tutorial.html)
 [202 autumn school](https://www.youtube.com/watch?v=lQi3b-sxt1s&ab_channel=AutumnSchoolonLogicandConstraintProgramming)
 
@@ -41,6 +42,24 @@ solve satisfy;
 ```
 
 How to make DSLs. Look for macros. Look for function call. Look for gensyms
+
+
+Minizinc has records now. That's huge. Hmm. But it doesn't have unions...
+What about recurisive records? Probably not
+```minizinc
+type Foo = tuple(int,int);
+
+var Foo: biz;
+
+var Foo: null = (0,0);
+enum tag = Foo | 
+  record(tag: "Foo", foo:null)
+```
+```minizinc
+type Cell = tuple(int, int);
+type Heap = array[Cell];
+
+```
 
 
 ```minizinc

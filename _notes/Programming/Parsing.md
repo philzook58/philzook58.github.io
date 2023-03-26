@@ -22,6 +22,13 @@ LALR
 
 [sy brand paper on how compilter diagnostics could be imporved](https://twitter.com/TartanLlama/status/1527327581464567809?s=20&t=C_oktCkKA7nprGoHnJpglQ)
 
+[Top-down LR parsing - panchekha](https://pavpanchekha.com/blog/top-down-lr.html)
+[Why We Need to Know LR and Recursive Descent Parsing Techniques - tratt](https://tratt.net/laurie/blog/2023/why_we_need_to_know_lr_and_recursive_descent_parsing_techniques.html) https://twitter.com/laurencetratt/status/1615281727538188289?s=20
+[Just write the parser - rompf](https://tiarkrompf.github.io/notes/?/just-write-the-parser/aside1)
+[Parser generators vs. handwritten parsers: surveying major language implementations in 2021](https://notes.eatonphil.com/parser-generators-vs-handwritten-parsers-survey-2021.html)
+
+https://langcc.io/ [paraticval lr parser generation](https://arxiv.org/abs/2209.08383)
+
 ## Grammars
 https://en.wikipedia.org/wiki/Formal_grammar
 String rewrite rules. Distinguishes between terminal and non terminal
@@ -162,7 +169,51 @@ graph tee sitter
 souffle tree-sitter
 
 
+a datalog grammar:
+egglite
+chr
 
+
+```python
+from lark import Lark
+
+grammar = """
+prog : rule*
+rule : fact "."
+   | head ":-" body  "."
+
+body: fact ("," fact)*
+head : fact
+fact :  NAME "("  [ term ("," term)* ]  ")"
+
+term : NUMBER -> number
+     | STRING -> string
+     | NAME -> var
+
+%import common.CNAME -> NAME
+%import common.ESCAPED_STRING   -> STRING
+%import common.NUMBER
+%import common.WS
+%ignore WS
+"""
+"""
+//   | head ":-" body "."
+
+fact : rel
+head : rel
+body : rel  ("," rel)*
+rel : name "("  [ term ("," term)* ]  ")"
+term : number
+     | string
+     | variable
+// term : name "("    ")"
+
+lit : 
+"""
+
+parser = Lark(grammar, start="prog")
+print(parser.parse("foo(3,4).  edge(1,2). edge(\"a\"). path(x,z) :- edge(x,y), path(y,z).").pretty())
+```
 
 # Sexp
 
