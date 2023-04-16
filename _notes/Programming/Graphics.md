@@ -26,3 +26,11 @@ https://github.com/ricktu288/ray-optics
 attributes - sent to vertex shader
 uniform - paramters sent to shaders
 varying sent to fragment shader
+
+
+Bloom effect
+
+`mix` `mod`
+
+Gamma correction and color mixing
+

@@ -1010,6 +1010,10 @@ It isn't phi spots so much as split spots that are annying in this backwards ver
 ```
 
 # Misc
+[Destination-Driven Code Generation](https://legacy.cs.indiana.edu/~dyb/pubs/ddcg.pdf)
+[One-pass Code Generation in V8](https://bernsteinbear.com/assets/img/46b-codegeneration-in-V8.pdf)
+
+[PL Resouces - Max Bernstein](https://bernsteinbear.com/pl-resources/) fantastic list of resources for compilers mostly
 [Proving the correctness of a compiler - Xavier Leroy](https://xavierleroy.org/courses/EUTypes-2019/) summer course
 
 [chibicc](https://github.com/rui314/chibicc) C compiler in nanopass style. Each commit is interesting! Written intentionally educationally.

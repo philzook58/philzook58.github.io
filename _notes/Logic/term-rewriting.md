@@ -106,7 +106,8 @@ http://cime.lri.fr/ cime
 
 
 # Term Orderings
-
+[Things to Know when Implementing KBO](https://link.springer.com/article/10.1007/s10817-006-9031-4)
+[Things to Know when Implementing LPO](https://www.worldscientific.com/doi/10.1142/S0218213006002564)
 rewrite ordering
 reduction ordering
 
@@ -127,12 +128,15 @@ stable under subsitition
 stable under contect
 terminating
 
+weighted path order WPO
+
 kbo - maps all variables to number that is less than all actual symbols
 Then upon subsitution, the cost can only increase
 first check variabnle count is ok
 complicated tie breaking
 https://www.cs.miami.edu/home/geoff/Courses/TPTPSYS/FirstOrder/SyntacticRefinements.shtml
 
+[Empirical Properties of Term Orderings for Superposition - Schulz](http://wwwlehre.dhbw-stuttgart.de/~sschulz/PAPERS/Schulz-PAAR-2022.pdf)
 # Termination
 https://github.com/TermCOMP/TPDB termination problem database
 
@@ -660,6 +664,7 @@ See automated theorem proving.
 # Systems
 
 ## Maude
+[Programming and Symbolic Computation in Maude 2019](https://arxiv.org/pdf/1910.08416.pdf)
 
 [Bool]
 looks like maude has reflective reasoning

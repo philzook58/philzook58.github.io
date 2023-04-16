@@ -24,8 +24,19 @@ title: Machine Learning
   - [tidbits](#tidbits)
 - [Verification](#verification)
 - [Famous Models](#famous-models)
+    - [LoRA](#lora)
+    - [Stable Diffusion](#stable-diffusion)
+    - [Mixed Precision](#mixed-precision)
+    - [prompt engineering](#prompt-engineering)
+    - [Transformers](#transformers)
+  - [Large Language Models](#large-language-models)
+    - [Models](#models)
+    - [Data sets](#data-sets)
+    - [Vector Databases](#vector-databases)
   - [Backprop Technqiues](#backprop-technqiues)
   - [Frameworks](#frameworks)
+- [Hugging Face](#hugging-face)
+    - [fastai](#fastai)
   - [Resources](#resources)
 - [Reinforcement Learning](#reinforcement-learning)
 - [Verification](#verification-1)
@@ -157,9 +168,9 @@ node2vec
 code2vec
 
 copilot
-gpt-3
-chatgpt
-llama https://news.ycombinator.com/item?id=35100086 llama weights leaked. 4 bt quantization
+
+
+gato
 
 wavenet
 DALL-E
@@ -172,8 +183,129 @@ alphafold
 alpha zero / go
 BERT
 
+https://github.com/facebookresearch/segment-anything 
+### LoRA
+Low rank adaptation
+https://arxiv.org/abs/2106.09685
+But people are also using the technique on stable diffusion
+[Using LoRA for Efficient Stable Diffusion Fine-Tuning](https://huggingface.co/blog/lora)
 
-## Backprop Technqiues
+Lora let's you fine tune big models by injecting in small layers that are easier to train
+
+PEFT parameter efficient fine tuning https://www.youtube.com/watch?v=YVU5wAA6Txo&ab_channel=code_your_own_AI
+
+https://civitai.com/ people post their lora updates
+
+https://twitter.com/rasbt/status/1642161887889567745 soft finetuning
+prefix finetuning
+
+[Fine-tuning 20B LLMs with RLHF on a 24GB consumer GPU](https://huggingface.co/blog/trl-peft)
+
+### Stable Diffusion
+https://www.fast.ai/posts/part2-2023.html course
+
+inpainting
+outpainting
+
+### Mixed Precision
+https://github.com/NVIDIA/apex
+https://github.com/ggerganov/llama.cpp/issues/9
+GPTQ quantization
+### prompt engineering
+https://www.promptingguide.ai/
+Question answer format to give a couple examples
+Start a conversation
+See openai examples page
+People use seperators to denote different sections. Weird.
+
+Avoid impreciseness
+
+chain of thought prompting https://arxiv.org/abs/2201.11903
+### Transformers
+## Large Language Models
+https://openai.com/research/instruction-following instructgpt RLHF reinfrocement learning human feedback
+
+alpaca https://crfm.stanford.edu/2023/03/13/alpaca.html llamma fine tuned. Make a bunch of examples. Make gpt3 build a dataset out of them, finetune llama on those answers
+
+
+Emery berger is going ham. I think basically what he is doing is grabbing pertinent data and constructing a gpt prompt
+
+[](https://huggingface.co/blog/stackllama)
+
+langchain https://www.pinecone.io/learn/langchain-intro/
+https://github.com/microsoft/semantic-kernel microsoft version of langchain?
+
+https://github.com/unitaryai/detoxify detect toxix comments. I suppose you just need to detect if the output is mean and then you can block it. AI vs AI
+
+https://bellard.org/ts_server/  text synth server fabrice bellard
+
+https://www.emergentmind.com/
+https://www.builder.io/blog/ai-shell
+
+Chinchilla scaling - There is an amount of data and number of parameters that is compute optima
+
+https://news.ycombinator.com/item?id=35483933 chatdbg, another gdb chatgpt integration
+
+https://github.com/openai/tiktoken tokenizer BPE byte pair encoding https://platform.openai.com/tokenizer try out te tokenizer
+
+https://github.com/openai/openai-cookbook open ai cookebook
+
+[sentence transformers](https://www.sbert.net/) make embeddings easily?
+
+"Pre-training" is the heavy lift huge datacetner part that produces raw gpt3 models or whatever. Weird terminology to call that pretraining
+
+ICL - in context learning - running inferece. A set of examples in the prompt
+
+[deep to long learning](https://news.ycombinator.com/item?id=35502187) Context length is important. It scales poorly
+
+Perplexity - measurement of inaccuracy of model prediction on test set https://en.wikipedia.org/wiki/Perplexity
+
+NLP - 
+unigram model - probility of individual words
+n-gram model - condtional probability of word window
+### Models
+https://vectara.com/top-large-language-models/ useful summary. Probaby will be outdate in a month
+
+- gpt-3
+- chatgpt
+- llama https://news.ycombinator.com/item?id=35100086 llama weights leaked. 4 bt quantization. https://github.com/rustformers/llama-rs
+
+- Bloom https://huggingface.co/bigscience/bloom
+- eleuther gpt-j https://en.wikipedia.org/wiki/GPT-J https://www.width.ai/post/gpt-j-vs-gpt-3 https://github.com/EleutherAI/gpt-neox
+- gpt4all - another lora finetuning of llama
+- flan-t5 / flan-ul2 / t5-xxl
+- PaLM
+
+gpt-cerebras - the point it was trained efficiently, not that its good? https://news.ycombinator.com/item?id=35487846
+claude https://www.anthropic.com/index/introducing-claude
+
+rwkv https://github.com/BlinkDL/RWKV-LM https://news.ycombinator.com/item?id=35370357  https://github.com/saharNooby/rwkv.cpp
+
+### Data sets
+The Pile
+
+
+### Vector Databases
+Databases that include the abilitt to do fuzzy search for vectors (from embeddings)
+
+Approximate nearest neighbor: [FAISS](https://github.com/facebookresearch/faiss),  https://github.com/spotify/annoy https://github.com/nmslib/hnswlib/
+
+- Pinecone
+- Milvus
+- Weaviate
+- Qdrant
+
+[missing where clause](https://www.pinecone.io/learn/vector-search-filtering/), pre vs post filtering
+
+sqlite vector search
+https://github.com/asg017/sqlite-vss https://observablehq.com/@asg017/introducing-sqlite-vss
+
+postgres vector pg_vector
+
+vs 
+elastic search, opensearch, lucene.
+BM25
+## Backprop Technqiues 
 adam
 sgd
 with momentum?
@@ -185,6 +317,19 @@ Pytorch
 JAX
 
 Julia
+
+https://github.com/huggingface/accelerate
+
+# Hugging Face
+transformers
+pipeline is the easy version
+datasets library
+
+```python
+
+```
+
+### fastai
 ## Resources
 - Deep Learning Book
 - 

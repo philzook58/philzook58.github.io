@@ -834,22 +834,80 @@ Lambda's in `yall` only produce goals, so far as I can tell. So if you want them
 :- use_module(library(yall)).
 :- use_module(library(apply)).
 :- use_module(library(apply_macros)).
+:- initialization(main,main).
+:- use_module(library(occurs)).
 
-right(_,_,_,true).
-right(S,P,E,and(B1,B2)) :- right(S,P,E,B1), right(S,P,E,B2).
-right(S,P,E,or(B1,_B2)) :- right(S,P,E,B1).
-right(S,P,E,or(_B1,B2)) :- right(S,P,E,B2).
-right(S,P,E,impl(B1,B2)) :- right(S,[B1|P], E,B2).
-right(S,P,E,ex(L)) :- call(L,X,G), right(S,P,[X|E],G).
-right(S,P,E,all(L)) :- gensym(X), call(L,X,G), right([X|S],P,E,G).
-right(S,P,E,+A) :- member(D,P),  left(S,P,D,A). %decide
+extrude_check(S,T) :- writeln([ex_check, S, T]), forall((sub_term(X, T), ground(X), X = fvar(Y)), member(Y,S)). 
+
+right(_,_,true).
+right(S,P,and(B1,B2)) :- right(S,P,B1), right(S,P,B2).
+right(S,P,or(B1,_B2)) :- right(S,P,B1).
+right(S,P,or(_B1,B2)) :- right(S,P,B2).
+right(S,P,impl(B1,B2)) :- right(S,[B1|P],B2).
+right(S,P,ex(L)) :- call(L,X,G), right(S,P,G), writeln([ex,X]), extrude_check(S,X).
+right(S,P,all(L)) :- writeln(all), gensym(v,X), call(L,fvar(X),G), right([X|S],P,G), writeln([exit_all, G]).
+right(S,P,+A) :- member(D,P), writeln([pick,P, D,A]), left(S,P,D,A), writeln([D,A]). %decide
 
 % alternate name: clause deonstruct, focused.
-left(_,_,A,A).
+left(_,_,+A,A).
 left(S,P,impl(G,D), A) :- left(S,P,D,A), right(S,P,G).
 left(S,P,and(D1,_D2), A) :- left(S,P,D1,A).
 left(S,P,and(_D1,D2), A) :- left(S,P,D2,A).
 left(S,P,all(L), A) :- call(L,X,D), left(S,P,D,A). % maybe
+
+
+%main(_) :- P = [
+%  all( [J, T] >> T = impl(all([X,T1] >> T1 = impl(and(bug(x), in(x,J)), dead(x)), sterile(J))),
+%  all( [B, T] >> T = impl(ex([J,T1] >> T1 = and(headed(J), and(in(B,J), bug(B)) ) , dead(B))),
+%  heated(j) ]
+
+
+foo(E,G) :- G = all(bar(E)).
+bar(E,X,G) :- G = impl(+foo(X), +foo(E)). 
+% ;re
+query(Q) :- Q = ex([H2,J2] >> (J2 = all({H2} / [Q2,G2] >> (G2 = impl(+foo(Q2),+foo(H2)))))).
+
+main(_) :- 
+  P = [
+  all([L,T] >> (T = +append([], L, L))),
+  all([H,T] >> (T = all([L1, T1] >> 
+               (T1 = all([L2,T2] >> 
+               (T2 = all([L3, T3] >> 
+               (T3 = 
+        impl(+append(L1,L2,L3),
+             +append( [ H | L1], L2, [H | L3]))))))))))
+  ], right([], P, +append([a,D], [c], Z)), writeln(Z),
+  right([],[],true), writeln(pass),
+  right([],[+a], +a), writeln(pass2),
+  right([],[+a,+b], +b), writeln(pass3),
+  right([],[all([X,T] >> (T = +foo(X)))],+foo(a)), writeln(pass4)
+  , right([], [+append(nil, nil, nil)], +append(nil, nil, nil)) , writeln(pass5)
+  , right([], P, +append([], [], X)) , writeln(X), writeln(pass6),
+
+  right([], [], impl(+a,+A)), writeln(A),
+  right([], [], impl(and(+a,+b),+b)),
+  right([], [], impl(and(+a,+b),+b)),
+  right([], [], all([Q,G] >> (G = impl(+foo(Q),+foo(Q))))),
+  %\+ right([], [], all([Q,G] >> (G = impl(+foo(Q),+foo(a))))),
+  right([], [], all({F}/[Q1,G1] >> (G1 = impl(+foo(Q1),+foo(F))))), writeln(F),
+
+  %right([], [], ex([H1,J1] >> (J1 = impl(+foo(H1),+foo(H1))))),
+  writeln(pass7),!,
+  %right([], [], ex([H2,J2] >> (J2 = all({H2} / [Q2,G2] >> (G2 = impl(+foo(Q2),+foo(H2))))))),
+  writeln(pass8),
+  right([],[],ex(foo)),
+  writeln(pass9),
+  query(Q7),
+  right([],[],Q7)
+
+
+
+
+
+  %right([],[],[], append(nil,nil,nil)), print(passed)
+.
+
+
 
 ```
 
@@ -947,6 +1005,143 @@ left(all(L), A) --> {call(L,X,D)}, left(D,A).
 Higher order unification is a separate issue. If we are already overloading unification, it is probably not that hard to treat.
 Miller pattern unification is a subcase of higher order unification that is easy. The idea is to restrict higher order unification to it's bones. 
 
+```prolog
+:- use_module(library(intercept)).
+:- initialization(main,main).
+
+%https://www.swi-prolog.org/pldoc/man?section=intercept
+
+%right(+A) :- send_signal(goal(A)).
+% hmm, so that send signal is still in scope of the current intercept it seems like?
+%right(impl(D,G)) :- intercept(right(G),goal(A), (writeln(A), D=A;send_signal(goal(A)))).
+
+% implicit contxt being parlayed.
+left(D,A) :- D = A.
+right(+A) :- send_signal(prog(P)), member(D,P), left(D,A). 
+right(impl(D,G)) :- send_signal(prog(P)), intercept(right(G), prog(P1), P1 = [D | P]).
+
+run(G) :-  intercept(right(G), prog([]), true).
+ % intercept(right(G),goal(A), (writeln(A), D=A)).
+main(_) :-  intercept(send_signal(x), X, writeln(X)),
+            %intercept((right(impl(foo(c), impl(foo(b), +foo(A)))), writeln(A)), prog([]), true).
+            run(right(impl(foo(c), impl(foo(b), +foo(A))))), writeln(A).
+```
+So these techniques enable implicit context in different ways. Could receive database per head symbol
+
+```prolog
+:- use_module(library(intercept)).
+:- use_module(library(yall)).
+:- use_module(library(apply)).
+:- initialization(main,main).
+
+biz(X) :- get_ctx(facts(P)), member(D,P), D = biz(X). % for non unversal facts this works. call(D,bar(X))
+%biz(X) :- X = foo.
+
+% hmm. I want to reenter the continuation mutiple times though? Is that ok?
+% ok, so if I just send back the 
+
+
+bar(X) :- get_ctx(facts(P)), member(D,P), D = bar(X). % for non unversal facts this works. call(D,bar(X))
+
+bar(X) :- get_ctx(clauses(P)), writeln(P), writeln(X), member(D,P), call(D,bar(X)). % for non unversal facts this works. call(D,bar(X))
+
+
+% bar(a).
+
+
+% essentially, reader monad
+
+foo(X) :- send_signal(clauses(P)), member(D,P), call(D,foo(X)).
+
+% mayb send_silent_signal is useful here
+% or perhaps catch the error of a missing prog(P).
+% use intercept/4 just to make sure variables in P don't get screwed up?
+%impl(D,G) :- get_ctx(facts(P)), intercept(G, facts(P1), P1=[D|P]).
+
+impl(D,G) :- get_ctx(facts(P)), intercept(G, facts(P1), =(P1), [D|P]).
+
+climpl(D,G) :- get_ctx(clauses(P)), intercept(G, clauses(P1), =(P1), [D|P]).
+
+
+get_ctx(facts(P)) :- catch(send_signal(facts(P)), error(unintercepted_signal(facts(_4104)),_4096), P = []).
+get_ctx(clauses(P)) :- catch(send_signal(clauses(P)), error(unintercepted_signal(clauses(_4104)),_4096), P = []).
+
+% could maintan seprate lists per functor, but what's the point?
+setup_db(G) :- intercept(G,prog(P),P=[]).
+
+buz :- writeln(ap), bar(a), send_signal(facts(P)), writeln([facts,P]), bar(b), writeln(succed_b).
+
+bar_clause(X, G) :- G = bar(X).
+biz_clause(G) :- G = bar(X), writeln(X), biz(X).
+main(_) :- 
+  % yes it traverses to the outer intercept
+ %intercept(intercept(send_signal(foo), bar, writeln(bar)), foo, writeln(foo)),
+% setup_db((
+  %impl(bar(b), impl(bar(c), bar(A))), A \= c, writeln(A), bar(a),
+
+  % \+ impl(bar(_F), (bar(a), bar(b))) % should fail because F needs to be a and b
+  %, climpl([G] >> G = bar(a), bar(a))
+  %, climpl([G] >> G = bar(a), bar(a))
+  %, climpl(=(bar(a)), bar(a)) % this is nice. What if I wanted a body though?
+  %, climpl([G] >> (G = bar(X), biz(X)), impl(biz(a), bar(a)))
+   climpl(biz_clause, bar(a)) % impl blocks climpl. Hmm. So non interferencing signals don't bubble.
+   % Do I need to do  if_( = facts(), P1 = P(),  send_signal()) explicit signal repropgation?
+   % intercept(G, Signal, Signal = fact(P) -> doit ; send_signal(Signal))
+   % seems very non compostional to require this. Can this be right?
+   % Also could use [fact(), clause(), fact()] rep of P
+   % or implement impl(D,G) :- climpl(=(D), G). 
+
+
+  .
+% )).
+ %intercept((biz(X), send_signal(bar)), bar, X=bar), writeln(X).
+
+% exists is uninterestnig except for scope check.
+%pi(L) :- gensym(fvar,X), call(L,X).
+pi(L) :- send_signal(fvar(N)), N1 #= N + 1, intercept(call(L, fvar(N1)), fvar(N1), true).
+
+% This seems kind of useful for abductive logic programming. Maybe they have soome tricks?
+
+% more point free combinator tricks rather than using []
+% That will be less error prone.
+```
+
+```prolog
+:- use_module(library(intercept)).
+:- initialization(main,main).
+
+% add this clause to mark bar/1 as "scoped dynamic predicate"
+bar(X) :- get_ctx(facts(P)), member(D,P), D = bar(X).
+% also can have regular global clauses
+bar(X) :- biz(X).
+bar(c). 
+
+impl(D,G) :- get_ctx(facts(P)), intercept(G, facts(P1), =(P1), [D|P]).
+get_ctx(facts(P)) :- catch(send_signal(facts(P)), error(unintercepted_signal(facts(_)),_), P = []).
+
+main(_) :- impl(bar(a), (bar(X), impl(bar(b), bar(Y)))), writeln(X), writeln(Y).
+
+
+% no it does pass signals through.
+
+%main(_) :- intercept(intercept(send_signal(foo(X)), bar(X), writeln(bar)), foo(X), writeln(foo)).
+
+```
+
+
+They don't cover (maybe) the problem of keeping universal variables universal but existentials linked
+```prolog
+%:- initialization(main,main).
+
+right(+A) :- shift(goal(A)).
+right(impl(D,G)) :- reset(right(G), goal(A), Cont), 
+  (Cont == 0 ->
+  true;
+  (A=D ; shift(goal(A))), call(Cont)).
+
+main(_) :-  reset(right(impl(foo(c), impl(foo(b), +foo(A)))), goal(_), Cont), 
+(Cont == 0 -> writeln(A) ; fail).
+```
 ## Delimitted Continuations
 Continuations are a reification of a call stack. The call stack in prolog is a goal stack.
 When you 
@@ -2091,6 +2286,7 @@ Man what hope is there of compiling a 7 year old haskell project?
 compiler to sql statements. Makes sense.
 
 ```prolog
+:- use_module(library(chr)).
 :- chr_constraint left/0, right/0, forward/0, backward/0.
 
 left,right  <=> true.
@@ -2167,6 +2363,43 @@ right = [(,), (,)]
 
 If my advice is to just use SWI for CHR, why is tabled SWI not my advice for datalog. No. That _is_ reasonable advice probably.
 Not unless you're doing something weird
+
+
+
+What would be better is to store the build values in env and not the keep ids. I don't know persay how bad that join is. Maybe using a left join or something so that sql knows it doesn't have to even loop up stuff it doesn't need.
+
+
+This is not that elegant.
+
+```python
+
+class Rule():
+  def __init__(self, name, kill, keep, guard, build):
+    cols = ", ".join([f"{row})" for table, row in kill + keep])
+    constraints = ", ".join([f"UNIQUE ({row})" for table, row in kill]) # To avoid double counting kills
+    fields = ", ".join(cols, constraints)
+    create_env = f"CREATE TEMP TABLE env({fields})" # put name on the env?
+
+    selects = ", ".join([f"{row}.rowid" for table, row in kill + keep])
+    wheres = " AND ".join(guards)
+    find = f"INSERT OR IGNORE INTO env SELECT DISTINCT {selects} FROM {froms} WHERE {wheres}"
+    
+    deletes = [f"DELETE FROM {table} INNER JOIN env ON {table}.rowid = env.{row}" for table,row in kill]
+
+    #rowenv  = ", " [ "  for table,row in kill + keep]
+    where = " AND ".join([f"{table}.rowid = env.{row}" for table,row in kill + keep])
+    inserts = [f"INSERT INTO {table} SELECT {val} FROM env, {selects} WHERE " for table, val in build]
+
+    "DROP TABLE env"
+```
+
+Could imagine a syntax with an explicit binding part that puts these things in the env.
+And that the built expsressions may not refer to the bound varaibles. Annoying restriction. And obviously we could
+
+```
+l @ left, r @ right <=> guard | p = l.x, z = r.y |  {r,a}
+```
+Keep a bunch of rules synchronized is annoying
 
 
 ## Answer Set Programming s(CASP)

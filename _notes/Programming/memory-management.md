@@ -31,6 +31,7 @@ Deallocate all at once. Good for fragmentation too.
 https://manishearth.github.io/blog/2021/03/15/arenas-in-rust/
 
 # Garbage Collection
+[garbage colleciton handbook 2](https://news.ycombinator.com/item?id=35492307)
 [](https://wingolog.org/archives/2022/12/11/we-iterate-so-that-you-can-recurse)
 [semi space collector](https://wingolog.org/archives/2022/12/10/a-simple-semi-space-collector)
 

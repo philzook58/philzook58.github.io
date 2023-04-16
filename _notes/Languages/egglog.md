@@ -471,3 +471,378 @@ During term rewrting, we can track it. In egraphs we can't (unless I build it th
 ```
 let rewrite ctx t = 
 ```
+
+## AC
+
+Let's dial back to terms. What is wrong with using unordered vertices as "AC-nodes". Relational matching ought to basically work.
+
+```
+a \
+b--ac - + - 
+c /
+```
+
+```sql
+create table plus(ac unique); -- functional to rowid
+create table lit(n unique); -- functional to rowid
+create table ac(in_,out_); -- a many to many relationship. A special table with special rebuild. Multiset semantics because can have terms like "a" + "a" + "a"
+-- construct a + b + c as 
+-- lit a  \
+-- lit b -- ac - plus - 
+-- lit c  /
+insert into lit values ("a"), ("b"), ("c");--select * from generate_series(0,3);
+insert into ac select lit.rowid,0 from lit;
+
+--values (1,0), (2,0), (3,0);
+insert into plus values (0);
+
+select *, rowid from plus;
+select *, rowid from ac;
+-- This query is doing AC-matching (_ + ?x + ?y)
+-- (?x + ?y) coule mean partition the AC set.
+-- or (?x + ?y) could mean ony match sets of cardinality 2.
+-- Depends if vars can bind to sets or
+-- plus( { ?x , ?y }   ) vs  plus( { ?x , ?y, ... }) vs plus( ?x union ?y) 
+
+select * from plus, ac as n1, ac as n2, lit as x1, lit as x2
+ where n1.out_ = plus.ac and n2.out_ = plus.ac 
+ and n1.rowid != n2.rowid -- multiset but don't match same term twice
+ and n1.in_ = x1.rowid and n2.in_ = x2.rowid 
+ and n1.in_ < n2.in_  -- break permutation symmetry
+ ;
+-- If I want to match (?x + ?y + ?z)... no this is impossible. Like what do you mean? Ok. Maybe in the plus case this is possible. Even a single term can be artbirarily in real valued plus.
+-- Ok but AC is more dsicrete and combinatorial. There is the empty set. Maybe by vonvention you denote whether you want to allow vars to attach to the empty set.
+-- I should always be allowed to bind y and z to null also.
+
+--select * from ac 
+-- groupby ac.j
+```
+
+
+### slog
+
+```python
+from lark import Lark, Transformer, v_args
+grammar = '''
+//prog : rule*
+rule : head ":-" body  "."
+
+body: body_fact ("," body_fact)*
+head : NAME "{"  [ head_field ("," head_field)* ]  "}"
+head_field : NAME ":" expr
+body_fact :  
+  | expr "=" expr -> eq
+  | NAME "@" NAME -> from_
+
+// op:
+expr : NUMBER -> number
+     | STRING -> string
+     | NAME "." NAME -> field
+
+%import common.CNAME -> NAME
+%import common.ESCAPED_STRING   -> STRING
+%import common.NUMBER
+%import common.WS
+%ignore WS
+'''
+
+@v_args(inline=True)
+class RuleTransformer(Transformer):
+  froms = []
+  wheres = []
+  def field(self, row, field):
+    return "{row}.{field}"
+  def string(self,s):
+    return '"' + s[1] + '"'
+  def number(self,n):
+    return n[1]
+  def from_(self, table, row):
+    self.froms.append(f"{table} AS {row}")
+  def eq(self, lhs, rhs):
+    wheres.append(f"{lhs} = {rhs}")
+  def body(self,*args):
+    wheres = " AND ".join(self.wheres)
+    froms = ", ".join(self.froms)
+    return f"FROM {froms} WHERE {wheres}"
+  def head_field(self, key, val):
+    return f"{val} AS {key}"
+  def head(self,table, *fields):
+    selects = ", ".join(fields)
+    return f"INSERT INTO OR IGNORE {table} SELECT {selects}"
+  def rule(self, head, body):
+    self.froms = []
+    self.wheres = []
+    return  head + " " + body
+
+
+parser = Lark(grammar, start="rule", parser="lalr", transformer=RuleTransformer())
+print(parser.parse("path { x : e.x, y : p.y} :- edge @ e, path @ p, e.y = p.x"))
+```
+
+```python
+from lark import Lark, Transformer, v_args
+from dataclasses import dataclass
+grammar = '''
+//prog : rule*
+rule : head ":-" body  "."
+
+body: body_fact ("," body_fact)*
+head : NAME "("  [ term ("," term)* ]  ")"
+body_fact :  
+  | term  "=" term -> eq
+  | NAME "("  [ term ("," term)* ]  ")" -> rel
+
+term : NUMBER -> number
+     | STRING -> string
+     | NAME -> var
+     | NAME "("  [ term ("," term)* ]  ")" -> func
+
+%import common.CNAME -> NAME
+%import common.ESCAPED_STRING   -> STRING
+%import common.NUMBER
+%import common.WS
+%ignore WS
+'''
+
+#parser = Lark(grammar, start="prog")
+#print(parser.parse("foo(3,4).  edge(1,2). edge(\"a\"). path(x,z) :- edge(x,y), path(y,z).").pretty())
+
+@dataclass(frozen=True, eq=True)
+class Var():
+  name:str
+
+@v_args(inline=True)
+class RuleTransformer(Transformer):
+  env = {} # variable env 
+  froms = [] 
+  wheres = []
+  counter = 0
+  def fresh(self, n):
+    self.counter += 1
+    return f"{n}{self.counter}"
+  def var(self,name):
+    print(name)
+    return Var(name)
+  def string(self,s):
+    return '"' + s[1] + '"'
+  def number(self,n):
+    return n[1]
+
+  def rel(self,table,*args):
+    self.func(table,*args)
+  def eq(self, x, y):
+    if isinstance(y, Var):
+      y = self.env[y]
+    if isinstance(x,Var):
+        if x in self.env:
+          self.wheres.append(f"{self.env[x]} = {y}")
+        else:
+          self.env[x] = y
+    else:  
+      self.wheres.append(f"{x} = {y}")
+  def func(self, table, *args):
+    row = self.fresh(table)
+    self.froms.append(f"{table} AS {row}")
+    for n, arg in enumerate(args):
+      if isinstance(arg,Var):
+        if arg in self.env:
+          self.wheres.append(f"{self.env[arg]} = {row}.x{n}")
+        else:
+          self.env[arg] = f"{row}.x{n}"
+      else:  
+        self.wheres.append(f"{arg} = {row}.x{n}")
+    return f"{row}.rowid"
+  def body(self,*args):
+    wheres = " AND ".join(self.wheres)
+    froms = ", ".join(self.froms)
+    return f"FROM {froms} WHERE {wheres}"
+  def head(self,table, *args):
+    # delay. Is this dumb? It's gnna bite me
+    def res():
+      print(self.env)
+      selects = []
+      for arg in args:
+        if isinstance(arg,Var):
+          selects.append(self.env[arg])
+        else:
+          selects.append(arg)
+      selects = ", ".join(selects)
+      return f"INSERT INTO OR IGNORE {table} SELECT {selects}"
+    return res
+  def rule(self, head, body):
+    res = head() + " " + body
+    self.env = {}
+    self.froms = []
+    self.wheres = []
+    self.counter = 0
+    return res
+
+
+parser = Lark(grammar, start="rule", parser="lalr", transformer=RuleTransformer())
+print(parser.parse("path(x,z) :- edge(x,y), path(y,z)."))
+print(parser.parse("path(x,z) :- edge(x,\"y\"), path(y,z)."))
+print(parser.parse("path(x,p(z)) :- add(mul(x,y), div(y,z)), y = x."))
+```
+Rename columns to x0-xn.
+Multiheaded rules.
+Accumulating semantics for multihead is kind of easy. Weird though.
+purify the wheres
+add root and union everywhere.
+((d :- c)  /\ b) :- a
+d :- a,b,c
+b :- a
+
+```sql
+create table foo(rowid INTEGER PRIMARY KEY AUTOINCREMENT, a );
+insert into foo (a) values (1), (2);
+create table bar(rowid INTEGER PRIMARY KEY AUTOINCREMENT, a );
+insert into bar (a) values (1), (2);
+
+select * from foo;
+select * from bar;
+select * from sqlite_sequence;
+```
+
+
+Using `default` instead of rowid
+```sql
+create table foo(a,b,res default -1);
+--describe foo;
+insert into foo (a,b) values (1 ,2);
+select * from foo;
+```
+
+```python
+
+import sqlite3
+counter = 0
+def fresh():
+  global counter
+  counter += 1
+  return counter
+conn = sqlite3.connect(":memory:")
+cur = conn.cursor()
+conn.create_function("fresh", 0, fresh)
+cur.execute("create table foo(a,b,c default (fresh()), unique (a,b))")
+cur.execute("insert or ignore into foo (a,b) values (2,3), (3,4), (2,3), (4,5)")
+cur.execute("select * from foo")
+print(cur.fetchall())
+# hmm. it calls fresh even on ignore. Don't like that
+```
+
+Too many fresh isn't persay a problem but it is kind of disappointing
+I guess we could use a trigger after insert
+
+```sql
+create table foo(a,b,res default -1);
+--describe foo;
+create trigger after insert 
+insert into foo (a,b) values (1 ,2);
+select * from foo;
+```
+
+
+```
+counter = 0
+def freshrow():
+  global counter
+  counter += 1
+  return "row" + str(counter)
+
+def var(x):
+  def res(loc):
+    return {x : loc}, [] , []
+  return res
+
+
+def foo(a):
+  def res(loc):
+    row = freshrow()
+    (env, froms, wheres) = a(f"{row}.a")
+    return (env,  [f"foo as {row}"] + froms, [f"{loc} = {row}.rowid"] + wheres)
+  return res
+
+def merge(env1,env2):
+  if len(env1) > len(env2):
+    env1, env2 = env2, env1
+  wheres = [ f"{v} = {env2[k]}" for k,v in env1.items() if k in env2 ] # join
+  return {**env1, **env2}, wheres
+
+def func(table):
+  def res(*args):
+    def res1(loc):
+      row = freshrow()
+      if loc != None:
+        wheres = [f"{loc} = {row}.rowid"]
+      else:
+        wheres = []
+      froms = [f"{table} as {row}"]
+      env = {}
+      for n, arg in enumerate(args):
+        e, f, w = arg(f"{row}.x{n}")
+        wheres += w
+        froms += f
+        env, w2 =  merge(env,e)
+        wheres += w2
+      return env, froms, wheres
+    return res1
+  return res
+
+plus = func("plus")
+x = var("x")
+print(plus(x,x)(None)) # This is ugly. I should also be returning the row.
+```
+Ugh, so I need to pass something down the tree so the vars can do something, or I can make retvals either var or not. I could make the env have concat merge semantics and collect up at the end. That's what I did in snakelog
+
+a.1.1 = b.1.1, a.h =
+
+plus @ a, a.x, a.x
+
+Ok, so I need to build a datalog first. It sucks too much to
+
+```
+      #args1 = [arg(f"{row}.x{n}") for n, arg in enumerate(args)]
+      #envs, froms, wheres = map(list, zip(*args1))
+      #print(froms, wheres)
+      #env1 = {}
+      #wheres.append(f"{loc} = {row}.rowid")
+      ##froms.append(f"{f} as {row}")
+      #for env in envs:
+      #  env1, w = merge(env, env1)
+      #  wheres += w
+
+counter = 0
+def freshrow():
+  global counter
+  counter += 1
+  return "row" + str(counter)
+
+def foo(a):
+  def res():
+    (rid, froms, wheres) = a()
+    row = freshrow()
+    return (f"{row}.rowid",  [f"foo as {row}"] + froms, [f"{rid} = {row}.a"]+ wheres)
+  return res
+
+def x():
+  row = freshrow()
+  return (row + ".rowid" ,[f"x AS {row}"], [])
+
+def func(f):
+  def res(*args):
+    def res1():
+      args = [arg() for arg in args]
+      rids, froms, wheres = zip(*args)
+      row = freshrow()
+      (f"{row}.rowid",  [f"{f} as {row}"] + froms, [f"{rid} = {row}.arg{n}" for n,rid in enumerate(rids)] + wheres)
+    return res1
+  return res
+
+print(foo(foo(x))())
+```
+
+Wait, would the join form be cleaner?
+JOIN foo, a on a.rowid = foo.
+Meh. Kind of. 
+
+

@@ -504,6 +504,34 @@ create table accept(s1 state, flag bool);
 -- insert into  trans
 from trans as t1, trans as t2, accept where t1.
 ```
+
+
+```sql
+create table trans(s state unique, fin bool, sa state, sb state);
+create table observe(fin, pa partition, pb partition, unique (fin,pa,pb)); -- observations
+create table eqclass(s state unique, ob); -- mapping from state to eqclass id
+-- initialize assuming everything in same partition
+insert into eqclass select s, 0 from trans;
+
+-- dfa_map
+insert or ignore into observe select trans.fin, sobs1.ob, sobs2.ob from eqclass as sobs1, eqclass as sobs2, trans 
+  where 
+    trans.sa = sobs1.s and trans.sb = sobs2.s;
+
+insert into eqclass select trans.s, o.rowid from trans, observe as o where 
+  o.fin = trans.fin and
+  eqclass.o
+
+insert into sobs select s, o from observe, eqclass as sobs1, eqclass as sobs2, trans 
+  where 
+    trans.sa = sobs1.s and
+    trans.sb = sobs2.s and
+    observe.fin = trans.fin and
+    observe.pa = sobs1.ob and
+    observe.pb = sobs2.ob
+
+```
+
 ### Puzzle
 I mean this is the brute force loop searhc, but it's neat that sqlite pushes the checks high up in the loop
 https://stackoverflow.com/questions/15104206/solving-a-crypt-arithmetic-puzzle-with-relational-database
@@ -639,7 +667,6 @@ Performance tips: WAL mode
 - `.indexes`
 - `.expert` suggests indices?
 
-<<<<<<< HEAD
 ```sql
 create table edge(a,b);
 insert into edge values (1,2), (2,3);
@@ -651,10 +678,25 @@ create view path(a,b) as
 select * from path; -- error, circularly defined.
 ```
 
-=======
+
 [	Strong Consistency with Raft and SQLite](https://news.ycombinator.com/item?id=35246228)
 https://rqlite.io/ The lightweight, easy-to-use, distributed relational database built on SQLite
->>>>>>> ddf5edc098d5ddaa7b4405b907a6595be2aa09fa
+
+
+NULL behavior
+https://www.sqlite.org/nulls.html
+```sql
+-- NULL don't collide in unique constraints. NULL is not = to NUll
+create table foo(a,b, unique (b));
+insert into foo values (1,NULL), (2,NULL);
+select * from foo;
+select 1,NULL = NULL; -- returns null
+select 1,NULL != NULL; -- returns null
+select 1,2=2; --returns 1 whih is true
+--1|
+--2|
+```
+
 # Duckdb
 https://duckdb.org/
 sqlite for olap
@@ -746,6 +788,9 @@ catalog multiversion concrruncy control
 cimpressed execution binder
 
 # Postgres
+Full Text Search
+
+[postgres as a graph database](https://news.ycombinator.com/item?id=35386948)
 https://www.postgresql.org/docs/current/index.html The manual
 `sudo -u postgres psql`
 Very often you need to be the postgres user on the default install
