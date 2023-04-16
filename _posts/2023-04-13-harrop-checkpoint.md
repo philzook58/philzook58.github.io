@@ -10,15 +10,17 @@ Well, the time has come once again. I have been spending a decent amount of time
 
 I've been trying to embed [lambda prolog](https://www.lix.polytechnique.fr/~dale/lProlog/) like features in regular prolog. Prolog implementations have a lot of effort put into them, and a fairly large ecosystem, so there are advantages if this can be achieved.
 
-Lambda prolog has [two interrelated aspects](https://www.lix.polytechnique.fr/~dale/lProlog/faq/what.html) to it, extending the horn clause structure to harrop and allowing higher order unification. I'm attacking the Harrop part first.
+Lambda prolog has [two interrelated aspects](https://www.lix.polytechnique.fr/~dale/lProlog/faq/what.html) to it, extending the horn clause structure to Harrop and allowing higher order unification. I'm attacking the Harrop part first.
 
-The basic extra features that Harrop clauses offer on top of prolog is the ability to assert clauses into the database and the creation of fresh variables when you traverse under forall binders.
+The basic extra features that Harrop clauses offer on top of prolog is the ability to locally assert clauses into the database and the creation of fresh variables when you traverse under forall binders.
 
-This paper [A Declarative Alternative to “assert” in Logic Programming](https://www.cs.cmu.edu/~fp/papers/ilps91.pdf) attacked kind of the same problem. Maybe the addition of continuations since then changes the solution space though.
+This paper [A Declarative Alternative to “assert” in Logic Programming](https://www.cs.cmu.edu/~fp/papers/ilps91.pdf) attacked kind of the same problem. Maybe the addition of continuations to prolog since then changes the solution space though.
 
-Really if you want these features to work right you should probably just use [elpi](https://github.com/LPCIC/elpi). But I did discover some useful tidbits, so here we go.
+Really, if you want these features to work right you should probably just use [elpi](https://github.com/LPCIC/elpi). But I did discover some useful tidbits, so here we go.
 
-Ok, anyway, but prolog offers [dynamic predicates](https://www.swi-prolog.org/pldoc/man?predicate=dynamic/1) which can be controlled by `assert` and `retract`. Additionally, there is a [gensym facility](https://www.swi-prolog.org/pldoc/doc_for?object=gensym/2) for making fresh constants. Awesome.
+# It's easy right?
+
+Ok, prolog offers [dynamic predicates](https://www.swi-prolog.org/pldoc/man?predicate=dynamic/1) which can be controlled by `asserta` and `retract`. Additionally, there is a [gensym facility](https://www.swi-prolog.org/pldoc/doc_for?object=gensym/2) for making fresh constants. Awesome.
 
 This suggests two simple implementations of these features.
 
@@ -36,13 +38,13 @@ There are a 2 problems with using `asserta`:
 1. Retracting at the right moment 
 2. Maintaining connections between the variables in the asserted clauses and in the current env.
 
-What if the goals in between the `assert` and `retract` fail? Then the `assert` will not get cleaned up. What if there are multipl solutions? Then `retract` gets called too many times.
+What if the goals in between the `assert` and `retract` fail? Then the `assert` will not get cleaned up. What if there are multiple solutions? Then `retract` gets called too many times.
 
 This is somewhat reminiscent of controlling cleanup of resource usage like file handlers. Prolog offers the [`setup_call_cleanup/3`](https://www.swi-prolog.org/pldoc/man?predicate=setup_call_cleanup/3) for this use case. I don't think this solution works, since I believe the retract only gets cleaned up once.
 
-The other issue is that  `assert` treats variables as universally quantified, when they are more likely to be something that will be filled in later. `assert` breaks the connection between the logical variables in the term you are asserting and the variables you have in your current goal stack. I don't know how to recover this.
-`assert(foo(X)), X=a, foo(b)` ought to fail under this reading, because `assert(foo(X))` retroactively means `assert(foo(a))` under this reading. But assert treats it like the clause `foo(X).` which says `foo` is true of everything.
+The other issue is that  `assert` treats variables as universally quantified, when only some of them are. `assert` breaks the connection between the logical variables in the term you are asserting and the variables you have in your current goal stack. I don't know how to recover this behavior easily using `assert`.
 
+For example, `assert(foo(X)), X=a, foo(b)` ought to fail under this reading, because `assert(foo(X))` retroactively means `assert(foo(a))` under this reading. But assert treats it like the clause `foo(X).` which says `foo` is true of everything.
 
 
 # The problem with pi
@@ -156,7 +158,9 @@ foo(X) :- send_signal(clauses(P)), member(D,P), call(D,foo(X)).
 
 # Bits and Bobbles
 
-Could attributed variables do the extrude check?
+- Could attributed variables do the extrude check?
+- gensym might be a bad idea. Could carry around an integer in context to represent current free vars in scope
+- Linearly searching the clause context using `member` is silly. We could use much better indexing, like some kind of trie. There are readily available facilities
 
 ## A Digression on Different Meanings of Logical Variables
 Would adding `let` to prolog help scoping? `let` is compatible with first order logic without the complications of higher order logic.
