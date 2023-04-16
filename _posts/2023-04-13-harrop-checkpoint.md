@@ -6,15 +6,19 @@ description: Shallow embedding of lambda prolog concepts
 tags: prolog
 ---
 
-Well, the time has come once again. I have been spending a decent amount of time about a problem of questionable worth and I need to checkpoint it.
+Well, the time has come once again. I have been spending a decent amount of time thinking about a problem of questionable worth and I need to checkpoint it.
 
-I've been trying to embed lambda prolog like features in regular prolog. Prolog implementations have a lot of effort put into them, and a fairly large ecosystem, so there are advantages if this can be achieved.
+I've been trying to embed [lambda prolog](https://www.lix.polytechnique.fr/~dale/lProlog/) like features in regular prolog. Prolog implementations have a lot of effort put into them, and a fairly large ecosystem, so there are advantages if this can be achieved.
 
-The basic extra features that harrop clauses offer on top of prolog is the ability to assert clauses into the database and the creation of fresh variables when you traverse under forall binders.
+Lambda prolog has [two interrelated aspects](https://www.lix.polytechnique.fr/~dale/lProlog/faq/what.html) to it, extending the horn clause structure to harrop and allowing higher order unification. I'm attacking the Harrop part first.
+
+The basic extra features that Harrop clauses offer on top of prolog is the ability to assert clauses into the database and the creation of fresh variables when you traverse under forall binders.
+
+This paper [A Declarative Alternative to “assert” in Logic Programming](https://www.cs.cmu.edu/~fp/papers/ilps91.pdf) attacked kind of the same problem. Maybe the addition of continuations since then changes the solution space though.
 
 Really if you want these features to work right you should probably just use [elpi](https://github.com/LPCIC/elpi). But I did discover some useful tidbits, so here we go.
 
-Ok, but prolog offers [dynamic predicates](https://www.swi-prolog.org/pldoc/man?predicate=dynamic/1) which can be controlled by `assert` and `retract`. Additionally, there is a [gensym facility](https://www.swi-prolog.org/pldoc/doc_for?object=gensym/2) for making fresh constants. Awesome.
+Ok, anyway, but prolog offers [dynamic predicates](https://www.swi-prolog.org/pldoc/man?predicate=dynamic/1) which can be controlled by `assert` and `retract`. Additionally, there is a [gensym facility](https://www.swi-prolog.org/pldoc/doc_for?object=gensym/2) for making fresh constants. Awesome.
 
 This suggests two simple implementations of these features.
 
@@ -39,7 +43,7 @@ This is somewhat reminiscent of controlling cleanup of resource usage like file 
 The other issue is that  `assert` treats variables as universally quantified, when they are more likely to be something that will be filled in later. `assert` breaks the connection between the logical variables in the term you are asserting and the variables you have in your current goal stack. I don't know how to recover this.
 `assert(foo(X)), X=a, foo(b)` ought to fail under this reading, because `assert(foo(X))` retroactively means `assert(foo(a))` under this reading. But assert treats it like the clause `foo(X).` which says `foo` is true of everything.
 
-For more on these issues see [A Declarative Alternative to “assert” in Logic Programming](https://www.cs.cmu.edu/~fp/papers/ilps91.pdf)
+
 
 # The problem with pi
 
@@ -104,11 +108,13 @@ Really, to make this interpreter more shallow, the obvious thing to do is look f
 
 One option might be [Definite Clause Grammars](https://www.metalevel.at/prolog/dcg), which can be used to encode stateful computations by modelling the sequence of states as a stream.
 
-We don't really need _state_ persay to implement this because the context is scoped. This is a subtle idea that is familiar to me from use of the `Reader` vs `State` monad.
+We don't really need _state_ persay to implement this because the context is scoped. This is a subtle idea that is familiar to me from use of the `Reader` vs `State` monad. This is the same distinction as that between shadowing let bound variables and actual mutable variables. When you leave the scope, let bound variables come back. Likewise when we leave an `impl` scope, we restore the old program context.
 
 Another fun option is to use delimited continuations. The "delimited" part of that is referring to a notion of scope. When we need to access the context, we can jump out to a delimitation point and grab it there.
 
-Apparently, [`library(intercept)`](https://www.swi-prolog.org/pldoc/man?section=intercept) is better behaved than general delimitted continuations. I think this library implements something very similar to one-shot delimitted continuations. Using it looks very much like a throw/catch that can return values back to the throw. This is related to algebraic effects. All these concepts are one big mash.
+Apparently, [`library(intercept)`](https://www.swi-prolog.org/pldoc/man?section=intercept) is better behaved than general delimitted continuations. I think this library implements something very similar to one-shot delimited continuations. Using it looks very much like a throw/catch that can return values back to the throw. This is related to algebraic effects. All these concepts are one big mash.
+
+I found it easiest (necessary?) to mark certain predicates as scoped dynamic by adding a clause that will try to search the current program context. This is similar in spirit to how tabled predicates are marked `:- table fib/2.`  because they need to try searching the table.
 
 This is a simple version that only allows assert of ground facts, and/or logic variables that stay connected to the one's in the current goal stack.
 
@@ -130,11 +136,11 @@ main(_) :- impl(bar(a), (bar(X), impl(bar(b), bar(Y)))), writeln(X), writeln(Y).
 ```
 
 A different convention of what we store in the context is that we store a lambda representation that when called with the current goal, either fail or succeed. This means converting a clause that looks like
-```
+```prolog
 bar(X,Y) :- biz, baz(X,Z).
 ``` 
 into 
-```
+```prolog
 bar1(G) :- G = bar(X,Y), biz, baz(X,Z).
 ```
 before the clause is able to be store in the clause context. Variables that need to be maintained in connection to the current ones in scope are extra parameters to `bar1`. For example `bar(A,B,G)` would be inserted as an entry `bar(A,B)` in the clause context.
