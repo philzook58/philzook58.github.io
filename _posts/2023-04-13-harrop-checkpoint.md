@@ -61,15 +61,17 @@ A crucial feature of the proper treatment of these forall fresh variables is the
 # Metainterpreter
 One of the things I enjoy about prolog is that it makes inference rules (the horizontal line things) operational. The horizontal bar really is prolog's `:-`.
 
-So, what we can do is take the inference rules for harrop clause's out of [Miller and Nadathur](https://www.amazon.com/Programming-Higher-Order-Logic-Dale-Miller/dp/052187940X) (I love this book) and directly translate them to an interpreter.
+So, what we can do is take the inference rules for Harrop clause's out of [Miller and Nadathur](https://www.amazon.com/Programming-Higher-Order-Logic-Dale-Miller/dp/052187940X) (I love this book) and directly translate them to an interpreter.
 
 ![right rules](/assets/right_harrop.png)
 
 ![left rules](/assets/left_harrop.png)
 
-This is definitely going to be possible, you can build an interpreter for any language in prolog with enough muscle grease, but the ultimate goal is to remove the interpreter.
+This is definitely going to be possible, you can build an interpreter for any language in prolog with enough muscle grease, but the ultimate goal is to remove the interpreter. It actually isn't obvious how to write the interpreter correctly though. Nasty scoping issues.
 
-We use a couple tricks. Instead of `pi(X,B)`, we use a HOAS-like `pi(L)`. `L` is a goal that can be `call`ed with 2 arguments. The first is the instantiation of `X`, and the second is an output parameter `G` that will be unified with `B` with `X` replaced. We can't really have `L` "return" `G = B[t/X]` because returning isn't a thing in prolog, so this is what we have to do.
+We use a couple tricks. Instead of `pi(X,B)`, we use a [HOAS-like](https://en.wikipedia.org/wiki/Higher-order_abstract_syntax) `pi(L)`. `L` is a goal that can be `call`ed with 2 arguments. The first is the instantiation of `X`, and the second is an output parameter `G` that will be unified with `B` with `X` replaced. We can't really have `L` "return" `G = B[t/X]` because returning isn't a thing in prolog, so this is what we have to do.
+
+It is a HOAS in the sense we are borrowing prolog's natural notion of scoping inside a clause for our uses.
 
 We use the prolog lambda library [`library(yall)`](https://www.swi-prolog.org/pldoc/man?section=yall) as a convenience for building `L`. The scoping behavior of this library is [not great](https://swi-prolog.discourse.group/t/yall-lambda-arguments-visibility/5112/2). To be safer, you can manually lambda lift the `L` predicates that go into `pi`
 
@@ -84,16 +86,16 @@ We have two extra context parameters we thread in the interpreter. One is the si
 :- initialization(main,main).
 :- use_module(library(occurs)).
 
-extrude_check(S,T) :- writeln([ex_check, S, T]), forall((sub_term(X, T), ground(X), X = fvar(Y)), member(Y,S)). 
+extrude_check(S,T) :- forall((sub_term(X, T), ground(X), X = fvar(Y)), member(Y,S)). 
 
 right(_,_,true).
 right(S,P,and(B1,B2)) :- right(S,P,B1), right(S,P,B2).
 right(S,P,or(B1,_B2)) :- right(S,P,B1).
 right(S,P,or(_B1,B2)) :- right(S,P,B2).
 right(S,P,impl(B1,B2)) :- right(S,[B1|P],B2).
-right(S,P,ex(L)) :- call(L,X,G), right(S,P,G), writeln([ex,X]), extrude_check(S,X).
-right(S,P,all(L)) :- writeln(all), gensym(v,X), call(L,fvar(X),G), right([X|S],P,G), writeln([exit_all, G]).
-right(S,P,+A) :- member(D,P), writeln([pick,P, D,A]), left(S,P,D,A), writeln([D,A]). %decide
+right(S,P,ex(L)) :- call(L,X,G), right(S,P,G), extrude_check(S,X).
+right(S,P,all(L)) :- gensym(v,X), call(L,fvar(X),G), right([X|S],P,G).
+right(S,P,+A) :- member(D,P), left(S,P,D,A). %decide
 
 % alternate name: clause deonstruct, focused.
 left(_,_,+A,A).
@@ -106,7 +108,7 @@ left(S,P,all(L), A) :- call(L,X,D), left(S,P,D,A). % maybe
 # Implicit Context and Scoped Databases with library(intercept)
 Really, to make this interpreter more shallow, the obvious thing to do is look for mechanisms to help us carry implicit contexts.
 
-One option might be [Definite Clause Grammars](https://www.metalevel.at/prolog/dcg), which can be used to encode stateful computations by modelling the sequence of states as a stream.
+One option might be [Definite Clause Grammars](https://www.metalevel.at/prolog/dcg), which can be used to encode stateful computations by modelling the sequence of states as a stream. It's not that shallow in that then everything we do has to be lifted to DCG land.
 
 We don't really need _state_ persay to implement this because the context is scoped. This is a subtle idea that is familiar to me from use of the `Reader` vs `State` monad. This is the same distinction as that between shadowing let bound variables and actual mutable variables. When you leave the scope, let bound variables come back. Likewise when we leave an `impl` scope, we restore the old program context.
 
