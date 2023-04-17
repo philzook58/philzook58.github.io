@@ -180,7 +180,9 @@ If I used delimited continuations, a natural design might be to just bounce requ
 - Linearly searching the clause context using `member` is silly. We could use much better indexing, like some kind of trie. There are readily available facilities
 - Do I have enough pieces to implement the `rule` construct from [A Declarative Alternative to “assert” in Logic Programming](https://www.cs.cmu.edu/~fp/papers/ilps91.pdf) or not?
 
-## A Digression on Different Meanings of Logical Variables
+# Junk
+
+### A Digression on Different Meanings of Logical Variables
 Would adding `let` to prolog help scoping? `let` is compatible with first order logic without the complications of higher order logic.
 
 Logical variables mean different things. It's way too overloaded a concept.
@@ -201,11 +203,11 @@ See [Oleg Kiselyov's discussion of this](https://okmij.org/ftp/Prolog/index.html
 
 I think it is generally quite unwise to attempt to use one kind of variable for another. Very subtle errors will arise.
 
-## Prolog's forall and pi
+### Prolog's forall and pi
 
 The relationship of the lambda prolog `pi` and the standard [`forall/2`](https://www.swi-prolog.org/pldoc/doc_for?object=forall/2) predicate is interesting. `forall/2` can be seen as a bounded forall really and gets into the whole negation as failure business. Whereas `pi` creates a fresh var, and if you can prove the body given no other properties of this fresh var, the property must be true.
 
-## Using the interpreter
+### Using the interpreter
 
 ```
 
@@ -250,7 +252,7 @@ main(_) :-
 .
 
 ```
-## Direct opening and closing
+### Direct opening and closing
 Could go for a regular locally nameless encoding rather than trying to use HOAS.
 make `open` and `close` predicates.
 
