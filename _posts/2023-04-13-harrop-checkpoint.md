@@ -12,7 +12,7 @@ I've been trying to embed [lambda prolog](https://www.lix.polytechnique.fr/~dale
 
 Lambda prolog has [two interrelated aspects](https://www.lix.polytechnique.fr/~dale/lProlog/faq/what.html) to it, extending the horn clause structure to Harrop and allowing higher order unification. I'm attacking the Harrop part first (and I kind of think it's more important / interesting).
 
-The basic extra features that Harrop clauses offer on top of prolog is the ability to locally assert clauses into the database and the creation of fresh variables when you traverse under forall binders.
+The basic extra features that Harrop clauses offer on top of prolog is the ability to locally assert clauses into the database and the creation of fresh constant when you traverse under `pi` aka `forall` binders.
 
 This paper, ["A Declarative Alternative to “assert” in Logic Programming"](https://www.cs.cmu.edu/~fp/papers/ilps91.pdf), attacked kind of the same problem. Maybe the addition of continuations to prolog since then changes the solution space though.
 
@@ -35,16 +35,16 @@ No.
 
 There are a 2 problems with using `asserta`:
 
-1. Retracting at the right moment 
+1. Retracting at the right moments
 2. Maintaining connections between the variables in the asserted clauses and in the current env.
 
 What if the goals in between the `assert` and `retract` fail? Then the `assert` will not get cleaned up. What if there are multiple solutions? Then `retract` gets called too many times.
 
 This is somewhat reminiscent of controlling cleanup of resource usage like file handlers. Prolog offers the [`setup_call_cleanup/3`](https://www.swi-prolog.org/pldoc/man?predicate=setup_call_cleanup/3) for this use case. I don't think this solution works, since I believe the retract only gets cleaned up once.
 
-The other issue is that  `assert` treats variables as universally quantified, when only some of them are. `assert` breaks the connection between the logical variables in the term you are asserting and the variables you have in your current goal stack. I don't know how to recover this behavior easily using `assert`.
+The other issue is that  `assert` treats variables as universally quantified, when only some of should be. `assert` breaks the connection between the logical variables in the term you are asserting and the variables you have in your current goal stack. I don't know how to recover this behavior easily using `assert`.
 
-For example, `assert(foo(X)), X=a, foo(b)` ought to fail under this reading, because `assert(foo(X))` retroactively means `assert(foo(a))` under this reading. But assert treats it like the clause `foo(X).` which says `foo` is true of everything.
+For example, `assert(foo(X)), X=a, foo(b)` ought to fail if we wanted `X` to stay connected, because `assert(foo(X))` retroactively means `assert(foo(a))` under this reading. But `assert` treats it like the clause `foo(X).` which says `foo` is true of everything.
 
 
 # The problem with pi
@@ -59,10 +59,19 @@ A crucial feature of the proper treatment of these forall fresh variables is the
 
 Point 3 may seem silly. It's one of those "well if that hurts, don't do that" kind of things, but _it has bit me_.
 
+See Oleg's related comments on abusing logical variables for [lambda binders](https://okmij.org/ftp/Prolog/index.html#lambda-calc)
+
 # Metainterpreter
-One of the things I enjoy about prolog is that it makes inference rules (the horizontal line things) operational. The horizontal bar really is prolog's `:-`.
+An good tact is to try to build a metainterpreter.
+
+It is definitely going to be possible to build a lambda prolog metainterpreter in prolog. You can build an interpreter for any language in prolog with enough muscle grease, but the ultimate goal is to remove the interpreter. 
+
+It actually isn't obvious how to write the interpreter correctly though. Nasty scoping issues.
 
 So, what we can do is take the inference rules for Harrop clause's out of [Miller and Nadathur](https://www.amazon.com/Programming-Higher-Order-Logic-Dale-Miller/dp/052187940X) (I love this book) and directly translate them to an interpreter.
+
+One of the things I enjoy about prolog is that it makes inference rules (the horizontal line things) operational. The horizontal bar really is prolog's `:-`.
+
 
 These are right rules that deconstruct goals
 ![right rules](/assets/right_harrop.png)
@@ -70,19 +79,9 @@ These are right rules that deconstruct goals
 And these are left rules that try to use a focussed clause.
 ![left rules](/assets/left_harrop.png)
 
-This is definitely going to be possible. You can build an interpreter for any language in prolog with enough muscle grease, but the ultimate goal is to remove the interpreter. It actually isn't obvious how to write the interpreter correctly though. Nasty scoping issues.
+and here is the prolog code
 
-We use a couple tricks. Instead of `pi(X,B)`, we use a [HOAS-like](https://en.wikipedia.org/wiki/Higher-order_abstract_syntax) `pi(L)`. `L` is a goal that can be `call`ed with 2 arguments. The first is the instantiation of `X`, and the second is an output parameter `G` that will be unified with `B` with `X` replaced. We can't really have `L` "return" `G = B[t/X]` because returning isn't a thing in prolog, so this is what we have to do.
 
-It is a HOAS in the sense we are borrowing prolog's natural notion of scoping inside a clause for our uses.
-
-We use the prolog lambda library [`library(yall)`](https://www.swi-prolog.org/pldoc/man?section=yall) as a convenience for building `L`. The scoping behavior of this library is [not great](https://swi-prolog.discourse.group/t/yall-lambda-arguments-visibility/5112/2). To be safer, you can manually lambda lift the `L` predicates that go into `pi`
-
-For the extrude check, since we explicitly introduce the existential variables with `ex(L)`, we can check for scope extrusion after calling `L` is done. It is possible this is not right, but I'm not sure how else variables could escape their scope.
-
-We have two extra context parameters we thread in the interpreter. One is the signature `S` which holds gensymed variables so that we can perform the extrude_check. The other is the program context `P` which holds clauses introduced by  `impl`. They are mostly very passively threaded.
-
-I use the `+` marker on predicates to make this a ["clean"](https://www.metalevel.at/prolog/data) representation rather than a defaulty one.
 
 ```prolog
 :- use_module(library(yall)).
@@ -109,6 +108,18 @@ left(S,P,and(_D1,D2), A) :- left(S,P,D2,A).
 left(S,P,all(L), A) :- call(L,X,D), left(S,P,D,A). 
 ```
 
+We use a couple tricks. Instead of `pi(X,B)`, we use a [HOAS-like](https://en.wikipedia.org/wiki/Higher-order_abstract_syntax) `pi(L)`. `L` is a goal that can be `call`ed with 2 arguments. The first is the instantiation of `X`, and the second is an output parameter `G` that will be unified with `B` with `X` replaced. We can't really have `L` "return" `G = B[t/X]` because returning isn't a thing in prolog, so this is what we have to do.
+
+It is a HOAS in the sense we are borrowing prolog's natural notion of scoping inside a clause for our uses.
+
+We use the prolog lambda library [`library(yall)`](https://www.swi-prolog.org/pldoc/man?section=yall) as a convenience for building `L`. The scoping behavior of this library is [not great](https://swi-prolog.discourse.group/t/yall-lambda-arguments-visibility/5112/2) and I have had to use the `{}` capturing notation. To be safer, you can manually lambda lift the `L` predicates that go into `pi`
+
+For the extrude check, since we explicitly introduce the existential variables with `ex(L)`, we can check for scope extrusion after calling `L` is done. It is possible this is not right, but I'm not sure how else variables could escape their scope.
+
+We have two extra context parameters we thread in the interpreter. One is the signature `S` which holds gensymed variables so that we can perform the extrude_check. The other is the program context `P` which holds clauses introduced by  `impl`. They are mostly very passively threaded.
+
+I use the `+` marker on predicates to make this a ["clean"](https://www.metalevel.at/prolog/data) representation rather than a defaulty one.
+
 # Implicit Context and Scoped Databases with library(intercept)
 Really, to make this interpreter more shallow, the obvious thing to do is look for mechanisms to help us carry implicit contexts.
 
@@ -118,7 +129,7 @@ We don't really need _state_ persay to implement this because the context is sco
 
 Another fun option is to use delimited continuations. The "delimited" part of that is referring to a notion of scope. When we need to access the context, we can jump out to a delimitation point and grab it there.
 
-Apparently, [`library(intercept)`](https://www.swi-prolog.org/pldoc/man?section=intercept) is better behaved than general delimitted continuations. I think this library implements something very similar to one-shot delimited continuations. Using it looks very much like a throw/catch that can return values back to the throw. This is related to algebraic effects. All these concepts are one big mash.
+Apparently, [`library(intercept)`](https://www.swi-prolog.org/pldoc/man?section=intercept) is [better behaved](https://swi-prolog.discourse.group/t/dcgs-implemented-with-delimited-continuations/1921/9) than general delimited continuations. I think this library implements something very similar to one-shot delimited continuations. Using it looks very much like a throw/catch that can return values back to the throw. This is related to [algebraic effects](https://arxiv.org/abs/1608.00816). All these concepts are one big mash.
 
 I found it easiest (necessary?) to mark certain predicates as scoped dynamic by adding a clause that will try to search the current program context. This is similar in spirit to how tabled predicates are marked `:- table fib/2.`  because they need to try searching the table.
 
@@ -140,15 +151,18 @@ get_ctx(facts(P)) :- catch(send_signal(facts(P)), error(unintercepted_signal(fac
 main(_) :- impl(bar(a), (bar(X), impl(bar(b), bar(Y)))), writeln(X), writeln(Y).
 
 ```
+I used the `catch` handler in `get_ctx` just to avoid needing a preliminary `intercept` to iniitiate the program context to `[]`. Maybe this is too cute and unwise.
 
-A different convention of what we store in the context is that we store a lambda representation that when called with the current goal, either fail or succeed. This means converting a clause that looks like
+A different convention of what we store in the context is that we store a lambda representation that when called with the current goal, either fail or succeed. This form is better for more interesting clauses with more interesting variable binding structure. This means converting a clause that looks like
+
 ```prolog
 bar(X,Y) :- biz, baz(X,Z).
 ``` 
-into 
+into a "goal/head-passing" representation
 ```prolog
 bar1(G) :- G = bar(X,Y), biz, baz(X,Z).
 ```
+
 before the clause is able to be store in the clause context. Variables that need to be maintained in connection to the current ones in scope are extra parameters to `bar1`. For example `bar(A,B,G)` would be inserted as an entry `bar(A,B)` in the clause context.
 
 
@@ -157,13 +171,15 @@ To install this capability into `foo/1` it would look like
 foo(X) :- send_signal(clauses(P)), member(D,P), call(D,foo(X)).
 ```
 
+
+If I used delimited continuations, a natural design might be to just bounce requests up the delimitation point chain until you find one that works, but that doesn't work for intercept. We'd then need intercept to return multiple times.
 # Bits and Bobbles
 
 - Could attributed variables do the extrude check?
 - gensym might be a bad idea. Could carry around an integer in context to represent current free vars in scope
 - Linearly searching the clause context using `member` is silly. We could use much better indexing, like some kind of trie. There are readily available facilities
 - Do I have enough pieces to implement the `rule` construct from [A Declarative Alternative to “assert” in Logic Programming](https://www.cs.cmu.edu/~fp/papers/ilps91.pdf) or not?
-- 
+
 ## A Digression on Different Meanings of Logical Variables
 Would adding `let` to prolog help scoping? `let` is compatible with first order logic without the complications of higher order logic.
 
