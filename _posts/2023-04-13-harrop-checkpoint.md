@@ -179,6 +179,87 @@ If I used delimited continuations, a natural design might be to just bounce requ
 - gensym might be a bad idea. Could carry around an integer in context to represent current free vars in scope
 - Linearly searching the clause context using `member` is silly. We could use much better indexing, like some kind of trie. There are readily available facilities
 - Do I have enough pieces to implement the `rule` construct from [A Declarative Alternative to “assert” in Logic Programming](https://www.cs.cmu.edu/~fp/papers/ilps91.pdf) or not?
+- This blog post was partially prompted by [this discussion](https://github.com/mthom/scryer-prolog/discussions/1639)
+
+# Addendum
+[A thread discussing this post](https://swi-prolog.discourse.group/t/blog-post-on-harrop-clauses-and-scoped-dynamic-databases/6468/3) had some interesting points.
+
+One cool example that came up is the drinker's paradox
+
+The drinker’s paradox is an interesting example because the extrude_check blocks it. The goal is
+ex x, D(x) → forall y, D(y). Under the proof search reading I am following, first we introduce a logical variable X when we traverse ex, then we scoped assert D(X), then we gensym a fresh y, then we try to resolve D(y) against the database. It unifies X with y, so retroactively, we actually asserted D(y) into the database at the implication step. Great. But now when exiting the ex binder it checks if the term X contains any fresh variables it shouldn’t as the extrude check. X is indeed y now which was not in scope at the time of traversing the ex binder, so this check fails. Hence the goal of the drinker’s paradox fails.
+
+
+The relationship to the [Jens Otten provers](http://jens-otten.de/tutorial_tableaux19/) (slides patt 2) should have been more obvious to me. The trick of using the occurs_check to implement the extrude check is quite clever. If we make our gensymed fresh constants hold the existentials in context, then the occurs check will fail if those existentials ever get unified to the fresh constant that was no in scope for them. The [occurs check](https://www.swi-prolog.org/pldoc/man?predicate=unify_with_occurs_check/2) makes sure no cyclic terms are made by unfication and can be turned on globally via a flag.
+
+Looking at the implementation of yall, it appears that it works via  `copy_term` implementation. If instead of using yall, I inline those tricks, it can make for an interpreter where the user is less likely to make mistakes adding the `{} / ` variable capturing annotations. I hadn't realized that copy_term can be used to make shared variables via the pattern `copy_term(Shared-T, Shared-T1)` where `Shared` holds a list of the logical variables you want to share with the fresh copy `T1`
+
+
+[`undo/1`](https://www.swi-prolog.org/pldoc/doc_for?object=undo/1) may be a way to recover good behavior of `assert`. I am a little skeptical. Blowing the lid off of imperative effects and then trying to plug the leaks sounds like a scary proposition. [snapshot](https://www.swi-prolog.org/pldoc/man?predicate=snapshot/1) also sounds interesting.
+
+Jan suggests looking at XSB which has a notion of a first class clause set. I'm not sure how much this would help semantically speaking. This might be just a drop in more efficient replacement for my `P` clause list?
+
+@j4n_bur53 has a cleaned up version of my interpreter using some of these trick.
+
+```
+/**
+ * Warranty & Liability
+ * To the extent permitted by applicable law and unless explicitly
+ * otherwise agreed upon, XLOG Technologies AG makes no warranties
+ * regarding the provided information. XLOG Technologies AG assumes
+ * no liability that any problems might be solved with the information
+ * provided by XLOG Technologies AG.
+ *
+ * Rights & License
+ * All industrial property rights regarding the information - copyright
+ * and patent rights in particular - are the sole property of XLOG
+ * Technologies AG. If the company was not the originator of some
+ * excerpts, XLOG Technologies AG has at least obtained the right to
+ * reproduce, change and translate the information.
+ *
+ * Reproduction is restricted to the whole unaltered document. Reproduction
+ * of the information is only allowed for non-commercial uses. Selling,
+ * giving away or letting of the execution of the library is prohibited.
+ * The library can be distributed as part of your applications and libraries
+ * for execution provided this comment remains unchanged.
+ *
+ * Restrictions
+ * Only to be distributed with programs that add significant and primary
+ * functionality to the library. Not to be distributed with additional
+ * software intended to replace any components of the library.
+ *
+ * Trademarks
+ * Jekejeke is a registered trademark of XLOG Technologies AG.
+ */
+
+/**
+ * See also:
+ * https://www.philipzucker.com/harrop-checkpoint/
+ */
+
+right(_,_,true) :- !.
+right(S,P,(B1,B2)) :- !, right(S,P,B1), right(S,P,B2).
+right(S,P,(B1;_B2)) :- !, right(S,P,B1).
+right(S,P,(_B1;B2)) :- !, right(S,P,B2).
+right(S,P,(B1->B2)) :- !, right(S,[B1|P],B2).
+right(S,P,ex(W,L)) :- !,
+   copy_term((W,L)-S,(V,R)-S),
+   right([V|S],P,R).
+right(S,P,all(W,L)) :- !,
+   flag('$sk', N, N+1),
+   copy_term((W,L)-S,(sk(N,S),R)-S),
+   right(S,P,R).
+right(S,P,A) :- member(D,P), left(S,P,D,A). %decide focuses a program clauses
+
+left(S,P,(G->D), A) :- !, left(S,P,D,A), right(S,P,G).
+left(S,P,(D1,_D2), A) :- !, left(S,P,D1,A).
+left(S,P,(_D1,D2), A) :- !, left(S,P,D2,A).
+left(S,P,all(W,L), A) :- !,
+   copy_term((W,L)-S,(V,R)-S),
+   left([V|S],P,R,A).
+left(_,_,A,B) :- unify_with_occurs_check(A,B).
+```
+
 
 # Junk
 

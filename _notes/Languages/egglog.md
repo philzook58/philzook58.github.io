@@ -846,3 +846,38 @@ JOIN foo, a on a.rowid = foo.
 Meh. Kind of. 
 
 
+# Partial Application
+`call` is super useful
+The applicative encoding
+We can do it manually to see how useful it is
+Lambda lifting for binders
+
+Monads / algerbaic effects
+```egglog
+
+(function cont1/0)
+(define prog
+  (set_ "x" 1 cont1/0)
+)
+
+(function cont1/1)
+(rewrite (apply cont1/0 x) (cont1/1 x))
+(rewrite (cont1 w)
+
+)
+
+; the obvious thing
+; what is the issue if any?
+(define prog
+(seq 
+  (set "x" 1)
+  (set "y" 2)
+))
+
+; semantics of set is state -> state function
+; seq is composition. Fine.
+; var "x" is state -> int
+; 
+
+
+```

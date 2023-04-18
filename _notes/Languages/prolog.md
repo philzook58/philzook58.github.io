@@ -895,10 +895,11 @@ main(_) :-
   writeln(pass7),!,
   %right([], [], ex([H2,J2] >> (J2 = all({H2} / [Q2,G2] >> (G2 = impl(+foo(Q2),+foo(H2))))))),
   writeln(pass8),
-  right([],[],ex(foo)),
+  %right([],[],ex(foo)),
   writeln(pass9),
-  query(Q7),
-  right([],[],Q7)
+  %query(Q7),
+  %right([],[],Q7),
+  right([],[],ex([X,Q]>>(Q=all([Y,P]>>(P=impl(+d(X),+d(Y))))))).
 
 
 
@@ -908,8 +909,49 @@ main(_) :-
 .
 
 
-
 ```
+
+
+Drinker's paradox example. This shouldn't pass
+```prolog
+
+:- use_module(library(yall)).
+:- use_module(library(apply)).
+:- use_module(library(apply_macros)).
+:- initialization(main,main).
+:- use_module(library(occurs)).
+
+extrude_check(S,T) :- writeln([ex_check, S, T]), forall((sub_term(X, T), ground(X), X = fvar(Y)), member(Y,S)). 
+
+right(_,_,true).
+right(S,P,and(B1,B2)) :- right(S,P,B1), right(S,P,B2).
+right(S,P,or(B1,_B2)) :- right(S,P,B1).
+right(S,P,or(_B1,B2)) :- right(S,P,B2).
+right(S,P,impl(B1,B2)) :- right(S,[B1|P],B2).
+right(S,P,ex(L)) :- call(L,X,G), right(S,P,G), writeln([ex,X]), extrude_check(S,X).
+right(S,P,all(L)) :- writeln(all), gensym(v,X), call(L,fvar(X),G), right([X|S],P,G), writeln([exit_all, G]).
+right(S,P,+A) :- member(D,P), writeln([pick,P, D,A]), left(S,P,D,A), writeln([D,A]). %decide
+
+% alternate name: clause deonstruct, focused.
+left(_,_,+A,A).
+left(S,P,impl(G,D), A) :- left(S,P,D,A), right(S,P,G).
+left(S,P,and(D1,_D2), A) :- left(S,P,D1,A).
+left(S,P,and(_D1,D2), A) :- left(S,P,D2,A).
+left(S,P,all(L), A) :- call(L,X,D), left(S,P,D,A). % maybe
+
+
+main(_) :- right([],[],ex([X,Q]>>(Q=all({X} / [Y,P]>>(P=impl(+d(X),+d(Y))))))).
+```
+
+https://github.com/SWI-Prolog/swipl-devel/blob/master/library/yall.pl yall implementation
+copy_term_nat(Free+Lambda, Free+LambdaCopy), is a way to copy_term but also share variables in the Free list. We copy and then unify. Nice.
+```
+lambda_functor(Term, Functor) :-
+    copy_term_nat(Term, Copy),
+    variant_sha1(Copy, Functor0),
+    atom_concat('__aux_yall_', Functor0, Functor).
+```
+This is interesting. Determinsitically creating a functor name based on the sha1 of the context
 
 We could also implement scoping the usual way, not trying to pull a fast one by reusing prolog mechanisms.
 de bruijn indices or locally nameless
