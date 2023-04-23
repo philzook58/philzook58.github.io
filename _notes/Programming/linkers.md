@@ -32,9 +32,11 @@ Sections are for linking.
 
 
 # Segments
-Segments are for loading.
+Segments are for loading. Load time view
+
 # Symbol Table
 A key value mapping
+
 
 # Relocations
 [relocation](https://en.wikipedia.org/wiki/Relocation_(computing))
@@ -121,6 +123,8 @@ In a curious way, if you are accessing these formats from C, it's actually _easi
 - PE - windows
 - Mach-o - mac
 ## ELF
+[The missing link: explaining ELF static linking, semantically](https://dl.acm.org/doi/10.1145/3022671.2983996) a fantastic paper on a formalization of elf and linking generally
+
 `man elf` on your system will give you a whole spiel
 
 [The elf spec](https://refspecs.linuxfoundation.org/elf/elf.pdf)
@@ -224,6 +228,13 @@ You can get line number and column info from dwarf
 [gcc flags related to debugging](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html#Debugging-Options)
 - `-Og`
 # Resources
+
+[I wrote a linker everyone can understand!](https://news.ycombinator.com/item?id=27444647) https://briancallahan.net/blog/20210609.html
+
+[Pascal linker](http://mail.turbopascal.org/linker)
+
+[Surfing With The Linker Aliens: Solaris Linking & ELF Blogs](http://www.linker-aliens.org/)
+
 [packer tutorial](https://github.com/frank2/packer-tutorial)
 
 N. Glew and G. Morrisett. Type-Safe Linking and Modular Assembly Language
@@ -377,6 +388,43 @@ type t = {
 ```
 
 
+
+Maybe one way of thinking about it is pairs of interpolation strings and a symbol dictionary. We collect up symbols and strings (binaries) and concat them together. Then eventually we inline the appropriate symbols.
+
+It's fun how string interpolation is a cute toy model of interesting things like macros.
+
+
+```python
+
+mod1 = "{foo} {bar}", {biz: 3}
+mod2 = " {biz} ", {foo : 4, bar : "hi"}
+
+def link(mod1,mod2):
+  b1, sym1 = mod1
+  b2, sym2 = mod2
+  b1 + b2, sym1 + sym2
+
+def finalize(mod):
+  b, sym = mod
+  b.format(mod)
+
+```
+
+Ramsey's relocation by currying makes one want to use lambdas rather than named representation of strnig interpolation.
+
+```python
+
+mod1 = lambda foo, bar: f"{foo} {bar}", {biz ; 3}
+
+```
+
+The string interpolation pair is rather evocative of a closure
+
+```python
+mod1 = lambda file, offset, **kwargs:  write(file, "{foo} {bar}".format(kwargs)) , 30 , {biz : "fred"} 
+```
+
+Typical relocations can be seen as simple bytecode instuctions / defunctionalization of general purpose concepts
 
 
 

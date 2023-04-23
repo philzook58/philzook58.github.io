@@ -1138,6 +1138,7 @@ The transformation foo(firstclassmap) -> foo(i), map(i, k,v) is lossy in the pre
 
 
 ### Dominators
+[Program Analysis with Datalog: Dominance Tree](https://xiaowenhu.com/posts/dominance_tree/)
 https://pages.cs.wisc.edu/~fischer/cs701.f07/lectures/Lecture20.pdf
 https://twitter.com/taktoa1/status/1548109466620424193?s=20&t=G28jQnYTSb1KEI--BWennw
 https://codeql.github.com/codeql-standard-libraries/cpp/semmle/code/cpp/controlflow/Dominance.qll/module.Dominance.html
@@ -6275,6 +6276,8 @@ What about guarded negation? For example if you turn off stratification but are 
 
 
 # Resources
+[Drinking with Datalog](https://ianthehenry.com/posts/drinking-with-datalog/)
+
 [Database Theory](https://github.com/pdm-book/community) book
 
 

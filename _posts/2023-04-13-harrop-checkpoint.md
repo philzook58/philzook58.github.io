@@ -195,9 +195,13 @@ The relationship to the [Jens Otten provers](http://jens-otten.de/tutorial_table
 Looking at the implementation of yall, it appears that it works via  `copy_term` implementation. If instead of using yall, I inline those tricks, it can make for an interpreter where the user is less likely to make mistakes adding the `{} / ` variable capturing annotations. I hadn't realized that copy_term can be used to make shared variables via the pattern `copy_term(Shared-T, Shared-T1)` where `Shared` holds a list of the logical variables you want to share with the fresh copy `T1`
 
 
-[`undo/1`](https://www.swi-prolog.org/pldoc/doc_for?object=undo/1) may be a way to recover good behavior of `assert`. I am a little skeptical. Blowing the lid off of imperative effects and then trying to plug the leaks sounds like a scary proposition. [snapshot](https://www.swi-prolog.org/pldoc/man?predicate=snapshot/1) also sounds interesting.
+[`undo/1`](https://www.swi-prolog.org/pldoc/doc_for?object=undo/1) may be a way to recover good behavior of `assert`. Maybe something like `impl(D,G) :- assert(D), undo(retract(D)), G, retract(D), undo(assert(D))` ? I am a little skeptical. Blowing the lid off of imperative effects and then trying to plug the leaks sounds like a scary proposition. [snapshot](https://www.swi-prolog.org/pldoc/man?predicate=snapshot/1) also sounds interesting.
 
 Jan suggests looking at XSB which has a notion of a first class clause set. I'm not sure how much this would help semantically speaking. This might be just a drop in more efficient replacement for my `P` clause list?
+
+"Embedded Implication" and "hypothetical reasoning" are both phrases that seem relevant. [see this paper](https://arxiv.org/pdf/2108.03602.pdf) They do a thing that looks like using `assert` but they pass in the shared variables as a separate argument. Maybe some kind of global variable, or maybe storing an E context like the S or P could work. I did have a version I was threading that, but then I didn't know why. They're metainterpreter looks very similar to the one below. The performance numbers look ok compared to their compiled version. Maybe metainterpreter is the way to go.
+
+It is disappointing that it is very easy to miss an accidental logical variable introduction. Marking all of them with `ex` is the only way to register them. It seems very impossible to know all the variables in scope... Is that true? They are held on a stack probably? In some sense the continuation might have all the currently in scope variables.
 
 @j4n_bur53 has a cleaned up version of my interpreter using some of these trick.
 
@@ -260,6 +264,9 @@ left(S,P,all(W,L), A) :- !,
 left(_,_,A,B) :- unify_with_occurs_check(A,B).
 ```
 
+Why did I even want this stuff?
+- hypothetical rewriting / contextual in egglog
+- guesses in disassembly or decompilation
 
 # Junk
 
