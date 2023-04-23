@@ -32,18 +32,18 @@ A term is a "ported" graph where each vertex has exactly one incoming edge.
 
 Sometimes we prefer to think of the term as a ported directed acyclic graph (DAG) where common subterms are shared. DAGs and trees are basically the same for many purposes.
 
-To add AC to this picture, we want to have "AC-nodes" for which the order and number of children is not specified. This is the more usual notion of vertex in a graph.
+To add AC to this picture, we want to have "AC-nodes" for which the order and number of children is not specified. This is the more usual notion of vertex in a graph. The `+` node in the following diagram does not differentiate it's children, while the other nodes do
 
 ![foo(bar, baz + baz + biz(bar) + bar)](/assets/acgraph.svg)
 
-`foo(bar, baz + baz + biz(bar) + bar)`
+`foo(bar, bar + bar + biz(bar) + baz)`
 
 We can also put e-graphs in this graphical picture (indeed that's why they are called egraphs) as a bipartite graph with ported enodes combined and unported eclass nodes (there is no notion of ordering or constrained number of children of an eclass). Again AC and E are rather similar from this perspective. In the usual drawing of an egraph, we represent the edge coming from the eclass node to an enode (representing the relationship of the enoe being in the eclass) by representing the eclass as a dotted outline surrounding its enodes.
 
 ![](/assets/egraphs.svg) [source](https://egraphs-good.github.io/)
 # Graphs as Relational Databases
 
-A graph is easily encoded into a relational database and graph matching problems to relational queries. It is obvious one said, but not well known enough.
+A graph is easily encoded into a relational database and graph matching problems to relational queries. It is obvious once said, but not well known enough.
 
 For example, we can construct an edge table and here is a query that finds all triangle patterns in the graph.
 ```sql
@@ -118,6 +118,8 @@ Some other articles and examples on AC matching:
 I don't actually find this that obvious.
 
 What should `(X + Y)` be capable of finding? Is `X` bound to a cluster of terms? Can `Y` be the empty multiset?
+
+Maybe the terminology "multiset pattern" is better.
 
 I think really the more natural pattern operationally speaking to allow is _open_ AC patterns `(X + Y + ...)` where `X` and `Y` can only bind to non plus terms.
 
