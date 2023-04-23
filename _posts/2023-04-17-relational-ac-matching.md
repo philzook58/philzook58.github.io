@@ -10,7 +10,7 @@ Matching modulo associativity and/or commutativity is something people tend to w
 
 It can be partially dealt with by taking AC pieces and normalizing them to canonical forms. We can do this by flattening out the parenthesis into a list (right associating) to deal with the "A" and then sorting the elements to deal with "C".
 
-In functional programming languages, we are used to having pattern matching be semi deterministic (it either fails or succeeds once). If you need to pattern match into this AC normal form though, you need to search through choices from this flat sorted expression and pattern matching even a single term becomes nondeterministic, possibly returning many results.
+In functional programming languages, we are used to having pattern matching be semi-deterministic (it either fails or succeeds once). If you need to pattern match into this AC normal form though, you need to search through choices from this flat sorted expression and pattern matching even a single term becomes nondeterministic, possibly returning many results.
  
 An insightful idea that I learned of from the [Relational E-matching paper](https://arxiv.org/abs/2108.02290) is that it can be very useful to flatten term matching problems so that they are amenable to database engines.
 
@@ -19,6 +19,8 @@ While we might be tempted to typically use top down search in a term (perhaps as
 In addition, we get to reuse the effort that has been put into databases. Databases are very sophisticated, declarative, high performance solver systems.
 
 In E-matching, you need to search the equivalence classes for things that might match your pattern. Even if you start from a single eclass, there may be many solutions. E-matching and AC-matching are in this sense similar problems and it appears basically the same relational approach works.
+
+Perhaps this is unsurprising given that commutativity and associativity are popular difficult to direct rewrite rules that people like throwing in their egraph rewriting. But people also complain that this blows up the egraph. This blog post might be a step towards correcting that.
 
 It's pretty simple, first we think about how AC-terms are graphs and then how to treat graph matching relationally.
 
@@ -34,8 +36,11 @@ To add AC to this picture, we want to have "AC-nodes" for which the order and nu
 
 ![foo(bar, baz + baz + biz(bar) + bar)](/assets/acgraph.svg)
 
-We can also put e-graphs in this graphical picture (indeed that's why they are called egraphs) as a bipartite graph with ported enodes combined and unported eclass nodes (there is no notion of ordering or constrained number of children of an eclass). Again AC and E are rather similar from this perspective.
+`foo(bar, baz + baz + biz(bar) + bar)`
 
+We can also put e-graphs in this graphical picture (indeed that's why they are called egraphs) as a bipartite graph with ported enodes combined and unported eclass nodes (there is no notion of ordering or constrained number of children of an eclass). Again AC and E are rather similar from this perspective. In the usual drawing of an egraph, we represent the edge coming from the eclass node to an enode (representing the relationship of the enoe being in the eclass) by representing the eclass as a dotted outline surrounding its enodes.
+
+![](/assets/egraphs.svg) [source](https://egraphs-good.github.io/)
 # Graphs as Relational Databases
 
 A graph is easily encoded into a relational database and graph matching problems to relational queries.
@@ -85,30 +90,6 @@ insert into ac values (0,1), (0,1);
 
 So given a term mod AC, we can canonicalize it and then insert it into the database according to these recipes. Then to find all AC patterns
 
-# SQLite
-
-```sql
-create table plus(ac unique); -- functional to rowid
-create table lit(n unique); -- functional to rowid
-create table ac(in_,out_); -- a many to many relationship. A special table with special rebuild. Multiset semantics because can have terms like "a" + "a" + "a"
--- construct a + b + c as 
--- lit a  \
--- lit b -- ac - plus - 
--- lit c  /
-insert into lit values ("a"), ("b"), ("c");--select * from generate_series(0,3);
-insert into ac values (1,0), (2,0), (3,0);
-insert into plus values (0);
-​
-select *, rowid from plus;
-select *, rowid from ac;
--- This query is doing AC-matching
-select * from plus, ac as n1, ac as n2, lit as x1, lit as x2
- where n1.out_ = plus.ac and n2.out_ = plus.ac 
- and n1.rowid != n2.rowid -- multiset but don't match same term twice
- and n1.in_ = x1.rowid and n2.in_ = x2.rowid 
- and n1.in_ < n2.in_  -- break permutation symmetry
- ;
-```
 
 # Bits and Bobbles
 - Eli had a very similar proposal I think
@@ -116,8 +97,7 @@ select * from plus, ac as n1, ac as n2, lit as x1, lit as x2
 - Does one want (a + b + ...) patterns where `a` and `b` cannot contain `+` or do we want `(A + B)` patterns where A and B are partitions of the terms in the `+` node?
 - Can AC and E matching be combined in a manner compatible with rebuilding? In a sense AC "flattening" is similiar to rebuilding. The original conception of relational E-matching had the canonization/rebuilding happening outside the database, and this blog post is in a similar spirit.
 - Ordering needs to be readjusted in the equality saturation case.
-
-# 
+- `GROUP BY` and [`group_concat` aggregator](https://www.sqlitetutorial.net/sqlite-group_concat/) is useful for reconstituting the ac-term from SQL. 
 
 Some other articles and examples:
 
@@ -130,12 +110,15 @@ Some other articles and examples:
 - [associative commutative rules Symbolics.jl](https://github.com/JuliaSymbolics/SymbolicUtils.jl/pull/12)
 
 
+#  Junk
+
+
 ## What are AC patterns?
 I don't actually find this that obvious.
 
-What should `X + Y` be capable of finding? Is `X` bound to a cluster of terms? Can `Y` be the empty multiset?
+What should `(X + Y)` be capable of finding? Is `X` bound to a cluster of terms? Can `Y` be the empty multiset?
 
-I think really the more natural pattern to allow is _open_ AC patterns `X + Y + ...` where `X` and `Y` can only bind to non plus terms.
+I think really the more natural pattern operationally speaking to allow is _open_ AC patterns `(X + Y + ...)` where `X` and `Y` can only bind to non plus terms.
 
 Perhaps really we ought to bind te multiset to a pattern and then add constraints on the multiset about its membership and cardinality. 
 
@@ -149,51 +132,10 @@ Combined with flattening this sort of gives AC.
 
 Full AC requires flattening on both the pattern and term side. The pattern `(x + y) + z` ought to be flattened.
 
-1. Is the plus at the head of the pattern  `x + y`. This is "unsealed" in some sense since it should also match `1 + 2 + 3`. The pattern `1 + 2` ought to find the subterm in `1 + 3 + 2` . No it's really about point 2. Are there vars in the pattern or not.
+1. Is the plus at the head of the pattern  `x + y`? This is "unsealed" in some sense since it should also match `1 + 2 + 3`. The pattern `1 + 2` ought to find the subterm in `1 + 3 + 2` . No it's really about point 2. Are there vars in the pattern or not.
 2. Is there a var or a constant as te child of plus `foo(x + foo(1))` The var then can absorb everything else
 3. multiple vars `x + y` is silly? unless they nonlinearly appear elsewhere.
 4. 
-
-
-
-
-## Flattening Combinators
-
-Flattening terms to relations is an annoying but trivial pass. Basically, you need a way to generate fresh variables/names and a place to record the various constraints and things you have in scope. 
-A kind of cute way to shallowly embed this is to use flattening combinators.
-
-```python
-counter = 0
-def freshrow():
-  global counter
-  counter += 1
-  return "row" + str(counter)
-
-def foo(a):
-  def res():
-    (rid, froms, wheres) = a()
-    row = freshrow()
-    return (f"{row}.rowid",  [f"foo as {row}"] + froms, [f"{rid} = {row}.a"]+ wheres)
-  return res
-
-def x():
-  row = freshrow()
-  return (row + ".rowid" ,[f"x AS {row}"], [])
-
-def func(f):
-  def res(*args):
-    def res1():
-      args = [arg() for arg in args]
-      rids, froms, wheres = zip(*args)
-      row = freshrow()
-      (f"{row}.rowid",  [f"{f} as {row}"] + froms, [f"{rid} = {row}.arg{n}" for n,rid in enumerate(rids)] + wheres)
-    return res1
-  return res
-
-print(foo(foo(x))())
-
-```
-
 
 
 ## Pattern Matching Combinators
@@ -266,6 +208,8 @@ def ms(f):
 
 ```
 
+In some sense, an AC pattern is a multiset pattern, where you need to only match on multisets greater than that of the pattern. 
+
 ```python
 class ACNode():
     multiset:Dict[Term,int]
@@ -329,7 +273,71 @@ def comm(f):
 ```
 What does `a + b + c` mean
 
+# SQLite
 
+Using rowid, a questionable practice
+```sql
+create table plus(ac unique); -- functional to rowid
+create table lit(n unique); -- functional to rowid
+create table ac(in_,out_); -- a many to many relationship. A special table with special rebuild. Multiset semantics because can have terms like "a" + "a" + "a"
+-- construct a + b + c as 
+-- lit a  \
+-- lit b -- ac - plus - 
+-- lit c  /
+insert into lit values ("a"), ("b"), ("c");--select * from generate_series(0,3);
+insert into ac values (1,0), (2,0), (3,0);
+insert into plus values (0);
+​
+select *, rowid from plus;
+select *, rowid from ac;
+-- This query is doing AC-matching
+select * from plus, ac as n1, ac as n2, lit as x1, lit as x2
+ where n1.out_ = plus.ac and n2.out_ = plus.ac 
+ and n1.rowid != n2.rowid -- multiset but don't match same term twice
+ and n1.in_ = x1.rowid and n2.in_ = x2.rowid 
+ and n1.in_ < n2.in_  -- break permutation symmetry
+ ;
+```
+
+## Flattening Combinators
+
+Flattening terms to relations is an annoying but trivial pass. Basically, you need a way to generate fresh variables/names and a place to record the various constraints and things you have in scope. 
+A kind of cute way to shallowly embed this is to use flattening combinators.
+
+```python
+counter = 0
+def freshrow():
+  global counter
+  counter += 1
+  return "row" + str(counter)
+
+def foo(a):
+  def res():
+    (rid, froms, wheres) = a()
+    row = freshrow()
+    return (f"{row}.rowid",  [f"foo as {row}"] + froms, [f"{rid} = {row}.a"]+ wheres)
+  return res
+
+def x():
+  row = freshrow()
+  return (row + ".rowid" ,[f"x AS {row}"], [])
+
+def func(f):
+  def res(*args):
+    def res1():
+      args = [arg() for arg in args]
+      rids, froms, wheres = zip(*args)
+      row = freshrow()
+      (f"{row}.rowid",  [f"{f} as {row}"] + froms, [f"{rid} = {row}.arg{n}" for n,rid in enumerate(rids)] + wheres)
+    return res1
+  return res
+
+print(foo(foo(x))())
+
+```
+
+
+# graphs
 https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)
 
 There are multiple definitions/variations of what you might call a graph. The standard definition is that a graph is a set of vertices and a set of edges.
@@ -353,9 +361,6 @@ These types of graphs tend to be fairly shallowly embeddable in each other using
 ported vertex graphs can be modelled by adding "port" vertices attached to each vertex.
 
 The simple graph is not necessarily the easiest one to implement though
-
-
-
 
 
 The ac table does have an odd variation of functional dependency. An “aggregate fd”. Instead of forall x y1 y2, r(x, y1), r(x,y2) -> y1 = y2 it is instead forall y1 y2, (forall x, r(x,y1) <-> r(x,y2)) -> y1 = y2
