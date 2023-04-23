@@ -1085,7 +1085,7 @@ https://github.com/tobymao/sqlglot/blob/main/posts/python_sql_engine.md https://
 - VLDB
 - HYTRADBOI https://www.hytradboi.com/ also very cool stuff.
 ## Misc
-
+[build your own database book](https://news.ycombinator.com/item?id=35666598)
 - Database Design and Implementation by Edward Sciore, 2020
 
 

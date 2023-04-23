@@ -533,6 +533,7 @@ fragment DIGIT
 ```
 
 # Misc
+[   flap: A Deterministic Parser with Fused Lexing](https://github.com/yallop/ocaml-flap) use metaocaml staged programming techniques to fuse lexer and parser
 
 [grammar zoo](http://slebok.github.io/zoo/index.html)
 

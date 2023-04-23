@@ -10,7 +10,7 @@ Matching modulo associativity and/or commutativity is something people tend to w
 
 It can be partially dealt with by taking AC pieces and normalizing them to canonical forms. We can do this by flattening out the parenthesis into a list (right associating) to deal with the "A" and then sorting the elements to deal with "C".
 
-In functional programming languages, we are used to having pattern matching be semi-deterministic (it either fails or succeeds once). If you need to pattern match into this AC normal form though, you need to search through choices from this flat sorted expression and pattern matching even a single term becomes nondeterministic, possibly returning many results.
+In functional programming languages, we are used to having pattern matching be semi-deterministic (it either fails or succeeds once). If you need to pattern match into this AC normal form though, you need to search through choices from this flat sorted expression and pattern matching even a single term becomes nondeterministic, possibly returning many results. Another reason we might expect pattern matching to return many results is that we may be seeking patterns in a database of terms and all their subterms.
  
 An insightful idea that I learned of from the [Relational E-matching paper](https://arxiv.org/abs/2108.02290) is that it can be very useful to flatten term matching problems so that they are amenable to database engines.
 
@@ -43,7 +43,7 @@ We can also put e-graphs in this graphical picture (indeed that's why they are c
 ![](/assets/egraphs.svg) [source](https://egraphs-good.github.io/)
 # Graphs as Relational Databases
 
-A graph is easily encoded into a relational database and graph matching problems to relational queries.
+A graph is easily encoded into a relational database and graph matching problems to relational queries. It is obvious one said, but not well known enough.
 
 For example, we can construct an edge table and here is a query that finds all triangle patterns in the graph.
 ```sql
@@ -93,13 +93,14 @@ So given a term mod AC, we can canonicalize it and then insert it into the datab
 
 # Bits and Bobbles
 - Eli had a very similar proposal I think
+- I am intrigued by this relational AC matching idea but am stumped on how to flesh them out further and actually validate its usefulness. This blog post is an imperfect attempt to push on that. I'm a little stumped how to move forward.
 - Arguably the system I have presented only deals with C and not A. A flattening process deals with A
 - Does one want (a + b + ...) patterns where `a` and `b` cannot contain `+` or do we want `(A + B)` patterns where A and B are partitions of the terms in the `+` node?
 - Can AC and E matching be combined in a manner compatible with rebuilding? In a sense AC "flattening" is similiar to rebuilding. The original conception of relational E-matching had the canonization/rebuilding happening outside the database, and this blog post is in a similar spirit.
 - Ordering needs to be readjusted in the equality saturation case.
 - `GROUP BY` and [`group_concat` aggregator](https://www.sqlitetutorial.net/sqlite-group_concat/) is useful for reconstituting the ac-term from SQL. 
 
-Some other articles and examples:
+Some other articles and examples on AC matching:
 
 - [flat and orderless patterns in mathematica](https://reference.wolfram.com/language/tutorial/Patterns.html#28368)
 - [Non-linear Associative-Commutative Many-to-One Pattern Matching with Sequence Variables](https://arxiv.org/abs/1705.00907)
@@ -110,7 +111,7 @@ Some other articles and examples:
 - [associative commutative rules Symbolics.jl](https://github.com/JuliaSymbolics/SymbolicUtils.jl/pull/12)
 
 
-#  Junk
+# Less Well Digested Thoughts
 
 
 ## What are AC patterns?

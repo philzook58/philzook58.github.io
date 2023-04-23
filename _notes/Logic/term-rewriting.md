@@ -137,6 +137,21 @@ complicated tie breaking
 https://www.cs.miami.edu/home/geoff/Courses/TPTPSYS/FirstOrder/SyntacticRefinements.shtml
 
 [Empirical Properties of Term Orderings for Superposition - Schulz](http://wwwlehre.dhbw-stuttgart.de/~sschulz/PAPERS/Schulz-PAAR-2022.pdf)
+
+Basically term size is a good idea for a termination ordering
+
+But also obviously definitional systems are obviously terminating. Systems that do not have recursive definitions. However, these unfolder systems clearly grow term sizes. So we need an intuition for these. THe lexicographic order works. THe ordering on symbols is the definition order
+No `let rec`
+```
+let f x = x
+let g x y = f f f f f f f x 
+let h x = g (f x) (f x)
+```
+Any program in this system is obviously terminating. 
+Non recursive Macro expansions
+
+But maybe you need some mix of "called on smaller arguments" + definition unpacking
+
 # Termination
 https://github.com/TermCOMP/TPDB termination problem database
 

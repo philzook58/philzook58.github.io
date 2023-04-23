@@ -65,6 +65,22 @@ How do you put suggested hand written invariants in?
 ```
 
 # Resources
+[eldarica](http://uu.diva-portal.org/smash/get/diva2:1268767/FULLTEXT01.pdf) https://github.com/uuverifiers/eldarica [web](http://logicrunch.it.uu.se:4096/~wv/eldarica/) Impressive seeming examples.
+
+```
+• CEGAR and predicate abstraction, such as HSF [20],
+Duality [30], and ELDARICA;
+• IC3/PDR, such as the PDR engine in Z3 [21]. The algorithm implemented in SPACER [28] extends IC3/PDR by
+maintaining both under- and over-approximations during
+analysis;
+• Transformation of Horn clauses, such as VeriMAP [13]
+and Rahft [26];
+• Machine learning, such as SynthHorn [33], FreqHorn
+[17] and HoIce [11], which progressively drive concrete
+invariant samples and use machine learning classification
+techniques to find the inductive invariant.
+```
+
 [liquid fixpoint](https://github.com/ucsd-progsys/liquid-fixpoint) Not entirely sure what this is, but it is a solverified version of liquid haskell ish? Using liquid types as a horn clause problem specification language?
 
 [cartesian predciate abstraction](https://swt.informatik.uni-freiburg.de/berit/papers/boolean-and-cartesian-....pdf)
