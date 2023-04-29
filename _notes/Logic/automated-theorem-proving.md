@@ -688,8 +688,8 @@ If I run superposition on unit positive clauses, is it performing completion? Co
 
 The discussion of the encoding of t = s is a bit goofy. Yes, `=` is commutative. In that sense in is reasoonable to use sets. Could the opposite convention be used? This is kind of like the set-theoretic convention of `(a,b) === {  {a}, {a,b} __ }` (stupid liquid formatting error) which is pretty bizarre too
 
-`t = s  === {{t}, {s}}`
-`t != s === {{t,s}}`
+`t = s  === {  __ {t}, {s} __ }`
+`t != s === { __ {t,s} __ }`
 Multiset orderings
 # Literal Selection
 Ordered resolution - order on literals, only resolve on biggest one (you want to get rid of big stuff)
