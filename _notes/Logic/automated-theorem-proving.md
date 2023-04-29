@@ -686,7 +686,7 @@ If I run superposition on unit positive clauses, is it performing completion? Co
 
 [E a brainiac theorem prover](https://dl.acm.org/doi/10.5555/1218615.1218621)
 
-The discussion of the encoding of t = s is a bit goofy. Yes, `=` is commutative. In that sense in is reasoonable to use sets. Could the opposite convention be used? This is kind of like the set-theoretic convention of `(a,b) === {{a}, {a,b}}` which is pretty bizarre too
+The discussion of the encoding of t = s is a bit goofy. Yes, `=` is commutative. In that sense in is reasoonable to use sets. Could the opposite convention be used? This is kind of like the set-theoretic convention of `(a,b) === {  {a}, {a,b} __ }` (stupid liquid formatting error) which is pretty bizarre too
 
 `t = s  === {{t}, {s}}`
 `t != s === {{t,s}}`
