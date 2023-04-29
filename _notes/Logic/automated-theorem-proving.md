@@ -321,6 +321,10 @@ Ok this basically did what i wanted. I'm not sure what it is though?
 
 
 "The most natural clause representation for E is probably a literal disjunction: a=$true;b!=$true;c!=$true."
+
+```bash
+
+```
 ## Prover9
 [Prover9 and Mace4](https://www.cs.unm.edu/~mccune/prover9/)
 Prover9 is intriguing. It seems to have interaction modalities that other provers don't
@@ -545,6 +549,30 @@ Big question is, what is the representation of formulas, literals, clauses.
 
 [logtk](https://hal.inria.fr/hal-01101057). Huh. LPO as a constraint solving problem https://sneeuwballen.github.io/zipperposition/2.0/logtk/Logtk_solving/index.html
 
+[demo resolution prover](https://github.com/sneeuwballen/zipperposition/tree/master/src/demo/resolution)
+
+```ocaml
+#use "topfind";;
+#require "logtk";;
+print_endline "hello world";;
+open Logtk
+(* https://github.com/sneeuwballen/zipperposition/blob/master/tests/testTerm.ml *)
+module T = Term
+let f_ = ID.make "f"
+let g_ = ID.make "g"
+let ty = Type.term
+let ty_t = Term.of_ty ty 
+let prop = Type.prop
+let f_fun = (T.const ~ty:Type.([ty;ty] ==> ty) f_)
+let f x y = T.app f_fun [x; y]
+
+let prec = Precedence.default [f_;g_]
+(*let ord = Logtk.Ordering.lambda_kbo prec *)
+let names = Ordering.names ()
+
+let () = List.iter (fun name -> print_endline name) names
+
+```
 
 ## Datalog vs ATP
 What makes an ATP that different from a datalog? Both are saturating. If I could limit of prune clauses of size > N, that might emulate a datalog. Or perhaps protect rule-rule resolution from happening.
@@ -622,6 +650,7 @@ https://www.cs.cmu.edu/~fp/courses/99-atp/lectures/lecture20.html
 encoding subusmption to SAT
 https://fmcad.org/FMCAD22/presentations/08%20-%20SAT%20and%20SMT%202/01_rath.pdf
 ## Narrowing
+see term rewriting
 
 ## Paramodulation
 paramodulation is unification based equational substitution
@@ -655,6 +684,13 @@ superposition can be used instead of resolution by encoding predicates as functi
 
 If I run superposition on unit positive clauses, is it performing completion? Completion of guarded rewrite systems?
 
+[E a brainiac theorem prover](https://dl.acm.org/doi/10.5555/1218615.1218621)
+
+The discussion of the encoding of t = s is a bit goofy. Yes, `=` is commutative. In that sense in is reasoonable to use sets. Could the opposite convention be used? This is kind of like the set-theoretic convention of `(a,b) === {{a}, {a,b}}` which is pretty bizarre too
+
+`t = s  === {{t}, {s}}`
+`t != s === {{t,s}}`
+Multiset orderings
 # Literal Selection
 Ordered resolution - order on literals, only resolve on biggest one (you want to get rid of big stuff)
 # Term Indexing

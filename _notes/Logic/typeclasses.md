@@ -4,6 +4,7 @@ title: Typeclasses
 ---
 
 - [Applications](#applications)
+- [](#)
 - [Canonical Structures](#canonical-structures)
 - [Unification Hints](#unification-hints)
 - [Diamonds](#diamonds)
@@ -31,6 +32,17 @@ basic 1 parametr type classes
 [wadler typeclas page](https://homepages.inf.ed.ac.uk/wadler/topics/type-classes.html)
 
 [Quantified class constraints](https://homepages.inf.ed.ac.uk/wadler/papers/quantcc/quantcc.pdf) harrop extension to typeclass clauses
+
+[types and typeclasses](https://crypto.stanford.edu/~blynn/compiler/type.html)
+[typing haskell in haskell](https://web.cecs.pdx.edu/~mpj/thih/thih.pdf)
+[let should not be generalized](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tldi10-vytiniotis.pdf) - hindley milner let eneralization is a pain. Interesting disucssion of local equalities for gadts. ocal equalities is an interedting challenge. Can lambda prolog even do this?
+```elpi
+main :-  (X = [] => print X), (X = [1] => print X).
+```
+
+[Implementing typeclasses](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.53.3952&rep=rep1&type=pdf)
+
+Overloading with runtime evidence. Everything has tags, tags are unbundled. Tags are structural? Just ship the dictionary of operatios
 # Canonical Structures
 Typeclasses vs Canonical Structures. I don't get it.
 Could I make a model? Maybe in prolog?
@@ -157,7 +169,83 @@ The proof of a successful resolution is a recipe for building the appropriate
 
 Associated types means a piercing of this barrier
 
+https://lpcic.github.io/coq-elpi/tutorial_elpi_lang.html
 
+```elpi
+kind person type.
+type fred, larry person.
+pred daddy o:person, o:person.
+
+daddy larry fred.
+
+main :- daddy larry F, print F.
+
+```
+
+Build simply typed lambda checker.
+Add typeclases
+Oh, hmm. The mode annotations freeze it?
+
+```elpi
+
+kind  term  type.
+
+type  app   term -> term -> term.
+type  fun   (term -> term) -> term.
+
+kind  ty   type.           % the data type of types
+type  arr  ty -> ty -> ty. % our type constructor
+
+
+pred whd i:term, o:term.
+
+% when the head "Hd" of an "app" (lication) is a
+% "fun" we substitute and continue
+whd (app Hd Arg) Reduct :- whd Hd (fun F), !,
+whd (F Arg) Reduct.
+
+% otherwise a term X is already in normal form.
+whd X Reduct :- Reduct = X.
+
+
+pred of i:term, o:ty. % the type checking algorithm
+
+% for the app node we ensure the head is a function from
+% A to B, and that the argument is of type A
+of (app Hd Arg) B :-
+of Hd (arr A B), of Arg A.
+
+% for lambda, instead of using a context (a list) of bound
+% variables we use pi and => , explained below
+of (fun F) (arr A B) :-
+pi x\ of x A => of (F x) B.
+
+kind class type.
+
+% constr is =>
+type constr  class -> ty -> ty.
+
+type eq ty -> class.
+
+
+kind impl type.
+pred instance i:class, o:impl.
+
+type eq_impl term -> impl.
+
+type bool ty.
+type bool_eq term.
+of bool_eq (arr bool (arr bool bool)).
+
+type prod ty -> ty -> ty.
+type pair term -> term -> term.
+of (pair A B) (prod TA TB) :- of A TA, of B TB.
+
+instance (eq bool) (eq_impl bool_eq).
+% instance Eq a, Eq b => Eq (a,b) where ...
+instance (eq (prod A B)) (eq_impl TODO) :- instance (eq A) (eq_impl ImplA), instance (eq B) (eq_impl ImplB).
+
+```
 
 datalog
 egglog

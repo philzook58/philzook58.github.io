@@ -15,7 +15,7 @@
 # in the templates via {{ site.myvariable }}.
 title: Hey There Buddo!
 tagline: Hot Leaves in a Cold Worlds.
-# email: philzook58@gmail.com
+email: philzuckerblog@gmail.com
 description: A blog about life, programming, math, logic, and physics.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://www.philipzucker.com" # the base hostname & protocol for your site, e.g. http://example.com

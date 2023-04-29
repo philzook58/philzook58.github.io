@@ -2637,6 +2637,10 @@ https://en.wikipedia.org/wiki/Rete_algorithm
 
 
 # Lambda Prolog
+[tabling in higher order logic programming](http://reports-archive.adm.cs.cmu.edu/anon/2003/CMU-CS-03-185.pdf)
+
+https://userpages.uni-koblenz.de/~laemmel/paradigms1011/resources/pdf/lambda-prolog.pdf ralf lammel slides
+
 [lambda prolog page](https://www.lix.polytechnique.fr/~dale/lProlog/)
 Implementations
 - Teyjus - seems to maybe not be developed anymore

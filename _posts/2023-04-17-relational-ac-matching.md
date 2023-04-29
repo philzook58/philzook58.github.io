@@ -99,16 +99,19 @@ So given a term mod AC, we can canonicalize it and then insert it into the datab
 - Can AC and E matching be combined in a manner compatible with rebuilding? In a sense AC "flattening" is similiar to rebuilding. The original conception of relational E-matching had the canonization/rebuilding happening outside the database, and this blog post is in a similar spirit.
 - Ordering needs to be readjusted in the equality saturation case.
 - `GROUP BY` and [`group_concat` aggregator](https://www.sqlitetutorial.net/sqlite-group_concat/) is useful for reconstituting the ac-term from SQL. 
+- normalizing AC is similar to congruence. It is a bottom up pass.
 
 Some other articles and examples on AC matching:
 
 - [flat and orderless patterns in mathematica](https://reference.wolfram.com/language/tutorial/Patterns.html#28368)
+- [Associative-Commutative Rewriting on Large Terms - Eker](https://link.springer.com/chapter/10.1007/3-540-44881-0_3) [ac slides](http://maude.cs.uiuc.edu/papers/pdf/acSlides.pdf) Interesting, they use term in indexing to try and prune the explosion faster. Fingerprints / etc. They need AC if they want to represent Maps equationally in maude with the right asymptotic properties. S. M. Eker. Associative-commutative matching via bipartite graph matching. Oh snap. 
 - [Non-linear Associative-Commutative Many-to-One Pattern Matching with Sequence Variables](https://arxiv.org/abs/1705.00907)
 - [Compilation of Pattern Matching with Associative-Commutative Functions ](https://link.springer.com/content/pdf/10.1007/3-540-53982-4_4.pdf)
 - [matchpy docs](https://matchpy.readthedocs.io/en/latest/)
 - [Commutative unification](https://matthewrocklin.com/blog/work/2013/01/25/Commutative-Unification)
 - [Equational Unification and Matching, and Symbolic Reachability Analysis in Maude 3.2 (System Description)](https://link.springer.com/chapter/10.1007/978-3-031-10769-6_31)
 - [associative commutative rules Symbolics.jl](https://github.com/JuliaSymbolics/SymbolicUtils.jl/pull/12)
+- [Variadic Equational Matching in Associative and Commutative Theories](https://www3.risc.jku.at/publications/download/risc_6260/variadic-equational-matching-jsc-final-with-mma-versions.pdf) comparing with mathemticas closed source solution. Systems of equations perspective like unification is interesting angle.
 
 
 # Less Well Digested Thoughts

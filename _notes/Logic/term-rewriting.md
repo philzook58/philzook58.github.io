@@ -5,9 +5,13 @@ title: Term Rewriting
 
 - [Abstract Rewrite Systems](#abstract-rewrite-systems)
 - [Completion](#completion)
+- [Ground Rewriting](#ground-rewriting)
 - [Term Orderings](#term-orderings)
+  - [KBO](#kbo)
 - [Termination](#termination)
 - [Implementation](#implementation)
+- [Narrowing](#narrowing)
+- [AC](#ac)
 - [Higher order rewriting](#higher-order-rewriting)
 - [Egraph](#egraph)
 - [String rewriting systems](#string-rewriting-systems)
@@ -17,6 +21,7 @@ title: Term Rewriting
   - [Maude](#maude)
     - [Unification](#unification)
     - [Equation Search](#equation-search)
+    - [Built ins](#built-ins)
     - [Category](#category)
   - [K](#k)
 - [Other Systems](#other-systems)
@@ -103,7 +108,56 @@ https://github.com/bytekid/maedmax ?
 http://cime.lri.fr/ cime
 
 
+# Ground Rewriting
+A Ground rewriting system is an egraph in a loose sense. Both are pile of ground equations.
+Completion is canonicalization.
 
+```
+def size(t):
+  return 1 + sum(map(size, t[1:]))
+def term_order(t1,t2):
+  s1 = size(t1)
+  s2 = size(t2)
+  if s1 < s2:
+    return True
+  elif s1 == s2:
+    if t1[0] < t2[0]:
+      return True
+    elif t1[0] == t2[0]:
+      for t,s in zip(t1[1:], t2[1:]):
+        if term_order(t,s):
+          return True
+  return False
+
+
+
+def groundrewrite(lhs, rhs, t):
+  if lhs == t:
+    return rhs
+  return [t[0]] + [map(groundrewrite(lhs,rhs) , t[1:]
+
+```
+
+Hmm. Interesting. Term orderings on ground terms are a good hting to consider first. A bit less complicated than terms with variables.
+
+```python
+if str_order(t,s):
+  if len(t) < len(s):
+    return True
+  elif len(t) == len(s):
+    return t < s
+  else:
+    return False 
+```
+No this is a bad ordering. It doesn't obey subterm properties?
+
+
+Term ordering Mod E. Term Ordering mode beta
+
+The egraph implements a fast on the fly defind term ordering.
+But we can probably define an easy to compute ahead of time ground ordering. Memoize fingerprints, etc.
+
+As compared to string rwriting, I don't want to (or don't have to) consider non-complete overlap pairs? That's what really makes this process terminating perhaps.
 
 # Term Orderings
 [Things to Know when Implementing KBO](https://link.springer.com/article/10.1007/s10817-006-9031-4)
@@ -151,6 +205,23 @@ Any program in this system is obviously terminating.
 Non recursive Macro expansions
 
 But maybe you need some mix of "called on smaller arguments" + definition unpacking
+
+Hmm. But weighted size is more or less KBO. And if we made the weight very high for the lower definitions, that might work too.
+
+You can remove extra ways from some algortihmic description of an ordering and it stays a partial ordering, just a weaker one.
+
+## KBO
+1. s > var_X if var_X is in s. Base case for variables.
+2. All number of occurances of variables must be equal or reduced.
+3. weighting function must be reduced
+4. to tie break some weighting function equivalnces, we can start a. check ordering on head symbols b. recursing into subterms 
+
+Weighting function
+1. weight for all variables must be the same
+2. zero weights is fishy
+
+Otherwise it's the obvious add up the number of occurances of symbols weighted
+
 
 # Termination
 https://github.com/TermCOMP/TPDB termination problem database
@@ -253,6 +324,30 @@ sum(n, acc) -> sum(n - 1, acc+n)
 # Implementation
 [Terms for Efficient Proof Checking and Parsing](https://www.youtube.com/watch?v=SdB2hVIZ2nI&ab_channel=ACMSIGPLAN)
 Two different types for terms that are expected to live different amounts of time. Differ only in rust pointer type. short terms have borrowed reference to long terms. Kontroli
+
+# Narrowing
+<https://maude.lcc.uma.es/manual271/maude-manualch16.html>
+Narrowing is like prolog resolition
+Instead of rewriting ground terms, we cna rewrite terms with variables. Nondeterminsically we might unify and "narrow" the variables in there.
+
+[functional logic programming in maude](http://personales.upv.es/sanesro/papers/futatsugi-fest.pdf)
+# AC
+- [flat and orderless patterns in mathematica](https://reference.wolfram.com/language/tutorial/Patterns.html#28368)
+- [Associative-Commutative Rewriting on Large Terms - Eker](https://link.springer.com/chapter/10.1007/3-540-44881-0_3) [ac slides](http://maude.cs.uiuc.edu/papers/pdf/acSlides.pdf) Interesting, they use term in indexing to try and prune the explosion faster. Fingerprints / etc. They need AC if they want to represent Maps equationally in maude with the right asymptotic properties. S. M. Eker. Associative-commutative matching via bipartite graph matching. Oh snap. Some AC patterns can be fast
+- []()
+- [Non-linear Associative-Commutative Many-to-One Pattern Matching with Sequence Variables](https://arxiv.org/abs/1705.00907)
+- [Compilation of Pattern Matching with Associative-Commutative Functions ](https://link.springer.com/content/pdf/10.1007/3-540-53982-4_4.pdf)
+- [matchpy docs](https://matchpy.readthedocs.io/en/latest/)
+- [Commutative unification](https://matthewrocklin.com/blog/work/2013/01/25/Commutative-Unification)
+- [Equational Unification and Matching, and Symbolic Reachability Analysis in Maude 3.2 (System Description)](https://link.springer.com/chapter/10.1007/978-3-031-10769-6_31)
+- [associative commutative rules Symbolics.jl](https://github.com/JuliaSymbolics/SymbolicUtils.jl/pull/12)
+- [Variadic Equational Matching in Associative and Commutative Theories](https://www3.risc.jku.at/publications/download/risc_6260/variadic-equational-matching-jsc-final-with-mma-versions.pdf) comparing with mathemticas closed source solution. Systems of equations perspective like unification is interesting angle. Matching is solution of system of equations.
+- [asscaitve unification in maude](https://www.sciencedirect.com/science/article/abs/pii/S2352220821001103?via%3Dihub)
+
+Even if you have a confluent terminating system, E-matching (in this other sense?) requires search. Interesting. So that's probably what the variant stuff is about.
+If you do narrowing rewriting on the patterns (only interesting non critical pair overlap), eventually the pattern is so instantiated it can't possibly match the term (?). That could help. This is back to the idea of treating AC as a macro on patterns. This is limitting in many ways. But maybe limitting is what you want. Pre resolution on datalog rules.
+
+
 
 # Higher order rewriting
 
@@ -679,6 +774,11 @@ See automated theorem proving.
 # Systems
 
 ## Maude
+https://github.com/SRI-CSL/Maude/tree/master/src/Interface Interfaces
+
+https://github.com/SRI-CSL/Maude/blob/master/src/Main/prelude.maude prelude
+
+
 [Programming and Symbolic Computation in Maude 2019](https://arxiv.org/pdf/1910.08416.pdf)
 
 [Bool]
@@ -941,6 +1041,86 @@ for (sol, subst, seq, steps) in t.search(5, mod.parseTerm("c + (b + n)"), depth=
 
 I do feel like there is way to hack cost into this. Define cost via computational equations... Hmm.
 
+
+Ok, so an equality condition on the cost function
+
+```python
+import maude
+
+test_mod = """
+  mod SEARCH is
+    protecting NAT .
+    sort Num .
+ 
+    op plus : Num Num -> Num .
+    op neg : Num -> Num .
+    ops a b c d e f z : -> Num .
+
+    vars n m p  : Num .
+    rl [lassoc] : plus(plus(n, m), p) => plus(n,  plus(m , p)) .
+    rl [rassoc] : plus(n,  plus(m , p))  => plus(plus(n, m), p) .
+    rl [comm] : plus(n , m) => plus(m , n) .
+    eq plus(n, neg(n)) = z .
+    eq plus(n, z) = n . 
+
+    op cost : Num -> Nat .
+    eq cost(plus(n,m)) = cost(n) + cost(m) .
+    eq cost(a) = 1 .
+    eq cost(b) = 1 .
+    eq cost(c) = 1 .
+    eq cost(z) = 1 .
+
+  endm"""
+maude.init()
+maude.input(test_mod)
+mod = maude.getModule('SEARCH')
+
+#t = mod.parseTerm("plus(plus(a , b), c)")
+t = mod.parseTerm("plus(a,plus(b , neg(a)))")
+# t.search takes in parameters. I thnk the first one is no step, one step, *step
+#for (sol, subst, seq, steps) in t.search(5, mod.parseTerm("plus(c, plus(b , n))"), depth=2):
+n = mod.parseTerm("n ")
+import pprint
+for (sol, subst, seq, steps) in t.search(maude.ANY_STEPS, n , condition=[maude.EqualityCondition(mod.parseTerm("cost(n)"),mod.parseTerm("1") )], depth=3):
+    path = seq()
+    print(subst) # n = a
+    pprint.pprint(path) # an interleaved list of term and rule.
+
+```
+
+
+### Built ins
+Chspter 8 of manual
+- Rat
+- Float
+- string
+- list
+- sets
+- Map
+- 
+```python
+import maude
+
+
+maude.init()
+mod = maude.getModule('NAT')
+def term(s):
+  t = mod.parseTerm(s)
+  t.reduce()
+  print(t)
+
+term("max(10,0)")
+term("10 + 2 * 3")
+term("s s 0")
+
+mod = maude.getModule('BOOL')
+mod = maude.getModule('INT')
+mod = maude.getModule('STRING')
+
+term("length(\"hello\")")
+term(")
+```
+
 ### Category
 
 ```python
@@ -988,6 +1168,25 @@ print(t)
 
  
 ## K
+```bash
+rm -rf /tmp/ktest
+mkdir /tmp/ktest && cd /tmp/ktest
+echo "
+module LESSON
+
+  syntax Color ::= Yellow() | Blue()
+  syntax Fruit ::= Banana() | Blueberry()
+  syntax Color ::= colorOf(Fruit) [function]
+
+  rule colorOf(Banana()) => Yellow()
+  rule colorOf(Blueberry()) => Blue()
+
+endmodule
+" > lesson.k
+kompile lesson.k
+krun -cPGM='colorOf(Banana())'
+```
+
 <https://dl.acm.org/doi/pdf/10.1145/3314221.3314601> instruction semantics for x86 in K
 https://kframework.org/index.html
 intepreter, compiler, formal prover thing
@@ -1034,9 +1233,9 @@ https://redex.racket-lang.org/
 RMT - rewriting modfulo theories https://profs.info.uaic.ro/~stefan.ciobaca/inriaparis2017/pres.pdf https://github.com/ciobaca/rmt/
 
 
+[](https://github.com/joshrule/term-rewriting-rs)
 
-
-
+https://github.com/comby-tools/comby comby a rewriting sed tool for languages. Odd.
 
 
 # 2020 Term rewritng notes

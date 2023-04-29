@@ -292,6 +292,9 @@ Also ghidra has built in diffing
 
 
 ## Resources
+[formal semantics for ghidra](https://link.springer.com/chapter/10.1007/978-3-031-25803-9_7) high pcode. mentions interpeter for low pcode.
+
+
 - [Ghidra Class](https://github.com/NationalSecurityAgency/ghidra/tree/master/GhidraDocs/GhidraClass)
 - [decompiler docs](https://grant-h.github.io/docs/ghidra/decompiler/index.html)
 - [Mike Bell: Extending Ghidra: from Script to Plugins and Beyond](https://vimeo.com/377180466)
