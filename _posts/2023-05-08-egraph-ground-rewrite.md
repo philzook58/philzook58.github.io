@@ -107,6 +107,12 @@ I've been playing with [LogTK](https://sneeuwballen.github.io/zipperposition/2.0
 
 There's also a sketch of a python version using some interesting string tricks that I haven't really thought through below.
 
+- The "egraph" is a rewrite system defined as a map from lhs ground terms to rhs ground terms
+- `find` runs the rewrite system to reduce to a canonical form
+- `union` reduces it's two terms and then sets the larger to the smaller in the map
+- `canon` reduces the values in the map and finds nontrivial overlaps in the keys and renormalizes them to a fixed point.
+
+
 ```ocaml
 #use "topfind";;
 #require "logtk";;
@@ -187,6 +193,8 @@ let e = union empty a (foo a)
 let () = Format.printf "%a" (Term.Map.pp Term.pp) e *)
 ```
 Start hashconsing those babies and now the `Term.t Term.Map.t` is basically an Int to Int map being used as a union find
+
+All of this can be cleaned up and done more efficiently, but these are the bones. LogTK includes a number of interesting and useful term indexing mechanisms.
 
 # Ok?
 
