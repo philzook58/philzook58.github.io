@@ -8,9 +8,9 @@ tags: egraphs term-rewriting
 
 [E-graphs](https://egraphs-good.github.io/) are a data structure for compactly storing a pile of ground equations. They are the core of a cool methodology for performing equational search for optimized forms of expressions (optimizing tensor computations, floating point expressions, circuits, database queries, etc).
 
-[Term rewriting](https://www.stephendiehl.com/posts/exotic02.html) is an old and sophisticated field.
+[Term rewriting](https://www.stephendiehl.com/posts/exotic02.html) is an old and sophisticated field. See [Term Rewriting and All That](https://www21.in.tum.de/~nipkow/TRaAT/) for a good resource. Learning new stuff every day.
 
-In the most recent variant of e-graph literature I have not seen made explicit some of the connections between the approaches. In this blog post, I try to show this connection, how it shows one possible road to extending egraph rewriting to lambda terms and hypothetical reasoning.
+In the most recent variant of e-graph literature I have not seen made explicit some of the connections between the approaches. In this blog post, I try to demonstrate this connection, and insinuate it shows one possible road to extending egraph rewriting to lambda terms and hypothetical reasoning by borrowing from superposition.
 
 # Duh?
 I think basically the correspondence I'm suggesting is so obvious it's not even interesting if you're aware of both worlds or the history of the fields. 
@@ -190,7 +190,7 @@ let () = Format.printf "%a" (Term.Map.pp Term.pp) e *)
 
 Well, what is intriguing is that we have returned to the world of terms. Egraphs are too aggressively optimized, every notion of context is screwed up and trying to get them back is a backwards feeling battle. Lambdas, AC, etc are more straightforward to talk about in the completion context. So by pumping the intuition and observations of both sides I think there are interesting things to find.
 
-The egraph world has the notion of e-matching, which I haven't at all touched in this post. This exact notion of ematching is not so obvious I think from the completion perspective. That a completed rewrite system defines a set of terms that you should search over isn't so obvious.
+The egraph world has the notion of e-matching, which I haven't at all touched in this post. This exact notion of ematching is not so obvious I think from the completion perspective. That a completed rewrite system defines a set of terms that you should search over isn't so obvious. I don't know how to map [relational ematching](https://arxiv.org/abs/2108.02290) back over to completion (yet).
 
 The notions of analyses and lattices from egraphs are new I believe from a completion perspective.
 
@@ -213,6 +213,12 @@ That egraphs are used for optimizing terms rather than proving theorems is reall
 The very evocative pictures are also actually crucial for getting users on board. 
 
 ![](/assets/egraphs.svg)
+
+# Related Work
+- Term rewriting and all that.
+- Bohua Zhan - [Auto2](https://github.com/bzhan/auto2) [AUTO2, a saturation-based heuristic prover for higher-order logic](https://arxiv.org/abs/1605.07577) Simon Cruanes pointed this out. Looking at the implementation of the "egraph"  <https://github.com/bzhan/auto2/blob/master/rewrite.ML> gave me a lot of food for thought. I wondered why lambdas were not a problem for him?
+- Snyder - [fast ground completion](https://link.springer.com/chapter/10.1007/3-540-51081-8_123)
+
 
 # Bits and Bobbles
 What is it to be "ground". Is a lambda term really "ground"?
@@ -247,14 +253,7 @@ Tree automata is another observation about how egraphs are related to a previous
 
 Extraction is the biggest concept that does not appear obviously in . Nor analyses, not lattice values. This to some degree can be seen as a specialization of notions of subsumption in superposition.
 
-[congruence closure in intensional type theory](https://arxiv.org/pdf/1701.04391.pdf)
-
-# Related Work
-- Term rewriting and all that.
-- Bohua Zhan - [Auto2](https://github.com/bzhan/auto2) [AUTO2, a saturation-based heuristic prover for higher-order logic](https://arxiv.org/abs/1605.07577) Simon Cruanes pointed this out. Looking at the implementation of the "egraph"  <https://github.com/bzhan/auto2/blob/master/rewrite.ML> gave me a lot of food for thought.
-- Snyder - [fast ground completion](https://link.springer.com/chapter/10.1007/3-540-51081-8_123)
-
-
+[congruence closure in intensional type theory](https://arxiv.org/pdf/1701.04391.pdf) - We want lambdas for all sorts of reasons. It is hard to know how to push egraph techniques into being more useful without them.
 
 
 # Ground Terms
