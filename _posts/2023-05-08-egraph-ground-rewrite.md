@@ -1,8 +1,8 @@
 ---
 date: 2023-05-21
 layout: post
-title: "A Road to Lambda: Egraphs are Ground Completion"
-description: Connecting EGraphs and Term Completion
+title: "A Road to Lambda: E-graphs are Ground Completion"
+description: Connecting E-Graphs and Term Completion
 tags: egraphs term-rewriting
 ---
 
@@ -177,40 +177,50 @@ let mem (e : t) (t : Term.t) : bool =
     (fun t -> Term.subterm ~sub:t' t)
     (Iter.append (Term.Map.values e) (Term.Map.keys e))
 
-
+(*
 let foo = let foo = Term.const ~ty:Type.([int] ==> int) (ID.make "foo") in 
           fun x -> Term.app foo [x]
 let a = Term.const ~ty:Type.int (ID.make "a")
 
 let e = union empty a (foo a)
-
-
-(* let () = Format.printf "%a" (Term.Map.pp Term.pp) e *)
+let () = Format.printf "%a" (Term.Map.pp Term.pp) e *)
 ```
 
 # Ok?
 
 Well, what is intriguing is that we have returned to the world of terms. Egraphs are too aggressively optimized, every notion of context is screwed up and trying to get them back is a backwards feeling battle. Lambdas, AC, etc are more straightforward to talk about in the completion context. So by pumping the intuition and observations of both sides I think there are interesting things to find.
 
+The egraph world has the notion of e-matching, which I haven't at all touched in this post. This exact notion of ematching is not so obvious I think from the completion perspective. That a completed rewrite system defines a set of terms that you should search over isn't so obvious.
 
-The egraph world has the notion of e-matching, which I haven't at all touched in this post. This exact notion of ematching is not so obvious I think from the completion perspective. 
+The notions of analyses and lattices from egraphs are new I believe from a completion perspective.
 
-The notions of analyses and lattices from egraphs ar
+[Superposition](https://eprover.org/EVENTS/Superposition-25.html) is roughly completion under hypothetical contexts. You need to carry along the assumptions you used to get to deriving rewrite rule Equality saturation ought to be implementable as an incomplete strategy of superposition. [Work has been done on integrating lambdas](https://sneeuwballen.github.io/zipperposition/) into [superposition solvers](https://matryoshka-project.github.io/#Publications)
 
-Superposition is roughly completion under hypothetical contexts. You need to carry along the assumptions you used to get to a point. Equality saturation ought to be implementable as an incomplete strategy of superposition.
+Equality saturation is more programmable/operationally understandable in my opinion than superposition. This is analogous to the relationship between resolution and datalog.
 
-Equality saturation is more programmable/operationally understandable in my opinion than superposition. This is analogous to teh relationship between resolution and datalog.
+That egraphs are used for optimizing terms rather than proving theorems is really really interesting. I think the more easily understood operational nature, plus lower conceptual barrier to entry are important. Using theorem proving technology to find stuff, build compilers, and solve problems beyond theorem proving is a very interesting angle.
 
-In fact there's a nice little chart
+There's a nice little chart of analogies
 
-| Prop       | Eq            |
-| ---------- | ------------- |
-| Resolution | Superposition |
-| Prolog     | FLP (Curry)   |
-| Datalog    | Egglog        |
+| Prop       | Eq                                               |
+| ---------- | ------------------------------------------------ |
+| Resolution | Superposition                                    |
+| Prolog     | FLP (Curry)                                      |
+| Datalog    | [Egglog](https://github.com/egraphs-good/egglog) |
+
+
+The very evocative pictures are also actually crucial for getting users on board. 
+
+![](/assets/egraphs.svg)
 
 # Bits and Bobbles
+What is it to be "ground". Is a lambda term really "ground"?
+
 What I have not touched at all is e-matching or equality saturation. The egraph is more implicit. 
+
+The graphical representation of an egraph is canonical, but when you actually have indices the indices aren't canonical. The reduced ground completion actually is canonical. 
+
+It isn't really lambda terms persay that I care about. beta reduction isn't the point. Alpha equivalence and proper scoping is more the problem.
 
 It is interesting to note that the words E-matching and E-unification are used in the term rewriting context in a way that precedes their specialization to the egraph.
 
@@ -229,6 +239,8 @@ Likewise, datalog is a srategy for resolution. But that does not negate
 - Nominal
 
 - incremental addition of these features. Problems with the relational approach. Problems with hash consing.
+
+
 
 Tree automata is another observation about how egraphs are related to a previously known strucutre/idea. I have not yet understood why this connection is useful.
 
