@@ -20,15 +20,14 @@ But I wasn't.
 And I asked Cody, my resident term rewriting expert (a title he will deny), he wasn't sure it is right. Also when I ran it past the egraph crew they weren't so sure either. So maybe there is something here.
 
 Here's the jist:
-- You do completion on a bunch of ground equations. It "solves" them. Completion is guaranteed to terminate on ground equations.
+- You do completion on a bunch of ground equations like `foo(a) = a, foo(b) = b, b = a`. It "solves" them. Completion is guaranteed to terminate on ground equations.
 - You can also put these equations into an egraph. It also "solves" the problem.
-- One can interpret the inner workings of the egraph in completion notions, or you can see egraphs techniques as useful optimizations available for ground equations.
+- One can interpret the inner workings of the egraph in completion notions, or you can see egraph techniques as useful optimizations available for ground equations.
 - The notion of e-graph canonization is roughly a completion simplification/reduction step on a set of rewrite rules (r-simplify and l-simplify steps).
 - The egraph's union find is in some sense orienting your equations on the fly to an ad hoc term ordering.
 - An egraph holds an infinite number of terms in some sense. This same infinite class of terms is inductively defined by running the completed rewrite system backwards.
 - The ground rewrite system is in sense inlining away the notion of eclass id. If you make skolem symbols to label enodes, things become more familiar.
-- Each eclass is identified with its representative term.
-- Every right hand side in the canonicalized rewrite system is an eclass' representative term.
+- Each eclass is identified with its representative term. Every right hand side in the canonicalized rewrite system is an eclass' representative term.
 
 
 
@@ -190,10 +189,6 @@ let () = Format.printf "%a" (Term.Map.pp Term.pp) e *)
 
 Well, what is intriguing is that we have returned to the world of terms. Egraphs are too aggressively optimized, every notion of context is screwed up and trying to get them back is a backwards feeling battle. Lambdas, AC, etc are more straightforward to talk about in the completion context. So by pumping the intuition and observations of both sides I think there are interesting things to find.
 
-The egraph world has the notion of e-matching, which I haven't at all touched in this post. This exact notion of ematching is not so obvious I think from the completion perspective. That a completed rewrite system defines a set of terms that you should search over isn't so obvious. I don't know how to map [relational ematching](https://arxiv.org/abs/2108.02290) back over to completion (yet).
-
-The notions of analyses and lattices from egraphs are new I believe from a completion perspective.
-
 [Superposition](https://eprover.org/EVENTS/Superposition-25.html) is roughly completion under hypothetical contexts. You need to carry along the assumptions you used to get to deriving rewrite rule Equality saturation ought to be implementable as an incomplete strategy of superposition. I do not consider this incompleteness to negate it's use. Prolog and datalog are incomplete strategies for resolution. They are very operationally useful and map better into inference rules, which is closer to what I care about than first order logic is.
 
 There's a nice little chart of analogies
@@ -206,6 +201,8 @@ There's a nice little chart of analogies
 
 [Work has been done on integrating lambdas](https://sneeuwballen.github.io/zipperposition/) into [superposition solvers](https://matryoshka-project.github.io/#Publications)
 
+The notions of analyses and lattices from egraphs are new I believe from a completion perspective.
+
 Equality saturation is more programmable/operationally understandable in my opinion than superposition. This is analogous to the relationship between resolution and datalog.
 
 That egraphs are used for optimizing terms rather than proving theorems is really really interesting. I think the more easily understood operational nature, plus lower conceptual barrier to entry are important. Using theorem proving technology to find stuff, build compilers, and solve problems beyond theorem proving is a very interesting angle.
@@ -213,6 +210,10 @@ That egraphs are used for optimizing terms rather than proving theorems is reall
 The very evocative pictures are also actually crucial for getting users on board. 
 
 ![](/assets/egraphs.svg)
+
+Egraphs have their own intuition, they can be viewed as foundational and not necessarily subservient to terms.
+
+The egraph world has the notion of e-matching, which I haven't at all touched in this post. This exact notion of ematching is not so obvious I think from the completion perspective. That a completed rewrite system defines a set of terms that you should search over isn't so obvious. I don't know how to map [relational ematching](https://arxiv.org/abs/2108.02290) back over to completion (yet).
 
 # Related Work
 - Term rewriting and all that.
@@ -255,6 +256,7 @@ Extraction is the biggest concept that does not appear obviously in . Nor analys
 
 [congruence closure in intensional type theory](https://arxiv.org/pdf/1701.04391.pdf) - We want lambdas for all sorts of reasons. It is hard to know how to push egraph techniques into being more useful without them.
 
+Buchberger and egraphs would be sweet. But do people even do combo buchberger with completion?
 
 # Ground Terms
 [Terms](https://en.wikipedia.org/wiki/Term_(logic)) are expressions like `sin(cos(x))` or `cons(1,cons(2,cons(3,nil)))`. They are basically the same thing as abstract syntax trees. They are natural thing to be manipulating when you try to figure out how to computerize the sorts of stuff you were taught in algebra. Or they are a perspective on functional programming or compiler stuff.
