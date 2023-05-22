@@ -198,7 +198,9 @@ All of this can be cleaned up and done more efficiently, but these are the bones
 
 # Ok?
 
-Well, what is intriguing is that we have returned to the world of terms. Egraphs are too aggressively optimized, every notion of context is screwed up and trying to get them back is a backwards feeling battle. Lambdas, AC, etc are more straightforward to talk about in the completion context. So by pumping the intuition and observations of both sides I think there are interesting things to find.
+Well, what is intriguing is that we have returned to the world of terms. Egraphs are too aggressively optimized, every notion of context is screwed up and trying to get them back is a backwards feeling battle. Really in some respects, even hash conses or any nonlinear usage of terms screw up notions of context. 
+
+ Lambdas, AC, etc are more straightforward to talk about when you have terms. Completion seems to have a long historied story here. So by pumping the intuition and observations of both sides I think there are interesting things to find.
 
 [Superposition](https://www.youtube.com/watch?v=zja691VwfSA&t=3771s&ab_channel=JetBrainsResearch) is roughly completion under hypothetical contexts. You need to carry along the assumptions you used to get to deriving rewrite rule Equality saturation ought to be implementable as an incomplete strategy of superposition. I do not consider this incompleteness to negate it's use. Prolog and datalog are incomplete strategies for resolution. They are very operationally useful and map better into inference rules, which is closer to what I care about than first order logic is.
 
