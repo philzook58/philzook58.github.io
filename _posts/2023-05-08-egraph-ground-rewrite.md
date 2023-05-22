@@ -29,8 +29,6 @@ Here's the jist:
 - The ground rewrite system is in sense inlining away the notion of eclass id. If you make skolem symbols to label enodes, things become more familiar.
 - Each eclass is identified with its representative term. Every right hand side in the canonicalized rewrite system is an eclass' representative term.
 
-
-
 # Completion
 [Completion](https://en.wikipedia.org/wiki/Knuth%E2%80%93Bendix_completion_algorithm) is a semi-decision procedure for converting a set of equations into a terminating confluent rewrite system. Rewrite rules are nice because they are oriented and easy to apply. If completion succeeds (big if), then it produces a decision procedure to determine if two terms are equal. You run the rules in any order you like until you can't and then check if the remains are equal.
 
@@ -47,7 +45,7 @@ But completion can be presented as a set of inference rules that you may apply h
 Basically you take moves from above the line to below the line trying to empty out E and make R confluent. E and R might literally be data structures in your completion program, for example a list of pairs of terms.
 
 ![term rewriting and all that page 165](/assets/completion_rules.png)
-
+See Term Rewriting and All That page 165 for more explanation
 # Union Find as Atomic Completion
 
 Union finds can be seen as atomic completion (where every term is ground and has 0 arguments).
@@ -96,6 +94,10 @@ e.canon()
 print(e.rules)
 ```
 Because an "atomic" rewriting system is so primitive, there is no need to even consider usage of the `l-simplify` rule.
+
+Union finds for sets of integers can be implemented using pointers, using array arenas and indices, or using integer to integer maps. For sets of other things that integers, it is easiest to just directly use `D->D` mappings.Here `self.rules` is the `D->D` map/dictionary.
+
+Path compression is a neat trick but not necessary for the union find functioning, and there may be other considerations that override it's worth. `canon` can batch up compressing the union find in a single pass. This may be preferred.
 
 # Egraph as ground rewrite system
 [I've said before](https://www.philipzucker.com/egraph-1/) that an egraph is basically a union find smashed together with a hash cons.
@@ -184,6 +186,7 @@ let a = Term.const ~ty:Type.int (ID.make "a")
 let e = union empty a (foo a)
 let () = Format.printf "%a" (Term.Map.pp Term.pp) e *)
 ```
+Start hashconsing those babies and now the `Term.t Term.Map.t` is basically an Int to Int map being used as a union find
 
 # Ok?
 
@@ -366,6 +369,7 @@ If you are storing actual things in your disjoint sets (like enodes), then you a
 
 Another style is to inline the union find into just a Map/Dict. Conceptually this is the interface
 
+It is interesting that garbage collectors can traverse the pointer based union find
 
 
 Indices are not semantically meaningful though. They depend on the order terms went into the egraph. So instead
