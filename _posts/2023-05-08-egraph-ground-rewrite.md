@@ -194,11 +194,7 @@ The egraph world has the notion of e-matching, which I haven't at all touched in
 
 The notions of analyses and lattices from egraphs are new I believe from a completion perspective.
 
-[Superposition](https://eprover.org/EVENTS/Superposition-25.html) is roughly completion under hypothetical contexts. You need to carry along the assumptions you used to get to deriving rewrite rule Equality saturation ought to be implementable as an incomplete strategy of superposition. [Work has been done on integrating lambdas](https://sneeuwballen.github.io/zipperposition/) into [superposition solvers](https://matryoshka-project.github.io/#Publications)
-
-Equality saturation is more programmable/operationally understandable in my opinion than superposition. This is analogous to the relationship between resolution and datalog.
-
-That egraphs are used for optimizing terms rather than proving theorems is really really interesting. I think the more easily understood operational nature, plus lower conceptual barrier to entry are important. Using theorem proving technology to find stuff, build compilers, and solve problems beyond theorem proving is a very interesting angle.
+[Superposition](https://eprover.org/EVENTS/Superposition-25.html) is roughly completion under hypothetical contexts. You need to carry along the assumptions you used to get to deriving rewrite rule Equality saturation ought to be implementable as an incomplete strategy of superposition. I do not consider this incompleteness to negate it's use. Prolog and datalog are incomplete strategies for resolution. They are very operationally useful and map better into inference rules, which is closer to what I care about than first order logic is.
 
 There's a nice little chart of analogies
 
@@ -208,6 +204,11 @@ There's a nice little chart of analogies
 | Prolog     | FLP (Curry)                                      |
 | Datalog    | [Egglog](https://github.com/egraphs-good/egglog) |
 
+[Work has been done on integrating lambdas](https://sneeuwballen.github.io/zipperposition/) into [superposition solvers](https://matryoshka-project.github.io/#Publications)
+
+Equality saturation is more programmable/operationally understandable in my opinion than superposition. This is analogous to the relationship between resolution and datalog.
+
+That egraphs are used for optimizing terms rather than proving theorems is really really interesting. I think the more easily understood operational nature, plus lower conceptual barrier to entry are important. Using theorem proving technology to find stuff, build compilers, and solve problems beyond theorem proving is a very interesting angle.
 
 The very evocative pictures are also actually crucial for getting users on board. 
 
