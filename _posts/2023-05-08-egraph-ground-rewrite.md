@@ -192,15 +192,15 @@ Start hashconsing those babies and now the `Term.t Term.Map.t` is basically an I
 
 Well, what is intriguing is that we have returned to the world of terms. Egraphs are too aggressively optimized, every notion of context is screwed up and trying to get them back is a backwards feeling battle. Lambdas, AC, etc are more straightforward to talk about in the completion context. So by pumping the intuition and observations of both sides I think there are interesting things to find.
 
-[Superposition](https://eprover.org/EVENTS/Superposition-25.html) is roughly completion under hypothetical contexts. You need to carry along the assumptions you used to get to deriving rewrite rule Equality saturation ought to be implementable as an incomplete strategy of superposition. I do not consider this incompleteness to negate it's use. Prolog and datalog are incomplete strategies for resolution. They are very operationally useful and map better into inference rules, which is closer to what I care about than first order logic is.
+[Superposition](https://www.youtube.com/watch?v=zja691VwfSA&t=3771s&ab_channel=JetBrainsResearch) is roughly completion under hypothetical contexts. You need to carry along the assumptions you used to get to deriving rewrite rule Equality saturation ought to be implementable as an incomplete strategy of superposition. I do not consider this incompleteness to negate it's use. Prolog and datalog are incomplete strategies for resolution. They are very operationally useful and map better into inference rules, which is closer to what I care about than first order logic is.
 
 There's a nice little chart of analogies
 
-| Prop       | Eq                                               |
-| ---------- | ------------------------------------------------ |
-| Resolution | Superposition                                    |
-| Prolog     | FLP (Curry)                                      |
-| Datalog    | [Egglog](https://github.com/egraphs-good/egglog) |
+| Prop                                                                              | Eq                                                                |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| [Resolution](https://www.philipzucker.com/notes/Logic/automated-theorem-proving/) | [Superposition](https://eprover.org/EVENTS/Superposition-25.html) |
+| [Prolog](https://www.philipzucker.com/notes/Languages/prolog/)                    | FLP (Curry / Verse)                                               |
+| [Datalog](https://www.philipzucker.com/notes/Languages/datalog/)                  | [Egglog](https://github.com/egraphs-good/egglog)                  |
 
 [Work has been done on integrating lambdas](https://sneeuwballen.github.io/zipperposition/) into [superposition solvers](https://matryoshka-project.github.io/#Publications)
 
