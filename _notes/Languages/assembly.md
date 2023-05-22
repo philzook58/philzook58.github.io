@@ -17,6 +17,9 @@ title: Assembly
 - [RISC V](#risc-v)
 - [FORTH](#forth)
 - [High level assemlby / macros](#high-level-assemlby--macros)
+- [Typed Assembly](#typed-assembly)
+- [Proof Carrying Code](#proof-carrying-code)
+- [Verification](#verification)
 - [Misc](#misc)
 
 
@@ -155,6 +158,19 @@ _start:
 hello:
   .ascii "Hello world\n"
   len = . - hello
+
+```
+
+```bash
+echo '
+.global _start
+_start:
+  mov $0x42, %rax
+  int3
+' | as -o /tmp/a.out #-x assembler -
+ld /tmp/a.out -o /tmp/a2.out
+#chmod +x /tmp/a.out
+gdb /tmp/a2.out -ex run -ex 'info registers'
 
 ```
 ## nasm
@@ -301,8 +317,180 @@ https://gitlab.com/tsoding/porth
 # High level assemlby / macros
 https://en.wikipedia.org/wiki/High-level_assembler
 
+The art of assembly book by Hyde
+
+If, for, while macros
+Auto flattening.
+`(loc,asm)` pairs
+`r0 == (r0, "")`
+
+
+# Typed Assembly
+
+Type preserving compilation
+Shift from alpha bound names to true names.
+`foo: {ebx:b4}` label `foo` expects a 4 byte value in `ebx`
+They still have a code rewriting semantics analagous to immediate subtition.
+Closures use existential types
+
+Code blocks have type annotations about assumptions of typed content of registers
+code pointers
+stacks have type sequences and polymorphic below that.
+
+[weirich papers we love](https://www.youtube.com/watch?v=Epbaka9uTQ4&ab_channel=PapersWeLovePhiladelphia)
+
+related to PCC (proof carryng code). Use type discipline
+
+The continuation is carried on the stack (typically). {eax:b4} is the calling convention on x86. {rax:b8} would be calling convention on x86_64. That continuation is threaded through everything (if we don't smash stack)
+
+A summation program annotated
+```
+sum: ; {ecx:b4, ebx:{eax:b4}}
+  mov eax, 0  ; int acc = 0;
+  jmp test
+loop:{eax:b4, ecx:b4, ebx:{eax:b4}}
+  add eax, ecx  ; acc += x
+  dec ecx      ; x--;
+  ; FALLTHRU
+test: ; {eax:b4, ecx:b4, ebx:{eax:b4}}
+  cmp ecx,0 ; while( x != 0)
+  jne loop 
+  jmp ebx ; return acc
+```
+
+Compare and contrast these annotations with preconditions. I mean, types can be viewed as some kind of abstract interpretation.
+
+[tal weirich haskell](https://github.com/sweirich/tal)
+
+[FunTAL: reasonably mixing a functional language with assembly](https://dl.acm.org/doi/10.1145/3062341.3062347) [prncipled language interopaibility course - ahmed](https://www.ccs.neu.edu/home/amal/course/7480-s19/) [](https://dbp.io/pubs/2022/dbp-dissertation.pdf)
+[TAL website](https://www.cs.cornell.edu/talc/)
+[TALx86]()
+[from system f to typed assembly language](https://www.cs.princeton.edu/~dpw/papers/tal-toplas.pdf)
+[typed assembly language](https://www.cs.cmu.edu/~crary/papers/2003/talt/talt.pdf)
+[alasteir reid's notes](https://alastairreid.github.io/RelatedWork/papers/morrisett:wcsss:1999/)
+
+[stack based tpyed assembly language](http://trac.parrot.org/parrot/raw-attachment/wiki/LoritoCPSTutorial/stal-tic.pdf)
+Stack type: esp sptr to a stack
+`forall rho:Ts. {esp:sptr{eax:B4, esp:sptr B4::rho}::B4::rho”`
+
+Using "free theorem" to ensure callee register saving.
+`forall a. {r0:'a, r1:{r0:'a} }` the only way to type this is to pass r0 into the contuation.
+Analog of `forall b, b -> (b -> Void) -> Void`. Security / noniterference and polymorphism free theorems are the same kind of thing
+
+[Type-Based Decompilation1 (or program reconstruction via type reconstruction)](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=91043faf9894af4c85c53343c702085daed73d42) hmm. datalog disassembly as type reconstruction?
+
+Can I embed TAL as a well typed DSL in ocaml staged metaprograming style? Polymorphic record types would probably be nice. I mean, it's possible that's what they already did?
+
+```ocaml
+type sem = string
+type (a,b) stack
+{ void
+type eax
+type edx
+type ecx
+type 'a fptr
+
+(* "subtyping" using polymorphism *)
+type ('r0, 'r1, 'r2) regfile = {r0 : 'r0; r1 : 'r1; r2 : 'r2 }
+
+let zero_reg : (int,int,int) regfile = {r0 = 0; r1 = 0; r2 = 0}
+let r0_valid : ( int  , ?  , ? ) regfile (* existential type maybe?  (forall r1 r2. (int, r1,r2) regfile -> 'ret) -> 'ret *)
+
+type 
+type instr = Mov 
+
+let rec interp heap regfile instr = 
+  match instr with
+  | Jump nu ->
+  | Mov dst src -> 
+  | Add dst src1 src2 ->
+  | If cond dst fall -> 
+
+
+
+(* analogous to metaocaml's code *)
+type 't asm = string
+let assemble : 't asm -> 't =
+    let bin = Unix.exec ["as" ; ] in
+    let = Unix.mmap Execute yada
+    let f = ccall
+    Obj.magic 
+
+let disassemble : 't -> 't asm (* ?? *) =
+    (* use obj to figure out code pointer. Differentiate code pointers vs closures. *)
+    let Unix.exec "objdump" or "ghidra" ???
+
+let compile : 't code -> 't asm = 
+    let Unix.exec "ocamlopt"
+
+let decompile : 't asm -> 't code = 
+
+let byte_compile : 't code -> 't bytecode = 
+    let Unix.exec "ocamlc"
+  
+```
+
+So what is the type of `mov rax, 0`? How is fallthru represented?
+
+TAL led in some ways to Cyclone, which is turn heavily influenced rust
+
+
+What would a "well-typed" interpreter of assembly look like
+Mem, Reg -> 
+
+Pierce - Advanced Topics has a chapter on TAL and PCC (4 and 5)
+
+[Ulf norell typed assembly in agda](https://github.com/UlfNorell/x86-agda/blob/master/src/Test.agda)
+
+<https://twitter.com/search?q=typed%20assembly&src=typed_query> twitter
+
+[chen and hawblitzel - channel 9 introduction to typed assembly. Verse a typed operatiog system](https://web.archive.org/web/20211126000658/https://sec.ch9.ms/ch9/6f8d/5edac2dc-adcc-4b2e-93b7-9ecc016c6f8d/MSRTypedAssemblyLanguage_low_ch9.mp4)
+[Safe to the last instruction: automated verification of a type-safe operating system](https://dl.acm.org/doi/10.1145/1809028.1806610) - Verve a type safe operating system
+[Hawblitzel bibliography](https://dblp.org/pid/22/3053.html)
+
+
+[xi and harper - a dependently typed assembly langguae](https://www.cs.cmu.edu/~rwh/papers/dtal/icfp01.pdf)
+[singleton 2011- a depently typed assembly langguae](https://dl.acm.org/doi/10.1145/1929553.1929557)
+
+[Inferable object-oriented typed assembly language - Tate Chen hawblitzel](https://dl.acm.org/doi/10.1145/1806596.1806644) [youtube](https://www.youtube.com/watch?v=HjdA3W6Mg-c&t=252s&ab_channel=RossTate)
+
+
+```prolog
+% pcode
+% tabled prolog appropriate becase we need unification variables for polymorphism.
+hastype() :- .
+
+
+```
+dwarf annotations as untrusted input?
+
+gradual typing is a natural fit
+[dynamic typed assembly languge](https://digitalcommons.usf.edu/cgi/viewcontent.cgi?article=8230&context=etd)
+
+# Proof Carrying Code
+
+
+
+foundational pcc - appell and felty
+[A Tutorial Example of the Semantic Approach to Foundational Proof-Carrying Code](https://link.springer.com/chapter/10.1007/978-3-540-32033-3_29)
+Chapter in Pierce 
+[Necula's thesis](https://www.cs.princeton.edu/~appel/proofsem/papers/necula-thesis.ps)
+
+[INTERFACING COMPILERS, PROOF CHECKERS, AND PROOFS FOR FOUNDATIONAL PROOF-CARRYING CODE- Wu thesis](https://faculty.ist.psu.edu/wu/papers/wu-phd-thesis.pdf) annotation are untrusted.
+
+
+LF
+metamath0
+ebpf connection?
+
+# Verification
+[Verified Transformations and Hoare Logic: Beautiful Proofs for Ugly Assembly Language](https://link.springer.com/chapter/10.1007/978-3-030-63618-0_7)
+Galois' SAW
+[A verified, efficient embedding of a verifiable assembly language](https://dl.acm.org/doi/10.1145/3290376)
+F* land. [Vale - Verifying High-Performance Cryptographic Assembly Code](https://project-everest.github.io/assets/vale2017.pdf). Hmm. this is leveraging dafny
 
 # Misc
+
 [bootstrapping a c compiler](https://news.ycombinator.com/item?id=31244150)
 <https://learnxinyminutes.com/docs/mips/>
 
@@ -333,7 +521,7 @@ x86 forth
 
 [Some Assembly Required](https://github.com/hackclub/some-assembly-required) https://news.ycombinator.com/item?id=31909183
 
-[typed assembly language](https://www.cs.cmu.edu/~crary/papers/2003/talt/talt.pdf)
+
 Metamath zero - is there some simpler thing one could do? Why did metamath _really_ have to be written in assembly? Is this a trusted computing base thing?
 
 

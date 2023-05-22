@@ -23,10 +23,11 @@ description: my notes about ocaml
   - [PPX](#ppx)
   - [Build System](#build-system)
     - [META vs dune vs opam files](#meta-vs-dune-vs-opam-files)
-  - [Js_of_ocaml](#js_of_ocaml)
+  - [Js\_of\_ocaml](#js_of_ocaml)
     - [WASM](#wasm)
 - [Language Features](#language-features)
   - [Object System](#object-system)
+    - [Row polymorphism](#row-polymorphism)
   - [Open Recursion](#open-recursion)
   - [Recursive Modules](#recursive-modules)
   - [Extensible Variants](#extensible-variants)
@@ -469,6 +470,15 @@ Objects add subtyping to ocaml. So do polymorphic variants though. And in asense
 
 [ocaml objects](https://roscidus.com/blog/blog/2013/09/28/ocaml-objects/)
 [mixins](https://www.lexifi.com/blog/ocaml/mixin/)
+
+[Objective ML: An effective object-oriented extension to ML - 98](https://caml.inria.fr/pub/papers/remy_vouillon-objective_ml-tapos98.pdf)
+[Simple Type Inference for Structural Polymorphism ](https://caml.inria.fr/pub/papers/garrigue-structural_poly-fool02.pdf)
+### Row polymorphism
+[Ivan's answer](https://stackoverflow.com/questions/48092739/what-are-row-types-are-they-algebraic-data-types)
+[Advaced Functional Programming notes 2014 - yallop ](https://www.cl.cam.ac.uk/teaching/1415/L28/rows.pdf)
+[A Polymorphic Type System for Extensible Records and Variants ](http://www.cs.cmu.edu/~aldrich/courses/819/papers/row-poly.pdf)
+[objects and aspects krishnaswami](https://www.cs.cmu.edu/~aldrich/courses/819/slides/rows.pdf)
+
 ## Open Recursion
 This somewhat is related to objects. `self` is a late bound variable that can be overridden. You can emulate this by having base classes take in later classes as an argument.
 Related to the fix form of recursion?

@@ -12,7 +12,7 @@ my_array:
   - Programming
   - Engineering
 ---
-More fluid than posts. Unfinished thoughts. Link Dumps. I will hopefully continually rearrange and crosslink these.
+More fluid than posts. Unfinished thoughts. Link Dumps. I will hopefully continually rearrange and crosslink these. It can look way more cogent in the [markdown sources](https://github.com/philzook58/philzook58.github.io/tree/master/_notes). I don't really look at the rendered version often.
 
 {% for folder in page.my_array  %}
 <h2> {{ folder }} </h2>

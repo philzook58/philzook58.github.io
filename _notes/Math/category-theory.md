@@ -157,6 +157,7 @@ Vect
 
 # String Diagrams
 
+[string diagrams for computer scientists](https://twitter.com/rwolffoot/status/1658383020473176064?s=20)
 # Higher Category
 
 https://en.wikipedia.org/wiki/Higher_category_theory

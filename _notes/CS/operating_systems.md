@@ -15,6 +15,7 @@ title: Operating Systems
 - [microkernels](#microkernels)
 - [seL4](#sel4)
 - [Hypervisors](#hypervisors)
+- [Bootloaders](#bootloaders)
 
 
 See also note on:
@@ -161,3 +162,40 @@ But also binary level verification. Uses gcc but disassemblers result to verify
 
 
 # Hypervisors
+
+# Bootloaders
+
+Booting is like a whole thing.
+
+
+UEFI
+BIOS basic input output system - loads first sector and runs it. 16 bit code
+
+[UBOOT](https://en.wikipedia.org/wiki/Das_U-Boot)
+
+https://superuser.com/questions/708196/what-is-difference-between-u-boot-and-bios
+
+GRUB
+
+POST - power on self test
+
+MBR master boot record. 512 bytes. See sector lisp, sector forth, sector games
+
+bootloader stages  - more an more complex systems
+
+TPM https://www.sweetwater.com/sweetcare/articles/tpm-and-secure-boot-what-are-they-and-how-do-i-enable-them/
+secure boot 
+So like malware can really fuck you by manipulating the boot process? I could see that.
+
+Formal methods applied to booting
+
+[Formal Verification of a Modern Boot Loader 2018](https://surface.syr.edu/cgi/viewcontent.cgi?article=1182&context=eecs_techreports) - SABLE. Isabelle
+[Towards a verified first-stage bootloader in Coq - 2020](https://dspace.mit.edu/handle/1721.1/127529) - phd dissertation
+
+[SPIN 2009](https://link.springer.com/chapter/10.1007/978-3-540-76650-6_14)
+[Verified functional programming of an IoT operating system's bootloader - 2021](https://dl.acm.org/doi/10.1145/3487212.3487347) Low* Riot
+[Formally Verifying Security Properties for OpenTitan Boot Code with Uppaal - 2021](https://projekter.aau.dk/projekter/files/422795285/P10__24_.pdf)
+
+[Model checking boot code from AWS data centers- 2020](http://www0.cs.ucl.ac.uk/staff/b.cook/fmsd2020.pdf) - CBMC
+
+

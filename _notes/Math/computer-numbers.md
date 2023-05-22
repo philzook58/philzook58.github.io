@@ -61,6 +61,10 @@ You can represent an exact number by stating an exact polynomial it is the solut
 # Intervals
 
 # Floats
+https://github.com/VeriNum/vcfloat
+
+[sam pollard fpbench talk](https://sampollard.github.io/research/artifacts/pollard_fpbench23_presentation.pdf)
+
 ## Multiprecision FLoats
 mpfr
 ## Core identities
@@ -590,7 +594,7 @@ rosa
 
 https://monadius.github.io/FPTaylorJS/#/ FPTaylor demo
 https://github.com/arnabd88/Satire - scaling numerical rounding analysis
-FPBench , FPTalk
+[FPBench](https://fpbench.org/) , FPTalk 
 Herbie
 https://github.com/soarlab
 https://gitlab.com/numerical_shaman/shaman shaman - another error tracking thing
@@ -708,6 +712,12 @@ Interval arithmetic has much of the implementation flavor of forward mode auto d
 
 https://github.com/holgerthies/coq-aern
 # Misc
+[coq robot](https://github.com/affeldt-aist/coq-robot)
+[nasa stuff](https://shemesh.larc.nasa.gov/fm/) precisa
+
+yves bertot said he was working in collision avoidance? http://www-sop.inria.fr/members/Yves.Bertot/internships/curve_collision.pdf bezier curves. Lavalle collision planning algorithms http://lavalle.pl/books.html
+
+[assia mahboubi habiliaton](https://theses.hal.science/tel-03107626v2/document)
 
 https://rtca2023.github.io/pages_Lyon/m2.html workshop may 2023. Sounds cool. Certified ans Symbolic computation
 

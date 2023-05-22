@@ -59,6 +59,10 @@ Defunctionalizing these lambdas produces the first order form of ordinary reloca
 
 
 # Dynamic Linking
+
+`man elf`
+
+
 GOT global offset table - table holding global variables
 PLT - procedure linkage table - table holding function pointers
 got.plt 
@@ -123,6 +127,8 @@ In a curious way, if you are accessing these formats from C, it's actually _easi
 - PE - windows
 - Mach-o - mac
 ## ELF
+[witchcraft compiler collction](https://github.com/endrazine/wcc) "unlinks" executables back into libraries. How?
+
 [The missing link: explaining ELF static linking, semantically](https://dl.acm.org/doi/10.1145/3022671.2983996) a fantastic paper on a formalization of elf and linking generally
 
 `man elf` on your system will give you a whole spiel
@@ -228,6 +234,7 @@ You can get line number and column info from dwarf
 [gcc flags related to debugging](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html#Debugging-Options)
 - `-Og`
 # Resources
+[sRDI - Shellcode Reflective DLL Injection](https://github.com/monoxgas/sRDI) https://disman.tl/2015/01/30/an-improved-reflective-dll-injection-technique.html
 
 [I wrote a linker everyone can understand!](https://news.ycombinator.com/item?id=27444647) https://briancallahan.net/blog/20210609.html
 
@@ -238,7 +245,7 @@ You can get line number and column info from dwarf
 [packer tutorial](https://github.com/frank2/packer-tutorial)
 
 N. Glew and G. Morrisett. Type-Safe Linking and Modular Assembly Language
-
+https://dl.acm.org/doi/pdf/10.1145/292540.292563
 
 [stephen kell - interopability](https://www.humprog.org/~stephen/blog/2022/12/12/#interoperability-c-rich-poor) ld has a plugin interface. Cool linker links
 

@@ -32,6 +32,8 @@ title: Machine Learning
   - [Large Language Models](#large-language-models)
     - [Models](#models)
     - [Data sets](#data-sets)
+    - [Openai](#openai)
+    - [langchain](#langchain)
     - [Vector Databases](#vector-databases)
   - [Backprop Technqiues](#backprop-technqiues)
   - [Frameworks](#frameworks)
@@ -284,7 +286,80 @@ rwkv https://github.com/BlinkDL/RWKV-LM https://news.ycombinator.com/item?id=353
 ### Data sets
 The Pile
 
+### Openai 
+```python
+import openai
 
+# list models
+models = openai.Model.list()
+#print(models)
+# print the first model's id
+print(models.data[0].id)
+
+# create a completion
+completion = openai.Completion.create(model="ada", prompt="Hello world")
+
+# print the completion
+print(completion.choices[0].text)
+print(completion)
+```
+
+```bash
+# list models
+openai api models.list
+
+# create a completion
+openai api completions.create -m ada -p "Hello world"
+
+# create a chat completion
+openai api chat_completions.create -m gpt-3.5-turbo -g user "Hello world"
+
+# generate images via DALL·E API
+#openai api image.create -p "two dogs playing chess, cartoon" -n 1
+
+# audio.transcribe
+# audio.translate
+
+```
+
+
+Embeddings
+https://www.buildt.ai/blog/3llmtricks embedding tricks. Hyde - predict answer from query, then use embedding of predicted answer
+
+```python
+import openai
+
+# choose text to embed
+text_string = "sample text"
+
+# choose an embedding
+model_id = "text-similarity-davinci-001"
+
+# compute the embedding of the text
+embedding = openai.Embedding.create(input=text_string, model=model_id)['data'][0]['embedding']
+print(embedding)
+```
+
+### langchain
+
+```python
+from langchain.llms import OpenAI
+llm = OpenAI(temperature=0.9) # hgh temprateur
+text = "What would be a good company name for a company that makes colorful socks?"
+print(llm(text))
+```
+
+```python
+from langchain.prompts import PromptTemplate
+
+prompt = PromptTemplate(
+    input_variables=["product"],
+    template="What is a good name for a company that makes {product}?",
+)
+print(prompt.format(product="colorful socks"))
+```
+
+https://github.com/Unstructured-IO/unstructured
 ### Vector Databases
 Databases that include the abilitt to do fuzzy search for vectors (from embeddings)
 

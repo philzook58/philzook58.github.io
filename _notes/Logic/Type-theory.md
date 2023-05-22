@@ -59,6 +59,11 @@ title: Type Theory
     - [Older](#older)
 - [Logical Relations](#logical-relations)
 - [Realizability](#realizability)
+- [Topics](#topics)
+  - [Gradual Typing](#gradual-typing)
+  - [Intersection types](#intersection-types-1)
+  - [subtyping](#subtyping-1)
+  - [union types](#union-types)
 - [Bidirectional Typing Old](#bidirectional-typing-old)
 - [Misc](#misc)
   - [Books:](#books)
@@ -863,6 +868,12 @@ Tait proved strong normalization using them 1967.
 
 Parametricity is supposedly an example also
 
+Chapter (crary) in Advanced Topics in Types  by Pierce
+People keep referencing Mitchell 1996
+
+Logical relations as a generalization of homomorphism - Stump podcast referencing a paper
+
+
 
 
 
@@ -905,7 +916,18 @@ Chapter 5: Inconsistent combinations of rules
 4. Guard condition and inductive type issues
 5. Other universe issues
 
+# Topics
+[A collection of programming languages and type systems.](https://github.com/ayazhafiz/plts)
 
+## Gradual Typing
+## Intersection types
+## subtyping
+ALgebraic subtyping 
+https://lptk.github.io/programming/2020/03/26/demystifying-mlsub.html
+mlsub
+dolan thesis
+
+## union types
 
 
 # Bidirectional Typing Old

@@ -24,6 +24,8 @@ wordpress_id: 2913
   - [Dominators](#dominators)
   - [Dataflow](#dataflow)
   - [def-use chains](#def-use-chains)
+- [Compiler Correctness](#compiler-correctness)
+  - [Compcert](#compcert)
 - [Undefined behavior](#undefined-behavior)
     - [undefining imp](#undefining-imp)
 - [Optimizations](#optimizations)
@@ -164,6 +166,17 @@ available expressions
 ## def-use chains
 https://en.wikipedia.org/wiki/Use-define_chain
 
+
+# Compiler Correctness
+
+[The Next 700 Compiler Correctness Theorems (Functional Pearl) - ahmed patterson](https://www.ccs.neu.edu/home/amal/papers/next700ccc.pdf)
+
+Compositional compilers
+
+
+## Compcert
+
+[Verified peephole optimizations for CompCert](https://dl.acm.org/doi/10.1145/2980983.2908109)
 # Undefined behavior
 undefined vs implementation defined.
 
@@ -174,6 +187,17 @@ The compiler may optimize code assuming undefined behavior never happens. It is 
 
 Poison undef
 llvm IR has some surprising values available in it's semantics. Varables can hold _sets_ and poison. Poison is a special marker value that infects things. undef creates a set of a all possible values
+
+[The cerbrus C semantics dissertation](https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-981.pdf)
+"At PLDI16 [Mem+16], where we discussed the disagreements between the ISO
+standard and the de facto standards found in practice, and presented a early state
+of the Cerberus model:
+“Into the Depths of C: Elaborating the De Facto Standards”,.
+• At POPL19 [Mem+19], where we presented our provenance-based memory object
+model, and reported on new developments of the Cerberus model.
+“Exploring C Semantics and Pointer Provenance”,
+"
+
 
 [Towards Optimization-Safe Systems: Analyzing the Impact of Undefined Behavior](https://dl.acm.org/doi/pdf/10.1145/2517349.2522728)
 
