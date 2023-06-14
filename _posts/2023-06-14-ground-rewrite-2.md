@@ -1,17 +1,18 @@
 ---
-date: 2023-07-13
+date: 2023-07-14
 layout: post
 title: "E-graphs are Ground Rewrite Systems 2: E-matching"
 description: Connecting E-Graphs and Term Completion
 tags: egraphs term-rewriting
 ---
 
-A further checkpoint on the ideas [here](https://www.philipzucker.com/egraph-ground-rewrite/). It's good to just dump stuff out there.
+A further checkpoint on the ideas [here](https://www.philipzucker.com/egraph-ground-rewrite/). It's good to just dump stuff out there. This is not my most cogent post.
 
 Buyer beware. I think the basic ideas are right, the details of the code as it stands are probably wrong and definitely slow.
 
 I am also writing way more checks than I can currently cash about lambdas and theories. But I still see promise.
 
+[Git commit at time of post](https://github.com/philzook58/lambda-egglog/commit/b2a43af57db640030fa1eced2a3b2cfabc1b4553)
 # E-matching on GRS
 
 The ground rewrite system implicitly defines a possibly infinite set of terms. It is the set of terms that reduces to a subterm on the left or right hand side of the system. Taking a term and reducing an effective method to check if a term is in the egraph term set `val mem : term -> egraph -> bool` .
