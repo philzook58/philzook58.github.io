@@ -165,7 +165,11 @@ The design space of term orderings is very interesting. Especially when I only c
 Interpretation orderings into lattices. Section 5.3 in TRAAT.
 
 # Lambda
-I go back and forth whether x-x = 0 is fine or not. If x is supposed to be a bound variable, x can escape its scope if you consider using it as a substitution from right to left. One can give an interpretation to terms with free variables though, maybe scope escape isn't so bad. I have a suspicion that one can use a variation of the directed union find and "scope tagging" use sites of eids to prevent this if it's worth it (scoped union finds). More definitely an issue is accidental capture. foo ?a => \x foo ?a . If you use d bruijn numbers, you need to lift free indices in ?a. If you go named, I don't know how to do alpha equiv, and you need to know there are no x in ?a (the free var set, which has been done). I dunno. I've been tinkering with adding lambda in a ground rewrite system based egraph, which I feel is a simpler arena than the relationalized egraph.
+## Scope escape
+I go back and forth whether `x-x = 0` is fine or not. If `x` is supposed to be a bound variable, x can escape its scope if you consider using it as a substitution from right to left. One can give an interpretation to terms with free variables though, maybe scope escape isn't so bad. I have a suspicion that one can use a variation of the directed union find and "scope tagging" use sites of eids to prevent this if it's worth it (scoped union finds). 
+
+## Accidental Capture
+More definitely an issue is accidental capture. `foo ?a => \x foo ?a` . If you use de bruijn numbers, you need to lift free indices in `?a`. If you go named, I don't know how to do alpha equiv, and you need to know there are no `x` in `?a` (the free var set, which has been done in egglog). I dunno.
 
 - Are lambda terms really ground?
 - Do I want beta or would alpha only be good enough?
