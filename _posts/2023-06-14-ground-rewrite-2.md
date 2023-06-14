@@ -1,5 +1,5 @@
 ---
-date: 2023-07-14
+date: 2023-06-14
 layout: post
 title: "E-graphs are Ground Rewrite Systems 2: E-matching"
 description: Connecting E-Graphs and Term Completion
