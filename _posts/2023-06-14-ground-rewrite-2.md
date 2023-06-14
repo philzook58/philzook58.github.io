@@ -12,7 +12,7 @@ Buyer beware. I think the basic ideas are right, the details of the code as it s
 
 I am also writing way more checks than I can currently cash about lambdas and theories. But I still see promise.
 
-[Git commit at time of post](https://github.com/philzook58/lambda-egglog/commit/b2a43af57db640030fa1eced2a3b2cfabc1b4553)
+[Git commit at time of post](https://github.com/philzook58/lambda-egglog/tree/b2a43af57db640030fa1eced2a3b2cfabc1b4553)
 # E-matching on GRS
 
 The ground rewrite system implicitly defines a possibly infinite set of terms. It is the set of terms that reduces to a subterm on the left or right hand side of the system. Taking a term and reducing an effective method to check if a term is in the egraph term set `val mem : term -> egraph -> bool` .
@@ -115,6 +115,8 @@ Suppose for example we had a pattern that had only one variable in it. We might 
 Altogether, these are capabilities we already had and are easy to express.
 
 ```ocaml
+let ( let* ) x f = List.concat_map f x
+
 let bottom_up (e : egraph) pat =
   let eclasses = eclasses e in
   let elist = TermSet.to_seq eclasses |> List.of_seq in
@@ -250,7 +252,8 @@ Some intriguing theories:
 - Linear (gaussian elimination as a rewrite system)
 - Nonlinear (grobner)
 - Beta normalization ?
-- 
+
+
 # Blah blah blah
 
 
