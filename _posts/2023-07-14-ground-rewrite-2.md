@@ -1,7 +1,7 @@
 ---
 date: 2023-07-13
 layout: post
-title: "Egraphs are Ground Rewrite Systems 2: E-matching"
+title: "E-graphs are Ground Rewrite Systems 2: E-matching"
 description: Connecting E-Graphs and Term Completion
 tags: egraphs term-rewriting
 ---
@@ -12,7 +12,7 @@ Buyer beware. I think the basic ideas are right, the details of the code as it s
 
 I am also writing way more checks than I can currently cash about lambdas and theories. But I still see promise.
 
-# Ematching on GRS
+# E-matching on GRS
 
 The ground rewrite system implicitly defines a possibly infinite set of terms. It is the set of terms that reduces to a subterm on the left or right hand side of the system. Taking a term and reducing an effective method to check if a term is in the egraph term set `val mem : term -> egraph -> bool` .
 
@@ -150,13 +150,16 @@ For example, in AC matching, it is hard to guess the right correspondence of sub
 
 Incrementalization feels easier to me bottom up.
 
-These different approaches are all subsumed by 
+These different approaches are all subsumed by relational ematching which can go bottom up, top down, side to side. But there is a simplicity here.
+
 ## Term Orderings, Analyses and Extraction
 Also, I said at some point in the last post that I didn't know if GRS had a notion of analyses for extraction, but I'm not so sure that's true anymore. It seems like using the analyses to build a custom ground term order and then extraction merely being reducing a term with respect to the GRS works pretty well
 
 It is interesting to use the term ordering as the tie breaker in the directed union find. This is at least a meaningful tie breaker, whereas using max/min eid can't be all that semantically meaningful because the number of the eid itself is not meaningful (this isn't quite true because eid tends to be associated with age / distance from original terms as in the aegraph)
 
 The design space of term orderings is very interesting. Especially when I only care about ground terms.
+
+Interpretation orderings into lattices. Section 5.3 in TRAAT.
 
 # Lambda
 I go back and forth whether x-x = 0 is fine or not. If x is supposed to be a bound variable, x can escape its scope if you consider using it as a substitution from right to left. One can give an interpretation to terms with free variables though, maybe scope escape isn't so bad. I have a suspicion that one can use a variation of the directed union find and "scope tagging" use sites of eids to prevent this if it's worth it (scoped union finds). More definitely an issue is accidental capture. foo ?a => \x foo ?a . If you use d bruijn numbers, you need to lift free indices in ?a. If you go named, I don't know how to do alpha equiv, and you need to know there are no x in ?a (the free var set, which has been done). I dunno. I've been tinkering with adding lambda in a ground rewrite system based egraph, which I feel is a simpler arena than the relationalized egraph.
@@ -246,6 +249,7 @@ Some intriguing theories:
 - Linear (gaussian elimination as a rewrite system)
 - Nonlinear (grobner)
 - Beta normalization ?
+- 
 # Blah blah blah
 
 
