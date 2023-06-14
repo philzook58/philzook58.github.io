@@ -7,6 +7,7 @@ title: Type Theory
   - [Bidirectional Typing](#bidirectional-typing)
   - [Hindley Milner](#hindley-milner)
 - [Systems](#systems)
+  - [Typed Expressions](#typed-expressions)
   - [Simply Typed lambda Calculus (STLC)](#simply-typed-lambda-calculus-stlc)
   - [System T](#system-t)
   - [System F](#system-f)
@@ -19,6 +20,7 @@ title: Type Theory
 - [Refinement Types](#refinement-types)
 - [Quotient Types](#quotient-types)
 - [Dependent Types](#dependent-types)
+- [Two Level Type Theory](#two-level-type-theory)
 - [Data Types](#data-types)
   - [Inductive Types](#inductive-types)
     - [Parameters vs indices](#parameters-vs-indices)
@@ -30,11 +32,15 @@ title: Type Theory
     - [Conversion vs Reduction vs Expansion](#conversion-vs-reduction-vs-expansion)
 - [Pattern Matching](#pattern-matching)
 - [Metatheory](#metatheory)
+    - [Mechanized Metatheory](#mechanized-metatheory)
     - [Decidability of type checking](#decidability-of-type-checking)
+    - [Princiapl Types](#princiapl-types)
     - [Consistency](#consistency)
     - [Progress](#progress)
     - [Preservation, Subject Reduction](#preservation-subject-reduction)
     - [Normalization](#normalization)
+    - [Canonicity](#canonicity)
+  - [Computation rules](#computation-rules-1)
     - [Completeness](#completeness)
     - [Soundness](#soundness)
     - [Head Normal Form](#head-normal-form)
@@ -149,6 +155,84 @@ type(E,ite(E1,E2,E3), tvar(T), C1 ++C2 ++ C3 ++ C) :-
 # Systems
 
 https://en.wikipedia.org/wiki/Lambda_cube is a way to classify different subsystems
+
+## Typed Expressions
+Kind of it's nice to avoid all the lambda calculus stuff. Consider compound boolean and nat expressions.
+
+```ocaml
+#use "topfind";;
+#require "ppx_jane";;
+type ty = Bool | Nat
+type term =
+    True | False | If of term * term * term | Zero 
+    | Succ of term | Pred of term | IsZero of term [@@deriving sexp, equal, compare]
+let term_of_string s = Sexplib.Sexp.of_string s |> term_of_sexp
+let ex = term_of_string "(if true true false)"
+let () = Sexplib.Sexp.pp_hum Format.std_formatter (sexp_of_term ex)
+```
+
+```z3
+;re
+; very goofy since I have no evaluable forms
+(declare-datatype Term
+  ((True) (False) (Zero))
+)
+
+(declare-datatype Type
+  ((Bool) (Nat))
+)
+
+(define-fun-rec hastype ((t Term) (ty Type)) Bool
+  (match t (
+    (True (= ty Bool))
+    (False (= ty Bool))
+    (Zero (= ty Nat))
+  ))
+)
+
+(push)
+(declare-const ty1 Type)
+(assert (hastype True ty1))
+(check-sat)
+(get-model)
+(pop)
+
+(define-fun value ((x Term)) Bool
+  true
+)
+
+(define-fun eval ((x Term) (y Term)) Bool
+  false
+)
+
+(define-fun progress () Bool
+  (forall ((x Term) (ty Type))
+    (=> (hastype x ty)
+        (or (exists ((y Term)) (eval x y))
+            (value x))
+    )))
+
+(define-fun preservation () Bool
+  (forall ((x Term) (y Term) (ty Type))
+    (=> (and (hastype x ty) (eval x y))
+        (hastype y ty)
+    )))
+
+(push)
+(echo "progress")
+(assert-not progress)
+(check-sat)
+(pop)
+
+(push)
+(echo "preservation")
+(assert-not preservation)
+(check-sat)
+(pop)
+```
+
+Is normalization of typed expressions easy? We don't need logical relations?
+
 ## Simply Typed lambda Calculus (STLC)
 typechecking stlc does not have the binding issues you might expect of a lambda calc
 
@@ -212,6 +296,21 @@ Supposedly is kind of a shit show.
 - Liquid Haskell
 
 - PVS?
+
+
+```prolog
+:- initialization(main,main).
+:- op(900, xfx, user:(::)).
+tt :: unit.
+
+
+main(_) :- tt :: Ty, writeln(Ty). 
+```
+
+```z3
+
+```
+
 # Quotient Types
 Cody has alluded to there being accidental stumbling blocks into inconsistency here
 # Dependent Types
@@ -239,6 +338,10 @@ calculus of constructions
 - [easy as pie](https://www.seas.upenn.edu/~sweirich/papers/tfp07.pdf)
 - [elaboration zoo](https://github.com/AndrasKovacs/elaboration-zoo)
 
+# Two Level Type Theory
+[two level type theory staging](https://andraskovacs.github.io/pdfs/2ltt.pdf)
+
+[peridot](https://news.ycombinator.com/item?id=31325581)
 
 # Data Types
 What makes "datatypes" different from the things above? They aren't. My organization is all fucked.
@@ -356,26 +459,59 @@ Conor Mcbride thesis
 # Metatheory
 Many type systems talk about lambda calculus, so the metatheory is intertwined with the rewrite theory of lambda calc.
 
+### Mechanized Metatheory
+
+
 ### Decidability of type checking
 type checking is the question of whether given all the pieces going into the judgement under line of the inference rule, is it decidable to construct a typing tree that produces such a thing. Even this seemingly simple question can be undecidable in some type systems, because higher up in the typing tree you may ask questions that are very difficult. In the presence of nontermination, you probably are encountering a variant of the halting problem. Undecidability of type checking is typically considered to be an undesriable property, but people are willing to entertain the notion.
 
 
+### Princiapl Types
 Type inference supposes I give the context and term, but leave out the type, can I construct both the typing tree and the type. [Principle types](https://en.wikipedia.org/wiki/Principal_type) are asking whether there is a unique most general type that can be inferred.
 
+[What are principal typings and what are they good for?](https://dspace.mit.edu/bitstream/handle/1721.1/149247/MIT-LCS-TM-532.pdf?sequence=1&isAllowed=y)
+
+"Uniqueness of types" may hold in some system. 
 
 ### Consistency
 ### Progress
+Well typed terms can take a step under the eval relation or are values.
+
+A kind of liveness property? Eh. Really it feels kind of "coinductive" to me.
+
 ### Preservation, Subject Reduction
-Evaluation does not cause types to change.
+
+under evaluation, terms remain well typed.
+
+This can mean evaluation does not cause types to change. These are slightly different statements that may not be equivalent in all systems
+
+Preservation is very reminiscent of verifying that types are an invariant, or that the typing relation is an invariant set. 
+
 ### Normalization
+https://www.pls-lab.org/en/Normalization
+### Canonicity
+The same thing as normalization?
+https://cs.stackexchange.com/questions/112893/what-does-canonicity-property-mean-in-type-theory
+## Computation rules
+
+
+
 ### Completeness
 ### Soundness
+Soundness is whatever the type system claims to show about evaluation, it shows. Sometimes this is progress + preservation
 
 
 ### Head Normal Form
 ### Value
 <https://ice1000.org/2019/04-07-Reduction.html>
 
+What are possible definitions of "value"?
+- a subset of terms
+- a separate entity akin to terms
+- semantic objects
+
+
+Some of the distinction and confusion depends on how much you rely on your host meta system.
 
 
 #### Neutral

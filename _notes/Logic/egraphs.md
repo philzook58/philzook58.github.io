@@ -650,3 +650,5 @@ https://en.wikipedia.org/wiki/E-graph
 [risinglightdb query planner](https://github.com/risinglightdb/risinglight/tree/main/src/planner)
 
 [An Evaluation Algorithm for Datalog with Equality Martin E. Bidlingmaier](https://arxiv.org/pdf/2302.05792.pdf)
+
+[MetaEmu](https://arxiv.org/pdf/2208.03528.pdf) - ssa form rewriting out of ghidra? dang.

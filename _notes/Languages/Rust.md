@@ -245,6 +245,11 @@ Getting a webpage up that runs webassembly seems like an involved process. I thn
 Serde seems like a useful route to getting stuff into and out of javascript. It is a serialization deserialization library.
 
 # Resources 
+[Rust to Assembly: Understanding the Inner Workings of Rust](https://www.eventhelix.com/rust/)
+
+[from stacks to trees](https://www.ralfj.de/blog/2023/06/02/tree-borrows.html)https://www.reddit.com/r/rust/comments/13y8a9b/from_stacks_to_trees_a_new_aliasing_model_for_rust/  https://perso.crans.org/vanille/treebor/
+[miri interpreter](https://github.com/rust-lang/miri/) interpreter on mir ir detects undefined behavior
+
 [im](https://docs.rs/im/latest/im/#) immutable data structure / maps. Hash array mapped tries. HAMT. 
 
 [cargo-dist](https://blog.axo.dev/2023/02/cargo-dist)

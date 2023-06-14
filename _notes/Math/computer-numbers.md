@@ -65,6 +65,7 @@ https://github.com/VeriNum/vcfloat
 
 [sam pollard fpbench talk](https://sampollard.github.io/research/artifacts/pollard_fpbench23_presentation.pdf)
 
+[Odyssey: An Interactive Workbench for Expert-Driven Floating-Point Expression Rewriting](https://arxiv.org/pdf/2305.10599.pdf)
 ## Multiprecision FLoats
 mpfr
 ## Core identities

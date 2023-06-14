@@ -51,3 +51,15 @@ Isabelle => vs --> vs ==>
 --> is implication
 ==> is meta implication, which is something like a sequent |-
 
+
+```isabelle
+{% include_relative isabelle/play.thy %}
+```
+
+
+Querying
+```isabelle
+{% include_relative isabelle/isabelleplay.thy %}
+```
+
+

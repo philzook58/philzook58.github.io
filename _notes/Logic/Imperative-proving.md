@@ -8,6 +8,7 @@ title: Imperative Proving
 - [Boogie](#boogie)
 - [Dafny](#dafny)
 - [Model Checking](#model-checking)
+  - [CBMC](#cbmc)
   - [ESBMC](#esbmc)
   - [cpachecker](#cpachecker)
 - [Memory](#memory)
@@ -61,6 +62,31 @@ ADA Spark
 TLA
 
 Seahorn
+## CBMC
+Nice, fairly easy to use
+[homepage](https://www.cprover.org/cbmc/)
+`sudo apt install cbmc`
+
+[maual](http://www.cprover.org/cprover-manual/) see tutorial
+
+```bash
+echo "
+int main()
+{
+  int buffer[10];
+  buffer[20] = 10;
+}
+" > /tmp/overflow.c
+cbmc /tmp/overflow.c --bounds-check --pointer-check --trace
+```
+
+All kinds of analysuis options
+```bash
+cbmc --help
+```
+User defined stuff via `assert` or specialized 
+
+Supports lots of different smt and sat backended. Generic dimacs, Could toss into kissat
 
 ## ESBMC
 

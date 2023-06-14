@@ -73,6 +73,8 @@ https://github.com/opencompl/lean-mlir
 [do unchained](https://leanprover.github.io/papers/do.pdf) - a description of the extensions to monad syntax like for, break, mut that lean offer
 
 https://github.com/ccodel/verified-encodings
+
+[a big twitter thread on lean software verification stuff](https://twitter.com/mukesh_tiwari/status/1667848032128499714?s=12&t=pdj9jytXGvxDOXHWwx4_mg)
 ### Build
 
 `elan` tool

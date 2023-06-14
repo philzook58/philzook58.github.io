@@ -13,7 +13,7 @@ https://en.wikipedia.org/wiki/Stack-based_memory_allocation
 alloca
 
 # Malloc
-
+[cool viualization of malloc](https://news.ycombinator.com/item?id=36029087)
 
 # Pools
 https://en.wikipedia.org/wiki/Memory_pool 
@@ -29,6 +29,13 @@ https://en.wikipedia.org/wiki/Region-based_memory_management
 Arenas?
 Deallocate all at once. Good for fragmentation too.
 https://manishearth.github.io/blog/2021/03/15/arenas-in-rust/
+
+
+https://dl.acm.org/doi/pdf/10.1145/3519939.3523443 fearless concurrency. domination rather than unique ownershp
+
+[ghost cells](https://plv.mpi-sws.org/rustbelt/ghostcell/)
+
+Mads Tofte and Jean-Pierre Talpin. 1997. Region-Based Memory Management. 
 
 # Garbage Collection
 [garbage colleciton handbook 2](https://news.ycombinator.com/item?id=35492307)

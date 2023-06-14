@@ -301,6 +301,39 @@ type instruction =
 
 Zinc report mentions tha some objects you can statically allocate for in the data section of the binary. This does seem to be the case. Somehow the garbage collector knows not to try to collect these.
 
+
+Backends
+
+```ocaml
+#use "topfind";;
+#require "ocaml-compiler-libs.optcomp ctypes.foreign ctypes.top";; 
+(* let rax = X86_ast.RAX *)
+
+(* https://ocaml.org/p/ocaml-base-compiler/4.12.1/doc/X86_ast/index.html 
+   https://ocaml.org/p/ocaml-base-compiler/4.12.1/doc/X86_dsl/index.html
+*)
+
+
+let print_asm = Ocaml_optcomp.X86_gas.generate_asm Out_channel.stdout
+let () = 
+let open Ocaml_optcomp.X86_dsl in 
+print_asm [
+  Comment "Look ma! I'm generatin asm!";
+  Global "myfun";
+  NewLabel ("myfun", PROC);
+  Ins (MOV (rax, int 42));
+  Ins RET
+  ] 
+
+(* https://github.com/yallop/ocaml-ctypes/wiki/ctypes-tutorial *)
+let myfun = 
+  let open Ctypes in 
+  foreign "myfun" (int @-> returning int)
+
+
+
+
+```
 # Ecosystem 
 
 ## Debugging
@@ -405,8 +438,32 @@ What do the metaocaml patches look like?
 
 [Meta ocaml bibliography](https://github.com/metaocaml/metaocaml-bibliography)
 
+
+offshoring https://okmij.org/ftp/meta-programming/tutorial/genc.html
+
+cross stage persistance
+
 ## PPX
 PPX is a preprocessing stage. You get access to the ocaml syntax tree and can modify it
+
+<http://ocamlverse.net/content/metaprogramming.html>
+
+
+
+- ppx_sexp is by far the most useful one
+- https://opam.ocaml.org/packages/ppx_jane/ ppx_jane has a nice list
+- ppx_expect cool for writing tests
+- https://github.com/fdopen/ppx_cstubs  helpers for FFI
+- string interpolation
+
+
+```ocaml
+#use "topfind";;
+#require "ppx_jane";;
+
+let () = print_endline [%string "%{1 + 2 # Int}"]
+
+```
 
 
 ## Build System

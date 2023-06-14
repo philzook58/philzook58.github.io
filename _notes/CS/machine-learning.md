@@ -24,9 +24,15 @@ title: Machine Learning
   - [tidbits](#tidbits)
 - [Verification](#verification)
 - [Famous Models](#famous-models)
+  - [Tasks](#tasks)
+    - [speech recognition](#speech-recognition)
+    - [code](#code)
+    - [math](#math)
+  - [GAN](#gan)
     - [LoRA](#lora)
     - [Stable Diffusion](#stable-diffusion)
     - [Mixed Precision](#mixed-precision)
+    - [renting gpu](#renting-gpu)
     - [prompt engineering](#prompt-engineering)
     - [Transformers](#transformers)
   - [Large Language Models](#large-language-models)
@@ -183,9 +189,34 @@ alexnet
 vgg
 alphafold
 alpha zero / go
-BERT
+BERT - masked language modelling. mask some words. predict them. next sentence prediction - did this sentence follow from the previous?  https://huggingface.co/bert-base-uncased
 
 https://github.com/facebookresearch/segment-anything 
+
+whisper
+
+instructgpt
+
+## Tasks
+https://huggingface.co/models look at tasks tab
+- question answering
+- summarization
+- conversational
+- table questin answering
+- text generation
+- image segmentation
+- text 2 speech
+- 
+### speech recognition
+https://huggingface.co/openai/whisper-large-v2
+### code
+https://huggingface.co/bigcode/starcoder
+### math
+[let's verify step by step](https://cdn.openai.com/improving-mathematical-reasoning-with-process-supervision/Lets_Verify_Step_by_Step.pdf )
+
+## GAN
+https://vcai.mpi-inf.mpg.de/projects/DragGAN/ drag your gan
+
 ### LoRA
 Low rank adaptation
 https://arxiv.org/abs/2106.09685
@@ -195,6 +226,7 @@ But people are also using the technique on stable diffusion
 Lora let's you fine tune big models by injecting in small layers that are easier to train
 
 PEFT parameter efficient fine tuning https://www.youtube.com/watch?v=YVU5wAA6Txo&ab_channel=code_your_own_AI
+https://github.com/huggingface/peft
 
 https://civitai.com/ people post their lora updates
 
@@ -203,16 +235,36 @@ prefix finetuning
 
 [Fine-tuning 20B LLMs with RLHF on a 24GB consumer GPU](https://huggingface.co/blog/trl-peft)
 
+https://github.com/artidoro/qlora qlora
+https://towardsdatascience.com/qlora-fine-tune-a-large-language-model-on-your-gpu-27bed5a03e2b
+https://huggingface.co/blog/4bit-transformers-bitsandbytes
+
 ### Stable Diffusion
 https://www.fast.ai/posts/part2-2023.html course
 
 inpainting
 outpainting
 
+https://github.com/AUTOMATIC1111/stable-diffusion-webui
+
+negative prompt, negative embedding
+
 ### Mixed Precision
 https://github.com/NVIDIA/apex
 https://github.com/ggerganov/llama.cpp/issues/9
-GPTQ quantization
+GPTQ quantization https://github.com/IST-DASLab/gptq https://huggingface.co/TheBloke
+
+https://github.com/TimDettmers/bitsandbytes
+
+### renting gpu
+vast.ai
+lambdalabs
+runpod  https://www.youtube.com/watch?v=TP2yID7Ubr4&ab_channel=Aitrepreneur
+
+google colab provides ~15gb vram free? colab pro gives a100
+
+https://github.com/skypilot-org/skypilot
+
 ### prompt engineering
 https://www.promptingguide.ai/
 Question answer format to give a couple examples
@@ -223,9 +275,26 @@ People use seperators to denote different sections. Weird.
 Avoid impreciseness
 
 chain of thought prompting https://arxiv.org/abs/2201.11903
+
+https://learn.deeplearning.ai/chatgpt-prompt-eng
+
+https://twitter.com/ShriramKMurthi/status/1664978520131477505?s=20 shriram racket. 
+"You are a programming assitant that generates programs  in the Rakcet programming language. Your response should contain *only* a Racket program. It should NOT include anything else: explanation, test cases, or anything else.
+The output should be a Racke function that can be evaluared direvtly.
+It should begin with \"(define\" and end with \"), e.h., (defibe (f x) x), but replaced with the actual function you produce."
+
+https://ianarawjo.medium.com/introducing-chainforge-a-visual-programming-environment-for-prompt-engineering-bc6910be01cf
+https://github.com/ianarawjo/ChainForge
+Automated the prompt engineering workflow. You could ask questions you know the answer to, or evaluate code generation against test suite or what have you. The prompt is a kind of hyperparameter and you can apply the same methodolgy you might with others (random search, test sets, validation sets, etc). The llm is a fixed parametrized function like `y = ax+b` where a and b are the prompts.
+
 ### Transformers
 ## Large Language Models
 https://openai.com/research/instruction-following instructgpt RLHF reinfrocement learning human feedback
+
+
+distillation. Take output from bigger more powerful model to train smaler model
+
+evaluate models by asking gpt4 about them
 
 alpaca https://crfm.stanford.edu/2023/03/13/alpaca.html llamma fine tuned. Make a bunch of examples. Make gpt3 build a dataset out of them, finetune llama on those answers
 
@@ -265,8 +334,14 @@ Perplexity - measurement of inaccuracy of model prediction on test set https://e
 NLP - 
 unigram model - probility of individual words
 n-gram model - condtional probability of word window
+
+https://github.com/imartinez/privateGPT ingest a bunch of documents. chroma vector db
+
+
 ### Models
 https://vectara.com/top-large-language-models/ useful summary. Probaby will be outdate in a month
+
+https://www.promptingguide.ai/models/collection
 
 - gpt-3
 - chatgpt
@@ -274,18 +349,51 @@ https://vectara.com/top-large-language-models/ useful summary. Probaby will be o
 
 - Bloom https://huggingface.co/bigscience/bloom
 - eleuther gpt-j https://en.wikipedia.org/wiki/GPT-J https://www.width.ai/post/gpt-j-vs-gpt-3 https://github.com/EleutherAI/gpt-neox
-- gpt4all - another lora finetuning of llama
+
 - flan-t5 / flan-ul2 / t5-xxl
 - PaLM
-
+- falcon
+- 
 gpt-cerebras - the point it was trained efficiently, not that its good? https://news.ycombinator.com/item?id=35487846
 claude https://www.anthropic.com/index/introducing-claude
 
 rwkv https://github.com/BlinkDL/RWKV-LM https://news.ycombinator.com/item?id=35370357  https://github.com/saharNooby/rwkv.cpp
 
-### Data sets
-The Pile
 
+
+finetunes
+- gpt4all - another lora finetuning of llama
+- alpaca - paid chatgpt api to generate examples to finetune llama
+- vicuna - https://lmsys.org/blog/2023-03-30-vicuna/ llama finetuned on sharegpt data
+- wizard - https://github.com/nlpxucan/WizardLM#fine-tuning 
+- https://huggingface.co/PygmalionAI/pygmalion-13b pygmalion for conversation?
+- guanaco - qlora. finetuning with quantization. https://guanaco-model.github.io/ https://huggingface.co/datasets/JosephusCheung/GuanacoDataset hmm. actually the qlora stuff might be separate
+ 
+https://erichartford.com/uncensored-models uncensored models remove examples where chat refused to answr
+
+oobabooga text-generation-webui https://github.com/oobabooga/text-generation-webui
+run on colab https://www.youtube.com/watch?v=TP2yID7Ubr4&ab_channel=Aitrepreneur
+
+https://github.com/lm-sys/FastChat/ related somehow to vicuna? Fast way to get chat server?
+### Data sets
+The Pile - eleuther ai. huge corpus for training
+
+https://huggingface.co/datasets
+
+databricks dolly https://huggingface.co/datasets/databricks/databricks-dolly-15k
+
+oasst1 https://huggingface.co/datasets/OpenAssistant/oasst1 https://open-assistant.io/ crowd sourced chat stuff
+
+https://sharegpt.com/ sharegpt. crowd source gpt responses. Used in some models, but then commerical use restricted
+
+
+https://huggingface.co/datasets/bigcode/the-stack the stack. starcoder.
+
+red pajama https://huggingface.co/datasets/togethercomputer/RedPajama-Data-1T clean room open source llama dataset
+
+benchmarks
+https://lmsys.org/blog/2023-05-03-arena/ open source battle between llm
+https://huggingface.co/datasets/glue general langhguae understanding evaluation benchmark https://gluebenchmark.com/
 ### Openai 
 ```python
 import openai
@@ -380,8 +488,11 @@ postgres vector pg_vector
 vs 
 elastic search, opensearch, lucene.
 BM25
+
+https://www.sbert.net/ sentence transformers
+https://github.com/imartinez/privateGPT
 ## Backprop Technqiues 
-adam
+adam adamw
 sgd
 with momentum?
 
@@ -395,12 +506,23 @@ Julia
 
 https://github.com/huggingface/accelerate
 
+gradio for UIs. huggingface spaces
 # Hugging Face
 transformers
 pipeline is the easy version
 datasets library
 
 ```python
+
+from peft import PeftModel    
+from transformers import AutoModelForCausalLM, AutoTokenizer, LlamaTokenizer,  AutoModelForSeq2SeqLM
+
+```
+
+```python
+from transformers import AutoTokenizer, AutoModelForMaskedLM
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+model = AutoModelForMaskedLM.from_pretrained("bert-base-uncased")
 
 ```
 

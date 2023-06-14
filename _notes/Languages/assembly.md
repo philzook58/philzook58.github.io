@@ -77,6 +77,34 @@ https://twitter.com/pkhuong/status/1507790343151960073?s=20&t=GsM8M-fHdbvp9M4n5S
 
 [box64](https://github.com/ptitSeb/box64) x86 emultator for arm
 [fex](https://fex-emu.com/)
+
+[x86 gui programming](https://news.ycombinator.com/item?id=36153237)
+using strace is kind of cool
+
+[say hello to x86 assembly](https://github.com/0xAX/asm)
+
+- `mov` `movz` `movs`
+- `movsb` copy byte from esi to edi and inc/dec both. Useful string op
+- `cmov__` conditional mov based on flags. 
+- `lea` calculates a pointer offset in one instruction. 3 operands, a shift and a constant add.
+- `add` `sub` `or` `xor` `inc` `dec`
+- `imul` `idiv` `mul`. one parameter. implicit rax as one operand. rdx:rax as implicit output
+- `syscall`
+- `test` `cmp` <https://stackoverflow.com/questions/39556649/in-x86-whats-difference-between-test-eax-eax-and-cmp-eax-0>
+- `jmp` `jnz` `jz` condition suffixes
+- `setxx` copy from flags 
+- `call`
+- `push` `pop` `enter` `leave`
+- `loop` kind of a goofball. dec ecx and jump if zero. [Hmm slow?](https://stackoverflow.com/questions/35742570/why-is-the-loop-instruction-slow-couldnt-intel-have-implemented-it-efficiently)
+
+[x86 assembly book](https://en.wikibooks.org/wiki/X86_Assembly)
+
+Addressing modes
+
+`rdi, rsi, rdx, rcx, r8-r11, rax ` are all good scratch registers. The first 6 of those are where function arguments go. rax is where return values go
+
+rax accumulatr, rcx counter, rdx extended accumulator, rbx base of array,  https://en.wikipedia.org/wiki/X86#Purpose
+
 ## BMI1 BMI2
 Bit manipulation instructions https://twitter.com/geofflangdale/status/1502481857375793153?s=20&t=j5MN13cFOkc3qH8tpATyNA
 apparently people can do crazy stuff with this https://twitter.com/pkhuong/status/1497332651891515395?s=20&t=j5MN13cFOkc3qH8tpATyNA
@@ -175,6 +203,12 @@ gdb /tmp/a2.out -ex run -ex 'info registers'
 ```
 ## nasm
 
+https://www.nasm.us/doc/
+
+Nasm does seem a little nicer. x86 only though.
+
+[nasm tutorial](https://cs.lmu.edu/~ray/notes/nasmtutorial/) pretty good
+
 ```edb
 global _start
 _start:
@@ -184,7 +218,51 @@ _start:
   ret
 ```
 
+- `db` pseduo instruction
 
+```bash
+echo "
+global _start
+section .text
+_start:
+  mov rax, 42
+  int3
+" > /tmp/test.s
+nasm -felf64 /tmp/test.s -o /tmp/temp
+ld /tmp/temp -o /tmp/temp2
+file /tmp/temp2
+gdb /tmp/temp2
+```
+
+```bash
+echo "
+;default rel
+extern puts
+global main
+section .text
+main:
+  sub rsp, 8
+  mov BYTE [rsp + 0], 'h'
+  mov BYTE [rsp + 1], 'e'
+  mov BYTE [rsp + 2], 'l'
+  mov BYTE [rsp + 3], 'l'
+  mov BYTE [rsp + 4], 'o'
+  mov BYTE [rsp + 5], 0
+  mov rdi, rsp
+  CALL puts WRT ..plt
+
+  mov rax,0
+  add rsp,8
+  ret
+
+" > /tmp/test.s
+nasm -felf64 /tmp/test.s -o /tmp/temp
+gcc /tmp/temp  -o /tmp/temp2
+file /tmp/temp2
+/tmp/temp2
+```
+
+[unix abi](https://gitlab.com/x86-psABIs) https://github.com/hjl-tools/x86-psABI/wiki/X86-psABI/
 
 
 
@@ -428,6 +506,100 @@ let decompile : 't asm -> 't code =
 let byte_compile : 't code -> 't bytecode = 
     let Unix.exec "ocamlc"
   
+```
+
+```ocaml
+
+(*Might want to go objects just for strucutral notaton *)
+(* let mov_r0_r1 : < r0 : 'a; r1: 'b> -> <r0 : 'a; r1 : 'a> = fun st -> *)
+
+(* 
+type ('r0, 'r1, 'r2) st = ST
+let mov_r0_r1 : ('r0,'r1,'r2) st -> ('r0, 'r0, 'r2) st = fun x -> ST
+*)
+
+(* let mov : 'rdst reg -> 'rsrc reg ->  
+   Ths can't work at all
+   selection style?
+   (a,b,c) reg -> (a1,b1,c1) reg -> ? 
+   
+  
+COuld first class modules help? I don't really see it.
+
+module type INSN = sig
+
+
+end
+
+*)
+
+
+
+
+
+
+
+(* let mov : 'a reg -> 'b reg -> {rax : } *)
+```
+
+```ocaml
+
+(* het list *)
+type ('xs, 'x) cons = {hd : 'x; tl : 'xs} 
+type nil = unit
+let cons x xs = {hd = x; tl = xs}
+let nil = ()
+
+let swap : type r. ((r, 'b) cons, 'a) cons -> ((r, 'a) cons, 'b) cons = 
+  fun x -> cons x.tl.hd (cons x.hd x.tl.tl)
+let binop : ('a -> 'b -> 'c) ->  (('r, 'b) cons, 'a) cons -> ('r, 'c) cons   = 
+  fun op st -> cons (op st.hd st.tl.hd) st.tl.tl
+
+let add = binop (+)
+let sub = binop (-)
+let mul = binop (fun x y -> x * y)
+
+let push : 'a -> 'r -> ('r, 'a) cons = cons
+let imm = push
+let pop : ('r, 'a) cons -> 'r = fun st -> st.tl
+let dup : ('r, 'a) cons -> (('r, 'a) cons, 'a) cons = fun st -> cons st.hd st  
+
+
+module type STACKSIG = sig
+  type 'a repr
+  type ('xs, 'x) cons
+  type nil
+  (* list out types supported *)
+  (* Hmm. I dunno if that raw 'r is ok. *)
+  val push_int : int repr -> 'r -> ('r, int) cons
+end
+
+
+
+(* use rdi,...  etc as extensions of the stack?
+   Mark extra param
+   *)
+type rdi = RDI
+type rsi = RSI
+type rax = RAX
+
+(*
+type ('rdi, 'rsi) regfile = {rdi : 'rdi ; rsi : 'rsi}
+
+   *)
+
+(* 
+consider the stack below arguments as non existent... hm.
+let systemv_call_1 : ( (nil , 'a , rdi) cons -> ('b, rax) cons) -> ('a -> 'b)  
+   
+Or we could just mov regusters onto the stack as a prelude
+Or internaly track not in types what is around.
+
+type ( , ) cons = {hd : location ; ty : 'x;   in_use :   }
+
+*)
+
+
 ```
 
 So what is the type of `mov rax, 0`? How is fallthru represented?

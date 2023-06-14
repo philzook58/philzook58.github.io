@@ -5,6 +5,7 @@ title: Term Rewriting
 
 - [Abstract Rewrite Systems](#abstract-rewrite-systems)
 - [Completion](#completion)
+  - [unfailing completion](#unfailing-completion)
 - [Ground Rewriting](#ground-rewriting)
 - [Term Orderings](#term-orderings)
   - [KBO](#kbo)
@@ -106,6 +107,8 @@ Finite state machines are rewrite systems with each state being a single simple 
 https://github.com/bytekid/mkbtt - does knuth bendix completion. There is a web interface
 https://github.com/bytekid/maedmax ? 
 http://cime.lri.fr/ cime
+
+## unfailing completion
 
 
 # Ground Rewriting
@@ -210,6 +213,9 @@ Hmm. But weighted size is more or less KBO. And if we made the weight very high 
 
 You can remove extra ways from some algortihmic description of an ordering and it stays a partial ordering, just a weaker one.
 
+[REST: Integrating Term Rewriting with Program Verification](https://malyzajko.github.io/papers/ecoop2022b.pdf)
+So I think they are doing ordered rewriting but they maintain an abstraction over which term order they are using.And then they have a search procesdure that branches when they can't make progress to try and specialize the order.
+
 ## KBO
 1. s > var_X if var_X is in s. Base case for variables.
 2. All number of occurances of variables must be equal or reduced.
@@ -223,11 +229,80 @@ Weighting function
 Otherwise it's the obvious add up the number of occurances of symbols weighted
 
 
+Going ground is smart for understanding
+
+```ocaml
+#use "topfind";;
+#require "ppx_jane sexplib";;
+
+open Sexplib.Std
+
+type term = 
+| Const of string
+| App of term * term [@@deriving sexp]
+
+(* Apply term * term  ?? *)
+
+let app (f : term) (args : term list) : term = List.fold_left (fun f x -> App (f,x)) f args
+
+let rec size = function
+| Const _ -> 1
+| App (f,x) -> size f + size x
+(* List.fold_left (fun acc a -> acc + size a) (size a) args *)
+
+
+let rec ground_kbo t1 t2 =
+    let s1 = size t1 in (* obviously silly to be recomputing thi a bunch *)
+    let s2 = size t2 in
+    if Int.equal s1 s2 then
+        match t1, t2 with
+        | Const x1, Const x2 -> String.compare x1 x2 (* could compare weights first *)
+        | Const x1, App (f,args) -> -1
+        | App (f,args), Const x1 -> 1
+        | App (f1,args1), App (f2,args2) -> 
+            let cf =  ground_kbo f1 f2 in
+            if Int.equal cf 0 then
+              ground_kbo args1 args2 else
+              cf
+    else Int.compare s2 s2
+
+let f = fun x -> App ((Const "f"), x)
+let a = Const "a"
+let () = print_int (compare (f (f a)) (f a))
+let () = print_int (compare (f a) (f a))
+let () = print_int (compare (app (Const "f") [a;a]) (f a))
+
+
+(* 
+type memo_term =
+ | Const of string
+ | Apply of {size : int; head : memo_term, memo_term term array}
+and data = 
+  {size : int; id : int; hash : int; feature : int array ; sym : memo_term }
+*)
+
+```
+
+[KBO for combinators](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7324232/)
+
+[A unified ordering for termination proving - WPO weighted path order](https://www.sciencedirect.com/science/article/pii/S0167642314003335?via%3Dihub)
+But also interesting survey
+
+dependency pairs
+matrix interpretations
+POLO
+
 # Termination
 https://github.com/TermCOMP/TPDB termination problem database
 
 https://termination-portal.org/wiki/Termination_Portal
 Termcomp 2022 https://termination-portal.org/wiki/Termination_Competition_2022
+
+
+Dumping into a constraint solver. For a parametrzied family, conceivably one can build a constraint problem over the parameters that requires a rewrite system follows a term order. For an equational system, one could have the "or" of the two directions as part of the constraints.
+
+The dummiest version of this is a MIP for weights of symbols and uses a < inequality of the weight of the two sides.
+It's the tie breaking that is a real pain.
 
 2021- 02
 
@@ -1331,4 +1406,5 @@ http://www.cs.tau.ac.il/~nachum/papers/klop.pdf - Klop review on term Rewriting.
 
 http://cl-informatik.uibk.ac.at/teaching/ws20/trs/content.php term rewriting course mitteldorp
 
-[REST: Integrating Term Rewriting with Program Verification](https://malyzajko.github.io/papers/ecoop2022b.pdf)
+
+[code generation via hogher order rewrite systems](https://link.springer.com/chapter/10.1007/978-3-642-12251-4_9)

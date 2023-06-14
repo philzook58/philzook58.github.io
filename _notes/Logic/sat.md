@@ -59,3 +59,7 @@ model counting
 
 
 https://twitter.com/ArminBiere/status/1556292768607207425?s=20&t=yqv3psiW3ByDbnVTBLr_GA Kissat is domainting. The parallel and cloud solvers have really interesting things going on. mallob-ki. parkissat-rs is parallel winner
+
+[The silent revolution of sat](https://news.ycombinator.com/item?id=36079115#36081904)
+
+[creusat](https://sarsko.github.io/_pages/SarekSkot%C3%A5m_thesis.pdf) https://github.com/sarsko/CreuSAT

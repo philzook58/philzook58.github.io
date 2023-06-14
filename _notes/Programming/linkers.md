@@ -7,12 +7,15 @@ title: Linkers and Loaders
 - [Segments](#segments)
 - [Symbol Table](#symbol-table)
 - [Relocations](#relocations)
+- [Loading](#loading)
 - [Dynamic Linking](#dynamic-linking)
+  - [plt got](#plt-got)
 - [Compilation Units](#compilation-units)
 - [Link Time Optimization](#link-time-optimization)
     - [Tree Shaking](#tree-shaking)
 - [Linking Formats](#linking-formats)
   - [ELF](#elf)
+  - [Core files](#core-files)
 - [Objcopy](#objcopy)
 - [ld](#ld)
   - [Linker scripts](#linker-scripts)
@@ -34,10 +37,20 @@ Sections are for linking.
 # Segments
 Segments are for loading. Load time view
 
+```bash
+readelf -l /bin/ls
+```
 # Symbol Table
 A key value mapping
 
+`objdump -t` 
 
+local 
+global
+weak https://en.wikipedia.org/wiki/Weak_symbol
+
+default
+hidden
 # Relocations
 [relocation](https://en.wikipedia.org/wiki/Relocation_(computing))
 Relocations are "fixups" to the binary. There is a list of possible ones.
@@ -57,15 +70,49 @@ Defunctionalizing these lambdas produces the first order form of ordinary reloca
 
 
 
+# Loading
 
+Auxiliary vector [getauxval and the axiliary vector](https://lwn.net/Articles/519085/) `LD_SHOW_AUXV=1 `
+`fs/binfmt_elf.c` loads elf in kernel
+```bash
+ od -t d8 /proc/self/auxv
+```
+
+[Userland exec - grugq](https://grugq.github.io/docs/ul_exec.txt)
+
+https://www.anvilsecure.com/blog/userland-execution-of-binaries-directly-from-python.html
+https://github.com/anvilsecure/ulexecve/blob/main/ulexecve.py
+use python to gather data, then construct an assembly program to call the appropriate sequence of unmap and map calls
+
+`man execve`
+
+```
+-----------------------------------------
+              [ 0 ]  <-- top of the stack
+              [ envp strings ]
+              [ 0 ]
+              [ argv strings ]
+              [ 0 ]
+              [ auxv ]
+              [ 0 ]
+              [ envp ]
+              [ 0 ]
+              [ argv ]
+              [ argc ] <-- stack pointer
+-----------------------------------------
+```
+
+1. cleanup memory. People look at /proc/self for introspection /proc/self/maps 
+
+```bash
+ls /sys
+```
 # Dynamic Linking
 
 `man elf`
 
-
-GOT global offset table - table holding global variables
-PLT - procedure linkage table - table holding function pointers
-got.plt 
+`objdump -R` for dynamic relocations
+`readelf -r`
 
 DSO - dynamic shared object
 
@@ -90,8 +137,21 @@ dlmopen
 - `LD_LIBRARY_PATH`
 - `LD_DEBUG=help cat` This is crazy. This exists?
 - `LD_PRELOAD`
+
+```bash
+LD_SHOW_AUXV=1 /bin/true
+```
 `ldconfig`
 [`ld.so`](https://man7.org/linux/man-pages/man8/ld.so.8.html)
+
+ vdso - overview of the virtual ELF dynamic shared object https://man7.org/linux/man-pages/man7/vdso.7.html
+ Sort of a kernel provided dynamic linked object to avoid kernel call overheads https://en.wikipedia.org/wiki/VDSO
+
+## plt got
+GOT global offset table - table holding global variables
+PLT - procedure linkage table - table holding function pointers
+got.plt 
+
 
 # Compilation Units
 https://en.wikipedia.org/wiki/Single_Compilation_Unit
@@ -147,6 +207,8 @@ The [Lief](https://lief-project.github.io/) library is useful for manipulating f
 
 A lot of stuff is powered by 
 
+## Core files
+`/proc/kcore` is a core file of the kernel memory
 # Objcopy
 Not linking persay. But some useful stuff for manipulating object files
 

@@ -177,6 +177,7 @@ Compositional compilers
 ## Compcert
 
 [Verified peephole optimizations for CompCert](https://dl.acm.org/doi/10.1145/2980983.2908109)
+[testing a formally verified compiler](https://news.ycombinator.com/item?id=36018300)
 # Undefined behavior
 undefined vs implementation defined.
 
@@ -374,6 +375,9 @@ FPL - fast presburger arithmetic
 - [minimips minikanren mips assembler/disassembler](https://github.com/orchid-hybrid/minimips)
 - [Parsing and compiling using Prolog](https://dl.acm.org/doi/abs/10.1145/22719.22946) There is also a chapter in the art of prolog
 
+
+- https://www.cs.tufts.edu/~nr/pubs/zipcfg.pdf zgraph
+- hoopl https://hackage.haskell.org/package/hoopl-3.7.7.0/src/hoopl.pdf a framework for transformations
 ### Unison
 - [Unison](https://unison-code.github.io/)
 

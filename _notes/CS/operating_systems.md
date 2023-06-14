@@ -16,6 +16,7 @@ title: Operating Systems
 - [seL4](#sel4)
 - [Hypervisors](#hypervisors)
 - [Bootloaders](#bootloaders)
+- [](#)
 
 
 See also note on:
@@ -199,3 +200,14 @@ Formal methods applied to booting
 [Model checking boot code from AWS data centers- 2020](http://www0.cs.ucl.ac.uk/staff/b.cook/fmsd2020.pdf) - CBMC
 
 
+
+
+# 
+
+https://www.kernel.org/doc/Documentation/filesystems/proc.txt proc documentation
+```bash
+cat /proc/self/mems
+cat /proc/self/status
+
+
+```
