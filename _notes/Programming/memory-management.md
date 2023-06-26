@@ -37,6 +37,22 @@ https://dl.acm.org/doi/pdf/10.1145/3519939.3523443 fearless concurrency. dominat
 
 Mads Tofte and Jean-Pierre Talpin. 1997. Region-Based Memory Management. 
 
+There is a chapter in Pierce ATAPL
+
+ML Kit
+
+[Programming with Regions in the MLKit](https://elsman.com/pdf/mlkit-4.7.2.pdf)
+
+`e1 at r` puts values e1 in region r
+`letregion r in e` creates new region
+
+A stack of regions. They can have compile time fixed size or variable size (linked list of pages)
+Basically local bump pointer guys.
+With raw pointers you could alloc `int region[500]; region_desc reg; reg.fresh = 0; reg.mem = region` on the stack and that would kind of work similarly. It is arenas. But having parameters 
+
+lifetimes
+
+[Region based memory management in cyclone](https://www.cs.umd.edu/projects/cyclone/papers/cyclone-regions.pdf)
 # Garbage Collection
 [garbage colleciton handbook 2](https://news.ycombinator.com/item?id=35492307)
 [](https://wingolog.org/archives/2022/12/11/we-iterate-so-that-you-can-recurse)

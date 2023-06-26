@@ -51,6 +51,7 @@ wordpress_id: 2913
 - [JVM](#jvm)
 - [Simple Compilation](#simple-compilation)
   - [](#)
+    - [Destination Driven](#destination-driven)
 - [Misc](#misc-2)
 
 
@@ -1037,8 +1038,53 @@ It isn't phi spots so much as split spots that are annying in this backwards ver
 
 ```
 
-# Misc
+
+### Destination Driven
+
 [Destination-Driven Code Generation](https://legacy.cs.indiana.edu/~dyb/pubs/ddcg.pdf)
+
+```ocaml
+type ident = string
+type expr = 
+    Seq of expr * expr
+  | While of expr * expr 
+  | When of expr * expr
+  | If of expr * expr * expr
+  | Set of ident * expr
+  | Call of ident * expr list
+  | Var of ident
+  | Int of int
+
+type loc = 
+  | Acc | Stack
+  | Local of int
+  | Param of int
+type operand = Loc of loc | Lit of int
+
+
+module IMap = Map.Make(String)
+type map = loc IMap.t (* ident -> loc  *)
+type label = Return | Label of asmlabel 
+type env = label * map
+
+type data_dest = Effect | DLoc of loc
+type control_dest = Jmp of label | CJmp of label * label
+let codegen : expr -> env -> data_dest -> control_dest -> code = fun stmt rho delta gamma ->
+match cmd with
+| Seq (e1,e2) ->
+    codegen e1 rh Effect gamma @@
+    let l = label () in 
+    l @@
+    codegen e2 rho delta gamma
+| If (etest, ethen, eelse ) ->
+| Set (x, e) -> lookup (snd rho 
+
+
+
+
+```
+
+# Misc
 [One-pass Code Generation in V8](https://bernsteinbear.com/assets/img/46b-codegeneration-in-V8.pdf)
 
 [PL Resouces - Max Bernstein](https://bernsteinbear.com/pl-resources/) fantastic list of resources for compilers mostly

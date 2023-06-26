@@ -723,3 +723,5 @@ yves bertot said he was working in collision avoidance? http://www-sop.inria.fr/
 https://rtca2023.github.io/pages_Lyon/m2.html workshop may 2023. Sounds cool. Certified ans Symbolic computation
 
 [seven sins of numerical linear algebra](https://nhigham.com/2022/10/11/seven-sins-of-numerical-linear-algebra/)
+
+https://verinum.org/

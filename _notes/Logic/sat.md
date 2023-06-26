@@ -63,3 +63,5 @@ https://twitter.com/ArminBiere/status/1556292768607207425?s=20&t=yqv3psiW3ByDbnV
 [The silent revolution of sat](https://news.ycombinator.com/item?id=36079115#36081904)
 
 [creusat](https://sarsko.github.io/_pages/SarekSkot%C3%A5m_thesis.pdf) https://github.com/sarsko/CreuSAT
+
+[IPASIR-UP: User Propagators for CDCL](https://www.youtube.com/watch?v=pgsvqXAPgqA&ab_channel=SimonsInstitute)

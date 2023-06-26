@@ -79,11 +79,12 @@ What is answer set programming:
   - Datalog + branching
   - disjunctive datalog
 - Justified SMT
+- Datalog metaprogramming for SAT
 - Prolog negation done right
 
 [Potassco](https://potassco.org/) is the host of clingo, the main ASP solver (so far as I know)
 
-
+The examples demonstrate some of these points.
 # Examples
 [potassco guide examples](https://github.com/potassco/guide/tree/master/examples)
 [modeling section of course](https://teaching.potassco.org/modeling/)
@@ -2005,3 +2006,5 @@ LP2mip
 
 
 [interesting discussion](https://swi-prolog.discourse.group/t/non-monotonicity-defeasibility-strategies-and-other-stuff/6038/15)
+
+[hard string problems encoded to answer set programming](https://drops.dagstuhl.de/opus/volltexte/2023/17953/pdf/lipics-vol259-cpm2023-complete.pdf#page=309)

@@ -4319,14 +4319,34 @@ eqangle(A, B, C, D, E, F, G, H ):-
 Hmm. Vector algebra is the method. Parametrize objects. Use trig identities. Logic is super algebra.
 Hmm.
 
-```egglog
-(rule (on (line a b) a))
-(rewrite (line a b) (line b a))
-(= (para l1) (para l2))
-(angle l1 l2)
-(line (seg a b))
-(seg a b) = (seg b c) is cong()
-(circle o a) = (circle o b)
+```bash
+echo ";re
+(datatype Point)
+(datatype Seg (seg Point Point))
+(datatype Line (line Seg))
+
+; segments are undirected
+(rewrite (seg a b) (seg b a))
+
+(relation para (Line Line))
+(relation perp (Line Line))
+
+(rule ((para a b)) ((para b a)))
+(rule ((perp a b)) ((perp b a)))
+(rule ((para a b) (para b c)) ((para a c)))
+(rule ((para a b) (perp b c)) ((perp a c)))
+
+
+
+;(rule (on (line a b) a))
+;(rewrite (line a b) (line b a))
+;(= (para l1) (para l2))
+;(angle l1 l2)
+;(line (seg a b))
+;(seg a b) = (seg b c) is cong()
+;(circle o a) = (circle o b)
+" | egglog
+
 
 ```
 

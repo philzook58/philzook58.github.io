@@ -59,3 +59,8 @@ Methods only present their pre and post conditions to the solver
 
 
 https://github.com/dafny-lang/compiler-bootstrap
+
+
+```dafny
+{% include_relative dafny/tutorial.dfy %}
+```

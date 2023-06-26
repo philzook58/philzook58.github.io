@@ -24,6 +24,7 @@ title: E-graphs
 - [Lambda Encoding](#lambda-encoding)
 - [Contextual EGraphs](#contextual-egraphs)
 - [Equational Logic](#equational-logic)
+- [Theories AC](#theories-ac)
 - [CHR egraphs](#chr-egraphs)
 - [Misc](#misc)
 
@@ -461,6 +462,18 @@ Maude
 [Goguen theorem proving and algebra](https://arxiv.org/abs/2101.02690)
 
 rigid e-uniifcation https://pure.uvt.nl/ws/portalfiles/portal/311063/80170.pdf Equational Proofs in Tableaux en Logic Programming de Kogel, E.A. Another fairly extnsive work that seems a lot like egglog.
+
+# Theories AC
+[CC(X): Semantic Combination of Congruence Closure with Solvable Theories](https://www.sciencedirect.com/science/article/pii/S1571066108002958)
+
+Sylvain Conchon, Evelyne Contejean, and Mohamed Iguernelala. Canonized Rewriting and Ground
+AC Completion Modulo Shostak Theories : Design and Implementation. Logical Methods in
+Computer Science, 8(3), 2012.
+
+
+Ashish TIwari
+
+
 
 # CHR egraphs
 
