@@ -1,7 +1,7 @@
 ---
 date: 2023-07-01
 layout: post
-title: "Answer Set Programming for E-graph DAG Extraction"
+title: "Answer Set Programming for E-Graph DAG Extraction"
 description: An unusually good fit for ASP
 ---
 
@@ -9,13 +9,13 @@ description: An unusually good fit for ASP
 
 Ultimately, one is interested in extracting out a version of an expression from inside the egraph with good properties so you can turn it into efficient code or a piece of hardware. This problem can be hard depending on how you want to model it.
 
-[Answer Set Programming](https://potassco.org/) is a paradigm for solving combinatorial satisfaction or optimization problems. It offers some unusual well-foundedness/justification modelling capabilities not offered by SAT, CSP, ILP, or SMT solvers. It is exactly this aspect that makes it very useful for a particular case of extraction. That [Remy](https://github.com/egraphs-good/extraction-gym/pull/2) independently had this idea is encouraging that it is a good one, since he is often right.
+[Answer Set Programming](https://potassco.org/) is a paradigm for solving combinatorial satisfaction or optimization problems. It offers some unusual well-foundedness/justification modelling capabilities not offered by SAT, CSP, ILP, or SMT solvers. It is exactly this aspect that makes it very useful for a particular case of extraction. The ASP solver clingo is roughly a datalog-like grounder gringo that feeds into a SAT-like solver clasp with intrinsic cycle breaking constraints support. That [Remy](https://github.com/egraphs-good/extraction-gym/pull/2) independently had this idea is encouraging that it is a good one, since he is often right.
 
-## Extraction
+## Tree vs DAG Extraction
 
 A method for certain cost models is to apply dynamic programming. In this model, the cost of a enode in the egraphs is a function of the minimal cost of its children. Very natural right? You can compute the best cost as a fixed point calculation, taking the best enode for each eclass to be the one who's cost is currently smallest. This will converge fairly quickly.
 
-It occurs rather often that this framework does not model the actual costs well. Shared subpexpressions can be reused cheaply. In this case, what one wants to extract is not an optimal AST, but instead an optimal DAG. The cost function of the DAG is intrinsically more nonlocal or noncompositional that the cost function of an AST. It may be desirable to pick a locally less optimal subexpression, if that subexpression has more reusable parts elsewhere.
+It occurs rather often that this framework does not model the actual costs well, in particular in regards to sharing. Shared subexpressions can be reused cheaply. In this case, what one wants to extract is not an optimal AST, but instead an optimal DAG. The cost function of the DAG is intrinsically more nonlocal or noncompositional than the cost function of an AST. It may be desirable to pick a locally less optimal subexpression, if that subexpression has more reusable parts elsewhere.
 
 A simple additive cost model is  $\sum_n c_n m_n$  where $c_n$ is the cost of enode $n$ and $m_n$ is the multiplicity you have picked it.
 
@@ -23,8 +23,12 @@ THe DAG cost model would instead be  $\sum_n c_n b_n$ where instead $b_n$ is not
 
 In either case, the optimization problem is constrained to be selecting subgraphs of the egraph which form valid trees or valid DAGs. Tree-ness or DAG-ness is a subtle property that is surprisingly difficult/impossible to describe in first order logic. It is an example where you need a notion of least fixed point in your logic.
 
+See for example:
+- [Transitive closure and first order logic](https://math.stackexchange.com/questions/1286141/transitive-closure-and-first-order-logic)
+- [Why can't reachability be expressed in first order logic?](https://math.stackexchange.com/questions/250551/why-cant-reachability-be-expressed-in-first-order-logic)
+
 This axiom expresses that if all of your children are valid trees, then you are a valid tree.
-`(forall c, child(c,node) => Tree(c)) => Tree(node)`.
+`Tree(node) = (forall c, child(c,node) => Tree(c))`.
 
 This axiom is loose however to the notion of tree-ness. `Tree(C) := true` is a valid model of this axiom, that just says every node is a tree in any graph.
 
@@ -34,9 +38,9 @@ As a second counterexample, consider a graph with a single vertex `a` and a sing
 
 Ok, you might try to patch this up by saying trees have no self loops but an extension of this counterexample is to consider a giant loop of arbitrarily large size N. How can you fight this?
 
-What we want to express is that operationally, we can iteratively find the trees by first saying any leaf (no children) is a tree, then keep increasing our class of tree things to include anything we have already determined. This is a very intuitive interpretation of a notion of implication `=>`, but it is not the classical first order logic notion.
+What we want to express is that we can iteratively find the trees by first saying any leaf (no children) is a tree, then keep increasing our class of tree things to include anything we have already determined. This is a very intuitive interpretation of a notion of implication `=>`, but it is _not_ the classical first order logic notion.
 
-It is exactly what datalog or answer set programming does though. Until you start using non-stratified negation, answer set programming and datalog are identical. They both allow you to derive a minimal model or least fixed point of a pile of horn clauses.
+It is exactly what datalog or answer set programming does though. Note that until you start using non-stratified negation, answer set programming and datalog are essentially identical. They both allow you to derive a minimal model or least fixed point of a pile of horn clauses.
 
 ```clingo
 
@@ -52,7 +56,7 @@ tree(N) :- node(N), tree(C) : edge((C,N)).
 % SATISFIABLE
 ```
 
-It is exactly this property that makes it possible to require to extract only the DAGs.
+It is exactly this property that makes it possible to require to extract only the DAGs to the ASP solver in a very natural way.
 
 
 ## Extraction Model
@@ -137,9 +141,6 @@ It seems to help the solve time to add that we don't expect more than 1 enode to
 
 The short nature of the encoding reflects that ASP is a very natural framework for this problem. ASP has a number of different solver architectures, but a basic gist of some is that they are roughly SAT solvers + learned cycle breaking / support constraints. In most other solvers, these cycle breaking constraints must be eagerly produced (this is also done in the types of ASP solvers that eagerly compile to SAT).
 
-
-
-
 # Rust Encoding
 
 Max has been starting to cook up an [extraction gym](https://github.com/egraphs-good/extraction-gym). I don't know that it is fully baked ready for contributors yet (although I think more benchmark egraphs _are_ welcome).
@@ -213,8 +214,6 @@ impl Extractor for AspExtractor {
             let root = Root {
                 eid: (*eid).try_into().unwrap(),
             };
-
-            //println!("{}.", root.symbol().expect("should be symbol"));
             fb.insert(&root);
         }
         for (_i, class) in egraph.classes.values().enumerate() {
@@ -225,7 +224,6 @@ impl Extractor for AspExtractor {
                     op: node.op.clone(),
                     cost: node.cost.round() as i32,
                 };
-                //println!("{}.", enode.symbol().expect("should be symbol"));
                 fb.insert(&enode);
                 for child_eid in node.children.iter() {
                     let child = Child {
@@ -233,7 +231,6 @@ impl Extractor for AspExtractor {
                         node_i: node_i.try_into().unwrap(),
                         child_eid: (*child_eid).try_into().unwrap(),
                     };
-                    //println!("{}.", child.symbol().expect("should be symbol"));
                     fb.insert(&child);
                 }
             }
@@ -244,25 +241,20 @@ impl Extractor for AspExtractor {
         let parts = vec![part];
         ctl.ground(&parts).expect("Failed to ground");
         let mut handle = ctl
-            .solve(clingo::SolveMode::YIELD, &[]) // stl.optimal_models()
+            .solve(clingo::SolveMode::YIELD, &[]) // maybe use ctl.optimal_models()
             .expect("Failed to solve");
         let mut result = ExtractionResult::new(egraph.classes.len());
         while let Some(model) = handle.model().expect("model failed") {
             let atoms = model
                 .symbols(ShowType::SHOWN)
                 .expect("Failed to retrieve symbols in the model.");
-            //println!("atoms length {}", atoms.len());
             for symbol in atoms {
                 assert!(symbol.name().unwrap() == "sel");
                 let args = symbol.arguments().unwrap();
                 result.choices[args[0].number().unwrap() as usize] =
                     args[1].number().unwrap() as usize;
-                //println!("{}", symbol);
             }
 
-            //if !handle.wait(Duration::from_secs(30)) {
-            //    break;
-            //}
             handle.resume().expect("Failed resume on solve handle.");
         }
         handle.close().expect("Failed to close solve handle.");
@@ -273,7 +265,11 @@ impl Extractor for AspExtractor {
 
 # Clingraph
 
-A really cool and useful utility is [clingraph](https://clingraph.readthedocs.io/en/latest/). It let's you visualize solutions directly out of clingo
+A really cool and useful utility for working with clingo is [clingraph](https://clingraph.readthedocs.io/en/latest/). It let's you visualize solutions directly out of clingo.
+
+Here is a solution visualized out of the `egg::test_fn! {math_powers, rules(), "(* (pow 2 x) (pow 2 y))" => "(pow 2 (+ x y))"}` example.
+
+It is slightly easier for me to draw the egraph as a bipartite graph between eclasses and enodes than the typical "eclass as dotted box surrounding enodes" visualization. Selected eclasses are colored red and selected enodes are colored cyan.
 
 ![](/assets/egraph_asp_extract.png)
 
@@ -471,9 +467,6 @@ istree(X) :- node(X), not path(X,X).
 Doesn't make much sense unless we can have choice over children (like in egraph). So why even bother abstracting the problem?
 
 Social network, pick a pyramid scheme. No loops, pick from your friends to maximize
-
-
-
 
 
 
