@@ -9,7 +9,7 @@ description: An unusually good fit for ASP
 
 Ultimately, one is interested in extracting out a version of an expression from inside the egraph with good properties so you can turn it into efficient code or a piece of hardware. This problem can be hard depending on how you want to model it.
 
-[Answer Set Programming](https://potassco.org/) is a paradigm for solving combinatorial satisfaction or optimization problems. It offers some unusual well-foundedness/justification modelling capabilities not offered by SAT, CSP, ILP, or SMT solvers. It is exactly this aspect that makes it very useful for a particular case of extraction. The ASP solver clingo is roughly a datalog-like grounder gringo that feeds into a SAT-like solver clasp with intrinsic cycle breaking constraints support. That [Remy](https://github.com/egraphs-good/extraction-gym/pull/2) independently had this idea is encouraging that it is a good one, since he is often right.
+[Answer Set Programming](https://potassco.org/) is a paradigm for solving combinatorial satisfaction or optimization problems. It offers some unusual well-foundedness/justification/supported-set modelling capabilities not offered by SAT, CSP, ILP, or SMT solvers. It is exactly this aspect that makes it very useful for a particular case of extraction. The ASP solver clingo is roughly a [datalog-like grounder](https://www.youtube.com/watch?v=tWrk94svdT8&list=PL7DBaibuDD9PRJitHc-lVwLNI2nlMEsSU&index=3&ab_channel=Potassco) gringo that feeds into a SAT-like solver clasp with [intrinsic loop breaking constraints](https://www.youtube.com/watch?v=0eHc0EoKLcA&list=PL7DBaibuDD9NFCpoQWNCvoSdhPE3kdzmM&index=4&ab_channel=Potassco) support. That [Remy](https://github.com/egraphs-good/extraction-gym/pull/2) independently had this idea is encouraging that it is a good one, since he is often right.
 
 ## Tree vs DAG Extraction
 
@@ -40,7 +40,7 @@ Ok, you might try to patch this up by saying trees have no self loops but an ext
 
 What we want to express is that we can iteratively find the trees by first saying any leaf (no children) is a tree, then keep increasing our class of tree things to include anything we have already determined. This is a very intuitive interpretation of a notion of implication `=>`, but it is _not_ the classical first order logic notion.
 
-It is exactly what datalog or answer set programming does though. Note that until you start using non-stratified negation, answer set programming and datalog are essentially identical. They both allow you to derive a minimal model or least fixed point of a pile of horn clauses.
+It is exactly what datalog or answer set programming does though. Note that until you start using non-stratified negation, answer set programming and datalog are essentially identical (ASP treats negation "presciently"/self-consistently. You check an ASP solution by running datalog on using current derived atoms for positive atoms but the guessed final solution for the negated atoms). They both allow you to derive a minimal model or least fixed point of a pile of horn clauses.
 
 ```clingo
 
