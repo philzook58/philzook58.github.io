@@ -20,6 +20,7 @@ title: Assembly
 - [Typed Assembly](#typed-assembly)
 - [Proof Carrying Code](#proof-carrying-code)
 - [Verification](#verification)
+- [Semantics / Specification](#semantics--specification)
 - [Misc](#misc)
 
 
@@ -661,6 +662,21 @@ Galois' SAW
 [A verified, efficient embedding of a verifiable assembly language](https://dl.acm.org/doi/10.1145/3290376)
 F* land. [Vale - Verifying High-Performance Cryptographic Assembly Code](https://project-everest.github.io/assets/vale2017.pdf). Hmm. this is leveraging dafny
 
+# Semantics / Specification
+[L3 in cakeml](https://cakeml.org/itp22-armv8.pdf)
+[L3 risc v](https://github.com/SRI-CSL/l3riscv/tree/master)
+[L3 mips](https://github.com/acjf3/l3mips)
+
+[alastair reid's notes](https://alastairreid.github.io/RelatedWork/notes/isa-specification/)
+Sail
+ASL arm spec language
+
+
+[A Complete Formal Semantics of x86-64 User-Level Instruction Set Architecture](https://fsl.cs.illinois.edu/publications/dasgupta-park-kasampalis-adve-rosu-2019-pldi.pdf) K framework
+
+[Flexible Instruction-Set Semantics via Type Classes](https://arxiv.org/pdf/2104.00762.pdf)
+
+[risc v Machine Readable Specs](https://five-embeddev.com/quickref/machine-readable.html)
 # Misc
 
 [bootstrapping a c compiler](https://news.ycombinator.com/item?id=31244150)

@@ -4,7 +4,14 @@ title: Concurrency
 ---
 
 - [Memory Models](#memory-models)
+  - [Example programs](#example-programs)
+  - [Axiomatic Semantics](#axiomatic-semantics)
+    - [What is an execution?](#what-is-an-execution)
+  - [Operational Semantics](#operational-semantics)
+  - [Rewriting](#rewriting)
   - [Memory Order vs Program Order](#memory-order-vs-program-order)
+  - [The "git" model](#the-git-model)
+  - [Automated Reasoning](#automated-reasoning)
   - [Consistency vs Coherence](#consistency-vs-coherence)
   - [Sequential Consistency (SC)](#sequential-consistency-sc)
   - [Total Store Order (TSO)](#total-store-order-tso)
@@ -55,6 +62,48 @@ When you compile, there are intermediate states of the target that don't really 
 
 Some things that seem intuitively atomic at the source are not in the target. One statement may become multiple, that a concurrent processor could screw with.
 
+## Example programs
+
+
+
+
+## Axiomatic Semantics
+
+[Lecture Notes on Weak Memory Models – Part I](https://www.tcs.cs.tu-bs.de/documents/ConcurrencyTheory_SS_2014/lecturenotes/13_06_2014_axiomatic.pdf)
+[Explaining Relaxed Memory Models with Program Transformations](https://plv.mpi-sws.org/trns/paper.pdf)
+Ori Lahav and [Viktor Vafeiadis](https://people.mpi-sws.org/~viktor/) are two good names to know
+
+rewriting 
+
+
+### What is an execution?
+Execution graphs. A pile of dependency relations.
+
+Some events happen out of possible events.
+Some events are reads, some are writes.
+
+Reads read a value that was written somewhere.
+
+Data race = two events, at least one of which is a write (aka not double read).
+
+An overapproximate model is one in which all reads are chaosed. Maybe this even makes sense if stuff gets lost in transit. 
+
+A more reasonable thing is that every read must have been written in a different event somewhere. For bool variables, you can probably find any possibly value somewhere, so this actually isn't even that much of a restricting assumption.
+
+
+## Operational Semantics
+[A Promising Semantics for Relaxed-Memory Concurrency](https://sf.snu.ac.kr/promise-concurrency/)
+[Promising 2.0: Global Optimizations in Relaxed Memory Concurrency](https://people.mpi-sws.org/~viktor/papers/pldi2020-promising2.pdf)
+
+What is the notion of "state"
+Keeping history. Possibly you may read from history
+Traces translate to execution graphs
+
+Timestamps is a useful idea. Timestamps may not be totally ordered. They might be vectors of local times for example
+
+## Rewriting
+What rewrites of the program are "allowed". AKA, what compiler optimizations are allowed.
+
 ## Memory Order vs Program Order
 [Memory order](https://en.wikipedia.org/wiki/Memory_ordering)
 [Program](order)
@@ -63,7 +112,48 @@ Program order is the code order in the source. This is vaguely evokes the image 
 
 Even in single threaded code, execution does not need to follow program order. Non interfering stores and loads are allowed to be slid over each other. Common subexpression elimination means computations may not even happen when they do in the program. Function calls and system calls are probably required to stay in the same order as the source.
 
-We could describe some realatively concrete concurrent machine, with some layer of caching. Does the variable "a" in code exist in the execution of this machine. We are already used to "a" depending on time. But it also not depends on location. It is conceivable that Thread 1, Thread 2, Cache 1 have different opinions on what "a" at the "same" time. Their clocks stay synchronized? Quite an assumption.
+We could describe some relatively concrete concurrent machine, with some layer of caching. Does the variable "a" in code exist in the execution of this machine. We are already used to "a" depending on time. But it also not depends on location. It is conceivable that Thread 1, Thread 2, Cache 1 have different opinions on what "a" at the "same" time. Their clocks stay synchronized? Quite an assumption.
+
+## The "git" model
+When you write to a variable, the new value is not published everywhere. There is a separate event where this value may be published to another thread.
+Not all variables may be published to the other thread at once.
+It isn't persay required in a general memory model that `store(a,1) ;store(a,2)` has to necessarily publish the store of 1 before the store of 2, or that the store of 1 can't be seen even after you've seen the store of 2. These are certain requirements of in order arrival and dedeuplication of publish messages.
+
+
+
+## Automated Reasoning
+[MemSAT: Checking Axiomatic Specifications of Memory Models](https://homes.cs.washington.edu/~emina/doc/memsat.pldi10.pdf)
+
+https://github.com/rems-project/isla "isla is a symbolic execution engine for Sail, and a tool (sometimes known more specifically as isla-axiomatic) that uses that to evaluate the relaxed-memory behavior of instruction set architectures (ISAs) specified in Sail"
+
+http://diy.inria.fr/doc/index.html herd7
+
+
+ASP seems like a reasonable language to work in to me. Well, of course it does
+```clingo
+
+% program order po
+
+% transitive
+po(A,C) :- po(A,B), po(B,C).
+
+% actions
+
+% write(A, L). action A writes to locatin L
+% read(A,L) action A reads from location L
+
+
+% rf reads from
+:- rf(A,B), rf(A,B1), B != B1. % rf is a functional relationship
+
+% we obey the program order
+:- po(B,A), rf(A,B).
+
+% memory order. Order on write events to same location. mo(A,A)
+
+
+```
+
 
 ## Consistency vs Coherence
 ## Sequential Consistency (SC)
