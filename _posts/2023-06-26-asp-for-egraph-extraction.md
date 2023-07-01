@@ -265,13 +265,15 @@ impl Extractor for AspExtractor {
 
 # Clingraph
 
-A really cool and useful utility for working with clingo is [clingraph](https://clingraph.readthedocs.io/en/latest/). It let's you visualize solutions directly out of clingo.
+A really cool and useful utility for working with clingo is [clingraph](https://clingraph.readthedocs.io/en/latest/). It let's you visualize solutions directly out of clingo. It is actually a separate command that you can pipe other stuff into as well. 
 
 Here is a solution visualized out of the `egg::test_fn! {math_powers, rules(), "(* (pow 2 x) (pow 2 y))" => "(pow 2 (+ x y))"}` example.
 
 It is slightly easier for me to draw the egraph as a bipartite graph between eclasses and enodes than the typical "eclass as dotted box surrounding enodes" visualization. Selected eclasses are colored red and selected enodes are colored cyan.
 
 ![](/assets/egraph_asp_extract.png)
+
+The example below is a bash script showing the clingraph invocation.
 
 ```bash
 echo " 
