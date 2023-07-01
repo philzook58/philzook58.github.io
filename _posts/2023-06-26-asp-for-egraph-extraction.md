@@ -9,7 +9,7 @@ description: An unusually good fit for ASP
 
 Ultimately, one is interested in extracting out a version of an expression from inside the egraph with good properties so you can turn it into efficient code or a piece of hardware. This problem can be hard depending on how you want to model it.
 
-[Answer Set Programming](https://potassco.org/) is a paradigm for solving combinatorial satisfaction or optimization problems. It offers some unusual well-foundedness/justification/supported-set modelling capabilities not offered by SAT, CSP, ILP, or SMT solvers. It is exactly this aspect that makes it very useful for a particular case of extraction. The ASP solver clingo is roughly a [datalog-like grounder](https://www.youtube.com/watch?v=tWrk94svdT8&list=PL7DBaibuDD9PRJitHc-lVwLNI2nlMEsSU&index=3&ab_channel=Potassco) gringo that feeds into a SAT-like solver clasp with [intrinsic loop breaking constraints](https://www.youtube.com/watch?v=0eHc0EoKLcA&list=PL7DBaibuDD9NFCpoQWNCvoSdhPE3kdzmM&index=4&ab_channel=Potassco) support. That [Remy](https://github.com/egraphs-good/extraction-gym/pull/2) independently had this idea is encouraging that it is a good one, since he is often right.
+[Answer Set Programming](https://potassco.org/) is a paradigm for solving combinatorial satisfaction or optimization problems. It offers some unusual well-foundedness/justification/supported-set modelling capabilities not offered by [SAT](https://en.wikipedia.org/wiki/SAT_solver), [CSP](https://www.minizinc.org/), [ILP](https://en.wikipedia.org/wiki/Integer_programming), or [SMT](https://en.wikipedia.org/wiki/Satisfiability_modulo_theories) solvers. It is exactly this aspect that makes it very useful for a particular model of the extraction problem. The ASP solver [clingo](ttps://potassco.org/) is roughly a [datalog-like grounder](https://www.youtube.com/watch?v=tWrk94svdT8&list=PL7DBaibuDD9PRJitHc-lVwLNI2nlMEsSU&index=3&ab_channel=Potassco) gringo that feeds into a SAT-like solver clasp with [intrinsic loop breaking constraints](https://www.youtube.com/watch?v=0eHc0EoKLcA&list=PL7DBaibuDD9NFCpoQWNCvoSdhPE3kdzmM&index=4&ab_channel=Potassco) support. That [Remy](https://github.com/egraphs-good/extraction-gym/pull/2) independently had this idea is encouraging that it is a good one, since he is often right.
 
 ## Tree vs DAG Extraction
 
@@ -17,9 +17,9 @@ A method for certain cost models is to apply dynamic programming. In this model,
 
 It occurs rather often that this framework does not model the actual costs well, in particular in regards to sharing. Shared subexpressions can be reused cheaply. In this case, what one wants to extract is not an optimal AST, but instead an optimal DAG. The cost function of the DAG is intrinsically more nonlocal or noncompositional than the cost function of an AST. It may be desirable to pick a locally less optimal subexpression, if that subexpression has more reusable parts elsewhere.
 
-A simple additive cost model is  $\sum_n c_n m_n$  where $c_n$ is the cost of enode $n$ and $m_n$ is the multiplicity you have picked it.
+A simple additive tree cost model is  $\sum_n c_n m_n$  where $c_n$ is the cost of enode $n$ and $m_n$ is the multiplicity you have picked it.
 
-THe DAG cost model would instead be  $\sum_n c_n b_n$ where instead $b_n$ is not a boolean 0-1 variable saying whether you picked the node or not.
+The DAG cost model would instead be  $\sum_n c_n b_n$ where instead $b_n$ is not a boolean 0-1 variable saying whether you picked the node or not.
 
 In either case, the optimization problem is constrained to be selecting subgraphs of the egraph which form valid trees or valid DAGs. Tree-ness or DAG-ness is a subtle property that is surprisingly difficult/impossible to describe in first order logic. It is an example where you need a notion of least fixed point in your logic.
 
@@ -38,9 +38,9 @@ As a second counterexample, consider a graph with a single vertex `a` and a sing
 
 Ok, you might try to patch this up by saying trees have no self loops but an extension of this counterexample is to consider a giant loop of arbitrarily large size N. How can you fight this?
 
-What we want to express is that we can iteratively find the trees by first saying any leaf (no children) is a tree, then keep increasing our class of tree things to include anything we have already determined. This is a very intuitive interpretation of a notion of implication `=>`, but it is _not_ the classical first order logic notion.
+What we want to express is that we can iteratively find the trees by first saying any leaf (no children) is a tree, then keep increasing our class of tree things to include anything with all children we have already determined to be trees. This is a very intuitive interpretation of a notion of implication `=>`, but it is _not_ the classical first order logic notion.
 
-It is exactly what datalog or answer set programming does though. Note that until you start using non-stratified negation, answer set programming and datalog are essentially identical (ASP treats negation "presciently"/self-consistently. You check an ASP solution by running datalog on using current derived atoms for positive atoms but the guessed final solution for the negated atoms). They both allow you to derive a minimal model or least fixed point of a pile of horn clauses.
+It is exactly what datalog or answer set programming does though. It is `:-`. Note that until you start using non-stratified negation, answer set programming and datalog are essentially identical (ASP treats negation "presciently"/self-consistently. You check an ASP solution by running datalog on using current derived atoms for positive atoms but the guessed final solution for the negated atoms). They both allow you to derive a minimal model or least fixed point of a pile of horn clauses.
 
 ```clingo
 
@@ -119,10 +119,10 @@ This is subtly different from saying we pick the root, which I would write like 
 selclass(E) :- root(E).
 ```
 
-These statements are classically equivalent  using the classical equivalence `A => B == not A \/ B`.
-`forall E, root(E) /\ not selclass(E) => false == not root(E) \/ not not selclass(E) \/ false == not root(E) \/ selclass(E)` and  `forall E, root(E) => selclass(E) == not root(E) \/ selclass(E)`, but they are not ASP equivalent.
+These statements are classically equivalent , but they are _not_ ASP equivalent. I can show the classical equivalence using the ASP invalid identity `A => B == not A \/ B`.
+`forall E, root(E) /\ not selclass(E) => false == not root(E) \/ not not selclass(E) \/ false == not root(E) \/ selclass(E)` and  `forall E, root(E) => selclass(E) == not root(E) \/ selclass(E)`. 
 
-If we added this axiom, we'd allow picking a solution where we pick the root but do not requre the root's children to be picked first. This is again a subtle aspect of ASP modeling, but it's exactly the subtly we want to express the required DAGness of the desired solution.
+If we added this axiom, we'd allow picking a solution where we pick the root but do not require the root's children to be picked first. This is again a subtle use of ASP modeling, but it's exactly the subtly we want to express the required DAGness of the desired solution.
 
 Finally, we want to minimize the cost of the selected enodes.
 
@@ -130,11 +130,10 @@ Finally, we want to minimize the cost of the selected enodes.
 #minimize { C,E,I : sel(E,I), enode(E,I,_,C) }.
 ```
 
-
 It seems to help the solve time to add that we don't expect more than 1 enode to be select per eclass in the minimizing model.
 
 ```
-% optional constrains to help?
+% optional constraints to help?
 :- enode(E,_,_,_), #count { E,I : sel(E,I)} > 1.
 ```
 
@@ -389,6 +388,7 @@ attr(node, e(E), color, red) :- selclass(E).
 
 
 # Blah Blah Blah
+I could, and possibly should, label the children of an enode by their order, but it doesn't matter
 
 
 Ok, well we could add another axiom to tighten it up
