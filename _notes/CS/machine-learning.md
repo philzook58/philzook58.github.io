@@ -12,6 +12,8 @@ title: Machine Learning
   - [SVM](#svm)
   - [Kernel](#kernel)
   - [decision trees](#decision-trees)
+    - [Boosting](#boosting)
+    - [Random Forest](#random-forest)
 - [Unsupervised](#unsupervised)
 - [Visualization](#visualization)
 - [Learning Theory](#learning-theory)
@@ -29,6 +31,7 @@ title: Machine Learning
     - [code](#code)
     - [math](#math)
   - [GAN](#gan)
+  - [Deepfakes](#deepfakes)
     - [LoRA](#lora)
     - [Stable Diffusion](#stable-diffusion)
     - [Mixed Precision](#mixed-precision)
@@ -110,6 +113,18 @@ one hot encoding
 ## Kernel
 ## decision trees
 
+
+### Boosting
+https://en.wikipedia.org/wiki/Boosting_(machine_learning)
+
+Adaboost
+[XGboost](https://en.wikipedia.org/wiki/XGBoost)
+
+https://en.wikipedia.org/wiki/Multiplicative_weight_update_method a generalizatio of the idea of combinigh expert opinions
+### Random Forest
+
+
+
 # Unsupervised
 
 PCA
@@ -124,6 +139,9 @@ umap
 
 # Learning Theory
 VC dimension
+
+PAC probably apprximately correct
+https://en.wikipedia.org/wiki/Probably_approximately_correct_learning
 
 # Overfitting
 
@@ -217,6 +235,8 @@ https://huggingface.co/bigcode/starcoder
 ## GAN
 https://vcai.mpi-inf.mpg.de/projects/DragGAN/ drag your gan
 
+## Deepfakes
+
 ### LoRA
 Low rank adaptation
 https://arxiv.org/abs/2106.09685
@@ -248,6 +268,15 @@ outpainting
 https://github.com/AUTOMATIC1111/stable-diffusion-webui
 
 negative prompt, negative embedding
+
+You can generate a supervised learning problem to predict noise given a noisy image. Text info may help.
+You can then iteratively subtract this noise.
+If you ask it to remove all noise, then add 99% noise, then ask it to remove 99% noise and so on you have a stable noise removal process.
+You can boost listening to the text by comparing againt a version tat doesn't have the text and boosting the differences
+You can do this process in latent space (small space of autoencoder) to speed it up
+
+Schedules
+
 
 ### Mixed Precision
 https://github.com/NVIDIA/apex
@@ -288,6 +317,9 @@ https://github.com/ianarawjo/ChainForge
 Automated the prompt engineering workflow. You could ask questions you know the answer to, or evaluate code generation against test suite or what have you. The prompt is a kind of hyperparameter and you can apply the same methodolgy you might with others (random search, test sets, validation sets, etc). The llm is a fixed parametrized function like `y = ax+b` where a and b are the prompts.
 
 ### Transformers
+https://en.wikipedia.org/wiki/Attention_(machine_learning)
+
+
 ## Large Language Models
 https://openai.com/research/instruction-following instructgpt RLHF reinfrocement learning human feedback
 

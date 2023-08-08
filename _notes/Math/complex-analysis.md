@@ -3,6 +3,9 @@ layout: post
 title: Complex Analysis
 ---
 
+- [Convergence](#convergence)
+
+
 These terms actually mean something
 
 Analytic - <https://en.wikipedia.org/wiki/Analytic_function>. A function is analytic on an open set if a convergent power series exists on that 
@@ -43,3 +46,7 @@ Differentiable implies continuity and so on.
 
 Continuity
 
+
+# Contour Integrals
+
+Visual Complex Anaysis

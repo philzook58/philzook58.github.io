@@ -404,6 +404,9 @@ Auto flattening.
 `r0 == (r0, "")`
 
 
+https://github.com/nbenton/x86proved
+[Coq: The world’s best macro assembler?](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/12/coqasm.pdf)
+
 # Typed Assembly
 
 Type preserving compilation
@@ -668,6 +671,7 @@ F* land. [Vale - Verifying High-Performance Cryptographic Assembly Code](https:/
 [L3 mips](https://github.com/acjf3/l3mips)
 
 [alastair reid's notes](https://alastairreid.github.io/RelatedWork/notes/isa-specification/)
+
 Sail
 ASL arm spec language
 
@@ -677,6 +681,37 @@ ASL arm spec language
 [Flexible Instruction-Set Semantics via Type Classes](https://arxiv.org/pdf/2104.00762.pdf)
 
 [risc v Machine Readable Specs](https://five-embeddev.com/quickref/machine-readable.html)
+
+```bash
+echo "
+default Order dec // what does this do?
+\$include <prelude.sail>
+
+//val print = monadic {ocaml: \"print_endline\"} : string -> unit
+
+let n:int = 42
+// val myguy
+
+//function myguy(x) = x + 1
+enum E = A | B | C
+
+//val main : unit -> unit
+
+function main (() : unit) -> unit = print_endline(\"hello world\")
+" > /tmp/foo.sail
+sail -coq -o /tmp/foo /tmp/foo.sail 
+cat /tmp/foo.v
+```
+
+`sail -i` interpreter
+
+
+https://github.com/rems-project/isla/blob/master/doc/manual.adoc
+isla. It's more than a symbolic executor
+I can dump an IR of instruction semantics. Pseudo-smt. Has command statements too. Still. The expressions are smt expressions yea?
+
+[pydrofoil](https://github.com/pydrofoil/pydrofoil) using pypy jit with sail. It uses isla to dump semantics?
+
 # Misc
 
 [bootstrapping a c compiler](https://news.ycombinator.com/item?id=31244150)
@@ -716,8 +751,6 @@ Metamath zero - is there some simpler thing one could do? Why did metamath _real
 [peachpy](https://github.com/Maratyszcza/PeachPy) an assembly dsl in python
 https://docs.micropython.org/en/latest/pyboard/tutorial/assembler.html inline assembler in micropython
 
-
-[isa specification link list](https://alastairreid.github.io/RelatedWork/notes/isa-specification/)
 
 
 

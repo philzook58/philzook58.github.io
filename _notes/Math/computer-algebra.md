@@ -2,6 +2,17 @@
 layout: post
 title: Computer Algebra
 ---
+- [Systems](#systems)
+- [Integration](#integration)
+- [Maxima](#maxima)
+- [Reduce](#reduce)
+- [Axiom](#axiom)
+- [Macaulay](#macaulay)
+- [GAP](#gap)
+- [Singular](#singular)
+
+
+
 See Also:
 - Differential Equations
 - Term rewriting
@@ -33,11 +44,80 @@ print(tsub) # This is assuming a is nonzero though.
 expand(simplify(e1.subs(t,tsub)))
 ```
 
+
+https://leanprover.github.io/theorem_proving_in_lean4/conv.html
+
+```python
+
+class Proof():
+    def __init__(self,expr):
+        self.steps = []
+        self.ctx = []
+        self.expr = expr
+    def arg(self,n):
+
+    def cong(self): #pop up 
+    def simp(self):
+        self.steps.append("simp")
+        self.expr = simplify(self.expr)
+    def expand(self):
+    def factor(self):
+    def comm(self):
+    def assoc(self):
+    def apply(self,eq):
+
+    def subst(self,e):
+        assert sympy.Eq(e)
+        self.steps.append(("rw", e))
+        self.expr = e
+    def pprint(self):
+        map(latex, self.steps)
+
+
+```
+
+
 # Integration
 https://en.wikipedia.org/wiki/Symbolic_integration
 
 Risch algorithm
 https://en.wikipedia.org/wiki/Risch_algorithm
+"heuristic risch"
+
+https://docs.sympy.org/latest/modules/integrals/integrals.html
+Meijer G functions.
+Closed form for definite integrals even in compound terms
+They also have "hand" mode which returns steps
 
 
 https://groups.google.com/g/sci.math.symbolic
+
+# Maxima
+
+```bash
+echo "
+print(hello);
+ expand ((x + y)^6);
+factor (x^6 - 1);
+exp(%i*%pi);
+linsolve ([3*x + 4*y = 7, 2*x + a*y = 13], [x, y]);
+solve (x^3 - 3*x^2 + 5*x = 15, x);
+eq_2: 3*x + y = 1$  # $ is silent
+plot2d (sin(x)/x, [x, -20, 20])$
+?? integ
+quit();
+" | maxima
+
+`%` is most recent calculated
+Also can refer to by assigned number
+```
+
+# Reduce
+
+# Axiom
+https://github.com/daly/axiom
+Hmm I can't get it too install. soorrrry axiom
+
+# Macaulay
+# GAP
+# Singular

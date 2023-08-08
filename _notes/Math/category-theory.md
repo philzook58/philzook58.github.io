@@ -269,3 +269,5 @@ Processes are a timey database.
 [topology a category theory approach](https://topology.mitpress.mit.edu/) https://news.ycombinator.com/item?id=33601318
 
 [Category Theory Illustrated](https://github.com/abuseofnotation/category-theory-illustrated)
+
+[sheaf theory through examples](https://mitpress.mit.edu/9780262542159/sheaf-theory-through-examples/)

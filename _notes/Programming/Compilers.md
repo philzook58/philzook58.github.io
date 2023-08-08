@@ -14,6 +14,8 @@ wordpress_id: 2913
 - [Intermediate Representations](#intermediate-representations)
   - [SSA](#ssa)
   - [LLVM IR](#llvm-ir)
+    - [MLIR](#mlir)
+  - [BRIL](#bril)
   - [Sea of nodes](#sea-of-nodes)
   - [CPS](#cps)
   - [RTL](#rtl)
@@ -47,7 +49,6 @@ wordpress_id: 2913
   - [Assembly Production](#assembly-production)
 - [JIT](#jit)
 - [Garbage Collector](#garbage-collector)
-  - [LLVM](#llvm)
 - [JVM](#jvm)
 - [Simple Compilation](#simple-compilation)
   - [](#)
@@ -69,7 +70,6 @@ http://ssabook.gforge.inria.fr/latest/book.pdf SSA bookv
 
 [compcertssa](http://compcertssa.gforge.inria.fr/) verified ssa
 
-[bril](https://github.com/sampsyo/bril) educational IR. ocaml and rust bindings.
 
 [Simple and Efficient Construction of Static Single
 Assignment Form](https://pp.info.uni-karlsruhe.de/uploads/publikationen/braun13cc.pdf) https://twitter.com/peter_a_goodman/status/1541105429215936513?s=20&t=Id3zoB1xCWLA5QQIrPNHVA
@@ -78,7 +78,187 @@ Gated SSA
 
 
 ## LLVM IR
-See LLVM section
+LLVM IR
+
+MIR
+
+Instruction Combiner
+
+  * [https://www.cs.cornell.edu/~asampson/blog/llvm.html](https://www.cs.cornell.edu/~asampson/blog/llvm.html)
+
+<https://jonathan2251.github.io/lbd/index.html>  Tutorial: Creating an LLVM Backend for the Cpu0 Architecturehttps://danielkeep.github.io/tlborm/book/README.html
+
+<https://www.youtube.com/watch?v=m8G_S5LwlTo&ab_channel=LLVM> LLVM IR tutorial
+
+[llvm-mca](https://llvm.org/docs/CommandGuide/llvm-mca.html) - static analysis of performance of code 
+
+<https://www.llvm.org/docs/ProgrammersManual.html>
+<https://mukulrathi.com/create-your-own-programming-language/llvm-ir-cpp-api-tutorial/>
+
+[Learning to combine instructions in LLVM compiler](https://twitter.com/johnregehr/status/1501649959505985537?s=20&t=-ebjuD7WRIIQNgiBChK5cQ)
+<https://lowlevelbits.org/how-to-learn-compilers-llvm-edition/> 
+
+
+gllvm and wllvm - they dump the llvm bitcode files into object sections. Not a bad start if you are in a cooperative situation
+
+https://langston-barrett.github.io/notes/llvm-ir/
+https://langston-barrett.github.io/notes/learning-llvm/
+
+```bash
+echo '
+#include <stdio.h>
+int main(){
+  //printf("hello world");
+  return 0;
+}' > /tmp/hello.c
+clang /tmp/hello.c -S -emit-llvm -o /tmp/hello.ll #-o /tmp/hello
+#/tmp/hello
+cat /tmp/hello.ll
+```
+
+```bash
+echo "
+define i32 @main() {
+  ret i32 0
+}
+" > /tmp/foo.ll
+llc /tmp/foo.ll -o /tmp/foo.s
+cat /tmp/foo.s
+```
+
+```bash
+llc --help
+```
+
+### MLIR
+A higher level region based IR under the auspices of the llvm project
+Things that target llvm need another IR to lower and do cleanup
+Capable of representing control flow?
+
+
+## BRIL
+[bril](https://github.com/sampsyo/bril) educational IR. ocaml and rust bindings.
+[manual](https://capra.cs.cornell.edu/bril/intro.html)
+```bash
+echo "
+fun main {
+
+}
+" \
+ | bril2json 
+```
+```python
+prog = """
+# ARGS: 8
+@main(input: int) {
+  value: int = id input;
+  v1: int = const 1;
+  result: int = id v1;
+  v3: int = id value;
+  i: int = id v3;
+.for.cond.2:
+  v4: int = id i;
+  v5: int = const 0;
+  v6: bool = gt v4 v5;
+  br v6 .for.body.2 .for.end.2;
+.for.body.2:
+  v7: int = id result;
+  v8: int = id i;
+  v9: int = mul v7 v8;
+  result: int = id v9;
+  v10: int = id i;
+  v11: int = const 1;
+  v12: int = sub v10 v11;
+  i: int = id v12;
+  jmp .for.cond.2;
+.for.end.2:
+  v13: int = id result;
+  print v13;
+  v14: int = const 0;
+}"""
+
+import briltxt
+import json
+prog = json.loads(briltxt.parse_bril(prog))
+main = prog["functions"][0]
+print(briltxt.print_func(main))
+print(main["args"])
+print(main["instrs"][2])
+
+env = {}
+env["input"] = "r0"
+counter = 1
+def fresh():
+  global counter
+  counter += 1
+  return f"r{counter}"
+
+for instr in main["instrs"]:
+  if "op" in instr:
+    op = instr["op"]
+    if "dest" in instr:
+      #print(instr)
+      #briltxt.print_instr(instr)
+      d = instr["dest"] 
+      if d in env:
+        dst = env[d]
+      else:
+        f = fresh()
+        env[d] = f
+        dst = f
+    if "labels" in instr:
+      labels = instr["labels"]
+    
+    if op == "id":
+      # could do move peephole here
+      src = instr["args"][0]
+      print(f"mov {dst}, {src} # {json.dumps(instr)}")
+    elif op == "const":
+      src = instr["value"]
+      print(f"mov {dst}, {src}")
+    elif op == "print":
+      print("int3")
+    elif op == "br":
+      cond = instr["args"][0]
+      print(f"test {env[cond]}")
+      print(f"bze {labels[0]}")
+      print(f"b {labels[1]}")
+    elif op == "jmp":
+      print(f"b {labels[0]}")
+    else:
+      print(instr)
+      assert False
+  elif "label" in instr:
+    label = instr["label"]
+    print(f"{label}:")
+  else:
+    print(instr)
+    assert False
+
+```
+
+
+```
+
+import clingo
+env = {}
+facts = []
+
+for i,instr in enumerate(instrs):
+  if "label" in instr:
+    env = {}
+  elif:
+  elif op == "add"
+    binop()
+    env[dest] = Clingo.Function("add", [env[], env[]])
+    clin
+  elif op == "id"
+    env[dest] = env[]
+
+
+
+```
+
 
 ## Sea of nodes
 https://www.researchgate.net/profile/Cliff-Click/publication/2394127_Combining_Analyses_Combining_Optimizations/links/0a85e537233956f6dd000000/Combining-Analyses-Combining-Optimizations.pdf
@@ -653,7 +833,9 @@ https://news.ycombinator.com/item?id=25196121 discussion
 
 - Souper https://github.com/google/souper https://arxiv.org/pdf/1711.04422.pdf
 - STOKE https://cs.stanford.edu/people/eschkufz/docs/asplos_13.pdf
-- TOAST an ASP based one?
+- TOAST an ASP based one? https://purehost.bath.ac.uk/ws/portalfiles/portal/187949093/UnivBath_PhD_2009_T_Crick.pdf
+- GSO gnu superoptimizer
+- 
 
 https://twitter.com/kripken/status/1564754007289057280?s=20&t=KWXpxw5bjeXiDnNeX75ogw Zakai binaryen superopitmizer
 
@@ -712,32 +894,8 @@ See memory managements
 
 
 
-## LLVM
-LLVM IR
-
-MIR
-
-Instruction Combiner
-
-  * [https://www.cs.cornell.edu/~asampson/blog/llvm.html](https://www.cs.cornell.edu/~asampson/blog/llvm.html)
-
-<https://jonathan2251.github.io/lbd/index.html>  Tutorial: Creating an LLVM Backend for the Cpu0 Architecturehttps://danielkeep.github.io/tlborm/book/README.html
-
-<https://www.youtube.com/watch?v=m8G_S5LwlTo&ab_channel=LLVM> LLVM IR tutorial
-
-[llvm-mca](https://llvm.org/docs/CommandGuide/llvm-mca.html) - static analysis of performance of code 
-
-<https://www.llvm.org/docs/ProgrammersManual.html>
-<https://mukulrathi.com/create-your-own-programming-language/llvm-ir-cpp-api-tutorial/>
-
-[Learning to combine instructions in LLVM compiler](https://twitter.com/johnregehr/status/1501649959505985537?s=20&t=-ebjuD7WRIIQNgiBChK5cQ)
-<https://lowlevelbits.org/how-to-learn-compilers-llvm-edition/> 
 
 
-gllvm and wllvm - they dump the llvm bitcode files into object sections. Not a bad start if you are in a cooperative situation
-
-https://langston-barrett.github.io/notes/llvm-ir/
-https://langston-barrett.github.io/notes/learning-llvm/
 # JVM
 
 

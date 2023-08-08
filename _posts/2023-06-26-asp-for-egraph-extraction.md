@@ -480,3 +480,123 @@ edge((a,a)).
 --quiet=1 --outf=2 |  clingraph --view --out=render --format=png --dir=/tmp/clingraph --type=digraph
 ```
 ```
+
+
+
+```
+% DP cost
+treecost(E,C1) :- enode(E,_,_,_), C1 = #min { C,E,I : treecost(E,I,C) }.
+treecost(E,I,C1 + Cs) :- enode(E,I,_,C1), Cs = #sum { C, Ec : child(E,I,Ec)}.
+
+% tree cost of actual selection
+overcost(E)
+overcost(E,I,C) :- sel(E,I), enode(E,I,_,C), #sum { C1,  : selclass(Ec), child(), overcost(E,C1)  }.
+ovrcost(E,C) :- overcost(E,I,C).
+
+Hmm. but we can't guarantee the tree cost of selection will be better.
+Can we count usages?
+Usages compound?
+
+:- treecost(E,C), overcost().
+
+
+
+% :- #sum { C,E,I : sel(E,I), enode(E,I,_,C) } <= #sum { C,E : root(E), treecost(E,C)}.
+
+% is this redundant or not?
+% :- sel(E,I), child(E,I,Ec), { sel(Ec,I) : enode(Ec,I,_,_) } = 0. 
+
+
+
+```
+
+
+```clingo
+enode(0,0,"+",1).
+child(0,0,1).
+child(0,0,1). % hmm. deduplication
+enode(1,0,a,1).
+enode(1,1,b,2).
+
+treecost(E,C1) :- enode(E,_,_,_), C1 = #min { C,I : treecost(E,I,C) }.
+treecost(E,I,C1 + Cs) :- enode(E,I,_,C1), Cs = #sum { C, Ec : child(E,I,Ec), treecost(Ec,C)}.
+
+:- #sum { C,E : root(E), treecost(E,C) } > 
+
+%unique(E) :- selclass(E), not selclass(E2), child(E1,I1,E), child(E2,I2,E), E1 != E2.
+%-unique(E) :- selclass(E1), selclass(E2), child(E1,I1,E), child(E2,I2,E), E1 != E2.
+
+% we count the number of selected parents
+uses(E,U) :- enode(E,_,_,_), U = #count { Ep,I : sel(Ep,I), child(Ep,I,E)  }.
+
+% tree cost of only uniquely owned. Could recursive call be treecost?
+ucost(E,C) :- C = #sum { Cc,Ec : sel(E,I), child(E,I,Ec), uses(Ec,1), ucost(Ec,Cc) }.
+
+% tempting for som reaosn. Charge each usage equally. But I don't think it can be dgnified
+%ucost(E,C) :- C = #sum { Cc/U,Ec : sel(E,I), child(E,I,Ec), uses(Ec,U), ucost(Ec,Cc) }.
+
+% if you have unique ownership, you
+:- ucost(E,C) > treecost(E,C).
+
+```
+
+```clingo
+
+treecost(E,C1) :- eclass(E), C1 = #min { C,I : treecost(E,I,C) }.
+treecost(E,I,C1 + Cs) :- enode(E,I,_,C1), Cs = #sum { C, Ec : child(E,I,Ec), treecost(Ec,C)}.
+
+:- S1 = #sum { C,E : root(E), treecost(E,C) }, S2 = #sum { C,E,I : sel(E,I), enode(E,I,_,C) }, S1 > S2.
+
+
+```
+
+```clingo
+
+% tie breaking soft constraints?
+% we count the number of selected parents
+%uses(E,U) :- selclass(E), U = #count { Ep,I : sel(Ep,I), child(Ep,I,E) }.
+%#maximize { U@0,E : uses(U,E) }. % we want to reuse eclasses
+
+%#maximize { E@0,E : selclass(E) }.
+
+%#minimize { E*I@0,E,I : sel(E,I) }.
+#minimize { I@1,E,I : sel(E,I) }. % symmetry break to just prefer lower I?
+
+%#minimize { 1@2,E : selclass(E) }. % minimizing number of eclasses is a decent heuristic
+
+%:~ sel(E,I) [I@1]
+
+%#heuristic selclass(E). [1@1, false]
+%#heuristic sel(E,I). [2@2, false]
+
+%:- S = #sum { C,E,I : sel(E,I), enode(E,I,_,C) }, S > 14.
+
+treecost(E,C1) :- eclass(E), C1 = #min { C,E,I : treecost(E,I,C) }.
+treecost(E,I,C1 + Cs) :- enode(E,I,_,C1), Cs = #sum { C, Ec : child(E,I,Ec), treecost(Ec,C) }, Cs < 15.
+treesel(E,I) :- treecost(E,I,C), treecost(E,C). 
+%#maximize { 1/C@2,E,I : treecost(E,I,C), sel(E,I)}.
+
+#maximize { 1@2,E : treesel(E,I), sel(E,I)}.
+
+%#maximize { 1@2,E,I : sel(E,I), bottomsel(E,I)}.
+
+
+% The idea here is maybe the local tree cost is a useful guide.
+%estcost(E,C) :- estcost(E,I,C).
+%estcost(E,I,C1 + Cs) :- sel(E,I), enode(E,I,_,C1), Cs = #sum { C, Ec : child(E,I,Ec), estcost(Ec,C)}, Cs < 10.
+%#minimize { C@2,E,I : estcost(E,I,C)}.
+
+
+%rootcost(S1) :-  S1 = #sum { C,E : root(E), treecost(E,C) }.
+%:- rootcost(S1), S2 = #sum { C,E,I : sel(E,I), enode(E,I,_,C) }, S1 > S2.
+
+
+
+% tree cost of only uniquely owned. Could recursive call be treecost?
+%ucost(E,C) :- ucost(E,I,C).
+%ucost(E,I,C1 + Cs) :- enode(E,I,_,C1), sel(E,I),  Cs = #sum { C, Ec : child(E,I,Ec), uses(Ec, 1), ucost(Ec,C)}, Cs < 40.
+
+% if you have unique ownership, you
+%:- selclass(E), ucost(E,C1), treecost(E,C), C1 > C.
+
+```

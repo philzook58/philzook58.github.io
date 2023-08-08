@@ -23,9 +23,45 @@ Classical geometry. Euclidean lines and points and circles
 
 # Algebraic
 
+
+https://en.wikipedia.org/wiki/Blowing_up
+[birational](https://en.wikipedia.org/wiki/Birational_geometry)
+
+
+Griffiths, Phillip; Harris, Joseph (1978). Principles of Algebraic Geometry.
+Hartshorne, Robin Algebraic Geometry. 
+https://math.stackexchange.com/questions/1748/undergraduate-algebraic-geometry-textbook-recommendations?noredirect=1&lq=1 
+
 # Differential
+https://en.wikipedia.org/wiki/Manifold
+https://juliamanifolds.github.io/Manifolds.jl/stable/index.html https://arxiv.org/pdf/2106.08777.pdf
+[manopt.jl](https://www.youtube.com/watch?v=thbekfsyhCE&ab_channel=TheJuliaProgrammingLanguage)
+[manifolds.jl](https://www.youtube.com/watch?v=md-FnDGCh9M&ab_channel=TheJuliaProgrammingLanguage)
+"The seven major libraries for
+differential geometry in Python are Pymanopt (Townsend et al., 2016), Geomstats (Miolane
+et al., 2020), Geoopt (Kochurov et al., 2020), TheanoGeometry (Kühnel and Sommer, 2017),
+Jax Geometry (Kühnel and Sommer, 2017), Tensorflow RiemOpt (Smirnov, 2021), and
+McTorch"
+
 Visual differential geometry
 Functional differential geometry
+
+Differential forms
+
+coordinate free
+abstract manifold type
+```
+type M = { 
+    [(string, I , Rn -> M) ] 
+    [string,string, I,I ,Rn -> Rn] I is interval of overlap
+    https://en.wikipedia.org/wiki/Atlas_(topology)
+}
+type M = {Rn, [Rn -> R] } # intersection of constrain maps embedded in higher Rm
+
+x : M -> R
+
+
+```
 
 ## Curvature
 
@@ -33,6 +69,9 @@ Functional differential geometry
 
 # Convex Geometry
 - See convex optimization
+
+
+
 
 
 # Automated Theorem Proving
@@ -57,3 +96,15 @@ https://dblp.org/pid/18/4206.html jacques fleuriot
 
 
 https://www.usna.edu/CS/qepcadweb/B/QEPCAD.html 
+
+
+https://github.com/lucaferranti/GeometricTheoremProver.jl https://www.youtube.com/watch?v=q_08LE4UOU8&ab_channel=TheJuliaProgrammingLanguage
+Ritt-Wu method. Use polynomial divisiion once? Seems kind of weak, but maybe
+[Automated Geometric Theor omated Geometric Theorem Proving: W ving: Wu's Method s Method ](https://scholarworks.umt.edu/cgi/viewcontent.cgi?article=1034&context=tme)
+
+https://www.osti.gov/servlets/purl/1761359 Prove-It
+https://sandialabs.github.io/Prove-It//
+https://github.com/sandialabs/Prove-It
+
+https://www.andrew.cmu.edu/user/avigad/Students/rojas_thesis.pdf EuclidZ3
+

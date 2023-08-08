@@ -5418,6 +5418,17 @@ Ordered semirings
 Perhaps related to semiring semantics
 [scallop](https://scallop-lang.github.io/) neurosymbolic datalog. Probablistic datalog. Uses provenance. topkrpoofs other methods. 
 
+```python
+import torch
+
+path = edge
+for i in range(N):
+  path = [edge[x,y] * path[x,y] for x,y in ]
+
+```
+
+vector db?
+
 ## Datalog+- and the chase
 [Datalog+-](https://dl.acm.org/doi/pdf/10.1145/1514894.1514897) A Unified Approach to Ontologies and Integrity Constraints. Integraes datalog with equality and tuple generating dependencies. 
 [Datalog+- questions and answers](https://www.aaai.org/ocs/index.php/KR/KR14/paper/viewFile/7965/7972)

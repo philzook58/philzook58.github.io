@@ -204,6 +204,12 @@ Rabin
 
 https://github.com/Garvys/rustfst Rust implementation of Weighted Finite States Transducers. speech recognition and synthesis, machine translation, optical character recognition, pattern matching, string processing, machine learning, information extraction and retrieval
 
+
+https://en.wikipedia.org/wiki/Two-way_finite_automaton
+Two way finite automata. Reducible to DFA but with state explosion
+[read only turing machine](https://en.wikipedia.org/wiki/Read-only_Turing_machine)
+
+
 ## Tree Automata
 https://github.com/ondrik/libvata
 [Tree Automata Techniques and Applications](https://jacquema.gitlabpages.inria.fr/files/tata.pdf)

@@ -239,6 +239,35 @@ mov r1,r2
 ''').pretty())
 ```
 
+## Imp
+
+```python
+```python
+import logging
+from lark import Lark, logger, Transformer
+
+logger.setLevel(logging.WARN)
+grammar = '''
+expr : 
+      | "0" "+" expr -> zero_left
+      | NUMBER -> number
+      | expr "+" expr -> add
+      | "("  expr ")"
+
+stmt : 
+   | "if" "(" expr ")" "{"  stmt* "}"  else "{" "}"
+   | lvalue "="  expr  ";"
+   | "while" "(" expr  ")" "{" stmt* "}"
+   | "return" expr? ";"
+    
+
+lvalue : CNAME
+
+%import common.WS
+%ignore WS
+%import common.NUMBER
+'''
+```
 ## Datalog
 a datalog grammar:
 egglite

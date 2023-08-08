@@ -21,7 +21,10 @@ title: Differential Equations
   - [Control Problems](#control-problems)
     - [LQR](#lqr)
     - [Inverse Problems?](#inverse-problems)
-  - [DFT, Fourier Series, Fourier Transform](#dft-fourier-series-fourier-transform)
+- [DFT, Fourier Series, Fourier Transform](#dft-fourier-series-fourier-transform)
+  - [Dirac Delta](#dirac-delta)
+  - [Laplace](#laplace)
+  - [Related transforms](#related-transforms)
 - [Finite Difference](#finite-difference)
   - [Summations](#summations)
   - [Growth Equation](#growth-equation)
@@ -51,6 +54,7 @@ title: Differential Equations
   - [Domain Decomposition](#domain-decomposition)
   - [Finite Elements / Galerkin](#finite-elements--galerkin)
   - [Boundary Element Method](#boundary-element-method)
+- [Functional Analysis](#functional-analysis)
 - [Misc](#misc)
 
 
@@ -196,8 +200,42 @@ $\frac{}$
 
 ### Inverse Problems?
 
-## DFT, Fourier Series, Fourier Transform
+# DFT, Fourier Series, Fourier Transform
+Bracewell book
+Course
 
+Schwarz distributions
+## Dirac Delta
+https://en.wikipedia.org/wiki/Dirac_delta_function
+
+The identity operator as an integral transform
+$\int \delta(x-y) f(x) dx = f(y) $
+
+$\delta(x) = \int_{-\inf}^{\inf} e^{ikx}dx $
+
+Can consider limit of gausian or square function
+
+$ \delta(x) = e^{-\frac{x^2}{\alpha}} $
+
+```python
+from sympy import *
+init_printing(use_unicode=False, wrap_line=False)
+x, a = symbols('x a')
+print(integrate(exp(-x**2/a), (x, -oo, oo), conds='none'))
+
+
+```
+
+## Laplace 
+More appropriate for initial value problems / transients.
+Fourier is kind of goofy and yet it feels more sensible to consider a superposition of sine and cosine. There is also more symmettry between the forward and inverse trasnform
+
+
+## Related transforms
+
+Radon
+Mellin
+Hankel
 
 
 # Finite Difference
@@ -291,6 +329,9 @@ https://github.com/pyamg/pyamg
 ## Domain Decomposition
 ## Finite Elements / Galerkin
 ## Boundary Element Method
+
+# Functional Analysis
+
 
 # Misc
 

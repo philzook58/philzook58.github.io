@@ -16,10 +16,9 @@ wordpress_id: 1865
   - [Things that are prolog](#things-that-are-prolog)
   - [Lists](#lists)
   - [Difference Lists](#difference-lists)
-  - [Rewriting in prolog](#rewriting-in-prolog)
   - [Copy Term and Structural Matching](#copy-term-and-structural-matching)
   - [Term rewriting](#term-rewriting)
-- [Typeclass](#typeclass)
+  - [Typeclass](#typeclass)
   - [Type checking / inference](#type-checking--inference)
 - [Topics](#topics)
   - [SLD resolution](#sld-resolution)
@@ -35,10 +34,12 @@ wordpress_id: 1865
   - [Delimitted Continuations](#delimitted-continuations)
   - [Tabling](#tabling)
     - [XSB](#xsb)
+  - [Python](#python)
   - [Attributed Variables](#attributed-variables)
   - [Constraint Logic Programming (CLP)](#constraint-logic-programming-clp)
-    - [Prolog II, III IV.](#prolog-ii-iii-iv)
+  - [Prolog II, III IV.](#prolog-ii-iii-iv)
   - [Parallel](#parallel)
+  - [Macros](#macros)
   - [Coroutines](#coroutines)
   - [Indexing](#indexing)
   - [DCG - Definite Clauses Grammars (DCG)](#dcg---definite-clauses-grammars-dcg)
@@ -68,6 +69,7 @@ wordpress_id: 1865
   - [Extralogical features](#extralogical-features)
     - [Database manipulation](#database-manipulation)
     - [Cuts and Such](#cuts-and-such)
+- [Functions](#functions)
   - [Lambda](#lambda)
     - [HiLog](#hilog)
     - [Alpha prolog](#alpha-prolog)
@@ -183,8 +185,6 @@ You have fast append because you don't have to traverse the list to find the end
 append(X-Y,Y-Z,X-Z).
 ```
 
-## Rewriting in prolog
-
 ## Copy Term and Structural Matching
 copy_term is super useful, but questionable from a purist perspective. 
 <https://www.swi-prolog.org/pldoc/man?predicate=copy_term/2>
@@ -208,7 +208,7 @@ The context technique is nice. It's a generic representation of context.
 This is showing a generic approach where rewrite rules are repreented as a data structure.
 But a specialization/partial evaluation is writing them directly in 
 
-```
+```prolog
 step(fact(0), 1).
 step(fact(N), N * fact(N')) :- N #> 0, N' #= N + 1.
 
@@ -219,6 +219,18 @@ normal_form(T,T1) :-
 
 conc(F,Ls,Rs)  is f(l3,l2,l1, _, r1, r2, r3)
 ```
+
+Functional programs using infix equality notation. Slightly different than `fact/2` predicate style.
+```prolog
+:- initialization(main,main).
+:- op(900, xfx, user:(==>)).
+
+fact(0) ==> 1.
+fact(N) ==> M :- N1 is N - 1, fact(N1) ==> M1, M is N * M1.
+
+main(_) :- fact(6) ==> N, writeln(N).
+```
+
 
 What is demand driven egglog? It may have a relation to provenance.
 Naive equality proof search.
@@ -281,7 +293,93 @@ main(_) :- phrase(1 === 1, Pf), format("~w\n",Pf),
 
 ```
 
-# Typeclass
+```prolog
+:- initialization(main,main).
+:- op(900, xfx, user:(==>)).
+:- op(900, xfx, user:(===)).
+
+:- table _ ==> po('@<'/2). % accumulate smallest term according to "standard order"
+
+A === B :- A ==> C, B ==> C1, C = C1.
+
+
+%A ==> C :- A ==> B, B ==> C. % trans
+
+A ==> A. % refl first or last?
+
+% congruence before rewriting to memoize subpieces
+A + B ==> A1 + B1 :- A ==> A1, B ==> B1.
+
+% This is not ematching.
+A ==> C :- rw(A, B), B ==> C.
+
+% rw(A1,B), A1 ==> C, B ==> C. 
+% This kind of specs to ematching...?
+% we might need to freeze the pattern when it gets too big. unfailing completion.
+
+
+
+%A ==> B :- B ==> A. % sym? No.
+
+%A + B ==> A + B1 :- A ==> A1.
+
+rw(A,B) :- birw(A,B).
+rw(A,B) :- birw(B,A).
+rw(A + B, B + A).
+birw(A + (B + C), (A + B) + C).
+
+% generic congruence
+% A ==> B :- A =.. [F | Args], length(Args,N), length(Args1,N), map('==>', Args, Args1), B =.. [F | Args1].
+
+
+
+%f(A) ==> f(B) :- A ==> B. % cong
+%foo(A) ==> foo(B) :- A ==> B. % cong
+%foo(foo(a)) ==> a.
+%a ==> b.
+%b ==> c.
+
+
+
+main(_) :- writeln(hi), 
+  ((9 + 4) + 3) ==> A, writeln(A),
+  ((9 + 4) + 3 + 10 + 12) === (12 + 10 + 3 + 4 + 9), writeln(success).
+  
+  
+  %foo(foo(a)) ==> E, writeln(E),
+  %b ==> C, writeln(C).
+
+% Any ground ordering is fine.
+
+% https://www.swi-prolog.org/pldoc/man?predicate=term_size/2 includes sharing. interesting
+% term_order(T,T2) :- term_size(T,S), term_size(T2,S2), 
+%      S < S2 -> 
+%        true 
+%      ;  T =.. Tl, T1 =.. Tl2, lex(term_order, Tl1, Tl2) 
+```
+
+A cure possibly for non confluence.
+
+evaluation relations
+
+```prolog
+eval()
+
+
+```
+
+It is more useful to track by final position rather than by initial query term.
+Knuth bendix completion. With respect to a data type of ground rewrite rules, instantiate a pattern
+
+```
+match(foo(A), [foo(foo(a)) -> a]) :- 
+
+match(Pat, Pat, _).
+match(foo(Pat), foo(T), [ -> foo(T)]) :- match(Pat, []
+
+```
+
+## Typeclass
 
 ```
 implements(clone,life(A,T))
@@ -327,6 +425,15 @@ type(Env, var(X), TX) :- lookup(Env, X, TX).
 type(Env, lam(X, B), TA -> TB ) :- type([X - TA |Env], B, TB ).
 type(Env, app(F,X), TB ) :- type(Env, F, TA -> TB ), type(Env, X, TA).
 
+```
+
+
+3-fix notation can be 2 2-fix operators
+```
+:- op(|-, fxx).
+:- op(:, fxx).
+
+G |- E : T :- .
 ```
 
 
@@ -1493,6 +1600,11 @@ radial,
 incrmenetal table mainatence. Has a dependency graph. Something like seminaive? Trie based vs not?
 
 Weaker semantics and choosing semantics.
+
+## Python
+[easy to call into python now](https://swi-prolog.discourse.group/t/a-bundled-python-interface/6735)
+ 
+swi
 ## Attributed Variables
 Attaching extra info to variables. This can be be used to implement CLP as a library
 
@@ -1501,6 +1613,7 @@ https://sicstus.sics.se/sicstus/docs/3.7.1/html/sicstus_17.html
 https://www.swi-prolog.org/pldoc/man?section=attvar
 
 Attributed variables are a union find dict?
+
 ## Constraint Logic Programming (CLP)
 - CLP(B) - constraint over boolean variables. Sometimes bdd based
 - CLP(FD)
@@ -1515,7 +1628,7 @@ Attributed variables are a union find dict?
 eclipse talks to minizinc?
 [clp examples](https://swish.swi-prolog.org/example/examples.swinb)
 
-### Prolog II, III IV.
+## Prolog II, III IV.
 Cyclic terms. Rational terms. See Condicutive logic programming
 [swi prolog comments on rational trees](https://www.swi-prolog.org/pldoc/man?section=cyclic)
 
@@ -1525,6 +1638,21 @@ Cyclic terms. Rational terms. See Condicutive logic programming
 ## Parallel 
 https://en.wikipedia.org/wiki/Parlog
 50 years of datalog talks about stuff.
+
+## Macros
+<https://swi-prolog.discourse.group/t/new-library-macros/6571> macro library. Seems nice
+```prolog
+:- use_module(library(macros)).
+#define(max_size, 100).
+
+```
+
+<https://www.swi-prolog.org/pldoc/man?section=progtransform>
+`goal_expansion`
+`term_expansion`
+
+Can I use macros to make better scoping?
+
 
 
 ## Coroutines
@@ -2459,6 +2587,10 @@ s(ASP) was just ASP https://personal.utdallas.edu/~gupta/ . S(CASP) includes con
 [event calculus](https://swi-prolog.discourse.group/t/event-calculus-in-swi-prolog/5233)
 ## Extralogical features
 ### Database manipulation
+[Persistent predicates based on RocksDB ](https://swi-prolog.discourse.group/t/persistent-predicates-based-on-rocksdb/5501)
+https://github.com/JanWielemaker/rocks-predicates
+
+
 [swi](https://www.swi-prolog.org/pldoc/man?section=db)
 [sicstus database manip](https://sicstus.sics.se/sicstus/docs/latest4/html/sicstus.html/ref_002dmdb.html#ref_002dmdb)
 retract - take out of database
@@ -2495,6 +2627,9 @@ findall bagor setof are aggregation of solutions. They are reifying predicates k
 [ Finding all Solutions to a Goal](https://www.swi-prolog.org/pldoc/man?section=allsolutions)
 
 
+
+# Functions
+https://www.swi-prolog.org/pack/list?p=function_expansion a macro for function expansion
 
 
 ## Lambda
@@ -2894,6 +3029,38 @@ Dealing with infinite terms and streams.
 Completion + loop formula (external support) gives lfp.
 completion + ? give gfp?
 
+[Co-Logic Programming: Extending Logic Programming with Coinduction](https://personal.utdallas.edu/~gupta/ppdp06.pdf)
+
+[COnductive logic programming and it's applications](https://personal.utdallas.edu/~gupta/iclp07paper.pdf)
+
+
+
+
+```prolog
+:- use_module(library(coinduction)).
+
+:- coinductive p/1.
+
+p([1|T]) :- p(T).
+
+```
+
+```prolog
+:- use_module(library(coinduction)).
+
+:- coinductive p/0, q/0.
+p :- q.
+q :- p.
+
+```
+
+
+
+
+```prolog
+mi(Gs, G) :- member(Gs,G1), subsumes_term(G1,G), 
+
+```
 # inductive logic programmingh
 popper https://arxiv.org/abs/2005.02259
 https://github.com/metagol/metagol metagol 
@@ -2915,6 +3082,7 @@ metainterpretive learning (MIL) - a prolgo metainterpreter
 
 
 # Probablistic Logic Programming
+https://swi-prolog.discourse.group/t/new-book-second-edition-of-foundations-of-probabilistic-logic-programming/6228
 
 
 # Abductive logic programming

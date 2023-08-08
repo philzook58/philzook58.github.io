@@ -17,12 +17,23 @@ title: Answer Set Programming
   - [Default Reasoning](#default-reasoning)
   - [Worlds](#worlds)
   - [Compiler problems](#compiler-problems)
+  - [Egraph extraction / Union Find](#egraph-extraction--union-find)
+  - [Instruction Selection](#instruction-selection)
+  - [Observer](#observer)
+  - [Sqlite](#sqlite)
+  - [Geometry](#geometry)
+  - [Lambda-datalog](#lambda-datalog)
+  - [Calcium](#calcium)
+  - [Types](#types)
+    - [Formulog](#formulog)
   - [Sorting](#sorting)
   - [Shortest Path](#shortest-path)
   - [Spanning Tree](#spanning-tree)
   - [Metainterpreter](#metainterpreter)
   - [Subsumption / Lattices](#subsumption--lattices)
   - [Tree 2 Graph](#tree-2-graph)
+  - [Graph Matching / Edit Distance / Homomorphism](#graph-matching--edit-distance--homomorphism)
+  - [Graph Minor](#graph-minor)
   - [Intuitionistic Logic](#intuitionistic-logic)
   - [Rewriting](#rewriting)
   - [SMT Theories](#smt-theories)
@@ -88,6 +99,8 @@ The examples demonstrate some of these points.
 # Examples
 [potassco guide examples](https://github.com/potassco/guide/tree/master/examples)
 [modeling section of course](https://teaching.potassco.org/modeling/)
+
+[Automatic Composition of Melodic and Harmonic Music by Answer Set Programming](https://link.springer.com/chapter/10.1007/978-3-540-89982-2_21)
 ## Reachability
 To demonstrate that it is a superset of datalog.
 
@@ -278,6 +291,10 @@ You can make variables that are true in particular worlds. A version I saw was c
 
 
 ## Compiler problems
+
+[TOAST: Applying Answer Set Programming to Superoptimisation](https://link.springer.com/chapter/10.1007/11799573_21) http://www.cs.bath.ac.uk/tom/toast/
+[Generating Optimal Code Using Answer Set Programming 2009](https://link.springer.com/chapter/10.1007/978-3-642-04238-6_57)
+[Superoptimisation: Provably Optimal Code Generation using Answer Set Programmin - crick thesis](https://purehost.bath.ac.uk/ws/portalfiles/portal/187949093/UnivBath_PhD_2009_T_Crick.pdf)
 
 
 ```python
@@ -498,7 +515,572 @@ The graph like structure is nice for sea of nodes perhaps.
 clingo-dl might be nice for scheduling constraints.
 
 
-Usiing clingraph would be cool here.
+Using clingraph would be cool here.
+
+```clingo
+
+prog(E).
+expr(E) :- prog(E).
+
+% block(B,X,E) % variable X should have expression E in it. This summarizes the block.
+
+% demand.  ( dead code elimination kind of actually. )
+expr(A;B) :- expr(add(A,B)). 
+
+reg(rax;rdi;rsi;r10;r11).
+
+
+insn(E, x86add(I1,I2)) :- expr(add(A,B)), insn(A,I1), insn(B,I2). 
+
+{ insn(E, x86add(R1,R2)) } :- expr(E), E = add(A,B), insn(A,I1), insn(B,I2), reg(R1), reg(R2). 
+
+% how to factor representing intructions
+
+{ insn(E, x86add) } :- expr(add(A,B)).
+
+% really its a pattern identifier.
+
+
+
+sched(E,I,N) :- insn(E,I), ninsn(N), 0...N.
+{ dst(E,x86add,0,R) } :- reg(R), not live(R).
+src(E,I,R) :- insn(add(A,B, x86add), dst(A,_,R), dst(B,_,R).
+
+% must schedule value needed before computation
+:- sched(add(A,B), I, N), sched(A,I1,M), M >= N.
+:- sched(add(A,B), I, N), sched(B,I1,M), M >= N.
+
+% We could schedule at multiple times. That's rematerialization.
+
+
+% copy packing?
+{insn(E, cp)} :- expr(E).
+
+
+read(src) :- insn(x86add(Dst, Src)).
+clobber(Dst;zf;cf) :- insn(x86add(Dst, Src)).
+
+% initial values / calling conventions
+value(rdi,x0,0; rsi,x1,0; rcx,x2,0).
+value(rax, E, N) :- prog(E), ninsn(N).
+
+live(R,N-1) :- live(R,N), not clobber(R,I,N). 
+live(R,N-1) :- read(R,N). 
+
+
+
+ninsn(N) :- N = #count { I : active(E,I) }.
+
+
+
+```
+
+
+```clingo
+#script (python)
+import clingo
+
+def to_asm(t):
+  if t.name == "add":
+
+  return clingo.String("todo")
+
+#end.
+
+
+prog(E).
+expr(E) :- prog(E).
+expr(A;B) :- expr(add(A,B)).
+
+child(E,A; E,B):- expr(E), E = add(A,B).
+
+reg(rax;rdi;rsi;r10;r11).
+ecount(N) :- N = #count { E : expr(E) }.
+{ where(R,E)   } = 1 :- reg(R), expr(E).
+{ when(1..N,E) } = 1 :- ecount(N), expr(E).
+
+% subexpressions must come earlier
+:- when(I, E), when(I2, C), child(E,C), I2 > I.
+
+% time is unique
+:- when(I,E1), when(I,E2), E1 != E.
+
+% There can't exist a clobber E1 that occurs
+:- child(E,C), where(R,C), where(R, E1), E1 != C, 
+   when(T,E), when(Tc,C), when(T1,E1), Tc < T1, T1 < T. 
+
+write(R,T) :- when(T,E), where(R,E).
+read(R,T)  :-  when(T,E), child(E,C), where(R,C).
+
+liver(R,T) :- read(R,T).
+liver(R,T-1) :- liver(R,T), not write(R,T).
+
+live(T, C)   :-  when(T, E), child(E,C).
+live(T-1, E) :-  live(T,E), not when(T,E), T >= 0. 
+
+avail(T,E) :- when(T,E).
+avail(T+1,E) :- avail(T,E), where(R,E), not write(R,T), T <= End.
+
+% where = assign ? alloc ?
+
+#minimize { 10, : where(R,E), reg(R)  } + { 50, : where(R,E), stack(R)  }.
+
+```
+
+## Egraph extraction / Union Find
+<https://www.philipzucker.com/asp-for-egraph-extraction/>
+
+```clingo
+%re
+eq(Y,X) :- eq(X,Y).
+eq(X,Z) :- eq(X,Y), eq(Y,Z).
+
+term(X) :- eq(X,_).
+term(X;Y) :- term(add(X,Y)).
+
+eq(add(X,Y), add(Y,X)) :- term(add(X,Y)).
+eq(add(X,add(Y,Z)), add(add(X,Y),Z)) :- term(add(X,add(Y,Z))).
+eq(add(X,add(Y,Z)), add(add(X,Y),Z)) :- term(add(add(X,Y),Z)).
+
+term(add(1,add(2,add(3,4)))).
+```
+
+
+```clingo
+%re
+#script(python)
+
+uf = {}
+def find(x):
+  while x in uf:
+    x = uf[x]
+  return x
+
+def union(x,y):
+  x = find(x)
+  y = find(y)
+  if x != y:
+    uf[x] = y
+  return y
+
+#end.
+
+
+% :- term(add(X,Y)), rw(X,X1), rw(Y,Y1), 
+
+% add( @find(Y) , @find(X) ,@find(XY) ):- add(X,Y,XY).
+
+%rw(T, @union(T,add(@find(X), @find(Y)))) :- term(T), T = add(X,Y). % congruence?
+%rw(T, @union(T,add(@find(Y), @find(X)))) :- term(T), T = add(X,Y). % commutativity.
+%rw(T, @find(T)) :- term(T).
+%rw(X, @find(X); Y, @find(Y)) :- term(add(X,Y)).
+
+%term(T) :- rw(_,T).
+
+term(@union(T, add(@find(X), @find(Y)))) :- term(T), T = add(X,Y).
+term(@union(T, add(@find(Y), @find(X)))) :- term(T), T = add(X,Y).
+
+term(@find(X); @find(Y)) :- term(add(X,Y)).
+
+bterm(1,0).
+bterm(N+1, add(N,X)):- bterm(N,X), N < 5. 
+term(X) :-  bterm(5,X).
+%term(add(1,2)).
+
+#show term/1.
+```
+
+
+Explicit strata control. Does this work? Does it semi-naive? But I want to add strata for term producing rules
+
+```
+#script(python)
+def main(ctl):
+  for i in range(10):
+    ctl.ground(["cong", [])]) # aka rebuild
+    ctl.ground(["rewrite",[])])
+  ctl.solve()
+
+#prog(rebuild)
+add(@find(X),@find(Y),@find(Z)) :- add(X,Y,Z).
+add(X,Y,@union(Z,Z1)) :- add(X,Y,Z), add(X,Y,Z1), Z != Z1.
+#end.
+
+#prog(rewrite)
+add(Y,X,Z) :- add(X,Y,Z).
+add()
+
+@end.
+
+#end.
+```
+
+```clingo
+%re
+#script(python)
+
+uf = {}
+def find(x):
+  while x in uf:
+    x = uf[x]
+  return x
+
+def union(x,y):
+  x = find(x)
+  y = find(y)
+  if x != y:
+    uf[x] = y
+  #print(uf)
+  return y
+
+#end.
+
+add(X,Y,XY) :- term(XY), XY = add(X,Y).
+term(X;Y) :- term(add(X,Y)).
+term(add(add(add(add(1,2),3),4),5)).
+
+add(@find(Y),@find(X),@find(Z)) :- add(X,Y,Z).
+add(@find(X),@find(YZ),@find(XYZ);@find(Y),@find(Z),@find(YZ)) :- add(X,Y,XY), add(XY,Z,XYZ), YZ = @find(add(Y,Z)).
+
+add(@find(X),@find(Y),@find(Z)) :- add(X,Y,Z).
+add(@find(X),@find(Y),@union(Z,Z1)) :- add(X,Y,Z), add(X,Y,Z1), Z != Z1.
+
+enode(N) :- N = #count { X,Y,XY : add(X,Y,XY) }.
+enode2(N) :- N = #count { X,Y,XY : fadd(X,Y,XY) }.
+
+fadd(@find(X),@find(Y),@find(Z)) :- add(X,Y,Z).
+
+#show enode/1.
+#show enode2/1.
+```
+
+## Instruction Selection
+[Complete and Practical Universal Instruction Selection](https://dl.acm.org/doi/10.1145/3126528)
+
+```clingo
+prog((
+  set(p2,plus(p1,4)),
+  set((st,q1), p2),
+  set(q2, plus(q1,4)),
+  set((st,p1), q2)
+)).
+
+plus(p1,4,p2).
+plus(p1,4,p1).
+
+```
+
+This is doing dag tiling. Graph matching probably doesn't look that much different.
+
+```clingo
+% demand
+expr(X;Y) :- expr(add(X,Y)).
+expr(X;Y) :- expr(mul(X,Y)).
+
+{ sel( add, E) } :- expr(E),    E = add(X,Y),        sel(P1,X), sel(P2,Y).
+{ sel( mul, E) } :- expr(E),    E = mul(X,Y),        sel(P1,X), sel(P2,Y).
+{ sel( fma, E) } :- expr(E),    E = add(mul(X,Y),Z), sel(P1,X), sel(P2,Y), sel(P3,Z).
+@
+offset(0;1;2;4;8;16).
+{ sel( load, E) } :- expr(E),    E = load(add(Addr,N)), sel(P1,Addr), offset(N).
+
+{ sel(reg, E) } :- expr(E), E = var(X). % we don't _have_ to "use" register if something dumb is using it.
+
+
+{ sel(nop, E) }:- expr(E), E = add(X,0), sel(P,X).
+
+prog(mul(var(x), var(y))).
+expr(E) :- prog(E).
+
+pat(P) :- sel(P,_).
+
+%:- #count { sel(P,E) : expr(E),pat(P) } > 1. % only select at most one pattern
+:- #count {sel(P, E) : pat(P), prog(E)} = 0.
+%#minimize { 1,X,Y : sel(X,Y) }.
+
+#show expr.
+
+
+```
+
+## Observer
+
+```clingo
+%re
+#script(python)
+
+class Observer():
+  def output_atom(sym, atom):
+    print(f"output_atom {sym} {atom}")
+  def rule(self, choice, head=[] , body=[]):
+    print(f"rule {choice} {head} :- {body}")
+
+
+def main(ctl):
+  ctl.register_observer(Observer)
+  ctl.ground([("base",[])])
+  print(dir(ctl))
+  ctl.solve()
+
+#end.
+
+edge(1,2;3,4).
+path(X,Y) :- edge(X,Y).
+
+```
+
+## Sqlite
+
+
+```python
+import sqlite
+import clingo
+
+prog = """
+edge(1,2;3,4).
+path(X,Y) :- edge(X,Y).
+"""
+
+sqlite.connect(":memory:")
+# could either register observer callback to insert into sqlite
+# or just flip the entire model in
+
+ctl = Control()
+ctl.ground([("base",[])])
+
+
+```
+
+## Geometry
+Deductive database
+
+
+```clingo
+#script(python)
+import clingo
+def sort(*s):
+  return clingo.Tuple(sorted(s))
+
+#end.
+
+test(@sort(4,5,3)).
+
+point(y,x).
+line(A,B) :- point(X), point(Y), (A,B) = @sort(X,Y). % seems a little silly here.
+```
+Storing sorted canonical versions is easy, joining (efficiently) modulo permutations is tougher.
+
+
+Mixing in grobner?
+
+```clingo
+#script(python)
+import sympy
+
+#end.
+
+
+```
+
+
+## Lambda-datalog
+All the herculean effort I went to on souffle is easy because clingo has nice pyton integration
+
+varargs is easy.
+Sets can be represented as sorted deduped lists.
+We can return multiple results so this is also easy to get the elements out of a set.
+certainly I can define
+
+```clingo
+%re
+#script(python)
+import clingo
+nil = clingo.Function("nil",[])
+def cons(x,xs):
+  return clingo.Function("cons", [x,xs])
+
+def elem(l):
+  res = []
+  while l.name == "cons":
+    assert len(l.arguments) == 2
+    res.append(l.arguments[0])
+    l = l.arguments[1]
+  assert l.name == "nil" and len(l.arguments) == 0
+  return res
+
+def clist(*args):
+  if len(args) == 0:
+    return nil
+  return cons(args[0], clist(*args[1:]))
+
+# sort and duplicate a list. Could also do a whole patricia tree thing, but whetev.
+def cset(*args):
+  s = set(args)
+  return clist(*sorted(list(s)))
+
+def append(*ls):
+  return clist(*sum(map(elem,ls), []))
+
+def union(*ls):
+  return cset(*sum(map(elem,ls), []))
+
+# maps as assoc lists
+'''
+def put(d,k,v):
+  d = { k : v for (k,v) in elem(d) }
+  d[k] = v
+  clist( d.items())
+'''
+
+# introspection
+def arguments(x):
+  return clist(*x.arguments)
+def name(x):
+  return clingo.String(x.name)
+def apply(name,args):
+  return clingo.Function(name.string, elem(args))
+
+
+# locally nameless
+def open(t):
+  pass
+def close(x,t):
+  pass
+def subst():
+  pass
+def lam(x,e):
+  pass
+def norm(t):
+  pass
+
+
+def error(e):
+  print(e)
+  assert False
+
+#end.
+
+test(@clist(1,2,3,4,5)).
+test(@append(@clist(a,b,c), @clist(d))).
+test(@cset(1,1,2,28,3,4,4)).
+foo(@elem(X)) :- test(X).
+
+err(@error("this is a custom error")). 
+```
+
+
+## Calcium
+
+```clingo
+#script(python)
+
+from calcium import *
+
+#end.
+
+```
+
+## Types
+
+https://www.cl.cam.ac.uk/~nk480/bidir-survey.pdf
+
+```clingo
+
+#script(python)
+
+def lookup(env,k):
+  assert env.name == "cons"
+  print(env)
+  car = env.arguments[0]
+  if car.arguments[0] == k:
+    return car.arguments[1]
+  else:
+    return lookup(env.arguments[1], k)
+
+#end.
+
+%-of(cons(X,A,G), E, B) :- -of(G, lam(X,E), arr(A,B)) 
+% demand
+%do_check(G, lam) :- 
+%check() :- check(lamI),
+%synth() :- -check(lamI),
+
+
+check(G, E, T) :- do_check(G,E,T), E = var(X), T = @lookup(G,X).
+check(G, E, T) :- do_check(G,E,T), E = ann(E1,T), check(G,E1,T).
+check(G, E, T) :- do_check(G,E,T), E = tt, T = unit.
+check(G, E, T) :- do_check(G,E,T), E = lam(X,E1), T = arr(A,B), check(cons((X,A),G),E1,B).
+check(G, E, T) :- do_check(G,E,T), E = app(E1,E2), T = B, check(G,E1,arr(A,B)), check(G,E2,A).
+
+
+check(G,E,T) :- synth(G,E,T). 
+do_synth(G,E) :- do_check(G,E,T). % we can derive a synth query from check query
+
+synth(G,E,T) :- do_synth(G,E), E = var(T), T = @lookup(G,X).
+synth(G,E,T) :- do_synth(G,)
+
+do_check(G, E1, T1) :- do_check(G, ann(E1,T1), T).
+do_check(cons((X,A),G),E1,B) :- do_check(G, lam(X,E1), arr(A,B)).
+
+do_synth(G, E1) :- do_check(G, app(E1,E2), B).
+do_check(G, )
+
+
+do_check(nil, lam(x,var(x)), arr(a,a)).
+```
+
+Hmm. This actually kind of is the rule selection problem.
+
+Proof search. How to put the search into choice and not do full datalog expansion
+p(n, )   add n parameter to judgement. no, this still expands too much... hmm. Maybe like the isel example, we need to abstract the state and put more in the derivation tree.
+
+```
+
+```
+
+### Formulog
+Z3 is available in python. ASP is a datalog. Badabing bada boom
+
+```clingo
+%re
+#script(python)
+from z3 import *
+import clingo
+
+exprs = {}
+
+def z3ref(e):
+  id_ = e.get_id()
+  res =  clingo.Function("z3", [clingo.Number(id_),clingo.String(repr(e))])
+  exprs[res] = e
+  return res
+
+def toz3(s):
+  assert s.name == "z3"
+  return exprs[s]
+
+def bool(x):
+  return z3ref(Bool(x.string))
+
+def is_sat(e):
+  s = Solver()
+  s.add(toz3(e))
+  res = s.check()
+  if res == sat:
+    return clingo.Function("sat")
+  elif res == unsat:
+    return clingo.Function("unsat")
+
+#end.
+
+test(@bool("x")).
+foo(X) :- test(Y), X = @is_sat(Y).
+
+```
+
+Could Z3 be used as a theory?
+ASP as z3 theory?
+
 ## Sorting
 https://www.aaai.org/ocs/index.php/KR/KR14/paper/viewFile/7966/7912
 
@@ -630,6 +1212,57 @@ num(1..3).
 
 When the pinnacle of the lattice is selected, does that imply everything underneath is selected? That feels right.
 
+The power set lattice does not present an issue? But it doesn't in datalog either.
+We have greater powers of negation and aggregation in ASP.
+"booleanization" seems like a useful technique. 
+
+
+
+Lattice via python.
+
+```clingo
+%re
+#script(python)
+import clingo
+path_ = {}
+
+def path(x,y):
+  return path_[(x,y)]
+
+tt = clingo.Function("tt", [])
+
+def set_path(x,y,c):
+  if (x,y) in path_:
+    c1 = path_[(x,y)]
+    c =  min(c1,c)
+    path_[(x,y)] = c
+  else:
+    path_[(x,y)] = c
+  return c
+#end.
+
+path(X,Y,C1) :- edge(X,Y,C), C1 = @set_path(X,Y,C).
+path(X,Z,C2) :- edge(X,Y,C), path(Y,Z,C1), C2 = @set_path(X,Y,C + C1).
+
+
+edge(a,b,1).
+edge(b,c,1).
+edge(a,c,4).
+edge(a,c,5).
+edge(a,c,3).
+
+
+conn(X,Y) :- path(X,Y,_).
+final_path(X,Y,C1) :- conn(X,Y), C1 =  #min { C : path(X,Y,C)  }.
+
+```
+
+Hmm. Doesn't work because how do we inform clingo something has changed?
+Ok yes, this works. We have some lighter amounts of redundancy + improved termination.
+Ordering of atoms matters.
+
+
+
 ## Tree 2 Graph
 
 In a sense this is doing very little, but perhaps that is only because the tree and graph reprsentations are so close to each other. In most other languages this would stink.
@@ -660,6 +1293,35 @@ expr'(A, var'(A)) :- vert(A,var).
 %#show expr'/1.
 
 ```
+## Graph Matching / Edit Distance / Homomorphism
+[Flexible graph matching and graph edit distance using answer set programming](https://arxiv.org/abs/1911.11584)
+
+Instead of encoding subgraph patterns as rules (good for small patterns), they encode is by explicitly representing grpah homomoprhisms
+
+```clingo
+% h is functiona mapping from X to Y
+{h(X,Y) : n2(Y,L)} = 1 :- n1(X,L).
+% X and Y are edge identifiers now. Map edge X to edge Y such that source and tagret are mapped
+{h(X,Y) : e2(Y,S2,T2,L), h(S1,S2), h(T1,T2)} = 1 :- e1(X,S1,T1,L).
+% properties must also be preserved
+:- p1(X,K,D), h(X,Y), not p2(Y,K,D).
+```
+
+Flip it around to get an isomorphism
+```clingo
+{h(X,Y) : n1(X,L)} = 1 :- n2(Y,L).
+{h(X,Y) : e1(X,S1,T1,L), h(S1,S2), h(T1,T2)} = 1 :- e2(Y,S2,T2,L).
+ :- p2(Y,K,D), h(X,Y), not p1(X,K,D).
+
+```
+
+Or alternatively get a subgraph isomorphism
+```clingo
+{h(X,Y) : n1(X,L)} <= 1 :- n2(Y,L).
+{h(X,Y) : e1(X,S1,T1,L), h(S1,S2), h(T1,T2)} <= 1 :- e2(Y,S2,T2,L).
+```
+
+## Graph Minor
 
 ## Intuitionistic Logic
 In what sense, if any, is clingo an intuitionistic theorem prover [applications of intuionistic logic to answer set programming](https://nokyotsu.com/me/papers/tplp04.pdf) [Answer set programming in intuitionistic logic](https://www.sciencedirect.com/science/article/pii/S001935771730054X). 
@@ -679,9 +1341,13 @@ Datalog + Case analysis. Cyclic proofs?
 and Lifschitz [2] and, more generally, finite propositional formulas it is sufficient
 to check that the equivalence F ↔ G is provable intuitionistically" So intuitionsitc reasoning is sufficient for proving equivalence of ASP programs. But perhaps not the other way. Yes, that is often what I'm doing. Translating datalog programs into intionistic logic to see if it's ok. But if the connection is complete, I may miss valid transformations.
 
+
+
 ## Rewriting
 It all comes back to edge-path.
 Rewriting systems have directed edges between terms.
+
+
 
 ```clingo
 
@@ -713,6 +1379,27 @@ rw(Start, N*fact(N-1), S+1) :- rw(Start, T, S), T = fact(N), N > 0.
 
 ```
 A graph without cycles can talk about longest path.
+
+```clingo
+
+size_ = {}
+def size(l):
+  if l in size_:
+    return size_[l]
+  res = sum(map(size,l.arguments)) + 1
+  size_[l] = res
+  return res
+
+# subsumptn pattern
+simp_ = {}
+def simp(l):
+
+def set_simp(l,l1):
+
+
+```
+Modular grounding?
+
 
 
 Datalog modulo term rewriting. I mean, I guess this is ASP modulo term rewriting.
@@ -911,6 +1598,53 @@ How to identifty partitions? in a factored way?
 
 
 ### Bitvectors
+Named bitvectors + extract function is good approach.
+Sum of product form can be literall translated to rules.
+`z = ab + ~cd`
+```clingo
+{a;b;c;d}.
+z :- a,b.
+z :- not c, d.
+```
+```clingo
+%cnf no. something isn't right.  z <-> ab + ~cd 
+{a;b;c;d;z}.
+% {-a;-b;-c;-d;-z}.
+e :- a,b.
+e :- not c, d.
+:- not z, e.
+:- not e, z.
+```
+
+```clingo
+{a;b}. %inputs
+and(a,b) :- a,b.
+or(a,b) :- a,b.
+-a :- not a.
+nand(a,b) :- not and(a,b).
+nand1(a,b) :- not a.
+nand1(a,b) :- not b.
+xor :- a, not b.
+xor :- not a, b.
+eq :- a,b.
+eq :- not a, not b.
+
+% demand driven calculation of boolean expressions
+bit(X;Y) :- bit(and(X,Y)).
+and(X,Y) :- bit(and(X,Y)), X, Y.  
+{X} :- input(X).
+
+bit(X) :- bitvec(X,1).
+bit(sel(X,I)) :- bitvec(X,N), I = 0..N. % bitblast
+bitvec(X,N;Y,N) :- bitvec(and(X,Y), N).
+
+
+
+```
+Sat sweeping internal to asp?
+
+
+
 ```clingo
 
 bitvec(a).
@@ -941,6 +1675,8 @@ bit(B,N) :- bit(A,N), eq(A,B).
 
 
 ```
+
+
 
 
 ```clingo
@@ -1433,6 +2169,9 @@ def maplist(f,*ls):
 There are external theories available. In particular for difference logic and linear programming.
 Also you can make your own
 [theory solving slides](https://teaching.potassco.org/tsolving/)
+
+https://github.com/potassco/clingoLP linear programming
+https://github.com/potassco/clingo-dl difference logic
 
 ```clingo
 {a}.

@@ -34,3 +34,11 @@ Bloom effect
 
 Gamma correction and color mixing
 
+
+green coordinates
+
+
+Siggraph
+[siggraph retrospective- Seminal Graphics Papers: Pushing the Boundaries, 50 year retro](https://dl.acm.org/doi/book/10.1145/3596711)
+
+Ray tracng in one weekend

@@ -1,4 +1,21 @@
 
+- [Examples](#examples)
+  - [Geometry](#geometry)
+  - [Egglog0 posts](#egglog0-posts)
+  - [Souffle Posts](#souffle-posts)
+  - [Refining equalities](#refining-equalities)
+  - [Integration](#integration)
+  - [Merging Database](#merging-database)
+  - [Extraction as datalog](#extraction-as-datalog)
+- [Misc](#misc)
+  - [Modulo theories](#modulo-theories)
+  - [Propagators](#propagators)
+  - [AC](#ac)
+    - [slog](#slog)
+- [Partial Application](#partial-application)
+  - [RVSDG](#rvsdg)
+
+
 # Examples
 ```eggsmol
 (datatype Foo (Bar))
@@ -52,6 +69,100 @@
 
 ## Souffle Posts
 
+
+
+## Refining equalities
+Geometry example - directed lines refine
+
+partial functions - restriction of domain
+
+equal up to epsilon. An equality over epsilon families - everythign that has same derivatives
+
+## Integration
+
+```
+d(x*x) = x*d(x) + d(x)*x
+chain rule can't be written
+d(cos(e)) = -sin(e)*d(e) no, this is the chain rule
+d(sin(e)) = cos(e)*d(e)
+
+xd(x)
+
+2xcos(x)d(x) -> cos(x*x)d(x*x) 
+This works
+d(e1 + e2) = d(e1) + d(e2)
+d(pow(e,n)) -> pow(e, n-1)*d(e)
+
+d(u*v) = d(u) * v + u * d(v)
+d(u)*v -> d(u*v) - v * d(u) - integ by parts
+- u substition happen by definition.
+
+(cross u v) 
+
+(* a b)  -> (neg (* b a)) :when (dim a = odd)
+d (/ a b) 
+
+int(a,b,f)
+int(Domset,f)
+sphere_int
+
+
+int(sphere(R), )
+rot_sym(r)
+rot_sym(x), rot_sym(y) -> rot_sym(x*y)
+rot_sym(x), rot_sym(y) -> rot_sym(x + y)
+rot_sym(x) -> rot_sym(f(x))
+rot_sym(lit(n))
+
+int(sphere(R), e*d(r)), rot_sym(r) -> 4 * pi * 
+int(ball(R))
+int(interval(a,b), e*d(x)), dim(e) = 0 -> int(interval(0,1), d(y))
+```
+
+
+Differential forms works. These aren't binding operations anymore. sonova.
+
+
+`sin(x) = 1`. we are learing about x. exists x. sin(x) = 1
+
+`f(x) = 1`. we are learning about f. closer to forall x. f(x) = 1
+
+The function sin(x) is more like the second. `x` is a coordinate function M -> R.
+`sin : (R -> R) -> (M -> R)` is partially applied `comp(sin : R -> R,_)`.
+Because of this, we can build in the chain rule.
+
+
+A different modelling paradigm is to use hoas.
+`int(\x -> sin(x))` Now x is alpha bound.
+
+
+sum, set, fun, differential. WHat are the meanings of these symbols? 
+
+
+Integration:
+See rubi
+See winston lecture
+
+```prolog
+
+int(sin)
+
+```
+
+
+https://github.com/egraphs-good/egg/blob/c590048817a35236ce9910e7c1e0b1fac670822c/tests/math.rs#L179
+Is there an example where the naive approahc is wrong?
+
+Interesting. Metatheory used extraction then diff technqiue
+https://github.com/JuliaSymbolics/Metatheory.jl/blob/9045c7df97b910e57a644bf9c5ddc152d7b0d869/test/integration/cas.jl#L78
+
+
+Egraph starts at syntax and moves progressively towards semantics. You have to have a semantics in mind.
+
+
+Can I do summation? Discrete exterior calculus I guess. Manifestly working in "2d" simplicial space avoids summation swapping problem.
+
+Contour integrals
 
 
 
@@ -880,4 +991,68 @@ Monads / algerbaic effects
 ; 
 
 
+```
+
+## RVSDG
+We want as much to be dataflow as possible. That is where egraph shines
+
+An interstig design angle is to disallow varable capture.
+Is this even interesting? C doesn't really have a notion of variable capture in function calls. But mutation itself is a form of let capture
+Allow multi-arity. Disallow
+Everything must be 
+
+
+
+```
+(datatype 1->1)
+(datatype 2->1)
+(datatype 2->2)
+
+(datatype Func)
+(datatype Expr)
+(datatype Expr* (Cons Expr Expr*) (Nil))
+
+(datatype Tup1)
+(datatype Tup2 (Pair Expr Expr))
+
+
+(function func-1-inputs-1-outputs (Expr) RVSDG)
+(function func-1-inputs-2-outputs (Expr Expr) RVSDG)
+(function func-2 (Expr Expr) RVSDG)
+(function func (Expr*) Func)
+(function call* (Func Expr*) Expr*) ; multiple input ultiple output
+(function call1)
+(function call2 (Func Expr Expr) Expr*)
+(rewrite (call2 f e1 e2) (call f (Cons e1 (Cons e2 (Nil)))))
+;(function call (Func Env) Expr)
+
+(function get (i64) Expr)
+
+(define neg (func-1-inputs-1-outputs (* -1 get-0)))
+; specializing call to neg to get it in one shot.
+(rewrite (call neg (Cons e (Nil))) (* -1 e))
+
+(func-2-inputs-1-outputs (+ get-0 (get-0 (call ?neg get-1))))
+
+
+(function call1 (RVSDG Expr) Expr)
+(function subst1 (Expr Expr) Expr)
+
+(rewrite (call1 (func-1-input1-1-output1 e) e1) (subst1 e e1))
+(rewrite (subst1 (* a b) e) (* (subst1 a e) (subst1 b e)))
+(rewrite (subst1 (get 0) e)) e)
+(rewrite (subst1))
+(rewrite (subst (call1 f x) e) (call1 f (subst1 x e))) ; we don't substitue into the function. Only explicit capture allowed
+
+; hmm   maybe not recursing into the definition is what makes this different
+
+; no capture is allowed. Anything body needs is explicitly passed (lambda lifting)
+; But in exchance we have multi-arity as a primitive.
+; slash we lift everything to work over lists? Whch is a curious form of env.
+; The syntax of the language let's us restrict the context.
+
+(function call2 (RVSDG Expr Expr) Expr)
+
+
+(rewrite (= f  ... (call f)) (loop ))
 ```

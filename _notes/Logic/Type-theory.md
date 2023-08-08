@@ -17,6 +17,7 @@ title: Type Theory
   - [LF](#lf)
 - [Subtyping](#subtyping)
 - [Intersection Types](#intersection-types)
+- [Recursive Types](#recursive-types)
 - [Refinement Types](#refinement-types)
 - [Quotient Types](#quotient-types)
 - [Dependent Types](#dependent-types)
@@ -39,6 +40,7 @@ title: Type Theory
     - [Progress](#progress)
     - [Preservation, Subject Reduction](#preservation-subject-reduction)
     - [Normalization](#normalization)
+    - [normalization by evaluation](#normalization-by-evaluation)
     - [Canonicity](#canonicity)
   - [Computation rules](#computation-rules-1)
     - [Completeness](#completeness)
@@ -289,6 +291,9 @@ lambda pi system https://en.wikipedia.org/wiki/Dependent_type#First_order_depend
 # Subtyping
 Supposedly is kind of a shit show.
 # Intersection Types
+# Recursive Types
+iso recursive vs. equirecursive
+
 # Refinement Types
 [Refinement Types: A tutorial](https://arxiv.org/abs/2010.07763)
 
@@ -489,6 +494,23 @@ Preservation is very reminiscent of verifying that types are an invariant, or th
 
 ### Normalization
 https://www.pls-lab.org/en/Normalization
+
+### normalization by evaluation
+
+```ocaml
+
+type term = Lam of string * term
+ | Var of string
+ | App of term * term
+
+type typ = Arr of typ * typ
+  | Unit
+
+type value = Arr of value Value.Map.t | UnitV
+
+let eval : term -> typ -> value
+
+```
 ### Canonicity
 The same thing as normalization?
 https://cs.stackexchange.com/questions/112893/what-does-canonicity-property-mean-in-type-theory

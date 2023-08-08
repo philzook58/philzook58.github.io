@@ -52,3 +52,27 @@ tapinade - low level imlet
 [Systematically Differentiating Parametric Discontinuities - gilbert](https://people.csail.mit.edu/sbangaru/projects/teg-2021/)
 
 [A simple differentiable programming language - Abadi and plotkin](https://dl.acm.org/doi/10.1145/3371106)
+
+
+micrograd
+https://github.com/karpathy/micrograd
+
+```python
+class Value():
+    def __init__(self, value):
+        self.value = value
+        self.grad = 0
+        self.backward = lambda (): None
+    def __add__(self,x):
+        r = Value(self.value + x.value)
+        def backward():
+            self.grad += r.grad
+            x.grad += r.grad
+        r.backward = 
+    def __mul__(self,x):
+
+x = Value(2)
+e = x * x
+e.backward()
+
+```
