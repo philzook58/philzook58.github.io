@@ -725,3 +725,11 @@ https://rtca2023.github.io/pages_Lyon/m2.html workshop may 2023. Sounds cool. Ce
 [seven sins of numerical linear algebra](https://nhigham.com/2022/10/11/seven-sins-of-numerical-linear-algebra/)
 
 https://verinum.org/
+
+https://bellard.org/libbf/ libbf self contained multiprecision library
+
+
+
+Dreal
+delta satsifiability. attach a delta to equality.
+https://www.cs.mcgill.ca/~prakash/Talks/part2handout.pdf interesting. probability does the same thing?

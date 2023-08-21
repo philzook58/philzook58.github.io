@@ -11,6 +11,7 @@ title: Answer Set Programming
   - [N-Queens](#n-queens)
   - [Traveling Salesman](#traveling-salesman)
   - [Reviewer Assignment](#reviewer-assignment)
+  - [Dependency Management](#dependency-management)
   - [Planning](#planning)
   - [Tower of Hanoi](#tower-of-hanoi)
   - [Rule Inference](#rule-inference)
@@ -36,6 +37,7 @@ title: Answer Set Programming
   - [Graph Minor](#graph-minor)
   - [Intuitionistic Logic](#intuitionistic-logic)
   - [Rewriting](#rewriting)
+  - [Well founded / Coinduction](#well-founded--coinduction)
   - [SMT Theories](#smt-theories)
     - [EUF Ackermanization](#euf-ackermanization)
     - [Bitvectors](#bitvectors)
@@ -183,6 +185,11 @@ There are other modes than branch and bound
 ```
 
 cardinality cnstraints are convenience features for count
+
+## Dependency Management
+[Using Answer Set Programming for HPC Dependency Solving](https://arxiv.org/abs/2210.08404)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bkY9mOyUaDA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
 
 ## Planning
 This is a cool one. It shows that ASP has an answer to the frame problem. It is finite unrolling
@@ -499,6 +506,17 @@ id(@mkid(E),E) :- expr(E).
 
 
 
+```
+
+```clingo
+#script(python)
+import clingo
+def my_add(a,b):
+  return clingo.Number(a.number + b.number)
+
+#end.
+
+test_fact(@my_add(1,2)).
 ```
 
 ```clingo
@@ -1553,6 +1571,49 @@ def meaning(ctx, tm):
 
 
 ```
+
+## Well founded / Coinduction
+Coq Accessibility [chlipala](http://adam.chlipala.net/cpdt/html/GeneralRec.html#:~:text=Well%2DFounded%20Recursion,Coq%20is%20well%2Dfounded%20recursion)
+[coq library for wf](https://coq.inria.fr/library/Coq.Init.Wf.html)
+<https://proofassistants.stackexchange.com/questions/1077/well-foundedness-classical-equivalence-of-no-infinite-descent-and-accessibility>
+
+Accessible seems like a bad name to me. "acc(x) = Terminating at x"
+Wait. Does acc stand for ascending chain condition?
+
+```clingo
+r(1,2;2,3;3,4).
+r(2,1). 
+node(X;Y) :- r(X,Y).
+acc(X) :- node(X), acc(Y) : r(X,Y).
+wf :-  acc(X) : node(X).
+```
+
+
+
+Encode well-foundedness. Put choice in. Solve for termination order?
+
+Coinductive. Greatest Fixed point. Least fixed point of negative works.
+Take each coinductive rule and if any of hypotheses are _known_ false, it isn't true.
+
+Has inifintie path is coinductive property
+
+See coinduction in datalog notes
+
+
+```clingo
+-inf_trace(X) :- vert(X), -inf_trace(Y) : edge(X,Y).
+inf_trace(X) :- vert(X), not -inf_trace(X). %If it's not disprovable, it's true.
+```
+
+Nontermination = presence of loop in finite case. In a sense finite makes us classical.
+
+```clingo
+
+path(X,Z) :- edge(X,Y), path(Y,Z).
+loop(X) :- path(X,X). % loop = inf_trace
+
+```
+
 
 ## SMT Theories
 How many SMT theories (euf, arrays, sets) are encodable?

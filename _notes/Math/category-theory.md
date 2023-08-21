@@ -271,3 +271,6 @@ Processes are a timey database.
 [Category Theory Illustrated](https://github.com/abuseofnotation/category-theory-illustrated)
 
 [sheaf theory through examples](https://mitpress.mit.edu/9780262542159/sheaf-theory-through-examples/)
+
+
+[chyp](https://github.com/akissinger/chyp)interactive string diagram prover. Also graph rewrite system... hmmmmmm.

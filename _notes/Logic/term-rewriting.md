@@ -18,12 +18,14 @@ title: Term Rewriting
 - [String rewriting systems](#string-rewriting-systems)
 - [Graph Rewriting](#graph-rewriting)
   - [Term Indexing](#term-indexing)
+  - [Order Sorted Logic](#order-sorted-logic)
 - [Systems](#systems)
   - [Maude](#maude)
     - [Unification](#unification)
     - [Equation Search](#equation-search)
     - [Built ins](#built-ins)
     - [Category](#category)
+  - [Eqlog](#eqlog)
   - [K](#k)
 - [Other Systems](#other-systems)
 - [2020 Term rewritng notes](#2020-term-rewritng-notes)
@@ -293,6 +295,12 @@ matrix interpretations
 POLO
 
 # Termination
+Nontermination checking
+Online termination checking
+
+https://link.springer.com/chapter/10.1007/978-3-642-32347-8_17 stopwhen you're almost full.
+
+
 https://github.com/TermCOMP/TPDB termination problem database
 
 https://termination-portal.org/wiki/Termination_Portal
@@ -846,6 +854,7 @@ chr_show_store(true).
 ## Term Indexing
 See automated theorem proving.
 
+## Order Sorted Logic
 # Systems
 
 ## Maude
@@ -1240,7 +1249,10 @@ print(t)
 
 "matching equations" are multipatterns rather than guards
 
-
+## Eqlog
+[CATEGORY-BASED SEMANTICS FOR EQUATIONAL AND CONSTRAINT LOGIC PROGRAMMING](https://www.cs.ox.ac.uk/files/3444/PRG116.pdf)
+Goguen Meseguer
+ 
  
 ## K
 ```bash

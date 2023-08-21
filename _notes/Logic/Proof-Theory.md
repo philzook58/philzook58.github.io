@@ -117,6 +117,20 @@ You are breaking down formula going up the inference rule
 
 
 # Ordinal Analysis
+Transfinite induction https://en.wikipedia.org/wiki/Transfinite_induction
+Ordinals 
+Order theoretic strength
+[The Art of Measuring the Strength of Theories](https://www.ams.org/notices/202307/rnoti-p1071.pdf)
+[The Curious Dependence of Set Theory on Order Theory ](https://golem.ph.utexas.edu/category/2012/10/the_curious_dependence_of_set.html)
+
+https://en.wikipedia.org/wiki/Ordinal_analysis
+
+Well Ordering
+
+Well ordering principle
+Zorn's Lemma https://en.wikipedia.org/wiki/Zorn%27s_lemma
+Axiom of Choice
+Axioms of dependent choice
 
 # Things
 ## Peano Arithmetic
@@ -147,6 +161,11 @@ Weaker than Peano Airthemtic, Induction schema removed. Still a complex thing
 ## Primitive Recursive Arithmetic
 <https://en.wikipedia.org/wiki/Primitive_recursive_arithmetic>
 ## Set Theory
+Schroder-Bernstein Theorem
+
+
+Forcing
+
 ### ZFC
 <https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory>
 [Richard Borcherd lectures on zfc](https://www.youtube.com/playlist?list=PL8yHsr3EFj52EKVgPi-p50fRP2_SbG2oi)
@@ -180,8 +199,7 @@ Reduction of one logic to another.
 
 
 ### Uhhhh
-Transfinite induction
-Ordinals
+
 
 <https://github.com/neel-krishnaswami/proof-checker> simple proof checker
 

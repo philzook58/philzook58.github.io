@@ -92,6 +92,14 @@ They also have "hand" mode which returns steps
 
 https://groups.google.com/g/sci.math.symbolic
 
+
+[	Does there exist a complete implementation of the Risch algorithm? ](https://news.ycombinator.com/item?id=37124059)
+[Bronstein Book](https://link.springer.com/book/10.1007/b138171)
+
+
+
+Schanuel Conjecture
+
 # Maxima
 
 ```bash

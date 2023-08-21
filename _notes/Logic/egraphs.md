@@ -441,12 +441,46 @@ print(add)
 
 # Lambda Encoding
 Might work:
-- Combinators. SKI or categorical. Many projects are doing something like this. Relational Algebra or matrix algebra are the same thing.
+- Combinators. SKI or categorical. Many projects are doing something like this. Relational Algebra or matrix algebra are the same thing. Combinators require many administrative rewrites
 - Succ lifting. [pavel](https://pavpanchekha.com/blog/egg-bindings.html) [oleg](https://okmij.org/ftp/tagless-final/ski.pdf). Do de bruijn but let Succ float out of Var. Let's you do de bruijn index lifting as local rewrite rule. Succ has interpretation as a higher order function.
+- Lambda lifting.
+- Defunctionalization. 
+- Closure conversion.
+
 
 Arguable:
 - Co de-bruijn. Hash Cons modulo alpha. Mcbride's Do Be doo be doo. Doesn't seem to work. Correlated rewrites required
 - Graph compilation. Optimal graph reduction
+
+
+Why are de bruijn indices insufficient? Or are they?
+
+I was asked by a coworker yesterday to elaborate why I thought lambdas were an unsolved problem in egraphs.
+
+I'm semi convinced that there will never be a completely satsifactory answer to this an that it is probaby a bad question in some way.
+
+Nevertheless, it is desirable to apply egraphs to domain that contain lambdas
+- functional programming languages
+- theorem provers
+
+A notion of binding that doesn't persay require entire lambdas
+- integrals
+- sums
+- einstein notation
+- forall, exists quantifiers
+- let binding
+
+
+Alpha v Beta
+substitution
+()
+
+
+Even hash consing is conceptually bad for binding. Hash consing identifies all terms regardless of context. Is the 0 in \x. 0 the same as 0 not inside a binding context? Maaaaybe.
+
+Capture avoiding substition.
+Problematic examples
+
 
 
 # Contextual EGraphs

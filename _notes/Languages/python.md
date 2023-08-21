@@ -2,6 +2,26 @@
 layout: post
 title: Python
 ---
+- [Venv](#venv)
+- [Django](#django)
+- [CFFI](#cffi)
+- [Generators](#generators)
+- [Collections](#collections)
+- [Protocols](#protocols)
+- [Abstract Base classes](#abstract-base-classes)
+- [Modules](#modules)
+- [python internals](#python-internals)
+- [Venv](#venv-1)
+- [Async](#async)
+- [Type Hints](#type-hints)
+- [stdlib](#stdlib)
+- [C interop](#c-interop)
+- [Pypy](#pypy)
+- [Hashcons](#hashcons)
+- [Holpy](#holpy)
+- [Lark](#lark)
+- [libraries](#libraries)
+
 
 # Venv
 Venv makes an isolated python environment
@@ -97,7 +117,20 @@ Metaclasses
 sqlite
 
 
-### python internals
+# python internals
+[python runtime services](https://docs.python.org/3/library/python.html)
+The `sys` module
+
+```python
+import sys
+print(sys.displayhook("foo"))
+print(sys.modules)
+print(sys.getsizeof(3))
+print(sys.getsizeof("fooo"))
+
+```
+
+
 https://devguide.python.org/
 https://github.com/python/cpython
 https://devguide.python.org/exploring/

@@ -32,6 +32,42 @@ Related to https://en.wikipedia.org/wiki/Edge_cover where each vertex must touch
 Algebraic Graph theory
 Graph expanders
 
+## Hamiltonian cycles
+<https://en.wikipedia.org/wiki/Hamiltonian_path>
+Visit each vertex once.
+Travellign salesman problem is weighted relative
+
+## Isomorphism
+nauty
+graph canonicalization. Find a way to sort vertices? If they all had unique attributes, sweet.
+Then number of neighbors, other little facts. properties of neigbors
+Could use properties of nehigbors
+Could use labelling of neighbors too. That becomes a self consistent search. However, if you already know certain orderings (based on properties). Or you could branch
+I'm not sure I'm understanding this the same way nauty does.
+
+
+Graph hashing
+
+disjoint set partition data structure?
+
+## subgraph isomorphgism
+https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem
+
+## Graph rewriting
+See term rewriting
+
+double pushout.
+A pattern L.
+the "kept" bits K
+the right hand side R, glued in
+
+My temptation would be to: find a pattern L (using datalog/sql probably), store result in an env dict, blow it all away, paste in R filling in from the env.
+
+The "env" can be represented as a graph homomorphism though from the pattern (a dictionary mapping vertices to vertices and edges to edges).
+
+
+
+
 ## Misc
 https://en.wikipedia.org/wiki/Graph_polynomial
 Tutte polynomial
@@ -41,6 +77,9 @@ bipartite graphs
 
 # Knots
 https://en.wikipedia.org/wiki/Knot_polynomial
+
+
+Rational Tangles - infinite series
 
 # Matroids
 See also abstract algebra

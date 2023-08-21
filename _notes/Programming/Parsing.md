@@ -172,6 +172,22 @@ souffle tree-sitter
 https://austinhenley.com/blog/parsingriscv.html
 Kind of a fun macro assembler design. Instead of using a built in macro language or a we can add new parsing forms to the language.
 
+```bash
+echo "
+int fact(int x){
+   int acc = 1;
+   for (int i = 1; i < x; i++){
+      acc *= i;
+   }
+   return acc;
+}
+" > /tmp/fact.c
+gcc /tmp/fact.c -c -o /tmp/fact 
+gcc /tmp/fact.c -c -S -o /tmp/fact.s 
+objdump -S /tmp/fact
+cat /tmp/fact.s
+```
+
 ```python
 from lark import Lark
 
@@ -180,18 +196,22 @@ grammar = '''
 
 prog : NL* (com NL+)*
 com : label | directive | insn
-label : NAME ":"
-directive : "." NAME
+ident : "@" NAME | "." NAME | NAME
+label : ident ":"
+directive : "." NAME param? ("," param)*
+param: STRING | NAME | NUMBER | SIGNED_NUMBER | "@" NAME
 insn : NAME (operand ("," operand)*)?
-operand : reg | NAME
-reg : "r" INT 
+
+operand : reg | ident | SIGNED_NUMBER "(" reg ")" | "$" INT
+reg : "r" INT | "%" NAME
 
 
 
 %import common.CNAME -> NAME
 %import common.INT -> INT
 %import common.ESCAPED_STRING   -> STRING
-%import common.NUMBER
+%import common.NUMBER -> NUMBER
+%import common.SIGNED_NUMBER -> SIGNED_NUMBER
 %import common.NEWLINE -> NL
 %import common.WS_INLINE
 %import common.SH_COMMENT
@@ -203,7 +223,16 @@ parser = Lark(grammar, start="prog")
 print(parser.parse(''' foo:
 mov r1,r2
 ''').pretty())
+
+with open("/tmp/fact.s") as f:
+   print(parser.parse(f.read()))
 ```
+
+
+
+
+
+
 ### Hack
 
 ```python

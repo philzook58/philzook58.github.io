@@ -307,6 +307,31 @@ with tempfile.NamedTemporaryFile(suffix=".c") as fp:
 
 ```
 
+```bash
+echo "
+int fact(int x){
+   int acc = 1;
+   for (int i = 1; i < x; i++){
+      acc *= i;
+   }
+   return acc;
+}
+" > /tmp/fact.c
+gcc /tmp/fact.c -c -o /tmp/fact 
+```
+```python
+import angr
+p = angr.Project('/tmp/fact')
+cfg = p.analyses.CFGFast()
+print("This is the graph:", cfg.graph)
+entry_func = cfg.kb.functions[p.entry]
+print(entry_func.name)
+print(list(entry_func.blocks))
+
+```
+
+
+
 ## Patching
 https://github.com/GJDuck/e9patch
 

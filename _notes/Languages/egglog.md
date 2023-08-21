@@ -1,10 +1,39 @@
 
+- [Welcome to Egglog!](#welcome-to-egglog)
 - [Examples](#examples)
+  - [Shortest Path](#shortest-path)
+  - [List Programming](#list-programming)
+  - [Arithmetic Simplification](#arithmetic-simplification)
+  - [Negation and Wellfounded Semantics](#negation-and-wellfounded-semantics)
   - [Geometry](#geometry)
-  - [Egglog0 posts](#egglog0-posts)
-  - [Souffle Posts](#souffle-posts)
+  - [Delta equality](#delta-equality)
+  - [Box / Generic DataStructures](#box--generic-datastructures)
+  - [Disequality](#disequality)
+  - [Inequality](#inequality)
+  - [Choice Domains](#choice-domains)
   - [Refining equalities](#refining-equalities)
   - [Integration](#integration)
+  - [BitVectors](#bitvectors)
+  - [Peano](#peano)
+  - [BDDs](#bdds)
+  - [Homotopy](#homotopy)
+  - [Kleene Algebra](#kleene-algebra)
+  - [Matrices](#matrices)
+  - [Category](#category)
+  - [Typechecking](#typechecking)
+  - [Intervals](#intervals)
+  - [Context](#context)
+  - [Lambdas](#lambdas)
+  - [Let](#let)
+  - [Polynomials](#polynomials)
+  - [Arrays/Maps](#arraysmaps)
+  - [Resolution](#resolution)
+  - [SMTLIB](#smtlib)
+  - [Partial Application](#partial-application)
+  - [RVSDG](#rvsdg)
+  - [Algebra of Programming](#algebra-of-programming)
+- [Egglog0 posts](#egglog0-posts)
+- [Souffle Posts](#souffle-posts)
   - [Merging Database](#merging-database)
   - [Extraction as datalog](#extraction-as-datalog)
 - [Misc](#misc)
@@ -12,26 +41,127 @@
   - [Propagators](#propagators)
   - [AC](#ac)
     - [slog](#slog)
-- [Partial Application](#partial-application)
-  - [RVSDG](#rvsdg)
+- [GJ scribbles](#gj-scribbles)
+  - [Bottom Up](#bottom-up)
+- [Termination](#termination)
+- [Rulesets](#rulesets)
+- [Ideas](#ideas)
 
+
+# Welcome to Egglog!
+
+Egglog is a term rewriting and analysis engine with a special eye towards applications involving program optimization.
+It is backed by a high performance Rust database backend and uses E-graph techniques to retain a compressed representation of equivalent terms.
+
+- If you like SMT solvers, Egglog is akin to a more programmable and predictable quantifier instantiation engine. It is an SMT solver without the SAT.
+- If you like datalog, Egglog is a datalog with existentials / functions symbols, lattices, and a very special notion of equality backed by a union find. This union find behaves differently than the special equivalence relation representation in souffle.
+- If you like pure functional programming, egglog is a functional programming system where everything is memoized by default and which allows a larger class of pattern matching rules than just matching on constructors
+
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/N2RDQGRBrSY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 # Examples
-```eggsmol
-(datatype Foo (Bar))
+## Shortest Path
 
+The canonical datalog program is path connectivity.
+
+```eggsmol
+;re
+(relation edge (i64 i64))
+(relation path (i64 i64))
+(rule ((edge x y) (path y z)) 
+      ((path x z)))
+(rule ((edge x y))
+      ((path x y)))
+(edge 1 2)
+(edge 2 3)
+
+(run 10)
+(print path)
 ```
+
+There are a couple of twists we can add to this.
+
+
+
+```eggsmol
+;re
+(function edge (i64 i64) i64 :merge (min old new))
+(function path (i64 i64) i64 :merge (min old new))
+(rule ((edge x y) (path y z)) 
+      ((path x z)))
+(rule  ((= c (edge x y)))
+       ((set (path x y) c)))
+(set (edge 1 2) 3)
+(set (edge 2 3) 4)
+
+(run 10)
+(print path)
+```
+
+A second interesting twist is 
+
+
+## List Programming
+Some simple functional programming style manipulation of lists.
+We wrap the primiive `i64` type in `Int` in order to get equational rewriting behavior. This is a common pattern for primitives. In order for a function to "return" it needs some way of tracking where it returns to. In an ordinary lnaguage, this information is held on the stack. There is no stack in egglog, so instead one registers a new "equivalence id" that is eventually unioned to the result.
+
+```eggsmol
+;re
+(datatype Int (Lit i64))
+(datatype List (Cons i64 List) (Nil))
+
+(function append (List List) List)
+(rewrite (append (Nil) l) l)
+(rewrite (append (Cons x xs) l) (Cons x (append xs l)))
+
+(function add (Int Int) Int)
+(rewrite (add (Lit x) (Lit y)) (Lit (+ x y)))
+
+(function sum (List) Int)
+(rewrite (sum (Nil)) (Lit 0))
+(rewrite (sum (Cons x xs)) (add (Lit x) (sum xs)))
+
+
+(let t (append (Cons 3 (Nil)) (Cons 4 (Nil))))
+(run 10)
+(extract t)
+
+(let x (sum t))
+(run 10)
+(extract x)
+```
+
+## Arithmetic Simplification
+
+
+
+
+## Negation and Wellfounded Semantics
+
+
+
+
+
 
 ## Geometry
 
 ```eggsmol
+;re
 (datatype Point)
+(datatype Mag)
+
+
+(function dist (Point Point) Mag)
+(rewrite (dist x y) (dist y x))
+
 (datatype Seg)
 (function seg (Point Point) Seg)
 ; hmm. Questionable. Should I define segments to be commutative?
-(rewrite (seg x y) (seg y x))
+; (rewrite (seg x y) (seg y x))
 
-;(function len (Seg) ?)
+(function len (Seg) Mag)
+(rewrite (len (seg x y)) (dist x y))
 
 (datatype Line)
 (function extend (Seg) Line)
@@ -44,31 +174,214 @@
 (datatype ParaClass)
 (function para (Line) ParaClass)
 
+(relation not-para (ParaClass ParaClass))
+(rule ((not-para b a)) ((not-para a b)))
 
-(relation perp (Line Line))
+
+(relation perp (ParaClass ParaClass))
 (rule ((perp a b)) ((perp b a)))
-(rule ((perp a b) (perp b c)) ((set (para a) (para c)))
-(rule ((perp a b) (= (para c) (para b)) ((perp a c)))
+(rule ((perp a b) (perp b c)) ((set (para a) (para c))))
+(rule ((perp a b) (= (para c) (para b)) ((perp a c))))
 
+(rule ((perp a b)) ((not-para a b)))
 (datatype Angle)
 (function angle (Line Line) Angle)
 
 (datatype Circle)
 (function center-circ (Point Point) Circle)
 
+(rewrite (center-circ p x) (center-circ p y)
+  :when (= (dist p x) (dist p y))
+)
 
 ; I wanted to deempasize coordinates, but we can construct points using coordinates if you like.
 (function coord (Rational Rational) Point)
 
+(datatype Triangle (Triangle Point Point Point) )
+(rewrite (Triangle a b c) (Triangle b c a))
+(rewrite (Triangle a b c) (Triangle b a c))
+
+(relation equilateral (Triangle))
+; definition
+(rule ((= d (dist a b)) (= d (dist b c)) (= d (dist c a)))
+      (equilateral (Triangle a b c)))
+(rule ((equilateral (Triangle a b c)))
+      ((define d (dist a b) 
+      (union d (dist b c))
+       (union d (dist c a)))
+      ))
+
+(relation inside (Point Seg)) ; in the interior of the segment. Strict Betweenness. Important for 
+
+(push)
+; Euclid prop I
+(function X () Point)
+(function Y () Point)
+
+(define c1 (Circle X Y))
+(define c2 (Circle Y X))
+(function Z () Point)
+
+; Z is on both circles
+(union c1 (Circle X Z))
+(union c2 (Circle Y Z))
+
+(define t (Triangle (X) (Y) (Z)))
+
+(run 10)
+(check (equilateral t))
+(pop)
+
 ```
 
 
+## Delta equality
+https://alfa.di.uminho.pt/~nevrenato/probprogschool_slides/Prakash.pdf
+Dreal uses delta equality
+Subsumptive character. a =eps b  --> a =eps' b  if  eps <= eps'
+| a - b | <= eps. This is two inequalities, sure.
 
-## Egglog0 posts
-<https://www.philipzucker.com/egglog>
 
-## Souffle Posts
 
+Order O(epsilon) classes are actual equality classes. njection functions can treat that
+Congruence now involes the derivatives?
+x =eps x' -> f(x) =df(eps) f(x')
+
+Tightest eps is shortest path. Floyd Warshall. Bummer.
+Minimum spanning tree as approximation?
+LCA is convenient. Rem's algorithm? 
+
+heursistic:
+union(a,b,l) 
+x = lca(a,b)
+if d(a,x) + d(x,b) < l:
+  if d(a,x) < d(x,b):
+    parent(b) = parent(x)
+    parent(x) = a
+    parent(a) = b
+
+eh seems pretty fishy.
+
+
+
+Axioms of a metric = shortest path
+See for example my encpding of shortest path. symmettry makes it way more natural (quasimetric is assymettric metric. No one ever does this)
+<https://en.wikipedia.org/wiki/Metric_space>
+```bash
+echo "
+;re
+
+;(rewrite (dist x y) (dist y x)) ; symmettric
+;(rewrite (dist x x) 0.0)
+
+(datatype Expr (X) (Y) (Z))
+(function dist (Expr Expr) f64 :merge (min old new))
+
+(rule ((= d (dist x y))) ((set (dist y x) d))) ; symmettric
+(rule ((= d (dist x x))) ((set (dist x x) 0.0))) ; reflexive
+(rule ((= d1 (dist x y)) (= d2 (dist y z))) ((set (dist x z) (+ d1 d2)))) ; trans
+(rule ((= 0.0 (dist x y))) ((union x y))) ; I don't know how this would fire.
+
+(set (dist (X) (Y)) 3.0)
+(set (dist (Y) (Z)) 3.0)
+(set (dist (X) (Z)) 9.0)
+
+(run 10)
+(print dist)
+
+" > /tmp/metric.egg
+egglog /tmp/metric.egg
+
+
+```
+
+Clearly the reading of `(dist x y) = d` is wrong. What I am actually stating logically is `(<= (dist x y) d)`
+
+We don't persay require a lattice. Could just be regulatr partial order + subsumption
+`<=` would get confusing when it is actually `max`.
+
+Monotonic functions have a property similar to congruence.
+Also continuous functions have epsilon delta definitions.
+
+
+
+## Box / Generic DataStructures
+You can strip off the simple types of egglog by making a universal box type. This is not so bad as in other languages because datatypes are not closed.
+Can make universal list functions in this manner
+
+```bash
+echo "
+;re
+(datatype Box)
+(datatype BoxList (Cons Box BoxList) (Nil))
+(function _i64 (i64) Box)
+(function _String (String) Box)
+
+(function append (BoxList BoxList) BoxList)
+(rewrite (append (Nil) l) l)
+(rewrite (append (Cons x xs) l) (Cons x (append xs l)))
+
+" > /tmp/box.egg
+egglog /tmp/box.egg
+
+```
+
+Note that egglog has [open datatypes](https://www.andres-loeh.de/OpenDatatypes.pdf) by default. 
+
+## Disequality
+There is no current proposal for a runtime mechanism for disequality that is much better than a brute force `dif/2` table.
+
+```bash
+echo '
+;re
+(datatype Box)
+(function Cons (Box Box) Box)
+(function boxi64 (i64) Box)
+(function Nil () Box)
+(relation dif (Box Box))
+(rule ((dif a b)) ((dif b a))) ; symmetric
+
+; lift primitive disequality
+(rule ((= a (boxi64 x)) (= b (boxi64 y)) (!= x y))
+      ((dif a b))
+)
+
+; contrapositive injectivity
+(rule ((dif (Cons a xs)) (Cons a ys))
+      ((dif xs ys))
+)
+(rule ((dif (Cons a xs)) (Cons b xs))
+      ((dif a b))
+)
+
+(rule ((= e (Cons x xs))) ; Distict constructors are never equal
+      ((dif e (Nil)))
+)
+(rule ((dif a a)) ((panic "Explode!")))  ; something has gone awry
+
+
+' > /tmp/dif.egg
+egglog /tmp/dif.egg
+
+
+```
+
+## Inequality
+inequalty / partial orders is a very common pattern. What can be done
+
+
+## Choice Domains
+Souffle has a feature called choice-domains which allows something to be set once.
+This is emulatable in egglog using the unusual merge function which just tosses aways any new values
+
+
+```eggsmol
+(function choice-example (i64) i64 :merge old)
+(set (choice-example 3) 4)
+(set (choice-example 3) 5)
+(print choice-example)
+
+```
 
 
 ## Refining equalities
@@ -163,6 +476,621 @@ Egraph starts at syntax and moves progressively towards semantics. You have to h
 Can I do summation? Discrete exterior calculus I guess. Manifestly working in "2d" simplicial space avoids summation swapping problem.
 
 Contour integrals
+
+```bash
+echo "
+;re
+(datatype Expr (Add Expr Expr)
+ (Mul Expr Expr) 
+ (Lit f64)
+  (X) (Y) (R) (Th)
+  (Cos Expr) (Sin Expr)
+  (Neg Expr) (Pow Expr i64) (Sub Expr Expr) ; (Recip Expr)
+  
+)
+; What "are" Expr? Scalar Fields maybe.
+
+(function D (Expr) Expr)
+
+(ruleset simp)
+
+(rewrite (Neg (Neg x)) x :ruleset simp)
+(rewrite (Neg x) (Mul (Lit -1.0) x))
+(rewrite (Sub x y) (Add x (Neg y)))
+
+(rewrite (Pow x 0) (Lit 1.0))
+(rewrite (Pow x 1) x)
+(rewrite (Mul x x) (Pow x 2))
+(rewrite (Pow x n) (Mul x (Pow x (- n 1)))
+  :when ((!= n 0))
+)
+(rewrite  (Mul x (Pow x n)) (Pow x (+ n 1)))
+
+(rewrite (Add x y) (Add y x))
+(birewrite (Add x (Add y z)) (Add (Add x y) z))
+(rewrite (Mul x y) (Mul y x))
+(birewrite (Mul x (Mul y z)) (Mul (Mul x y) z))
+(birewrite (Mul (Add x y) z) (Add (Mul x z) (Mul y z)))
+
+; solving
+; (rule ((= (Add x y) z)) ((set (Sub z y) x)))
+; (rule ((= (Add x y) z)) ((set (Sub z y) x)))
+
+; Differentiation rules
+(birewrite (D (Add x y)) (Add (D x) (D y))) ; linear
+(birewrite (D (Mul x y)) (Add (Mul (D x) y) (Mul x (D y)))) ; product rule
+(birewrite (D (Cos x)) (Neg (Mul (D x) (Sin x))))
+(birewrite (D (Sin x)) (Mul (D x) (Cos x)))
+(rewrite (D (Lit n)) (Lit 0.0))
+(rewrite (D (Neg x)) (Neg (D x))) ; probably derived
+; (rewrite (D (Pow x n)) (Mul (Lit (- n 1) (D x))))
+
+; integration by parts (product rule with different demand)
+(rewrite (Mul u (D v))  
+  (Sub (D (Mul u v))
+        (Mul v (D u))))
+
+
+(union (X) (Mul (R) (Cos (Th))))
+(union (Y) (Mul (R) (Sin (Th))))
+
+; trig
+(rewrite (Add (Mul (Cos x) (Cos x)) (Mul (Sin x) (Sin x))) (Lit 1.0))
+
+
+
+(define t1 (Mul (X) (D (X))))
+(define t2 (Add t1 t1))
+
+; (define t3 (Mul (D x) (Mul (Cos x) (Cos x))))
+
+; If you want to seek a shape, you can hack in. Don't offer sketch based extraction directly yet
+;(relation antideriv (Expr Expr))
+;(rule ((= (D x) t)) (antideriv t x))
+
+
+(run 3)
+;(check (= t2 (D (Mul x x))))
+(extract t2)
+(extract t1)
+" > /tmp/integ.egg
+egglog /tmp/integ.egg
+
+```
+
+```bash
+echo "
+%re
+cnf(add_assoc, axiom,  add(add(X, Y),Z) = add(X,add(Y,Z))).
+cnf(add_comm, axiom, add(X,Y) = add(Y,X)).
+cnf(mul_assoc, axiom,  mul(mul(X, Y),Z) = mul(X,mul(Y,Z))).
+cnf(mul_comm, axiom, mul(X,Y) = mul(Y,X)).
+cnf(add_mul_distr, axiom, mul(add(X,Y),Z) = add(mul(X,Z), mul(Y,Z))).
+cnf()
+" > /tmp/integ.tptp
+vampire /tmp/integ.tptp
+
+```
+
+
+## BitVectors
+https://stackoverflow.com/questions/8273033/use-of-term-rewriting-in-decision-procedures-for-bit-vector-arithmetic
+
+```python
+from z3 import *
+
+x,y,z = BitVecs("x y z", 8)
+
+# it doesn't pretty print assoc so good
+rw2  = [
+    (x + y) + z == x + (y + z)
+]
+
+rw = [
+  x + y == y + x,
+  x * y == y * x,
+  -(-x) == x,
+  x & y == y & x,
+  x | y == y | x,
+  x | (y & z) == (x | y) & (x | z),
+  ~(~x) == x,
+  ~(x | y) == ~x & ~y,
+  ~x | ~y == ~(x & y),
+
+  # x |  == True,
+
+
+]
+
+for rule in rw + rw2:
+  prove(rule)
+
+for rule in rw:
+  print(rule.sexpr().replace("=", "rewrite"))
+
+```
+
+
+```python
+# micro ruler
+from z3 import *
+import itertools
+x,y,z = BitVecs("x y z", 8)
+
+def genexpr():
+  yield from (x,y,z)
+  for i in genexpr():
+    yield from (~i, -i)
+    for j in genexpr():
+      yield from (x + y, x - y)
+
+exprs = {x,y}
+for i in range(3):
+  
+  a = {~ i for i in exprs }
+  b = {- i for i in exprs }
+  c = {i + j for i in exprs for j in exprs }
+  d = {i - j for i in exprs for j in exprs }
+  exprs.update(a)
+  exprs.update(b)
+  exprs.update(c)
+  exprs.update(d)
+
+
+#exprs = itertools.islice(genexpr(), 10)
+"""
+for e1 in range(10):
+  for e2 in 
+  s = Solver()
+  eq = e1 == e2
+  s.add(Not(eq))
+  if s.check() == unsat:
+    print(eq.sexpr().replace("=", "rewrite"))
+"""
+print(exprs)
+```
+
+
+
+```bash
+echo "
+;re
+;(datatype Size (Lit i64))
+(datatype BV (Zero i64) (One i64) (Lit i64 i64)
+  (bvnot BV) (bvand BV BV) (bvor BV BV) ; bitwise
+  (bvadd BV BV) (bvneg BV) (bvmul BV BV) ; arith
+  ;predicates
+  ;
+  (concat BV BV)
+)
+(ruleset bitblast)
+(ruleset simp)
+
+(rewrite (bvadd (bvadd x y) z) (bvadd z (bvadd y z)) :ruleset simp)
+
+(function size (BV) i64)
+(rewrite (Zero i) i)
+(rewrite (One i) i)
+
+(rewrite (bvadd x y) (bvadd y x))
+(rewrite (bvmul x y) (bvmul y x))
+(rewrite (bvneg (bvneg x)) x)
+(rewrite (bvand x y) (bvand y x))
+(rewrite (bvor x y) (bvor y x))
+(rewrite (bvor x (bvand y z)) (bvand (bvor x y) (bvor x z)))
+(rewrite (bvnot (bvnot x)) x)
+(rewrite (bvnot (bvor x y)) (bvand (bvnot x) (bvnot y)))
+(rewrite (bvor (bvnot x) (bvnot y)) (bvnot (bvand x y)))
+
+
+
+" > /tmp/bitvector.egg
+egglog /tmp/bitvector.egg
+
+
+```
+
+```python
+# ingest smt using z3 parser, hack it to get in egglog form.
+from z3 import *
+import egglog
+
+smtstring ="(define x )"
+
+
+if __name__ == "main":
+
+```
+
+```python
+from io import StringIO
+from pysmt.smtlib.parser import SmtLibParser
+
+# To make the example self contained, we store the example SMT-LIB
+# script in a string.
+DEMO_SMTLIB=\
+"""
+(set-logic QF_LIA)
+(declare-fun p () Int)
+(declare-fun q () Int)
+(declare-fun x () Bool)
+(declare-fun y () Bool)
+(define-fun .def_1 () Bool (! (and x y) :cost 1))
+(assert (=> x (> p q)))
+(check-sat)
+(push)
+(assert (=> y (> q p)))
+(check-sat)
+(assert .def_1)
+(check-sat)
+(pop)
+(check-sat)
+"""
+
+# We read the SMT-LIB Script by creating a Parser.
+# From here we can get the SMT-LIB script.
+parser = SmtLibParser()
+
+# The method SmtLibParser.get_script takes a buffer in input. We use
+# StringIO to simulate an open file.
+# See SmtLibParser.get_script_fname() if to pass the path of a file.
+script = parser.get_script(StringIO(DEMO_SMTLIB))
+```
+
+Use ruler rules?
+
+```python
+import urllib.request, json 
+with urllib.request.urlopen("https://nightly.cs.washington.edu/reports/ruler/1691466530%3Anightly%3Amain%3Aeb702fc89b/data/output.js") as url:
+    data = json.loads(url.read().decode().replace("var data =", ""))
+    for ex in data:
+      if "rules" in ex and "spec_name" in ex:
+        pass
+        #print(ex["spec_name"])
+        #print(ex["rules"])
+        #print("\n".join(["(rewrite " + rule.replace(" ==>", "") + ")" for rule in ex["rules"]]))
+      if "direct_gen" in ex:
+        print(ex["domain"])
+        ex = ex["direct_gen"]
+        print("\n".join(["(rewrite " + rule.replace(" ==>", "") + ")" for rule in ex["rules"]]))
+
+
+```
+
+## Peano
+```eggsmol
+;re
+(datatype Nat (Z) (S Nat))
+(function plus (Nat Nat) Nat)
+(birewrite (plus (Z) m) m)
+(birewrite (plus (S n) m) (S (plus n m)))
+
+;(relation lte (Nat Nat))
+
+(push)
+(function X () Nat)
+(function Y () Nat)
+
+(define t1 (plus (X) (Y)))
+(define t2 (plus (Y) (X)))
+
+(push)
+; case x = zero
+(union (Z) (X))
+(run 10)
+(check (= t1 t2))
+(pop)
+
+; case X = SUCC(A), induction hypothetsis plus(A,Y) = plus(Y,A)
+(function (A) Nat)
+(union (S (A)) (X))
+(union (plus (A) (Y)) (plus (Y) (A)))
+(run 10)
+(check (= t1 t2))
+(pop)
+
+```
+
+
+Binary nats
+```eggsmol
+(datatype Even (Z) (SO Odd) (DE Even) (DE Odd))
+(datatype Odd (SE Even))
+```
+
+```
+(datatype Rational1 (Ratio Nat Nat))
+
+(datatype Real (Rat Rational) (sin Real) (cos Real) (plus Real Real) (mul Real Real))
+
+```
+
+
+## BDDs
+
+## Homotopy
+
+## Kleene Algebra
+
+## Matrices
+## Category
+## Typechecking
+## Intervals
+[Interval Constraint Propagation](https://en.wikipedia.org/wiki/Interval_propagation)
+## Context
+Sam's paper. Assume nodes.
+## Lambdas
+## Let
+`let` is a reified notion of sharing or subsitutions. There is a calculus of pushing lets through. `let` could be written as `subst`. They are very related notions.
+Application of a lambdas converts it to a let.
+
+
+
+https://github.com/remysucre/triangles/blob/main/src/main.rs
+## Polynomials
+
+## Arrays/Maps
+One of the most useful SMT theories is that of arrays. Arrays can equally be called the theory of total maps.
+
+
+
+```eggsmol
+(datatype Int (Lit i64))
+(datatype Array (Empty Int))
+
+
+```
+
+
+Observation Tries - do a trie set/map based on observations.
+
+
+
+## Resolution
+https://github.com/inpefess/tptp-lark-parser/tree/master
+https://github.com/AndrzejKucik/tptp_python_parser
+
+```python
+from tptp_lark_parser import TPTPParser
+from tptp_lark_parser.grammar import Variable, Function, Predicate
+tptp_parser = TPTPParser()
+parsed_text = tptp_parser.parse("""
+cnf(add_assoc, axiom,  add(add(X, Y),Z) = add(X,add(Y,Z))).
+cnf(add_comm, axiom, add(X,Y) = add(Y,X)).
+cnf(assoc, axiom,  times(times(X, Y),Z) = times(X,times(Y,Z))).
+%cnf(comm, axiom, mul(X,Y) = mul(Y,X)).
+%cnf(add_mul_distr, axiom, mul(add(X,Y),Z) = add(mul(X,Z), mul(Y,Z))).""")
+clause_literals = parsed_text[0].literals
+print(parsed_text)
+print(clause_literals[0].atom.index)
+#print(dir(tptp_parser))
+#print(dir(tptp_parser.cnf_parser))
+#print(tptp_parser.cnf_parser.token_map)
+#print(tptp_parser.cnf_parser.token_map.keys())
+
+fun_map = {v : k for k,v in tptp_parser.cnf_parser.token_map["functions"].items()}
+pred_map = {v : k for k,v in tptp_parser.cnf_parser.token_map["predicates"].items()}
+var_map = {v : k for k,v in tptp_parser.cnf_parser.token_map["variables"].items()}
+print(pred_map[clause_literals[0].atom.index])
+
+def format(f):
+  if isinstance(f,Variable):
+
+    return var_map[f.index]
+  if isinstance(f,Function):
+    name = fun_map[f.index]  
+    args = " ".join(map(format, f.arguments))
+    return f"({name} {args})"
+  elif isinstance(f,Predicate):
+    name = pred_map[f.index]
+    if name == "=":
+      name = "birewrite"
+    args = " ".join(map(format, f.arguments))
+    return f"({name} {args})"
+  else:
+    assert False
+
+for clause in parsed_text:
+  assert(len(clause.literals) == 1)
+  print(format(clause.literals[0].atom))
+
+
+import glob
+for filename in glob.glob("/home/philip/Downloads/TPTP-v8.2.0/Axioms/*.ax"):
+  print(filename)
+  with open(filename) as f:
+    tptp = tptp_parser.parse(f.read())
+    print(tptp)
+
+
+
+```
+
+Do Sets "just work" now?
+
+```
+(relation elem ((Set Term) Term))
+
+```
+
+## SMTLIB
+```python
+import egglog
+from z3 import *
+
+x,y,z = Ints("x y z")
+
+e = x + y + z
+
+def format(e):
+  c = map(format, e.children())
+
+
+
+```
+
+
+## Partial Application
+`call` is super useful
+The applicative encoding
+We can do it manually to see how useful it is
+Lambda lifting for binders
+
+Monads / algerbaic effects
+```egglog
+
+(function cont1/0)
+(define prog
+  (set_ "x" 1 cont1/0)
+)
+
+(function cont1/1)
+(rewrite (apply cont1/0 x) (cont1/1 x))
+(rewrite (cont1 w)
+
+)
+
+; the obvious thing
+; what is the issue if any?
+(define prog
+(seq 
+  (set "x" 1)
+  (set "y" 2)
+))
+
+; semantics of set is state -> state function
+; seq is composition. Fine.
+; var "x" is state -> int
+; 
+
+
+```
+
+## RVSDG
+SSA can be converted to a purely functional program <https://www.cs.princeton.edu/~appel/papers/ssafun.pdf>
+
+The recipe is:
+- make a function defintion for each block with the block's name
+- Each phi node actually corresponds to a function call at the end of the incoming block. These function calls carry the variables that need to go into the function body. The outputs of the phi nodes are the arguments of the current block-function
+
+```
+fact:
+
+loop:
+ x <- x + 1 
+end:
+
+```
+
+```ocaml
+let fact x = 
+  let rec loop = 
+  and 
+
+```
+
+
+
+We want as much to be dataflow as possible. That is where egraph shines.
+
+An interstig design angle is to disallow varable capture. This is what sharpe's optir is doing. 
+This is also what lambda-lifting does. Lambda lifting turns capture into threading extra parameters. This requires adjuestment of call sites of functions, so if you don't know what function you're calling, it doesn't work?
+
+Now "de bruijn" indces aren't expressing traversing binding sites, it is just the variable argument number.
+
+
+
+[Supercombinators](https://en.wikipedia.org/wiki/Supercombinator). SKI combinators are sufficient to express lambda calculus. But then you are doing a ton of equational manipulations. Doing a bunch of combinator reductions or manipulations for basically and often doesn't match the efficient thing for a target platform.
+The supercombinator idea is to
+
+Egraphs are essentially first order. Compiling programs to a first order form is analagous in itself to first ordering lambda expressions, or compiling to assembly. Egraphs are almost a machine.
+
+
+ 
+
+Super blocks
+https://www.cs.princeton.edu/courses/archive/spr04/cos598C/lectures/05-Superblocks.pdf
+
+
+Is this even interesting? C doesn't really have a notion of variable capture in function calls. But mutation itself is a form of let capture
+Allow multi-arity. Disallow
+Everything must be 
+
+
+
+```
+(datatype 1->1)
+(datatype 2->1)
+(datatype 2->2)
+
+(datatype Func)
+(datatype Expr)
+(datatype Expr* (Cons Expr Expr*) (Nil))
+
+(datatype Tup1)
+(datatype Tup2 (Pair Expr Expr))
+
+
+(function func-1-inputs-1-outputs (Expr) RVSDG)
+(function func-1-inputs-2-outputs (Expr Expr) RVSDG)
+(function func-2 (Expr Expr) RVSDG)
+(function func (Expr*) Func)
+(function call* (Func Expr*) Expr*) ; multiple input ultiple output
+(function call1)
+(function call2 (Func Expr Expr) Expr*)
+(rewrite (call2 f e1 e2) (call f (Cons e1 (Cons e2 (Nil)))))
+;(function call (Func Env) Expr)
+
+(function get (i64) Expr)
+
+(define neg (func-1-inputs-1-outputs (* -1 get-0)))
+; specializing call to neg to get it in one shot.
+(rewrite (call neg (Cons e (Nil))) (* -1 e))
+
+(func-2-inputs-1-outputs (+ get-0 (get-0 (call ?neg get-1))))
+
+
+(function call1 (RVSDG Expr) Expr)
+(function subst1 (Expr Expr) Expr)
+
+(rewrite (call1 (func-1-input1-1-output1 e) e1) (subst1 e e1))
+(rewrite (subst1 (* a b) e) (* (subst1 a e) (subst1 b e)))
+(rewrite (subst1 (get 0) e)) e)
+(rewrite (subst1))
+(rewrite (subst (call1 f x) e) (call1 f (subst1 x e))) ; we don't substitue into the function. Only explicit capture allowed
+
+; hmm   maybe not recursing into the definition is what makes this different
+
+; no capture is allowed. Anything body needs is explicitly passed (lambda lifting)
+; But in exchance we have multi-arity as a primitive.
+; slash we lift everything to work over lists? Whch is a curious form of env.
+; The syntax of the language let's us restrict the context.
+
+(function call2 (RVSDG Expr Expr) Expr)
+
+
+(rewrite (= f  ... (call f)) (loop ))
+```
+
+
+## Algebra of Programming
+I feel as though RVSDG are a first order functional language using supercombinators
+
+
+# Egglog0 posts
+<https://www.philipzucker.com/egglog0>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dbgZJyw3hnk?start=2725" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+Github repo: <https://github.com/philzook58/egglog0>
+Read more here: 
+- [Talk abstract](https://github.com/philzook58/egglog0-talk/blob/main/out.pdf)
+- <https://www.philipzucker.com/egglog-checkpoint/> - Early version of egglog, motivations.
+- <https://www.philipzucker.com/egglog2-monic/> - A simple category theory theorem about pullbacks.
+- <https://www.philipzucker.com/egglog-3/> - Arithmetic, SKI combinator, datalog, lists examples
+
+
+# Souffle Posts
 
 
 
@@ -957,102 +1885,181 @@ JOIN foo, a on a.rowid = foo.
 Meh. Kind of. 
 
 
-# Partial Application
-`call` is super useful
-The applicative encoding
-We can do it manually to see how useful it is
-Lambda lifting for binders
-
-Monads / algerbaic effects
-```egglog
-
-(function cont1/0)
-(define prog
-  (set_ "x" 1 cont1/0)
-)
-
-(function cont1/1)
-(rewrite (apply cont1/0 x) (cont1/1 x))
-(rewrite (cont1 w)
-
-)
-
-; the obvious thing
-; what is the issue if any?
-(define prog
-(seq 
-  (set "x" 1)
-  (set "y" 2)
-))
-
-; semantics of set is state -> state function
-; seq is composition. Fine.
-; var "x" is state -> int
-; 
 
 
-```
 
-## RVSDG
-We want as much to be dataflow as possible. That is where egraph shines
 
-An interstig design angle is to disallow varable capture.
-Is this even interesting? C doesn't really have a notion of variable capture in function calls. But mutation itself is a form of let capture
-Allow multi-arity. Disallow
-Everything must be 
+
+
+# GJ scribbles
+
+The incoming variables take signal values 
+
+```python
+
+_edge = set()
+def edge(x,y):
+  if x != None:
+    return { for (x1,y1) in _edge if x == x1 and  }
 
 
 
 ```
-(datatype 1->1)
-(datatype 2->1)
-(datatype 2->2)
 
-(datatype Func)
-(datatype Expr)
-(datatype Expr* (Cons Expr Expr*) (Nil))
+```ocaml
+type req = Output | Ignore | Restrict of value
 
-(datatype Tup1)
-(datatype Tup2 (Pair Expr Expr))
+type = (value * () -> ) list
+
+let edge = function
+  | Output, Output
 
 
-(function func-1-inputs-1-outputs (Expr) RVSDG)
-(function func-1-inputs-2-outputs (Expr Expr) RVSDG)
-(function func-2 (Expr Expr) RVSDG)
-(function func (Expr*) Func)
-(function call* (Func Expr*) Expr*) ; multiple input ultiple output
-(function call1)
-(function call2 (Func Expr Expr) Expr*)
-(rewrite (call2 f e1 e2) (call f (Cons e1 (Cons e2 (Nil)))))
-;(function call (Func Env) Expr)
-
-(function get (i64) Expr)
-
-(define neg (func-1-inputs-1-outputs (* -1 get-0)))
-; specializing call to neg to get it in one shot.
-(rewrite (call neg (Cons e (Nil))) (* -1 e))
-
-(func-2-inputs-1-outputs (+ get-0 (get-0 (call ?neg get-1))))
-
-
-(function call1 (RVSDG Expr) Expr)
-(function subst1 (Expr Expr) Expr)
-
-(rewrite (call1 (func-1-input1-1-output1 e) e1) (subst1 e e1))
-(rewrite (subst1 (* a b) e) (* (subst1 a e) (subst1 b e)))
-(rewrite (subst1 (get 0) e)) e)
-(rewrite (subst1))
-(rewrite (subst (call1 f x) e) (call1 f (subst1 x e))) ; we don't substitue into the function. Only explicit capture allowed
-
-; hmm   maybe not recursing into the definition is what makes this different
-
-; no capture is allowed. Anything body needs is explicitly passed (lambda lifting)
-; But in exchance we have multi-arity as a primitive.
-; slash we lift everything to work over lists? Whch is a curious form of env.
-; The syntax of the language let's us restrict the context.
-
-(function call2 (RVSDG Expr Expr) Expr)
-
-
-(rewrite (= f  ... (call f)) (loop ))
 ```
+
+
+## Bottom Up
+
+```ocaml
+
+
+```
+
+Value is [(a, env)]
+Value is Tree -> eid
+Rather than using named env, use positional env. Interesting.
+
+Var is just 
+
+```python
+_add = {}
+class Var():
+  name
+def add(x,y):
+  for (xv,yv),zv in _add:
+    if isinstance(x,int) and x != xv:
+      continue
+    if isinstanc()
+  if isinstance(x,Var):
+    filter( ,_add)
+maxeid = 0
+def add(x,y):
+  return { (x,y) : _add[(ex,ey)] for x,ex in x.items() for y,ey in y.items() if (ex,yx) in _add }
+
+def var():
+  return { eid : eid for eid in range(maxeid) }
+
+```
+
+
+```python
+
+db = {}
+
+class UF():
+  pass
+class Env():
+  def union(self, b):
+
+
+class DB():
+  def __init__(self):
+    self.db = {}
+    self.uf = UF()
+  def function(self,name, merge=None):
+    self.db[name] = {}
+    def res(*args):
+      self.db[name]
+  def var(self,name):
+    return 
+
+
+
+```
+
+
+Normalized view
+
+```sql
+create view eadd select r1.y, r2.y, r3.y, from root as r1, root as r2, root as r3, add where r1.x = add.x, r2.x = add.y, r3.x = add.z
+
+```
+# Termination
+This is Yihong's jam.
+
+Two simple termination improvers:
+- Do not allow make-set. Do not allow primitive functions? These can be written as rules with extra clauses in the body
+- Yihong had some kind of depth tracking thing. track smallest term size in eclass. Refuse to build things that are too big. You run out of trees.
+
+Stratification of types a la EPR. Why are functions to unit ok (datalog)? Bounded lattices.
+
+
+# Rulesets
+Not all rules are made a like
+- Simp rules - (x + 0) = x. Not necessarily terminating even if they are in the term rewriting ocntext, which is distrubing.
+- defintional rules. decreating abstraction, bit blasting.
+- refold rules, decompilation. Increasing abstraction. Pattern finding.
+- churn rules - like AC. Kind of not exploding, but not very goal directed. 
+- generative rules - building new objects for which there are often infinitely many
+
+To what degree can these be automatically identified?
+
+# Ideas
+
+- IO functions. Communicate to port, pipe `(readline)` `(writeln)`. The _really_ crazy version would use eids as futures
+- `eval` and Expr type.
+- negation and unstable inequality
+- primitive intervals
+- multiprecision floats
+- random number generator?
+- Polynomials, semiring semantics? Quotient rings. polynomials as container.
+- Talk to scryer
+- subsumption
+- python interop
+- libloading
+- a mode where no "new" thing are ever inserted. Similar to some kind of EPR condition? Stratified typing?
+
+egraph decomp
+rewrite imp
+
+
+examples
+- geom
+- sharing logic min
+- matrices
+- category
+- float
+- first order interactive
+
+asp - neighborhood
+custom search for extreact (stochstic)
+]
+
+intgrals and sums. bound vars. 
+aegraph picat
+egglog ocaml
+theories? linear vectors 
+
+egraph isel
+
+
+design a problem to thwart greedy
+
+
+x = bar(x1, a)
+y = biz(y1, a)
+z = z1 + a
+
+
+foo(x,y,z)
+
+cost x y z : 10
+cost x1 : 1
+cost a : 10
+
+
+x = x1(a)
+y = y1(a)
+z = z1(a)
+
+extract foo(x,y,z)

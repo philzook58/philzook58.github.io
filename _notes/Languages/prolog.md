@@ -18,6 +18,7 @@ wordpress_id: 1865
   - [Difference Lists](#difference-lists)
   - [Copy Term and Structural Matching](#copy-term-and-structural-matching)
   - [Term rewriting](#term-rewriting)
+  - [Small Step Semantics](#small-step-semantics)
   - [Typeclass](#typeclass)
   - [Type checking / inference](#type-checking--inference)
 - [Topics](#topics)
@@ -27,6 +28,7 @@ wordpress_id: 1865
     - [Manual Prolog](#manual-prolog)
   - [Abstract Machines / Implementation](#abstract-machines--implementation)
   - [Modes](#modes)
+  - [Single Sided Unifivcation](#single-sided-unifivcation)
     - [DIY Prolog](#diy-prolog)
   - [Verification](#verification)
   - [Modules](#modules)
@@ -87,7 +89,10 @@ wordpress_id: 1865
 - [inductive logic programmingh](#inductive-logic-programmingh)
 - [Probablistic Logic Programming](#probablistic-logic-programming)
 - [Abductive logic programming](#abductive-logic-programming)
+- [Equational Logic Programming](#equational-logic-programming)
+- [Functional Logic Programming](#functional-logic-programming)
 - [Theorem Proving](#theorem-proving)
+  - [Interactive](#interactive)
 - [Misc](#misc)
   - [2019](#2019)
   - [Notes from 2017 -Resolution and unification](#notes-from-2017--resolution-and-unification)
@@ -379,6 +384,43 @@ match(foo(Pat), foo(T), [ -> foo(T)]) :- match(Pat, []
 
 ```
 
+## Small Step Semantics
+```prolog
+:- initialization(main,main).
+
+value(true).
+value(false).
+value(zero).
+value(succ(V)) :- value(V).
+
+eval(A,A) :- value(A). % not step(A,B). Or put cut here.
+eval(A,C) :- step(A,B), eval(B,C).
+      % step(A,B) -> eval(B,C) ; done.
+step(pred(zero),zero).
+step(pred(succ(T)),T).
+step(succ(T), succ(T1)) :- step(T,T1).
+step(pred(T), pred(T1)) :- step(T,T1).
+step(iszero(zero), true).
+step(iszero(succ(_)), false).
+step(ite(true,T,_), T).
+step(ite(false,_,E), E).
+step(ite(C,T,E), ite(C1,T,E)) :- step(C,C1).
+
+hastype(zero, nat).
+hastype(succ(T), nat) :- hastype(T,nat).
+hastype(pred(T), nat) :- hastype(T,nat).
+hastype(iszero(T), bool) :- hastype(T,nat).
+hastype(ite(C,T,E), Ty) :- hastype(T,Ty), hastype(E,Ty), hastype(C,bool).
+
+main(_) :- eval(pred(pred(succ(succ(succ(zero))))), V), writeln(V).
+
+```
+
+If we go metainterpreter on this, we can evaluate with respect to a list or set of rewrite rules.
+```
+step(apply(F,X), )
+
+```
 ## Typeclass
 
 ```
@@ -409,6 +451,31 @@ dotcall( foo, tostring ) :- type(foo, T), traitfield(Trait, tostring), impl(Tran
 
 % iterator
 ```
+
+
+Typeclass are "functions" from types to instances. Functions in prolog are represented as relations. This is proof threading.
+
+```prolog
+
+eq(bool,
+  [ eq(bool,true,true) = true, 
+    eq(bool,false,false) = true,  
+    eq(bool,true,false) = false,
+    eq(bool, false,true) = false ]).
+
+eq(pair(A,B), [eq((A,B),(XA,XB),(YA,YB)) = and(eq(A,XA,YA), eq(B,XB,YB))]) :- eq(A,IA), eq(B,IB).
+
+```
+The equational represntation is a separate issue.
+
+Use dicts https://www.swi-prolog.org/pldoc/man?section=bidicts for instance dictionaries?
+```
+instance(eq(bool),  { equal: [X,Y] >> X = Y ->  } ).
+
+```
+
+
+
 
 ## Type checking / inference
 I probably have something like this somewhere else in my notes
@@ -500,6 +567,9 @@ generalize(A -> B)
 - `variant_sha1` a cyrptographic hash? This is acceptable?
 
 [concurrent_forall](https://www.swi-prolog.org/pldoc/man?section=thread)
+
+[`call_with_inference_limit`](https://www.swi-prolog.org/pldoc/doc_for?object=call_with_inference_limit/3)
+- https://www.swi-prolog.org/pldoc/doc_for?object=once/1 once make nondet semidet
 ## Imperative analogies
 Unification variables are pointers. Unifying them is aliasing them.
 Unification is bidirectional pattern matching
@@ -676,7 +746,15 @@ Modes are required to use predicates correctly. Annotating them may allow the co
 mercury
 ciao prolog
 
+## Single Sided Unifivcation
+picat pattern matching 
 
+https://www.swi-prolog.org/pldoc/man?section=ssu
+
+```prolog
+
+
+```
 ### DIY Prolog
 [a python interpreter](https://github.com/photonlines/Python-Prolog-Interpreter)
 
@@ -1603,8 +1681,23 @@ Weaker semantics and choosing semantics.
 
 ## Python
 [easy to call into python now](https://swi-prolog.discourse.group/t/a-bundled-python-interface/6735)
- 
+ https://www.swi-prolog.org/pldoc/doc_for?object=section(%27packages/janus.html%27)
+
 swi
+
+```prolog
+:- initialization(main,main).
+
+main(_) :- 
+  py_version,
+  py_call(print("Hello World!\n")),
+  py_call(sys:getsizeof([1,2,3]), Size), writeln(Size),
+  py_call(sys:path, Path), writeln(Path),
+  py_iter(range(1,3), X), writeln(X)
+  %,py_call(eval("1"), X)
+   .
+
+```
 ## Attributed Variables
 Attaching extra info to variables. This can be be used to implement CLP as a library
 
@@ -3115,7 +3208,20 @@ solve((A,B)) --> !, solve(A), solve(B).
 solve(A) --> {abducible(A)}, !, [A].
 solve(H) --> {clause(H, B)}, solve(B).
 ```
+# Equational Logic Programming
+https://www.cs.ox.ac.uk/files/3444/PRG116.pdf
 
+https://cseweb.ucsd.edu/~goguen/sys/eqlog.html eqlog
+
+See Maude in term rewriting
+[INDUCTIVE EQUATIONAL LOGIC PROGRAMMING](https://digitalcommons.uri.edu/oa_diss/791/)
+[higher order equationa logic programming](https://dl.acm.org/doi/pdf/10.1145/174675.177889)
+
+[
+Logic programming, functional programming, and inductive definitions](https://link.springer.com/chapter/10.1007/BFb0038699) Another argument in favor of inductive definitions, not first order logic. paulson
+
+# Functional Logic Programming
+See Curry
 # Theorem Proving
 [Leantap](https://formal.iti.kit.edu/beckert/leantap/)
 Jens Otten
@@ -3135,6 +3241,29 @@ Is it kind of a zipper to isolate a variable?
 [tarau Formula Transformers and Combinatorial Test Generators for Propositional Intuitionistic Theorem Provers](https://arxiv.org/abs/1910.01775)
 
 Dyckhoff g4ip
+
+
+## Interactive
+Teyjus
+ACL2 analogy. ACL2 is modelling a pure lisp.
+
+```prolog
+axiom(P) :- asserta(P).
+qed(F,Prf) :- check(F, Prf), asserta(F).
+
+main(_) :- 
+  axiom(a),
+  axiom(b),
+  lemma(a(X) :- b(X))
+
+```
+
+```
+% lexical scope. We could do this as a macro?
+let(X, e, let(X, e,  X).
+
+```
+
 
 # Misc
 [tar parsing in prolog](https://news.ycombinator.com/item?id=34427081)

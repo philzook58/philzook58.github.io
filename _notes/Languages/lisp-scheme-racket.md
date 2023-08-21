@@ -11,7 +11,10 @@ title: Scheme Racket Lisp
 - [Racket](#racket)
     - [Rosette](#rosette)
 - [Common Lisp](#common-lisp)
+  - [CLOS](#clos)
+  - [Condition System](#condition-system)
   - [ACL2](#acl2)
+- [Other Lisps](#other-lisps)
 - [Compilation](#compilation)
     - [Gambit compiling to javascript](#gambit-compiling-to-javascript)
 - [Misc](#misc)
@@ -47,6 +50,8 @@ Gerbil is a system on top of Gambit approximately similar to racket
 [ribbit scheme](https://news.ycombinator.com/item?id=31096771)
 
 [scheme primer](https://spritely.institute/static/papers/scheme-primer.html)
+
+[Pre-Scheme: A Scheme Dialect for Systems Programming](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.3.4031&rep=rep1&type=pdf)
 ### Minikanren
 http://minikanren.org/
 
@@ -136,11 +141,93 @@ SLIME
 
 [alive vscode extension](https://github.com/nobody-famous/alive)
 
+[getting started](https://lisp-lang.org/learn/getting-started/)
+[sbcl manual](http://www.sbcl.org/manual/)
+[quick lisp library manager](https://www.quicklisp.org/beta/) This makes it easy to load up packages. I think using this is quite strandard. Follow  instructions to curl and load and add to init file
+
+[lisp books](https://lisp-lang.org/books/#practical-common-lisp)
+
+[Practical Common Lisp](https://gigamonkeys.com/book/)
+[Common Lisp the Language 2nd ed](https://www.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html)
+
+[Cliki](http://www.cliki.net:8080/)
+```bash
+echo $'
+;re
+(write-line "Hello, World!")
+(ql:quickload "vecto")
+(format t "Hello, world!")
+; comment one
+#|
+Multiline comment are nestable
+|#
+
+(defun fib (n)
+  "return fib nuymber"
+  (if (< n 2)
+      1
+      (+ (fib (- n 1)) (fib (- n 2)))
+  )
+)
+(fib 3)
+(funcall #\'fib 3)  ; funcall takes multiarity args. Functions quoting
+(apply #\'fib (list 3)) ; apply takes list of args
+#\'fib
+
+; multiple value returns
+(defun many (n)
+  (values n (* n 2) (* n 3)))
+
+(let ((str "Hello, world!")) ; let and let*
+  (string-upcase str))
+
+; defparameter and defvar
+
+(defparameter *string* "I\'m global")
+
+(defun print-variable ()
+  (print *string*))
+
+(print-variable)
+
+
+(defun foobar (a b c) (+ a (* b c)))
+(compiled-function-p #\'foobar)
+(disassemble #\'foobar)
+
+(format t "~a" t)
+
+(vector 1 2 3)
+#(1 2 3)
+' | sbcl 
+```
+
+[disassemble](http://clhs.lisp.se/Body/f_disass.htm)
+
+`(declaim (optimize (debug 3)))`
+<https://malisper.me/category/debugging-common-lisp/>
+
+save-lisp-and-die to save an image of current process.
+## CLOS
+art of metaobject protocol
+
+<https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node260.html>
+
+## Condition System
+Like exceptions except you can restrta from them
+[book](https://news.ycombinator.com/item?id=24867548)
 ## ACL2
 The main theorem prover associated with common lisp. It is a granddaddy of a lot of other systems
+<https://github.com/acl2/acl2>
 
 
 
+# Other Lisps
+- [Carp](https://github.com/carp-lang/Carp)  https://news.ycombinator.com/item?id=28875051
+- Janet
+- [Shen](https://shen-language.github.io/) https://shenlanguage.org/
+- Clojure
+- emacs lisp
 
 # Compilation
 [http://home.pipeline.com/~hbaker1/CheneyMTA.html](http://home.pipeline.com/~hbaker1/CheneyMTA.html)
