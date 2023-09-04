@@ -1,5 +1,9 @@
+---
+layout: post
+title: Discrete Math
+---
 
-https://en.wikipedia.org/wiki/Discrete_mathematics
+<https://en.wikipedia.org/wiki/Discrete_mathematics>
 
 
 # Graphs
