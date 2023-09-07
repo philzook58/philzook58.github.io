@@ -12,6 +12,8 @@ title: Calculus
 - [Exterior Calculus](#exterior-calculus)
 - [Calculus of Variations](#calculus-of-variations)
 - [Analysis](#analysis)
+  - [Completeness of Reals](#completeness-of-reals)
+  - [Constructive Analysis](#constructive-analysis)
 - [Limits](#limits)
 
 
@@ -88,6 +90,28 @@ Tao I and II
 Rudin
 Jay Cummings
 
+
+
+## Completeness of Reals
+
+Bolzano Weierstrauss
+
+open-closed induction. Very interesting.
+
+
+
+
+## Constructive Analysis
+<https://en.wikipedia.org/wiki/Constructive_analysis>
+
+https://en.wikipedia.org/wiki/Apartness_relation apartness relatiobn
+
+Bishop
+
+Marshal
+
+
+[Computable Analysis](https://en.wikipedia.org/wiki/Computable_analysis)
 # Limits
 
 

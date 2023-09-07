@@ -36,6 +36,23 @@ esbmc /tmp/test.c
 ```
 
 
+There are many bits of software out there that have security vulnerabilities.
+
+Obviously, the easiest and most likely solution is to change the code in source, recompile, and push out the new version.
+This is not always possible or desirable however.
+- Even recompiling the original program may introduce bugs due to compiler difference versions
+- You may not have the source
+- 
+
+It is in general an interesting problem to consdier the 50 year software stack.
+
+
+Worse is better: A use case for dumb compilers
+
+
+
+
+
 
 
 

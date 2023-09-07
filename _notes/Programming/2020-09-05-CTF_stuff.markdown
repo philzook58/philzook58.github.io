@@ -326,13 +326,69 @@ cfg = p.analyses.CFGFast()
 print("This is the graph:", cfg.graph)
 entry_func = cfg.kb.functions[p.entry]
 print(entry_func.name)
-print(list(entry_func.blocks))
+blocks = list(entry_func.blocks)
+print(blocks)
+irsb = blocks[0].vex
+import pyvex
 
+stmts = []
+counter = 0
+def fresh():
+  global counter
+  counter += 1
+  return f"%v{counter}"
+
+def print_expr(dst, expr):
+  if isinstance(expr, pyvex.expr.Const):
+    stmts.append( { "op": "const", "type": "int", dest: dst, "value": expr.con })
+  elif isinstance(expr, pyvex.expr.Binop):
+    args = [fresh() for _ in range(2)]
+    for a, e in zip(args, expr.child_expressions):
+      print_expr(a,e)
+    stmts.append({ "op": expr.op, "type": "int", "dest": dst, "args": args })
+  elif isinstance(expr, pyvex.expr.RdTmp):
+    print(expr.tmp)
+    stmts.append({ "op": "id", "type": "int", "dest": dst, "args":  })
+  elif isinstance(expr, pyvex.expr.Get):
+    return f"%{expr.offset}"
+  else:
+    print(expr)
+    print(type(expr))
+    assert False
+  
+
+for stmt in irsb.statements:
+    stmt.pp()
+    if isinstance(stmt, pyvex.IRStmt.Store):
+      expr = print_expr(stmt.data)
+      print(stmt.end)
+      assert stmt.end == "Iend_LE"
+      expr["op"] = "store"
+      expr["dest"] = expr.addr
+      stmts.append(expr)
+    elif isinstance(stmt, pyvex.IRStmt.Put):
+      print_expr(stmt.data)
+      print(stmt.offset)
+    elif isinstance(stmt, pyvex.IRStmt.WrTmp):
+      print_expr(stmt.data)
+      print(stmt.tmp)
+    elif isinstance(stmt, pyvex.IRStmt.IMark):
+      pass
+    else:
+      print(stmt)
+      print(type(stmt))
+      assert "unrecognized stmt" == None
+print(stmts)
 ```
 
 
 
 ## Patching
+https://github.com/joxeankoret/diaphora diaphora diffing tool
+[A Method to Evaluate CFG Comparison Algorithms](http://cfgsim.cs.arizona.edu/qsic14.pdf)
+
+
+
 https://github.com/GJDuck/e9patch
 
 [Reassembly is Hard: A Reflection on Challenges and Strategies](https://softsec.kaist.ac.kr/~sangkilc/papers/kim-usenix23.pdf)

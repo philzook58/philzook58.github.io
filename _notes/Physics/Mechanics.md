@@ -2,6 +2,41 @@
 layout: post
 title: Mechanics
 ---
+- [High School](#high-school)
+  - [Vectors](#vectors)
+  - [Kinematics](#kinematics)
+  - [Free Body Diagrams and Force Balance](#free-body-diagrams-and-force-balance)
+  - [F = ma](#f--ma)
+  - [Virial](#virial)
+  - [Simple Harmonic Motion](#simple-harmonic-motion)
+- [Planetary Motion](#planetary-motion)
+- [Collisions](#collisions)
+- [Rigid Bodies](#rigid-bodies)
+  - [State](#state)
+    - [angular velocity](#angular-velocity)
+- [Accelerating Frames](#accelerating-frames)
+- [Conservation Laws](#conservation-laws)
+  - [Momentum](#momentum)
+  - [Energy](#energy)
+  - [Angular Momentum](#angular-momentum)
+  - [Center of Mass](#center-of-mass)
+- [Lagrangian Mechanics](#lagrangian-mechanics)
+  - [Noether's theorem](#noethers-theorem)
+- [Hamiltonian Mechanics](#hamiltonian-mechanics)
+  - [Legendre Transformations](#legendre-transformations)
+  - [Phase Space](#phase-space)
+  - [Hamilton Jacobi Equations](#hamilton-jacobi-equations)
+  - [Action angle coordinats](#action-angle-coordinats)
+    - [Liouville's theorem](#liouvilles-theorem)
+- [Waves](#waves)
+- [Normal Modes](#normal-modes)
+- [Fluids](#fluids)
+- [Acoustics](#acoustics)
+- [Continuous Media](#continuous-media)
+- [Stress Strain / Continuous Media / Strength of Materials](#stress-strain--continuous-media--strength-of-materials)
+- [Resources](#resources)
+
+
 
 # High School
 ## Vectors
@@ -9,11 +44,31 @@ title: Mechanics
 
 The Big 4
 
+Velocity is the change of position with respect to time
+
 ## Free Body Diagrams and Force Balance
 
 ## F = ma
 Friction
 Atwood machines
+
+The force is the change of momentum wth respect to time
+$$ F = \frac{p}{dt} $$
+
+Force is a function of position and velocity.
+
+
+
+
+Conservation of energy and momentum
+
+
+Center of Mass. Conservation of total momentum.
+In center of mass frame, the center of mass itself is preserved.
+
+
+## Virial
+A truly odd duck. Most useful as a kinetic theory kind of thing.
 
 ## Simple Harmonic Motion
 
@@ -23,6 +78,11 @@ $$ F = -k x $$
 # Planetary Motion
 # Collisions
 # Rigid Bodies
+
+Angular momentum is $$ L = r \times p $$. It's value is dependent on your choice of coordinate system, which feels rather odd.
+
+Torque is $$ r \times F $$
+
 
 ## State
 [David's blog post tennis racket theorem](https://davidtersegno.wordpress.com/2022/01/30/the-tennis-racket-theorem/)
@@ -77,15 +137,28 @@ Symettry and conservation laws
 ## Angular Momentum
 ## Center of Mass
 
-# Langrangian Mechanics
+# Lagrangian Mechanics
 L = T - V
 Basic form is kinetic energy minus potential energy.
+
+The action is the time integral of the lagrangian
+$$ S = \int L dt $$
+What does this equation mean? Does it have any content?
+
 ## Noether's theorem
 
 # Hamiltonian Mechanics
 ## Legendre Transformations
 ## Phase Space
+
+## Hamilton Jacobi Equations
+Caonical transformations
+
+## Action angle coordinats
+
+
 ### Liouville's theorem
+
 
 
 

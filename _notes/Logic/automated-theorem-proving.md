@@ -68,6 +68,13 @@ Automated reasoning book
 
 Using for higher order or typed systems
 
+I took a big dump of the axioms because they are hard to peruse. You can find them in my notes.
+They are very interesting.
+
+
+
+
+
 ## Puzzles
 
 ## Math
@@ -870,3 +877,5 @@ with tempfile.NamedTemporaryFile(suffix=".smt2") as fp:
     print(res.stdout.decode())
 
 ```
+
+

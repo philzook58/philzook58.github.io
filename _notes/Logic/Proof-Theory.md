@@ -22,20 +22,19 @@ title: Proof Theory
 - [Ordinal Analysis](#ordinal-analysis)
 - [Things](#things)
   - [Peano Arithmetic](#peano-arithmetic)
+    - [Godel numbering](#godel-numbering)
+    - [Undefinability of Truth](#undefinability-of-truth)
+    - [Diagonal Argument](#diagonal-argument)
+    - [Godel Completeness](#godel-completeness)
+    - [Godel Incompleteness](#godel-incompleteness)
   - [Heyting Arithmetic](#heyting-arithmetic)
   - [PRA (Primitive Reucrsive Arithemtic)](#pra-primitive-reucrsive-arithemtic)
   - [Second Order Arithmetic](#second-order-arithmetic)
   - [Second Order Logic](#second-order-logic)
   - [Robinson Arithmetic (Q)](#robinson-arithmetic-q)
   - [Primitive Recursive Arithmetic](#primitive-recursive-arithmetic)
-  - [Set Theory](#set-theory)
-    - [ZFC](#zfc)
-    - [NBG](#nbg)
     - [Arithmetic Hierarchy](#arithmetic-hierarchy)
     - [](#-1)
-    - [Undefinability of Truth](#undefinability-of-truth)
-    - [Godel Completeness](#godel-completeness)
-    - [Godel Incompleteness](#godel-incompleteness)
 - [Interpetability](#interpetability)
     - [Uhhhh](#uhhhh)
     - [Computability theory](#computability-theory)
@@ -51,11 +50,10 @@ title: Proof Theory
     - [comprehesion](#comprehesion)
     - [modal operators](#modal-operators)
     - [Of a different character?](#of-a-different-character)
-- [Model thoery](#model-thoery)
-  - [Finite Model Theory](#finite-model-theory)
-    - [Fixed point logic](#fixed-point-logic)
 
 Should I seperate this out into a computability, logic, model theory, and proof theory notes?
+
+<https://en.wikipedia.org/wiki/Proof_theory>
 
 # What are Proofs?
 
@@ -64,6 +62,10 @@ Should I seperate this out into a computability, logic, model theory, and proof 
 It is surprisingly subtle and difficult to make a reasoning system in which you don't end up being able to prove everything
 A system is consistent if you can't prove "false" in it.
 
+Systems can't prove themselves consistent (?) You need more "power" 
+
+
+Gentzen proved peano arith consistent <https://en.wikipedia.org/wiki/Gentzen%27s_consistency_proof>
 
 # Completeness
 # Soundness
@@ -127,13 +129,37 @@ https://en.wikipedia.org/wiki/Ordinal_analysis
 
 Well Ordering
 
-Well ordering principle
-Zorn's Lemma https://en.wikipedia.org/wiki/Zorn%27s_lemma
-Axiom of Choice
-Axioms of dependent choice
+
+
 
 # Things
 ## Peano Arithmetic
+
+Axiom schema vs second order axiom.
+
+Or are you in a second order system and tracking
+Are peano axioms conditions for an embedding in a larger system, or are hey
+
+
+
+### Godel numbering 
+We can encode syntax as a number. The details don't matter that much except you need to be concrete to make sure things are working
+<https://en.wikipedia.org/wiki/G%C3%B6del_numbering>
+"arithmetization"
+
+
+
+### Undefinability of Truth
+<https://en.wikipedia.org/wiki/Tarski%27s_undefinability_theorem>
+
+We can godel code statements. We cannot define the subset of coded statements that are true inside our system.
+
+### Diagonal Argument
+<https://en.wikipedia.org/wiki/Cantor%27s_diagonal_argument>
+
+### Godel Completeness
+### Godel Incompleteness
+
 ## Heyting Arithmetic
 ## PRA (Primitive Reucrsive Arithemtic)
 
@@ -160,37 +186,27 @@ Two sorts, natrual numbers a la peano and sets of natural numbers
 Weaker than Peano Airthemtic, Induction schema removed. Still a complex thing
 ## Primitive Recursive Arithmetic
 <https://en.wikipedia.org/wiki/Primitive_recursive_arithmetic>
-## Set Theory
-Schroder-Bernstein Theorem
 
-
-Forcing
-
-### ZFC
-<https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory>
-[Richard Borcherd lectures on zfc](https://www.youtube.com/playlist?list=PL8yHsr3EFj52EKVgPi-p50fRP2_SbG2oi)
-### NBG
-[Von Neumann–Bernays–Gödel set theory](https://en.wikipedia.org/wiki/Von_Neumann%E2%80%93Bernays%E2%80%93G%C3%B6del_set_theory)
-
-Finite axiomatization? As in no schema? That's crazy.
-<https://cstheory.stackexchange.com/questions/25380/which-formalism-is-best-suited-for-automated-theorem-proving-in-set-theory>
-<https://cstheory.stackexchange.com/questions/25127/what-paradigm-of-automated-theorem-proving-is-appropriate-for-principia-mathemat>
-metamath is all schemata?
 
 ### Arithmetic Hierarchy
-Formula equivalent to one using some particular combo of quantifiers.
+
+Formula (logically) equivalent to one using some particular combo of quantifiers.
+
+Logically equivalent is with respect to a particular model.
+
+
 Proof 
 
-<https://en.wikipedia.org/wiki/Tarski%E2%80%93Kuratowski_algorithm> algoirthm to get upper bound. Finding upper bound is easy
+<https://en.wikipedia.org/wiki/Tarski%E2%80%93Kuratowski_algorithm> algoirthm to get upper bound. Finding upper bound is easy. Basically, convert the formula to prenex form (put quantifiers in front). This can be done algorithmically.
 Finding lower bound may be hard.
 
 These are considered "sets" because importantly, these are not closed formula. An unclosed formula can be considered a set via the axiom schema of comprehension
+
+
 ### 
 
 
-### Undefinability of Truth
-### Godel Completeness
-### Godel Incompleteness
+
 
 
 # Interpetability
@@ -232,150 +248,3 @@ You _could_ consider $\{x | phi(x) \}$ it's own kind of binder
 Sum, product, min, argmin, integral
 If I understand the history, Boole arithmetized logic and the exists and forall operators were actually inspired by actual sum and product
 
-
-# Model thoery
-[gentle introduction to model theory](https://www.youtube.com/watch?v=xNJHw8E_36g&ab_channel=LambdaConf)
-Model theory is more informal?
-I have thought model theory is finding what logic looks like in informal set theory
-A more general notion and precise notion may be finding homomorphisms between . A way of mapping statements to each other such that theorems in one theory are theorems in the other.
-
-[finite model theory notes dan suciu](https://courses.cs.washington.edu/courses/cse599c/18sp/lectures/unit3-handout.pdf)
-## Finite Model Theory
-https://homepages.inf.ed.ac.uk/libkin/fmt/fmt.pdf finite model theory book
-
-https://courses.cs.washington.edu/courses/cse599c/18sp/calendar/lecturelist.html
-Finite model theory is actually interesting.
-Finite models are those for which Z3 can return results even in the prescence of quantifiers.
-
-query containment
-```python
-from z3 import *
-Sort("A")
-A = Function("A", BoolSort())
-B = 
-Q1 = And()
-Q2 = And()
-
-contains = ForAll([] , Implies(
-  Q1, Q2
-))
-
-prove(contains)
-```
-
-Directly solving for homomorphisms.
-The alice book is insane
-
-https://simons.berkeley.edu/workshops/logical-structures-computation-boot-camp/
-https://www.youtube.com/watch?v=rfvYLCixrdQ&ab_channel=SimonsInstitute
-
-### Fixed point logic
-https://en.wikipedia.org/wiki/Fixed-point_logic
-
-[Fixed-Point Logics and Computation - Dawar](https://www.cl.cam.ac.uk/~ad260/talks/oviedo.pdf)
-
-Horn clauses interpreted as implications are loose. More models obey than you want. You want the least model. You can fix this (sometimes?) by clark completion and loop formula.
-
-Fixed point logic binds both a second order variable and a et of tuples to it? And it returns another relation that can be applied.
-
-The least fixed point logic is good for datalog.
-Greatest fixed point logics include u-calculus.
-
-Thes are both model checking problems.
-
-Translation into datalog
-
-```python
-import clingo
-
-
-```
-
-```ocaml
-type prop =  Rel rel * term list
-type fof = Forall of fof | Exists of fof | Prop of prop | And | Or | Neg | ... 
-type form = Lfp of var list * rel * form | FOF of fof
-
-type rule = {head : prop ; body : prop list} 
-type datalog = rule list
-let interp : form -> datalog
-
-
-```
-
-Finite Model Theory and Its Applications - book
-
-
-Is the empty set a model of fixed point
-
-https://courses.cs.washington.edu/courses/cse344/13au/lectures/query-language-primer.pdf
-compiling first order logic model checking to sql or nonrecursive datalog
-
-Ok, but a prolog program might make sense.
-Or magic-set/ demand style pushing down seeds from existentials.
-
-Model checking first order logic is a strange thing to do. Model finding or proving are more common things to do I feel like. Although since datbase queries are in some sense model checking.. hmm.
-
-Prolog against a ground database.
-All the negation makes me queasy.
-```prolog
-:- initialization(main,main).
-
-check(and(P,Q)) :- check(P), check(Q).
-check(or(P,Q)) :- check(P) ; check(Q).
-check(not(P)) :- \+ check(P).
-check(forall(D, P)) :-  forall(D, check(P)). % \+ check(exists(X, not(P))).  % %https://www.swi-prolog.org/pldoc/man?predicate=forall/2
-check(exists(Y, P)) :- check(P). % , call(D). Perhaps we should check the 
-check(pred(P)) :- call(P).
-check(implies(P,Q)) :- check(or(not(P), Q)).
-
-% maybe with tabling I can demonstrate
-% check(mu(R,X,P)) :- ??
-p(1).
-q(2).
-
-dom(1).
-dom(2).
-% sort has to be specified when binding 
-main(_) :- print("hi"), check(forall(dom(X), pred(p(X)))).
-
-% This formulation rather than reflecting to primitive prolog at predicates would be literal translation of
-% the satisfactin relation
-% sat(Formula, Interp) :- 
-
-% models of separation logic required proof.
-
-%q1(X) :- check(exists(Y, and(likes(X,Y), forall(Z, implies(serves(Z,Y), frequents(X,Z)))))).
-
-
-
-```
-
-Also probably ASP makes this easier. Use - relation for negation. It's hard to write the interpreter though.
-
-```clingo
-% write down database facts
-
-And
-existsp(Y,Z) :- p(X,Y,Z).
-% forall rule
-forallp(Y,Z) :- { p(X,Y,Z) : dom(X) }
-
-negp(X,Y,Z) :- -p(X,Y,Z).
-
-```
-
-Hmm. EPR. But I want satisfiability of EPR, not model checking. Ok. amusing idea, but no.
-
-
-```sql
--- NOT EXISTS in where clause with subquery.
-```
-
-
-model checking propsitional formula is easy. Plug it in
-model checking QBF is harder.
-
-datalog is really model producing. That's kind of the point.
-
-The lfp of lfp(FO) is kind of like the mu minimization operator. https://en.wikipedia.org/wiki/%CE%9C_operator

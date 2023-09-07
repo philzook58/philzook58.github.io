@@ -86,7 +86,14 @@ MLTS
 # Nominal Unification
 See nominal logic notes
 
+# Boolean Unification
+https://cs.au.dk/~magnusm/papers/oopsla20/paper_b.pdf using it in Flix type checker
 
+successive variable elimiations
+lowenheim's algorithm
+https://web.cs.wpi.edu/~dd/publications/unif19.pdf coq
+
+[boolean unification, the story so far](https://www.sciencedirect.com/science/article/pii/S0747717189800136)
 # Pattern Matching
 Arguably pattern matching should be it's own article.
 Depending on which you see first, you may consider unification two way pattern matching or pattern matching as one way unification. I think pattern matching is the much simpler topic

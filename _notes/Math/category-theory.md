@@ -263,7 +263,6 @@ Processes are a timey database.
 
 - [pattern matching: a sheaf theortic approach thesis](https://escholarship.org/content/qt3t59q0pp/qt3t59q0pp_noSplash_8827b78a6461f58bc090a563888ef7fe.pdf)
 
-
 [category theory carlo youtube](https://twitter.com/carloangiuli/status/1587467571737120769?s=20&t=rPY3oIv7e70HfT_mJgeYuA)
 
 [topology a category theory approach](https://topology.mitpress.mit.edu/) https://news.ycombinator.com/item?id=33601318
@@ -274,3 +273,72 @@ Processes are a timey database.
 
 
 [chyp](https://github.com/akissinger/chyp)interactive string diagram prover. Also graph rewrite system... hmmmmmm.
+
+
+```vampire
+% clark completion
+
+fof(mytheory, axiom,
+
+%((dom(F) != cod(G)) => (comp(F,G) = junk)) &
+
+%((dom(F) != cod(G)) => (comp(F,G) = junk(comp(F,G)))) &
+
+
+
+%comp(junk(G),F) = junk(comp(junk(G),F)) &
+%comp(G,junk(F)) = junk(comp(G,junk(F))) &
+%(((dom(F) != cod(G)) | F = junk | G = junk) <=> (comp(F,G) = junk)) &
+%comp(junk,F) = junk &
+%comp(G,junk) = junk &
+
+dom(id(A)) = A &
+cod(id(A)) = A &
+
+comp(id(A), F) = F &
+comp(F, id(A)) = F &
+
+cod(comp(F,G)) = cod(F) &
+dom(comp(F,G)) = dom(G) 
+
+%(monic(F) <=> ( ![X,Y] : ((comp(F,Y) = comp(F,X)) => X = Y)))
+
+% junk(A,B) junk(comp(F,G)) keep junk intference seperated. Dunno.
+
+
+).
+cnf(noncollapse, axiom, junk != nonjunk).
+```
+
+`comp(id(dom(F)), F) = some(F)` 
+only use intrinsically well typed expressions.
+`comp(F,comp(G,H)) = comp(comp(F,G),H)`
+right, as I said 3 years ago, this doesn't work unguarded.
+
+```vampire
+
+fof(mytheory, axiom,
+
+% unconditional
+dom(id(A)) = A &
+cod(id(A)) = A &
+% I almost feel like unguarded assoc might be ok.
+% possibly important for special AC support
+% comp(F,comp(G,H)) = comp(comp(F,G),H) 
+
+((dom(F) = A & cod(F) = B & cod(G) = A & dom(G) = C & cod(H) = C & dom(H) = D) => 
+(
+comp(id(B), F) = F &
+comp(F, id(A)) = F &
+
+cod(comp(F,G)) = cod(F) &
+dom(comp(F,G)) = dom(G) &
+comp(F,comp(G,H)) = comp(comp(F,G),H) 
+)
+)
+
+
+).
+cnf(noncollapse, axiom, junk != nonjunk).
+```
+How about this principle: We can unguard axioms that can never equate a well typed to an un well typed term.

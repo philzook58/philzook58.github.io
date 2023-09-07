@@ -75,6 +75,9 @@ https://github.com/opencompl/lean-mlir
 https://github.com/ccodel/verified-encodings
 
 [a big twitter thread on lean software verification stuff](https://twitter.com/mukesh_tiwari/status/1667848032128499714?s=12&t=pdj9jytXGvxDOXHWwx4_mg)
+
+[mathematics in lean course](https://github.com/leanprover-community/mathematics_in_lean)
+[iris lean ](https://github.com/leanprover-community/iris-lean)
 ### Build
 
 `elan` tool

@@ -16,6 +16,7 @@
   - [BitVectors](#bitvectors)
   - [Peano](#peano)
   - [BDDs](#bdds)
+  - [First Class Union Find](#first-class-union-find)
   - [Homotopy](#homotopy)
   - [Kleene Algebra](#kleene-algebra)
   - [Matrices](#matrices)
@@ -24,14 +25,17 @@
   - [Intervals](#intervals)
   - [Context](#context)
   - [Lambdas](#lambdas)
+    - [Normalization by Evaluation](#normalization-by-evaluation)
   - [Let](#let)
   - [Polynomials](#polynomials)
   - [Arrays/Maps](#arraysmaps)
   - [Resolution](#resolution)
   - [SMTLIB](#smtlib)
+  - [The Chase](#the-chase)
   - [Partial Application](#partial-application)
   - [RVSDG](#rvsdg)
   - [Algebra of Programming](#algebra-of-programming)
+  - [AC](#ac)
 - [Egglog0 posts](#egglog0-posts)
 - [Souffle Posts](#souffle-posts)
   - [Merging Database](#merging-database)
@@ -39,7 +43,7 @@
 - [Misc](#misc)
   - [Modulo theories](#modulo-theories)
   - [Propagators](#propagators)
-  - [AC](#ac)
+  - [AC](#ac-1)
     - [slog](#slog)
 - [GJ scribbles](#gj-scribbles)
   - [Bottom Up](#bottom-up)
@@ -61,6 +65,8 @@ It is backed by a high performance Rust database backend and uses E-graph techni
 <iframe width="560" height="315" src="https://www.youtube.com/embed/N2RDQGRBrSY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 # Examples
+<https://github.com/philzook58/egg-smol/tree/scratchpad2/tests>
+
 ## Shortest Path
 
 The canonical datalog program is path connectivity.
@@ -383,6 +389,31 @@ This is emulatable in egglog using the unusual merge function which just tosses 
 
 ```
 
+```eggsmol
+; Example from https://souffle-lang.github.io/choice
+; choice-domain is a somewhat subtle construct
+; Using it in combination with other egglog features may be unsound.
+; Perhaps it needs to be in it's own strata
+
+(relation edge (String String))
+
+(edge "L1" "L2") (edge "L2" "L10") (edge "L2" "L3")
+(edge "L3" "L4") (edge "L4" "L8") (edge "L3" "L6")
+(edge "L6" "L8") (edge "L8" "L2")
+
+
+(function span-tree (String) String :merge old)
+
+(set (span-tree "L1") "root")
+
+(rule ((= (span-tree v) w) (edge v u)) ((set (span-tree u) v)))
+
+(run 10)
+(print span-tree)
+(check (= (span-tree "L2") "L1"))
+(check (!= (span-tree "L2") "L8"))
+
+```
 
 ## Refining equalities
 Geometry example - directed lines refine
@@ -807,6 +838,222 @@ Binary nats
 
 
 ## BDDs
+```eggsmol
+; Binary Decision Diagrams are if-then-else trees/ compressed tries that hash cons their leaves
+; This is easily expressible in the facilities provided. Everything in egg-smol is automatcally shared
+; and Compression is easily expressible as a rule.
+
+; They are a notion of first class set useful for certain classes of uniformly describable sets.
+; https://en.wikipedia.org/wiki/Binary_decision_diagram
+; https://www.lri.fr/~filliatr/ftp/publis/hash-consing2.pdf Type-Safe Modular Hash-Consing - Section 3.3
+
+(datatype BDD
+    (ITE i64 BDD BDD) ; variables labelled by number
+    (True)
+    (False)
+)
+
+; compress unneeded nodes
+(rewrite (ITE n a a) a)
+
+(function and (BDD BDD) BDD)
+(rewrite (and (False) n) (False))
+(rewrite (and n (False)) (False))
+(rewrite (and (True) x) x)
+(rewrite (and x (True)) x)
+; We use an order where low variables are higher in tree
+; Could go the other way.
+(rewrite (and (ITE n a1 a2) (ITE m b1 b2))
+    (ITE n (and a1 (ITE m b1 b2)) (and a2 (ITE m b1 b2)))
+    :when ((< n m))
+)
+(rewrite (and (ITE n a1 a2) (ITE m b1 b2))
+    (ITE m (and (ITE n a1 a2) b1) (and (ITE n a1 a2) b2))
+    :when ((> n m))
+)
+(rewrite (and (ITE n a1 a2) (ITE n b1 b2))
+    (ITE n (and a1 b1) (and a2 b2))
+)
+
+(define b0 (ITE 0 (True) (False)))
+(define b1 (ITE 1 (True) (False)))
+(define b2 (ITE 2 (True) (False)))
+
+(define b123 (and b2 (and b0 b1)))
+(define b11 (and b1 b1))
+(define b12 (and b1 b2))
+(run 5)
+(extract b11)
+(extract b12)
+(extract b123)
+(check (= (and (ITE 1 (True) (False)) (ITE 2 (True) (False)))
+       (ITE 1 (ITE 2 (True) (False)) (False)))
+)
+;(check (= b123 (ITE 3 ()))
+
+(function or (BDD BDD) BDD)
+(rewrite (or (True) n) (True))
+(rewrite (or n (True)) (True))
+(rewrite (or (False) x) x)
+(rewrite (or x (False)) x)
+(rewrite (or (ITE n a1 a2) (ITE m b1 b2))
+    (ITE n (or a1 (ITE m b1 b2)) (or a2 (ITE m b1 b2)))
+    :when ((< n m))
+)
+(rewrite (or (ITE n a1 a2) (ITE m b1 b2))
+    (ITE m (or (ITE n a1 a2) b1) (or (ITE n a1 a2) b2))
+    :when ((> n m))
+)
+(rewrite (or (ITE n a1 a2) (ITE n b1 b2))
+    (ITE n (or a1 b1) (or a2 b2))
+)
+
+(define or121 (or b1 (or b2 b1)))
+(run 5)
+(extract or121)
+
+(function not (BDD) BDD)
+(rewrite (not (True)) (False))
+(rewrite (not (False)) (True))
+(rewrite (not (ITE n a1 a2)) (not (ITE n (not a1) (not a2))))
+
+(function xor (BDD BDD) BDD)
+(rewrite (xor (True) n) (not n))
+(rewrite (xor n (True)) (not n))
+(rewrite (xor (False) x) x)
+(rewrite (xor x (False)) x)
+(rewrite (xor (ITE n a1 a2) (ITE m b1 b2))
+    (ITE n (xor a1 (ITE m b1 b2)) (or a2 (ITE m b1 b2)))
+    :when ((< n m))
+)
+(rewrite (xor (ITE n a1 a2) (ITE m b1 b2))
+    (ITE m (xor (ITE n a1 a2) b1) (or (ITE n a1 a2) b2))
+    :when ((> n m))
+)
+(rewrite (xor (ITE n a1 a2) (ITE n b1 b2))
+    (ITE n (xor a1 b1) (xor a2 b2))
+)
+
+
+```
+
+## First Class Union Find
+```eggsmol
+; A "first class" / local / scope union find is encodable in egglog.
+; This is perhaps not surprising, since there are also encodings to 
+; souffle subsumption
+; It's fairly natural to write though
+
+;Similar to how a union find is encodable into Souffle using subsumption, union finds are encodable into egglog using a merge function.
+;This is particularly interesting as I think it gives a notion of a "scoped", "keyed", or "first class" union find, if we expose the ability to compare eids. This is a very natural way of "reifying" equality in the context of egglog rather than reifying to an eq relation. It may be important to have the notion of the first class UFs notion of tie breaking match the internal egglog tie breaker (if possible).
+;It may also be possible to encode generalized union finds whose edges are labelled by group elements.
+;It is interesting to note that the keyed union find is kind of separating off a segment of the global union find for it's own use.
+
+
+(function root (i64) i64 :merge (min old new))
+
+; To make this more first class
+; One can give union finds some kind of posibly structured "name" 
+; in the standard first orderi representation of named first class functions
+; (function apply_uf (Name i64) i64)
+
+; root being undefined is it being the same eclass as itself
+
+; reflexivity
+
+; should this work?
+;(rule ((< x (root x))) ((set (root x) x)))
+(rule ((= y (root x)) (< x y)) ((set (root x) x)))
+
+; transitivity
+(rule ((= (root x) y) (= (root y) z)) 
+    ((set (root x) z))
+)
+
+(set (root 0) 1)
+(set (root 1) 2)
+(set (root 4) 7)
+(set (root 7) 0)
+(set (root 7) 7)
+
+(run 10)
+(print root)
+(check (= (root 0) (root 4)))
+
+
+(datatype EClass)
+
+; way more direct encoding
+
+(function root2 (i64) EClass)
+
+(set (root2 0) (root2 1))
+(set (root2 1) (root2 2))
+(set (root2 4) (root2 7))
+(set (root2 7) (root2 0))
+(set (root2 7) (root2 7))
+(run 10)
+(print root2)
+(check (= (root2 0) (root2 4)))
+
+
+; A keyed union find built out of union operations.
+
+(datatype UF (Union i64 i64 UF) (Empty))
+(function root3 (UF i64) EClass)
+
+; These are nice compression laws / extensionality, but not necessary
+; They are definitely not complete extensionality
+; (rewrtie (union i j (union k l uf))) (union k l (union i j uf))))
+(rewrite (Union i i uf) uf)
+(rewrite (Union i j uf) (Union j i uf))
+(rewrite (Union i j uf) uf
+    :when ((= (root3 uf i) (root3 uf j))))
+
+;(rewrite (root3 (Union i j uf) a) (root3 (Union i j uf) b)
+; :when ((= (root3 uf a) (root uf b)))
+;)
+
+; Maybe this is smarter. Does this copy cleanly?
+; Well it makes demand which is nice.
+; And it avoid the large number of bound variables of the other trasnference rules.
+
+(rewrite (root3 (Union i j uf) i) (root3 (Union i j uf) j))
+(function root3-trans (UF EClass) EClass)
+(rewrite (root3 (Union i j uf) a) (root3-trans (Union i j uf) (root3 uf a)))
+
+(define uf1 (Union 2 3 (Union 1 2 Empty)))
+(define r1 (root3 uf1 1))
+(define r3 (root3 uf1 3))
+(define r4 (root3 uf1 4))
+(run 10)
+(check (= r1 r3))
+(check (!= r1 r4))
+(print root3)
+(print Union)
+
+
+
+; It also plays nice with eclasses
+;(datatype EClass (Name String))
+; Need to define min. For this purpose, min over eids is probably ok?
+;(function root2 (EClass) EClass :merge (min old new))
+
+;(rule ((= y (root2 x))) ((set (root2 x) x)))
+
+; transitivity
+;(rule ((= (root2 x) y) (= (root2 y) z)) 
+;    ((set (root2 x) z))
+;)
+
+
+; To use a particular first class union find in a rule under context C
+; 
+; one needs to now explicitly join with respect to (apply_uf C _) 
+; over the eq relation. This is _not_ an N^2 join though. Maybe it is...
+
+
+```
 
 ## Homotopy
 
@@ -815,11 +1062,81 @@ Binary nats
 ## Matrices
 ## Category
 ## Typechecking
+[Eqlog](https://www.mbid.me/posts/type-checking-with-eqlog-polymorphism/)
+Vec example
+Yihong hindley Milner
+
+
+; https://courses.engr.illinois.edu/cs522/sp2016/PureTypeSystemsInRewritingLogic.pdf
+; Pure Type Systems in Rewriting Logic:
+; Specifying Typed Higher-Order Languages
+; in a First-Order Logical Framework
+
 ## Intervals
 [Interval Constraint Propagation](https://en.wikipedia.org/wiki/Interval_propagation)
 ## Context
 Sam's paper. Assume nodes.
 ## Lambdas
+First class function objects.
+
+Non capturing lambdas: Just can pull out of an arguments object.
+```
+(datatype Fun)
+(datatype Args (args))
+(datatype Term)
+(function call (Fun Args) Term) ; apply?
+
+(function lambda1 (Term) Fun) ; no capturing allowed
+(function arg (i64 Args) Term)
+
+
+(define myadd (lambda1 (+ (arg 0 (args)) ((arg 1 (args))) )))
+
+; indeed we recover alpha equivalence
+(define myadd2 (lambda1 (+ (arg 0 (args)) ((arg 1 (args))) )))
+
+; indeed we can observe extensional equality. myadd2 can be discovered to be equal to
+(define myadd2 (lambda1 (+ (arg 1 (args)) ((arg 2 (args))) )))
+
+(rewrite (apply (lambda1 body) args))
+(let args body))
+
+(function let1 (Args Term) Term)
+(rewrite (let1 a (+ x y))  
+  (+ (let a x) (let a y))
+)
+
+; OR we can defin super paplication to short circuit the let. Different choices for different desires.
+(rewrite (apply myadd1 args)
+  (+ (arg 1 args) (arg2 args) )
+)
+
+
+(define curryadd
+  (lambda1 (apply myadd1 (store  (args)))
+)
+
+```
+
+
+```
+(datatype Lambda (Lam Expr))
+(datatype Expr (EnvVar i64) (Var i64) (Add Expr Expr))
+(datatype Closure (Close Env Lam))
+
+(define curryadd (Lam 
+  (Close (ECons (Var 0))
+         (Lam (Add (Evar 0) (Var 0))
+))))
+
+
+```
+
+
+### Normalization by Evaluation
+
+
+
 ## Let
 `let` is a reified notion of sharing or subsitutions. There is a calculus of pushing lets through. `let` could be written as `subst`. They are very related notions.
 Application of a lambdas converts it to a let.
@@ -845,6 +1162,83 @@ One of the most useful SMT theories is that of arrays. Arrays can equally be cal
 Observation Tries - do a trie set/map based on observations.
 
 
+```eggsmol
+; Smtlib theory of arrays
+; https://smtlib.cs.uiowa.edu/theories-ArraysEx.shtml
+; http://smtlib.cs.uiowa.edu/version1/theories/Arrays.smt
+
+(datatype Math
+  (Num i64)
+  (Var String)
+)
+
+
+(datatype Array
+  (Const i64)
+  (AVar String)
+)
+
+(function add (Math Math) Math)
+(function select (Array Math) Math)
+(function store (Array Math Math) Array)
+
+(relation neq (Math Math))
+
+(rule ((neq x y))
+      ((neq y x)))
+
+(rule ((neq x x))
+      ((panic "query (neq x x) found something equal to itself")))
+
+
+; injectivity rules take not equal to not equal.
+(rule  ((neq x y) (= (add x z) e))
+       ((neq (add x z) (add y z))))
+(rule  ((= (add x (Num i)) e) (!= i 0))
+       ((neq e x)))
+
+
+(rule ((= (Num a) n1) (= (Num b) n2) (!= a b))
+      ((neq n1 n2)))
+
+; select gets from store
+(rewrite (select (store mem i e) i) e)
+; select passes through wrong index
+(rule ((= (select (store mem i1 e) i2) e1) (neq i1 i2))
+      ((set (select mem i2) e1)))
+; aliasing writes destroy old value
+(rewrite (store (store mem i e1) i e2) (store mem i e2))
+; non-aliasing writes commutes
+(rule ((= (store (store mem i2 e2) i1 e1) mem1) (neq i1 i2))
+      ((set (store (store mem i1 e1) i2 e2) mem1)))
+
+; typical math rules
+(rewrite (add x y) (add y x))
+(rewrite (add (add x y) z) (add x (add y z)))
+(rewrite (add (Num x) (Num y)) (Num (+ x y)))
+
+(define r1 (Var "r1"))
+(define r2 (Var "r2"))
+(define r3 (Var "r3"))
+(define mem1 (AVar "mem1"))
+
+(neq r1 r2)
+(neq r2 r3)
+(neq r1 r3)
+(define test1 (select (store mem1 r1 (Num 42)) r1))
+(define test2 (select (store mem1 r1 (Num 42)) (add r1 (Num 17))))
+(define test3 (select (store (store mem1 (add r1 r2) (Num 1)) (add r2 r1) (Num 2)) (add r1 r3)))
+
+(run 4)
+(check (= test1 (Num 42)))
+(check (neq r1 r2))
+(check (neq r1 (add r1 (Num 17))))
+(check (= test2 (select mem1 (add r1 (Num 17)))))
+(check (= test3 (select mem1 (add r1 r3))))
+
+
+
+```
 
 ## Resolution
 https://github.com/inpefess/tptp-lark-parser/tree/master
@@ -929,6 +1323,12 @@ def format(e):
 
 ```
 
+## The Chase
+The procedure of egglog is intimately related to the chase.
+
+The chase is used for reasoning about conjunctive queryes under schema (functional dependencues, tuple gen deps, eq gen deps). Data migration, some other things.
+
+Understand chase applications, translate when possible to egglog
 
 ## Partial Application
 `call` is super useful
@@ -1075,6 +1475,61 @@ Everything must be
 
 ## Algebra of Programming
 I feel as though RVSDG are a first order functional language using supercombinators
+
+
+## AC
+See blog post for some ideas
+
+Primitive multisets. How much does this get you?
+
+```python
+
+def msunion(m1,m2):
+  d = {k:v for k,v in m1}
+  for k,v in m2:
+    if k in d:
+      d[k] += v
+    else:
+      d[k] = v
+  return d
+
+def msdiff(m1,m2):
+  d = {k:v for k,v in m1}
+  for k,v in m2:
+    if k in d:
+      d[k] += v
+    else:
+      d[k] = v
+  return d
+
+
+def sing(k):
+  return {k : 1}
+
+def add(m,k):
+  m = m.copy()
+  if k in m:
+    m[k] += 1
+  else:
+    m[k] = 1
+
+def card(d):
+  return sum(k.values())
+# patterns
+def partitions(d): # (?X + ?Y)
+
+# (?X + ?Y + ?Z)
+
+def items(d):  # (?x + ...)
+  for k,v in d.items():
+    for i in range(v):
+      yield k
+# (?x + ?y + ...)
+
+# (?x + ?y)
+
+
+```
 
 
 # Egglog0 posts
@@ -2063,3 +2518,18 @@ y = y1(a)
 z = z1(a)
 
 extract foo(x,y,z)
+
+
+Unison - hashes every construct to be globally accessible. For mutually recursive definitions, it tie breaks.
+
+Egglog doesn't really allow recursive defintions (should it?)
+```
+(function zeros () List)
+(union zeros (Cons 0 zeros))
+
+(function zeros1 () List)
+(union zeros1 (Cons 0 zeros1))
+
+```
+There is a loop here. `zeros1` is not dervied to be `zeros` because there is no isomorphism finder.
+`zeros` is not really "defined" to be `cons 0 zeros`. It is "equal"

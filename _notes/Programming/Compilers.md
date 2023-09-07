@@ -529,6 +529,7 @@ Expand expressions with care - less dependencies
 [liveness analysis for ssa form program](https://hal.inria.fr/inria-00558509v2/document) 
 
 
+[VW-SLP: Auto-Vectorization with Adaptive Vector Width](http://vporpo.me/papers/vwslp_pact2018.pdf)
 
 ## Polyhedral
 [Polyhedral model](https://en.wikipedia.org/wiki/Polytope_model)

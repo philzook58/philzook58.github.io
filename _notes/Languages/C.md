@@ -181,3 +181,6 @@ instrusive linked list
 K semantics
 
 https://en.wikipedia.org/wiki/Undefined_behavior
+
+
+[foundations of cs](http://infolab.stanford.edu/~ullman/focs.html) kind of cool they do it in C

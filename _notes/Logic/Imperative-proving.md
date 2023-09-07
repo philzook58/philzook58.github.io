@@ -3,7 +3,8 @@ layout: post
 title: Imperative Proving
 ---
 - [Hoare Logic](#hoare-logic)
-- [Weakest Precondition](#weakest-precondition)
+  - [Incorrectness Logic](#incorrectness-logic)
+  - [Weakest Precondition](#weakest-precondition)
 - [Why3](#why3)
 - [Boogie](#boogie)
 - [Dafny](#dafny)
@@ -32,7 +33,14 @@ Axiom schema
 Prpositionbal hoare logic - see KAT
 
 
-# Weakest Precondition
+[Outcome logic](https://github.com/gleachkr/OL-Slides)
+Extension of hoare logic that can express some thins in incrroectness logic
+
+
+## Incorrectness Logic
+
+## Weakest Precondition
+
 
 
 # Why3

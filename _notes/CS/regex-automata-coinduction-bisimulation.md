@@ -481,6 +481,8 @@ https://www.youtube.com/watch?v=-fhaZvgDaZk&ab_channel=OlafChitil altenrkirch co
 
 [Copatterns: programming infinite structures by observations](https://dl.acm.org/doi/10.1145/2480359.2429075)
 ## Coalgebra
+hypersets
+
 [](https://thorsten-wissmann.de/theses/dissertation-wissmann.pdf)
 [Coalgebra for the working programming languages researcher](https://www.youtube.com/watch?v=Qb0z1FWT5bw&ab_channel=ACMSIGPLAN)
 [Coalgebraic Semantics [1/4] - Alexandra Silva - OPLSS 2019](https://www.youtube.com/watch?v=MFUhTtsJNzE&ab_channel=OPLSS)

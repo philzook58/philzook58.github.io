@@ -20,7 +20,11 @@ title: Abstract Algebra
 - [Universal Algebra](#universal-algebra)
 - [Homomorphisms](#homomorphisms)
 
-
+See also:
+- discrete math
+- category theory
+- linear algebra
+- nonlinear algebra
 
 [Abstract Algebra](https://en.wikipedia.org/wiki/Abstract_algebra)
 # Elementary
@@ -38,6 +42,9 @@ I don't know why, but this is still the one that makes me the most comfortable
 - Symettries
 - Lie Groups
 
+
+https://en.wikipedia.org/wiki/Computational_group_theory
+GAP Magma
 
 
 # Semirings
@@ -61,6 +68,8 @@ Semiring provenanc in datalog
 
 Galois connections
 Fixed point theorems
+
+
 
 # Boolean Algebra
 

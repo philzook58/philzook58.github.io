@@ -50,6 +50,11 @@ Lists or arrays of integers can be used to make arbitrary sized integers
 
 gmp
 limbs
+karatsuba multiplication
+
+[modern computer arithemtic - brent and zimmerman](https://maths-people.anu.edu.au/~brent/pd/mca-cup-0.5.9.pdf)
+
+modular airthemtic
 
 # Rationals
 Two integers (a tuple or struct) describes fractions. You can do `+-*/` exactly for fractions. That can be very powerful, since you can then analyze more complicated operations

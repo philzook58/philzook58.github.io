@@ -9,8 +9,6 @@ title: Prolog
 wordpress_id: 1865
 ---
 
-- [Systems](#systems)
-  - [Ciao](#ciao)
 - [Examples](#examples)
   - [Hello World](#hello-world)
   - [Things that are prolog](#things-that-are-prolog)
@@ -19,9 +17,23 @@ wordpress_id: 1865
   - [Copy Term and Structural Matching](#copy-term-and-structural-matching)
   - [Term rewriting](#term-rewriting)
   - [Small Step Semantics](#small-step-semantics)
+  - [Hoare Logic](#hoare-logic)
+  - [Bunched Logic / Separation](#bunched-logic--separation)
+  - [Modal Logic](#modal-logic)
+  - [Model Checking](#model-checking)
   - [Typeclass](#typeclass)
   - [Type checking / inference](#type-checking--inference)
+  - [Refinement Types](#refinement-types)
+    - [Bussproofs printing](#bussproofs-printing)
+      - [Categorical Prover](#categorical-prover)
+    - [Instruction selection](#instruction-selection)
+  - [Lambda](#lambda)
+  - [Unification](#unification)
+  - [Theorem Proving](#theorem-proving)
+    - [Interactive](#interactive)
 - [Topics](#topics)
+  - [Systems](#systems)
+    - [Ciao](#ciao)
   - [SLD resolution](#sld-resolution)
   - [Interesting predicates](#interesting-predicates)
   - [Imperative analogies](#imperative-analogies)
@@ -37,17 +49,18 @@ wordpress_id: 1865
   - [Tabling](#tabling)
     - [XSB](#xsb)
   - [Python](#python)
-  - [Attributed Variables](#attributed-variables)
-  - [Constraint Logic Programming (CLP)](#constraint-logic-programming-clp)
   - [Prolog II, III IV.](#prolog-ii-iii-iv)
   - [Parallel](#parallel)
   - [Macros](#macros)
   - [Coroutines](#coroutines)
   - [Indexing](#indexing)
   - [DCG - Definite Clauses Grammars (DCG)](#dcg---definite-clauses-grammars-dcg)
-    - [Bussproofs printing](#bussproofs-printing)
-      - [Categorical Prover](#categorical-prover)
-    - [Instruction selection](#instruction-selection)
+  - [Constraint Logic Programming (CLP)](#constraint-logic-programming-clp)
+    - [clpb](#clpb)
+    - [clp(euf)](#clpeuf)
+    - [Attributed Variables](#attributed-variables)
+    - [Coroutining](#coroutining)
+    - [CLP(Set)](#clpset)
   - [CHR](#chr)
     - [Compiling](#compiling)
     - [Examples](#examples-1)
@@ -72,7 +85,7 @@ wordpress_id: 1865
     - [Database manipulation](#database-manipulation)
     - [Cuts and Such](#cuts-and-such)
 - [Functions](#functions)
-  - [Lambda](#lambda)
+  - [Lambda](#lambda-1)
     - [HiLog](#hilog)
     - [Alpha prolog](#alpha-prolog)
 - [Semantics](#semantics)
@@ -91,8 +104,6 @@ wordpress_id: 1865
 - [Abductive logic programming](#abductive-logic-programming)
 - [Equational Logic Programming](#equational-logic-programming)
 - [Functional Logic Programming](#functional-logic-programming)
-- [Theorem Proving](#theorem-proving)
-  - [Interactive](#interactive)
 - [Misc](#misc)
   - [2019](#2019)
   - [Notes from 2017 -Resolution and unification](#notes-from-2017--resolution-and-unification)
@@ -103,61 +114,17 @@ See also:
 - Constraint Programming (Answer Set programming in particular)
 - Scheme (Minikanren)
 
-# Systems
-[50 years of prolog](https://arxiv.org/pdf/2201.10816.pdf)
-
-- Swi prolog - I think this is a good default choice.
-- [ciao](http://ciao-lang.org/)
-- [sicstus](https://sicstus.sics.se/) requires commercial license [manual](https://sicstus.sics.se/sicstus/docs/latest4/html/sicstus.html/index.html)
-- gnu prolog
-- [scryrer](https://github.com/mthom/scryer-prolog)
-- tau prolog - javascript web enabled
-- hprolog
-- binprolog
-- XSB - fancy tabling. 
-- YAP
-- B-prolog
-- ECLiPSe - can talk to minizinc
-- Qu-prolog
-- [trealla](https://github.com/trealla-prolog/trealla) prolog interpreter in C. Not WAM based. tree-walking, structure-sharing, deep binding whatever that means
-
-Relatives:
-- Minikanren
-- minizinc
-- picat
-- Mercury - mode declarations and type declarations. Allows reordering, but deals with IO using lionear types?
-- Curry - Haskell syntax like language.
-- Lambda prolog - teyjus, elpi, makam
-- Hilog
-- Godel
-- Hyprolog - abduction
-- ergo AI, flora2
-- guan https://github.com/microsoft/Guan c# prolog?
-
-
-## Ciao
-[ciao manual](http://ciao-lang.org/ciao/build/doc/ciao.html/ciaofulltoc.html)
-
-```ciao
-main(_) :- format("hellow world").
-```
-
-```ciao
-main(_) :- print([1,2,3]),
-  append(A,A,A), print(A)
-.
-```
-
-[assertions and auto documetation](http://ciao-lang.org/ciao/build/doc/ciao.html/AssrtLang.html)
-[ciao and design philosphy](http://cliplab.org/papers/hermenegildo11:ciao-design-tplp.pdf)
-ciaopp - preprocessor and veirfier? PLAI
 
 # Examples
 ## Hello World
+For a SWI prolog program, I need the `initiaization(main,main).` thing to say where to start running.
 
 ```prolog
 :- initialization(main,main).
-main(_) :- format("hello world ~p\n", [foo(8)]).
+main(_) :- 
+  writeln("hello world"),
+  print("hello world"),
+  format("hello world ~p\n", [foo(8)]).
 ```
 
 ## Things that are prolog
@@ -174,6 +141,7 @@ main(_) :- format("hello world ~p\n", [foo(8)]).
 append([], X, X).
 append([H | X], Y, [H | Z]) :- append(X, Y, Z).
 ```
+
 ## Difference Lists
 Differece lists are related to singly-linked that maintain a pointer to the last element. 
 ```
@@ -421,6 +389,39 @@ If we go metainterpreter on this, we can evaluate with respect to a list or set 
 step(apply(F,X), )
 
 ```
+
+## Hoare Logic
+<https://softwarefoundations.cis.upenn.edu/plf-current/Hoare.html>
+
+```prolog
+
+hoare(P, skip, P).
+hoare(P, seq(C1,C2), Q) :- hoare(P, c1, R), hoare(R, c2, Q).
+% hoare(P, set(X,V), Q) :- subst(P,X,V,Q). something like this. Not declarative.
+% hoare(P, while(C,Inv,B), Q) , a good place for inductive logic programming? 
+hoare(P, ite(C,T,E), Q) :- hoare(and(C,P), T, Q), hoare(and(not(C), P), E, Q).
+
+% consequence, We may weaken the post, or strengthen the pre
+% a use case for subsumption?
+% hoare(P, S, Q) :- hoare(P1, S, Q), P => P1.
+% hoare(P, S, Q) :- hoare(P, S, Q1), Q1 => Q.
+% or make it same rule.
+
+% weakest precondition is reasonable use of -++ mode. Or maybe +++ mode.
+
+```
+
+## Bunched Logic / Separation
+https://softwarefoundations.cis.upenn.edu/slf-current/toc.html
+
+## Modal Logic
+
+## Model Checking
+[Set Graphs VI Logic Programming and Bisimulation](https://users.dimi.uniud.it/~agostino.dovier/DID/LNC/CONVEGNI/DOVIER_TORINO.pdf)
+Bisimulation
+co-LP
+
+
 ## Typeclass
 
 ```
@@ -544,8 +545,309 @@ generalize(tVar(A), )
 generalize(A -> B)
 ```
 
+## Refinement Types
+Use CLP to build a refinement type system.
+https://arxiv.org/abs/2010.07763
+
+
+```prolog
+
+
+
+```
+
+### Bussproofs printing
+
+```prolog
+
+proof(bin(G, Rule, PX,PY)) --> proof(PX), proof(PY),
+              ,"\RightLabel{", rule(Rule) ,"}", "\BinaryInfC{", sequent(G), "}".
+proof(un(G, Rule, PX)) --> proof(PX),
+              ,"\RightLabel{", rule(Rule) ,"}", "\UnaryInfC{", sequent(G), "}".
+proof(ax(G, Rule)) --> 
+              ,"\RightLabel{", rule(Rule) ,"}", "\AxiomC{", sequent(G), "}".
+
+
+height(ax(_,_), 0).
+height(un(_,_,PX), N) :- N := NX+1, height(PX,NX).
+height(bin(_,_,PX,PY), N) :- N := max(NX,NY)+1, height(PX,NX), height(PY,NY).
+
+
+
+
+```
+
+#### Categorical Prover
+```prolog
+
+%sequent( Hyp, Conc, Var )
+
+:- use_module(library(clpfd)).
+%:- table prove/2.
+:- use_module(library(solution_sequences)).
+%:- op(600,	xfy,	i- ).
+
+prove(S, ax(S, id)) :- S = (A > A).
+prove(S, ax(S, fst)) :- S = (A /\ _B > A).
+prove( A /\ B > B, ax(A /\ B > B, snd)).
+prove( S, ax(S, inj1 )) :- S = (A > A \/ _B).
+prove( S, ax(S, inj2 )) :- S = (B > _A \/ B).
+prove( false > _ , initial ).
+prove( _ > true  , terminal ).
+prove( A > B /\ C, bin(A > B /\ C, pair, P1, P2)) :- prove(A > B, P1), prove(A > C, P2).
+prove( A \/ B > C , bin(A \/ B > C, case, P1, P2)) :- prove( A > B, P1), prove( A > C, P2).
+prove( A > C, bin(A > C, comp, P1, P2)) :- prove(A > B, P1), prove(B > C, P2).
+
+
+height(ax(_,_), 1).
+height(un(_,_,PX), N) :- N #> 1, N #= NX+1, height(PX,NX).
+height(bin(_,_,PX,PY), N) :- N #> 1, N #= max(NX , NY) + 1, height(PX,NX), height(PY,NY).
+
+% maybe explicilty taking proof steps off of a list. using length.
+% use dcg for proof recording?
+
+
+prove(A > A)       --> [id].
+prove(A /\ _ > A)  --> [fst].
+prove(_ /\ B > B)  --> [snd].
+prove(A > A \/ _)  --> [inj1].
+prove(B > _ \/ B)  --> [inj2].
+prove(false > _)   --> [initial].
+prove( _ > true)   --> [terminal].
+prove(A > B /\ C)  --> [pair], prove(A > B),  prove(A > C).
+prove(A \/ B > C)  --> [case], prove(A > C),  prove(B > C).
+prove(A > C)       --> [comp], prove(A > B),  prove(B > C).
+
+:- initialization(main).
+%main :- format("hello world", []).
+%main :- between(1, 10, N), height(Pf, N), writeln(Pf), prove( w /\ x /\ y /\ z > w, Pf ), print(Pf), halt.
+main :- length(Pf, _), phrase(prove(w /\ x /\ y /\ z > w \/ y),Pf), print(Pf), halt.
+main :- halt.
+```
+
+Yes, the dcg form is very pretty. It's a writer monad of sorts. It is recording a minimal proof certificate that is reconstructable to the full thing pretty easily.
+
+`G --> [tag], D1, D2`
+Should be read as
+
+```
+  D1        D2
+------------------ tag
+       G
+```
+
+```
+
+prove(Sig , A > B) --> { insert(A,Sig,Sig1) }, [weaken(A)], prove(Sig1, A > B).
+prove(A > forall(X,B)) --> , prove(weak(X, A) > B).
+prove(A > forall(X,B)) --> {insert(X,Sig,Sig2) }, prove(Sig1, A > B).
+prove(Sig, forall(X,A) > ) --> , prove(weak(X, A) > B)
+
+```
+Maybe start with implication
+prove((A > (B > C)  ) --> [curry], prove( A /\ B > C).
+prove((A /\ (A > B) > B ) --> [eval].
+
+Catlog
+### Instruction selection
+A model of Instruction selection can be viewed as related to a parsing problem. A parse is building a tree out of a linearized sequence. Instruction selection is finding a linear sequence of machine instructions to represent an expression or sequence of high level statements.
+
+```prolog
+% isel(R0, select( ,A + B)) --> {B := }
+
+isel(R0, lit(A))    --> [mov(R0, A)]. % {integer(A)},
+isel(R0, A + A)     --> [lsl(R0, R1)], isel(R1, A).
+isel(R0, A + B * C) --> [fma(R0, RA,RB, RC)], isel(), sel().
+isel(R0, A + B)     --> [add(R0, R1, R2)], isel(R1, A), isel(R2, B).
+isel(R0, A * B)     --> [mul(R0, R1, R2)], isel(R1, A), isel(R2, B).
+%isel(R0, binop(Op, A, B))     --> [mul(R0, R1, R2)], isel(R1, A), isel(R2, B).
+
+% note storage restrictions.
+% isel(reg(R0), A + B)     --> [add(reg(R0), reg(R1), reg(R2))], isel(reg(R1), A), isel(reg(R2), B).
+% spill?
+% isel(R0, A) --> [mv(R0, R1)], isel(R1, A). %optional copy. Bad rule
+
+
+% liveness.
+% isel(LiveSet, ) --> [add(R0,R1,R2)], { Live1 = Live \ R0 + R1 + R2 } , isel(LiveSet)
+% maybe use bitvector?
+% No give varoables unique identifiers, skolem style? id(1, Expr), id(2, Expr), 
+
+:- initialization(main,main).
+main(_) :- phrase(isel(R0, lit(2) + lit(7)), Asm), print(Asm), halt.
+```
+
+
+## Lambda
+Higher Order Unification
+Embeddable nonimal unification
+Unification
+```
+unify(A,B) :- var(A), var(B)
+```
+
+```
+subst(X,V,E,E1) :- 
+```
+
+
+maps from ground variables to prolog vars for interpreters
+```
+[x - X, y - Y, z - Z]
+```
+
+```prolog
+:- initialization(main,main).
+main(_) :- T = [append([],A,A), append([X|Xs], Y, [X|Zs]) :- append(Xs,Y,Zs)],
+      numbervars(T,0,End),
+      length(Vs, End),
+      writeln(Vs).
+
+
+
+
+```
+
+Can you make pure data structures that respect monotonicity.
+They ought to defer or freeze rather than make judgements on variables.
+
+## Unification
+
+```prolog
+find(Env,K,) :- 
+  lookup(Env,K,V),
+  (V == $'var'(N) ->
+   find(Env, V, )
+   ; 
+   
+   )
+
+
+
+
+union(Uf, X, Y) :- 
+  lookup(Uf, X, Xv), lookup(Uf, Y, Yv), Xv = Yv.
+
+find(Uf,X,V) :- lookup(Uf,X,Xv).
+
+unify(Env,'T1,T2) :- 
+  eval(T1,T11), eval(T1,T22),
+unify(Env, term(F,Arg), term(F,Arg1)) :-
+ maplist(unify(Env, Arg, Arg1)).
+unify(Env, $VAR(N), T) :-
+    eval(T,T1), lookup(Env, $VAR(N), T1).
+
+
+```
+
+```prolog
+
+
+%macro(ex(X,E)) :- 
+  
+
+
+```
+
+[set unification](https://arxiv.org/pdf/cs/0110023.pdf)
+list based vs union based reps
+Set constraints
+{log}
+boolean unification
+
+
+## Theorem Proving
+[Leantap](https://formal.iti.kit.edu/beckert/leantap/)
+Jens Otten
+[How to Build an Automated Theorem Prover. Invited Tutorial at TABLEAUX in London/UK](http://www.jens-otten.de/tutorial_tableaux19/)
+
+[A simple version of this implemented in tau prolog](https://www.philipzucker.com/javascript-automated-proving/) Prdocues proofs translated to bussproofs latex
+
+
+[a pearl on SAT and SMT solving in prolog](https://www.sciencedirect.com/science/article/pii/S030439751200165X) [code](http://www.staff.city.ac.uk/~jacob/solver/index.html)
+
+[Backjumping is Exception Handling](https://arxiv.org/abs/2008.04720) throw and catch implement backjumping for a sat solver
+
+[PRESS: PRolog Equation Solving System](https://github.com/maths/PRESS) as described in the art of prolog book. also has an lp solver?
+Pretty interesting tehcniques. If a variable is in a single position, you can unfold the expression. 2. you can apply quadratic equations and stuff 3. 
+Is it kind of a zipper to isolate a variable?
+
+[tarau Formula Transformers and Combinatorial Test Generators for Propositional Intuitionistic Theorem Provers](https://arxiv.org/abs/1910.01775)
+
+Dyckhoff g4ip
+
+
+### Interactive
+Teyjus
+ACL2 analogy. ACL2 is modelling a pure lisp.
+
+```prolog
+axiom(P) :- asserta(P).
+qed(F,Prf) :- check(F, Prf), asserta(F).
+
+main(_) :- 
+  axiom(a),
+  axiom(b),
+  lemma(a(X) :- b(X))
+
+```
+
+```
+% lexical scope. We could do this as a macro?
+let(X, e, let(X, e,  X).
+
+```
 
 # Topics
+## Systems
+[50 years of prolog](https://arxiv.org/pdf/2201.10816.pdf)
+
+- Swi prolog - I think this is a good default choice.
+- [ciao](http://ciao-lang.org/)
+- [sicstus](https://sicstus.sics.se/) requires commercial license [manual](https://sicstus.sics.se/sicstus/docs/latest4/html/sicstus.html/index.html)
+- gnu prolog
+- [scryrer](https://github.com/mthom/scryer-prolog)
+- tau prolog - javascript web enabled
+- hprolog
+- binprolog
+- XSB - fancy tabling. 
+- YAP
+- B-prolog
+- ECLiPSe - can talk to minizinc
+- Qu-prolog
+- [trealla](https://github.com/trealla-prolog/trealla) prolog interpreter in C. Not WAM based. tree-walking, structure-sharing, deep binding whatever that means
+
+Relatives:
+- Minikanren
+- minizinc
+- picat
+- Mercury - mode declarations and type declarations. Allows reordering, but deals with IO using lionear types?
+- Curry - Haskell syntax like language.
+- Lambda prolog - teyjus, elpi, makam
+- Hilog
+- Godel
+- Hyprolog - abduction
+- ergo AI, flora2
+- guan https://github.com/microsoft/Guan c# prolog?
+
+
+### Ciao
+[ciao manual](http://ciao-lang.org/ciao/build/doc/ciao.html/ciaofulltoc.html)
+
+```ciao
+main(_) :- format("hellow world").
+```
+
+```ciao
+main(_) :- print([1,2,3]),
+  append(A,A,A), print(A)
+.
+```
+
+[assertions and auto documetation](http://ciao-lang.org/ciao/build/doc/ciao.html/AssrtLang.html)
+[ciao and design philosphy](http://cliplab.org/papers/hermenegildo11:ciao-design-tplp.pdf)
+ciaopp - preprocessor and veirfier? PLAI
+
 ## SLD resolution
 
 
@@ -554,6 +856,7 @@ generalize(A -> B)
 ## Interesting predicates
 [comparson and unification of terms](https://www.swi-prolog.org/pldoc/man?section=compare)
 - `=@=`, variant
+- `?=`
 - `==`
 - `=`
 - `/=` a weaker version of dif. Uses negation as fialure in kind of unsatisfactory way
@@ -751,6 +1054,7 @@ picat pattern matching
 
 https://www.swi-prolog.org/pldoc/man?section=ssu
 
+Maybe not even that complicated? Claims it a fairly simple macro. Use `==` 
 ```prolog
 
 
@@ -1698,28 +2002,8 @@ main(_) :-
    .
 
 ```
-## Attributed Variables
-Attaching extra info to variables. This can be be used to implement CLP as a library
-
-https://www.metalevel.at/prolog/attributedvariables
-https://sicstus.sics.se/sicstus/docs/3.7.1/html/sicstus_17.html
-https://www.swi-prolog.org/pldoc/man?section=attvar
-
-Attributed variables are a union find dict?
-
-## Constraint Logic Programming (CLP)
-- CLP(B) - constraint over boolean variables. Sometimes bdd based
-- CLP(FD)
-- CLP(Z)
-
-[Anne Ogborn's tutorial](https://github.com/Anniepoo/swiplclpfd)
-
-[Indexing dif/2](https://arxiv.org/abs/1607.01590)
-`reif` `if_/` `tfilter/3`
 
 
-eclipse talks to minizinc?
-[clp examples](https://swish.swi-prolog.org/example/examples.swinb)
 
 ## Prolog II, III IV.
 Cyclic terms. Rational terms. See Condicutive logic programming
@@ -1734,6 +2018,8 @@ https://en.wikipedia.org/wiki/Parlog
 
 ## Macros
 <https://swi-prolog.discourse.group/t/new-library-macros/6571> macro library. Seems nice
+[triska on macros](https://www.metalevel.at/prolog/macros)
+
 ```prolog
 :- use_module(library(macros)).
 #define(max_size, 100).
@@ -1745,6 +2031,27 @@ https://en.wikipedia.org/wiki/Parlog
 `term_expansion`
 
 Can I use macros to make better scoping?
+
+```prolog
+:- initialization(main,main).
+
+%term_expansion(Term,X) :- write(term), nl, write_canonical(Term), nl, fail.
+term_expansion(bar(foo(X)), biz :- baz) :- writeln(hit_other).
+
+%goal_expansion(Term,X) :- write(goal), nl, write_canonical(Term), nl, fail.
+
+bar(foo(X)).
+
+%goal_expansion(ex(X,T), )
+
+main(_) :- 
+  %write_canonical(foo(a))
+  %write(hi).
+  writeln(foo),
+  listing(biz),
+  true.
+
+```
 
 
 
@@ -1863,127 +2170,155 @@ regexp interpreter. dcg rexp//1
 
 Longest match firsat behavior - order rules for longest match
 
+## Constraint Logic Programming (CLP)
+- CLP(B) - constraint over boolean variables. Sometimes bdd based
+- CLP(FD)
+- CLP(Z)
+- CLP(H)
 
-### Bussproofs printing
+[Anne Ogborn's tutorial](https://github.com/Anniepoo/swiplclpfd)
+
+[Indexing dif/2](https://arxiv.org/abs/1607.01590)
+`reif` `if_/` `tfilter/3`
+
+
+eclipse talks to minizinc?
+[clp examples](https://swish.swi-prolog.org/example/examples.swinb)
+
+CHR is a language for eaiser custom clp theories
+
+[Constraint Logic Programming : A Survey](https://www.sciencedirect.com/science/article/pii/0743106694900337)
+
+Constrained Horn Clauses are not that much different from CLP.
+
+Bottom up execution. "facts" allows logically constrained variables. `foo(X) :- x > 7, X < 11.`. I wonder how resolutin provers deal with theory specific stuff.
+
+Execution model: A goal stack + constraint store. Minikanren?
+[A Framework for Extending microKanren with Constraints](https://arxiv.org/pdf/1701.00633.pdf)
+
+### clpb
+[swi manual clpb](https://www.swi-prolog.org/pldoc/man?section=clpb)
+[The Boolean Constraint Solver of SWI-Prolog: System Description](https://www.metalevel.at/swiclpb.pdf)
+[Boolean Constraints in SWI-Prolog: A Comprehensive System Description](https://www.metalevel.at/boolean.pdf)
+[clpb triska](https://www.metalevel.at/clpb/)
+[github repo with examples](https://github.com/triska/clpb)
+```prolog
+:- include(module(clpb)).
+
+% a finite set is a mapping / assoc-list to bool
+% a multiset is a mapping to int
+union()
+
+main(_) :- [x - X. y - Y, z - Z]
+
+```
+
+bdd, indexical, or external sat.
+[robdd.pl](http://www.cs.otago.ac.nz/cosc410/ok/index.htm)
+
+bdd using chr?
+```
+
+bdd(Var, L,R , Id), bdd( ,L,R, Id) ==>
+bdd(Var,L,R,)
+```
+
+independent set example
+```prolog
+independent_set(*(NBs)) :−
+  findall(U−V, edge(U, V), Edges),
+  setof(U, V^(member(U−V, Edges);member(V−U, Edges)), Nodes),
+  pairs_keys_values(Pairs, Nodes, _),
+  list_to_assoc(Pairs, Assoc),
+   maplist(not_both(Assoc), Edges, NBs).
+
+ not_both(Assoc, U−V, ~BU + ~BV) :−
+  get_assoc(U, Assoc, BU),
+  get_assoc(V, Assoc, BV).
+```
+
+- domino tilings
+
+
+https://stackoverflow.com/questions/63505466/prolog-implementation-of-quines-algorithm-for-classical-propositional-logic-in?noredirect=1&lq=1
+https://stackoverflow.com/questions/64835191/boolean-unification-in-prolog
+
+### clp(euf)
+`union(+T1,+T2)` `T1 =:= T2` delay until ground? Not quite right. foo(x,X) foo(y,X) still has congruence power if we learn x = y. `union(eid(), eid())`. Support union of terms and eid
+`find(+T,-Eid)`
+`ematch(+Pat,-Match)` 
+`extract(+Eid, -Term)`
+
+attrbitued var style ([z3](https://z3prover.github.io/papers/z3internals.html#sec-equality-and-uninterpreted-functions) style?). `put_attr( ,euf_parents,)` `put_attr( , euf_sibling, )` `put_attr( , term, )`
+vs chr style
+There was also in that prolog smt paper a congruence closure routine.
+
+### Attributed Variables
+Attaching extra info to variables. This can be be used to implement CLP as a library
+
+<https://www.metalevel.at/prolog/attributedvariables>
+https://sicstus.sics.se/sicstus/docs/3.7.1/html/sicstus_17.html
+<https://www.swi-prolog.org/pldoc/man?section=attvar>
+
+Attributed variables are a union find dict?
+
+Atributed variables are also reminscent of nelson oppen, theories are informed 
 
 ```prolog
-
-proof(bin(G, Rule, PX,PY)) --> proof(PX), proof(PY),
-              ,"\RightLabel{", rule(Rule) ,"}", "\BinaryInfC{", sequent(G), "}".
-proof(un(G, Rule, PX)) --> proof(PX),
-              ,"\RightLabel{", rule(Rule) ,"}", "\UnaryInfC{", sequent(G), "}".
-proof(ax(G, Rule)) --> 
-              ,"\RightLabel{", rule(Rule) ,"}", "\AxiomC{", sequent(G), "}".
-
-
-height(ax(_,_), 0).
-height(un(_,_,PX), N) :- N := NX+1, height(PX,NX).
-height(bin(_,_,PX,PY), N) :- N := max(NX,NY)+1, height(PX,NX), height(PY,NY).
-
-
-
-
-```
-
-#### Categorical Prover
-```prolog
-
-%sequent( Hyp, Conc, Var )
-
-:- use_module(library(clpfd)).
-%:- table prove/2.
-:- use_module(library(solution_sequences)).
-%:- op(600,	xfy,	i- ).
-
-prove(S, ax(S, id)) :- S = (A > A).
-prove(S, ax(S, fst)) :- S = (A /\ _B > A).
-prove( A /\ B > B, ax(A /\ B > B, snd)).
-prove( S, ax(S, inj1 )) :- S = (A > A \/ _B).
-prove( S, ax(S, inj2 )) :- S = (B > _A \/ B).
-prove( false > _ , initial ).
-prove( _ > true  , terminal ).
-prove( A > B /\ C, bin(A > B /\ C, pair, P1, P2)) :- prove(A > B, P1), prove(A > C, P2).
-prove( A \/ B > C , bin(A \/ B > C, case, P1, P2)) :- prove( A > B, P1), prove( A > C, P2).
-prove( A > C, bin(A > C, comp, P1, P2)) :- prove(A > B, P1), prove(B > C, P2).
-
-
-height(ax(_,_), 1).
-height(un(_,_,PX), N) :- N #> 1, N #= NX+1, height(PX,NX).
-height(bin(_,_,PX,PY), N) :- N #> 1, N #= max(NX , NY) + 1, height(PX,NX), height(PY,NY).
-
-% maybe explicilty taking proof steps off of a list. using length.
-% use dcg for proof recording?
-
-
-prove(A > A)       --> [id].
-prove(A /\ _ > A)  --> [fst].
-prove(_ /\ B > B)  --> [snd].
-prove(A > A \/ _)  --> [inj1].
-prove(B > _ \/ B)  --> [inj2].
-prove(false > _)   --> [initial].
-prove( _ > true)   --> [terminal].
-prove(A > B /\ C)  --> [pair], prove(A > B),  prove(A > C).
-prove(A \/ B > C)  --> [case], prove(A > C),  prove(B > C).
-prove(A > C)       --> [comp], prove(A > B),  prove(B > C).
-
-:- initialization(main).
-%main :- format("hello world", []).
-%main :- between(1, 10, N), height(Pf, N), writeln(Pf), prove( w /\ x /\ y /\ z > w, Pf ), print(Pf), halt.
-main :- length(Pf, _), phrase(prove(w /\ x /\ y /\ z > w \/ y),Pf), print(Pf), halt.
-main :- halt.
-```
-
-Yes, the dcg form is very pretty. It's a writer monad of sorts. It is recording a minimal proof certificate that is reconstructable to the full thing pretty easily.
-
-`G --> [tag], D1, D2`
-Should be read as
-
-```
-  D1        D2
------------------- tag
-       G
-```
-
-```
-
-prove(Sig , A > B) --> { insert(A,Sig,Sig1) }, [weaken(A)], prove(Sig1, A > B).
-prove(A > forall(X,B)) --> , prove(weak(X, A) > B).
-prove(A > forall(X,B)) --> {insert(X,Sig,Sig2) }, prove(Sig1, A > B).
-prove(Sig, forall(X,A) > ) --> , prove(weak(X, A) > B)
-
-```
-Maybe start with implication
-prove((A > (B > C)  ) --> [curry], prove( A /\ B > C).
-prove((A /\ (A > B) > B ) --> [eval].
-
-Catlog
-### Instruction selection
-A model of Instruction selection can be viewed as related to a parsing problem. A parse is building a tree out of a linearized sequence. Instruction selection is finding a linear sequence of machine instructions to represent an expression or sequence of high level statements.
-
-```prolog
-% isel(R0, select( ,A + B)) --> {B := }
-
-isel(R0, lit(A))    --> [mov(R0, A)]. % {integer(A)},
-isel(R0, A + A)     --> [lsl(R0, R1)], isel(R1, A).
-isel(R0, A + B * C) --> [fma(R0, RA,RB, RC)], isel(), sel().
-isel(R0, A + B)     --> [add(R0, R1, R2)], isel(R1, A), isel(R2, B).
-isel(R0, A * B)     --> [mul(R0, R1, R2)], isel(R1, A), isel(R2, B).
-%isel(R0, binop(Op, A, B))     --> [mul(R0, R1, R2)], isel(R1, A), isel(R2, B).
-
-% note storage restrictions.
-% isel(reg(R0), A + B)     --> [add(reg(R0), reg(R1), reg(R2))], isel(reg(R1), A), isel(reg(R2), B).
-% spill?
-% isel(R0, A) --> [mv(R0, R1)], isel(R1, A). %optional copy. Bad rule
-
-
-% liveness.
-% isel(LiveSet, ) --> [add(R0,R1,R2)], { Live1 = Live \ R0 + R1 + R2 } , isel(LiveSet)
-% maybe use bitvector?
-% No give varoables unique identifiers, skolem style? id(1, Expr), id(2, Expr), 
-
 :- initialization(main,main).
-main(_) :- phrase(isel(R0, lit(2) + lit(7)), Asm), print(Asm), halt.
+
+
+attr_unify_hook(Domain, Y) :-  % it's odd this is not tagged by the event type. 
+ % Since we don't super get the key, perhaps it is wisest to wrap the attribute foo(Domaindata)
+  writeln(union_event),
+  writeln(Domain), % larry (data held in "Y")
+  writeln(Y). % variable id of "X"
+
+main(_) :- put_attr(X, mykey, fred), 
+           put_attr(Y, mykey, larry), 
+           put_attr(Y, mykey2, farry),  % with ths union_event is triggered twice, once per attribute
+           get_attr(X,mykey,F), writeln(F),
+           writeln(X), writeln(Y),
+           X = Y,  % triggers union_event
+           get_attr(X,mykey,FX), writeln(FX), % fred 
+           get_attr(Y,mykey,FY), writeln(Y), writeln(FY)  % fred. Y is literally X now anyway.
+
+          .
+
 ```
+
+ 
+
+### Coroutining
+Sometimes is makes sense to be lazy doing something until a variable is filled in more.
+This is basically what `dif/2` does. It wakes up when either thing gets more filled in
+
+`freeze` is a delayed `call`
+
+### CLP(Set)
+https://www.clpset.unipr.it/
+`{log}` "setlog"
+JSetL
+
+[set unification](https://www.cambridge.org/core/journals/theory-and-practice-of-logic-programming/article/abs/set-unification/2B789EB32DCF9F77021DBE26FC691032)
+[Sets and constraint logic programming](https://dl.acm.org/doi/10.1145/365151.365169)
+
+G Rossi
+A Dovier
+E Pontelli
+
+herditraryl hybrid finite sets. Finite sets of finite sets + terms
+
+
+[Set Constraints in Logic Programming](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=ea756dcfc1db14307899a5b7d33b82fefbdc74c0)
+[Set constraints and logic programming - kozen](https://www.cs.cornell.edu/~kozen/Papers/sclp.pdf) CLP(SC)
+Herbrand atom ~ singleton set
+Aiken
+
+Relation to boolean equation systems?
+
+Kuper - Logic programming with sets
+
 
 ## CHR
 [forward chaining, chr comes up](https://swi-prolog.discourse.group/t/forward-chaining-like-rete-algorithm-in-rule-engine/5137/28)
@@ -3222,47 +3557,7 @@ Logic programming, functional programming, and inductive definitions](https://li
 
 # Functional Logic Programming
 See Curry
-# Theorem Proving
-[Leantap](https://formal.iti.kit.edu/beckert/leantap/)
-Jens Otten
-[How to Build an Automated Theorem Prover. Invited Tutorial at TABLEAUX in London/UK](http://www.jens-otten.de/tutorial_tableaux19/)
 
-[A simple version of this implemented in tau prolog](https://www.philipzucker.com/javascript-automated-proving/) Prdocues proofs translated to bussproofs latex
-
-
-[a pearl on SAT and SMT solving in prolog](https://www.sciencedirect.com/science/article/pii/S030439751200165X) [code](http://www.staff.city.ac.uk/~jacob/solver/index.html)
-
-[Backjumping is Exception Handling](https://arxiv.org/abs/2008.04720) throw and catch implement backjumping for a sat solver
-
-[PRESS: PRolog Equation Solving System](https://github.com/maths/PRESS) as described in the art of prolog book. also has an lp solver?
-Pretty interesting tehcniques. If a variable is in a single position, you can unfold the expression. 2. you can apply quadratic equations and stuff 3. 
-Is it kind of a zipper to isolate a variable?
-
-[tarau Formula Transformers and Combinatorial Test Generators for Propositional Intuitionistic Theorem Provers](https://arxiv.org/abs/1910.01775)
-
-Dyckhoff g4ip
-
-
-## Interactive
-Teyjus
-ACL2 analogy. ACL2 is modelling a pure lisp.
-
-```prolog
-axiom(P) :- asserta(P).
-qed(F,Prf) :- check(F, Prf), asserta(F).
-
-main(_) :- 
-  axiom(a),
-  axiom(b),
-  lemma(a(X) :- b(X))
-
-```
-
-```
-% lexical scope. We could do this as a macro?
-let(X, e, let(X, e,  X).
-
-```
 
 
 # Misc

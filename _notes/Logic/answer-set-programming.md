@@ -24,6 +24,7 @@ title: Answer Set Programming
   - [Sqlite](#sqlite)
   - [Geometry](#geometry)
   - [Lambda-datalog](#lambda-datalog)
+  - [Polynimal / Semirng](#polynimal--semirng)
   - [Calcium](#calcium)
   - [Types](#types)
     - [Formulog](#formulog)
@@ -38,13 +39,15 @@ title: Answer Set Programming
   - [Intuitionistic Logic](#intuitionistic-logic)
   - [Rewriting](#rewriting)
   - [Well founded / Coinduction](#well-founded--coinduction)
+  - [Hereditary Finite Sets](#hereditary-finite-sets)
+  - [Model Checking](#model-checking)
+    - [Boolean Equation Systems](#boolean-equation-systems)
   - [SMT Theories](#smt-theories)
     - [EUF Ackermanization](#euf-ackermanization)
     - [Bitvectors](#bitvectors)
     - [Theory of Arrays](#theory-of-arrays)
     - [Difference Logic](#difference-logic)
     - [EPR](#epr)
-    - [Boolean Equation Systems](#boolean-equation-systems)
   - [Junk](#junk)
 - [Constructs](#constructs)
   - [Integrity constraints](#integrity-constraints)
@@ -61,6 +64,7 @@ title: Answer Set Programming
   - [Other](#other)
 - [Theory](#theory)
   - [Stable Models](#stable-models)
+  - [Unfounded Sets](#unfounded-sets)
   - [Non Monotonic Reasoning](#non-monotonic-reasoning)
   - [Logic of here and there](#logic-of-here-and-there)
   - [Operational](#operational)
@@ -889,6 +893,18 @@ line(A,B) :- point(X), point(Y), (A,B) = @sort(X,Y). % seems a little silly here
 Storing sorted canonical versions is easy, joining (efficiently) modulo permutations is tougher.
 
 
+Using smart constructors. Is this better?
+```
+#script(python)
+
+def line(*args):
+  return clingo.Function("line", sorted(args))
+
+#end.
+
+```
+
+
 Mixing in grobner?
 
 ```clingo
@@ -899,6 +915,8 @@ import sympy
 
 
 ```
+
+
 
 
 ## Lambda-datalog
@@ -985,7 +1003,83 @@ foo(@elem(X)) :- test(X).
 
 err(@error("this is a custom error")). 
 ```
+## Polynimal / Semirng
+Similar to lattices in some respects.
 
+```clingo
+#script(python)
+import sympy
+
+
+#end.
+
+
+
+
+```
+
+
+```python
+from sympy import *
+x, y, z = symbols('x,y,z')
+init_printing(use_unicode=False, wrap_line=False)
+e = (3*x/2 + y)*(z - 1)
+print(e.as_poly())
+f = Function("f")
+e = f(x) + 1 + f(f(x))
+print(e)
+print(e.as_poly())
+p = e.as_poly()
+d = {p : 7}
+e = f(x) + 1 + f(f(x))
+p2 = e.as_poly()
+d[p] =  8
+print(p == p2)
+print(hash(p), hash(p2))
+print(p is p2)
+print(d)
+```
+
+A problem with foreign relatons is there is no way to communicate an update back to asp.
+
+```python
+import clingo
+
+ctl = clingo.Control()
+print(dir(ctl))
+#print(help(ctl.add))
+_biz = [42]
+def biz(x):
+  yield from _biz
+
+ctl.add("""
+foo(7).
+bar(Y) :- foo(X), X = Y. %, @biz(X) = Y.
+""")
+ctl.ground()
+_biz.append(76)
+ctl.ground()
+
+```
+
+Hmm. Ok, clingo does both
+```clingo
+#script(python)
+import clingo
+def test1():
+  print("hello world")
+  return clingo.String("hiel")
+#end.
+
+#script(python)
+def test2():
+  print("he world")
+  return clingo.String("foo")
+#end.
+foo(@test1()).
+foo(@test2()).
+
+```
 
 ## Calcium
 
@@ -1327,17 +1421,21 @@ Instead of encoding subgraph patterns as rules (good for small patterns), they e
 
 Flip it around to get an isomorphism
 ```clingo
-{h(X,Y) : n1(X,L)} = 1 :- n2(Y,L).
-{h(X,Y) : e1(X,S1,T1,L), h(S1,S2), h(T1,T2)} = 1 :- e2(Y,S2,T2,L).
- :- p2(Y,K,D), h(X,Y), not p1(X,K,D).
-
+{h2(X,Y) : n1(X,L)} = 1 :- n2(Y,L).
+{h2(X,Y) : e1(X,S1,T1,L), h2(S1,S2), h(T1,T2)} = 1 :- e2(Y,S2,T2,L).
+:- p2(Y,K,D), h2(X,Y), not p1(X,K,D).
 ```
+Hmm h and h2 aren't necessarily inverse. They probably compose to an automorphism. Would adding the inverse condition help or hurt?
 
 Or alternatively get a subgraph isomorphism
 ```clingo
 {h(X,Y) : n1(X,L)} <= 1 :- n2(Y,L).
 {h(X,Y) : e1(X,S1,T1,L), h(S1,S2), h(T1,T2)} <= 1 :- e2(Y,S2,T2,L).
 ```
+
+
+Interesting maybe for query homomorphisms. Queries can be represented as graph.
+
 
 ## Graph Minor
 
@@ -1614,6 +1712,118 @@ loop(X) :- path(X,X). % loop = inf_trace
 
 ```
 
+## Hereditary Finite Sets
+Set theory has this notion of sets of sets. This is not how I typically model things, but it is interesting and fun.
+
+Atomic set labels.
+Extensionality
+elem relation
+
+Wellfoundedness is optional, becomes nonwellfounded set theory which is neat.
+
+```clingo
+set(empty).
+:- elem(X,empty).
+wf(empty).
+
+subset(A,B) :- set(A), set(B), elem(X,B) : elem(X,A). 
+eq(A,B) :- subset(A,B), subset(B,A).
+
+wf(A) :- set(A), wf(X) : elem(X,A).
+
+elem(X, sing(X)) :- set(sing(X)).
+:- elem(Y,sing(X)), X != Y.
+
+elem(X, union(A,B)) :- set(union(A,B)), elem(X,A).
+elem(X, union(A,B)) :- set(union(A,B)), elem(X,B).
+:- elem(X,union(A,B)), not elem(X,A), not elem(X,B). % is this necessary?
+
+
+elem(X, inter(A,B)) :- set(inter(A,B)), elem(X,A), elem(X,B).
+:- elem(X,inter(A,B)), not elem(X,A).
+:- elem(X,inter(A,B)), not elem(X,B).
+
+
+elem(X, trans(A)) :- elem(X,A).
+elem(Y, trans(A)) :- set(X), elem(X,A), elem(Y,trans(X))
+
+% demand
+set(trans(X)) :- set(trans(A)), elem(X,A), set(X).
+
+
+
+
+
+```
+
+## Model Checking
+Modal logic. Satisfaction is set of states
+modal mu calculus
+
+```
+% labelled transition system
+trans(1,a,2).
+states(s) :- trans(s,_,_).
+states(s) :- trans(_,_,s).
+act(a) :- trans(_,a,_).
+prop(p, 1). % state property p holds at 1.
+
+reachable(S,S) :- state(S).
+reachable(S,S2) :- trans(S,_,S1), reachable(S1,S2).
+
+
+form(A;B) :- form(and(A,B)). 
+form(A;B) :- form(or(A,B)). 
+sat(S,P) :- prop(P,S).
+sat(S,) :- form(box(a, F)), sat(S1,F) : reachable(S,S1).
+
+```
+
+### Boolean Equation Systems
+<http://www.tcs.hut.fi/Publications/bibdb/HUT-TCS-A99.pdf>. See also mcrl2 groot book
+An intermediate problem for model checking modal u-calculus. Boolean equations with least and greatest fixed point operaors.
+`(sx=a)*`
+
+Dependency graph, edge if x_i appears in a_j
+Standard form. binary operations on rhs.
+
+If everything is using least fixed point, no prob. Direct translation.
+
+"Blocks" correspond to strata
+
+```clingo
+p1 :- p3. % u.x1=x3
+p2.  %  u.x2 = 1 
+p3 :- p4. p3 :- p5. % u.x3 = x4 \/ x5
+p4 :- p2,p1. %u.x4 = x2 /\ x1
+
+```
+
+If everythign is greatest fixed point, complement the system
+```clingo
+-p1 :- -p2. -p1 :- -p3. % v.x1 = x2 /\ x3
+-p2 :- -p3,-p4. % v.x2 = x3 \/ x4
+-p3 :- -p2,-p4. % v.x3 = x2 \/ x4
+-p4. %v.x4 = 0
+```
+
+Conjunctive and disjunctive systems allow alternation but only contain /\ or only contain \/
+
+Hmm. It might be possible to directly express the modal formula + transition systemcompilation in ASP
+```clingo
+trans(1,a,2; 1,a,4; 2,a,3; 3,a,2).
+
+
+```
+
+
+General translaion. Feels like they are building a parametrized system with rules turnining on and off. We're inferring some kind of graph.
+
+My first inclination was to use direct encoding + ASP priority. That seems like it ought to work?
+Add min p and max p as optimization objectives. Put them in the priority that the equations appear. Can I encode games in this way?
+I'm like mixing my metaphors. A max sat solver can probably do this also
+
+
 
 ## SMT Theories
 How many SMT theories (euf, arrays, sets) are encodable?
@@ -1833,50 +2043,6 @@ rel(R, a)
 
 ```
 
-
-### Boolean Equation Systems
-<http://www.tcs.hut.fi/Publications/bibdb/HUT-TCS-A99.pdf>. See also mcrl2 groot book
-An intermediate problem for model checking modal u-calculus. Boolean equations with least and greatest fixed point operaors.
-`(sx=a)*`
-
-Dependency graph, edge if x_i appears in a_j
-Standard form. binary operations on rhs.
-
-If everything is using least fixed point, no prob. Direct translation.
-
-"Blocks" correspond to strata
-
-```clingo
-p1 :- p3. % u.x1=x3
-p2.  %  u.x2 = 1 
-p3 :- p4. p3 :- p5. % u.x3 = x4 \/ x5
-p4 :- p2,p1. %u.x4 = x2 /\ x1
-
-```
-
-If everythign is greatest fixed point, complement the system
-```clingo
--p1 :- -p2. -p1 :- -p3. % v.x1 = x2 /\ x3
--p2 :- -p3,-p4. % v.x2 = x3 \/ x4
--p3 :- -p2,-p4. % v.x3 = x2 \/ x4
--p4. %v.x4 = 0
-```
-
-Conjunctive and disjunctive systems allow alternation but only contain /\ or only contain \/
-
-Hmm. It might be possible to directly express the modal formula + transition systemcompilation in ASP
-```clingo
-trans(1,a,2; 1,a,4; 2,a,3; 3,a,2).
-
-
-```
-
-
-General translaion. Feels like they are building a parametrized system with rules turnining on and off. We're inferring some kind of graph.
-
-My first inclination was to use direct encoding + ASP priority. That seems like it ought to work?
-Add min p and max p as optimization objectives. Put them in the priority that the equations appear. Can I encode games in this way?
-I'm like mixing my metaphors. A max sat solver can probably do this also
 
 
 
@@ -2264,6 +2430,11 @@ double negation - doesn't have to vbe proven
 # Theory
 ## Stable Models
 Stable models = well-founded model + branching
+## Unfounded Sets
+[Using Unfounded Sets for Computing Answer Sets of Programs with Recursive Aggregates](https://www.mat.unical.it/~alviano/archives/publications/2007/cilc07-recAggr.pdf)
+
+Is there a relation with non-well-founded sets (aczel)? A nested set-like model. Maybe each atom is a set?
+
 ## Non Monotonic Reasoning
 <https://en.wikipedia.org/wiki/Negation_as_failure>
 <https://en.wikipedia.org/wiki/Autoepistemic_logic>

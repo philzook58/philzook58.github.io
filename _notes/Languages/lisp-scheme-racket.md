@@ -75,12 +75,13 @@ https://www.philipzucker.com/aop-minikanren/
 # Racket
 https://docs.racket-lang.org/index.html
 
+`raco pkg install`
+
 [Creating Languages in Racket (2011)](https://news.ycombinator.com/item?id=26008869)
 
 https://school.racket-lang.org/2019/plan/
 
 [beautiful racket](https://beautifulracket.com/)
-
 
 https://github.com/wilbowma/cur a curious dependently typed proof assistant
 
@@ -105,6 +106,11 @@ https://docs.racket-lang.org/search/index.html?q=H%3A
 
 [Bowman how to hashlang](https://williamjbowman.com/tmp/how-to-hashlang/)
 [Macro-embedding Compiler Intermediate Languages in Racket](https://williamjbowman.com/tmp/wjb2022-hashlang-x64.pdf)
+
+FRTime
+
+[implementing type systems as a macros](https://lambdaland.org/posts/2023-08-14_types_with_macros/)
+[Type Systems as macros](https://dl.acm.org/doi/10.1145/3009837.3009886)
 ### Rosette
 https://docs.racket-lang.org/rosette-guide/index.html
 
@@ -121,7 +127,7 @@ stage0 would be "just" a macro expander for smtlib.
 (assume b)
 (verify b)
 
-(define-symbolic b boolean?)
+;(define-symbolic b boolean?)
 
 ```
 
