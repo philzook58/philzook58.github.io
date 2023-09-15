@@ -78,6 +78,13 @@ https://github.com/ccodel/verified-encodings
 
 [mathematics in lean course](https://github.com/leanprover-community/mathematics_in_lean)
 [iris lean ](https://github.com/leanprover-community/iris-lean)
+
+[lean 4 hackers](https://agentultra.github.io/lean-4-hackers/)
+
+[lean 4 released](https://news.ycombinator.com/item?id=37429938)
+
+[lean dojo](https://leandojo.org/) LeanDojo: Theorem Proving with Retrieval-Augmented Language Models
+
 ### Build
 
 `elan` tool
@@ -119,6 +126,13 @@ IR - somehow this is what I need to look at to implement new backend?
 
 # Stuff
 
+```bash
+echo '
+def main := IO.println "hello world"
+' > /tmp/test.lean
+lean --run /tmp/test.lean
+
+```
 
 ```lean
 def main := IO.println "hello world"

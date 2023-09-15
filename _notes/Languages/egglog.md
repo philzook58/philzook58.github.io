@@ -2533,3 +2533,11 @@ Egglog doesn't really allow recursive defintions (should it?)
 ```
 There is a loop here. `zeros1` is not dervied to be `zeros` because there is no isomorphism finder.
 `zeros` is not really "defined" to be `cons 0 zeros`. It is "equal"
+
+
+
+
+Backend issues
+scan vs binary join vs gj
+terms.
+what about proofs via tracing

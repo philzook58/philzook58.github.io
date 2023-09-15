@@ -2794,6 +2794,8 @@ x :- not notx.
 notx :- not x.
 ```
 # Misc
+[Stable model semantics mnikanren](http://minikanren.org/workshop/2023/minikanren23-final3.pdf)
+
 [clinguin](https://github.com/potassco/clinguin) specify a gui in asp
 
 ```clingo

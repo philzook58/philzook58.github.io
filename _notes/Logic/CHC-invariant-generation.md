@@ -90,6 +90,10 @@ techniques to find the inductive invariant.
 
 
 [higher order chc](https://github.com/penteract/HigherOrderHornRefinement) https://research-information.bris.ac.uk/ws/portalfiles/portal/142259264/popl18_p253.pdf
+https://github.com/hopv/mochi
+https://github.com/hopv
+[Higher order PDR](https://dl.acm.org/doi/10.1145/3607831)
+[HFL(Z) Validity Checking for Automated Program Verification](https://dl.acm.org/doi/abs/10.1145/3571199)
 
 [magic set for chc](https://bishoksan.github.io/papers/scp18.pdf) [tools for chc](https://arxiv.org/pdf/1405.3883.pdf)
 [solving constrained horn cluases using interpolation mcmillan Rybalchenko 2013](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/MSR-TR-2013-6.pdf)

@@ -96,7 +96,7 @@ Relationship to double negation encoding
 ### dynamic-wind
 
 # Algebraic effects
-
+[The Evolution of Effects (Keynote) - Wu ](https://dl.acm.org/doi/10.1145/3609026.3615581)
 What even are algebraic effects?
 
 Kind of like resumable exceptions.

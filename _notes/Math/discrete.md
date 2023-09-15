@@ -78,6 +78,7 @@ https://en.wikipedia.org/wiki/Perfect_graph
 
 https://en.wikipedia.org/wiki/Chordal_graph all cycles of 4 or more vertices have a chord
 
+series parallel graph
 
 https://en.wikipedia.org/wiki/Bipartite_graph separated into two sets of vertices that are not connected. Two colorable.
 Tree's are bartite. Even cycle graphs
@@ -251,6 +252,65 @@ def graph_from_term(t):
 ```
 
 ```python
+import networkx as nx
+import matplotlib.pyplot as plt
+def fun(name):
+    def res(*args):
+        G = nx.Graph()
+        G.add_node(0)
+        for arg in args:
+            G = nx.disjoint_union(G,arg)
+            G.add_edge(0,len(G) - len(arg))
+        return G
+    return res
+
+def const(a):
+    G = nx.Graph()
+    G.add_node((0,a))
+    return G
+a = const("a")
+
+plus = fun("+")
+paa = plus(a,a)
+G = plus(paa,paa)
+
+
+nx.draw(G, with_labels=True)
+#plt.show()
+
+
+table = {}
+def intern(G):
+    h = nx.weisfeiler_lehman_graph_hash(G) # we should obviously cache this, but whatever
+    matches = table.get(h) 
+    if matches == None:
+        table[h] = [G]
+        return G
+    else:
+        if G in matches:
+            print("found")
+            return G
+        for m in matches:
+            #if m is G: # fast shortcutting
+            #    return m
+            #else:
+            if nx.is_isomorphic(m,G):
+                    print("iso")
+                    return m
+        matches.append(G)
+        return G
+
+a0 = intern(a)
+print(table)
+a = const("a")
+a1 = intern(a)
+print(table)
+print(a1 is a0)
+
+```
+
+
+```python
 
 table = {} # enumerating in toplogica order would be nice. OrderedDict. We seem to be fine though. default dict guarantees this?
 class Node():
@@ -292,7 +352,29 @@ print(three2.id)
 print(three.id)
 print(three2)
 print(three)
+
+
+def pair(a,b):
+    return hashset([hashset([a]), hashset([a,b])])
+
+print(pair("a","b"))
+print(pair("a","b") is pair("a","b"))
+
+def union(a,b):
+    return hashset(a.term | b.term)
+
+def trans(s):
+    if isinstance(s.term, set):
+        set(trans(x) for x in s.term)
+        return 
+    else:
+        return s
+
+
+
 ```
+Hmm. this is also basically a method for tree isomorphism. More or less follows the lins of the ahu algorithm.
+
 Hash consing generates ids that witness the well foundedness.
 hashunconsing
 
@@ -358,6 +440,9 @@ https://en.wikipedia.org/wiki/Graph_homomorphism generalization of coloring. col
 
 ### subgraph isomorphgism
 https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem
+subgraph matching and query containment
+
+
 
 ### Pfaffian orientation
 https://en.wikipedia.org/wiki/Pfaffian_orientation

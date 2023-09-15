@@ -798,6 +798,27 @@ let(X, e, let(X, e,  X).
 
 ```
 
+isabelle style
+
+```prolog
+:- dynamic proven.
+
+
+% "difference list" form of a proof fragment
+[A] > (A | foo(x) )  
+
+proven(edge12,  [] > edge(1,2)).
+proven(edge23,  [] > edge(2,3)).
+proven(trans, [A] > path(X,Z) :- edge(X,Y) :- A).
+proven(trans, [A,B] > path(X,Z) :- edge(X,Y) :- A, path(Y,Z) :- B)
+
+asserta(proven(myname, tree)).
+
+```
+Using asserta let's us refresh the schematic variable in an axiom
+
+
+
 # Topics
 ## Systems
 [50 years of prolog](https://arxiv.org/pdf/2201.10816.pdf)

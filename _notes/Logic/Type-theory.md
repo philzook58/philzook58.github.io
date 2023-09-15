@@ -296,6 +296,8 @@ iso recursive vs. equirecursive
 
 # Refinement Types
 [Refinement Types: A tutorial](https://arxiv.org/abs/2010.07763)
+[Explicit Refinment Types](https://dl.acm.org/doi/10.1145/3607837)
+"Instrinsic semantics niterprets typing relationd rathert than terms
 
 - FStar
 - Liquid Haskell

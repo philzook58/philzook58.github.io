@@ -6,6 +6,15 @@ title: Automated Theorem Proving
 - [TPTP](#tptp)
   - [Puzzles](#puzzles)
   - [Math](#math)
+    - [antiderivatives](#antiderivatives)
+  - [ATP as a Logical Framework](#atp-as-a-logical-framework)
+    - [Constructive](#constructive)
+  - [Symbolic Execution](#symbolic-execution)
+  - [Lambda](#lambda)
+  - [Structures](#structures)
+  - [Peano](#peano)
+  - [ECTS](#ects)
+  - [Set Theory](#set-theory)
 - [Systems](#systems)
   - [Vampire](#vampire)
   - [E prover](#e-prover)
@@ -87,11 +96,176 @@ Categories
 Set theory https://en.wikipedia.org/wiki/List_of_set_identities_and_relation
 Geometry
 
-antiderivatives
+### antiderivatives
+
+```vampire
+
+thf(manitype, type, mani : $tType). % manifold
+
+thf(consttype, type, const : $real > mani > $real ).
+
+thf(xtype, type, x : mani > $real ). % coordinate function
+thf(ytype, type, y : mani > $real ). % coordinate function
+thf(rtype, type, r : mani > $real ). % coordinate function
+
+thf(plustype, type, plus : (mani > $real) > (mani > $real) > mani > $real ). % coordinate function
+
+thf(plusaxioms,axiom, (plus @ X @ Y)  = (plus @ Y @ X)).
+
+
+thf(consttype, type, const : $real > mani > $real ).
+
+%thf(dtype, type, d : (mani > $real) >  ).
+thf(sintype, type, sin : (mani > $real) > mani > $real).
+
+%thf(powtype,type, > )
+
+```
+
+thf
+`^ [X] : X` is a lambda
+`[a,b,c]` is a built in tuple.
+`$i` is a universe of individuals
+`$o` is bools `$true` `$false`
+`$real` `$int`
+
+## ATP as a Logical Framework
+
+I am used to in the prolog and datalog context to consider the clauses not as classical logical clauses, but instead a description of inference rules. This is the attitude in Miller & Nadathur and [The Logic of Logic Programming](https://arxiv.org/abs/2304.13430)
+
+It seems to me that there is nothing preventing this interpretation for ATP as well. There are a numbr of axiom sets in the TPTP library that have thsi flavor
+
+
+```
+~ a  
+is the same as
+   a
+-------
+This is how we express a goal.
+
+
+~a | b is
+
+   a
+------
+   b
+
+
+~a | ~c | b
+
+is
+
+ a   c
+------
+   b
+
+```
+
+Putting together clauses (resolution) is interpreted as putting together inference rules to make proof fragments.
+
+
+```vampire
+% finite sets either by AC axioms or some primitive
+cnf(and_comm, axiom, and(A,B) = and(B,A)).
+cnf(and_assoc, axiom, and(A,and(B,C)) = and(and(A,B),C)).
+
+
+cnf(not_intro ,axiom,  ~ turnstile(and(C, not(A)), B) | turnstile(C , and(A,B)).
+
+```
+
+### Constructive
+See the CAT axioms. References a Scott work.
+
+## Symbolic Execution
+
+Wos book chapter
+
+```vampire
+
+```
+
+## Lambda
+
+```vampire
+thf(easymode, conjecture, ?[P : $i > $i] : ((P @ X) = X)).
+```
+
+## Structures
+In coq or lean we prove somwethign has properties, then we abstract it an use only the properties
+
+```vampire
+thf(monoid_def, axiom, monoid(E, Op) <=> ( ! [X,Y,Z] : ( 
+    Op @ (Op @ X @ Y) @ Z = Op @ X @ (Op @ Y @ Z)
+    & Op @ E @ X = X
+    & Op @ X @ E = X
+))).
+
+
+```
+
+## Peano
+
+```vampire
+fof(myaxioms, axiom, 
+    nat(z)  % unnecessary?
+    & (nat(X) => nat(s(X)))
+    & (s(X) = s(Y) => X = Y) % need nat(X) nat(Y) ?
+    & s(X) != z
+
+    % induction is of course the sticky one
+    % & (((P @ z) & (! [X] : (P @ X => P @ (s(X))))) => P @ Y)
+
+).
+
+```
+
+[Getting Saturated with Induction](https://link.springer.com/chapter/10.1007/978-3-031-22337-2_15)
+
+
+## ECTS
+
+```vampire
+
+% don't connect posibly non well formed things
+cnf(comp_assoc, axiom, comp(X,comp(Y,Z)) = comp(comp(X,Y),Z)). 
+cnf(wf_comp, axiom, ~wf(F) | ~wf(G) | dom(F) != cod(G) 
+                            | wf(comp(F,G))).
+cnf(wf_id, axiom, wf(id(A))).
+cnf(comp_id_left, axiom, comp(id(cod(F)),F) = F).
+cnf(comp_id_right, axiom, comp(F,id(dom(F))) = F).
+
+cnf(term_final, axiom, cod(F) != unit | cod(G) != unit | dom(F) != dom(G) 
+                                            | F = G ).
+
+
+%fof(elem_def, axiom, elem(X,A) <=> ( comp(X,A) ) )
 
 
 
+```
 
+What about doing bash + vampire as a proof system
+
+What about universes?
+## Set Theory
+TPTP has tons of axiom sets for this. But let's play around
+
+```vampire
+fof(mystuff, axiom,
+    $true
+    %~ elem(X,empty)
+    & ((elem(X,A) | elem(X,B)) <=> elem(X,union(A,B)))
+    %& ((elem(X,A) & elem(X,B)) <=> elem(X,inter(A,B)))
+    %& (elem(X,sing(Y)) <=> (X = Y))
+    %& ( (![X] : (elem(X,A) <=> elem(X,B))) <=> (A = B)) % extensionality 
+    %& ( (![X] : (elem(X,A) => elem(X,B))) <=> sub(A,B)) 
+    
+).
+%fof(sub_equal, conjecture,   (sub(X,Y) & sub(Y,X)) <=> (X = Y) ).
+%fof(union_comm, conjecture, union(A,B) = union(B,A)).
+fof(union_assoc, conjecture, union(A,union(B,C)) = union(union(A,B),C)).
+```
 
 # Systems
 - Vampire
@@ -610,7 +784,11 @@ atom ordering
 
 - Resonance Strategy
 - Weighting
-- 
+
+
+
+
+
 # Methodology 
 Given clause 
 Discount loop

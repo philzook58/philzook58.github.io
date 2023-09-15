@@ -187,6 +187,18 @@ transfer learning
 # Verification
 Adversarial examples
 
+
+Generate and Test -> use or augment generate with chatgpt
+
+Spec suggestions.
+Use python syntax for coq questions. Python type annotations
+Axiom schema instantiations. All the things that require "creativity"
+Program invariant suggestions. Some come out weak or wrong. Mutation rules. Ask to refine or simplify.
+
+Automata verification of langchains. Blackbox the language model. Verified parsing of the output
+
+"Function call" api
+
 # Famous Models
 word2vec
 node2vec
@@ -224,9 +236,26 @@ https://huggingface.co/models look at tasks tab
 - text generation
 - image segmentation
 - text 2 speech
-- 
+
 ### speech recognition
+
 https://huggingface.co/openai/whisper-large-v2
+https://github.com/openai/whisper
+
+```bash
+whisper audio.flac --model small
+whisper --model large-v2
+```
+https://github.com/openai/whisper/discussions/categories/show-and-tell discussions
+
+
+https://github.com/ggerganov/whisper.cpp inference on cpu. 
+
+https://colab.research.google.com/drive/1WLYoBvA3YNKQ0X2lC9udUOmjK7rZgAwr?usp=sharing
+Colab is nice. medium run.s
+
+Man, whisper is pretty dang good
+
 ### code
 https://huggingface.co/bigcode/starcoder
 ### math
@@ -567,6 +596,14 @@ model = AutoModelForMaskedLM.from_pretrained("bert-base-uncased")
 
 
 # Reinforcement Learning
+Dreamerv3
+Decision Transformer
+
+cleanrl
+sheeprl
+
+PPO SAC
+DDPG
 
 imitation learning
 reinforce

@@ -3,6 +3,43 @@ layout: post
 title: SAT Solvers
 ---
 
+
+See:
+- Verilog
+
+# BDD
+https://www.cs.cmu.edu/~bryant/pubdir/fmcad22.pdf tbuddy a proof generating sat solver
+buddy
+cudd
+
+zdd
+
+
+pgbdd https://github.com/rebryant/pgbdd
+pgpbs https://github.com/rebryant/pgpbs-artifact
+
+
+https://arxiv.org/abs/2211.06818 CFLOBDDs: Context-Free-Language Ordered Binary Decision Diagrams
+
+
+See also berkely abc. AIG and inverter graphs.
+(RO)BDD are canonical. AIG aren't
+
+# Beyond NP
+## Model Counting
+https://mccompetition.org/
+
+
+https://github.com/crillab/d4 
+https://github.com/rebryant/cpog CPOG Knowledge Compiler Certifier
+
+beyond np https://beyondnp.org/ hmm. This website is dead?
+
+## knowledge compilation
+https://en.wikipedia.org/wiki/Knowledge_compilation
+
+## QBF 
+
 ## Encoding
 
 At most one constraints (AMO)
@@ -20,11 +57,13 @@ Adders
 [pysat](https://pysathq.github.io/)
 [encoding into sat](https://www.cs.upc.edu/~erodri/webpage/cps/theory/sat/encodings/slides.pdf)
 http://www.cs.cmu.edu/~15414/s21/lectures/13-sat-encodings.pdf
+
 ## Preprocessing
 aiger
 
 
 ## CDCL
+
 
 ## Stochastic local search solvers
 Simple and sometimes good.
@@ -65,3 +104,4 @@ https://twitter.com/ArminBiere/status/1556292768607207425?s=20&t=yqv3psiW3ByDbnV
 [creusat](https://sarsko.github.io/_pages/SarekSkot%C3%A5m_thesis.pdf) https://github.com/sarsko/CreuSAT
 
 [IPASIR-UP: User Propagators for CDCL](https://www.youtube.com/watch?v=pgsvqXAPgqA&ab_channel=SimonsInstitute)
+

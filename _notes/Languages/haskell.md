@@ -12,12 +12,15 @@ title: Haskell
   - [Monad Transformers](#monad-transformers)
   - [Algebraic Effects](#algebraic-effects)
 - [Lensology](#lensology)
+- [Parametericity](#parametericity)
 - [Algebra of Programming](#algebra-of-programming)
 - [Category Theory](#category-theory)
 - [STG and low level](#stg-and-low-level)
   - [Unboxed types](#unboxed-types)
 - [Laziness](#laziness)
+  - [Knot Tying](#knot-tying)
 - [Extensions](#extensions)
+- [Typelvel Programming](#typelvel-programming)
 - [Typeclasses](#typeclasses)
 - [Pipes etc](#pipes-etc)
 - [Pearls](#pearls)
@@ -25,6 +28,8 @@ title: Haskell
 
 
 ```haskell
+import qualified Data.Set as Set 
+
 data Foo = Bar | Biz deriving Show
 
 
@@ -35,14 +40,47 @@ main = do
     let x = 2 * pi
     print Biz
     print x
+    let x = Set.fromList [1,2,3] -- Set.empty Set.singleton
+    print $ Set.member 4 (Set.insert 4 x) 
 
 
 ```
 
 [ghcup](https://www.haskell.org/ghcup/)
 
+## Libraries
+https://hackage.haskell.org/packages
+https://github.com/krispo/awesome-haskell
 
+containers
+https://haskell-containers.readthedocs.io/en/latest/
 
+https://hackage.haskell.org/package/text oh yeah. Is it still a thing that good strings are a package?
+
+https://hackage.haskell.org/package/bytestring
+
+https://hackage.haskell.org/package/term-rewriting
+
+https://hackage.haskell.org/package/unification-fd
+
+pandoc
+
+aeson json needs
+
+https://hackage.haskell.org/package/attoparsec 
+
+https://hackage.haskell.org/package/logict
+
+bizarro verse
+https://hackage.haskell.org/package/kan-extensions
+
+criterion
+
+mtl
+
+vector
+
+https://hackage.haskell.org/package/sbv
 # Functor Games
 
 ## Applicative
@@ -67,7 +105,8 @@ Bananases barbed wire
 
 
 # Monad
-
+https://stackoverflow.com/questions/44965/what-is-a-monad
+https://stackoverflow.com/questions/3870088/a-monad-is-just-a-monoid-in-the-category-of-endofunctors-whats-the-problem
 ```haskell
 return :: a -> m a
 (>>=) :: m a -> (a -> m b) -> m b
@@ -93,6 +132,7 @@ Maybe maps any type `a` to the the  `Maybe a`
 
 ## Comonads
 ## Free Monads
+https://stackoverflow.com/questions/13352205/what-are-free-monads
 ## Monad Transformers
 ## Algebraic Effects
 
@@ -101,6 +141,13 @@ http://blog.ezyang.com/2012/01/problem-set-the-codensity-transformation/
 
 
 # Lensology
+https://github.com/cohomolo-gy/optics-resources
+
+# Parametericity
+Free theorems
+Jaseklioff and higher kinded versions of parametrcity
+https://www.well-typed.com/blog/2015/05/parametricity/
+https://www.well-typed.com/blog/2015/08/parametricity-part2/
 
 
 
@@ -136,14 +183,44 @@ https://hackage.haskell.org/package/stgi stg interpeter. but also a good read
 --ddump-ds
 --ddump-stg
 
+
+https://haskell.foundation/hs-opt-handbook.github.io/contents.html Optimization handbook
+https://book.realworldhaskell.org/read/profiling-and-optimization.html
+
+`+RTS` flags. There is a runtime you know.
+
+`Debug.trace`
+
+https://well-typed.com/blog/2021/01/first-look-at-hi-profiling-mode/ info table profiling. You can know what code line allocated data
+
+https://langdev.stackexchange.com/questions/1823/what-is-the-relationship-between-stg-and-rvsdg 
+
+https://www.well-typed.com/blog/2020/04/dwarf-2/ dwarf and ghc
 ## Unboxed types
 kinds are calling conventions
 levity polymorphism
 # Laziness
+https://en.wikipedia.org/wiki/Strictness_analysis
 
 [Alexis King on laziness](https://www.youtube.com/watch?v=fSqE-HSh_NU&ab_channel=Tweag)
 
+We can ssume the result of a function is demanded.
+If you return a structure, the arguments aren't necessarily demanded
+bang patterns
+
+
+[why laziness thread](https://www.reddit.com/r/haskell/comments/5xge0v/today_i_used_laziness_for/)
+`take 10 . sort`
+where clauses only make sense because `let` kind of float / are unordered
+[pure memoization](https://stackoverflow.com/questions/3208258/memoization-in-haskell/3209189#3209189) https://github.com/conal/MemoTrie Define toplevel stream of answers, memo function just indexes ito ths toplevel stream. However, this is linear time lookup. So MemoTrie
+
+circular programming
+
+[why is lazy evaluation useful](https://stackoverflow.com/questions/265392/why-is-lazy-evaluation-useful/265548#265548)
+
+## Knot Tying
 # Extensions
+https://github.com/i-am-tom/haskell-exercises
 
 
 higher rank types
@@ -156,12 +233,19 @@ datakinds
 
 backpack
 
+impredicative types
+a quicklook
+
+# Typelvel Programming
+[higher order typelevel programming](https://www.microsoft.com/en-us/research/uploads/prod/2019/03/ho-haskell-5c8bb4918a4de.pdf) Did these matchable arrows make it in
 
 # Typeclasses
 
 # Pipes etc
 
 # Pearls
+https://github.com/cohomolo-gy/haskell-resources emily pillmore's list of papers
+
 Generalizing generalized tries
 
 Fun with semirings
@@ -171,6 +255,19 @@ Power serious
 parser combinators
 
 impossible functional programs
+
+
+```haskell
+import qualified Data.Set as Set
+import qualified Data.Map as Map
+import qualified Data.Sequence as Seq
+
+
+main = print "hello"
+```
+
+
+
 
 # Resources
 [native delim contby alexis king](https://twitter.com/lexi_lambda/status/1511315589020753929?s=20&t=-ertSPtY87GogVCFq4f-Rw)
@@ -209,7 +306,24 @@ Ralf Hinze
 
 Jules Hedges - games, selection monad
 
+Joachim Breitner - https://www.joachim-breitner.de/publications/rec-def-pearl.pdf more fixpoints
+
+Matthew Pickering https://scholar.google.co.uk/citations?hl=en&user=nRJGAIYAAAAJ
+Emily Pillmore
+Nicholas Wu https://scholar.google.co.uk/citations?user=0E8zPucAAAAJ&hl=en
+Jeremy Gibbons
+Schrijvers
+Andres Loh
+Simon Peyton Jones
+Wouter Swierstra
+richard eisenberg
+stephanie weirich
+
+
+observable equality
+
 [comonad reader](http://comonad.com/reader/)
+
 
 haskell symposium
 
@@ -217,7 +331,7 @@ haskell symposium
 production haskell
 effective haskell
 learn you a haskell for great good
-
+https://book.realworldhaskell.org/read/ 
 
 Diehl - what I wish I had known learning haskell
 
@@ -233,3 +347,12 @@ https://news.ycombinator.com/item?id=37391161 phsyics and functional programming
 [evolution of haskell programmer](https://willamette.edu/~fruehr/haskell/evolution.html)
 
 Go through old notes
+
+https://www.amazon.com/Introduction-to-ComputationHaskell_-Logic-and-Automata-Undergraduate-Topics-in-Computer-Science/dp/3030769070 haskell and automata
+
+tweag
+well-typed
+serokell
+
+
+https://stackoverflow.com/questions/tagged/haskell?tab=Votes

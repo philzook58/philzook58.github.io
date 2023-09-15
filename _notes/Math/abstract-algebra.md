@@ -97,6 +97,8 @@ https://www.cambridge.org/us/academic/subjects/computer-science/algorithmics-com
 
 
 # Homomorphisms
+https://en.wikipedia.org/wiki/Homomorphism
+
 At a certain point of sophistication, this becomes all you care about it seems.
 Exactness
 

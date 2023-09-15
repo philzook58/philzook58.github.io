@@ -107,7 +107,8 @@ cuckoo filter
 
 
 # Theory
-
+[Topics in Database Theory](https://berkeley-cs294-248.github.io/) Dan Suciu
+[Principles of Databases book](https://github.com/pdm-book/community)
 ## Conjunctive Queries
 Query containment
 
@@ -123,12 +124,21 @@ Foundations of database
 
 [Conjunctive Query Fun](https://github.com/lorenzleutgeb/cqf) queures to solve NP problems. another angle on the bdd = gj thing
 
+hypergraph. vertices are variables. hyperedges are tables
+
+hypertree width
+
+CSP is finding homomorphisms to structures. graph coloring. The from is the instance
+queries are finding homomorphisms from structures (the query pattern). The to is the database
+
+quantified boolean formula. Interesting. Model checking a QBF... use a database? Seem wacky. Hmm. Use an ROBDD. Makes sense then the connection between GJ and ROBDD. ROBDD and elimination ordering?
+
 ## Schema
 
 
 https://en.wikipedia.org/wiki/Database_normalization
 
-schema is finite set of relation symbol names 
+schema is finite set of relation symbol names
 an instance is a set of concrete relations with those symbol names. Sometimes also called a structure
 
 ## Functional Dependencies
@@ -1080,6 +1090,8 @@ https://github.com/tobymao/sqlglot/blob/main/posts/python_sql_engine.md https://
 
 
 # Resources
+
+
 ## Conferences
 - SIGMOD PODS https://sigmod.org/pods-home/ pods uutorials https://sigmod.org/pods-home/pods-tutorials/ [Testy of time awards](https://sigmod.org/pods-home/acm-pods-alberto-o-mendelzon-test-of-time-award/) Cool stuff in here.
 - VLDB
