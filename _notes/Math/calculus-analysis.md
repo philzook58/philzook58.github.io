@@ -16,28 +16,27 @@ title: Calculus
   - [Constructive Analysis](#constructive-analysis)
 - [Limits](#limits)
 
-
 Is there anything to even say about calculus?
 Probably!
 
-Calculu vs Analysis. Basically the same thing
-https://en.wikipedia.org/wiki/Calculus
+Calculus vs Analysis. Basically the same thing
+<https://en.wikipedia.org/wiki/Calculus>
 
 # Calc I
+
 Stewart Book
 
 # Derivatives
-Tangents and Secants
 
+Tangents and Secants
 
 When do derivatives exists
 Continuity
 Moduli of continuity
-https://en.wikipedia.org/wiki/Lipschitz_continuity
+<https://en.wikipedia.org/wiki/Lipschitz_continuity>
 
 Product Rule
 Chain Rule
-
 
 Sequences
 Series
@@ -45,31 +44,25 @@ Convergence Tests
 
 Mean Value Theorem
 
-
-
-
 Taylor Series
-
-
 
 Infinitesimals
 
-# Integrals 
-
+# Integrals
 
 # Multivariate
 
 # Partial Derivatives
+
 Somewhat subtle actually. What does it mean to "fix" the other coordinates?
 
 # Vector Calc
 
-Grad Div Curl are best understood via their definition as 
-
+Grad Div Curl are best understood via their definition as
 
 Line integrals
 
-Stokes theorem https://en.wikipedia.org/wiki/Stokes%27_theorem
+Stokes theorem <https://en.wikipedia.org/wiki/Stokes%27_theorem>
 
 # Exterior Calculus
 
@@ -80,8 +73,8 @@ See also differential geometry
 Functional Derivative
 Path Integral
 
-
 # Analysis
+
 Some book reccomendations:
 
 Abbott understanding analysis
@@ -90,30 +83,22 @@ Tao I and II
 Rudin
 Jay Cummings
 
-
-
 ## Completeness of Reals
 
 Bolzano Weierstrauss
 
 open-closed induction. Very interesting.
 
-
-
-
 ## Constructive Analysis
+
 <https://en.wikipedia.org/wiki/Constructive_analysis>
 
-https://en.wikipedia.org/wiki/Apartness_relation apartness relatiobn
+<https://en.wikipedia.org/wiki/Apartness_relation> apartness relatiobn
 
 Bishop
 
 Marshal
 
-
 [Computable Analysis](https://en.wikipedia.org/wiki/Computable_analysis)
+
 # Limits
-
-
-
-

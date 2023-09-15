@@ -20,12 +20,11 @@ title: Haskell
 - [Laziness](#laziness)
   - [Knot Tying](#knot-tying)
 - [Extensions](#extensions)
-- [Typelvel Programming](#typelvel-programming)
+- [Typelevel Programming](#typelevel-programming)
 - [Typeclasses](#typeclasses)
 - [Pipes etc](#pipes-etc)
 - [Pearls](#pearls)
 - [Resources](#resources)
-
 
 ```haskell
 import qualified Data.Set as Set 
@@ -49,30 +48,31 @@ main = do
 [ghcup](https://www.haskell.org/ghcup/)
 
 ## Libraries
-https://hackage.haskell.org/packages
-https://github.com/krispo/awesome-haskell
+
+<https://hackage.haskell.org/packages>
+<https://github.com/krispo/awesome-haskell>
 
 containers
-https://haskell-containers.readthedocs.io/en/latest/
+<https://haskell-containers.readthedocs.io/en/latest/>
 
-https://hackage.haskell.org/package/text oh yeah. Is it still a thing that good strings are a package?
+<https://hackage.haskell.org/package/text> oh yeah. Is it still a thing that good strings are a package?
 
-https://hackage.haskell.org/package/bytestring
+<https://hackage.haskell.org/package/bytestring>
 
-https://hackage.haskell.org/package/term-rewriting
+<https://hackage.haskell.org/package/term-rewriting>
 
-https://hackage.haskell.org/package/unification-fd
+<https://hackage.haskell.org/package/unification-fd>
 
 pandoc
 
 aeson json needs
 
-https://hackage.haskell.org/package/attoparsec 
+<https://hackage.haskell.org/package/attoparsec>
 
-https://hackage.haskell.org/package/logict
+<https://hackage.haskell.org/package/logict>
 
 bizarro verse
-https://hackage.haskell.org/package/kan-extensions
+<https://hackage.haskell.org/package/kan-extensions>
 
 criterion
 
@@ -80,33 +80,36 @@ mtl
 
 vector
 
-https://hackage.haskell.org/package/sbv
+<https://hackage.haskell.org/package/sbv>
+
 # Functor Games
 
 ## Applicative
+
 ## Recursion Schemes and F-Algebras
+
 `Fix`
 
 A different category
 
 `f a -> a`
+
 - objects are _haskell functions of this type_ and the type `a`. Again a bizarre (depending on your background) mixing of values and types
 - morphisms are squares. Very very weird.
-
 
 a -> f a
 
 Initiality
 
-https://www.reddit.com/r/haskell/comments/74t23t/classic_paper_review_bananas_lenses_envelopes_and/
-https://news.ycombinator.com/item?id=24056901
+<https://www.reddit.com/r/haskell/comments/74t23t/classic_paper_review_bananas_lenses_envelopes_and/>
+<https://news.ycombinator.com/item?id=24056901>
 Bananases barbed wire
 
-
-
 # Monad
-https://stackoverflow.com/questions/44965/what-is-a-monad
-https://stackoverflow.com/questions/3870088/a-monad-is-just-a-monoid-in-the-category-of-endofunctors-whats-the-problem
+
+<https://stackoverflow.com/questions/44965/what-is-a-monad>
+<https://stackoverflow.com/questions/3870088/a-monad-is-just-a-monoid-in-the-category-of-endofunctors-whats-the-problem>
+
 ```haskell
 return :: a -> m a
 (>>=) :: m a -> (a -> m b) -> m b
@@ -114,93 +117,102 @@ return :: a -> m a
 
 "monoid in the category of endofunctors"
 
-type constructors are endofunctors. A functor is 
+type constructors are endofunctors. A functor is
+
 1. a mapping ofobjects
 2. a mapping of morphisms
 
 The standard model of category theory in haskell is
+
 1. types are objects
 2. morphisms are functions
 
-Composition is `(.)`. `id` are identity morphisms. 
+Composition is `(.)`. `id` are identity morphisms.
 
 Note how weird this is. We've in some sense put types and values (haskell functions are values that inhabit function types) on the same level.
 
-
 Maybe maps any type `a` to the the  `Maybe a`
 
-
 ## Comonads
+
 ## Free Monads
-https://stackoverflow.com/questions/13352205/what-are-free-monads
+
+<https://stackoverflow.com/questions/13352205/what-are-free-monads>
+
 ## Monad Transformers
+
 ## Algebraic Effects
 
-
-http://blog.ezyang.com/2012/01/problem-set-the-codensity-transformation/
-
+<http://blog.ezyang.com/2012/01/problem-set-the-codensity-transformation/>
 
 # Lensology
-https://github.com/cohomolo-gy/optics-resources
+
+<https://github.com/cohomolo-gy/optics-resources>
 
 # Parametericity
+
 Free theorems
 Jaseklioff and higher kinded versions of parametrcity
-https://www.well-typed.com/blog/2015/05/parametricity/
-https://www.well-typed.com/blog/2015/08/parametricity-part2/
-
-
+<https://www.well-typed.com/blog/2015/05/parametricity/>
+<https://www.well-typed.com/blog/2015/08/parametricity-part2/>
 
 # Algebra of Programming
+
 Algerba of programming book
 Backhouse
 
 Point free
 
-Bird and Gibbons 
+Bird and Gibbons
 Algorithm Design with Haskell
 
-https://en.wikipedia.org/wiki/Bird%E2%80%93Meertens_formalism
+<https://en.wikipedia.org/wiki/Bird%E2%80%93Meertens_formalism>
 
-https://www.cs.ox.ac.uk/people/jeremy.gibbons/publications/squiggol-history.pdf
+<https://www.cs.ox.ac.uk/people/jeremy.gibbons/publications/squiggol-history.pdf>
 
 Mathematics of program construction
 
 [program desgin by calculation](https://www4.di.uminho.pt/~jno/ps/pdbc.pdf)
+
 # Category Theory
+
 Compiling to categories
 
 # STG and low level
+
 Low level ocaml and haskell
 
 The STG. It's curiously like a Bohm mararducci or finally tagless. Constructors are function points. I mean. They're both called tagless.
-https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/generated-code
+<https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/generated-code>
 push-enter vs eval-apply
-https://github.com/lexi-lambda/ghc-proposals/blob/delimited-continuation-primops/proposals/0000-delimited-continuation-primops.md continuation primop
-https://medium.com/superstringtheory/haskell-compilation-pipeline-and-stg-language-7fe5bb4ed2de
-http://www.scs.stanford.edu/11au-cs240h/notes/ghc-slides.html#(1) crazy slides on the full stack
-https://hackage.haskell.org/package/stgi stg interpeter. but also a good read
+<https://github.com/lexi-lambda/ghc-proposals/blob/delimited-continuation-primops/proposals/0000-delimited-continuation-primops.md> continuation primop
+<https://medium.com/superstringtheory/haskell-compilation-pipeline-and-stg-language-7fe5bb4ed2de>
+<http://www.scs.stanford.edu/11au-cs240h/notes/ghc-slides.html#(1)> crazy slides on the full stack
+<https://hackage.haskell.org/package/stgi> stg interpeter. but also a good read
 --ddump-ds
 --ddump-stg
 
-
-https://haskell.foundation/hs-opt-handbook.github.io/contents.html Optimization handbook
-https://book.realworldhaskell.org/read/profiling-and-optimization.html
+<https://haskell.foundation/hs-opt-handbook.github.io/contents.html> Optimization handbook
+<https://book.realworldhaskell.org/read/profiling-and-optimization.html>
 
 `+RTS` flags. There is a runtime you know.
 
 `Debug.trace`
 
-https://well-typed.com/blog/2021/01/first-look-at-hi-profiling-mode/ info table profiling. You can know what code line allocated data
+<https://well-typed.com/blog/2021/01/first-look-at-hi-profiling-mode/> info table profiling. You can know what code line allocated data
 
-https://langdev.stackexchange.com/questions/1823/what-is-the-relationship-between-stg-and-rvsdg 
+<https://langdev.stackexchange.com/questions/1823/what-is-the-relationship-between-stg-and-rvsdg>
 
-https://www.well-typed.com/blog/2020/04/dwarf-2/ dwarf and ghc
+<https://www.well-typed.com/blog/2020/04/dwarf-2/> dwarf and ghc
+
 ## Unboxed types
+
 kinds are calling conventions
 levity polymorphism
+
 # Laziness
-https://en.wikipedia.org/wiki/Strictness_analysis
+
+<https://en.wikipedia.org/wiki/Strictness_analysis>
 
 [Alexis King on laziness](https://www.youtube.com/watch?v=fSqE-HSh_NU&ab_channel=Tweag)
 
@@ -208,20 +220,20 @@ We can ssume the result of a function is demanded.
 If you return a structure, the arguments aren't necessarily demanded
 bang patterns
 
-
 [why laziness thread](https://www.reddit.com/r/haskell/comments/5xge0v/today_i_used_laziness_for/)
 `take 10 . sort`
 where clauses only make sense because `let` kind of float / are unordered
-[pure memoization](https://stackoverflow.com/questions/3208258/memoization-in-haskell/3209189#3209189) https://github.com/conal/MemoTrie Define toplevel stream of answers, memo function just indexes ito ths toplevel stream. However, this is linear time lookup. So MemoTrie
+[pure memoization](https://stackoverflow.com/questions/3208258/memoization-in-haskell/3209189#3209189) <https://github.com/conal/MemoTrie> Define toplevel stream of answers, memo function just indexes ito ths toplevel stream. However, this is linear time lookup. So MemoTrie
 
 circular programming
 
 [why is lazy evaluation useful](https://stackoverflow.com/questions/265392/why-is-lazy-evaluation-useful/265548#265548)
 
 ## Knot Tying
-# Extensions
-https://github.com/i-am-tom/haskell-exercises
 
+# Extensions
+
+<https://github.com/i-am-tom/haskell-exercises>
 
 higher rank types
 liquid haskell
@@ -229,14 +241,13 @@ liquid haskell
 gadts
 datakinds
 
-
-
 backpack
 
 impredicative types
 a quicklook
 
-# Typelvel Programming
+# Typelevel Programming
+
 [higher order typelevel programming](https://www.microsoft.com/en-us/research/uploads/prod/2019/03/ho-haskell-5c8bb4918a4de.pdf) Did these matchable arrows make it in
 
 # Typeclasses
@@ -244,7 +255,8 @@ a quicklook
 # Pipes etc
 
 # Pearls
-https://github.com/cohomolo-gy/haskell-resources emily pillmore's list of papers
+
+<https://github.com/cohomolo-gy/haskell-resources> emily pillmore's list of papers
 
 Generalizing generalized tries
 
@@ -256,7 +268,6 @@ parser combinators
 
 impossible functional programs
 
-
 ```haskell
 import qualified Data.Set as Set
 import qualified Data.Map as Map
@@ -266,31 +277,30 @@ import qualified Data.Sequence as Seq
 main = print "hello"
 ```
 
-
-
-
 # Resources
+
 [native delim contby alexis king](https://twitter.com/lexi_lambda/status/1511315589020753929?s=20&t=-ertSPtY87GogVCFq4f-Rw)
-[ recursion schemes and comonads - Tielen](https://twitter.com/luctielen/status/1516719551131574274?s=20&t=7564nBvc82Jdkz_E3ccZbA)
+[recursion schemes and comonads - Tielen](https://twitter.com/luctielen/status/1516719551131574274?s=20&t=7564nBvc82Jdkz_E3ccZbA)
 
-https://arxiv.org/pdf/2210.04729.pdf The Foil: Capture-Avoiding Substitution With No Sharp Edges
+<https://arxiv.org/pdf/2210.04729.pdf> The Foil: Capture-Avoiding Substitution With No Sharp Edges
 
-secrets of the ghc inliner https://www.microsoft.com/en-us/research/wp-content/uploads/2002/07/inline.pdf
+secrets of the ghc inliner <https://www.microsoft.com/en-us/research/wp-content/uploads/2002/07/inline.pdf>
 
 [Haskell Wiki book](https://en.wikibooks.org/wiki/Haskell)
 
 [Bartsoz](https://bartoszmilewski.com/)
 
-[Conal Elliott](http://conal.net/) 
+[Conal Elliott](http://conal.net/)
+
 - Compiling to categories
 - Generalized convolution and efficient language recognition
 - The simple essence of automatic differentiation
--  Generic parallel functional programming
+- Generic parallel functional programming
 
-[Gonzalez]()
+[Gonzalez](https://www.haskellforall.com/)
 
 [Brent Yorgey](http://ozark.hendrix.edu/~yorgey/)
-https://byorgey.wordpress.com/2023/07/13/compiling-to-intrinsically-typed-combinators/
+<https://byorgey.wordpress.com/2023/07/13/compiling-to-intrinsically-typed-combinators/>
 Species
 
 Sjoerd
@@ -306,11 +316,11 @@ Ralf Hinze
 
 Jules Hedges - games, selection monad
 
-Joachim Breitner - https://www.joachim-breitner.de/publications/rec-def-pearl.pdf more fixpoints
+Joachim Breitner - <https://www.joachim-breitner.de/publications/rec-def-pearl.pdf> more fixpoints
 
-Matthew Pickering https://scholar.google.co.uk/citations?hl=en&user=nRJGAIYAAAAJ
+Matthew Pickering <https://scholar.google.co.uk/citations?hl=en&user=nRJGAIYAAAAJ>
 Emily Pillmore
-Nicholas Wu https://scholar.google.co.uk/citations?user=0E8zPucAAAAJ&hl=en
+Nicholas Wu <https://scholar.google.co.uk/citations?user=0E8zPucAAAAJ&hl=en>
 Jeremy Gibbons
 Schrijvers
 Andres Loh
@@ -319,40 +329,35 @@ Wouter Swierstra
 richard eisenberg
 stephanie weirich
 
-
 observable equality
 
 [comonad reader](http://comonad.com/reader/)
 
-
 haskell symposium
-
 
 production haskell
 effective haskell
 learn you a haskell for great good
-https://book.realworldhaskell.org/read/ 
+<https://book.realworldhaskell.org/read/>
 
 Diehl - what I wish I had known learning haskell
-
-
 
 Algebraic graphs
 
 Fun with semiring
 
-https://news.ycombinator.com/item?id=37391161 phsyics and functional programming
-
+<https://news.ycombinator.com/item?id=37391161> physics and functional programming
 
 [evolution of haskell programmer](https://willamette.edu/~fruehr/haskell/evolution.html)
 
 Go through old notes
 
-https://www.amazon.com/Introduction-to-ComputationHaskell_-Logic-and-Automata-Undergraduate-Topics-in-Computer-Science/dp/3030769070 haskell and automata
+<https://www.amazon.com/Introduction-to-ComputationHaskell_-Logic-and-Automata-Undergraduate-Topics-in-Computer-Science/dp/3030769070> haskell and automata
 
-tweag
-well-typed
-serokell
+Compaines:
 
+- tweag
+- well-typed
+- serokell
 
-https://stackoverflow.com/questions/tagged/haskell?tab=Votes
+[Top stack exchange questions by vote](https://stackoverflow.com/questions/tagged/haskell?tab=Votes)

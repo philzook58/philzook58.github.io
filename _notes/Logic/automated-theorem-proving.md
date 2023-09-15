@@ -4,17 +4,18 @@ title: Automated Theorem Proving
 ---
 
 - [TPTP](#tptp)
+  - [Methodology](#methodology)
   - [Puzzles](#puzzles)
   - [Math](#math)
     - [antiderivatives](#antiderivatives)
   - [ATP as a Logical Framework](#atp-as-a-logical-framework)
-    - [Constructive](#constructive)
   - [Symbolic Execution](#symbolic-execution)
   - [Lambda](#lambda)
   - [Structures](#structures)
   - [Peano](#peano)
   - [ECTS](#ects)
   - [Set Theory](#set-theory)
+  - [Free Logic / Partial Functions](#free-logic--partial-functions)
 - [Systems](#systems)
   - [Vampire](#vampire)
   - [E prover](#e-prover)
@@ -26,7 +27,7 @@ title: Automated Theorem Proving
   - [Datalog vs ATP](#datalog-vs-atp)
   - [Prolog vs ATP](#prolog-vs-atp)
 - [Strategies](#strategies)
-- [Methodology](#methodology)
+- [Methodology](#methodology-1)
   - [Unification](#unification)
   - [Resolution](#resolution)
   - [Subsumption](#subsumption)
@@ -44,13 +45,14 @@ title: Automated Theorem Proving
 - [Higher Order](#higher-order)
 - [Misc](#misc)
 
-
 See also notes on:
+
 - SMT
 - prolog
 - datalog
 
 # TPTP
+
 [TPTP](https://www.tptp.org/) Thousands of Problems for Theorem Provers is an incredible resource
 [Quick Guide](https://www.tptp.org/TPTP/QuickGuide/)
 
@@ -60,6 +62,7 @@ tff offers built in ints, which is cool.
 
 [TPTP in latex](https://math.chapman.edu/~jipsen/tptp/tptpPDF/)
 [Axiom List](https://www.tptp.org/cgi-bin/SeeTPTP?Category=Documents&File=AxiomList) Highlights:
+
 - PUZ - puzzles
 - GEO - geometry
 - GRP - group theory
@@ -69,8 +72,8 @@ tff offers built in ints, which is cool.
 - TOP [](https://www.tptp.org/cgi-bin/SeeTPTP?Category=Axioms&File=TOP001-0.ax)
 - DAT - datatypes
 
-
 Automated reasoning book
+
 - puzzles
 - circuit design (other sythesis problems?)
 - program verification
@@ -80,9 +83,16 @@ Using for higher order or typed systems
 I took a big dump of the axioms because they are hard to peruse. You can find them in my notes.
 They are very interesting.
 
+## Methodology
 
+I find I am often making inconsistent theories because I am trying to be too cute and avoid writing burdensome and inefficient side conditions.
+A neat thing though is that
 
+Sanity checks:
 
+1. Make sure your _axioms_ can't derive a contradiction. Run vampire or eprover and it should hopefully hang or produce a model
+2. Make sure there are at least two elements that haven't collapsed. I find I tend to make theories that collapse
+3. If you have a simpler seeming axiom than the one that feels to most trustworthy, write them both and ask for equivalence to be proven. If it works, then you can be a little more sure that your simpler axiom is correct.
 
 ## Puzzles
 
@@ -93,7 +103,7 @@ Lattices
 kleene algebra, kat
 
 Categories
-Set theory https://en.wikipedia.org/wiki/List_of_set_identities_and_relation
+Set theory <https://en.wikipedia.org/wiki/List_of_set_identities_and_relation>
 Geometry
 
 ### antiderivatives
@@ -135,7 +145,6 @@ I am used to in the prolog and datalog context to consider the clauses not as cl
 
 It seems to me that there is nothing preventing this interpretation for ATP as well. There are a numbr of axiom sets in the TPTP library that have thsi flavor
 
-
 ```
 ~ a  
 is the same as
@@ -163,7 +172,6 @@ is
 
 Putting together clauses (resolution) is interpreted as putting together inference rules to make proof fragments.
 
-
 ```vampire
 % finite sets either by AC axioms or some primitive
 cnf(and_comm, axiom, and(A,B) = and(B,A)).
@@ -173,9 +181,6 @@ cnf(and_assoc, axiom, and(A,and(B,C)) = and(and(A,B),C)).
 cnf(not_intro ,axiom,  ~ turnstile(and(C, not(A)), B) | turnstile(C , and(A,B)).
 
 ```
-
-### Constructive
-See the CAT axioms. References a Scott work.
 
 ## Symbolic Execution
 
@@ -192,6 +197,7 @@ thf(easymode, conjecture, ?[P : $i > $i] : ((P @ X) = X)).
 ```
 
 ## Structures
+
 In coq or lean we prove somwethign has properties, then we abstract it an use only the properties
 
 ```vampire
@@ -222,7 +228,6 @@ fof(myaxioms, axiom,
 
 [Getting Saturated with Induction](https://link.springer.com/chapter/10.1007/978-3-031-22337-2_15)
 
-
 ## ECTS
 
 ```vampire
@@ -248,7 +253,9 @@ cnf(term_final, axiom, cod(F) != unit | cod(G) != unit | dom(F) != dom(G)
 What about doing bash + vampire as a proof system
 
 What about universes?
+
 ## Set Theory
+
 TPTP has tons of axiom sets for this. But let's play around
 
 ```vampire
@@ -267,14 +274,25 @@ fof(mystuff, axiom,
 fof(union_assoc, conjecture, union(A,union(B,C)) = union(union(A,B),C)).
 ```
 
+## Free Logic / Partial Functions
+
+See the category theory CAT003 example in TPTP with comments about paper by Scott [Identity and Existence in Intuitionist Logic](https://link.springer.com/chapter/10.1007/BFb0061839)
+Avigad book
+[Free logic article](https://plato.stanford.edu/entries/logic-free/)
+
+We don't want it necessarily to assume our function symbols are total. How do we model this?
+We could switch t a relational character. Functions are so gosh darn nice though.
+
 # Systems
+
 - Vampire
-- E Prover https://wwwlehre.dhbw-stuttgart.de/~sschulz/E/E.html
+- E Prover <https://wwwlehre.dhbw-stuttgart.de/~sschulz/E/E.html>
 - Zipperposition
-- https://github.com/tammet/gkc on an in memory database
+- <https://github.com/tammet/gkc> on an in memory database
 - [Twee: An Equational Theorem Prover](https://smallbone.se/papers/twee.pdf)
 
 ## Vampire
+
 [First-Order Theorem Proving and VAMPIRE](https://publik.tuwien.ac.at/files/PubDat_225994.pdf)
 [vampire tutorial](https://github.com/vprover/ase17tutorial)
 
@@ -333,7 +351,6 @@ tff(mytheorem, conjecture, ? [X : num] : add(zero, X) = X).
 
 ```
 
-
 ```vampire
 % https://www.tptp.org/cgi-bin/SeeTPTP?Category=Problems&Domain=DAT&File=DAT001=1.p
 tff(list_type,type,
@@ -365,25 +382,6 @@ tff(check_list,conjecture,
 ```
 
 Array axioms. Also axioms for int collections, int map, heaps. They all boil to pretty similar stuff though
-```vampire
-% https://www.tptp.org/cgi-bin/SeeTPTP?Category=Axioms&File=DAT001=0.ax
-tff(array_type,type,
-    array: $tType ).
-
-tff(read_type,type,
-    read: ( array * $int ) > $int ).
-
-tff(write_type,type,
-    write: ( array * $int * $int ) > array ).
-
-tff(ax1,axiom,
-    ! [U: array,V: $int,W: $int] : ( read(write(U,V,W),V) = W ) ).
-
-tff(ax2,axiom,
-    ! [X: array,Y: $int,Z: $int,X1: $int] :
-      ( ( Y = Z )
-      | ( read(write(X,Y,X1),Z) = read(X,Z) ) ) ).
-```
 
 ```vampire
 % https://www.tptp.org/cgi-bin/SeeTPTP?Category=Axioms&File=DAT001=0.ax
@@ -405,8 +403,25 @@ tff(ax2,axiom,
       | ( read(write(X,Y,X1),Z) = read(X,Z) ) ) ).
 ```
 
+```vampire
+% https://www.tptp.org/cgi-bin/SeeTPTP?Category=Axioms&File=DAT001=0.ax
+tff(array_type,type,
+    array: $tType ).
 
+tff(read_type,type,
+    read: ( array * $int ) > $int ).
 
+tff(write_type,type,
+    write: ( array * $int * $int ) > array ).
+
+tff(ax1,axiom,
+    ! [U: array,V: $int,W: $int] : ( read(write(U,V,W),V) = W ) ).
+
+tff(ax2,axiom,
+    ! [X: array,Y: $int,Z: $int,X1: $int] :
+      ( ( Y = Z )
+      | ( read(write(X,Y,X1),Z) = read(X,Z) ) ) ).
+```
 
 ```vampire
 fof(ground, axiom,
@@ -428,6 +443,7 @@ fof(myquery, conjecture,
 ).
 
 ```
+
 vampire -av off --question_answering answer_literal
 
 ```vampire
@@ -438,7 +454,7 @@ fof(a,axiom,tutorial(probabilistic)).
 fof(a,conjecture,?[X]: (prover(X) & tutorial(X))).
 ```
 
-`--sos` 
+`--sos`
 
 inference restrictions
 `--unit_resulting_resolution`
@@ -456,10 +472,12 @@ fof(path2, axiom,
 ).
 " |  vampire  --unit_resulting_resolution on
 ```
+
 Hmm. Vampire with the option or not. Not really sure what to take away from that. It might be recogzninig a datalog fragment
 If I wanted to use this like an egraph, I can't look inside the equality. It's entirely unobseravle. Maybe I could use the reflection trick.
 
 ## E prover
+
 enormalizer is an interesting sounding program. Give it a pile of unit equalities and it will normalize with respect to thm
 EPR grounder to DIMACS
 The e calculus is a bit puzzling. I haven't seen the analog for vampire
@@ -472,7 +490,6 @@ Database printing feature -S. Doesn't print stuff I would expect though?
 Kind of prints everything by default right?
 Early stopping conditions
 clause size
-
 
 ```bash
 eprover --help | less
@@ -500,19 +517,21 @@ fof(path2, axiom,
 `--generated-limit=100`
 Ok this basically did what i wanted. I'm not sure what it is though?
 
-
 "The most natural clause representation for E is probably a literal disjunction: a=$true;b!=$true;c!=$true."
 
 ```bash
 
 ```
+
 ## Prover9
+
 [Prover9 and Mace4](https://www.cs.unm.edu/~mccune/prover9/)
 Prover9 is intriguing. It seems to have interaction modalities that other provers don't
 Mace
 [proverx](http://proverx.com/doc/) a web gui variant
 
 Some examples I didn't write:
+
 ```bash
 echo "% Prove that a group in which all elements have order 2 is commutative.
 
@@ -601,23 +620,26 @@ end_of_list.
 ```
 
 ## Otter
-https://www.cs.unm.edu/~mccune/otter/
-otter lambda - dumping lambda terms in otter? http://www.michaelbeeson.com/research/otter-lambda/
+
+<https://www.cs.unm.edu/~mccune/otter/>
+otter lambda - dumping lambda terms in otter? <http://www.michaelbeeson.com/research/otter-lambda/>
 Otter seemed to offer more control over the resolution process
 Prover9 is the succssor to otter
 
 [otter manual](https://www.mcs.anl.gov/research/projects/AR/otter/otter33.pdf)
 "Although OTTER has an autonomous mode, most work with OTTER involves interaction
 with the user"
+
 ## LeanTAP and ilk
+
 See prolog some
 [Build Your Own First-Order Prover](http://jens-otten.de/tutorial_cade19/)
-https://www.philipzucker.com/javascript-automated-proving/
+<https://www.philipzucker.com/javascript-automated-proving/>
 
 ## PyRes
+
 - <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7324010/> Teaching Automated Theorem Proving by Example: PyRes 1.2
 - pyres-simple is a minimal system for clausal logic, pyres-cnf adds heuristics, indexing, and subsumption, and pyres-fof
-
 
 ```python
 # atomic formula first. Ground is basically the same.
@@ -657,6 +679,7 @@ while len(unprocessed) > 0:
 ```
 
 A sqlized given-clause loop
+
 ```python
 unproc = []
 proc = sqlite3.connect(":memory:") # store processed clauses in DB.
@@ -667,8 +690,8 @@ while len(unproc) > 0:
     cur.execute("INSERT INTO", C)
 ```
 
-
 Ground Subsumption queyr on clauses. Find all sets that have C as subset
+
 ```sql
 CREATE Table lit (clause INTEGER, lit STRING); -- UNIQUE (clause, lit) gives redundant lit deletion
 -- find all clauses c such it contains literal a,b,c.
@@ -688,9 +711,6 @@ SELECT DISTINCT clause from lit a
     min(case when lit = ? then 1 when lit = ? when else 0 ) = 1
 
 ```
-
-
-
 
 ```python
 t1 = "fah0"
@@ -722,13 +742,15 @@ class Unify(Transformer):
 ```
 
 Big question is, what is the representation of formulas, literals, clauses.
+
 - Strings
 - Json
 - Relational Terms / hashconsed
 - Feature vectors.
+
 ## Zipperposition
 
-[logtk](https://hal.inria.fr/hal-01101057). Huh. LPO as a constraint solving problem https://sneeuwballen.github.io/zipperposition/2.0/logtk/Logtk_solving/index.html
+[logtk](https://hal.inria.fr/hal-01101057). Huh. LPO as a constraint solving problem <https://sneeuwballen.github.io/zipperposition/2.0/logtk/Logtk_solving/index.html>
 
 [demo resolution prover](https://github.com/sneeuwballen/zipperposition/tree/master/src/demo/resolution)
 
@@ -756,6 +778,7 @@ let () = List.iter (fun name -> print_endline name) names
 ```
 
 ## Datalog vs ATP
+
 What makes an ATP that different from a datalog? Both are saturating. If I could limit of prune clauses of size > N, that might emulate a datalog. Or perhaps protect rule-rule resolution from happening.
 
 The given clause algorithm has some flavor of seminaive.
@@ -765,7 +788,9 @@ Not at all clear how to do extraction on a paramodulated database.
 Given that ATP subsumes in some sense both prolog and datalog, what does it say about Magic Set?
 
 Extraction from ATP. The equality is invisible. The copying trick?
+
 ## Prolog vs ATP
+
 Set of support strategy with horn clauses in passive set, goal in active set, hyperresolution as only inference rule behaves akin to prolog.
 
 [What is the difference between E and a PROLOG system?](https://wwwlehre.dhbw-stuttgart.de/~sschulz/E/FAQ.html)
@@ -773,11 +798,12 @@ Set of support strategy with horn clauses in passive set, goal in active set, hy
 Prolog `=` is unification. ATP `=` is rewrite/semantical.
 
 # Strategies
-Relationship to focusing http://web4.ensiie.fr/~guillaume.burel/download/LFAT.pdf
+
+Relationship to focusing <http://web4.ensiie.fr/~guillaume.burel/download/LFAT.pdf>
 
 -Set of Support - Only infer on clauses that trace provenance to user specified set of support.
 
-https://www.doc.ic.ac.uk/~kb/MACTHINGS/SLIDES/2013Notes/7LControl4up13.pdf
+<https://www.doc.ic.ac.uk/~kb/MACTHINGS/SLIDES/2013Notes/7LControl4up13.pdf>
 The Predicate Ordering Syntactic Refinement - order predicates. Only resolve on lowest
 Locking Refinement - mark each literal in clause and resolve only on lowest one
 atom ordering
@@ -785,15 +811,13 @@ atom ordering
 - Resonance Strategy
 - Weighting
 
+# Methodology
 
-
-
-
-# Methodology 
-Given clause 
+Given clause
 Discount loop
 
 ## Unification
+
 - see note on unification
 Two way matching.
 Is there a substitution for variables that solves an equation. Yes
@@ -808,50 +832,56 @@ y = var("y")
 y1 = var("y") # same y.
 print(unify((x,y), (y1,1))) # returns subst dict
 ```
+
 Or can use Maude's unification. Or prolog's. Or just write it.
 
 ## Resolution
-Put clauses in cnf. Each clause is an `\/` of positive and negative atoms.
-Take two clauses that have matching (unifiable) positive and negative pieces 
 
-Hyperresolution https://www.doc.ic.ac.uk/~kb/MACTHINGS/SLIDES/8LHyper4up.pdf You are seeking clauses of only positive literals. Only use a "nuecleii" if it covers all of the negative literals.
+Put clauses in cnf. Each clause is an `\/` of positive and negative atoms.
+Take two clauses that have matching (unifiable) positive and negative pieces
+
+Hyperresolution <https://www.doc.ic.ac.uk/~kb/MACTHINGS/SLIDES/8LHyper4up.pdf> You are seeking clauses of only positive literals. Only use a "nuecleii" if it covers all of the negative literals.
 
 UR-resolution - unit-resulting resolution. Only perform resultion if it results in nw unit literal (all other chunks line up). UR is essentially datalog stye resolution. It does however allow universals in the unit facts.
-
 
 SLD resolution is ATP view of prolog.
 
 Factoring
 
-
 ## Subsumption
+
 Cleaning out the database.
 
 given C(X) ,  C(a) is redundant (subsumed). You can remove it from clause database. A question is how to do this quickly. See Term indexing.
 
-https://www.doc.ic.ac.uk/~kb/MACTHINGS/SLIDES/2013Notes/6LSub4up13.pdf
-https://www.cs.cmu.edu/~fp/courses/99-atp/lectures/lecture20.html
+<https://www.doc.ic.ac.uk/~kb/MACTHINGS/SLIDES/2013Notes/6LSub4up13.pdf>
+<https://www.cs.cmu.edu/~fp/courses/99-atp/lectures/lecture20.html>
 
 encoding subusmption to SAT
-https://fmcad.org/FMCAD22/presentations/08%20-%20SAT%20and%20SMT%202/01_rath.pdf
+<https://fmcad.org/FMCAD22/presentations/08%20-%20SAT%20and%20SMT%202/01_rath.pdf>
+
 ## Narrowing
+
 see term rewriting
 
 ## Paramodulation
+
 paramodulation is unification based equational substitution
 
-https://math.stackexchange.com/questions/865562/a-simple-yet-non-superficial-explanation-of-what-paramodulation-means-in-the
+<https://math.stackexchange.com/questions/865562/a-simple-yet-non-superficial-explanation-of-what-paramodulation-means-in-the>
 
 Paramodulation is dealing with equality pieces in clauses.
-http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.34.9958&rep=rep1&type=pdf
+<http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.34.9958&rep=rep1&type=pdf>
 
 ## Demodulation
+
 rewrite rules basically? destructively simplify terms using them
 Positive literals can be marked or inferred as demodulators (what we ordinary think of as rewrite rules)
 By having both paramodulation and demodulation exist, the system has both destructive and conservative rules.
 
 ## Superposition
-https://en.wikipedia.org/wiki/Superposition_calculus
+
+<https://en.wikipedia.org/wiki/Superposition_calculus>
 
 [ntroduction to Superposition calculus - Cruanes](https://www.youtube.com/watch?v=zja691VwfSA&ab_channel=JetBrainsResearch) [slides](https://simon.cedeela.fr/assets/jetbrains_2021.pdf)
 
@@ -861,7 +891,7 @@ Term orderings - see term rewriting
 
 [Implementation of Saturating Theorem Provers](http://wwwlehre.dhbw-stuttgart.de/~sschulz/PAPERS/Schulz-SSA-2018ImpSat.pdf)
 
-[Superposition 25](https://eprover.org/EVENTS/Superposition-25.html) http://www.eprover.org/EVENTS/Superposition-25/TutorialSP_ho.pdf
+[Superposition 25](https://eprover.org/EVENTS/Superposition-25.html) <http://www.eprover.org/EVENTS/Superposition-25/TutorialSP_ho.pdf>
 
 [backmair and ganzinger 1994](https://pure.mpg.de/rest/items/item_1834970/component/file_1857487/content)
 
@@ -876,10 +906,14 @@ The discussion of the encoding of t = s is a bit goofy. Yes, `=` is commutative.
 `t = s  === {  __ {t}, {s} __ }`
 `t != s === { __ {t,s} __ }`
 Multiset orderings
+
 # Literal Selection
+
 Ordered resolution - order on literals, only resolve on biggest one (you want to get rid of big stuff)
+
 # Term Indexing
-[Triemaps that match](https://arxiv.org/pdf/2302.08775.pdf) SPJ and Graf https://www.youtube.com/watch?v=cT8G6FS2v94&ab_channel=Konfy
+
+[Triemaps that match](https://arxiv.org/pdf/2302.08775.pdf) SPJ and Graf <https://www.youtube.com/watch?v=cT8G6FS2v94&ab_channel=Konfy>
 
 ```ocaml
 type expr = Var of string | App of expr * expr
@@ -888,13 +922,14 @@ type 'a exprmap = {var : 'a String.Map.t; app : 'a exprmap exprmap } (* I thing 
 ```
 
 See Automated reasoning handbook chapter 18
-https://www.cs.cmu.edu/~fp/courses/atp/lectures/22-indexing.html
+<https://www.cs.cmu.edu/~fp/courses/atp/lectures/22-indexing.html>
 [towards efficient subsumption - Tammet](https://www.cs.cmu.edu/~fp/courses/atp/cmuonly/T98.pdf)
 [Give reasoning a trie](https://www.en.pms.ifi.lmu.de/publications/PMS-FB/PMS-FB-2020-2/PMS-FB-2020-2-paper.pdf)
 Indexes are pretty good for serialized structures. You can serialize a term/tree by .
 Perfect indexing vs approximate indexing. You don't necessarily need to index only the terms you need. YOu can iterate over the returned bits and just toss out the stuff you didn't want. Depends how expensive perfect vs imperfect is
 
 Indexing has different kinds of queries. Is the database ground or not?
+
 - Variants
 - Unifiers
 - Forward Subsumption
@@ -902,6 +937,7 @@ Indexing has different kinds of queries. Is the database ground or not?
 You may want multi-term indexing
 
 ## Path Indexing
+
 most suitable for backward subsumption)
 Consider paths from root to leaf of tree. Can put this in a trie.
 Look at all paths in a query term of interest and take set intersection from path index trie.
@@ -909,6 +945,7 @@ Look at all paths in a query term of interest and take set intersection from pat
 Generalization? Consider just paths through a graph? f(a,b,c), g(a,d,c), ... . Up down and around. Kind of reminds me of code2vec
 
 ## Discrimination Trees
+
 most suitable for unit forward subsumption
 
 A depth first traversal of the whole term
@@ -916,6 +953,7 @@ A depth first traversal of the whole term
 ## Substitution trees
 
 ## Feature Vectors
+
 [Simple and Efficient Clause Subsumption with Feature Vector Indexing](http://wwwlehre.dhbw-stuttgart.de/~sschulz/PAPERS/Schulz2013-FVI.pdf)
 
 [Fingerprint Indexing for Paramodulation and Rewriting](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=b63b68cfbfb5636dc298f808e108e7ca513b68d3#page=490)
@@ -927,12 +965,14 @@ A generalization of seperating terms out by their head symbol
 Imperfect indexing is useful. It does mean you may have to implement algorithms more than once.
 
 # Theories
+
 Inductiion [Superposition with Structural Induction](https://simon.cedeela.fr/assets/frocos_17_paper.pdf)
 Datatypes [Superposition with Datatypes and Codatatypes](https://hal.science/hal-01904588)
 Arrays
 Arith [Beagle – A Hierarchic Superposition Theorem Prover](https://www.trustworthy.systems/publications/nicta_full_text/8726.pdf)
 
 # Higher Order
+
 Applicative encoding. Turn `f(x,y)` into `app(app(f,x),y)`. Wasteful and inefficint but it can work. Built in appreciation of higher order structure (currying basically?) is better
 Higher order lambda free.
 HORPO - term orderings that appreciate the applicative structure
@@ -947,8 +987,8 @@ hammers
 [](https://www.cl.cam.ac.uk/~lp15/papers/Notes/Herbrand.pdf) blast
 [First-Order Proof Tactics in Higher-Order Logic Theorem Provers - Hurd](https://www.gilith.com/papers/metis.pdf) Metis
 
-
 # Misc
+
 [Uwe Waldemann - automated reasoning courses](https://people.mpi-inf.mpg.de/~uwe/lehre/)
 
 [Ordering-Based Strategies for Hor n Clauses* - Dershowitz](https://www.ijcai.org/Proceedings/91-1/Papers/020.pdf) Equational horn clause. positive is larger than negative in literal selection
@@ -962,39 +1002,33 @@ loveland book
 fitting book
 theorem proving in otter
 
-wos summary https://ininet.org/automated-reasoning-and-resolution.html
+wos summary <https://ininet.org/automated-reasoning-and-resolution.html>
 
-http://wp.doc.ic.ac.uk/kb/teaching/ autmated reasoning course krysia 
+<http://wp.doc.ic.ac.uk/kb/teaching/> autmated reasoning course krysia
 
 Set of Support
 prio
 
-
 - <https://logictools.org/> neat online ATP interface
 - TPTP
 
-
 - Sledgehammer
-
-
 
 Resolution is bottom up, tableau is top down?
 
 [Automated Deduction in Equational Logic and Cubic Curves](https://ftp.mcs.anl.gov/pub/Otter/RP/monograph-8.ps.gz)
 
-
 - Idea: Convert resolution proof to bus proofs tree. Is this even possible or desirable?
 
 [Pelletier Problems](https://carlosareces.github.io/cordoba08/Bib/75ATPproblems86.pdf)
-
 
 [Schulz teaching automated theorem proving](https://www.youtube.com/watch?v=j9Dyz5xXVrk)
 [polymorphic vampire](https://www.youtube.com/watch?v=WTrzv1dSrTg)
 
 [An Impossible Asylum](https://arxiv.org/abs/2112.02142) - ATP checking of Smullyan puzzle found hypotheses inconsistent
 
- Phillips & Stanovsky https://www2.karlin.mff.cuni.cz/~stanovsk/math/slides_esarm.pdf loop theory and non associative lagerbas
-  https://www2.karlin.mff.cuni.cz/~stanovsk/math/slides_lpar08.pdf
+ Phillips & Stanovsky <https://www2.karlin.mff.cuni.cz/~stanovsk/math/slides_esarm.pdf> loop theory and non associative lagerbas
+  <https://www2.karlin.mff.cuni.cz/~stanovsk/math/slides_lpar08.pdf>
 
   Searching for a Fixed Point Combinators by Using Automated
                     Theorem Proving: A Preliminary Report
@@ -1020,12 +1054,11 @@ Dedam: A Kernel of Data Structures and Algorithms for
 
 [Thesis on Implementation of Higher-Order Superposition](https://research.vu.nl/en/publications/implementation-of-higher-order-superposition)
 
-[auto2](https://arxiv.org/pdf/1605.07577.pdf) interesting system that combines egraphs and sturation proving https://github.com/bzhan/auto2 he alos mentions gowers as influence
+[auto2](https://arxiv.org/pdf/1605.07577.pdf) interesting system that combines egraphs and sturation proving <https://github.com/bzhan/auto2> he alos mentions gowers as influence
 [Coming to Terms with Quantified Reasoning](https://arxiv.org/abs/1611.02908)
 algerbaic datatypes require an infinite number of acyclicity axioms.
 
-https://www.ps.uni-saarland.de/Publications/documents/Treinen_tacs91.pdf FOL + datatypes is more powerful than just FOL.
-
+<https://www.ps.uni-saarland.de/Publications/documents/Treinen_tacs91.pdf> FOL + datatypes is more powerful than just FOL.
 
 ```python
 from pysmt.shortcuts import get_env
@@ -1055,5 +1088,3 @@ with tempfile.NamedTemporaryFile(suffix=".smt2") as fp:
     print(res.stdout.decode())
 
 ```
-
-
