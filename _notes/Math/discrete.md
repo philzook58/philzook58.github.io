@@ -20,6 +20,7 @@ title: Discrete Mathematics
     - [Coloring](#coloring)
     - [Covering](#covering)
     - [Isomorphism](#isomorphism)
+    - [Graph hashing](#graph-hashing)
     - [subgraph isomorphgism](#subgraph-isomorphgism)
     - [Pfaffian orientation](#pfaffian-orientation)
     - [Matchings](#matchings)
@@ -35,16 +36,10 @@ title: Discrete Mathematics
 - [Order Theory](#order-theory)
   - [Lattice](#lattice)
 
-
-
-
-
-
-
 <https://en.wikipedia.org/wiki/Discrete_mathematics>
 
-
 # Graphs
+
 <https://en.wikipedia.org/wiki/Graph_theory>
 
 [introduction to graph theory - grinberg](https://arxiv.org/abs/2308.04512)
@@ -52,144 +47,153 @@ Infinite graphs? How does this even make sense.
 
 [graph theory vids](https://www.youtube.com/playlist?list=PLVqjIisMyo_9h78itHVS2hZzkthxFHoT7)
 
-https://en.wikipedia.org/wiki/Line_graph
+<https://en.wikipedia.org/wiki/Line_graph>
 
-https://en.wikipedia.org/wiki/Strongly_connected_component#Definitions Condensation graph - strongly connected component collapsed to vertex
+<https://en.wikipedia.org/wiki/Strongly_connected_component#Definitions> Condensation graph - strongly connected component collapsed to vertex
 
-https://en.wikipedia.org/wiki/List_of_graphs particular graphs
+<https://en.wikipedia.org/wiki/List_of_graphs> particular graphs
 
+<https://en.wikipedia.org/wiki/Multigraph> multiple edges between vertices
+<https://en.wikipedia.org/wiki/Directed_graph> directed edges
+<https://en.wikipedia.org/wiki/Rooted_graph> graph with distinguished root. "flow graphs". Aczel's anti foundation axiom
+<https://en.wikipedia.org/wiki/Directed_acyclic_graph>
+<https://en.wikipedia.org/wiki/Graph_labeling>
 
-https://en.wikipedia.org/wiki/Multigraph multiple edges between vertices
-https://en.wikipedia.org/wiki/Directed_graph directed edges
-https://en.wikipedia.org/wiki/Rooted_graph graph with distinguished root. "flow graphs". Aczel's anti foundation axiom
-https://en.wikipedia.org/wiki/Directed_acyclic_graph
-https://en.wikipedia.org/wiki/Graph_labeling
-
-https://en.wikipedia.org/wiki/Hypergraph edges connect more than one vertex
+<https://en.wikipedia.org/wiki/Hypergraph> edges connect more than one vertex
 
 ## Graph Families / Classes
+
 <https://en.wikipedia.org/wiki/Category:Graph_families>
 
-https://en.wikipedia.org/wiki/Complete_graph totally connected
+<https://en.wikipedia.org/wiki/Complete_graph> totally connected
 
-https://en.wikipedia.org/wiki/Regular_graph Every vertex has same number of neighbors
+<https://en.wikipedia.org/wiki/Regular_graph> Every vertex has same number of neighbors
 
-https://en.wikipedia.org/wiki/Perfect_graph
+<https://en.wikipedia.org/wiki/Perfect_graph>
 
-https://en.wikipedia.org/wiki/Chordal_graph all cycles of 4 or more vertices have a chord
+<https://en.wikipedia.org/wiki/Chordal_graph> all cycles of 4 or more vertices have a chord
 
 series parallel graph
 
-https://en.wikipedia.org/wiki/Bipartite_graph separated into two sets of vertices that are not connected. Two colorable.
+<https://en.wikipedia.org/wiki/Bipartite_graph> separated into two sets of vertices that are not connected. Two colorable.
 Tree's are bartite. Even cycle graphs
 Konig's theorem - minimum vertex cover = maximum edge cover
 
-https://en.wikipedia.org/wiki/Planar_graph
-https://en.wikipedia.org/wiki/Circle_packing_theorem
+<https://en.wikipedia.org/wiki/Planar_graph>
+<https://en.wikipedia.org/wiki/Circle_packing_theorem>
 
+<https://en.wikipedia.org/wiki/Intersection_graph> all graphs are intersection graphs. Intersections of sets
 
-https://en.wikipedia.org/wiki/Intersection_graph all graphs are intersection graphs. Intersections of sets
+<https://en.wikipedia.org/wiki/Interval_graph> intersection graph of a set of intervals
 
-https://en.wikipedia.org/wiki/Interval_graph intersection graph of a set of intervals
-
-https://en.wikipedia.org/wiki/Comparability_graph things that are comparable in a partial order have an edge. Total order has complete comparaibility graph. Comparability graphs are perfect
-
-
-
+<https://en.wikipedia.org/wiki/Comparability_graph> things that are comparable in a partial order have an edge. Total order has complete comparaibility graph. Comparability graphs are perfect
 
 ## Minors
-
 
 Algebraic Graph theory
 Graph expanders
 
 ### Cut
-https://en.wikipedia.org/wiki/Cut_(graph_theory) a
 
-https://en.wikipedia.org/wiki/Bridge_(graph_theory) an edge who's removal increases number of connected components
+<https://en.wikipedia.org/wiki/Cut_(graph_theory)> a
+
+<https://en.wikipedia.org/wiki/Bridge_(graph_theory)> an edge who's removal increases number of connected components
 Tarjan bridge finding algo
 Chain decomposition
 
-### Flow 
-https://en.wikipedia.org/wiki/Flow_network
+### Flow
 
-https://en.wikipedia.org/wiki/Maximum_flow_problem
+<https://en.wikipedia.org/wiki/Flow_network>
+
+<https://en.wikipedia.org/wiki/Maximum_flow_problem>
 
 [max flow min cut](https://en.wikipedia.org/wiki/Max-flow_min-cut_theorem)
 
 Max cut
+
 ## Decomposition
+
  tree decompoaitions
  <https://en.wikipedia.org/wiki/Tree_decomposition>
-There was also the kleene algebra variation of 
+There was also the kleene algebra variation of
+Treewidth is the width of a minimal tree decomposition
+Cops and Robbers
+Elimination ordering
 
-https://en.wikipedia.org/wiki/Modular_decomposition
-
+<https://en.wikipedia.org/wiki/Modular_decomposition>
 
 ## Algebra
-https://en.wikipedia.org/wiki/Adjacency_matrix
-https://en.wikipedia.org/wiki/Spectral_graph_theory
+
+<https://en.wikipedia.org/wiki/Adjacency_matrix>
+<https://en.wikipedia.org/wiki/Spectral_graph_theory>
 cheeger constant. cheeger inequality
 
 Positive and negative value on eigenvectors are a way of labelling or cutting graph.
 
-
-https://en.wikipedia.org/wiki/Expander_graph sparse graph with strong connectivity properties. hard to cut apart.
+<https://en.wikipedia.org/wiki/Expander_graph> sparse graph with strong connectivity properties. hard to cut apart.
 
 [Miracles of algerbaic graph theory](https://www.youtube.com/watch?v=CDMQR422LGM&t=6s&ab_channel=JointMathematicsMeetings)
+
 ## Logic
+
 Monadic second order logic.
 Existential second of logic let's you talk about selection sets of certaain kinds. Model checking these formulas requires solving dificult NP problems. Many of the problems below fall into this class.
 
 Courcelle's theorem
 
 ##
+
 SDP
 Max cut approximation
 
 Sherali Adams
 
-
-
 ## Problems
+
 ### Easy
+
 Topological sort
 reachability
 shortest path
 minimum spanning tree
 [max flow min cut](https://en.wikipedia.org/wiki/Max-flow_min-cut_theorem) . A corolary on linear duality.
 
-
 Many (all?) of the easy problems are reducible simply to a linear program.
+
 ### Enumeration
 
-https://en.wikipedia.org/wiki/BEST_theorem 
+<https://en.wikipedia.org/wiki/BEST_theorem>
 
 ### Hamiltonian cycles
+
 <https://en.wikipedia.org/wiki/Hamiltonian_path>
 Visit each vertex once.
 Travellign salesman problem is weighted relative
 
-https://en.wikipedia.org/wiki/Eulerian_path visit every edge exactly once
+<https://en.wikipedia.org/wiki/Eulerian_path> visit every edge exactly once
 
 ### Clique
-https://en.wikipedia.org/wiki/Clique_problem
+
+<https://en.wikipedia.org/wiki/Clique_problem>
 Find maximal completely connected cluster (clique)
 
-Ramsey theory guarantees clique exists 
+Ramsey theory guarantees clique exists
+
 ### Coloring
+
 <https://en.wikipedia.org/wiki/Graph_coloring>
 Register allocation
 
-https://en.wikipedia.org/wiki/Edge_coloring
+<https://en.wikipedia.org/wiki/Edge_coloring>
 chormatic index = minimum number of edge colors
-https://en.wikipedia.org/wiki/Vizing%27s_theorem every graph can be edge colored with close to the maximum degree (edge count on single vertex)
+<https://en.wikipedia.org/wiki/Vizing%27s_theorem> every graph can be edge colored with close to the maximum degree (edge count on single vertex)
 
 ### Covering
+
 <https://en.wikipedia.org/wiki/Covering_problems>
 
-
 ### Isomorphism
+
 nauty
 bliss
 saucy
@@ -200,25 +204,21 @@ Could use properties of nehigbors
 Could use labelling of neighbors too. That becomes a self consistent search. However, if you already know certain orderings (based on properties). Or you could branch
 I'm not sure I'm understanding this the same way nauty does.
 
+### Graph hashing
 
-Graph hashing
-https://github.com/calebh/dihash
-
+<https://github.com/calebh/dihash>
 
 disjoint set partition data structure?
-
 
 isomorphism vs bisimulation. Different but related ideas.
 
 automorphism - permutation of graph such that is an isomorphism
 vertex orbit
 
-
 [Practical graph isomorphism II](https://www.sciencedirect.com/science/article/pii/S0747717113001193)
 
 Colorings are partitions. A mapping from vertices to numbers.
 Refinement
-
 
 ```python
 import pynauty
@@ -227,12 +227,14 @@ g = pynauty.Graph(10)
 print(g)
 
 ```
+
 Interning alpha equiv terms
 graphlog. graphs as datalog objects. Graphs as the fundamental store.
 automorphisms + group union find
 
 AC terms are unstructure graphs
 Typically terms are structured graphs.
+
 ```python
 (1,(2,3))
 
@@ -309,7 +311,6 @@ print(a1 is a0)
 
 ```
 
-
 ```python
 
 table = {} # enumerating in toplogica order would be nice. OrderedDict. We seem to be fine though. default dict guarantees this?
@@ -373,6 +374,7 @@ def trans(s):
 
 
 ```
+
 Hmm. this is also basically a method for tree isomorphism. More or less follows the lins of the ahu algorithm.
 
 Hash consing generates ids that witness the well foundedness.
@@ -381,8 +383,9 @@ hashunconsing
 A unique id, but then we also kind of want to go back from id to terms. We could maintaini an id table, but from whence do we receive id?
 
 Our memoizing table choices
+
 - `Int -> Term`
-- 
+-
 
 Hash consing does maximal compression to unique CSE form. To hash cons already built stuff _is_ to perform congruence closure? disjoint sets of tid.
 
@@ -407,6 +410,7 @@ AC shuffling. Terms equal modulo AC. Terms equal modulo AC and Alpha. That's kin
 query automorphisms - permutation symmettries of a conjunctive query.
 
 query containment / query equivalence
+
 ```python
 from z3 import *
 S = Sort("S")
@@ -416,16 +420,14 @@ Q1 = And(R(x,y), R()  )
 Implies()
 ```
 
-
-
 ```clingo
 h(X,Y)
 
 ```
+
 Uniqueness is kind of easier to enforce than maximal sharing (?) because subgraph identity is tough. One incoming edge.
 Forbid subgraph automorphisms? Can that be done?
 A minimal (labeled/colored) graph that you have a homomorphism to. Does this minimal graph have automorphisms?
-
 
 Approximate matching. Convex relaxation
 Quadratic assignement problem
@@ -435,42 +437,68 @@ A permutation matrix = 0-1 matrix with all
 $PBP^T = A$
 doubly stochastic matrix
 
+<https://en.wikipedia.org/wiki/Graph_homomorphism> generalization of coloring. colorings are homomoprhisms to complete graph
 
-https://en.wikipedia.org/wiki/Graph_homomorphism generalization of coloring. colorings are homomoprhisms to complete graph
+Weisfeiler and Leman Test.
+<https://davidbieber.com/post/2019-05-10-weisfeiler-lehman-isomorphism-test/>
+An iterative thing. Get a bunch of fingerprints. Actually looks a lot like partition refinement for autmata minimization. I suppose taking a graph, reducing to a canonical automata is a reasonable canonical object.
+
+[A SHORT TUTORIAL ON THE WEISFEILER-LEHMAN TEST AND ITS VARIANTS](https://par.nsf.gov/servlets/purl/10299993)
+
+```python
+
+for n in G.neighbors():
+    hash((selfid,frozenset( G.neighbors ))) # multiset is better.
+
+
+```
 
 ### subgraph isomorphgism
-https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem
-subgraph matching and query containment
+
+<https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem>
+
+subgraph matching and query containment. You can use SQL to build a pattern that matches against a database. This is part of a general framework of homomorphisms.
+
+```sql
+CREATE TABLE k3(a,b);
+INSERT INTO k3 VALUES (1,2), (2,3), (3,1);
+INSERT INTO k3 SELECT k3.b, k3.a FROM k3;
+SELECT * FROM k3;
+
+-- automorphisms
+SELECT e1.a, e1.b, e2.a, e2.b, e3 FROM k3 as e1, k3 as e2, k3 as e3 WHERE e1.b = e2.a and e2.b = e3.a and e3.b = e1.a;
 
 
+```
 
 ### Pfaffian orientation
-https://en.wikipedia.org/wiki/Pfaffian_orientation
+
+<https://en.wikipedia.org/wiki/Pfaffian_orientation>
 A directon to each edge such that each cycle
-https://tex.stackexchange.com/questions/692892/kasteleyn-orientation-for-square-lattice
+<https://tex.stackexchange.com/questions/692892/kasteleyn-orientation-for-square-lattice>
 
 Kastelyn orietnation
 
 [FKT algorithm](https://en.wikipedia.org/wiki/FKT_algorithm) for counting perfect matchings. Katelyn Temperley Fisher. Dimers.
 pfaffian of skew symmettric matrix can be reduced to determinant
 counting is useful in stat phys. entropy.
-https://en.wikipedia.org/wiki/Geometrical_frustration
-https://en.wikipedia.org/wiki/Holographic_algorithm
-
+<https://en.wikipedia.org/wiki/Geometrical_frustration>
+<https://en.wikipedia.org/wiki/Holographic_algorithm>
 
 ### Matchings
-https://en.wikipedia.org/wiki/Matching_(graph_theory)
+
+<https://en.wikipedia.org/wiki/Matching_(graph_theory)>
 a set of edges such that none share vertices
 
 maximum matching
 
-
-https://en.wikipedia.org/wiki/Perfect_matching
+<https://en.wikipedia.org/wiki/Perfect_matching>
 pick edges such that exactly one edge touches every vertex
 
-Related to https://en.wikipedia.org/wiki/Edge_cover where each vertex must touch at least one edge
+Related to <https://en.wikipedia.org/wiki/Edge_cover> where each vertex must touch at least one edge
 
 ## Graph rewriting
+
 See term rewriting
 
 double pushout.
@@ -535,35 +563,33 @@ axiom(F) :- asserta(theorem(forall)X,foo(X)).
 ```
 
 ## Misc
-https://en.wikipedia.org/wiki/Graph_polynomial
-Tutte polynomial
 
+<https://en.wikipedia.org/wiki/Graph_polynomial>
+Tutte polynomial
 
 bipartite graphs
 
 # Knots
-https://en.wikipedia.org/wiki/Knot_polynomial
 
+<https://en.wikipedia.org/wiki/Knot_polynomial>
 
 Rational Tangles - infinite series
 
 # Matroids
+
 See also abstract algebra
 
-https://en.wikipedia.org/wiki/Matroid
+<https://en.wikipedia.org/wiki/Matroid>
 
 "where greedy works"
 
-https://en.wikipedia.org/wiki/Submodular_set_function
-
+<https://en.wikipedia.org/wiki/Submodular_set_function>
 
 greedoids
-
 
 # Packings
 
 Circle packing. Really cool. A discrete analog of complex functions
-
 
 # Combinatorics
 
@@ -573,12 +599,12 @@ Binomial
 [generatingfunctionology](https://www2.math.upenn.edu/~wilf/DownldGF.html)
 [combinatorial species](https://en.wikipedia.org/wiki/Combinatorial_species)
 
-https://doc.sagemath.org/html/en/reference/combinat/sage/combinat/species/species.html
-https://hackage.haskell.org/package/species
+<https://doc.sagemath.org/html/en/reference/combinat/sage/combinat/species/species.html>
+<https://hackage.haskell.org/package/species>
 
 Shadow calculus
 Sums
-https://en.wikipedia.org/wiki/Umbral_calculus
+<https://en.wikipedia.org/wiki/Umbral_calculus>
 
 Concrete mathematics
 
@@ -589,47 +615,46 @@ The continuous analog.
 
 [polya enumeration theorem](https://en.wikipedia.org/wiki/P%C3%B3lya_enumeration_theorem) polya's theory of counting
 
-
 handbook of combinatorics
 
-https://en.wikipedia.org/wiki/Combinatorial_design 
+<https://en.wikipedia.org/wiki/Combinatorial_design>
 
 Finite geometry
 
-https://en.wikipedia.org/wiki/Incidence_structure 
+<https://en.wikipedia.org/wiki/Incidence_structure>
+
 # Ramsey Theory
+
 Big step up in sophistication huh
-Principles that 
+Principles that
 
 Cody says has something to do with well quasi-orders
 
-
-https://en.wikipedia.org/wiki/Schur%27s_theorem
-https://mathworld.wolfram.com/SchurNumber.html
+<https://en.wikipedia.org/wiki/Schur%27s_theorem>
+<https://mathworld.wolfram.com/SchurNumber.html>
 Schur number 5 = 161. 2017
-
 
 [Ramsey number](https://mathworld.wolfram.com/RamseyNumber.html) solution to party problem. R(m,n) m know each other or n don't know each other.
 Diagonal vs nondiagonal
 2023 breakthrough on upper bound
 
-
 # Logic
+
 See lik the whole pile on logic
 
 # Set theory
+
 Ditto
 
-
 # Order Theory
-https://en.wikipedia.org/wiki/Order_theory
 
-https://en.wikipedia.org/wiki/Dilworth%27s_theorem
+<https://en.wikipedia.org/wiki/Order_theory>
+
+<https://en.wikipedia.org/wiki/Dilworth%27s_theorem>
 Finite po-sets
 
-
-https://en.wikipedia.org/wiki/Hasse_diagram visualizing posets
-
+<https://en.wikipedia.org/wiki/Hasse_diagram> visualizing posets
 
 ## Lattice
+
 See also abstract algebra

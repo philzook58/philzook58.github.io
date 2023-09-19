@@ -16,6 +16,7 @@ title: Automated Theorem Proving
   - [ECTS](#ects)
   - [Set Theory](#set-theory)
   - [Free Logic / Partial Functions](#free-logic--partial-functions)
+  - [Query Containment](#query-containment)
 - [Systems](#systems)
   - [Vampire](#vampire)
   - [E prover](#e-prover)
@@ -282,6 +283,40 @@ Avigad book
 
 We don't want it necessarily to assume our function symbols are total. How do we model this?
 We could switch t a relational character. Functions are so gosh darn nice though.
+
+## Query Containment
+
+Queries are first order logical statements with perhaps some free variables. They ae evaluated (model checked) with respect to particular finite models. Asking if one statement implies another in all models is semantic entailment.
+Because `|-` and `|=` are the same thing here (? Really we are relying on soundness), We can write query containment as a simple theorem proving question
+
+```vampire
+fof(q1_def, axiom, q1(X) <=> (r(X,Y) & r(Y,X))). % just implication or biimplication?
+
+fof(q2_def, axiom, q2(X) <=> r(X,Y)). 
+
+fof(contain, conjecture, 
+q1(X) => q2(Q)
+).
+
+```
+
+This also implies a method for solving CSPs.
+
+```vampire
+
+% or really the full clark completion? Yea. I almost certainly do need it.
+fof(k3_edges, axiom, k3edge(a,b) & k3edge(b,c) & k3edge(c,a) & k3edge(b,a) & k3edge(c,b) & k3edge(a,c)
+    & ~k3edge(a,a) & ~k3edge(b,b) & ~k3edge(c,c)
+).
+
+fof(mygraph, axiom, edge(1,2)).
+
+fof(verts, axiom, vert(V) <=> (edge(V,X)) | edge(X,V)).
+
+fof(color3 , conjecture, edge(X,Y) => k3(color(X),color(Y)))
+```
+
+hhmmm.
 
 # Systems
 

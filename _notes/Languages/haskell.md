@@ -270,11 +270,118 @@ impossible functional programs
 
 ```haskell
 import qualified Data.Set as Set
-import qualified Data.Map as Map
+import qualified Data.Map.Strict as Map
 import qualified Data.Sequence as Seq
 
 
 main = print "hello"
+
+-- Trie a b 
+data Trie a = All -- Hmm. Put a result here? 
+  -- | None  -- None is Proj (empty)
+  | Skip (Trie a)  -- Skip Int (Trie a) compressed skip
+  | Proj (Map.Map a (Trie a)) -- Proj Int Map.Map 
+   -- | None (Trie a) ???
+  deriving (Eq, Ord)
+
+{-
+data Trie { [Int]} skip list factored out.
+-}
+
+{-
+Wel typed form
+
+data Trie a b = All b | Proj (Map a b)
+
+type = Trie Int (Trie Char ())
+
+-}
+
+{-
+instance Functor Trie where
+  fmap f All = All
+  fmap f (Skip x) = Skip (fmap f x)
+  fmap f (Proj m) = Proj (fmap f m)
+-}
+
+join :: Ord a => Trie a -> Trie a -> Trie a
+join All x = x
+join x All = x
+join (Skip x) (Skip y) = (Skip (join x y))
+join (Proj x) (Proj y) = (Proj (Map.intersectionWith join x y))
+join (Skip x) (Proj y) = Proj $ fmap (\ y -> join x y) y
+join (Proj x) (Skip y) = Proj $ fmap (\ x -> join x y) x
+
+full = All
+
+-- insert
+
+{-
+union :: Ord a => Trie a -> Trie a -> Trie a
+union All x = All
+union x All = All
+union (Skip x) (Skip y) = (Skip (union x y))
+union (Proj x) (Proj y) = (Proj (Map.unionWith union x y))
+union (Skip x) (Proj y) = ? -- hmm. maybe there's nothing
+union (Proj x) (Skip y) = ?
+-}
+
+singleton :: [Maybe a]  -> Trie a
+singleton [] = All
+singleton (Nothing:xs) = Skip (singleton xs)
+singleton ((Just x) : xs) = Proj (Map.singleton x (singleton xs))
+
+lookup k (Skip m) = m
+lookup k All = All
+lookup k (Proj m) = Map.lookup k m
+
+{-
+singleton' :: [Either a Int] -> Trie a
+singleton' [] = All
+singleton' (Left x : xs) = Proj (Map.singleton x (singleton' xs))
+singleton' (Right n : xs) = Proj (Map.singleton x (singleton' xs))
+-}
+-- ixy :: [(Int,a)] -> [Maybe a] 
+-- ixy :: [a] -> [Int] -> [Maybe a]
+{-
+trie :: [[a]] -> [Int] -> Trie a
+trie ls ixs = 
+  foldl ls
+
+
+shift?
+
+map :: (Trie a -> Trie a) -> Trie a  -- map?
+
+collapse :: Trie a -> Trie a
+collapse All = All
+collapse (Skip m) = m
+collapse (Proj m) = Map.mapWithKey (\k m' -> lookup k m') 
+
+swap :: Trie a -> Trie a
+swap All = All
+swap (Skip (Proj m)) = Proj (map (\k -> Skip k) m)
+swap t@(Skip (Skip m)) = t
+swap (Proj m) = 
+
+Map.lookup  
+
+
+So... it's partial maps over lists of stuff.
+They're kind of more like ZDDs
+
+fresh :: State Int (Trie a)
+
+rel1 :: Set a -> Int -> Trie a
+rel1 s 0 = 
+
+rel2 :: Set (a,a) -> Int -> Int -> Trie a
+rel2 s i j | i == j    = rel1 (filter (==)  s)
+           | i < j     = 
+           | otherwise = 
+rel3 :: Set (a,a,a) -> Int -> Int -> Int -> Trie a
+-}
+
 ```
 
 # Resources
