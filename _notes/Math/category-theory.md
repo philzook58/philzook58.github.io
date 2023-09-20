@@ -98,6 +98,7 @@ Part of the appeal of category theory comes from it's relationship to polymorphi
 <https://arxiv.org/pdf/2209.01259.pdf> Category Theory for Programming
 
 # Combinators
+
 <https://en.wikipedia.org/wiki/Combinatory_logic>
 
 Combinators are little functional pieces you can combine like lego blocks. When you have a language of combinators, variable binding issues are gone. They are hard to program with
@@ -256,6 +257,8 @@ I can't comment much on what category theory contributes to mathematics, but I t
 What is this? Cody talks about this a lot.
 
 # Resources
+
+[Nice list of resources](https://www.logicmatters.net/categories/)
 
 - Bartosz Milewski
 - Computational Category Theory

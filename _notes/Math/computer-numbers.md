@@ -9,8 +9,10 @@ title: Computer Numbers
 - [Algebraic Numbers](#algebraic-numbers)
 - [Intervals](#intervals)
 - [Floats](#floats)
+  - [Fixed point](#fixed-point)
   - [Multiprecision FLoats](#multiprecision-floats)
   - [Core identities](#core-identities)
+    - [smt](#smt)
   - [Fused multiply add](#fused-multiply-add)
   - [Range reduction](#range-reduction)
   - [2Sum and Fast2Sum](#2sum-and-fast2sum)
@@ -69,6 +71,7 @@ You can represent an exact number by stating an exact polynomial it is the solut
 # Intervals
 
 # Floats
+<https://ssvlab.github.io/lucasccordeiro/papers/nsv2020.pdf> An Efficient Floating-Point Bit-Blasting API for Verifying C Programs - esbmc
 
 <https://arith2023.arithsymposium.org/program.html> arith conference
 
@@ -78,6 +81,14 @@ You can represent an exact number by stating an exact polynomial it is the solut
 [sam pollard fpbench talk](https://sampollard.github.io/research/artifacts/pollard_fpbench23_presentation.pdf)
 
 [Odyssey: An Interactive Workbench for Expert-Driven Floating-Point Expression Rewriting](https://arxiv.org/pdf/2305.10599.pdf)
+
+## Fixed point
+
+Is fixed point under float? In a general sense I suppose. You fix the exponent and then can use integer numbers. You do the rounding yourself. Simpler to think about in some ways. absolute error instead of relative error. Microcontrollers may not have FPU
+
+[SMT theory of fixed point](https://soarlab.org/papers/2020_ijcar_bhlnr.pdf)
+
+<https://soarlab.org/papers/2020_ijcar_bhlnr.pdf>
 
 ## Multiprecision FLoats
 
@@ -112,6 +123,8 @@ Theorem 2.2
 
 e = 0 if 1 <= x < 2
 e = 2 if 2 <= x < 4
+
+### smt
 
 ```z3
 ;re

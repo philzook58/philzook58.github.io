@@ -36,6 +36,7 @@ title: Answer Set Programming
   - [Tree 2 Graph](#tree-2-graph)
   - [Graph Matching / Edit Distance / Homomorphism](#graph-matching--edit-distance--homomorphism)
   - [Graph Minor](#graph-minor)
+  - [Finding Functors](#finding-functors)
   - [Intuitionistic Logic](#intuitionistic-logic)
   - [Rewriting](#rewriting)
   - [Well founded / Coinduction](#well-founded--coinduction)
@@ -62,6 +63,8 @@ title: Answer Set Programming
   - [Functions](#functions)
   - [Theories](#theories)
   - [Other](#other)
+- [true #false](#true-false)
+- [sup #inf useful for aggregates (min max of empty set)](#sup-inf-useful-for-aggregates-min-max-of-empty-set)
 - [Theory](#theory)
   - [Stable Models](#stable-models)
   - [Unfounded Sets](#unfounded-sets)
@@ -83,6 +86,7 @@ title: Answer Set Programming
 - [Misc](#misc)
 
 See also notes on:
+
 - Datalog
 - Prolog
 - Constraint Programming
@@ -102,12 +106,16 @@ What is answer set programming:
 [Potassco](https://potassco.org/) is the host of clingo, the main ASP solver (so far as I know)
 
 The examples demonstrate some of these points.
+
 # Examples
+
 [potassco guide examples](https://github.com/potassco/guide/tree/master/examples)
 [modeling section of course](https://teaching.potassco.org/modeling/)
 
 [Automatic Composition of Melodic and Harmonic Music by Answer Set Programming](https://link.springer.com/chapter/10.1007/978-3-540-89982-2_21)
+
 ## Reachability
+
 To demonstrate that it is a superset of datalog.
 
 ```clingo
@@ -117,9 +125,10 @@ path(X,Z) :- edge(X,Y), path(Y,Z).
 
 ```
 
-Try `gringo  --text`. This shows that the grounder solves the entire problem. 
+Try `gringo  --text`. This shows that the grounder solves the entire problem.
 
 ## Graph Coloring
+
 ```clingo
 edge(1,2).edge(2,3). edge(3,4). edge(1,4).
 color(r). color(g). color(b).
@@ -129,10 +138,13 @@ vert(N) :- edge(_, N).
 :- edge(X,Y), assign(X,C), assign(Y,C).
 
 ```
+
 ## Satisfiability
+
 In CNF form (a or b or c) can be see as constraint (not a /\ not b /\ not c -> false).
 In this way we can translate CNF to ASP, one integrity constraint per clause.
 Generate the vars via
+
 ```clingo
 {a}. {b}.
 :- a, not b.
@@ -141,6 +153,7 @@ Generate the vars via
 ```
 
 ## N-Queens
+
 ```clingo
 #const n=5.
 row(1..n).
@@ -159,7 +172,9 @@ Not space effective. THere are better encodings
 {queen(1..n, J)} = 1 :- J = 1..n.
 
 ```
+
 ## Traveling Salesman
+
 ```clingo
 {travel(X,Y)} :- road(X,Y,_).
 
@@ -179,7 +194,9 @@ visited(X) :- travel(X,Y), start(X).
 There are other modes than branch and bound
 
 [clingo example](https://potassco.org/clingo/run/?example=traveling-salesperson.lp)
+
 ## Reviewer Assignment
+
 ```
 {assigned(P,R) : reviewer(R)} = 3 :- paper(P).
 :- assigned(P,R), coi(P,R).
@@ -191,11 +208,12 @@ There are other modes than branch and bound
 cardinality cnstraints are convenience features for count
 
 ## Dependency Management
+
 [Using Answer Set Programming for HPC Dependency Solving](https://arxiv.org/abs/2210.08404)
 <iframe width="560" height="315" src="https://www.youtube.com/embed/bkY9mOyUaDA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-
 ## Planning
+
 This is a cool one. It shows that ASP has an answer to the frame problem. It is finite unrolling
 
 ```
@@ -219,7 +237,6 @@ holds(F,T) :- time(T), holds(F, T-1), not occ(A,T) : del(A,F).
 
 ```
 
-
 can I use this to conveniently describe transition systems? Yes.
 [block world planning example](https://potassco.org/clingo/run/?example=blocksworld-planning.lp)
 `#include <incmode>.` What does that do?
@@ -239,16 +256,14 @@ You can give positive and negative examples as integrity constraints. And then o
 So this infers a datalog program.
 Have a pile of reasonable rules and give it a couple answers. Kind of jives for something a decompiler might like.
 
-
-https://rulemlrr19.inf.unibz.it/rw2019/downloads/RW2019-Russo-Law-p2.pdf
+<https://rulemlrr19.inf.unibz.it/rw2019/downloads/RW2019-Russo-Law-p2.pdf>
 Abduction
 
 inductive logic programming
 [ilasp](https://doc.ilasp.com/) [vid](https://www.youtube.com/watch?v=d3-0E-F2rks)
 brave or cautius indunction
 
-A related subproblem might be to deduce the initial fact database given the rules and some facts in and not in the output. Abduction logic programming https://ceur-ws.org/Vol-3204/paper_9.pdf
-
+A related subproblem might be to deduce the initial fact database given the rules and some facts in and not in the output. Abduction logic programming <https://ceur-ws.org/Vol-3204/paper_9.pdf>
 
 ```clingo
 vert(1..4).
@@ -268,9 +283,10 @@ path(X,Z) :- edge(X,Y), path(Y,Z).
 
 [Answer Set Programming for Regular Inference](https://www.mdpi.com/2076-3417/10/21/7700) inferring regular expressions from string examples
 
-https://github.com/stefano-bragaglia/XHAIL
+<https://github.com/stefano-bragaglia/XHAIL>
 
 Abuduction
+
 ```clingo
 {rainy; wet}.
 
@@ -288,25 +304,24 @@ slippery :- wet.
 Adbuction as loop invariant
 while(C) {}
 not C /\ ? => Q. get first hypothesis
+
 - is inductive
-- is invariant not inductive. strengthen loop C /\ I /\ ? => I. I is inductive realtive to I' 
+- is invariant not inductive. strengthen loop C /\ I /\ ? => I. I is inductive realtive to I'
 - is not invariant - backtrack. many abudction choices.
 
-
 ## Default Reasoning
+
 ASP offers in a sense 5 truth values. True `a`, possibly true `not -a`, unknown `not a, not -a`, possibly false `not a`, false `-a`. You can add rules that collapse some of these values into the others, i.e. let's assume something possible true is in fact true `a :- not -a`.
 
-
 ## Worlds
-You can make variables that are true in particular worlds. A version I saw was carton reasoning vs real world reasoning. This feels very modal logic-y. The branching stable models are then different worlds you can be on. I don't know that there is a way to talk about connections between worlds though in this style.
 
+You can make variables that are true in particular worlds. A version I saw was carton reasoning vs real world reasoning. This feels very modal logic-y. The branching stable models are then different worlds you can be on. I don't know that there is a way to talk about connections between worlds though in this style.
 
 ## Compiler problems
 
-[TOAST: Applying Answer Set Programming to Superoptimisation](https://link.springer.com/chapter/10.1007/11799573_21) http://www.cs.bath.ac.uk/tom/toast/
+[TOAST: Applying Answer Set Programming to Superoptimisation](https://link.springer.com/chapter/10.1007/11799573_21) <http://www.cs.bath.ac.uk/tom/toast/>
 [Generating Optimal Code Using Answer Set Programming 2009](https://link.springer.com/chapter/10.1007/978-3-642-04238-6_57)
 [Superoptimisation: Provably Optimal Code Generation using Answer Set Programmin - crick thesis](https://purehost.bath.ac.uk/ws/portalfiles/portal/187949093/UnivBath_PhD_2009_T_Crick.pdf)
-
 
 ```python
 import clingo
@@ -320,7 +335,6 @@ def Set(v, e):
 
 
 ```
-
 
 ```clingo
 
@@ -338,9 +352,6 @@ alloc(R,T)
 
 %#show expr/1.
 ```
-
-
-
 
 ```clingo
 % re
@@ -420,7 +431,6 @@ live(I, X) :- defines(J, X), le(J, I), J!=I, le(I,K), uses(K,X).
 
 #show assign/2.
 ```
-
 
 ```
 add(0, z, x, y).
@@ -530,12 +540,9 @@ biz.
 
 Could use python parser to create code. That's kind of intriguing.
 
-
-
 Free floating and assign to blocks?
 The graph like structure is nice for sea of nodes perhaps.
 clingo-dl might be nice for scheduling constraints.
-
 
 Using clingraph would be cool here.
 
@@ -597,7 +604,6 @@ ninsn(N) :- N = #count { I : active(E,I) }.
 
 ```
 
-
 ```clingo
 #script (python)
 import clingo
@@ -650,6 +656,7 @@ avail(T+1,E) :- avail(T,E), where(R,E), not write(R,T), T <= End.
 ```
 
 ## Egraph extraction / Union Find
+
 <https://www.philipzucker.com/asp-for-egraph-extraction/>
 
 ```clingo
@@ -666,7 +673,6 @@ eq(add(X,add(Y,Z)), add(add(X,Y),Z)) :- term(add(add(X,Y),Z)).
 
 term(add(1,add(2,add(3,4)))).
 ```
-
 
 ```clingo
 %re
@@ -711,7 +717,6 @@ term(X) :-  bterm(5,X).
 
 #show term/1.
 ```
-
 
 Explicit strata control. Does this work? Does it semi-naive? But I want to add strata for term producing rules
 
@@ -777,6 +782,7 @@ fadd(@find(X),@find(Y),@find(Z)) :- add(X,Y,Z).
 ```
 
 ## Instruction Selection
+
 [Complete and Practical Universal Instruction Selection](https://dl.acm.org/doi/10.1145/3126528)
 
 ```clingo
@@ -853,7 +859,6 @@ path(X,Y) :- edge(X,Y).
 
 ## Sqlite
 
-
 ```python
 import sqlite
 import clingo
@@ -874,8 +879,8 @@ ctl.ground([("base",[])])
 ```
 
 ## Geometry
-Deductive database
 
+Deductive database
 
 ```clingo
 #script(python)
@@ -890,10 +895,11 @@ test(@sort(4,5,3)).
 point(y,x).
 line(A,B) :- point(X), point(Y), (A,B) = @sort(X,Y). % seems a little silly here.
 ```
+
 Storing sorted canonical versions is easy, joining (efficiently) modulo permutations is tougher.
 
-
 Using smart constructors. Is this better?
+
 ```
 #script(python)
 
@@ -903,7 +909,6 @@ def line(*args):
 #end.
 
 ```
-
 
 Mixing in grobner?
 
@@ -916,10 +921,8 @@ import sympy
 
 ```
 
-
-
-
 ## Lambda-datalog
+
 All the herculean effort I went to on souffle is easy because clingo has nice pyton integration
 
 varargs is easy.
@@ -1003,7 +1006,9 @@ foo(@elem(X)) :- test(X).
 
 err(@error("this is a custom error")). 
 ```
+
 ## Polynimal / Semirng
+
 Similar to lattices in some respects.
 
 ```clingo
@@ -1017,7 +1022,6 @@ import sympy
 
 
 ```
-
 
 ```python
 from sympy import *
@@ -1063,6 +1067,7 @@ ctl.ground()
 ```
 
 Hmm. Ok, clingo does both
+
 ```clingo
 #script(python)
 import clingo
@@ -1094,7 +1099,7 @@ from calcium import *
 
 ## Types
 
-https://www.cl.cam.ac.uk/~nk480/bidir-survey.pdf
+<https://www.cl.cam.ac.uk/~nk480/bidir-survey.pdf>
 
 ```clingo
 
@@ -1151,6 +1156,7 @@ p(n, )   add n parameter to judgement. no, this still expands too much... hmm. M
 ```
 
 ### Formulog
+
 Z3 is available in python. ASP is a datalog. Badabing bada boom
 
 ```clingo
@@ -1194,7 +1200,8 @@ Could Z3 be used as a theory?
 ASP as z3 theory?
 
 ## Sorting
-https://www.aaai.org/ocs/index.php/KR/KR14/paper/viewFile/7966/7912
+
+<https://www.aaai.org/ocs/index.php/KR/KR14/paper/viewFile/7966/7912>
 
 ```clingo
 order(X,Y) :- p(X), p(Y), X < Y, not p(Z) : p(Z), X < Z, Z < Y.
@@ -1203,8 +1210,8 @@ p(7).
 p(19).
 ```
 
-
 ## Shortest Path
+
 Fishy as hell. It's complaining about something. And it's outputting all paths. Hmm.
 
 ```clingo
@@ -1230,8 +1237,6 @@ start(1). end(4).
 ```
 
 ## Spanning Tree
-
-
 
 ```clingo
 %edge(1..3,1..6).
@@ -1267,6 +1272,7 @@ path(X,Z) :- edge(X,Y), path(Y,Z).
 ```
 
 ## Metainterpreter
+
 [slides](https://teaching.potassco.org/meta/)
 `clingo --output=reify`
 
@@ -1287,9 +1293,10 @@ body(sum(B,G))  :- rule(_,sum(B,G)),
 #show T : output(T,B), conjunction(B).
 ```
 
-Hmm. Maybe I need to ground the metaprogram itself? Then I can avoid 
+Hmm. Maybe I need to ground the metaprogram itself? Then I can avoid
 
 ## Subsumption / Lattices
+
 It is unlikely the grounder gets the boost that subsumption or lattices gives datalog. In which point it is not clear there is a point. Lattices and subsumption can be modelled by just ignoring the deletion. But if I wanted to model having exactly only the unsubumed terms could I do it?
 
 Question: Can ASP and Lattice Datalog be reconciled? Does this model in terms of pure ASP show yes? That we could push the solving in principle into the grounder. Yes, I think that's right. Then the remaining uncertain pre-foo can be used.
@@ -1326,9 +1333,7 @@ When the pinnacle of the lattice is selected, does that imply everything underne
 
 The power set lattice does not present an issue? But it doesn't in datalog either.
 We have greater powers of negation and aggregation in ASP.
-"booleanization" seems like a useful technique. 
-
-
+"booleanization" seems like a useful technique.
 
 Lattice via python.
 
@@ -1373,8 +1378,6 @@ Hmm. Doesn't work because how do we inform clingo something has changed?
 Ok yes, this works. We have some lighter amounts of redundancy + improved termination.
 Ordering of atoms matters.
 
-
-
 ## Tree 2 Graph
 
 In a sense this is doing very little, but perhaps that is only because the tree and graph reprsentations are so close to each other. In most other languages this would stink.
@@ -1405,7 +1408,9 @@ expr'(A, var'(A)) :- vert(A,var).
 %#show expr'/1.
 
 ```
+
 ## Graph Matching / Edit Distance / Homomorphism
+
 [Flexible graph matching and graph edit distance using answer set programming](https://arxiv.org/abs/1911.11584)
 
 Instead of encoding subgraph patterns as rules (good for small patterns), they encode is by explicitly representing grpah homomoprhisms
@@ -1420,50 +1425,84 @@ Instead of encoding subgraph patterns as rules (good for small patterns), they e
 ```
 
 Flip it around to get an isomorphism
+
 ```clingo
 {h2(X,Y) : n1(X,L)} = 1 :- n2(Y,L).
 {h2(X,Y) : e1(X,S1,T1,L), h2(S1,S2), h(T1,T2)} = 1 :- e2(Y,S2,T2,L).
 :- p2(Y,K,D), h2(X,Y), not p1(X,K,D).
 ```
+
 Hmm h and h2 aren't necessarily inverse. They probably compose to an automorphism. Would adding the inverse condition help or hurt?
 
 Or alternatively get a subgraph isomorphism
+
 ```clingo
 {h(X,Y) : n1(X,L)} <= 1 :- n2(Y,L).
 {h(X,Y) : e1(X,S1,T1,L), h(S1,S2), h(T1,T2)} <= 1 :- e2(Y,S2,T2,L).
 ```
 
-
 Interesting maybe for query homomorphisms. Queries can be represented as graph.
-
 
 ## Graph Minor
 
+## Finding Functors
+
+```clingo
+% tabulate a finite category
+compose1(f, g , h).
+hom1(f, a, b). % or cod(f,a), dom(f,b)
+
+cod(F,A) :- hom(F,A,_).
+dom(F,B) :- hom(F,_,B).
+
+% maybe check associativity and such
+% maybe generate id(a) laws.
+
+% tabulate a second cat
+compose2(f, g , h).
+hom2(f, a2, b2).
+
+% functor is analog of h in graph homomorphism
+{functorOb(A,B) : ob2(B)} = 1 :- ob1(A).
+{functormorph(F,G) : }
+
+% plays consisntently with objects and morphisms
+% should this be generating facts? ... maaaaaybe.
+functorObj(A,B) :- functorHom(F,G), hom1(F,A,_), hom2(G,B,_). 
+
+% plays nice with compose
+funHom(H1,H2) :- compose1(F1,G1,H1), compose2(F2,G2,H2), funHom(F1,F2), funHom(G1,G2). 
+
+
+```
+
+Is finding a functor easier or harder than graph homomorphism?
+Enumerating them?
+Is finding functors part of any interesting proof method?
+
+Next level up, finding natural transformations
+
 ## Intuitionistic Logic
-In what sense, if any, is clingo an intuitionistic theorem prover [applications of intuionistic logic to answer set programming](https://nokyotsu.com/me/papers/tplp04.pdf) [Answer set programming in intuitionistic logic](https://www.sciencedirect.com/science/article/pii/S001935771730054X). 
+
+In what sense, if any, is clingo an intuitionistic theorem prover [applications of intuionistic logic to answer set programming](https://nokyotsu.com/me/papers/tplp04.pdf) [Answer set programming in intuitionistic logic](https://www.sciencedirect.com/science/article/pii/S001935771730054X).
 Refutations. State axioms as rules, state therem to prove as constraint. Look for unsat.
 asp does not immediately admit every intuitionistic formula. That's ok.
 The relationship of asp negation to intuitionistics negation is confusing.
 Intuitionistic logic is one with pretty few assumptions about how the logic works. A proof in there probably transfers over to a notion of proof in ASP. It's the other direction that is more worrying.
 
-
-I mean, forgetting (explicit) negation, what about just using choice to model intuitionistic disjunction? A -> B \/ C ~ 1{b;c} :- a. I don't see a reason to use  disjunction? 
+I mean, forgetting (explicit) negation, what about just using choice to model intuitionistic disjunction? A -> B \/ C ~ 1{b;c} :- a. I don't see a reason to use  disjunction?
 Using conditionals to simulate higher order axioms?
 Datalog + Case analysis. Cyclic proofs?
-
 
 [On Equivalent Transformations of Infinitary Formulas under the Stable Model Semantics](https://www.cs.utexas.edu/users/vl/papers/etinf.pdf) "From the results of Pearce [7] and Ferraris
 [1] we know that in the case of grounded logic programs in the sense of Gelfond
 and Lifschitz [2] and, more generally, finite propositional formulas it is sufficient
 to check that the equivalence F ↔ G is provable intuitionistically" So intuitionsitc reasoning is sufficient for proving equivalence of ASP programs. But perhaps not the other way. Yes, that is often what I'm doing. Translating datalog programs into intionistic logic to see if it's ok. But if the connection is complete, I may miss valid transformations.
 
-
-
 ## Rewriting
+
 It all comes back to edge-path.
 Rewriting systems have directed edges between terms.
-
-
 
 ```clingo
 
@@ -1494,6 +1533,7 @@ rw(Start, N*fact(N-1), S+1) :- rw(Start, T, S), T = fact(N), N > 0.
 #maximum { S : rw(fact(3), T, S)}
 
 ```
+
 A graph without cycles can talk about longest path.
 
 ```clingo
@@ -1514,9 +1554,8 @@ def set_simp(l,l1):
 
 
 ```
+
 Modular grounding?
-
-
 
 Datalog modulo term rewriting. I mean, I guess this is ASP modulo term rewriting.
 The idea is that you can normalize datalog terms before they go in. What is unsatisfying is you may want guarded rewriting, for which the guards depend on datalog analyses. Then we need something subsumptive or lattice-like, which clingo doesn't offer?
@@ -1671,6 +1710,7 @@ def meaning(ctx, tm):
 ```
 
 ## Well founded / Coinduction
+
 Coq Accessibility [chlipala](http://adam.chlipala.net/cpdt/html/GeneralRec.html#:~:text=Well%2DFounded%20Recursion,Coq%20is%20well%2Dfounded%20recursion)
 [coq library for wf](https://coq.inria.fr/library/Coq.Init.Wf.html)
 <https://proofassistants.stackexchange.com/questions/1077/well-foundedness-classical-equivalence-of-no-infinite-descent-and-accessibility>
@@ -1686,8 +1726,6 @@ acc(X) :- node(X), acc(Y) : r(X,Y).
 wf :-  acc(X) : node(X).
 ```
 
-
-
 Encode well-foundedness. Put choice in. Solve for termination order?
 
 Coinductive. Greatest Fixed point. Least fixed point of negative works.
@@ -1696,7 +1734,6 @@ Take each coinductive rule and if any of hypotheses are _known_ false, it isn't 
 Has inifintie path is coinductive property
 
 See coinduction in datalog notes
-
 
 ```clingo
 -inf_trace(X) :- vert(X), -inf_trace(Y) : edge(X,Y).
@@ -1713,6 +1750,7 @@ loop(X) :- path(X,X). % loop = inf_trace
 ```
 
 ## Hereditary Finite Sets
+
 Set theory has this notion of sets of sets. This is not how I typically model things, but it is interesting and fun.
 
 Atomic set labels.
@@ -1757,6 +1795,7 @@ set(trans(X)) :- set(trans(A)), elem(X,A), set(X).
 ```
 
 ## Model Checking
+
 Modal logic. Satisfaction is set of states
 modal mu calculus
 
@@ -1780,6 +1819,7 @@ sat(S,) :- form(box(a, F)), sat(S1,F) : reachable(S,S1).
 ```
 
 ### Boolean Equation Systems
+
 <http://www.tcs.hut.fi/Publications/bibdb/HUT-TCS-A99.pdf>. See also mcrl2 groot book
 An intermediate problem for model checking modal u-calculus. Boolean equations with least and greatest fixed point operaors.
 `(sx=a)*`
@@ -1800,6 +1840,7 @@ p4 :- p2,p1. %u.x4 = x2 /\ x1
 ```
 
 If everythign is greatest fixed point, complement the system
+
 ```clingo
 -p1 :- -p2. -p1 :- -p3. % v.x1 = x2 /\ x3
 -p2 :- -p3,-p4. % v.x2 = x3 \/ x4
@@ -1810,12 +1851,12 @@ If everythign is greatest fixed point, complement the system
 Conjunctive and disjunctive systems allow alternation but only contain /\ or only contain \/
 
 Hmm. It might be possible to directly express the modal formula + transition systemcompilation in ASP
+
 ```clingo
 trans(1,a,2; 1,a,4; 2,a,3; 3,a,2).
 
 
 ```
-
 
 General translaion. Feels like they are building a parametrized system with rules turnining on and off. We're inferring some kind of graph.
 
@@ -1823,17 +1864,17 @@ My first inclination was to use direct encoding + ASP priority. That seems like 
 Add min p and max p as optimization objectives. Put them in the priority that the equations appear. Can I encode games in this way?
 I'm like mixing my metaphors. A max sat solver can probably do this also
 
-
-
 ## SMT Theories
+
 How many SMT theories (euf, arrays, sets) are encodable?
 
 ASP is kind of datalog metaprgramming for SAT.
 Many (quantifier free?) SMT problems can be bit blasted.
 
-
 ### EUF Ackermanization
+
 Ackermanization in clingo?
+
 ```clingo
 % congruence
 % generate using python probably.
@@ -1859,6 +1900,7 @@ term(A) :- eq(A,_).
 % foreign union find? Too fishy. The UF needs to be backtracked.
 
 ```
+
 The information in a union find is not that big. There just aren't as many partitions as there are binary relations (2^(n^2)) power set of pairs. The number of partitions isn't that much bigger than 2^n
 But can one find a fixed parametrization of partitions that embeds into asp?
 
@@ -1867,16 +1909,18 @@ root(a,b) doesn't work.
 at most n partitions. Could order them by partition size. But that's still quadratic
 How to identifty partitions? in a factored way?
 
-
 ### Bitvectors
+
 Named bitvectors + extract function is good approach.
 Sum of product form can be literall translated to rules.
 `z = ab + ~cd`
+
 ```clingo
 {a;b;c;d}.
 z :- a,b.
 z :- not c, d.
 ```
+
 ```clingo
 %cnf no. something isn't right.  z <-> ab + ~cd 
 {a;b;c;d;z}.
@@ -1912,9 +1956,8 @@ bitvec(X,N;Y,N) :- bitvec(and(X,Y), N).
 
 
 ```
+
 Sat sweeping internal to asp?
-
-
 
 ```clingo
 
@@ -1946,9 +1989,6 @@ bit(B,N) :- bit(A,N), eq(A,B).
 
 
 ```
-
-
-
 
 ```clingo
 {foo(0..3)}.
@@ -1993,13 +2033,15 @@ shift(N+1) :- foo(N), N < 4.
 ```
 
 ### Theory of Arrays
+
 Theory of arrays in clingo? Hmm.
+
 ```clingo
 select(store(X,A,V), X, V).
 ```
 
-
 A theory of sets is pretty cool
+
 ```clingo
 
 elem(S, X) :- set(S), S = add(X,S1).
@@ -2013,14 +2055,17 @@ eq(S1,S2) :- sub(S1,S2), sub(S2,S1).
 ```
 
 ### Difference Logic
+
 In the datalog notes, I talk about how difference logic propagator is th same as shortest path.
 
 ### EPR
+
 What about this one huh. Kind of interesting.
 EPR and datalog are kind of related in that they both rely on something like finite herband universes for their termination/decidability.
 The eager encoding of epr can be very bad though.
 
 a(V) and e(V) for variables.
+
 ```clingo
 
 ; relation enumrating existential variables
@@ -2043,12 +2088,10 @@ rel(R, a)
 
 ```
 
-
-
-
 ## Junk
 
 Questions:
+
 - First class sets and reflecltion
 - Lattice stuff. External union find? subsumption. Use aggregates? They can be recursive?
 - parsing
@@ -2067,26 +2110,31 @@ parent(ann,bob). parent(bob,carol). parent(bob,dan).
 ```
 
 constants are larger than integers
+
 ```clingo
 % p in model
 p :- abracadabra > 7.
 ```
+
 ```clingo
 % p not in model
 p :- abracadabra < 7.
 ```
 
 unsafe variable. Clingo throws error
+
 ```clingo
 p(X) :- X > 7.
 ```
 
 shorthand for multiple tuples
+
 ```clingo
 p(1,2; 2,4; 4,8; 8,16).
 ```
 
 Pick which to show and which to not
+
 ```clingo
 p. p(a). p(a,b).
 #show p/0. #show p/2.
@@ -2096,11 +2144,13 @@ p. p(a). p(a,b).
 `#include` directives
 
 Ranges are inclusive
+
 ```clingo
 p(1..5). % analog of p(0). p(1). ... p(5).
 ```
 
 remainder operator `\`
+
 ```clingo
 #const n=10.
 composite(N) :- N = 1..n, I = 2..N-1, N\I = 0.
@@ -2108,7 +2158,8 @@ prime(N) :- N=2..n, not composite(N).
 
 ```
 
-Choice rules. pieces from the set. Cardniality constraints. 
+Choice rules. pieces from the set. Cardniality constraints.
+
 ```clingo
 #const n=4.
 {p(X); q(X)} = 1 :- X = 1..n.
@@ -2122,12 +2173,11 @@ Choice rules. pieces from the set. Cardniality constraints.
 ```
 
 `{p(a); p(b)} 1` is the same as `{p(a); p(b)}. :- p(a), q(b).` We could enumerate every subset that can't be and exclude them with constraint.
-`1 {p(a); p(b)} ` is the same as `{p(a); p(b)}. :- p(X), q(X).`
+`1 {p(a); p(b)}` is the same as `{p(a); p(b)}. :- p(X), q(X).`
 
 `:- f(X,Y1), f(X,Y2), Y1 != Y2.` expresses functional constraint. Same thing as `Y1 = Y2 :- f(X,Y1), f(X,Y2).`
 
 Clingo makes auxiliary predicates instead of dummy variables for `_` interesting.
-
 
 grounding time and solving time.
 For slow ground: try enumerating better. symettry breaking. Rules with fewer variables.
@@ -2137,47 +2187,54 @@ Conditional Literals.
 p :- q(X) : r(X).
 
 # Constructs
+
 There are a bunch of extra constructs that compile to extra variables and such. Many are in essence syntactic sugar.
 
 ## Integrity constraints
+
 `:- a,b,c.`
 gets translated to
 `x :- a,b,c, not x.`
 
 odd loop destroys model.
 
-
 Negation in the head Is the same thing a flipped integrity constraint. Makes sense from a currying perspective
-In intuitionistic logic `not a = (a -> void)`. 
+In intuitionistic logic `not a = (a -> void)`.
 `not a :- b = (void :- a) :- b = void :- a,b.`
+
 ## Choice Rule
+
 `{a}`
 `{buy(corn); buy(chips)} :- at(grocery).`
 even loop
 `{a,b,c} :- foo`
 give a name to body, but then also give a name to the things that can or can't be in the model (neg a basically).
+
 ```
 body :- foo.
 a :- body, not nega.
 nega :- body, not a.
 ```
 
-
 ## Cardinality rules
+
 introduce counter. This is the datalog method for summation. You don't need lattice / summation because you just need to check for the presence of the trigger
 The greatest sum
 
 upper bounds
 `a :- {} u`
 becomes
+
 ```
 y :- u {}
 a :- not y
 ```
 
 ### cardinality as heads
+
 `l {stuff} u :- body`
 becomes
+
 ```
 x :- body
 {stuff} :- x
@@ -2195,14 +2252,15 @@ Having the counter go up by a weight isn't hard
 bar(N) :- N = #count { N1: foo(N1)}.
 ```
 
-
 This is amusingly conjunction in the head. Gringo doesn't really recognizes it as such though. So you're probably paying a lot of cost
+
 ```clingo
 d.
 {a;b;c} = 3 :- d.
 ```
 
 ## Conditional
+
 {l : l1,l2,l3}
 Could be seen as {l | l1, l2, l3}
 Expansion is context dependent.
@@ -2210,6 +2268,7 @@ In head: disjunction (exists?)
 In body: conjuction of elements.
 
 Conditionals are related to `:-`
+
 ```clingo
 bar.
 foo : bar.
@@ -2222,6 +2281,7 @@ Also relatedly a bounded forall quantification in the body.
 It's more like a bounded existential quantification in the head.
 
 Condition in the `{}` brackets vs not.
+
 ```clingo
 bar(1..3).
 biz(X) : bar(X). % this is a disjunctive rule
@@ -2230,8 +2290,8 @@ baz :- X < 4 : bar(X).
 
 ```
 
-
 is `#false : foo` the same thing as `neg foo`?
+
 ```clingo
 foo.
 % #false : foo.
@@ -2241,11 +2301,13 @@ foo.
 How are conditionals expanded? I don't see them saying
 q :- a(X) : l(X)
 could possible be expanded to
+
 ```clingo
 c(x1) :- not l(x1). % Is this okay? Yes.
 c(x1) :- a(x1).
 q :- c(x1).  % ... c(x2),c(x3),...
 ```
+
 q :- c(x1),c(x1),c(x3),...
 
 Stratified conditionals are not really a problem.
@@ -2259,7 +2321,6 @@ l(x1).
 q :- not -q.
 ```
 
-
 ```clingo
 {l(1..3)}.
 {a(1..2)}.
@@ -2267,7 +2328,6 @@ q :- a(X) : l(X).
 %q :- {a(X) : l(X)}.
 :- not q.
 ```
-
 
 Hmm. So adding brackets makes it do nothing with that rule. Is this an empty cardinality constraint?
 No brackets is the conjunction of the rules.
@@ -2284,20 +2344,24 @@ No brackets is the conjunction of the rules.
 q:-a(1):l(1);a(2):l(2);#false:l(3).
 :-not q.
 ```
+
 Ok, so this looks like it reduces it to an expansion. a(1):l(1) could be called c(1).
 
 `#count {a(X), l(X)} = #count l(X)`
 
-
-
 ## Aggregates
+
 `#count #sum #sum+ #min #max`
+
 ## Optimization
+
 Directive
 weights and priorities
 
 ## Disjunction
+
 Disjunction is a weirdo.
+
 ```clingo
 c.
 a;b;d :- c.
@@ -2305,22 +2369,25 @@ a;b;d :- c.
 % a,b,d :- c. same thing
 % b. try this. Kills all the other models
 ```
-Note that only models with exactly one of these are returned. 
+
+Note that only models with exactly one of these are returned.
 
 ```clingo
 c.
 {a;b;d} :- c.
 ```
+
 This program has all choices
 
 ```clingo
 c.
 1 {a;b;d} :- c.
 ```
+
 This program has what I might consider the classical disjunction where at least one of them is true.
 
-
 ## Terms
+
 ```clingo
 list(cons(a,cons(b,cons(c,cons(d,nil))))).
 list(Xs) :- list(cons(X,Xs)).
@@ -2330,14 +2397,14 @@ In my experience, terms are _extremely_ useful for modelling.
 Clingo also supports tuples.
 That clingo has structured data is huge compared to minizinc.
 
-
 ## Functions
+
 Clingo can call extrnal functins defined in python or lua using `@`
+
 ```clingo
 
 
 ```
-
 
 ```clingo
 #script (python).
@@ -2364,7 +2431,7 @@ foo(@inspect(bar(biz,2))).
 foo(@mylist(1,2,3,4,5,6)).
 ```
 
-Another interesting thing. Extralogical generic functions like prolog `=..` or `functor` https://www.swi-prolog.org/pldoc/man?predicate=functor/3
+Another interesting thing. Extralogical generic functions like prolog `=..` or `functor` <https://www.swi-prolog.org/pldoc/man?predicate=functor/3>
 
 ```clingo
 #script (python).
@@ -2393,12 +2460,13 @@ def maplist(f,*ls):
 ```
 
 ## Theories
+
 There are external theories available. In particular for difference logic and linear programming.
 Also you can make your own
 [theory solving slides](https://teaching.potassco.org/tsolving/)
 
-https://github.com/potassco/clingoLP linear programming
-https://github.com/potassco/clingo-dl difference logic
+<https://github.com/potassco/clingoLP> linear programming
+<https://github.com/potassco/clingo-dl> difference logic
 
 ```clingo
 {a}.
@@ -2416,26 +2484,35 @@ https://github.com/potassco/clingo-dl difference logic
 - aspartame
 - adsolver
 - aspmt, dlvhex, ezcsp, gasp, inca
+
 ## Other
+
 `%* *%` multiline comments
 asp-core-2 languague
 aspif intermdiate language
-#true #false
-#sup #inf useful for aggregates (min max of empty set)
+
+# true #false
+
+# sup #inf useful for aggregates (min max of empty set)
+
 double negation - doesn't have to vbe proven
 
 `#external` atom
 
-
 # Theory
+
 ## Stable Models
+
 Stable models = well-founded model + branching
+
 ## Unfounded Sets
+
 [Using Unfounded Sets for Computing Answer Sets of Programs with Recursive Aggregates](https://www.mat.unical.it/~alviano/archives/publications/2007/cilc07-recAggr.pdf)
 
 Is there a relation with non-well-founded sets (aczel)? A nested set-like model. Maybe each atom is a set?
 
 ## Non Monotonic Reasoning
+
 <https://en.wikipedia.org/wiki/Negation_as_failure>
 <https://en.wikipedia.org/wiki/Autoepistemic_logic>
 <https://en.wikipedia.org/wiki/Default_logic>
@@ -2444,7 +2521,7 @@ Is there a relation with non-well-founded sets (aczel)? A nested set-like model.
 <https://en.wikipedia.org/wiki/Circumscription_(logic)>
 
 Monotonic means that adding a fact or axioms only increases the theorems derived.
-Non-monotonic means this is not true. Negation as failure means 
+Non-monotonic means this is not true. Negation as failure means
 
 <https://en.wikipedia.org/wiki/Closed-world_assumption> Closed world assumption. It's something like there are no rules we don't know of. Our set of rules is complete. Hence if we fail to derive something via the rules we have, it is false.
 Other interesting assumptions: unique name assumption (things with distinct names are not equal). closed domain assumption (only elements that are named exist).
@@ -2453,7 +2530,6 @@ stable models are not unique
 in prolog multiple model program do not terminate
 
 wellfounded semantics - true,false, unkown. If atom in wellfounded model it is true in every stable model. upper bound on union and lower bound on interesection. Unique well founded model?
-
 
 classical interpretation of prolog rules has way too many models.
 completion of logic program - :- becoms if and only if <->
@@ -2464,20 +2540,18 @@ Loop formula block these out
 True false prpagation
 Known true atom set and known false atom set
 
-
 ## Logic of here and there
+
 A two world kripke model. One of possibly true and one definitely true.
 
 Satisfaction relationship.
 
-
-
 Equilibrium logic
 
-
 ## Operational
+
 The consequence operator is famiiar from datalog. We make an expanding databas of known facts by applying the rules.
-We can also however note when facts cannot be possible be derived. 
+We can also however note when facts cannot be possible be derived.
 The Fitting operator does this.
 Phi(T,F) = using rules who fit known true and known false
 F(<t,f>) = {a | }
@@ -2487,19 +2561,13 @@ The well-founded operator adds the extra derivations that circular proofs are di
 
 Can I make an asp system automatically produce well-founded or fitting fixed points instead of stable models? I think this might be what the brave and cautious modes do. They converge the the known true and the compement of known true for the well-founded operator.
 
-
-
-
 The fixed point of the operators typically does not converge such that the known true and known false sets cover the whole space.
-
-
 
 foo() :- pos(), pos(), neg(), neg()
 // all atoms from program. one generator for eac argument of foo.
 notfoo() :- atom(x), atom(y), atom(z), { notpos() ; notpos() ; neg(); neg() }
 The result of this datalog program is an underapproximation of foo and notfoo. Stable models do not include any atoms of notfoo and must have all atoms in foo.
 If you then branch on one of the remaining choices, you can allow propagation to proceed. I guess until notfoo U foo cover all possible atoms.
-
 
 Upper bounding operator keep foo rule above. replace notfoo where you just ignore negs of rule. This results in a smaller notfoo. In fact this doesn't fepend on the true set at all?
 notfoo() :-  atom(x), atom(y), atom(z), { notpos() ; notpos() }
@@ -2511,15 +2579,16 @@ foo :- basefoo().
 foo() :- bar, biz, foo, yada
 bar,biz,foo  :- foo, !basefoo()
 
-
 nogood is a set of entries expressing that any solution containing is inadmissble
 
 ## Tableau / Proof
-https://teaching.potassco.org/pcharacterization/
 
+<https://teaching.potassco.org/pcharacterization/>
 
 ## Justification
+
 ## Completion
+
 Completion is methology to translate logic programs into more traditional logic. This is useful if you want to reuse other systems or metatheory.
 We know that `:-` is implication in some sense. The thing is, if you directly translate your rules to classical logic using this correpondence, the resulting axioms are too loose. A classical solver is free to _overapproximate_. For example, a positive logic program interpreted this way always has a model where everything is true. This isn't what we want.
 This is related to the confusing notion that the transitive closure of a relation is not shallowly embeddable in first order logic with finite axioms, despite the path axioms sure looking like they do it.
@@ -2532,11 +2601,11 @@ To axiomatize this, collect up every rule with the same head by or-ing the possi
 There is still a problem though in regards to loops.
 Loop-formula require that every loop is supported from the outside.
 
-
-
 # Solving
+
 ## Grounding
-take every rule 
+
+take every rule
 Naive grounding, just expand every varable with every possible value in the program.
 bottom up grounding
 arithemtic predicates X < X' is good for reducing redudnant grounds. All ground terms are totally ordered.
@@ -2553,7 +2622,6 @@ gringo --text mode shows grounded program
 
 [On the Semantics of Gringo](https://www.cs.utexas.edu/~vl/papers/gringo.pdf) Some propsitional rewrites of some of the rules
 
-
 Grounding is a compelling idea. There are two pieces to an ASP system, the grounder and solver. The grounder is a datalog that takes ordinary quantified rules `foo(X) :- bar(X)`  and produces an overapproximation of their possible ground instances `foo(a) :- bar(a). foo(b) :- bar(b) ...` . For every new rule that applies (and possibly produces something new I think), it outputs one line into a file. I think this aspif file is a very natural proof format for datalog. You can basically build provenance by traversing the file upwards. Building a checker that such a file is a valid datalog run is much simpler than building a performant datalog.
 
 In other words, a grounder converts a datalog program into much bigger one that only has grounded rules. And it produces these grounded rules in the order they can be derived. Hence the heads of the ground rules are the facts in the database and the bodies are information about which rule and facts produced that head.
@@ -2561,7 +2629,8 @@ In other words, a grounder converts a datalog program into much bigger one that 
 And that is basically the information that provenance needs. It is also basically a trace of the datalog execution, short circuiting out the difficulties of actually performing the body queries.
 
 ## Solver
-Branching 
+
+Branching
 Conflict directed No good learning
 Conequence operator
 X = Cn(P^X)
@@ -2607,38 +2676,38 @@ Solving
 Nogoods - an assignmnt that cannot be extended to a model
 bodies and atoms are (partially) assigned truth values
 
-
 ASP is so powerful.
 I could possibly write a version of contextual datalog here?
 Map into Z3 using explicit justification
 Non-sautrating ASP. Is this ok? Kind of feels like it isn't
 
-
 Open vs Closed world - what does this mean really.
 
 # Systems
+
 Clingo
 smodels - original. Branching + propagation?
 ASSAT - encoding to sat
 
-
-
 # API
+
 Pyhton and Lua can be done inline
+
 ```clingo
 #script (python).
 print("hello world")
 #end.
 
 ```
+
 ## Lua
+
 There is inline lua for writing propagators and control. That's pretty neat.
 <https://potassco.org/clingo/run/?example=pigeonator-propagator.lp>
 
 ## Python
 
-
-https://potassco.org/clingo/python-api/5.6/
+<https://potassco.org/clingo/python-api/5.6/>
 
 ```python
 import clingo
@@ -2666,8 +2735,8 @@ ctl.ground(parts)
 ctl.solve(on_model=lambda m: print("Answer: {}".format(m)))
 ```
 
-
 ### nqueens
+
 ```clingo
 #const n=4.
 {q(1..n,1..n)} = n.
@@ -2676,6 +2745,7 @@ ctl.solve(on_model=lambda m: print("Answer: {}".format(m)))
 ```
 
 Clingo options --help:
+
 - enum-mode
 - projective solution enumeration
 - `--models 10` compute at most 10 models
@@ -2687,16 +2757,15 @@ Clingo options --help:
 - help=3 gives more options
 - --warn
 
-
 nogoods
 loops
 
 gringo is the grounder
-clasp is the solver - very SAT solver sounding. The options in help=3 talk about random restarts, glucose, 
+clasp is the solver - very SAT solver sounding. The options in help=3 talk about random restarts, glucose,
 
 Is ASP an ackermannization stage kind of followed by SAT/CSP? Datalog followed by SAT/CSP? How intertwined are the stages?
 
-Hmm. All constraints are encodable to 
+Hmm. All constraints are encodable to
 
 Grounding with datalog?
 Ackermanizing in clingo?
@@ -2711,14 +2780,17 @@ While ASP is usually introduced by talking about negation, negation is a complic
 b :- a.
 :- not b.
 ```
+
 "In order". Non recursive answer set programs are _still_ interesting. They are a set description language.
 You can run right down them. Go in topological order of appearance in heads / bodies
+
 ```clingo
 {a}.
 b :- a.
 {c} :- not a.
 ```
-Hmm. So backtracking search is still necessary for non recusrive? 
+
+Hmm. So backtracking search is still necessary for non recusrive?
 
 ```clingo
 n(1).
@@ -2727,9 +2799,11 @@ b(X) :- a(X).
 :- n(X), not b(X).
 
 ```
+
 Generate and test. Describe the space first. Then add implications, Then constraints.
 
 For positive recursive rules, it is nondeterministic guessing of choice rules, and then running datalog to execution
+
 ```clingo
 {a}.
 b :- c.
@@ -2770,6 +2844,7 @@ ASP is datalog with a prophetic negation
 ASP is datalog + branching (to deal with ) into multiple universes
 
 non monotnic. Adding a c fact doesn't just increase the model. It makes a totally incomparable model
+
 ```clingo
 a :- not c.
 %c. 
@@ -2777,23 +2852,29 @@ a :- not c.
 ```
 
 Only 1 is possible
+
 ```clingo
 b :- not a.
 a :- not b.
 ```
 
 One of these possibilities.
+
 ```clingo
 b :- not a, not c.
 a :- not b, not c.
 c :- not a, not b.
 ```
-So you can compile {x} into 
+
+So you can compile {x} into
+
 ```clingo
 x :- not notx.
 notx :- not x.
 ```
+
 # Misc
+
 [Stable model semantics mnikanren](http://minikanren.org/workshop/2023/minikanren23-final3.pdf)
 
 [clinguin](https://github.com/potassco/clinguin) specify a gui in asp
@@ -2813,25 +2894,22 @@ rw :- not cw.
 
 Facts, rules, disjuntion, integrity, conditions, choice, aggregate, multiobjective optimization, weak integrity constraints
 
-
-
 Safety - a rule is safe if all variables occur in positive body
 Grounding outputs rules and possibly true atoms.
 An overapproximation of atoms
 
 elaboration tolerance
 
-
 Union, Intersevtion, projection of models
 
-https://arxiv.org/html/2208.02685v1/#rprlif19 iclp 2022
+<https://arxiv.org/html/2208.02685v1/#rprlif19> iclp 2022
 [Transforming Gringo Rules into Formulas in a Natural Way](https://arxiv.org/html/2208.02685v1/#EPTCS364.13) translating gringo into First order logic
 
 [Verifying Tight Logic Programs with anthem and vampire](https://www.cambridge.org/core/journals/theory-and-practice-of-logic-programming/article/abs/verifying-tight-logic-programs-with-anthem-and-vampire/F8EDF1CABBEC7B5AC369B51D8BF90F7D) - using vampire to solveasp problems?
 
 [Transforming Gringo Rules into Formulas in a Natural Way](https://link.springer.com/chapter/10.1007/978-3-030-75775-5_28)
 
-[How to build your own ASP-based system ?! ](https://arxiv.org/pdf/2008.06692.pdf)
+[How to build your own ASP-based system ?!](https://arxiv.org/pdf/2008.06692.pdf)
 
 [Arntzenius disccision](https://twitter.com/arntzenius/status/1264570390849949696?s=20&t=5y91-I1SPrIGomAWSqs69w) "How are Datalog, SAT/SMT, and answer set programming related? Is ASP basically the generalisation of SAT to first order logic, plus recursion? And Datalog restricts ASP to Horn clauses and stratified recursion?
 
@@ -2841,15 +2919,15 @@ https://arxiv.org/html/2208.02685v1/#rprlif19 iclp 2022
 [temporal answer set programming](https://deepai.org/publication/temporal-answer-set-programming) TELINGO
 [Potassco, the Potsdam Answer Set Solving Collection](https://potassco.org/)
 
-[Possivbe worlds explorer](https://github.com/idaks/PW-explorer) demos https://github.com/idaks/PWE-demos . Qlearning? Sure. https://ischool.illinois.edu/people/bertram-ludascher datalog debugging. Prevoenance. 
+[Possivbe worlds explorer](https://github.com/idaks/PW-explorer) demos <https://github.com/idaks/PWE-demos> . Qlearning? Sure. <https://ischool.illinois.edu/people/bertram-ludascher> datalog debugging. Prevoenance.
 [martens Generating Explorable Narrative Spaces with Answer Set Programming](https://drive.google.com/file/d/1CKDOsT9FIGW3SNyW5u5heIxbx_ZLCAP5/view)
 
 [Alviano, M., Faber, W., Greco, G., and Leone, N. 2012. Magic Sets for Disjunctive Datalog Programs](https://arxiv.org/abs/1204.6346)
 Clingo
-dlv2 maybe https://dlv.demacs.unical.it/
+dlv2 maybe <https://dlv.demacs.unical.it/>
 [wasp](https://github.com/alviano/wasp)
-[embasp](https://embasp.readthedocs.io/en/latest/index.html) https://github.com/DeMaCS-UNICAL/EmbASP
-dlvhex http://www.kr.tuwien.ac.at/research/systems/dlvhex/
+[embasp](https://embasp.readthedocs.io/en/latest/index.html) <https://github.com/DeMaCS-UNICAL/EmbASP>
+dlvhex <http://www.kr.tuwien.ac.at/research/systems/dlvhex/>
 
 [seventh answer set competition](https://arxiv.org/pdf/1904.09134.pdf)
 [lifschitz prgraming with clingo short 35 page](https://www.cs.utexas.edu/~vl/teaching/378/pwc.pdf)
@@ -2861,7 +2939,6 @@ semi naive grounding.
 So answer set programming runs datalog, and then ?
 
 Hmm. This is datalog + csp. This is what i wanted to build a compiler end to end.
-
 
 stable models - smallest of models?
 [13 definitions of a stable model](https://www.cs.utexas.edu/users/vl/papers/13defs.pdf)
@@ -2909,6 +2986,7 @@ penguin(tux).
 bird(X) :- penguin(X).
 bird(X) :- eagle(X).
 ```
+
 Hmm. Explicit negation predicate.
 
 ```clingo
@@ -2917,17 +2995,14 @@ Hmm. Explicit negation predicate.
 p.
 ```
 
-brave vs cautious modes? What the hell is that. https://stackoverflow.com/questions/55675488/brave-cautious-reasoning-in-clingo enumration modes. Non total. They converge towards minimal or maximal model?
-
+brave vs cautious modes? What the hell is that. <https://stackoverflow.com/questions/55675488/brave-cautious-reasoning-in-clingo> enumration modes. Non total. They converge towards minimal or maximal model?
 
 [Beyond version solving: implementing general package solvers w Answer Set Programming Todd Gamblin](https://www.youtube.com/watch?v=bkY9mOyUaDA&ab_channel=PackagingCon)
 
-
-[Answer set programming (ASP) is the powerhouse technology you’ve never heard of](https://twitter.com/mgrnbrg/status/1589652522180153344?s=20&t=JfnzTQG-SeFdO1qYUwKkrw) http://www.weaselhat.com/2022/11/07/asp/
+[Answer set programming (ASP) is the powerhouse technology you’ve never heard of](https://twitter.com/mgrnbrg/status/1589652522180153344?s=20&t=JfnzTQG-SeFdO1qYUwKkrw) <http://www.weaselhat.com/2022/11/07/asp/>
 Datalog provenance is explanations. Can be used as a monotonic theory in SMT search.
 
 [Potassco Guide](https://github.com/potassco/guide/releases/)
-
 
 [Comments on ASP](https://news.ycombinator.com/item?id=34071325)
 [Automating Commonsense Reasoning with ASP and s(CASP)*](https://personal.utdallas.edu/~gupta/csr-scasp.pdf)
@@ -2950,6 +3025,7 @@ Constraints. Default rules. 5 truth values for p, not -p, not p not -p, not p, -
 [eclingo](https://www.cs.uni-potsdam.de/wv/publications/DBLP_journals/corr/abs-2008-02018.pdf) modal operators for all worlds reasoning
 
 [asp tools](https://research.ics.aalto.fi/software/asp/)
+
 - [lp2normal](https://research.ics.aalto.fi/software/asp/lp2normal/) This tool transforms an smodels program into a normal logic program by translating away extended rule types (choice rules, cardinality rules, and weight rules).
 - [lp2sat](http://www.tcs.hut.fi/Software/lp2sat/)
 
@@ -2973,10 +3049,7 @@ LP2mip
 
 [lp2pb](https://github.com/wulfdewolf/lp2pb) translate grounded rules to opb pseudoboolean models
 
-
-
 [hakank's asp](http://www.hakank.org/answer_set_programming/)
-
 
 [interesting discussion](https://swi-prolog.discourse.group/t/non-monotonicity-defeasibility-strategies-and-other-stuff/6038/15)
 
