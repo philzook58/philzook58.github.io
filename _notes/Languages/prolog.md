@@ -49,7 +49,7 @@ wordpress_id: 1865
   - [Tabling](#tabling)
     - [XSB](#xsb)
   - [Python](#python)
-  - [Prolog II, III IV.](#prolog-ii-iii-iv)
+  - [Prolog II, III IV](#prolog-ii-iii-iv)
   - [Parallel](#parallel)
   - [Macros](#macros)
   - [Coroutines](#coroutines)
@@ -109,14 +109,16 @@ wordpress_id: 1865
   - [Notes from 2017 -Resolution and unification](#notes-from-2017--resolution-and-unification)
 
 See also:
+
 - Datalog
 - Constrained Horn Clauses
 - Constraint Programming (Answer Set programming in particular)
 - Scheme (Minikanren)
 
-
 # Examples
+
 ## Hello World
+
 For a SWI prolog program, I need the `initiaization(main,main).` thing to say where to start running.
 
 ```prolog
@@ -128,22 +130,23 @@ main(_) :-
 ```
 
 ## Things that are prolog
+
 - Typeclasses
 - Inductive data types
 - Inference rules
 - CSS?
 
-
-
-
 ## Lists
+
 ```prolog
 append([], X, X).
 append([H | X], Y, [H | Z]) :- append(X, Y, Z).
 ```
 
 ## Difference Lists
-Differece lists are related to singly-linked that maintain a pointer to the last element. 
+
+Differece lists are related to singly-linked that maintain a pointer to the last element.
+
 ```
 // something like this.
 struct diff_list {
@@ -159,27 +162,27 @@ append(X-Y,Y-Z,X-Z).
 ```
 
 ## Copy Term and Structural Matching
-copy_term is super useful, but questionable from a purist perspective. 
+
+copy_term is super useful, but questionable from a purist perspective.
 <https://www.swi-prolog.org/pldoc/man?predicate=copy_term/2>
 
-I think the issue is moding? copy_term only works in one mode. "proper" prolog works in all modes, or at least has termination issues in some modes. https://www.metalevel.at/prolog/purity
+I think the issue is moding? copy_term only works in one mode. "proper" prolog works in all modes, or at least has termination issues in some modes. <https://www.metalevel.at/prolog/purity>
 
 copy_term can in principle be define by cases however...? No wait. it can't. We can copy ground terms, which is almost meaningless.
-It's an equality predicate also. 
+It's an equality predicate also.
 
 copy_term1([],[]).
-copy_term1([X|Xs], [X|Ys]) :- copy_term(Xs,Ys). 
-
+copy_term1([X|Xs], [X|Ys]) :- copy_term(Xs,Ys).
 
 eq([],[]).
-eq([X|Xs], [Y|Ys]) :- X=Y, eq(Xs,Ys). 
-
+eq([X|Xs], [Y|Ys]) :- X=Y, eq(Xs,Ys).
 
 ## Term rewriting
-https://www.youtube.com/watch?v=b2Px7cu2a68
+
+<https://www.youtube.com/watch?v=b2Px7cu2a68>
 The context technique is nice. It's a generic representation of context.
 This is showing a generic approach where rewrite rules are repreented as a data structure.
-But a specialization/partial evaluation is writing them directly in 
+But a specialization/partial evaluation is writing them directly in
 
 ```prolog
 step(fact(0), 1).
@@ -194,6 +197,7 @@ conc(F,Ls,Rs)  is f(l3,l2,l1, _, r1, r2, r3)
 ```
 
 Functional programs using infix equality notation. Slightly different than `fact/2` predicate style.
+
 ```prolog
 :- initialization(main,main).
 :- op(900, xfx, user:(==>)).
@@ -204,13 +208,12 @@ fact(N) ==> M :- N1 is N - 1, fact(N1) ==> M1, M is N * M1.
 main(_) :- fact(6) ==> N, writeln(N).
 ```
 
-
 What is demand driven egglog? It may have a relation to provenance.
 Naive equality proof search.
 
 Expect lots of loops and overlap. memoization is useful.
 
-DCG stye proof for depth control? But then 
+DCG stye proof for depth control? But then
 Ah answer subsumption tabling can keep just first answer. Yes.
 
 The rewrite proof reconstruction and this process are related.
@@ -231,7 +234,6 @@ T1 == T2 --> {T1 ..= [F | Args1], T2 ..= [F | Args2]}, [cong], map(==, Args1, Ar
 % If I used explicit context, this could be tail recursive?
 ```
 
-
 ```prolog
 
 :- initialization(main,main).
@@ -240,7 +242,6 @@ T1 == T2 --> {T1 ..= [F | Args1], T2 ..= [F | Args2]}, [cong], map(==, Args1, Ar
 rule(fact(N), fact(N-1)).
 
 ```
-
 
 ```prolog
 
@@ -353,6 +354,7 @@ match(foo(Pat), foo(T), [ -> foo(T)]) :- match(Pat, []
 ```
 
 ## Small Step Semantics
+
 ```prolog
 :- initialization(main,main).
 
@@ -385,12 +387,14 @@ main(_) :- eval(pred(pred(succ(succ(succ(zero))))), V), writeln(V).
 ```
 
 If we go metainterpreter on this, we can evaluate with respect to a list or set of rewrite rules.
+
 ```
 step(apply(F,X), )
 
 ```
 
 ## Hoare Logic
+
 <https://softwarefoundations.cis.upenn.edu/plf-current/Hoare.html>
 
 ```prolog
@@ -412,15 +416,16 @@ hoare(P, ite(C,T,E), Q) :- hoare(and(C,P), T, Q), hoare(and(not(C), P), E, Q).
 ```
 
 ## Bunched Logic / Separation
-https://softwarefoundations.cis.upenn.edu/slf-current/toc.html
+
+<https://softwarefoundations.cis.upenn.edu/slf-current/toc.html>
 
 ## Modal Logic
 
 ## Model Checking
+
 [Set Graphs VI Logic Programming and Bisimulation](https://users.dimi.uniud.it/~agostino.dovier/DID/LNC/CONVEGNI/DOVIER_TORINO.pdf)
 Bisimulation
 co-LP
-
 
 ## Typeclass
 
@@ -453,7 +458,6 @@ dotcall( foo, tostring ) :- type(foo, T), traitfield(Trait, tostring), impl(Tran
 % iterator
 ```
 
-
 Typeclass are "functions" from types to instances. Functions in prolog are represented as relations. This is proof threading.
 
 ```prolog
@@ -467,24 +471,22 @@ eq(bool,
 eq(pair(A,B), [eq((A,B),(XA,XB),(YA,YB)) = and(eq(A,XA,YA), eq(B,XB,YB))]) :- eq(A,IA), eq(B,IB).
 
 ```
+
 The equational represntation is a separate issue.
 
-Use dicts https://www.swi-prolog.org/pldoc/man?section=bidicts for instance dictionaries?
+Use dicts <https://www.swi-prolog.org/pldoc/man?section=bidicts> for instance dictionaries?
+
 ```
 instance(eq(bool),  { equal: [X,Y] >> X = Y ->  } ).
 
 ```
 
-
-
-
 ## Type checking / inference
+
 I probably have something like this somewhere else in my notes
 This has something of the flsvor of a declarative statement of the typing rules, readin `:-` as horizontal line.
 I'm not being careful about moding.
 Not that de bruijn isn't really necessary in the type checking process. Explicit names works ok because I'm not doing any substitution.
-
-
 
 ```prolog
 type(Env, nat(X), int).
@@ -495,15 +497,14 @@ type(Env, app(F,X), TB ) :- type(Env, F, TA -> TB ), type(Env, X, TA).
 
 ```
 
-
 3-fix notation can be 2 2-fix operators
+
 ```
 :- op(|-, fxx).
 :- op(:, fxx).
 
 G |- E : T :- .
 ```
-
 
 Hmm. in the lambda prolog encdoing of this, thye use implication for var(X).
 So env is more of the form [ forall Env, type(E,X,TA) | Env]
@@ -515,29 +516,25 @@ type(E,X,Tx) :- var(E), forallE_type(X,Tx).
 forallE_type(X,Tx) :- lookup(Env, forallE_type(X,Tx))
 forallE_type(X,Tx) :- type(E,X,Tx).
 
-
-
 fvar(X) onto the assertion environment list.
 
 strcturally recursive copy_term is pure and can produce fresh vars. Kindo f it builds new vars by refining a fhresness source
 var(X)
 
-
-
 []
 
 instead of putting it in the type(var(X)) rule.
 
-
 Relationship to Hindley-Milner. We are using prolog uvars as type variables. This is tricky though.
 
-https://github.com/bertas/hm_prolog/blob/master/src/type.pl This is not right to my eye for example.
+<https://github.com/bertas/hm_prolog/blob/master/src/type.pl> This is not right to my eye for example.
 Using var(A) is cheating.
-https://www.swi-prolog.org/pack/list?p=type_check a package for typechecking prolog itself with HM
-http://kyagrd.github.io/tiper/
+<https://www.swi-prolog.org/pack/list?p=type_check> a package for typechecking prolog itself with HM
+<http://kyagrd.github.io/tiper/>
 [Executable Relational Specifications of Polymorphic Type Systems Using Prolog](https://link.springer.com/chapter/10.1007/978-3-319-29604-3_8)
 Let generalization
 Is generalize even good prolog?
+
 ```
 type(Env, let(X,E,B), TB) :- type(Env, E, T1), generalize(T1,T2), type([X - T2 | Env], B, TB).
 
@@ -546,9 +543,9 @@ generalize(A -> B)
 ```
 
 ## Refinement Types
-Use CLP to build a refinement type system.
-https://arxiv.org/abs/2010.07763
 
+Use CLP to build a refinement type system.
+<https://arxiv.org/abs/2010.07763>
 
 ```prolog
 
@@ -578,6 +575,7 @@ height(bin(_,_,PX,PY), N) :- N := max(NX,NY)+1, height(PX,NX), height(PY,NY).
 ```
 
 #### Categorical Prover
+
 ```prolog
 
 %sequent( Hyp, Conc, Var )
@@ -585,7 +583,7 @@ height(bin(_,_,PX,PY), N) :- N := max(NX,NY)+1, height(PX,NX), height(PY,NY).
 :- use_module(library(clpfd)).
 %:- table prove/2.
 :- use_module(library(solution_sequences)).
-%:- op(600,	xfy,	i- ).
+%:- op(600, xfy, i- ).
 
 prove(S, ax(S, id)) :- S = (A > A).
 prove(S, ax(S, fst)) :- S = (A /\ _B > A).
@@ -644,12 +642,15 @@ prove(A > forall(X,B)) --> {insert(X,Sig,Sig2) }, prove(Sig1, A > B).
 prove(Sig, forall(X,A) > ) --> , prove(weak(X, A) > B)
 
 ```
+
 Maybe start with implication
 prove((A > (B > C)  ) --> [curry], prove( A /\ B > C).
 prove((A /\ (A > B) > B ) --> [eval].
 
 Catlog
+
 ### Instruction selection
+
 A model of Instruction selection can be viewed as related to a parsing problem. A parse is building a tree out of a linearized sequence. Instruction selection is finding a linear sequence of machine instructions to represent an expression or sequence of high level statements.
 
 ```prolog
@@ -677,11 +678,12 @@ isel(R0, A * B)     --> [mul(R0, R1, R2)], isel(R1, A), isel(R2, B).
 main(_) :- phrase(isel(R0, lit(2) + lit(7)), Asm), print(Asm), halt.
 ```
 
-
 ## Lambda
+
 Higher Order Unification
 Embeddable nonimal unification
 Unification
+
 ```
 unify(A,B) :- var(A), var(B)
 ```
@@ -690,8 +692,8 @@ unify(A,B) :- var(A), var(B)
 subst(X,V,E,E1) :- 
 ```
 
-
 maps from ground variables to prolog vars for interpreters
+
 ```
 [x - X, y - Y, z - Z]
 ```
@@ -755,29 +757,37 @@ Set constraints
 {log}
 boolean unification
 
-
 ## Theorem Proving
+
+Last chapter of bratko. Building a resolution prover using asserta. PyRes?
+
+```prolog
+% unify with occurs check? No. We don't need occurs check
+theorem(Poslist,Neglist).
+resolve(A-B,C-D) :- remove(Form, B,B1), remove(Form, C,C1), Q=A+C1, P=B1+D. % sort of a hash join
+
+```
+
 [Leantap](https://formal.iti.kit.edu/beckert/leantap/)
 Jens Otten
 [How to Build an Automated Theorem Prover. Invited Tutorial at TABLEAUX in London/UK](http://www.jens-otten.de/tutorial_tableaux19/)
 
 [A simple version of this implemented in tau prolog](https://www.philipzucker.com/javascript-automated-proving/) Prdocues proofs translated to bussproofs latex
 
-
 [a pearl on SAT and SMT solving in prolog](https://www.sciencedirect.com/science/article/pii/S030439751200165X) [code](http://www.staff.city.ac.uk/~jacob/solver/index.html)
 
 [Backjumping is Exception Handling](https://arxiv.org/abs/2008.04720) throw and catch implement backjumping for a sat solver
 
 [PRESS: PRolog Equation Solving System](https://github.com/maths/PRESS) as described in the art of prolog book. also has an lp solver?
-Pretty interesting tehcniques. If a variable is in a single position, you can unfold the expression. 2. you can apply quadratic equations and stuff 3. 
+Pretty interesting tehcniques. If a variable is in a single position, you can unfold the expression. 2. you can apply quadratic equations and stuff 3.
 Is it kind of a zipper to isolate a variable?
 
 [tarau Formula Transformers and Combinatorial Test Generators for Propositional Intuitionistic Theorem Provers](https://arxiv.org/abs/1910.01775)
 
 Dyckhoff g4ip
 
-
 ### Interactive
+
 Teyjus
 ACL2 analogy. ACL2 is modelling a pure lisp.
 
@@ -815,12 +825,13 @@ proven(trans, [A,B] > path(X,Z) :- edge(X,Y) :- A, path(Y,Z) :- B)
 asserta(proven(myname, tree)).
 
 ```
+
 Using asserta let's us refresh the schematic variable in an axiom
 
-
-
 # Topics
+
 ## Systems
+
 [50 years of prolog](https://arxiv.org/pdf/2201.10816.pdf)
 
 - Swi prolog - I think this is a good default choice.
@@ -831,7 +842,7 @@ Using asserta let's us refresh the schematic variable in an axiom
 - tau prolog - javascript web enabled
 - hprolog
 - binprolog
-- XSB - fancy tabling. 
+- XSB - fancy tabling.
 - YAP
 - B-prolog
 - ECLiPSe - can talk to minizinc
@@ -839,6 +850,7 @@ Using asserta let's us refresh the schematic variable in an axiom
 - [trealla](https://github.com/trealla-prolog/trealla) prolog interpreter in C. Not WAM based. tree-walking, structure-sharing, deep binding whatever that means
 
 Relatives:
+
 - Minikanren
 - minizinc
 - picat
@@ -849,10 +861,10 @@ Relatives:
 - Godel
 - Hyprolog - abduction
 - ergo AI, flora2
-- guan https://github.com/microsoft/Guan c# prolog?
-
+- guan <https://github.com/microsoft/Guan> c# prolog?
 
 ### Ciao
+
 [ciao manual](http://ciao-lang.org/ciao/build/doc/ciao.html/ciaofulltoc.html)
 
 ```ciao
@@ -871,11 +883,10 @@ ciaopp - preprocessor and veirfier? PLAI
 
 ## SLD resolution
 
-
-
-
 ## Interesting predicates
+
 [comparson and unification of terms](https://www.swi-prolog.org/pldoc/man?section=compare)
+
 - `=@=`, variant
 - `?=`
 - `==`
@@ -883,7 +894,6 @@ ciaopp - preprocessor and veirfier? PLAI
 - `/=` a weaker version of dif. Uses negation as fialure in kind of unsatisfactory way
 
 - `=..` destructures a term
-
 
 - `numbervar` [vanumber](https://www.swi-prolog.org/pldoc/man?section=varnumbers) concretize terms.
 - [gensym](https://www.swi-prolog.org/pldoc/man?section=gensym) suggests using content based identifiers
@@ -893,21 +903,25 @@ ciaopp - preprocessor and veirfier? PLAI
 [concurrent_forall](https://www.swi-prolog.org/pldoc/man?section=thread)
 
 [`call_with_inference_limit`](https://www.swi-prolog.org/pldoc/doc_for?object=call_with_inference_limit/3)
-- https://www.swi-prolog.org/pldoc/doc_for?object=once/1 once make nondet semidet
+
+- <https://www.swi-prolog.org/pldoc/doc_for?object=once/1> once make nondet semidet
+
 ## Imperative analogies
+
 Unification variables are pointers. Unifying them is aliasing them.
 Unification is bidirectional pattern matching
 
 Prolog predicates are like function calls. The fact that fields can be both input and output is like using output pointers in C. These pointers come in as arguments often.
 
 [Prolog as a Procedural Programming Language](https://www3.cs.stonybrook.edu/~warren/xsbbook/node4.html)
-- Assign Once variables - because of this assignment can be symmetrical
-- 
 
+- Assign Once variables - because of this assignment can be symmetrical
+-
 
 We can abuse the precedure calls of a host languages. This is related to minikanren, but minkanren doesn't use depth first search
 
 ### Manual Prolog
+
 Proplog is even weaker than datalog. Pure propositional variables with no arguments.
 
 ```python
@@ -928,12 +942,10 @@ def c():
 a() # succeeds.
 ```
 
-
 For nondeterminism python generators are a decent guess.
 Need to undo unifications.
 Can do Cells without persay doing generic unification.
 Use python case statements or if then else.
-
 
 ```python
 # no path compression
@@ -961,7 +973,6 @@ print(x.find() is y.find())
 print(x.find() is z.find())
 
 ```
-
 
 ```
 # a(Stuff) :- b(Stuff), c(Stuff).
@@ -996,8 +1007,8 @@ def append(x,y,z,s):
 
 
 ```
-Yeah. This amounts to a goofy minikanren where I've inlined combinators.
 
+Yeah. This amounts to a goofy minikanren where I've inlined combinators.
 
 ```ocaml
 type goal = string (* Propsoitional *)
@@ -1025,14 +1036,14 @@ let rec slg_step prog table resume_stack gen_stack
 
 
 ```
-SLD resolution in stack form. You have a stack of goal sets. It isn't that bad because you're actually sharing a lot of repeated goals. 
+
+SLD resolution in stack form. You have a stack of goal sets. It isn't that bad because you're actually sharing a lot of repeated goals.
 
 SLD in tree search form? The stack is some kind of manifestation of the tree. We could perhaps store the tree as a zipper instead
 
-
 ## Abstract Machines / Implementation
-[Warren's Abstract Machine: A Tutorial Reconstruction.](http://wambook.sourceforge.net/wambook.pdf)
 
+[Warren's Abstract Machine: A Tutorial Reconstruction.](http://wambook.sourceforge.net/wambook.pdf)
 
 Paul Tarau showing an interesting compilation strategy. <https://popl21.sigplan.org/details/PADL-2021-papers/5/A-Family-of-Unification-oblivious-Program-Transformations-and-Their-Applications>
 <https://github.com/ptarau/LogicTransformers>
@@ -1045,47 +1056,49 @@ Term indexing
 
 Original Dec-10 prolog paper
 
-[discussion on scryer forum](https://github.com/mthom/scryer-prolog/discussions/1457) 
+[discussion on scryer forum](https://github.com/mthom/scryer-prolog/discussions/1457)
 
 BAM - berkeley abstract machine [Can Logic Programming Execute as Fast as Imperative Programming?](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.68.9970&rep=rep1&type=pdf)
 [Peter Van Yoy's thesis](https://www.info.ucl.ac.be/~pvr/Peter.thesis/Peter.thesis.html)
-http://lambda-the-ultimate.org/classic/message1618.html#11082
+<http://lambda-the-ultimate.org/classic/message1618.html#11082>
 [Andrew Taylor's thesis  - high performance prolog implementation](http://www.info.ucl.ac.be/people/PVR/Taylor.thesis.ps)
 
 [comparsion of WAM and ZIP](https://stackoverflow.com/questions/4478615/alternatives-to-the-wam/4504325#4504325)
 
-VAM 
+VAM
 
 TOAM - tree oriented abstract machine
 
 [global optimization in a prolog compiler for TOAM](https://core.ac.uk/download/pdf/82489071.pdf)
 
-
-
 ## Modes
-In some ideal world, it's great if every predicate is reversible, but it isn't the case. Different variable positions can be used in different ways, input, output, both. They can also have total functional character (exactly one answer), partial functional character (one or zero), of nondeterminisitc (many answers). 
-Modes are required to use predicates correctly. Annotating them may allow the compiler to be more efficient. The compiler may infer them. They are conceptually interesting also in theorem proving contexts. See bidirectional typing.
 
+In some ideal world, it's great if every predicate is reversible, but it isn't the case. Different variable positions can be used in different ways, input, output, both. They can also have total functional character (exactly one answer), partial functional character (one or zero), of nondeterminisitc (many answers).
+Modes are required to use predicates correctly. Annotating them may allow the compiler to be more efficient. The compiler may infer them. They are conceptually interesting also in theorem proving contexts. See bidirectional typing.
 
 mercury
 ciao prolog
 
 ## Single Sided Unifivcation
-picat pattern matching 
 
-https://www.swi-prolog.org/pldoc/man?section=ssu
+picat pattern matching
 
-Maybe not even that complicated? Claims it a fairly simple macro. Use `==` 
+<https://www.swi-prolog.org/pldoc/man?section=ssu>
+
+Maybe not even that complicated? Claims it a fairly simple macro. Use `==`
+
 ```prolog
 
 
 ```
+
 ### DIY Prolog
+
 [a python interpreter](https://github.com/photonlines/Python-Prolog-Interpreter)
 
-https://curiosity-driven.org/prolog-interpreter
+<https://curiosity-driven.org/prolog-interpreter>
 
-Prolog and es6 generators https://curiosity-driven.org/prolog-interpreter
+Prolog and es6 generators <https://curiosity-driven.org/prolog-interpreter>
 
 <https://news.ycombinator.com/item?id=2152570>
 
@@ -1099,12 +1112,9 @@ Prolog and es6 generators https://curiosity-driven.org/prolog-interpreter
 
 ## Modules
 
-
-
 ## meta interpreters
 
 [power of prolog - A Couple of Meta-interpreters in Prolog](https://www.metalevel.at/acomip/) [video](https://www.youtube.com/watch?v=nmBkU-l1zyc&feature=youtu.be&ab_channel=ThePowerofProlog)
-
 
 [metapredicates](https://www.metalevel.at/prolog/metapredicates#call)
 `call/N` in principle could be implemented in prolog itself.
@@ -1114,6 +1124,7 @@ Prolog and es6 generators https://curiosity-driven.org/prolog-interpreter
 foo(7).
 main(_) :- call(foo(X)), print(X).
 ```
+
 Things you can do:
 
 - tracing parameter "proof"
@@ -1126,7 +1137,6 @@ Things you can do:
 
 absorption and reification
 
-
 ```prolog
 :- initialization(main,main).
 % surprisingly raw Goal is implicit call/1
@@ -1135,11 +1145,11 @@ mi0(Goal) :- Goal.
 main(_) :- mi0(mi0(append([12],[42],X))), print(X).
 ```
 
-
 Advantages to _not_ using prolog syntax.
 
 metacircular interpeter - interpreter can interpret self
-https://news.ycombinator.com/item?id=19283803
+<https://news.ycombinator.com/item?id=19283803>
+
 ```prolog
 :- initialization(main,main).
 mi([]). % empty goal stack
@@ -1165,10 +1175,10 @@ mi([G|Gs]) :-
 
 
 ```
+
 Same idea but the body of a clause is represented as a difference list in clause_
 
 `clause/2` is a way to get the rules of a clause.
-
 
 ```prolog
 
@@ -1192,6 +1202,7 @@ do_goal(P,S, [_|Gs], G) :- do_goal(P,S,Gs,G).
 ```
 
 This is wrong.
+
 ```prolog
 
 :- initialization(main,main).
@@ -1218,7 +1229,7 @@ heated(j).
 main(_) :- sterile(j), \+ bug(_B), \+ fvar(_X).
 ```
 
-Hmm. when I asserta with a variable, I'm asserting the universal thing, not something tied to the variables in scope. That seems really bad. 
+Hmm. when I asserta with a variable, I'm asserting the universal thing, not something tied to the variables in scope. That seems really bad.
 
 Oh wow. Also asserta doesn't cleanup on fail. asserta(bar(7)), fail. still leaves bar(7) asserted
 
@@ -1228,20 +1239,19 @@ foo_q(X,Y,Z) \ foo(X,Y,Z) <=> true.
 foo_q(X,Y,Z) <=> { foo(x,y,z)}.
 foo_q(X,Y,Z) <=> {fail}.
 
-
 or turn it around
 
 foo(X) :- foo_q_chr(X). % see if chr query succeeds
 % else regular other clauses.
 
-CHR + 
+CHR +
 
 How can I automatically associate chr with
 
 assert_chr(foo, Args)
 retract_chr(foo, Args), assert(foo, Args) <=> true.
 assert_chr(T,Args) \ query_chr(T, Args) <=> true. % hmm. does this unify the stuff in the assert, destroying it's universal quantification?
-% https://www.swi-prolog.org/pldoc/man?section=compare
+% <https://www.swi-prolog.org/pldoc/man?section=compare>
 assert(T) \ query(T1) <=> { unifiable(T1, T), copy_term(T, Tc), Tc = T1 }.
 This might fix that problem. Very ugly.
 
@@ -1254,13 +1264,12 @@ assert(T) \ query(T1) <=> { unifiable(T1, T), copy_term(T, Tc), Tc = T1 ; fail}.
 This is insanity.
 Wow, shallowly embedding harrop clauses in prolog is hard/impossible.
 
-
-
 Naw, why even seaprate out the args? Maybe better indexing, but screw it for now.
 assert_chr(foo(Args)).
 I might be building a prolog (meta?) interpreter in chr.
 
 locally nameless encoding of exists. do opening with X. no copy_term of program clauses.
+
 ```
 open(evar(N),N,X,X).
 open(evar(M),N,X,evar(M)) :- dif(N,M).
@@ -1288,9 +1297,10 @@ mi(Sig, Env, Prog, +G ) :- subst(G,Env,Sig).
 
 
 ```
+
 normalization by evaluation.
 Hmm. What if I did use the lambda library
-https://www.swi-prolog.org/pldoc/man?section=yall
+<https://www.swi-prolog.org/pldoc/man?section=yall>
 
 ```
 all(L) :- gensym(X), call(L, fvar(X)).
@@ -1303,7 +1313,6 @@ impl(D,G) :-  call(asserta(D), G) -> retract(D) ; retract(D), fail.
 % number_vars, term_variables
 % https://www.cs.cmu.edu/~fp/papers/ilps91.pdf mentions the assert retract encoding. Mentions that variables are nasty.
 ```
-
 
 ```prolog
 right(_,_,true).
@@ -1325,18 +1334,19 @@ left(S,P,all(_X,D), A) :- left(S,P,D,A). % maybe
 
 
 ```
+
 Before unify throw signal (attrbuted var).
 WHy this is wrong:
 Generally, trying to use the wrong kind of variable is a road strife with peril.
+
 - When we use P, we destroy the universal quantifications within. If we copy, we destroy the connection to the existential variables. This is also one of the problems of using `asserta`. `copy_term` allows you to add variables to be renamed, but not the ones to be shared. This is the opposite of he behavior we want
 
-It is somewhat natural to expect that lambda terms might be useful. https://www.swi-prolog.org/pldoc/man?section=yall 
-https://www.swi-prolog.org/pack/list?p=lambda
-https://swi-prolog.discourse.group/t/yall-lambda-arguments-visibility/5112/2 This example is evidence that the implementation of yall may not scope as lambdas should.
+It is somewhat natural to expect that lambda terms might be useful. <https://www.swi-prolog.org/pldoc/man?section=yall>
+<https://www.swi-prolog.org/pack/list?p=lambda>
+<https://swi-prolog.discourse.group/t/yall-lambda-arguments-visibility/5112/2> This example is evidence that the implementation of yall may not scope as lambdas should.
 
 Let us go under the (quite possibly faulty) assumption that the story on lambdas is clear in prolog.
 One can manually lambda lift, defunctionalize, closure convert if you want to.
-
 
 Lambda's in `yall` only produce goals, so far as I can tell. So if you want them to produce terms, that needs to come in as another paramter by convention. This feels a bit like continuation passing or output parameter passing.
 
@@ -1421,8 +1431,8 @@ main(_) :-
 
 ```
 
-
 Drinker's paradox example. This shouldn't pass
+
 ```prolog
 
 :- use_module(library(yall)).
@@ -1453,14 +1463,16 @@ left(S,P,all(L), A) :- call(L,X,D), left(S,P,D,A). % maybe
 main(_) :- right([],[],ex([X,Q]>>(Q=all({X} / [Y,P]>>(P=impl(+d(X),+d(Y))))))).
 ```
 
-https://github.com/SWI-Prolog/swipl-devel/blob/master/library/yall.pl yall implementation
+<https://github.com/SWI-Prolog/swipl-devel/blob/master/library/yall.pl> yall implementation
 copy_term_nat(Free+Lambda, Free+LambdaCopy), is a way to copy_term but also share variables in the Free list. We copy and then unify. Nice.
+
 ```
 lambda_functor(Term, Functor) :-
     copy_term_nat(Term, Copy),
     variant_sha1(Copy, Functor0),
     atom_concat('__aux_yall_', Functor0, Functor).
 ```
+
 This is interesting. Determinsitically creating a functor name based on the sha1 of the context
 
 We could also implement scoping the usual way, not trying to pull a fast one by reusing prolog mechanisms.
@@ -1469,6 +1481,7 @@ This brings it's own peril. We are treated prolog as a functional or imperative 
 Oleg has an example where he uses pure constructs.
 If we want to make this generic
 [ndexing dif/2](https://arxiv.org/pdf/1607.01590.pdf)
+
 ```prolog
 :- use_module(library(reif)).
 :- use_module(library(terms)).
@@ -1487,6 +1500,7 @@ main(_) :- writeln(hi), open_(a, 0, lam(var(1)), T), writeln(T).
 
 We don't need to open persay, since we mostly/entirely just need evaluation?
 It's the same as open except doing it eagerly vs lazily / batching the traversal.
+
 ```prolog
 right(T1 = T2) --> {unify(T1,T2)}.
 eval(S,E,evar(N), V) :- lookup(E,N,V).
@@ -1516,6 +1530,7 @@ term_lam(X \ B) :- [G|X] \ (G = B). % does this make sense? Fishy. term_lam = \\
 So a natural question is how can we make this interpreter shallower? We are reusing prolog's search mechanisms and unification mechanisms. So that's nice.
 
 Implication is sticky though. One might be tempted to use `asserta` which make dynamic databases. Naive use of this is not right
+
 - asserta considers all unification variables to be universals. It breaks the correlation of the program database with the goal
 - retracting the implication once you leave the scope of it is tricky. Yes `retract` exists. But it is not clear to me
 
@@ -1527,10 +1542,9 @@ Ok, well perhaps we never call retract, but instead key on an identifier of what
 And to deal with the sharing problem, we could replace all E vars in the program clause with keys that access them from a store.
 It really feels like we're plugging up hole after hole on a leaky ship.
 
-
 DCGs can be used to clean up the state carrying a bit, since so may rules do not involve state.
-https://www.swi-prolog.org/pack/list?p=edcg
-https://www.metalevel.at/prolog/dcg
+<https://www.swi-prolog.org/pack/list?p=edcg>
+<https://www.metalevel.at/prolog/dcg>
 
 ```prolog
 :- use_module(library(yall)).
@@ -1555,7 +1569,7 @@ left(all(L), A) --> {call(L,X,D)}, left(D,A).
 ```
 
 Higher order unification is a separate issue. If we are already overloading unification, it is probably not that hard to treat.
-Miller pattern unification is a subcase of higher order unification that is easy. The idea is to restrict higher order unification to it's bones. 
+Miller pattern unification is a subcase of higher order unification that is easy. The idea is to restrict higher order unification to it's bones.
 
 ```prolog
 :- use_module(library(intercept)).
@@ -1578,6 +1592,7 @@ main(_) :-  intercept(send_signal(x), X, writeln(X)),
             %intercept((right(impl(foo(c), impl(foo(b), +foo(A)))), writeln(A)), prog([]), true).
             run(right(impl(foo(c), impl(foo(b), +foo(A))))), writeln(A).
 ```
+
 So these techniques enable implicit context in different ways. Could receive database per head symbol
 
 ```prolog
@@ -1680,8 +1695,8 @@ main(_) :- impl(bar(a), (bar(X), impl(bar(b), bar(Y)))), writeln(X), writeln(Y).
 
 ```
 
-
 They don't cover (maybe) the problem of keeping universal variables universal but existentials linked
+
 ```prolog
 %:- initialization(main,main).
 
@@ -1694,14 +1709,16 @@ right(impl(D,G)) :- reset(right(G), goal(A), Cont),
 main(_) :-  reset(right(impl(foo(c), impl(foo(b), +foo(A)))), goal(_), Cont), 
 (Cont == 0 -> writeln(A) ; fail).
 ```
+
 ## Delimitted Continuations
+
 Continuations are a reification of a call stack. The call stack in prolog is a goal stack.
-When you 
+When you
 
 [swipl manual entry](https://www.swi-prolog.org/pldoc/man?section=delcont)
 [schrivers et al](https://www.swi-prolog.org/download/publications/iclp2013.pdf)
 [disjunctive delimited control](https://arxiv.org/pdf/2108.02972.pdf)
-[Tabling as a Library with Delimited Control](https://biblio.ugent.be/publication/6880648/file/6885145.pdf) https://arxiv.org/pdf/1507.08087.pdf
+[Tabling as a Library with Delimited Control](https://biblio.ugent.be/publication/6880648/file/6885145.pdf) <https://arxiv.org/pdf/1507.08087.pdf>
 [intercept library](https://www.swi-prolog.org/pldoc/man?section=intercept)preferred because it plays nicer with cuts and things. I don't even understand what the difference is in contract between this and reset/shift.
 
 - effect handlers - implicit state
@@ -1711,10 +1728,12 @@ When you
 [DCGs implemented with delimited continuations](https://swi-prolog.discourse.group/t/dcgs-implemented-with-delimited-continuations/1921)
 [Conitnuations in prolog](https://occasionallycogent.com/continuations_in_prolog/index.html)
 [exmaple usage in prolog](https://github.com/kamahen/nerdle/blob/main/cw631.pl)
+
 ## Tabling
+
 Tabling is a kind of auto-memoization. It can make queries terminate that no longer did, and the caching can speed others up.
 
-[Tabling as a Library with Delimited Control](https://biblio.ugent.be/publication/6880648/file/6885145.pdf) https://arxiv.org/pdf/1507.08087.pdf
+[Tabling as a Library with Delimited Control](https://biblio.ugent.be/publication/6880648/file/6885145.pdf) <https://arxiv.org/pdf/1507.08087.pdf>
 [Swi prolog manual](https://www.swi-prolog.org/pldoc/man?section=tabling)
 [Programming in Tabled Prolog - Warren](https://www3.cs.stonybrook.edu/~warren/xsbbook/book.html)
 [Tabling as Concurrent Machines](https://www3.cs.stonybrook.edu/~warren/xsbbook/node15.html)
@@ -1725,6 +1744,7 @@ Tabling is a kind of auto-memoization. It can make queries terminate that no lon
 [Fixing non-determinsim](https://lirias.kuleuven.be/retrieve/383155)
 
 [Linear Tabling Strategies and Optimizations](https://arxiv.org/abs/0705.3468) - kind of a combo of iterative deepening and tabling. Iterate top level goal and memoize true solutions. Just kill it on looping. Eventually, you'll stabilize
+
 ```
 :-table p/2.
 p(X,Y):-p(X,Z),e(Z,Y).
@@ -1734,6 +1754,7 @@ p(X,Y):-p(X,Z),e(Z,Y),memo(p(X,Y)).
 p(X,Y):-e(X,Y),memo(p(X,Y)).
 p(X,Y):-check_completion(p(X,Y)).
 ```
+
 calls memo on success. This is probably not how tabling is implemented in SWI, but it's interestign. Hmm. I don't really see how al this state tracking is possible/easy as user prolog.
 
 [A simple scheme for implementing tabled logic programming systems based on dynamic reordering of alternatives.](https://www.cs.nmsu.edu/~gupta/tabling/tab.pdf) DRA.
@@ -1747,8 +1768,6 @@ WHat is the search space of prolog? Nodes are goal stacks, edges are rules. Usin
 Memoizatin of prolog goals is differet to purely functional moemization. The metavariables matter and are in a sense return parameters a la C. So you have to memoize different metavairable paramters as different things, because they are in a sense different functions.
 
 Fib and Fact are terminating even if exponentially slow. It's hard to think of a simple high school math example that might be defined in a potentially non terminating way. THe edge-path query is an easy prolog example.
-
-
 
 ```prolog
 :- table path/2.
@@ -1771,7 +1790,7 @@ main(_) :- path(1,4).
 a :- a.
 ```
 
-https://www.swi-prolog.org/pldoc/man?section=tabling-mode-directed. Mode difreced tabling. Can take minimum answer, first answer, etc. Good for dynamic programming
+<https://www.swi-prolog.org/pldoc/man?section=tabling-mode-directed>. Mode difreced tabling. Can take minimum answer, first answer, etc. Good for dynamic programming
 
 Longest common subsequence
 
@@ -1799,7 +1818,6 @@ main(_) :- lcs([1,2,3], [2,7,1,4,2,3,6,5], LCS), print(LCS).
 
 ```
 
-
 Hmm. Tabling comes _from_ earley parsing historically. That's interesting.
 "Earley deduction"
 
@@ -1809,11 +1827,10 @@ tabling vs memoing
 [Memoisation: Purely, Left-recursively, and with (Continuation Passing) Style](https://arxiv.org/abs/1707.04724)
 [More declarative tabling in Prolog using multi-prompt delimited control](https://arxiv.org/abs/1708.07081)
 
-
 Queries and Answers as separate concepts.
 
 - Variant Tabling - lookup in the table only allows for renaming of variables in the query
-- Subsumptive tabling - lookup can also succeed on anything that is 
+- Subsumptive tabling - lookup can also succeed on anything that is
 
 Call similarity vs answer similarity. User defined subsumption
 
@@ -1878,14 +1895,13 @@ This somehow didn't have a problem with the recursive answer.
 A failing computation may later succeed.
 Is it not a problem that we are filling the continuation table excessively?
 
-To make it less spooky, the continuation could be defunctionalized maybe? This would allow us to deduplicate the continuations as we can make a set of the 
+To make it less spooky, the continuation could be defunctionalized maybe? This would allow us to deduplicate the continuations as we can make a set of the
 
 Very coroutiney. Memoized coroutines?
 
 bounded term depth property. all terms have bounded depth. tabling is guaranteed to terminate
 definite programs - no negation
 normal programs
-
 
 []()
 [A Term-Based Global Trie for Tabled Logic Programs](https://www.dcc.fc.up.pt/~ricroc/homepage/publications/2009-ICLP.pdf)
@@ -1897,11 +1913,11 @@ To what degree can the parts of magic set be seen as analogs of tabling
 
 variant tabling - the magic predicates may be storage of tabling keys / queries
 
-
 Tabling is "memoized coroutines"
 Memoing
 
 There is more variation available in memoizing than I realized.
+
 ```python
 
 fib_table = {0:1, 1:1}
@@ -1918,6 +1934,7 @@ print(fib(3))
 There are _two_ very distinct sites of interaction with the table. Checking if a query is in the table, vs filling in the table once you know.
 
 If you're worried about a non terminating computation because you end up callign yourself in a loop, you can mark a question as already asked in the table. We lift a nonterminating query to and Option[int] returning query that for some examples of nontermination instead returns `None`.
+
 ```python
 fib_table = {0:1, 1:1}
 def fob(n):
@@ -1946,6 +1963,7 @@ Above was tabling/memoizing a determinstic computation
 Tabling semideterminstic is easier than full nondeterminism.
 
 path query in semideterministic mode. Either fails or succeeds. Not multiple values.
+
 ```python
 edge = {0:1, 1:2, 2:0}
 path_table = {(x,y) for i,j in edge.items()}
@@ -1960,18 +1978,15 @@ def path(x,z):
 
 print(path(0,0))
 ```
-    
-
-
-
-
 
 ### XSB
-XSB prolog has some unsusual features and supposedly the most advanced implementation of tabling. 
+
+XSB prolog has some unsusual features and supposedly the most advanced implementation of tabling.
 
 The manual is quite nice.[manual vol 1](http://xsb.sourceforge.net/manual1/manual1.pdf)
 
-http://xsb.sourceforge.net/research.html
+<http://xsb.sourceforge.net/research.html>
+
 ```
 john[spouse->mary, child->>{bob,bill}]
 
@@ -1985,7 +2000,7 @@ mvd(john,child,bill)
 model checking
 [model checking using tabled logic programming](https://cs.uwaterloo.ca/~jmatlee/Teaching/CS745/PaperPres/XMC.pdf)
 
-term-sets {Var:Goal} let's you talk about the set that corresponds to Goal. 
+term-sets {Var:Goal} let's you talk about the set that corresponds to Goal.
 `{X : member(X,[a,b,c])}`
 This is related to "first class sets" in datalog
 Prolog has `setof`
@@ -1996,17 +2011,17 @@ a(a(a(b(b(b))))) as a string Or maybe symmetric comp form?
 S -> aSb
 S -> eps
 
-
 There are different mechanisms for table size restrictions / improve terminating.
-radial, 
+radial,
 
 incrmenetal table mainatence. Has a dependency graph. Something like seminaive? Trie based vs not?
 
 Weaker semantics and choosing semantics.
 
 ## Python
+
 [easy to call into python now](https://swi-prolog.discourse.group/t/a-bundled-python-interface/6735)
- https://www.swi-prolog.org/pldoc/doc_for?object=section(%27packages/janus.html%27)
+ <https://www.swi-prolog.org/pldoc/doc_for?object=section(%27packages/janus.html%27)>
 
 swi
 
@@ -2024,20 +2039,21 @@ main(_) :-
 
 ```
 
+## Prolog II, III IV
 
-
-## Prolog II, III IV.
 Cyclic terms. Rational terms. See Condicutive logic programming
 [swi prolog comments on rational trees](https://www.swi-prolog.org/pldoc/man?section=cyclic)
 
 [introduction to prolog III](https://www.researchgate.net/publication/220427862_Introduction_to_prolog_III)
 [prolog and infinite trees](http://www.softwarepreservation.org/projects/prolog/marseille/doc/Colmerauer-InfTree-1982.pdf)
 
-## Parallel 
-https://en.wikipedia.org/wiki/Parlog
+## Parallel
+
+<https://en.wikipedia.org/wiki/Parlog>
 50 years of datalog talks about stuff.
 
 ## Macros
+
 <https://swi-prolog.discourse.group/t/new-library-macros/6571> macro library. Seems nice
 [triska on macros](https://www.metalevel.at/prolog/macros)
 
@@ -2074,10 +2090,10 @@ main(_) :-
 
 ```
 
-
-
 ## Coroutines
+
 [swi manual](https://www.swi-prolog.org/pldoc/man?section=coroutining)
+
 - `dif/2` ? Test is delyed until terms are sfufcient different or have become identical
 - `freeze/2` - equivalent to call is Var is bound
 frozen
@@ -2088,14 +2104,16 @@ delay
 [block](https://www.swi-prolog.org/pldoc/doc_for?object=block_directive%3A(block)/1)
 
 ## Indexing
-https://www.youtube.com/watch?v=FZLofckPu4A&ab_channel=ThePowerofProlog
+
+<https://www.youtube.com/watch?v=FZLofckPu4A&ab_channel=ThePowerofProlog>
+
 - first argument indexing
 - deep indexing
 - multi argument indexing
 - JIT
 
 - exchange arguments
-- use specific functor not default ones - https://www.metalevel.at/prolog/data#clean [clean vs dirty reps](https://www.youtube.com/watch?v=KJ8uZiWpomg&ab_channel=ThePowerofProlog). For example reprrsent integer by lit(N) rather than raw N. default args + nonlogical preds are nodet. not good. "defaulty" representation. We can't symbolically express lit(X) + lit(Y). monotonic mode of clp(z)
+- use specific functor not default ones - <https://www.metalevel.at/prolog/data#clean> [clean vs dirty reps](https://www.youtube.com/watch?v=KJ8uZiWpomg&ab_channel=ThePowerofProlog). For example reprrsent integer by lit(N) rather than raw N. default args + nonlogical preds are nodet. not good. "defaulty" representation. We can't symbolically express lit(X) + lit(Y). monotonic mode of clp(z)
 - pull unifications into head (should happen by default)
 - decompose arguments - use auxiliary predicates if system doesn't offer deep indexing
 - lagged arguments - one case is subsumed by another. list_last convert to auxliary that remebed what you've seen. Check if foldl is applicable
@@ -2105,7 +2123,6 @@ redundant choice points are an indication of lost performance or poor indexing
 
 [Indexing dif/2](https://arxiv.org/abs/1607.01590) Consider a removal predicate on a list. it involves dif.
 
-
 [first zargument indexing](https://stackoverflow.com/questions/29605132/first-argument-indexing)
 [eclipse: from LP to CLP](https://arxiv.org/abs/1012.4240)
 [demand driven indexing of prolog clauses](https://user.it.uu.se/~kostis/Papers/iclp07.pdf)
@@ -2114,7 +2131,7 @@ See also tabling
 
 ## DCG - Definite Clauses Grammars (DCG)
 
-https://www.youtube.com/watch?v=CvLsVfq6cks&t=3811&ab_channel=ThePowerofProlog
+<https://www.youtube.com/watch?v=CvLsVfq6cks&t=3811&ab_channel=ThePowerofProlog>
 
 [Anne Ogborn tutorial](https://github.com/Anniepoo/swipldcgtut)
 [hakank picat](https://twitter.com/hakankj/status/1508321812261871616?s=20&t=-ertSPtY87GogVCFq4f-Rw)
@@ -2138,9 +2155,6 @@ main(_) :- phrase(as, [a,a,a]), print("passed"),
 
 ```
 
-
-
-
 `{ mygoal }` is a way to lift a prolog goal that doesn't touch the input lists.
 
 Triska suggests turning on double quoted strings becomes lists. It appears swi has some behavior like this by default.
@@ -2162,13 +2176,13 @@ seqq describes concatenating a sequence of lists.
 - semicontext
 - DCGs are useful also for implicilty carrying state.
 - State trasnformation is a _sequence_ of states when considered purely functionally.
+
 ```
 state(S), [S] --> [S].
 state(S0, S), [S] --> [S0].
 ```
 
 Being able to implicilty pass state makes DCGs reminscent of monads. I've not seen a proof of equivalence however. State _is_ a very powerful construct. Me dunno. Maybe you could even pass around continuations in there.
-
 
 This is showing context notation. Lists on the left hand sides of rules are pushed onto the stream after the rule works (I guess that means it unifies the head of the remained with this quantity). It looks very much like a form of lookahead.
 
@@ -2181,7 +2195,7 @@ consuming the input stream. The recursion depth should be bounded by the stream 
 
 expr([_ | Rs], Rs) --> "1". shows that expr consumes one character
 Called via
-phrase(expr(Rs, _),Rs). 
+phrase(expr(Rs, _),Rs).
 
 Or more easily, use tabling.
 
@@ -2192,6 +2206,7 @@ regexp interpreter. dcg rexp//1
 Longest match firsat behavior - order rules for longest match
 
 ## Constraint Logic Programming (CLP)
+
 - CLP(B) - constraint over boolean variables. Sometimes bdd based
 - CLP(FD)
 - CLP(Z)
@@ -2201,7 +2216,6 @@ Longest match firsat behavior - order rules for longest match
 
 [Indexing dif/2](https://arxiv.org/abs/1607.01590)
 `reif` `if_/` `tfilter/3`
-
 
 eclipse talks to minizinc?
 [clp examples](https://swish.swi-prolog.org/example/examples.swinb)
@@ -2218,11 +2232,13 @@ Execution model: A goal stack + constraint store. Minikanren?
 [A Framework for Extending microKanren with Constraints](https://arxiv.org/pdf/1701.00633.pdf)
 
 ### clpb
+
 [swi manual clpb](https://www.swi-prolog.org/pldoc/man?section=clpb)
 [The Boolean Constraint Solver of SWI-Prolog: System Description](https://www.metalevel.at/swiclpb.pdf)
 [Boolean Constraints in SWI-Prolog: A Comprehensive System Description](https://www.metalevel.at/boolean.pdf)
 [clpb triska](https://www.metalevel.at/clpb/)
 [github repo with examples](https://github.com/triska/clpb)
+
 ```prolog
 :- include(module(clpb)).
 
@@ -2238,6 +2254,7 @@ bdd, indexical, or external sat.
 [robdd.pl](http://www.cs.otago.ac.nz/cosc410/ok/index.htm)
 
 bdd using chr?
+
 ```
 
 bdd(Var, L,R , Id), bdd( ,L,R, Id) ==>
@@ -2245,6 +2262,7 @@ bdd(Var,L,R,)
 ```
 
 independent set example
+
 ```prolog
 independent_set(*(NBs)) :−
   findall(U−V, edge(U, V), Edges),
@@ -2260,14 +2278,14 @@ independent_set(*(NBs)) :−
 
 - domino tilings
 
-
-https://stackoverflow.com/questions/63505466/prolog-implementation-of-quines-algorithm-for-classical-propositional-logic-in?noredirect=1&lq=1
-https://stackoverflow.com/questions/64835191/boolean-unification-in-prolog
+<https://stackoverflow.com/questions/63505466/prolog-implementation-of-quines-algorithm-for-classical-propositional-logic-in?noredirect=1&lq=1>
+<https://stackoverflow.com/questions/64835191/boolean-unification-in-prolog>
 
 ### clp(euf)
+
 `union(+T1,+T2)` `T1 =:= T2` delay until ground? Not quite right. foo(x,X) foo(y,X) still has congruence power if we learn x = y. `union(eid(), eid())`. Support union of terms and eid
 `find(+T,-Eid)`
-`ematch(+Pat,-Match)` 
+`ematch(+Pat,-Match)`
 `extract(+Eid, -Term)`
 
 attrbitued var style ([z3](https://z3prover.github.io/papers/z3internals.html#sec-equality-and-uninterpreted-functions) style?). `put_attr( ,euf_parents,)` `put_attr( , euf_sibling, )` `put_attr( , term, )`
@@ -2275,15 +2293,16 @@ vs chr style
 There was also in that prolog smt paper a congruence closure routine.
 
 ### Attributed Variables
+
 Attaching extra info to variables. This can be be used to implement CLP as a library
 
 <https://www.metalevel.at/prolog/attributedvariables>
-https://sicstus.sics.se/sicstus/docs/3.7.1/html/sicstus_17.html
+<https://sicstus.sics.se/sicstus/docs/3.7.1/html/sicstus_17.html>
 <https://www.swi-prolog.org/pldoc/man?section=attvar>
 
 Attributed variables are a union find dict?
 
-Atributed variables are also reminscent of nelson oppen, theories are informed 
+Atributed variables are also reminscent of nelson oppen, theories are informed
 
 ```prolog
 :- initialization(main,main).
@@ -2308,16 +2327,16 @@ main(_) :- put_attr(X, mykey, fred),
 
 ```
 
- 
-
 ### Coroutining
+
 Sometimes is makes sense to be lazy doing something until a variable is filled in more.
 This is basically what `dif/2` does. It wakes up when either thing gets more filled in
 
 `freeze` is a delayed `call`
 
 ### CLP(Set)
-https://www.clpset.unipr.it/
+
+<https://www.clpset.unipr.it/>
 `{log}` "setlog"
 JSetL
 
@@ -2330,7 +2349,6 @@ E Pontelli
 
 herditraryl hybrid finite sets. Finite sets of finite sets + terms
 
-
 [Set Constraints in Logic Programming](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=ea756dcfc1db14307899a5b7d33b82fefbdc74c0)
 [Set constraints and logic programming - kozen](https://www.cs.cornell.edu/~kozen/Papers/sclp.pdf) CLP(SC)
 Herbrand atom ~ singleton set
@@ -2340,8 +2358,8 @@ Relation to boolean equation systems?
 
 Kuper - Logic programming with sets
 
-
 ## CHR
+
 [forward chaining, chr comes up](https://swi-prolog.discourse.group/t/forward-chaining-like-rete-algorithm-in-rule-engine/5137/28)
 
 [swipl manual section](https://www.swi-prolog.org/pldoc/man?section=chr)
@@ -2349,26 +2367,21 @@ Kuper - Logic programming with sets
 [Schrijver's ICLP tutorial](https://dtai.cs.kuleuven.be/CHR/files/tutorial_iclp2008.pdf)
 
 Constraint handling rules
-A question I never had an answer for https://twitter.com/notjfmc/status/1422215450675535877?s=20&t=RyHMtBS3ySaALLC9MuGmUA . CHR afaik are a way of integrating eager rewriting into prolog https://en.wikipedia.org/wiki/Constraint_Handling_Rules 
+A question I never had an answer for <https://twitter.com/notjfmc/status/1422215450675535877?s=20&t=RyHMtBS3ySaALLC9MuGmUA> . CHR afaik are a way of integrating eager rewriting into prolog <https://en.wikipedia.org/wiki/Constraint_Handling_Rules>
 
 I'm not sure this is even persay a prolog topic. But the prolog community is the most engaged
 
-http://www.informatik.uni-ulm.de/pm/fileadmin/pm/home/fruehwirth/constraint-handling-rules-book.html
+<http://www.informatik.uni-ulm.de/pm/fileadmin/pm/home/fruehwirth/constraint-handling-rules-book.html>
 [chr.js](https://github.com/fnogatz/CHR.js/)
 [chr what else](https://arxiv.org/pdf/1701.02668.pdf)
-
-
 
 [Where is the CHR constraint store?](https://stackoverflow.com/questions/59234770/constraint-handling-rules-in-swi-prolog-does-the-constraint-store-exists-only?rq=1)
 
 [Some cool examples](https://dtai.cs.kuleuven.be/CHR/examples.shtml). Gaussian, fourier, rational trees, equation solvers
 
-https://github.com/brog45/chrplay
-
+<https://github.com/brog45/chrplay>
 
 Multiset rewriting?
-
-
 
 [cchr](https://github.com/nickmain/cchr) efficient implementation in C
 
@@ -2378,18 +2391,19 @@ Multiset rewriting?
 
 [parallel chr](https://github.com/KaiSta/Parallel_CHR)
 
-
 [Automatic Differentiation using Constraint Handling Rules in Prolog](https://arxiv.org/abs/1706.00231)
 Build up dataflow graph. Huh.
 
-[Pros and Cons of Using CHR for Type Inference](https://dtai.cs.kuleuven.be/CHR/papers/chr2012/02-Csorba-chr12.pdf) https://twitter.com/flippac/status/1567622246025383938?s=20&t=7jEZ-QlMkI3Jdw1l-LGSjg
+[Pros and Cons of Using CHR for Type Inference](https://dtai.cs.kuleuven.be/CHR/papers/chr2012/02-Csorba-chr12.pdf) <https://twitter.com/flippac/status/1567622246025383938?s=20&t=7jEZ-QlMkI3Jdw1l-LGSjg>
 
 [Toward a First-Order Extension of Prolog’s Unification          using CHR](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.112.1661&rep=rep1&type=pdf)
 
 [satisfiability modulo chr](https://www.comp.nus.edu.sg/~gregory/papers/smchr.pdf)
 
 [Extending Arbitrary Solvers with Constraint Handling Rules](https://www.comp.nus.edu.sg/~gregory/papers/ppdp03.pdf)
+
 ### Compiling
+
 [KU leuven system : implementation and application](https://lirias.kuleuven.be/retrieve/33588). Hmm. Is CHR compiled into prolog code?
 [CCHR: the fastest CHR Implementation, in C](https://lirias.kuleuven.be/retrieve/22123)  
 Idle thoughts, what about time dataflow.
@@ -2397,12 +2411,13 @@ Idle thoughts, what about time dataflow.
 [attributed data for chr indexing](https://lirias.kuleuven.be/retrieve/61662)
 
 ### Examples
+
 CHR parsing
 “Analysing graph transformation systems through Constraint Handling Rules” by Frank Raiser and Thom Frühwirth
 “As time goes by: Constraint Handling Rules — A survey of CHR research from 1998 to 2007” by Jon Sneyers, Peter Van Weert, Tom Schrijvers and Leslie De Koninck
 
+<https://stackoverflow.com/questions/67771845/prolog-get-a-list-of-all-the-rules-an-entity-verifies>
 
-https://stackoverflow.com/questions/67771845/prolog-get-a-list-of-all-the-rules-an-entity-verifies
 ```prolog
 :- use_module(library(chr)).
 
@@ -2431,6 +2446,7 @@ pull(Who,L) \ collect(Who2,L2) <=> Who = Who2, L = L2.
 
 [sicstus examples](https://sicstus.sics.se/sicstus/docs/4.2.0/html/sicstus/CHR-Examples.html#CHR-Examples)
 [swi examples](https://www.swi-prolog.org/pldoc/man?section=chr-examples)
+
 ```prolog
 
 :- module(leq,[leq/2]).
@@ -2449,7 +2465,8 @@ leq(X, Y).
 */
 ```
 
-finite domain solver. 
+finite domain solver.
+
 ```prolog
 :- module(dom,[dom/2]).
 :- use_module(library(chr)).
@@ -2469,16 +2486,18 @@ dom(X,L1), dom(X,L2) <=> intersection(L1,L2,L3), dom(X,L3).
 chr tracing
 chr_show_store
 
-https://www.swi-prolog.org/pldoc/man?section=chr-guidelines
+<https://www.swi-prolog.org/pldoc/man?section=chr-guidelines>
 Don't bind rules in head
 mode declarations of chr affect performance. Huh
 c \ c <=> true is often desirable. Set semantics instead of multiset.
 
-You can ignore the 
+You can ignore the
+
 ```
 :- initialization(main,main).
 main(_) :- whatever
 ```
+
 as noise that I do to make my prolog programs run from the command line instead of interactively.
 
 #### Basics
@@ -2519,6 +2538,7 @@ main(_) :- forward, left, right, backward, left, chr_show_store(true).
 ```
 
 #### Pairing
+
 ```prolog
 :- use_module(library(chr)).
 :- chr_constraint male/1, female/1, pair/2.
@@ -2533,8 +2553,8 @@ male(X) \ female(Y)  <=> pair(X,Y).
 main(_) :- male(gary), female(zirkin),  male(cransto), female(farbus), chr_show_store(true).
 ```
 
-
 #### Paths from edges
+
 ```prolog
 :- use_module(library(chr)).
 :- chr_constraint edge/2, path/2.
@@ -2548,6 +2568,7 @@ main(_) :- edge(1,2), edge(3,4), edge(3,2), edge(1,3), chr_show_store(true).
 ```
 
 #### Minimum
+
 ```prolog
 :- use_module(library(chr)).
 :- initialization(main,main).
@@ -2557,7 +2578,9 @@ findmin(_), min(N) \ min(M) <=> N < M | true.
 findmin(Min), min(N) <=> Min = N.
 main(_) :- min(7), min(14), min(13), findmin(Min), print(Min), chr_show_store(true).
 ```
+
 #### GCD
+
 ```prolog
 :- use_module(library(chr)).
 :- initialization(main,main).
@@ -2568,10 +2591,10 @@ gcd(N) \ gcd(M) <=> 0 < N, M>=N | Z is M - N, gcd(Z).
 main(_) :- gcd(15), gcd(5), chr_show_store(true).
 ```
 
-
 #### Sort
 
 bubble sort
+
 ```prolog
 :- use_module(library(chr)).
 :- initialization(main,main).
@@ -2582,6 +2605,7 @@ main(_) :- a(1,6), a(2,4), a(3,14), chr_show_store(true).
 ```
 
 merge sort
+
 ```prolog
 :- use_module(library(chr)).
 :- initialization(main,main).
@@ -2594,7 +2618,9 @@ main(_) :- next(0,7), next(0,2), next(0,5), chr_show_store(true).
 #### Get foo
 
 #### Fibonacci
+
 merge sort
+
 ```prolog
 :- use_module(library(chr)).
 :- initialization(main,main).
@@ -2622,6 +2648,7 @@ main(_) :- fib(5,M), print(M), chr_show_store(true).
 ```
 
 top down memo
+
 ```prolog
 :- use_module(library(chr)).
 :- use_module(library(clpfd)).
@@ -2639,8 +2666,8 @@ main(_) :- fib(5,M), print(M), chr_show_store(true).
 
 #### Boolean Propagators
 
-
 #### Lattice
+
 ```
 lat(A), lat(B) <=> lat(join(A,B))
 ```
@@ -2652,6 +2679,7 @@ Other fast propagators?
 #### Assignment
 
 #### Union Find
+
 From furhwith book. Generalized union find is also interesting.
 
 ```prolog
@@ -2787,7 +2815,6 @@ main(_) :-
           
 ```
 
-
 ```prolog
 %rhs([]).
 %rhs([T | L]) :- flatten(T), rhs(L).
@@ -2815,6 +2842,7 @@ find(t1), find(t2) ==> E1 = E2.
 These will always finish since they only compress egraph.
 
 It is quite possible that translating to integers and using CHR union find is faster.
+
 #### Semi naive?
 
 eclass2 is somewhat like new_eclass
@@ -2888,10 +2916,8 @@ Is there a way to encode seminaive eval maybe? Even for datalog this is not clea
 leansmt
 egraph + clp(R) + clp(FD) + clp(B). How far from SMT is that?
 
-
-
-
 ### Embedding into CHR
+
 - TRS
 - Prolog and CLP
 - Graph trasnfomation - See term rewriting notes
@@ -2900,6 +2926,7 @@ egraph + clp(R) + clp(FD) + clp(B). How far from SMT is that?
 GAMMA general abstract mnodel for multiset manipulation
 
 ### SQL
+
 [sql](https://github.com/awto/chr2sql)
 Man what hope is there of compiling a 7 year old haskell project?
 compiler to sql statements. Makes sense.
@@ -2914,6 +2941,7 @@ forward, backward <=> true.
 :- initialization(main,main).
 main(_) :- forward, left, right, backward, left, chr_show_store(true).
 ```
+
 ```sql
 CREATE TABLE left(a);
 CREATE TABLE right(a);
@@ -2983,10 +3011,7 @@ right = [(,), (,)]
 If my advice is to just use SWI for CHR, why is tabled SWI not my advice for datalog. No. That _is_ reasonable advice probably.
 Not unless you're doing something weird
 
-
-
 What would be better is to store the build values in env and not the keep ids. I don't know persay how bad that join is. Maybe using a left join or something so that sql knows it doesn't have to even loop up stuff it doesn't need.
-
 
 This is not that elegant.
 
@@ -3018,34 +3043,37 @@ And that the built expsressions may not refer to the bound varaibles. Annoying r
 ```
 l @ left, r @ right <=> guard | p = l.x, z = r.y |  {r,a}
 ```
+
 Keep a bunch of rules synchronized is annoying
 
-
 ## Answer Set Programming s(CASP)
-https://swish.swi-prolog.org/example/scasp.swinb
+
+<https://swish.swi-prolog.org/example/scasp.swinb>
 "Tabling and s(CASP) are quite different beasts. They both address reasoning in cyclic domains including negation. Tabling provides Well Founded Semantics where s(CASP) provides Stable Model Semantics. s(CASP) stresses creating an explanation. Tabling does not. Tabling scales a lot better than s(CASP). It all depends …"
 
-https://gitlab.software.imdea.org/ciao-lang/sCASP
+<https://gitlab.software.imdea.org/ciao-lang/sCASP>
 [Constraint Answer Set Programming without Grounding](https://arxiv.org/abs/1804.11162)
-[Justifications for Goal-Directed Constraint Answer Set Programming](http://www.cliplab.org/papers/sCASP-ICLP2020/TC-explainCASP.pdf) ERGO AI uses justification trees  https://coherentknowledge.com/ using XSB
+[Justifications for Goal-Directed Constraint Answer Set Programming](http://www.cliplab.org/papers/sCASP-ICLP2020/TC-explainCASP.pdf) ERGO AI uses justification trees  <https://coherentknowledge.com/> using XSB
 
-s(ASP) was just ASP https://personal.utdallas.edu/~gupta/ . S(CASP) includes constraints
+s(ASP) was just ASP <https://personal.utdallas.edu/~gupta/> . S(CASP) includes constraints
 [tutorial slides](http://platon.etsii.urjc.es/~jarias/slides/gde21-tutorial.pdf)
 [tutorail paper](http://ceur-ws.org/Vol-2970/gdepaper1.pdf)
 
 [event calculus](https://swi-prolog.discourse.group/t/event-calculus-in-swi-prolog/5233)
-## Extralogical features
-### Database manipulation
-[Persistent predicates based on RocksDB ](https://swi-prolog.discourse.group/t/persistent-predicates-based-on-rocksdb/5501)
-https://github.com/JanWielemaker/rocks-predicates
 
+## Extralogical features
+
+### Database manipulation
+
+[Persistent predicates based on RocksDB](https://swi-prolog.discourse.group/t/persistent-predicates-based-on-rocksdb/5501)
+<https://github.com/JanWielemaker/rocks-predicates>
 
 [swi](https://www.swi-prolog.org/pldoc/man?section=db)
 [sicstus database manip](https://sicstus.sics.se/sicstus/docs/latest4/html/sicstus.html/ref_002dmdb.html#ref_002dmdb)
 retract - take out of database
 assert - put into database/
 set_prolog_falg
-dynamic predicates. 
+dynamic predicates.
 recorded database
 
 `A = A, assert(foo(A)), A = x` what does this do. Does it make a clause `foo(A).` or does it make `foo(x).` Ah ok. The term is copied. So it makes the first on
@@ -3062,26 +3090,22 @@ fib(M,N) :- M > 1, M1 is M - 1, M2 is M - 2, fib(M2, N2), asserta(fib(M2,N2)),
 ```
 
 Program reflection. Partial evaluation.
+
 ### Cuts and Such
 
 cut
 green cut
 
-
-
-
 findall bagor setof are aggregation of solutions. They are reifying predicates kind of.
 
-
-[ Finding all Solutions to a Goal](https://www.swi-prolog.org/pldoc/man?section=allsolutions)
-
-
+[Finding all Solutions to a Goal](https://www.swi-prolog.org/pldoc/man?section=allsolutions)
 
 # Functions
-https://www.swi-prolog.org/pack/list?p=function_expansion a macro for function expansion
 
+<https://www.swi-prolog.org/pack/list?p=function_expansion> a macro for function expansion
 
 ## Lambda
+
 Oh sweet mysterious lambda
 
 The minikanren `evalo`
@@ -3098,11 +3122,12 @@ One is tempted to attempt to use prolog variables for lambda variables. Requires
 `copy_term`
 
 [swipl](https://www.swi-prolog.org/pldoc/man?section=yall) lambda expressions.
-`[X] >> B` as `lam(X,B)`. 
+`[X] >> B` as `lam(X,B)`.
 
 [lambda is iso prolog](http://www.complang.tuwien.ac.at/ulrich/Prolog-inedit/ISO-Hiord.html)
 
 the elpi paper argues for de bruijn levels?
+
 ```prolog
 % locally nameless
 
@@ -3142,22 +3167,22 @@ instantiate(X)
 
 The question is, can lambda prolog be implemented as a library?
 
-
 ### HiLog
+
 My impression is this is a bit like "first order functional" programming. All predicates need names. You can achieve this via defunctionalization, lambda lifting, etc.
 
 [From HiLog to Prolog](https://www3.cs.stonybrook.edu/~sbprolog/manual1/node44.html)
 
-
 "`X(a, b)` is just an (external) shorthand for the Prolog compound term: `apply(X, a, b)` "
 
 ### Alpha prolog
-https://homepages.inf.ed.ac.uk/jcheney/programs/aprolog/
+
+<https://homepages.inf.ed.ac.uk/jcheney/programs/aprolog/>
 
 Nominal logic
-https://arxiv.org/pdf/1012.4890.pdf nominal unification revsitied Urban
+<https://arxiv.org/pdf/1012.4890.pdf> nominal unification revsitied Urban
 
-https://johnwickerson.github.io/dissertation.pdf 
+<https://johnwickerson.github.io/dissertation.pdf>
 "atoms" are a thing that are less free than unification vars but more free than ground terms. They are alpha renamable
 
 freshness constraint a # t says that a appears in no subterm in t.
@@ -3177,9 +3202,10 @@ J. Levy and M. Villaret. Nominal Unification from a Higher-Order Perspective
 
 A # A \ Y.
 
-https://easychair.org/publications/preprint/DLVk Efficiency of a good but not linear nominal unification algorithm
+<https://easychair.org/publications/preprint/DLVk> Efficiency of a good but not linear nominal unification algorithm
 
 # Semantics
+
 Completion semantics
 
 Well-founded
@@ -3190,6 +3216,7 @@ Well-founded
 Completion semantics
 
 # History
+
 Resolution in automatc theorem provers came earlier.
 Kowalski and Colmerauer
 
@@ -3214,24 +3241,28 @@ Prolog III
 CLP Jaffar Lassez 1987
 
 # Expert Systems
+
 See Also:
+
 - Databases
 Knowledge Representation
-https://en.wikipedia.org/wiki/Rete_algorithm
-
+<https://en.wikipedia.org/wiki/Rete_algorithm>
 
 # Lambda Prolog
+
 [tabling in higher order logic programming](http://reports-archive.adm.cs.cmu.edu/anon/2003/CMU-CS-03-185.pdf)
 
-https://userpages.uni-koblenz.de/~laemmel/paradigms1011/resources/pdf/lambda-prolog.pdf ralf lammel slides
+<https://userpages.uni-koblenz.de/~laemmel/paradigms1011/resources/pdf/lambda-prolog.pdf> ralf lammel slides
 
 [lambda prolog page](https://www.lix.polytechnique.fr/~dale/lProlog/)
 Implementations
+
 - Teyjus - seems to maybe not be developed anymore
 - elpi - alive and well. Coq metaprogamming
 - Makam - a variant on lambda prolog with some cooll paper tutorials
 
 [elpi: fast embeddable lmabda prolog interpreter](https://hal.inria.fr/hal-01176856/document)
+
 - using de bruijn _levels_ means pattern matching doesn't need to do anything?
 [elpi vs code extension](https://github.com/LPCIC/elpi-lang)
 
@@ -3327,6 +3358,7 @@ main :- (x\ x) = (y\ F y), print F,
       (x\ tt) = (y\ F2), print F2
 . 
 ```
+
 ```elpi
 main :- (x \ x) = (x \ F_ x),
         (x \ y \ x y) = (z \ G z), print G.
@@ -3350,24 +3382,25 @@ main :- two(T), one(O), add T T Z, print Z,
 
 ```
 
-
 Some built in elpi files
+
 - [builtin](https://github.com/LPCIC/elpi/blob/master/src/builtin.elpi) surprising that even very basic stuff is defined in here.
   - i+ i- r+ mod div infix operations. + is overloaded it looks le
   - regular expresions rex. Like Str module
   - print dprint raw terms?
-  - quotation? https://github.com/LPCIC/elpi/blob/master/src/elpi-quoted_syntax.elpi lam, app, const, clause, arg
-  - same_term same_var var name - geiventbaraibe, ground_term, closed_term, constant, 
+  - quotation? <https://github.com/LPCIC/elpi/blob/master/src/elpi-quoted_syntax.elpi> lam, app, const, clause, arg
+  - same_term same_var var name - geiventbaraibe, ground_term, closed_term, constant,
   - if/3
   - random.int
-  - int.map, std.string.map, std.string.set, std.map takes in a comp function, 
+  - int.map, std.string.map, std.string.set, std.map takes in a comp function,
   - gc functions. trace,counter
 - [stdlib](https://github.com/LPCIC/elpi/blob/master/src/builtin_stdlib.elpi)
-  - mem, exsits, map2, filter, fold, zip, unzip, intersperse, max, findall 
+  - mem, exsits, map2, filter, fold, zip, unzip, intersperse, max, findall
 
 std.do notation?
 
 [Intro slides](https://github.com/gares/mlws18/blob/master/slides.pdf)
+
 ```elpi
 kind term type.
 kind ty type.
@@ -3385,9 +3418,8 @@ cbn (app (lam F) N) M :- cbn (F N) M.
 
 ```
 
-
-
 [examples in test](https://github.com/LPCIC/elpi/tree/master/tests/sources)
+
 - named clauses `:clausename`
 - namespaces
 - typeabbrev
@@ -3403,28 +3435,27 @@ look at teyjus test folders?
 [thesis implementing lambda prolog in ciao prolog](https://www.yumpu.com/en/document/view/39502786/university-of-minnesota-this-is-to-certify-that-i-employers)
 
 [Implementing Type Theory in Higher Order Constraint Logic Programming](https://hal.inria.fr/hal-01410567v2/document) longer elpi paper. describes chr.
+
 - macro directives
 - delay directives
 
-
 ### HO Unification
+
 forall exists forall problems
 Raising vs Skolemization
 
-
 ## LF
+
 LF is of some relation to lambda prolog (being a prologish system with lambdas in it) although with some different aims. It is dependently typed (pi 2 I think?) in a way different from coq etc.
 
 Twelf.
 dedukti. lambda - pi
-https://www.youtube.com/watch?v=XnZTADrsiHQ&list=PL2IiUBbPiuoY22PjECQscRQ81LaR0lgdh&index=2&ab_channel=TYPES2022
+<https://www.youtube.com/watch?v=XnZTADrsiHQ&list=PL2IiUBbPiuoY22PjECQscRQ81LaR0lgdh&index=2&ab_channel=TYPES2022>
 dedukti workshop
 Intermidate "assembly" for interchange between proof formats.
 Logical framework
 lambda pi - has dependent types. But not types that depend on types. Pi only quantifies over terms.
 kocheck - fast rust
-
-
 
 [beluga](http://complogic.cs.mcgill.ca/beluga/) is this kind of twelf? [beluga paper](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.188.3950&rep=rep1&type=pdf)
 abella.
@@ -3435,25 +3466,25 @@ but ELF the edburgh logical fraemwork is more specific.
 Related to Pi2 a corner of the lambda cube.
 
 [The Next 700 Challenge Problems for Reasoning with Higher-Order Abstract Syntax Representations](https://link.springer.com/article/10.1007/s10817-015-9327-3)
+
 ### Twelf
-http://twelf.plparty.org/live/
-http://twelf.org/wiki/About_The_Twelf_Project 
+
+<http://twelf.plparty.org/live/>
+<http://twelf.org/wiki/About_The_Twelf_Project>
 
 Twelf is a depnedelty typed landguage that is also a logic programming langfuage. Because it has a totality checker and termination checker, prolog clauses can be considered proofs.
 
-https://core.ac.uk/download/pdf/82649367.pdf Normalization for the Simply-Typed Lambda-Calculus in Twelf
+<https://core.ac.uk/download/pdf/82649367.pdf> Normalization for the Simply-Typed Lambda-Calculus in Twelf
 
 ## Rust Chalk Harrop
-https://github.com/rust-lang/chalk
-https://rust-lang.github.io/chalk/book/
 
-http://smallcultfollowing.com/babysteps/blog/2017/01/26/lowering-rust-traits-to-logic/#type-checking-generic-functions-beyond-horn-clauses
-https://internals.rust-lang.org/t/blog-series-lowering-rust-traits-to-logic/4673/12 internals thread
+<https://github.com/rust-lang/chalk>
+<https://rust-lang.github.io/chalk/book/>
 
-http://smallcultfollowing.com/babysteps/blog/2017/04/23/unification-in-chalk-part-2/ how chalk handles type normalization
+<http://smallcultfollowing.com/babysteps/blog/2017/01/26/lowering-rust-traits-to-logic/#type-checking-generic-functions-beyond-horn-clauses>
+<https://internals.rust-lang.org/t/blog-series-lowering-rust-traits-to-logic/4673/12> internals thread
 
-
-
+<http://smallcultfollowing.com/babysteps/blog/2017/04/23/unification-in-chalk-part-2/> how chalk handles type normalization
 
 # LogTalk
 
@@ -3463,6 +3494,7 @@ It adds object oriented programming to prolog.
 <https://logtalk.org/2009/12/08/lambda-expressions-in-logtalk.html> lambdas
 
 # Linear Logic Programming
+
 See linear logic
 prolog rules destroy the body. Good for modeling state
 Chris martens
@@ -3471,6 +3503,7 @@ Chris martens
 The interaction of linear logic and logic programming was very inlfluential on the concept of focusing
 
 # Coinductive Logic Programming
+
 Actually fairly unrelated to inductive logic programming.
 Dealing with infinite terms and streams.
 
@@ -3481,9 +3514,6 @@ completion + ? give gfp?
 [Co-Logic Programming: Extending Logic Programming with Coinduction](https://personal.utdallas.edu/~gupta/ppdp06.pdf)
 
 [COnductive logic programming and it's applications](https://personal.utdallas.edu/~gupta/iclp07paper.pdf)
-
-
-
 
 ```prolog
 :- use_module(library(coinduction)).
@@ -3503,43 +3533,45 @@ q :- p.
 
 ```
 
-
-
-
 ```prolog
 mi(Gs, G) :- member(Gs,G1), subsumes_term(G1,G), 
 
 ```
+
 # inductive logic programmingh
-popper https://arxiv.org/abs/2005.02259
-https://github.com/metagol/metagol metagol 
-http://andrewcropper.com/ muggleton
-https://arxiv.org/pdf/2102.10556.pdf inductive logic programming at 30
-[hakank examples](https://swi-prolog.discourse.group/t/popper-inductive-logic-programming-ilp-and-my-popper-page/3929) 
+Hyper in bratko
+
+[Inductive Logic Programming: From Machine Learning to Software Engineering](https://direct.mit.edu/books/book/4900/Inductive-Logic-ProgrammingFrom-Machine-Learning)
+
+popper <https://arxiv.org/abs/2005.02259>
+<https://github.com/metagol/metagol> metagol
+<http://andrewcropper.com/> muggleton
+<https://arxiv.org/pdf/2102.10556.pdf> inductive logic programming at 30
+[hakank examples](https://swi-prolog.discourse.group/t/popper-inductive-logic-programming-ilp-and-my-popper-page/3929)
 
 [Abductive Reasoning in Intuitionistic Propositional Logic via Theorem Synthesis](https://arxiv.org/abs/2205.05728v1). Includes a g4ip
 
 [Hakank symbolic function induction picat](https://twitter.com/hakankj/status/1556344141994508288?s=20&t=yqv3psiW3ByDbnVTBLr_GA)
 
 [Louise](https://github.com/stassa/louise)
-https://github.com/stassa/louise/blob/09a06e081b8933bbdb999424bf1a62673e88a3d6/src/louise.pl line 465 for metainterpreter prove. multi clause inductive learning. "inductive"
+<https://github.com/stassa/louise/blob/09a06e081b8933bbdb999424bf1a62673e88a3d6/src/louise.pl> line 465 for metainterpreter prove. multi clause inductive learning. "inductive"
 
 Metarules
 `P(A,B) :- Q(A,C), R(C,B)`. second order qauntified variables
 
 metainterpretive learning (MIL) - a prolgo metainterpreter
 
-
 # Probablistic Logic Programming
-https://swi-prolog.discourse.group/t/new-book-second-edition-of-foundations-of-probabilistic-logic-programming/6228
 
+<https://swi-prolog.discourse.group/t/new-book-second-edition-of-foundations-of-probabilistic-logic-programming/6228>
 
 # Abductive logic programming
-https://en.wikipedia.org/wiki/Abductive_logic_programming
+
+<https://en.wikipedia.org/wiki/Abductive_logic_programming>
 
 Infer ground facts given results
 
-https://stackoverflow.com/questions/41274692/discussion-about-abductive-logic-programming-vs-answer-set-programming
+<https://stackoverflow.com/questions/41274692/discussion-about-abductive-logic-programming-vs-answer-set-programming>
 "Any logic programing that supports hypothetical reasoning can support ALP"
 
 ```
@@ -3556,7 +3588,8 @@ feed(lactose) :- amount(glucose,medium), amount(lactose,medium).
 
 [Abduction in Logic Programming - Denecker Kakas](https://web.stanford.edu/class/cs227/Readings/Abudction%20in%20LP.pdf)
 
-A different variation https://swi-prolog.discourse.group/t/non-monotonicity-defeasibility-strategies-and-other-stuff/6038/23
+A different variation <https://swi-prolog.discourse.group/t/non-monotonicity-defeasibility-strategies-and-other-stuff/6038/23>
+
 ```
 /* SWI-Prolog 9.1.0 */
 solve(true) --> !.
@@ -3564,10 +3597,12 @@ solve((A,B)) --> !, solve(A), solve(B).
 solve(A) --> {abducible(A)}, !, [A].
 solve(H) --> {clause(H, B)}, solve(B).
 ```
-# Equational Logic Programming
-https://www.cs.ox.ac.uk/files/3444/PRG116.pdf
 
-https://cseweb.ucsd.edu/~goguen/sys/eqlog.html eqlog
+# Equational Logic Programming
+
+<https://www.cs.ox.ac.uk/files/3444/PRG116.pdf>
+
+<https://cseweb.ucsd.edu/~goguen/sys/eqlog.html> eqlog
 
 See Maude in term rewriting
 [INDUCTIVE EQUATIONAL LOGIC PROGRAMMING](https://digitalcommons.uri.edu/oa_diss/791/)
@@ -3577,30 +3612,27 @@ See Maude in term rewriting
 Logic programming, functional programming, and inductive definitions](https://link.springer.com/chapter/10.1007/BFb0038699) Another argument in favor of inductive definitions, not first order logic. paulson
 
 # Functional Logic Programming
+
 See Curry
 
-
-
 # Misc
+
 [tar parsing in prolog](https://news.ycombinator.com/item?id=34427081)
 [rethinking prolog - oleg](https://okmij.org/ftp/kakuritu/rethinking.pdf) unification variables are an optimization
 
-[An interactive semantics of logic programming](https://arxiv.org/abs/cs/0107022) https://twitter.com/davidad/status/1567780900284387329?s=20&t=jW6J2ukuizpdkb11CCe3bQ
+[An interactive semantics of logic programming](https://arxiv.org/abs/cs/0107022) <https://twitter.com/davidad/status/1567780900284387329?s=20&t=jW6J2ukuizpdkb11CCe3bQ>
 
 [ICLP proceedings](https://arxiv.org/abs/2208.02685) - lots of ASP stuff
 
-
 [pyswip](https://github.com/yuce/pyswip)
 
-https://github.com/mthom/scryer-prolog/pull/838 scryer as a library?
+<https://github.com/mthom/scryer-prolog/pull/838> scryer as a library?
 
 .type Lifted = Lit {x : symbol} | Y {x : Lifted, y : Lifted}
 
 .decl r(x : Lifted, y : Lifted)
 .decl a(x : Lifted)
 r(x1, $Y(x1,x2)), a($Y(x1,x2)) :- r(x1,x2).
-
-
 
 defeasible logic programming
 
@@ -3617,9 +3649,6 @@ defeasible logic programming
 old title: prolog, scheme,racket, lambdaprolog, What the Hell is LogicT / Guanxi notes
   Minikanren, Unification, Resolution
 
-
-
-
 BAP universal valures
 OCaml typeclasss system
 Oleg modellign typeclasses as prolog
@@ -3627,7 +3656,6 @@ Oleg modellign typeclasses as prolog
 <http://okmij.org/ftp/ML/index.html#trep>
 
 canonical structures and unification hints. Can we make a metaintepreter for this?
-
 
 Hmm. Gauntlet thrown.
 Byrd is not sure how prolog can? do this stuff.
@@ -3643,8 +3671,6 @@ lvars. fixpoint over lattices
 meta interpeter, sure. That's one way to get com,plketeness
 What if one defunctionalizes the minikanren pause mechanism. What does it look like?
 Oh there's a first order kanren paper that does this
-
-
 
 Hmm. Could one do barliman style in lambda prolog?
 F, ex1, ex2, ex3.
@@ -3662,15 +3688,11 @@ defeasible logic
 
 proof checker running backwards
 
-
-
 Scheme workshop
 
-
-
-https://git.sr.ht/~sforman/Prolog-Junkyard/tree/master/miscellaneous/itc.pl interval tree clocks in prolog
-https://www.metalevel.at/trs/ knuth bendix completion
-https://arxiv.org/abs/1706.00231 auto differentiating using constraint handling rules
+<https://git.sr.ht/~sforman/Prolog-Junkyard/tree/master/miscellaneous/itc.pl> interval tree clocks in prolog
+<https://www.metalevel.at/trs/> knuth bendix completion
+<https://arxiv.org/abs/1706.00231> auto differentiating using constraint handling rules
 
 <http://adam.chlipala.net/papers/MakamICFP18/MakamICFP18.pdf> prototpying functional language using higher order logic programing makam
 chlipala
@@ -3689,14 +3711,14 @@ equal(  t1, t2  ) :- lookup( t1 )
 
 file:///home/philip/Downloads/ODonnell1987_Chapter_Term-rewritingImplementationOf.pdf
 
-https://core.ac.uk/download/pdf/81972151.pdf Logic programming with equations.
+<https://core.ac.uk/download/pdf/81972151.pdf> Logic programming with equations.
 
 Eqlog - goguen and mesegaer?
 
 assert_equal(EGraph,   ,EGraph') :- lookup(t1, E1), lookup(t2, E2), E1 = E2, EGraph' = EGraph
 assert_eqyal(  ) :- lookup(t1, E1), lookup(t2, E2)
 
-rebuild(EGraph, EGraph' ) :- 
+rebuild(EGraph, EGraph' ) :-
 
 rebuild(EGraph) :- EGraph = (  , Map )
 
@@ -3715,7 +3737,7 @@ This isunder the assumptyiong that variables
 [ == , ]
 
 We may want to prune duplicates occasionally
-If we interweave 
+If we interweave
 
 Can we even achieve apttern matching without an index from ENodes => terms?
 Yessss.....?
@@ -3723,27 +3745,21 @@ Given a pattern ( EClass, g(f(A)) )
 We can look in g/1 for Eclass on the right hand side.
 For those matches, we build a subproblem of matching the pieces of the left hand size ENodes.
 
-
-
-
-
 With tabling?
 Tabling gives us some kind of memoization
 
 equal?(Egraph, t1,t2) :- lookup(EGraph, t1, E1), lookup(EGraph, t2, E2).
 equal?(arg1(  ) :- eqwal?(args1, args2), assert_equal(EGraph, t1, t2)
 
-Stratified prolog predciates. This euqation paper mentions this 
-and this tabling thing mentions it https://www.swi-prolog.org/pldoc/man?section=tabling-non-termination
-
+Stratified prolog predciates. This euqation paper mentions this
+and this tabling thing mentions it <https://www.swi-prolog.org/pldoc/man?section=tabling-non-termination>
 
 Datalog and program analysis
-https://www2.cs.sfu.ca/CourseCentral/721/jim/DatalogPaper.pdf - What you always wanted to know about datalog
-http://rightingcode.org/tutorials/popl20/ popl 2020 - reasoning tools using llvm and z3
+<https://www2.cs.sfu.ca/CourseCentral/721/jim/DatalogPaper.pdf> - What you always wanted to know about datalog
+<http://rightingcode.org/tutorials/popl20/> popl 2020 - reasoning tools using llvm and z3
 Z3 has a datalog style reasoning engine in it
 
 First you need to get a program as a mapping
-
 
 The Chase - get existentials in the head. Wisnesky says somethign to do with jkabn extensions and lawvere theory
 What was up with the notion of quantifiers as adjoints anyway?
@@ -3751,7 +3767,7 @@ Maybe also some kind of completion?
 Datalog +-
 Formulog
 Bap KB as datalog
-What 
+What
 
 Typeclasses vs Canonical Structures. I don't get it.
 Could I make a model? Maybe in prolog?
@@ -3760,13 +3776,13 @@ Inheritance.
 What are typeclasses? "Kind of like prolog"
 Things are incompatible for some reason?
 Canonical structures add unification hints?
-https://hal.inria.fr/hal-00816703v1/document canonical structures ofr the working coq user
-
+<https://hal.inria.fr/hal-00816703v1/document> canonical structures ofr the working coq user
 
 So what is the synctatic condition that precludes search?
-1. nonoverlapping 
 
-Would it be more interesting to just 
+1. nonoverlapping
+
+Would it be more interesting to just
 What am I understanding here?
 
 Canonical structures was suggesting that some kind of inconstency would manifest.
@@ -3774,36 +3790,29 @@ Maybe lambda prolog gets us closer. We can have existential variables and such.
 
 extensible unification
 
-
-nat === (carrier nat_abGrp) :- 
+nat === (carrier nat_abGrp) :-
 A === A.
-
 
 nat == carrier(Eq) :- Eq == natEq.
 carrier(Eq,nat).
 
-
-
 nonunifiable(L) :- all( /= , L ).
-
 
 % haskell has no backtracking
 % every case has a cut.
 eq(tup()) :- !.
 eq(tup(A,B)) :- !, eq(A), eq(B)
 
-% 
+%
 
 eq(int, prim__equal_int).
-eq(tup(A,B), lambda( x, case( x, tup(a,b) => bool_and( apply(EqualA, a) , apply(EqualB, b )  )    )  )  ) :- 
+eq(tup(A,B), lambda( x, case( x, tup(a,b) => bool_and( apply(EqualA, a) , apply(EqualB, b )  )    )  )  ) :-
       eq(A, EqualA), eq(B, EqualB).
 eq(tup(A,B), comp(and, par(EqualA,EqualB)))
-
 
 eq(int).
 eq()
 eq(tup(A,B)) :- eq(A), eq(B).
-
 
 ord(bool).
 ord().
@@ -3816,36 +3825,28 @@ traversable :-
 % superclass
 class(ord(A)) :- call(ord, A), class(eq(A))
 
-
-
 "diamonds appear evertwhere. See pullbacks" ~ Hale
-
 
 Transcribing rules to prolog and coq.
 In Coq the cookbook is that you make an inductive. One constrctor per rule.
 If you call eauto, coq will perform prolog style backchaining search. See Chlipala
-You could write these as functions rather than as 
+You could write these as functions rather than as
 The data type is the proof structure.
 
 Prolog is the same thing. It's less imposing than coq though.
 You make predicates and :- for each condition.
 Prolog has built in nondtermisnion and unification.
 
-
 Tying rules in prolog.
 I did the point-free simply typed lambda calculus
 type(fst, tup(A,B), A).
 
-
-type(Gamma |- plus(A,B) : nat ) :- 
+type(Gamma |- plus(A,B) : nat ) :-
           type(Gamma |- A : nat), type(Gamma |- B : nat)
 type(Gamma, lam(X, Body) |- fun(A,B )) :- type() , type( [X | Gamma]
 
-
-http://www.coli.uni-saarland.de/projects/milca/esslli/comsem.pdf computational semantics. some interesting material here
-https://samples.jbpub.com/9780763772062/PrologLabBook09.pdf - prolog experiment in discretem mathemtiacs logic and computatilbitly
-
-
+<http://www.coli.uni-saarland.de/projects/milca/esslli/comsem.pdf> computational semantics. some interesting material here
+<https://samples.jbpub.com/9780763772062/PrologLabBook09.pdf> - prolog experiment in discretem mathemtiacs logic and computatilbitly
 
 They start with defining a set of atoms like
 
@@ -3854,21 +3855,16 @@ var(y).
 
 forall(x, stupid(x)).
 
+<https://www.youtube.com/watch?v=RwBiHLoQ3E4&ab_channel=PapersWeLove> niko matsakis - lambda prolog
 
-https://www.youtube.com/watch?v=RwBiHLoQ3E4&ab_channel=PapersWeLove niko matsakis - lambda prolog
-
-https://rust-lang.github.io/chalk/book/recursive.html chalk. harrop formula
-
+<https://rust-lang.github.io/chalk/book/recursive.html> chalk. harrop formula
 
 The Otten sequent calculus prover is very similar to a meta circular intepreter for prolog
 
-Horn clauses (or harrop formula) 
-
-
+Horn clauses (or harrop formula)
 
 Lambda-mu calculus and prolog. Focusing is relevant.
 Prolog has an imperative reading
-
 
 Executing the Algebra of Programming
 
@@ -3892,23 +3888,16 @@ interp(map(F), nil, nil).
 interp(map(F), [], []).
 interp(map(F), [X | XS], [Y | YS]  ) :- interp(F, X, Y), interp(map(F), XS, YS).
 
-
-
-
-
 % convert to listf form
 listf([], nil).
 listf([A | XS ], cons(A,fix(L))  ) :- listf(XS, L).
 
-
 Different style
-
 
 cata(F, fix(A), C) :- map(cata(F), A, B), call(F, B, C).
 fst(pair(A,B), A).
 
 comp(F, G, A, B) :- call() , call()
-
 
 % define what it means to be a functional relation
 functional( fst, fst).
@@ -3917,17 +3906,15 @@ function(  )
 
 % prolog is database stuff ~ relation algebra. It makes perfect sense.
 
-
 interp( map )
 
 Converting prolog to abstract machine form
 step( Stack Result ) :-
 
-
 oprolog veriffication
 
 Warrne and Maier 1988 textboook
-proplog - propsitional goals only. 
+proplog - propsitional goals only.
 datalog - constants only
 prolog - functional symbols
 
@@ -3937,75 +3924,65 @@ factorial(I,N,T,F) :- I < N, I1 is I+1, T1 is T * I1, factorial(I1, N, T1,F)
 factorial(N,N,F,F).
 
 hitchikers guide to prolog machine
-https://drops.dagstuhl.de/opus/volltexte/2018/8453/pdf/OASIcs-ICLP-2017-10.pdf
-
+<https://drops.dagstuhl.de/opus/volltexte/2018/8453/pdf/OASIcs-ICLP-2017-10.pdf>
 
 ref a
 ref b
 
-https://formal.iti.kit.edu/beckert/leantap/leantap.html Beckert posegga leantap
-https://link.springer.com/chapter/10.1007%2F3-540-36377-7_6 metacircular abstarct interpretation in prolog
-https://www.metalevel.at/acomip/
+<https://formal.iti.kit.edu/beckert/leantap/leantap.html> Beckert posegga leantap
+<https://link.springer.com/chapter/10.1007%2F3-540-36377-7_6> metacircular abstarct interpretation in prolog
+<https://www.metalevel.at/acomip/>
 
-Pfenning constructive logic course http://www.cs.cmu.edu/~fp/courses/15317-f17/schedule.html
+Pfenning constructive logic course <http://www.cs.cmu.edu/~fp/courses/15317-f17/schedule.html>
 Programs as proof search
 He considers the prolog predictaes as the judgements themeselves
 As compared to considering the pile of predicates as entedcedents of a sequent
 Bottom up search ius forward reasoning, top down is backward reasonining
-bidrectional type checking - https://arxiv.org/pdf/1908.05839.pdf
-
-
+bidrectional type checking - <https://arxiv.org/pdf/1908.05839.pdf>
 
 Prolog semantics -
 Since prolog can not terminate you can take that denotational semantics perspective.
-https://www.swi-prolog.org/pldoc/man?section=WFS well founded semantics. - True/False/unknown
-https://en.wikipedia.org/wiki/Well-founded_semantics
-http://www.cse.unsw.edu.au/~cs4415/2010/resources/gelder91wellfounded.pdf
-http://dai.fmph.uniba.sk/~sefranek/links/FixPointSurvey.pdf  fixpoitn semantics for logic programming a survey. melvin fitting
-Melvin fitting has a number of interesting bokos http://melvinfitting.org/
+<https://www.swi-prolog.org/pldoc/man?section=WFS> well founded semantics. - True/False/unknown
+<https://en.wikipedia.org/wiki/Well-founded_semantics>
+<http://www.cse.unsw.edu.au/~cs4415/2010/resources/gelder91wellfounded.pdf>
+<http://dai.fmph.uniba.sk/~sefranek/links/FixPointSurvey.pdf>  fixpoitn semantics for logic programming a survey. melvin fitting
+Melvin fitting has a number of interesting bokos <http://melvinfitting.org/>
 
-So prolog already has belnap bools in it. 
-
+So prolog already has belnap bools in it.
 
 What does it look like to mix prolog with exact reals?
 
-
-
 Modes and determinism annotations.
 
-Kowalski - hgistory of prolog https://www.researchgate.net/publication/277670164_History_of_Logic_Programming
+Kowalski - hgistory of prolog <https://www.researchgate.net/publication/277670164_History_of_Logic_Programming>
 
-
-
-tabling - 
+tabling -
 Tabling is some kind of memoization.
 It is connected to bottom up strategies
-swi prolog https://www.swi-prolog.org/pldoc/man?section=tabling
-https://www.metalevel.at/prolog/memoization
-https://biblio.ugent.be/publication/6880648/file/6885145.pdf tabling as a library with delimited control
-https://www.cambridge.org/core/journals/theory-and-practice-of-logic-programming/article/abs/delimited-continuations-for-prolog/DD08147828169E26212DFAF743C8A9EB delimitted continuations for prolog
-https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.294.9440&rep=rep1&type=pdf XSB extending prolog with tabled logic programming. XSB prolog is the most advanced tabling implementation (still? maybe that is old information)
-https://github.com/SWI-Prolog/tabled-prolog-book warren wrote a book draft
-https://www3.cs.stonybrook.edu/~warren/xsbbook/book.html ok This may not be being finished anytime soon
+swi prolog <https://www.swi-prolog.org/pldoc/man?section=tabling>
+<https://www.metalevel.at/prolog/memoization>
+<https://biblio.ugent.be/publication/6880648/file/6885145.pdf> tabling as a library with delimited control
+<https://www.cambridge.org/core/journals/theory-and-practice-of-logic-programming/article/abs/delimited-continuations-for-prolog/DD08147828169E26212DFAF743C8A9EB> delimitted continuations for prolog
+<https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.294.9440&rep=rep1&type=pdf> XSB extending prolog with tabled logic programming. XSB prolog is the most advanced tabling implementation (still? maybe that is old information)
+<https://github.com/SWI-Prolog/tabled-prolog-book> warren wrote a book draft
+<https://www3.cs.stonybrook.edu/~warren/xsbbook/book.html> ok This may not be being finished anytime soon
 Tabled typeclass resolution
 
+<http://www.covingtoninnovations.com/mc/plcoding.pdf> - coding guidelines for prolog
 
-http://www.covingtoninnovations.com/mc/plcoding.pdf - coding guidelines for prolog
+<https://swi-prolog.discourse.group/t/algebra-in-prolog/1849> - algerba in prolog
+<https://github.com/maths/PRESS> prolog equation solving system
 
-https://swi-prolog.discourse.group/t/algebra-in-prolog/1849 - algerba in prolog
-https://github.com/maths/PRESS prolog equation solving system
-
-
-scryer prolog - a rust based implemnentation . https://github.com/mthom/scryer-prolog
+scryer prolog - a rust based implemnentation . <https://github.com/mthom/scryer-prolog>
 Interesting links
-Precise garbage collection in Prolog 
+Precise garbage collection in Prolog
 "Can Logic Programming Execute as Fast as Imperative Programming?" - Peter van Roy
-indexing dif/2 https://arxiv.org/abs/1607.01590 calls for if_ predicate
+indexing dif/2 <https://arxiv.org/abs/1607.01590> calls for if_ predicate
 debray allocator
 
-https://wiki.nikitavoloboev.xyz/programming-languages/prolog notes
+<https://wiki.nikitavoloboev.xyz/programming-languages/prolog> notes
 
-https://mercurylang.org/documentation/documentation.html mercury
+<https://mercurylang.org/documentation/documentation.html> mercury
 
 Names:
 Kowalski
@@ -4018,23 +3995,21 @@ Miller
 Nadathur
 melivn fitting
 
-https://www.metalevel.at/prolog/theoremproving 
+<https://www.metalevel.at/prolog/theoremproving>
 presburger and resolution
-https://www.youtube.com/watch?v=b2Px7cu2a68&feature=youtu.be&ab_channel=ThePowerofProlog term rewriting in prolog
+<https://www.youtube.com/watch?v=b2Px7cu2a68&feature=youtu.be&ab_channel=ThePowerofProlog> term rewriting in prolog
 
-https://dl.acm.org/doi/book/10.1145/3191315
+<https://dl.acm.org/doi/book/10.1145/3191315>
 Declarative Logic Programming: Theory, Systems, and ApplicationsSeptember 2018
 Has another WAM tutorial in it
 
 So
 
-
 prolog modes
 
-https://www.metalevel.at/prolog/attributedvariables attributed variables
+<https://www.metalevel.at/prolog/attributedvariables> attributed variables
 
-https://sicstus.sics.se/sicstus/docs/latest4/pdf/sicstus.pdf sicstus prolog manual
-
+<https://sicstus.sics.se/sicstus/docs/latest4/pdf/sicstus.pdf> sicstus prolog manual
 
 Exact reals. The semantics already has this three valued logic flavor
 
@@ -4060,29 +4035,25 @@ clpr
 delmittied dontinuation. The contiuation is a goal stack.
 But is the continuation also catching choice point stack?
 
+homoiconic. Term syntax is identical to
 
-homoiconic. Term syntax is identical to 
-
-
-Maier and Warren 
+Maier and Warren
 
 T_p, the immediate conseqeunce operator. Applying one round of prolog/datalog/ etc rules
 
 Proplog
 
-
 SMT-log
-Datafun - a fiunctional datalog https://www.cl.cam.ac.uk/~nk480/datafun.pdf https://www.youtube.com/watch?v=gC295d3V9gE
-datalog - stephenel diehl https://www.stephendiehl.com/posts/exotic04.html
+Datafun - a fiunctional datalog <https://www.cl.cam.ac.uk/~nk480/datafun.pdf> <https://www.youtube.com/watch?v=gC295d3V9gE>
+datalog - stephenel diehl <https://www.stephendiehl.com/posts/exotic04.html>
 uZ - datalog in Z3
 souffle
 doup
 
-
 What are appli8cations of datalog
 program analysis. That points to analysis tutorial
 
-Datalog ~ polynomial time in some sense. 
+Datalog ~ polynomial time in some sense.
  So application wise, it can be fixed point computations
  Or we can encode
 
@@ -4091,17 +4062,15 @@ Datalog ~ polynomial time in some sense.
  num(2)
  adder(  )
 
- https://sites.google.com/site/pydatalog/Online-datalog-tutorial
+ <https://sites.google.com/site/pydatalog/Online-datalog-tutorial>
  nqueens - they unroll it significantly.
 
 Some examples
-http://cse.unl.edu/~riedesel/pub/cse413/des/doc/manualDES.pdf
+<http://cse.unl.edu/~riedesel/pub/cse413/des/doc/manualDES.pdf>
 
  ok farmer goat. As a path search basicaly
 
-state(goat, foxm, chienbk, ) :- 
-
-
+state(goat, foxm, chienbk, ) :-
 
 Parsing a grammar. This is an odd one. Encode positions of string in database.
 t(1,a,2).
@@ -4118,12 +4087,12 @@ DES> a(1,6)
 }
 Info: 1 tuple computed.
 
-Games? 
+Games?
 
 Domain modeling with datalog
-https://www.youtube.com/watch?v=oo-7mN9WXTw&ab_channel=%23pivorakLvivRubyMeetUp
+<https://www.youtube.com/watch?v=oo-7mN9WXTw&ab_channel=%23pivorakLvivRubyMeetUp>
 
-https://github.com/ptarau/TypesAndProofs
+<https://github.com/ptarau/TypesAndProofs>
 More theorem provers
 
 binprolog - analog of CPS. Add a new parameter to every predicate
@@ -4133,11 +4102,10 @@ LD resolution
 monoid of clauses - unfolding
 bin(A :- BBBB) = (A>C :- BBBB>C)
 
-
 2020/9
 Propagators.
 
-Kmett. The Art of the Propagator https://dspace.mit.edu/bitstream/handle/1721.1/44215/MIT-CSAIL-TR-2009-002.pdf?sequence=1&isAllowed=y 
+Kmett. The Art of the Propagator <https://dspace.mit.edu/bitstream/handle/1721.1/44215/MIT-CSAIL-TR-2009-002.pdf?sequence=1&isAllowed=y>
 
 The gecode manual [https://www.gecode.org/doc-latest/MPG.pdf](https://www.gecode.org/doc-latest/MPG.pdf)
 
@@ -4151,38 +4119,31 @@ What are the good programs. The art of prolog has an open access link
 
 Difference lists are cool. They really are similar ot hughes lists. Or al ist that keeps a pointer to it's end
 
-Using it for theorem proving is cool. Where are those examples? The lambda prolog book has some exmaples. There is a propsitional satisfiabilioty prover in art of prolog. Propositional solver in powr of prolog [https://www.metalevel.at/prolog/theoremproving](https://www.metalevel.at/prolog/theoremproving) [http://vidal-rosset.net/g4i_prover.html](http://vidal-rosset.net/g4i_prover.html)   http://jens-otten.de/tutorial_cade19/slides/prover_tutorial_CADE19_2.pdf
-
-
-
-
-
+Using it for theorem proving is cool. Where are those examples? The lambda prolog book has some exmaples. There is a propsitional satisfiabilioty prover in art of prolog. Propositional solver in powr of prolog [https://www.metalevel.at/prolog/theoremproving](https://www.metalevel.at/prolog/theoremproving) [http://vidal-rosset.net/g4i_prover.html](http://vidal-rosset.net/g4i_prover.html)   <http://jens-otten.de/tutorial_cade19/slides/prover_tutorial_CADE19_2.pdf>
 
 nomial logic programming [https://arxiv.org/pdf/cs/0609062.pdf](https://arxiv.org/pdf/cs/0609062.pdf) alphaprolog. Chris mentioned this nominal thing as nother way of dealing with binders
 
 Datalog - souffle.  Reading gorup paper [https://arxiv.org/pdf/1207.5384.pdf](https://arxiv.org/pdf/1207.5384.pdf). Sttratification. relations indexed on program point/ abstract state of program point. Interval analysis encoded in binary to datalog?
 
-425/20 I was playing with prolog recently. Pretty cool 
+425/20 I was playing with prolog recently. Pretty cool
 
 What is the deal with scheme and racket? i just don't have the  revelation.
-
-
 
 I was looking at disjoint set data structures again [https://en.wikipedia.org/wiki/Disjoint-set_data_structure#cite_note-Conchon2007-9](https://en.wikipedia.org/wiki/Disjoint-set_data_structure#cite_note-Conchon2007-9)
 
 Kmett's latest propgator talk was mentioning using group actions somehow in unification? [https://www.youtube.com/watch?v=s2dknG7KryQ](https://www.youtube.com/watch?v=s2dknG7KryQ)
 
-george wilson - https://www.youtube.com/watch?v=nY1BCv3xn24 intutition for propagators.
+george wilson - <https://www.youtube.com/watch?v=nY1BCv3xn24> intutition for propagators.
 
-[http://hackage.haskell.org/package/discrimination-0.3](http://hackage.haskell.org/package/discrimination-0.3) What the hell is this? Fritz Henglein. 
+[http://hackage.haskell.org/package/discrimination-0.3](http://hackage.haskell.org/package/discrimination-0.3) What the hell is this? Fritz Henglein.
 
 [http://conway.rutgers.edu/~ccshan/wiki/blog/posts/WordNumbers1/](http://conway.rutgers.edu/~ccshan/wiki/blog/posts/WordNumbers1/)
 
-https://www.reddit.com/r/haskell/comments/a9yze4/is_there_an_arraylike_data_structure_which_gives/
+<https://www.reddit.com/r/haskell/comments/a9yze4/is_there_an_arraylike_data_structure_which_gives/>
 
 interesting comments  
 
-[https://www.lri.fr/~filliatr/puf/](https://www.lri.fr/~filliatr/puf/) a coq formalization of a persistent union find data structure.  They use persistent arrays, which do some kind of rebalancing operation. 
+[https://www.lri.fr/~filliatr/puf/](https://www.lri.fr/~filliatr/puf/) a coq formalization of a persistent union find data structure.  They use persistent arrays, which do some kind of rebalancing operation.
 
 Persistent data structures. Wassup with them?
 
@@ -4216,7 +4177,7 @@ Typed logical variables in haskell by Claesson and Ljundogjgklds
 
 [https://people.seas.harvard.edu/~pbuiras/publications/KeyMonadHaskell2016.pdf](https://people.seas.harvard.edu/~pbuiras/publications/KeyMonadHaskell2016.pdf)
 
-Also by claesson, the key monad paper. 
+Also by claesson, the key monad paper.
 
 [http://www.cse.chalmers.se/~koen/](http://www.cse.chalmers.se/~koen/)
 
@@ -4224,7 +4185,7 @@ Interesting guy. He is coqauthor with hughes on quickcheck.
 
 Atze van der Ploeg is both Key monad paper and reflection without remorse. They have an FRP paper that sounds interesting
 
-He metnioend a number of interesting things. He's doing very reference heavy code? Kanren. 
+He metnioend a number of interesting things. He's doing very reference heavy code? Kanren.
 
 He mentoins intension vs extensional equality. Judgemental eqaulity is the one inside the type checker. Is it ~ ? And intwnsional equality is the one within the language itself, that is :~: . Extensional. nuPRL starts with an untyped lambda calculus and then you teahc the system typing derivations? What is nuPRL's deal
 
@@ -4252,15 +4213,15 @@ View patterns might be a way of getting something like the Agda .x syntax, where
 
 Kmett mentions a "octagonal" domain. What the hell is he talkiing about. He also moentions interval and polyhedral which makes more sense
 
-https://www-apr.lip6.fr/~mine/publi/article-mine-HOSC06.pdf
+<https://www-apr.lip6.fr/~mine/publi/article-mine-HOSC06.pdf>
 
 Huh. Interesting. It is in between power of polyhedral and interval. allows sums/differences of two variables. I think I've heard this called difference logic. This paper also mentions galois connections. Galois connections are studied in the context of abstract interpetation?
 
-https://arxiv.org/pdf/1807.08711.pdf 
+<https://arxiv.org/pdf/1807.08711.pdf>
 
 Using Agda and galois connections. Interestign example of sets of even and odd numbers.
 
-This other paper does an interesting thing of defining division in terms of a glaois connection. Might we also get a good definition of fractions that way? a fraction t ~ m/n is a "number" such that forall z. x <= y   -> x * t * n <= y * m?  There is an notion of negative numbers, fractions, etc as reified weirdo operations that can't be solved yet. Hmm. Yeah, This jives with galois theory doesn't it. That book I was reading was talking about field extensions. Or number systems being invented to make more equations solvable. The reals make ? solvable. fractions make division solvable. Complex makes roots solvable. finite field extensions make simple algerbaic equations solvable. 
+This other paper does an interesting thing of defining division in terms of a glaois connection. Might we also get a good definition of fractions that way? a fraction t ~ m/n is a "number" such that forall z. x <= y   -> x _t_ n <= y * m?  There is an notion of negative numbers, fractions, etc as reified weirdo operations that can't be solved yet. Hmm. Yeah, This jives with galois theory doesn't it. That book I was reading was talking about field extensions. Or number systems being invented to make more equations solvable. The reals make ? solvable. fractions make division solvable. Complex makes roots solvable. finite field extensions make simple algerbaic equations solvable.
 
 [https://www.sciencedirect.com/science/article/pii/S1567832612000525](https://www.sciencedirect.com/science/article/pii/S1567832612000525)
 
@@ -4290,17 +4251,17 @@ Interval airthemteic in a theorem prover. That is a way of getting sets. Min and
 
 This is also a pleasant by Backhouse
 
-http://www.cs.nott.ac.uk/~psarb2/G53PAL/FPandGC.pdf
+<http://www.cs.nott.ac.uk/~psarb2/G53PAL/FPandGC.pdf>
 
 indirect equality
 
 m=n ===  forall k. k <= m <=> k <= n
 
-Galois connection between convex hulls of integer points? There is a sequence of abstractions for integer programming. You can turn dimension by dimension into integer so there are 2^D different domains to talk about. And there is this grid of connections that forms a lattice itself? Like the top is the completely R^D, and the bottom is Z^D. Using these connections is the branch and bound procedure. 
+Galois connection between convex hulls of integer points? There is a sequence of abstractions for integer programming. You can turn dimension by dimension into integer so there are 2^D different domains to talk about. And there is this grid of connections that forms a lattice itself? Like the top is the completely R^D, and the bottom is Z^D. Using these connections is the branch and bound procedure.
 
 Floor and Ceil are also galois connections. Maybe also round? I had been thinking in terms of ibjects being individual numbers, not convex sets of numbers. Convex sets does tie in much better to categorical thinking
 
-http://www.cs.tau.ac.il/~msagiv/courses/asv/absint-1.pdf
+<http://www.cs.tau.ac.il/~msagiv/courses/asv/absint-1.pdf>
 
 An interesting paper tutorial on galois connections. V cool.
 
@@ -4316,7 +4277,7 @@ minikanren is strongly unification based. it is using search for the unification
 
 [https://github.com/JeffreyBenjaminBrown/learn-logict](https://github.com/JeffreyBenjaminBrown/learn-logict)
 
-https://www.msully.net/blog/2015/02/26/microkanren-%CE%BCkanren-in-haskell/
+<https://www.msully.net/blog/2015/02/26/microkanren-%CE%BCkanren-in-haskell/>
 
 [https://gup.ub.gu.se/file/207634](https://gup.ub.gu.se/file/207634) logic typed variable claesson
 
@@ -4324,7 +4285,7 @@ https://www.msully.net/blog/2015/02/26/microkanren-%CE%BCkanren-in-haskell/
 
 [Pure, Declarative, and Constructive Arithmetic Relations (Declarative Pearl)](http://webyrd.net/arithm/arithm.pdf)
 
-[https://ro-che.info/articles/2017-06-17-generic-unification](https://ro-che.info/articles/2017-06-17-generic-unification) unification-fd . 
+[https://ro-che.info/articles/2017-06-17-generic-unification](https://ro-che.info/articles/2017-06-17-generic-unification) unification-fd .
 
 [https://winterkoninkje.dreamwidth.org/100478.html](https://winterkoninkje.dreamwidth.org/100478.html)
 
@@ -4397,4 +4358,3 @@ We need to collect up a bucket of deduced equivalences as we go down the trees o
 The prolog algorithm is roughly guess a pair of terms in the goal (the executing state) and knowledge base (the code base) that will unify. Try to unify them. If they do, then use resolution to get rid of those terms.
 
 Like what if we reflected into Eisenberg's Stitch? Or what was Weirich's thing? People have been talking about intrinsically typed system-F lately.
-

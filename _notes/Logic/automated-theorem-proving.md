@@ -27,6 +27,7 @@ title: Automated Theorem Proving
   - [Zipperposition](#zipperposition)
   - [Datalog vs ATP](#datalog-vs-atp)
   - [Prolog vs ATP](#prolog-vs-atp)
+  - [ATP vs ITP](#atp-vs-itp)
 - [Strategies](#strategies)
 - [Methodology](#methodology-1)
   - [Unification](#unification)
@@ -182,6 +183,8 @@ cnf(and_assoc, axiom, and(A,and(B,C)) = and(and(A,B),C)).
 cnf(not_intro ,axiom,  ~ turnstile(and(C, not(A)), B) | turnstile(C , and(A,B)).
 
 ```
+
+Multiple consequence logic. Smiley <https://en.wikipedia.org/wiki/Multiple-conclusion_logic>
 
 ## Symbolic Execution
 
@@ -831,6 +834,14 @@ Set of support strategy with horn clauses in passive set, goal in active set, hy
 [What is the difference between E and a PROLOG system?](https://wwwlehre.dhbw-stuttgart.de/~sschulz/E/FAQ.html)
 
 Prolog `=` is unification. ATP `=` is rewrite/semantical.
+
+## ATP vs ITP
+
+```bash
+
+
+
+```
 
 # Strategies
 

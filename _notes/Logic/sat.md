@@ -3,15 +3,17 @@ layout: post
 title: SAT Solvers
 ---
 - [BDD](#bdd)
-- [Beyond NP](#beyond-np)
-  - [Model Counting](#model-counting)
-  - [knowledge compilation](#knowledge-compilation)
-  - [QBF](#qbf)
   - [Encoding](#encoding)
   - [Preprocessing](#preprocessing)
   - [CDCL](#cdcl)
   - [Parallel SAT](#parallel-sat)
   - [Stochastic local search solvers](#stochastic-local-search-solvers)
+- [Beyond NP](#beyond-np)
+  - [Model Counting](#model-counting)
+  - [knowledge compilation](#knowledge-compilation)
+  - [QBF](#qbf)
+  - [Maxsat](#maxsat)
+- [Misc](#misc)
 
 See:
 
@@ -32,23 +34,6 @@ pgpbs <https://github.com/rebryant/pgpbs-artifact>
 
 See also berkely abc. AIG and inverter graphs.
 (RO)BDD are canonical. AIG aren't
-
-# Beyond NP
-
-## Model Counting
-
-<https://mccompetition.org/>
-
-<https://github.com/crillab/d4>
-<https://github.com/rebryant/cpog> CPOG Knowledge Compiler Certifier
-
-beyond np <https://beyondnp.org/> hmm. This website is dead?
-
-## knowledge compilation
-
-<https://en.wikipedia.org/wiki/Knowledge_compilation>
-
-## QBF
 
 ## Encoding
 
@@ -71,6 +56,8 @@ Adders
 
 aiger
 
+[preprcoessing in sat, maxsat, qbf](https://simons.berkeley.edu/talks/preprocessing-sat-maxsat-qbf)
+
 ## CDCL
 
 ## Parallel SAT
@@ -90,6 +77,37 @@ Some examples:
 matrix multiplication, problems with high symettry, graph coloring, pythoagorean triple problem
 
 Seems very reasonable for max sat too?
+
+# Beyond NP
+
+<https://simons.berkeley.edu/workshops/beyond-satisfiability>
+
+## Model Counting
+
+<https://mccompetition.org/>
+
+<https://github.com/crillab/d4>
+<https://github.com/rebryant/cpog> CPOG Knowledge Compiler Certifier
+
+beyond np <https://beyondnp.org/> hmm. This website is dead?
+
+## knowledge compilation
+
+<https://en.wikipedia.org/wiki/Knowledge_compilation>
+
+## QBF
+
+<https://simons.berkeley.edu/talks/quantified-boolean-formulas>
+
+## Maxsat
+
+<https://maxsat-evaluations.github.io/>
+<https://github.com/FlorentAvellaneda/EvalMaxSAT>
+[Combining Clause Learning and Branch and Bound for MaxSAT](https://drops.dagstuhl.de/opus/volltexte/2021/15329/pdf/LIPIcs-CP-2021-38.pdf) maxcdcl
+
+<https://github.com/forge-lab/upmax>
+
+# Misc
 
 [Quadrangulation using a SAT solver](https://github.com/hjwdzh/QuadriFlow)
 [satsort](https://github.com/arminbiere/satsort) I'm not sure what this is
@@ -117,3 +135,5 @@ model counting
 [creusat](https://sarsko.github.io/_pages/SarekSkot%C3%A5m_thesis.pdf) <https://github.com/sarsko/CreuSAT>
 
 [IPASIR-UP: User Propagators for CDCL](https://www.youtube.com/watch?v=pgsvqXAPgqA&ab_channel=SimonsInstitute)
+
+[On Solving Word Equations Using SAT](https://arxiv.org/pdf/1906.11718.pdf)

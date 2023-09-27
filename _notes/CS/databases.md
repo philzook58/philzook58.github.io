@@ -10,6 +10,7 @@ title: Databases
   - [Schema](#schema)
   - [Functional Dependencies](#functional-dependencies)
   - [Query Optimization](#query-optimization)
+  - [Relation Algebra](#relation-algebra)
   - [The Chase](#the-chase)
 - [SQL](#sql)
   - [Functional Programming](#functional-programming)
@@ -170,6 +171,22 @@ HottSQL <https://homotopytypetheory.org/2016/09/26/hottsql-proving-query-rewrite
 [Inside the SQL Server Query Optimizer](https://www.amazon.com/Inside-SQL-Server-Query-Optimizer/dp/1906434603)
 
 [Building Query Compilers (2023, under construction)](https://pi3.informatik.uni-mannheim.de/~moer/querycompiler.pdf)
+
+<http://cs.boisestate.edu/~jhyeh/cs410/cs410_notes_ch15.pdf> nice notes. Convert sql to relation algebra. Push down select, convert cross product to join, pick from different methods according to what is
+Query trees vs query graphs
+
+SQlite query optimization <https://www.sqlite.org/optoverview.html> <https://www.sqlite.org/queryplanner-ng.html>
+
+## Relation Algebra
+
+<https://en.wikipedia.org/wiki/Relational_algebra>
+
+<https://en.wikipedia.org/wiki/Codd%27s_theorem> relation algebra and relation calculus have same power
+
+<https://en.wikipedia.org/wiki/Relational_calculus>
+
+<https://en.wikipedia.org/wiki/Tuple_relational_calculus>
+<https://en.wikipedia.org/wiki/Domain_relational_calculus>
 
 ## The Chase
 

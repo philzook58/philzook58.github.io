@@ -50,6 +50,26 @@ fundamental polyhedron - polyhedra schema. Those diagram with glued edges. The e
 - simplicial set <https://en.wikipedia.org/wiki/Delta_set>
 - [Kan complex](https://en.wikipedia.org/wiki/Kan_fibration)
 
+```python
+# toy around with hap definitions
+
+class CW():
+
+#triangle
+points = [None,None,None]
+edges = [(0,1), (1,2), (2,0)]
+faces = [(0,1,2)] # indices refer to previous
+
+# square
+points = [None,None,None,None]
+edges = [(0,1), (1,2), (2,3), (3,0)]
+faces = [(0,1,2,3)] # indices refer to previous
+```
+
+Discrete finite represntation of CW uses loops over previous layers. The "disk" is a polygon. This is nice compared to simplicial because there is a nicer notion of "simplyfing" a space by removing redundant subdivision.
+
+Regular vs non regular
+
 ## Homotopy
 
 Deformation Retract- $f_t : X -> X$ s.t. $f_0 = id$ and f_1 = A and f_t(A) = A for all t. It leaves A alone for all t. <https://en.wikipedia.org/wiki/Retraction_(topology)>. Retraction is projection to subspace that preserves all points in subspace.

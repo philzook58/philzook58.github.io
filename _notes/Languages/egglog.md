@@ -1,5 +1,5 @@
 
-- [Welcome to Egglog!](#welcome-to-egglog)
+- [Welcome to Egglog](#welcome-to-egglog)
 - [Examples](#examples)
   - [Shortest Path](#shortest-path)
   - [List Programming](#list-programming)
@@ -51,8 +51,9 @@
 - [Rulesets](#rulesets)
 - [Ideas](#ideas)
 
+See also notes on [egraphs](../Logic/egraphs.md)
 
-# Welcome to Egglog!
+# Welcome to Egglog
 
 Egglog is a term rewriting and analysis engine with a special eye towards applications involving program optimization.
 It is backed by a high performance Rust database backend and uses E-graph techniques to retain a compressed representation of equivalent terms.
@@ -61,10 +62,10 @@ It is backed by a high performance Rust database backend and uses E-graph techni
 - If you like datalog, Egglog is a datalog with existentials / functions symbols, lattices, and a very special notion of equality backed by a union find. This union find behaves differently than the special equivalence relation representation in souffle.
 - If you like pure functional programming, egglog is a functional programming system where everything is memoized by default and which allows a larger class of pattern matching rules than just matching on constructors
 
-
 <iframe width="560" height="315" src="https://www.youtube.com/embed/N2RDQGRBrSY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 # Examples
+
 <https://github.com/philzook58/egg-smol/tree/scratchpad2/tests>
 
 ## Shortest Path
@@ -88,8 +89,6 @@ The canonical datalog program is path connectivity.
 
 There are a couple of twists we can add to this.
 
-
-
 ```eggsmol
 ;re
 (function edge (i64 i64) i64 :merge (min old new))
@@ -105,10 +104,10 @@ There are a couple of twists we can add to this.
 (print path)
 ```
 
-A second interesting twist is 
-
+A second interesting twist is
 
 ## List Programming
+
 Some simple functional programming style manipulation of lists.
 We wrap the primiive `i64` type in `Int` in order to get equational rewriting behavior. This is a common pattern for primitives. In order for a function to "return" it needs some way of tracking where it returns to. In an ordinary lnaguage, this information is held on the stack. There is no stack in egglog, so instead one registers a new "equivalence id" that is eventually unioned to the result.
 
@@ -140,15 +139,7 @@ We wrap the primiive `i64` type in `Int` in order to get equational rewriting be
 
 ## Arithmetic Simplification
 
-
-
-
 ## Negation and Wellfounded Semantics
-
-
-
-
-
 
 ## Geometry
 
@@ -240,14 +231,12 @@ We wrap the primiive `i64` type in `Int` in order to get equational rewriting be
 
 ```
 
-
 ## Delta equality
-https://alfa.di.uminho.pt/~nevrenato/probprogschool_slides/Prakash.pdf
+
+<https://alfa.di.uminho.pt/~nevrenato/probprogschool_slides/Prakash.pdf>
 Dreal uses delta equality
 Subsumptive character. a =eps b  --> a =eps' b  if  eps <= eps'
 | a - b | <= eps. This is two inequalities, sure.
-
-
 
 Order O(epsilon) classes are actual equality classes. njection functions can treat that
 Congruence now involes the derivatives?
@@ -255,10 +244,10 @@ x =eps x' -> f(x) =df(eps) f(x')
 
 Tightest eps is shortest path. Floyd Warshall. Bummer.
 Minimum spanning tree as approximation?
-LCA is convenient. Rem's algorithm? 
+LCA is convenient. Rem's algorithm?
 
 heursistic:
-union(a,b,l) 
+union(a,b,l)
 x = lca(a,b)
 if d(a,x) + d(x,b) < l:
   if d(a,x) < d(x,b):
@@ -268,11 +257,10 @@ if d(a,x) + d(x,b) < l:
 
 eh seems pretty fishy.
 
-
-
 Axioms of a metric = shortest path
 See for example my encpding of shortest path. symmettry makes it way more natural (quasimetric is assymettric metric. No one ever does this)
 <https://en.wikipedia.org/wiki/Metric_space>
+
 ```bash
 echo "
 ;re
@@ -309,9 +297,8 @@ We don't persay require a lattice. Could just be regulatr partial order + subsum
 Monotonic functions have a property similar to congruence.
 Also continuous functions have epsilon delta definitions.
 
-
-
 ## Box / Generic DataStructures
+
 You can strip off the simple types of egglog by making a universal box type. This is not so bad as in other languages because datatypes are not closed.
 Can make universal list functions in this manner
 
@@ -332,9 +319,10 @@ egglog /tmp/box.egg
 
 ```
 
-Note that egglog has [open datatypes](https://www.andres-loeh.de/OpenDatatypes.pdf) by default. 
+Note that egglog has [open datatypes](https://www.andres-loeh.de/OpenDatatypes.pdf) by default.
 
 ## Disequality
+
 There is no current proposal for a runtime mechanism for disequality that is much better than a brute force `dif/2` table.
 
 ```bash
@@ -373,13 +361,13 @@ egglog /tmp/dif.egg
 ```
 
 ## Inequality
+
 inequalty / partial orders is a very common pattern. What can be done
 
-
 ## Choice Domains
+
 Souffle has a feature called choice-domains which allows something to be set once.
 This is emulatable in egglog using the unusual merge function which just tosses aways any new values
-
 
 ```eggsmol
 (function choice-example (i64) i64 :merge old)
@@ -416,6 +404,7 @@ This is emulatable in egglog using the unusual merge function which just tosses 
 ```
 
 ## Refining equalities
+
 Geometry example - directed lines refine
 
 partial functions - restriction of domain
@@ -463,9 +452,7 @@ int(ball(R))
 int(interval(a,b), e*d(x)), dim(e) = 0 -> int(interval(0,1), d(y))
 ```
 
-
 Differential forms works. These aren't binding operations anymore. sonova.
-
 
 `sin(x) = 1`. we are learing about x. exists x. sin(x) = 1
 
@@ -475,13 +462,10 @@ The function sin(x) is more like the second. `x` is a coordinate function M -> R
 `sin : (R -> R) -> (M -> R)` is partially applied `comp(sin : R -> R,_)`.
 Because of this, we can build in the chain rule.
 
-
 A different modelling paradigm is to use hoas.
 `int(\x -> sin(x))` Now x is alpha bound.
 
-
-sum, set, fun, differential. WHat are the meanings of these symbols? 
-
+sum, set, fun, differential. WHat are the meanings of these symbols?
 
 Integration:
 See rubi
@@ -493,16 +477,13 @@ int(sin)
 
 ```
 
-
-https://github.com/egraphs-good/egg/blob/c590048817a35236ce9910e7c1e0b1fac670822c/tests/math.rs#L179
+<https://github.com/egraphs-good/egg/blob/c590048817a35236ce9910e7c1e0b1fac670822c/tests/math.rs#L179>
 Is there an example where the naive approahc is wrong?
 
 Interesting. Metatheory used extraction then diff technqiue
-https://github.com/JuliaSymbolics/Metatheory.jl/blob/9045c7df97b910e57a644bf9c5ddc152d7b0d869/test/integration/cas.jl#L78
-
+<https://github.com/JuliaSymbolics/Metatheory.jl/blob/9045c7df97b910e57a644bf9c5ddc152d7b0d869/test/integration/cas.jl#L78>
 
 Egraph starts at syntax and moves progressively towards semantics. You have to have a semantics in mind.
-
 
 Can I do summation? Discrete exterior calculus I guess. Manifestly working in "2d" simplicial space avoids summation swapping problem.
 
@@ -603,9 +584,9 @@ vampire /tmp/integ.tptp
 
 ```
 
-
 ## BitVectors
-https://stackoverflow.com/questions/8273033/use-of-term-rewriting-in-decision-procedures-for-bit-vector-arithmetic
+
+<https://stackoverflow.com/questions/8273033/use-of-term-rewriting-in-decision-procedures-for-bit-vector-arithmetic>
 
 ```python
 from z3 import *
@@ -640,7 +621,6 @@ for rule in rw:
   print(rule.sexpr().replace("=", "rewrite"))
 
 ```
-
 
 ```python
 # micro ruler
@@ -680,8 +660,6 @@ for e1 in range(10):
 """
 print(exprs)
 ```
-
-
 
 ```bash
 echo "
@@ -789,6 +767,7 @@ with urllib.request.urlopen("https://nightly.cs.washington.edu/reports/ruler/169
 ```
 
 ## Peano
+
 ```eggsmol
 ;re
 (datatype Nat (Z) (S Nat))
@@ -822,8 +801,8 @@ with urllib.request.urlopen("https://nightly.cs.washington.edu/reports/ruler/169
 
 ```
 
-
 Binary nats
+
 ```eggsmol
 (datatype Even (Z) (SO Odd) (DE Even) (DE Odd))
 (datatype Odd (SE Even))
@@ -836,8 +815,8 @@ Binary nats
 
 ```
 
-
 ## BDDs
+
 ```eggsmol
 ; Binary Decision Diagrams are if-then-else trees/ compressed tries that hash cons their leaves
 ; This is easily expressible in the facilities provided. Everything in egg-smol is automatcally shared
@@ -938,6 +917,7 @@ Binary nats
 ```
 
 ## First Class Union Find
+
 ```eggsmol
 ; A "first class" / local / scope union find is encodable in egglog.
 ; This is perhaps not surprising, since there are also encodings to 
@@ -1060,26 +1040,34 @@ Binary nats
 ## Kleene Algebra
 
 ## Matrices
+
 ## Category
+
 ## Typechecking
+
 [Eqlog](https://www.mbid.me/posts/type-checking-with-eqlog-polymorphism/)
 Vec example
 Yihong hindley Milner
 
-
-; https://courses.engr.illinois.edu/cs522/sp2016/PureTypeSystemsInRewritingLogic.pdf
+; <https://courses.engr.illinois.edu/cs522/sp2016/PureTypeSystemsInRewritingLogic.pdf>
 ; Pure Type Systems in Rewriting Logic:
 ; Specifying Typed Higher-Order Languages
 ; in a First-Order Logical Framework
 
 ## Intervals
+
 [Interval Constraint Propagation](https://en.wikipedia.org/wiki/Interval_propagation)
+
 ## Context
+
 Sam's paper. Assume nodes.
+
 ## Lambdas
+
 First class function objects.
 
 Non capturing lambdas: Just can pull out of an arguments object.
+
 ```
 (datatype Fun)
 (datatype Args (args))
@@ -1118,7 +1106,6 @@ Non capturing lambdas: Just can pull out of an arguments object.
 
 ```
 
-
 ```
 (datatype Lambda (Lam Expr))
 (datatype Expr (EnvVar i64) (Var i64) (Add Expr Expr))
@@ -1132,24 +1119,20 @@ Non capturing lambdas: Just can pull out of an arguments object.
 
 ```
 
-
 ### Normalization by Evaluation
 
-
-
 ## Let
+
 `let` is a reified notion of sharing or subsitutions. There is a calculus of pushing lets through. `let` could be written as `subst`. They are very related notions.
 Application of a lambdas converts it to a let.
 
+<https://github.com/remysucre/triangles/blob/main/src/main.rs>
 
-
-https://github.com/remysucre/triangles/blob/main/src/main.rs
 ## Polynomials
 
 ## Arrays/Maps
+
 One of the most useful SMT theories is that of arrays. Arrays can equally be called the theory of total maps.
-
-
 
 ```eggsmol
 (datatype Int (Lit i64))
@@ -1158,9 +1141,7 @@ One of the most useful SMT theories is that of arrays. Arrays can equally be cal
 
 ```
 
-
 Observation Tries - do a trie set/map based on observations.
-
 
 ```eggsmol
 ; Smtlib theory of arrays
@@ -1241,8 +1222,9 @@ Observation Tries - do a trie set/map based on observations.
 ```
 
 ## Resolution
-https://github.com/inpefess/tptp-lark-parser/tree/master
-https://github.com/AndrzejKucik/tptp_python_parser
+
+<https://github.com/inpefess/tptp-lark-parser/tree/master>
+<https://github.com/AndrzejKucik/tptp_python_parser>
 
 ```python
 from tptp_lark_parser import TPTPParser
@@ -1308,6 +1290,7 @@ Do Sets "just work" now?
 ```
 
 ## SMTLIB
+
 ```python
 import egglog
 from z3 import *
@@ -1324,6 +1307,7 @@ def format(e):
 ```
 
 ## The Chase
+
 The procedure of egglog is intimately related to the chase.
 
 The chase is used for reasoning about conjunctive queryes under schema (functional dependencues, tuple gen deps, eq gen deps). Data migration, some other things.
@@ -1331,12 +1315,14 @@ The chase is used for reasoning about conjunctive queryes under schema (function
 Understand chase applications, translate when possible to egglog
 
 ## Partial Application
+
 `call` is super useful
 The applicative encoding
 We can do it manually to see how useful it is
 Lambda lifting for binders
 
 Monads / algerbaic effects
+
 ```egglog
 
 (function cont1/0)
@@ -1367,9 +1353,11 @@ Monads / algerbaic effects
 ```
 
 ## RVSDG
+
 SSA can be converted to a purely functional program <https://www.cs.princeton.edu/~appel/papers/ssafun.pdf>
 
 The recipe is:
+
 - make a function defintion for each block with the block's name
 - Each phi node actually corresponds to a function call at the end of the incoming block. These function calls carry the variables that need to go into the function body. The outputs of the phi nodes are the arguments of the current block-function
 
@@ -1389,34 +1377,24 @@ let fact x =
 
 ```
 
-
-
 We want as much to be dataflow as possible. That is where egraph shines.
 
-An interstig design angle is to disallow varable capture. This is what sharpe's optir is doing. 
+An interstig design angle is to disallow varable capture. This is what sharpe's optir is doing.
 This is also what lambda-lifting does. Lambda lifting turns capture into threading extra parameters. This requires adjuestment of call sites of functions, so if you don't know what function you're calling, it doesn't work?
 
 Now "de bruijn" indces aren't expressing traversing binding sites, it is just the variable argument number.
-
-
 
 [Supercombinators](https://en.wikipedia.org/wiki/Supercombinator). SKI combinators are sufficient to express lambda calculus. But then you are doing a ton of equational manipulations. Doing a bunch of combinator reductions or manipulations for basically and often doesn't match the efficient thing for a target platform.
 The supercombinator idea is to
 
 Egraphs are essentially first order. Compiling programs to a first order form is analagous in itself to first ordering lambda expressions, or compiling to assembly. Egraphs are almost a machine.
 
-
- 
-
 Super blocks
-https://www.cs.princeton.edu/courses/archive/spr04/cos598C/lectures/05-Superblocks.pdf
-
+<https://www.cs.princeton.edu/courses/archive/spr04/cos598C/lectures/05-Superblocks.pdf>
 
 Is this even interesting? C doesn't really have a notion of variable capture in function calls. But mutation itself is a form of let capture
 Allow multi-arity. Disallow
-Everything must be 
-
-
+Everything must be
 
 ```
 (datatype 1->1)
@@ -1472,12 +1450,17 @@ Everything must be
 (rewrite (= f  ... (call f)) (loop ))
 ```
 
+```egglog
+(function block1 () Int)
+
+```
 
 ## Algebra of Programming
+
 I feel as though RVSDG are a first order functional language using supercombinators
 
-
 ## AC
+
 See blog post for some ideas
 
 Primitive multisets. How much does this get you?
@@ -1531,26 +1514,24 @@ def items(d):  # (?x + ...)
 
 ```
 
-
 # Egglog0 posts
+
 <https://www.philipzucker.com/egglog0>
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/dbgZJyw3hnk?start=2725" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 Github repo: <https://github.com/philzook58/egglog0>
-Read more here: 
+Read more here:
+
 - [Talk abstract](https://github.com/philzook58/egglog0-talk/blob/main/out.pdf)
 - <https://www.philipzucker.com/egglog-checkpoint/> - Early version of egglog, motivations.
 - <https://www.philipzucker.com/egglog2-monic/> - A simple category theory theorem about pullbacks.
 - <https://www.philipzucker.com/egglog-3/> - Arithmetic, SKI combinator, datalog, lists examples
 
-
 # Souffle Posts
 
-
-
-
 ## Merging Database
+
 It's interesting (to me) how similar this is to the union find dict. The difference is that all the tables share the same union find.
 This formulation of merge and default functions is not mine. Some mix of yihong, max, remy, or zach came up with it.
 
@@ -1620,7 +1601,6 @@ class DB:
 
 # merge dicts have their own definition of union
 ```
-
 
 ```python
 from typing import TypeVar, Generic, Callable
@@ -1716,7 +1696,7 @@ print(path)
 
 - The edges of comprenhensions start creaking. They aren't really overloadable enough
 - flattening `add[(add(x,y),z)`. This is tablized adt datalog, not persay egglog
-- 
+-
 
 ```python
 
@@ -1730,16 +1710,17 @@ class MergeDict():
             for k, arg in zip(ks,args):
                 yield from arg(k) kind of
 ```
+
 Modelling as
-type gen = (subst, outval) -> list subst 
+type gen = (subst, outval) -> list subst
 This is basically top down ematching search.
 I guess we could use [] for bottom up, and () for top down... that's not horrible.
 Could literally try to do embedded gj. The idea being it is in some sense simpler.
 
 Hmm. It's kind of an overloading of how subst dicts are merged... We could do normalization there?
 
-
 Flattening is related to compiling to assembly. Very related. Hmm.
+
 ```ocaml
 type expr = loc * bindings
 let foo (a, froms, wheres) = 
@@ -1779,15 +1760,16 @@ def func(f):
 print(foo(foo(x))())
 
 ```
-How do we deal with variables? It's like datalog problems but more so.
-`from foo as row, (select row.a) as x, ` does this work?
-analog of turn `let x = row.a` into `for x in [row.a]` where select plays role of []. Not really that much less complex. You still need to maintani a compile time env with a bool instead of a column.
 
+How do we deal with variables? It's like datalog problems but more so.
+`from foo as row, (select row.a) as x,` does this work?
+analog of turn `let x = row.a` into `for x in [row.a]` where select plays role of []. Not really that much less complex. You still need to maintani a compile time env with a bool instead of a column.
 
 What about GJ. GJ is actually pretty simple.
 
 Trie. `(k, )` `dict[dict]
 [None] = data held
+
 ```python
 def insert(trie, k, v):
   node = trie
@@ -1836,10 +1818,10 @@ def rel2(table):
 insert into mytab select root(a), root(b), root(c) from mytab on conflict set c = union(c, excluded.c)
 ```
 
-
 In the experiment, I tried internalizing the union find into sql. Maybe it is simpler not to
 
 Wasm based union find? Would that be fun?
+
 ```python
 class BadUF():
   # no path compression. no depth stroage.
@@ -1880,6 +1862,7 @@ cur.execute("insert into add select a,b from add as l, add as r where _root(l.ro
 ```
 
 ## Extraction as datalog
+
 ```souffle
 
 .decl add0(x:number, y : number, z : number)
@@ -1913,12 +1896,9 @@ tree(z, $Add(tx,ty)) :- tree(x,tx), tree(y,ty), add(x,y,z).
 
 ```
 
-
-
 # Misc
 
-https://www.mbid.me/eqlog-algorithm/ Martin E. Bidlingmaier basically developed a system similar or identical to egglog on completely parallel lines. Maybe that means it's a good/natural idea?
-
+<https://www.mbid.me/eqlog-algorithm/> Martin E. Bidlingmaier basically developed a system similar or identical to egglog on completely parallel lines. Maybe that means it's a good/natural idea?
 
 ## Modulo theories
 
@@ -1926,7 +1906,6 @@ Grobner bases are ~ knuth bendix method. Completion algorithm.
 Modulo some a priori known equations.
 Do grobner as a preprocessing step. Akin to running knuth bendix as preprocesing step.
 = polynomials as objects modulo grobner. This is like datalog modulo term rewriting.
-
 
 relations vs objects vs rules.
 first class rules (rules as objects). first class sets (relations as objects). both blur the lines.
@@ -1950,12 +1929,9 @@ linear objective subject to difference constraints? probably.
 Best interior octagon? Usually get a bunch of feasible points and construct convex hull. Can I build an octagon out of points? What are "best" points. Well, I could construct a polyhedra out of the points.
 
 ## Propagators
+
 The whole database as a cell
 Each relation as a cell
-
-
-
-
 
 Context
 R(x+y)
@@ -2011,7 +1987,6 @@ select * from plus, ac as n1, ac as n2, lit as x1, lit as x2
 --select * from ac 
 -- groupby ac.j
 ```
-
 
 ### slog
 
@@ -2177,6 +2152,7 @@ print(parser.parse("path(x,z) :- edge(x,y), path(y,z)."))
 print(parser.parse("path(x,z) :- edge(x,\"y\"), path(y,z)."))
 print(parser.parse("path(x,p(z)) :- add(mul(x,y), div(y,z)), y = x."))
 ```
+
 Rename columns to x0-xn.
 Multiheaded rules.
 Accumulating semantics for multihead is kind of easy. Weird though.
@@ -2197,8 +2173,8 @@ select * from bar;
 select * from sqlite_sequence;
 ```
 
-
 Using `default` instead of rowid
+
 ```sql
 create table foo(a,b,res default -1);
 --describe foo;
@@ -2234,7 +2210,6 @@ create trigger after insert
 insert into foo (a,b) values (1 ,2);
 select * from foo;
 ```
-
 
 ```
 counter = 0
@@ -2286,6 +2261,7 @@ plus = func("plus")
 x = var("x")
 print(plus(x,x)(None)) # This is ugly. I should also be returning the row.
 ```
+
 Ugh, so I need to pass something down the tree so the vars can do something, or I can make retvals either var or not. I could make the env have concat merge semantics and collect up at the end. That's what I did in snakelog
 
 a.1.1 = b.1.1, a.h =
@@ -2337,18 +2313,11 @@ print(foo(foo(x))())
 
 Wait, would the join form be cleaner?
 JOIN foo, a on a.rowid = foo.
-Meh. Kind of. 
-
-
-
-
-
-
-
+Meh. Kind of.
 
 # GJ scribbles
 
-The incoming variables take signal values 
+The incoming variables take signal values
 
 ```python
 
@@ -2372,7 +2341,6 @@ let edge = function
 
 ```
 
-
 ## Bottom Up
 
 ```ocaml
@@ -2384,7 +2352,7 @@ Value is [(a, env)]
 Value is Tree -> eid
 Rather than using named env, use positional env. Interesting.
 
-Var is just 
+Var is just
 
 ```python
 _add = {}
@@ -2405,7 +2373,6 @@ def var():
   return { eid : eid for eid in range(maxeid) }
 
 ```
-
 
 ```python
 
@@ -2432,29 +2399,32 @@ class DB():
 
 ```
 
-
 Normalized view
 
 ```sql
 create view eadd select r1.y, r2.y, r3.y, from root as r1, root as r2, root as r3, add where r1.x = add.x, r2.x = add.y, r3.x = add.z
 
 ```
+
 # Termination
+
 This is Yihong's jam.
 
 Two simple termination improvers:
+
 - Do not allow make-set. Do not allow primitive functions? These can be written as rules with extra clauses in the body
 - Yihong had some kind of depth tracking thing. track smallest term size in eclass. Refuse to build things that are too big. You run out of trees.
 
 Stratification of types a la EPR. Why are functions to unit ok (datalog)? Bounded lattices.
 
-
 # Rulesets
+
 Not all rules are made a like
+
 - Simp rules - (x + 0) = x. Not necessarily terminating even if they are in the term rewriting ocntext, which is distrubing.
 - defintional rules. decreating abstraction, bit blasting.
 - refold rules, decompilation. Increasing abstraction. Pattern finding.
-- churn rules - like AC. Kind of not exploding, but not very goal directed. 
+- churn rules - like AC. Kind of not exploding, but not very goal directed.
 - generative rules - building new objects for which there are often infinitely many
 
 To what degree can these be automatically identified?
@@ -2477,8 +2447,8 @@ To what degree can these be automatically identified?
 egraph decomp
 rewrite imp
 
-
 examples
+
 - geom
 - sharing logic min
 - matrices
@@ -2490,21 +2460,18 @@ asp - neighborhood
 custom search for extreact (stochstic)
 ]
 
-intgrals and sums. bound vars. 
+intgrals and sums. bound vars.
 aegraph picat
 egglog ocaml
-theories? linear vectors 
+theories? linear vectors
 
 egraph isel
 
-
 design a problem to thwart greedy
-
 
 x = bar(x1, a)
 y = biz(y1, a)
 z = z1 + a
-
 
 foo(x,y,z)
 
@@ -2512,17 +2479,16 @@ cost x y z : 10
 cost x1 : 1
 cost a : 10
 
-
 x = x1(a)
 y = y1(a)
 z = z1(a)
 
 extract foo(x,y,z)
 
-
 Unison - hashes every construct to be globally accessible. For mutually recursive definitions, it tie breaks.
 
 Egglog doesn't really allow recursive defintions (should it?)
+
 ```
 (function zeros () List)
 (union zeros (Cons 0 zeros))
@@ -2531,11 +2497,9 @@ Egglog doesn't really allow recursive defintions (should it?)
 (union zeros1 (Cons 0 zeros1))
 
 ```
+
 There is a loop here. `zeros1` is not dervied to be `zeros` because there is no isomorphism finder.
 `zeros` is not really "defined" to be `cons 0 zeros`. It is "equal"
-
-
-
 
 Backend issues
 scan vs binary join vs gj

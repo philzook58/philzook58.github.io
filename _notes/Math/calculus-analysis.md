@@ -15,6 +15,7 @@ title: Calculus
   - [Completeness of Reals](#completeness-of-reals)
   - [Constructive Analysis](#constructive-analysis)
 - [Limits](#limits)
+- [Hyperreals](#hyperreals)
 
 Is there anything to even say about calculus?
 Probably!
@@ -102,3 +103,9 @@ Marshal
 [Computable Analysis](https://en.wikipedia.org/wiki/Computable_analysis)
 
 # Limits
+
+# Hyperreals
+
+Goldblatt
+
+Compactness is important here? Huh.

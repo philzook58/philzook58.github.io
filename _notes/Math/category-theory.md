@@ -32,13 +32,14 @@ title: Category Theory
 - [Higher Category](#higher-category)
 - [Topos](#topos)
 - [Processes](#processes)
-- [Categorical Databases](#categorical-databases)
 - [Sheaves](#sheaves)
 - [Profunctors](#profunctors)
 - [Optics](#optics)
 - [Logic](#logic)
-- [Computational Category Theory](#computational-category-theory)
 - [Internal Language](#internal-language)
+- [Applied Category Theory](#applied-category-theory)
+  - [Categorical Databases](#categorical-databases)
+  - [Computational Category Theory](#computational-category-theory)
 - [Resources](#resources)
 
 EPR?
@@ -204,12 +205,6 @@ Weird notions of truth value are fun.
 
 Time
 
-# Categorical Databases
-
-schema is a finite category
-Data lives over it
-Mappings between schema describe
-
 # Sheaves
 
 # Profunctors
@@ -228,14 +223,34 @@ A proof of `A |- B` is the basic "morphism". A proof is a tree. We can perhaps a
 - Existentials and universals as adjunctions
   Different proofs are different morphisms between the same objects.
 
-# Computational Category Theory
+# Internal Language
+
+What is this? Cody talks about this a lot.
+
+# Applied Category Theory
+
+[Compositional Modeling with Decorated Cospans - Baez](https://www.youtube.com/watch?v=skEsCiIM7S4&ab_channel=GReTASeminar)
+
+<https://act2023.github.io/> International Conference on Applied Category Theory
+
+## Categorical Databases
+
+schema is a finite category
+Data lives over it
+Mappings between schema describe
+
+## Computational Category Theory
 
 - [Computational Category Theory](https://www.cs.man.ac.uk/~david/categories/book/book.pdf)
 - [evan patterson](https://www.epatters.org/wiki/algebra/computational-category-theory.html)
 
+<https://github.com/homalg-project/CAP_project> GAP package. Homological algebra focus
+
 [hey I got on hacker news](https://news.ycombinator.com/item?id=23058551)
 
 [catlab.jl](https://www.algebraicjulia.org/)
+
+[gatlab](https://www.youtube.com/watch?v=Jdl2dh_hY3c&ab_channel=AppliedCategoryTheory)
 
 homotopy.io
 globular
@@ -251,10 +266,6 @@ From a programming perspective I think there are a couple contributions:
 - Point free DSLs are really nice to work with as library/compiler writer. It makes optimizations way easier to recognize and implement correctly. Named references are phantom links attaching different points in a syntax tree and make it hard to manipulate them correctly. In slightly different (and vague) terms, category theory gives a methodology to turn abstract syntax graphs into trees by making all links very explicit.
 
 I can't comment much on what category theory contributes to mathematics, but I think there are similar points. I think category theory can make precise analogies between extremely disparate fields like logic, set theory, and linear algebra. I think categorical intuitions lead to clean definitions when specialized to some particular field. Combinatory categorical logic does make some aspects of logic less spooky.
-
-# Internal Language
-
-What is this? Cody talks about this a lot.
 
 # Resources
 
@@ -288,6 +299,18 @@ Processes are a timey database.
 [sheaf theory through examples](https://mitpress.mit.edu/9780262542159/sheaf-theory-through-examples/)
 
 [chyp](https://github.com/akissinger/chyp)interactive string diagram prover. Also graph rewrite system... hmmmmmm.
+
+[Categorical diagram editor](https://www.youtube.com/watch?v=iWSw4RK8wEk&list=PLGAzEMA0TM_WxCnc__yLOFoS0_k-liev0&index=4&ab_channel=GReTASeminar)
+
+[ghica keynote ICGT](https://www.youtube.com/watch?v=adHzaC5vVDg&ab_channel=GReTASeminar)
+[Hierarchical string diagrams and applications](https://arxiv.org/abs/2305.18945)
+Greta. See Graphs. See term rewriting.
+
+Cartographer
+globular
+quantomatic
+chyp
+homotopy.io
 
 ```vampire
 % clark completion
