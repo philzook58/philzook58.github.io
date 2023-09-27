@@ -1,3 +1,7 @@
+---
+layout: post
+title: Egglog
+---
 
 - [Welcome to Egglog](#welcome-to-egglog)
 - [Examples](#examples)
