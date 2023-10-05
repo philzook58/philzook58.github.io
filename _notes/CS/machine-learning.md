@@ -47,21 +47,20 @@ title: Machine Learning
   - [Backprop Technqiues](#backprop-technqiues)
   - [Frameworks](#frameworks)
 - [Hugging Face](#hugging-face)
-    - [fastai](#fastai)
+  - [fastai](#fastai)
   - [Resources](#resources)
 - [Reinforcement Learning](#reinforcement-learning)
-- [Verification](#verification-1)
   - [Resources](#resources-1)
 - [Old Reinforcement learning](#old-reinforcement-learning)
 
-
 See also:
+
 - Optimization
 
 [ml for proofs bibliography](https://github.com/tlringer/ml-for-proofs)
 
-
 # Applications
+
 - Speech recognition
 - Image recognition
 - branch prediction
@@ -70,21 +69,22 @@ See also:
 - recommender systems
 - Fluid sim accelerate
 - system identification
-- learning program invariants http://pranav-garg.com/papers/cav14.pdf https://www.cs.purdue.edu/homes/suresh/papers/pldi18.pdf
+- learning program invariants <http://pranav-garg.com/papers/cav14.pdf> <https://www.cs.purdue.edu/homes/suresh/papers/pldi18.pdf>
 
 # Data
-outliers
 
+outliers
 
 augmentation - sometimes you can apply trasnformations to the data in ways. For example rotating images if you want the answer to not depend on direction. Or adding noise if you want it to ignore noise. Warping.
 
 In some problems it's nice that you can cripple your data and train it to undo the crippling
+
 - colorizing images
 - interpolating frames
 - super resolution
 
-
 # Good Practice? What's the right word here
+
 Test and training sets
 cross validation
 data cleaning
@@ -105,25 +105,26 @@ Regression - continous output
 
 one hot encoding
 
-
-
 ## Linear in WHAT?
+
 ## Nearest neighbor
+
 ## SVM
+
 ## Kernel
+
 ## decision trees
 
-
 ### Boosting
-https://en.wikipedia.org/wiki/Boosting_(machine_learning)
+
+<https://en.wikipedia.org/wiki/Boosting_(machine_learning)>
 
 Adaboost
 [XGboost](https://en.wikipedia.org/wiki/XGBoost)
 
-https://en.wikipedia.org/wiki/Multiplicative_weight_update_method a generalizatio of the idea of combinigh expert opinions
+<https://en.wikipedia.org/wiki/Multiplicative_weight_update_method> a generalizatio of the idea of combinigh expert opinions
+
 ### Random Forest
-
-
 
 # Unsupervised
 
@@ -134,41 +135,46 @@ hierarchical clustering
 dimsenionlaity reduction?
 
 # Visualization
+
 t-sne
 umap
 
 # Learning Theory
+
 VC dimension
 
 PAC probably apprximately correct
-https://en.wikipedia.org/wiki/Probably_approximately_correct_learning
+<https://en.wikipedia.org/wiki/Probably_approximately_correct_learning>
 
 # Overfitting
-
 
 bias variance
 
 # Bayesian Shit
+
 pyro pymc3
-stan 
+stan
 particle filters?
 probalistic programming
 
 ## Regularization
+
 [diffrax](https://twitter.com/PatrickKidger/status/1493239723497857025?s=20&t=vnpYi0b4BbBHdrISb_Kxfw) JAX powered differential equations.
 
 # Deep Learning
-https://github.com/AUTOMATIC1111/stable-diffusion-webui
 
+<https://github.com/AUTOMATIC1111/stable-diffusion-webui>
 
 ## Convolutional
 
 ## Recurrent
+
 lstm
 gru
 blowup problem / vanishing gradient
 
 ## tidbits
+
  Attention
  Capsule
  transformers
@@ -176,7 +182,7 @@ blowup problem / vanishing gradient
 batch normalization
 
 dropout
-grokking? overfit and keep going. Sometimes it gets better later. Bizarre. Don't count on this. https://mathai-iclr.github.io/papers/papers/MATHAI_29_paper.pdf
+grokking? overfit and keep going. Sometimes it gets better later. Bizarre. Don't count on this. <https://mathai-iclr.github.io/papers/papers/MATHAI_29_paper.pdf>
 autoencoders
 GANs
 
@@ -185,8 +191,8 @@ graph neural networks?
 transfer learning
 
 # Verification
-Adversarial examples
 
+Adversarial examples
 
 Generate and Test -> use or augment generate with chatgpt
 
@@ -199,14 +205,22 @@ Automata verification of langchains. Blackbox the language model. Verified parsi
 
 "Function call" api
 
+Talia's AI for math <https://docs.google.com/document/d/1kD7H4E28656ua8jOGZ934nbH2HcBLyxcRgFDduH5iQ0/edit>
+
+<https://huggingface.co/datasets/hoskinson-center/proof-pile> proof pile
+
+lean dojo
+
+[Neural Network Verification with Proof Production](https://arxiv.org/pdf/2206.00512.pdf)
+
 # Famous Models
+
 word2vec
 node2vec
 
 code2vec
 
 copilot
-
 
 gato
 
@@ -219,16 +233,18 @@ alexnet
 vgg
 alphafold
 alpha zero / go
-BERT - masked language modelling. mask some words. predict them. next sentence prediction - did this sentence follow from the previous?  https://huggingface.co/bert-base-uncased
+BERT - masked language modelling. mask some words. predict them. next sentence prediction - did this sentence follow from the previous?  <https://huggingface.co/bert-base-uncased>
 
-https://github.com/facebookresearch/segment-anything 
+<https://github.com/facebookresearch/segment-anything>
 
 whisper
 
 instructgpt
 
 ## Tasks
-https://huggingface.co/models look at tasks tab
+
+<https://huggingface.co/models> look at tasks tab
+
 - question answering
 - summarization
 - conversational
@@ -239,62 +255,68 @@ https://huggingface.co/models look at tasks tab
 
 ### speech recognition
 
-https://huggingface.co/openai/whisper-large-v2
-https://github.com/openai/whisper
+<https://huggingface.co/openai/whisper-large-v2>
+<https://github.com/openai/whisper>
 
 ```bash
 whisper audio.flac --model small
 whisper --model large-v2
 ```
-https://github.com/openai/whisper/discussions/categories/show-and-tell discussions
 
+<https://github.com/openai/whisper/discussions/categories/show-and-tell> discussions
 
-https://github.com/ggerganov/whisper.cpp inference on cpu. 
+<https://github.com/ggerganov/whisper.cpp> inference on cpu.
 
-https://colab.research.google.com/drive/1WLYoBvA3YNKQ0X2lC9udUOmjK7rZgAwr?usp=sharing
+<https://colab.research.google.com/drive/1WLYoBvA3YNKQ0X2lC9udUOmjK7rZgAwr?usp=sharing>
 Colab is nice. medium run.s
 
 Man, whisper is pretty dang good
 
 ### code
-https://huggingface.co/bigcode/starcoder
+
+<https://huggingface.co/bigcode/starcoder>
+
 ### math
+
 [let's verify step by step](https://cdn.openai.com/improving-mathematical-reasoning-with-process-supervision/Lets_Verify_Step_by_Step.pdf )
 
 ## GAN
-https://vcai.mpi-inf.mpg.de/projects/DragGAN/ drag your gan
+
+<https://vcai.mpi-inf.mpg.de/projects/DragGAN/> drag your gan
 
 ## Deepfakes
 
 ### LoRA
+
 Low rank adaptation
-https://arxiv.org/abs/2106.09685
+<https://arxiv.org/abs/2106.09685>
 But people are also using the technique on stable diffusion
 [Using LoRA for Efficient Stable Diffusion Fine-Tuning](https://huggingface.co/blog/lora)
 
 Lora let's you fine tune big models by injecting in small layers that are easier to train
 
-PEFT parameter efficient fine tuning https://www.youtube.com/watch?v=YVU5wAA6Txo&ab_channel=code_your_own_AI
-https://github.com/huggingface/peft
+PEFT parameter efficient fine tuning <https://www.youtube.com/watch?v=YVU5wAA6Txo&ab_channel=code_your_own_AI>
+<https://github.com/huggingface/peft>
 
-https://civitai.com/ people post their lora updates
+<https://civitai.com/> people post their lora updates
 
-https://twitter.com/rasbt/status/1642161887889567745 soft finetuning
+<https://twitter.com/rasbt/status/1642161887889567745> soft finetuning
 prefix finetuning
 
 [Fine-tuning 20B LLMs with RLHF on a 24GB consumer GPU](https://huggingface.co/blog/trl-peft)
 
-https://github.com/artidoro/qlora qlora
-https://towardsdatascience.com/qlora-fine-tune-a-large-language-model-on-your-gpu-27bed5a03e2b
-https://huggingface.co/blog/4bit-transformers-bitsandbytes
+<https://github.com/artidoro/qlora> qlora
+<https://towardsdatascience.com/qlora-fine-tune-a-large-language-model-on-your-gpu-27bed5a03e2b>
+<https://huggingface.co/blog/4bit-transformers-bitsandbytes>
 
 ### Stable Diffusion
-https://www.fast.ai/posts/part2-2023.html course
+
+<https://www.fast.ai/posts/part2-2023.html> course
 
 inpainting
 outpainting
 
-https://github.com/AUTOMATIC1111/stable-diffusion-webui
+<https://github.com/AUTOMATIC1111/stable-diffusion-webui>
 
 negative prompt, negative embedding
 
@@ -306,25 +328,27 @@ You can do this process in latent space (small space of autoencoder) to speed it
 
 Schedules
 
-
 ### Mixed Precision
-https://github.com/NVIDIA/apex
-https://github.com/ggerganov/llama.cpp/issues/9
-GPTQ quantization https://github.com/IST-DASLab/gptq https://huggingface.co/TheBloke
 
-https://github.com/TimDettmers/bitsandbytes
+<https://github.com/NVIDIA/apex>
+<https://github.com/ggerganov/llama.cpp/issues/9>
+GPTQ quantization <https://github.com/IST-DASLab/gptq> <https://huggingface.co/TheBloke>
+
+<https://github.com/TimDettmers/bitsandbytes>
 
 ### renting gpu
+
 vast.ai
 lambdalabs
-runpod  https://www.youtube.com/watch?v=TP2yID7Ubr4&ab_channel=Aitrepreneur
+runpod  <https://www.youtube.com/watch?v=TP2yID7Ubr4&ab_channel=Aitrepreneur>
 
 google colab provides ~15gb vram free? colab pro gives a100
 
-https://github.com/skypilot-org/skypilot
+<https://github.com/skypilot-org/skypilot>
 
 ### prompt engineering
-https://www.promptingguide.ai/
+
+<https://www.promptingguide.ai/>
 Question answer format to give a couple examples
 Start a conversation
 See openai examples page
@@ -332,55 +356,54 @@ People use seperators to denote different sections. Weird.
 
 Avoid impreciseness
 
-chain of thought prompting https://arxiv.org/abs/2201.11903
+chain of thought prompting <https://arxiv.org/abs/2201.11903>
 
-https://learn.deeplearning.ai/chatgpt-prompt-eng
+<https://learn.deeplearning.ai/chatgpt-prompt-eng>
 
-https://twitter.com/ShriramKMurthi/status/1664978520131477505?s=20 shriram racket. 
+<https://twitter.com/ShriramKMurthi/status/1664978520131477505?s=20> shriram racket.
 "You are a programming assitant that generates programs  in the Rakcet programming language. Your response should contain *only* a Racket program. It should NOT include anything else: explanation, test cases, or anything else.
 The output should be a Racke function that can be evaluared direvtly.
 It should begin with \"(define\" and end with \"), e.h., (defibe (f x) x), but replaced with the actual function you produce."
 
-https://ianarawjo.medium.com/introducing-chainforge-a-visual-programming-environment-for-prompt-engineering-bc6910be01cf
-https://github.com/ianarawjo/ChainForge
+<https://ianarawjo.medium.com/introducing-chainforge-a-visual-programming-environment-for-prompt-engineering-bc6910be01cf>
+<https://github.com/ianarawjo/ChainForge>
 Automated the prompt engineering workflow. You could ask questions you know the answer to, or evaluate code generation against test suite or what have you. The prompt is a kind of hyperparameter and you can apply the same methodolgy you might with others (random search, test sets, validation sets, etc). The llm is a fixed parametrized function like `y = ax+b` where a and b are the prompts.
 
 ### Transformers
-https://en.wikipedia.org/wiki/Attention_(machine_learning)
 
+<https://en.wikipedia.org/wiki/Attention_(machine_learning)>
 
 ## Large Language Models
-https://openai.com/research/instruction-following instructgpt RLHF reinfrocement learning human feedback
 
+<https://openai.com/research/instruction-following> instructgpt RLHF reinfrocement learning human feedback
 
 distillation. Take output from bigger more powerful model to train smaler model
 
 evaluate models by asking gpt4 about them
 
-alpaca https://crfm.stanford.edu/2023/03/13/alpaca.html llamma fine tuned. Make a bunch of examples. Make gpt3 build a dataset out of them, finetune llama on those answers
-
+alpaca <https://crfm.stanford.edu/2023/03/13/alpaca.html> llamma fine tuned. Make a bunch of examples. Make gpt3 build a dataset out of them, finetune llama on those answers
 
 Emery berger is going ham. I think basically what he is doing is grabbing pertinent data and constructing a gpt prompt
 
 [](https://huggingface.co/blog/stackllama)
 
-langchain https://www.pinecone.io/learn/langchain-intro/
-https://github.com/microsoft/semantic-kernel microsoft version of langchain?
+langchain <https://www.pinecone.io/learn/langchain-intro/>
+<https://github.com/microsoft/semantic-kernel> microsoft version of langchain?
 
-https://github.com/unitaryai/detoxify detect toxix comments. I suppose you just need to detect if the output is mean and then you can block it. AI vs AI
+<https://github.com/unitaryai/detoxify> detect toxix comments. I suppose you just need to detect if the output is mean and then you can block it. AI vs AI
 
-https://bellard.org/ts_server/  text synth server fabrice bellard
+<https://bellard.org/ts_server/>  text synth server fabrice bellard
 
-https://www.emergentmind.com/
-https://www.builder.io/blog/ai-shell
+<https://www.emergentmind.com/>
+<https://www.builder.io/blog/ai-shell>
 
 Chinchilla scaling - There is an amount of data and number of parameters that is compute optima
 
-https://news.ycombinator.com/item?id=35483933 chatdbg, another gdb chatgpt integration
+<https://news.ycombinator.com/item?id=35483933> chatdbg, another gdb chatgpt integration
 
-https://github.com/openai/tiktoken tokenizer BPE byte pair encoding https://platform.openai.com/tokenizer try out te tokenizer
+<https://github.com/openai/tiktoken> tokenizer BPE byte pair encoding <https://platform.openai.com/tokenizer> try out te tokenizer
 
-https://github.com/openai/openai-cookbook open ai cookebook
+<https://github.com/openai/openai-cookbook> open ai cookebook
 
 [sentence transformers](https://www.sbert.net/) make embeddings easily?
 
@@ -390,72 +413,75 @@ ICL - in context learning - running inferece. A set of examples in the prompt
 
 [deep to long learning](https://news.ycombinator.com/item?id=35502187) Context length is important. It scales poorly
 
-Perplexity - measurement of inaccuracy of model prediction on test set https://en.wikipedia.org/wiki/Perplexity
+Perplexity - measurement of inaccuracy of model prediction on test set <https://en.wikipedia.org/wiki/Perplexity>
 
-NLP - 
+NLP -
 unigram model - probility of individual words
 n-gram model - condtional probability of word window
 
-https://github.com/imartinez/privateGPT ingest a bunch of documents. chroma vector db
-
+<https://github.com/imartinez/privateGPT> ingest a bunch of documents. chroma vector db
 
 ### Models
-https://vectara.com/top-large-language-models/ useful summary. Probaby will be outdate in a month
 
-https://www.promptingguide.ai/models/collection
+<https://vectara.com/top-large-language-models/> useful summary. Probaby will be outdate in a month
+
+<https://www.promptingguide.ai/models/collection>
 
 - gpt-3
 - chatgpt
-- llama https://news.ycombinator.com/item?id=35100086 llama weights leaked. 4 bt quantization. https://github.com/rustformers/llama-rs
+- llama <https://news.ycombinator.com/item?id=35100086> llama weights leaked. 4 bt quantization. <https://github.com/rustformers/llama-rs>
 
-- Bloom https://huggingface.co/bigscience/bloom
-- eleuther gpt-j https://en.wikipedia.org/wiki/GPT-J https://www.width.ai/post/gpt-j-vs-gpt-3 https://github.com/EleutherAI/gpt-neox
+- Bloom <https://huggingface.co/bigscience/bloom>
+- eleuther gpt-j <https://en.wikipedia.org/wiki/GPT-J> <https://www.width.ai/post/gpt-j-vs-gpt-3> <https://github.com/EleutherAI/gpt-neox>
 
 - flan-t5 / flan-ul2 / t5-xxl
 - PaLM
 - falcon
-- 
-gpt-cerebras - the point it was trained efficiently, not that its good? https://news.ycombinator.com/item?id=35487846
-claude https://www.anthropic.com/index/introducing-claude
+-
 
-rwkv https://github.com/BlinkDL/RWKV-LM https://news.ycombinator.com/item?id=35370357  https://github.com/saharNooby/rwkv.cpp
+gpt-cerebras - the point it was trained efficiently, not that its good? <https://news.ycombinator.com/item?id=35487846>
+claude <https://www.anthropic.com/index/introducing-claude>
 
-
+rwkv <https://github.com/BlinkDL/RWKV-LM> <https://news.ycombinator.com/item?id=35370357>  <https://github.com/saharNooby/rwkv.cpp>
 
 finetunes
+
 - gpt4all - another lora finetuning of llama
 - alpaca - paid chatgpt api to generate examples to finetune llama
-- vicuna - https://lmsys.org/blog/2023-03-30-vicuna/ llama finetuned on sharegpt data
-- wizard - https://github.com/nlpxucan/WizardLM#fine-tuning 
-- https://huggingface.co/PygmalionAI/pygmalion-13b pygmalion for conversation?
-- guanaco - qlora. finetuning with quantization. https://guanaco-model.github.io/ https://huggingface.co/datasets/JosephusCheung/GuanacoDataset hmm. actually the qlora stuff might be separate
- 
-https://erichartford.com/uncensored-models uncensored models remove examples where chat refused to answr
+- vicuna - <https://lmsys.org/blog/2023-03-30-vicuna/> llama finetuned on sharegpt data
+- wizard - <https://github.com/nlpxucan/WizardLM#fine-tuning>
+- <https://huggingface.co/PygmalionAI/pygmalion-13b> pygmalion for conversation?
+- guanaco - qlora. finetuning with quantization. <https://guanaco-model.github.io/> <https://huggingface.co/datasets/JosephusCheung/GuanacoDataset> hmm. actually the qlora stuff might be separate
 
-oobabooga text-generation-webui https://github.com/oobabooga/text-generation-webui
-run on colab https://www.youtube.com/watch?v=TP2yID7Ubr4&ab_channel=Aitrepreneur
+<https://erichartford.com/uncensored-models> uncensored models remove examples where chat refused to answr
 
-https://github.com/lm-sys/FastChat/ related somehow to vicuna? Fast way to get chat server?
+oobabooga text-generation-webui <https://github.com/oobabooga/text-generation-webui>
+run on colab <https://www.youtube.com/watch?v=TP2yID7Ubr4&ab_channel=Aitrepreneur>
+
+<https://github.com/lm-sys/FastChat/> related somehow to vicuna? Fast way to get chat server?
+
 ### Data sets
+
 The Pile - eleuther ai. huge corpus for training
 
-https://huggingface.co/datasets
+<https://huggingface.co/datasets>
 
-databricks dolly https://huggingface.co/datasets/databricks/databricks-dolly-15k
+databricks dolly <https://huggingface.co/datasets/databricks/databricks-dolly-15k>
 
-oasst1 https://huggingface.co/datasets/OpenAssistant/oasst1 https://open-assistant.io/ crowd sourced chat stuff
+oasst1 <https://huggingface.co/datasets/OpenAssistant/oasst1> <https://open-assistant.io/> crowd sourced chat stuff
 
-https://sharegpt.com/ sharegpt. crowd source gpt responses. Used in some models, but then commerical use restricted
+<https://sharegpt.com/> sharegpt. crowd source gpt responses. Used in some models, but then commerical use restricted
 
+<https://huggingface.co/datasets/bigcode/the-stack> the stack. starcoder.
 
-https://huggingface.co/datasets/bigcode/the-stack the stack. starcoder.
-
-red pajama https://huggingface.co/datasets/togethercomputer/RedPajama-Data-1T clean room open source llama dataset
+red pajama <https://huggingface.co/datasets/togethercomputer/RedPajama-Data-1T> clean room open source llama dataset
 
 benchmarks
-https://lmsys.org/blog/2023-05-03-arena/ open source battle between llm
-https://huggingface.co/datasets/glue general langhguae understanding evaluation benchmark https://gluebenchmark.com/
-### Openai 
+<https://lmsys.org/blog/2023-05-03-arena/> open source battle between llm
+<https://huggingface.co/datasets/glue> general langhguae understanding evaluation benchmark <https://gluebenchmark.com/>
+
+### Openai
+
 ```python
 import openai
 
@@ -491,9 +517,8 @@ openai api chat_completions.create -m gpt-3.5-turbo -g user "Hello world"
 
 ```
 
-
 Embeddings
-https://www.buildt.ai/blog/3llmtricks embedding tricks. Hyde - predict answer from query, then use embedding of predicted answer
+<https://www.buildt.ai/blog/3llmtricks> embedding tricks. Hyde - predict answer from query, then use embedding of predicted answer
 
 ```python
 import openai
@@ -528,11 +553,13 @@ prompt = PromptTemplate(
 print(prompt.format(product="colorful socks"))
 ```
 
-https://github.com/Unstructured-IO/unstructured
+<https://github.com/Unstructured-IO/unstructured>
+
 ### Vector Databases
+
 Databases that include the abilitt to do fuzzy search for vectors (from embeddings)
 
-Approximate nearest neighbor: [FAISS](https://github.com/facebookresearch/faiss),  https://github.com/spotify/annoy https://github.com/nmslib/hnswlib/
+Approximate nearest neighbor: [FAISS](https://github.com/facebookresearch/faiss),  <https://github.com/spotify/annoy> <https://github.com/nmslib/hnswlib/>
 
 - Pinecone
 - Milvus
@@ -542,17 +569,19 @@ Approximate nearest neighbor: [FAISS](https://github.com/facebookresearch/faiss)
 [missing where clause](https://www.pinecone.io/learn/vector-search-filtering/), pre vs post filtering
 
 sqlite vector search
-https://github.com/asg017/sqlite-vss https://observablehq.com/@asg017/introducing-sqlite-vss
+<https://github.com/asg017/sqlite-vss> <https://observablehq.com/@asg017/introducing-sqlite-vss>
 
 postgres vector pg_vector
 
-vs 
+vs
 elastic search, opensearch, lucene.
 BM25
 
-https://www.sbert.net/ sentence transformers
-https://github.com/imartinez/privateGPT
-## Backprop Technqiues 
+<https://www.sbert.net/> sentence transformers
+<https://github.com/imartinez/privateGPT>
+
+## Backprop Technqiues
+
 adam adamw
 sgd
 with momentum?
@@ -565,10 +594,12 @@ JAX
 
 Julia
 
-https://github.com/huggingface/accelerate
+<https://github.com/huggingface/accelerate>
 
 gradio for UIs. huggingface spaces
+
 # Hugging Face
+
 transformers
 pipeline is the easy version
 datasets library
@@ -588,14 +619,14 @@ model = AutoModelForMaskedLM.from_pretrained("bert-base-uncased")
 ```
 
 ### fastai
+
 ## Resources
+
 - Deep Learning Book
-- 
-
-
-
+-
 
 # Reinforcement Learning
+
 Dreamerv3
 Decision Transformer
 
@@ -619,23 +650,17 @@ Q function
 policy function
 Learn Dynamics - system identification
 
-
 Q-learning
 sarsa
 policy gradient
 Actor critic
 
-
-
 Monte-carlo search
 
-# Verification
-[Neural Network Verification with Proof Production](https://arxiv.org/pdf/2206.00512.pdf)
-
 ## Resources
+
 [openai spinning up](https://spinningup.openai.com/en/latest/index.html)
 Sutton and Barto
-
 
 [Machine intellgience course](https://www.youtube.com/playlist?list=PLPQUqhKcaBdUYQRyS_g3GFN4L5B-_asUt)
 
@@ -643,7 +668,7 @@ Sutton and Barto
 
 I watched David Silver's lectures on Reinforcement Learning.
 
-http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html
+<http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html>
 
 Pretty interesting stuff.
 
@@ -660,12 +685,6 @@ There are table based methods for
 There is also a layer of function approximation you can stack on there.
 
 I think you could implement temporal difference learning using common libraries using $latex r_t + \gamma \max_a Q(S,a,\theta)$ as the truth value, and then update the truth values occasionally.
-
-
-
-
-
-
 
 Old:
 
@@ -689,11 +708,7 @@ observations, actions, and rewards.
 
 Three kinds of RL. Policy, Value, and Model based.
 
-
-
 There are the questions of policy evaluation and policy optimization. They are related.
-
-
 
 Given either a deterministic policy or probabilistic policy, you could hypothetically write down the exact probabilistic step from one time step to another.
 
@@ -717,17 +732,11 @@ Q(s,a) is a very clever, non obvious function.
 
 To perform a step of the bellman equation without the model of the system, you need a function like that.
 
-
-
-
-
 Q learning vs SARSA
 
 Q learning is off policy. It pretends you're using a greedy policy
 
 SARSA is on policy
-
-
 
 Deep RL course
 
@@ -757,23 +766,19 @@ iterative LQR / Differential dynamic programming (DDP uses second order expansio
 
 go backwards to find the right K. Using it forwards to compute correct x and u. Iterate until convergence
 
-https://homes.cs.washington.edu/~todorov/papers/TassaIROS12.pdf
+<https://homes.cs.washington.edu/~todorov/papers/TassaIROS12.pdf>
 
 Model Predictive Control. Do it all like you were playing chess. After each actual time step re-run the iterative LQR
 
-https://people.eecs.berkeley.edu/~svlevine/papers/mfcgps.pdf
+<https://people.eecs.berkeley.edu/~svlevine/papers/mfcgps.pdf>
 
+<https://studywolf.wordpress.com/2016/02/03/the-iterative-linear-quadratic-regulator-method/>
 
+<https://github.com/pydy/pydy-tutorial-human-standing>
 
-https://studywolf.wordpress.com/2016/02/03/the-iterative-linear-quadratic-regulator-method/
-
-https://github.com/pydy/pydy-tutorial-human-standing
-
-https://github.com/openai/roboschool
+<https://github.com/openai/roboschool>
 
 pybullet
-
-
 
 learning the model.
 
@@ -787,12 +792,10 @@ Can also directly train a parametrized policy function as part of the loop rathe
 
 Neural network based model of the dynamics might be fine especially since you can backpropagate which is nice for the iterative LQR step.
 
-https://rse-lab.cs.washington.edu/papers/robot-rl-rss-11.pdf
+<https://rse-lab.cs.washington.edu/papers/robot-rl-rss-11.pdf>
 
 in global models the planning stage will tend to try to exploit regions that are crappily modelled.
 
 maximum entropy. May want to have the most random solution that doesn't hurt cost?
 
 Local models try to avoid this by just modelling gradients? And simply. But use a contrained optimization problem to make sure the robot stays in a region where the local estimates still apply. Trust regions. Defined using how unlikely the current trajectory is
-
-

@@ -8,6 +8,7 @@ title: Software Verification
   - [Bounded Model Checking](#bounded-model-checking)
     - [CBMC / ESBMC](#cbmc--esbmc)
     - [Cpachecker](#cpachecker)
+    - [Rust](#rust)
 - [Hoare Logic](#hoare-logic)
   - [Incorrectness Logic](#incorrectness-logic)
   - [Weakest Precondition](#weakest-precondition)
@@ -64,6 +65,7 @@ checked C [C to checked C by 3C](https://arxiv.org/abs/2203.13445)
   
 - ESBMC / CBMC
 - CPAChecker
+- Symbiotic
 
 coveriteam <https://www.sosy-lab.org/research/coveriteam/> `pip install CoVeriTeam`
 
@@ -99,6 +101,8 @@ Companies
 Abstract interpretation
 Shape analysis - <https://github.com/kdudka/predator> predator
 
+Algebraic program analyis - Reps
+
 ## Bounded Model Checking
 
 See note on
@@ -123,9 +127,17 @@ Seahorn
 
 Nice, fairly easy to use
 [homepage](https://www.cprover.org/cbmc/)
+<https://arxiv.org/abs/2302.02384>
 `sudo apt install cbmc`
+<https://github.com/diffblue/cbmc> gitbub
+<https://diffblue.github.io/cbmc/> docs
 
-[maual](http://www.cprover.org/cprover-manual/) see tutorial
+<https://github.com/diffblue/aws-training>
+<https://model-checking.github.io/cbmc-training/>
+<https://github.com/model-checking/cbmc-starter-kit> starter kit template <https://model-checking.github.io/cbmc-starter-kit/tutorial/index.html> insstrumenting a maloc
+<https://github.com/model-checking/cbmc-proof-debugger>
+
+[manual](http://www.cprover.org/cprover-manual/) see tutorial
 
 ```bash
 echo "
@@ -154,7 +166,16 @@ ESBMC
 - Float support
 - Still actually developd
 
-<https://model-checking.github.io/cbmc-training/>
+<https://awslabs.github.io/aws-proof-build-assistant/>
+<https://github.com/awslabs/aws-c-common>
+corejson <https://github.com/FreeRTOS/coreJSON/tree/main/test/cbmc>
+s2n-tls <https://github.com/aws/s2n-tls/tree/main/tests/cbmc>
+<https://github.com/aws/aws-encryption-sdk-c/tree/master/verification/cbmc>
+<https://github.com/aws/s2n-quic>
+
+bounded proof vs harnes vs contracts
+
+<https://crates.io/crates/libcprover_rust/5.91.0> rust api
 
 ### Cpachecker
 
@@ -162,7 +183,14 @@ ESBMC
 Start in blast?
 There is a yearly workshop
 
+introductin to cpachecker <https://sosy-lab.gitlab.io/research/tutorials/CPAchecker/ShortIntroductionCPAchecker.html>
+
 `script/cpa.sh`
+
+### Rust
+
+<https://rust-formal-methods.github.io/welcome.html>
+<https://github.com/model-checking/kani>
 
 # Hoare Logic
 

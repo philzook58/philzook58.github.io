@@ -98,6 +98,23 @@ Part of the appeal of category theory comes from it's relationship to polymorphi
 
 <https://arxiv.org/pdf/2209.01259.pdf> Category Theory for Programming
 
+```
+class Functor f where
+  map : (a -> b) -> f a -> f b
+```
+
+`f` is type mapping. Types are objects. map transfers morphisms
+
+`forall a, f a -> g a` is a natural transformation
+
+Types are objects. Type derivations are morphisms.
+
+Saying "functions' are morphisms is a bit confusing because what do we mean by function? The naive set model of functional programming? We're gonna get lost in the polymorphism stuff
+
+idea: T,E |- T,R  as the morphism. "type evaluation" and "term checking" happneing in parallel.
+
+[categorical models of polymorphism](https://core.ac.uk/download/pdf/81193164.pdf)
+
 # Combinators
 
 <https://en.wikipedia.org/wiki/Combinatory_logic>
@@ -187,7 +204,7 @@ An example I like is Rel. Morphisms are binary relations. binary relations can b
 # Topos
 
 <https://twitter.com/johncarlosbaez/status/1461346819963686920?s=20> John Baez
-
+[topos theory in a nutshell baez](https://math.ucr.edu/home/baez/topos.html)
 Use functions instead of a notion of element being member of set.
 functions can essentially select elements.
 functions into "truth value" set (indicator functions) are analogs of subsets.
@@ -200,6 +217,15 @@ To say something is a topos is to say it is
 2. a special category with some special constructs
 
 Weird notions of truth value are fun.
+
+Concepctual mathematics
+Categories and Sets
+Goldblatt
+Maclane and Moerdijk
+
+retract & section as notions of division / pseudo inverse
+
+"variable sets"?
 
 # Processes
 

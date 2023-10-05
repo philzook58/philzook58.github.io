@@ -133,6 +133,22 @@ queries are finding homomorphisms from structures (the query pattern). The to is
 
 quantified boolean formula. Interesting. Model checking a QBF... use a database? Seem wacky. Hmm. Use an ROBDD. Makes sense then the connection between GJ and ROBDD. ROBDD and elimination ordering?
 
+[Constraint Satisfaction Complexity and Logic Phokion G Kolaitis](https://www.aimath.org/WWN/constraintsatis/csp-lc053.pdf)
+
+Schefer's dichomotmy
+existensial pebble games
+CSP(B)
+finite variable logic and bounded tree width
+
+conjunctive query containent, equivalence, evaluation
+
+A |= Q is evaluation
+
+canonical conjunctive query - turn structure into query. elements become vriables, facts become parts of conjunction
+canonical structure - turn qury into database/structure. variables become elements, conjuncts become facts
+
+Chndra and merlin. See also graph theory: logic of graphs
+
 ## Schema
 
 <https://en.wikipedia.org/wiki/Database_normalization>

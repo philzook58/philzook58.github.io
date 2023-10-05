@@ -4,38 +4,12 @@ title: Discrete Mathematics
 ---
 
 - [Graphs](#graphs)
-  - [Graph Families / Classes](#graph-families--classes)
-  - [Planar](#planar)
-  - [Minors](#minors)
-  - [Algebraic Graph theory](#algebraic-graph-theory)
-    - [Cut](#cut)
-    - [Flow](#flow)
-  - [Decomposition](#decomposition)
-    - [Tree Decompositions](#tree-decompositions)
-    - [Graph Partition](#graph-partition)
-  - [Algebra](#algebra)
-  - [Logic](#logic)
-  - [](#)
-  - [Problems](#problems)
-    - [Easy](#easy)
-    - [Enumeration](#enumeration)
-    - [Hamiltonian cycles](#hamiltonian-cycles)
-    - [Clique](#clique)
-    - [Coloring](#coloring)
-    - [Covering](#covering)
-    - [Isomorphism](#isomorphism)
-    - [Graph hashing](#graph-hashing)
-    - [subgraph isomorphgism](#subgraph-isomorphgism)
-  - [Graph rewriting](#graph-rewriting)
-    - [Pfaffian orientation](#pfaffian-orientation)
-    - [Matchings](#matchings)
-  - [Misc](#misc)
 - [Knots](#knots)
 - [Matroids](#matroids)
 - [Packings](#packings)
 - [Combinatorics](#combinatorics)
 - [Ramsey Theory](#ramsey-theory)
-- [Logic](#logic-1)
+- [Logic](#logic)
 - [Set theory](#set-theory)
 - [Order Theory](#order-theory)
   - [Lattice](#lattice)
@@ -135,6 +109,24 @@ Ditto
 Finite po-sets
 
 <https://en.wikipedia.org/wiki/Hasse_diagram> visualizing posets
+
+<https://github.com/leanprover-community/mathlib4/blob/master/Mathlib/Init/Order/Defs.lean>
+
+```lean
+-- an attempt
+class PartialOrder (A : Type) (R : A -> A -> Prop) where
+  refl : forall x, R x x
+  antisym : forall x y, R x y -> R y x -> x = y
+  trans : forall x y z, R x y -> R y z -> R x z
+
+instance : PartialOrder Nat Eq where 
+  refl := fun x => by rfl
+  antisym := fun x y r1 _r2 => by rw [r1]
+  trans := fun x y z r1 r2 => by rw [r1, r2]
+
+def main := IO.println "hello world"
+
+```
 
 ## Lattice
 

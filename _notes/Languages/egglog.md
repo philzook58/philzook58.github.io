@@ -16,7 +16,9 @@ title: Egglog
   - [Inequality](#inequality)
   - [Choice Domains](#choice-domains)
   - [Refining equalities](#refining-equalities)
+  - [Reflection](#reflection)
   - [Integration](#integration)
+  - [Geometric Algebra](#geometric-algebra)
   - [BitVectors](#bitvectors)
   - [Peano](#peano)
   - [BDDs](#bdds)
@@ -55,7 +57,7 @@ title: Egglog
 - [Rulesets](#rulesets)
 - [Ideas](#ideas)
 
-See also notes on [egraphs](../Logic/egraphs.md)
+See also notes on [egraphs](/_notes/Logic/egraphs.md)
 
 # Welcome to Egglog
 
@@ -415,6 +417,8 @@ partial functions - restriction of domain
 
 equal up to epsilon. An equality over epsilon families - everythign that has same derivatives
 
+## Reflection
+
 ## Integration
 
 ```
@@ -587,6 +591,10 @@ cnf()
 vampire /tmp/integ.tptp
 
 ```
+
+## Geometric Algebra
+
+<https://github.com/RobinKa/egga> geometric algebra
 
 ## BitVectors
 

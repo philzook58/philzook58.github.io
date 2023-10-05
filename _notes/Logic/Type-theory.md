@@ -746,6 +746,8 @@ The homotopy type theory book
 
 - [cubical paper](https://arxiv.org/pdf/1611.02108.pdf)
 
+Implementing Patch Theories in Homotopy Type Theory <https://www.cs.ru.nl/bachelors-theses/2023/Dick_Blankvoort___1056960___Implementing_Patch_Theories_in_Homotopy_Type_Theory.pdf>
+
 ### Older
 
 2018

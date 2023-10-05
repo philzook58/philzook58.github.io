@@ -11,18 +11,23 @@ title: Mathematical Logic
 - [Compactness](#compactness)
 - [Consistency](#consistency)
 - [Set Theory](#set-theory)
-    - [Ordinals](#ordinals)
-    - [ZFC](#zfc)
-    - [NBG](#nbg)
-    - [Axiom of Choice](#axiom-of-choice)
+  - [Ordinals](#ordinals)
+  - [ZFC](#zfc)
+  - [NBG](#nbg)
+  - [Axiom of Choice](#axiom-of-choice)
 - [Model thoery](#model-thoery)
   - [Finite Model Theory](#finite-model-theory)
     - [Fixed point logic](#fixed-point-logic)
 - [Intuitionism / Constructive Math](#intuitionism--constructive-math)
+- [Proof Theory](#proof-theory)
+- [Recursion Theory](#recursion-theory)
+  - [Combinators](#combinators)
+  - [Lambda Calculus](#lambda-calculus)
+    - [Untyped](#untyped)
+    - [Typed](#typed)
 - [Misc](#misc)
 
-
-https://en.wikipedia.org/wiki/Mathematical_logic
+<https://en.wikipedia.org/wiki/Mathematical_logic>
 This whole subfolder is about mathematical logic
 
 - Set theory
@@ -32,20 +37,18 @@ This whole subfolder is about mathematical logic
 
 # Well formed formula
 
+# Lowenheim Skolem
 
-
-# Lowenheim Skolem 
-https://en.wikipedia.org/wiki/L%C3%B6wenheim%E2%80%93Skolem_theorem
+<https://en.wikipedia.org/wiki/L%C3%B6wenheim%E2%80%93Skolem_theorem>
 For infinite models, there are always bigger and smaller models.
-
 
 Lindstrom's theorem
 
-https://en.wikipedia.org/wiki/Skolem%27s_paradox Skolem's paradox.
+<https://en.wikipedia.org/wiki/Skolem%27s_paradox> Skolem's paradox.
 Set theory says there are uncountable sets, but set theory is expressed in countable language
 
-
 # Semantic entailment
+
 `|=` is used in different ways
 
 `G |= x`. G is a set of formula. This is to say that every model in which G hold, x also holds
@@ -56,15 +59,17 @@ Model's are often treated less carefully. We agree the integers are a thing. For
 Models are shallow embedded, formulas are deep embedded
 
 # Soundness
+
 G |- x  --> G |= x
 
 Syntactic rules are obeyed in models.
 
-
 # Completeness
+
 G |= x --> G |- x
 
 # Compactness
+
 Infinite families of sentences
 
 Propositional compactness
@@ -73,40 +78,36 @@ Infinite graphs?
 
 A proof only uses a finite number of axioms (?)
 
-
 # Consistency
 
-
 # Set Theory
+
 Schroder-Bernstein Theorem
 
-
 Forcing
-
 
 [hereditarily finite sets](https://en.wikipedia.org/wiki/Hereditarily_finite_set)
 set who's elements are also hereditarily finite. set of sets of sets of ... empty set
 finitary set theory
 
-
 non well founded hypersets
-https://en.wikipedia.org/wiki/Non-well-founded_set_theory
+<https://en.wikipedia.org/wiki/Non-well-founded_set_theory>
 
-apg accessible pointed graph https://en.wikipedia.org/wiki/Rooted_graph
+apg accessible pointed graph <https://en.wikipedia.org/wiki/Rooted_graph>
 Hypersets. Set equations.
-Aczel is a computer scientist. 
-https://en.wikipedia.org/wiki/Aczel%27s_anti-foundation_axiom
+Aczel is a computer scientist.
+<https://en.wikipedia.org/wiki/Aczel%27s_anti-foundation_axiom>
 
-https://en.wikipedia.org/wiki/Axiom_of_regularity aka axiom of foundation
-
+<https://en.wikipedia.org/wiki/Axiom_of_regularity> aka axiom of foundation
 
 Axiom of specification. Let's us take arbitrary subsets of predefined sets
 
-https://en.wikipedia.org/wiki/Axiom_of_pairing 
+<https://en.wikipedia.org/wiki/Axiom_of_pairing>
 
 Ordered Pairs - part of the general idea of sequences of subsets.
 
 ### Ordinals
+
 A well ordered set is a set combined with a well order on it.
 Order isomporphic things are the ordinals
 
@@ -118,12 +119,13 @@ Ordinals are totally ordered?
 
 [Transfinite induction](https://en.wikipedia.org/wiki/Transfinite_induction)
 
-
 ### ZFC
+
 <https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory>
 [Richard Borcherd lectures on zfc](https://www.youtube.com/playlist?list=PL8yHsr3EFj52EKVgPi-p50fRP2_SbG2oi)
 
 ### NBG
+
 [Von Neumann–Bernays–Gödel set theory](https://en.wikipedia.org/wiki/Von_Neumann%E2%80%93Bernays%E2%80%93G%C3%B6del_set_theory)
 
 Finite axiomatization? As in no schema? That's crazy.
@@ -132,33 +134,37 @@ Finite axiomatization? As in no schema? That's crazy.
 metamath is all schemata?
 
 ### Axiom of Choice
+
 Well ordering principle
-Zorn's Lemma https://en.wikipedia.org/wiki/Zorn%27s_lemma
+Zorn's Lemma <https://en.wikipedia.org/wiki/Zorn%27s_lemma>
 [Choiceless Grapher Diagram creator for consequences of the axiom of choice (AC).](https://cgraph.inters.co/)
 Axioms of dependent choice
 
-https://en.wikipedia.org/wiki/Diaconescu%27s_theorem axiom of choice implies excluded middle
+<https://en.wikipedia.org/wiki/Diaconescu%27s_theorem> axiom of choice implies excluded middle
 
 Weaker notions
-https://en.wikipedia.org/wiki/Axiom_of_countable_choice
-https://en.wikipedia.org/wiki/Axiom_of_dependent_choice
-
+<https://en.wikipedia.org/wiki/Axiom_of_countable_choice>
+<https://en.wikipedia.org/wiki/Axiom_of_dependent_choice>
 
 # Model thoery
+
 [gentle introduction to model theory](https://www.youtube.com/watch?v=xNJHw8E_36g&ab_channel=LambdaConf)
 Model theory is more informal?
 I have thought model theory is finding what logic looks like in informal set theory
 A more general notion and precise notion may be finding homomorphisms between . A way of mapping statements to each other such that theorems in one theory are theorems in the other.
 
 [finite model theory notes dan suciu](https://courses.cs.washington.edu/courses/cse599c/18sp/lectures/unit3-handout.pdf)
-## Finite Model Theory
-https://homepages.inf.ed.ac.uk/libkin/fmt/fmt.pdf finite model theory book
 
-https://courses.cs.washington.edu/courses/cse599c/18sp/calendar/lecturelist.html
+## Finite Model Theory
+
+<https://homepages.inf.ed.ac.uk/libkin/fmt/fmt.pdf> finite model theory book
+
+<https://courses.cs.washington.edu/courses/cse599c/18sp/calendar/lecturelist.html>
 Finite model theory is actually interesting.
 Finite models are those for which Z3 can return results even in the prescence of quantifiers.
 
 query containment
+
 ```python
 from z3 import *
 Sort("A")
@@ -177,11 +183,12 @@ prove(contains)
 Directly solving for homomorphisms.
 The alice book is insane
 
-https://simons.berkeley.edu/workshops/logical-structures-computation-boot-camp/
-https://www.youtube.com/watch?v=rfvYLCixrdQ&ab_channel=SimonsInstitute
+<https://simons.berkeley.edu/workshops/logical-structures-computation-boot-camp/>
+<https://www.youtube.com/watch?v=rfvYLCixrdQ&ab_channel=SimonsInstitute>
 
 ### Fixed point logic
-https://en.wikipedia.org/wiki/Fixed-point_logic
+
+<https://en.wikipedia.org/wiki/Fixed-point_logic>
 
 [Fixed-Point Logics and Computation - Dawar](https://www.cl.cam.ac.uk/~ad260/talks/oviedo.pdf)
 
@@ -216,10 +223,9 @@ let interp : form -> datalog
 
 Finite Model Theory and Its Applications - book
 
-
 Is the empty set a model of fixed point
 
-https://courses.cs.washington.edu/courses/cse344/13au/lectures/query-language-primer.pdf
+<https://courses.cs.washington.edu/courses/cse344/13au/lectures/query-language-primer.pdf>
 compiling first order logic model checking to sql or nonrecursive datalog
 
 Ok, but a prolog program might make sense.
@@ -229,6 +235,7 @@ Model checking first order logic is a strange thing to do. Model finding or prov
 
 Prolog against a ground database.
 All the negation makes me queasy.
+
 ```prolog
 :- initialization(main,main).
 
@@ -278,29 +285,54 @@ negp(X,Y,Z) :- -p(X,Y,Z).
 
 Hmm. EPR. But I want satisfiability of EPR, not model checking. Ok. amusing idea, but no.
 
-
 ```sql
 -- NOT EXISTS in where clause with subquery.
 ```
-
 
 model checking propsitional formula is easy. Plug it in
 model checking QBF is harder.
 
 datalog is really model producing. That's kind of the point.
 
-The lfp of lfp(FO) is kind of like the mu minimization operator. https://en.wikipedia.org/wiki/%CE%9C_operator
+The lfp of lfp(FO) is kind of like the mu minimization operator. <https://en.wikipedia.org/wiki/%CE%9C_operator>
 
 # Intuitionism / Constructive Math
+
 Choice sequences
 
-https://en.wikipedia.org/wiki/Constructive_set_theory
+<https://en.wikipedia.org/wiki/Constructive_set_theory>
 
-https://en.wikipedia.org/wiki/Constructive_analysis
+<https://en.wikipedia.org/wiki/Constructive_analysis>
+
+# Proof Theory
+
+See note n proof theory
+
+# Recursion Theory
+
+<https://en.wikipedia.org/wiki/Computability_theory>
+<https://plato.stanford.edu/entries/recursive-functions/>
+<https://mitpress.mit.edu/9780262680523/theory-of-recursive-functions-and-effective-computability/> Hartley Rogers
+
+## Combinators
+
+## Lambda Calculus
+
+### Untyped
+
+barendregt book
+dana scot at lambda conf <https://www.youtube.com/watch?v=mBjhDyHFqJY&ab_channel=LambdaConf>
+The lambda calculus as an unyped
+
+[History of Lambda-calculus and Combinatory Logic Felice Cardone ∗ J. Roger Hindley †](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=959d32cfa6df9299312ba51e2102045e1f25bc18)
+
+### Typed
+
+See note on type theory
 
 # Misc
 
-https://news.ycombinator.com/item?id=33236447
+<https://news.ycombinator.com/item?id=33236447>
 
 [Book list](https://github.com/jaalonso/Libros_de_Logica/blob/main/README.org)
 
@@ -310,19 +342,16 @@ mathematical logic through python
 
 [Handbook of mathemtical logic](http://www.alefenu.com/libri/handbooklogica.pdf)
 
-https://carnap.io/srv/doc/index.md
-forall x https://www.fecundity.com/logic/
+<https://carnap.io/srv/doc/index.md>
+forall x <https://www.fecundity.com/logic/>
 jscoq, lean-web-editor, sasylf, pie
-https://github.com/RBornat/jape
+<https://github.com/RBornat/jape>
 
-
-
-https://home.sandiego.edu/~shulman/papers/induction.pdf
+<https://home.sandiego.edu/~shulman/papers/induction.pdf>
 equality as induction.
 Defining the axioms of equality as an axiom schema.
 
-https://golem.ph.utexas.edu/category/2013/01/from_set_theory_to_type_theory.html from set theory to type theory
-ects - structural set theory. notion of set and function. 
+<https://golem.ph.utexas.edu/category/2013/01/from_set_theory_to_type_theory.html> from set theory to type theory
+ects - structural set theory. notion of set and function.
 
-https://golem.ph.utexas.edu/category/2012/12/rethinking_set_theory.html rethinking set theory
-
+<https://golem.ph.utexas.edu/category/2012/12/rethinking_set_theory.html> rethinking set theory

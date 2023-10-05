@@ -37,6 +37,15 @@ Manipulating both sides
 
 # Monoids
 
+```lean
+class Monoid (A : Type) where
+  prod : A -> A -> A
+  e : A
+  assoc : forall x y z, prod (prod x y) z = prod x (prod y z)
+  
+def main : IO Unit := return ()
+```
+
 # Groups
 
 I don't know why, but this is still the one that makes me the most comfortable
@@ -83,6 +92,7 @@ Fixed point theorems
 - See automata
 
 # Algebra over a field
+
 <https://en.wikipedia.org/wiki/Algebra_over_a_field>
 
 Geometrical Algebra
@@ -90,6 +100,7 @@ clifford algebra
 [exterior algebra](https://en.wikipedia.org/wiki/Exterior_algebra)
 
 # Matroids
+
 <https://www.cambridge.org/us/academic/subjects/computer-science/algorithmics-complexity-computer-algebra-and-computational-g/computational-oriented-matroids-equivalence-classes-matrices-within-natural-framework?format=HB&isbn=9780521849302>
 
 # Tropical Algebra
@@ -97,6 +108,7 @@ clifford algebra
 # Universal Algebra
 
 # Homomorphisms
+
 <https://en.wikipedia.org/wiki/Homomorphism>
 
 At a certain point of sophistication, this becomes all you care about it seems.

@@ -23,6 +23,7 @@ wordpress_id: 2960
   - [Binary reversign](#binary-reversign)
 - [Debuggers](#debuggers)
 - [Emulation](#emulation)
+  - [Qemu](#qemu)
   - [Fuzzing](#fuzzing)
   - [Symbolic Execution](#symbolic-execution)
   - [Vulnerabilities](#vulnerabilities)
@@ -45,8 +46,8 @@ wordpress_id: 2960
 - [Elf stuff](#elf-stuff)
 - [CTF](#ctf)
 - [What is Binary Analysis](#what-is-binary-analysis)
-    - [Program Analysis](#program-analysis)
-    - [How are binaries made](#how-are-binaries-made)
+  - [Program Analysis](#program-analysis)
+  - [How are binaries made](#how-are-binaries-made)
 - [Misc](#misc)
   - [GDB](#gdb)
 - [nmap](#nmap)
@@ -60,23 +61,20 @@ wordpress_id: 2960
   - [pwntools](#pwntools)
   - [Examples from pwn.college](#examples-from-pwncollege)
 
-
-# Reversing 
-
-
-
+# Reversing
 
 ## Disassembly
-disassembler 
+
+disassembler
 linear sweep
 Shingled
-recusrive traversal 
-anti-disassembly 
-https://github.com/AppleReer/Anti-Disassembly-On-Arm64
+recusrive traversal
+anti-disassembly
+<https://github.com/AppleReer/Anti-Disassembly-On-Arm64>
 
 [relative disassembler performance](https://twitter.com/richinseattle/status/1468418790006267910?s=20)
 
-capstone http://www.capstone-engine.org/ - disassembler. converse of key
+capstone <http://www.capstone-engine.org/> - disassembler. converse of key
 zydis
 xed
 distrom
@@ -93,13 +91,13 @@ BAP
 ANGR - VEX which is valgrind's ir
 
 gtirb ddisasm grammatech
-https://grammatech.github.io/gtirb/
-https://github.com/GrammaTech/gtirb "GTIRB explicitly does NOT represent instructions or instruction semantics but does provide symbolic operand information and access to the bytes. "
+<https://grammatech.github.io/gtirb/>
+<https://github.com/GrammaTech/gtirb> "GTIRB explicitly does NOT represent instructions or instruction semantics but does provide symbolic operand information and access to the bytes. "
 
-Speculative disssembly https://ieeexplore.ieee.org/document/7745279 decode every offset. Refine blocks. Spedi, open source spcualtive disassembler https://github.com/abenkhadra/spedi
-Nucleus paper https://mistakenot.net/papers/eurosp-2017.pdf Compiler-Agnostic Function Detection in Binaries
+Speculative disssembly <https://ieeexplore.ieee.org/document/7745279> decode every offset. Refine blocks. Spedi, open source spcualtive disassembler <https://github.com/abenkhadra/spedi>
+Nucleus paper <https://mistakenot.net/papers/eurosp-2017.pdf> Compiler-Agnostic Function Detection in Binaries
 
-superset disassembler kenneth https://personal.utdallas.edu/~hamlen/bauman18ndss.pdf
+superset disassembler kenneth <https://personal.utdallas.edu/~hamlen/bauman18ndss.pdf>
 civuentes thesis
 
 probablistic disassembly using proabablistic datalog?
@@ -107,17 +105,18 @@ bap mc + datalog?
 
 [Formally Verified Lifting of C-Compiled x86-64 Binaries](https://www.ssrg.ece.vt.edu/papers/pldi22.pdf)
 [Scalable validation of binary lifters](https://dl.acm.org/doi/10.1145/3385412.3385964)
+
 - Linear
 - Recursive
 
-- 
+-
 
 [Disasm.Driver](https://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Disasm/Driver/index.html)
 [](https://binaryanalysisplatform.github.io/bap/api/master/bap/Bap/Std/Disasm/index.html)
 
 Delay slots are an annoyance. Some architectures allow instructions to exist in the shadow of jump instructions that logically execute beofre the jump instruction. This makes sense from a micro architectural perspective, but it is bizarre to disassemble
 
-https://rev.ng/
+<https://rev.ng/>
 [rev.ng paper](https://hexhive.epfl.ch/publications/files/17CC.pdf)
 osr - offset shift range. I;ve seen this called value set analysis?
 [rev.ng thesis](https://www.politesi.polimi.it/bitstream/10589/139255/1/main.pdf)
@@ -128,22 +127,23 @@ osr - offset shift range. I;ve seen this called value set analysis?
 
 byteweight - bap neural network thing identifies function starts
 
-
 Ghidra repackaging:
 [lifting bits sleigh](https://github.com/lifting-bits/sleigh)
 [pypcode](https://github.com/angr/pypcode)
-https://github.com/StarCrossPortal/sleighcraft
-https://github.com/black-binary/sleigh
+<https://github.com/StarCrossPortal/sleighcraft>
+<https://github.com/black-binary/sleigh>
 
 [An Empirical Study on ARM Disassembly Tools](https://github.com/valour01/arm_disasssembler_study)
 
 [ben's ll2l](https://gitlab.com/delysid/ll2l)
+
 ## Decompiler
+
 [FoxDec - Formally verified x86-64 decompilation](https://ssrg-vt.github.io/FoxDec/)
 
 relic - no more gotos
 
-a comb for decompiled C https://rev.ng/downloads/asiaccs-2020-presentation.pdf
+a comb for decompiled C <https://rev.ng/downloads/asiaccs-2020-presentation.pdf>
 
 [Cifuentes thesis](https://yurichev.com/mirrors/DCC_decompilation_thesis.pdf) kind of a ludicrous amount of info
 "Decompiler compiler" references BB91 BB92 bbl91 bbl93 bow91 bow93
@@ -155,23 +155,23 @@ a comb for decompiled C https://rev.ng/downloads/asiaccs-2020-presentation.pdf
 [The art of computer un-programming: Reverse engineering in Prolog](https://link.springer.com/chapter/10.1007/3-540-55930-2_20)
 [Generating Decompilers](https://www.researchgate.net/publication/2524264_Generating_Decompilers/link/0fcfd50c60fe6c4876000000/download)
 
+<https://www2.cs.arizona.edu/~collberg/Teaching/620/1999/Handouts/rmeadows1.pdf>
 
-https://www2.cs.arizona.edu/~collberg/Teaching/620/1999/Handouts/rmeadows1.pdf
- 
  [Polymorphic Type Inference for Machine Code](https://arxiv.org/abs/1603.05495)
 
  [Static Single Assignment for Decompilation - Emmerik](https://yurichev.com/mirrors/vanEmmerik_ssa.pdf)
- https://twitter.com/brightprogramer/status/1626841275801702400?s=20
+ <https://twitter.com/brightprogramer/status/1626841275801702400?s=20>
 
 [Decompilers and beyond Ilfak Guilfanov, Hex-Rays SA, 2008](https://web.archive.org/web/20181014083034/https://www.hex-rays.com/products/ida/support/ppt/decompilers_and_beyond_white_paper.pdf)
 
 [Type-Based Decompilation? (or Program Reconstruction via Type Reconstruction)- Alan Mycroft](https://link.springer.com/content/pdf/10.1007/3-540-49099-X_14.pdf)
 
 ### Loop recovery
-Getting structured control flow from CFG
-Stackify https://gitlab.inria.fr/why3/why3/-/merge_requests/453
 
-https://icfp22.sigplan.org/details/icfp-2022-papers/1/Beyond-Relooper-Recursive-Translation-of-Unstructured-Control-Flow-to-Structured-Con
+Getting structured control flow from CFG
+Stackify <https://gitlab.inria.fr/why3/why3/-/merge_requests/453>
+
+<https://icfp22.sigplan.org/details/icfp-2022-papers/1/Beyond-Relooper-Recursive-Translation-of-Unstructured-Control-Flow-to-Structured-Con>
 
 [havlak and tarjan](https://www.researchgate.net/publication/220404846_Nesting_of_Reducible_and_Irreducible_Loops)
 testing redicibility with union find
@@ -179,36 +179,36 @@ testing redicibility with union find
 [A New Algorithm for Identifying Loops in
 Decompilation ](https://lenx.100871.net/papers/loop-SAS.pdf)
 
-dfs. label nodes. Intervals of labels are subsets of nodes. timestamp of first visit timestamp of last ivist. 
+dfs. label nodes. Intervals of labels are subsets of nodes. timestamp of first visit timestamp of last ivist.
 backedge forward edge, cross edge
 
-
-https://zenodo.org/record/6727752#.YsxRw9rMI2w
-
+<https://zenodo.org/record/6727752#.YsxRw9rMI2w>
 
 Also... egraphs
-
 
 webassembly is at the core of both of these
 Allllll things come around
 I wonder if webassembly would be a good universal disassembler ir
 someone should do that
-https://github.com/nforest/awesome-decompilation
+<https://github.com/nforest/awesome-decompilation>
 
 ### Interactive
+
 - IDA
 - Ghidra
 - Binary Ninja
 - Cutter
 - angr management
-https://github.com/GrammaTech/gtirb-vscode
+<https://github.com/GrammaTech/gtirb-vscode>
 
 [decompiler explorer](https://github.com/mborgerson/mdec) Hmm. too bad it's not a web service
+
 ### Binary Ninja
+
 SCC- shellcde compiler. Why is this a top level thing?
 
 Binary View
-Making a plugin - has remote denug to vs code https://docs.binary.ninja/dev/plugins.html
+Making a plugin - has remote denug to vs code <https://docs.binary.ninja/dev/plugins.html>
 
 `current_function`
 `bv.functions`
@@ -217,7 +217,8 @@ f.callers
 f.callees
 
 #### Types
-https://docs.binary.ninja/guide/type.html#boolean
+
+<https://docs.binary.ninja/guide/type.html#boolean>
 ` bv.parse_type_string("uint64_t") ` slow but convenient
 
 Type.bool
@@ -237,12 +238,10 @@ Lifted IL
 
 LLIL
 
-
 HLIL
 
-
-
 ### Ghidra
+
 See ghidra notes
 
 ### Angr
@@ -319,6 +318,243 @@ int fact(int x){
 " > /tmp/fact.c
 gcc /tmp/fact.c -c -o /tmp/fact 
 ```
+
+```bash
+echo "
+int max(int x){
+  return x > 0 ? x : -x;
+}
+" > /tmp/max.c
+gcc /tmp/max.c -c -o /tmp/max 
+```
+
+```python
+import angr
+p = angr.Project('/tmp/fact')
+cfg = p.analyses.CFGFast()
+print("This is the graph:", cfg.graph)
+entry_func = cfg.kb.functions[p.entry]
+print(entry_func.name)
+blocks = list(entry_func.blocks)
+print(blocks)
+irsb = blocks[0].vex
+print(dir(entry_func))
+print(entry_func.block_addrs)
+print(dir(blocks[0]))
+print(entry_func.addr)
+```
+
+```python
+import angr
+p = angr.Project('/tmp/max')
+cfg = p.analyses.CFGFast()
+print("This is the graph:", cfg.graph)
+entry_func = cfg.kb.functions[p.entry]
+print(entry_func.name)
+blocks = list(entry_func.blocks)
+print(blocks)
+irsb = blocks[0].vex
+from pyvex.stmt import *
+from pyvex.expr import *
+
+
+
+jmp_table = ["""
+jump_table:
+switch(state.gr[184]){
+"""]
+
+#for addr in addrs:
+#  jmp_table.append(f"case 0x{addr:x}: goto {label(addr)};")
+#jmp_table.append("""
+#default:
+# assert(false); // unexpected indirect jump
+#}
+#""")
+def proc_binop(expr):
+    #print(expr.op)
+    # TODO: perhaps I need casts here to signed unsigned?
+    if expr.op == "Iop_Sub64":
+      return f"({proc_expr(expr.args[0])} - {proc_expr(expr.args[1])})"
+    elif expr.op == "Iop_Sub32":
+      return f"({proc_expr(expr.args[0])} - {proc_expr(expr.args[1])})"
+    elif expr.op == "Iop_Add64":
+      return f"({proc_expr(expr.args[0])} + {proc_expr(expr.args[1])})"
+    elif expr.op == "Iop_Add32":
+      return f"({proc_expr(expr.args[0])} + {proc_expr(expr.args[1])})"
+    elif expr.op == "Iop_Shr64":
+      return f"({proc_expr(expr.args[0])} >> {proc_expr(expr.args[1])})"
+    elif expr.op == "Iop_And64":
+      return f"({proc_expr(expr.args[0])} & {proc_expr(expr.args[1])})"
+    elif expr.op == "Iop_Xor64":
+      return f"({proc_expr(expr.args[0])} & {proc_expr(expr.args[1])})"
+    elif expr.op == "Iop_CmpLT32S":
+      return f"({proc_expr(expr.args[0])} < {proc_expr(expr.args[1])})"
+    elif expr.op == "Iop_Mul32":
+      return f"({proc_expr(expr.args[0])} * {proc_expr(expr.args[1])})"
+    else:
+      assert False, f"Unimplemented binop {expr.op}"
+def proc_unop(expr):
+  #print(expr.op)
+  if expr.op == "Iop_64to32":
+    return f"((int32_t) {proc_expr(expr.args[0])})"
+  elif expr.op == "Iop_32Uto64":
+    return f"((int64_t) {proc_expr(expr.args[0])})"
+  elif expr.op == "Iop_1Uto64":
+    return f"((int64_t) {proc_expr(expr.args[0])})"
+  elif expr.op == "Iop_64to1":
+    return f"((bool) {proc_expr(expr.args[0])})"
+  else:
+    assert False, f"Unimplemented unop {expr.op}"
+
+def proc_expr(expr : IRExpr):
+    #print(expr)
+    if isinstance(expr, Binder):
+        assert False
+    elif isinstance(expr, VECRET):
+        assert False
+    elif isinstance(expr, GSPTR):
+        assert False
+    elif isinstance(expr, RdTmp):
+        return str(expr)
+    elif isinstance(expr, Get):
+        assert expr.ty == "Ity_I64"
+        return f"state->gr[{expr.offset}]"
+    elif isinstance(expr, Qop):
+        assert False
+    elif isinstance(expr, Triop):
+        assert False
+    elif isinstance(expr, Binop):
+        return proc_binop(expr)
+    elif isinstance(expr, Unop):
+        return proc_unop(expr)
+    elif isinstance(expr, Load):
+        #assert expr.ty == "Ity_I32"  # TODO. We need to deal with these types and endianess. Yuck
+        return f"state->mem[{expr.addr}]"
+    elif isinstance(expr, Const):
+        return str(expr)
+    elif isinstance(expr, ITE):
+        return f"{proc_expr(expr.cond)} ? {proc_expr(expr.iftrue)}: {proc_expr(expr.iffalse)}"
+    elif isinstance(expr, CCall):
+        assert False
+    else:
+      assert False
+
+def label(addr):
+  return f"L_0x{addr:x}" 
+def proc_type(typ):
+  if ty == "Ity_I32":
+    return "int32_t"
+  elif ty == "ItyI64":
+    return "int64_t"
+  else:
+    assert False
+
+def proc_stmt(stmt : IRStmt):
+    #print(stmt.tag)
+    if isinstance(stmt, NoOp):
+         return "// NoOp"
+    elif isinstance(stmt, IMark):
+        # assert PC = expected pc here?
+        # f"assert(state->gr[{}] == stmt.addr);"
+        #return f"break; case 0x{stmt.addr:x}: //{label(stmt.addr)}:" # also print original assembly in comment
+        return f"//{label(stmt.addr)}:"
+    elif isinstance(stmt, AbiHint):
+        return f"return; // {stmt}" # TODO: add return parameter? Or state is good. Is abihint always at returns?
+    elif isinstance(stmt, Put):
+
+        return f"state->gr[{stmt.offset}] = {proc_expr(stmt.data)};"
+        assert False
+    elif isinstance(stmt, PutI):
+        assert False
+    elif isinstance(stmt, WrTmp):
+        return f"t{stmt.tmp} = {proc_expr(stmt.data)};"
+    elif isinstance(stmt, Store):
+        return f"state->mem[{stmt.addr}] = {proc_expr(stmt.data)};"
+    elif isinstance(stmt, CAS):
+        assert False
+    elif isinstance(stmt, LLSC):
+        assert False
+    elif isinstance(stmt, MBE):
+        assert False
+    elif isinstance(stmt, Dirty):
+        assert False
+    elif isinstance(stmt, Exit):
+        print(stmt.jk)
+        assert stmt.jk == "Ijk_Boring"
+        #return f"if({proc_expr(stmt.guard)}){{ goto {label(stmt.dst.value)}; }}"
+        return f"if({proc_expr(stmt.guard)}){{ state->gr[{stmt.offsIP}] = 0x{stmt.dst.value:x}; break; /*goto {label(stmt.dst.value)}; */ }}" 
+        # TODO deal with other jumpkind
+        # What represents an indirect jump? goto jump_table;
+        # elif stmt.jk == "Ijk_Ret" f"return;"
+        # elif stmt.jk == Ijk_Call   hmmm. f"{funname}()" maybe?
+        # elif stmt.jk == "Ijk_Exit"
+    elif isinstance(stmt, LoadG):
+        assert False
+    else:
+      print("unrecognized IRStmt")
+      assert False
+
+output = []
+tmps = set()
+for block in blocks:
+  #print(dir(block))
+  #print(block.instructions)
+  output.append("/*")
+  output.append(str(block.disassembly))
+  output.append("*/")
+  output.append(f"case 0x{block.addr:x}:")
+  for stmt in block.vex.statements:
+    #stmt.pp()
+    output.append(proc_stmt(stmt))
+    if isinstance(stmt,WrTmp):
+      tmps.add(stmt.tmp)
+  # output.append("goto jump_table;")
+  output.append("break;")
+output.append("default: assert(0); // Unexpected PC value. Something has gone awry.")
+
+#print("\n".join(output))
+
+header = """
+#include <stdint.h>
+#include <assert.h>
+#include <stdbool.h>
+#define PUT(reg) reg
+#define PC 184
+
+typedef struct state_t 
+{
+int64_t *mem;
+int64_t *gr;
+} state_t;
+"""
+
+
+
+with open("/tmp/decomp.c", "w") as file:
+    file.write(header)
+    file.write(f"void {entry_func.name}_decomp(state_t *state){{\n") # use entry_func.name?
+    file.write("int " + ",".join([f"t{tmp}" for tmp in tmps]) + ";\n") # declare temps
+    file.write(f"state->gr[PC] = 0x{entry_func.addr:x};\n") # initilizae PC to entry point
+    file.write("while(1){\n") # interpreter loop invariant on PC? Could make gas?
+    file.write("switch(state->gr[PC]){") 
+    file.writelines([x + "\n" for x in output])
+    file.write("}}}\n")
+```
+
+```bash
+clang-format -i  --style=google /tmp/decomp.c
+cat /tmp/decomp.c
+gcc /tmp/decomp.c -O2 -c -o /tmp/decomp.o -Wall -Wextra -Wcast-align -Wcast-qual -Wmissing-declarations
+esbmc /tmp/decomp.c --function max_decomp #--goto-functions-only
+```
+
+Control flow encoding. Do I do separate jump table, go to jump table every time?
+`while(true){switch state.gr[pc]{  case: case: case: case default: }  }`
+This is fairly conservative.
+Big block encoding trusts fall through behavior.
+Byte address and then cast mem pointers.
+
 ```python
 import angr
 p = angr.Project('/tmp/fact')
@@ -348,7 +584,7 @@ def print_expr(dst, expr):
     stmts.append({ "op": expr.op, "type": "int", "dest": dst, "args": args })
   elif isinstance(expr, pyvex.expr.RdTmp):
     print(expr.tmp)
-    stmts.append({ "op": "id", "type": "int", "dest": dst, "args":  })
+    #stmts.append({ "op": "id", "type": "int", "dest": dst, "args":  })
   elif isinstance(expr, pyvex.expr.Get):
     return f"%{expr.offset}"
   else:
@@ -381,15 +617,12 @@ for stmt in irsb.statements:
 print(stmts)
 ```
 
-
-
 ## Patching
-https://github.com/joxeankoret/diaphora diaphora diffing tool
+
+<https://github.com/joxeankoret/diaphora> diaphora diffing tool
 [A Method to Evaluate CFG Comparison Algorithms](http://cfgsim.cs.arizona.edu/qsic14.pdf)
 
-
-
-https://github.com/GJDuck/e9patch
+<https://github.com/GJDuck/e9patch>
 
 [Reassembly is Hard: A Reflection on Challenges and Strategies](https://softsec.kaist.ac.kr/~sangkilc/papers/kim-usenix23.pdf)
 
@@ -464,30 +697,140 @@ with tempfile.NamedTemporaryFile(suffix=".c") as fp:
 {% endraw %}
 
 ## Binary reversign
-https://corte.si/posts/visualisation/binvis/index.html hilbert curves for binary vsiualization
+
+<https://corte.si/posts/visualisation/binvis/index.html> hilbert curves for binary vsiualization
 benford's law
 binwalk
 entropy visualization
 
-https://www.usenix.org/system/files/sec22-burk.pdf Decomperson: How Humans Decompile
+<https://www.usenix.org/system/files/sec22-burk.pdf> Decomperson: How Humans Decompile
 and What We Can Learn From It
 
 [MATE](https://github.com/GaloisInc/MATE)
 
 # Debuggers
-https://github.com/x64dbg/x64dbg
-https://rr-project.org/
+
+<https://github.com/x64dbg/x64dbg>
+<https://rr-project.org/>
 windbg
 
 # Emulation
+
 [qiling](https://qiling.io/)
+
+## Qemu
+
+Qemu plugins
+Qemu has user land and system
+
+```bash
+echo '
+#include <stdio.h>
+int main(){
+  printf("hello world\n");
+  return 0;
+}
+' > /tmp/hello.c
+gcc /tmp/hello.c -o /tmp/hello
+qemu-x86_64  -strace -singlestep -d in_asm,cpu /tmp/hello 
+```
+
+options <https://www.qemu.org/docs/master/user/main.html>
+
+- strace
+- trace
+- plugin
+- d logs
+- singlestep (now one-insn-per-tb)
+
+```bash
+qemu-x86_64 --help
++ qemu-x86_64 --help
+usage: qemu-x86_64 [options] program [arguments...]
+Linux CPU emulator (compiled for x86_64 emulation)
+
+Options and associated environment variables:
+
+Argument             Env-variable      Description
+-h                                     print this help
+-help                                  
+-g port              QEMU_GDB          wait gdb connection to 'port'
+-L path              QEMU_LD_PREFIX    set the elf interpreter prefix to 'path'
+-s size              QEMU_STACK_SIZE   set the stack size to 'size' bytes
+-cpu model           QEMU_CPU          select CPU (-cpu help for list)
+-E var=value         QEMU_SET_ENV      sets targets environment variable (see below)
+-U var               QEMU_UNSET_ENV    unsets targets environment variable (see below)
+-0 argv0             QEMU_ARGV0        forces target process argv[0] to be 'argv0'
+-r uname             QEMU_UNAME        set qemu uname release string to 'uname'
+-B address           QEMU_GUEST_BASE   set guest_base address to 'address'
+-R size              QEMU_RESERVED_VA  reserve 'size' bytes for guest virtual address space
+-d item[,...]        QEMU_LOG          enable logging of specified items (use '-d help' for a list of items)
+-dfilter range[,...] QEMU_DFILTER      filter logging based on address range
+-D logfile           QEMU_LOG_FILENAME write logs to 'logfile' (default stderr)
+-p pagesize          QEMU_PAGESIZE     set the host page size to 'pagesize'
+-singlestep          QEMU_SINGLESTEP   run in singlestep mode
+-strace              QEMU_STRACE       log system calls
+-seed                QEMU_RAND_SEED    Seed for pseudo-random number generator
+-trace               QEMU_TRACE        [[enable=]<pattern>][,events=<file>][,file=<file>]
+-plugin              QEMU_PLUGIN       [file=]<file>[,<argname>=<argvalue>]
+-version             QEMU_VERSION      display version information and exit
+
+Defaults:
+QEMU_LD_PREFIX  = /etc/qemu-binfmt/x86_64
+QEMU_STACK_SIZE = 8388608 byte
+
+You can use -E and -U options or the QEMU_SET_ENV and
+QEMU_UNSET_ENV environment variables to set and unset
+environment variables for the target process.
+It is possible to provide several variables by separating them
+by commas in getsubopt(3) style. Additionally it is possible to
+provide the -E and -U options multiple times.
+The following lines are equivalent:
+    -E var1=val2 -E var2=val2 -U LD_PRELOAD -U LD_DEBUG
+    -E var1=val2,var2=val2 -U LD_PRELOAD,LD_DEBUG
+    QEMU_SET_ENV=var1=val2,var2=val2 QEMU_UNSET_ENV=LD_PRELOAD,LD_DEBUG
+Note that if you provide several changes to a single variable
+the last change will stay in effect.
+
+See <https://qemu.org/contribute/report-a-bug> for how to report bugs.
+More information on the QEMU project at <https://qemu.org>.
+```
+
+```bash
+qemu-x86_64 -d help
+Log items (comma separated):
+out_asm         show generated host assembly code for each compiled TB
+in_asm          show target assembly code for each compiled TB
+op              show micro ops for each compiled TB
+op_opt          show micro ops after optimization
+op_ind          show micro ops before indirect lowering
+int             show interrupts/exceptions in short format
+exec            show trace before each executed TB (lots of logs)
+cpu             show CPU registers before entering a TB (lots of logs)
+fpu             include FPU registers in the 'cpu' logging
+mmu             log MMU-related activities
+pcall           x86 only: show protected mode far calls/returns/exceptions
+cpu_reset       show CPU state before CPU resets
+unimp           log unimplemented functionality
+guest_errors    log when the guest OS does something invalid (eg accessing a
+non-existent register)
+page            dump pages at beginning of user mode emulation
+nochain         do not chain compiled TBs so that "exec" and "cpu" show
+complete traces
+plugin          output from TCG plugins
+
+strace          log every user-mode syscall, its input, and its result
+trace:PATTERN   enable trace events
+
+Use "-d trace:help" to get a list of trace events.
+```
+
 ## Fuzzing
+
 Mayhem
 [Fuzzy-sat](https://arxiv.org/pdf/2102.06580.pdf) running smt queries through a fuzzer
 Angora
 SLF eclipser
-
-
 
 [fuzzing challeneges and reflection](https://mboehme.github.io/paper/IEEESoftware20.pdf)
 
@@ -500,11 +843,13 @@ oss-fuzz
 [rode0day](https://rode0day.mit.edu/) rolling fuzzing competition
 
 Greybox
+
 - AFL.  [AFL++](https://aflplus.plus/) fork of afl [tutorials](https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/tutorials.md). compile using afl-clang-fast++ or use qemu mode.
 - [libfuzzer](https://llvm.org/docs/LibFuzzer.html) `clagg++ -fsantizer=address,fuzzer myfile.cc` [tutorial](https://github.com/google/fuzzing/blob/master/tutorial/libFuzzerTutorial.md)
 - honggfuzz
 
 whitebox
+
 - klee
 - sage
 
@@ -524,36 +869,35 @@ Write checker. Fuzz it. It's randomized search
 
 [Fuzzgym](https://arxiv.org/abs/1807.07490) makes a lot of sense to put neural heuristics in there
 
+<https://github.com/mykter/afl-training> afl fuzzing training
 
-
-https://github.com/mykter/afl-training afl fuzzing training
-
-https://www.youtube.com/watch?v=sjLFf9q2NRc&ab_channel=FuzzingLabs-PatrickVentuzelo afl++ qemy
+<https://www.youtube.com/watch?v=sjLFf9q2NRc&ab_channel=FuzzingLabs-PatrickVentuzelo> afl++ qemy
 libfuzzer vs afl vs honggfuzz
 corpus grammar based fuzzing, differential fuzzing
 
 ## Symbolic Execution
+
 [MAAT](https://maat.re/tutorials/get_started.html) Ttrail of bits using ghidra
 
-https://github.com/eurecom-s3/symcc
+<https://github.com/eurecom-s3/symcc>
 [symqemu](https://github.com/eurecom-s3/symqemu)
 
 [unicorn](https://www.unicorn-engine.org/) - ripped out the heart of qemu and made it programmatically accessible. Based on an old version of qemu though
 
 KLEE
 
-
 primus - bap's emulator framework
 
-panda https://github.com/panda-re/panda - built on qemu. record and replay executions
+panda <https://github.com/panda-re/panda> - built on qemu. record and replay executions
 
 [](https://github.com/analysis-tools-dev/dynamic-analysis)
 
 ## Vulnerabilities
-[CWE](https://cwe.mitre.org/index.html) - common weakenss enumeration
-https://attack.mitre.org/
 
-integer overflow https://cwe.mitre.org/data/definitions/190.html
+[CWE](https://cwe.mitre.org/index.html) - common weakenss enumeration
+<https://attack.mitre.org/>
+
+integer overflow <https://cwe.mitre.org/data/definitions/190.html>
 
 [null pointer dereference](https://cwe.mitre.org/data/definitions/476.html)
 
@@ -561,14 +905,13 @@ integer overflow https://cwe.mitre.org/data/definitions/190.html
 
 [Current State of Exploit Dev 2020](https://www.crowdstrike.com/blog/state-of-exploit-development-part-1/)
 
-
-
 ## Windows
+
 [microsoft exploits and exploit kits](https://docs.microsoft.com/en-us/microsoft-365/security/intelligence/exploits-malware?view=o365-worldwide)
 
-
 ## Mitigations
-Control Flow integrity is a broad term for many of these 
+
+Control Flow integrity is a broad term for many of these
 [CONFIRM: Evaluating Compatibility and Relevance of Control-flow Integrity Protections for Modern Software](https://personal.utdallas.edu/~hamlen/xu19-confirm.pdf)
 
 DEP - data execution prevention [executable space protection](https://en.wikipedia.org/wiki/Executable_space_protection) This says DEP is Windows terminology?
@@ -581,13 +924,13 @@ reverse flow guard
 extreme flow guard
 kernel data protection
 
-stack canary https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_cjh1548250046139.htm -fstack-protector. Guard variable put on stack
-SSP stack smashing protection. Stackguard, Propolice. https://embeddedartistry.com/blog/2020/05/18/implementing-stack-smashing-protection-for-microcontrollers-and-embedded-artistrys-libc/
+stack canary <https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_cjh1548250046139.htm> -fstack-protector. Guard variable put on stack
+SSP stack smashing protection. Stackguard, Propolice. <https://embeddedartistry.com/blog/2020/05/18/implementing-stack-smashing-protection-for-microcontrollers-and-embedded-artistrys-libc/>
 [Buffer overflow protection](https://en.wikipedia.org/wiki/Buffer_overflow_protection)
 
 ASLR ASLP A [Address Space Layout Randomization](https://en.wikipedia.org/wiki/Address_space_layout_randomization). Libraries are linked in at a different location. This make code reuse in an exploit more difficult.
 
-Fat pointers 
+Fat pointers
 
 [endbr](https://stackoverflow.com/questions/56905811/what-does-the-endbr64-instruction-actually-do) intel control flow enforcement technology (CET). Valid locations for indirect jumps.
 
@@ -596,13 +939,13 @@ cat /proc/mem/self ? To look at what actually loaded
 Also ldd shows were libraries get loaded in memory
 Stack canaries - set once per binary run, so with forking you can brute force them or maybe leak them?
 
-[checksec](https://github.com/slimm609/checksec.sh) tells you about which things are enabled. https://opensource.com/article/21/6/linux-checksec which also has a rundown of the different things and how you could check them manually. Can output into xml, json, csv
+[checksec](https://github.com/slimm609/checksec.sh) tells you about which things are enabled. <https://opensource.com/article/21/6/linux-checksec> which also has a rundown of the different things and how you could check them manually. Can output into xml, json, csv
 
 gcc options
--no-pie -pie -fpie 
+-no-pie -pie -fpie
 -no-stack-protection
 -fstack-protector-all
--z execstack makes stack executable 
+-z execstack makes stack executable
 
 RELRO - relocation read only. GOT table becomes read only. Prevents relocation attacks
 
@@ -611,6 +954,7 @@ binary diversification - compiler differently every time. code reuse becomes way
 # Exploits
 
 ## Buffer Overflows
+
 [buffer overflow](https://en.wikipedia.org/wiki/Buffer_overflow)
 When a buffer overflow occurs you are writing to memory that possibly had a different purpose. Maybe other stack variables, maybe return address pointers, maybe over heap metadata.
 
@@ -618,13 +962,13 @@ Sanitization of user input
 Off by one errors
 String termination
 
-
 ## Primitives
+
 AWP Arbitrary write primitive [CWE-123: Write-what-where Condition](https://cwe.mitre.org/data/definitions/123.html)
 ARP arbitrary read primitive
 
-
 ## Return Oriented Programming (ROP)
+
 [rp](https://github.com/0vercl0k/rp)
 [ropper](https://github.com/sashs/Ropper)
 [pwntool]
@@ -641,9 +985,9 @@ you can weave together libc calls. "Solar Designer"
 
 [smashing the stack for fun and profit](http://phrack.org/issues/49/14.html) - stacks are no longer executable
 
-https://acmccs.github.io/papers/geometry-ccs07.pdf geometry of innocent flesh on the bone. ROP
+<https://acmccs.github.io/papers/geometry-ccs07.pdf> geometry of innocent flesh on the bone. ROP
 
-https://github.com/sashs/Ropper
+<https://github.com/sashs/Ropper>
 
 [rop emporium](https://ropemporium.com/)
 
@@ -652,6 +996,7 @@ https://github.com/sashs/Ropper
 pop_gadget ; value ; nextgadget  loads from stack into register
 
 pure buffer overflow from command line:
+
 ```C
 #include <stdio.h>
 int main(int argc, char *argv[])
@@ -676,11 +1021,13 @@ ret2dlresolve
 ret2csu
 ret2plt
 
-https://medium.com/cyber-unbound/buffer-overflows-ret2libc-ret2plt-and-rop-e2695c103c4c
+<https://medium.com/cyber-unbound/buffer-overflows-ret2libc-ret2plt-and-rop-e2695c103c4c>
+
 ### JOP COP
+
 jop rocket. blackhat talk
-https://i.blackhat.com/asia-21/Thursday-Handouts/as-21-Brizendine-Babcock-Prebuilt-Jop-Chains-With-The-Jop-Rocket-wp.pdf  
-https://github.com/Bw3ll/JOP_ROCKET
+<https://i.blackhat.com/asia-21/Thursday-Handouts/as-21-Brizendine-Babcock-Prebuilt-Jop-Chains-With-The-Jop-Rocket-wp.pdf>  
+<https://github.com/Bw3ll/JOP_ROCKET>
 
 ## Data Oriented Programming (DOP)
 
@@ -691,9 +1038,6 @@ https://github.com/Bw3ll/JOP_ROCKET
 If you can overwrite a struct that contains a pointer, you can use this to obtain reads or writes when that pointer is read or written.
 If the struct contains a code pointer, you get control flow execution.
 
-
-
-
 Heap layout problem
 Heap layout manipulation
 
@@ -702,14 +1046,13 @@ Metadata
 Double free
 Use after free
 
-http://phrack.org/issues/61/6.html advanced doug lea malloc hacking
+<http://phrack.org/issues/61/6.html> advanced doug lea malloc hacking
 
-
-https://milianw.de/blog/heaptrack-a-heap-memory-profiler-for-linux.html
+<https://milianw.de/blog/heaptrack-a-heap-memory-profiler-for-linux.html>
 valgrind massif
 perf-mem, valgrind massif, and heaptrack
 
-https://heap-exploitation.dhavalkapil.com/ https://github.com/DhavalKapil/heap-exploitation
+<https://heap-exploitation.dhavalkapil.com/> <https://github.com/DhavalKapil/heap-exploitation>
 
 advanced doug lea malloc - phreak post
 
@@ -730,7 +1073,7 @@ new/delete make_unique
 pwndbg `vis` let's you see allocated chunks. How do it do it?
 vmmap also shows memory regions classified
 top chunk. I think the top chunk is resized to hand out new memory.
-Metadata - size field. prev_in_use flag. 
+Metadata - size field. prev_in_use flag.
 Allocator hands out in discrete sizes, not arbitrarily flexible
 
 [hacktheheap.io](https://twitter.com/wootsecurity/status/1529893232557142037?s=20&t=6BI9d8LKn2fVprDrNxITOw)
@@ -744,7 +1087,7 @@ slake
 
 [how2heap](https://github.com/shellphish/how2heap)
 
-https://ir0nstone.gitbook.io/notes/types/heap/bins
+<https://ir0nstone.gitbook.io/notes/types/heap/bins>
 
 chunks - has prev size, size, info bits. Free chunks have pointers in content
 top chunk - large piece of memory new chunks are carved out of
@@ -754,12 +1097,10 @@ fastbin - last in first out. a stacklike structure
 
 large bins - varying size. chunks put in order
 
-
 printf("%p") is your friend
 
-
 free lists
-when we call free memory 
+when we call free memory
 fastbin. hold free checks of a specific size
 set context-sections code
 b main
@@ -774,10 +1115,11 @@ fd forward pointer
 ### House of Force
 
 ### fastbin dup
+
 arbitrary write
 double free
 fastbin will return twice.
-frame command to 
+frame command to
 context code
 
 immediate double free is prtoected
@@ -785,12 +1127,12 @@ immediate double free is prtoected
 free_hook
 
 find_fake_fast
-one_gadget - constraints https://github.com/david942j/one_gadget
+one_gadget - constraints <https://github.com/david942j/one_gadget>
 
 malloc_alloc
 
-
 ### unsafe unlink
+
 n
 vis
 
@@ -809,17 +1151,20 @@ voodoo malloc tricks
 ## Type Confusion
 
 ## Kernel
-double free ps4 https://github.com/Cryptogenic/Exploit-Writeups/blob/master/FreeBSD/PS4%205.05%20BPF%20Double%20Free%20Kernel%20Exploit%20Writeup.md
 
-https://twitter.com/sirdarckcat/status/1584846038866989056?s=20&t=udFq9u7zLY-5-Ae6VrdqeQ Joy of explooitation the kernel  http://slides.kernel.kitchen
+double free ps4 <https://github.com/Cryptogenic/Exploit-Writeups/blob/master/FreeBSD/PS4%205.05%20BPF%20Double%20Free%20Kernel%20Exploit%20Writeup.md>
+
+<https://twitter.com/sirdarckcat/status/1584846038866989056?s=20&t=udFq9u7zLY-5-Ae6VrdqeQ> Joy of explooitation the kernel  <http://slides.kernel.kitchen>
+
 ## Browser
 
-https://twitter.com/5aelo?lang=en
+<https://twitter.com/5aelo?lang=en>
 [Attacking JavaScript Engines: A case study of JavaScriptCore and CVE-2016-4622](http://www.phrack.org/issues/70/3.html#article)
 
 [How I started chasing speculative type confusion bugs in the kernel and ended up with 'real' ones](https://lpc.events/event/16/contributions/1211/)
 
-[Return to sender Detecting kernel exploits with eBPF](https://i.blackhat.com/USA-22/Wednesday/US-22-Fournier-Return-To-Sender.pdf) https://github.com/Gui774ume/krie
+[Return to sender Detecting kernel exploits with eBPF](https://i.blackhat.com/USA-22/Wednesday/US-22-Fournier-Return-To-Sender.pdf) <https://github.com/Gui774ume/krie>
+
 ## Automated Exploit Generation (AEG)
 
 [sean heelan](https://sean.heelan.io/) [thesis](https://seanhn.files.wordpress.com/2020/11/heelan_phd_thesis.pdf)
@@ -835,32 +1180,30 @@ usenix security
 [crax++](https://github.com/SQLab/CRAXplusplus)
 
 # Elf stuff
+
 See linker
 elfmaster
 elf reverse
 
 [example interesting elf files](https://github.com/tmpout/elfs) overlaying headers. smallest that doesn't voilate spec
 
-
 [binary golf workshop](https://github.com/netspooky/bgws)
-https://codegolf.stackexchange.com/ [size coding](http://www.sizecoding.org/wiki/Main_Page)
+<https://codegolf.stackexchange.com/> [size coding](http://www.sizecoding.org/wiki/Main_Page)
 [dead bytes](https://tmpout.sh/1/1.html) libgolf
 [UNIX ELF Parasites and virus - Silvio Cesare](https://ivanlef0u.fr/repo/madchat/vxdevl/vdat/tuunix02.htm)
 [Elf Binary Mangling Pt. 4: Limit Break](https://tmpout.sh/2/11.html)
-# CTF
-commando vm
 
+# CTF
+
+commando vm
 
 [yolo space hacker. steam game of ctf stuff](https://store.steampowered.com/app/1341450/Yolo_Space_Hacker/)
 [exploit_me](https://github.com/bkerler/exploit_me) very vulnerable example applications
 [pwntools](https://github.com/Gallopsled/pwntools)
 
-
-
 pwndbg
 
 cyclic_gen
-
 
 # What is Binary Analysis
 
@@ -873,14 +1216,15 @@ There are greys areas. Symbolic execution starts to feel like a grey area. I wou
 
 Trying to understand a binary
 Why?
+
 - Finding vulnerabilities for defense or offense
-  + buffer overflows
-  + double frees
-  + use after frees
-  + memory leaks - just bad performance
-  + info leaks - bad security
+  - buffer overflows
+  - double frees
+  - use after frees
+  - memory leaks - just bad performance
+  - info leaks - bad security
 - Verification - Did your compiler produce a thing that does what your code said?
-- Reversing/Cracking closed source software. 
+- Reversing/Cracking closed source software.
 - Patching and Code injection. Finding Bugs for use in speed runs. Game Genie.
 - Auditing
 - Aids for manual RE work. RE is useful because things may be undocumented intentionally or otherwise. You want to reuse a chip, or turn on secret functionality, or reverse a protocol.
@@ -890,8 +1234,6 @@ Why?
 I don't want my information stolen or held ransom. I don't want people peeping in on my conversations. I don't want my computer wrecked. These are all malicious actors
 We also don't want our planes and rockets crashing. This does not require maliciousness on anyone's part persay.
 
-
-
 - Symbol recovery
 - Disassembly
 - CFG recovery
@@ -899,88 +1241,72 @@ We also don't want our planes and rockets crashing. This does not require malici
 - symbolic execution
 
 <https://github.com/analysis-tools-dev/dynamic-analysis> A list of tools
-https://analysis-tools.dev/
-[CSE597: Binary-level program analysis	Spring 19 Gang Tan](http://www.cse.psu.edu/~gxt29/teaching/cse597s19/schedule.html)
+<https://analysis-tools.dev/>
+[CSE597: Binary-level program analysis Spring 19 Gang Tan](http://www.cse.psu.edu/~gxt29/teaching/cse597s19/schedule.html)
 
 ### Program Analysis
+
 What's the difference? Binaries are less structured than what you'll typically find talked about in program analysis literature.
 
-Binaries are tough because we have tossed away or the coupling has become very loose between high level intent and constructs and what is there. 
+Binaries are tough because we have tossed away or the coupling has become very loose between high level intent and constructs and what is there.
 
 ### How are binaries made
 
-
 C preprocessor -> Maintains file number information isn't that interesting
 
-C compiler -> assembly. You can ask for this assembly with `-S`. You can also 
+C compiler -> assembly. You can ask for this assembly with `-S`. You can also
 Or more cut up
 C -> IR
 IR -> MIR (what does gcc do? RTL right? )
 MIR -> Asm
 
-
 # Misc
 
-https://twitter.com/33y0re/status/1528719776142475264?s=20&t=vcTgXMu6ZeZRjj7LiSMcFg kernel exploitation brwoser exploitation blog posts
+<https://twitter.com/33y0re/status/1528719776142475264?s=20&t=vcTgXMu6ZeZRjj7LiSMcFg> kernel exploitation brwoser exploitation blog posts
 
 - Arbitrary code guard
 - Code interity guard
 - hypervisor protected code integrity (HVCI) "the acg of kernel mode"
 - vistualization based security VBS. credential guard
 - local privilege escalation (LPE)
-- 
-
-
+-
 
 People
-- elfmaster ryan oneill
-- 
 
+- elfmaster ryan oneill
+-
 
 ## GDB
-https://github.com/HyperDbg/HyperDbg
 
-- [pwndbg](https://browserpwndbg.readthedocs.io/en/docs/) 
+<https://github.com/HyperDbg/HyperDbg>
+
+- [pwndbg](https://browserpwndbg.readthedocs.io/en/docs/)
 - heap commands. For exminging heap structur
-
 
 - gef can track malloc and free. That makes sense
 
-
-
-
-
-
-
-
 cfi directives - call frame information
 
-
-joern.io 
-https://github.com/RUB-SysSec/EvilCoder automatic bug insertion using joern
+joern.io
+<https://github.com/RUB-SysSec/EvilCoder> automatic bug insertion using joern
 phaser
 slither
 
 Hiding instructions in instructions
-https://lucris.lub.lu.se/ws/portalfiles/portal/78489284/nop_obfs.pdf
+<https://lucris.lub.lu.se/ws/portalfiles/portal/78489284/nop_obfs.pdf>
 
-
-Thomas stars https://github.com/bsoddreams?tab=stars
+Thomas stars <https://github.com/bsoddreams?tab=stars>
 
 SGX enclaves
 
 obfuscation
 [snapchat](https://hot3eed.github.io/2020/06/18/snap_p1_obfuscations.html)
 ollvm
-vmprotect https://github.com/void-stack/VMUnprotect
+vmprotect <https://github.com/void-stack/VMUnprotect>
 opaque preciates - one branch always taken
 
-
-chris domas https://github.com/xoreaxeaxeax/movfuscator
+chris domas <https://github.com/xoreaxeaxeax/movfuscator>
 tom 7
-
-
-
 
 [firmadyne](https://github.com/firmadyne/firmadyne) emulating and analyzing firmware
 
@@ -989,10 +1315,9 @@ tom 7
 burp suite
 idor - autorize
 
-
 bloodhound
- 
-shellcode encoding and decoding - sometimes you need to avoid things like \0 termination. https://www.ired.team/offensive-security/code-injection-process-injection/writing-custom-shellcode-encoders-and-decoders
+
+shellcode encoding and decoding - sometimes you need to avoid things like \0 termination. <https://www.ired.team/offensive-security/code-injection-process-injection/writing-custom-shellcode-encoders-and-decoders>
 Shellcode generators. What do they do?
 [shellcode database](http://shell-storm.org/shellcode/)
 
@@ -1000,12 +1325,11 @@ Shellcode generators. What do they do?
 shodan
 
 # nmap
+
 -A -T4. OS detection
 nmap nse - nmap scriping engine. There is a folder of scripts
 
 p0f - passive sniffing. fingerprinting
-
-
 
 [malware reversing class](https://class.malware.re/)
 [live overflow youtube](https://www.youtube.com/watch?v=iyAyN3GFM7A)
@@ -1019,16 +1343,14 @@ snort
 
 SIEM
 IDS - intrusin detection systems
-https://en.wikipedia.org/wiki/Intrusion_detection_system
+<https://en.wikipedia.org/wiki/Intrusion_detection_system>
 
 shellcode encoder/decoder/generator
-https://www.msreverseengineering.com/blog/2017/7/15/the-synesthesia-shellcode-generator-code-release-and-future-directions 
+<https://www.msreverseengineering.com/blog/2017/7/15/the-synesthesia-shellcode-generator-code-release-and-future-directions>
 synesthesia
 
 FLIRT
-https://github.com/avast/retdec
-
-
+<https://github.com/avast/retdec>
 
 <https://github.com/grimm-co/NotQuite0DayFriday> exploit examples
 
@@ -1037,38 +1359,32 @@ The Shellcoder's handbook
 Attacking network Protocols
 Implementing Effective Code Review
 
-<https://objective-see.com/blog/blog_0x64.html> 
-
+<https://objective-see.com/blog/blog_0x64.html>
 
 Hacking:
-http://langsec.org/papers/Bratus.pdf sergey weird machine paper
+<http://langsec.org/papers/Bratus.pdf> sergey weird machine paper
 
-https://github.com/sashs/filebytes
+<https://github.com/sashs/filebytes>
 
 blackhat
 defcon
 bluehat
 ccc
-https://en.wikipedia.org/wiki/Security_BSides bsides
+<https://en.wikipedia.org/wiki/Security_BSides> bsides
 ctf
 project zero
-kpaersky blog https://usa.kaspersky.com/blog/
+kpaersky blog <https://usa.kaspersky.com/blog/>
 spectre/meltdown
-https://www.youtube.com/watch?v=b7urNgLPJiQ&ab_channel=PinkDraconian
+<https://www.youtube.com/watch?v=b7urNgLPJiQ&ab_channel=PinkDraconian>
 
 return oriented programming sounds like my backwards pass.
 Huh.
 
-
-
-
-
-#### Digital forensics 
+#### Digital forensics
 
 - Volatility <https://www.volatilityfoundation.org/>
 - wireshark
 - sleuth kit?
-
 
 radare2, a binary analysis thingo. rax is useful for conversion of hex
 
@@ -1102,9 +1418,7 @@ ropper
 
 Best CTFs. I probably don't want the most prestigious ones? They'll be too high level? I want the simple stuff
 
-https://ctf101.org/ - check out the heap exploitation github thing
-
-
+<https://ctf101.org/> - check out the heap exploitation github thing
 
 pwntools
 
@@ -1119,16 +1433,13 @@ BOP - block oriented
 
 return 2 libc - a subset of rop?
 
-
 #### pwn.college
-ryan chapman syscall 
 
+ryan chapman syscall
 
-http://ref.x86asm.net/
+<http://ref.x86asm.net/>
 
-https://github.com/revng/revng
-
-
+<https://github.com/revng/revng>
 
 privilege escalation - getuid effective id.. Inherit user and group from parent process.
 switching to user resets the setuid bit.
@@ -1141,9 +1452,9 @@ intel vs at&t syntax
 Load up addresses
 constantrs in binary with .string
 gcc -static -nostdlib
-objcopy --section .text=outfile 
+objcopy --section .text=outfile
 exiting cleanly is smart. Helps know what is screwing up
-ldd 
+ldd
 
 Trying out shellcode
 mmap. mprotect?
@@ -1157,19 +1468,21 @@ x/5i $rip gives assembly?
 x/gx
 break *0xx040404
 n next
-s step 
+s step
 ni
 si
 
 strace is useful first debugging
 
 ## Intro
+
 system calls
 set rax to syscall number.
 call syscall instruction
-https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/
+<https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/>
 man yada
 strace
+
 - fork
 - execve
 - read
@@ -1182,11 +1495,12 @@ most systems are little endian
 calling conventions. rdi rsi rdx rcx r8 r9, return in rax
 rbx rbp r12 r13 r14 r15 are callee saved. guaranteed not smashed
 
-http://ref.x86asm.net/coder64.html opcode listing
-https://github.com/yrp604/rappel - assembly repl
-https://github.com/zardus/ctf-tools
+<http://ref.x86asm.net/coder64.html> opcode listing
+<https://github.com/yrp604/rappel> - assembly repl
+<https://github.com/zardus/ctf-tools>
 
 ### binary files
+
     file - tells info about file
     elf - interpreter, 
      - sections - text, plt/got resolve and siprach library calls, data preinitilize data, rodata, global read only,, bss for uniitialized data. sections are not required to run a binary
@@ -1196,20 +1510,22 @@ https://github.com/zardus/ctf-tools
     readelf, objdump, nm - reads symbols, patchelf, objcopy, strip, kaitai struct https://www.intezer.com/blog/malware-analysis/executable-linkable-format-101-part-2-symbols/
 
 ### process loading
-https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-4.html
+
+<https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-4.html>
    what to load. look for #! or elf magic. /proc/sys/fs/binsmt_misc can match a string there. hand off to elf defined interpeter is dynamically linked.
 
-   Then it's onto ld probably. 
+   Then it's onto ld probably.
    LD_PRELOAD,, LD_LIBRARY_PATH,, DT_RUNTIME in binary file,, system wide /etc/ld.so.conf, /lib and /usr/lib
    relocations updated
    /proc/self/maps
-   https://gist.github.com/CMCDragonkai/10ab53654b2aa6ce55c11cfc5b2432a4
+   <https://gist.github.com/CMCDragonkai/10ab53654b2aa6ce55c11cfc5b2432a4>
    libc is almost always linked.
    printf, scanf, socket, atoi, amlloc, free
 
 # shellcode
-    
+
 ## Protection
+
 ASLR - Addresses are randomized
 cat /proc/mem/self ? To look at what actually loaded
 Also ldd shows were libraries get loaded in memory
@@ -1221,7 +1537,8 @@ gcc options
 -no-pie
 -no-stack-protection
 
-## pwntools 
+## pwntools
+
 attaching to gdb and/or a process is really useful.
 cyclic bytes can let you localize what ends up where in a buffer overflow for example
 cyclic_find

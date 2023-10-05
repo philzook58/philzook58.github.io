@@ -86,6 +86,16 @@ That sounds fun
 
 [euclidean geometry](https://github.com/jjdishere/EG)
 
+[learning lean 4](https://leanprover-community.github.io/learn.html)
+
+<https://lftcm2023.github.io/tutorial/> lean curious mathematician 2023
+<https://www.slmath.org/summer-schools/1021#schedule_notes>
+
+[Verification of Combinational and Sequential Circuits in LEAN3](https://theses.liacs.nl/pdf/2022-2023-BingenZA.pdf)
+
+<https://github.com/leanprover/lean4-cli>
+<https://github.com/EdAyers/ProofWidgets4>
+
 ### Build
 
 `elan` tool
@@ -124,6 +134,18 @@ LEAN_PATH for libraries? Probably I'm fighting the Lake experience which is bad.
 [Expr](https://github.com/leanprover/lean4/blob/master/src/Lean/Expr.lean)
 
 IR - somehow this is what I need to look at to implement new backend?
+
+# MIL
+
+```lean
+-- tactics
+rw
+use
+rintro
+ring
+
+have have, show style proofs
+```
 
 # Stuff
 

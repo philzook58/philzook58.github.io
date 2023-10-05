@@ -10,6 +10,7 @@ title: Coq
   - [Reflection](#reflection)
   - [What are Proofs](#what-are-proofs)
     - [match annotations](#match-annotations)
+- [Canonical Structures](#canonical-structures)
 - [Kernel](#kernel)
   - [VM](#vm)
 - [Ocaml](#ocaml)
@@ -77,6 +78,15 @@ These annotations bring the match closer or exactly equivalent to the "recursor"
 
 In any sense does this
 
+# Canonical Structures
+
+<https://coq.inria.fr/refman/language/extensions/canonical.html>
+
+[canonical structures for the working coq user](https://inria.hal.science/hal-00816703v1)
+Register in a database how to go from a projection of a structure to the structure itself. Kind of sort of we are declaring that projectors are injective.
+
+<https://okmij.org/ftp/ML/canonical.html> Oleg discussing aspects of the system.
+
 # Kernel
 
 ## VM
@@ -142,6 +152,7 @@ Individual folders for each architecture. Interesting.
 - backend
 
 ## Coq hackthan 2022
+
 <https://github.com/coq/coq/tree/master/dev/doc>
 <https://github.com/coq/coq/wiki/DevelSetup> coq devel setup
 
@@ -336,3 +347,7 @@ coq platform
 [defaultt](https://github.com/acorrenson/Defaultt) - default logic
 
 <https://github.com/acorrenson/SATurne>
+
+[An Introduction to MathComp-Analysis](https://www.math.nagoya-u.ac.jp/~garrigue/lecture/2022_affeldt/karate-coq-nagoya2022.pdf)
+
+[PRISM proof repair](https://zenodo.org/record/7935207)

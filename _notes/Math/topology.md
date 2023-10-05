@@ -3,6 +3,7 @@ layout: post
 title: Topology
 ---
 - [Point Set Topology](#point-set-topology)
+  - [Continuity](#continuity)
 - [Homeomorphism](#homeomorphism)
 - [Algebraic Topology](#algebraic-topology)
   - [Complexes](#complexes)
@@ -17,6 +18,46 @@ title: Topology
 Munkres
 
 [Leinster - General topology](https://www.maths.ed.ac.uk/~tl/topology/topology_notes.pdf)
+bourbaki
+
+Topology - A space equipped with a set of open sets.
+<https://en.wikipedia.org/wiki/Topological_space>
+
+```lean
+-- fiddling
+structure Topology (A : Type) where
+  open_sets : Set (Set A)
+  empty_open : (fun x => False) ∈ open_sets
+  full_open : (fun x => True) ∈ open_sets
+  union_open : 
+  inter_open : forall x y : Set a, open_sets x -> open_sets y -> open_sets (fun z => x z /\ y z)
+
+```
+
+<https://github.com/leanprover-community/mathlib4/blob/master/Mathlib/Topology/Basic.lean>
+<https://isabelle.in.tum.de/library/HOL/HOL/Topological_Spaces.html> isabelle
+
+<https://github.com/math-comp/analysis/blob/master/theories/topology.v> mathcomp
+
+<https://gist.github.com/andrejbauer/d31e9666d5f950dd8ccd> andrej bauer coq. syntehtic topology ad functions into sierpinski space <https://en.wikipedia.org/wiki/Sierpi%C5%84ski_space>
+<https://github.com/coq-community/topology>
+
+<https://en.wikipedia.org/wiki/Filter_(mathematics)>  many presentation use filters
+<https://en.wikipedia.org/wiki/Filters_in_topology>
+
+<https://en.wikipedia.org/wiki/Axiomatic_foundations_of_topological_spaces>
+closure and interior operators can be axiomatized
+
+## Continuity
+
+Continuous functions have open preimages of open sets.
+
+```lean
+
+```
+
+quotient topology. Take an equivalence relation. The quotient set is the set of equivalence classes `[z] = {x | x ~ z}`
+  The quotient toplogy is the toplogy whose
 
 # Homeomorphism
 
@@ -66,7 +107,7 @@ edges = [(0,1), (1,2), (2,3), (3,0)]
 faces = [(0,1,2,3)] # indices refer to previous
 ```
 
-Discrete finite represntation of CW uses loops over previous layers. The "disk" is a polygon. This is nice compared to simplicial because there is a nicer notion of "simplyfing" a space by removing redundant subdivision.
+Discrete finite representation of CW uses loops over previous layers. The "disk" is a polygon. This is nice compared to simplicial because there is a nicer notion of "simplifying" a space by removing redundant subdivision.
 
 Regular vs non regular
 

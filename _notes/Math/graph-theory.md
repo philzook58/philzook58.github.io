@@ -4,15 +4,18 @@ title: Graph Theory
 ---
 
 - [Graph Families / Classes](#graph-families--classes)
-- [Planar](#planar)
+- [Software](#software)
+  - [Representation](#representation)
+- [Topological Graph Theory / Planar](#topological-graph-theory--planar)
 - [Minors](#minors)
+- [Extremal Graph Theory](#extremal-graph-theory)
+- [Probablistic Graph Theory](#probablistic-graph-theory)
 - [Algebraic Graph theory](#algebraic-graph-theory)
   - [Cut](#cut)
   - [Flow](#flow)
 - [Decomposition](#decomposition)
   - [Tree Decompositions](#tree-decompositions)
   - [Graph Partition](#graph-partition)
-- [Algebra](#algebra)
 - [Logic](#logic)
 - [Problems](#problems)
   - [Easy](#easy)
@@ -28,6 +31,7 @@ title: Graph Theory
 - [Graph Rewriting / Graph Transformation](#graph-rewriting--graph-transformation)
   - [Pfaffian orientation](#pfaffian-orientation)
   - [Matchings](#matchings)
+- [Infinite Graphs](#infinite-graphs)
 - [Misc](#misc)
 
 <https://en.wikipedia.org/wiki/Graph_theory>
@@ -128,13 +132,62 @@ fn main() {
 
 ```
 
-## Planar
+### Representation
+
+Set of pairs
+Adjacency list. multigraph
+
+raw pointery. Ironically, graphs are easy to define in C. Raw access to pointers makes traversing around in the grap possible. Global questions/search about the graph become annying.
+
+E,V,s,t. Functional rep. You see this in categorical presentations. This is a finite category and then a functor takes it to data. Multigraph really.
+
+```lean
+-- https://proofassistants.stackexchange.com/questions/1698/making-a-finite-graph-type-in-lean-introduction-rule
+structure Graph where -- a choice. Make E V parameters or not.
+    E : Type
+    V : Type
+    s : E -> V
+    t : E -> V
+-- It's not good data though. We're not going to be able to compute
+def ex := Graph.mk Unit Unit (fun _ => ()) (fun _ => ())
+def ex2 := Graph.mk Bool Unit (fun _ => ()) (fun _ => ()) -- two edges to one vertex
+
+
+def Graph2 (V : Type) : Type := V -> V -> Prop
+
+inductive ex1 : Bool -> Bool -> Prop where
+    true_edge : ex1 true true
+
+def ex2 x y := match x, y with
+ | true, true => True
+ | _,_ => False
+def Set (X : Type) : Type := X -> Prop
+-- a set of edges
+def Graph3 (V : Type) : Type := Set (Prod V V)
+--#print (<->)
+-- #check Iso
+-- theorem iso (V : Type) : Iso (Graph2 V) (Graph3 V) := (fun p => fun (x,y) => p x y, fun p => fun x y => p (x, y))
+
+structure SymGraph (V) where
+    g : Graph2 V
+    sym : forall x y, g x y -> g y x
+
+
+
+def main : IO Unit := pure ()
+```
+
+half edge
+
+## Topological Graph Theory / Planar
 
 <https://en.wikipedia.org/wiki/Planar_graph>
 <https://en.wikipedia.org/wiki/Book_embedding>
 <https://en.wikipedia.org/wiki/Topological_graph_theory>
 
 <https://en.wikipedia.org/wiki/User:David_Eppstein/Graph_Drawing> graph drawing.
+
+Kuratowski's theorem
 
 ## Minors
 
@@ -144,9 +197,35 @@ fn main() {
 
 <https://en.wikipedia.org/wiki/Robertson%E2%80%93Seymour_theorem> - Robertson Seymour. Graphs, ordered by the minor relationship, form a well quasi-order
 
+## Extremal Graph Theory
+
+<https://en.wikipedia.org/wiki/Extremal_graph_theory>
+graphons
+[Szemerédi regularity lemma](https://en.wikipedia.org/wiki/Szemer%C3%A9di_regularity_lemma)
+
+## Probablistic Graph Theory
+
+<https://en.wikipedia.org/wiki/Random_graph>
+
+[Erdős–Rényi model](https://en.wikipedia.org/wiki/Erd%C5%91s%E2%80%93R%C3%A9nyi_model)
+
+<https://en.wikipedia.org/wiki/Percolation_theory>
+
 ## Algebraic Graph theory
 
 Graph expanders
+
+<https://en.wikipedia.org/wiki/Adjacency_matrix>
+<https://en.wikipedia.org/wiki/Spectral_graph_theory>
+cheeger constant. cheeger inequality
+
+Positive and negative value on eigenvectors are a way of labelling or cutting graph.
+
+<https://en.wikipedia.org/wiki/Expander_graph> sparse graph with strong connectivity properties. hard to cut apart.
+
+[Miracles of algerbaic graph theory](https://www.youtube.com/watch?v=CDMQR422LGM&t=6s&ab_channel=JointMathematicsMeetings)
+
+kepner and gilbert - graphs in language of linear algebra
 
 ### Cut
 
@@ -243,18 +322,6 @@ It's almost "dual" to graph coloring, negating the sign of color color surafce. 
 Optmization metrics: number of cut edges normalized in some way. "Volume" is sum of edges. ormalize by volume? Qutient, normalized cut
 
 Karger's algorithm - random for min cut. Randomly contract edges until you have only two vertices left. The edges between those are your guess for a cut and the set of contracted together vertcies are the two sides of the cut
-
-## Algebra
-
-<https://en.wikipedia.org/wiki/Adjacency_matrix>
-<https://en.wikipedia.org/wiki/Spectral_graph_theory>
-cheeger constant. cheeger inequality
-
-Positive and negative value on eigenvectors are a way of labelling or cutting graph.
-
-<https://en.wikipedia.org/wiki/Expander_graph> sparse graph with strong connectivity properties. hard to cut apart.
-
-[Miracles of algerbaic graph theory](https://www.youtube.com/watch?v=CDMQR422LGM&t=6s&ab_channel=JointMathematicsMeetings)
 
 ## Logic
 
@@ -667,6 +734,8 @@ SELECT e1.a, e1.b, e2.a, e2.b, e3 FROM k3 as e1, k3 as e2, k3 as e3 WHERE e1.b =
 
 [Stanford CS224W: Machine Learning with Graphs](https://www.youtube.com/playlist?list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn)
 
+the power of graph learning - simons <https://www.youtube.com/watch?v=iAxrFW1ku4I>
+
 ## Graph Rewriting / Graph Transformation
 
 "Graph grammars"
@@ -691,6 +760,7 @@ the right hand side R, glued in
 AGG
 GP 2 <https://github.com/UoYCS-plasma/GP2>
 
+GGL <https://www.tbi.univie.ac.at/software/GGL/> graph grammar obrary. Built on bosot graphs
 [GDGEN.Net](https://grgen.de/)
 [PORGY](https://porgy.labri.fr/) <https://www.youtube.com/watch?v=D_YHlXawg9o&ab_channel=GReTASeminar>
 
@@ -698,6 +768,9 @@ GP 2 <https://github.com/UoYCS-plasma/GP2>
 [verigraph](https://github.com/Verites/verigraph)
 
 [galoisenne](https://github.com/breandan/galoisenne) Lots of cool links
+
+Chemical rewriting "Chemical Graph Transformation and Applications" <https://www.youtube.com/watch?v=mzIXfsp-eJE&ab_channel=GReTASeminar>
+SMILES is a graph. chemical databases. See note on chemistry
 
 My temptation would be to: find a pattern L (using datalog/sql probably), store result in an env dict, blow it all away, paste in R filling in from the env.
 
@@ -854,7 +927,7 @@ pick edges such that exactly one edge touches every vertex
 
 Related to <https://en.wikipedia.org/wiki/Edge_cover> where each vertex must touch at least one edge
 
-# Infinite Graphs
+## Infinite Graphs
 
 <https://en.wikipedia.org/wiki/End_(graph_theory)>
 
