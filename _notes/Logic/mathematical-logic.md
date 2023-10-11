@@ -82,6 +82,57 @@ A proof only uses a finite number of axioms (?)
 
 # Set Theory
 
+Books:
+Halmos Naive Set Theory
+Jech Introduction
+
+```python
+from z3 import *
+S = DeclareSort("Set1")
+empty = Const("empty", S)
+elem = Function("elem", S, S, BoolSort())
+x,y,z = Consts("x y z", S)
+power = Function("P", S, S)
+sub = Function("sub", S, S, BoolSort())
+union = Function("U", S, S, S)
+inter = Function("N", S, S, S)
+
+
+class Theory():
+  def __init__(self):
+    self.ax = {}
+    self.theorem = {}
+    # self.kb = {}
+  def axiom(self, name, formula):
+    self.ax[name] = formula
+    self.theorem[name] = formula
+  def theorem(self, name, formula, lemmas):
+    assert name not in self.theorem
+    s = Solver()
+    s.add(lemmas)
+    s.add(Not(formula))
+    res = s.check()
+    if res == unsat:
+      self.theorem[name] = formula
+    else:
+      print("Theorem {} is not valid".format(name))
+  def define(name, formula):
+    c = FreshConst(name,S)
+    self.theorems[name + "_define"] = c == formula
+    # axiom? theorem?
+  def spec(A,P): # axiom of specification
+    y = FreshConst(S)
+    return ForAll([x], And(elem(x,A), elem(x, P(x))) == elem(x, y))
+
+ZF = Theory()
+ZF.axiom("empty", ForAll([x], Not(elem(x, empty))))
+ZF.axiom("ext", ForAll([x,y], ForAll([z], elem(z,x) == elem(z,y)) == (x == y)))
+
+ZF.theorem("empty_unique", ForAll([y], Implies(ForAll([x,y], Not(elem(x, y))), y == empty), [])
+
+
+```
+
 Schroder-Bernstein Theorem
 
 Forcing
@@ -100,11 +151,19 @@ Aczel is a computer scientist.
 
 <https://en.wikipedia.org/wiki/Axiom_of_regularity> aka axiom of foundation
 
-Axiom of specification. Let's us take arbitrary subsets of predefined sets
+Axiom of specification. Let's us take arbitrary subsets of predefined sets. We need to convert
 
 <https://en.wikipedia.org/wiki/Axiom_of_pairing>
 
 Ordered Pairs - part of the general idea of sequences of subsets.
+
+It is interesting that induction and recursion are principles/theorems and not axioms of set theory. We can use comprehension to find the minimal set that is closed under
+Induction
+The recursion theorem. A sequence of equations feel like they define a function. Using the principle of specification, we can define get a set of tuples that satisfy the equations. Being a function requires covering the domain and uniqueness of the output. These are theorems that must be proved. It turns out that simple recursion over naturals does define a function.
+
+Families of sets.
+
+Peano inside set theory.
 
 ### Ordinals
 

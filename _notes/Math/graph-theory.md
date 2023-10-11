@@ -96,6 +96,8 @@ Konig's theorem - minimum vertex cover = maximum edge cover
 
 <https://en.wikipedia.org/wiki/Comparability_graph> things that are comparable in a partial order have an edge. Total order has complete comparaibility graph. Comparability graphs are perfect
 
+cayley graph <https://en.wikipedia.org/wiki/Cayley_graph> turn group into graph. edges are generators. Can easily get infinite graph in this way
+
 ## Software
 
 networkx

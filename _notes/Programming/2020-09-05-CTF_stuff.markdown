@@ -482,7 +482,6 @@ def proc_stmt(stmt : IRStmt):
     elif isinstance(stmt, Exit):
         print(stmt.jk)
         assert stmt.jk == "Ijk_Boring"
-        #return f"if({proc_expr(stmt.guard)}){{ goto {label(stmt.dst.value)}; }}"
         return f"if({proc_expr(stmt.guard)}){{ state->gr[{stmt.offsIP}] = 0x{stmt.dst.value:x}; break; }}"
         # TODO deal with other jumpkind
         # What represents an indirect jump? goto jump_table;
