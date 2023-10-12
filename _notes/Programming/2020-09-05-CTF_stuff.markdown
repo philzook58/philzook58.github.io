@@ -328,6 +328,8 @@ int max(int x){
 gcc /tmp/max.c -c -o /tmp/max 
 ```
 
+{% raw %}
+
 ```python
 import angr
 p = angr.Project('/tmp/fact')
@@ -615,6 +617,8 @@ for stmt in irsb.statements:
       assert "unrecognized stmt" == None
 print(stmts)
 ```
+
+{% endraw %}
 
 ## Patching
 
