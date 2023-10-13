@@ -249,6 +249,156 @@ A proof of `A |- B` is the basic "morphism". A proof is a tree. We can perhaps a
 - Existentials and universals as adjunctions
   Different proofs are different morphisms between the same objects.
 
+`x | A |- B` is kind of expressing $A \subset B$ where the sets A and B live in `x` space (the number of free variables describes the number of ). Because logic and set theory kind of reflect each other by the comprehension principle, formula and sets are quite similar. This is probably decribable as a functor of some kind.
+Coordinates and coordinate changes are interesting to consider.
+universal and existential quantifiers are kind of projectons combined with coordinatre transform. Weakening is like lifting a low-d set to a high-d set by just allowing the column above it. If you do existential and then lift, you get an outer approximation of original set. If you do
+Sets and predicates are also akin to indicator functions. We are well aware that coordinate changes sort of require changing functions contravariantly.
+A finitary version of coordinates is considering a representation of finset where you need to just label wth integers. Tupling can be collapsed to indices in column major, row major, or zigzag quite naturally. These are different cooridnate schemes.
+
+```python
+# finset
+
+def idd(n):
+  return (n,n,[i for i in range(n)])
+DOM = 0
+COD = 1
+def compose(f,g):
+  assert f[DOM] == g[COD]
+  return (g[DOM], f[COD], [f[2][t] for t in g[2]]) 
+
+def rowmajor(n,m,(i,j)):
+  return i + n*j
+def undorowmajor(n,m,k):
+  return (k % n, k // n)
+
+def colmajor(n,m,(i,j)):
+  return j + m*i
+
+
+def kron_row(f,g):
+  pass
+def kron_col(f,g):
+  pass
+def kron_zigzag(f,g):
+  pass
+
+# permutations are interesting subcase. These form groups at each object.
+# when we define a pullback, we pick some ordering. There are others.
+
+INITIAL = 0
+FINAL = 1
+OMEGA = 2
+
+true = (FINAL, OMEGA, [1])
+false = (FINAL, OMEGA, [0])
+
+# a subset morphism of the finset n. It is indexed by the a set the size of the subset
+def subset(n, s):
+  return (len(s), n, [i for i in s]) 
+
+def is_mono(f):
+  pass
+def is_epi(f):
+  pass
+
+
+
+```
+
+Using integers as objects is a skeletal category. Using python sets as objects would not be. Lots of isomorphic objects. Integers are kind of beautiful in a way. Let's us use arrays.
+
+```python
+'''
+use integers to mark variables, tuples and strings for function symbols / constants
+objects are numbers of variables
+morphisms are subsitutions
+We also should case the domain and codomain
+'''
+def idd(n):
+  return (n,n,[i for i in range(n)])
+DOM = 0
+COD = 1
+def apply(subst, term):
+  if isinstance(term, int):
+    return subst[term]
+  elif isinstance(term, tuple):
+    return tuple(apply(subst, t) for t in term)
+  elif isinstance(term, str):
+    return term
+  else:
+    raise Exception("bad term")
+
+def compose(f,g):
+  assert f[DOM] == g[COD]
+  return (g[DOM], f[COD], [apply(f[2], t) for t in g[2]])
+
+def lift(t,n):
+  if isinstance(t, int):
+    return t+n
+  elif isinstance(t, tuple):
+    return tuple(lift(t, n) for t in t)
+  elif isinstance(t, str):
+    return t
+  else:
+    raise Exception("bad term")
+
+def kron(f,g):
+  return (f[DOM]+g[DOM], f[COD]+g[COD], f[2]+[lift(t, f[COD]) for t in g[2]])
+
+fuse = (2,1,[0,0])
+
+print(compose(idd(2), idd(2)))
+print(compose(fuse, kron(fuse,fuse))) # (4, 1, [0, 0, 0, 0])
+# equalizer
+
+# pullback
+
+# 
+```
+
+[Finite Limits and Anti-unification in Substitution Categories Wolfram Kahl](https://inria.hal.science/hal-02364568/document)
+
+```python
+# predicates are again represented using tuples, integers, and strings
+# object are now predicates
+# morphisms are proof trees with the root as `a |- b` which is a symbolic version of subset
+def idd(p):
+  return (p,p, "id")
+DOM = 0
+COD = 1
+def compose(f,g):
+  assert f[DOM] == g[COD]
+  return (g[DOM], f[COD], ("cut", f[2], g[2]))
+
+# conjuction
+#def prod(f,g):
+  
+# disjunction
+
+# implication
+
+# a subsitution defines a functor
+def instan(subst, pf):
+  objmap = lambda ob: apply(subst, pf[DOM])
+  arrmap = lambda arr: ("instan", subst[2], arr)
+  return (objmap(pf[DOM]), objmap(pf[COD]), arrmap(pf[2]))
+
+# adjoint
+def exists(subst, pf):
+  pass
+
+
+```
+
+Polynomials semialgebraic
+Z3 impl
+Linear numpy
+Modules
+Convex
+Polytope
+marshall
+sympy
+
 # Internal Language
 
 What is this? Cody talks about this a lot.
@@ -258,6 +408,9 @@ What is this? Cody talks about this a lot.
 [Compositional Modeling with Decorated Cospans - Baez](https://www.youtube.com/watch?v=skEsCiIM7S4&ab_channel=GReTASeminar)
 
 <https://act2023.github.io/> International Conference on Applied Category Theory
+
+[polynomil functors book](https://github.com/ToposInstitute/poly)
+<https://github.com/ToposInstitute/polytt> a type theory implementation?
 
 ## Categorical Databases
 

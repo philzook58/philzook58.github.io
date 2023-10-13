@@ -147,11 +147,68 @@ Axiom schema vs second order axiom.
 Or are you in a second order system and tracking
 Are peano axioms conditions for an embedding in a larger system, or are hey
 
+Peano embedded in term of ZF theory.
+
+```lean
+inductive pterm where
+  | Add : pterm -> pterm -> pterm
+inductive pform where
+  | Eq : pterm -> pterm -> pform
+  | 
+inductive pproof where
+ | Induct : (pterm -> pform) -> 
+
+```
+
+```python
+from z3 import *
+
+def Peano():
+  def __init__(self):
+    self.data = {}
+    self.defns = {}
+  def induction(self, name, P): # make n a parameter?
+    n = FreshInt() # make n a nat?
+    self.data[name] = Implies(And(P(0), Forall([n],Implies(P(n), P(n+1)))), ForAll(n, P(n)))
+  def theorem(self, name, th, *lemmas):
+    assert name not in self.data
+    s = Solver()
+    for lemma in lemmas:
+      s.add(self.data[lemma][1])
+    s.add(Not(th))
+    res = s.check()
+    if res == unsat:
+      self.data[name] = ("theorem", th, lemmas)
+    elif res == sat:
+      print(s.model())
+      raise Exception("Not a theorem")
+    else:
+      raise Exception("Unknown")
+  def definition(self, name, args, res, th):
+    assert name not in self.defns
+    self.theorem(name + "_total", ForAll(args, Exist(res, th)))
+    self.theorem(name + "_unique", ForAll(args, Forall([res, res2], Implies(And(th, th2), res == res2))))
+    self.defns[name] = (args, res, th)
+    self.data = ("definition", )
+    #self.data[name] = ("definition", th)
+  def axiom(name, th):
+    self.data[name] = ("axiom", th)
+
+
+
+
+
+```
+
 ### Godel numbering
 
 We can encode syntax as a number. The details don't matter that much except you need to be concrete to make sure things are working
 <https://en.wikipedia.org/wiki/G%C3%B6del_numbering>
 "arithmetization"
+
+Sequences of numbers <https://en.wikipedia.org/wiki/G%C3%B6del_numbering_for_sequences>
+
+inference rules
 
 ### Undefinability of Truth
 
