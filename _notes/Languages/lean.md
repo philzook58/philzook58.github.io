@@ -73,6 +73,10 @@ https://github.com/opencompl/lean-mlir
 [do unchained](https://leanprover.github.io/papers/do.pdf) - a description of the extensions to monad syntax like for, break, mut that lean offer
 
 https://github.com/ccodel/verified-encodings
+
+[lean 3 to lean 4 tactic trasnlation cheatsheet](https://github.com/madvorak/lean3-tactic-lean4)
+
+[A super position prover for Lean 3](https://github.com/leanprover/super)
 ### Build
 
 `elan` tool

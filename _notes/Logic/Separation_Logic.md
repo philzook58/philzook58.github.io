@@ -5,6 +5,10 @@ layout: post
 title: Separation Logic
 ---
 
+https://cs.nyu.edu/~wies/software/grasshopper/
+https://github.com/wies/grasshopper
+"GRASShopper is an experimental verification tool for programs that manipulate dynamically allocated data structures. GRASShopper programs can be annotated with specifications expressed in a decidable specification logic to check functional correctness properties. The logic supports mixing of separation logic and first-order logic assertions, yielding expressive yet concise specifications."
+
 
 https://blog.sigplan.org/2020/03/03/go-huge-or-go-home-popl19-most-influential-paper-retrospective/
 

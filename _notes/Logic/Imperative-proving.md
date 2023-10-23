@@ -7,10 +7,12 @@ title: Imperative Proving
 - [Why3](#why3)
 - [Boogie](#boogie)
 - [Dafny](#dafny)
+- [Assembly](#assembly)
 - [Model Checking](#model-checking)
   - [ESBMC](#esbmc)
   - [cpachecker](#cpachecker)
 - [Memory](#memory)
+  - [Memory Safety](#memory-safety)
 - [Misc](#misc)
     - [Fun old timey books.](#fun-old-timey-books)
 - [old model checking notes](#old-model-checking-notes)
@@ -44,7 +46,13 @@ Stackifty algorithm of llvm for wasm
 # Dafny
 
 
+# Assembly
+[bil-to-boogie](https://github.com/UQ-PAC/bil-to-boogie-translator) By god they did it.
+BinSec
+Cbat
+ghihorn
 
+arguably all symbolic execution engines - the trick is to cut loops
 # Model Checking
 https://github.com/kind2-mc/kind2 takes in lustre. Multiple smt backends. ocaml implementations of ic3 and invarait
 https://kind.cs.uiowa.edu/kind2_user_doc/1_techniques/1_techniques.html
@@ -77,8 +85,19 @@ Tagged memory separating heap and stack. Chaos when gets confused. Does pointer 
 [Synthesizing an Instruction Selection Rule Library from Semantic Specifications](https://pp.ipd.kit.edu/uploads/publikationen/buchwald18cgo.pdf)
 [A Formal Model of a Large Memory that Supports Efficient Execution](https://www.cs.utexas.edu/users/hunt/FMCAD/FMCAD12/014.pdf)
 
+## Memory Safety
+[Beyond the PDP-11: Architectural support for a memory-safe C abstract machine](https://www.cl.cam.ac.uk/research/security/ctsrd/pdfs/201503-asplos2015-cheri-cmachine.pdf)
+Diehard allocator
+[The meaning of memory safety](https://arxiv.org/abs/1705.07354)
+Noninterferece as memory safety. The details of malloc should not leak
+[Baggy Bounds Checking: An Efficient and Backwards-Compatible Defense against Out-of-Bounds Errors](https://www.usenix.org/legacy/event/sec09/tech/full_papers/akritidis.pdf)
+[In Memory Safety, The Soundness Of Attacks Is What Matters*](https://openwall.info/wiki/_media/people/jvanegue/files/soundness_of_attacks.pdf)
+[RUDRA: Finding Memory Safety Bugs in Rust  at the Ecosystem Scale](https://taesoo.kim/pubs/2021/bae:rudra.pdf)
+[is memory safety still a concern](https://www.cs.columbia.edu/~mtarek/files/candidacy_exam_syllabus.pdf)
+
 
 # Misc
+
 [jitterbug](https://unsat.cs.washington.edu/projects/jitterbug/)
 [serval](https://unsat.cs.washington.edu/projects/serval/)
 

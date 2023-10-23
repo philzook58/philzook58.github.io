@@ -639,7 +639,6 @@ Performance tips: WAL mode
 - `.indexes`
 - `.expert` suggests indices?
 
-<<<<<<< HEAD
 ```sql
 create table edge(a,b);
 insert into edge values (1,2), (2,3);
@@ -651,10 +650,13 @@ create view path(a,b) as
 select * from path; -- error, circularly defined.
 ```
 
-=======
 [	Strong Consistency with Raft and SQLite](https://news.ycombinator.com/item?id=35246228)
 https://rqlite.io/ The lightweight, easy-to-use, distributed relational database built on SQLite
->>>>>>> ddf5edc098d5ddaa7b4405b907a6595be2aa09fa
+
+https://github.com/libsql/libsql https://libsql.org/ fork of sqlite to add features?
+
+https://vlcn.io/cr-sqlite/intro merging sqlite database plugin
+
 # Duckdb
 https://duckdb.org/
 sqlite for olap
