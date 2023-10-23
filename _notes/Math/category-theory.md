@@ -36,6 +36,7 @@ title: Category Theory
 - [Profunctors](#profunctors)
 - [Optics](#optics)
 - [Logic](#logic)
+  - [Poly](#poly)
 - [Internal Language](#internal-language)
 - [Applied Category Theory](#applied-category-theory)
   - [Categorical Databases](#categorical-databases)
@@ -398,6 +399,40 @@ Convex
 Polytope
 marshall
 sympy
+
+## Poly
+
+```python
+import sympy
+from sympy import poly
+from sympy import symbols
+# a category of polynomial substutiton
+# actually this is just sympy substitution.
+def idd(n):
+  x = sympy.MatrixSymbol('x', n, 1)
+  x = [symbols(f"x{i}") for i in range(n)]
+  return (n, x)
+
+def cod(f):
+  return len(f[1])
+def dom(f):
+  return f[0]
+
+def comp(f,g):
+  assert dom(f) == cod(g)
+  sub = {symbols(f"x{i}") : e for i,e in enumerate(g[1])}
+  return (dom(g), [y.subs(sub)  for y in f[1]])
+
+print(comp(idd(3),idd(3)))
+
+def kron(f,g):
+  shift_sub = {symbols(f"x{i}") : i + dom(f) for i in range(dom(g))}
+  gshift = [e.subs(shift_sub) for e in g]
+  return (dom(f) + dom(g), f + gshift)
+
+dup = [symbols("x0"), symbols("x0")]
+
+```
 
 # Internal Language
 
