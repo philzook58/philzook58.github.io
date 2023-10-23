@@ -3,9 +3,22 @@ layout: post
 title: Performance
 ---
 
+- [perf](#perf)
+  - [Easyperf](#easyperf)
+  - [Agner Fog](#agner-fog)
+    - [manual 1](#manual-1)
+- [Estimating Maximum Possible Perf](#estimating-maximum-possible-perf)
+- [Instruction Level Parallelism (ILP)](#instruction-level-parallelism-ilp)
+- [SIMD](#simd)
+- [Memory](#memory)
+  - [Cache](#cache)
+  - [Page](#page)
+  - [Stuff](#stuff)
 
+# perf
 
 See Also:
+
 - compilers
 - computer architecture
 - operating systems
@@ -14,6 +27,7 @@ See Also:
 - concurrency
 
 ## Easyperf
+
 Performance matters, it unlocks new applications, important for business
 python -> avx extensions: x60,000 in one example
 Measurement is really important and hard.
@@ -24,64 +38,97 @@ Plot your benchmark data. Bimodal? Two different behaviors are happening
 microbenchmarks: be careful. Is it inlining a bunch of stuff? Anything except your exact final application and environment is a proxy. That the proxy at all represents the real behavior is fishy. Never forget that.
 System clock and system counters.
 
-
 ## Agner Fog
-###  manual 1
+
+### manual 1
+
 Reduce data dependencies
 a[i++] may be faster than a[++i] because of a data dependency reduction
 bool in C++ outputs 0/1 but may have come from a source that didn't. This means it needs branching code for simple satuff
 short circuiting && ||, try to short circuit early
 
 # Estimating Maximum Possible Perf
+
 If compute bound: Single core freq ~3Ghz * 8 byte words -> 24Gb/s
-RAM 
+RAM
 SSD speeds - look it up. sequential vs no nsequential v different. Maybe ~1 gb/s as a order of magnitude
 
 Network
 
 [latency numbers every programmer should know](https://colin-scott.github.io/personal_website/research/interactive_latency.html)
 [napkin math](https://www.youtube.com/watch?v=IxkSlnrRFqc)
+
+# Instruction Level Parallelism (ILP)
+
 # SIMD
+
 [Filtering a vector with simd - rust](https://quickwit.io/blog/filtering%20a%20vector%20with%20simd%20instructions%20avx-2%20and%20avx-512/)
 
-# Memory
-dhat check for memory allocation sites that are worst
-https://en.wikipedia.org/wiki/Memory_pool
-https://en.wikipedia.org/wiki/Object_pool_pattern
-Can use vector to store fixed size chunks. Your own private malloc specialized for one size
-https://en.wikipedia.org/wiki/Slab_allocation
+[art of simd - slotkin](https://www.youtube.com/watch?v=vIRjSdTCIEU)
 
+<https://arxiv.org/abs/2306.00229> Minotaur: A SIMD-Oriented Synthesizing Superoptimizer
+
+<https://dl.acm.org/doi/10.1145/3372297.3423352> HACLxN: Verified Generic SIMD Crypto (for all your favourite platforms)
+
+<https://simdjson.org/>
+<https://roaringbitmap.org/> compressed bitmaps
+
+<http://0x80.pl/notesen/2023-04-09-faster-parse-ipv4.html>
 
 [Simd for C++ developers](http://const.me/articles/simd/simd.pdf)
 
+What this?
+<https://branchfree.org/2019/02/25/paper-parsing-gigabytes-of-json-per-second/>
+<https://news.ycombinator.com/item?id=24069530>
+roaring bitmaps
+simdjson
+judy arrays
+People are mentioned warming up the branch predictors on purpose somehow
+Branchless programming
+
+# Memory
+
+See also note on memory-management
+
+dhat check for memory allocation sites that are worst
+<https://en.wikipedia.org/wiki/Memory_pool>
+<https://en.wikipedia.org/wiki/Object_pool_pattern>
+Can use vector to store fixed size chunks. Your own private malloc specialized for one size
+<https://en.wikipedia.org/wiki/Slab_allocation>
+
+## Cache
+
+## Page
+
+<https://www.computerenhance.com/p/powerful-page-mapping-techniques>
+[how to allocate huge tables](https://twitter.com/trascendentale/status/1462916354453946371?s=20&t=p3cq_31MG7DBts7HVR_-lg)
+
 ## Stuff
+
+[casey muratori series](https://www.computerenhance.com/)
+
 [cp algorithms](https://cp-algorithms.com/#navigation) competitive programming algorithsm
 
 [geoff langdale blog](https://branchfree.org/)
 
 [iterating over set bits](https://lemire.me/blog/2018/03/08/iterating-over-set-bits-quickly-simd-edition/)
 
-[Computing Adler32 Checksums at 41 GB/s ](https://news.ycombinator.com/item?id=32377597) https://wooo.sh/articles/adler32.html
+[Computing Adler32 Checksums at 41 GB/s](https://news.ycombinator.com/item?id=32377597) <https://wooo.sh/articles/adler32.html>
 
 [how fast are linux pipes anyway](https://mazzo.li/posts/fast-pipes.html)
-pv - pipe viewer. pipe thorughput http://www.ivarch.com/programs/pv.shtml
+pv - pipe viewer. pipe thorughput <http://www.ivarch.com/programs/pv.shtml>
 
+really cool blog posts <https://mazzo.li/archive.html>
 
-really cool blog posts https://mazzo.li/archive.html
-
-[how to allocate huge tables](https://twitter.com/trascendentale/status/1462916354453946371?s=20&t=p3cq_31MG7DBts7HVR_-lg)
-
-Software pipelining https://twitter.com/geofflangdale/status/1531858991336550400?s=20&t=geOHu86_aPOLlcz-y8fE0Q
+Software pipelining <https://twitter.com/geofflangdale/status/1531858991336550400?s=20&t=geOHu86_aPOLlcz-y8fE0Q>
 
 The Art of Writing Efficient Programs: An advanced programmer's guide to efficient hardware utilization and compiler optimizations using C++ examples - Pikus
-
 
 [Given the potential for straightline speculation w/ deleterious performance impact, does it makes sense to align functions with speculation blocking instructions like INT3 instead of nops?](https://twitter.com/pkhuong/status/1507790343151960073)
 [microbenchmarks of return address prediction (ras)](https://blog.stuffedcow.net/2018/04/ras-microbenchmarks/)
 
 [programming parallel computers course](https://ppc.cs.aalto.fi/)
 `asm("# foo");` nice trick. Inject comment into assembly
-
 
 [](https://blog.janestreet.com/magic-trace/)
 
@@ -93,7 +140,7 @@ The Art of Writing Efficient Programs: An advanced programmer's guide to efficie
 
 [Parsing series of integers with SIMD](http://0x80.pl/articles/simd-parsing-int-sequences.html) This [Wojciech Muła](http://0x80.pl/) guy is a wizard
 
-[unaligned vector load + length-driven PSHUFB. What's everyone's favourite way to handle page crossings?](https://twitter.com/pkhuong/status/1497332651891515395?s=20&t=BoUiLAriWXha2_XgoVMl5A) overreading for short variables possibly into out of bounds memory? pshufb 
+[unaligned vector load + length-driven PSHUFB. What's everyone's favourite way to handle page crossings?](https://twitter.com/pkhuong/status/1497332651891515395?s=20&t=BoUiLAriWXha2_XgoVMl5A) overreading for short variables possibly into out of bounds memory? pshufb
 
 [umash](https://github.com/backtrace-labs/umash) very fast hash
 [Algorithms for Modern Hardware](https://github.com/sslotin/amh-code) - book on algorithms on modern hardware
@@ -102,23 +149,21 @@ The Art of Writing Efficient Programs: An advanced programmer's guide to efficie
 
 [x86 instrinsic cheatsheet](https://db.in.tum.de/~finis/x86-intrin-cheatsheet-v2.1.pdf)
 
-[OSACA](https://github.com/RRZE-HPC/OSACA) an analyzer of assembly code. It is on godbolt 
+[OSACA](https://github.com/RRZE-HPC/OSACA) an analyzer of assembly code. It is on godbolt
 
 <iframe width="800px" height="200px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,fontUsePx:'0',j:1,lang:analysis,selection:(endColumn:12,endLineNumber:8,positionColumn:12,positionLineNumber:8,selectionStartColumn:12,selectionStartLineNumber:8,startColumn:12,startLineNumber:8),source:'square(int):%0A++++++++pushq+++%25rbp%0A++++++++movq++++%25rsp,+%25rbp%0A++++++++movl++++%25edi,+-4(%25rbp)%0A++++++++movl++++-4(%25rbp),+%25eax%0A++++++++imull+++%25eax,+%25eax%0A++++++++popq++++%25rbp%0A++++++++ret'),l:'5',n:'0',o:'Analysis+source+%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:osacatrunk,filters:(b:'0',binary:'1',commentOnly:'0',demangle:'0',directives:'0',execute:'1',intel:'1',libraryCode:'1',trim:'1'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:analysis,libs:!(),options:'',selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1,tree:'1'),l:'5',n:'0',o:'OSACA+(0.4.7)+(Analysis,+Editor+%231,+Compiler+%231)',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),version:4"></iframe>
 
- This gruop has a number of interesting tools. <https://github.com/RRZE-HPC> It scrapes info from 
+ This gruop has a number of interesting tools. <https://github.com/RRZE-HPC> It scrapes info from
+
 - Likwid
 - [kerncraft](https://github.com/RRZE-HPC/kerncraft) loop kernel analysis and performance modelling
 
-[List of interesting optimizers](https://en.wikipedia.org/wiki/Optimizing_compiler) - These are compiler optimizations, so hopefully your compiler does them for you, but maybe it doesn't and maybe 
+[List of interesting optimizers](https://en.wikipedia.org/wiki/Optimizing_compiler) - These are compiler optimizations, so hopefully your compiler does them for you, but maybe it doesn't and maybe
 
 <https://twitter.com/lemire/status/1461181871841320962?s=20> Lemire converting integerrs to fix digit representations
 By considering data dependencies and using lookup tables take from 25ns to 2ns.
 
-
-
 MIT optimization course <https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-172-performance-engineering-of-software-systems-fall-2018/>
-
 
 <https://news.ycombinator.com/item?id=29107147> <https://randomascii.wordpress.com/2012/12/29/the-surprising-subtleties-of-zeroing-a-register/> surprising subtleites of zeroing a register.
 
@@ -137,14 +182,12 @@ MIT optimization course <https://ocw.mit.edu/courses/electrical-engineering-and-
 
 I feel like most algorithms and data structures are os ordinary they are kind of boring?
 
-
-Sparse Sets - knuth - bitvectors + 
-Bitvectors  http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.681.8766&rep=rep1&type=pdf
+Sparse Sets - knuth - bitvectors +
+Bitvectors  <http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.681.8766&rep=rep1&type=pdf>
 ullmann bitvector algos for binary constraint and subgraph iso.
 
 Books:
 CLRS
-
 
 Sorting algorithms
 Hash tables
@@ -152,51 +195,38 @@ Dynamic programming
 Tries
 Graph algorithsm - shortest path, spanning tree
 
-https://news.ycombinator.com/item?id=26590234#26592091 hash table in C. some interesting commments too
+<https://news.ycombinator.com/item?id=26590234#26592091> hash table in C. some interesting commments too
 linear search - an assoc list but he kept it in an array
-http://burtleburtle.net/bob/hash/doobs.html - hashing from z3 source code
-https://craftinginterpreters.com/hash-tables.html
+<http://burtleburtle.net/bob/hash/doobs.html> - hashing from z3 source code
+<https://craftinginterpreters.com/hash-tables.html>
 
-lkinear probing vs linked list in hash table. 
+lkinear probing vs linked list in hash table.
 
 concurrent hash map
 
-
-What this?
-https://branchfree.org/2019/02/25/paper-parsing-gigabytes-of-json-per-second/
-https://news.ycombinator.com/item?id=24069530
-roaring bitmaps
-simdjson
-judy arrays
-People are mentioned warming up the branch predictors on purpose somehow
-Branchless programming
-
-https://algorithmica.org/en/eytzinger https://news.ycombinator.com/item?id=26695694
+<https://algorithmica.org/en/eytzinger> <https://news.ycombinator.com/item?id=26695694>
 Interesting. Cache-oblivious binary search. Uses the "Heap" ordering or what have you
 Plus a branchless comparator?
-I think also a big point is 
+I think also a big point is
 How do you even know when cache something is a problem. How do you use feedback and self correct?
 How do you organize tight loops? "smart" ways of keeping structure.
 
-
 microbenchmarking
 performance counters - cache misses, TLB ht/miss, mispredicted branches
-nanobench https://arxiv.org/pdf/1911.03282.pdf
+nanobench <https://arxiv.org/pdf/1911.03282.pdf>
 VTune, perf, PAPI, libpfc,
 
 What every programmer should know abouyt memory
-https://people.freebsd.org/~lstewart/articles/cpumemory.pdf
+<https://people.freebsd.org/~lstewart/articles/cpumemory.pdf>
 
 modern microprcessor 90 minute guide
-http://www.lighterra.com/papers/modernmicroprocessors/
+<http://www.lighterra.com/papers/modernmicroprocessors/>
 
-
-https://en.wikipedia.org/wiki/Program_optimization
+<https://en.wikipedia.org/wiki/Program_optimization>
 Bentley Writing Efficient Program
 
-
 <https://news.ycombinator.com/item?id=28955461> - a rust optimization story
-<https://pvk.ca/Blog/2012/07/03/binary-search-star-eliminates-star-branch-mispredictions/> 
+<https://pvk.ca/Blog/2012/07/03/binary-search-star-eliminates-star-branch-mispredictions/>
 <https://dirtyhandscoding.wordpress.com/2017/08/25/performance-comparison-linear-search-vs-binary-search/>
 <https://www.youtube.com/watch?v=1tEqsQ55-8I&ab_channel=MollyRocket> - handmade hero guy talkin about optimizations
 <https://www.youtube.com/watch?v=pgoetgxecw8&ab_channel=MollyRocket> - refterm optimization talk. this is fascinating
@@ -204,7 +234,6 @@ Bentley Writing Efficient Program
 1. optimization - measuring.
 2. non-pessimization - don't do unnecessary work
 3. fake optimziation - people just repeatin shit
-
 
 <https://www.uops.info/>
 <https://uica.uops.info/> uica online demo gives info on what's hurtin ya. Cycle counts and stuff
@@ -215,17 +244,14 @@ perf seems balla. Works on ocaml btw <https://ocaml.org/learn/tutorials/performa
 <https://www.brendangregg.com/perf.html>
 <https://www.youtube.com/watch?v=fhBHvsi0Ql0&ab_channel=USENIX> - linux systems performance
 
+<https://www.gem5.org/> The gem5 simulator is a modular platform for computer-system architecture research, encompassing system-level architecture as well as processor microarchitecture
+<https://ieeexplore.ieee.org/document/8718630?denied=>  gem5, MARSS×86 , Multi2Sim, PTLsim, Sniper, and ZSim.
+gem5 as an alternaitve to qemu? <http://www.diva-portal.org/smash/get/diva2:1058030/FULLTEXT01.pdf>
 
-
-https://www.gem5.org/ The gem5 simulator is a modular platform for computer-system architecture research, encompassing system-level architecture as well as processor microarchitecture
-https://ieeexplore.ieee.org/document/8718630?denied=  gem5, MARSS×86 , Multi2Sim, PTLsim, Sniper, and ZSim.
-gem5 as an alternaitve to qemu? http://www.diva-portal.org/smash/get/diva2:1058030/FULLTEXT01.pdf
-
-
-https://www.infoq.com/presentations/microarchitecture-modern-cpu/
+<https://www.infoq.com/presentations/microarchitecture-modern-cpu/>
 
 NUMA - non uniform memory access
-register file? 
+register file?
 l1 cache. instruction and data. instruction is one way
 `lstopo --no-io` tells you how your computer looks
 large /huge pages. faster for TLB. Hugetablefs is linux suppotrt? `/proc/cpuinfo`
@@ -233,40 +259,39 @@ Transparent Huge Pages- `madvise` is a call yes I'd like huge tables. `defer`
 cache lines - 64 bytes. even if you read/write 1 byte your're writing 64
 M exculsively own and dirty, E exlucsive and clean, S shared, , I invalid
 __builtin_prefecth_. linear access is good
-splitting into revcord of arrays tends to be better for cache if only using one field. compressed memory is worth it. compuitayion is fast. memory is slow. Array of structs vs struct of arrays. Compressed pointers? https://en.wikipedia.org/wiki/Tagged_pointer https://v8.dev/blog/pointer-compression
+splitting into revcord of arrays tends to be better for cache if only using one field. compressed memory is worth it. compuitayion is fast. memory is slow. Array of structs vs struct of arrays. Compressed pointers? <https://en.wikipedia.org/wiki/Tagged_pointer> <https://v8.dev/blog/pointer-compression>
 pinning
 `isolcpus` boot time option. pinning of thread or memory to cpu `taskset`. linux admin styuff. isolate cpus to certain tasks `numactl` and `libnuma`
 loop stream decoder
-branch predictor, pipelikne stall or bubble. 
+branch predictor, pipelikne stall or bubble.
 branch target predcitro
-ports, execution units. some logic, some airthmetic. 
+ports, execution units. some logic, some airthmetic.
 `perf` - interrogate counters. `record report annotate stat`
 skid - bad - precision knobs :p :pp :ppp    perf record -b perf record --call-graph lbr -j any_call,any_ret program -e intel_pt//u
-LBR - last branch record - linux weekly  https://lwn.net/Articles/680985/ intel processors record control flow
+LBR - last branch record - linux weekly  <https://lwn.net/Articles/680985/> intel processors record control flow
 Intel processor trace
 IPC - intrcutions per cycle. 4 is maximum ish. less than 1 is  perf stat
 performance ocunters - `perf -list`
 `TMAM` top down microarctecture analsyis method `perf -dtopdown`
 `toplev` go throgyh process. and kleen. fancy frontend to perf/ `-l1` `l2`
-`__builtin_expect` 
+`__builtin_expect`
 profile guided optimization may do builtin expect for you
-loop alginment - 32 bit boundaries. straight from uop cache. llvm flag. align-all-nofallthru-blocks  align-all-function 
-https://easyperf.net/blog/2018/01/18/Code_alignment_issues code alignment can changed your perfoamnce.
+loop alginment - 32 bit boundaries. straight from uop cache. llvm flag. align-all-nofallthru-blocks  align-all-function
+<https://easyperf.net/blog/2018/01/18/Code_alignment_issues> code alignment can changed your perfoamnce.
 BOLT - vinary optimization layout tranformer. defrag your code. Puts hot code in same memory location at runtime
-Daniel Lemire - simd parser. mechnisms for avodiing branching. masking operations. 
-Summary - cache aligned / cache aware data structures. B-trees. Compress data. Avoid random memory access. Huge pages can help. 10% speedup by enabling maybe. libnuma source memory. branch0free and lock-free. perf /toplev. Use vectorization where you  can. 
-https://alblue.bandlem.com/ his blog
-https://speakerdeck.com/alblue/understanding-cpu-microarchitecture-for-performance?slide=62 reference
-https://speakerdeck.com/alblue/understanding-cpu-microarchitecture-for-performance?slide=63 links
+Daniel Lemire - simd parser. mechnisms for avodiing branching. masking operations.
+Summary - cache aligned / cache aware data structures. B-trees. Compress data. Avoid random memory access. Huge pages can help. 10% speedup by enabling maybe. libnuma source memory. branch0free and lock-free. perf /toplev. Use vectorization where you  can.
+<https://alblue.bandlem.com/> his blog
+<https://speakerdeck.com/alblue/understanding-cpu-microarchitecture-for-performance?slide=62> reference
+<https://speakerdeck.com/alblue/understanding-cpu-microarchitecture-for-performance?slide=63> links
 
-Blog links neato: 
-https://easyperf.net/notes/
-https://epickrram.blogspot.com/
-https://lemire.me/blog/
-http://psy-lob-saw.blogspot.com/
-https://richardstartin.github.io/
-https://travisdowns.github.io/
-https://www.agner.org/optimize/
-https://www.real-logic.co.uk/
-https://groups.google.com/g/mechanical-sympathy
-
+Blog links neato:
+<https://easyperf.net/notes/>
+<https://epickrram.blogspot.com/>
+<https://lemire.me/blog/>
+<http://psy-lob-saw.blogspot.com/>
+<https://richardstartin.github.io/>
+<https://travisdowns.github.io/>
+<https://www.agner.org/optimize/>
+<https://www.real-logic.co.uk/>
+<https://groups.google.com/g/mechanical-sympathy>

@@ -1138,6 +1138,7 @@ The transformation foo(firstclassmap) -> foo(i), map(i, k,v) is lossy in the pre
 
 
 ### Dominators
+[Program Analysis with Datalog: Dominance Tree](https://xiaowenhu.com/posts/dominance_tree/)
 https://pages.cs.wisc.edu/~fischer/cs701.f07/lectures/Lecture20.pdf
 https://twitter.com/taktoa1/status/1548109466620424193?s=20&t=G28jQnYTSb1KEI--BWennw
 https://codeql.github.com/codeql-standard-libraries/cpp/semmle/code/cpp/controlflow/Dominance.qll/module.Dominance.html
@@ -4318,14 +4319,34 @@ eqangle(A, B, C, D, E, F, G, H ):-
 Hmm. Vector algebra is the method. Parametrize objects. Use trig identities. Logic is super algebra.
 Hmm.
 
-```egglog
-(rule (on (line a b) a))
-(rewrite (line a b) (line b a))
-(= (para l1) (para l2))
-(angle l1 l2)
-(line (seg a b))
-(seg a b) = (seg b c) is cong()
-(circle o a) = (circle o b)
+```bash
+echo ";re
+(datatype Point)
+(datatype Seg (seg Point Point))
+(datatype Line (line Seg))
+
+; segments are undirected
+(rewrite (seg a b) (seg b a))
+
+(relation para (Line Line))
+(relation perp (Line Line))
+
+(rule ((para a b)) ((para b a)))
+(rule ((perp a b)) ((perp b a)))
+(rule ((para a b) (para b c)) ((para a c)))
+(rule ((para a b) (perp b c)) ((perp a c)))
+
+
+
+;(rule (on (line a b) a))
+;(rewrite (line a b) (line b a))
+;(= (para l1) (para l2))
+;(angle l1 l2)
+;(line (seg a b))
+;(seg a b) = (seg b c) is cong()
+;(circle o a) = (circle o b)
+" | egglog
+
 
 ```
 
@@ -5397,6 +5418,17 @@ Ordered semirings
 Perhaps related to semiring semantics
 [scallop](https://scallop-lang.github.io/) neurosymbolic datalog. Probablistic datalog. Uses provenance. topkrpoofs other methods. 
 
+```python
+import torch
+
+path = edge
+for i in range(N):
+  path = [edge[x,y] * path[x,y] for x,y in ]
+
+```
+
+vector db?
+
 ## Datalog+- and the chase
 [Datalog+-](https://dl.acm.org/doi/pdf/10.1145/1514894.1514897) A Unified Approach to Ontologies and Integrity Constraints. Integraes datalog with equality and tuple generating dependencies. 
 [Datalog+- questions and answers](https://www.aaai.org/ocs/index.php/KR/KR14/paper/viewFile/7965/7972)
@@ -6275,6 +6307,8 @@ What about guarded negation? For example if you turn off stratification but are 
 
 
 # Resources
+[Drinking with Datalog](https://ianthehenry.com/posts/drinking-with-datalog/)
+
 [Database Theory](https://github.com/pdm-book/community) book
 
 

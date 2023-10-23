@@ -80,12 +80,17 @@ open aexp
 
 #print Int.lt_succ
 --set_option trace.Compiler.
-set_option trace.Compiler.simp true 
+--set_option t.Compiler.simp true 
+--set_option trace.Debug.Meta.Tactic.simp true
+set_option trace.Meta.Tactic.simp true
 --set_option pp.all true
 theorem aeval_xplus1 :
   forall (s :store) (x :ident), aeval s (PLUS (VAR x) (CONST 1)) > aeval s (VAR x) := by 
   intros s x
-  simp [aeval]
+  --simp? [aeval]
+  simp only [aeval, gt_iff_lt, lt_add_iff_pos_right]
+
+  --simp [aeval]
   --linarith -- huh merely importing Linarith makes simpe discharge this
   -- library_search
   -- apply Int.lt_succ

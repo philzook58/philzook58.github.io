@@ -92,6 +92,29 @@ https://news.ycombinator.com/item?id=26413343 - that nautolius article "you quit
 
 If you're going to be white and male, it helps to be jewish.
 
+# Publish or Blog?
+Something I struggle with is that I feel a desire to publish or a guilt for not doing so.
+
+A part of me gets belggerent in defense. The world is filled with garbage research. Everyone has to scream at that top of their lungs or chase papers. My advisor would take me aside and give a little speech bemoaning the state of te publishing world. I have escaped that.
+
+The style of research articles is a certain kind of professional. The incentive is to demonstrate sufficient erudition of difficulty of the result to get the paper published, not persay demonstrating how ultimately simple the thing done was in hindsight.
+
+Does 
+
+
+
+Ok, but pulling back into attack myself mode, why don't I publish? It's because I don't have the skills or ideas of sufficient worth or complexity to publish them.
+
+I have a pretty bad attention span. Sticking to a project for months or years is excruciating for me. I'd much rather an idea to a proof of concept, mildly edit a blog post, dump it out and receive my external validation from twitter thank you very much. I fear this may end up being to some degree cookie licking, which is also a serious problem for the research community
+
+I also do believe in fail fast. You do not know which of your ideas is something that will land in other people. Very fast spray is possibly a good strategy. On the other hand, the ideas might ned a fai shak
+
+To some degree, getting a blog post out is a way for m to let go of an idea I can't stop fixating on. It is the worst that I have piles and piles of projects that I have gotten the meat out of but never sealed off enough to make them go away from my mind.
+
+
+You really can sort of wander through life and wake up in 20 years and not have done things you feel you're capable of.
+This torments some people.
+
 
 # I hate everyone else's Macros
 But I love mine.
@@ -134,6 +157,8 @@ Sometimes we make proxies of proxies. We know we have a better model, but simpli
 
 
 # Managing Time
+Pomodoro
+GTD
 
 # How to Manage / Lead
 Project lead

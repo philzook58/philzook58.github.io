@@ -7,4 +7,7 @@ I showed up late to sunday dinner. I felt bad. I communicated poorly. I should t
 
 Learning about floating point and concurrency.
 
+# 5-10-23
+
+Week in zion wth the fam. Really nice. On a plane going to colorado for VIBES. Into term rewriting. Getting out there dating. Maybe my mind is healing from the awfulness of the last year. Started jogging. Took a spill and really destroyed my pinky. Hanging out with buddy this weekend at my place was neat.
 

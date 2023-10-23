@@ -7,24 +7,25 @@ title: Lean
 - [Theorem proving in lean4](https://leanprover.github.io/theorem_proving_in_lean4/)
 - [functional programming in lean](https://leanprover.github.io/functional_programming_in_lean/hello-world.html) Christianson
 
-[Theorem prover lab: applications in programming languages ](https://github.com/IPDSnelting/tba-2021)
+[Theorem prover lab: applications in programming languages](https://github.com/IPDSnelting/tba-2021)
 
 [Lambda the Ultimate SSA: Optimizing Functional Programs in SSA](https://arxiv.org/abs/2201.07272)
 
 Numerical packages in lean
+
 - [numlean](https://github.com/arthurpaulino/NumLean)
 - [lean karray](https://github.com/lecopivo/lean4-karray)
-- https://github.com/lecopivo/SciLean
+- <https://github.com/lecopivo/SciLean>
 Webserver example. Custom syntax
-https://github.com/leanprover/lean4/blob/master/tests/playground/webserver/Webserver.lean
+<https://github.com/leanprover/lean4/blob/master/tests/playground/webserver/Webserver.lean>
 
 novice friendly induction tactic
-https://arxiv.org/pdf/2012.08990.pdf
+<https://arxiv.org/pdf/2012.08990.pdf>
 
 metaprogramming framework for formal verification
-https://dl.acm.org/doi/pdf/10.1145/3110278
+<https://dl.acm.org/doi/pdf/10.1145/3110278>
 
-http://leanprover.github.io/papers/lean4.pdf lean4
+<http://leanprover.github.io/papers/lean4.pdf> lean4
 
 "The Lean typeclass resolution procedure can be viewed as a
 simple λ-Prolog interpreter [8], where the Horn clauses are the user declared
@@ -39,14 +40,12 @@ That sounds fun
 - [lean 4 manual](https://leanprover.github.io/lean4/doc/)
 - [lean 3 logic and proof](https://leanprover.github.io/logic_and_proof/)
 
-
 - [theorme prover lab](https://github.com/IPDSnelting/tba-2022)
-- [MA 208: Proof and Programs ](http://math.iisc.ac.in/~gadgil/proofs-and-programs-2023/index.html)
+- [MA 208: Proof and Programs](http://math.iisc.ac.in/~gadgil/proofs-and-programs-2023/index.html)
 - [lean learning group](https://www.maths.ed.ac.uk/~pkinnear/leancourse/)
 [Aesop (Automated Extensible Search for Obvious Proofs) i](https://github.com/JLimperg/aesop)
 
 [lean for the curious mathematician 2020](https://github.com/leanprover-community/lftcm2020)
-
 
 [mathlib 4 docs](https://leanprover-community.github.io/mathlib4_docs/) but also std lib docs
 
@@ -57,26 +56,51 @@ That sounds fun
 
 [lean chat](https://github.com/zhangir-azerbayev/lean-chat) openai codex tranlate natural language to lean statements
 
-[](https://proofassistants.stackexchange.com/questions/1964/setting-up-lean-4-on-a-server) https://lean.math.hhu.de/ lean4 web editor
+[](https://proofassistants.stackexchange.com/questions/1964/setting-up-lean-4-on-a-server) <https://lean.math.hhu.de/> lean4 web editor
 [lean 4 metaprgramming book](https://github.com/arthurpaulino/lean4-metaprogramming-book)
 [metaprogramming in lean 4](https://www.youtube.com/watch?v=hxQ1vvhYN_U&ab_channel=leanprovercommunity)
 
-https://github.com/yatima-inc hmm. Lean company?
+<https://github.com/yatima-inc> hmm. Lean company?
 
-https://github.com/search?q=language%3ALean&type=Repositories&ref=advsearch&l=Lean&l=
+<https://github.com/search?q=language%3ALean&type=Repositories&ref=advsearch&l=Lean&l=>
 
 [lean 4 tagged stuff on github](https://github.com/topics/lean4)
 [makig lean cli tools - arg parsing and whatnot](https://github.com/mhuisi/lean4-cli)
-https://github.com/GaloisInc/reopt-vcg
-https://github.com/opencompl/lean-mlir
+<https://github.com/GaloisInc/reopt-vcg>
+<https://github.com/opencompl/lean-mlir>
 
 [do unchained](https://leanprover.github.io/papers/do.pdf) - a description of the extensions to monad syntax like for, break, mut that lean offer
-
-https://github.com/ccodel/verified-encodings
 
 [lean 3 to lean 4 tactic trasnlation cheatsheet](https://github.com/madvorak/lean3-tactic-lean4)
 
 [A super position prover for Lean 3](https://github.com/leanprover/super)
+
+<https://github.com/ccodel/verified-encodings>
+
+[a big twitter thread on lean software verification stuff](https://twitter.com/mukesh_tiwari/status/1667848032128499714?s=12&t=pdj9jytXGvxDOXHWwx4_mg)
+
+[mathematics in lean course](https://github.com/leanprover-community/mathematics_in_lean)
+[iris lean](https://github.com/leanprover-community/iris-lean)
+
+[lean 4 hackers](https://agentultra.github.io/lean-4-hackers/)
+
+[lean 4 released](https://news.ycombinator.com/item?id=37429938)
+
+[lean dojo](https://leandojo.org/) LeanDojo: Theorem Proving with Retrieval-Augmented Language Models
+
+[euclidean geometry](https://github.com/jjdishere/EG)
+
+[learning lean 4](https://leanprover-community.github.io/learn.html)
+
+<https://lftcm2023.github.io/tutorial/> lean curious mathematician 2023
+<https://www.slmath.org/summer-schools/1021#schedule_notes>
+
+[Verification of Combinational and Sequential Circuits in LEAN3](https://theses.liacs.nl/pdf/2022-2023-BingenZA.pdf)
+
+<https://github.com/leanprover/lean4-cli>
+<https://github.com/EdAyers/ProofWidgets4>
+
+
 ### Build
 
 `elan` tool
@@ -104,6 +128,7 @@ LEAN_PATH for libraries? Probably I'm fighting the Lake experience which is bad.
 `[@simp]`
 
 # Lean Src
+
 <https://leanprover-community.github.io/mathlib4_docs/Init/Prelude.html> prelude is interesting
 
 [simp tactic](https://github.com/leanprover/lean4/tree/master/src/Lean/Meta/Tactic/Simp)
@@ -115,9 +140,27 @@ LEAN_PATH for libraries? Probably I'm fighting the Lake experience which is bad.
 
 IR - somehow this is what I need to look at to implement new backend?
 
+# MIL
+
+```lean
+-- tactics
+rw
+use
+rintro
+ring
+
+have have, show style proofs
+```
 
 # Stuff
 
+```bash
+echo '
+def main := IO.println "hello world"
+' > /tmp/test.lean
+lean --run /tmp/test.lean
+
+```
 
 ```lean
 def main := IO.println "hello world"
@@ -222,11 +265,13 @@ def main : IO Unit := pure ()
 ```
 
 # Typeclass
+
 ```lean
 {% include_relative lean/myproject/typeclass.lean %}
 ```
 
 # IMP
+
 ```lean
 {% include_relative lean/myproject/IMP.lean %}
 ```

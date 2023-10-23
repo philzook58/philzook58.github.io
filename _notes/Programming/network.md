@@ -13,3 +13,5 @@ title: Network
 https://jvns.ca/blog/2021/12/15/mess-with-dns/
 
 [What happens when you press the enter key to google.com](https://github.com/alex/what-happens-when)
+
+[high performance browser networking](https://news.ycombinator.com/item?id=35937554)

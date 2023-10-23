@@ -97,6 +97,7 @@ title: SMT Solvers
 - [Resources](#resources-1)
 
 See also:
+
 - SAT solvers
 - Synthesis
 - automated theorem proving
@@ -113,18 +114,19 @@ For more:
 - [Z3 guide](https://microsoft.github.io/z3guide/)
 - [smtlib standard](https://smtlib.cs.uiowa.edu/language.shtml)
 
-
 <iframe width="560" height="315" src="https://www.youtube.com/embed/56IIrBZy9Rc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-
 ## SAT solving
+
 If you just stick to boolean variables, SMT is just a SAT solver (albeit with a better input format).
 See notes on SAT
 
 ## Bitvectors
+
 [Bitwuzla](https://bitwuzla.github.io/) and Boolector seem like winners here (for quantifier free). I don't know why
 
 Some interesting ops
+
 ```
 (declare-const a (_ BitVec 4))
 (simplify (concat a #x0 #x1 #x2))
@@ -141,30 +143,35 @@ Some interesting ops
 ## Integers
 
 ## Reals
-## Difference Logic
-For special integer inequalities of the form `x - y <= 7`, you don't need a general linear arithemtic solver. You can use graph algorithms to determine if 
 
-https://users.aalto.fi/~tjunttil/2020-DP-AUT/notes-smt/diff_solver.html
-https://www.cs.upc.edu/~erodri/webpage/cps/theory/sat/SMT-DL/slides.pdf
+## Difference Logic
+
+For special integer inequalities of the form `x - y <= 7`, you don't need a general linear arithemtic solver. You can use graph algorithms to determine if
+
+<https://users.aalto.fi/~tjunttil/2020-DP-AUT/notes-smt/diff_solver.html>
+<https://www.cs.upc.edu/~erodri/webpage/cps/theory/sat/SMT-DL/slides.pdf>
 [ast and Flexible Difference Constraint Propagation for DPLL(T)](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.67.1781&rep=rep1&type=pdf)
 [Deciding Separation Logic Formulae by SAT and Incremental Negative Cycle Elimination](https://cpb-us-e1.wpmucdn.com/sites.usc.edu/dist/c/321/files/2019/03/Wang05SLICE-1txv47w.pdf)
+
 ## Arrays
-- https://microsoft.github.io/z3guide/docs/theories/Arrays
-- https://smtlib.cs.uiowa.edu/theories-ArraysEx.shtml
-- 
+
+- <https://microsoft.github.io/z3guide/docs/theories/Arrays>
+- <https://smtlib.cs.uiowa.edu/theories-ArraysEx.shtml>
+-
 
 - `(_ map and)` map functions
 - `((_ const T) a)` constant arrays
 - `(as-array f)` to lift a named function to an array.
 
 Using Arrays as Sets, Bags.
-- https://stackoverflow.com/questions/17706219/defining-a-theory-of-sets-with-z3-smt-lib2?rq=1
-- 
+
+- <https://stackoverflow.com/questions/17706219/defining-a-theory-of-sets-with-z3-smt-lib2?rq=1>
+-
+
 ```
 (define-fun bag-union ((x A) (y A)) A
   ((_ map (+ (Int Int) Int)) x y))
 ```
-
 
 ```z3
 ;z3 has some pre-defined set stuff
@@ -179,33 +186,34 @@ Using Arrays as Sets, Bags.
 (check-sat)
 ```
 
-
 ## Constraint problems
+
 See notes on constraint satisfaction
 
 - N-queens
 - Sudoku
 
-
 # Datatypes
+
 cvc5
 
 `Tuple`
 `dt.size`
 `tuple_select` `tuple_update`
 
-
 Datatypes are great. They let you bundle stuff into records.
 
 [cvc4 codatatypes](https://www.ijcai.org/Proceedings/16/Papers/631.pdf)
 
 datatypes add an infinite number of acyclicity conditions
+
 ## List
+
 List already comes in Z3
 List vs Seq
 
-
 ## Option datatype
+
 Option datatypes are a tempting way to model partial functions. I can't say I've had much success.
 
 ```z3
@@ -243,8 +251,11 @@ Option datatypes are a tempting way to model partial functions. I can't say I've
 
 
 ```
+
 ## Records
+
 ### Rationals
+
 Rationals are kind of not an intrinsic. Reals are.
 
 Rationals are a tuple of ints with a notion of equivalence.
@@ -369,10 +380,14 @@ Rationals are a tuple of ints with a notion of equivalence.
 (check-sat)
 (get-model)
 ```
+
 ### Intervals
+
 Intervals are a tuple of reals.
 [CEGARing Exponentials into Z3 with Intervals and Python Coroutines](https://www.philipzucker.com/z3-cegar-interval/)
+
 ### Modules
+
 Explicit record passing style. You nutter. But it is hard/impossible to pass types. Hmm.
 
 ```z3
@@ -446,9 +461,11 @@ Explicit record passing style. You nutter. But it is hard/impossible to pass typ
 (simplify (example_any aexprstring2))
 
 ```
+
 Hmm. Phantom hoas?
 
 ## Church / Recursors / Final
+
 To what degree can I go church / bohm-berarducci / recursor?
 We have arrays as higher order functions. Can used boxed universals to simulate forall.
 
@@ -456,11 +473,11 @@ We have arrays as higher order functions. Can used boxed universals to simulate 
 
 Dependent datatypes?
 
-
-Final style encodings using `define-fun` are great. 
+Final style encodings using `define-fun` are great.
 You can use a poor man's module system using `(include)` to import interpretations of these things
 
 # Solvers
+
 Q: What options are actualy worth fiddling with
 It is interesting to note what unusual characteristics solvers have.
 
@@ -469,29 +486,32 @@ It is interesting to note what unusual characteristics solvers have.
 - boolector
 - cvc4
 - cvc5
-- yices2 https://yices.csl.sri.com/papers/manual.pdf yices has a `ef-solve` mode that synesthesia used for synthesis. Is this the analog of PBR solving?
+- yices2 <https://yices.csl.sri.com/papers/manual.pdf> yices has a `ef-solve` mode that synesthesia used for synthesis. Is this the analog of PBR solving?
 - [smtinterpol](https://github.com/ultimate-pa/smtinterpol)
 - alt-ergo
 - veriT
 - colibri - good at floats?
-- mathsat (ultimate eliminator https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&tool=eliminator)
+- mathsat (ultimate eliminator <https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&tool=eliminator>)
 - smt-rat
 - stp
 - [dreal](http://dreal.github.io/)
 
 Other systems
+
 - vampire
 - aprove
 - E
 
 # Optimization
+
 Is Z3 good for classic optimization problems?
 I don't know. Without any data I'd guess probably not. It is an after thought to the system. If it beats systems built from the ground up for this purpose that's kind of embarassing.
 
 But minimization can be useful
+
 - Datalog models are minimal ones
 - abduction / synthesis is looking for minimal ish solutions
-- 
+-
 
 - [νZ - An Optimizing SMT Solver](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/nbjorner-nuz.pdf)
 - [Programming Z3 -  Optimization](https://theory.stanford.edu/~nikolaj/programmingz3.html#sec-optimization)
@@ -499,9 +519,9 @@ But minimization can be useful
 
 - MaxSAT solvers
 
-
 Implementing datalog as a minsat problem. Minimal model.
 `WARNING: optimization with quantified constraints is not supported`. Hmm well, maybe there goes that idea. It does seem to be working though.
+
 ```z3
 ;re
 (declare-sort Vert)
@@ -545,13 +565,14 @@ Implementing datalog as a minsat problem. Minimal model.
 
 [aeval](https://github.com/grigoryfedyukovich/aeval/) quantifier elimination that also synthesizes
 
-
 [Synthesizing an Instruction Selection Rule Library from Semantic Specifications](https://pp.ipd.kit.edu/uploads/publikationen/buchwald18cgo.pdf)
 
 ## Constrained Horn Clauses
+
 See note on CHC
 
 ## Interpolation
+
 [interpolation slide](https://userpages.uni-koblenz.de/~sofronie/vtsa-2015/slides-griggio2.pdf)
 [Craig interpolation](https://en.wikipedia.org/wiki/Craig_interpolation)
 
@@ -570,40 +591,36 @@ For propositional variables you can derive the appropriate interpolat by exsiten
 cvc5 has an interpolation solver
 You can also use CHC solvers - see spacer tutorial
 [iZ3](http://mcmil.net/wordpress/2019/12/09/interpolating-z3/) old no longer maintained z3 extension
-https://theory.stanford.edu/~nikolaj/programmingz3.html#sec-propositional-interpolation POGO. Using unsat cores to derive interpolants
-
-
+<https://theory.stanford.edu/~nikolaj/programmingz3.html#sec-propositional-interpolation> POGO. Using unsat cores to derive interpolants
 
 ## Abduction
-Absduction is a synthesis problem. See notes on synthesis 
+
+Absduction is a synthesis problem. See notes on synthesis
 
 Abduction -
 
 Given A and C, find some B such that. `A, B |- C` Super underconstrained. A and B should be consistent. Should generalize well. A is accepted axioms, C is observations.
 
-Or `A /\ ? => C` 
+Or `A /\ ? => C`
 
 Houdini
 
 - Planning. A = initial state, B is final state, C is plan
 - spec synthesis
-- invariant synthesis. 
-
+- invariant synthesis.
 
 Houdini explicitly parametrizes candidate things with boolean turns ons `(and (=> enable1 (x < 7)) (=> enable 2 (= x 0)). We may want to minsat these enables.
 
+<https://plato.stanford.edu/entries/abduction/index.html>
+<https://en.wikipedia.org/wiki/Abductive_reasoning>
+<https://en.wikipedia.org/wiki/Abductive_logic_programming>
 
+<https://fbinfer.com/docs/separation-logic-and-bi-abduction>
+<https://blog.sigplan.org/2020/03/03/go-huge-or-go-home-popl19-most-influential-paper-retrospective/>
 
-
-https://plato.stanford.edu/entries/abduction/index.html
-https://en.wikipedia.org/wiki/Abductive_reasoning
-https://en.wikipedia.org/wiki/Abductive_logic_programming
-
-https://fbinfer.com/docs/separation-logic-and-bi-abduction
-https://blog.sigplan.org/2020/03/03/go-huge-or-go-home-popl19-most-influential-paper-retrospective/
-
-- get-abduct --produce-abducts https://github.com/cvc5/cvc5/blob/master/test/regress/regress1/abduction/abduct-dt.smt2 get-abduct-next (set-option :produce-abducts true)
+- get-abduct --produce-abducts <https://github.com/cvc5/cvc5/blob/master/test/regress/regress1/abduction/abduct-dt.smt2> get-abduct-next (set-option :produce-abducts true)
 (set-option :incremental true)
+
 ```cvc5
 (set-logic QF_LIA)
 (set-option :produce-abducts true)
@@ -626,13 +643,13 @@ https://blog.sigplan.org/2020/03/03/go-huge-or-go-home-popl19-most-influential-p
 (get-abduct A (>= y 5))
 ```
 
-
 Absduction andanswer set programming
 
 ## Syntax Guided Synthesis Sygus
+
 Semgus
 
-https://cvc5.github.io/docs/cvc5-1.0.0/examples/sygus-inv.html
+<https://cvc5.github.io/docs/cvc5-1.0.0/examples/sygus-inv.html>
 
 ```cvc5
 ;; The background theory is linear integer arithmetic
@@ -831,7 +848,6 @@ https://cvc5.github.io/docs/cvc5-1.0.0/examples/sygus-inv.html
 (eval (bool1 (Int 17))) ; something very weird is happening here
 ```
 
-
 Sort gas. But then we still can't define-fun-recs
 (define-sort S)
 (delare-datatypes (N) (
@@ -839,8 +855,8 @@ Sort gas. But then we still can't define-fun-recs
       (Add (S N) (S N)))
 )
 
-
 # Higher Order
+
 [Extending SMT Solvers to Higher-Order Logic](https://www.verit-solver.org/papers/cade2019.pdf)
 
 ```cvc5
@@ -854,8 +870,9 @@ Sort gas. But then we still can't define-fun-recs
 ```
 
 ## Lambda
-https://microsoft.github.io/z3guide/docs/logic/Lambdas
+<https://microsoft.github.io/z3guide/docs/logic/Lambdas>
 Z3 supports lambdas. I believe they are lambda lifted.
+
 ```z3
 ;re
 (simplify (select (lambda ((x Int)) (+ x 3)) 17))
@@ -873,6 +890,7 @@ How else can we make arrays that have a definition?
 ```
 
 relational-style, underapproximate constraints on a by only requiring usage sites.
+
 ```z3
 
 (declare-const a (Array Int Int))
@@ -889,7 +907,6 @@ relational-style, underapproximate constraints on a by only requiring usage site
 (get-model)
 ```
 
-
 ```z3
 (define-const a (Array Int Int) (lambda ((x Int)) (+ x 3)))
 (check-sat) ; sat. no problemo
@@ -898,6 +915,7 @@ relational-style, underapproximate constraints on a by only requiring usage site
 
 `as-array` lifts functions to arrays. That's pretty cool.
 `define-fun-rec` can be lifted into array not `define-fun`.
+
 ```z3
 ;re
 (define-sort Arrow (A B) (Array A B))
@@ -909,9 +927,11 @@ relational-style, underapproximate constraints on a by only requiring usage site
 (eval (select a 7)) ;11
 
 ```
+
 ## Normalization By Evaluation
 
 We can deeply embed a lambda calculus and use define-fun-rec to normalize it. Perhaps by defining eval with explicit envs, defunctionalize?, perhaps by abusing Array system.
+
 ```z3
 ;nbe
 (declare-datatype Term (
@@ -927,16 +947,18 @@ We can deeply embed a lambda calculus and use define-fun-rec to normalize it. Pe
 )
 ```
 
-
 SKI combinators. I've heard tale that F* compiles to ski combinators in some part and discharges to smt
 
 # Models
+
 ## Separation logic
+
 <https://www.philipzucker.com/executable-seperation/> blog post modelling separation logic in Z3
-http://cvc4.cs.stanford.edu/wiki/Separation_Logic
+<http://cvc4.cs.stanford.edu/wiki/Separation_Logic>
 Can do the same sort of thing directly in define-fun
 
 Using the Option encoding seems to work very poorly
+
 ```z3
 ;re
 ;(declare-datatype Heap 
@@ -993,6 +1015,7 @@ Using the Option encoding seems to work very poorly
 
 
 ```
+
 ```
   (lambda ((h Heap)) 
     (exists ((h1 Heap))
@@ -1018,6 +1041,7 @@ Using the Option encoding seems to work very poorly
 ```
 
 Using a separate valid and data encoding, it goes much better. We can share the data everywhere, which is nice
+
 ```z3
 ;re
 (define-sort Ptr () (_ BitVec 64))
@@ -1082,19 +1106,21 @@ Using a separate valid and data encoding, it goes much better. We can share the 
 (check-sat)
 ;(get-model)
 ```
+
 ## Temporal Logic
+
 - [Modelling TLA+ in Z3py](https://www.philipzucker.com/Modelling_TLA_in_z3py/)
-- https://en.wikipedia.org/wiki/Temporal_logic
+- <https://en.wikipedia.org/wiki/Temporal_logic>
 
 We could try to find models for temproal logic statements.
 
 Typically one is trying to model check. Does such and such statement hold on a particular transition system.
 
-
 ## Kripke Intuitionism
+
 [Basic semantcs](https://plato.stanford.edu/entries/logic-intuitionistic/#BasSem)
-https://en.wikipedia.org/wiki/Kripke_semantics#Semantics_of_intuitionistic_logic
-http://therisingsea.org/notes/talk-shawn-kripke.pdf
+<https://en.wikipedia.org/wiki/Kripke_semantics#Semantics_of_intuitionistic_logic>
+<http://therisingsea.org/notes/talk-shawn-kripke.pdf>
 
 ```z3
 
@@ -1165,6 +1191,7 @@ http://therisingsea.org/notes/talk-shawn-kripke.pdf
 ```
 
 # Polymorphism
+
 It is a consistent theme that many people have tried in various ways to build a more powerful type system on top of the simple one in smtlib.
 This often involves encoding the types into smtlib terms, the analog in some sense of using runtime type checking.
 
@@ -1180,7 +1207,7 @@ This often involves encoding the types into smtlib terms, the analog in some sen
 ```
 
 # Type Checking
-https://cstheory.stackexchange.com/questions/37211/how-to-do-type-inference-using-an-smt-solver
+<https://cstheory.stackexchange.com/questions/37211/how-to-do-type-inference-using-an-smt-solver>
 [SMT-based Static Type Inference for Python 3](https://ethz.ch/content/dam/ethz/special-interest/infk/chair-program-method/pm/documents/Education/Theses/Mostafa_Hassan_BA_report.pdf)
 
 [Practical SMT-Based Type Error Localization](https://cs.nyu.edu/~wies/publ/practical_smt-based_type_error_localization.pdf)
@@ -1232,7 +1259,6 @@ https://cstheory.stackexchange.com/questions/37211/how-to-do-type-inference-usin
 ```
 
 ## Refinement types
-
 
 ```z3
 ;re
@@ -1343,9 +1369,11 @@ https://cstheory.stackexchange.com/questions/37211/how-to-do-type-inference-usin
 ```
 
 # Transcendentals
+
 <https://cvc5.github.io/docs/cvc5-0.0.7/theories/transcendentals.html>
 
 `exp` `sin` `cos` `arccos` `sqrt` and so on
+
 ```cvc5
 (set-logic QF_NRAT)
 (declare-fun x () Real)
@@ -1356,9 +1384,11 @@ https://cstheory.stackexchange.com/questions/37211/how-to-do-type-inference-usin
 (assert (< (* y y) (sin x)))
 (check-sat)
 ```
+
 # Float
+
 [Good real to float?](https://github.com/cvc5/cvc5/discussions/8024)
-`+oo` `+zero` `-zero` `NaN` 
+`+oo` `+zero` `-zero` `NaN`
 `fp` What is this? `fq.eq` `fp.abs` `fp.neg` `fp.fma` `fp.sqrt` `fp.roundtoIntegral`
 `fp.isNormal` `fp.isSubnormal` `fp.izZero` `fp.isInfinitr` `fp.isNaN` `fp.isNegative` `fp.isPositive` `fp.to_real`
 Indexed operators
@@ -1387,8 +1417,8 @@ Indexed operators
 
 (closest(x,fp)  (forall fp2 (<= (abs (- x fp.to_real)  ) <= (abs (- x (fp.to_real fp2))  )     )
 
-http://smtlib.cs.uiowa.edu/papers/BTRW14.pdf
-https://www.lri.fr/~melquion/doc/17-cav-article.pdf
+<http://smtlib.cs.uiowa.edu/papers/BTRW14.pdf>
+<https://www.lri.fr/~melquion/doc/17-cav-article.pdf>
 
 (round x r)  log2(x)  <= x - r <=
 
@@ -1411,7 +1441,7 @@ https://www.lri.fr/~melquion/doc/17-cav-article.pdf
 (get-model)
 ```
 
-We should just directly compute eps from 
+We should just directly compute eps from
 
 ```
 (define-fun eps32 ((x Real) (y Real))
@@ -1472,14 +1502,12 @@ R(x)
 (check-sat) ; sat
 ```
 
-
-
-
-
 # Quantifiers
+
 [really good f* summar of z3 whispering](http://fstar-lang.org/tutorial/book/under_the_hood/uth_smt.html#understanding-how-f-uses-z3)
 
 [pointers to quantifiers on cvc5](https://github.com/cvc5/cvc5/discussions/8770)
+
 ```
 (1) Bernays-Schönfinkel, when using the option --finite-model-find (https://homepage.divms.uiowa.edu/~ajreynol/cade24.pdf).
 
@@ -1487,7 +1515,6 @@ R(x)
 
 (3) Finite interpreted quantification, e.g. quantifiers over bitvectors (which also can be arbitrarily nested). See e.g. https://homepage.divms.uiowa.edu/~ajreynol/cav18.pdf for the techniques cvc5 uses; these techniques are used by default for quantifiers over e.g. BV when other theories are not present. They can be forced on using the option --cegqi-all.
 ```
-
 
 - MBQI - model based quantifier instantiation. Consider quantified formula as opaque propositions. Upon getting prop assignment, ask for countermodel to proposition. Infer _term_ instantiation from countermodel
 - E-matching - syntactic trigger.s
@@ -1499,8 +1526,8 @@ R(x)
 
 Amin Leino Rompf, [Computing with an SMT Solver”](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/12/krml237.pdf)
 They translate functions to versions that have fuel. They don't give them much fuel
-Lit marking. 
-Lit(x) + Lit(y) => Lit(x + y). This is another wya to encode constant propagation into egglog 
+Lit marking.
+Lit(x) + Lit(y) => Lit(x + y). This is another wya to encode constant propagation into egglog
 
 Trigger whispering. Can I use Z3 as an egglog? Completely using the trigger system I can't trigger on equality can I?
 
@@ -1510,12 +1537,11 @@ Michal Moskal's thesis - interesting
 Claire Dross, Sylvain Conchon, Johannes Kanig, and Andrei Paskevich. Reasoning with
 triggers. In Pascal Fontaine and Amit Goel, editors, 10th International Workshop on Satisfiability Modulo Theories, SMT 2012, EasyChair 2013 EPiC Series, pages 22–31, 2012. - a logical semantics of triggers
 
-http://www.rosemarymonahan.com/specsharp/papers/SAC_Final.pdf Reasoning about Comprehensions with
+<http://www.rosemarymonahan.com/specsharp/papers/SAC_Final.pdf> Reasoning about Comprehensions with
 First-Order SMT Solvers
 Duplicate functions. Trigger on only one version. Avoids things going off the rails.
 
-
-https://microsoft.github.io/z3guide/docs/logic/Quantifiers
+<https://microsoft.github.io/z3guide/docs/logic/Quantifiers>
 Stratified sorts fragment
 
 (set-option :smt.mbqi true)
@@ -1527,6 +1553,7 @@ What is compact models?
 
 Essentially (Almost) Uninterpreted Fragment
 [Complete instantiation for quantified formulas in Satisfiability Modulo Theories](https://leodemoura.github.io/files/ci.pdf)
+
 ```z3
 
 (declare-sort MyInt)
@@ -1548,12 +1575,11 @@ Essentially (Almost) Uninterpreted Fragment
 
 f-inv trick for injective function axiomatization
 
-
-Hmm. Z3 has `sin` built in? https://github.com/Z3Prover/z3/blob/f1bf660adc6f40cfdbd1c35de58c49b5f9960a9c/src/ast/arith_decl_plugin.h doesn't really seem so. It just recognizes it as defined. subpaving is interesting
+Hmm. Z3 has `sin` built in? <https://github.com/Z3Prover/z3/blob/f1bf660adc6f40cfdbd1c35de58c49b5f9960a9c/src/ast/arith_decl_plugin.h> doesn't really seem so. It just recognizes it as defined. subpaving is interesting
 
 ## Gas
-https://namin.seas.harvard.edu/files/krml237.pdf
-https://microsoft.github.io/z3guide/docs/logic/Quantifiers#patterns
+<https://namin.seas.harvard.edu/files/krml237.pdf>
+<https://microsoft.github.io/z3guide/docs/logic/Quantifiers#patterns>
 
 ```z3
 ; Nah. This isn't doing what I want it to
@@ -1592,6 +1618,7 @@ https://microsoft.github.io/z3guide/docs/logic/Quantifiers#patterns
 
 
 ```
+
    ; (! (=> (= (add (S g) x y) e)
 
 ```z3
@@ -1601,18 +1628,18 @@ https://microsoft.github.io/z3guide/docs/logic/Quantifiers#patterns
 
 ```
 
-
-
 ## Mechanisms for abstraction
 
 ### `let`
+
 ### define
+
 ### datatype DSL
+
 include and poor man module system
 
-
-
 ## Quantifiers and define
+
 Sometimes you can eliminate quantifiers by using define rather than a quantifier. Some quantifiers are turned into macros by macrofinders. `define-fun` is explicitly macro expanded.
 
 ```
@@ -1634,6 +1661,7 @@ Sometimes you can eliminate quantifiers by using define rather than a quantifier
 ```
 
 ### A Manual Proof Discipline
+
 Separation between module signature and proofs. Seperate files.
 Proof datatype to separate from bool definitions
 
@@ -1664,6 +1692,7 @@ Exists (Expr)
 Eh. I don't really want to reflect everything.
 
 A shallower HOAS embedding
+
 ```z3
 ;re
 (declare-datatype Formula (
@@ -1684,14 +1713,15 @@ A shallower HOAS embedding
 
 ```
 
-
 Universals can be proven by having
 (define-const x)
+
 ```
 ; other hypothesis do not mention x
 ;-----------------
 (instan-lemma1 x)
 ```
+
 or by
 ; other hypothesis can't possibly mention x
 ;-----------
@@ -1700,11 +1730,14 @@ or by
 Universal can be used by using lemma1 or by instan-lemma1 on anything
 
 Existentials can be proved
+
 ```
 ----------
 (exists x (relx x))
 ```
+
 or by
+
 ```
 whatever
 ---------
@@ -1713,6 +1746,7 @@ whatever
 ```
 
 They can be used via
+
 ```
 define-const x
 (relx x)
@@ -1722,25 +1756,17 @@ conclusion may refer to x
 
 ```
 
-
 ExistsE (ExistsE Bool)
 ForallE (ForallE (forallE Bool)) ; (apply?)
-Forall (ForallI (forallE Bool)) 
-
+Forall (ForallI (forallE Bool))
 
 (Exists Int Bool) ; can I pack the witness?
 
 define-const lemma Forall (forall x (forallE (instan-lemma x)))
 define-fun instan-lemma ((x Int)) ForallE
 
-
-
 The method is related to lambda lifting.
 We need to give names to different free parameter things.
-
-
-
-
 
 ```z3
 ;re
@@ -1786,6 +1812,7 @@ We need to give names to different free parameter things.
 (check-sat)
 
 ```
+
 ```z3
 ;re
 (define-fun even ((x Int)) Bool (exists ((y Int)) (= (* 2 y) x)))
@@ -1822,6 +1849,7 @@ I'm a little worried about circulaity if I pack everything into one proof thing.
 
 existential lemma can be used in hyps.
 Instantiated version in a conc (give explicitly). Or just let it crank.
+
 ```
 (declare-const e) appears only once in hyp for existential elim
 
@@ -1842,7 +1870,6 @@ Instantiated version in a conc (give explicitly). Or just let it crank.
 
 ```
 
-
 ### Reflection
 
 Reflection through ADTs + define-fun-rec interpreters
@@ -1862,12 +1889,11 @@ Reflection through arrays
 
 ```
 
-
 ### Minkanren
+
 define-fun-rec gives you the ability to do an embedded mininkanren
 
 Hmm. minikanren is structured more like clark completion. Interesting.
-
 
 ```z3
 (define-sort LInt () (List Int))
@@ -1929,7 +1955,6 @@ Hmm. minikanren is structured more like clark completion. Interesting.
 ;    nil)
 ;)
 ```
-
 
 ```z3
 ;re
@@ -2012,7 +2037,6 @@ Hmm. minikanren is structured more like clark completion. Interesting.
 (get-model)
 ```
 
-
 ```z3
 
 (declare-datatypes () (
@@ -2040,19 +2064,22 @@ Hmm. minikanren is structured more like clark completion. Interesting.
 ```
 
 ## Relations vs Functions
+
 Sometims you may want to work relationally rather than functionally.
 
-
-
 ## Bounded Quantification
+
 Some ideas
+
 - Inject from bounded domain like BitVec
 - (forall x (=> subset P)) use implication to constrain
 - Use define-fun-rec to recursively define quantification
 - Use define-fun to reccurve define quantification. Can use lambda
 
 ### define-fun-rec
+
 Using define-fun-rec as a bounded forall. Make the recursive function that enumarates the range. Probably it is a bad idea to
+
 ```z3
 
 (define-fun-rec bforall ((low Int) (high Int) (pred (Array (Array Int Int) Bool)) Bool
@@ -2060,8 +2087,8 @@ Using define-fun-rec as a bounded forall. Make the recursive function that enuma
 )
 ```
 
-
 Hmm. This is actually slower than the quantified form below
+
 ```z3
 ; but really it is hard to habstract this in z3. Specialize bforall for each predictae of interest.
 (define-fun-rec bforall ((low Int) (high Int) (pred (Array Int Bool))) Bool
@@ -2076,8 +2103,8 @@ Hmm. This is actually slower than the quantified form below
 
 
 ```
-The models look different too. The first gives a nicer model in some subjective sense.
 
+The models look different too. The first gives a nicer model in some subjective sense.
 
 ```z3
 ; but really it is hard to habstract this in z3. Specialize bforall for each predictae of interest.
@@ -2093,19 +2120,19 @@ The models look different too. The first gives a nicer model in some subjective 
 (check-sat)
 (get-model)
 ```
+
 ### Bitvec Quantify
-Quantify over bounded domains only. This might play nice with mbqi. Not so much with ematching. This is explicit parametrization of a finite subset of an infinite domain. Which might help. 
+
+Quantify over bounded domains only. This might play nice with mbqi. Not so much with ematching. This is explicit parametrization of a finite subset of an infinite domain. Which might help.
 
 ```
 (forall (x0 (_ BitVec 8))   (let ((x (+ offset (bv2int x0))))   (yadayada x)   )   )
 ```
 
-
-
-
-
 ## Datalog
+
 ### uZ3
+
 ```z3
 ;re
 
@@ -2154,7 +2181,9 @@ Quantify over bounded domains only. This might play nice with mbqi. Not so much 
 (query q2)
 (query q3 :print-answer true)
 ```
+
 ### Clark Completion
+
 [clark completion](https://www.inf.ed.ac.uk/teaching/courses/lp/2012/slides/lpTheory8.pdf)
 Only things that are forced to be true are true.
 Take horn clause  head(x) :- b(x).
@@ -2163,10 +2192,8 @@ Now collect up all rules with heads. head == body1 \/ body2 \/ body3 \/
 
 This example may be deceptive.
 `p :- p.` is an example rule that in clark completion allows self reinforcing of p. It justifies itself. Not good.
-So perhaps one way of thinking about this is you need some kind of termination argument, inductive type, or minimality restriction. 
+So perhaps one way of thinking about this is you need some kind of termination argument, inductive type, or minimality restriction.
 This particular example got lucky
-
-
 
 ```z3
 (declare-fun edge (Int Int) Bool)
@@ -2188,14 +2215,15 @@ This particular example got lucky
 (get-model)
 ```
 
-
 Closed world assumption. I guess that's simpler
+
 ### Transitive Closure
+
 [relational constraint solving in smt](https://homepage.divms.uiowa.edu/~ajreynol/cade17.pdf)
-https://cvc5.github.io/docs/cvc5-1.0.0/theories/sets-and-relations.html
+<https://cvc5.github.io/docs/cvc5-1.0.0/theories/sets-and-relations.html>
 
 special relations. Transitive closure cannot be expressed in first order logic
-https://math.stackexchange.com/questions/295298/is-reflexive-transitive-closure-of-relation-r-a-first-order-property
+<https://math.stackexchange.com/questions/295298/is-reflexive-transitive-closure-of-relation-r-a-first-order-property>
 
 My gut says this is a pretty nuanced statement.
 
@@ -2203,7 +2231,7 @@ Simple obvious axioms actually express that it is an overapproximation of the th
 
 [Some Remarks on the Definability of Transitive Closure in First-order Logic and Datalog](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.127.8266&rep=rep1&type=pdf)
 
-https://microsoft.github.io/z3guide/docs/theories/Special%20Relations#transitive-closures
+<https://microsoft.github.io/z3guide/docs/theories/Special%20Relations#transitive-closures>
 
 expansion operator of database. This is a little nuts
 {(a,b), (b,c)} R  (a,b)
@@ -2211,11 +2239,10 @@ expansion operator of database. This is a little nuts
 explicit
 
 deterministic transitive closure. Transitive closure of a functional relationship is a little bit lesser.
-http://cs.technion.ac.il/~shachari/dl/thesis.pdf tricking your way around these restrictions. Kind of using an indirect minimality condition.
-
-
+<http://cs.technion.ac.il/~shachari/dl/thesis.pdf> tricking your way around these restrictions. Kind of using an indirect minimality condition.
 
 ### Explicit datalog iteration
+
 ```
 (define-fun path (Int Vert Vert) Bool)
 
@@ -2235,11 +2262,13 @@ http://cs.technion.ac.il/~shachari/dl/thesis.pdf tricking your way around these 
 
 
 ```
+
 We can check if `(assert (!= (path N x y) (path (+ N 1) x y))` for whether we've terminated or not.
 
-### Well founded 
+### Well founded
 
 `Option Bool` is also acceptable
+
 ```z3
 (declare-datatype WF (
   (ProveTrue) (ProveFalse) (Unknown)
@@ -2262,7 +2291,9 @@ We can check if `(assert (!= (path N x y) (path (+ N 1) x y))` for whether we've
 ```
 
 This doesn't really help. Well founded semantics still has a minimality condition
+
 ### Proof Relevant
+
 ```z3
 ;re
 (declare-datatype Vert (
@@ -2345,10 +2376,10 @@ This doesn't really help. Well founded semantics still has a minimality conditio
 (eval (path c a))
 (eval (path b c))
 ```
+
 In some sense, inductive datatypes are also a minimal fixed point. It seems that by making proof relevant relations, we can inherit this minimality?
 
 One might thing you could remove the arguments to Trans. You can't remove `pf`. That is what is guaranteeing well foundedness of the derivation / acyclicity.
-
 
 See also "Proof Objects" below.
 
@@ -2434,8 +2465,6 @@ Do we cast to bool or not?
 There is a proof relevant thing that tells you which case of the `or` you're in in the completion semantics.
 I need negation because I need == and !=?
 
-
-
 ```
 (declare-datatype Proof
   (Trans (trans1 Int))
@@ -2480,7 +2509,8 @@ I need negation because I need == and !=?
 ```
 
 #### First Class Union Find
-Hmm. Making an adt for spanning trees is difficult and annoying. Maybe using the notion of 
+
+Hmm. Making an adt for spanning trees is difficult and annoying. Maybe using the notion of
 x -> zipper. Because funion, it has unique spot in tree.
 
 Is this n*2 space though? with sharing it shouldn't be
@@ -2494,6 +2524,7 @@ SpanTree.
 
 root(x) = root(y)
 explain(x) = path between root(x) and x. = Trans(y,just_xy, pf)
+
 ```z3
 ;re
 (declare-datatype Vert (
@@ -2538,7 +2569,6 @@ explain(x) = path between root(x) and x. = Trans(y,just_xy, pf)
 
 ```
 
-
 ```z3
 ;re
 (declare-datatype SpanTree (
@@ -2578,7 +2608,6 @@ explain(x) = path between root(x) and x. = Trans(y,just_xy, pf)
 
 
 ```
-
 
 ## Rewriting
 
@@ -2624,7 +2653,6 @@ z3 `simplify` command. This only simplifies under the base theories though.
 
 ```
 
-
 ```z3
 (declare-sort aexpr)
 (declare-fun add (aexpr aexpr aexpr) Bool)
@@ -2655,23 +2683,22 @@ z3 `simplify` command. This only simplifies under the base theories though.
 
 
 ```
-(not (= x y)) iff no functional dependency violation. 
 
-
+(not (= x y)) iff no functional dependency violation.
 
 forall z1, z2, (not (= z1 z2)) iff (not (exists (x y) (add x y z1) (add x y z2)))
 what about simple constants
 (X x) (Y y) => x != y all pairs of constant tables?
 But why?
 
-forall z1, z2. z1 != z2 <->  (not (add(x,y,z1) /\ add(x,y,z2)) ) 
-forall z1, z2. z1 != z2 <->  (not (mul(x,y,z1) /\ mul(x,y,z2)) ) 
-forall z1, z2. z1 != z2 <->  (not (add(x,y,z1) /\ add(x,y,z2)) ) 
-forall z1, z2. z1 != z2 <->  (not (X z1 /\ X z2) ) 
+forall z1, z2. z1 != z2 <->  (not (add(x,y,z1) /\ add(x,y,z2)) )
+forall z1, z2. z1 != z2 <->  (not (mul(x,y,z1) /\ mul(x,y,z2)) )
+forall z1, z2. z1 != z2 <->  (not (add(x,y,z1) /\ add(x,y,z2)) )
+forall z1, z2. z1 != z2 <->  (not (X z1 /\ X z2) )
 
 // No but this isn't right. We _might_ have these equal
 forall z1, z2. Y z1 /\ X z2 -> z1 != z2  // all pairs
-forall z1, z2. Y z1 /\ Z z2 -> z1 != z2 
+forall z1, z2. Y z1 /\ Z z2 -> z1 != z2
 
 Yes some are existential head rules. hmm.
 exists z, X z.
@@ -2679,9 +2706,8 @@ where does the exists go?
 Skolemize them I guess.
 forall x y, head(x, y) <-> \/  ( y = skolem(x) /\ body(x)  )
 
-
-so 
-exists z, X z. becomes 
+so
+exists z, X z. becomes
 exists z, forall x, X x <-> x = z.
 
 exists z, f(y,z) :- f(x,y)
@@ -2691,9 +2717,7 @@ f(f(X)) <- f(X).
 
 forall z y, f(y,z) = (z = f(y) /\ exists x, f(x,y)  \/  f(a,fa)   )
 
-
 algerbaic datatypes + datalog have the same problem
-
 
 Maybe if I know the big terms that are causing nontermination, I could cap them. Over approximate equality.
 Checking two terms can be done as a separate smt query.
@@ -2702,16 +2726,13 @@ Checking two terms can be done as a separate smt query.
 
 (depth (add x y)) <= 1 + max(depth(x),depth(y))
 
-
-
-
 mbqi is a kind of like datalog isn't it?
 
-If we want things bounded, perhaps explicilty bound the state of eids? 
+If we want things bounded, perhaps explicilty bound the state of eids?
 n : _ BitVec 20
 (eid n)
 
-Logically there is nothing forcing it to have 3 universe elements here. Hmm. We need equality to be forced by some reason. clark semantics on the equality relation. (= x y) = 
+Logically there is nothing forcing it to have 3 universe elements here. Hmm. We need equality to be forced by some reason. clark semantics on the equality relation. (= x y) =
 
 (eid n x) as a relation (eid bitvec aexpr)
 
@@ -2719,25 +2740,22 @@ bounded skolem function?
 
 We could explicitly use three valued semantics. What about encoding an ASP query to smt?
 
-
 = is explicitly a relation. We can't quantify the thing?
 One reason is refl. But we can't really talk about refl
-So we need to expand the forall and exlude the refl cases, which don't need to be dignified. 
+So we need to expand the forall and exlude the refl cases, which don't need to be dignified.
 (= (= a b)  ((a = c) /\ (= b c)
 (skolem x) = a
 
 (= (= x y) (or (((exists a b) (= (add a b) x) and (= (add a b) y)
             ((   exists a b     (= (add a b) x) (= (add b a) y)  ))
-            
+
             )
 add(a,b) = add(b,a) if
-
 
 (add a b c)
 (=
 
 )
-
 
 (= (baseeq x y) (or (= x y)
                     (and (add a b x) (and a b y))
@@ -2745,15 +2763,12 @@ add(a,b) = add(b,a) if
 
 (= (_ transitive baseq)  (a = b)
 
-
 ## Pseudo Boolean
 
-
-
-
-
 # Parsing
+
 This is not working.
+
 ```z3
 ;re
 (declare-datatype Tree (
@@ -2784,10 +2799,10 @@ This is not working.
 
 ```
 
-
 # Finite Models
+
 There is a sense in which getting a model returend is much more powerful and satisfying than merely getting `unsat`.
-When you start using quantifiers, it feels as though 
+When you start using quantifiers, it feels as though
 Z3 can output finite models.
 
 Don't ask Z3 questions it can't have finite answers for. Asking for functions symbols for complex infinite functions is destined for pain. Ask for underapproximation, or use define-fun, define-fun-rec where it doesn't have to figure out the function.
@@ -2797,7 +2812,7 @@ Is there a pile of tricks or systematic thing I can do to a set of axioms such t
 
 one suggestion. Try to use relational definitions, not functional definitions. total functions tend to lead to infinite models.
 
-Finite model finding. Finitizing a set of axioms in such a way that the resulting model has a useful relationship to the actual infinite model. Just truncating isn't very satisfactory. 
+Finite model finding. Finitizing a set of axioms in such a way that the resulting model has a useful relationship to the actual infinite model. Just truncating isn't very satisfactory.
 
 I guess I could stratify sorts? A lot of duplication. I can't make equalities across strata.
 I don't have counters in z3. Possibly we do have gas. things with different gas aren't equal though. hmm.
@@ -2806,12 +2821,11 @@ depth metric? But that isn't stable across eclass.
 
 explicit eid labelling for fresh const.
 
-
-
 ## EPR
+
 [a (kinda long) thread on the decidability of EPR (a fragment of first-order logic) - James Wilcox](https://twitter.com/wilcoxjay/status/1367698694988992513?s=20&t=kFDTTfb0qkcnSqysfiGJ4A)
-EPR is pretty powerful. axioms for transitivity, reflexivity, and antisymmetry are all expressible, as are simple uniqueness and cardinality constraints. so for example, you can go to town on reasoning about trees, graphs, or database-y things (primary key constraints, etc.). 
-see http://cs.technion.ac.il/~shachari/dl/thesis.pdf for an application to imperative linked list manipulation!
+EPR is pretty powerful. axioms for transitivity, reflexivity, and antisymmetry are all expressible, as are simple uniqueness and cardinality constraints. so for example, you can go to town on reasoning about trees, graphs, or database-y things (primary key constraints, etc.).
+see <http://cs.technion.ac.il/~shachari/dl/thesis.pdf> for an application to imperative linked list manipulation!
 [Complete instantiation for quantified formulas in Satisfiability Modulo Theories](http://leodemoura.github.io/files/ci.pdf)
 
 "Bernays Schonfinkel"
@@ -2821,7 +2835,6 @@ Also the only quantifiers allowed are exists, forall.
 Quantifier alternation also leads to a form of function symbols thanks for skolemization.
 There are more sophisticated variants which can have function symbols satisfying certain straitifcation conditions.
 
-
 The finite model property.
 
 <http://microsoft.github.io/ivy/decidability.html>
@@ -2829,8 +2842,8 @@ The finite model property.
 <https://theory.stanford.edu/~nikolaj/programmingz3.html#sec-model-based-quantifier-instantiation>
 <https://arxiv.org/pdf/1710.07191.pdf>
 
-
 Can be turned into equisatisfiable propositional formula by:
+
 1. Turn outer existential to free variable
 2. Turn inner forall into conjunction over all existential variable possibilities.
 
@@ -2839,23 +2852,19 @@ Can be turned into equisatisfiable propositional formula by:
 Herbrand universe saturation is sort of key. Can I achieve this with gas? I could artificially macroize sorts to do so.
 
 Using existentials is in a sense defining skolem function symbols
-Defining function symbols is in a sense invoking an implicit congruence and totality axiom which have scary quantifiers. 
-
-
-
+Defining function symbols is in a sense invoking an implicit congruence and totality axiom which have scary quantifiers.
 
 [interestting tidbit](https://stackoverflow.com/questions/24062292/most-efficient-way-to-represent-memory-buffers-in-z3) suggests not using array initialization using stores. Instead element by element. Also extensionality axiom for arrays can be turned off
 
-https://stackoverflow.com/questions/28149863/why-is-e-matching-for-conjunctions-sensitive-to-order-case-splitting-strategy
-
-
+<https://stackoverflow.com/questions/28149863/why-is-e-matching-for-conjunctions-sensitive-to-order-case-splitting-strategy>
 
 # Query Containment
-https://www.logic.at/emclworkshop12/slides/student_talks/Sergey/presentation.pdf
-https://ieeexplore.ieee.org/document/9161435
+<https://www.logic.at/emclworkshop12/slides/student_talks/Sergey/presentation.pdf>
+<https://ieeexplore.ieee.org/document/9161435>
 [Conjunctive-Query Containment and Constraint Satisfaction](https://www.cs.rice.edu/~vardi/papers/pods98rj.pdf)
 
 Explicit modelling of homomorphism
+
 ```
 (declare-fun h (domA) domB)
 (declare-fun A (domA) Bool)
@@ -2912,7 +2921,6 @@ Any function defines equivalence classes based on it's preimages.
 
 ```
 
-
 ```z3
 (declare-sort A)
 (declare-fun uf (A) Int)
@@ -2945,17 +2953,19 @@ Any function defines equivalence classes based on it's preimages.
 
 Yeah, this is nonsensical. There aren't enough hooks to control what is equal and isn't. Externally, we could try to search
 
-
 # Program Verification
+
 Small scale and large scale choices:
 
 - Predicate transformers
 - Transition relation between state
-  + Use a transition function vs transition relation
+  - Use a transition function vs transition relation
 
 Modelling the state
+
 - explicit store Array
-- 
+-
+
 Dealing with the frame problem
 
 - Bounded checking vs complete
@@ -2963,16 +2973,13 @@ Dealing with the frame problem
 - Termination. It kind of matters
 - Structure vs unstructured control flow
 - Use Constrained horn clauses for control flow
-- 
-
-
-
+-
 
 [jitterbug](https://unsat.cs.washington.edu/projects/jitterbug/)
 [serval](https://unsat.cs.washington.edu/projects/serval/)
 
 ## Nand2Tetris Cpu
-https://www.philipzucker.com/nand2tetris-chc/
+<https://www.philipzucker.com/nand2tetris-chc/>
 
 ```z3
 ;re
@@ -3011,14 +3018,13 @@ https://www.philipzucker.com/nand2tetris-chc/
 ```
 
 ## Arm
+
 ## RiscV
-https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
+<https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf>
 
 - Using define-fun-rec gives a first class handle on instructions.
 - To curry or not.
-- 
-
-
+-
 
 ```z3
 ;re
@@ -3114,7 +3120,7 @@ def hcomp(f,g):
 So what do I want to do with this model? WP? CHC? Model checking? Symbolic execution? Hoare Logic?
 Bit accurate assembly modelling can be interesting too.
 
-https://github.com/mit-plv/riscv-coq/blob/master/src/riscv/Spec/Decode.v
+<https://github.com/mit-plv/riscv-coq/blob/master/src/riscv/Spec/Decode.v>
 
 ```z3
 ;re
@@ -3275,6 +3281,7 @@ https://github.com/mit-plv/riscv-coq/blob/master/src/riscv/Spec/Decode.v
 ```
 
 ## Forth
+
 ## WASM
 
 ```z3
@@ -3282,11 +3289,13 @@ https://github.com/mit-plv/riscv-coq/blob/master/src/riscv/Spec/Decode.v
 ```
 
 ## Weakest Precondition
+
 - [Weakest Precondition with Z3py](https://www.philipzucker.com/weakest-precondition-z3py/)
 
-
 ### Initial Style
+
 Deep embedding of weakest precondition
+
 ```z3
 
 (define-sort Var () String)
@@ -3469,16 +3478,15 @@ There is nothng stopping me from doing ForAll I think. The clobbering exactly ma
 
 ```
 
-
 Fresh variables. Use skolem function  and counter. I guess this is a fresh var counter?
 (f Int)
-(+ counter 1) 
+(+ counter 1)
 
 IntTerm
 BoolTerm
 
-
 ### Final Style
+
 ```z3
 ;re
 (define-sort Var () String)
@@ -3552,6 +3560,7 @@ BoolTerm
 
 
 ```
+
 Huh. I can't make polymorphic functions, but I can make polymorphic array types. Uh. But I can't instantiate them.
 Can use explicit boxed polymorphism. Runtime.
 
@@ -3565,8 +3574,6 @@ Can use explicit boxed polymorphism. Runtime.
 
 
 ```
-
-
 
 ```
 ;re
@@ -3604,10 +3611,10 @@ Can use explicit boxed polymorphism. Runtime.
 
 alpha-kanren. nominal sets ~ finite sets. Hmm.
 
-
 Can I do this shallowly? It's hard because of variable bindings.
 It's also hard because we we can't do much higher order stuff.
 Reuse z3 formula as formula
+
 ```z3
 
 ;(define-fun when ((cond Bool) ()  (post Bool)))
@@ -3618,16 +3625,15 @@ Reuse z3 formula as formula
 
 ```
 
-
 # Proofs
+
 [Haniel Barbosa - Better SMT proofs for certifying compliance and correctness - IPAM at UCLA](https://www.youtube.com/watch?v=ygsY2LlWyQI&t=7s&ab_channel=InstituteforPure%26AppliedMathematics%28IPAM%29)
-
-
 
 How do you get proofs out of smt solvers?
 It's tough.
 
 cvc5 supports a proof production
+
 - [proof production](https://cvc5.github.io/docs/cvc5-1.0.2/proofs/proofs.html)
 - alethe, lfsc, dot
 - carcara checker for alethe
@@ -3643,11 +3649,13 @@ cvc5 supports a proof production
 ```
 
 So does Z3. They are hard to interpret
+
 - [State of Proof Checking](https://github.com/Z3Prover/z3/discussions/5981)
-- [On proof generation and proof checking ](https://github.com/Z3Prover/z3/discussions/4881)
+- [On proof generation and proof checking](https://github.com/Z3Prover/z3/discussions/4881)
 - [state of proofs slides](https://z3prover.github.io/slides/proofs.html)
 
 ## Proof Objects
+
 A la coq inductive datatypes. Searching for a proof object.
 
 ```z3
@@ -3688,10 +3696,12 @@ A la coq inductive datatypes. Searching for a proof object.
 
 ```
 
-
 ## Interactive Proof
+
 [Automating Theorem Proving with SMT - leino](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/12/krml234.pdf)
+
 ### A Manual Proof Discipline
+
 Separation between module signature and proofs. Seperate files.
 Proof datatype to separate from bool definitions
 
@@ -3722,6 +3732,7 @@ Exists (Expr)
 Eh. I don't really want to reflect everything.
 
 A shallower HOAS embedding
+
 ```z3
 ;re
 (declare-datatype Formula (
@@ -3742,14 +3753,15 @@ A shallower HOAS embedding
 
 ```
 
-
 Universals can be proven by having
 (define-const x)
+
 ```
 ; other hypothesis do not mention x
 ;-----------------
 (instan-lemma1 x)
 ```
+
 or by
 ; other hypothesis can't possibly mention x
 ;-----------
@@ -3758,11 +3770,14 @@ or by
 Universal can be used by using lemma1 or by instan-lemma1 on anything
 
 Existentials can be proved
+
 ```
 ----------
 (exists x (relx x))
 ```
+
 or by
+
 ```
 whatever
 ---------
@@ -3771,6 +3786,7 @@ whatever
 ```
 
 They can be used via
+
 ```
 define-const x
 (relx x)
@@ -3780,25 +3796,17 @@ conclusion may refer to x
 
 ```
 
-
 ExistsE (ExistsE Bool)
 ForallE (ForallE (forallE Bool)) ; (apply?)
-Forall (ForallI (forallE Bool)) 
-
+Forall (ForallI (forallE Bool))
 
 (Exists Int Bool) ; can I pack the witness?
 
 define-const lemma Forall (forall x (forallE (instan-lemma x)))
 define-fun instan-lemma ((x Int)) ForallE
 
-
-
 The method is related to lambda lifting.
 We need to give names to different free parameter things.
-
-
-
-
 
 ```z3
 ;re
@@ -3844,6 +3852,7 @@ We need to give names to different free parameter things.
 (check-sat)
 
 ```
+
 ```z3
 ;re
 (define-fun even ((x Int)) Bool (exists ((y Int)) (= (* 2 y) x)))
@@ -3880,6 +3889,7 @@ I'm a little worried about circulaity if I pack everything into one proof thing.
 
 existential lemma can be used in hyps.
 Instantiated version in a conc (give explicitly). Or just let it crank.
+
 ```
 (declare-const e) appears only once in hyp for existential elim
 
@@ -3932,7 +3942,6 @@ Instantiated version in a conc (give explicitly). Or just let it crank.
 
 
 ```
-
 
 ```z3
 ;re
@@ -4012,8 +4021,8 @@ Instantiated version in a conc (give explicitly). Or just let it crank.
 
 ```
 
-
 ### Python Hilbert Proof
+
 Hilbert style proofs where the only inference rule is Z3_check.
 Register known theorems to central repository. Refer to them later.
 There are some basic theorems with quantifiers I couldn't get Z3 to do even the most basic step of, so this idea feels sunk.
@@ -4120,8 +4129,6 @@ t.theorem(9, even(r*r) != odd(r*r), 8)
 even(r * r) != odd(r * r)
 ```
 
-
-
 ```python
 t = Hilbert()
 
@@ -4175,6 +4182,7 @@ t.formula
 ```
 
 ### Python Backwards Proof
+
 <https://www.philipzucker.com/programming-and-interactive-proving-with-z3py>
 At the end of this blog post I had kind of a neat system mimicking how coq feels.
 Keep a goal stack. Allow usage of Z3 tactics.
@@ -4183,19 +4191,20 @@ I don't think systems tend to make the backwards proof process part of their cor
 Probably sunk for the same reasons that Z3 just will not accept certain quanitifier proofs.
 
 ### Python Forward Proof
+
 Guidance from Harrison.
 
 Reuse the Z3 syntax tree but build custom
 
-https://en.wikipedia.org/wiki/Sequent_calculus
+<https://en.wikipedia.org/wiki/Sequent_calculus>
 
 It is alarming it feels like i can't use instantiation of proven theorems. What am I missing.
 
 We could explicilty maintain the signature and check when new stuff comes in to add to it
 
-https://ncatlab.org/nlab/show/sequent+calculus
+<https://ncatlab.org/nlab/show/sequent+calculus>
 
-https://github.com/jonsterling/lcf-sequent-calculus-example
+<https://github.com/jonsterling/lcf-sequent-calculus-example>
 
 ```python
 from z3 import *
@@ -4350,7 +4359,6 @@ print(contains(Exists([x], x >= 0), x))
 
 ```
 
-
 ```python
 from z3 import *
 #help(substitute_vars)
@@ -4369,8 +4377,8 @@ print(t.var_name(0))
 
 ```
 
-https://leanprover.github.io/logic_and_proof/natural_deduction_for_propositional_logic.html
-https://www.cs.cmu.edu/~fp/courses/atp/handouts/ch2-natded.pdf
+<https://leanprover.github.io/logic_and_proof/natural_deduction_for_propositional_logic.html>
+<https://www.cs.cmu.edu/~fp/courses/atp/handouts/ch2-natded.pdf>
 Use tuples instead of lists for immutability?
 
 ```python
@@ -4489,6 +4497,7 @@ print(Proof.smt([], z + y == y + z).forallI(z).forallI(y).forallE(z))
 ```
 
 ## Hoare LCF
+
 A [hoare triple](https://en.wikipedia.org/wiki/Hoare_logic) is a judgement.$\{P\}C\{Q\}$ lives at the same level as $\Gamma \turnstile e : T$
 We can literally construct the proof tree as a data structure, or we can go lcf style whrere we have trusted functions.
 
@@ -4543,96 +4552,90 @@ class CosnsAx():
 
 Weakest precondition could be used to generate a particular hoare tree I think
 
-
-
-
-
-
-
-
-# Z3 
+# Z3
 
 mindiff on arrays?
 
-https://github.com/Z3Prover/z3test tests repo
+<https://github.com/Z3Prover/z3test> tests repo
 
-https://t.co/ovrqsZR9sw
+<https://t.co/ovrqsZR9sw>
 
 [z3 internals](https://z3prover.github.io/papers/z3internals.html)
 
 [Z3 slides](https://z3prover.github.io/slides/)
 
-
-
 ## Z3 source spelunking
 
 Folders:
+
 - cmake, not that interesting
 - contrib - qprofdiff tool. axiom profiler diff tool?
 - doc - not that ijnterest
-- examples 
-  * tptp
-  * maxsat solver using C bindings
-## src - most of the goodies are here.
+- examples
+  - tptp
+  - maxsat solver using C bindings
 
-
+## src - most of the goodies are here
 
 - CmakeLists.txt - ineresting actually. Gives a more full listing of everything
   header files.
   subdirectories to scan. util comes first.
   util, math, ast, params, model, tactic, parsers, sat,
-- utils 
-  * approx_nat. uses UINTMAX to represent "huge". That's cool.
-  * bitvector - arrau for storing bit vbectors
-  * hash - custom hash stuff http://burtleburtle.net/bob/hash/doobs.html
-  * inf_int_rational - rationals with infinitesimals
-  * memory_manager? 
-  * min_cut
-  * mpbq - binary rationals. multi precision binary Q, q meaing rational
-  * mpff - mulitprecision fast floats?
-  * sexp
-  * stack - low level stack allocator?
-  * state_graph - tracking "live" and "dead" states 
+- utils
+  - approx_nat. uses UINTMAX to represent "huge". That's cool.
+  - bitvector - arrau for storing bit vbectors
+  - hash - custom hash stuff <http://burtleburtle.net/bob/hash/doobs.html>
+  - inf_int_rational - rationals with infinitesimals
+  - memory_manager?
+  - min_cut
+  - mpbq - binary rationals. multi precision binary Q, q meaing rational
+  - mpff - mulitprecision fast floats?
+  - sexp
+  - stack - low level stack allocator?
+  - state_graph - tracking "live" and "dead" states
 - math
-  * polynomial - upolonymial - uvariate. some facotrizxations, algerbaic numbers
-  * dd - decision diagrams
-  * hilbert - computes hilbert basis. A thing from inequalities o https://en.wikipedia.org/wiki/Hilbert_basis_(linear_programming)
-  * simplex - bit matrix, network flow, simplex algo
-  * automata
-  * interval - interval arithemtic
-  * realclosure - closing the rationals, computale reals, infinitesimals, Huh. This idea of infinitesimals is odd but intriguing. What is that for?
-  * subpaving
-  * greobner
-  * lp
+  - polynomial - upolonymial - uvariate. some facotrizxations, algerbaic numbers
+  - dd - decision diagrams
+  - hilbert - computes hilbert basis. A thing from inequalities o <https://en.wikipedia.org/wiki/Hilbert_basis_(linear_programming)>
+  - simplex - bit matrix, network flow, simplex algo
+  - automata
+  - interval - interval arithemtic
+  - realclosure - closing the rationals, computale reals, infinitesimals, Huh. This idea of infinitesimals is odd but intriguing. What is that for?
+  - subpaving
+  - greobner
+  - lp
 - ast
- * euf - has an egraph implementation -referencing egg?! etable - one entry per function symbol
- * fpa - conversion between bitvector and floating point
- * macro - z3 macros. universally quantified that can be used as macros. Macros are universally quantified formulas of the form:
+
+- euf - has an egraph implementation -referencing egg?! etable - one entry per function symbol
+- fpa - conversion between bitvector and floating point
+- macro - z3 macros. universally quantified that can be used as macros. Macros are universally quantified formulas of the form:
      (forall X  (= (f X) T[X]))
      (forall X  (iff (f X) T[X]))
    where T[X] does not contain X. macro_finder=True flag?
- * normal - normal forms. skolemaizaytion. negation normals form. Pull quantifiers
- * pattern - pattern ordering, can one be instantiated to the other?
- * proof - proof checker and traversal
- * rewriter - huge. der destructive equality resoltion. rewrite.h common infratsture
- * More I got tired
+- normal - normal forms. skolemaizaytion. negation normals form. Pull quantifiers
+- pattern - pattern ordering, can one be instantiated to the other?
+- proof - proof checker and traversal
+- rewriter - huge. der destructive equality resoltion. rewrite.h common infratsture
+- More I got tired
+
 - params - stuff
 - model
 
-
 You know, it's a lot, but it isn't quite as overwhelming as I have felt in the past
+
 - shell - z3 executable
- * main.cpp - hmm trace and debug builds.
- * smtlib_frontend.cpp - parse_smt2_commands
- * src/smt2/smt23parser - oh wow. the parser is pretty complex. Is this really the runtime in some sense? This file is best read bottom to top. Well, it's loading evertythning up into the context. That makes sense. asserts. parse_cmd. declarations, consts, asserrs,  eventually you run check_sat
- * src/solver/solver.h check_sat, combined_solver.cpp. check_sat is like an overloadable class function though? Where does the solver get built?
 
- * cmd_context? This is where commands are defined. Might be secret ones.
+- main.cpp - hmm trace and debug builds.
+- smtlib_frontend.cpp - parse_smt2_commands
+- src/smt2/smt23parser - oh wow. the parser is pretty complex. Is this really the runtime in some sense? This file is best read bottom to top. Well, it's loading evertythning up into the context. That makes sense. asserts. parse_cmd. declarations, consts, asserrs,  eventually you run check_sat
+- src/solver/solver.h check_sat, combined_solver.cpp. check_sat is like an overloadable class function though? Where does the solver get built?
 
+- cmd_context? This is where commands are defined. Might be secret ones.
 
-https://github.com/Z3Prover/z3/blob/master/src/smt/mam.h ematching machine
+<https://github.com/Z3Prover/z3/blob/master/src/smt/mam.h> ematching machine
 
 ## Tactics
+
 [Tactics](https://microsoft.github.io/z3guide/docs/strategies/tactics/)
 [Tactics summary](https://microsoft.github.io/z3guide/docs/strategies/summary)
 
@@ -4641,12 +4644,12 @@ The entire assertion state is considered a goal?
 It can return multiple goals?
 
 Tactics can have:
+
 - under precision. goal may not have sat models even if original problem did
 - over precsion
 
-
-
 ## paramaters, tactics, and commands
+
 `z3 -in`  interactive mode
 
 SOme interesting looking commands:
@@ -4689,11 +4692,10 @@ model based projection
 muz has: datalog, bmc, and spacer mode, and xform?
 :print-certificatie fives "inductive invataint" even in datalog?
 
-
 ## Z3 Add Commutative Benchmark
+
 This is making and abstract sort for which we are defining commutativity and associativity rules.
 Z3 is quite fast even here at proving some particularly rearrangement.
-
 
 ```python
 from z3 import *
@@ -4726,9 +4728,10 @@ for N in range(5,17):
 
 ```
 
-
 # CVC5
+
 [Paper](https://homepages.dcc.ufmg.br/~hbarbosa/papers/tacas2022.pdf)
+
 - abduction
 - inteprolation
 - sygus
@@ -4737,7 +4740,7 @@ for N in range(5,17):
 - separation logic
 
 [kinds files](https://github.com/cvc5/cvc5/blob/a8623b22f6f8d28191f090f8f5456540d9cb0a18/src/theory/builtin/kinds)
-This is a [parsers listing](https://github.com/cvc5/cvc5/blob/a8623b22f6f8d28191f090f8f5456540d9cb0a18/src/parser/smt2/smt2.cpp). You can find all (exposed) built in functions here 
+This is a [parsers listing](https://github.com/cvc5/cvc5/blob/a8623b22f6f8d28191f090f8f5456540d9cb0a18/src/parser/smt2/smt2.cpp). You can find all (exposed) built in functions here
 
 - `eqrange`? So set equality over a range? Seems useful. Rewriter expands to obvious quantified fromula
 - `iand`
@@ -4747,7 +4750,9 @@ This is a [parsers listing](https://github.com/cvc5/cvc5/blob/a8623b22f6f8d28191
 - bags
 
 ## test/regress
+
 Looking at the test/regress folder, what sort of odd looking stuff is there?
+
 - (_ iand 4) what is this
 - sygus
 - (! :named foo)
@@ -4756,11 +4761,13 @@ Looking at the test/regress folder, what sort of odd looking stuff is there?
 - (set-info :status sat) . Hmm does it use this?
 
 So it looks like theory specific stuff can be accesed namespaces
+
 - str.prefixof str.substr str.len str.to_int
 - set.subset set.insert set.singleton
 - fp.is_zero fp.to_real
 
 ## options
+
 <https://cvc5.github.io/docs/cvc5-0.0.7/binary/options.html#most-commonly-used-cvc5-options>
 cvc --help
 --dump-intsantiations
@@ -4768,7 +4775,6 @@ cvc --help
 --dump-unsat-cores
 --proof-dot-dag
 --proof-format-mode
-
 
 --conjecture-gen candidate fo inductive proof
 --dt-stc-ind strengthening based on structural induction
@@ -4781,31 +4787,34 @@ cvc --help
 -o trigger - print selected triggers
 -o learned-lits
 -o subs
+
 # user defined propagators
-https://avm.sosy-lab.org/2022/prs/AVM22_Eisenhofer.pdf
-https://github.com/CEisenhofer/Z3-User-Propagator-Example
+<https://avm.sosy-lab.org/2022/prs/AVM22_Eisenhofer.pdf>
+<https://github.com/CEisenhofer/Z3-User-Propagator-Example>
 
 [User-Propagation for Custom Theories in SMT Solving](https://ceur-ws.org/Vol-3185/extended6630.pdf)
-http://theory.stanford.edu/~nikolaj/z3navigate.html
+<http://theory.stanford.edu/~nikolaj/z3navigate.html>
 OpenSMT
 
 callbacks
+
 - push/pop
 - fixed
 - eq and diseq
 - final
 
-
 string solvers
 n-queens custom csp
 
 also can be used to watch quantifier instantion.
+
 # Resources
 
+[Speeding up smt solving via compiler optimizers](https://helloqirun.github.io/papers/FSE_23_Ben.pdf) toss smt into llvm, extract smt back out. llvm optmizations so good they simplify the formula. crazy.
 
 [The Design and Implementation of the Model Constructing Satisfiability Calculus](https://www.cs.utexas.edu/users/hunt/FMCAD/FMCAD13/papers/71-Model-Construction-SAT-Calculus.pdf) MCSat
 
-[datalog based systems can us incremental smt solving ](https://cs.pomona.edu/~michael/papers/iclp2020_extabs.pdf) Nice trick to use (=> label clause). This trick also comes up in unsat cores. (check-sat-assuming label label) then. ALso consider doing minimal number of push pops or keep pool of solver contexts to find miniaml push pop
+[datalog based systems can us incremental smt solving](https://cs.pomona.edu/~michael/papers/iclp2020_extabs.pdf) Nice trick to use (=> label clause). This trick also comes up in unsat cores. (check-sat-assuming label label) then. ALso consider doing minimal number of push pops or keep pool of solver contexts to find miniaml push pop
 
 [Fuzzy-sat](https://arxiv.org/pdf/2102.06580.pdf) running smt queries through a fuzzer
 
@@ -4817,12 +4826,11 @@ Idea: Convert Z3 DRAT to tactic script <https://github.com/Z3Prover/z3/discussio
 
 Idea: Analgous to intervals or complex numbers, do extended reals <https://en.wikipedia.org/wiki/Extended_real_number_line> Using Reals + ADTs. Interesting because algerbaic operations become partial. Do as smt macro?
 
-
 User propagated theories
 
-delta debugging  - https://ddsmt.readthedocs.io/en/master/
+delta debugging  - <https://ddsmt.readthedocs.io/en/master/>
 
-https://twitter.com/RanjitJhala/status/1391074098441187328 - jhala asks for help on a slowdown
+<https://twitter.com/RanjitJhala/status/1391074098441187328> - jhala asks for help on a slowdown
 
 running `perf`
 `perf record -F 99  --call-graph dwarf ./z3 /tmp/review.smt2;  perf report |  c++filt | less`
@@ -4835,24 +4843,20 @@ Differences between solvers is important
 
 Check regression on same solver - much better if true.
 
-LLogic debugging - https://www.metalevel.at/prolog/debugging
+LLogic debugging - <https://www.metalevel.at/prolog/debugging>
 
 "Try Smt.arith.solver=2"
 "All automatic Z3 bot sometimes uses git bisect."
 "rewriter.flat=false"
 -v:10
 
-
 WWDD - what would dafny do
 
-
-https://arxiv.org/pdf/2010.07763.pdf refinement types tutorial
+<https://arxiv.org/pdf/2010.07763.pdf> refinement types tutorial
 
 fascinating that this paper internalizes the partial evaluation prcoess into the smt formula
 
-
-
-https://github.com/Z3Prover/z3/pull/5625/commits/ec792f64205a6aea5ab21d2859a632676726bedf user propagation of theories example
+<https://github.com/Z3Prover/z3/pull/5625/commits/ec792f64205a6aea5ab21d2859a632676726bedf> user propagation of theories example
 
 How to get Z3 to return models with quantified statements.
 mbqi needs to saturate? epr
@@ -4860,22 +4864,19 @@ Can I do it by explicitly gassing?
 
 Axiom schema
 
-
 [decision prcoesures book](http://www.decision-procedures.org/)
 [calculus of computation books](https://theory.stanford.edu/~arbrad/book.html)
 
-
 ford-fulkerson push relabelling for special relations?
-https://en.wikipedia.org/wiki/Push%E2%80%93relabel_maximum_flow_algorithm
-https://microsoft.github.io/z3guide/docs/theories/Special%20Relations
-
+<https://en.wikipedia.org/wiki/Push%E2%80%93relabel_maximum_flow_algorithm>
+<https://microsoft.github.io/z3guide/docs/theories/Special%20Relations>
 
 # Resources
 
-https://ojs.aaai.org/index.php/AAAI/article/view/9755 sat modulo monotonic theories
+<https://ojs.aaai.org/index.php/AAAI/article/view/9755> sat modulo monotonic theories
 
-https://users.aalto.fi/~tjunttil/2020-DP-AUT/notes-smt/index.html
+<https://users.aalto.fi/~tjunttil/2020-DP-AUT/notes-smt/index.html>
 
-https://github.com/awslabs/rust-smt-ir hmm. This is an smt preprocessor
+<https://github.com/awslabs/rust-smt-ir> hmm. This is an smt preprocessor
 
-http://reports-archive.adm.cs.cmu.edu/anon/2003/CMU-CS-03-210.pdf UCLID. Eager encoding to SAT
+<http://reports-archive.adm.cs.cmu.edu/anon/2003/CMU-CS-03-210.pdf> UCLID. Eager encoding to SAT

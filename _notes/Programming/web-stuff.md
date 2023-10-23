@@ -23,6 +23,8 @@ htmx
 
 flexbox
 
+[cassius](https://cassius.uwplse.org/) vizassert. Constraint based. Z3 layout? Troika - a proof assistant version. Pavel and Zach
+
 ## Frameworks
 Get some nicer default styling, often some kind of grid system for layout, mobile formatting etc.
 

@@ -104,12 +104,68 @@ Non negated datalog should have a unique solution. Datalog with negation is a di
 
 # Picat
 [website](http://www.picat-lang.org/)
+[user guide](http://picat-lang.org/download/picat_guide.pdf)
+[Book](http://picat-lang.org/picatbook2015.html)
 
 index mode annotations
 table annotions include lattice type stuff "mode-directed tabling"
 
 action rules
 loops
+
+
+```picat
+main =>
+  printf("hello world\n"),
+  X = 3,
+  print(X),
+  print([I**2 :  I in 1..5 ]), % comprehensions
+  Y = {1,2,3,4}, % arrays
+  Y := 10, % assignement
+  print(Y),
+  print($foo(bar,$biz)), % Dollar sign $ for structs/
+  M = new_map(), put(M,mykey,10), print(get(M,mykey)),
+  print(fib(10))
+  .
+
+
+
+% clauses. 
+index (+,-) (-,+)
+edge(a,b).
+edge(a,c).
+edge(b,c).
+edge(c,b).
+
+% functions
+fib(0) = F => F=1. % alternative fib(0) = 1. "function facts"
+fib(1) = F => F=1.
+fib(N) = F, N>1 => F = fib(N-1)+fib(N-2).
+
+sum_list(L) = Sum => % returns sum(L)
+  S=0,
+  foreach (X in L)
+    S:=S+X
+  end,
+  Sum=S.
+
+% tabling
+table
+fib2(0) = 1.
+fib2(1) = 1.
+fib2(N) = fib2(N-1)+fib2(N-2).
+
+```
+
+picat is by default pattern match based rather than unification based.
+
+```picat
+
+foo(1) => true.
+% this fails
+main => foo(X), print(X).
+```
+
 # Answer Set Programming
 See notes on answer set programming
 # Topics

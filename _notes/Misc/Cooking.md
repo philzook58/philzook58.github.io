@@ -29,7 +29,7 @@ Knife skills. How much does evenness/size of chops help? I'm still kind of skept
 
 Do small greens like cilantro and parsley matter? Is it wrong to even put them in the same class? It is a pain to stock these imo
 
-Acid: Lemon and lime. Vinegar. Cuts fat? 
+Acid: Lemon and lime. Vinegar. Cuts fat?
 
 Rice theory: Wash rice? Pressure cook? Salt and/or butter in rice before cook? Sushi rice: sugar + vinegar
 
@@ -48,5 +48,15 @@ When do you want garlic and onion
 
 MSG: does it do much?
 
+# Recipes
+
+- Turkey chili
+- Blend a full lime + condensed milk
+- Salmon + bacon kale
+- Salmon + paprika baked
+- Baked Veggies. Olive oil on broccoli + carrots + sprots
+-
+
 # Mixology
+
 I'm not a drinker really. Puke easy, hate the taste. Also health wise, it seems society is leaning towards the less the better. However, it has massive social benefits. I sound like a vulcan.

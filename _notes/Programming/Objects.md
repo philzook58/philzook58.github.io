@@ -51,7 +51,9 @@ Realted to metaobject protocols. A weakening?
 
 ASP is structured comefrom?
 
+[15-819 Objects and Aspects: Language Support for Extensible and Evolvable Software](https://www.cs.cmu.edu/~aldrich/courses/819/) Cool literature. Krishnaswami? Maybe he was a grad student 
 
+[An overview of aspectJ](https://www.cs.ubc.ca/~gregor/papers/kiczales-ECOOP2001-AspectJ.pdf)
 # interface
 https://en.wikipedia.org/wiki/Interface_(object-oriented_programming)
 # Multiple inheritance
@@ -63,3 +65,12 @@ You get the pieces of a class without being an inheritor of that class. Ok.
 Related to mixins but not applied linearly?
 https://en.wikipedia.org/wiki/Trait_(computer_programming)
 
+# Multimethods
+[Object-Oriented Multi-Methods in Cecil](https://www.cs.cmu.edu/~aldrich/courses/819/cecil-oo-mm.pdf)
+The CLOS
+
+# Metaobject protocols
+
+
+# Prototypes
+[Self the power of simplicity](https://www.cs.cmu.edu/~aldrich/courses/819/self.pdf)

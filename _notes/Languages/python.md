@@ -2,6 +2,26 @@
 layout: post
 title: Python
 ---
+- [Venv](#venv)
+- [Django](#django)
+- [CFFI](#cffi)
+- [Generators](#generators)
+- [Collections](#collections)
+- [Protocols](#protocols)
+- [Abstract Base classes](#abstract-base-classes)
+- [Modules](#modules)
+- [python internals](#python-internals)
+- [Venv](#venv-1)
+- [Async](#async)
+- [Type Hints](#type-hints)
+- [stdlib](#stdlib)
+- [C interop](#c-interop)
+- [Pypy](#pypy)
+- [Hashcons](#hashcons)
+- [Holpy](#holpy)
+- [Lark](#lark)
+- [libraries](#libraries)
+
 
 # Venv
 Venv makes an isolated python environment
@@ -30,7 +50,57 @@ Django rest framework
 Django channels
 
 
+# CFFI
+Ctypes is standard clib cffi is higher level one
 
+
+
+```python
+from cffi import FFI
+ffi = FFI()
+ffi.cdef("""
+     int printf(const char *format, ...);   // copy-pasted from the man page
+ """)
+C = ffi.dlopen(None)                     # loads the entire C namespace
+arg = ffi.new("char[]", b"world")        # equivalent to C code: char arg[] = "world";
+C.printf(b"hi there, %s.\n", arg)        # call printf
+
+```
+
+```bash
+echo "
+int foo(int x){
+    return x + 4;
+}
+" > /tmp/foo.c
+gcc -shared -fPIC /tmp/foo.c -o /tmp/foo.so
+```
+
+```python
+import cffi
+
+ffi = cffi.FFI()
+ffi.cdef("int foo(int x);")
+foolib = ffi.dlopen("/tmp/foo.so")
+print(foolib.foo(3)) # 7
+
+```
+
+```python
+# https://youtu.be/2BB39q6cqPQ?t=345
+import ctypes
+import mmap
+
+addr = mmap.mmap(-1, 4096, mmap.PROT_READ | mmap.PROT_READ | mmap.PROT_EXEC,
+                 mmap.MAP_PRIVATE | mmap.MAP_ANONYMOUS, -1, 0)
+
+import pwntools
+code = asm()
+ctypes.memmove(addr, code, len(code))
+myfun = ctypes.cast(addr, ctypes.CFUNCTYPE(ctypes.c_long))
+print(myfun())
+
+```
 
 # Generators
 
@@ -47,7 +117,20 @@ Metaclasses
 sqlite
 
 
-### python internals
+# python internals
+[python runtime services](https://docs.python.org/3/library/python.html)
+The `sys` module
+
+```python
+import sys
+print(sys.displayhook("foo"))
+print(sys.modules)
+print(sys.getsizeof(3))
+print(sys.getsizeof("fooo"))
+
+```
+
+
 https://devguide.python.org/
 https://github.com/python/cpython
 https://devguide.python.org/exploring/

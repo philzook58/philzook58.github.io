@@ -168,7 +168,136 @@ https://en.wikipedia.org/wiki/Recursive_ascent_parser
 graph tee sitter
 souffle tree-sitter
 
+## ASM
+https://austinhenley.com/blog/parsingriscv.html
+Kind of a fun macro assembler design. Instead of using a built in macro language or a we can add new parsing forms to the language.
 
+```bash
+echo "
+int fact(int x){
+   int acc = 1;
+   for (int i = 1; i < x; i++){
+      acc *= i;
+   }
+   return acc;
+}
+" > /tmp/fact.c
+gcc /tmp/fact.c -c -o /tmp/fact 
+gcc /tmp/fact.c -c -S -o /tmp/fact.s 
+objdump -S /tmp/fact
+cat /tmp/fact.s
+```
+
+```python
+from lark import Lark
+
+grammar = '''
+
+
+prog : NL* (com NL+)*
+com : label | directive | insn
+ident : "@" NAME | "." NAME | NAME
+label : ident ":"
+directive : "." NAME param? ("," param)*
+param: STRING | NAME | NUMBER | SIGNED_NUMBER | "@" NAME
+insn : NAME (operand ("," operand)*)?
+
+operand : reg | ident | SIGNED_NUMBER "(" reg ")" | "$" INT
+reg : "r" INT | "%" NAME
+
+
+
+%import common.CNAME -> NAME
+%import common.INT -> INT
+%import common.ESCAPED_STRING   -> STRING
+%import common.NUMBER -> NUMBER
+%import common.SIGNED_NUMBER -> SIGNED_NUMBER
+%import common.NEWLINE -> NL
+%import common.WS_INLINE
+%import common.SH_COMMENT
+%ignore WS_INLINE
+%ignore SH_COMMENT
+'''
+
+parser = Lark(grammar, start="prog")
+print(parser.parse(''' foo:
+mov r1,r2
+''').pretty())
+
+with open("/tmp/fact.s") as f:
+   print(parser.parse(f.read()))
+```
+
+
+
+
+
+
+### Hack
+
+```python
+from lark import Lark
+
+grammar = '''
+prog : NL* (com NL+)*
+com : label | directive | insn
+label : NAME ":"
+ainsn : "@"
+cinsn : ";"
+jmp : "J" | "JNE" | JEQ"
+insn : NAME (operand ("," operand)*)?
+operand : reg | NAME
+reg : "r" INT 
+
+
+
+%import common.CNAME -> NAME
+%import common.INT -> INT
+%import common.ESCAPED_STRING   -> STRING
+%import common.NUMBER
+%import common.NEWLINE -> NL
+%import common.WS_INLINE
+%import common.SH_COMMENT
+%ignore WS_INLINE
+%ignore SH_COMMENT
+'''
+
+parser = Lark(grammar, start="prog")
+print(parser.parse(''' foo:
+mov r1,r2
+''').pretty())
+```
+
+## Imp
+
+```python
+```python
+import logging
+from lark import Lark, logger, Transformer
+
+logger.setLevel(logging.WARN)
+grammar = '''
+expr : 
+      | "0" "+" expr -> zero_left
+      | NUMBER -> number
+      | expr "+" expr -> add
+      | "("  expr ")"
+
+stmt : 
+   | "if" "(" expr ")" "{"  stmt* "}"  else "{" "}"
+   | lvalue "="  expr  ";"
+   | "while" "(" expr  ")" "{" stmt* "}"
+   | "return" expr? ";"
+    
+
+lvalue : CNAME
+
+%import common.WS
+%ignore WS
+%import common.NUMBER
+'''
+```
+## Datalog
 a datalog grammar:
 egglite
 chr
@@ -196,32 +325,62 @@ term : NUMBER -> number
 %import common.WS
 %ignore WS
 """
-"""
-//   | head ":-" body "."
-
-fact : rel
-head : rel
-body : rel  ("," rel)*
-rel : name "("  [ term ("," term)* ]  ")"
-term : number
-     | string
-     | variable
-// term : name "("    ")"
-
-lit : 
-"""
 
 parser = Lark(grammar, start="prog")
 print(parser.parse("foo(3,4).  edge(1,2). edge(\"a\"). path(x,z) :- edge(x,y), path(y,z).").pretty())
 ```
 
-# Sexp
+## CHR
+```python
+from lark import Lark
+
+grammar = """
+prog : rule*
+rule : fact "."
+   | label? prop "." 
+   | label? simp "."
+
+prop : body "==>" head
+simp :  body ("/" body )?  "<=>" head
+body: fact ("," fact)*
+
+label : NAME "@"
+head : ( guards "|" )? body?
+guards : guard ("," guards)*
+guard : NAME "=" NAME 
+
+//op : "=|<=|"
+fact :  NAME ("("  [ term ("," term)* ]  ")")?
+
+term : NUMBER -> number
+     | STRING -> string
+     | NAME -> var
+
+%import common.CNAME -> NAME
+%import common.ESCAPED_STRING   -> STRING
+%import common.NUMBER
+%import common.WS
+%ignore WS
+"""
+
+parser = Lark(grammar, start="prog")
+print(parser.parse("""
+foo(3,4).  edge(1,2). edge(\"a\"). 
+edge(x,y) / edge(x,y) <=> true.
+edge(x,y), path(y,z) ==> path(x,z).
+edge(x,y) <=> a = y, c = d | path(x,y).
+""").pretty())
+```
+
+
+## Sexp
 
 S-expressions are a good example. They are kind of the core simple parse, easy enough to do basic ones by hand.
 
 [Sweet expressions](https://readable.sourceforge.io/)
 
  https://lark-parser.readthedocs.io/en/latest/json_tutorial.html
+ https://github.com/lark-parser/lark/blob/master/lark/grammars/common.lark the common symbols available in lark
 ```python
 from lark import Lark, Transformer
 grammar = 
@@ -432,6 +591,7 @@ fragment DIGIT
 ```
 
 # Misc
+[   flap: A Deterministic Parser with Fused Lexing](https://github.com/yallop/ocaml-flap) use metaocaml staged programming techniques to fuse lexer and parser
 
 [grammar zoo](http://slebok.github.io/zoo/index.html)
 

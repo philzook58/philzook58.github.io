@@ -13,6 +13,12 @@ title: Functional Languages Implementation
 - [Combinators](#combinators)
 - [HVM](#hvm)
 - [Graph combinators](#graph-combinators)
+- [Lambda Lifting](#lambda-lifting)
+- [Defunctionalization](#defunctionalization)
+- [Closure Conversion](#closure-conversion)
+- [SSA Continuations](#ssa-continuations)
+- [Administrative Normal Form ANF](#administrative-normal-form-anf)
+- [Control Flow Analysis](#control-flow-analysis)
 - [Misc](#misc)
       - [Why Abstract Machines?](#why-abstract-machines)
       - [Why Stacks?](#why-stacks)
@@ -51,6 +57,8 @@ How is polymorphism represented
 # Combinators
 [When were combinators inveneted](https://twitter.com/code_report/status/1502854198005690371?s=20&t=NnxLD33Ap2wMOWoFXRFmHw)
 
+Supercombinators
+
 # HVM
 https://news.ycombinator.com/item?id=30219452
 "
@@ -73,6 +81,30 @@ Asperti
 
 # Graph combinators
 [spj book](https://www.microsoft.com/en-us/research/uploads/prod/1987/01/slpj-book-1987.pdf)
+
+# Lambda Lifting
+Lambda dropping
+# Defunctionalization
+# Closure Conversion
+
+# SSA Continuations
+[SSA is functional Programming - Appell](https://www.cs.princeton.edu/~appel/papers/ssafun.pdf)
+
+
+[The essence of compiling with continuations](https://dl.acm.org/doi/pdf/10.1145/173262.155113)
+[Compiling with Continuations, Continued - Kennedy](https://www.microsoft.com/en-us/research/wp-content/uploads/2007/10/compilingwithcontinuationscontinued.pdf)
+[Compiling Without Continuations](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/11/compiling-without-continuations.pdf)
+[Compiling with Continuations, or without? Whatever.](https://www.cs.purdue.edu/homes/rompf/papers/cong-icfp19.pdf)
+
+See also note on continuations
+
+# Administrative Normal Form ANF
+
+
+
+# Control Flow Analysis
+[The Cartesian Product Algorithm: Simple and Precise Type Inference Of Parametric Polymorphism](https://dl.acm.org/doi/10.5555/646153.679533)
+[Control-flow analysis of functional programs](https://dl.acm.org/doi/abs/10.1145/2187671.2187672?casa_token=8XWrk1nCEWcAAAAA:H6hRNhN2no7y9-SDOg2Qcu1wZRwyiD5TzKfqTof9ub4V5Aw-2moXsYfIJZYjhPH_H-XsKYiYArO5RA)
 
 
 

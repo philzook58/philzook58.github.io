@@ -23,10 +23,11 @@ description: my notes about ocaml
   - [PPX](#ppx)
   - [Build System](#build-system)
     - [META vs dune vs opam files](#meta-vs-dune-vs-opam-files)
-  - [Js_of_ocaml](#js_of_ocaml)
+  - [Js\_of\_ocaml](#js_of_ocaml)
     - [WASM](#wasm)
 - [Language Features](#language-features)
   - [Object System](#object-system)
+    - [Row polymorphism](#row-polymorphism)
   - [Open Recursion](#open-recursion)
   - [Recursive Modules](#recursive-modules)
   - [Extensible Variants](#extensible-variants)
@@ -300,6 +301,39 @@ type instruction =
 
 Zinc report mentions tha some objects you can statically allocate for in the data section of the binary. This does seem to be the case. Somehow the garbage collector knows not to try to collect these.
 
+
+Backends
+
+```ocaml
+#use "topfind";;
+#require "ocaml-compiler-libs.optcomp ctypes.foreign ctypes.top";; 
+(* let rax = X86_ast.RAX *)
+
+(* https://ocaml.org/p/ocaml-base-compiler/4.12.1/doc/X86_ast/index.html 
+   https://ocaml.org/p/ocaml-base-compiler/4.12.1/doc/X86_dsl/index.html
+*)
+
+
+let print_asm = Ocaml_optcomp.X86_gas.generate_asm Out_channel.stdout
+let () = 
+let open Ocaml_optcomp.X86_dsl in 
+print_asm [
+  Comment "Look ma! I'm generatin asm!";
+  Global "myfun";
+  NewLabel ("myfun", PROC);
+  Ins (MOV (rax, int 42));
+  Ins RET
+  ] 
+
+(* https://github.com/yallop/ocaml-ctypes/wiki/ctypes-tutorial *)
+let myfun = 
+  let open Ctypes in 
+  foreign "myfun" (int @-> returning int)
+
+
+
+
+```
 # Ecosystem 
 
 ## Debugging
@@ -404,8 +438,32 @@ What do the metaocaml patches look like?
 
 [Meta ocaml bibliography](https://github.com/metaocaml/metaocaml-bibliography)
 
+
+offshoring https://okmij.org/ftp/meta-programming/tutorial/genc.html
+
+cross stage persistance
+
 ## PPX
 PPX is a preprocessing stage. You get access to the ocaml syntax tree and can modify it
+
+<http://ocamlverse.net/content/metaprogramming.html>
+
+
+
+- ppx_sexp is by far the most useful one
+- https://opam.ocaml.org/packages/ppx_jane/ ppx_jane has a nice list
+- ppx_expect cool for writing tests
+- https://github.com/fdopen/ppx_cstubs  helpers for FFI
+- string interpolation
+
+
+```ocaml
+#use "topfind";;
+#require "ppx_jane";;
+
+let () = print_endline [%string "%{1 + 2 # Int}"]
+
+```
 
 
 ## Build System
@@ -469,6 +527,15 @@ Objects add subtyping to ocaml. So do polymorphic variants though. And in asense
 
 [ocaml objects](https://roscidus.com/blog/blog/2013/09/28/ocaml-objects/)
 [mixins](https://www.lexifi.com/blog/ocaml/mixin/)
+
+[Objective ML: An effective object-oriented extension to ML - 98](https://caml.inria.fr/pub/papers/remy_vouillon-objective_ml-tapos98.pdf)
+[Simple Type Inference for Structural Polymorphism ](https://caml.inria.fr/pub/papers/garrigue-structural_poly-fool02.pdf)
+### Row polymorphism
+[Ivan's answer](https://stackoverflow.com/questions/48092739/what-are-row-types-are-they-algebraic-data-types)
+[Advaced Functional Programming notes 2014 - yallop ](https://www.cl.cam.ac.uk/teaching/1415/L28/rows.pdf)
+[A Polymorphic Type System for Extensible Records and Variants ](http://www.cs.cmu.edu/~aldrich/courses/819/papers/row-poly.pdf)
+[objects and aspects krishnaswami](https://www.cs.cmu.edu/~aldrich/courses/819/slides/rows.pdf)
+
 ## Open Recursion
 This somewhat is related to objects. `self` is a late bound variable that can be overridden. You can emulate this by having base classes take in later classes as an argument.
 Related to the fix form of recursion?

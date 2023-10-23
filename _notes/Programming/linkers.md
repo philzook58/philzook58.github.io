@@ -7,12 +7,15 @@ title: Linkers and Loaders
 - [Segments](#segments)
 - [Symbol Table](#symbol-table)
 - [Relocations](#relocations)
+- [Loading](#loading)
 - [Dynamic Linking](#dynamic-linking)
+  - [plt got](#plt-got)
 - [Compilation Units](#compilation-units)
 - [Link Time Optimization](#link-time-optimization)
     - [Tree Shaking](#tree-shaking)
 - [Linking Formats](#linking-formats)
   - [ELF](#elf)
+  - [Core files](#core-files)
 - [Objcopy](#objcopy)
 - [ld](#ld)
   - [Linker scripts](#linker-scripts)
@@ -32,10 +35,22 @@ Sections are for linking.
 
 
 # Segments
-Segments are for loading.
+Segments are for loading. Load time view
+
+```bash
+readelf -l /bin/ls
+```
 # Symbol Table
 A key value mapping
 
+`objdump -t` 
+
+local 
+global
+weak https://en.wikipedia.org/wiki/Weak_symbol
+
+default
+hidden
 # Relocations
 [relocation](https://en.wikipedia.org/wiki/Relocation_(computing))
 Relocations are "fixups" to the binary. There is a list of possible ones.
@@ -55,11 +70,49 @@ Defunctionalizing these lambdas produces the first order form of ordinary reloca
 
 
 
+# Loading
 
+Auxiliary vector [getauxval and the axiliary vector](https://lwn.net/Articles/519085/) `LD_SHOW_AUXV=1 `
+`fs/binfmt_elf.c` loads elf in kernel
+```bash
+ od -t d8 /proc/self/auxv
+```
+
+[Userland exec - grugq](https://grugq.github.io/docs/ul_exec.txt)
+
+https://www.anvilsecure.com/blog/userland-execution-of-binaries-directly-from-python.html
+https://github.com/anvilsecure/ulexecve/blob/main/ulexecve.py
+use python to gather data, then construct an assembly program to call the appropriate sequence of unmap and map calls
+
+`man execve`
+
+```
+-----------------------------------------
+              [ 0 ]  <-- top of the stack
+              [ envp strings ]
+              [ 0 ]
+              [ argv strings ]
+              [ 0 ]
+              [ auxv ]
+              [ 0 ]
+              [ envp ]
+              [ 0 ]
+              [ argv ]
+              [ argc ] <-- stack pointer
+-----------------------------------------
+```
+
+1. cleanup memory. People look at /proc/self for introspection /proc/self/maps 
+
+```bash
+ls /sys
+```
 # Dynamic Linking
-GOT global offset table - table holding global variables
-PLT - procedure linkage table - table holding function pointers
-got.plt 
+
+`man elf`
+
+`objdump -R` for dynamic relocations
+`readelf -r`
 
 DSO - dynamic shared object
 
@@ -84,8 +137,21 @@ dlmopen
 - `LD_LIBRARY_PATH`
 - `LD_DEBUG=help cat` This is crazy. This exists?
 - `LD_PRELOAD`
+
+```bash
+LD_SHOW_AUXV=1 /bin/true
+```
 `ldconfig`
 [`ld.so`](https://man7.org/linux/man-pages/man8/ld.so.8.html)
+
+ vdso - overview of the virtual ELF dynamic shared object https://man7.org/linux/man-pages/man7/vdso.7.html
+ Sort of a kernel provided dynamic linked object to avoid kernel call overheads https://en.wikipedia.org/wiki/VDSO
+
+## plt got
+GOT global offset table - table holding global variables
+PLT - procedure linkage table - table holding function pointers
+got.plt 
+
 
 # Compilation Units
 https://en.wikipedia.org/wiki/Single_Compilation_Unit
@@ -121,6 +187,10 @@ In a curious way, if you are accessing these formats from C, it's actually _easi
 - PE - windows
 - Mach-o - mac
 ## ELF
+[witchcraft compiler collction](https://github.com/endrazine/wcc) "unlinks" executables back into libraries. How?
+
+[The missing link: explaining ELF static linking, semantically](https://dl.acm.org/doi/10.1145/3022671.2983996) a fantastic paper on a formalization of elf and linking generally
+
 `man elf` on your system will give you a whole spiel
 
 [The elf spec](https://refspecs.linuxfoundation.org/elf/elf.pdf)
@@ -137,6 +207,8 @@ The [Lief](https://lief-project.github.io/) library is useful for manipulating f
 
 A lot of stuff is powered by 
 
+## Core files
+`/proc/kcore` is a core file of the kernel memory
 # Objcopy
 Not linking persay. But some useful stuff for manipulating object files
 
@@ -153,6 +225,7 @@ LMA vs VMA load memoery address vs virtual memory address. Can differe when stor
 
 
 # DWARF
+[Incomplete Debug Information](https://github.com/cristianassaiante/incomplete-debuginfo) testing for incompleteness of debug info
 Debug info
 unwind tables
 
@@ -223,10 +296,18 @@ You can get line number and column info from dwarf
 [gcc flags related to debugging](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html#Debugging-Options)
 - `-Og`
 # Resources
+[sRDI - Shellcode Reflective DLL Injection](https://github.com/monoxgas/sRDI) https://disman.tl/2015/01/30/an-improved-reflective-dll-injection-technique.html
+
+[I wrote a linker everyone can understand!](https://news.ycombinator.com/item?id=27444647) https://briancallahan.net/blog/20210609.html
+
+[Pascal linker](http://mail.turbopascal.org/linker)
+
+[Surfing With The Linker Aliens: Solaris Linking & ELF Blogs](http://www.linker-aliens.org/)
+
 [packer tutorial](https://github.com/frank2/packer-tutorial)
 
 N. Glew and G. Morrisett. Type-Safe Linking and Modular Assembly Language
-
+https://dl.acm.org/doi/pdf/10.1145/292540.292563
 
 [stephen kell - interopability](https://www.humprog.org/~stephen/blog/2022/12/12/#interoperability-c-rich-poor) ld has a plugin interface. Cool linker links
 
@@ -376,6 +457,43 @@ type t = {
 ```
 
 
+
+Maybe one way of thinking about it is pairs of interpolation strings and a symbol dictionary. We collect up symbols and strings (binaries) and concat them together. Then eventually we inline the appropriate symbols.
+
+It's fun how string interpolation is a cute toy model of interesting things like macros.
+
+
+```python
+
+mod1 = "{foo} {bar}", {biz: 3}
+mod2 = " {biz} ", {foo : 4, bar : "hi"}
+
+def link(mod1,mod2):
+  b1, sym1 = mod1
+  b2, sym2 = mod2
+  b1 + b2, sym1 + sym2
+
+def finalize(mod):
+  b, sym = mod
+  b.format(mod)
+
+```
+
+Ramsey's relocation by currying makes one want to use lambdas rather than named representation of strnig interpolation.
+
+```python
+
+mod1 = lambda foo, bar: f"{foo} {bar}", {biz ; 3}
+
+```
+
+The string interpolation pair is rather evocative of a closure
+
+```python
+mod1 = lambda file, offset, **kwargs:  write(file, "{foo} {bar}".format(kwargs)) , 30 , {biz : "fred"} 
+```
+
+Typical relocations can be seen as simple bytecode instuctions / defunctionalization of general purpose concepts
 
 
 

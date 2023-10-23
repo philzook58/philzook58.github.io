@@ -4,10 +4,10 @@ title: Automata, Regex, Coinduction, Bisimulation
 ---
 
 - [Regular Expressions](#regular-expressions)
-    - [Matching algorithms](#matching-algorithms)
-    - [Brzozowski Derivatives](#brzozowski-derivatives)
-    - [equivalence](#equivalence)
-    - [theory](#theory)
+  - [Matching algorithms](#matching-algorithms)
+  - [Brzozowski Derivatives](#brzozowski-derivatives)
+  - [equivalence](#equivalence)
+  - [theory](#theory)
 - [Automata](#automata)
   - [Finite Automata](#finite-automata)
   - [Tree Automata](#tree-automata)
@@ -35,8 +35,8 @@ title: Automata, Regex, Coinduction, Bisimulation
 - [Misc](#misc)
   - [Options:](#options)
 
-
 See also:
+
 - automata
 - regular expression
 - imperative proving
@@ -45,29 +45,28 @@ See also:
 Breaking up into these categories is kind of arbitrary
 
 # Regular Expressions
+
 See also note on automata
 
-https://en.wikipedia.org/wiki/Regular_expression
+<https://en.wikipedia.org/wiki/Regular_expression>
 
-https://regex101.com/
-https://regexr.com/
+<https://regex101.com/>
+<https://regexr.com/>
 
-https://en.wikipedia.org/wiki/Kleene%27s_algorithm
+<https://en.wikipedia.org/wiki/Kleene%27s_algorithm>
 
 [Thompson construction](https://en.wikipedia.org/wiki/Thompson%27s_construction)
 
-
-https://en.wikipedia.org/wiki/Glushkov%27s_construction_algorithm
-Finding minimum regex for given string (or set of strings). Identify groups within a given string https://cs.stackexchange.com/questions/109583/what-is-the-best-algorithm-known-to-learn-the-regular-expression-from-a-set-of-p  Is this related to invariant inference I wonder?
-
+<https://en.wikipedia.org/wiki/Glushkov%27s_construction_algorithm>
+Finding minimum regex for given string (or set of strings). Identify groups within a given string <https://cs.stackexchange.com/questions/109583/what-is-the-best-algorithm-known-to-learn-the-regular-expression-from-a-set-of-p>  Is this related to invariant inference I wonder?
 
 Knuth morris pratt
-regular expression rewriting or optimization. Slightly difference from equivalence but related. Minimization https://cs.stackexchange.com/questions/115739/algorithm-to-minimize-a-regular-expression?rq=1
+regular expression rewriting or optimization. Slightly difference from equivalence but related. Minimization <https://cs.stackexchange.com/questions/115739/algorithm-to-minimize-a-regular-expression?rq=1>
 
-
-Z3 checking regex containment https://www.philipzucker.com/z3-rise4fun/sequences.html
-https://microsoft.github.io/z3guide/docs/theories/Regular%20Expressions
+Z3 checking regex containment <https://www.philipzucker.com/z3-rise4fun/sequences.html>
+<https://microsoft.github.io/z3guide/docs/theories/Regular%20Expressions>
 [An SMT Solver for Regular Expressions and Linear Arithmetic over String Length cav'21](https://people.eecs.berkeley.edu/~fmora/cav21.pdf)
+
 ```z3
 (declare-const a String)
 ;(assert (str.in.re "ab" (str.to.re "ab")))
@@ -80,23 +79,26 @@ https://microsoft.github.io/z3guide/docs/theories/Regular%20Expressions
 ```
 
 [](https://github.com/katef/libfsm) compile regexp to C
+
 ### Matching algorithms
+
 - backtracking search
 - convert to dfa
 
 Matching is state inference perhaps of traces.
 
-https://types.pl/web/@maxsnew/109422022028474251 Regular Expressions : Logic Programming :: DFA : Functional Programming 
+<https://types.pl/web/@maxsnew/109422022028474251> Regular Expressions : Logic Programming :: DFA : Functional Programming
 
 ### Brzozowski Derivatives
-https://en.wikipedia.org/wiki/Brzozowski_derivative
+
+<https://en.wikipedia.org/wiki/Brzozowski_derivative>
 Oh, that's interesting u^-1 as a notation.
 
 `s in R <-> emp in s^-1 R` This gives us a matching algorithm.
 
 The final coalgebra is one that operates on sets of strings?
 from a regular expression, produce a regex for the family with one `a` stripped off. THis looks like a derivatve operation kind of because the sequence operator turns into a sum. Or a multiplicatve inverse.
-Brzozowski derivatives https://www.ccs.neu.edu/home/turon/re-deriv.pdf
+Brzozowski derivatives <https://www.ccs.neu.edu/home/turon/re-deriv.pdf>
 
 ```ocaml
 type kleene = Lit of char | One | Zero | Star of kleene | Plus of kleene * kleene | Seq of kleene * kleene
@@ -110,10 +112,11 @@ let deriv a = function
 
 ```
 
-https://news.ycombinator.com/item?id=35053328
+<https://news.ycombinator.com/item?id=35053328>
 Assoc, Comm, and idempotency necessary to actually make finite automata.
 flattening, sorting, and deleting duplicates is enough. `List.sort_uniq`
 Might be an interesting egglog example
+
 ```
 type prods = One | Lit of char | Star of prods | Seq of kleene * kleene
 type kleene = seq list (* sum of product representation. Hmm. Is this actually possible? Star gets in the way *)
@@ -123,21 +126,23 @@ type kleene = seq list (* sum of product representation. Hmm. Is this actually p
 [parsing with derivatives](https://matt.might.net/papers/might2011derivatives.pdf)
 
 ### equivalence
-regex equivalence can check containment of string. also regex containmnt a + b = a means b  <= a 
-https://www.drmaciver.com/2016/12/proving-or-refuting-regular-expression-equivalence/
+
+regex equivalence can check containment of string. also regex containmnt a + b = a means b  <= a
+<https://www.drmaciver.com/2016/12/proving-or-refuting-regular-expression-equivalence/>
 one he says do the dumb rewrite rules.
 hmm. We could egglog these hopcroft karp examples.
 
-See kleene algebra. This is an equational method for equivalence checking of regex expressions 
+See kleene algebra. This is an equational method for equivalence checking of regex expressions
 
 Normal Forms are usually a good way of checking equivalence when you can. Automata are kind of a normal form
 
 ### theory
+
 [pumping lemma](https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages) used to prove languages are not regular
 Whenever a sufficiently long string is accepted it must be in the same state twice
 Find an inifnite family of string that isn't pumpable
 
-myhill nerode theorem https://en.wikipedia.org/wiki/Myhill%E2%80%93Nerode_theorem necessary and sufficient condition for languasge to be regular
+myhill nerode theorem <https://en.wikipedia.org/wiki/Myhill%E2%80%93Nerode_theorem> necessary and sufficient condition for languasge to be regular
 define an equivalence relation. Sort of this relation is defining a notion of observably different traces.
 If there is no suffix z where xz fails but yz accepts or vice versa, the strings x y are considered equivalent.
 These equivalence classes correspond to states in a minimal automata. Given the classes, I can append letters to them to find the transitions between classes. By the definition all the elements in the class have to go to the same other class, because they can't be distinguished
@@ -145,24 +150,20 @@ These equivalence classes correspond to states in a minimal automata. Given the 
 characterizing
 NFA <-> DFA <-> regexp <-> regular grammars
 
-https://en.wikipedia.org/wiki/Regular_grammar left regular or right regular. Linear production rules + always has to be on the left or right. swapping left and right may not be regular anymore. Regular grammar nonterminals can be considered states in an NFA
-
+<https://en.wikipedia.org/wiki/Regular_grammar> left regular or right regular. Linear production rules + always has to be on the left or right. swapping left and right may not be regular anymore. Regular grammar nonterminals can be considered states in an NFA
 
 kleene algerba
-
 
 "In 1991, Dexter Kozen axiomatized regular expressions as a Kleene algebra, using equational and Horn clause axioms.[34] Already in 1964, Redko had proved that no finite set of purely equational axioms can characterize the algebra of regular languages.[35]"
 
 powerset construction
 
-
 [proof pearl regular expressions isabelle](https://www21.in.tum.de/~krauss/papers/rexp.pdf)
-
 
 MOnadic second order logic
 
-
 # Automata
+
 See also note on Parsing regularexp
 
 Determinization - turn nondeterministic automaton to deterministic
@@ -175,14 +176,11 @@ Consider edges to be labelable by regexs. regex is equal to simple 2 state autom
 You can eliminate states by performing the product of their in and out edges.
 You can create states and edges by expanding the regexp. Sequence is a new intermiedtae state. alternate is two parall arrows
 
-
 Myhill Nerode theorem
 Pumping Lemma
 
-
-Automata minimization https://en.wikipedia.org/wiki/DFA_minimization - Partition refinement https://en.wikipedia.org/wiki/Partition_refinement
+Automata minimization <https://en.wikipedia.org/wiki/DFA_minimization> - Partition refinement <https://en.wikipedia.org/wiki/Partition_refinement>
 Separate into separate sets those which are definitely distinguishable (the remaining in same partition may or may not be). Things that transition into distinguishable things are distinguishable from each other. This is finding the nerode congruence
-
 
 Datalog partition refinement?
 Sets. Things definitely not in set.
@@ -191,49 +189,56 @@ DAWG - transitions are single labelled edges. Transitions are
 
 [Hopcroft and Karp’s algorithm for Non-deterministic Finite Automata](https://hal.archives-ouvertes.fr/file/index/docid/648587/filename/hkc.pdf)
 [fado](https://pypi.org/project/fado/)
+
 ## Finite Automata
-https://github.com/leonardomso/awesome-fsm
+
+<https://github.com/leonardomso/awesome-fsm>
 
 DFA NFA
 
 finite set of states. Labelled transitions between.
 
-https://en.wikipedia.org/wiki/%CE%A9-automaton omega automata - ru on infinite rather than finite strings
+<https://en.wikipedia.org/wiki/%CE%A9-automaton> omega automata - ru on infinite rather than finite strings
 Buchi - visit accepting state infinitely often
 Rabin
 
-https://github.com/Garvys/rustfst Rust implementation of Weighted Finite States Transducers. speech recognition and synthesis, machine translation, optical character recognition, pattern matching, string processing, machine learning, information extraction and retrieval
+<https://github.com/Garvys/rustfst> Rust implementation of Weighted Finite States Transducers. speech recognition and synthesis, machine translation, optical character recognition, pattern matching, string processing, machine learning, information extraction and retrieval
+
+<https://en.wikipedia.org/wiki/Two-way_finite_automaton>
+Two way finite automata. Reducible to DFA but with state explosion
+[read only turing machine](https://en.wikipedia.org/wiki/Read-only_Turing_machine)
 
 ## Tree Automata
-https://github.com/ondrik/libvata
-[Tree Automata Techniques and Applications](https://jacquema.gitlabpages.inria.fr/files/tata.pdf)
 
+<https://github.com/ondrik/libvata>
+[Tree Automata Techniques and Applications](https://jacquema.gitlabpages.inria.fr/files/tata.pdf)
 
 [E-Graphs, VSAs, and Tree Automata: a Rosetta Stone](https://remy.wang/reports/dfta.pdf) [slides](https://docs.google.com/presentation/d/1oDNmzxJpsdLE51lmybcfzzzv4jRLDdrVpmMhMpFEoFk/edit?usp=sharing) [merge only rules](https://gist.github.com/remysucre/1788cf0153d7db240e751fb698f74d99)
 
-
-https://en.wikipedia.org/wiki/Tree_automaton
+<https://en.wikipedia.org/wiki/Tree_automaton>
 
 [Tree Automata as Algebras: Minimisation and Determinisation](https://arxiv.org/pdf/1904.08802.pdf)
 
 Are tree automata kind of like finite state folds?
 
-https://courses.engr.illinois.edu/cs498mv/fa2018/TreeAutomata.pdf
+<https://courses.engr.illinois.edu/cs498mv/fa2018/TreeAutomata.pdf>
 
 Compare with term rewrting fomrulation of regulr DFA. Special q marker
-`q1 a -> a q2` 
+`q1 a -> a q2`
 Translated to term rewriting
 `q1(a(X)) -> a(q2(X))`
 Starts to look like a tree automata. Recognizing a string is a fold over it, big woop.
 
 ## pushdown automata
+
 "recursive function with variables over finite domain"
 
-See also: 
+See also:
 parsing
 
 ## Probablistic automata
-https://en.wikipedia.org/wiki/Probabilistic_automaton
+
+<https://en.wikipedia.org/wiki/Probabilistic_automaton>
 PFA
 Minimization vs reduction
 residual
@@ -243,27 +248,43 @@ residual
 PRISM
 [STORM](https://www.stormchecker.org/) [stormpy](https://moves-rwth.github.io/stormpy/index.html) [tutorial](https://www.stormchecker.org/tutorials.html)
 
-[ 2019 Comparison of Tools for the Analysis of Quantitative Formal Models](https://qcomp.org/competition/2019/)
+[2019 Comparison of Tools for the Analysis of Quantitative Formal Models](https://qcomp.org/competition/2019/)
+
 ## Other
+
 Register automata
 nominal automata
 Timed automata
 [Symbolic automata](https://github.com/lorisdanto/symbolicautomata)
-quantum atuomata https://en.wikipedia.org/wiki/Quantum_finite_automaton
-### nominal automata 
-https://github.com/Jaxan/nominal-lstar Learning Nominal Automata
- http://www.calf-project.org/talks.html
- https://www.youtube.com/watch?v=b38uoZccGuU&ab_channel=SimonsInstitute
+quantum atuomata <https://en.wikipedia.org/wiki/Quantum_finite_automaton>
+
+### nominal automata
+
+<https://github.com/Jaxan/nominal-lstar> Learning Nominal Automata
+ <http://www.calf-project.org/talks.html>
+ <https://www.youtube.com/watch?v=b38uoZccGuU&ab_channel=SimonsInstitute>
 Automata learning huh
 ALF - abstract lerarning framework
+
+<https://www.math.ru.nl/~bosma/Students/DavidVenhoekMSc.pdf> Nominal sets and automata: Representation theory and computations
+
+[Automata theory in nominal sets](https://arxiv.org/abs/1402.0897)
+Infinite alphabet. Can still be represented in finite terms if your automata represents in a good way. "strngs that start and end with same character". A simple seeming set, almost a regex. `aa|bb|cc|dd|...`
+
+So to run one, you should just backtrack and try to determine new facts about permutation of symbols. First time you see a symbol, record it, next time check against record.
+
 # Kleene Algebra
+
 [Kleene Algebras and Applications - Alexandra Silva OPLSS](https://www.youtube.com/watch?v=TEFx5DG9ghE&ab_channel=OPLSS)
 [Kleene Algebras: Theory and Applications](https://www.youtube.com/watch?v=FbYY4dlL_vs&ab_channel=JetBrainsResearch)
+
 ## KAT
-http://perso.ens-lyon.fr/damien.pous/symbolickat/ symkat ocaml
+
+<http://perso.ens-lyon.fr/damien.pous/symbolickat/> symkat ocaml
 [Symbolic Algorithms for Language Equivalence and Kleene Algebra with Tests](http://doi.acm.org/10.1145/2676726.2677007) transition function using BDD. Generating automata using Brzowski's derivative and classical. bdds + union find for language equivalence
-https://hal.archives-ouvertes.fr/hal-01021497v2/document
+<https://hal.archives-ouvertes.fr/hal-01021497v2/document>
 safa is a library for automata
+
 ```ocaml
 #use "topfind";;
 #require "symkat";;
@@ -271,28 +292,28 @@ module S = Safa.Make(Queues.BFS)
 Automata 
 ```
 
-https://link.springer.com/chapter/10.1007/978-3-030-81685-8_3 algerbaic program anlaysis
+<https://link.springer.com/chapter/10.1007/978-3-030-81685-8_3> algerbaic program anlaysis
 graphs and paths can be represent by taking the letters of the alphabet to representedges in the graph. The paths from a to b can be represented as a regex
-Tarjan's algorithm http://i.stanford.edu/pub/cstr/reports/cs/tr/79/734/CS-TR-79-734.pdf "path expression problem"
+Tarjan's algorithm <http://i.stanford.edu/pub/cstr/reports/cs/tr/79/734/CS-TR-79-734.pdf> "path expression problem"
 If you have the path expression, you can just intepret it to calculate program quantities.
 
 Kleene algerba with tests
-MOdelling language for 
+MOdelling language for
 horn equational?
 Relative of Propositional Hoare Logic. Which is a neat idea on it's own
 
-tutorial https://alexandrasilva.org/files/talks/kat-tutorial.pdf https://popl20.sigplan.org/details/POPL-2020-tutorialfest/7/-T7-Programming-and-Reasoning-with-Kleene-Algebra-with-Tests
-https://www.cl.cam.ac.uk/events/ramics13/KozenTutorial1.pdf
+tutorial <https://alexandrasilva.org/files/talks/kat-tutorial.pdf> <https://popl20.sigplan.org/details/POPL-2020-tutorialfest/7/-T7-Programming-and-Reasoning-with-Kleene-Algebra-with-Tests>
+<https://www.cl.cam.ac.uk/events/ramics13/KozenTutorial1.pdf>
 
-GKAT  guarded kleene with test https://arxiv.org/abs/1907.05920 https://www.youtube.com/watch?v=Dp68j9Wi_84&ab_channel=ACMSIGPLAN
+GKAT  guarded kleene with test <https://arxiv.org/abs/1907.05920> <https://www.youtube.com/watch?v=Dp68j9Wi_84&ab_channel=ACMSIGPLAN>
 Kleene algebra modulo theories
-https://github.com/mgree/kmt
-https://arxiv.org/pdf/1707.02894.pdf
-https://github.com/mgree/katbury hmm. guess invariants
+<https://github.com/mgree/kmt>
+<https://arxiv.org/pdf/1707.02894.pdf>
+<https://github.com/mgree/katbury> hmm. guess invariants
 kat modulo rewriting?
 
-https://github.com/arlencox/mlbdd
-https://github.com/netkat-lang/idds
+<https://github.com/arlencox/mlbdd>
+<https://github.com/netkat-lang/idds>
 
 [On the Coalgebraic Theory of Kleene Algebra with Tests](https://www.cs.cornell.edu/kozen/Papers/ChenPucella.pdf)
 Automatic proof generaton via derivatives? That sounds neat.
@@ -300,14 +321,11 @@ Chen and Pucella - coalgerba theory of KAT
 
 [Automated Reasoning in Kleene Algebra](http://www.hoefner-online.de/home/pdfs_tr/trCS-07-04-Shef.pdf) Prover9/Mace4
 
-
-
-topkat incorrectess logic and kat https://www.youtube.com/watch?v=gLLlrnxB5Jg&ab_channel=ACMSIGPLAN popl22
+topkat incorrectess logic and kat <https://www.youtube.com/watch?v=gLLlrnxB5Jg&ab_channel=ACMSIGPLAN> popl22
 
 NetKat - kat for network reasoning
 [Kleene Algebra with Tests and Coq Tools for While Programs](https://arxiv.org/abs/1302.1737)
-https://opam.ocaml.org/packages/netkat/
-
+<https://opam.ocaml.org/packages/netkat/>
 
 syntax are kleene expressions / logic is kleene algebra manipulation. logic is algebra on steroids
 semantics are strings
@@ -317,7 +335,6 @@ algerbraic laws + leastness of fixed point
 hmm. 2x2 matrices have a schur complement representation theorem. hmmm.
 
 a <= b <-> a + b = b
-
 
 Well, this is basically doable
 
@@ -376,18 +393,20 @@ relation models - relation compose, relation closure
 tropical semiring and convex polyhedra
 matrices over another kleene algerba
 
-
 ## Process Alegebras
+
 - CCS Calculus of communicating systems - milner
 - CSP Communicating sequential systems - hoare
 - ACP ?
 - Pi-calculus
+- TLA
 
 ## Modal u-calculus
+
 u-calc without the modal
 fixed point theory
 [backhouse - galois connections and fixed point calculus](https://link.springer.com/chapter/10.1007/3-540-47797-7_4)
-http://web.mit.edu/16.399/www/lecture_12-fixpoints2/Cousot_MIT_2005_Course_12_4-1.pdf
+<http://web.mit.edu/16.399/www/lecture_12-fixpoints2/Cousot_MIT_2005_Course_12_4-1.pdf>
 
 rules
 minimal set
@@ -395,28 +414,28 @@ solution to constraint system
 
 ## Monadic Second Order Logic
 
-https://en.wikipedia.org/wiki/Monadic_second-order_logic
+<https://en.wikipedia.org/wiki/Monadic_second-order_logic>
 Colorability
 Monadic = one entry of predicate
 We can quantify over them
 
 What even is the category I should put MSO under? Automata? Logic? Model theory? Model checking?
 
-https://courses.engr.illinois.edu/cs498mv/fa2018/ goo stuff
+<https://courses.engr.illinois.edu/cs498mv/fa2018/> goo stuff
 
 Buchi-Elgot-Trakhtenbrot Theorem
-https://en.wikipedia.org/wiki/B%C3%BCchi-Elgot-Trakhtenbrot_theorem Iff string is describably in MSO, it is regular
+<https://en.wikipedia.org/wiki/B%C3%BCchi-Elgot-Trakhtenbrot_theorem> Iff string is describably in MSO, it is regular
 
 NP - existential monaid. For example graph coloring. Figuring out the collring given grahp is annoying.
 
-S1S The monadic second order theory of N under successor 
+S1S The monadic second order theory of N under successor
 
-S2S https://en.wikipedia.org/wiki/S2S_(mathematics)
-Tree width https://en.wikipedia.org/wiki/Treewidth,
-tree decompoistion https://en.wikipedia.org/wiki/Tree_decomposition
+S2S <https://en.wikipedia.org/wiki/S2S_(mathematics)>
+Tree width <https://en.wikipedia.org/wiki/Treewidth>,
+tree decompoistion <https://en.wikipedia.org/wiki/Tree_decomposition>
 courcelle's theorem - tree wsth graphs can have mso formula decided in time
 
-[Monadic Second-Order Logic on Finite Sequences](https://pages.cs.wisc.edu/~loris/papers/popl17sws1s.pdf) 
+[Monadic Second-Order Logic on Finite Sequences](https://pages.cs.wisc.edu/~loris/papers/popl17sws1s.pdf)
 [MSO for heap models](http://madhu.cs.illinois.edu/strand-popl11.pdf)
 
 S1S
@@ -425,6 +444,7 @@ S2S
 ## Petri Nets
 
 ## Boolean Equation Systems
+
 Boolean equations with fixed points.
 I don't get it.
 
@@ -433,7 +453,8 @@ I don't get it.
 
 mu and nu fixed oiutbs
 
-parametrized BES  kind of sounds like BES modulo theories. 
+parametrized BES  kind of sounds like BES modulo theories.
+
 # Bisimulation
 
 [BisPy is a Python library for the computation of the maximum bisimulation of directed graphs.](https://bispy-bisimulation-in-python.readthedocs.io/en/latest/index.html)
@@ -441,10 +462,7 @@ I'm confused. Is it partition refinment or union find?
 
 [alogirhtmics of bisimulation](https://www.ru.is/faculty/luca/PAPERS/algobisimchapter.pdf)
 
-
 Of what relationship is bisimulation to non-interference proofs? Bisimulation is kind of a way of saying the state is unobservable from the actions/observations.
-
-
 
 Graph isomorphism - too striog?
 Trace equivalence - Too strong?
@@ -454,35 +472,40 @@ There is a distinction between saying a given relation is a bisimulation and _de
 Least vs greatest fixed point
 
 Simulation
-Refinement of behavior https://en.wikipedia.org/wiki/Refinement_(computing)
+Refinement of behavior <https://en.wikipedia.org/wiki/Refinement_(computing)>
 
 ## Codata
+
 [Data-Codata Symmetry and its Interaction with Evaluation Order](https://arxiv.org/pdf/2211.13004.pdf)
-https://blog.sigplan.org/2019/10/14/how-to-design-co-programs/
+<https://blog.sigplan.org/2019/10/14/how-to-design-co-programs/>
 Howw to design co-porgrams - gibbonsd
 
-https://en.wikipedia.org/wiki/Corecursion
-https://arxiv.org/abs/2103.06913v1 - Classical (Co)Recursion: Programming
+<https://en.wikipedia.org/wiki/Corecursion>
+<https://arxiv.org/abs/2103.06913v1> - Classical (Co)Recursion: Programming
 Paul Downen, Zena M. Ariola, examples in python scheme, agda
 
 codata is productive, meaning recursion is guarded by applications of constructors
 
 copatterns
-https://agda.readthedocs.io/en/v2.6.1.3/language/copatterns.html
+<https://agda.readthedocs.io/en/v2.6.1.3/language/copatterns.html>
 Are copatterns simple? They just explain what to do on every application of an accessor functiojn
 on a record. This is the same thing as giving the record explicility
-https://www.youtube.com/watch?v=-fhaZvgDaZk&ab_channel=OlafChitil altenrkirch coinduction in agda
+<https://www.youtube.com/watch?v=-fhaZvgDaZk&ab_channel=OlafChitil> altenrkirch coinduction in agda
 
 [Copatterns: programming infinite structures by observations](https://dl.acm.org/doi/10.1145/2480359.2429075)
+
 ## Coalgebra
+
+hypersets
+
 [](https://thorsten-wissmann.de/theses/dissertation-wissmann.pdf)
 [Coalgebra for the working programming languages researcher](https://www.youtube.com/watch?v=Qb0z1FWT5bw&ab_channel=ACMSIGPLAN)
 [Coalgebraic Semantics [1/4] - Alexandra Silva - OPLSS 2019](https://www.youtube.com/watch?v=MFUhTtsJNzE&ab_channel=OPLSS)
 Functor gives you syntax and semantics. denotationa and operational.
-Determinstic atuomatya F(X) = X^A = A -> X. so transition relation is X -> F(X) = X -> A -> X. If you icnlude termination (X->Bool,A -> X). Somehow the pieces of reg exp corespond to 
+Determinstic atuomatya F(X) = X^A = A -> X. so transition relation is X -> F(X) = X -> A -> X. If you icnlude termination (X->Bool,A -> X). Somehow the pieces of reg exp corespond to
 Final coalgebra gives a denotational semantics
 Brzowsksi derivatives give operational semantics.
-https://cs.ru.nl/~jrot/coalg18/
+<https://cs.ru.nl/~jrot/coalg18/>
 
 Arbib and Manes - algerbad approaches to program semantics
 Rutten and Bart Jacobs
@@ -493,7 +516,6 @@ But if X and a are considered opaque, how do you describe the automata in pure c
 Morphisms between coalgebras are automata mappings. (Simulations?)
 category theory in python 4.
 What is finding the minimization of an automata categorically.
-
 
 An specific algebra is the analog of an intepretation. Some interpretations are models of the axioms and some aren't
 Consider finite groups.
@@ -528,24 +550,21 @@ for n in range(10):
 # (c -> a) -> (f a -> b) -> f c -> b
 #  f l = \fc -> l (map f fc) 
 ```
+
 The analog/dual of automata minimization is probably congruence closure. This jives nicely.
 The signature is the choice of functor.
 Refactoring the entire egraph into a _single_ dictionary. That's elegant.
 
-
-
-
 Jules Jacobs, Thorsten Wißmann - [https://dl.acm.org/doi/abs/10.1145/3571245](fast coalgebraic bisimulation minimization)
 Different automata types can be described by a Functor, meaning a function or dictionsry from states to something that may also involve states.
-
 
 FOr exmaple, labbleled transition systems might be `Map<State, Map<Action, State>>`, non deterministic systems.
 
 Or in other words (?) various kinds of automata graphs can be encoded as a functions from nodes to the outgoing edges.
 This isn't really saying all that much. But the structure/type of the function/dict can enforce certain regularity properties of the graph.
 
-
 Observational equivalence is obtained by considering the properties to be observable.
+
 ```
 f(x) = 7
 g(x) = "foo"
@@ -553,6 +572,7 @@ g(x) = "foo"
 f(y) = 7
 g(y) = "foo"
 ```
+
 If f and g are the only pieces of data obervable of these opaque objects, then x and y are observationally equvalent.
 Interestingly, by even posing the question, I was stating some meta sense in which x and y are not equivalent
 
@@ -569,7 +589,6 @@ name(y) = "y"
 ```
 
 It gets more interesting when we say that there are observations that are themselves the opaque objects.
-
 
 ```
 f(x) = 7
@@ -595,6 +614,7 @@ If we hash cons, `eclass ~ int`.
 ```
 
 Here's the simple naive algorithm. The paper covers essential optimizations. Something like the analog of seminiave evaluation and also good choice of eclass ids.
+
 ```python
 
 ex1 = {
@@ -631,7 +651,8 @@ Could use same justification tricks.
 ```
 
 ## Coinduction
-Coinduction. What up? https://en.wikipedia.org/wiki/Coinduction
+
+Coinduction. What up? <https://en.wikipedia.org/wiki/Coinduction>
 
 [coinduction he](https://paulhe.com/2019/04/17/coinduction.html) nice blog post. Greatest fixed point takes everything and prunes away stuff that can't be proven.
 Least fixed point starts with nothing an adds stuff that can be proven.
@@ -642,14 +663,16 @@ it only requires that each system has some way of finding corresponding states.
 
 What is induction really?
 
-
 # Stuff
+
 ## Applications
+
 Verification
 Anything fun? Puzzles?
 Program alignment?
 
 ## Tools
+
 boa tool
 [CoPaR](https://git8.cs.fau.de/software/copar) [Generic Partition Refinement and Weighted Tree Automata](https://link.springer.com/chapter/10.1007/978-3-030-30942-8_18) [CoPaR: An Efficient Generic Partition Refiner](https://arxiv.org/pdf/1811.08850v1.pdf)
 [DCPR]() are similar tools in some sense
@@ -658,16 +681,18 @@ boa tool
 
 [ltsmin](https://ltsmin.utwente.nl//)
 
-[VLTS](https://cadp.inria.fr/resources/vlts/) very large transition system bnenchmark suite 
+[VLTS](https://cadp.inria.fr/resources/vlts/) very large transition system bnenchmark suite
 [BEEM: BEnchmarks for Explicit Model Checkers](https://paradise.fi.muni.cz/beem/)
-
 
 circ
 K
+
 ### mCRL2
+
 [user manual](https://www.mcrl2.org/web/user_manual/introduction.html)
 [mCRL2](https://www.mcrl2.org/web/user_manual/index.html). Hmm. Impressive. ucrl2 language
 LPS format.
+
 - mcrl2-gui
 - ltsgraph tool to visualize
 - lpsim to simualte
@@ -676,9 +701,10 @@ LPS format.
 parametrised boolean equation systems
 [modal u-calculus](https://en.wikipedia.org/wiki/Modal_%CE%BC-calculus)
 
-https://www.mcrl2.org/web/user_manual/tutorial/machine/index.html
+<https://www.mcrl2.org/web/user_manual/tutorial/machine/index.html>
 
 Vending machine
+
 ```
 act
   ins10, optA, acc10, putA, coin, ready ;
@@ -698,8 +724,7 @@ cons zero : Nat;
 successor : Nat —> Nat,
 ```
 
-
-coursera course https://www.coursera.org/learn/automata-system-validation/home/welcome
+coursera course <https://www.coursera.org/learn/automata-system-validation/home/welcome>
 labelled transition system
 
 ```python
@@ -710,14 +735,15 @@ os.system("echo try this")
 ## Partition Refinement
 
 ## Model Checking
+
 Should this be in here?
 See also:
+
 - imperative proving
 - constrained horn clauses
 
-
-https://en.wikipedia.org/wiki/List_of_model_checking_tools
-https://github.com/johnyf/tool_lists/blob/main/verification_synthesis.md
+<https://en.wikipedia.org/wiki/List_of_model_checking_tools>
+<https://github.com/johnyf/tool_lists/blob/main/verification_synthesis.md>
 
 - [SPIN](https://spinroot.com/spin/whatispin.html), promela
 - UPPAAL
@@ -730,15 +756,17 @@ https://github.com/johnyf/tool_lists/blob/main/verification_synthesis.md
 [divine](https://divine.fi.muni.cz/index.html)
 
 [modelc checking contest](https://mcc.lip6.fr/2023/) petri nets? Not seeing familiar systems here
-[ hardware model checkers contest](http://fmv.jku.at/hwmcc20/)
+[hardware model checkers contest](http://fmv.jku.at/hwmcc20/)
 
-- AVR https://github.com/aman-goel/avr
+- AVR <https://github.com/aman-goel/avr>
 - abc
-- Pono http://theory.stanford.edu/~barrett/pubs/MIL+21.pdf
+- Pono <http://theory.stanford.edu/~barrett/pubs/MIL+21.pdf>
+
 # Misc
+
 [Automata theory - An algorithmic approach](https://www7.in.tum.de/~esparza/autoskript.pdf) book. Wait this seems fantastic.
 BDD as a kind of automata. solving presburger arith by reduction to automata? Bizarre.
-https://owl.model.in.tum.de/ https://github.com/owl-toolkit/owl
+<https://owl.model.in.tum.de/> <https://github.com/owl-toolkit/owl>
 
 [Automata : From Logics to Algorithms - Vardi and Wilke](https://www.cs.rice.edu/~vardi/papers/wal07.pdf)
 
@@ -746,16 +774,14 @@ Hopcroft and Ullman book
 wolfgang thomas
 autmata logic and games
 
+<https://github.com/ravenbeutner/FsOmegaLib>
 
+<https://github.com/topics/automata>
 
-https://github.com/ravenbeutner/FsOmegaLib
-
-https://github.com/topics/automata
-
-https://github.com/nppoly/cyac High performance Trie and Ahocorasick automata (AC automata) Keyword Match & Replace Tool for python
+<https://github.com/nppoly/cyac> High performance Trie and Ahocorasick automata (AC automata) Keyword Match & Replace Tool for python
 
 Automatalog
-partially built objects just can have fewer entries. But then how do we inform pointer to the objects they gave been 
+partially built objects just can have fewer entries. But then how do we inform pointer to the objects they gave been
 nondestructive update
 Monotonically, observations go down, equalities go up. observations go up, equalities go down.
 We can remove obserations and stay monotonic with respect to equality. Horizontal strtification. Relationship with subclassing? first strata of most fine-grained class rules.
@@ -767,13 +793,13 @@ codeql is an object oriented shellac on datalog
 logtalk
 weighted automata perform a merge like operation when states combine? "lumping"
 Options:
-  - 
-  - When a subobservation completes (if objects are stable) it splits the universe.
-  - when incompatbile observations occur, split.
-modal u-calc is a fixpoint algebra
-yihong said datalog is equation solving https://www.cs.cornell.edu/~kozen/Papers/Hopkins.pdf
-tree automata and egglog.
+  -
 
+- When a subobservation completes (if objects are stable) it splits the universe.
+- when incompatbile observations occur, split.
+modal u-calc is a fixpoint algebra
+yihong said datalog is equation solving <https://www.cs.cornell.edu/~kozen/Papers/Hopkins.pdf>
+tree automata and egglog.
 
 [higher dimensional automata pratt](http://boole.stanford.edu/pub/hda.pdf) woof. What even is this.
 
@@ -799,7 +825,6 @@ Ones | Inc1 n |
 apply (Inc1 n) = Cons a (Inc1 (1 + n))
 A closed data type of all my possible streams
 
-
 CoCaml
 
 bisimulation goes hand in hand with condicution.
@@ -812,35 +837,30 @@ Nodes are labelled with somethign and edges are labelled with somethign. not per
 Hmm. So the record type condictive in coq. Each accessor is a message or action
 And I suppose each value of the conidcutive is a state.
 Is this a bisimulation under that understanding?
+
 ```
 CoInductive bisim {A : Set} (x y : stream A) : Set :=
   | bisim_eq : head x = head y -> bisim (tail x) (tail y) -> bisim x y.
 ```
 
-https://poisson.chat/aquarium/defunctionalization.pdf - lusxia - shows an interesting defunctionalization trick to define fix.
+<https://poisson.chat/aquarium/defunctionalization.pdf> - lusxia - shows an interesting defunctionalization trick to define fix.
 Is the point to close the universe of possible functions so that coq can see that we're only using productive ones
 
-https://arxiv.org/pdf/1906.00046.pdf interaction trees
+<https://arxiv.org/pdf/1906.00046.pdf> interaction trees
 conor mcbride turing completeness
-
 
 A process in coq.
 The labelled trasnition relation. Ok sure.
 Inductive trans s1 a s2 :=
 
 Then what?
-Definition bisim ta tb sa1 sa2 := 
+Definition bisim ta tb sa1 sa2 :=
    forall s1
-Definition IsBisim r ta t2 := forall sa1 
-
-
-
+Definition IsBisim r ta t2 := forall sa1
 
 Sangiorgi Book
 
-
 Connection to recursion schemes. Categorical perspective. Meijer.
-
 
 "Biggest Fixed Point"
 
@@ -848,30 +868,25 @@ Connection to recursion schemes. Categorical perspective. Meijer.
 
 `f a -> a` breaking down a functor f
 
-
-
 Coinduction ~ object oriented.
 Observations / messages are sent to a data object
 Existential encoding - Strymonas paper
 exists s, {state : s ;  observation1 : s -> yada ; observation2 : s -> yada  }
 As compared to universal encoding (Bohm berarducci) of inductive types (their fold)
 
-
-
 LogTalk -
-Co-LP (logic programming), rational trees. Could one fold together the lambda prolog perspective and 
-https://www.youtube.com/watch?v=nOqO5OlC920&t=3644s&ab_channel=MicrosoftResearch a talk by gupta
+Co-LP (logic programming), rational trees. Could one fold together the lambda prolog perspective and
+<https://www.youtube.com/watch?v=nOqO5OlC920&t=3644s&ab_channel=MicrosoftResearch> a talk by gupta
 Vicisou Circle - book
 Aczel in 80s?
 
-
 Co-LP is dual to tabling
 The metinterpeter looks very simple. What is a metaintepreter for tabling. Is it similarly simple?
-https://personal.utdallas.edu/~gupta/meta.html
+<https://personal.utdallas.edu/~gupta/meta.html>
 Keep list of previous calls. Attempt to unify with a previous call. This recognizes cycles.
 co-auto for Coq? Does paco do something like this?
 Interesting connection: Sequent as a virtual machine, lambnda prolog sequents describe logic programming, This coniductive metainterpreter reifies the goal stack. So does the delmittied continuation based tabling. Coinductive = negative types
-Sequent calc as a virtual machine is already kind of how lambda prolog is described. But Downen was talking classical logic, and Miller nadathur almost exclusively constructive logic. Miller and nadathur do have function types, distinct from implication (I think). 
+Sequent calc as a virtual machine is already kind of how lambda prolog is described. But Downen was talking classical logic, and Miller nadathur almost exclusively constructive logic. Miller and nadathur do have function types, distinct from implication (I think).
 Could one make a prolog on this basis. Should the coinductive predicates somehow be connected to continuations? The tabled version reifies a goal stack for delimitted continuations. No wait. I'm remembering achieving tabling via delimitted conts.
 
 <   |   > :- < | >,  <  |  >
@@ -879,30 +894,23 @@ Or this as a notation for callcc, shift/reset? In scheme or whatever the conitnu
 p(X,Y) :-  < K |     >  % this is binding a K with callCC or something
 Downen and Ariloa are saing classical logic does have an operational semantics, some what maybe in contradictin to the feel of what Miller is saying,.
 
-
-https://personal.utdallas.edu/~gupta/ppdp06.pdf  Co-Logic Programming: Extending Logic Programming
+<https://personal.utdallas.edu/~gupta/ppdp06.pdf>  Co-Logic Programming: Extending Logic Programming
 with Coinduction L. Simon, A. Mallya, A. Bansal, G. Gupta
-https://twitter.com/sivawashere/status/1364734181545238532
-https://logtalk.org/papers/colp2012/coinduction_colp2012_slides.pdf
-
-
+<https://twitter.com/sivawashere/status/1364734181545238532>
+<https://logtalk.org/papers/colp2012/coinduction_colp2012_slides.pdf>
 
 Downen. Connections back to sequent calculus papers. Computing with classical connectives.
-
-
-
 
 Bisimulation
 Coinductive proof
 
-
 Coq and coidnuction
 Chlipala's chapter
-Breitner blog post - https://www.joachim-breitner.de/blog/726-Coinduction_in_Coq_and_Isabelle
-https://www.joachim-breitner.de/blog/727-How_is_coinduction_the_dual_of_induction_
+Breitner blog post - <https://www.joachim-breitner.de/blog/726-Coinduction_in_Coq_and_Isabelle>
+<https://www.joachim-breitner.de/blog/727-How_is_coinduction_the_dual_of_induction>_
 
 Older notes - Nice ones by
-Eduardo Giménez and Pierre Castéran (2007). "A Tutorial on [Co-]Inductive Types in Coq"  http://www.labri.fr/perso/casteran/RecTutorial.pdf
+Eduardo Giménez and Pierre Castéran (2007). "A Tutorial on [Co-]Inductive Types in Coq"  <http://www.labri.fr/perso/casteran/RecTutorial.pdf>
 Paco
 Computability theory library
 
@@ -912,15 +920,13 @@ techniques - unfold via a match function.
 Condinductive records are smarter?
 Positive and negative types
 
-
-https://www.cs.cornell.edu/~kozen/Papers/MetricCoind.pdf metric donictuction
+<https://www.cs.cornell.edu/~kozen/Papers/MetricCoind.pdf> metric donictuction
 What is this
 
-https://www.cs.cornell.edu/~kozen/Papers/Structural.pdf practical coinduction - kozen
+<https://www.cs.cornell.edu/~kozen/Papers/Structural.pdf> practical coinduction - kozen
 
-https://github.com/dpndnt/library/blob/master/doc/pdf/abel-adelsberger-setzer-2017.pdf
+<https://github.com/dpndnt/library/blob/master/doc/pdf/abel-adelsberger-setzer-2017.pdf>
 Interactive programming Agda - Objects and GUIs.
-
 
 The smallest coinductive is unit
 The smallest inductive   is void
@@ -934,15 +940,14 @@ Taking it more hard core, you could make a record for every body of an inductive
 Primitive inifinite condinductive is Forever
 primitive infiniter indcutive     is nat
 
-
 Negative types and positive types. They come together to create activity.
 Push streams and pull streams
 
-Neel - 
+Neel -
 Hi, this is a surprisingly complicated question.
 For lazy languages, least and greatest fixed points coincide. (The jargon is "limit-colimit coincidence" or "bilimit-compactness".)
 For strict languages, they do not coincide, and while you can still encode them, the absence of coinductive types is arguably a language deficiency.
 For languages with first class continuations, they are perfect duals -- the negation of an inductive type is a coinductive type, and vice versa. This also means that the eliminator for an inductive value is a coinductively defined continuation, and vice versa. (See David Baelde's Least and Greatest Fixed Points in Linear Logic.)
 This duality does not hold in languages without first class continuations, since there is an asymmetry between how you can use values and how you can use continuations.
 You will sometimes see people talking about how inductive types are strict and coinductive types are lazy. This is a misconception -- in a language with continuations, you can have both strict and lazy inductive types, and strict and lazy coinductive types. Due to the aforementioned asymmetry, in a language withouts control, you can have strict and lazy inductives, but only lazy coinductive types. (This is in Baelde's paper, but you have to squint to realize it, because he was doing proof theory rather than language design.)
-https://arxiv.org/pdf/0910.3383.pdf Balede's paper
+<https://arxiv.org/pdf/0910.3383.pdf> Balede's paper

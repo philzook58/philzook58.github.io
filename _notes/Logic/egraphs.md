@@ -24,12 +24,12 @@ title: E-graphs
 - [Lambda Encoding](#lambda-encoding)
 - [Contextual EGraphs](#contextual-egraphs)
 - [Equational Logic](#equational-logic)
+- [Theories AC](#theories-ac)
 - [CHR egraphs](#chr-egraphs)
 - [Misc](#misc)
 
-
-
 # E-Graph
+
 What is an e-graph?
 
 What is a summer's day? A rainbow?
@@ -38,11 +38,10 @@ E-graphs are a data structure that efficiently holds terms and equalities betwee
 
 It is useful for algebraic simplification, program transformations and proving equivalences in equational reasoning
 
-Destructive term rewriting can be used in 
-
-
+Destructive term rewriting can be used in
 
 # My E-Graph Blog Posts
+
 - [E-graphs in Julia (Part I)](https://www.philipzucker.com/egraph-1/)
 - [E-Graph Pattern Matching (Part II)](https://www.philipzucker.com/egraph-2/)
 - [Progress on Automated Reasoning for Catlab with Metatheory.jl Egraphs](https://www.philipzucker.com/metatheory-progress/)
@@ -59,8 +58,8 @@ Destructive term rewriting can be used in
 - [A Questionable Idea: Hacking findParent into Souffle with User Defined Functors](https://www.philipzucker.com/souffle-functor-hack/)
 - [Embedding E-graph Rewriting and Egglog in Constraint Handling Rules](https://www.philipzucker.com/egraph-chr/)
 
-
 # Union Finds
+
 Union finds are also called disjoint set datastructures.
 
 You can take a set an group it into equivalence classes. One place this is useful is finding the connected components of a graph.
@@ -69,7 +68,7 @@ There are different styles of union finds and both make one thing in different a
 
 At a level of fairly high abstraction, a union find is a contracting map. You iterate the map to a fixed point. Each equivalence class is the basin of a fixed point.
 
-See coq post https://www.philipzucker.com/simple-coq-union-find/
+See coq post <https://www.philipzucker.com/simple-coq-union-find/>
 
 How essential is path compression? It is the thing that gets you that inverse ackermann complexity. It requires mutation so far as I know.
 
@@ -79,8 +78,8 @@ Is the inverse acckerman complxity a requirement for anything I might call a uni
 
 Union finds can be fully normalized to flatness.
 
-
 ## Reference union finds
+
 A chain of pointers that lead up to a root. Often the root is a pointer to itself.
 
 ```python
@@ -111,6 +110,7 @@ print(x.find() is z.find())
 ```
 
 ## Union find arrays and ints
+
 What is a pointer but an index? What is an index but a pointer?
 In some sense your ram is just a giant array that you hand out. And vice versa you can build the analog of pointer based algorithms by using an array as ram.
 
@@ -151,16 +151,16 @@ assert(uf.find(x) != uf.find(z))
 ```
 
 ## Variations
+
 [persistent union find](https://www.lri.fr/~filliatr/ftp/publis/puf-wml07.pdf)
 
-[Union Find Dicts: Dictionaries Keyed on Equivalence Classes](https://www.philipzucker.com/union-find-dict/). You can make a dict from union find to lattices. It needs to know how to merge stuff in the range. Relatedly, you could also have union find keyed on union find. 
+[Union Find Dicts: Dictionaries Keyed on Equivalence Classes](https://www.philipzucker.com/union-find-dict/). You can make a dict from union find to lattices. It needs to know how to merge stuff in the range. Relatedly, you could also have union find keyed on union find.
 
 Union find with group elements on edges. [kmett talk](https://youtu.be/KxeHGcbh-4c?t=1254). Yihong points out <http://poj.org/problem?id=2492> as a competitive programming exercise that can use this. "generalized union find" mentioned in CHR book
 
 Scoped Union find
 
 Colored Union find
-
 
 [Data Structures and Algorithms for
 Disjoint Set Union Problem](https://core.ac.uk/download/pdf/161439519.pdf) "deunions" and backtracking. hmm. 1989
@@ -173,6 +173,7 @@ Disjoint Set Union Problem](https://core.ac.uk/download/pdf/161439519.pdf) "deun
 
 [parwary thesis - Parallel Graph Algorithms for Combinatorial Scientific Computing](https://bora.uib.no/bora-xmlui/handle/1956/5118)
 Compression methods:
+
 - compress all to root
 - splitting - compress to grandparent
 - halving compress every other to grandparent
@@ -180,12 +181,13 @@ Compression methods:
 Relationship to minimum spanning tree - Kruskal uses union find to determine whether you need an edge or not
 
 ## Applications
+
 connected components of graph
 
 reducibility of loops
 [Testing Flow Graph Reducibility  - tarjan]()
 
-https://www.cs.princeton.edu/courses/archive/spring07/cos226/lectures/01union-find.pdf
+<https://www.cs.princeton.edu/courses/archive/spring07/cos226/lectures/01union-find.pdf>
 "
 ! Network connectivity.
 ! Percolation.
@@ -201,27 +203,22 @@ quick-find vs quick-union
 
 percolation. estimate percolation via monte carlo. quick test of connectivity between conducting edges. That's neat.
 
-https://en.wikipedia.org/wiki/Tarjan%27s_off-line_lowest_common_ancestors_algorithm
-
-
+<https://en.wikipedia.org/wiki/Tarjan%27s_off-line_lowest_common_ancestors_algorithm>
 
 value numbering
 
 # Hash Cons
 
-
-
-
-
-
 # E-matching
+
 Searching over the egraph. It is both simple and complex.
 It is a brother of pattern matching. The branching factor of each eclass means that it is more nondeterministic than tree pattern matching.
-It is similar to database search. Relational E-matching. 
+It is similar to database search. Relational E-matching.
 
 Consider
+
 - pattern matching at the root of a single tree
-- pattern matching at ever node in a tree 
+- pattern matching at ever node in a tree
 - pattern matching over a database of trees (forest)
 
 - pattern matching over a DAG
@@ -229,12 +226,12 @@ Consider
 
 Simplify
 [de Moura and Bjorner](https://leodemoura.github.io/files/ematching.pdf)
-Their VM is quire similar to WAM. 
-
+Their VM is quire similar to WAM.
 
 # Equality Saturation
 
 # Proof Production
+
 [Proof producing congruence closure](https://www.cs.upc.edu/~roberto/papers/rta05.pdf)
 
 A union find is a data structure useful for finding connected components in a graph. The "proof" that two vertices are connected is the path between them. We need to maintain an incremental spanning tree of some kind.
@@ -242,12 +239,12 @@ A union find is a data structure useful for finding connected components in a gr
 We also need to record "reasons" why each edge got added. Reasons may be rewrite rules, or congruence closure.
 
 A proof might be:
+
 - a term rewriting sequence
 - a grounded confluent terminating term rewriting system
 - The ground equalities to assert to an egraph that are enough to push the proof through with no egraph rewrite rules
   
 See also Z3's proof production
-
 
 # E Graph Tactics
 
@@ -288,21 +285,22 @@ congruence. Qed.
 ```
 
 # Applications
-- Denali https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf
+
+- Denali <https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf>
 - Herbie - improve accuracy of floating point expressions
 - [Szalinksi](https://github.com/uwplse/szalinski) shrink 3d cad programs
 - [Vectorization for Digital Signal Processors via Equality Saturation](https://asplos-conference.org/abstracts/asplos21-paper142-extended_abstract.pdf)
 - [SPORES](https://arxiv.org/abs/2002.07951)
 
-
 - [High-performance symbolic-numerics via multiple dispatch](https://arxiv.org/abs/2105.03949)
-- 
+-
+
 # PEG Program Expression Graphs
 
 <https://ztatlock.net/pubs/2009-popl-equality-saturation-optimizations-egraphs.pdf>
-https://rosstate.org/publications/eqsat/
+<https://rosstate.org/publications/eqsat/>
 
-Control flow graph (CFG) is just like, a thing. Its denotational semantics are a bit confused. 
+Control flow graph (CFG) is just like, a thing. Its denotational semantics are a bit confused.
 
 Egraphs like talking about functions. How to encode something cfg like into functions?
 
@@ -314,7 +312,6 @@ SSA Phi nodes are slightly bizarre. Gated Phi nodes make explicit the condition 
 
 One can consider using streams as a functional representation of loop behavior. There are operations like tail, head, other on the stream.
 
-
 PEGs have some clues on how to treat summation symbols  $\Sigma$ in an egraph. Surely you can write a sum function asa CFG. Partial Sums / indefinite integrals rather than closed sum, definite integrals.
 
 Is there a relationship between pegs and timely dataflow?
@@ -324,23 +321,22 @@ You only Grep once by koppel - uses PEG-like representation for semantic code se
 [representing loops within egg](https://github.com/egraphs-good/egg/discussions/106)
 
 RVSDG
-https://github.com/jameysharp/optir/
+<https://github.com/jameysharp/optir/>
 
 Loops in egraphs and Landin's knot.
 
 [Equality Saturation: a New Approach to Optimization](https://cseweb.ucsd.edu/~lerner/papers/popl09.pdf)
 
 Quiche [quiche](https://github.com/riswords/quiche) python egraph for manipulating python AST
+
 ## Tree Automata
 
-https://github.com/ondrik/libvata
+<https://github.com/ondrik/libvata>
 [Tree Automata Techniques and Applications](https://jacquema.gitlabpages.inria.fr/files/tata.pdf)
-
 
 [E-Graphs, VSAs, and Tree Automata: a Rosetta Stone](https://remy.wang/reports/dfta.pdf) [slides](https://docs.google.com/presentation/d/1oDNmzxJpsdLE51lmybcfzzzv4jRLDdrVpmMhMpFEoFk/edit?usp=sharing) [merge only rules](https://gist.github.com/remysucre/1788cf0153d7db240e751fb698f74d99)
 
-
-https://en.wikipedia.org/wiki/Tree_automaton
+<https://en.wikipedia.org/wiki/Tree_automaton>
 
 # Egglog
 
@@ -349,7 +345,6 @@ See language/egglog
 ## First class sets
 
 ## GATs
-
 
 ```python
 # I should try souffle using subsumption UF. Maybe it'll work now?
@@ -436,20 +431,52 @@ print(add)
 
 ```
 
-
-
 # Lambda Encoding
+
 Might work:
-- Combinators. SKI or categorical. Many projects are doing something like this. Relational Algebra or matrix algebra are the same thing.
+
+- Combinators. SKI or categorical. Many projects are doing something like this. Relational Algebra or matrix algebra are the same thing. Combinators require many administrative rewrites
 - Succ lifting. [pavel](https://pavpanchekha.com/blog/egg-bindings.html) [oleg](https://okmij.org/ftp/tagless-final/ski.pdf). Do de bruijn but let Succ float out of Var. Let's you do de bruijn index lifting as local rewrite rule. Succ has interpretation as a higher order function.
+- Lambda lifting.
+- Defunctionalization.
+- Closure conversion.
 
 Arguable:
+
 - Co de-bruijn. Hash Cons modulo alpha. Mcbride's Do Be doo be doo. Doesn't seem to work. Correlated rewrites required
 - Graph compilation. Optimal graph reduction
 
+Why are de bruijn indices insufficient? Or are they?
+
+I was asked by a coworker yesterday to elaborate why I thought lambdas were an unsolved problem in egraphs.
+
+I'm semi convinced that there will never be a completely satsifactory answer to this an that it is probaby a bad question in some way.
+
+Nevertheless, it is desirable to apply egraphs to domain that contain lambdas
+
+- functional programming languages
+- theorem provers
+
+A notion of binding that doesn't persay require entire lambdas
+
+- integrals
+- sums
+- einstein notation
+- forall, exists quantifiers
+- let binding
+
+Alpha v Beta
+substitution
+()
+
+Even hash consing is conceptually bad for binding. Hash consing identifies all terms regardless of context. Is the 0 in \x. 0 the same as 0 not inside a binding context? Maaaaybe.
+
+Capture avoiding substition.
+Problematic examples
 
 # Contextual EGraphs
-No one know what this means. Everyone wants it. 
+
+No one know what this means. Everyone wants it.
 
 [colored egraphs](https://docs.google.com/presentation/d/16fpJiVfAaNasCp3rgPusiRl7GD-18fq6aMBkDnVfsco/edit?usp=sharing)
 [colored egg](https://github.com/eytans/egg)
@@ -457,13 +484,23 @@ No one know what this means. Everyone wants it.
 Perhaps related to backtracking
 
 # Equational Logic
+
 Maude
 [Goguen theorem proving and algebra](https://arxiv.org/abs/2101.02690)
 
-rigid e-uniifcation https://pure.uvt.nl/ws/portalfiles/portal/311063/80170.pdf Equational Proofs in Tableaux en Logic Programming de Kogel, E.A. Another fairly extnsive work that seems a lot like egglog.
+rigid e-uniifcation <https://pure.uvt.nl/ws/portalfiles/portal/311063/80170.pdf> Equational Proofs in Tableaux en Logic Programming de Kogel, E.A. Another fairly extnsive work that seems a lot like egglog.
+
+# Theories AC
+
+[CC(X): Semantic Combination of Congruence Closure with Solvable Theories](https://www.sciencedirect.com/science/article/pii/S1571066108002958)
+
+Sylvain Conchon, Evelyne Contejean, and Mohamed Iguernelala. Canonized Rewriting and Ground
+AC Completion Modulo Shostak Theories : Design and Implementation. Logical Methods in
+Computer Science, 8(3), 2012.
+
+Ashish TIwari
 
 # CHR egraphs
-
 
 ```prolog
 :- use_module(library(chr)).
@@ -493,7 +530,6 @@ cong @ eclass(T,E1) \ eclass(T, E2) <=> E1 < E2 | pto(E2, E1).
 
 
 ```
-
 
 ```prolog
 :- use_module(library(chr)).
@@ -571,15 +607,17 @@ count(608)
 N=5 is under a second. Not good scaling.
 */
 ```
+
 # Misc
+
 What would be a mvp egraph in C specialized for the comm/assoc problem look like.
 Use reference based union find with tag bits?
-
 
 Is ematching a wam? I suppose so. Ematching over a fixed egraph is easily expressible in prolog.
 We could implement egraph as `assert`
 We can't use unification vars?
 Does tabling help?
+
 ```
 f(1,2,3).
 g(1,2,3).
@@ -591,14 +629,12 @@ g(1,2,3).
 
 [denali](https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf)
 
-
 [tactic lean](https://github.com/opencompl/egg-tactic-code)
 
 [Cheli Thesis](https://arxiv.org/abs/2112.14714)
 
 [EGRAPH 2022 workshop](https://pldi22.sigplan.org/home/egraphs-2022)
 [youtube feed](https://www.youtube.com/watch?v=dbgZJyw3hnk&ab_channel=ACMSIGPLAN)
-
 
 [chasing an egg](https://effect.systems/doc/pldi-2022-egraphs/abstract.pdf)
 
@@ -612,8 +648,6 @@ g(1,2,3).
 
 [abstract interp for egraphs](https://arxiv.org/pdf/2203.09191.pdf) improving interval boounds
 
-
-
 [](https://github.com/lifting-bits/eqsat)
 
 [sketch guided equality satruation](https://arxiv.org/abs/2111.13040) Give sketches (~ patterns?) which one the ergaph reaches, transition to a new set of rewriting rules / clear the egraphs.
@@ -622,17 +656,16 @@ g(1,2,3).
 
 [Caviar: an e-graph based TRS for automatic code optimization](https://dl.acm.org/doi/pdf/10.1145/3497776.3517781) halide
 
-[Automatic Datapath Optimization using E-Graphs](https://arxiv.org/abs/2204.11478) Samuel Coward, George A. Constantinides, Theo Drane 
+[Automatic Datapath Optimization using E-Graphs](https://arxiv.org/abs/2204.11478) Samuel Coward, George A. Constantinides, Theo Drane
 
 [Cranelift egraph rfc](https://github.com/bytecodealliance/rfcs/pull/27)
 [aegraphs](https://docs.rs/cranelift-egraph/0.91.0/cranelift_egraph/)
 
-https://en.wikipedia.org/wiki/E-graph
+<https://en.wikipedia.org/wiki/E-graph>
 
 [Equality-Based Translation Validator for LLVM](https://link.springer.com/chapter/10.1007/978-3-642-22110-1_59)
 
 [Automatic Datapath Optimization using E-Graphs](https://arxiv.org/pdf/2204.11478.pdf) RTL optimization
-
 
 [Improving MBA Deobfuscation using Equality Saturation](https://secret.club/2022/08/08/eqsat-oracle-synthesis.html)
 
@@ -650,3 +683,7 @@ https://en.wikipedia.org/wiki/E-graph
 [risinglightdb query planner](https://github.com/risinglightdb/risinglight/tree/main/src/planner)
 
 [An Evaluation Algorithm for Datalog with Equality Martin E. Bidlingmaier](https://arxiv.org/pdf/2302.05792.pdf)
+
+[MetaEmu](https://arxiv.org/pdf/2208.03528.pdf) - ssa form rewriting out of ghidra? dang.
+
+[Rewriting History: Repurposing Domain-Specific CGRAs](https://arxiv.org/pdf/2309.09112.pdf) course gfrained reconfigurable arrays. Huh
