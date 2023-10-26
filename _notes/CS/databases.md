@@ -742,8 +742,12 @@ create view path(a,b) as
 select * from path; -- error, circularly defined.
 ```
 
-[Strong Consistency with Raft and SQLite](https://news.ycombinator.com/item?id=35246228)
-<https://rqlite.io/> The lightweight, easy-to-use, distributed relational database built on SQLite
+[	Strong Consistency with Raft and SQLite](https://news.ycombinator.com/item?id=35246228)
+https://rqlite.io/ The lightweight, easy-to-use, distributed relational database built on SQLite
+
+https://github.com/libsql/libsql https://libsql.org/ fork of sqlite to add features?
+
+https://vlcn.io/cr-sqlite/intro merging sqlite database plugin
 
 NULL behavior
 <https://www.sqlite.org/nulls.html>

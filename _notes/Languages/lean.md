@@ -72,6 +72,10 @@ That sounds fun
 
 [do unchained](https://leanprover.github.io/papers/do.pdf) - a description of the extensions to monad syntax like for, break, mut that lean offer
 
+[lean 3 to lean 4 tactic trasnlation cheatsheet](https://github.com/madvorak/lean3-tactic-lean4)
+
+[A super position prover for Lean 3](https://github.com/leanprover/super)
+
 <https://github.com/ccodel/verified-encodings>
 
 [a big twitter thread on lean software verification stuff](https://twitter.com/mukesh_tiwari/status/1667848032128499714?s=12&t=pdj9jytXGvxDOXHWwx4_mg)
