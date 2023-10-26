@@ -3,4 +3,4 @@ layout: post
 title: Javascript
 ---
 
-{% include javascript/test.html %}
+{% include_relative javascript/test.html %}
