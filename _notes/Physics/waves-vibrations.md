@@ -55,3 +55,6 @@ Thin films
 We did discuss this some elsewhere.
 
 # Acoustics
+
+AP French book
+<https://farside.ph.utexas.edu/teaching/315/315.html> Oscillations and Waves

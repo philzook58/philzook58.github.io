@@ -183,6 +183,8 @@ K semantics
 [foundations of cs](http://infolab.stanford.edu/~ullman/focs.html) kind of cool they do it in C
 
 [All kernighan and ritchie programs](https://github.com/ptdecker/cbasics/tree/master)
+[ACSL by example programs](https://github.com/fraunhoferfokus/acsl-by-example/tree/master/StandardAlgorithms)
+[svcomp C programs](https://gitlab.com/sosy-lab/benchmarking/sv-benchmarks/-/tree/main/c?ref_type=heads)
 
 <https://github.com/gouravthakur39/beginners-C-program-examples/tree/master> beginner C programs
 

@@ -38,7 +38,9 @@ cat /tmp/myfun.ll
 
 ```python
 import llvmlite.binding
-
+import matplotlib.pyplot as plt
+import networkx as nx
+G = nx.DiGraph()
 prog = open("/tmp/myfun.ll").read()
 module = llvmlite.binding.parse_assembly(prog)
 print(dir(module))
@@ -46,12 +48,26 @@ for func in module.functions:
     print(func)
     print(dir(func))
     for block in func.blocks:
-        print(block)
+        print(dir(block))
+        G.add_node(block.name)
         for insn in block.instructions:
             print(insn)
             print(insn.opcode)
-            print(insn.operands)
+            operands = list(insn.operands)
+            dst = operands[0]
+            print("dst", dst.name)
+            srcs = operands[1:]
+            for src in srcs:
+                print(src)
+                G.add_edge(src.name, insn.opcode)
+            G.add_edge(insn.opcode, dst.name)
+nx.draw(G)
+plt.show()
 ```
 
-```bash
+```python
+# convert from ssa phi form to tail call form
+for block in blocks:
+
+
 ```

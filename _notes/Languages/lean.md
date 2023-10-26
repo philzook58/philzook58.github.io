@@ -51,6 +51,7 @@ That sounds fun
 
 [lean forward](https://lean-forward.github.io/)
 [a hitchiker's guide to formal verification](https://lean-forward.github.io/logical-verification/2022/) Still on Lean 3 fyi
+<https://github.com/blanchette/logical_verification_2023> 2023 version is on lean 4
 
 [lean update ipam 2023](https://www.youtube.com/watch?v=BY78oZYMGCk&ab_channel=InstituteforPure%26AppliedMathematics%28IPAM%29)
 
@@ -95,6 +96,13 @@ That sounds fun
 
 <https://github.com/leanprover/lean4-cli>
 <https://github.com/EdAyers/ProofWidgets4>
+
+[A Henkin-style completeness proof for the modal logic S5∗](https://arxiv.org/pdf/1910.01697.pdf)
+
+[paper proof](https://github.com/Paper-Proof/paperproof) proof visualization
+<https://lakesare.brick.do/all-lean-books-and-where-to-find-them-x2nYwjM3AwBQ>
+
+[How to prove it with lean](https://djvelleman.github.io/HTPIwL/)
 
 ### Build
 
@@ -263,6 +271,20 @@ def main : IO Unit := pure ()
 
 ```lean
 {% include_relative lean/myproject/typeclass.lean %}
+```
+
+# Minikanren
+
+```lean
+{% include_relative lean/myproject/minikanren.lean %}
+```
+
+# Embedding Logic
+
+We're (Me) more used to embedding Hoare logics and things because they are disparate from Lean's logic. But we can also embed prop logic, fol, modal, etc. This can be useful for reflective proving
+
+```lean
+{% include_relative lean/myproject/fol.lean %}
 ```
 
 # IMP
