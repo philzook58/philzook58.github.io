@@ -3,6 +3,8 @@ layout: post
 title: Cooking
 ---
 
+Get the wok smoking hot before even adding oil. Helps non stick?
+
 I feel like my internal model if what matters and doesn't for cooking is way off.
 Some things seem like a waste of time joo joo and i just want to ignore them.
 

@@ -28,68 +28,73 @@ title: Functional Languages Implementation
       - [Adding Let Bindings](#adding-let-bindings)
       - [Adding Print Commands](#adding-print-commands)
       - [Named Functions](#named-functions)
-      - [Currying and Closures.](#currying-and-closures)
-
+      - [Currying and Closures](#currying-and-closures)
 
 See also notes on:
+
 - binding forms
 - continuations
 - ocaml
 - haskell
 - scheme / lisp
 
-
 # Boxing
+
 How is polymorphism represented
 [levity polymorphism](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/11/levity-pldi17.pdf) - related works is nice
 
-
-
-
-
 # Abstract Machines
+
 # CEK
 
 # SECD
+
 # Krivine
+
 # ZAM
+
 # G-machine
+
 # Combinators
+
 [When were combinators inveneted](https://twitter.com/code_report/status/1502854198005690371?s=20&t=NnxLD33Ap2wMOWoFXRFmHw)
 
 Supercombinators
 
 # HVM
-https://news.ycombinator.com/item?id=30219452
+
+<https://news.ycombinator.com/item?id=30219452>
 "
 So, in short, my journey was:
+
 1. Learn the abstract algorithm
 2. Implement it naively as a graph
 3. Optimize it by making trees whenever possible
 4. Favor rewrite equations over case-trees
 These steps lead to the design of HVM, which does fairly well in practice.
-[0] https://github.com/VictorTaelin/Symmetric-Interaction-Calculus
+[0] <https://github.com/VictorTaelin/Symmetric-Interaction-Calculus>
 "
 Sharing nodes. Fan
 "Cheap clone"
 Victor's syntactic representaion is really interesting. I wonder if it makes it all more confusing though
 
-
 Asperti
 
-
-
 # Graph combinators
+
 [spj book](https://www.microsoft.com/en-us/research/uploads/prod/1987/01/slpj-book-1987.pdf)
 
 # Lambda Lifting
+
 Lambda dropping
+
 # Defunctionalization
+
 # Closure Conversion
 
 # SSA Continuations
-[SSA is functional Programming - Appell](https://www.cs.princeton.edu/~appel/papers/ssafun.pdf)
 
+[SSA is functional Programming - Appell](https://www.cs.princeton.edu/~appel/papers/ssafun.pdf)
 
 [The essence of compiling with continuations](https://dl.acm.org/doi/pdf/10.1145/173262.155113)
 [Compiling with Continuations, Continued - Kennedy](https://www.microsoft.com/en-us/research/wp-content/uploads/2007/10/compilingwithcontinuationscontinued.pdf)
@@ -100,22 +105,19 @@ See also note on continuations
 
 # Administrative Normal Form ANF
 
-
-
 # Control Flow Analysis
+
 [The Cartesian Product Algorithm: Simple and Precise Type Inference Of Parametric Polymorphism](https://dl.acm.org/doi/10.5555/646153.679533)
 [Control-flow analysis of functional programs](https://dl.acm.org/doi/abs/10.1145/2187671.2187672?casa_token=8XWrk1nCEWcAAAAA:H6hRNhN2no7y9-SDOg2Qcu1wZRwyiD5TzKfqTof9ub4V5Aw-2moXsYfIJZYjhPH_H-XsKYiYArO5RA)
 
-
-
 # Misc
+
 [Justine Lambda Calculus in 400 Bytes](https://justine.lol/lambda/) unbelievable
 [Peyton jone compiling without continutations](https://www.youtube.com/watch?v=LMTr8yw0Gk4&ab_channel=ECOOPLDI2017)
 
 Xavier leroy implementing functional languages
-https://xavierleroy.org/talks/compilation-agay.pdf really good.
+<https://xavierleroy.org/talks/compilation-agay.pdf> really good.
 He describes an interesting operation "disassembling" SOme relation to quote :: Value -> Term
-
 
 ```ocaml
 type term = 
@@ -138,8 +140,6 @@ let rec eval env = function
 | Prim (f, args) -> let args' = List.map (eval env) args in
                     f args'
 ```
-
-
 
 Terms are syntax. The original program? Values are data objects. Bit patterns?
 
@@ -174,15 +174,13 @@ let rec compile : term -> machine list = function
 <http://t3x.org/klisp/klsys/index.html> KLSYS a kilolisp systems - bytecode compiler etc of lisp 2000 lines C, 3000 lines lisp
 <http://t3x.org/index.html> Also lots of books: lisp from nothing, lisp system implementation
 
-
 <http://www.iro.umontreal.ca/~feeley/papers/YvonFeeleyVMIL21.pdf> a msall scheme vm compiler and repl in 4k
 <https://github.com/udem-dlteam/ribbit>
 <http://www.iro.umontreal.ca/~feeley/> Marc Feeley
 
-
 <https://arxiv.org/pdf/1805.08842.pdf> compiling with continuations and LLVM
 
-https://www.cs.princeton.edu/~appel/papers/safe-closure.pdf
+<https://www.cs.princeton.edu/~appel/papers/safe-closure.pdf>
 closure converision is safe for space- Appel paper in coq about closures
 
 Defunctionalization and closures
@@ -192,78 +190,61 @@ Closures are open function data types
 Defunctionalizations are closed function data types. Internal to an algorithm we build closures, but the external interface does not accept them.
 
 Continuations
-Control flow is implicit and there are implicit auxiliary data structures. One of them (perhaps the most primordial) is the program counter. Even programming in assembly it is often a little hidden behind using instructions like jmp and call that yuou are manipulating it. 
+Control flow is implicit and there are implicit auxiliary data structures. One of them (perhaps the most primordial) is the program counter. Even programming in assembly it is often a little hidden behind using instructions like jmp and call that yuou are manipulating it.
 For example in programming an FPGA, it is puzzling how you can get a sequential algorithm to run as there is no CPU a priori available. A standard approach is to build a finite state machine and a register that holds which state you are in. This register is effectivley the program counter. This is a micro special purpose cpu in many respects.
 
 The next implicit control structure is the stack, which holds in it a pointer to what code to return to and also the context needed for the code to run.
 
 The stack holds a code pointer and an environment, and in this sense it has great similarity to a closure.
 
-
-
 Depth first search vs Breadth first.
-Depth first is easy, because you can just use recursive function calls whereas breadth first is a pain because you need to maintain 
+Depth first is easy, because you can just use recursive function calls whereas breadth first is a pain because you need to maintain
 a queue. However, this is a false perspective. You can write DFS using a manual stack data structure. You are using the implicit stack of your programming language.
 
 Assembly programmers know very intimately that the stack exists (if they choose to even have one). They have access to a continuation in this sense. It is part of a strange close mindedness that the memory of a program is divided into a heap and stack. This does not have to be. We could have multiples of each, forego them, perhaps have other fundamental regions of some other kind of data type. Implementing the stack as a heap allocated object is a valid approach. This allows you to save and destroy multiple stacks at will and is essentially what CPS boils down to under the hood assuming a typical implementation of a functional programming language.
-
-
-
 
 What else does this paper bring into play? Correctness conditions
 
 Functional programming has both a pure branch/smenatics and an operational semantics. It also has techniques needed to transform functional looking things into a form that can be executed by a computer. The output of a functional compiler is assembly.
 
-
-Hmm. Yes proving the cps version of a list reverse is the same as no cps is 
+Hmm. Yes proving the cps version of a list reverse is the same as no cps is
 Does CPS help streuctural recursion restirctions in coq?
 
-
-http://www.t3x.org/lfn/index.html lisp from nothing
-https://news.ycombinator.com/item?id=20591771
-
+<http://www.t3x.org/lfn/index.html> lisp from nothing
+<https://news.ycombinator.com/item?id=20591771>
 
 -dlambda and -dinstr flags for ocaml. interesting
-http://cadmium.x9c.fr/distrib/caml-instructions.pdf
-https://dev.realworldocaml.org/compiler-backend.html
+<http://cadmium.x9c.fr/distrib/caml-instructions.pdf>
+<https://dev.realworldocaml.org/compiler-backend.html>
 
+<https://news.ycombinator.com/item?id=25386756> compiler course cornell. Interesting links in comments
+<https://news.ycombinator.com/item?id=25273907> llvm comments
 
+<http://ezyang.com/jfp-ghc-rts-draft.pdf> ghc rts
 
-https://news.ycombinator.com/item?id=25386756 compiler course cornell. Interesting links in comments
-https://news.ycombinator.com/item?id=25273907 llvm comments
-
-
-
-http://ezyang.com/jfp-ghc-rts-draft.pdf ghc rts
-
-
-http://fyquah95.github.io/some-fun-with-ocaml-closures closure represnetatio n
-
-
+<http://fyquah95.github.io/some-fun-with-ocaml-closures> closure represnetatio n
 
 If you can write a fold, you can write finally taglessly. Deepply nested patterns mactches are convenient. Double negation removal is one example. You need to refiying the pattern into a data structure.
 
 There are many courses that use racket and ocaml
 
-  * [https://www.seas.upenn.edu/~cis341/current/](https://www.seas.upenn.edu/~cis341/current/)
-  * [https://course.ccs.neu.edu/cs4410/](https://course.ccs.neu.edu/cs4410/)
-  * [https://www.seas.harvard.edu/courses/cs153/2018fa/schedule.html](https://www.seas.harvard.edu/courses/cs153/2018fa/schedule.html)
-  * [https://iucompilercourse.github.io/IU-P423-P523-E313-E513-Fall-2020/](https://iucompilercourse.github.io/IU-P423-P523-E313-E513-Fall-2020/) IU compiler course Racket
-  * [http://ace.cs.ohio.edu/~gstewart/courses/4100-18/](http://ace.cs.ohio.edu/~gstewart/courses/4100-18/)
-  * [https://www.cs.cmu.edu/~janh/courses/411/17/schedule.html](https://www.cs.cmu.edu/~janh/courses/411/17/schedule.html)
-  * [https://www.cs.utexas.edu/ftp/garbage/cs345/schintro-v14/schintro_142.html](https://www.cs.utexas.edu/ftp/garbage/cs345/schintro-v14/schintro_142.html)
-  * https://blog.sigplan.org/2019/07/09/my-first-fifteen-compilers/ kuper describes nanopass style
-  * http://andykeep.com/pubs/dissertation.pdf nanopass dissertation
-  * [https://bernsteinbear.com/blog/compiling-a-lisp-0/](https://bernsteinbear.com/blog/compiling-a-lisp-0/) nice blog series compiling lisp to C
-  * https://bernsteinbear.com/assets/img/11-ghuloum.pdf incremental appraoich to compiler construction
-
-
+- [https://www.seas.upenn.edu/~cis341/current/](https://www.seas.upenn.edu/~cis341/current/)
+- [https://course.ccs.neu.edu/cs4410/](https://course.ccs.neu.edu/cs4410/)
+- [https://www.seas.harvard.edu/courses/cs153/2018fa/schedule.html](https://www.seas.harvard.edu/courses/cs153/2018fa/schedule.html)
+- [https://iucompilercourse.github.io/IU-P423-P523-E313-E513-Fall-2020/](https://iucompilercourse.github.io/IU-P423-P523-E313-E513-Fall-2020/) IU compiler course Racket
+- [http://ace.cs.ohio.edu/~gstewart/courses/4100-18/](http://ace.cs.ohio.edu/~gstewart/courses/4100-18/)
+- [https://www.cs.cmu.edu/~janh/courses/411/17/schedule.html](https://www.cs.cmu.edu/~janh/courses/411/17/schedule.html)
+- [https://www.cs.utexas.edu/ftp/garbage/cs345/schintro-v14/schintro_142.html](https://www.cs.utexas.edu/ftp/garbage/cs345/schintro-v14/schintro_142.html)
+- <https://blog.sigplan.org/2019/07/09/my-first-fifteen-compilers/> kuper describes nanopass style
+- <http://andykeep.com/pubs/dissertation.pdf> nanopass dissertation
+- [https://bernsteinbear.com/blog/compiling-a-lisp-0/](https://bernsteinbear.com/blog/compiling-a-lisp-0/) nice blog series compiling lisp to C
+- <https://bernsteinbear.com/assets/img/11-ghuloum.pdf> incremental appraoich to compiler construction
 
 I like to start things simple.
 
 Functional programming is cool and useful, but it isn't clear how to implement the features they provide on hardware that is controlled by assembly code.
 
-There is a topic in functional programming call "abstract machines". 
+There is a topic in functional programming call "abstract machines".
 
 #### Why Abstract Machines?
 
@@ -283,7 +264,7 @@ I don't know. Stacks are a fairly innocuous data structure and easy to provide i
 
 The Reverse Polish Notation calculator gives a simple way to use a stack to evaluate arithmetic.
 
-There is a place for code and a place for 
+There is a place for code and a place for
 
 [http://learnyouahaskell.com/functionally-solving-problems](http://learnyouahaskell.com/functionally-solving-problems)
 
@@ -291,7 +272,7 @@ There is a place for code and a place for
 
 You are imprisoned by the data and control constructs that the language you are using provides. You can step out of this by refusing to use them, and sometimes this can make things more clear. For example, sometimes it may be useful to control your own manual stack. This comes up for example when you are doing a depth first search and then want to go breadth first. You change a FILO stack into a FIFO queue.
 
-An evaluator written in a recursive style has an implicit language provided stack controlling and remembering what things to do. It's very convenient. 
+An evaluator written in a recursive style has an implicit language provided stack controlling and remembering what things to do. It's very convenient.
 
 This is one of the examples in the Defunctionalization paper and it is a good starting schematic for the Evaluators paper.
 
@@ -303,7 +284,7 @@ We can have both arithmetic and boolean operations. We can translate from arithe
 
 #### Adding Let Bindings
 
-Let bindings allow us to give names to values. The names themselves are often consdiered not particularly meaingful. 
+Let bindings allow us to give names to values. The names themselves are often consdiered not particularly meaingful.
 
 Let bindings are among the simplest examples of a binding form. Binding forms are things that introduce a name. The name itself is not meaningdful in that if you replaced it at the binding site and all usage sites, you have an equivlaent expression in some sense. This is called alpha renaming.
 
@@ -317,9 +298,9 @@ Printing is considered to be an effect in Haskell and not available for pure pro
 
 Named functions also gives you recursion.
 
-#### Currying and Closures.
+#### Currying and Closures
 
-One transformation is known as lambda lifting, where you 
+One transformation is known as lambda lifting, where you
 
 [http://matt.might.net/articles/closure-conversion/](http://matt.might.net/articles/closure-conversion/)
 
@@ -333,23 +314,22 @@ Forth. What about other control flow. What about Lazy If? The joy language has q
 
 How does unification play into this. The WAM. Or proof formats as code? Metamath is some kind of stack machine isn't it? Is there a defunctionalization reconstruction of metamath,. The flattened postfix form of proofs occurs in those discrimination trees. a fast proof checker for atp
 
-[https://arxiv.org/pdf/1109.6273.pdf](https://arxiv.org/pdf/1109.6273.pdf) Focalization. 
+[https://arxiv.org/pdf/1109.6273.pdf](https://arxiv.org/pdf/1109.6273.pdf) Focalization.
 
 [https://semantic-domain.blogspot.com/2014/10/focusing-is-not-call-by-push-value.html](https://semantic-domain.blogspot.com/2014/10/focusing-is-not-call-by-push-value.html)
 
-So you have this focus that moves around. And polarity. And these things remove inessential churn in the space of possible proofs. backtracking happens only when needed, specifically in /\L and \/R and focL and maybe other spots. If ou erase polrity annotations, you get a normal looking propsitions. You can arbitrarily add consistent polarity annotations? These correspond somehow perhaps to 
+So you have this focus that moves around. And polarity. And these things remove inessential churn in the space of possible proofs. backtracking happens only when needed, specifically in /\L and \/R and focL and maybe other spots. If ou erase polrity annotations, you get a normal looking propsitions. You can arbitrarily add consistent polarity annotations? These correspond somehow perhaps to
 
 natural deduction has intro elim rules. sequent has left right rules. You can have intuitionsitc sequent calc
 
 Values vs computations. Value vs co-values. Values vs contexts. Functions take values zand return compuutations. Thunking converts between computation to valu. pattern matching is a computation
 
-[https://www.cs.cmu.edu/~fp/courses/](https://www.cs.cmu.edu/~fp/courses/) 0 frank pfenning. 
+[https://www.cs.cmu.edu/~fp/courses/](https://www.cs.cmu.edu/~fp/courses/) 0 frank pfenning.
 
 adk [https://www.reddit.com/r/haskell/comments/hp1mao/i_found_a_neat_duality_for_cps_with_call_by_push/](https://www.reddit.com/r/haskell/comments/hp1mao/i_found_a_neat_duality_for_cps_with_call_by_push/)
 
 call by push value. A language that has thunks but not first class functions is possible. thunks are frozen commands. They can capture environment and be force, but not accept new commands. lambda x is pop x. V' is push V. reverse function application syntax
 
-    
     <code>model in ocaml
     
     type 'a thunk = unit -> 'a
@@ -367,26 +347,25 @@ There is some choices on what to target. Do you want to write a parser? Interpet
 
 What is your language
 
-  * Arithmetic expressions
-  * Boolean expressions
-  * let
-  * Mixed Arith Bool
-  * List of Commands.
-  * Untyped lambda
-  * named procedures.
-  * Simply typed lambda
-  * Mutation? References
-  * Polymorphic lambda
-  * callcc delimcc
-  * error throw try catch
-  * Read Write files
-  * Pattern matching
-  * Structs / Records / Tuple
-  * ADTs
+- Arithmetic expressions
+- Boolean expressions
+- let
+- Mixed Arith Bool
+- List of Commands.
+- Untyped lambda
+- named procedures.
+- Simply typed lambda
+- Mutation? References
+- Polymorphic lambda
+- callcc delimcc
+- error throw try catch
+- Read Write files
+- Pattern matching
+- Structs / Records / Tuple
+- ADTs
 
 I find it always useful to consider arithemtic expressions. I know em well, they're simple, and the expose a decent percentage / good warmup of the features of lambda claculus. The big confusing things they miss are binding forms and substitution.
 
-    
     <code>data AExpr = Lit Int | Add AExpr AExpr
     newtype Value = Value Int
     data AHole = LeftHole AExpr | RightHole Value -- ??? | HAdd AHole AHole | ALit Int
@@ -435,9 +414,9 @@ lambda mu mubar corresponds to sequent calculus somehow [https://ix.cs.uoregon.e
 
 [http://logitext.mit.edu/tutorial](http://logitext.mit.edu/tutorial) - pretty cool little tutorial on sequent claculus
 
-So sequent calculus is a strange little man. What is $latex \vdash$ ? 
+So sequent calculus is a strange little man. What is $latex \vdash$ ?
 
-Well, the point of formal proofs is that they are forms. This means that they are constructed out of steps that feels as straightforward, mechanical, and automatic as possible such that the checking of proofs is very difficult to get wrong. The syntax becomes this very dry and dead thing. You and I know we're talking about the naturals or whatever, but we're supposed to pretend we don't know that and just see the rules for what they are. I'm quite bad at this. 
+Well, the point of formal proofs is that they are forms. This means that they are constructed out of steps that feels as straightforward, mechanical, and automatic as possible such that the checking of proofs is very difficult to get wrong. The syntax becomes this very dry and dead thing. You and I know we're talking about the naturals or whatever, but we're supposed to pretend we don't know that and just see the rules for what they are. I'm quite bad at this.
 
 Sequent calculus originates in the 30s, where the idea of computer wasn't exactly unknown, but definitely in a very different state than it is today. Certainly no significant actual general purpose computers had been brought into existence yet (Babbage maybe?). So the intent was to be using this stuff on pencil and paper.
 
@@ -455,7 +434,6 @@ There does appear to be a point. You can have a big formula that is not obviousl
 
 The cut rule somehow invents an intermediate formula. Most of the other rules aren't like this. It's somewhat worrying. How does one mechanically invent this formula? I suppose you could enumerate as possible formulas?
 
-    
     <code>data C = C V E
     data V = Mu (E -> C ) | Lam (V -> E -> C) | Inj1 V | Inj2 V
     data E = MuBar (V -> C) |  Stack V E | Choice (V -> C) (V -> C)
@@ -480,12 +458,12 @@ Abstract Machines - What is an abstract machine. It should be a thing that feels
 
 matt Might van horn [http://matt.might.net/papers/vanhorn2010abstract.pdf](http://matt.might.net/papers/vanhorn2010abstract.pdf) They add in stores and garbage collection and other things
 
-  * krivine [https://www.irif.fr/~krivine/articles/lazymach.pdf](https://www.irif.fr/~krivine/articles/lazymach.pdf)
-  * SECD
-  * CEK [http://matt.might.net/articles/cek-machines/](http://matt.might.net/articles/cek-machines/) [https://www.youtube.com/watch?v=PwD7D7XUzec](https://www.youtube.com/watch?v=PwD7D7XUzec) [https://cstheory.stackexchange.com/questions/41256/is-a-cek-machine-an-implementation-of-a-cesk-machine](https://cstheory.stackexchange.com/questions/41256/is-a-cek-machine-an-implementation-of-a-cesk-machine)
-  * Zinc
-  * CAM
-  * Spinless tagless g machine (STG)
+- krivine [https://www.irif.fr/~krivine/articles/lazymach.pdf](https://www.irif.fr/~krivine/articles/lazymach.pdf)
+- SECD
+- CEK [http://matt.might.net/articles/cek-machines/](http://matt.might.net/articles/cek-machines/) [https://www.youtube.com/watch?v=PwD7D7XUzec](https://www.youtube.com/watch?v=PwD7D7XUzec) [https://cstheory.stackexchange.com/questions/41256/is-a-cek-machine-an-implementation-of-a-cesk-machine](https://cstheory.stackexchange.com/questions/41256/is-a-cek-machine-an-implementation-of-a-cesk-machine)
+- Zinc
+- CAM
+- Spinless tagless g machine (STG)
 
 Evidently If you use direct substitution, you can avoid the E part. That's mentioned in the sequent claculus tutorial. Don't need to look stuff up in an Env if you've already substituted.
 
@@ -495,11 +473,11 @@ So just a simple lambda calculus does not have the control operators necessary t
 
 Defunctionalizing the continuation. [https://www.brics.dk/RS/07/7/BRICS-RS-07-7.pdf](https://www.brics.dk/RS/07/7/BRICS-RS-07-7.pdf)
 
-When we evaluated the lambda calculus, it is easiest to write this in a recursive form. Dealing with trees often feels easiest in recursive form, although I suppose maybe a visitor pattern is ok too. But that's still recursive. function calls and recursion is a kind of control flow and a facility that many languages provide. 
+When we evaluated the lambda calculus, it is easiest to write this in a recursive form. Dealing with trees often feels easiest in recursive form, although I suppose maybe a visitor pattern is ok too. But that's still recursive. function calls and recursion is a kind of control flow and a facility that many languages provide.
 
-Any example of recursion can be turned into an iterative looking thing by maintaining your own call stack, basically reimplementing this feature. However, you may have some wisdom or optimization that might be obvious to you that the compiler would not know. Perhaps you don't need a full call stack. Perhaps you know how to reuse memory in a clever way. Perhaps you know certain things don't need to be maintained. These are all difficult for the compiler in general to infer, and in fact probably can't because for general purpose use they wouldn't even be correct. 
+Any example of recursion can be turned into an iterative looking thing by maintaining your own call stack, basically reimplementing this feature. However, you may have some wisdom or optimization that might be obvious to you that the compiler would not know. Perhaps you don't need a full call stack. Perhaps you know how to reuse memory in a clever way. Perhaps you know certain things don't need to be maintained. These are all difficult for the compiler in general to infer, and in fact probably can't because for general purpose use they wouldn't even be correct.
 
-Defunctionalizing is a brother to closure conversion. Functions pointers are fine in C. We have first class functions in that sense. But if you close over free variables, that's a little less easy. One makes a record of a function pointer and 
+Defunctionalizing is a brother to closure conversion. Functions pointers are fine in C. We have first class functions in that sense. But if you close over free variables, that's a little less easy. One makes a record of a function pointer and
 
 Is my tendency to convert R -> R functions and think of them as parametrized polynomials or samples a form of defunctionalization? Could defunctionalization adn refunctionalization give intuition to how to deal with higher order differentiayion
 
@@ -523,19 +501,17 @@ Hmm. They claim that abstract machine operate directly on syntax, whereas virtua
 
 In order to compile, we need to inject programs into initial states of the machines. Staged programming is a way to remove the overhead of this. See krishnamswami yallop. Why does it matter if you're going to a machine rep if you're just interpreting into core constructs anyway?
 
-We can take a physical perspective that at the moment not withstanding any hypothetical dna computers or whatever, the only technology that scales in time and speed is electronics. A commonly used abstraction in this domain is that of the digital circuit. They are controlled by clock signals for which the circuit takes on states and then next states. 
+We can take a physical perspective that at the moment not withstanding any hypothetical dna computers or whatever, the only technology that scales in time and speed is electronics. A commonly used abstraction in this domain is that of the digital circuit. They are controlled by clock signals for which the circuit takes on states and then next states.
 
 Higher up the stack, we have the abstractions available from C. We have the abstraction of functions calls, the low level details of the stack abstracted away by lagnauge facilities, often the ability to malloc and free.
 
-
-
-[https://caml.inria.fr/pub/papers/xleroy-zinc.pdf](https://caml.inria.fr/pub/papers/xleroy-zinc.pdf) Leroy describes the zinc machine and basically a whole ml implementation. Very interesting 
+[https://caml.inria.fr/pub/papers/xleroy-zinc.pdf](https://caml.inria.fr/pub/papers/xleroy-zinc.pdf) Leroy describes the zinc machine and basically a whole ml implementation. Very interesting
 
 Dybvig thesis
 
 Lisp in small pieces of obscure. He is so entrenched as a lisp expert
 
-Henry Baker seems nuts. The Cheney on the MTA 
+Henry Baker seems nuts. The Cheney on the MTA
 
 [https://tidsskrift.dk/brics/article/download/21784/19215](https://tidsskrift.dk/brics/article/download/21784/19215) - Danvy compilter
 
@@ -544,4 +520,3 @@ Henry Baker seems nuts. The Cheney on the MTA
 Leroy Imp to stack machine [https://deepspec.org/event/dsss17/leroy-dsss17.pdf](https://deepspec.org/event/dsss17/leroy-dsss17.pdf) in coq.
 
 [https://semantic-domain.blogspot.com/2020/02/thought-experiment-introductory.html](https://semantic-domain.blogspot.com/2020/02/thought-experiment-introductory.html) Neel Krishnaswami's hypotehtiocal coompiler course
-

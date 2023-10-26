@@ -71,3 +71,9 @@ https://github.com/digama0/mm0
 metamath-lamp https://github.com/digama0/mm0
 
 metamath book
+
+metamath pcc
+drat
+datalog
+prolog
+congruence closure

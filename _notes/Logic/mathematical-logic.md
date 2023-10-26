@@ -4,6 +4,7 @@ title: Mathematical Logic
 ---
 
 - [Well formed formula](#well-formed-formula)
+  - [Three Arrows](#three-arrows)
 - [Lowenheim Skolem](#lowenheim-skolem)
 - [Semantic entailment](#semantic-entailment)
 - [Soundness](#soundness)
@@ -36,6 +37,20 @@ This whole subfolder is about mathematical logic
 - recursion theory
 
 # Well formed formula
+
+## Three Arrows
+
+[Why are in this system *three* notions of “from this follows that” involved: the arrow, the turnstile and the vertical line? Two or infinitely many I could accept, but why *three*?](https://x.com/freekwiedijk/status/1717470234087407984?s=20)
+
+- I think there's kinda a literature (keyword: "metainference") about internalizing the (horizontal?) line as yet another symbol: <https://davewripley.rocks/papers/imst.pdf>, section 2 has the basic idea. Infinite hierarchies aplenty. This is probably a better reference, but it seems to be paywalled: <https://link.springer.com/article/10.1007/s10992-021-09615-7>
+- possibly related, that lower category theory also has three levels: category, functor, natural transformation.
+Yes! But s/category/morphism
+Or: number, function, functional."
+- @freekwiedijk Natural deduction can be formulated to have only two (cf Schroeder-Heister, and that's how Isabelle does it). But proof normalisation is simpler for the sequent calculus
+k An inference line lets you write (to the right) a reference and leave the work to the reader. Frege who came up with the original turnstile in his ConceptScript, also introduced this inference line shorthand (but with the reference to the left
+- reekwiedijk They control where implicit quantification occurs. The turnstile is implicitly wrapped in a universal quantifier for any free variables you have. If you do that yourself, you only need "=>" (and the inference rule modus ponens), and it's called Hilbert deduction.
+- freekwiedijk (|-) is external hom, (=>) is internal hom, (---) is a meta-level operation
+- "meta-level (rules), theory level (judgments), internal level (implications) you can have as many as you want if your brain is big enough to handle more levels. for instance talking about proof theories *inside* a theory will necessitate four levels!"
 
 # Lowenheim Skolem
 
