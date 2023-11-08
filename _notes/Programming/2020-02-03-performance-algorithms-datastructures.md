@@ -105,6 +105,9 @@ Can use vector to store fixed size chunks. Your own private malloc specialized f
 
 ## Stuff
 
+<https://github.com/sharkdp/hyperfine>  benchamrking commandline programs
+<https://github.com/dandavison/chronologer> timeline over git commit
+
 [casey muratori series](https://www.computerenhance.com/)
 
 [cp algorithms](https://cp-algorithms.com/#navigation) competitive programming algorithsm

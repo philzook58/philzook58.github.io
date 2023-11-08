@@ -1,12 +1,7 @@
 ---
 author: philzook58
-comments: true
-date: 2020-09-05 15:12:24+00:00
 layout: post
-link: https://www.philipzucker.com/?p=2960
-slug: CTF stuff
-title: CTF stuff
-wordpress_id: 2960
+title: Binary Analysis & CTF stuff
 ---
 
 - [Reversing](#reversing)
@@ -20,11 +15,12 @@ wordpress_id: 2960
     - [Ghidra](#ghidra)
     - [Angr](#angr)
   - [Patching](#patching)
-  - [Binary reversign](#binary-reversign)
+  - [Binary reversing](#binary-reversing)
 - [Debuggers](#debuggers)
 - [Emulation](#emulation)
   - [Qemu](#qemu)
   - [Fuzzing](#fuzzing)
+    - [AFL](#afl)
   - [Symbolic Execution](#symbolic-execution)
   - [Vulnerabilities](#vulnerabilities)
   - [Windows](#windows)
@@ -138,6 +134,12 @@ Ghidra repackaging:
 [ben's ll2l](https://gitlab.com/delysid/ll2l)
 
 ## Decompiler
+
+ <https://x.com/mahal0z/status/1717600833037377613?s=20> <https://www.zionbasque.com/files/publications/sailr_usenix24.pdf> Ahoy SAILR! There is No Need to DREAM of C: A Compiler-Aware Structuring Algorithm for Binary Decompilation
+Graph schema matching? Smart methodology. Take codebase, decompile, compare number of gotos in original vs decompiled functions. Find hotspots. Binary search for passes responsible
+
+DREAM
+Pheonix
 
 [FoxDec - Formally verified x86-64 decompilation](https://ssrg-vt.github.io/FoxDec/)
 
@@ -699,7 +701,7 @@ with tempfile.NamedTemporaryFile(suffix=".c") as fp:
 
 {% endraw %}
 
-## Binary reversign
+## Binary reversing
 
 <https://corte.si/posts/visualisation/binvis/index.html> hilbert curves for binary vsiualization
 benford's law
@@ -720,6 +722,8 @@ windbg
 # Emulation
 
 [qiling](https://qiling.io/)
+
+[Icicle: A Re-designed Emulator for Grey-Box Firmware Fuzzing](https://arxiv.org/pdf/2301.13346.pdf) <https://github.com/icicle-emu/icicle-emu> semantics powered by sleigh.
 
 ## Qemu
 
@@ -847,7 +851,6 @@ oss-fuzz
 
 Greybox
 
-- AFL.  [AFL++](https://aflplus.plus/) fork of afl [tutorials](https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/tutorials.md). compile using afl-clang-fast++ or use qemu mode.
 - [libfuzzer](https://llvm.org/docs/LibFuzzer.html) `clagg++ -fsantizer=address,fuzzer myfile.cc` [tutorial](https://github.com/google/fuzzing/blob/master/tutorial/libFuzzerTutorial.md)
 - honggfuzz
 
@@ -872,11 +875,39 @@ Write checker. Fuzz it. It's randomized search
 
 [Fuzzgym](https://arxiv.org/abs/1807.07490) makes a lot of sense to put neural heuristics in there
 
-<https://github.com/mykter/afl-training> afl fuzzing training
-
 <https://www.youtube.com/watch?v=sjLFf9q2NRc&ab_channel=FuzzingLabs-PatrickVentuzelo> afl++ qemy
 libfuzzer vs afl vs honggfuzz
 corpus grammar based fuzzing, differential fuzzing
+
+<https://github.com/airbus-cyber/ghidralligator> ghidra for fuzzing
+
+### AFL
+
+AFL.  [AFL++](https://aflplus.plus/) fork of afl
+
+ [tutorials](https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/tutorials.md).
+
+compile using afl-clang-fast++ or use qemu mode.
+
+<https://github.com/mykter/afl-training> afl fuzzing training
+
+<https://afl-1.readthedocs.io/en/latest/user_guide.html>
+
+```bash
+echo "
+int main(){
+  if(x > 0){
+    assert(0);
+  }
+  return 42;
+}" > /tmp/bug.c
+afl-gcc /tmp/bug.c -o /tmp/bug
+afl-fuzz -i /tmp/corpus -o /tmp/out /tmp/bug
+```
+
+AFT qemu
+deferred forkserver
+<https://github.com/AFLplusplus/AFLplusplus/blob/stable/instrumentation/README.persistent_mode.md>
 
 ## Symbolic Execution
 

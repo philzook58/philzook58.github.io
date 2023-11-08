@@ -28,6 +28,7 @@ title: Term Rewriting
   - [Eqlog](#eqlog)
   - [K](#k)
 - [Other Systems](#other-systems)
+- [TRaaT Rust](#traat-rust)
 - [2020 Term rewritng notes](#2020-term-rewritng-notes)
 - [Misc](#misc)
 
@@ -1318,6 +1319,156 @@ RMT - rewriting modfulo theories <https://profs.info.uaic.ro/~stefan.ciobaca/inr
 [](https://github.com/joshrule/term-rewriting-rs)
 
 <https://github.com/comby-tools/comby> comby a rewriting sed tool for languages. Odd.
+
+# TRaaT Rust
+
+<https://www21.in.tum.de/~nipkow/TRaAT/programs/>
+
+```rust
+// https://www21.in.tum.de/~nipkow/TRaAT/programs/trs.ML
+type VName = (String, i32);
+
+#[derive(PartialEq, Eq, Clone, Debug)]
+enum Term {
+    V(VName),
+    T(String, Vec<Term>),
+}
+
+// indom: Checks if a vname is in a substitution
+fn indom(x: &VName, s: &[(VName, Term)]) -> bool {
+    s.iter().any(|(y, _)| x == y)
+}
+
+// app: Applies a substitution to a vname
+fn app(s: &[(VName, Term)], x: &VName) -> Term {
+    for (y, t) in s {
+        if x == y {
+            return t.clone();
+        }
+    }
+    panic!("vname not found in substitution");
+}
+
+// lift: Applies a substitution to a term
+fn lift(s: &[(VName, Term)], term: &Term) -> Term {
+    match term {
+        Term::V(x) => {
+            if indom(x, s) {
+                app(s, x)
+            } else {
+                term.clone()
+            }
+        }
+        Term::T(f, ts) => Term::T(f.clone(), ts.iter().map(|t| lift(s, t)).collect()),
+    }
+}
+
+// occurs: Checks if a vname occurs in a term
+fn occurs(x: &VName, term: &Term) -> bool {
+    match term {
+        Term::V(y) => x == y,
+        Term::T(_, ts) => ts.iter().any(|t| occurs(x, t)),
+    }
+}
+
+fn solve(mut eqs: Vec<(Term, Term)>, mut s: Vec<(VName, Term)>) -> Option<Vec<(VName, Term)>> {
+    while let Some((lhs, rhs)) = eqs.pop() {
+        match (lhs, rhs) {
+            (Term::V(x), t) | (t, Term::V(x))  => {
+              if Term::V(x.clone()) != t {
+                elim(&x, &t, &mut eqs, &mut s)?;
+              }
+            }
+            (Term::T(f, ts), Term::T(g, us)) if f == g => {
+                eqs.extend(ts.into_iter().zip(us));
+            }
+            _ => return None,
+        }
+    }
+    Some(s)
+}
+
+fn elim(
+    x: &VName,
+    t: &Term,
+    eqs: &mut Vec<(Term, Term)>,
+    s: &mut Vec<(VName, Term)>,
+) -> Option<()> {
+    if occurs(x, t) {
+        None
+    } else {
+        let xt_subst = vec![(x.clone(), lift(s, t))];
+        eqs.iter_mut()
+            .for_each(|eq| *eq = (lift(&xt_subst, &eq.0), lift(&xt_subst, &eq.1)));
+        s.iter_mut()
+            .for_each(|sub| *sub = (sub.0.clone(), lift(&xt_subst, &sub.1)));
+        s.push((x.clone(), t.clone()));
+        Some(())
+    }
+}
+
+// unify: Tries to find a unifying substitution for two terms
+fn unify(t1: &Term, t2: &Term) -> Option<Vec<(VName, Term)>> {
+    solve(vec![(t1.clone(), t2.clone())], vec![])
+}
+
+// matchs: Tries to match two terms under a substitution
+fn matchs(mut eqs: Vec<(Term, Term)>, mut s: Vec<(VName, Term)>) -> Option<Vec<(VName, Term)>> {
+    while let Some((lhs, rhs)) = eqs.pop() {
+        match (&lhs, &rhs) {
+            (Term::V(x), t) => {
+                if indom(x, &s) {
+                    if app(&s, x) == *t {
+                        continue;
+                    } else {
+                        return None;
+                    }
+                } else {
+                    s.push((x.clone(), t.clone()));
+                }
+            }
+            (Term::T(f, ts), Term::T(g, us)) if f == g => {
+                eqs.extend(ts.iter().cloned().zip(us.iter().cloned()));
+            }
+            _ => return None,
+        }
+    }
+    Some(s)
+}
+
+// match_term: Wrapper for matchs to match a single term pair
+fn match_term(pat: &Term, obj: &Term) -> Option<Vec<(VName, Term)>> {
+    matchs(vec![(pat.clone(), obj.clone())], vec![])
+}
+
+const NORM: &str = "normal form";
+
+// rewrite: Attempts to rewrite a term using a list of rewrite rules
+fn rewrite(rules: &[(Term, Term)], term: &Term) -> Option<Term> {
+    rules.iter().find_map(|(l, r)| {
+        match_term(l, term)
+            .map(|subst| lift(&subst, r))
+    }).or_else(|| None)
+}
+
+// norm: Normalizes a term by repeatedly applying rewrite until no more rules can be applied
+fn norm(rules: &[(Term, Term)], term: &Term) -> Term {
+    let mut current_term = term.clone();
+    while let Some(new_term) = rewrite(rules, &current_term) {
+        if new_term == current_term {
+            break;
+        }
+        current_term = new_term;
+    }
+    current_term
+}
+
+
+fn main() {
+    println!("Hello, world!");
+}
+
+```
 
 # 2020 Term rewritng notes
 

@@ -29,15 +29,15 @@ title: Software Verification
 - [Memory](#memory)
   - [Memory Safety](#memory-safety)
 - [Misc](#misc)
-    - [Fun old timey books](#fun-old-timey-books)
+  - [Fun old timey books](#fun-old-timey-books)
 - [old model checking notes](#old-model-checking-notes)
   - [wordpress\_id: 879](#wordpress_id-879)
 - [Old Sep Logic](#old-sep-logic)
 - [Old CHC / Invariants](#old-chc--invariants)
-    - [BTOR2](#btor2)
+  - [BTOR2](#btor2)
 - [Resources](#resources)
-    - [What is a query?](#what-is-a-query)
-    - [Program Verification](#program-verification)
+  - [What is a query?](#what-is-a-query)
+  - [Program Verification](#program-verification)
   - [Tricks](#tricks)
 - [Ideas](#ideas)
 
@@ -263,6 +263,16 @@ Stackifty algorithm of llvm for wasm
 
 WhyML <http://why3.lri.fr/python/>
 
+Standard library reference
+<https://why3.lri.fr/stdlib/>
+
+Commands:
+`why3`
+
+why3 prove -P z3
+
+why3 execute -use=ModulName
+
 #### frama-C
 
 Frama-C <https://frama-c.com/>
@@ -288,12 +298,14 @@ verified software toolchain
 <https://vst.cs.princeton.edu/>
 
 ### Assembly
+
 [bil-to-boogie](https://github.com/UQ-PAC/bil-to-boogie-translator) By god they did it.
 BinSec
 Cbat
 ghihorn
 
 arguably all symbolic execution engines - the trick is to cut loops
+
 # Invariants
 
 ## CEGAR
@@ -314,7 +326,9 @@ Tagged memory separating heap and stack. Chaos when gets confused. Does pointer 
 
 [Synthesizing an Instruction Selection Rule Library from Semantic Specifications](https://pp.ipd.kit.edu/uploads/publikationen/buchwald18cgo.pdf)
 [A Formal Model of a Large Memory that Supports Efficient Execution](https://www.cs.utexas.edu/users/hunt/FMCAD/FMCAD12/014.pdf)
+
 ## Memory Safety
+
 [Beyond the PDP-11: Architectural support for a memory-safe C abstract machine](https://www.cl.cam.ac.uk/research/security/ctsrd/pdfs/201503-asplos2015-cheri-cmachine.pdf)
 Diehard allocator
 [The meaning of memory safety](https://arxiv.org/abs/1705.07354)
@@ -323,8 +337,6 @@ Noninterferece as memory safety. The details of malloc should not leak
 [In Memory Safety, The Soundness Of Attacks Is What Matters*](https://openwall.info/wiki/_media/people/jvanegue/files/soundness_of_attacks.pdf)
 [RUDRA: Finding Memory Safety Bugs in Rust  at the Ecosystem Scale](https://taesoo.kim/pubs/2021/bae:rudra.pdf)
 [is memory safety still a concern](https://www.cs.columbia.edu/~mtarek/files/candidacy_exam_syllabus.pdf)
-
-
 
 # Misc
 
@@ -778,8 +790,8 @@ They are also represented by transition diagrams, but the acceptance condition i
 LTL - Linear Temporal Logic. This is one logic for describing properties of a transition system. It consists of ordinary boolean logic combined with temporal operators, X F G and U (which are not necessarily independent of the others). Each state in the transition systems is labelled with which propositions are true in that state. $latex G \phi$ is true if that statement $phi$ is true on all possible states you could end up on forever. $latex F \phi$ is true if you always enter a state at some point for which $latex \phi$ is true. In other words $latex \phi$ is eventually true. $latex X \phi$ is true if in the next state $latex \phi$ is true.
 
 # Old Sep Logic
-https://cs.nyu.edu/~wies/software/grasshopper/
-https://github.com/wies/grasshopper
+<https://cs.nyu.edu/~wies/software/grasshopper/>
+<https://github.com/wies/grasshopper>
 "GRASShopper is an experimental verification tool for programs that manipulate dynamically allocated data structures. GRASShopper programs can be annotated with specifications expressed in a decidable specification logic to check functional correctness properties. The logic supports mixing of separation logic and first-order logic assertions, yielding expressive yet concise specifications."
 
 <https://blog.sigplan.org/2020/03/03/go-huge-or-go-home-popl19-most-influential-paper-retrospective/>

@@ -3,19 +3,31 @@ layout: post
 title: Mathematical Logic
 ---
 
-- [Well formed formula](#well-formed-formula)
+- [Motivations](#motivations)
+- [Generic Concepts](#generic-concepts)
   - [Three Arrows](#three-arrows)
-- [Lowenheim Skolem](#lowenheim-skolem)
-- [Semantic entailment](#semantic-entailment)
-- [Soundness](#soundness)
-- [Completeness](#completeness)
-- [Compactness](#compactness)
-- [Consistency](#consistency)
+- [Propositional Logic](#propositional-logic)
+- [First Order Logic](#first-order-logic)
+  - [WFF](#wff)
+  - [Quantifiers](#quantifiers)
+  - [Semantic entailment](#semantic-entailment)
+  - [Soundness](#soundness)
+  - [Completeness](#completeness)
+  - [Lowenheim Skolem](#lowenheim-skolem)
+  - [Compactness](#compactness)
+  - [Consistency](#consistency)
+- [Equational Logic](#equational-logic)
 - [Set Theory](#set-theory)
-  - [Ordinals](#ordinals)
-  - [ZFC](#zfc)
-  - [NBG](#nbg)
-  - [Axiom of Choice](#axiom-of-choice)
+  - [Families of sets](#families-of-sets)
+    - [Ordinals](#ordinals)
+    - [Axiom of Choice](#axiom-of-choice)
+    - [Forcing](#forcing)
+  - [Axiomatizations](#axiomatizations)
+    - [ZFC](#zfc)
+    - [NBG](#nbg)
+    - [Grothendieck Tarksi](#grothendieck-tarksi)
+    - [New Foundations](#new-foundations)
+  - [Filters](#filters)
 - [Model thoery](#model-thoery)
   - [Finite Model Theory](#finite-model-theory)
     - [Fixed point logic](#fixed-point-logic)
@@ -36,11 +48,36 @@ This whole subfolder is about mathematical logic
 - Proof theory
 - recursion theory
 
-# Well formed formula
+# Motivations
+
+Euclidean Geometry
+
+<https://plato.stanford.edu/entries/logic-firstorder-emergence/>
+
+Arithmetic, Algebra, Calculus. Highly developed but nonrigorous by modern standards. Logic is highly genralized algebra
+
+Boole
+Quantifiers. They really do have histrocial roots in sums $\Sigma$ and products $\Pi$.
+
+The _really_ infinite. Not just bigger and bigger finite things. The closure. Naive set theory emerged in the late 1800s. THere is way more structure in the infinite than might be assumed from simple limit notions in calculus. Considering the infinite as a legitimate entity is akin to considering 0, the negative numbers, complex numbers, non-euclidean geometry as legitamate entities with their own rules. It is quite easy to lead yourself astray without carefulness. Perhaps half of mathematics is fixated on the infinite, something which has close to little application.
+
+Russell's Paradox
+Hilbert's Program
+
+# Generic Concepts
+
+syntax
+semantics
+completeness
+soundness
+consistency
+
+inference rules
+axiom schema
 
 ## Three Arrows
 
-[Why are in this system *three* notions of “from this follows that” involved: the arrow, the turnstile and the vertical line? Two or infinitely many I could accept, but why *three*?](https://x.com/freekwiedijk/status/1717470234087407984?s=20)
+[Why are in this system _three_ notions of “from this follows that” involved: the arrow, the turnstile and the vertical line? Two or infinitely many I could accept, but why _three_?](https://x.com/freekwiedijk/status/1717470234087407984?s=20)
 
 - I think there's kinda a literature (keyword: "metainference") about internalizing the (horizontal?) line as yet another symbol: <https://davewripley.rocks/papers/imst.pdf>, section 2 has the basic idea. Infinite hierarchies aplenty. This is probably a better reference, but it seems to be paywalled: <https://link.springer.com/article/10.1007/s10992-021-09615-7>
 - possibly related, that lower category theory also has three levels: category, functor, natural transformation.
@@ -50,19 +87,104 @@ Or: number, function, functional."
 k An inference line lets you write (to the right) a reference and leave the work to the reader. Frege who came up with the original turnstile in his ConceptScript, also introduced this inference line shorthand (but with the reference to the left
 - reekwiedijk They control where implicit quantification occurs. The turnstile is implicitly wrapped in a universal quantifier for any free variables you have. If you do that yourself, you only need "=>" (and the inference rule modus ponens), and it's called Hilbert deduction.
 - freekwiedijk (|-) is external hom, (=>) is internal hom, (---) is a meta-level operation
-- "meta-level (rules), theory level (judgments), internal level (implications) you can have as many as you want if your brain is big enough to handle more levels. for instance talking about proof theories *inside* a theory will necessitate four levels!"
+- "meta-level (rules), theory level (judgments), internal level (implications) you can have as many as you want if your brain is big enough to handle more levels. for instance talking about proof theories _inside_ a theory will necessitate four levels!"
 
-# Lowenheim Skolem
+# Propositional Logic
 
-<https://en.wikipedia.org/wiki/L%C3%B6wenheim%E2%80%93Skolem_theorem>
-For infinite models, there are always bigger and smaller models.
+<https://en.wikipedia.org/wiki/Propositional_calculus>
+Sentential Logic. 0th order
 
-Lindstrom's theorem
+Truth tables
+Completeness
+Compactness - infinite formula. Why? How infinite?
+Intuitionistic prop logic
 
-<https://en.wikipedia.org/wiki/Skolem%27s_paradox> Skolem's paradox.
-Set theory says there are uncountable sets, but set theory is expressed in countable language
+```lean
+-- just a sketch. Doesn't compile.
+-- wff.
+inductive Prop0 where
+  Atom : String -> Prop0
+  Impl : Prop0 -> Prop0 -> Prop0
 
-# Semantic entailment
+-- Every expressible formula is good.
+def wff : Set Prop0 := fun x => True
+
+-- starting from strings. Note that the above Prop0 and the parse proof tree are quite similar.
+inductive wff' : String -> Prop
+  | atom : forall x, is_ascii x -> wff' x
+  | impl : (x y : String) -> wff' x -> wff' y -> wff' (x ++ " -> " ++ y)
+
+def Env := String -> Bool
+
+-- a semantic function
+def sem prop env : Bool :=
+  match prop with
+  | Atom s => env s
+  | Impl x y => sem x env -> sem y env 
+-- a semantic relation
+-- inductive sem : Prop0 -> Env -> Bool -> Prop where
+
+```
+
+```metamath
+
+```
+
+```z3
+; deep embedded vampire
+(declare-sort Formula)
+(declare-fun atom (String) Formula)
+(declare-fun impl (Formula Formula) Formula)
+()
+
+```
+
+Categorical Flavored  
+Double line is fun metalevel "equality" / biimplication
+Solvers are nice for determining which axiom sets are equivalent.
+
+```
+a /\ b |- c
+===========
+a |- b => c
+```
+
+Could be written as
+
+```
+a /\ b |- c = a |- b => c
+```
+
+Proof relevance vs irrelevance. LCF style vs Proof carrying style.
+
+Hilbert style
+Interpolation
+
+Logical equivalence - kind of a bad name. A semantic notion of equivalence
+Conservative extension. Adding in new propositions.
+Equisatisfiability - two formulas are equisatisfiable if one is satisfiable iff the other is satisfiable. Could involve changing the signature. Are two unsatsfiable things equisatsifiable?
+
+There isn't a global universal notion of comparing two theories or systems. The comparison is a defined entity. It gets confusing when the two systems seem nearly the same (signatures that are subsets of each other, sharing inference rules). We could talk about `<->` being the same as `/\` in some other system, or made up names like pirate ship. You need to always specify a universe of discourse basically.
+
+Mathemtival logic is tryng to look past your intuition to see the formal symbol moving systems as they are. But contradictorily, these systems are only interesting because they correspond to some form of intuition or philosophical notions. Unless you're just a symbol crunching psycho.
+
+# First Order Logic
+
+Framework vs logic vs theory. Is there a distinction?
+Chris once corrected me saying FOL is a framework. Some useful syntactic infrastrcture for talking about / embedding more interesting theories (and getting various theorem proving strategies). However, it appears by completeness and lowenheim skolem to be intmiately related to sets. So perhaps FOL is a kind of weak theory of sets or a weak theory of comprehensions (like taking python comprehensions and allowing them to be highly (uncountably) infinite).
+
+<https://math.stackexchange.com/questions/176263/is-first-order-logic-fol-the-only-fundamental-logic?rq=1>
+
+EPR (effectively propositional reasoning)
+Many sorted, order sorted
+
+[Formalizing Basic First Order Model Theory - Harrison](https://www.cl.cam.ac.uk/~jrh13/papers/model.html)
+
+## WFF
+
+## Quantifiers
+
+## Semantic entailment
 
 `|=` is used in different ways
 
@@ -73,17 +195,38 @@ Set theory says there are uncountable sets, but set theory is expressed in count
 Model's are often treated less carefully. We agree the integers are a thing. Formulas we are sticklers about
 Models are shallow embedded, formulas are deep embedded
 
-# Soundness
+## Soundness
 
 G |- x  --> G |= x
 
 Syntactic rules are obeyed in models.
 
-# Completeness
+## Completeness
 
 G |= x --> G |- x
 
-# Compactness
+## Lowenheim Skolem
+
+<https://en.wikipedia.org/wiki/L%C3%B6wenheim%E2%80%93Skolem_theorem>
+For infinite models, there are always bigger and smaller models.
+This is possibly a failure of expressivity of FOL, similar in flavor to the inability to express transitivity precisely.
+
+Lindstrom's theorem
+
+<https://en.wikipedia.org/wiki/Skolem%27s_paradox> Skolem's paradox.
+Set theory says there are uncountable sets, but set theory is expressed in countable language
+
+Lowenheim spoke of "counting formulae". Perhaps one can try to "perform" the sums and products with the result being cardinals.
+
+Herbrandization and skolemization. These processes change the signature (constants / function symbols) at play, so they can't be strongly equivalent. They work at the level of conservative extensions.
+
+```
+T |- phi_s  <-> T |- phi
+T_h |- phi  <-> T |- phi
+
+```
+
+## Compactness
 
 Infinite families of sentences
 
@@ -93,7 +236,15 @@ Infinite graphs?
 
 A proof only uses a finite number of axioms (?)
 
-# Consistency
+## Consistency
+
+# Equational Logic
+
+See also note on term rewriting
+Algebra
+
+Equational logic is about simple equational manipulations.
+FOL has a first class notion of universal quantification. Equational logic instead has a schematic notion of universal. Axioms can have variables in them which are distinct from 0-ary constants
 
 # Set Theory
 
@@ -150,8 +301,6 @@ ZF.theorem("empty_unique", ForAll([y], Implies(ForAll([x,y], Not(elem(x, y))), y
 
 Schroder-Bernstein Theorem
 
-Forcing
-
 [hereditarily finite sets](https://en.wikipedia.org/wiki/Hereditarily_finite_set)
 set who's elements are also hereditarily finite. set of sets of sets of ... empty set
 finitary set theory
@@ -176,22 +325,55 @@ It is interesting that induction and recursion are principles/theorems and not a
 Induction
 The recursion theorem. A sequence of equations feel like they define a function. Using the principle of specification, we can define get a set of tuples that satisfy the equations. Being a function requires covering the domain and uniqueness of the output. These are theorems that must be proved. It turns out that simple recursion over naturals does define a function.
 
-Families of sets.
-
 Peano inside set theory.
+
+## Families of sets
+
+indexed sets
 
 ### Ordinals
 
 A well ordered set is a set combined with a well order on it.
 Order isomporphic things are the ordinals
 
-A generalizatin of counting or position
+A generalizatin of counting or position. In programming, it does come up whether we can index into a type. An infinitary generalization of this
 
 Von Neummann, ordinal is the set of all things less than that ordinal.
 
 Ordinals are totally ordered?
 
 [Transfinite induction](https://en.wikipedia.org/wiki/Transfinite_induction)
+
+<https://en.wikipedia.org/wiki/Von_Neumann_universe> von neumann universe. The class of all hereditarily well founded sets
+Rank - smallest ordinal greater than all members of set
+
+Burali Forti paradox. Related to Type in Type
+
+<https://math.stackexchange.com/questions/1343527/principle-of-transfinite-induction?rq=1>
+The ordinals are what you get when you use successor and supremum indefinitely
+
+### Axiom of Choice
+
+Well ordering principle
+Zorn's Lemma <https://en.wikipedia.org/wiki/Zorn%27s_lemma>
+[Choiceless Grapher Diagram creator for consequences of the axiom of choice (AC).](https://cgraph.inters.co/)
+Axioms of dependent choice
+
+<https://en.wikipedia.org/wiki/Diaconescu%27s_theorem> axiom of choice implies excluded middle
+
+Weaker notions
+<https://en.wikipedia.org/wiki/Axiom_of_countable_choice>
+<https://en.wikipedia.org/wiki/Axiom_of_dependent_choice>
+
+### Forcing
+
+Continuum hypothesis
+
+<https://xavierleroy.org/CdF/2018-2019/7.pdf> Forcing : just another program transformation? Leroy
+
+Timothy Chow beginner's guide to to forcing <http://timothychow.net/forcing.pdf>
+
+## Axiomatizations
 
 ### ZFC
 
@@ -207,18 +389,19 @@ Finite axiomatization? As in no schema? That's crazy.
 <https://cstheory.stackexchange.com/questions/25127/what-paradigm-of-automated-theorem-proving-is-appropriate-for-principia-mathemat>
 metamath is all schemata?
 
-### Axiom of Choice
+### Grothendieck Tarksi
 
-Well ordering principle
-Zorn's Lemma <https://en.wikipedia.org/wiki/Zorn%27s_lemma>
-[Choiceless Grapher Diagram creator for consequences of the axiom of choice (AC).](https://cgraph.inters.co/)
-Axioms of dependent choice
+### New Foundations
 
-<https://en.wikipedia.org/wiki/Diaconescu%27s_theorem> axiom of choice implies excluded middle
+## Filters
 
-Weaker notions
-<https://en.wikipedia.org/wiki/Axiom_of_countable_choice>
-<https://en.wikipedia.org/wiki/Axiom_of_dependent_choice>
+<https://math.uchicago.edu/~may/REU2018/REUPapers/Higgins.pdf>
+Filters are collections of sets closed under subset and finite intersection
+Ultrafilters are filters for which either a set or it's complement are in the filter
+A notion of largeness is being nside an ultrafilter
+
+Relation to hypperreals / non standard analysis
+compactness
 
 # Model thoery
 

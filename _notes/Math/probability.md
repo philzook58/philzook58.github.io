@@ -5,6 +5,14 @@ title: Probability
 
 - [Graphical Models](#graphical-models)
 - [Statistics](#statistics)
+  - [Bayesian](#bayesian)
+- [Distributions](#distributions)
+- [Mathematical](#mathematical)
+
+See also:
+
+- Discrete math / combinatorics
+-
 
 # Graphical Models
 
@@ -39,3 +47,43 @@ Combinatorics
 Markov decision processes
 Monte carlo algos
 las vegas algos
+
+## Bayesian
+
+bayesian vs freqeuntist
+Priors as regularization
+
+# Distributions
+
+Gaussian
+Poisson
+Binomial
+
+# Mathematical
+
+<https://en.wikipedia.org/wiki/Cox%27s_theorem>
+
+```python
+from z3 import *
+E = Sort("Event")
+P = Function("P", E, RealSort())
+
+# Proof system for probability theory?
+```
+
+<https://en.wikipedia.org/wiki/Probability_axioms> Kolmogorov axioms
+
+Sets and probability. You need to know an ambient space X to be working in.
+
+<https://en.wikipedia.org/wiki/Probabilistic_logic>
+
+[Law of Total Probability](https://en.wikipedia.org/wiki/Law_of_total_probability)
+$P(A) = \sum P(A \cap B_i) = \sum P(A | B_i) P(B_i)$
+if $B_i$ is a partition of the sample space
+
+<https://en.wikipedia.org/wiki/Law_of_total_expectation>
+
+Central limit theorem
+
+Markov bound
+Chernoff bound

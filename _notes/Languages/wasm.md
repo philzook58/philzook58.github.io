@@ -10,53 +10,52 @@ title: Wasm/Emscripten
     - [Wasm modules](#wasm-modules)
     - [Writing Wasm directly](#writing-wasm-directly)
 - [Emscripten](#emscripten)
-    - [Command line Utility Conversion](#command-line-utility-conversion)
-    - [Souffle](#souffle)
+  - [Command line Utility Conversion](#command-line-utility-conversion)
+  - [Souffle](#souffle)
   - [Minizinc](#minizinc)
 - [Misc](#misc)
 
-
 sqlite fuzzler
-
-
 
 # WASM
 
 [walloc](https://github.com/wingo/walloc) minimal malloc implementation for wasm. Makes for very small binary?
 
 <https://medium.com/swlh/a-suduko-solving-serverless-endpoint-using-webassembly-and-or-tools-df9f7bb10044>
-https://github.com/google/or-tools/pull/2404
+<https://github.com/google/or-tools/pull/2404>
 
 [walrus](https://docs.rs/walrus/latest/walrus/) webassembly transformation library in rust
 
 [awesome wasm tools](https://github.com/vshymanskyy/awesome-wasm-tools)
 
-
 [program analysis for web assembly](https://2022.ecoop.org/home/paw-2022#event-overview)
 
-https://bytecodealliance.org/
+<https://bytecodealliance.org/>
 
-wasmtime - run we assembly outside the 
+wasmtime - run we assembly outside the
 cranelift - optimized code generator for jit and aot. experimental backend to rust.
 wamr - webassembly micro runtime. interpeter for embedded and resource constrained
 enarx - trusted xecutin environment
 
-
 ## WASI
+
 Webassembly system interface
 
 ### WABT
-(likely wascally wabbit) Web assembly binary toolkit
-sudo apt install wabt 
 
-wasm2c - decompiled version
+(likely wascally wabbit) Web assembly binary toolkit
+sudo apt install wabt
+
 wasm2wat - binary totextual
 wat2wasm - textual to binary
 wasm-interp - interpet wasm
 wasm-objdump - look at disassembly alongside bits
+wasm-decomp
 
+wasm2c - makes wasm file compilable by C cmpiler. Not sure how much partial evaluation it does. I think it uses a wasm runtime still? Sandboxing still? Interesting target for rewriting.
 
-### Running 
+### Running
+
 wasmer vs wasmtime? <https://wasmtime.dev/>
 <https://github.com/wasm3/wasm3> another competitor? An interpeter?
 
@@ -76,6 +75,7 @@ default wasmer is run. -i is invoke
 <https://github.com/AssemblyScript/wabt.js> a port of wabt to assemblyscript
 
 ### Wasm modules
+
  interesting fields in module
  state
  memory
@@ -84,16 +84,10 @@ default wasmer is run. -i is invoke
  tables
  funcs
 
-
-
-
-
-
-
-
 <https://wapm.io/> package manager - runs examples in browser?
 
 ### Writing Wasm directly
+
 Named parameters vs anonymous.
 Stack style vs "lispy" style
 
@@ -103,10 +97,10 @@ Stack style vs "lispy" style
 - <https://blog.scottlogic.com/2019/05/17/webassembly-compiler.html> - making a webassembly compiler
 
 Books:
+
 - <https://livebook.manning.com/book/webassembly-in-action/chapter-1/>
 - Oreilly book is most current one?
 - The Art of Webassembly - no starch press
-
 
 ```wat
  (; block comment ;)
@@ -158,16 +152,13 @@ export internal definitions
 wasi-sdk vs emscripten vs binaryen
 WASI I guess is kind of like POSIX system calls or libc in some respects?
 
-
 Ok you can directly execute .wat files
 wat2wasm --debug-names puts debug names into Custom section of wasm file
 
 <https://wasdk.github.io/wasmcodeexplorer/> explore web assembly binary. highlights different pieces
 <https://webassembly.studio/>
 
-
 assemblyscript - an annotated version of typescript that compiles directly-ish to wasm
-
 
 binaryen - an optmizing compiler that accepts some kind of cfg or wasm. Has C api.
 wasm-opt will optimize wasm for me
@@ -179,13 +170,13 @@ Finicky process.
 There are sections in the above books about this
 C++ exceptions and threads are something to look for.
 
-
 Tips:
-- `emccmake cmake yada yada`
 
+- `emccmake cmake yada yada`
 
 You may need to puts flags into cmake projects.
 You may need to shield things in your code undo macros
+
 ```
 #ifndef EMSCRIPTEN
 
@@ -215,60 +206,60 @@ var Module = {
 <script src="myemscrtipt.js"></script>
 ```
 
-
 You can add arguments, add to the file system, etc.
 
-You may not want to thing to run as soon as the script tag is run. There is 
+You may not want to thing to run as soon as the script tag is run. There is
 
 `-sMODULARIZE` is a linking option
 
-emcmake cmake -DCMAKE_EXE_LINKER_FLAGS="-sEXPORTED_RUNTIME_METHODS=ccall,cwrap -sEXPORTED_FUNCTIONS=_main" 
+emcmake cmake -DCMAKE_EXE_LINKER_FLAGS="-sEXPORTED_RUNTIME_METHODS=ccall,cwrap -sEXPORTED_FUNCTIONS=_main"
 
 ### Souffle
+
 emcmake cmake -S . -B build_wasm -DSOUFFLE_USE_SQLITE=OFF -DSOUFFLE_USE_OPENMP=OFF -DSOUFFLE_USE_ZLIB=OFF -DSOUFFLE_USE_LIBFFI=OFF -DSOUFFLE_USE_CURSES=OFF -DSOUFFLE_ENABLE_TESTING=OFF -DSOUFFLE_TEST_EVALUATION=OFF
 
 -Wno-error
 
 -DCMAKE_BUILD_TYPE=MinSizeRel
 
-Needed to go into src/CMakeLists.txt and remove -Werror from 
-
+Needed to go into src/CMakeLists.txt and remove -Werror from
 
 Is it actually using my flag?
 
 cd /home/philip/Documents/prolog/souffle/build_wasm/src && /usr/bin/cmake -E cmake_link_script CMakeFiles/souffle.dir/link.txt --verbose=1
 /home/philip/Documents/prolog/emsdk/upstream/emscripten/em++  -sMAIN_MODULE=2 -stdlib=libc++ -O3    -fuse-ld=lld -lc++abi @CMakeFiles/souffle.dir/objects1.rsp  -o souffle.js @CMakeFiles/souffle.dir/linklibs.rsp
 
-
 Todo:
 Support dlopen. MAIN_MODULE=2 somehow should work but maybe need -fpic on entire build?
 
 Modularize=1 was important to get multiple runs independent
---no-proprocessor 
+--no-proprocessor
 -D -
 Exposing the filesystem
 
 It turns out link flags is where you put this stuff in cmake file. makes sense.
 
 I believe you can renamed the module
-https://stackoverflow.com/questions/33623682/how-to-use-fs-when-modularize-and-export-name-are-used-in-emscripten
+<https://stackoverflow.com/questions/33623682/how-to-use-fs-when-modularize-and-export-name-are-used-in-emscripten>
 -s EXPORT_NAME="'SOUFFLE'"
 
-
 ## Minizinc
+
 It just worked. Incredible
 Runnnig the file didn't do anything.
-I needed to do 
+I needed to do
+
 ```
 const lib = require("./minizinc.js");
 //var MINIZINC = {arguments: ["--help"]};
 console.log(lib());
 ```
+
 on node
 
 It seems like it was grabbing my node parameters.
 
-In the browser, I was able to load in and pass in a Module object 
+In the browser, I was able to load in and pass in a Module object
 MINIZINC({arguments : ["--help"]})
 
 Trying to build gecode
@@ -276,14 +267,15 @@ emcconfigure ../configure
 emmake make -j8
 
 gecode build suggestions for emscripten
-https://github.com/Gecode/gecode/issues/67
+<https://github.com/Gecode/gecode/issues/67>
 Hmm. They build a minizinc for wasm somewhere
-https://gitlab.com/minizinc/minizinc-js
-https://www.npmjs.com/package/minizinc/v/1.0.4-alpha.77
+<https://gitlab.com/minizinc/minizinc-js>
+<https://www.npmjs.com/package/minizinc/v/1.0.4-alpha.77>
 
 Ah I need release/6.3.0 branch which has the const fix.
 
 # Misc
+
 [MSWasm: Soundly Enforcing Memory-Safe Execution of Unsafe Code](https://arxiv.org/pdf/2208.13583.pdf)
 
 <https://github.com/AlexAltea/capstone.js>
@@ -293,33 +285,28 @@ Ah I need release/6.3.0 branch which has the const fix.
 
 Wasm baby
 
-https://www.minizinc.org/doc-2.5.5/en/installation_detailed_wasm.html minizinc
+<https://www.minizinc.org/doc-2.5.5/en/installation_detailed_wasm.html> minizinc
 graphviz
-or-tools https://github.com/google/or-tools/pull/2404/files
-
+or-tools <https://github.com/google/or-tools/pull/2404/files>
 
 The wasm reference interpeter is in ocaml
-https://github.com/WebAssembly/spec/tree/master/interpreter
-
+<https://github.com/WebAssembly/spec/tree/master/interpreter>
 
 What could be cool?
 SAT solver
 
+Analysis on wasm
+<https://github.com/synacktiv/toy-wasm-symbexp> toy symbolic executor in haskell
 
-Analysis on wasm 
-https://github.com/synacktiv/toy-wasm-symbexp toy symbolic executor in haskell
-
-https://github.com/WebAssembly/wabt binary toolkit
-
+<https://github.com/WebAssembly/wabt> binary toolkit
 
 How do you just run a command line tool in the browser?
 
-https://kripken.github.io/llvm.js/demo.html
+<https://kripken.github.io/llvm.js/demo.html>
 
-
-compiling miniznic 
+compiling miniznic
 source yadayada./emsdk_env.sh
-https://www.minizinc.org/doc-2.5.5/en/installation_detailed_wasm.html
+<https://www.minizinc.org/doc-2.5.5/en/installation_detailed_wasm.html>
 
 mkdir build
 cd build
@@ -335,22 +322,20 @@ Module, FS
 
 [wasmcloud](https://wasmcloud.com/)
 
-https://stackoverflow.com/questions/48292269/how-can-i-run-an-interactive-program-compiled-with-emscripten-in-a-web-page
+<https://stackoverflow.com/questions/48292269/how-can-i-run-an-interactive-program-compiled-with-emscripten-in-a-web-page>
 
-https://browsix.org/
+<https://browsix.org/>
 
-https://xtermjs.org/
+<https://xtermjs.org/>
 
-https://bellard.org/jslinux/
+<https://bellard.org/jslinux/>
 
-https://microsoft.github.io/monaco-editor/
+<https://microsoft.github.io/monaco-editor/>
 
 <https://github.com/jcubic/jquery.terminal> - for making web based terminals. Alternaitve for some pruposes to xterm.js
 
-
 <https://news.ycombinator.com/item?id=29376105> compiling stock python to wasm
 pyiodide
-
 
 [cheerp](https://leaningtech.com/cheerp/) - an alternative to emscripten?
 
@@ -358,9 +343,7 @@ pyiodide
 
 [virtual x86](https://copy.sh/v86/) a similar open source project but slower?
 
-[postgres wasm](https://news.ycombinator.com/item?id=33067962) 
-
-
+[postgres wasm](https://news.ycombinator.com/item?id=33067962)
 
 sqlite fiddle
 
@@ -368,6 +351,6 @@ sqlite fiddle
 
 Wave - a verified wasi interface
 
-https://news.ycombinator.com/item?id=33385007 cowasm? another emscrtipen alternative based on zig somehw?
+<https://news.ycombinator.com/item?id=33385007> cowasm? another emscrtipen alternative based on zig somehw?
 
 [tangle](https://github.com/kettle11/tangle) autosyncing of wasm state across multiple comps

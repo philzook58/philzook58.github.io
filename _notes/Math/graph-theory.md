@@ -767,9 +767,20 @@ GGL <https://www.tbi.univie.ac.at/software/GGL/> graph grammar obrary. Built on 
 [PORGY](https://porgy.labri.fr/) <https://www.youtube.com/watch?v=D_YHlXawg9o&ab_channel=GReTASeminar>
 
 [GRAPE](https://github.com/jenshweber/grape)
-[verigraph](https://github.com/Verites/verigraph)
+[verigraph](https://github.com/Verites/verigraph) <https://link.springer.com/chapter/10.1007/978-3-319-75396-6_9>
 
 [galoisenne](https://github.com/breandan/galoisenne) Lots of cool links
+
+<https://github.com/AlgebraicJulia/AlgebraicRewriting.jl> catlab. C-Set rewriting.
+<https://arxiv.org/abs/2111.03784> Computational category-theoretic rewriting. A generalization of graph rewriting?
+Typed graphs.
+
+Table 1
+AGG[34] Y N S N 2017 Y N Both
+Groove[27] Y N S N 2021 Y N App
+Kappa[14] N N N 2021 Y Y App
+VeriGraph[1] Y N D Y 2017 N Y Lib
+ReGraph[13]
 
 Chemical rewriting "Chemical Graph Transformation and Applications" <https://www.youtube.com/watch?v=mzIXfsp-eJE&ab_channel=GReTASeminar>
 SMILES is a graph. chemical databases. See note on chemistry

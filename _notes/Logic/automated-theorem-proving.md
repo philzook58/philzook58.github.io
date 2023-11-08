@@ -28,6 +28,7 @@ title: Automated Theorem Proving
   - [Datalog vs ATP](#datalog-vs-atp)
   - [Prolog vs ATP](#prolog-vs-atp)
   - [ATP vs ITP](#atp-vs-itp)
+- [Imandra](#imandra)
 - [Strategies](#strategies)
 - [Methodology](#methodology-1)
   - [Unification](#unification)
@@ -843,6 +844,16 @@ Prolog `=` is unification. ATP `=` is rewrite/semantical.
 
 ```
 
+# Imandra
+
+I don't know if this really belongs in this note
+Imandra is like ACL2 for ocaml I think
+python interface
+
+```python
+import imandra
+```
+
 # Strategies
 
 Relationship to focusing <http://web4.ensiie.fr/~guillaume.burel/download/LFAT.pdf>
@@ -893,6 +904,60 @@ UR-resolution - unit-resulting resolution. Only perform resultion if it results 
 SLD resolution is ATP view of prolog.
 
 Factoring
+
+```python
+# Ground resolution
+from typing import Any
+
+Form = Any
+Lit = Tuple[bool,Form]
+Clause = Set[Lit]
+
+def factor(c, i1, i2):
+    (pos1, fm1) = c1[i1]
+    (pos2, fm2) = c2[i2]
+    assert pos1 != pos2
+    assert fm1 == fm2
+    res = []
+    for i,x in enumerate(c1) 
+        if i != i1 and i != i2:
+            res.append(x)
+    return res
+
+def resolve(c1,i1, c2, i2):
+    (pos1, fm1) = c1[i1]
+    (pos2, fm2) = c2[i2]
+    assert pos1 != pos2
+    assert fm1 == fm2
+    res = []
+    for i,x in enumerate(c1) 
+        if i != i1:
+            res.append(x)
+    for i,x in enumerate(c2) 
+        if i != i2:
+            res.append(x)
+    return sorted(res)
+
+processed = []
+unprocessed = []
+
+def resolve_cand(lit):
+    lit2 = (not lit[0], lit)
+    for c in processed:
+        if lit2 in c:
+            
+while len(unprocessed) != 0:
+    c = unprocessed.pop()
+    for lit in c:
+        resolve_cand(lit)
+        cnew = resolve(c,i,c, i2)
+        if cnew not in processed:
+            unprocessed.append(cnew)
+
+Index = Dict[Lit,Set[Clause]]
+
+
+```
 
 ## Subsumption
 

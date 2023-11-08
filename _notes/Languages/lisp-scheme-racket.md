@@ -54,6 +54,8 @@ Gerbil is a system on top of Gambit approximately similar to racket
 
 [Pre-Scheme: A Scheme Dialect for Systems Programming](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.3.4031&rep=rep1&type=pdf)
 
+<https://gitlab.com/spritely/guile-hoot> hoot is scheme to wasm
+
 ### Minikanren
 
 <http://minikanren.org/>

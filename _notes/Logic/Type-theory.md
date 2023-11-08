@@ -11,6 +11,7 @@ title: Type Theory
   - [Simply Typed lambda Calculus (STLC)](#simply-typed-lambda-calculus-stlc)
   - [System T](#system-t)
   - [System F](#system-f)
+  - [F Omega](#f-omega)
   - [CoC](#coc)
     - [CiC](#cic)
   - [PTS](#pts)
@@ -250,9 +251,76 @@ typechecking stlc does not have the binding issues you might expect of a lambda 
 
 ## System F
 
+<https://en.wikipedia.org/wiki/System_F>
+
+polymorphic lambda calculus
+
 Lambda2
 Terms can depend on types. Big Lambda /\
 (al types can dpeend on types)
+
+[THE SYSTEM F OF VARIABLE TYPES, FIFTEEN YEARS LATER - Girard](https://core.ac.uk/download/pdf/82258639.pdf)
+System F is developed on as a intuitionistic second order arithmetic like how system T is first order.
+
+Data types are definable.
+Strongly normalizaing
+
+System F as dependent types. Type variables could be runtime data, just a special class of them. In that case, the polymorphic signature of a function is a dependent type.
+
+Reynolds [towards a theory of type structure](https://www.cs.cmu.edu/afs/cs/user/jcr/ftp/theotypestr.pdf)
+From the get go, considering the implementation of integers across two machines is brought up. A relational intepretation. The "inner" and "outer" view, one which sees representation and one that doesn't
+
+[Types abstraction and parametric polymorphism](https://people.mpi-sws.org/~dreyer/tor/papers/reynolds.pdf)
+
+Polymorphism is not set theoretic <https://inria.hal.science/inria-00076261/document>  <http://h2.jaguarpaw.co.uk/posts/polymorphism-is-not-set-theoretic/>
+
+Uniform representation
+
+[Polymorphism is set theoretic constructively - Pitts](https://link.springer.com/chapter/10.1007/3-540-18508-9_18)
+
+[Theorems for Free - Wadler](https://people.mpi-sws.org/~dreyer/tor/papers/wadler.pdf)
+
+```python
+from typing import Tuple
+def interp(typ):
+  if typ == bool:
+    {True, False}
+  if typ == Tuple[A,B]:
+    { (a,b)  for a in interp(A) for b in interp(B)}
+  if typ == Callable[A,B]:
+
+
+# we can't finitely list our universe. Since it needs to include all iterated arrow. Eh. I don't see why really.
+Universe = {bool : {True, False}}
+def Universe(S): # check if in universe
+def Universe(S): # infinite stream.  
+  yield {True, False}
+  yield 
+# Or maybe produce Z3 expressions. Hmmm.
+
+Typ = Sort("Type")
+
+def interp(ctx, ty):
+  if ty == bool:
+    ForAll([x,x1], interp(x,x1) == (x == x1))
+  if ty == int:
+  if ty == TVar:
+
+  if ty == Tuple[a,b]:
+  if ty == Callable[a,b]:
+    ForAll([x,x1], interp(f,f1) == ForAll([x,x1], interp(x,x1) == interp(f(x), f1(x1))))
+  if ty == Generic(X,T):
+    ForAll([x,x1], )
+  
+
+
+# I can't enumerate ? forall X, 
+
+```
+
+## F Omega
+
+first class type constructors.
 
 ## CoC
 
@@ -296,6 +364,8 @@ lambda pi system <https://en.wikipedia.org/wiki/Dependent_type#First_order_depen
 Supposedly is kind of a shit show.
 
 # Intersection Types
+
+<https://cs.stackexchange.com/questions/162744/what-is-practically-preventing-us-from-applying-set-theoretic-types-in-engineeri?stw=2>
 
 # Recursive Types
 

@@ -28,6 +28,8 @@ title: Mechanics
   - [Hamilton Jacobi Equations](#hamilton-jacobi-equations)
   - [Action angle coordinats](#action-angle-coordinats)
     - [Liouville's theorem](#liouvilles-theorem)
+- [Celestial Mechanics](#celestial-mechanics)
+- [Chaos](#chaos)
 - [Waves](#waves)
 - [Normal Modes](#normal-modes)
 - [Fluids](#fluids)
@@ -164,11 +166,26 @@ Caonical transformations
 
 ### Liouville's theorem
 
+# Celestial Mechanics
+
+# Chaos
+
+<https://en.wikipedia.org/wiki/Chaos_theory>
+
+Chaos book
+Logisistic model
+feigenbaum
+poincare sections
+Attractors lorenz and rossler
+chua's circuit
+quantum chaos
+
 # Waves
 
 # Normal Modes
 
 # Fluids
+
 <https://www.youtube.com/watch?v=iKAVRgIrUOU&t=648&ab_channel=TenMinutePhysics> 17 - How to write an Eulerian fluid simulator with 200 lines of code.
 
 # Acoustics

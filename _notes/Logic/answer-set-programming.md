@@ -1471,8 +1471,30 @@ edge(X,X+1) :- X = 1..3, rule(fact).
 path(X,Y) :- edge(X,Y), rule(base_path).
 path(X,Z) :- edge(X,Y), path(Y,Z), rule(trans_path).
 
+%*
+Bash Command: gringo path.lp --text
+Result:
+{rule(base_path);rule(fact);rule(trans_path)}.
+edge(1,2):-rule(fact).
+edge(2,3):-rule(fact).
+edge(3,4):-rule(fact).
+path(1,2):-rule(base_path),edge(1,2).
+path(2,3):-rule(base_path),edge(2,3).
+path(3,4):-rule(base_path),edge(3,4).
+path(2,4):-rule(trans_path),path(3,4),edge(2,3).
+path(1,3):-rule(trans_path),path(2,3),edge(1,2).
+path(1,4):-rule(trans_path),path(2,4),edge(1,2).
+*%
 
 %edge(1,5) :- rule(fact). % just to see what multiple proof pathways looks like
+
+
+% negation
+% hmm doesn't work. Because maybe the rules don't fire.
+%{rule(not_path)}.
+%vert(X) :- edge(X,Y).
+%vert(Y) :- edge(X,Y).
+%not_path(X,Y) :- vert(X), vert(Y), not path(X,Y), rule(not_path).
  " | gringo --text
 ```
 
@@ -1493,6 +1515,8 @@ def path(x,y):
 % a "lattice" like effect of only recording first derivation
 path(X,Y) :- edge(X,Y), path(X,Y), @path(X,Z) = true.
 ```
+
+What about negation?
 
 ## Tree 2 Graph
 

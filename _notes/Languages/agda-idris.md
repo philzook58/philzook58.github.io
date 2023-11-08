@@ -1,8 +1,9 @@
 ---
 layout: post
-title: Agda
+title: Agda / Idris
 ---
 
+[Certainty by Construction Maguire book](https://sandymaguire.me/blog/certainty-by-construction/)
 
 <https://twitter.com/agdakx/status/1577952310243872769?s=20&t=UJrepWvNkFpXFRNY8yoWDA> agda2hs blog post jasper
 
@@ -41,3 +42,9 @@ agda --compile /tmp/hello-world.agda
 
 [The hott game](https://thehottgameguide.readthedocs.io/en/latest/index.html)
 [Cubical Agda: a cold Introduction](https://nextjournal.com/agdacubicold/intro)
+
+# Idris
+
+Eh, they're similar enough. Wow. Idris. Takes me back
+
+[Idris 2: Quantitative Type Theory in Practice](https://arxiv.org/pdf/2104.00480.pdf)

@@ -3,12 +3,12 @@ layout: post
 title: Quantum Mechanics
 ---
 
-- [Prequanutm](#prequanutm)
+- [Pre-quantum](#pre-quantum)
 - [Vectors](#vectors)
   - [Qubit / Spin](#qubit--spin)
 - [Schroedinger Eq](#schroedinger-eq)
   - [Free Particle](#free-particle)
-  - [Simple Harmo ic Oscillator](#simple-harmo-ic-oscillator)
+  - [Simple Harmonic Oscillator](#simple-harmonic-oscillator)
   - [Particle in Box](#particle-in-box)
   - [Hydrogen](#hydrogen)
   - [Kramers Penney](#kramers-penney)
@@ -16,20 +16,27 @@ title: Quantum Mechanics
   - [Tight Binding Models](#tight-binding-models)
 - [Perturbation](#perturbation)
 - [Symmettry](#symmettry)
+  - [Particle Statistics](#particle-statistics)
 - [Path Integrals](#path-integrals)
 - [Scattering](#scattering)
-- [QFT](#qft)
+- [Many Body and QFT](#many-body-and-qft)
+  - [Feynman diagrams](#feynman-diagrams)
+- [Numerical](#numerical)
 - [Foundations](#foundations)
-- [Feynman diagrams](#feynman-diagrams)
+  - [Quantum information](#quantum-information)
+  - [Quantum Computing](#quantum-computing)
+  - [Quantum Logic](#quantum-logic)
 - [Resources](#resources)
 
-# Prequanutm
+# Pre-quantum
 
 Blackbody radiation
-photoelectric effect
+photoelectric effect - photons
 bohr atom
 
 de broglie waves
+wave particle dualtiy
+born nterpretation
 
 # Vectors
 
@@ -50,9 +57,16 @@ pauli maatrices
 Dirac vs Schroedinger vs Heisenberg
 $ H = i \hbar \partial_t  $
 
+Propagators
+[Baker–Campbell–Hausdorff formula](https://en.wikipedia.org/wiki/Baker%E2%80%93Campbell%E2%80%93Hausdorff_formula)
+Lie Algebra
+Lie Group
+<https://en.wikipedia.org/wiki/C*-algebra>
+Kac Moody Algebra <https://en.wikipedia.org/wiki/Kac%E2%80%93Moody_algebra>
+
 ## Free Particle
 
-## Simple Harmo ic Oscillator
+## Simple Harmonic Oscillator
 
 ## Particle in Box
 
@@ -77,7 +91,13 @@ variational methods - Helium
 
 Wigner Eckart
 
+## Particle Statistics
+
 # Path Integrals
+
+Gaussian Integrals
+Hubbard-Stratonovich
+Fermionic path integral - Grassman numbers
 
 # Scattering
 
@@ -86,29 +106,91 @@ Born Scattering
 Optical Theorem
 Fermi's golden rule
 
-# QFT
+# Many Body and QFT
 
-Fock space
+<https://en.wikipedia.org/wiki/Quantum_field_theory>
+
+Fock space. free monad
+
 Annihilation and creation operators
 
-Gauge theories
+Hartree Fock
+RPA random phase approximation
+plasmons
+Bogoliubov Transformations
+
+Gauge theories - ghosts. wilson loops
+Time Ordering
+Dyson Equation
+Wick Contraction
+Wick Rotation
 i epsilon
 keldysh
+regularization
+renormalization
+effective field theory
+Green's functions
+Many body thermo - kadanoff baym
+Legendre transformation - Effective action, potential
+Ward Identities
 
-# Foundations
+coherent states
+glauber
 
-Quantum information
-Bell's inequality
-Entanglement
+particle physics
+nuclear physics - Blatt and Wiesskopf. Many Body Fetter
+AMO
+goofball string theory
+supersymmttry
+conformal field theory <https://en.wikipedia.org/wiki/Conformal_field_theory>
+OPE operator product expansion
+bulk bundary correspondence
 
-density matrix
+topological field theory
+ADS/CFT
 
-# Feynman diagrams
+## Feynman diagrams
+
+1-D Feynman diagrams for SHO perturbaton theory.
+0-D
+Graph summation. Symmetries and isomorphism
 
 ```python
 import networkx as nx
 
 ```
+
+# Numerical
+
+- Quantum Monte Carlo
+- Density Functional Theory
+- Density Matrix Renormalization Group
+- Exact Diagonalization
+- Tensor Networks  Matrix Product States
+
+# Foundations
+
+## Quantum information
+
+Bell's inequality
+Entanglement
+
+density matrix
+obervables
+measurement
+
+## Quantum Computing
+
+Nielson Chang
+
+Grover
+Shor
+
+## Quantum Logic
+
+<https://en.wikipedia.org/wiki/Quantum_logic>
+Nonsensical?
+[https://plato.stanford.edu/entries/qt-quantlog/](https://plato.stanford.edu/entries/qt-quantlog/)
 
 # Resources
 
@@ -118,4 +200,12 @@ Ziman - advanced quantum mechanics
 Sakurai
 Landau Lishitz
 Schiff
-Quamtum and Path Integral - Feynman
+Quantum and Path Integral - Feynman
+Cogen Tanoudji
+Weinberg
+
+Ryder
+Zee
+Peskin Schroeder
+Srednicki
+Tong

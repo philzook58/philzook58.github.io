@@ -31,8 +31,8 @@ title: Category Theory
 - [String Diagrams](#string-diagrams)
 - [Higher Category](#higher-category)
 - [Topos](#topos)
-- [Processes](#processes)
-- [Sheaves](#sheaves)
+- [Presheafs](#presheafs)
+  - [Sheaves](#sheaves)
 - [Profunctors](#profunctors)
 - [Optics](#optics)
 - [Logic](#logic)
@@ -99,14 +99,31 @@ Part of the appeal of category theory comes from it's relationship to polymorphi
 
 <https://arxiv.org/pdf/2209.01259.pdf> Category Theory for Programming
 
-```
+```haskell
 class Functor f where
   map : (a -> b) -> f a -> f b
 ```
 
 `f` is type mapping. Types are objects. map transfers morphisms
 
-`forall a, f a -> g a` is a natural transformation
+`forall a, f a -> g a` is a natural transformation. Polymorphism means you can't really look at / create elements, only swap, duplicate, and forget them.
+
+`forall a. f a <~> Id a -> f a`  is a limit (do i remember that right?)
+
+Yoneda lemma
+[Reverse Engineering Machines with the Yoneda Lemma - Piponi](http://blog.sigfpe.com/2006/11/yoneda-lemma.html)
+
+```
+forall b. (a -> b) -> f b <~> f a
+to y = y id
+from fa = \f -> fmap f fa
+```
+
+Relation to CPS
+
+Functor composition `Comp f g`
+
+Representable Functors
 
 Types are objects. Type derivations are morphisms.
 
@@ -115,6 +132,8 @@ Saying "functions' are morphisms is a bit confusing because what do we mean by f
 idea: T,E |- T,R  as the morphism. "type evaluation" and "term checking" happneing in parallel.
 
 [categorical models of polymorphism](https://core.ac.uk/download/pdf/81193164.pdf)
+
+Fibration model
 
 # Combinators
 
@@ -185,6 +204,9 @@ convexsets <-> sets
 
 # Natural Transformations
 
+A "natural" notion of morphisms between functors : C -> D.
+Morphims in D indexed by objects in C.
+
 # Monoidal Categories
 
 Vect
@@ -228,11 +250,24 @@ retract & section as notions of division / pseudo inverse
 
 "variable sets"?
 
-# Processes
+# Presheafs
 
-Time
+Some "pattern" category indexing a set. One set per objects, one function per morphisms. i.e. a functor.
 
-# Sheaves
+Some examples of this are models of algebraic structures. Simple algebraic structures (monoid, group) are modelled as single objects where arrows are the operations. A preseaf.
+
+We sometimes say stuff like a group is a set with some structure. This is kind of the same thing.
+
+A process is a set with a time stepping map.
+A multigraph is a set of edges with source and target arrows. You can make it symmettric by insisting that flipping soruce and target is the same thing.
+
+Presheafs are also like schema.
+
+Presheafs are also like "action" like a group action on a set. Sometimes they are called C-sets.
+
+Simplicial sets are indexed by a simplex with face inclusion relations. <https://en.wikipedia.org/wiki/Simplicial_set>
+
+## Sheaves
 
 # Profunctors
 

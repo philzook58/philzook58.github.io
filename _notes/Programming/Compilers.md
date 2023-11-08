@@ -29,7 +29,7 @@ wordpress_id: 2913
 - [Compiler Correctness](#compiler-correctness)
   - [Compcert](#compcert)
 - [Undefined behavior](#undefined-behavior)
-    - [undefining imp](#undefining-imp)
+  - [undefining imp](#undefining-imp)
 - [Optimizations](#optimizations)
   - [Polyhedral](#polyhedral)
   - [Link Time Optimization (LTO)](#link-time-optimization-lto)
@@ -55,54 +55,53 @@ wordpress_id: 2913
     - [Destination Driven](#destination-driven)
 - [Misc](#misc-2)
 
-
 # Parsing and Lexing
+
 - See note on parsing
 
 # Intermediate Representations
+
 [Notes on IRs](https://cs.lmu.edu/~ray/notes/ir/)
 
-
 ## SSA
-http://ssabook.gforge.inria.fr/latest/book.pdf SSA bookv
+
+<http://ssabook.gforge.inria.fr/latest/book.pdf> SSA bookv
 [mirror of ssa book](https://github.com/pfalcon/ssabook)
 [actually published?](https://link.springer.com/book/10.1007/978-3-030-80515-9)
 
 [compcertssa](http://compcertssa.gforge.inria.fr/) verified ssa
 
-
 [Simple and Efficient Construction of Static Single
-Assignment Form](https://pp.info.uni-karlsruhe.de/uploads/publikationen/braun13cc.pdf) https://twitter.com/peter_a_goodman/status/1541105429215936513?s=20&t=Id3zoB1xCWLA5QQIrPNHVA
+Assignment Form](https://pp.info.uni-karlsruhe.de/uploads/publikationen/braun13cc.pdf) <https://twitter.com/peter_a_goodman/status/1541105429215936513?s=20&t=Id3zoB1xCWLA5QQIrPNHVA>
 
 Gated SSA
 
-
 ## LLVM IR
+
 LLVM IR
 
 MIR
 
 Instruction Combiner
 
-  * [https://www.cs.cornell.edu/~asampson/blog/llvm.html](https://www.cs.cornell.edu/~asampson/blog/llvm.html)
+- [https://www.cs.cornell.edu/~asampson/blog/llvm.html](https://www.cs.cornell.edu/~asampson/blog/llvm.html)
 
 <https://jonathan2251.github.io/lbd/index.html>  Tutorial: Creating an LLVM Backend for the Cpu0 Architecturehttps://danielkeep.github.io/tlborm/book/README.html
 
 <https://www.youtube.com/watch?v=m8G_S5LwlTo&ab_channel=LLVM> LLVM IR tutorial
 
-[llvm-mca](https://llvm.org/docs/CommandGuide/llvm-mca.html) - static analysis of performance of code 
+[llvm-mca](https://llvm.org/docs/CommandGuide/llvm-mca.html) - static analysis of performance of code
 
 <https://www.llvm.org/docs/ProgrammersManual.html>
 <https://mukulrathi.com/create-your-own-programming-language/llvm-ir-cpp-api-tutorial/>
 
 [Learning to combine instructions in LLVM compiler](https://twitter.com/johnregehr/status/1501649959505985537?s=20&t=-ebjuD7WRIIQNgiBChK5cQ)
-<https://lowlevelbits.org/how-to-learn-compilers-llvm-edition/> 
-
+<https://lowlevelbits.org/how-to-learn-compilers-llvm-edition/>
 
 gllvm and wllvm - they dump the llvm bitcode files into object sections. Not a bad start if you are in a cooperative situation
 
-https://langston-barrett.github.io/notes/llvm-ir/
-https://langston-barrett.github.io/notes/learning-llvm/
+<https://langston-barrett.github.io/notes/llvm-ir/>
+<https://langston-barrett.github.io/notes/learning-llvm/>
 
 ```bash
 echo '
@@ -131,14 +130,16 @@ llc --help
 ```
 
 ### MLIR
+
 A higher level region based IR under the auspices of the llvm project
 Things that target llvm need another IR to lower and do cleanup
 Capable of representing control flow?
 
-
 ## BRIL
+
 [bril](https://github.com/sampsyo/bril) educational IR. ocaml and rust bindings.
 [manual](https://capra.cs.cornell.edu/bril/intro.html)
+
 ```bash
 echo "
 fun main {
@@ -147,6 +148,7 @@ fun main {
 " \
  | bril2json 
 ```
+
 ```python
 prog = """
 # ARGS: 8
@@ -237,7 +239,6 @@ for instr in main["instrs"]:
 
 ```
 
-
 ```
 
 import clingo
@@ -259,11 +260,11 @@ for i,instr in enumerate(instrs):
 
 ```
 
-
 ## Sea of nodes
-https://www.researchgate.net/profile/Cliff-Click/publication/2394127_Combining_Analyses_Combining_Optimizations/links/0a85e537233956f6dd000000/Combining-Analyses-Combining-Optimizations.pdf
 
-https://darksi.de/d.sea-of-nodes/
+<https://www.researchgate.net/profile/Cliff-Click/publication/2394127_Combining_Analyses_Combining_Optimizations/links/0a85e537233956f6dd000000/Combining-Analyses-Combining-Optimizations.pdf>
+
+<https://darksi.de/d.sea-of-nodes/>
 
 one ir graph for cfg and data. no explicit basic blocks
 [Cliff Click — The Sea of Nodes and the HotSpot JIT](https://www.youtube.com/watch?v=9epgZ-e6DUU&ab_channel=JPoint%2CJoker%D0%B8JUGru)
@@ -272,6 +273,7 @@ one ir graph for cfg and data. no explicit basic blocks
 
 [a simple graph based interpediate representation](https://www.oracle.com/technetwork/java/javase/tech/c2-ir95-150110.pdf)
 optimistics analyses. That's interesting.
+
 ```ocaml
 (* ref cell or rec knots. *)
 ```
@@ -280,35 +282,40 @@ optimistics analyses. That's interesting.
 # networkx
 ```
 
-
-
 ## CPS
+
 ## RTL
 
 ## Misc
+
 - Universal function graph - Blindell.
 - PDG program dependence graph
 - PEGs
 - RVSDG - it's like structured loops?
+
+[Graph IRs for Impure Higher-Order Languages: Making Aggressive Optimizations Affordable with Precise Effect Dependencies oopsla 23](https://bracevac.org/assets/pdf/oopsla23.pdf)
+
 ## Tensor Stuff
+
 ILang
-Tiramisu http://tiramisu-compiler.org/Comparison.html
+Tiramisu <http://tiramisu-compiler.org/Comparison.html>
 MLIR
 Halide
 TVM
-BYOC bring your own codegen https://tvm.apache.org/2020/07/15/how-to-bring-your-own-codegen-to-tvm
+BYOC bring your own codegen <https://tvm.apache.org/2020/07/15/how-to-bring-your-own-codegen-to-tvm>
 
-
-http://www.gilbertbernstein.com/resources/LiuPOPL2022.pdf ATL verified "scheduling" rewrites in coq - Gilbert. Gilbert works on coolstuff  http://www.gilbertbernstein.com/
+<http://www.gilbertbernstein.com/resources/LiuPOPL2022.pdf> ATL verified "scheduling" rewrites in coq - Gilbert. Gilbert works on coolstuff  <http://www.gilbertbernstein.com/>
 
 [exo](https://github.com/exo-lang/exo)
 
-https://princetonuniversity.github.io/isca22-ila-tutorial/ ILAlang
+<https://princetonuniversity.github.io/isca22-ila-tutorial/> ILAlang
+
 ## Misc
 
 [esolang VM](https://github.com/shinh/elvm) - C compiler to simple virtual machine for compiling to esolangs
 
 [exo-lang.dev] exocompilation
+
 # Analysis
 
 ## Dominators
@@ -316,7 +323,7 @@ https://princetonuniversity.github.io/isca22-ila-tutorial/ ILAlang
 Everyone talks about dominators.
 Graph algorithms over the coaurse structure of the cfg itself.
 
-https://llvm.org/devmtg/2017-10/slides/Kuderski-Dominator_Trees.pdf
+<https://llvm.org/devmtg/2017-10/slides/Kuderski-Dominator_Trees.pdf>
 
 a node x domainates another y if every path through y goes through x
 
@@ -326,18 +333,17 @@ every def must dominate use
 
 intersection of sets of dominators of your predecssors
 
-
 Dominator trees
 loop nesting forests
 
 ## Dataflow
+
 Dataflow analysis
-https://en.wikipedia.org/wiki/Data-flow_analysis
+<https://en.wikipedia.org/wiki/Data-flow_analysis>
 Must/May and intersection vs union. Least fixed point vs greatest
 
 Kildall
 bitvector
-
 
 reaching definitions
 live variable
@@ -345,8 +351,8 @@ very busy expressions
 available expressions
 
 ## def-use chains
-https://en.wikipedia.org/wiki/Use-define_chain
 
+<https://en.wikipedia.org/wiki/Use-define_chain>
 
 # Compiler Correctness
 
@@ -354,12 +360,13 @@ https://en.wikipedia.org/wiki/Use-define_chain
 
 Compositional compilers
 
-
 ## Compcert
 
 [Verified peephole optimizations for CompCert](https://dl.acm.org/doi/10.1145/2980983.2908109)
 [testing a formally verified compiler](https://news.ycombinator.com/item?id=36018300)
+
 # Undefined behavior
+
 undefined vs implementation defined.
 
 undefined behavior:
@@ -379,7 +386,6 @@ of the Cerberus model:
 model, and reported on new developments of the Cerberus model.
 “Exploring C Semantics and Pointer Provenance”,
 "
-
 
 [Towards Optimization-Safe Systems: Analyzing the Impact of Undefined Behavior](https://dl.acm.org/doi/pdf/10.1145/2517349.2522728)
 
@@ -401,26 +407,25 @@ DFA with missing transitions as a model? NFA as model of nondeterministic behavi
 
 Finite automata are not so different from step relations. The syntax is state. Somehow we are less inclined to draw the term rewriting as graphs. The state space is infinite often
 
-https://samuelgruetter.net/blog/2022/09/30/omnisemantics/
+<https://samuelgruetter.net/blog/2022/09/30/omnisemantics/>
 
-backward simulation vs forward simulation. Forward is that there exists one trace in the compiled program that exists in source. If deterministic, this is fine. 
-
+backward simulation vs forward simulation. Forward is that there exists one trace in the compiled program that exists in source. If deterministic, this is fine.
 
 Krebbers thesis [The C standard formalized in Coq](https://robbertkrebbers.nl/thesis.html) [](https://robbertkrebbers.nl/research/slides/c_next.pdf)
+
 - implementation defined - parametrized by record
 - imspecified by nondeterminsim
 - undefined behavior - undef state
 
-
 [Advanced C: The UB and optimizations that trick good programmers.](https://www.youtube.com/watch?v=w3_e9vZj7D8&t=2570s&ab_channel=EskilSteenberg)
-
 
 - int - size is implementation defined, overflow is undefined behavior
 
 ### undefining imp
+
 imp + undef stmt
 `type stmt = st -> state option`
-`let seq s1 s2 = ` It goes backwards in time according to this semantics?
+`let seq s1 s2 =` It goes backwards in time according to this semantics?
 `let undef : stmt = fun _ -> None`
 `let skip : stmt = fun st -> st`
 
@@ -502,7 +507,6 @@ let seq s1 s2 = fun s ->
 
 ```
 
-
 # Optimizations
 
 [Wikiepedia list of compiler optimizations](https://en.wikipedia.org/wiki/Optimizing_compiler)
@@ -516,7 +520,6 @@ let seq s1 s2 = fun s ->
 hash consing kind of. Superlocal blocks. every block has only one predecessor. Not quite the same as loop free?
 [value numbering in gcc talk](https://www.youtube.com/watch?v=oNeAtmsDfK0&ab_channel=SUSELabs)
 
-
 loop unrolling
 
 [instruction level parallelism](https://link.springer.com/book/10.1007/978-1-4899-7797-7) Alex Aiken Utpal Banerjee Arun Kejariwal Alexandru Nicolau
@@ -526,15 +529,15 @@ Expand expressions with care - less dependencies
 
 [Implementing a Toy Optimizer](https://twitter.com/cfbolz/status/1549376580912386051?s=12&t=2TzLXakPIAt6RPwcq4Qz9w)
 
-[liveness analysis for ssa form program](https://hal.inria.fr/inria-00558509v2/document) 
-
+[liveness analysis for ssa form program](https://hal.inria.fr/inria-00558509v2/document)
 
 [VW-SLP: Auto-Vectorization with Adaptive Vector Width](http://vporpo.me/papers/vwslp_pact2018.pdf)
 
 ## Polyhedral
+
 [Polyhedral model](https://en.wikipedia.org/wiki/Polytope_model)
 [Foundations of Fine Grain Parallelism](https://www.cs.colostate.edu/~cs560/Fall2015/). Recurrence equations. Analyze them
-[granulairty](https://en.wikipedia.org/wiki/Granularity_(parallel_computing)) 
+[granulairty](https://en.wikipedia.org/wiki/Granularity_(parallel_computing))
 
 [Polyhedral Compilation as a Design Pattern for Compilers PLISS](https://www.youtube.com/watch?v=mt6pIpt5Wk0&ab_channel=PLISS)
 
@@ -544,12 +547,15 @@ A relative of omega?
 FPL - fast presburger arithmetic
 
 ## Link Time Optimization (LTO)
+
 - See note on Linker
 
 ## Profile Guided Optimization (PGO)
 
 # Code Gen
+
 ## Declarative
+
 - [Relational Processing for Fun and Diversity](https://personal.utdallas.edu/~hamlen/lundquist19minikanren.pdf) minikanren
 - [Denali - a goal directed super optimizer](https://courses.cs.washington.edu/courses/cse501/15sp/papers/joshi.pdf) egraph based optimization of assembly
 - [PEG](https://cseweb.ucsd.edu/~lerner/papers/popl09.pdf) egraph cfg
@@ -557,17 +563,16 @@ FPL - fast presburger arithmetic
 - [minimips minikanren mips assembler/disassembler](https://github.com/orchid-hybrid/minimips)
 - [Parsing and compiling using Prolog](https://dl.acm.org/doi/abs/10.1145/22719.22946) There is also a chapter in the art of prolog
 
+- <https://www.cs.tufts.edu/~nr/pubs/zipcfg.pdf> zgraph
+- hoopl <https://hackage.haskell.org/package/hoopl-3.7.7.0/src/hoopl.pdf> a framework for transformations
 
-- https://www.cs.tufts.edu/~nr/pubs/zipcfg.pdf zgraph
-- hoopl https://hackage.haskell.org/package/hoopl-3.7.7.0/src/hoopl.pdf a framework for transformations
 ### Unison
+
 - [Unison](https://unison-code.github.io/)
 
 [diversification](http://www.diva-portal.org/smash/get/diva2:1232129/FULLTEXT01.pdf) make many versions of binary to make code reuse attacks harder. disunison
 
-
 Toy Program:
-
 
 If you do liveness analysis ahead of time, it really does become graph coloring, with an edge between every temporary that is live at the same time.
 
@@ -576,12 +581,14 @@ You cannot do liveness ahead of time if you integrate instruction scheduling wit
 If you do SSA ahead of time, you have more flexibility to change colors/register at overwrite points
 
 How to communicate to minizinc:
+
 - Serialized files or C bindings
 - Parameters or constraints. In some sense, you a writing a constraint interpreter over the parameters. Why not cut out the middleman? 1: less clear what the structure is. 2. It forces your hand with the bundling of different pieces. Many things need to be bundled into the `insn` predicate unless you reify the `insn` predicate to a variable, in which case you are rebuilding the parameter version.
 
 There is a spectrum of more or less complex models you can use.
 
 ### Fixed Instruction Order
+
 This makes a DSL in minizinc that looks like a somewhat reasonable IR. It uses a predicate function `insn` that takes in the lhs and rhs temporaries. It assigns a register to each temporary such that it never clobbers a live variable.
 
 I could do the liveness analysis completely statically, but I choose to internalize it into the model for ease.
@@ -650,24 +657,26 @@ constraint
 ```
 
 How do you want to talk about the solution space.
+
 - a next(id1,id2) matrix
 - live[id,t] matrix vs start end cycle integers.
 
  % since we don't record the gen kill sets we need to do this in here.
-`% next[i,j]` where you see `id + 1` 
+`% next[i,j]` where you see `id + 1`
 I was assuming SSA, but maybe it can handle non ssa? Noo. It probably can't.
 
 ### Scheduling and Allocation
+
 We can also use a next[i,j] matrix or change live to a start end cycle parameter.
 
-
 ### Multiple Blocks
+
 ### Register Packing
+
 Using the rectangle packing constraint for register modelling
 
-
-
 ## Rewrite Rules
+
 peephole optimization
 [cranelift isle](https://github.com/bytecodealliance/wasmtime/blob/918671316301306d653345cc3486f0a15de2aa50/cranelift/docs/isle-integration.md)
 [Verifying and Improving Halide’s Term Rewriting System with Program Synthesis](https://dl.acm.org/doi/pdf/10.1145/3428234)
@@ -676,17 +685,19 @@ See: e-graphs
 [scheduling using unimodular modelling](https://twitter.com/taktoa1/status/1531386684876632064?s=20&t=-IHVNfpCMKlhva0T8ctWXA)
 
 ## Instruction Selection
-[Automatically Generating Back Ends Using Declarative Machine Descriptions](https://www.cs.tufts.edu/~nr/pubs/gentileset-abstract.html) dias ramsey https://www.cs.tufts.edu/~nr/pubs/tiler-abstract.html
+
+[Automatically Generating Back Ends Using Declarative Machine Descriptions](https://www.cs.tufts.edu/~nr/pubs/gentileset-abstract.html) dias ramsey <https://www.cs.tufts.edu/~nr/pubs/tiler-abstract.html>
 
 [Hoopl](https://www.cs.tufts.edu/~nr/pubs/hoopl-abstract.html)
 
 Maximal munch parsing
-http://www.cs.cmu.edu/afs/cs/academic/class/15745-s07/www/lectures/lect9-instruction_selection_745.pdf
+<http://www.cs.cmu.edu/afs/cs/academic/class/15745-s07/www/lectures/lect9-instruction_selection_745.pdf>
 Like parser generators / libraries, you can make instruction selection libraries / generators. Bottom up vs top down
-- TWIG BURG BEG bottom up generate instruction selectors
-- 
 
-[iburg](https://old.reddit.com/r/Compilers/comments/edgx5s/successors_to_iburg/) https://github.com/drh/iburg a code generator generator
+- TWIG BURG BEG bottom up generate instruction selectors
+-
+
+[iburg](https://old.reddit.com/r/Compilers/comments/edgx5s/successors_to_iburg/) <https://github.com/drh/iburg> a code generator generator
 
 [Synthesizing an Instruction Selection Rule Library from Semantic Specifications](https://pp.ipd.kit.edu/uploads/publikationen/buchwald18cgo.pdf)
 
@@ -697,7 +708,8 @@ Very similar to "technology mapping" in the vlsi community.
 type aexpr = Mul | Add
 
 Macro expansion
- - procede bottom up
+
+- procede bottom up
 Maximal Munch
 
 Instruction selection is taking a program and figuriing out which instructions can be used to implement this. Typically this leaves behind still some problems to solve, in particular register allocation and instruction scheduling. Presumably, everything in the program needs to be done. We have some notion of correspondence between the program representation and the available instructions. The exact nature of this correspondence depends on how we represent our program.
@@ -713,9 +725,9 @@ If the statements are purely for assignment, assignment can be inlined. The bloc
 The simplest case to consider is that of the tree. We can enumerate patterns in the tree that we know how to implement using instructions. The relationship between tree patterns and instructions can be many-to-many. We should understand how to implement every node in the tree `(?a + ?b)`, `(?a * ?b)` with a pattern consisting of a sequence of instructions for completeness (ability to compile any tree). We also should try to figure out the tree patterns that correspond to a single assembly instruction like `load reg [reg+n]` because these will often be efficient and desirable.
 
 There are two distinct and often separable problems here:
+
 1. Find pattern matches
 2. Pick which matches to actually use aka pattern selection
-
 
 A direct approach to describing patterns is to develop a datatype of patterns. This datatype will be basically the datatype of your AST with holes. This is clearly duplication and becomes painful the more constructors your language has, but whatever.
 
@@ -756,12 +768,13 @@ I understand enough to have many questions. What is the input language over whic
 
 Sequenced representation: Patterns may need to stretch over bits / reorderings. The sequence of the input language does not at all have to be the sequence of the output. Restricting yourself in this way
 
-You can often macro repeat patterns in ways to undo any arbitrary choices made by the representation. Some kind of quotienting. If we have an order free representation, we could aebitrary sequence it, and then sequence the patterns into all possible sequencings. Then you end up with baically the same thing. You can't go the other way in general. 
+You can often macro repeat patterns in ways to undo any arbitrary choices made by the representation. Some kind of quotienting. If we have an order free representation, we could aebitrary sequence it, and then sequence the patterns into all possible sequencings. Then you end up with baically the same thing. You can't go the other way in general.
 There is something that feels galois connection-y here.
 
 What is the output of pattern matching? Typically I would consider the output of a pattern match to be just pattern variable bindings. But in this case, really we may need full identification between pattern nodes and pattee nodes since this defines the covering.
 
 There are different axes upon which to consider graph variations
+
 - input/output Edges ordered or unordered / have identity are interchangeable. AST tree have identity. Consider the example of a power or any non commutative operation. Edges with identities may want to be considered to be attached to "ports"
 - Zero/many input output edges (trees)
 - Labels on vertices and or edges
@@ -774,14 +787,12 @@ Operads
 You could take a relational perspective on operations, having neither input not output.
 
 ## Register Allocation
+
 [iterated register coalescing - appell and george](https://c9x.me/compile/bib/irc.pdf)
 move edges are considered special because the can be coalesced (collapse the node in the interference graph)
 nodes with less than number of register nighbors can be removed and you can construct a coloring
 conservative coalescing -
 constants can be spilled cheaply via rematerialization
-
-
-
 
 [regallo2 design doc](https://github.com/bytecodealliance/regalloc2/blob/main/doc/DESIGN.md)
 
@@ -792,7 +803,7 @@ constants can be spilled cheaply via rematerialization
 
 [Register Allocation: What Does the NP-Completeness Proof of Chaitin et al. Really Prove? Or Revisiting Register Allocation: Why and How](https://link.springer.com/chapter/10.1007/978-3-540-72521-3_21#:~:text=Abstract,graph%20associated%20to%20the%20variables.)
 
-[The Solid-State Register Allocator](https://twitter.com/impraxical/status/1577321303400452100?s=20&t=UJrepWvNkFpXFRNY8yoWDA) https://www.mattkeeter.com/blog/2022-10-04-ssra/
+[The Solid-State Register Allocator](https://twitter.com/impraxical/status/1577321303400452100?s=20&t=UJrepWvNkFpXFRNY8yoWDA) <https://www.mattkeeter.com/blog/2022-10-04-ssra/>
 Belady's OPT algorithm page faults
 
 [The Power of Belady’s Algorithm in Register Allocation for Long Basic Blocks](http://polaris.cs.uiuc.edu/publications/guo-2003-old.pdf)
@@ -801,6 +812,7 @@ Belady's OPT algorithm page faults
 [linear scan register allocation](http://web.cs.ucla.edu/~palsberg/course/cs132/linearscan.pdf)
 
 The typical starting point of register allocation is support you've been given as assembly program that doesn't have registers filled in like
+
 ```assembly
 # input v1 v2 v3
 mov v1, v2
@@ -808,6 +820,7 @@ add v1, v1
 mul v3, v1
 # output v3
 ```
+
 The interference graph has an edge between any two variables that are live at the same time.
 Live means that the variable has been made and someone still needs to use it now or later.
 In this example, if we assume v1 v2 & v3 are live at the beginning, v1 is live for all 3 instructions, v3 is live for all three and at the output, but v2 is only live at the first instruction since it is never used again.
@@ -818,38 +831,40 @@ In this example, if we assume v1 v2 & v3 are live at the beginning, v1 is live f
 Compiler gym
 
 ## Instruction Scheduling
+
 The pure instruction scheduling problem might occur even at the IR level. We can imagine an imperative IR. Certain operations commute and others don't. We may want to minimize the liveness time of variables for example. This would make sense as a pre-processing step to a sequence input language to an instruction selector.
 
-
 Instruction scheduling can be parametrized as:
+
 1. an embedding into actual time (cycle issue time probably). This is important if you are optimizing for runtime and can get estimates of how long each instruction takes.
 2. a ranking as integers
 3. next(i,j) relation which is basically integers. Allows for partial order. after(i,j) :- next(i,k), after(). after is path connected in temporal dag. Possibly this is mappable into a lattice notion of time (i,j,k,etc)?
 
 ## SuperOptimizers
-https://en.wikipedia.org/wiki/Superoptimization
 
-[Superoptimizer -- A Look at the Smallest Program ](https://web.stanford.edu/class/cs343/resources/superoptimizer.pdf) Massalin
-https://news.ycombinator.com/item?id=25196121 discussion
+<https://en.wikipedia.org/wiki/Superoptimization>
 
-- Souper https://github.com/google/souper https://arxiv.org/pdf/1711.04422.pdf
-- STOKE https://cs.stanford.edu/people/eschkufz/docs/asplos_13.pdf
-- TOAST an ASP based one? https://purehost.bath.ac.uk/ws/portalfiles/portal/187949093/UnivBath_PhD_2009_T_Crick.pdf
+[Superoptimizer -- A Look at the Smallest Program](https://web.stanford.edu/class/cs343/resources/superoptimizer.pdf) Massalin
+<https://news.ycombinator.com/item?id=25196121> discussion
+
+- Souper <https://github.com/google/souper> <https://arxiv.org/pdf/1711.04422.pdf>
+- STOKE <https://cs.stanford.edu/people/eschkufz/docs/asplos_13.pdf>
+- TOAST an ASP based one? <https://purehost.bath.ac.uk/ws/portalfiles/portal/187949093/UnivBath_PhD_2009_T_Crick.pdf>
 - GSO gnu superoptimizer
-- 
+-
 
-https://twitter.com/kripken/status/1564754007289057280?s=20&t=KWXpxw5bjeXiDnNeX75ogw Zakai binaryen superopitmizer
-
+<https://twitter.com/kripken/status/1564754007289057280?s=20&t=KWXpxw5bjeXiDnNeX75ogw> Zakai binaryen superopitmizer
 
 ## Assembly Production
+
 You need to produce actual binary, actual 1s and 0s
 See also:
+
 - Linking
 - Assembly
 
-
-
 # JIT
+
 de-optimization paths
 [mir](https://github.com/vnmakarov/mir) an intermiedtae representation for JIT [blog post](https://developers.redhat.com/blog/2021/04/27/the-mir-c-interpreter-and-just-in-time-jit-compiler)
 [qbe](https://c9x.me/compile/)
@@ -863,7 +878,7 @@ de-optimization paths
 
 [copy and patch compilation](https://twitter.com/cfbolz/status/1516418354579394566?s=20&t=7564nBvc82Jdkz_E3ccZbA)
 
-[asmjit](https://github.com/asmjit/asmjit) https://asmjit.com/ lightweight library for machine code generation
+[asmjit](https://github.com/asmjit/asmjit) <https://asmjit.com/> lightweight library for machine code generation
 
 [](https://kipp.ly/blog/jits-intro/)
 [adnvetures in jit compilation](https://eli.thegreenplace.net/2017/adventures-in-jit-compilation-part-4-in-python/)
@@ -878,42 +893,32 @@ method based
 tracing
 meta-tracing
 
-
 tiered
 
 Self
 Java JIT hotspot
 v8
 
-
 [A Brief History of Just-In-Time](http://eecs.ucf.edu/~dcm/Teaching/COT4810-Spring2011/Literature/JustInTimeCompilation.pdf)
 
 [dynamic recompilation](https://en.wikipedia.org/wiki/Dynamic_recompilation) is what emulators call it
+
 # Garbage Collector
 
 See memory managements
 
-
-
-
-
 # JVM
-
-
-
-
 
 # Simple Compilation
 
 [Calculating correct compilers](https://www.cs.nott.ac.uk/~pszgmh/ccc.pdf) There's like 6 of these doing different stuff
 
-https://github.com/conal/talk-2020-calculating-compilers-categorically#readme conal elliot
+<https://github.com/conal/talk-2020-calculating-compilers-categorically#readme> conal elliot
 
+##
 
-## 
 There is a fun functional programming game to play.
 We know we can describe a syntax tree / adt. And then interpret it. But you can deforest the tree and just make combinators. Somehow this simple trick feels fun and meaningful. Loosely I refer to this style as going finally tagless.
-
 
 ```ocaml
 type store = string -> int
@@ -924,6 +929,7 @@ let var x = fun s -> s x
 ```
 
 The typical intepreter semantics of imp programs is as a function `store -> store`
+
 ```ocaml
 type stmt = store -> store
 ```
@@ -933,32 +939,28 @@ The typical perspective of compilation is as a function `imp -> asm`. This is no
 Partial evaluation kind of gets close? Not obviously
 Compilers typically take a very imperative/operational picture of the construction of the assembly program. They transform into various graph representations, do analyses over them, etc.
 
-
 What we need (at minimum) is some notion of relationship of high level variables to low level ones and high level to low level program points.
 
-One choice is 
+One choice is
+
 ```ocaml
 type store = string -> loc 
 ```
 
 A blocks are more compositional notion of assembly.
 
-
 The compiler may also want a typing environment.
-
 
 The first subproblem to consider is that of compting expressions.
 
-
 Graphs are kind of a pain in functional programming. Why is that? You need to deeply embed them via functional maps s the main ways it's done, which is awkward. Shallow graph embedding uses mutable pointers.
 
-
 Compilers are also performing various analyses.
-Finally tagless style enables an open extensibility. 
-
+Finally tagless style enables an open extensibility.
 
 A nice trick is to consider is backwards program semantics. We aren't running the program in an ordinary way, we aren't constrained to go forward.
-https://www.mattkeeter.com/blog/2022-10-04-ssra/
+<https://www.mattkeeter.com/blog/2022-10-04-ssra/>
+
 ```ocaml
 
 type value = { storage ; addr : pgm_point}
@@ -1197,7 +1199,6 @@ It isn't phi spots so much as split spots that are annying in this backwards ver
 
 ```
 
-
 ### Destination Driven
 
 [Destination-Driven Code Generation](https://legacy.cs.indiana.edu/~dyb/pubs/ddcg.pdf)
@@ -1244,6 +1245,7 @@ match cmd with
 ```
 
 # Misc
+
 [One-pass Code Generation in V8](https://bernsteinbear.com/assets/img/46b-codegeneration-in-V8.pdf)
 
 [PL Resouces - Max Bernstein](https://bernsteinbear.com/pl-resources/) fantastic list of resources for compilers mostly
@@ -1252,7 +1254,6 @@ match cmd with
 [chibicc](https://github.com/rui314/chibicc) C compiler in nanopass style. Each commit is interesting! Written intentionally educationally.
 [lcc](https://drh.github.io/lcc/) a retagretable compiler for C. Has a book
 [tcc](https://bellard.org/tcc/) Fabrice Bellard's cmall C compiler
-
 
 [An Incremental Approach to Compiler Construction](http://scheme2006.cs.uchicago.edu/11-ghuloum.pdf) nanopass compiler
 
@@ -1268,11 +1269,8 @@ compile(lit(n), [push(n) | TS]).
 compiler(opp(T),  ).
 compile(add(X,Y), [Z | TS] :- compile(X,X1), compile(Y,Y2), append(X1,Y1,Z), append(Z,Rest,TS).
 ```
+
 prolog using coq.
-
-
-
-
 
 [Query-based compiler architectures](https://ollef.github.io/blog/posts/query-based-compilers.html)
 
@@ -1282,24 +1280,17 @@ incremental compilation
 
 [Calculating correct compilers](https://www.cs.nott.ac.uk/~pszgmh/ccc.pdf) There's like 6 of these doing different stuff
 
-https://github.com/conal/talk-2020-calculating-compilers-categorically#readme conal elliot
+<https://github.com/conal/talk-2020-calculating-compilers-categorically#readme> conal elliot
 
 [cs6120 adrian sampson](https://www.cs.cornell.edu/courses/cs6120/2022sp/lesson/) Looks like a nice syllabus
 
 [rose compiler](https://en.wikipedia.org/wiki/ROSE_(compiler_framework)) source to source compiler? Makes sense.
 
-
 [compiler optimizations website](https://compileroptimizations.com/)
 
-  * [https://github.com/aalhour/awesome-compilers](https://github.com/aalhour/awesome-compilers)
+- [https://github.com/aalhour/awesome-compilers](https://github.com/aalhour/awesome-compilers)
 
-  *  [https://gcc.gnu.org/wiki/ListOfCompilerBooks](https://gcc.gnu.org/wiki/ListOfCompilerBooks)
-
-
-
-
-
-
+- [https://gcc.gnu.org/wiki/ListOfCompilerBooks](https://gcc.gnu.org/wiki/ListOfCompilerBooks)
 
 - interesting links <https://twitter.com/1101_debian/status/1456346324794806274?s=20>
 <https://news.ycombinator.com/item?id=29112482> more links
@@ -1308,32 +1299,17 @@ https://github.com/conal/talk-2020-calculating-compilers-categorically#readme co
 
 modules - global symbols, function declaration, function definitions, target information
 
-
-
-
-
 <https://gist.github.com/MattPD/00573ee14bf85ccac6bed3c0678ddbef> program analysis resources. Big long list.
-
-
-
-
-
 
 Man souffle does seem cool
 
+It's surprisingly difficult to find a cogent explanation of all the stuff one might need. It's useful to call C or be called from C **<https://blog.packagecloud.io/eng/2016/04/05/the-definitive-guide-to-linux-system-calls/>**
 
-
-
-
-It's surprisingly difficult to find a cogent explanation of all the stuff one might need. It's useful to call C or be called from C **https://blog.packagecloud.io/eng/2016/04/05/the-definitive-guide-to-linux-system-calls/**
-
-
-    
-    <code>	.globl compute_42
+    <code> .globl compute_42
     compute_42:
         movq    %rdi, %rax # move argument into rax
-    	addq	$32, %rax # add 32 
-    	retq
+     addq $32, %rax # add 32 
+     retq
         
     
     #include <stdio.h>
@@ -1347,38 +1323,27 @@ It's surprisingly difficult to find a cogent explanation of all the stuff one mi
         return 0;
     }</code>
 
-
-
-
-
-sjklsfkjl https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf x86 cheatsheet
-
+sjklsfkjl <https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf> x86 cheatsheet
 
 alignment is for serious. It really does screw you if you don't do function alls with stack on 16byte boundaries
 
-
 [https://en.wikibooks.org/wiki/X86_Assembly](https://en.wikibooks.org/wiki/X86_Assembly)
-
 
 [https://modernc.gforge.inria.fr/](https://modernc.gforge.inria.fr/) modern c book free online
 
-
 %rdi, %rsi, %rdx, %rcx, %r8, and %r9 as first 6 arguments
-
 
 pushq %rbx is usually first instruction inside function
 
-
 subq somethign rsp usually happens to allocate on the stack
-
 
 [https://brown-cs0330.github.io/website/index.html](https://brown-cs0330.github.io/website/index.html) introduction to computer systems
 
-Bryant and OHallaran book. CMU course http://www.cs.cmu.edu/~213/schedule.html
+Bryant and OHallaran book. CMU course <http://www.cs.cmu.edu/~213/schedule.html>
 
 [https://bernsteinbear.com/blog/lisp/](https://bernsteinbear.com/blog/lisp/)
 
-gdb. Compile with -g flag. break main. step next print. tui enabe https://sourceware.org/gdb/onlinedocs/gdb/TUI-Commands.html#TUI-Commands cheatsheet https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf https://brown-cs0330.github.io/website/docs/guides/vgg.pdf
+gdb. Compile with -g flag. break main. step next print. tui enabe <https://sourceware.org/gdb/onlinedocs/gdb/TUI-Commands.html#TUI-Commands> cheatsheet <https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf> <https://brown-cs0330.github.io/website/docs/guides/vgg.pdf>
 
 objdump -d -S -l
 

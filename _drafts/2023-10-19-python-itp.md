@@ -76,12 +76,84 @@ def send_object_to_server(obj):
 
 
 def proof_script():
-    
+
 obj_to_send = {"hello": "world"}
 response = send_object_to_server(obj_to_send)
 print("Received response:", response)
 
 ```
+
+```python
+from typing import Any, Tuple
+Fm = Any #typing.Union[tuple("->", Fm, Fm), tuple("-", Fm), str]
+Thm = Tuple[int, Fm]
+
+def trust(a : Fm) -> Thm:
+  return hash(("secret",a)), a # Use a crypto hash function here
+
+def check(a : Thm):
+  hsh, form = a
+  assert hsh == hash(("secret",form)) 
+
+def modus(a : Thm, ab : Thm) -> Thm:
+  check(ab)
+  check(a)
+  _, a = a
+  _, (arr, a1, b) = ab
+  assert arr == "->"
+  assert a1 == a
+  return trust(b)
+
+# axiom schema of propositional logic
+def axiom1(A : Fm, B : Fm) -> Thm:
+    return trust(("->", A, ("->", B, A)))
+
+def axiom2(A : Fm, B : Fm, C : Fm) -> Thm:
+    return trust(("->", ("->", A, ("->", B, C)), ("->", ("->", A, B), ("->", A, C))))
+
+def axiom3(A, B):
+    return trust(("->", ("->", ("-", A), ("-", B)), ("->", B, A)))
+
+
+def pprint_fm(a):
+    if a[0] == "->":
+        return f"( {pprint_fm(a[1])} -> {pprint_fm(a[2])})"
+    if a[0] == "-":
+        return f"(- {pprint_fm(a[1])})"
+    else:
+        return a
+
+def pprint_pf(a):
+    print(pprint_fm(a[1]))
+
+A = "A"
+pf = []
+pf.append(axiom1(A, A))
+pf.append(axiom1(A, ("->", A, A)))
+pf.append(axiom2(A, ("->", A, A), A))
+pf.append(modus(pf[-2], pf[-1]))
+pf.append(modus(pf[0], pf[-1]))
+
+import pprint
+pprint.pprint(pf)
+for x in pf:
+    pprint_fm(x)
+
+# A super simple "tactic"
+rev_modus = lambda ab, a: modus(a, ab)
+def a_to_a(A):
+    pf = []
+    pf.append(axiom1(A, A))
+    pf.append(axiom1(A, ("->", A, A)))
+    pf.append(axiom2(A, ("->", A, A), A))
+    pf.append(modus(pf[-2], pf[-1]))
+    pf.append(modus(pf[0], pf[-1]))
+    return pf[-1]
+
+# not having variable really stinks.
+```
+
+<https://us.metamath.org/mpeuni/idALT.html> Metamath is a good example of this stuff.
 
 # Proof Objects
 

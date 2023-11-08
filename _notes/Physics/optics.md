@@ -17,6 +17,11 @@ title: Optics
     - [Wavevector](#wavevector)
     - [Diffraction](#diffraction)
     - [Interference](#interference)
+- [Fourier Optics](#fourier-optics)
+- [Nonlinear optics](#nonlinear-optics)
+- [Quantum Optics](#quantum-optics)
+  - [Lasers](#lasers)
+- [Resources](#resources)
 
 # Optics
 
@@ -56,8 +61,26 @@ Analogies with Quantum Mechanics
 
 ### Interference
 
-Fourier Optics
-Nonlinear optics
+# Fourier Optics
+
+Paraxial optics and quantum mechanics. Etendue and phase space
+
+Analytic signal <https://en.wikipedia.org/wiki/Analytic_signal>
+Coherence
+Spatial and temporal
+
+# Nonlinear optics
+
+# Quantum Optics
+
+Haken : Light
+Coherent states
+
+AMO
+
+## Lasers
+
+# Resources
 
 Hecht
 Jenkins and White

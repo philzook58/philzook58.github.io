@@ -50,7 +50,7 @@ let rec unify env eqs =
 let rec solve env =
   let env' = mapf (tsubst env) env in
   if env' = env then env else solve env';;
-  
+
 (* Unification reaching a final solved form (often this isn't needed).       *)
 let fullunify eqs = solve (unify undefined eqs);;
 ```
@@ -61,6 +61,87 @@ unification-fd
 [Conor mcbride first order unification by structural recursion](https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.25.1516)
 
 Cody comments unification is an instance of completion?
+
+```python
+
+def lookup(subst, x):
+    if isinstance(x,int):
+        if x in subst:
+            return lookup(subst, subst[x])
+        else:
+            return x
+    elif isinstance(x,tuple):
+        return tuple(lookup(subst, y) for y in x)
+    else:
+        return x
+
+def unify(t1,t2):
+    subst = {}
+    eqs = [(t1,t2)]
+    while len(eqs) != 0:
+        t1,t2 = eqs.pop()
+    if isinstance(t1, int):
+        if t1 == t2:
+            continue
+        else:
+            if t1 in subst:
+                eqs.append((lookup(subst,t1), t2))
+            else:
+                subst[t1] = t2
+    elif isinstance(t1, int):
+        if t2 in subst:
+            return unify(t1, subst[t2])
+        else:
+            return {t2:t1}
+    elif isinstance(t1, tuple) and isinstance(t2, tuple):
+        if len(t1) != len(t2):
+            raise Exception("mismatched tuple lengths")
+        else:
+            return unify(t1[1:], t2[1:]).unify(t1[0], t2[0])
+    else:
+        raise Exception("mismatched types")
+
+```
+
+```rust
+enum Term {
+    Var(usize),
+    Const(String, Vec<usize>)
+}
+
+type RecTerm = Vec<Term>
+type Subst = Vec<Term>
+
+while let t1,t2 = eqs.pop() {
+    match t1 {
+        Var(x) => {
+            if t1 == t2 {
+                continue
+            } else {
+                if let Some(t) = subst.get(x) {
+                    eqs.push((t, t2))
+                } else {
+                    subst.push(t2)
+                }
+            }
+        }
+        Const(f, args) => {
+            if let Const(g, args2) = t2 {
+                if f == g && args.len() == args2.len() {
+                    for i in 0..args.len() {
+                        eqs.push((args[i], args2[i]))
+                    }
+                } else {
+                    panic!("mismatched constants")
+                }
+            } else {
+                panic!("mismatched types")
+            }
+        }
+    }
+}
+
+```
 
 ## Occurs Check
 
@@ -93,6 +174,53 @@ Narrowing and functional logic programming. See note on functional logic program
 [Hints in unification Andrea Asperti, Wilmer Ricciotti, Claudio Sacerdoti Coen, and Enrico Tassi](https://www.cs.unibo.it/~sacerdot/PAPERS/tphol09.pdf) interesting paper. Describes how typeclasses and canonical structures can be put under a similar umbrella as extesnible unification mechanisms.
 
 # Higher Order Unification
+
+Generate and test is the naive algorithm. What would generate and test look like for first order? We could enumerate every first order term
+
+```prolog
+%unify(const(F,Args))
+%unify(var(X),const(F,Args))
+
+% enumerate all first order terms of constants x/0 f/2
+% term(X). Allow variable to stay ungrounded
+term(const(x,[])).
+term(const(f, [X,Y])) :- term(X), term(Y).
+
+% guess (ground) and check. Using X metavariable as unguarded.
+unify(T1,T2,[]) :- T1 == T2. % don't use `=`` ?
+unify(T1,T2,[X | Vars]) :- term(X), unify(T1,T2,Vars).
+
+unify-eqs([T1-T2 | Eqs], []) :- T1 == T2, unify-eqs(Eqs, []). % really map(==, Eqs)
+
+```
+
+This is bottom up E-unification.
+
+The fact we're working in simply typed is important? It guarantees normal forms and gives clues to the appropriate shapes.
+
+Enumerate all "normal" forms. I need to lookup which normal forms I mean. I've always been shaky
+
+```
+% normal(Tm , Type).
+normal(lam(E)  , arr(A,B)) :- normal(E, B, [A | Ctx] ).
+normal( var(N), Ty, Ctx) :- lookup(N,Ty,Ctx).
+normal(app(F,X), Ty, Ctx) :- normal(F, arr(A,B), Ctx), normal(X, A, Ctx).
+
+unify() :- guess(), eval(), check().
+
+```
+
+Eta long form.
+
+Huet's algorithm takes advantage of some observations.
+
+Gilles dowek - handbook automated reasning article <https://dl.acm.org/doi/abs/10.5555/778522.778525>
+
+Huet's paper
+
+Graham's carnap <https://philarchive.org/archive/LEACAO-2v1> <https://github.com/Carnap/Carnap/blob/master/Carnap/src/Carnap/Core/Unification/Huet.hs>
+
+Lambda kanren <https://www.youtube.com/watch?v=iUZasa7wzW4&ab_channel=ACMSIGPLAN> <http://minikanren.org/workshop/2021/minikanren-2021-final8.pdf>
 
 [efficient full higher order unification](https://arxiv.org/abs/2011.09507) zipperposition
 
@@ -140,6 +268,25 @@ Raising
 
 MLTS
 
+[adam gundry literate haskell](https://github.com/adamgundry/type-inference) "(for the free theory, abelian groups and higher-order pattern unification)" goes along with thesis
+[A tutorial implementation of dynamic pattern unification](https://adam.gundry.co.uk/pub/pattern-unify/) gundry mcbride
+
+[higher order pattern unification exampel in elaboration zoo](https://github.com/AndrasKovacs/elaboration-zoo/blob/master/03-holes/Main.hs)
+[Basic pattern unification in haskell](https://www.youtube.com/watch?v=trecCoxYbgM&ab_channel=Andr%C3%A1sKov%C3%A1cs)
+
+What is the pattern fragment?
+L_lambda subset
+"existential variables" applied to unique bound variables.
+reminscent of haskell pattern matching using distinct variables
+
+<http://conal.net/papers/elliott90.pdf> conal elliott's thesis
+
+[Jozef g explanation](https://github.com/jozefg/higher-order-unification/blob/master/explanation.md)
+
+<https://conservancy.umn.edu/bitstream/handle/11299/57268/Qi_umn_0130E_10758.pdf?sequence=1> lambda prolog implementation
+
+See Miller and Nadathur book.
+
 # Nominal Unification
 
 See nominal logic notes
@@ -174,24 +321,6 @@ inductive logic programming
 # Resources
 
 [Unifcation theory Franz Baader Wayne Snyder - handbook of automated reasoning](https://www.cs.bu.edu/fac/snyder/publications/UnifChapter.pdf)
-
-[adam gundry literate haskell](https://github.com/adamgundry/type-inference) "(for the free theory, abelian groups and higher-order pattern unification)" goes along with thesis
-
-[higher order pattern unification exampel in elaboration zoo](https://github.com/AndrasKovacs/elaboration-zoo/blob/master/03-holes/Main.hs)
-[Basic pattern unification in haskell](https://www.youtube.com/watch?v=trecCoxYbgM&ab_channel=Andr%C3%A1sKov%C3%A1cs)
-
-What is the pattern fragment?
-L_lambda subset
-"existential variables" applied to unique bound variables.
-reminscent of haskell pattern matching using distinct variables
-
-<http://conal.net/papers/elliott90.pdf> conal elliott's thesis
-
-[Jozef g explanation](https://github.com/jozefg/higher-order-unification/blob/master/explanation.md)
-
-<https://conservancy.umn.edu/bitstream/handle/11299/57268/Qi_umn_0130E_10758.pdf?sequence=1> lambda prolog implementation
-
-See Miller and Nadathur book.
 
 <https://hal.archives-ouvertes.fr/hal-02123709/document> uniifcation modulo reverse. hmm but this says it's really hard
 related to unification modulo group action? <https://youtu.be/35xgRnWsUsg?t=1929>

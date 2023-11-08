@@ -108,6 +108,8 @@ That sounds fun
 
 [How to prove it with lean](https://djvelleman.github.io/HTPIwL/)
 
+[lean 4 terry tao](https://news.ycombinator.com/item?id=38035672)
+
 ### Build
 
 `elan` tool

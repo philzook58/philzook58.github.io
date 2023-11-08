@@ -110,6 +110,7 @@ Common axiom schema:
 Axiom schema are sort of a macro system thing that lets you avoid second order logic
 
 ### Rules of Inference
+<https://en.wikipedia.org/wiki/Logical_harmony> logical harmony. See notes of frank pfenning
 
 ## Hilbert systems
 
@@ -162,6 +163,36 @@ inductive pproof where
 
 ```python
 from z3 import *
+# Z3py adt of natural numbers
+Nat = Datatype("Nat")
+Nat.declare("zero")
+Nat.declare("succ", ("pred", Nat))
+Nat = Nat.create()
+#Nat = Datatype("Nat", ["zero", "succ"])
+print(Nat.succ(Nat.zero))
+
+def induct(P):
+  # assert P.type == Nat -> Bool ?
+  n = FreshConst(Nat)
+  return ForAll(n, Implies(P(Nat.zero), Forall(n, Implies(P(n), P(Nat.succ(n))))), Forall(n, P(n)))
+
+inj = Function("inj", Nat, IntSort())
+n = FreshConst(Nat)
+axioms = [
+  inj(Nat.zero) == 0,
+  ForAll(n, inj(Nat.succ(n)) == inj(n) + 1) # recursive definition of inj
+]
+
+theorem1 = ForAll(n, inj(n) >= 0)
+theorem2 = ForAll(i, Implies(i >= 0, Exist(n, inj(n) == i)))
+P = lambda x: 
+
+```
+
+```python
+from z3 import *
+
+
 
 def Peano():
   def __init__(self):
@@ -246,6 +277,9 @@ In a sense, because quantifier free, theorems are all universally quantified.
 Two sorts, natrual numbers a la peano and sets of natural numbers
 
 A comprhenesion axiom schema and inducton axioms schema
+
+Subsystems of second order arithmetic - simpson
+[The Prehistory of the Subsystems of Second-Order Arithmetic](https://arxiv.org/pdf/1612.06219.pdf)
 
 ## Second Order Logic
 

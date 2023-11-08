@@ -114,11 +114,11 @@ title: Datalog
       - [Provenance](#provenance-1)
       - [max min](#max-min)
   - [Recurusive Sum and Count](#recurusive-sum-and-count)
-      - [Lattices](#lattices-2)
-        - [Min/max lattice](#minmax-lattice)
-        - [Maybe/Option lattice](#maybeoption-lattice)
-        - [Intervals](#intervals)
-      - [Widening](#widening)
+    - [Lattices](#lattices-2)
+      - [Min/max lattice](#minmax-lattice)
+      - [Maybe/Option lattice](#maybeoption-lattice)
+      - [Intervals](#intervals)
+    - [Widening](#widening)
     - [Dyadic lattice](#dyadic-lattice)
       - [Equivalence relations](#equivalence-relations)
       - [Negation](#negation)
@@ -164,9 +164,12 @@ title: Datalog
   - [building souffle emscripten](#building-souffle-emscripten)
 
 See also notes on:
+
 - Prolog
 - Answer Sey Programming
+
 # What is datalog?
+
 Datalog is multifaceted. That's part of what it makes it so cool
 
 From one perspective, it is a database language, a more succinct competitor of sorts to SQL. It has a recursive flavor that makes it easy to express graph and network queries, problems for which you might reach for recursive common table subexpressions and/or triggers in SQL. It is also limited in some respects compared to SQL. SQL allows some imperative commands like `DELETE` or `UPDATE` whereas datalog is typically arranged to never forget information (monotonicity).
@@ -174,17 +177,21 @@ From one perspective, it is a database language, a more succinct competitor of s
 From another perspective, it is a relative of the logic programming language Prolog that proceeds by bottom up search instead of top down search. It inherits from this logic programing tradition the fun duality of both an operational and logical reading of the language. Sometimes in this context, the distinction is made from prolog in that datalog only allows atoms and not compound tree-like terms. In practice, many datalog systems do allow this though.
 
 Maybe part of what I like about datalog compared to prolog is
+
 1. complete search strategy
 2. logically pure. Kind of like Haskell's laziness kept it pure, Datalog's operation ordering is not obvious after compilation. This means extralogical stuff doesn't fly. Datalog makes control flow explicit. You do not get an implicit goal stack.
 3. simple and efficient execution semantics. Pattern match / query over database. Insert new facts accordingly
 
 # What can you do with datalog?
+
 Well, just about anything you can do with ordinary database queries. What do you do with those? I dunno. Search for patterns?
 
 ## Getting Started
+
 - [Souffle datalog tutorial](https://souffle-lang.github.io/tutorial), Souffle is an efficient datalog implementation that can be run in an interpreter or compiled to efficient parallel C++ code. It is my go to datalog implementation for most purposes.
 
 ## Path Reachability
+
 The #1 example is reachability from edges. It's doofy, but it is a simple recursive query and is my go to for experimenting on a new system or implementing some datalog technique
 
 ```souffle
@@ -201,6 +208,7 @@ path(x,z) :- edge(x,y), path(y,z).
 
 Even in this example there are some things to ask.
 What about:
+
 ```
 path(x,z) :- path(x,y), path(y,z).
 ```
@@ -210,6 +218,7 @@ path(x,z) :- path(x,y), edge(y,z).
 ```
 
 What if we want to express undirected edges. This becomes an equivalence relation
+
 ```
 .decl path(x : number, y : number) eqrel
 // or
@@ -255,6 +264,7 @@ print(path)
 ```
 
 #### Semi-Naive
+
 Semi-Naive evaluation of corresponds to the intuition that we only need to consider the current frontier of reachable nodes to find the next frontier of reachable nodes. It is easy enough to do by hand to the reachability query, but starts to be kind of annoying for larger more complex queries.
 
 Perhaps you could say this is of some relation to Djikstra's algorithm.
@@ -286,7 +296,9 @@ path = strata1(edge)
 {(1, 4)}
 '''
 ```
+
 #### Indexing
+
 Iteration over the full data structure and the filtering is dumb. Query planning.
 
 A simple thing you can do is use perhaps multiple redundant dictionaries rather than sets.
@@ -323,7 +335,8 @@ edge = {(1,2), (2,3), (3,4)}
 path = strata1(edge)
 ```
 
-####  Lattice
+#### Lattice
+
 ```python
 # min lattice using && as join
 class Min():
@@ -364,11 +377,13 @@ print(path)
 ```
 
 Other examples to consider:
+
 - Subsumption
 - Semiring
 - Provenance
 
 ### SQL recursive common table subexpressions
+
 ```sql
 CREATE TABLE edge(a INTEGER, b INTEGER);
 INSERT INTO edge(a,b)
@@ -393,6 +408,7 @@ SELECT a,b FROM path;
 ```
 
 ### Naive SQL translation
+
 <https://www.philipzucker.com/tiny-sqlite-datalog/>
 
 Ok, so recursive common table subexpressons are wacky. Also they don't really support all forms of recursion.
@@ -423,9 +439,12 @@ SELECT *,rowid FROM path; -- there is an implicit row id. This can conceivably b
 SELECT MAX(rowid) FROM path;
 SELECT MAX(rowid) FROM edge;
 ```
+
 #### Seminaive
+
 Either maintain explicit delta relations, or use timestamp tricks.
 Create a vector timestamp
+
 ```sql
 CREATE TABLE edge(a INTEGER, b INTEGER, PRIMARY KEY (a,b));
 INSERT OR IGNORE INTO edge(a,b)
@@ -450,6 +469,7 @@ INSERT INTO trans_rule SELECT MAX(edge.rowid), MAX(path.rowid) FROM edge, path;
 SELECT * FROM trans_rule;
 
 ```
+
 `WHERE edgo0.rowid > prevedfe OR path0.ro
 
 ```python
@@ -554,6 +574,7 @@ dump_db()
 print(trans)
 print(trans.timestamp)
 ```
+
 Langston pointed out that metadata could be stored in a different table that you join in when you need it. You just need defaults if it isn't there.
 
 Retaining the timestamp _sequence_ is a form of lightweight provenance. It tells you exactly which tuples were derived using this rule.
@@ -561,8 +582,10 @@ Retaining the timestamp _sequence_ is a form of lightweight provenance. It tells
 For every iteration, there are 3 timestamps at play. The last time the rule was run, the timestamp of the db before the rule, and the timestamp after the rule.
 
 #### Lattices
+
 Store either nullable lattice value at end
 Or in separate table. Every rule needs to deal with lattice value? That's annoying.
+
 ```sql
 create table edge(a,b,w, unique (a,b));
 create table path(a,b,w, unique (a,b));
@@ -575,9 +598,10 @@ ON CONFLICT UPDATE SET w = min(w, excluded.w); -- https://www.sqlite.org/lang_UP
 
 ```
 
-
 ### Ocaml
+
 #### Naive
+
 ```ocaml
 #use "topfind";;
 #require "core_kernel ppx_jane";;
@@ -617,7 +641,9 @@ let path =
 
 let () = List.iter (Set.to_list path) ~f:(fun (x,y) -> printf "%d %d; " x y)
 ```
+
 ### Rust
+
 Probably using HashSet is not a great idea.
 
 ```rust
@@ -646,38 +672,34 @@ fn main(){
 }
 ```
 
-
 ### Magic Set
-Do we need all node reachability? What if we are only interested in 
+
+Do we need all node reachability? What if we are only interested in
 `path(1,4)` or we only want all nodes reachable from 1 `path(1,X)`. Or what if we want strongly connected components
 `path(X,Y), path(Y,X)`
 
 It feels like we should be able to do something more limitted and efficient in the context of these queries and this is the case.
 
-
 How do we write this query raw in other systems?
 
-
 ## Program Analysis
-
 
 Points to analysis tutorial
 Doop
 
-See 
+See
+
 - Nielson and Nielson
 - Souffle tutorial
-- 
+-
 
 It is common to reduce your program into some kind of graph like form. One way to do this is to lbael program points (these may be machine addresses, stmt identifiers, or maybe line numbers) and state which points can follow other points in a relation `next(l1 : stmt, l2 : stmt)` . You may also want to collect statements into blocks.
 
-You will also need to summarize the effects of the constructs of your language into a relational form. 
+You will also need to summarize the effects of the constructs of your language into a relational form.
 Some possibilities
+
 - In `stmt_foo : x = 3 + 4;` `x` is written to. `writes(l:stmt, x:var)`
 - `reads(l:stmt, x:var)`
-
-
-
 
 ### Evaluation
 
@@ -721,7 +743,6 @@ var_store(run , [todo, [stmt, ctx]], x, v) :- var_store(run, pt, x, _),
 
 You need a notion of first class map, but if you know at souffle compile time how many you need, you can name them. Then no problem. Or perhaps at a different strata is enough?
 
-
 ```souffle
 
 .type AExpr = Add {x : AExpr, y : AExpr} | Lit {n : number} | Var {x : symbol}
@@ -752,6 +773,7 @@ eval("run0", $Var("x"), 42).
 ```
 
 ### Constant Propagation
+
 Constant propagation is kind of like a partial evaluation. The evaluator above just stops if it can't progress. In a sense it is already a constant propagator.
 
 ```
@@ -814,7 +836,9 @@ $Add($Var(x), $Add($Lit(1), $Lit(2)))   $Add($Var(x), $Lit(3))
 */
 
 ```
+
 ### Symbolic Evaluation
+
 Inside a block we can symbolically execute to inline all definitions.
 (We can also do something in multiple blocks, but let's stick to this for now.)
 
@@ -868,8 +892,6 @@ pts(START).
 
 ```
 
-
-
 Inlining of SSA block:
 
 ```souffle
@@ -908,8 +930,8 @@ summary(x, e) :- live_out(x), eval($Var(x), e).
 
 ```
 
-
 ### Reaching Definitions
+
 <https://souffle-lang.github.io/examples#defuse-chains-with-composed-types>
 
 ```
@@ -927,39 +949,40 @@ Really that is unnecessary
 
 ```
 
-
-
-
 ### Liveness
+
 Variables that will be needed on at least one path
 A backwards analysis
 Union
 
 ### Points To
 
-https://yanniss.github.io/cclyzer-sas16.pdf 
-https://github.com/GaloisInc/cclyzerpp 
-https://github.com/plast-lab/cclyzer
-https://github.com/souffle-lang/souffle/pull/2231 
-https://galoisinc.github.io/cclyzerpp/implementation.html#unification-based-analysis-via-subsumption-and-choice 
-https://github.com/souffle-lang/souffle/issues/2302 
+<https://yanniss.github.io/cclyzer-sas16.pdf>
+<https://github.com/GaloisInc/cclyzerpp>
+<https://github.com/plast-lab/cclyzer>
+<https://github.com/souffle-lang/souffle/pull/2231>
+<https://galoisinc.github.io/cclyzerpp/implementation.html#unification-based-analysis-via-subsumption-and-choice>
+<https://github.com/souffle-lang/souffle/issues/2302>
 
-### Available Expressions 
+### Available Expressions
+
 [Lecture notes on static analysis in datalog](https://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf)
-https://courses.cs.washington.edu/courses/csep501/18sp/lectures/T-dataflow.pdf
+<https://courses.cs.washington.edu/courses/csep501/18sp/lectures/T-dataflow.pdf>
 
-The expression is computed and/or the connection between expression and store state is not severed by subsequent write. on every path 
+The expression is computed and/or the connection between expression and store state is not severed by subsequent write. on every path
 Not that available expressions _does not_ mean expression is available.
+
 ```
 x = a + b
 x = 0
 ```
+
 AE says `a+b` is available at the ned of this snippet. So it's a bit subtler what AE means. It means that with a little fiddling the expression _could be_ available.
 
-
 Every path means we need an intersection. Datalog does unions more naturally, so we need to work wth the inverse relation notavailable. The intersection of available is the union of notavailable
- 
+
 Program
+
 ```
 start:
   x = readinput
@@ -1040,6 +1063,7 @@ avail(l,e) :- label(l), expr(e), !notavail_exit(l,e).
 So what do I need to do to extend this to equivalent expressions?
 
 ### Intersection
+
 De morgan intersections into unions.
 
 ```souffle
@@ -1081,15 +1105,13 @@ not_avail(x,v) :- not_avail(p,v), edge(p,x).
 
 ```
 
-
-
-
 ### Very Busy Expressions
+
 Expressions that are needed on every path
 Intersection
 
-
 ### Zippers For Program Points
+
 It is possible to generate program points from the Imp AST via using zippers
 
 ```souffle
@@ -1136,12 +1158,12 @@ The transformation foo(firstclassmap) -> foo(i), map(i, k,v) is lossy in the pre
 
 <https://souffle-lang.github.io/examples#context-sensitive-flow-graph-with-records>
 
-
 ### Dominators
+
 [Program Analysis with Datalog: Dominance Tree](https://xiaowenhu.com/posts/dominance_tree/)
-https://pages.cs.wisc.edu/~fischer/cs701.f07/lectures/Lecture20.pdf
-https://twitter.com/taktoa1/status/1548109466620424193?s=20&t=G28jQnYTSb1KEI--BWennw
-https://codeql.github.com/codeql-standard-libraries/cpp/semmle/code/cpp/controlflow/Dominance.qll/module.Dominance.html
+<https://pages.cs.wisc.edu/~fischer/cs701.f07/lectures/Lecture20.pdf>
+<https://twitter.com/taktoa1/status/1548109466620424193?s=20&t=G28jQnYTSb1KEI--BWennw>
+<https://codeql.github.com/codeql-standard-libraries/cpp/semmle/code/cpp/controlflow/Dominance.qll/module.Dominance.html>
 
 Dominators probably require first class sets. Bitsets are a very convenient one for small sets. Hmm no I guess not. The turning intersection into negated union trick works better.
 
@@ -1192,7 +1214,7 @@ dom(n,m) :- blks(n), blks(m), !not_dom(n,m).
 ```
 
 ### Forall Emulation
-https://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf
+<https://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf>
 
 [bicycle problem](https://github.com/souffle-lang/souffle/discussions/2256)
 
@@ -1227,11 +1249,12 @@ unsafeBicycle(id) :- bicycle(id, tid), tire(tid, "Flat").
 ```
 
 ### Doop
+
 I should probably know more about this but I don't.
 Java.
 
-
 ### Datalog Diassembly / Decompilers
+
 - [grammatech - Datalog Disassembly](https://www.usenix.org/system/files/sec20fall_flores-montoya_prepub_0.pdf)
 - [gigahorse](https://github.com/nevillegrech/gigahorse-toolchain) - decompiler for smart contracts based on souffle
 - Dr lojekyll [dr. disassembler](https://github.com/lifting-bits/dds) and blog post
@@ -1269,8 +1292,6 @@ oneval(addr+1, r1, v1 + v2) :- insns(addr, Add(r1,r2)), oneval(addr,r1, v1), one
 
 ```
 
-
-
 What makes disassembly hard?
 data and code can be intermixed.
 
@@ -1288,7 +1309,6 @@ Registers vs memory. What difference does it make? It doesn't really (for analys
 Should I use `symbol` to represent simple enum adts? They are syntactically a bit more convenient. It would be a bit more uniform to use souffle adts.
 
 [bap in souffle](https://github.com/philzook58/bap-notes/blob/main/souffle/bap.dl)
-
 
 ```souffle
 
@@ -1354,28 +1374,27 @@ Should I use `symbol` to represent simple enum adts? They are syntactically a bi
 //
 ```
 
-Does / what does bap's C api look like? https://github.com/BinaryAnalysisPlatform/bap-bindings
+Does / what does bap's C api look like? <https://github.com/BinaryAnalysisPlatform/bap-bindings>
 If we want to do specualtive disassembly, this might be the way to go.
 If we want to just analyze what bap already finds, we can print souffle database using a plugin.
 
 [alias analysis for disassembly](http://reports-archive.adm.cs.cmu.edu/anon/2006/CMU-CS-06-180R.pdf)
 [Holmes: Binary Analysis Integration Through Datalog](https://kilthub.cmu.edu/articles/thesis/Holmes_Binary_Analysis_Integration_Through_Datalog/7571519)
 
-
 use pcode?
 
 ### Resources
+
 - [Using Datalog for Fast and Easy Program Analysis](https://yanniss.github.io/doop-datalog2.0.pdf) A Doop paper
 - [Unification based pointer analysis](https://github.com/souffle-lang/souffle/pull/2231) "Steensgaard style" vs Anderson style
 - [hash consed points to sets](https://yuleisui.github.io/publications/sas21.pdf)
 - [datalog for static analysis](https://prl.ccs.neu.edu/blog/static/datalog-for-static-analysis.pdf)
-- 
-- 
+-
+-
 - [graspan](http://web.cs.ucla.edu/~wangkai/papers/asplos17)
 - [Using Datalog with Binary Decision Diagrams for Program Analysis bddbddb](https://people.csail.mit.edu/mcarbin/papers/aplas05.pdf)
 
 - [codeql](https://codeql.github.com/docs/ql-language-reference/about-the-ql-language/) semmle
-
 
 ## First Class Sets & Reflection
 
@@ -1383,8 +1402,8 @@ Groupby is an interesting construct. It's useful for parallelization because you
 
 If you have first class sets, it is much eaiser to achieve certain kinds of summarization data that need globals views on the relation.
 
-
 ### BitSets
+
 ```souffle
 .type bitset <: unsigned
 // Operations
@@ -1414,18 +1433,19 @@ test(l,s1) <= test(l,s2) :- SUBSET(s1,s2).
 .output test(IO=stdout)
 
 ```
+
 ```
 #define FLAG0 0x0
 #define FLAG1 0x2
 #define FLAG2 0x4
 ```
 
-
 A different kind of bitset. Strings are insanely versatile
 
 hmm. I can't get char codes easily
 
 string based vectors. Why not just use a list?
+
 ```souffle
 
 .decl test(x : symbol, s : number)
@@ -1436,9 +1456,6 @@ test("x", as(c,number)) :- c = "x".
 
 ```
 
-
-
- 
 ```souffle
 .decl test(x : symbol, s : number)
 test(to_string(32434901), to_number("000045")) :- true.
@@ -1462,14 +1479,13 @@ test(padx, to_number(padx) ) :- PAD(42, padx).
 
 
 ```
+
 Interesting metalevel skolemization. Very hacky
 
-
-
 #### Bitset reflection
+
 Can I use bitsets to reflect? Yes. Up to 32 entries allows.
 More if we use records of bitsets, n  * 32 element sets.
-
 
 ```souffle
 .type bitset <: unsigned
@@ -1509,25 +1525,29 @@ Possibly better is to use a lattice approximate reflection. Like factored over a
 ```
 factor_reflect(sing(arg1), sing(arg2)) :- rel(arg1, arg2).
 ```
+
 The cartesian product of these sets over approximates `rel`. Rather reminds me of relational division.
 
-Speculative idea: Could have reflection as a true primitive. User defined functors? Don't really get access to relations. 
+Speculative idea: Could have reflection as a true primitive. User defined functors? Don't really get access to relations.
 We need persitent set data structures if we want to do this. Garbage collection? We could mark them as special reflective relations `.decl foo() reflective`
 `reflect("rel_foo")`
 Something like this.
+
 ```
 rel reflect(string name){
    program.get_relation(name)
 }
 ```
+
 Oh, user defined functors woould support this `store(k,v, oldmap)` or `add(v, oldset)`. It would be nice if we could somehow just make sets pointers to souffle's structure themselves, or projections thereof? I mean what can you really do in that case?
 
-
 Reflection by grouping.
+
 ```
 reflect(group : unsigned, bitset)
 reflect(n / 32, sing(n % 32)) :- rel(n)
 ```
+
 Can the process be iterated?
 
 We could build a binary search tree ADT and reflect to that. What does that really do though? Uhhh. Yeah That makes sense. ADTs are persistent data structures. Maybe something other than binary tree is most appropriate? It would make sense to make sure we have a canonical representation of a particular set. I don't think the record table gets garbage collected. So we might build a set for every subset of the relation. Not good.
@@ -1547,6 +1567,7 @@ done(v) :- reify(1, v, bs), NONEMPTY(b)
 ```
 
 Oh, of course you could straight up unroll it
+
 ```
 #REIFY(r2, r1, n) r2(1) :- r1(bs), ELEM(n,bs)
 // done(1) :- bitset(bs), ELEM(1,bs). 
@@ -1557,18 +1578,20 @@ REIFY(done,bitset,3).
 ```
 
 Or it could be componentized.
+
 ### Sort Lists
+
 Sorted Lists are a canonical set representation, maybe even a good one in some instances.
 See above for some List functions.
 
 ### Patricia Tries
+
 [fillaitre](https://www.lri.fr/~filliatr/ftp/ocaml/ds/ptset.ml.html)
 [fast mergable maps okasaki gill](https://ittc.ku.edu/~andygill/papers/IntMap98.pdf)
 
-Patricia tries have a canonical shape for any given set. Hence hash consing them makes sense. 
+Patricia tries have a canonical shape for any given set. Hence hash consing them makes sense.
 
 Note that lookup shouldn't be just an `in(x,tree)` relation. We need to know when stuff isn't in the tree too. That's the beauty of first class sets. Really, it's more desirable to make external functors to do this stuff. We don't need to materialize these things. A nice property of patricia tries in this context is that lookup is memoizing on subtries, which are sets themselves, so the subqueries aren't necessarily wasted work.
-
 
 ```souffle
 .type Bool = True {} | False {}
@@ -1656,7 +1679,6 @@ test(res) :- branchingbit(0,2,res).
 .output test(IO=stdout)
 ```
 
-
 ```souffle
 .type ptrie = Empty {} 
             | Leaf {x : unsigned} 
@@ -1685,10 +1707,8 @@ mem($Empty(), _, $False()). // not valid
 
 ```
 
-
-
-
 ### BDDs
+
 bddbdddb is a datalog that used binary decision diagrams as it's backing store. It's an interesting idea. BDDs are very powerful.
 
 BDDs are a relaitve of hash consing.See [type safe modular hash consing](https://www.lri.fr/~filliatr/ftp/publis/hash-consing2.pdf) section 3.3
@@ -1722,7 +1742,7 @@ Wait... are bdds of the bits kind of like hash consed patricia trees?
 ### Call
 
 Prolog has a notion `call` which let's you call data as predicates.
-It is emulatable by manually lifting https://www.metalevel.at/prolog/metapredicates
+It is emulatable by manually lifting <https://www.metalevel.at/prolog/metapredicates>
 
 We can make an adt called `rel` which has one constructor for every relation. In principle this could be compiler magic that doesn't require actually duplicating (or worse) the data, but oh well
 
@@ -1751,11 +1771,10 @@ call(p) :- call($Call(p)).
 
 ```
 
-
-
 ### Meta circular interpreter
+
 See extensive prolog literature on meta circular intepreters
-https://www.metalevel.at/acomip/
+<https://www.metalevel.at/acomip/>
 
 This appears to be annoying to achieve. You have to manually manipulate the variable binding context and substitute. There doesn't seem to be a good way to piggy back on datalog's variables
 
@@ -1790,13 +1809,12 @@ add(ctx,x,x1) :- call($Path($Var(x), $Num(i)), ctx), path(x1, i).
 What about going point free? only binary relations?
 
 foo :- Comp(f,g) | Par {} | Fst | Id
-.type tup =     Tup {tup, tup} | 
+.type tup =     Tup {tup, tup} |
 eval($Comp(f,g), fin, gout) :- _eval($Comp(f,g)), eval(f,fin,fout), eval(g,ga,gb), fout = gin.
-https://www.philipzucker.com/aop-minikanren/ similar to this
+<https://www.philipzucker.com/aop-minikanren/> similar to this
 
 eval($Edge, i, j) :- edge(i,j)
 eval($Path, i, j) :- path(i,j)
-
 
 $Clause($Path, $Edge)
 $Clause($Path , $Comp($Edge, $Path))
@@ -1866,9 +1884,7 @@ path(i,j) :- eval($Lit("path"), $Num(i), $Num(j)).
 // typefail() :- eval($Lit("path"), a,b), (a != $Num(_),; b != $Num(_)
 ```
 
-
 Could also use n-ary combinators instead of binary categorical combinators. Relation algerbra I guess?
-
 
 ```souffle
 //.type Pred = [name : symbol, args : TList]
@@ -1910,6 +1926,7 @@ index()
 ```
 
 ## BogoSort
+
 Hmmmm... Can I do this?
 
 ```souffle
@@ -1926,13 +1943,15 @@ array(i-1,n) :- array(i,n), i > 0.
 // subsume bad possibilities...?
 array(i-1, n) <= array(i, n) :- i > 0, 
 ```
+
 What about building a relation of pairs
+
 ```
 pair(a,b) <= pair(b,a) :- b <= a, a <= b
 ```
 
-
 bubble sort
+
 ```
 // could use max over input iindices instead of N
 #define N 4
@@ -1948,7 +1967,8 @@ proc(i, x1, t + 1), proc(i+1,y1, t + 1):- proc(i, x,t), proc(i+1, y, t), t%2 = i
 out(i,x) :- proc( i, x, N).
 ```
 
-path based. Take shortest oriented edges. Graph is then 
+path based. Take shortest oriented edges. Graph is then
+
 ```
 v(1)
 v(2)
@@ -1970,13 +1990,14 @@ out(i,x) :- path(i,_,x).
 
 Radix sort?
 
-## Translating functional programs 
-https://drops.dagstuhl.de/opus/volltexte/2022/16235/pdf/LIPIcs-ECOOP-2022-7.pdf Functional Programming with Datalog
+## Translating functional programs
+<https://drops.dagstuhl.de/opus/volltexte/2022/16235/pdf/LIPIcs-ECOOP-2022-7.pdf> Functional Programming with Datalog
 
 Lift function to relation by making return value part of relation
 fib(n) becomes fib(b,ret)
 
 Datalog is bottom up. You need to rip apart all the recursive calls. What is the most principled way to see this? Principled transformation to bottom up call?
+
 ```souffle
 fact(0,1).
 fact(1,1).
@@ -1984,6 +2005,7 @@ fact(n + 1, (n+1) * m) :- fact(n, m), n < 10.
 ```
 
 I like the build a table of all possible arguments.
+
 ```souffle
 needed(n).
 needed(n - 1) :- needed(n), n > 0. 
@@ -1991,6 +2013,7 @@ fact(0,1).
 fact(1,1).
 fact(n + 1, (n+1) * m) :- fact(n, m), needed(n).
 ```
+
 For ADTs this ends up being a table of all subterms.
 
 Is needed a representation of call frames maybe?
@@ -2103,14 +2126,16 @@ Really all of the above are functions and it is a plum shame that I am materiali
 A linear datalog that consumes the _pred might be nice.
 Could destroy them with subsumption.
 
-
 ## Dynamic Programming
+
 ### Q learning
+
 Grid world + subsumption / lattice.
 
-
 ## Mandelbrot
+
 Translated from the [SQLlite docs on recursive ctes](https://www.sqlite.org/lang_with.html)
+
 ```sql
 WITH RECURSIVE
   xaxis(x) AS (VALUES(-2.0) UNION ALL SELECT x+0.05 FROM xaxis WHERE x<1.2),
@@ -2130,8 +2155,6 @@ WITH RECURSIVE
   )
 SELECT group_concat(rtrim(t),x'0a') FROM a;
 ```
-
-
 
 ```souffle
 #define dx 0.05
@@ -2200,6 +2223,7 @@ cy      line
 ===============
 */
 ```
+
 ## Ball and Springs
 
 Balls and springs are a model of a partial differential equation. We can model the equations of motion, initial conditions, and boundary conditions using datalog. What fun!
@@ -2233,7 +2257,6 @@ ball(t+1, n,  newx, newv) :-
 
 
 ```
-
 
 ```python
 #some plotting code
@@ -2289,6 +2312,7 @@ x(row,col2, s2 / s) :- x(row,col,s), SING(s), col != col2, x(row,col2,s2).
 ```
 
 ## Constraint handling Rules (CHR)
+
 See note on prolog for more on CHR
 
 Constraint handling rules have some similarity to datalog with subsumption and sometimes you can translate programs.
@@ -2296,7 +2320,7 @@ Datalog has set semantics, CHR has multiset semantics. Sometimes you add CHR rul
 subsumption allows some deletion.
 
 Timestamps and water marks?
-max(t1,t2)+1  :- foo( , t1), bar(t2) 
+max(t1,t2)+1  :- foo( , t1), bar(t2)
 
 :- watermark(t), foo(t1), , t1 < t
 foo() <= foo() :- watermark(t)
@@ -2411,6 +2435,7 @@ diff(2, T0, 1).
 #define DUP(x)  $Dup1(x),$Dup2(x)
 // could be used like this: x1 = DUP(foo) = x2
 ```
+
 ## Lambda representation
 
 [Lambda Normalization for Souffle Datalog](https://www.philipzucker.com/lambda-datalog-souffle/)
@@ -2431,7 +2456,7 @@ lambda datalog. Pattern matching on ground lambda terms is good.
 Yihong's let and fresh.
 Might still need first class maps for environements.
 
-https://github.com/AndrasKovacs/elaboration-zoo/blob/master/01-eval-closures-debruijn/Main.hs
+<https://github.com/AndrasKovacs/elaboration-zoo/blob/master/01-eval-closures-debruijn/Main.hs>
 
 ```souffle
 .type term = Lam {body : term} | Var {i : unsigned} | App {f : term, x : term}
@@ -2459,13 +2484,13 @@ _eval(nil, $Lam($App($Lam($Var(0)), $Var(1)))).
 Krivine machine.
 
 ## Parsing
+
 What about good error parsing? It feels like the flexibility of a datalog could be nice. It's sort of why-not provenance.
 
 [CYK Parsing](https://en.wikipedia.org/wiki/CYK_algorithm) is an example of dynamic programming.
 Earley = magic set of CYK. Doing it on demand
 
 `substr` makes this feasible. This unfortuantely is going to reintern the string though. So hard to believe it'll ever be efficient.
-
 
 ```souffle
 
@@ -2515,16 +2540,13 @@ parsed2(x, a) :- parens2(x, 0, strlen(x), a).
 
 ```
 
-
-
-
 Chomsky normal form. Only allow epsilon at start
 
 Magic set. The query we actuall want in `parsed(x)`.
 needparens(x,i,j) guard predicate in front. But so what
 
-
 I
+
 ```souffle
 #define cat3(x,y,z) cat(x,cat(y,z))
 #define cat4(x,y,z,w) cat(x, cat3(y,z,w))
@@ -2574,6 +2596,7 @@ parses(z, $Append(px,py)) :- needparse(z), parses(x,px), parses(y,py), z = cat(x
 
 Easy way to regexp?
 If I want identifiers
+
 ```python
 import string
 print(" ".join([f"lower(\"{c}\")." for c in string.ascii_lowercase  ]))
@@ -2595,8 +2618,8 @@ alpha(c) :- lower(c) ; upper(c).
 
 ```
 
-
 Earley parsing. Put the carefullness in needparse instead
+
 ```souffle
 #define cat3(x,y,z) cat(x,cat(y,z))
 #define FIRST(rem) substr(rem,0,1)
@@ -2630,10 +2653,10 @@ word(s,i,j) :- chars(s, i-1, c), alpha(c), word(s, i, j).
 
 ```
 
-
 DCG
 parser combinator
 We need like a whole stack then. Blugh
+
 ```souffle
 #define NEXT(rem) substr(rem,1,strlen(rem1)-1)
 #define FIRST(rem) substr(rem1,0,1)
@@ -2657,9 +2680,9 @@ recog("nextstate", rem) :- recog("upper", rem) , FIRST(rem) = c, !upper(c),
 
 
 ```
+
 So it seems like this is a general transfomation. I can exchange a global context parameter x that I dig into with substr for a need predicate.
 The two are uncoupled. Recurse over the thing first to reak it up, then bottom up the pieces. Don't do in one pass.
-
 
 Slices
 [i : unisnhged, n : unsigned, s : symbol] === substr(s, i , n)
@@ -2699,13 +2722,13 @@ str(")(").
 
 ```
 
-
 - [earley parsing](https://github.com/souffle-lang/souffle/blob/master/tests/example/earley/earley.dl)
 - [parser in datalog](https://homes.cs.washington.edu/~bodik/ucb/cs164/sp13/lectures/09-Datalog-CYK-Earley-sp13.pdf) bottom up parsing
 - [parsing and generation as datalog queries](https://aclanthology.org/P07-1023.pdf)
 - [DCGs + memoizing = Packrat Parsing](https://mercurylang.org/documentation/papers/packrat.pdf)
 
 ## Hilog
+
 ```souffle
 .type binreltag = Edge {} | Star {r : binreltag}
 // Closure is a bad name for this example
@@ -2723,12 +2746,11 @@ binrel($Edge(), 3, 4).
 
 .output binrel(IO=stdout)
 ```
+
 It may also be nice to make a universal type (for which number actually serves pretty well?).
 
-
-
-
 ## Equality Saturation
+
 See blog posts
 
 egglog
@@ -2736,6 +2758,7 @@ egglog
 See also perhaps first class union find
 
 ## Term Rewriting
+
 It's similar to "path" in some respects.
 
 Maybe don't bother with "t" parameter?
@@ -2764,10 +2787,12 @@ term(t) :- start(t).
 term(a), term(b) :- term($Add(a,b)).
 
 ```
+
 ### Datalog Modulo Term Rewriting
+
 There is an interesting alternative design to egglog that has some of the same mouthfeel.
 
-Many rewrite rules are obvious simplification rules. 
+Many rewrite rules are obvious simplification rules.
 There really is not much reason not to take them eagerly.
 
 Better yet, rather than rewrite rules, consider merely a partial ordering relation on terms.
@@ -2807,18 +2832,21 @@ foo(b) :- foo(a), replace(a,lhs,rhs,b)
 This framework for example could encompass datalog modulo beta reduction.
 
 ### Graph rewriting
+
 Subsumption might enable one to snip out old regions if you use timestamps. We're kind of trying to mimic CHR in datalog
 See note on:
+
 - Term Rewriting
 
-
 ## Graph Algorithms
+
 Graph form of monoidal category in soufflé?
 Graph rewriting? We have graph matching. How do we say some subgraph is better than some other.
 Graph combinator reduction?
 
 Flow problems?
 Ford fulkerson
+
 ```
 // Tinkering. This isn't right.
 / Maybe I can't do this. Need to track paths?
@@ -2832,8 +2860,11 @@ flow(i,j,f) <= flow(i,j,f2) :-  f <= f2.
 pathcap(i,j,f) <= flow(i,j,f2) :-  f2 <= f2.
 
 ```
+
 ### Reachability
+
 ### Shortest Path
+
 ```souffle
 
 .type vert = symbol
@@ -2860,26 +2891,25 @@ path(x,y,c1) <= path(x,y,c2) :- c2 <= c1.
 Note this is also useful for difference logic propagation.
 See difference logic in propagators
 
-
-
-
-
 A*
 
 Provenance of reachability _is_ the path.
+
 ### Spanning Tree
 
 ### Clique
+
 ### Cycle
 
 ### Subgraph Matching
+
 Doesn't really require datalog. No recursion.
 You can write patterns as queries. You can do this in sql. This is what graph databases do.
 
 ### Coloring
+
 With the choice construct.
 Not an optimal coloring. Or probably even a very good heuristic coloring.
-
 
 The increase of information from propagation is learnign what colors something can't be.
 
@@ -2897,6 +2927,7 @@ notcolor(n2,c) :- edge(n1,n2), color(n1, c).
 
 Maybe with a iter choice parameter. And you keep the lowest branching solution?
 iter could be an a priori ordering of nodes.
+
 ```
 // hmm doesn't work
 color(iter:unsigned,node , color)
@@ -2904,7 +2935,9 @@ color(i+1,n,c) :- !notcolor(i, n,c).
 color(n+1,n,c) :- !notcolor(n, n,c).
 
 ```
+
 All possible branches? Pruned branches?
+
 ```
 .type branch = Cons { n :  node, c : color,  branch } | Nil
 
@@ -2912,12 +2945,14 @@ All possible branches? Pruned branches?
 ```
 
 Mod out color choice.
+
 ```
 same_color(x,y)
 diff_color(x,y) :- edge(x,y)
 ```
 
 ## Propagators
+
 ### Boolean Constraint Propagation
 
 ```souffle
@@ -2963,6 +2998,7 @@ uhhhh, what am I doing?
 ```
 
 ### Difference Logic
+
 path(x,y,c) <=> x - y <= c
 
 can also encode equality and  x <= c constraints with zero node.
@@ -3051,6 +3087,7 @@ eq(x, c):- diff_eq(x, "zero",c).
 
 
 ```
+
 ### Finite Domain
 
 Use first class sets? Not necessarily
@@ -3062,8 +3099,8 @@ alldifferent?
 num() :- num(i,j,n).
 
 ```
-One hot encoding can be useful even if using not to represent sets
 
+One hot encoding can be useful even if using not to represent sets
 
 ```souffle
 // send more money
@@ -3081,6 +3118,7 @@ range(),
 ```
 
 I mean surely hakank has done this in clingo
+
 ```clingo
 
 {s(0..9)}. {e(0..9)}.
@@ -3088,9 +3126,6 @@ I mean surely hakank has done this in clingo
 
 
 ```
-
-
-
 
 ## Macros
 
@@ -3145,6 +3180,7 @@ The combinator is (a ; b) :- c where `a` can end up being a curried clause.
 z :- x :- y. == z :- x,y.
 
 We need a writer monad? We can store clauses at the back or front of the expansion, otherwise we might need to hold in a structure
+
 ```souffle
 //PAIR(x,y)
 #define FST_PAIR(x,y) x 
@@ -3155,8 +3191,8 @@ We need a writer monad? We can store clauses at the back or front of the expansi
 FST(PAIR(7, "hello"))
 
 ```
-Hmm. But it needs to be delayed.
 
+Hmm. But it needs to be delayed.
 
 ```cpp
 #define IMPL(h,b) PAIR(b , h :- b.)
@@ -3171,6 +3207,7 @@ EVAL(IMPL(head, BODY(x,y,z)))
 
 
 ```
+
 ```c
 #define E_FST_PAIR(x,y) x 
 #define E_SND_PAIR(x,y) y 
@@ -3180,6 +3217,7 @@ EVAL(IMPL(head, BODY(x,y,z)))
 #define EVAL(x) E_ ## x
 
 ```
+
 ```bash
 cpp $0 && exit 0
 
@@ -3195,6 +3233,7 @@ APPLY(SND, ID( (1,2) ))
 SND(,)
 
 ```
+
 ```souffle
 .pragma "dummy"
 ```
@@ -3220,19 +3259,18 @@ RUN(IHEAD(fib(n, m1 + m2) ,
 ```
 
 I'm suggesting I wangt the disjunction of a goal and (g ; h)? That's pretty bizarre.
-((h2 :- b1) ; h1) :- b2 
+((h2 :- b1) ; h1) :- b2
 
 fib(n, n1+n2) :- ORIMPL( (fib(n-2, n2), fib(n-1,n1)) ,
                    fib_q(n-2), fib_q(n))
                   ORIMPL( ?, fib_q(n-1) ,     )).
 This isn't working. There is something very odd about the recursion pattern here.
 
-
 // These are non compositional.
-#define ORBODY(h,b1,b2) CLAUSE(h, b1) CLAUSE(h, b2)
-#define ORHEAD(h1,h2,b) CLAUSE(h1,b) CLAUSE(h2,b)
-#define IMPLBODY(h, b1, b1) CLAUSE( h, (b1, b2) )
-#define IMPLHEAD()
+# define ORBODY(h,b1,b2) CLAUSE(h, b1) CLAUSE(h, b2)
+# define ORHEAD(h1,h2,b) CLAUSE(h1,b) CLAUSE(h2,b)
+# define IMPLBODY(h, b1, b1) CLAUSE( h, (b1, b2) )
+# define IMPLHEAD()
 
 ```
 
@@ -3249,7 +3287,8 @@ NVARS(x,y,z,w)
 
 ```
 
-simpler. The idea is the the larger var args is, the 
+simpler. The idea is the the larger var args is, the
+
 ```souffle
 #define NVARS(...) NVARS_(__VA_ARGS__,4,3,2,1)
 #define NVARS_(_1,_2,_3,_4,_N, ...) _N
@@ -3293,7 +3332,7 @@ x
 ===============
 */
 ```
-https://twitter.com/SandMouth/status/1551384178494668800?s=20&t=RCRFQkOrxezpvPdn1ABsBA ed kmett is up to some crazy looking shit.
+<https://twitter.com/SandMouth/status/1551384178494668800?s=20&t=RCRFQkOrxezpvPdn1ABsBA> ed kmett is up to some crazy looking shit.
 
 really the most boring version of this is to just spell out the cases and not use VA_ARGS. I will admit va_args makes it tighter. And just label the pattern LIST_N by it's size, you whiner. The macro weirdness to infer N is probably not worth it.  If you make the last argument by convention the tail of the list, these are useful for patterns like `a :: b :: xs` too.
 Also these can be chained like so : `LIST_3( 1,2,LIST_3(32,324,nil))`
@@ -3316,12 +3355,10 @@ test(LIST_7(57,34,46,52,7,34,nil)).
 
 Hmm. Rather than skolemization, inlining seems good. Gives us sound (hopefully) existentials.
 
-foo(x,y) :- 
-
-
-
+foo(x,y) :-
 
 ## Emulating Prolog
+
 Datalog is bottom up and prolog is top down. In a sense datalog feels “push” and prolog feels “pull”. These viewpoints can be translated to some degree to each other. Prolog can gain some benefits of datalog via tabling, which is a memoization technique. Likewise datalog can become goal driven via the “magic set transformation”, The following is a simplified but intuitive presentation I believe of the vague idea.
 
 Relations in prolog can be used in different [modes](https://www.swi-prolog.org/pldoc/man?section=modes) (this is prolog terminology btw. An interesting concept). It’s part of the beauty of prolog that relations are sometimes reversible or generative if written to be so. Sometimes prolog programs are written to only behave correctly if used as if they were essentially a function.
@@ -3334,13 +3371,7 @@ What is and isn't ground?
 
 What is and isn't pattern matching vs unification. In some sense datalog is a pattern matching language, not unifying language.
 
-
-
-
-
-
 ### Need Sets
-
 
 If you find yourself needing what is essentially a function call on a relation, you can define “need” relation for that relation that takes the arguments. Then the regular clauses producing that relation also take the need relation to push in the actually needed instantiations of the clause. Here is an example for factorial. We examine the body of fact to see that we need the recursive call evaluated in order to evaluate.
 
@@ -3368,8 +3399,8 @@ When you're translating typical functional algorithms, there is typically only t
 
 If you are using ADTs then perhaps one should consider the flattened version of the adt? ADTs only support some particular modes in the first place either ---+ or +++-. Give all args or give term and get args.
 
-
 We could possibly subsume to reclaim need_fib? Hardly seems worth it.
+
 ```
 need_fib(n) <= need_fib(m) :- fib(n,_). // doesn't do anything. Subsumption bug?
 need_fib(n) <= need_fib(m) :- fib(n,_), n < m. // this one works. I don't know why n < m is required.
@@ -3399,12 +3430,6 @@ Magic set talks about binding patterns. In prolog, one can use relations in diff
 
 In a lattice based datalog, we can use Option as a lattice type, filling in the value later at our leisure and erasing the scaffolding we used to make it.
 
-
-
-
-
-
-
 Specializes datalog program to a particular query / output.
 Query answer transfomation
 
@@ -3412,14 +3437,12 @@ We could imagine applying dataflow analysis techniques to prolog programs. We ca
 
 I suppose I identify datalog with bottom up execution, which is not necessarily the case depending on author.
 
-In prolog SLD resolution, there are program points. We could create relations describing the store at these points. These are the supplementary 
+In prolog SLD resolution, there are program points. We could create relations describing the store at these points. These are the supplementary
 For annotated predicates we could move the annotations as extra fields of the predicates instead of as annotations. This feels more natural when interpreting as a dataflow analysis. Annotations are a describing the binding state? (annotations are lattice? Maybe so but not in the right way)
 
 "It is a form of partial evaluation: at query time, rewrite (specialize) the entire program to an equivalent one, then evaluate it bottom-up. A binding-time analysis identifies which predicates benefit from specialization. Sideways-information passing strategy guides the rewrite."
 
-"I see it as a way to "hack" a bottom-up execution (from facts) into computing top-down (from queries). John Gallagher's query-answer transformation is related to that and used for program analysis https://arxiv.org/pdf/1405.3883.pdf, https://bishoksan.github.io/papers/scp18.pdf"
-
-
+"I see it as a way to "hack" a bottom-up execution (from facts) into computing top-down (from queries). John Gallagher's query-answer transformation is related to that and used for program analysis <https://arxiv.org/pdf/1405.3883.pdf>, <https://bishoksan.github.io/papers/scp18.pdf>"
 
 Emulating clp evaluation of prolog. The constraint store. Dif constraint into egglog.
 What matters in a prolog context.
@@ -3432,6 +3455,7 @@ Varmap says usage sites cause to exist?
 Existential var in body. We can choose to ignore in datalog. Or we can say it would have been grounded eventually by some grounding site. (Or terminated on a ground fact.) yeah. A non ground fact could be seen as a new kind of constant?
 
 [magic set slides](http://users.informatik.uni-halle.de/~brass/lp07/c7_magic.pdf)
+
 - tail recursion is more efficient in sld resolution.
 - metainterpeter. partial evaluation of metainterpeter with respect ot program and query, but not database. "sldmagic"
 
@@ -3440,8 +3464,8 @@ SLDMagic
 "Sniped! I have never understood it but have wanted to. The output has always looked to me like constprop (bottom-up) and specialization (top-down), repeating." - Goodman
 Resprenting sets of goals.
 
-
 binding patterns using Option. Could also allow options in fields of adts.
+
 ```
 .comp Option<T> {
   .type t = None {} | Some {x : t} 
@@ -3449,15 +3473,14 @@ binding patterns using Option. Could also allow options in fields of adts.
 
 fib()
 ```
-What about `foo(X,X,1)`? `foo(None, None, Some(1))` is an over approximation of this case, losing the equivalence info. Well, therse constraints are also probably finitely enumerable.
 
+What about `foo(X,X,1)`? `foo(None, None, Some(1))` is an over approximation of this case, losing the equivalence info. Well, therse constraints are also probably finitely enumerable.
 
 sideways information passing strategy - SIPS. I think this is kind of picking an equivalent prolog evaluation order
 
 [Efficient bottom-up computation of queries on stratified databases 1991](https://www.sciencedirect.com/science/article/pii/074310669190030S)
 
 [Query evaluation in recursive databases: bottom-up and top-down reconciled bry](https://www.sciencedirect.com/science/article/abs/pii/0169023X90900178)
-
 
 [Abstract Interpretation of Logic Programs Using Magic Transformations](https://www2.cs.arizona.edu/~debray/Publications/magic.pdf)
 
@@ -3466,15 +3489,13 @@ Is this he proper term for "need set"?
 [More Efficient Datalog Queries: Subsumptive Tabling Beats Magic Sets∗](http://epilog.stanford.edu/logicprogramming/readings/tekle.pdf)
 Is this saying need_sets may transfer to each other? Or subsume each other?
 Can't even express this i don't think
-p(x,y) <= p(x) :- 
+p(x,y) <= p(x) :-
 Unless you use the $Var | $Lit wrapper
 But this isn't even right.
 p($Var(), $Var()) <= p($Lit(), $Lit())
 
-
 KT Tekle
 Liu
-
 
 ```souffle
 .type UList = UL {n : number} | Cons {a : symbol, b : UList} | Nil {}
@@ -3523,6 +3544,7 @@ eq(a,a1), eq(b,b1):- eq( $Cons(a,b), $Cons(a1,b1)).
 ```
 
 ### First class union find
+
 Need to carry an explicit union find field to thread? Slash an explicit substition mapping (slash homomorphism which is insane terminology)
 
 eqrel gives _global_ union find. Sort of the question is how to have local consistent union finds.
@@ -3543,9 +3565,11 @@ A curried notation would be nice for functional patterns where we send demand an
 ( ( res :- continue  , recv)   , send :- start )
 
 ## Translating Imperative Programs
+
 similar to translating to functional style.
 Figure out the state. Make them all parameters to relation
 One style is:
+
 ```
 foo(nextstate) :- foo(state).
 ```
@@ -3570,7 +3594,8 @@ Note the big difference here though. We have _factored_ the old line3 relation. 
 This is of some relation to lossless joins and things in database theory.
 This factoring can be useful as an overapproximation technique.
 
-### Iteration 
+### Iteration
+
 This is related to timestamping.
 See mandelbrot example.
 Iteration isn't quite as silly as you'd think. Semi naive means we only work on the frontier of the loop.
@@ -3590,15 +3615,14 @@ sumn(i+1, s + i) :- sumn(i,s), i < 10.
 
 ```
 
-
-
-
 ## Model Checking
+
 See Chapter 8 State-Space Search with Tabled Logic Programs
 
 Farmer puzzle
 
 Die Hard puzzle
+
 ```souffle
 .pragma "provenance" "explain"
 .decl reach(big : unsigned, small : unsigned)
@@ -3651,10 +3675,11 @@ reach(5, 0)  5 > 3
 */
 ```
 
+## Timestamping
 
-## Timestamping 
 Transtion systems. All possible executions. Model Checking.
 Dedalus
+
 ```souffle
 .decl foo(a : number, b : number, time : unsigned)
 foo(a,b,t) <= foo(a1,b1,t2) :- t < t2. //possibly allow subsumption of new states only. This won't build all possible paths though.
@@ -3672,18 +3697,20 @@ Using datalog to control reactive systems
 timestamp(@time()) :- true.
 .output timestamp(IO=stdout)
 ```
-Ah I see 
+
+Ah I see
 <https://github.com/souffle-lang/souffle/blob/d1522e06c6e99c259951dc348689a77fa5f5c932/src/interpreter/Engine.cpp#L381>
 I can't open libc.so.6 because this string is being made in this way. libc.so is not the right kind of file.
 
 [Integrity Constraints for Microcontroller Programming in Datalog](https://users.informatik.uni-halle.de/~brass/micrologS/) arduino timestamping, external pin relations. pretty cool.
 [Microlog - A Datalog for Microcontrollers and other Interactive Systems](https://dbs.informatik.uni-halle.de/microlog/)
 
-[Dedalus](https://www2.eecs.berkeley.edu/Pubs/TechRpts/2009/EECS-2009-173.pdf) http://bloom-lang.net/faq/
+[Dedalus](https://www2.eecs.berkeley.edu/Pubs/TechRpts/2009/EECS-2009-173.pdf) <http://bloom-lang.net/faq/>
 
 Timely dataflow - modelling frontiers in datalog? What frontiers reach where is kind of a static analysis
 
 ## Theorem Proving
+
 A lot of these techniques are taken from interpeting the Lambda Prolog rules.
 Question: Is it possible to consider static analysis over lambda prolog to systematically understand some of these tricks?
 
@@ -3692,23 +3719,29 @@ Consider Jens Otten tutorial
 When is the difference between an ATP system like Vampire and Datalog really? They are closer than you might think on first inspection. Both are bottom up systems. Datalog significantly restrict their clause structure. Datalog matches, but doesn't unify.
 
 ### Skolemization for Existential Heads
-$ \forall x, \psi(x) \implies \exists y, \phi(x,y)$ can be replaced with 
+
+$ \forall x, \psi(x) \implies \exists y, \phi(x,y)$ can be replaced with
 $ \forall x, \psi(x) \implies \phi(x,y(x))$ where y is now the function that selects the approproate existential value. You can represent function symbols of this kind wtih ADTs. ADTs are great because they know if you've already made the symbol or not.
+
 ```
 .type Skolemized = Y { x : xtype } | Lit { a : ytype}
 ```
+
 An alternative semantics might be to try
 
 $ \forall x, \psi(x) \implies \phi(x,autoinc())$ but then the thing will never terminate.
 
 ### Goals / Queries
+
 Souffle doesn't quite have a notion of goal. But `.output` relations are the analog of goals/queries.
 The magic set transform works this way.
 
 If in prolog you would write
+
 ```
 ?- foo(X), bar(X,Y,7).
 ```
+
 as a query, you can do the same thing by naming this query
 
 ```souffle
@@ -3718,10 +3751,11 @@ myquery(x,y) :- foo(x), bar(x,y,7).
 
 In theorem proving, your axioms because clauses, and your to-be-proved theorem will become a goal of this variety.
 
-### Uncurrying 
+### Uncurrying
+
 A logical formula of the form
 $p \implies q \implies r$
-is equivalent to 
+is equivalent to
 $p \land q \implies r$
 `r :- p, q`
 So you can express axioms of this type by uncurrying.
@@ -3732,13 +3766,15 @@ A alternative approach to dealing with the same class of formula is "defunctiona
 part_rule1(x) :- p(x)
 r(z) :- part_rule(x), q()
 ```
+
 ### Contextual Datalog / Hypothetical Datalog
-[hypothetical datalog](http://www.fdi.ucm.es/profesor/fernan/FSP/Sae13c.pdf) https://www.sciencedirect.com/science/article/pii/0304397590900116
 
-https://www.philipzucker.com/contextual-datalog/
+[hypothetical datalog](http://www.fdi.ucm.es/profesor/fernan/FSP/Sae13c.pdf) <https://www.sciencedirect.com/science/article/pii/0304397590900116>
 
+<https://www.philipzucker.com/contextual-datalog/>
 
 ### Higher Order Clauses (Harrop)
+
 $ (p \implies q) \implies r$ is a different animal from the above.
 I'm not super sure how to deal with these.
 I'd suggest that predicates need to be extended with a notion of context. Higher order rules like these are interpetted as something like
@@ -3751,23 +3787,27 @@ What precisely I mean by ctx is unclear here. It seems like I'd need to internal
 Contexts do have a partial order. Derivations in weaker contexts can subsume strong ones.
 I suspect we are running into serious problems where we are just lacking the appropriate primitive to do this efficiently.
 
-
 Consider
+
 ```
 bar(x,y) -> (biz(x) -> baz(x,y)) -> foo(x) / rule7
 ```
+
 We can curry / materialize the subquery
+
 ```
 bar(x,y) -> need_bizbaz(x,y)
 ```
 
 This defunctionalize thing becomes the need set / magic set of a contextual query.
 We can partially evaluate the ctx to be part of the rules or not
+
 ```
 .type Ctx = Glob {} | BizBaz {x : number, y : number}
 ```
 
-We 
+We
+
 ```
 //insert the body of the higher order rule.
 biz($BizBaz(x,y), x) :- need_bizbaz(x,y).
@@ -3788,7 +3828,7 @@ far($BizBaz(x,y), z) :- ctx($BizBaz(x,y)), far(Glob(), z)
 
 ```
 
-We can make context arbitrarily deep, but we have to make a cutoff. Probably going higher than 2 is gonna not be so good. 
+We can make context arbitrarily deep, but we have to make a cutoff. Probably going higher than 2 is gonna not be so good.
 This is similar feeling to k-CFA.
 
 Anything that can be produced from biz needs a contextual verision. bar(x,y) can be considered the same as bar(Glob(),x,y). That's a different convention. Instead of adding context everything have bar and bar_ctx, where implicilty bar is Glob.
@@ -3796,10 +3836,11 @@ Anything that can be produced from biz needs a contextual verision. bar(x,y) can
 Can use subsumption if you learn fact should go in database.
 
 #### Stack database / Harrop Datalog / Tentative Datalog
+
 Blog post: [Contextual Datalog: Steps Towards Lambda Datalog](https://www.philipzucker.com/contextual-datalog/)
 
-You can organizing your database into a stack. You can refactor this in a number of ways. 
-In seminaive you have a old, new, and delta table per  relation. You can make old into `[old]` and only commit into the top of the stack. 
+You can organizing your database into a stack. You can refactor this in a number of ways.
+In seminaive you have a old, new, and delta table per  relation. You can make old into `[old]` and only commit into the top of the stack.
 You could also factor the entore `[database]` into a stack of databases instead of per relation.
 You could also add an extra stack height key into every row and then call `DELETE where stack >= N` when you want to pop (even pop far).
 
@@ -3879,6 +3920,7 @@ print(a.normalize())
 [{2, 3}, {1}]
 '''
 ```
+
 Could order sets by size. That could trim down on what to look at.
 s <= s1 only is possible if len(s) <= len(s1)
 
@@ -3887,9 +3929,9 @@ heuristic: look at set size itself bucket (to try and find the set itself), then
 If we didn't use hashsets, instead some kind of trie set, we could have a set of sets.
 
 [set trie](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0245122) there is no way this should be a 2021 paper?
-Ah they use sorted lists as the sets. That's interesting. 
+Ah they use sorted lists as the sets. That's interesting.
 
-https://github.com/KaiserKarel/set-trie
+<https://github.com/KaiserKarel/set-trie>
 
 ```python
 class Trie():
@@ -3936,6 +3978,7 @@ eq(t1,t2) :- forall a : set(t1,a), set(t2,a).
 The point of first class sets is closedness. Maybe this is a kind of peculiar stratification (partially ordered time?)? We need to ask aggregate questions of the set (forall, exists, count).
 
 Another kind of reflection. We can memoize if you like all operations.
+
 ```
 set3(s, @myindex(s,0), @myindex(s,1), @myindex(s,2)) :- set(s), s = [3,_data]
 set2(s, @myindex(s,0), @myindex(s,1)) :- set(s), s = [2,_data]
@@ -3950,6 +3993,7 @@ explicit index fights the useful capability of deleting duplicates
 first class maps gives us first class eqclass. f(x) = min(y : eq(x,y))
 
 ### Existenial Queries
+
 Existentials in bodies and toplevel query are interpreted as pattern matching.
 
 Possible alternative: contextual eq relation.
@@ -3963,6 +4007,7 @@ foo(d,Y,Z).
 
 ?- foo(a,B,C).
 ```
+
 emulate this in datalog.
 
 ```
@@ -3975,17 +4020,14 @@ foo(ADD(x,z,ctx) ,x,y,z) :- need_foo(eq, x,y,z), can_unif(eq,x,z).
 .type Lift = A_const {} | B {} | C {} | D_const{} // | Lit {n : number}
 ```
 
-
 A canonical notion of first class equiv rel is mapping from elements to maximum element of their eq class.
 or set. should always make constants higher than unif variables
 Bitset map is just ordered assoc list. 32 bits can support 9 -> 9 mappings. 8 -> 8 is easier. every 4 bits.
 234222.
 A tuple set take n^2 bits. Uh we can order them. n(n-1)/2 bits = 32. Hmm. So that is also 8 elements. Annoying to update though. I guess the other one is annoying to update too. THe canonicalization is annoying.
 
-
-
-
 ### Universal Quantifier
+
 $\forall x, foo(x)$ is not a probem in unification based prolog, but it is in pattern matching based datalog where everything needs to be grounded in the head by the body of a clause.
 
 Bounded quantification is one solution.
@@ -3997,15 +4039,14 @@ We might also try to globally collect up all constants of that type. This is sim
 `foo(x) :- allsymbols(x)`
 
 `allsymbols` can be manually instantiated as ground facts or generated from any predicate that uses symbol of said type
+
 ```
 allsymbols(x) :- biz(x,_,_).
 allsymbols(x) :- biz(_,_,x).
 allsymbols(x) :- baz(x,_). 
 ```
 
-
 Some foralls that are part of rules can just be dropped. $\forall x, \phi(x) \implies \phi(x)$. I suppose this could be considered an optimization of the `allsymbols` strategy.
-
 
 We can initialize the database with a set of "fresh" symbols. And carry around explicit signature
 `foo(sig,ctx) := sig ; ctx |- foo`
@@ -4015,7 +4056,8 @@ We can initialize the database with a set of "fresh" symbols. And carry around e
  `forall_foo(sig \ {a}, ctx, bvar(0)) :- foo(sig, ctx, a), elem(a,sig), free(a, ctx).`
 
  We need to seed predicates that a can be possible value of domain
-``` 
+
+```
 For fresh vars:
 
 -------------------- Ax1
@@ -4032,6 +4074,7 @@ For actual "meaningful" (top level) values.
 values(SING(a), a).
 foo(ctx,SING($Foo(v))) :- values(SING(a), a).
 ```
+
 We also may have subsumption of the signature in the same way as ctx. We need to assure the varable appears in neither ctx nor fields before we can delete it.
 
 If sig is nameless, when we combine/join sigs from separate relations, what do we get? All possible ways of matching up the two? Or maybe we just concat the sigs? That is the most general theorem. And we are always free to identify elements in the sigs? Is that a valid form of weakening the signature? We can also susbtitute?
@@ -4047,7 +4090,6 @@ universal without contexts as simpler problem
 
 existentials causes skolems, universals cause frees? Kind of reversed feeling from my gut. turning a forall into a var in backward mode is making a fresh var. In forward mode it is sealing a flexible var, a unification variable of sorts.
 The subst rule of harrison.
-
 
 ```souffle
 .type wrapnum =   Lit {n : number}
@@ -4075,8 +4117,10 @@ bar(x,x) :- bar($Free(0), $Free(0)), val(x).
 bar(x,y) :- bar($Free(n), $Free(n)), val(x), val(y), ((n = m, x = y); n != m).
 
 ```
+
 forall x, foo(x) /\ bar(x).
 We need to defunctionalize foo_bar and/or forall_foo_bar.
+
 ```
 forall x, foo(x) /\ bar(x)
 --------------------------
@@ -4096,18 +4140,17 @@ It really helps to ignore ADTs and just talk about forall for flat datalog-like 
 
 Logic with these instantiable variables is a very primitive thing.
 
-
 Options:
+
 - Limit avaialable variable patterns
 - Discrimiination tree. At leaves point to actual variable names. Variable in tree are labelled or no.
 - Matching modulo permutation of variable names
-- 
+-
 
 Clauses in ATP must have solved this problem. Deduplication of clauses, subsumption of clauses.
 Maybe universal is what makes it not datalog anymore
 prune context tables like rebuilding?
 Just ignore problem
-
 
 No I thought I had it, but there are still very serious permutation issues.
 The signature is somehow trying to capture a permutation invariance in the same way the set like character of the context is.
@@ -4137,6 +4180,7 @@ shift()
 
 Man embdding this in souffle seems tough. We really need to destructure
 If however I use a custom term representation
+
 ```souffle
 // type term = [head : symbol, args : vec]
 
@@ -4158,21 +4202,23 @@ test(ADD($T0("x"),$T0("y"))).
 ```
 
 First class union find [0,1,1,1]
-@perm3(uf, 2,1,1). returns uf of var [v2,v1,v1], which in this case would be [0,0,0]. since v2 and v1 point to each other. 
+@perm3(uf, 2,1,1). returns uf of var [v2,v1,v1], which in this case would be [0,0,0]. since v2 and v1 point to each other.
 Decouples naming variables from the data structure itself.
 Variant checking and a subclass of subsumption become easy.
 `foo(x,y,z, uf1) <= foo(x,y,z,uf2) :- @subuf(uf1,uf2).`
 
 Awkward and error prone to manually program with. Needs metadatalog.
+
 ```
 .decl nvar(t : term, n : unsigned)
 #define GROUND(t) nvar(t,0)
-``` 
+```
+
 Sometimes this may be necessary to step over unexpanded terms.
 
 Relative of co-de bruijn. Also relative of term indexing. Discrimination trees.
 Bad indexing for non concrete terms.
-We can tell the difference easily between `$Var()` and `a` in a pattern. 
+We can tell the difference easily between `$Var()` and `a` in a pattern.
 
 ```
 #define NIL $Symbol("nil")
@@ -4185,6 +4231,7 @@ append_a(CONS($Var(), x), y, CONS($Var(), z), uf) :-
   append_q(), append_a(x,y,z, uf1), nvar(x,nx), nvar(y,ny), nvar(z,nz), uf = @perm(uf, ???).
 append_q().
 ```
+
 @nvars(t:term):unsigned
 The union find surgery is more complex than I thought. Go figure.
 @slice(uf, 0, nx)
@@ -4197,7 +4244,7 @@ The union find surgery is more complex than I thought. Go figure.
 Maybe append(x,ufx, y,ufy, z, ufz) is better convention? toplevel packing of uf with tree?
 We could bite the bullet and just traverse terms.
 
-For context we need first class map.  _multiset_ of (unmarked var) terms in context which . first class map from terms to number of them. UF should have some convention for breaking ties. Now it isn't 
+For context we need first class map.  _multiset_ of (unmarked var) terms in context which . first class map from terms to number of them. UF should have some convention for breaking ties. Now it isn't
 Otherwise same diff.
 
 This seems great.
@@ -4212,15 +4259,17 @@ norm(t, offset):countterm
 norm(old:term, olduf:uf, new:term)
 
 Another representation: Use a set of location map trees. We don't care about order.
+
 ```
 .type map = Left {map} | Right {map} | Here {} | Both {map, map}
 ```
+
 Assume left associated form for things with more than 2 args.
 
 foo(Var,Var), { Both(Here,Here)  } vs {  Left(Here), Right(Here) }
 
 The trees are _disjoint_
-We then need to 
+We then need to
 This somehow is a unification tree or no?
 
 It's difficult to find the tree that corresponds to Something.
@@ -4241,8 +4290,8 @@ Do beta and free var norm?
 @norm3
 That is a nearly usable interface. Hmm.
 
-
 ### Geometry
+
 <http://www.mmrc.iss.ac.cn/~xgao/paper/jar-gdbase.pdf> see appendix
 
 Hmm they store canonical forms of relations. That's cool.
@@ -4399,7 +4448,6 @@ Hmm. Comp(Id, f) is going off the rails. Any loop will. Can subsume on term size
 Mayybe it's worth it to do Comp { symbol, morph} list style. Hard to do.
 Could block composition rule on Id. Kind of a cheap shot
 
-
 ```souffle
 .type obj <: symbol // Sometimes we need constructors, like Otimes.
 .type typ = Obj {} | Hom {a : obj, b : obj}
@@ -4417,30 +4465,31 @@ comp() :- typ(), comp
 
 ```
 
-## Typeclass resolution.
+## Typeclass resolution
+
 See Lean paper Tabling Typeclasses
-See Chalk (which uses datafrog?) https://github.com/rust-lang/chalk
+See Chalk (which uses datafrog?) <https://github.com/rust-lang/chalk>
 
 Write typeclass rules as datalog/prolog clauses. The provenance tree is enough to actually construct the type class instances.
 
-
 ## Borrow Checker
+
 Hmm the borrow checker is seperate from the trait engine chalk probably
 See ascent paper which compares itself with datafrog based polonius
-Polonius https://www.youtube.com/watch?v=_agDeiWek8w
-switches polonius from diff dataflow to datafrog https://github.com/rust-lang/polonius/pull/36#issuecomment-390393717
-https://github.com/frankmcsherry/blog/blob/master/posts/2018-05-19.md datafrog blog post
+Polonius <https://www.youtube.com/watch?v=_agDeiWek8w>
+switches polonius from diff dataflow to datafrog <https://github.com/rust-lang/polonius/pull/36#issuecomment-390393717>
+<https://github.com/frankmcsherry/blog/blob/master/posts/2018-05-19.md> datafrog blog post
 [An alias-based formulation of the borrow checker](http://smallcultfollowing.com/babysteps/blog/2018/04/27/an-alias-based-formulation-of-the-borrow-checker/) soufle datalog rules
 [rust board discussion](https://internals.rust-lang.org/t/blog-post-an-alias-based-formulation-of-the-borrow-checker/7411)
-"NLL"? Non lexical liftetimes https://stackoverflow.com/questions/50251487/what-are-non-lexical-lifetimes
+"NLL"? Non lexical liftetimes <https://stackoverflow.com/questions/50251487/what-are-non-lexical-lifetimes>
 This is perhaps related to alias analysis? But maybe not.
 Also perhaps to subtyping.
 
 [the move borrow checker](https://twitter.com/b1ackd0g/status/1526251533758738432?s=20&t=bg0gpKH5p3kCZWau-XE4ng) some kind of smart contract borrow checker
 
-
 region variables.
 lifetimes
+
 ```souffle
 // just collected up from post above
 
@@ -4514,12 +4563,12 @@ A sequel to the above post with other souffle rules
 [Polonius and the case of the hereditary harrop predicate](http://smallcultfollowing.com/babysteps/blog/2019/01/21/hereditary-harrop-region-constraints/)
 Hmm... So he's mixing harrop, lifetimes, datalog. My kinda guy.
 
-[lifetimes.lifetime inference in souffle ](https://github.com/rljacobson/lifetimes)
+[lifetimes.lifetime inference in souffle](https://github.com/rljacobson/lifetimes)
 
 ## Type checking
+
 Related of course to the above.
 See the table on page 3 of [this bidirectional typing tutorial](https://arxiv.org/pdf/1908.05839.pdf). This is more or less a transcription of these rules to datalog. It is interesting how explicit the moding and forward / backward reasoning becomes. `has` becomes a seperate entity from `infer` and `check`. The latter two are top down / backwards requests for proofs, whereas `has` is a bottom up / forward reasoning assertion of truth.
-
 
 ```souffle
 .type type = Unit {} | Arr {a :  type, b : type}
@@ -4650,17 +4699,15 @@ index([a,ctx], n + 1, x) :- index([a,ctx], _, _), index(ctx, n, x).
 
 ```
 
-Thinking in terms of tabling, there is a difference between query and answer. 
+Thinking in terms of tabling, there is a difference between query and answer.
 
 [bidirectional typing](https://arxiv.org/pdf/1908.05839.pdf)
 I suppose bidi checking feels nice because we are already used to thinking of the different modes as different predicates. We also need to make these distinctions for magic set transform
 
 [Rust lifetime analysis written in souffle](https://github.com/rljacobson/lifetimes)
 
-
 eqrel for hindley milner? Yihong had something like this
 souffle-z3 for refinement typing?
-
 
 ## Coinductive or Greatest Fixed Point Datalog
 
@@ -4669,9 +4716,8 @@ There is coinductive logic programming which is prolog
 
 In semantics of ASP, stable semantics, I seem to recall them talking about the ast and greatest model.
 
-LFP is the minimum 
+LFP is the minimum
 GFP is the maximal consistent set
-
 
 ```
 // a co-fact
@@ -4690,21 +4736,20 @@ neg_biz() :- neg_bar(), foo().
 
 
 ```
+
 Datalog builds finite sets. Co-datalog builds co-finite sets.
 
 This _is_ a valid ASP program, but maybe we're targetting a subset that is treatble
+
 ```clingo
 :- foo().
 bar() :- foo(), biz().
 ```
 
-
 Making a negatin relation is a good trick. It turns the union of datalog into an intersection.
 One could imagine a datalog that fills the database o start with and removes facts as they become inconsistent, but why not just list the facts that are known to not hold.
 
 The well founded semntics seems to be the best match here.
-
-
 
 has non terminating path is a kind of liveness property. It is analagous in some respects to reachability (vertex specialized path query).
 has-infinite-trace is another way of putting it.
@@ -4771,10 +4816,10 @@ cycle(x) :- edge(x,y), cycle(y).
 // cycle(x) :- edge(x,y), edge(y,x).
 // transitive closure to reach cycle
 ```
+
 If there are multiple rules, they all have to fail to propagate a negation.
 The negation also plays into the quantifier structure.
 This is perhaps related to performing the (clark) completion of a program.
-
 
 For co-datalog, this ought to be the only rule necessary.
 `inf_trace(x) :- edge(x,y), inf_trace(y)`
@@ -4787,9 +4832,8 @@ forall x, (not not forall (not edge \/ not t(y)) \/ t(x)
 
 forall x, not not t(x) \/ (exists edge, t(y))
 
-
-
 Hmm. Clingo is not panacea I pretended it might be. Clingo is still very least fixpoint based.
+
 ```clingo
 edge(1,2). 
 edge(2,3). 
@@ -4813,7 +4857,9 @@ I don't _really_ feel like clingo is necessary, but it does have some nice featu
 The conditional rule using bounded quantification to a previous strata is safe.
 
 Maybe I need to construct all possible proofs and only remove somthing when there are no allowable extant proofs.
+
 ### DFA Minimization
+
 ```souffle
 .type state = symbol
 .type action = number
@@ -4859,16 +4905,19 @@ eq(X,X) :- obs(hd, A, X).
 ```
 
 ## CRDTs
+
 CRDT are a latticy based structure. It makes sense that it might be realted or modellable in datalog
 
 [expressing crdts as queries using datalog](https://speakerdeck.com/ept/data-structures-as-queries-expressing-crdts-using-datalog)
-https://github.com/frankmcsherry/dynamic-datalog/blob/master/problems/crdt/query.dl souffle example
-https://github.com/frankmcsherry/dynamic-datalog
+<https://github.com/frankmcsherry/dynamic-datalog/blob/master/problems/crdt/query.dl> souffle example
+<https://github.com/frankmcsherry/dynamic-datalog>
 
 ## MultiSet Semantics
+
 If you give a reason for each tuple, you can get multiset semantics.
 
 paths in a dag
+
 ```souffle
 .type reason = Base {n : number} | Trans { x : reason, y : reason}
 
@@ -4896,7 +4945,7 @@ If you start subsumpting these reasons you get something similar to provenance a
 [Specifying and Reasoning about Dynamic Access-Control Policies Daniel J. Dougherty,1 Kathi Fisler,1 and Shriram Krishnamurthi 2](https://web.cs.wpi.edu/~dd/publications/ijcar06.pdf)
 googlew "access control datalog" you get a bunch of hits. The references in these paper
 
-description logics https://www.cs.man.ac.uk/~ezolin/dl/
+description logics <https://www.cs.man.ac.uk/~ezolin/dl/>
 
 AWS zelkova is not datalog
 
@@ -4906,30 +4955,33 @@ vs alloy vs tla+ vs smt?
 [souffle example](https://github.com/souffle-lang/souffle/blob/master/tests/example/access-policy/access-policy.dl)
 
 ## Networks
+
 [Checking Beliefs in Dynamic Networks](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/nod.pdf)
 [Efficient network configuration verification using optimized datalog](https://ieeexplore.ieee.org/document/8406876)
 [An Operational Semantics for Network Datalog](https://www.andrew.cmu.edu/user/liminjia/research/papers/ndlogsemans-tr.pdf) [NDlog thesis](https://digitalassets.lib.berkeley.edu/techreports/ucb/text/EECS-2006-177.pdf)
 [declarative netowrking book](https://ieeexplore.ieee.org/document/6813052?arnumber=6813052)
 
 ## Make
+
 Build systems like make a logic programing rukles
 [lpmake for ciao](https://github.com/ciao-lang/lpmake/blob/master/examples/latex/Makefile.pl)
 [Propositions as Filenames, Builds as Proofs: The Essence of Make](https://bentnib.org/posts/2015-04-17-propositions-as-filenames-essence-of-make.html)
 
 CSS is prolog
-https://twitter.com/soundly_typed/status/1513500166359298048?s=20&t=-ertSPtY87GogVCFq4f-Rw 
+<https://twitter.com/soundly_typed/status/1513500166359298048?s=20&t=-ertSPtY87GogVCFq4f-Rw>
 
 # Topics
 
 ## Answer Set Programmng
+
 Grounding is a form of provenance
 
 Conditional literals are a really good feature. If the condition appears ina previous strata, it is monotone and hence (?) actually a datalog feature.
 
 recursive Cardinality constraints with lower bound in the body are also a datalog feature. Upper bound and hence equality cardinality need to be stratified.
 
-Maybe with the double negation feature you could do it. https://twitter.com/taktoa1/status/1548109067855376385?s=20&t=mIwj8pQtmBh4ysUcnNC4vg . Parity-stratified negation in codeql
-https://www.swi-prolog.org/pldoc/man?predicate=forall/2 forall x:A, B = forall x, A -> B = not exists x (A /\ not B) = not exists x:A, not B. This is a classical correspondence. Intuitionisitically, you can go left to right but not right to left I suspect.
+Maybe with the double negation feature you could do it. <https://twitter.com/taktoa1/status/1548109067855376385?s=20&t=mIwj8pQtmBh4ysUcnNC4vg> . Parity-stratified negation in codeql
+<https://www.swi-prolog.org/pldoc/man?predicate=forall/2> forall x:A, B = forall x, A -> B = not exists x (A /\ not B) = not exists x:A, not B. This is a classical correspondence. Intuitionisitically, you can go left to right but not right to left I suspect.
 
 ```souffle
 // Not accepted because cyclic negation
@@ -4952,6 +5004,7 @@ rec_count(count : foo(x), max : foo(x)).
 ```
 
 ## Provenance
+
 [Explaining Outputs in Modern Data Analytics∗](http://www.vldb.org/pvldb/vol9/p1137-chothia.pdf) prvoencnace in differential dataflow <https://github.com/frankmcsherry/explanation> <https://github.com/frankmcsherry/blog/blob/master/posts/2016-03-27.md>
 
 [decalarative datalog debugging for mere mortals](https://yanniss.github.io/DeclarativeDebugging.pdf)
@@ -4968,19 +5021,22 @@ Master provenance can be done by reflecting the rules themselve into an AST al l
 
 ```
 
-Timestamps are a form of provenance. 
+Timestamps are a form of provenance.
+
 ## Semi Naive Evaluation
-I remember a time when semi naive seemed pretty cryptic to me. I still amnot sure I understand it perfectly, but I have crossed the threshld 
+
+I remember a time when semi naive seemed pretty cryptic to me. I still amnot sure I understand it perfectly, but I have crossed the threshld
 
 Naive evaluations only needs one table per relation. You can keep track of if there is anything to do by checking whether you find new tuples as you go along.
 You could do it instead with two tables
+
 - old
 - new
   
 And then at the final step, take the set `old \ new` , see if it is empty for termination check, and add it into old
 
-
 For every logical relation you need to keep 3 tables
+
 - old (stable)
 - delta (recent)
 - new (to_add)
@@ -4988,7 +5044,6 @@ You need these three because you need a place to put new facts, but also you wan
 `delta = new \ old`
 
 ## Algebraic Data Types
-
 
 Termination is no longer guaranteed. How do you guarantee termination?
 Well one way is perhaps to only produce _new_ terms "smaller" than ones discovered. This is like termination in functional programming with the caveat that you may recursively not make progress.
@@ -5000,34 +5055,30 @@ You may also use any terms discovered whole hog.
 One way to treat existential is to search for them in the already known database.
 
 ## Lattices
+
 Lattices give a natural way to "fix" broken functional dependencies of the tables.
 
 Flix, Ascent many others support a notion of relation fields being defined as lattices with a special "merge" operation.
 
-Datalog is declarative. You don't really control the order in which things happen. Lattices are an algebraic structure that supports a conveninent notion of merging. 
+Datalog is declarative. You don't really control the order in which things happen. Lattices are an algebraic structure that supports a conveninent notion of merging.
+
 1. Merging order doesn't matter (commutative and associative)
 2. Merging twice doesn't matter (idempotence)
 
+Datalog itself can be considered as a expansive operator operating over the space of powersets of tuples. Powersets of tuples form a lattice with subset inclusion being the order, union being join and intersection being meet. Somehow this notion of lattice operates at more of a "metalevel" than the internal notion of lattice.
 
-Datalog itself can be considered as a expansive operator operating over the space of powersets of tuples. Powersets of tuples form a lattice with subset inclusion being the order, union being join and intersection being meet. Somehow this notion of lattice operates at more of a "metalevel" than the internal notion of lattice. 
-
-It is possible, for example, to allow first class sets as elements of your datalog relation. Then 
+It is possible, for example, to allow first class sets as elements of your datalog relation. Then
 
 Other common lattices include MinInt, MaxInt, sets, Intervals, polyhedra, octagons, unknown-true-false-inconsistent, `Option<a>`,
 
 This lattice notion of "join" has no connection to the relational database word "join". This is infortunately confusing.
 
-
 ## Subsumption
+
 [1995 subsumption paper](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.28.103&rep=rep1&type=pdf)
 
-
-
-
-
-
 Linear "datalog" - destructive state update
-Using Sqllite - https://www.sqlite.org/lang_with.html recursive ctes seem to get you a lot. Cool examples. Mandelbrot
+Using Sqllite - <https://www.sqlite.org/lang_with.html> recursive ctes seem to get you a lot. Cool examples. Mandelbrot
 
 bottom up Dynamic programming in datalog? Rod cutting.
 
@@ -5036,6 +5087,7 @@ bottom up Dynamic programming in datalog? Rod cutting.
 Subsumption is kind of the master feature. Now, you can kind of also model these just ignoring the fact you're producing way to many tuples. But subsumption let's you at least keep it kind of under control
 
 #### Provenance
+
 Provenance using subsumption. Provenance works by deleting longer derivations.
 
 ```souffle
@@ -5053,23 +5105,29 @@ path(a,b, w1, d1) <= path(a, b, w2, d2) :- d2 <= d1.
 ```
 
 #### max min
-Max, min using subsumption. 
+
+Max, min using subsumption.
+
 ```
 mymax(z) :- reltomax(z).
 mymax(z) <= mymax(z2) :- z1 <= z2.
 ```
 
 ## Recurusive Sum and Count
+
 Can I do sum and count? Maybe not. Not without tracking what we've already used. You could do this with bitsets. Requires reflection I guess. c
 Ah, I don't need to require tracking the set of already used, only count. Oh. Wait. no.
+
 ```
 mysum(count : unsigned, partial_sum : unsigned)
 mysum(1,n) :- foo(n).
 mysum(n+1,) 
 nope
 ```
+
 But if I cluster them into groups, I can take approximate sums.
 What if I track the current biggest element in the sum. This is tracking the state of a naive summation algorithm. We can lways necode an imperative algorithm to datalog by tracking state. This relies on summing positive numbers only
+
 ```
 mysum(n,n) :- foo(n).
 mysum(n, partsum + n) :- mysum(top,partsum), foo(n), top < n.
@@ -5077,17 +5135,19 @@ mysum(n,sum) <= mysum(n,sum') :- sum <= sum'.
 ```
 
 count
+
 ```
 mycount(n,1) :- foo(n).
 mycount(n, partcount + 1) :- mysum(top,partcount), foo(n), top < n.
 mysum(n,count) <= mysum(n,count2) :- count <= count2.
 ```
 
-Could hyperloglog be relevant for approximate counts? https://en.wikipedia.org/wiki/HyperLogLog
+Could hyperloglog be relevant for approximate counts? <https://en.wikipedia.org/wiki/HyperLogLog>
 
 A* search. Interesting. If you have the a bound on distance you can subsumpt away bad possible paths. Path search is a canonical datalog program. Subsumption allows shortest path search (which I showed above).
 
 #### Lattices
+
 See also bitset lattice above
 
 Lattices are in some respects just an optimization. They allow the database to coalesce rows in a principled way. One could allow the database to be filled with the junk of lesser lattice values.
@@ -5113,13 +5173,12 @@ Perhaps you could make a generic lattice compment parametrized over join
   r(x) <= r(y) :- join(x,y,y).
 }
 ```
+
 But filling out joi will be annoying. There isn't a great way to parametrize over functors so far as I can tell.
 
-
-
 Todo:
-- vsa
 
+- vsa
 
 ##### Min/max lattice
 
@@ -5173,7 +5232,6 @@ Also you can make N max set lattice. Keep sorted. Insertion sort. Kind of a pain
 .type Nary = None {} | One {a : T} | Two {a : T, b : T} | Top {}
 ```
 
-
 ##### Intervals
 
 ```souffle
@@ -5203,8 +5261,8 @@ iexpr(e, [max(l1,l2), min(u1,u2)]) :- iexpr(e, [l1,u1]), iexpr(e, [l2,u2]).
 iexpr(e, [l1,u1]) <= iexpr(e, [l2,u2]) :- l1 <= l2, u2 <= u1.  
 .output iexpr(IO=stdout)
 ```
-It may not be worth packing into a record though. This almost certainly has performance cost. Records never get deleted. So you should just unpack into a relation. 
 
+It may not be worth packing into a record though. This almost certainly has performance cost. Records never get deleted. So you should just unpack into a relation.
 
 ```
 // intervals getting bigger
@@ -5247,13 +5305,13 @@ i1.upper(3).
 i1.upper(14).
 .output i1.upper(IO=stdout)
 ```
+
 #### Widening
+
 It is the case that an analysis may not terminate or just plain take too long.
 What can we do that is principled and still helps? Various definitions of widening, aggressive over approximation.
 
-Widening in trad datalog is not much of a topic. YOu need primitives / lattices before you care. 
-
-
+Widening in trad datalog is not much of a topic. YOu need primitives / lattices before you care.
 
 lat(wide(w)) :- lat(w).
 lat(join(x,y)):- lat(x), lat(y).
@@ -5264,12 +5322,11 @@ lat(wide(join(x,y))):- lat(x), lat(y).
 This is just a mapping into a different lattice. wide has to be monotone. wide is part of a galois connection between 2 lattices.
 
 Widening examples -
-coarsen intervals to nearest power of 2. -[2^-n, 2^n].  `[l,r] -> [bshr (bshl l), (bshl u + `
+coarsen intervals to nearest power of 2. -[2^-n, 2^n].  `[l,r] -> [bshr (bshl l), (bshl u +`
 It's kind of a float.
 Also simple in ball arith [2^n * offset, 2^n * (offset + 1)] <-> (offset, n)
 
 Or a max width interval.
-
 
 shoot intervals to infinite
 maintain iteration count timestamp? kind of like an iteration tracking ghost var. Count visit per block?
@@ -5285,7 +5342,6 @@ widened(@wide(x,t)) :- widened(x), lat(t)
 
 At least this feels like it is offering a possibility for non commuativity.
 How do widened conflicts get resolved? The smallest one?
-
 
 ### Dyadic lattice
 
@@ -5344,16 +5400,19 @@ chain(u1, l1) :- chain(u,l), norm(max(u, u+1), min(l,l-1) , u1, l1).
 .output chain
 ```
 
-
 Simple Type checking
+
 ```
 is_symbol(s : symbol) inline
 is_symbol(s) :- true.
 ```
+
 This will accept any type below symbol too?
 
 #### Equivalence relations
+
 You can make a findParent relation to get a lot of the functionality of equivalence relations. Eq relations are already the same thing as
+
 ```souffle
 eq(x,y) :- eq(y,x). //sym
 eq(x,z) :- eq(x,y), eq(y,z). //trans
@@ -5376,8 +5435,8 @@ canon("y","z").
 .output canon(IO=stdout)
 ```
 
-
 #### Negation
+
 Can I emulate negation using subsumption? Maybe remove negated clauses from rule, and later delete them?
 
 Need to duplicate all clauses to negated versions?
@@ -5388,17 +5447,14 @@ not_f() <= not_f() :- f(a,b).
 f(a,b) :- g(a,b)
 not_g(a,b) :- not_f(a,b)
 
-
-
 But f(a,b) does damage we need to undo?
 
 #### Choice domain
 
 Choice using subsumption, static or dynamic notion of "better".
 
-
-
 ## Semiring Semantics
+
 [Convergence of Datalog over (Pre-) Semirings](https://arxiv.org/abs/2105.14435)
 
 Can consider tensor calculations an example of datalog.
@@ -5411,12 +5467,10 @@ Ordered semirings
 
 `,` and  `;` are overloaded.
 
-
-
-
 ## Probability
+
 Perhaps related to semiring semantics
-[scallop](https://scallop-lang.github.io/) neurosymbolic datalog. Probablistic datalog. Uses provenance. topkrpoofs other methods. 
+[scallop](https://scallop-lang.github.io/) neurosymbolic datalog. Probablistic datalog. Uses provenance. topkrpoofs other methods.
 
 ```python
 import torch
@@ -5430,24 +5484,26 @@ for i in range(N):
 vector db?
 
 ## Datalog+- and the chase
-[Datalog+-](https://dl.acm.org/doi/pdf/10.1145/1514894.1514897) A Unified Approach to Ontologies and Integrity Constraints. Integraes datalog with equality and tuple generating dependencies. 
+
+[Datalog+-](https://dl.acm.org/doi/pdf/10.1145/1514894.1514897) A Unified Approach to Ontologies and Integrity Constraints. Integraes datalog with equality and tuple generating dependencies.
 [Datalog+- questions and answers](https://www.aaai.org/ocs/index.php/KR/KR14/paper/viewFile/7965/7972)
+
 - weakly acyclic
 - guarded - one relation holds all atoms
 - sticky
 
-
-[DLV](https://en.wikipedia.org/wiki/DLV) datalog with disjunction. 
-https://www.dlvsystem.it/dlvsite/dlv-user-manual/ 
-constraints - empty headed rules...? I've also seen them as `! :- ` in dglp
+[DLV](https://en.wikipedia.org/wiki/DLV) datalog with disjunction.
+<https://www.dlvsystem.it/dlvsite/dlv-user-manual/>
+constraints - empty headed rules...? I've also seen them as `! :-` in dglp
 some funky features here. I wonder what the execution semantics is. Maybe disjunctive heads go in constraint store?
 
 negation as failure vs stable model
 
 ## Tabling
-See 
- - prolog#tabling
 
+See
+
+- prolog#tabling
 
 Tabling in prolog leads to something very similar in power to the memoizing datalog. However, you still have unification and logic variables, so it is not clear it is truly equivalent.
 
@@ -5461,11 +5517,10 @@ Datalog puts more at compile time than tabling does (naively?).
 
 ## Descriptive Complexity and Least Fixed Point Logic
 
-[https://en.wikipedia.org/wiki/Fixed-point_logic#Least_fixed-point_logic](https://en.wikipedia.org/wiki/Fixed-point_logic#Least_fixed-point_logic) descriptive complexity theory says datalog is same thing as first order logic with fixpoints. Curious because datalog is also in some sense restricted horn clauses whereas this is saying in another sense it is full FO + fixpoint. 
-
-
+[https://en.wikipedia.org/wiki/Fixed-point_logic#Least_fixed-point_logic](https://en.wikipedia.org/wiki/Fixed-point_logic#Least_fixed-point_logic) descriptive complexity theory says datalog is same thing as first order logic with fixpoints. Curious because datalog is also in some sense restricted horn clauses whereas this is saying in another sense it is full FO + fixpoint.
 
 ## Push based Datalog
+
 - [Brass's website](https://users.informatik.uni-halle.de/~brass/)
 - [push based datalog](https://users.informatik.uni-halle.de/~brass/push/talks/inap17.pdf)
 - [push method](https://users.informatik.uni-halle.de/~brass/push/)
@@ -5479,6 +5534,7 @@ minikanren makes the horn clause aspect more hidden. It heavily uses the functio
 This uses host languae mechanism for bodys. It kind of has an object oriented feel for some reason to me. relations need to support call and iterate.
 There's this big fixpoint.
 Many language already support some kind of auto memoization.
+
 ```
 class Rel():
   def __init__(self,name,arity):
@@ -5491,7 +5547,6 @@ class Rel():
 class Rule():
 
 ```
-
 
 Maybe the way to look at this is to reorganize your clauses. I find this style repetitive and slightly unnatural, but maybe I'm just not used to it.
 
@@ -5610,18 +5665,20 @@ Does this tabling perspective lead to a clue on how to implement push based data
 
 This also brings to mind Peter Goodman's communicating datalog servers and Warren's communicating machine model.
 
-
 ## Incremental / Differential Datalog
-See 
-  - incremenetal notes
-  - DDlog.
-  - note on Databases Streaming
+
+See
+
+- incremenetal notes
+- DDlog.
+- note on Databases Streaming
 
 Seminaive evaluation is a canonical example of incremental computation already.
 
 While souffle does not support incrementality, you can manually do it by semi naive transforming your program yourself? Put the incrmenetality at the bash level
-Make every relation duplicated rel -> rel, drel. 
+Make every relation duplicated rel -> rel, drel.
 drel is an input delta relation.
+
 ```
 
 .decl dedge(x : number, y : number)
@@ -5639,6 +5696,7 @@ edge(x,y) :- dedge(x,y).
 .output path
 .output edge
 ```
+
  You can also output deltas if you want to manually feed seminaive between differetn souffle subprograms.
 
 meta-seminaive
@@ -5646,10 +5704,10 @@ Is this the multi time differential dataflow?
 Inner seminaive is douffle program
 outer is bash loop
 
-
 Multiset semantics
 
 edge path query
+
 ```python
 
 edge = [(i,j,t,delta)]
@@ -5664,10 +5722,6 @@ retracting facts feels important?
 You could just run semi-naive again if you're only adding in.
 provenance required to retract? just counting the ways?
 :- edge(), path()
-
-
-
-
 
 ```python
 scope = 0
@@ -5736,9 +5790,7 @@ But then we need to clean out before we push again. So that's not nice.
 
 Scopes can be related to the min lattice for scope. Yeah. Huh. So you don't even need to run to saturation before you push.
 
-But at the same time, it is the same thing as contextual datalog, just contexts are numbers / totally ordered instead or partially ordered. 
-
-
+But at the same time, it is the same thing as contextual datalog, just contexts are numbers / totally ordered instead or partially ordered.
 
 The second incA paper actuaklly had a description of differential datalog that sounds plausible to me, alhtough I can't quite tell if it makes sense. Record only the number of ways of deriving something at the iteration it was found. Now deletions come in and can reduce this number. If the number is reduced all the way to zero, it is actually deleted (but may be rederived at later iteration).
 
@@ -5751,13 +5803,14 @@ delete 2 -> 3
 
 ```
 
-
 DRED - Delete anything that may have used a fact (recursively). make a delta of thing to delete. Run it through recusrively semi naive style. This is an over approximation of things to delete. Delete them. Now run regular datalog with the fact in question removed. You _may_ have savings. Do you need to do one fully naive step?
 
 ## Backtracking a Datalog
+
 <https://philipzucker.com/backtracking-datalog/>
 
 # Implementations
+
 - Souffle
 - Flix
 - Rel
@@ -5767,7 +5820,7 @@ DRED - Delete anything that may have used a fact (recursively). make a delta of 
 - dr lojekyll
 - formulog
 - [datafrog](https://github.com/rust-lang/datafrog) - kind of a manual datalog library in rust. Powers polonius, the experimental rust borrow checker
-- ascent https://dl.acm.org/doi/pdf/10.1145/3497776.3517779 <https://docs.rs/ascent/latest/ascent/> Rust macro based datalog.
+- ascent <https://dl.acm.org/doi/pdf/10.1145/3497776.3517779> <https://docs.rs/ascent/latest/ascent/> Rust macro based datalog.
 - uZ3 (mu z3) built into z3
 - logicblox
 - [flora2](http://flora.sourceforge.net/) ergo lite. Is this a datalog?
@@ -5776,20 +5829,23 @@ DRED - Delete anything that may have used a fact (recursively). make a delta of 
 - yedalog
 - EVE
 - datomic
-- [cascalog](https://github.com/nathanmarz/cascalog) - clojure runs on hadoop 
+- [cascalog](https://github.com/nathanmarz/cascalog) - clojure runs on hadoop
 
-- bigdatalog - some kind of big data datalog. 
+- bigdatalog - some kind of big data datalog.
 - [XTDB](https://xtdb.com/) XTDB is a general-purpose bitemporal database for SQL, Datalog & graph queries. What the hell does that mean
-- percival https://percival.ink/
+- percival <https://percival.ink/>
 
 - Bloom
 
-- https://github.com/chessai/hsdatalog
+- <https://github.com/chessai/hsdatalog>
+
 ## Rel
+
 [vid](https://www.youtube.com/watch?v=WRHy7M30mM4&t=136s&ab_channel=CMUDatabaseGroup)
 Relational AI
 
 ## DDlog
+
 Incremental datalog. You can assert and unassert facts.
 Datalog compiler in haskell. Produces rust project. Rust project uses differential dataflow which in turn uses timely dataflow.
 
@@ -5829,24 +5885,28 @@ modules
 ```
 
 ## IncA
+
 An incremental datalog for program analysis. Incremental can be a big deal in terms of developer interactivity. Also supports lattices
 
-
 ## Formulog
+
 SMT formulas as data. Interesting distinction with CHC where smt formula are predicates.
 Refinement type checker.
 Symbolic Execution
 
 ## Datafrog
+
 Engine behind polonius?
 A kind of unsugared rust dsl
 [Description](https://github.com/frankmcsherry/blog/blob/master/posts/2018-05-19.md)
 I remember this being totally incomprehensible. I guess I must have lost my mind becaus it seems kind of nice now.
 
 ## Ascent
+
 Rust macro based datalog. Good integration with rust for that reason. Supports lattices
 
-rust-script 
+rust-script
+
 ```rust
 // cargo-deps: ascent
 use ascent::ascent;
@@ -5867,7 +5927,7 @@ fn main() {
 ```
 
 ## Flix
-https://github.com/flix/book
+<https://github.com/flix/book>
 
 Supports lattices.
 Has a full programming language to.
@@ -5881,20 +5941,21 @@ Also install as a vs code plugin. very nice.
 First class datalog programs. Macros for datalog? Is this different than having a datalog AST data type?
 
 ## dr lojekyl
-https://blog.trailofbits.com/2022/01/05/toward-a-best-of-both-worlds-binary-disassembler/
-https://www.petergoodman.me/docs/dr-lojekyll.pdf
+<https://blog.trailofbits.com/2022/01/05/toward-a-best-of-both-worlds-binary-disassembler/>
+<https://www.petergoodman.me/docs/dr-lojekyll.pdf>
 
 ## Datafun
+
 [Seminaïve evaluation for a higher-order functional language](https://dl.acm.org/doi/abs/10.1145/3371090)
 
 ## QL
 
-https://codeql.github.com/docs/ql-language-reference/recursion/#non-monotonic-recursion
-https://codeql.github.com/publications/
+<https://codeql.github.com/docs/ql-language-reference/recursion/#non-monotonic-recursion>
+<https://codeql.github.com/publications/>
 [algebraic data types](https://codeql.github.com/publications/algebraic-data-types.pdf)
 [QL: Object-oriented Queries on Relational Data](https://drops.dagstuhl.de/opus/volltexte/2016/6096/pdf/LIPIcs-ECOOP-2016-2.pdf)
-pairty recursion - even number of negqtions is ok. Hmm. 
- https://codeql.github.com/docs/ql-language-reference/recursion/#non-monotonic-recursion
+pairty recursion - even number of negqtions is ok. Hmm.
+ <https://codeql.github.com/docs/ql-language-reference/recursion/#non-monotonic-recursion>
 
 ```
  predicate isExtinct() {
@@ -5905,7 +5966,7 @@ pairty recursion - even number of negqtions is ok. Hmm.
 }
 ```
 
-QL has semantics in datalog. 
+QL has semantics in datalog.
 typing predicates.
 `this` is a parameter. fields are parameters.
 special result parameter for functions
@@ -5922,20 +5983,19 @@ subtyping relationship. we can reify class names to runtime.
 
 codeql I could define a "functor" class with method `call`. this is some kind of lambda lifting thing.
 
-
 Classical correspondence a => b ==  not a or b. This is true. Doesn't allow hypohtetical reasoning though right? I feel like classical correspondences are not valid.
+
 # Souffle
 
 Souffle is a datalog implementation that is fast. It can be compiled to parallel C++ code. It also has a number of very intriguing datalog extensions available
+
 - records
 - algebraic data types
 - subsumption
 - aggregates
 - choice domains
 
-
-
-[choice domain](https://www.youtube.com/watch?v=TnLGbUqOsBc&ab_channel=ACMSIGPLAN) Functional dependencies of pieces of relation. 
+[choice domain](https://www.youtube.com/watch?v=TnLGbUqOsBc&ab_channel=ACMSIGPLAN) Functional dependencies of pieces of relation.
 eligible advisors, total order, bipartite matching, more dogs than cats, highest mark in grade.
 Defined at relation level. Makes check before any insertion to see if something already defines functional dependency
 
@@ -5943,12 +6003,11 @@ Defined at relation level. Makes check before any insertion to see if something 
 
 `--show=initial-ram` and other options are quite interesting. The RAM is quite readable at least for small examples.
 
-
 `as(a, number)` I can cast ADTs to numbers?
-https://github.com/yihozhang/souffle/blob/conglog/tests/congruence/math.dl  interesting
-
+<https://github.com/yihozhang/souffle/blob/conglog/tests/congruence/math.dl>  interesting
 
 [Examples directory](https://github.com/souffle-lang/souffle/tree/master/tests/example)
+
 - convex hall
 - anderson pointer, hmmer, java-pointsto
 - dfa dataflow analysis
@@ -5966,28 +6025,25 @@ https://github.com/yihozhang/souffle/blob/conglog/tests/congruence/math.dl  inte
 - graph domaintors
 - 2sat
 
-Convert string to relation. To avoid 
+Convert string to relation. To avoid
+
 ```souffle
 str(s, char, i) :- range(0, len(s)) = i, char = substr(i, i+1, s) 
 ```
 
-
-
 ## intrinsic functors
+
 `cat` `strlen` `substr(string,index,length)` `ord`
 
 `lor` `land` `lxor` `band` `bxor` `bshl` `bshr` `bshru`
-
 
 every non zero number is considered true.
 max min + * % ^
 
 `f(@g()) :- true` Sometimes you need to put true in the rhs position.
 
-
 ## floats
-https://github.com/monadius/ocaml_simple_interval/blob/master/interval1.ml - very simple intervals
-
+<https://github.com/monadius/ocaml_simple_interval/blob/master/interval1.ml> - very simple intervals
 
 ```souffle
 .decl test(x : float, id : symbol)
@@ -6006,10 +6062,12 @@ test(0, "0").
 ```
 
 ## Souffle proofs
+
 Manual exploration of just dump it. Does the dump memoize?
 
 `-t explain`
 `.pragma "provenance" "explain"
+
 ```
 output proof.json
 format json
@@ -6019,8 +6077,8 @@ exit
 
 You can emulate proof production using subsumption. See below.
 
-
 ## Aggregates
+
 min, max, count, sum.
 
 Aggregates require stratification
@@ -6031,10 +6089,8 @@ The witness problem
 
 Aggregates by key correspond to something like a mapreduce computation or a groupby computation.
 
- 
-
-
 ## User Defined Functors
+
 What about normalization? That's intriguing
 BitSets
 
@@ -6051,6 +6107,7 @@ You can briefly hold pointers as unsigned inside a rule, but you should probably
 
 gnu multiprecision
 Nah, this won't work. I need to do allocation. Unless I can call malloc?
+
 ```
 .pragma "libraries" "gmp"
 .type mp_int <: unsigned
@@ -6060,12 +6117,9 @@ Nah, this won't work. I need to do allocation. Unless I can call malloc?
 .functor mpz_set_str(mp_int, mp_str, ):number
 ```
 
-
-
 lib_ldscript
 use `whereis` if ascii `cat` the file and include the things in group
 `souffle libc.dl -lm-2.31 -lmvec`
-
 
 ```
 .pragma "libraries" "m-2.31"
@@ -6103,6 +6157,7 @@ test1(@Z3_get_full_version()) :- true.
 I can't figure out how to get libc, but it is the weirdest library of all.
 
 Formulog via linking to Z3. Do my own interning for handling int32? Or compile souffle in 64bit mode. String manipulation of smtlib? Pool of z3 ctx? This is probably good because we may want to run parallel souffle.
+
 ```souffle
 #define BINOP(op,x,y) cat(cat(cat(cat(cat("(", op), ", x), " "), y), " )") 
 #define AND(x,y) BINOP("and", x, y)
@@ -6115,12 +6170,12 @@ Formulog via linking to Z3. Do my own interning for handling int32? Or compile s
 .type smtreal :< symbol
 
 ```
+
 Hmm But how to deal with `define-const`.
 
 Ah. This is in a sense striaghtforward ish CLP? CLP but in datalog.
 
 CHR constraint handling rules. Can I embed into subsumption?
-
 
 Syscalls. libc might already be available?
 
@@ -6136,10 +6191,10 @@ test(@puts("Hellow world")) :- true.
 ```
 
 You can't defined your own user-defined functors inline. Two options that get you a lot of the way there are:
+
 1. use cpp macros `#define FOO(x,y)`
 2. Use auxiliary choice-domain relations. Memoization of functions. Many functions are so cheap you don't want to memoize them though.
 3. use inline souffle relations
-
 
 ```
 // souffle is by default 32 bit
@@ -6148,9 +6203,6 @@ You can't defined your own user-defined functors inline. Two options that get yo
 
 
 ```
-
-
-
 
 ## ADTs
 
@@ -6163,8 +6215,10 @@ See also <https://www.philipzucker.com/souffle-functor-hack/>
 It is somewhat unfortnuate that there are not accessors for ADTs? It would make macro writing more satisfying
 
 [interesting discussion of adt storage](https://github.com/souffle-lang/souffle/issues/2181)
+
 - simple enums = ramdomain values
 Converting simple enums to numbers. unsigned or number should do the same thing until you get to 2^31 or so
+
 ```
 as($A(), number)
 ```
@@ -6172,16 +6226,17 @@ as($A(), number)
 - Values with single fields representable as interger become `[tag: unsigned, value : A]`
 - Compound values becomes [tag : unsigned, [all the stff]]
 
-
 You can access the "id" associated with a value also `as([1,2,3],number)` for devious ends
 
 ### Contexts are King
+
 a very useful thing to note is that you should use
 contexts, delimited continuations, goal stack, zippers, to implement control flow.
 Datalog is bottom up. In a sense it's a giant while loop. When you bottom upify or loopify recursive algorithms, sometimes you need to reify the call stack (or whatever else you might call it). See defunctionalize the continuation talk.
-These contexts are expressible as 
+These contexts are expressible as
 
 ### field accessors
+
 It is a pain that there isn't a good way to make trustworthy fresh variables using `mcpp` due to lack of `__COUNTER__`. Best I can figure is hacks using `__LINE__` and concatenation. Otherwise insist on variables coming from outside into macro.
 
 ```souffle
@@ -6196,6 +6251,7 @@ test([1,2]).
 ```
 
 This does _not_ work.
+
 ```souffle
 #define FST(a,r) (r = $A(a, _))
 
@@ -6210,12 +6266,15 @@ test($A(1,2)).
 We _could_ probably cast to records to get the same effect. If you dare.
 
 ### Vectors
+
 I am in no way endorsing this. Actual representation of vectors have size field in them. Eh maybe I can't even do this. I was thinking maybe I could do a unsafe cast, but that's a pain too. Maybe this is possible with some truly horrific macro programming + unsafe casts. Yikes.
+
 ```souffle
 .type vector = [size : unsigned, key : unsigned]
 ```
 
 safer alternative: We can make finite sized vectors as an adt
+
 ```
 .comp Vector<T>{
 .type vector = V0 {} | V1 {x1 : T} | V2 {x1 : T, x2 : T} | V3 {x1 : T, x2 : T, x3 : T} | V4 {x1 : T, x2 : T, x3 : T, x4 : T}
@@ -6232,13 +6291,13 @@ Or we can partially unroll a linked list to avoid so much indirection cost.
 }
 ```
 
-
-
 ### Use ADT instead of autoinc()
+
 autoinc() is a generative counter. It is nice because it is efficient. However, the stratification requirements on it are gnarly. It is too imperative, not declarative enough andyou get in trouble.
 ADTs are also generative though. If you makea new object with them, you can make things that didn't exist in the original dataset. They sort of track how they were made by their arguments. This helps prevent you from instantiating the same thing twice. ADTs are basically hash consed/interned.
 
 ### Record Packing
+
 Sometimes your number of fields in the relation get crazy. Like let's say you want to describe some abstract domain like an interval. You need to carry 2 parameters everywhere when you're really talking about 1.
 
 You may however be taking a big performance hit. There is always a indirection hit of records vs unpacked records. Here is it felt more accutely because it isn't just a memory deref, it's a whole table lookup (? how exactly are records imlepmented).
@@ -6246,16 +6305,19 @@ You may however be taking a big performance hit. There is always a indirection h
 It is a bummer that souffle doesn't have record access notation. It's be nice for macros.
 
 If you want join semantics on lattice records
+
 ```
 .type Interval = [l : unsigned, u : unsigned]
 .type VSA = [l, u, stride, ]
 
 ```
+
 // default souffle has 32 unsigned. You can make your own 64 bit by combination. Taking a big perfroamcne hit
 .type U64 =  [l : unsigned, u : unsigned]
 
 ## Macros
-You get the C preprocessor run by default over souffle files. I find this incredibly useful. Admittedly, the need for a C preprocessor can be considered evidence of a weakness in a language (meaning many many languages are weak. C, 
+
+You get the C preprocessor run by default over souffle files. I find this incredibly useful. Admittedly, the need for a C preprocessor can be considered evidence of a weakness in a language (meaning many many languages are weak. C,
 haskell, etc.)
 
 Note that you can pick a different preprocessor via `--preprocessor=`. I think this might be realitvely new.
@@ -6273,16 +6335,16 @@ test(CONST1(3)).
 
 ```
 
-
 ## Components
 
 ## Choice Domain
+
 <https://souffle-lang.github.io/choice> picks first one to come along
 Can I combine choice domain and lattice. But choice domain once you pick you're done...
 well. I can recover lattice style via an explicit congruence closure. So. it doesn't matter I guess.
 
-
 ## Negation
+
 Stratification
 
 See answer set programming and stable model semantics
@@ -6296,29 +6358,28 @@ and making it stratified by deleting all negative atoms (an overpapproximation?)
 foo1(x) :- biz.
 foo(x) :- biz, !foo1(z)
 
-What about guarded negation? For example if you turn off stratification but are able to supply an explicit `strata(n)` guard. This could be useful for 
+What about guarded negation? For example if you turn off stratification but are able to supply an explicit `strata(n)` guard. This could be useful for
 
+## Souffle source
 
-##  Souffle source
 - synthesizer - actual code printers
 - include/souffle - the runtime of souffle
 - ram, relational abstract machine
-- 
-
+-
 
 # Resources
+
+[Interactive debugging of datalog programs- André Pacak Sebastian Erdweg](https://dl.acm.org/doi/10.1145/3622824)
 [Drinking with Datalog](https://ianthehenry.com/posts/drinking-with-datalog/)
 
 [Database Theory](https://github.com/pdm-book/community) book
 
-
 [Modern Datalog Engines](https://www.nowpublishers.com/article/Details/DBS-073) 68 page book 2022
 
-[Cozo](https://news.ycombinator.com/item?id=33518320) https://github.com/cozodb/cozo
-
+[Cozo](https://news.ycombinator.com/item?id=33518320) <https://github.com/cozodb/cozo>
 
 [treeedb](https://github.com/langston-barrett/treeedb) use tree sitter to get languages into souffle
-https://github.com/langston-barrett/tree-sitter-souffle souffle tree-sitter
+<https://github.com/langston-barrett/tree-sitter-souffle> souffle tree-sitter
 
 [cclyzerpp](https://github.com/GaloisInc/cclyzerpp)
 
@@ -6330,31 +6391,26 @@ D/RED derive reduce - to delete a fact, delete any facts that _may_ have use tha
 
 vectors std::sort.
 
-
 automatic differentiation like chr?
 
 [initial limite datalog](https://research-information.bris.ac.uk/en/publications/initial-limit-datalog-a-new-extensible-class-of-decidable-constra) extension of datalog Z?
 
 datalog ilp? Using FLP?
 
-
 [the expressive power of higher order datalog](https://arxiv.org/pdf/1907.09820.pdf)
 
 [Overview of Datalog Extensions with Tuples and Sets (1998)](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.39.9904)
 LDL. Hilog. COL. Relationlog. Datalog with set objects and grouping is an old idea.
 
-
 [Neural Datalog through time](https://arxiv.org/pdf/2006.16723.pdf)
-
 
 [Datalog with Negation and Monotonicity semipositive datalog](https://drops.dagstuhl.de/opus/volltexte/2020/11943/pdf/LIPIcs-ICDT-2020-19.pdf) The theory of removing negation? I guess that makes sense as a pursuit. It's what I always try to trick my way into.
 
 [survey of deductive databases ullam nramakrishnan 1993](https://core.ac.uk/download/pdf/82655241.pdf)
 
-Stefania Gabriela Dumbrava - verified datalog https://web4.ensiie.fr/~stefania.dumbrava/ https://hal.archives-ouvertes.fr/hal-01745566/document datalogcert
+Stefania Gabriela Dumbrava - verified datalog <https://web4.ensiie.fr/~stefania.dumbrava/> <https://hal.archives-ouvertes.fr/hal-01745566/document> datalogcert
 
-
-[bag datalog](https://twitter.com/NickSmit_/status/1510832523701456896?s=20&t=5y91-I1SPrIGomAWSqs69w) https://arxiv.org/pdf/1803.06445.pdf
+[bag datalog](https://twitter.com/NickSmit_/status/1510832523701456896?s=20&t=5y91-I1SPrIGomAWSqs69w) <https://arxiv.org/pdf/1803.06445.pdf>
 bag rewriting. derivation tree. rule(reason1,reason2) :- R(reason).R(reason)
 No subsumption.
 What about making these things the same thing. We have an equiavalence class of proofs. We extract a smallest one.
@@ -6363,69 +6419,53 @@ eq(i, i, reason)
 proof extraction becomesan egrtaph extraction
 We get the hash consing property for free.
 
-
-
 topics:
-- incremental datalog
-- differential datalog https://github.com/frankmcsherry/blog/blob/master/posts/2016-06-21.md
 
-[big datalog on spark]http://yellowstone.cs.ucla.edu/~yang/paper/sigmod2016-p958.pdf
+- incremental datalog
+- differential datalog <https://github.com/frankmcsherry/blog/blob/master/posts/2016-06-21.md>
+
+[big datalog on spark]<http://yellowstone.cs.ucla.edu/~yang/paper/sigmod2016-p958.pdf>
 
 [Modern Datalog systems at sigmod and vldb](https://github.com/frankmcsherry/blog/blob/master/posts/2019-09-06.md)
 [Scaling-Up In-Memory Datalog Processing: Observations and Techniques]() Recstep
 
-
-
-
 unsafe stratification:
 strata_finish(), !query_strata.
 Timestamps can d something similar
-watermark(t), !query(t1), t1 < t 
+watermark(t), !query(t1), t1 < t
 or safe deletion
 delete(t).
 You can partial evaluate to satisfy rel_0 rel_1 rel_2... it is annoying though and not very scalable
 
-
 [QL: Object-oriented Queries on Relational Data](https://drops.dagstuhl.de/opus/volltexte/2016/6096/pdf/LIPIcs-ECOOP-2016-2.pdf)
 
 [datalog reloaded](https://link.springer.com/book/10.1007/978-3-642-24206-9?page=2#toc) a datalog compendiium 2011
- 
+
 [algebraic modelling in datalog](https://dynresmanagement.com/uploads/3/5/2/7/35274584/datalog_warrenbookchapter.pdf)
 Some logicblox stuff. Datalog meets mathemtical programming?
 
 Generic Join
 
-
-
 If you wrote a decompiler or compiler in datalog, provenance becoes something more concrete to talk about
-
 
 Compare and contrast datalog vs CHR. subsumption allows us some of the deletion of CHR. Proapgation rules of chr are similar to datalog rules. We could possibly emulate multisets using subsumption by adding extra multiplicty parameter to realtions.
 
-
 [datalog : concept history outlook 2018](https://dl.acm.org/doi/10.1145/3191315.3191317)
 [declarative logic programming](https://www.google.com/books/edition/Declarative_Logic_Programming/CMatvAEACAAJ?hl=en)
-
-
-
 
 `call/N` is emulatable clause by clause in prolog.
 Is there an analogous meta predicate?
 foo(a,b) :- push(["foo", a,b]).
 bar(a) :- push(["bar", a]).
 
-
-
 What about interfacing with prolog?
 What about interfacing with lua or python? ocaml haskell, minizinc.
-
-
-
 
 [Synthesizing Datalog Programs Using Numerical Relaxation](https://arxiv.org/abs/1906.00163) difflog
 [provenance based synthesis of datalog programs](https://www.youtube.com/watch?v=cYAjOGhclcM&ab_channel=ACMSIGPLAN)
 Building a compiler in datalog. I can parse. I can do program analysis. How do I backend? Backend takes arbitrary non monotonic choices.
 Use choice domain? that could work. I could force an ordering through the program.
+
 ```souffle
 // linear assembly sequence
 .type Op = Mov {out , in , }
@@ -6467,7 +6507,6 @@ So an object oriented datalog.
 [So You Want To Analyze Scheme Programs With Datalog?](http://webyrd.net/scheme_workshop_2021/scheme2021-final2.pdf)
 [parser in datalog](https://homes.cs.washington.edu/~bodik/ucb/cs164/sp13/lectures/09-Datalog-CYK-Earley-sp13.pdf) bottom up parsing
 
-
 [analysis are arrows](https://luctielen.com/posts/analyses_are_arrows/)
 
 [Static analysis in datalog slides](http://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf)
@@ -6477,7 +6516,6 @@ So an object oriented datalog.
 [crepe](https://github.com/ekzhang/crepe) a rust prcoedural macro datalog
 
 Dedalus datalog. Is it datalog with a time variable or something more? I think it may have changed the stratification conditions.
-
 
 <https://twitter.com/csaba_hruska/status/1456575302906355715?s=20> subsumptive datalog good for lattices?
 
@@ -6490,10 +6528,9 @@ More efficient datalog queires - subsumtive tabling beats magic sets
 
 <https://github.com/grin-compiler/souffle-cfa-optimization-experiment>
 
+Using SQL engines as backend. <https://duckdb.org/2021/10/29/duckdb-wasm.html>
 
-Using SQL engines as backend. https://duckdb.org/2021/10/29/duckdb-wasm.html
-
-https://www.youtube.com/watch?v=HRO3RkOHe_4&ab_channel=MayurNaik - constraint based analysis lecture 7
+<https://www.youtube.com/watch?v=HRO3RkOHe_4&ab_channel=MayurNaik> - constraint based analysis lecture 7
 
 Nielson books seems a lot more readable to me now.
 
@@ -6505,52 +6542,47 @@ Neither is souffle.
 Could roll own bad datalog.
 Ogre?
 
-https://souffle-lang.github.io/examples simple points to analysis
+<https://souffle-lang.github.io/examples> simple points to analysis
 
 Is datalog actually a good fit
-https://tudelft-cs4200-2020.github.io/ - hmm sppoofax
-https://www.youtube.com/watch?v=Qp3zfM-JSx8&ab_channel=ACMSIGPLAN - souffle
+<https://tudelft-cs4200-2020.github.io/> - hmm sppoofax
+<https://www.youtube.com/watch?v=Qp3zfM-JSx8&ab_channel=ACMSIGPLAN> - souffle
 [Demand Interprocedural Program Analysis Using Logic Databases](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.648.1834&rep=rep1&type=pdf) - reps
 Engler 96
 
-
 prosynth - leanr datalog rules from data?
 
-.type Binop = 
-.type Expr = 
-.type Stmt = 
-   While 
+.type Binop =
+.type Expr =
+.type Stmt =
+   While
 
-
-
-
-https://arxiv.org/abs/2107.12909 - so you want to analyze scheme with datalog https://www.youtube.com/watch?v=oiXL44WlC-U&ab_channel=ACMSIGPLAN
+<https://arxiv.org/abs/2107.12909> - so you want to analyze scheme with datalog <https://www.youtube.com/watch?v=oiXL44WlC-U&ab_channel=ACMSIGPLAN>
 
 Might this not be a nice pass for higher-order theorem proving?
 
 CFA - labelling all subespressions =? program points?
 In functional programs value and control flow are more intertwined
 
-https://en.wikipedia.org/wiki/Use-define_chain
+<https://en.wikipedia.org/wiki/Use-define_chain>
 
-https://matt.might.net/articles/implementation-of-kcfa-and-0cfa/ - k-CFA: Determining types and/or control-flow in languages like Python, Java and Scheme
-Might does stuff with this. Abstracxting abstract machines is about 
+<https://matt.might.net/articles/implementation-of-kcfa-and-0cfa/> - k-CFA: Determining types and/or control-flow in languages like Python, Java and Scheme
+Might does stuff with this. Abstracxting abstract machines is about
 Van horn. Darais
 Gilray. Micinski
 It's in that Nelson book
 
 olin shivers
 
-https://dl.acm.org/doi/10.1145/2926697.2926698 - chloe paper Liveness-based garbage collection for lazy languages
+<https://dl.acm.org/doi/10.1145/2926697.2926698> - chloe paper Liveness-based garbage collection for lazy languages
 
-https://www.youtube.com/watch?v=7fDfWBsiqok&ab_channel=ACMSIGPLAN - visualzing abstract absract machines
+<https://www.youtube.com/watch?v=7fDfWBsiqok&ab_channel=ACMSIGPLAN> - visualzing abstract absract machines
 
-
-https://yanniss.github.io/
+<https://yanniss.github.io/>
 Points to analysis. Doop
-https://yanniss.github.io/M221/
-https://www.youtube.com/playlist?list=PLheERyVBk39SefKqkGEo5YesOn9rkl8fS in greek
-https://www.youtube.com/watch?v=3RHv44Ehd5Y&list=PLRUJ115QHa0WMyGyP2j_1KRFJjaT0kFOu&ab_channel=plast-lab - doop and datalog tutorials
+<https://yanniss.github.io/M221/>
+<https://www.youtube.com/playlist?list=PLheERyVBk39SefKqkGEo5YesOn9rkl8fS> in greek
+<https://www.youtube.com/watch?v=3RHv44Ehd5Y&list=PLRUJ115QHa0WMyGyP2j_1KRFJjaT0kFOu&ab_channel=plast-lab> - doop and datalog tutorials
 
 objects are represented by allocation sites. firest abstraction. Good idea.
 Actual program textual positions
@@ -6598,23 +6630,22 @@ a model of context senssitive
 call site sensitivity
 variables are qualified by the call site of their enclosing method
 
-
-
 prelude.ml = open KB yada yada
 
-#include prelude.ml
-
+# include prelude.ml
 
 could I compile datalog to bap?
 class(slot,slot,slot) :- class(slot,slot,slot),
 class(slotname : f(x,y) , ) :-
 ==
+
 request body
 promise head,
 
 build rule.
 
 differences
+
 - classes have named columns, not positional (extensible). They also have unique ids always. Kind of more similar to souffle records?
 - Modedness. Can I even promise multiple slots at once? In a sense datalog is not interestingly moded.
 - It's more of a tabled prolog. Top down requests which lazily trigger table instantation
@@ -6622,11 +6653,11 @@ differences
 val promise : ('a, 'p) slot -> ('a obj -> 'p t) -> unit
 ('a, 'p) slot -> 'a obj -> 'p t
 
-program(obj@{ insn : q , semantics : s }) :-   
+program(obj@{ insn : q , semantics : s }) :-
 program( obj: o, semantics : s, ) :-
 
 Program.cls
-promise slot1 (fun obj -> 
+promise slot1 (fun obj ->
 
 )
 
@@ -6637,7 +6668,6 @@ provides <-trigger(slot, obj), collects
     Things don't _have_ to be built off of obj, but it sure helps.
 
 An option domain is closest to ordinary datalog / tabled prolog
-
 
 we can only promise on one slot. We can provide them all though. Individual slots are joined.
 a list of lattice tuples vs lattice with projections
@@ -6656,10 +6686,7 @@ path(3,_).
 
 path(a, _) :- vertex(a). -- trigger on path? but path doesn't exist
 
-
-p@path( head_slot , tail_slot ) :- 
-
-
+p@path( head_slot , tail_slot ) :-
 
 datalog over intervals. Maybe this would be an interesting blog post.
 The relation itself has to implement the lattice api. Not the individual fields
@@ -6668,20 +6695,16 @@ Datalog does require a notion of projection. And a notion of relation compositio
 E' = proj( A /\ B /\  C /\ D )
 E1 = E \/ E'
 
+Sometimes I've had knowledge base objects for which I immediately fill a slot upon creation, because that slot is essentially part of the objects identity. As an example, I have path objects in the KB. The only time i make one is when I have a particular path to talk about and I'm never going to offer another opinion about what that path is, all other information is derived from it. It feels slightly awkward that I have to define this slot using an optional domain, basically as far as I can tell, because I have to create an empty object and then provide for the slot on the next line. So I'm only using the `None` case for the briefest moment, but now have to deal with that case or use `Option.value_exn` whenever I access it. Is there a more elegant way to deal with nonoptional slots? I could use the `flat` domain with `[]` as a default but that is conflating
 
-Sometimes I've had knowledge base objects for which I immediately fill a slot upon creation, because that slot is essentially part of the objects identity. As an example, I have path objects in the KB. The only time i make one is when I have a particular path to talk about and I'm never going to offer another opinion about what that path is, all other information is derived from it. It feels slightly awkward that I have to define this slot using an optional domain, basically as far as I can tell, because I have to create an empty object and then provide for the slot on the next line. So I'm only using the `None` case for the briefest moment, but now have to deal with that case or use `Option.value_exn` whenever I access it. Is there a more elegant way to deal with nonoptional slots? I could use the `flat` domain with `[]` as a default but that is conflating 
+-
 
-- 
-
-https://kilthub.cmu.edu/articles/thesis/Holmes_Binary_Analysis_Integration_Through_Datalog/7571519
+<https://kilthub.cmu.edu/articles/thesis/Holmes_Binary_Analysis_Integration_Through_Datalog/7571519>
 homles binary analysis through datalog
-https://github.com/maurer/marduk/tree/master/mycroft
-https://github.com/maurer/holmes
+<https://github.com/maurer/marduk/tree/master/mycroft>
+<https://github.com/maurer/holmes>
 
-
-http://reports-archive.adm.cs.cmu.edu/anon/anon/usr/ftp/2006/CMU-CS-06-180R.pdf alias analysis datalog
-
-
+<http://reports-archive.adm.cs.cmu.edu/anon/anon/usr/ftp/2006/CMU-CS-06-180R.pdf> alias analysis datalog
 
 hmm. temporally oblivious. Interesting.
 This idea of using explicit time is interesting. Why didn't I consider using an epoch variable?
@@ -6690,27 +6713,22 @@ Synactic sites. also interesting. Syntax is intrinisically finite.
 
 doop, paddle, wala, bddbdbdbd
 
+<https://www.youtube.com/playlist?list=PLamk8lFsMyPXrUIQm5naAQ08aK2ctv6gE> - SOOT lectures.
 
-https://www.youtube.com/playlist?list=PLamk8lFsMyPXrUIQm5naAQ08aK2ctv6gE - SOOT lectures. 
-
-https://yanniss.github.io/ptaint-oopsla17.pdf - unified points to and taint tracking
+<https://yanniss.github.io/ptaint-oopsla17.pdf> - unified points to and taint tracking
 
 Interpeting programs into datalog?
 
-
 Context sensitivty. I kind of imagine copies of the CFG coming out of the plane of the screen. Finite loop unrolling and then just regular widening. A mapping from block to visitation # might work for example. Many combos might not exist. This probably won't get you much
-
 
 What would be a simple functional language to do this on?
 
+<https://arxiv.org/abs/2101.04718> Declarative Demand-Driven Reverse Engineering
 
-https://arxiv.org/abs/2101.04718 Declarative Demand-Driven Reverse Engineering
-
-https://link.springer.com/chapter/10.1007/978-3-030-11245-5_11 - demand control flow analysis
-
-
+<https://link.springer.com/chapter/10.1007/978-3-030-11245-5_11> - demand control flow analysis
 
 ## building souffle emscripten
+
 We revmoed all the extra flags turned off tests
 removed all mentions of libffi
 src/CMakeLists.txt - removed werror
@@ -6723,42 +6741,35 @@ This strips comments maybe?
 Can link in mcpp, but for now, just remove that stage. use fopen and fclose instead of popen
 
 We need to load into emscripten file system. It crashes kind of opaquely
-/media/philip/phils_gud_disk/emsdk/upstream/emscripten/em++  -O3     -s ERROR_ON_UNDEFINED_SYMBOLS=0 -fuse-ld=lld @CMakeFiles/souffle.dir/objects1.rsp  -o souffle.js @CMakeFiles/souffle.dir/linklibs.rsp --preload-file test.dl 
+/media/philip/phils_gud_disk/emsdk/upstream/emscripten/em++  -O3     -s ERROR_ON_UNDEFINED_SYMBOLS=0 -fuse-ld=lld @CMakeFiles/souffle.dir/objects1.rsp  -o souffle.js @CMakeFiles/souffle.dir/linklibs.rsp --preload-file test.dl
 
 remove loadDLL in engine.cpp. Maybe we can turn that back on. Do we even need it?
 
-https://github.com/hoodmane/libffi-emscripten
-https://github.com/emscripten-core/emscripten/issues/11066
+<https://github.com/hoodmane/libffi-emscripten>
+<https://github.com/emscripten-core/emscripten/issues/11066>
 It's conceviable libffi could be made to work
 
 I could probably easily enough manually remove any stratification restrictions.
 
 Actually, yizong mentioned some flags to do that
---disableTransformers=SemanticChecker 
+--disableTransformers=SemanticChecker
 "it may not do what uou expected"
-
-
 
 Why can I not use the souffle implementation of ADT?
 There is a cool directory of examples. There is a rewriting example in there
 
+<https://twitter.com/luctielen/status/1416319909055827970> datalog paper and haskell implementation
+ <https://souffle-lang.github.io/pdf/cc.pdf>
 
-
-
-
-https://twitter.com/luctielen/status/1416319909055827970 datalog paper and haskell implementation
- https://souffle-lang.github.io/pdf/cc.pdf
-
-Datalog for disassembly dldasm https://www.usenix.org/system/files/sec20fall_flores-montoya_prepub_0.pdf
+Datalog for disassembly dldasm <https://www.usenix.org/system/files/sec20fall_flores-montoya_prepub_0.pdf>
 instruction starts and ends is actually a hard problem. variable instruction lenght + stripping
 
-instruction_start(insn : int, byte : int), instruction_end(insn : int, byte : int) 
+instruction_start(insn : int, byte : int), instruction_end(insn : int, byte : int)
 bits(byte : int,  bits : byte ) ?
 
 block(blk, insn)
 Blockhead
 blocktail
-
 
 Identify instruction starts
 Identify function starts
@@ -6770,18 +6781,16 @@ control flow
 is_jmp(insns)
 next(insn1 : , insn2 : ).
 
-
-
 Dfiferential dataflow?
 Jhanme street incremental?
-https://en.wikipedia.org/wiki/Incremental_computing
+<https://en.wikipedia.org/wiki/Incremental_computing>
 Instead of datalog?
 what does change mean?
 diff x y
 apply x dx = y
 
 a -> (b, db -> da)
-id = \x -> (x, \dx -> dx) 
+id = \x -> (x, \dx -> dx)
 everything starts at 0
 
 stream processing
@@ -6800,23 +6809,20 @@ fix l = \x -> let (y, dl) = l x in
               | [] -> (x, dl)
               | _ ->  y ++ dl dx
 fix :: (Rel -> Rel) -> (Rel -> Rel)
-fix 
+fix
 
-relation foo x y z = 
-fresh (\x -> 
- 
+relation foo x y z =
+fresh (\x ->
+
 )
 fix :: Flow a a -> Flow a a
-fix f = \da -> db, f2 = f a in 
+fix f = \da -> db, f2 = f a in
               match db with
               | 0 -> (0, fix f2)
               | _ -> let (db2, f3) = fix f2 db in
                      (db + db2, fix f3)
 
 trace :: ((Rel,Rel) -> (Rel, Rel)) -> Rel -> Rel
-
-
-
 
 f(f(a)) = f(a) problem
 
@@ -6832,21 +6838,20 @@ equiv(1,2).
 % this is a very direct interpetation of congruence clsoure inference rule.
 equiv(A, A') :- equiv(B, B'), f(A, B), f(A', B').
 
-
 %alternative form
-eclass( id , head, args) :- 
+eclass( id , head, args) :-
 
 % get proof.
 
 % f(Self, )
 % f(Self, n )
 
-Datalog might be a good DSL for specifying egraph computation problems. It allows multipatterns. 
+Datalog might be a good DSL for specifying egraph computation problems. It allows multipatterns.
 A special relation = for egraph equality. We disallow unification?
 Stratified negation can be allowed in egraph pattern matching.
 The egraph is a database.
 
-pat1(A,B,C) :- 
+pat1(A,B,C) :-
 
 Can't we use unification variables as eclasses?
 
@@ -6858,19 +6863,17 @@ rhschunk(Fresh, ) : lhspat
 
 The de moura bjorner matcher is some kind of brother of the WAM.
 
-
 This might enable integrating congurence closure with program analysis passes.
-
 
 Datalog is a specification language of relations. It is similar in some respects to SQL.
 
 A relation is a set of tuples. One method for storing it is to use an array of tuples.
 
-A slightly expanded form of datalog we could require that every variable is unique unless using a special `=` clause. 
+A slightly expanded form of datalog we could require that every variable is unique unless using a special `=` clause.
 It has a simple precodural reading
 
 However, this naive storage method and algorithm is not the most efficient. Ideally, you want to use some pieces of the tuples as indices and use fast data structures for them (hashmaps or search trees). There is also much redundant computation here.
-We want to push from small relations into larger ones and use indexing to 
+We want to push from small relations into larger ones and use indexing to
 
 factored form:
 ancestor() :-  parent() ; (), ()
@@ -6896,8 +6899,8 @@ end
 
 a relation lifter.
 
-Or could use explicit fix? memofix 
-function rel(f, args...) 
+Or could use explicit fix? memofix
+function rel(f, args...)
     ctx = Dict()
     for arg in args
         if arg isa Symbol
@@ -6911,11 +6914,10 @@ Stream memoization.
 How can I get the other modes for free? If you implement the fully producing mode, receiving mode is easy.
 But unduly expensive.
 How do you solve mode constraints.
-Asymptotic costs. log_n( n^5 * ) 
+Asymptotic costs. log_n( n^5 * )
 
-
-https://www3.cs.stonybrook.edu/~warren/xsbbook/node5.html assign once variables.
-@prolog x = y 
+<https://www3.cs.stonybrook.edu/~warren/xsbbook/node5.html> assign once variables.
+@prolog x = y
 
 if inscope(x)
 if inscope(y)
@@ -6930,8 +6932,8 @@ f(::X, ::Y)
 f()
 
 @nondet()
-f(x) = 
-f(x) = 
+f(x) =
+f(x) =
 end
 rewrites to
 f(x)
@@ -6939,6 +6941,7 @@ f(x)
 end
 
 How do we encode the mutliples:
+
 1. array
 2. channel
 3. coroutine?
