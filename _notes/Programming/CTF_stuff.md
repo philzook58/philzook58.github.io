@@ -17,6 +17,7 @@ title: Binary Analysis & CTF stuff
   - [Patching](#patching)
   - [Binary reversing](#binary-reversing)
 - [Debuggers](#debuggers)
+- [Code Search](#code-search)
 - [Emulation](#emulation)
   - [Qemu](#qemu)
   - [Fuzzing](#fuzzing)
@@ -624,82 +625,7 @@ print(stmts)
 
 ## Patching
 
-<https://github.com/joxeankoret/diaphora> diaphora diffing tool
-[A Method to Evaluate CFG Comparison Algorithms](http://cfgsim.cs.arizona.edu/qsic14.pdf)
-
-<https://github.com/GJDuck/e9patch>
-
-[Reassembly is Hard: A Reflection on Challenges and Strategies](https://softsec.kaist.ac.kr/~sangkilc/papers/kim-usenix23.pdf)
-
-<https://twitter.com/peter_a_goodman/status/1503016499824537600?s=20&t=1Z4ew6rnGnFiMTSrQJSmKw> goodman on binary rewriting
-binrec - lift program merge lifted bytecode into debloated
-[egalito](https://ethv.net/static/egalito.pdf)
-BOLT
-lifting bits/grr
-
-{% raw %}
-
-```python
-
-code = '''
-int fact(int x){
-  int acc = 1;
-  while(x > 0){
-    acc *= x;
-    x--;
-  }
-  return acc;
-}
-'''
-def fragment(x, header, invars, outvars):
-  return f"""
-    vod cb();
-    {header}
-    void fragment(uint64_t r0, uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4){{ //varargs
-          // inavrs
-          {invars}
-          // patch code
-          {x}
-          // stack outvars{outvars}
-          cb({outvars});
-          return;
-    }}
-  """
-# Hmm. could verify the permutation
-def permute(asm, perm):
-  # simultaneous replacement
-  for k in perm.keys():
-    asm = asm.replace(k, "TEMPYTEMPY"+k)
-  for k,i in perm.items():
-    asm = asm.replace("TEMPYTEMPY"+k, i)
-  return asm
-
-def clip_ret(asm):
-
-def used_regs(asm, regs):
-  return [reg for reg in regs if asm.find(reg) != -1]
-
-
-  re.match
-import tempfile
-import subprocess
-import angr #, monkeyhex
-import os
-with tempfile.NamedTemporaryFile(suffix=".c") as fp:
-  with tempfile.TemporaryDirectory() as mydir:
-    fp.write(code.encode())
-    fp.flush()
-    fp.seek(0)
-    print(fp.readlines())
-    print(fp.name)
-    print(mydir)
-    outfile = mydir + "/fact"
-    print(outfile)
-    print(subprocess.run(["gcc",  "-g",  "-c","-O1", "-o",  outfile, fp.name], check=True))
-    print(os.listdir(mydir))
-```
-
-{% endraw %}
+See notes on patching
 
 ## Binary reversing
 
@@ -718,6 +644,12 @@ and What We Can Learn From It
 <https://github.com/x64dbg/x64dbg>
 <https://rr-project.org/>
 windbg
+
+# Code Search
+
+<https://github.com/weggli-rs/weggli>
+Joern
+codeql
 
 # Emulation
 
@@ -1068,6 +1000,7 @@ jop rocket. blackhat talk
 [Block Oriented Programming](https://arxiv.org/pdf/1805.04767.pdf)
 
 ## Heap
+<https://c4ebt.github.io/2021/01/22/House-of-Rust.html> house of rust
 
 If you can overwrite a struct that contains a pointer, you can use this to obtain reads or writes when that pointer is read or written.
 If the struct contains a code pointer, you get control flow execution.
@@ -1228,6 +1161,12 @@ elf reverse
 [Elf Binary Mangling Pt. 4: Limit Break](https://tmpout.sh/2/11.html)
 
 # CTF
+
+SUID
+<https://gtfobins.github.io/> GTFOBins is a curated list of Unix binaries that can be used to bypass local security restrictions in misconfigured systems.
+
+Misconfiguration
+<https://osquery.readthedocs.io/en/stable/>
 
 commando vm
 

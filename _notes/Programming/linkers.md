@@ -334,6 +334,58 @@ You can get line number and column info from dwarf
 
 # Resources
 
+[linker koans](https://github.com/bollu/linker-koans)
+
+link c by hand
+
+```makefile
+.PHONY: run
+run:
+ gcc -c main.c -o main.o
+ ar rs main.a main.o
+ ld  -o success.out /usr/lib/x86_64-linux-gnu/Scrt1.o  /usr/lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/11 -L/usr/lib/x86_64-linux-gnu -L/lib/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu -L/usr/lib/  main.a  -lc /usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o --dynamic-linker=/lib64/ld-linux-x86-64.so.2
+
+ ./success.out
+```
+
+```md
+https://web.archive.org/web/20180627210132/http://webpages.charter.net/ppluzhnikov/linker.html
+
+Succinct Explanation:
+
+the linker algorithm is this:
+
+
+def link(archives: List[Library]):
+  unresolved_refs = set(["_start"])
+  resolved_refs = set()
+  for archive in archives:
+    # if we have a ref in this archive that is 
+    # currently unresolved, then this archive is useful.
+    is_used = 
+     any([ref in unresolved_ref
+           for ref in def # get all references from def.
+             for def in archive])
+    if not is_used: continue
+    # INVARIANT: if we enter here, this this means that *at least*
+    #   one unresolved ref will be resolved.
+    for def in archive:
+      # we only add those defs that were unresolved.
+      if def not in unresolved_refs: continue
+      resolved_refs.add(def) # this defn is resolved.
+      unresolved_refs.remove(def) # this defn is resolved.
+      for ref in def:
+        if ref not in resolved_refs: # we have not resolved this ref yet.
+          unresolved_refs.add(def) # add to resolution worklist.
+  
+- This means we might need to link twice to resolve call chains:
+gcc main.o -lfoo -lbar -lfoo -lbar -lfoo
+- We can also use `--start-group` and `--end-group` to demarcate such mutual inclusion.
+```
+
+<https://web.archive.org/web/20180627210132/http://webpages.charter.net/ppluzhnikov/linker.html>
+2-pass linkers
+
 [sRDI - Shellcode Reflective DLL Injection](https://github.com/monoxgas/sRDI) <https://disman.tl/2015/01/30/an-improved-reflective-dll-injection-technique.html>
 
 [I wrote a linker everyone can understand!](https://news.ycombinator.com/item?id=27444647) <https://briancallahan.net/blog/20210609.html>

@@ -85,7 +85,7 @@ title: SMT Solvers
   - [Hoare LCF](#hoare-lcf)
 - [Z3](#z3)
   - [Z3 source spelunking](#z3-source-spelunking)
-  - [src - most of the goodies are here.](#src---most-of-the-goodies-are-here)
+  - [src - most of the goodies are here](#src---most-of-the-goodies-are-here)
   - [Tactics](#tactics)
   - [paramaters, tactics, and commands](#paramaters-tactics-and-commands)
   - [Z3 Add Commutative Benchmark](#z3-add-commutative-benchmark)
@@ -567,6 +567,18 @@ Implementing datalog as a minsat problem. Minimal model.
 
 [Synthesizing an Instruction Selection Rule Library from Semantic Specifications](https://pp.ipd.kit.edu/uploads/publikationen/buchwald18cgo.pdf)
 
+<https://archive.bar/pdfs/bar2020-preprint9.pdf> QSynth - A Program Synthesis based Approach for
+Binary Code Deobfuscation
+
+mixed Boolean arithmetic <https://github.com/softsec-unh/MBA-Solver/blob/main/README.md> mbasolver
+<https://github.com/quarkslab/sspam/blob/master/README.md>
+
+<https://github.com/RUB-SysSec/syntia/blob/master/README.md>
+<https://github.com/astean1001/ProMBA>
+
+<https://dl.acm.org/doi/pdf/10.1145/3453483.3454068> Boosting SMT Solver Performance on
+Mixed-Bitwise-Arithmetic Expressions
+
 ## Constrained Horn Clauses
 
 See note on CHC
@@ -579,7 +591,7 @@ See note on CHC
 For unsatisifable formula `A => B`, produces a C such that `A => C`, `C => B` whihc only uses shared variables. Considered as sets, B is a subset of A.
 
 For finite unrolling of transition relation, we can use it to produce an abstraction of the initial state that is sufficient to prove the property. Maybe this gets us a full inductive invariant. `unroll*10 => Prop of only last timesteps vars`
-
+e
 For pure sat interpolation can be found from resolution proof / unsat certificate
 
 Theory specific interpolation.
@@ -870,6 +882,7 @@ Sort gas. But then we still can't define-fun-recs
 ```
 
 ## Lambda
+
 <https://microsoft.github.io/z3guide/docs/logic/Lambdas>
 Z3 supports lambdas. I believe they are lambda lifted.
 
@@ -1207,6 +1220,7 @@ This often involves encoding the types into smtlib terms, the analog in some sen
 ```
 
 # Type Checking
+
 <https://cstheory.stackexchange.com/questions/37211/how-to-do-type-inference-using-an-smt-solver>
 [SMT-based Static Type Inference for Python 3](https://ethz.ch/content/dam/ethz/special-interest/infk/chair-program-method/pm/documents/Education/Theses/Mostafa_Hassan_BA_report.pdf)
 
@@ -1578,6 +1592,7 @@ f-inv trick for injective function axiomatization
 Hmm. Z3 has `sin` built in? <https://github.com/Z3Prover/z3/blob/f1bf660adc6f40cfdbd1c35de58c49b5f9960a9c/src/ast/arith_decl_plugin.h> doesn't really seem so. It just recognizes it as defined. subpaving is interesting
 
 ## Gas
+
 <https://namin.seas.harvard.edu/files/krml237.pdf>
 <https://microsoft.github.io/z3guide/docs/logic/Quantifiers#patterns>
 
@@ -2859,6 +2874,7 @@ Defining function symbols is in a sense invoking an implicit congruence and tota
 <https://stackoverflow.com/questions/28149863/why-is-e-matching-for-conjunctions-sensitive-to-order-case-splitting-strategy>
 
 # Query Containment
+
 <https://www.logic.at/emclworkshop12/slides/student_talks/Sergey/presentation.pdf>
 <https://ieeexplore.ieee.org/document/9161435>
 [Conjunctive-Query Containment and Constraint Satisfaction](https://www.cs.rice.edu/~vardi/papers/pods98rj.pdf)
@@ -2979,6 +2995,7 @@ Dealing with the frame problem
 [serval](https://unsat.cs.washington.edu/projects/serval/)
 
 ## Nand2Tetris Cpu
+
 <https://www.philipzucker.com/nand2tetris-chc/>
 
 ```z3
@@ -3020,6 +3037,7 @@ Dealing with the frame problem
 ## Arm
 
 ## RiscV
+
 <https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf>
 
 - Using define-fun-rec gives a first class handle on instructions.
@@ -4789,6 +4807,7 @@ cvc --help
 -o subs
 
 # user defined propagators
+
 <https://avm.sosy-lab.org/2022/prs/AVM22_Eisenhofer.pdf>
 <https://github.com/CEisenhofer/Z3-User-Propagator-Example>
 

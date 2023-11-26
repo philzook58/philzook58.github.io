@@ -15,6 +15,7 @@ title: Calculus/Analysis
   - [Ordered Fields](#ordered-fields)
   - [Completeness of Reals](#completeness-of-reals)
   - [Constructive Analysis](#constructive-analysis)
+- [Formalization](#formalization)
 - [Limits](#limits)
 - [Hyperreals](#hyperreals)
 
@@ -124,6 +125,16 @@ Marshal
 [Computable Analysis](https://en.wikipedia.org/wiki/Computable_analysis)
 
 Interval Analysis Moore
+
+# Formalization
+
+Harrison book Theorem Proving with Real Numbers <https://link.springer.com/book/10.1007/978-1-4471-1591-5>
+<https://ncatlab.org/nlab/show/Eudoxus+real+number#:~:text=Eudoxus%20real%20number%20refers%20to,the%20floor%20of%20r%20n%20>. eudoxus reals
+<https://golem.ph.utexas.edu/category/2023/09/constructing_the_real_numbers.html>  Constructing the Real Numbers as Nearly Multiplicative Sequences - riehl
+
+<https://www.cl.cam.ac.uk/~jrh13/papers/trybulec.pdf> - formalizig basic complex analyis - harrison
+
+<https://link.springer.com/book/10.1007/978-981-15-7261-6> Formalization of Complex Analysis and Matrix Theory
 
 # Limits
 

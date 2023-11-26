@@ -74,6 +74,10 @@ title: Datalog
     - [Difference Logic](#difference-logic)
     - [Finite Domain](#finite-domain)
   - [Macros](#macros)
+- [define ORBODY(h,b1,b2) CLAUSE(h, b1) CLAUSE(h, b2)](#define-orbodyhb1b2-clauseh-b1-clauseh-b2)
+- [define ORHEAD(h1,h2,b) CLAUSE(h1,b) CLAUSE(h2,b)](#define-orheadh1h2b-clauseh1b-clauseh2b)
+- [define IMPLBODY(h, b1, b1) CLAUSE( h, (b1, b2) )](#define-implbodyh-b1-b1-clause-h-b1-b2-)
+- [define IMPLHEAD()](#define-implhead)
   - [Emulating Prolog](#emulating-prolog)
     - [Need Sets](#need-sets)
     - [Magic Set](#magic-set-1)
@@ -93,7 +97,7 @@ title: Datalog
     - [Universal Quantifier](#universal-quantifier)
     - [Geometry](#geometry)
     - [Categorical Example](#categorical-example)
-  - [Typeclass resolution.](#typeclass-resolution)
+  - [Typeclass resolution](#typeclass-resolution)
   - [Borrow Checker](#borrow-checker)
   - [Type checking](#type-checking)
   - [Coinductive or Greatest Fixed Point Datalog](#coinductive-or-greatest-fixed-point-datalog)
@@ -160,6 +164,7 @@ title: Datalog
   - [Negation](#negation-1)
   - [Souffle source](#souffle-source)
 - [Resources](#resources-1)
+- [include prelude.ml](#include-preludeml)
 - [class(slotname : f(x,y) , ) :-](#classslotname--fxy----)
   - [building souffle emscripten](#building-souffle-emscripten)
 
@@ -1214,6 +1219,7 @@ dom(n,m) :- blks(n), blks(m), !not_dom(n,m).
 ```
 
 ### Forall Emulation
+
 <https://www.cse.psu.edu/~gxt29/teaching/cse597s19/slides/06StaticaAnalysisInDatalog.pdf>
 
 [bicycle problem](https://github.com/souffle-lang/souffle/discussions/2256)
@@ -1991,6 +1997,7 @@ out(i,x) :- path(i,_,x).
 Radix sort?
 
 ## Translating functional programs
+
 <https://drops.dagstuhl.de/opus/volltexte/2022/16235/pdf/LIPIcs-ECOOP-2022-7.pdf> Functional Programming with Datalog
 
 Lift function to relation by making return value part of relation
@@ -3267,9 +3274,13 @@ fib(n, n1+n2) :- ORIMPL( (fib(n-2, n2), fib(n-1,n1)) ,
 This isn't working. There is something very odd about the recursion pattern here.
 
 // These are non compositional.
+
 # define ORBODY(h,b1,b2) CLAUSE(h, b1) CLAUSE(h, b2)
+
 # define ORHEAD(h1,h2,b) CLAUSE(h1,b) CLAUSE(h2,b)
+
 # define IMPLBODY(h, b1, b1) CLAUSE( h, (b1, b2) )
+
 # define IMPLHEAD()
 
 ```
@@ -3332,6 +3343,7 @@ x
 ===============
 */
 ```
+
 <https://twitter.com/SandMouth/status/1551384178494668800?s=20&t=RCRFQkOrxezpvPdn1ABsBA> ed kmett is up to some crazy looking shit.
 
 really the most boring version of this is to just spell out the cases and not use VA_ARGS. I will admit va_args makes it tighter. And just label the pattern LIST_N by it's size, you whiner. The macro weirdness to infer N is probably not worth it.  If you make the last argument by convention the tail of the list, these are useful for patterns like `a :: b :: xs` too.
@@ -5927,6 +5939,7 @@ fn main() {
 ```
 
 ## Flix
+
 <https://github.com/flix/book>
 
 Supports lattices.
@@ -5941,6 +5954,7 @@ Also install as a vs code plugin. very nice.
 First class datalog programs. Macros for datalog? Is this different than having a datalog AST data type?
 
 ## dr lojekyl
+
 <https://blog.trailofbits.com/2022/01/05/toward-a-best-of-both-worlds-binary-disassembler/>
 <https://www.petergoodman.me/docs/dr-lojekyll.pdf>
 
@@ -6043,6 +6057,7 @@ max min + * % ^
 `f(@g()) :- true` Sometimes you need to put true in the rhs position.
 
 ## floats
+
 <https://github.com/monadius/ocaml_simple_interval/blob/master/interval1.ml> - very simple intervals
 
 ```souffle
@@ -6368,6 +6383,24 @@ What about guarded negation? For example if you turn off stratification but are 
 -
 
 # Resources
+<https://x.com/EvgSkvDev/status/1727168338475069465?s=20> logica <https://colab.research.google.com/drive/1KJ6xKSwpw5FWWkvUOyBCpAcU_jVZV7Gs?usp=sharing> <https://github.com/evgskv/logica> a sql based datalog. helllo nurse <https://logica.dev/>
+ython3 -m pip install logica
+
+```bash
+echo '
+@Engine("sqlite");
+Greeting("Hello world!");
+' > /tmp/greeting.l
+python3 -m logica /tmp/greeting.l run Greeting
+```
+
+```python
+import logica
+print(dir(logica))
+
+```
+
+<https://github.com/harp-lab/gdlog>  <https://arxiv.org/abs/2311.02206> a gpu driven deductive engine
 
 [Interactive debugging of datalog programs- André Pacak Sebastian Erdweg](https://dl.acm.org/doi/10.1145/3622824)
 [Drinking with Datalog](https://ianthehenry.com/posts/drinking-with-datalog/)

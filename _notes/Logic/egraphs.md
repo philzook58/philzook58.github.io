@@ -687,3 +687,5 @@ g(1,2,3).
 [MetaEmu](https://arxiv.org/pdf/2208.03528.pdf) - ssa form rewriting out of ghidra? dang.
 
 [Rewriting History: Repurposing Domain-Specific CGRAs](https://arxiv.org/pdf/2309.09112.pdf) course gfrained reconfigurable arrays. Huh
+
+[Latent Idiom Recognition for a Minimalist Functional Array Language using Equality Saturation](https://jonathanvdc.github.io/files/2024-cgo-latent-idiom-recognition.pdf)

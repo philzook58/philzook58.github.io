@@ -140,6 +140,8 @@ stage0 would be "just" a macro expander for smtlib.
 
 ```
 
+<https://rdivyanshu.github.io/ma122.html> Solving a mathemattic problem using Rosette
+
 # Common Lisp
 
 [common lisp resources](https://news.ycombinator.com/item?id=31120359)

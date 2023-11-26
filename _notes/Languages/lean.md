@@ -110,6 +110,10 @@ That sounds fun
 
 [lean 4 terry tao](https://news.ycombinator.com/item?id=38035672)
 
+<https://www.moogle.ai/> semantic search
+
+<https://lean-fro.org/about/roadmap/> learn roadmap for lean focused research organization
+
 ### Build
 
 `elan` tool

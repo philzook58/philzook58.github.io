@@ -9,20 +9,15 @@ title: Making
 
 ## GRBL
 
-
 # Parts
+
 GT2 Belt
 Screws
 
-
-
 # Motors
+
 Continuous
 Stepper
 Stepper drivers
 
-
 # Raspberry Pi
-
-
-

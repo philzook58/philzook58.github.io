@@ -231,6 +231,9 @@ Discipline of Programming <https://seriouscomputerist.atariverse.com/media/pdf/b
 
 ## Separation Logic
 
+<https://x.com/sarah_zrf/status/1722303679741489413?s=20>
+<https://arxiv.org/abs/1909.08789> proof pearl wand as frame. `P * (P -* Q)` is better than `P -* Q`
+
 <https://en.wikipedia.org/wiki/Bunched_logic>
 
 <https://cs.nyu.edu/~wies/software/grasshopper/>
@@ -326,6 +329,9 @@ Tagged memory separating heap and stack. Chaos when gets confused. Does pointer 
 
 [Synthesizing an Instruction Selection Rule Library from Semantic Specifications](https://pp.ipd.kit.edu/uploads/publikationen/buchwald18cgo.pdf)
 [A Formal Model of a Large Memory that Supports Efficient Execution](https://www.cs.utexas.edu/users/hunt/FMCAD/FMCAD12/014.pdf)
+
+<https://dl.acm.org/doi/abs/10.1145/3622855?af=R>  Static Analysis of Memory Models for SMT Encodings - oopsla 23
+<https://github.com/hernanponcedeleon/Dat3M> datragnan tool. memory model aware verification
 
 ## Memory Safety
 
@@ -790,6 +796,7 @@ They are also represented by transition diagrams, but the acceptance condition i
 LTL - Linear Temporal Logic. This is one logic for describing properties of a transition system. It consists of ordinary boolean logic combined with temporal operators, X F G and U (which are not necessarily independent of the others). Each state in the transition systems is labelled with which propositions are true in that state. $latex G \phi$ is true if that statement $phi$ is true on all possible states you could end up on forever. $latex F \phi$ is true if you always enter a state at some point for which $latex \phi$ is true. In other words $latex \phi$ is eventually true. $latex X \phi$ is true if in the next state $latex \phi$ is true.
 
 # Old Sep Logic
+
 <https://cs.nyu.edu/~wies/software/grasshopper/>
 <https://github.com/wies/grasshopper>
 "GRASShopper is an experimental verification tool for programs that manipulate dynamically allocated data structures. GRASShopper programs can be annotated with specifications expressed in a decidable specification logic to check functional correctness properties. The logic supports mixing of separation logic and first-order logic assertions, yielding expressive yet concise specifications."

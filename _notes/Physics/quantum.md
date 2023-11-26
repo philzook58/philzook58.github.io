@@ -52,6 +52,8 @@ Square = probability
 stern gerlach
 pauli maatrices
 
+<https://x.com/vm_braindumps/status/1042658911491375105?s=20> <https://arxiv.org/abs/1809.07287> A Physical Perspective on Control Points and Polar Forms: Bézier Curves, Angular Momentum and Harmonic Oscillators
+
 # Schroedinger Eq
 
 Dirac vs Schroedinger vs Heisenberg

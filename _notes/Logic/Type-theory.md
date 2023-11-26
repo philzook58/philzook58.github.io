@@ -818,6 +818,9 @@ The homotopy type theory book
 
 Implementing Patch Theories in Homotopy Type Theory <https://www.cs.ru.nl/bachelors-theses/2023/Dick_Blankvoort___1056960___Implementing_Patch_Theories_in_Homotopy_Type_Theory.pdf>
 
+<https://www.youtube.com/watch?v=Pu16iodESTU&list=PL245PKGUDdcN9-El9D7DRefwX4c9feiYq&t=594s&ab_channel=JacobNeumann>
+Youtube videos
+
 ### Older
 
 2018

@@ -49,7 +49,7 @@ for func in module.functions:
     print(dir(func))
     for block in func.blocks:
         print(dir(block))
-        G.add_node(block.name)
+        G.add_node("block" + block.name)
         for insn in block.instructions:
             print(insn)
             print(insn.opcode)
@@ -61,7 +61,7 @@ for func in module.functions:
                 print(src)
                 G.add_edge(src.name, insn.opcode)
             G.add_edge(insn.opcode, dst.name)
-nx.draw(G)
+nx.draw(G, with_labels=True)
 plt.show()
 ```
 
@@ -71,3 +71,6 @@ for block in blocks:
 
 
 ```
+
+liearity?
+e-substitution

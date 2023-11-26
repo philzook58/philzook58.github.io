@@ -386,6 +386,8 @@ rel3 :: Set (a,a,a) -> Int -> Int -> Int -> Trie a
 
 # Resources
 
+<https://www.youtube.com/watch?v=Zk5SJ79nOnA&ab_channel=ChalmersFunctionalProgrammingSeminarSeries> microhaskell augustsson <https://github.com/augustss/MicroHs>
+
 [native delim contby alexis king](https://twitter.com/lexi_lambda/status/1511315589020753929?s=20&t=-ertSPtY87GogVCFq4f-Rw)
 [recursion schemes and comonads - Tielen](https://twitter.com/luctielen/status/1516719551131574274?s=20&t=7564nBvc82Jdkz_E3ccZbA)
 

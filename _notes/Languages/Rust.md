@@ -9,10 +9,13 @@ title: Rust
 wordpress_id: 1849
 ---
 
-- [Timely Dataflow](#timely-dataflow)
-- [Ascent](#ascent)
-  - [Globals Variables](#globals-variables)
+- [Assembly](#assembly)
+- [Unsafe](#unsafe)
+- [Arenas](#arenas)
+- [Lifetimes](#lifetimes)
+- [Globals Variables](#globals-variables)
 - [Formal methods](#formal-methods)
+  - [Kani](#kani)
   - [RustBelt](#rustbelt)
   - [RustHorn](#rusthorn)
   - [RustHornBelt](#rusthornbelt)
@@ -20,17 +23,24 @@ wordpress_id: 1849
   - [Aeneas](#aeneas)
   - [Creusot](#creusot)
 - [Macros](#macros)
-  - [Declarative macros aka macro\_rules!](#declarative-macros-aka-macro_rules)
+  - [Declarative macros aka macro\_rules](#declarative-macros-aka-macro_rules)
   - [Proc Macros](#proc-macros)
   - [Hygiene](#hygiene)
 - [Optimization](#optimization)
 - [Webassembly](#webassembly)
+- [Translation From Legacy](#translation-from-legacy)
+- [Code](#code)
+  - [Timely Dataflow](#timely-dataflow)
+  - [Ascent](#ascent)
+- [Traits](#traits)
+  - [GAT](#gat)
+- [Async](#async)
 - [Resources](#resources)
+- [warn clippy will give advice](#warn-clippy-will-give-advice)
 
 See Also:
+
 - Prolog and Datalog for Polonius and Chalk info
-
-
 
 ```rust
 fn main(){
@@ -64,7 +74,179 @@ for func in funcs:
     print(func(5))
     print(id(func))
 ```
-# Timely Dataflow
+
+# Assembly
+
+inline assembly <https://doc.rust-lang.org/reference/inline-assembly.html>
+
+[Rust to Assembly: Understanding the Inner Workings of Rust](https://www.eventhelix.com/rust/)
+
+cargo asm
+`cargo asm lib_crate::bar::double_n --rust`
+
+<https://www.reddit.com/r/rust/comments/u3g0ih/new_crate_announcement_cargoshowasm/> cargo-show-asm
+
+<https://darkcoding.net/software/underrust-rust-assembly-output/>
+<https://crates.io/crates/rustfilt> rustfilt demangles symbols
+
+godbolt
+
+<https://blog.logrocket.com/interacting-with-assembly-in-rust/> interacting with assembly in rust
+
+```bash
+echo "
+const NAMES: [&'static str; 1] = [
+    \"Kaladin\"
+];
+
+fn main() {
+    roll_call();
+}
+
+pub fn roll_call() {
+    println!(\"SOUND OFF\");
+    for name in NAMES.iter() {
+        println!(\"{}: HERE!\", name);
+    }
+    let num_present = NAMES.len();
+    println!(\"All {} accounted for!\", num_present);
+}
+" > /tmp/rustex.rs
+rustc --emit asm -C llvm-args=-x86-asm-syntax=intel /tmp/rustex.rs -o /tmp/rustex.s
+cat /tmp/rustex.s
+
+```
+
+`RUSTFLAGS="--emit asm -C llvm-args=-x86-asm-syntax=intel" cargo build`
+
+# Unsafe
+
+<https://doc.rust-lang.org/reference/unsafety.html>
+
+# Arenas
+
+Vec arena
+bumpalo
+typed-arena
+
+# Lifetimes
+
+# Globals Variables
+
+[Rust global variables demystified](https://morestina.net/blog/1774/rust-global-variables-demystified)
+[Idiomatically use global variables in rust](https://www.sitepoint.com/rust-global-variables/)
+`static` which may not mean what you t5hink
+
+Lazy and once_cell are in nightly rust and std <https://github.com/rust-lang/rust/issues/74465>
+
+# Formal methods
+
+<https://blog.logrocket.com/5-automatic-verification-tools-rust/>
+
+<https://arxiv.org/abs/2311.08862>  Verification of a Rust Implementation of Knuth's Dancing Links using ACL2
+
+## Kani
+
+<https://blog.logrocket.com/using-kani-write-validate-rust-code-chatgpt/>
+<https://github.com/model-checking/kani>
+
+## RustBelt
+
+[RustBelt: Securing the Foundations of the Rust Programming Language](https://bobkonf.de/2022/dreyer.html)  
+
+## RustHorn
+
+Prophetic encoding. Mutable borrows are modelled as pairs of current and final values.
+
+## RustHornBelt
+
+<https://www.lri.fr/~xldenis/paper/rusthornbelt.pdf>
+
+## Prusti
+
+## Aeneas
+
+<https://arxiv.org/abs/2206.07185>
+<https://github.com/AeneasVerif/aeneas>
+
+## Creusot
+
+[creusat](https://news.ycombinator.com/item?id=31780128) <https://twitter.com/xldenis/status/1537578878364921856?s=20&t=Id3zoB1xCWLA5QQIrPNHVA>
+<https://hal.inria.fr/hal-03526634/document>
+built in why3
+pearlite - specification language
+
+This toggle thing is very surpising to me
+[cyclone](https://pling.jondgoodwin.com/post/cyclone/) Interesting breakdown of some history
+[parallel rust](https://parallel-rust-cpp.github.io/)
+
+```rust
+fn toggle<T>(t : bool, a : &mut T, b : &mut T) -> &mut T {
+    if t { a} else {b}
+}
+```
+
+# Macros
+
+[updated little book of macros](https://github.com/veykril/tlborm/)
+
+[syn]
+[quote] for quasiquoting
+
+## Declarative macros aka macro_rules
+
+## Proc Macros
+
+## Hygiene
+
+I think macro_rules! is hygienic
+
+Hygiene is dealing with what environment variables in your macro refer to. The sort of easy version is to just paste in the code in the call site of the macro.
+
+This kind of isn't what you want though. You almost certainly want to refer to libraries in scope at macro definition. If for example a function `foo` gets shadowed at the callsite.
+
+# Optimization
+
+flamegraph <https://github.com/flamegraph-rs/flamegraph>
+rust heap profiler dhat
+
+Make pools to improve performance?
+
+# Webassembly
+
+[https://rustwasm.github.io/](https://rustwasm.github.io/) The general webassembly site
+
+There is a web assembly tutorial
+
+[https://rustwasm.github.io/docs/book/introduction.html](https://rustwasm.github.io/docs/book/introduction.html)
+
+wasm-bindgen is a crate that auto builds javacript bindings given a macro annotation. This guide has the most stuff in it. web-sys and js-sys give useful bindings to things.
+
+[https://rustwasm.github.io/docs/wasm-bindgen/](https://rustwasm.github.io/docs/wasm-bindgen/)
+
+wasm-pack is a tool for building rust to webassembly projects
+
+[https://rustwasm.github.io/docs/wasm-pack/introduction.html](https://rustwasm.github.io/docs/wasm-pack/introduction.html)
+
+println! does not work unfortunately. You need to custom bind to console.log or use the web-sys bindings. It's kind of a pain in the ass [https://rustwasm.github.io/docs/wasm-bindgen/examples/console-log.html](https://rustwasm.github.io/docs/wasm-bindgen/examples/console-log.html)
+
+[https://www.nalgebra.org/](https://www.nalgebra.org/) nalgebra and ndarray are crates that give matrix and numerical stuff. They can bind to blas but also a lot of functionality is in pure rust, so it can be compiled to the web.
+
+Getting a webpage up that runs webassembly seems like an involved process. I thnk there is some preference to using web-pack. There is a lot of modern javascript features being used that I'm not familiar with. Guess I'm a grandpa. [https://javascript.info/](https://javascript.info/) Most importantly is the ES6 module system. Also some examples use await/async syntax to initialize the rust built webassembly.  [https://rustwasm.github.io/docs/wasm-bindgen/examples/without-a-bundler.html](https://rustwasm.github.io/docs/wasm-bindgen/examples/without-a-bundler.html)
+
+Serde seems like a useful route to getting stuff into and out of javascript. It is a serialization deserialization library.
+
+# Translation From Legacy
+
+<https://cpp-rust-assisted-migration.gitlab.io/> C++ to rust
+<https://github.com/newca12/awesome-rust-formalized-reasoning>
+<https://galois.com/blog/2023/09/using-gpt-4-to-assist-in-c-to-rust-translation/>
+<https://c2rust.com/>
+
+# Code
+
+## Timely Dataflow
+
 This stuff is scattered over both datalog and databases notes.
 
 [shipping puzzle in differential dataflow](https://www.nikolasgoebel.com/2018/12/22/shipping-puzzle.html)
@@ -72,13 +254,13 @@ Frank mcsherry also has sudoku examples on youtube
 
 [Life in Differential Dataflow](https://materialize.com/life-in-differential-dataflow/) blog post. interesecting lists. fizzbuzz. Game of life.
 
-https://materialize.com/blog
+<https://materialize.com/blog>
 
 Timely associates timestamps with data. That enables more complex operations. A similar thing occurs with computer state, where the program counter exists and enables more powerful programs than pure combinatorial circuitry (~dataflow programming).
 
 Timestamps are extending from simple integers into more complex partially ordered thingies. This may be familiar from lamport clocks for example, but also makes sense from a loopy scope perspective.
 
-Just as importantly you need a notion of frontier or watermark. Things tha are accumulating data may need to know nothing else may come in. How do you describe "nothing else may come in" in a complex notion of time? Antichains is apparently an answer. 
+Just as importantly you need a notion of frontier or watermark. Things tha are accumulating data may need to know nothing else may come in. How do you describe "nothing else may come in" in a complex notion of time? Antichains is apparently an answer.
 
 modelling purely functionally
 
@@ -100,6 +282,7 @@ fn main() {
 ```
 
 `-w2` gets 2 workers.
+
 ```rust
 // cargo-deps: timely
 extern crate timely;
@@ -137,7 +320,8 @@ fn main() {
 }
 ```
 
-# Ascent
+## Ascent
+
 ```rust
 // cargo-deps: ascent
 use ascent::ascent;
@@ -163,104 +347,32 @@ So if I could make a trait that mutates a global uf...
 <https://docs.rs/ena/latest/ena/>
 
 No. nevermind. That isn't good enough.
-## Globals Variables
 
-[Rust global variables demystified](https://morestina.net/blog/1774/rust-global-variables-demystified)
-[Idiomatically use global variables in rust](https://www.sitepoint.com/rust-global-variables/)
-`static` which may not mean what you t5hink
+# Traits
 
-Lazy and once_cell are in nightly rust and std https://github.com/rust-lang/rust/issues/74465
-# Formal methods
-## RustBelt
-[RustBelt: Securing the Foundations of the Rust Programming Language](https://bobkonf.de/2022/dreyer.html)  
-## RustHorn
-Prophetic encoding. Mutable borrows are modelled as pairs of current and final values.
-## RustHornBelt
-https://www.lri.fr/~xldenis/paper/rusthornbelt.pdf
+## GAT
 
-## Prusti
-## Aeneas
-https://arxiv.org/abs/2206.07185
-https://github.com/AeneasVerif/aeneas
-## Creusot
-[creusat](https://news.ycombinator.com/item?id=31780128) https://twitter.com/xldenis/status/1537578878364921856?s=20&t=Id3zoB1xCWLA5QQIrPNHVA
-https://hal.inria.fr/hal-03526634/document 
-built in why3
-pearlite - specification language
+<https://blog.logrocket.com/using-rust-gats-improve-code-app-performance/>
 
-This toggle thing is very surpising to me
-[cyclone](https://pling.jondgoodwin.com/post/cyclone/) Interesting breakdown of some history
-[parallel rust](https://parallel-rust-cpp.github.io/)
+# Async
 
-```rust
-fn toggle<T>(t : bool, a : &mut T, b : &mut T) -> &mut T {
-    if t { a} else {b}
-}
-```
+# Resources
 
-# Macros
-[updated little book of macros](https://github.com/veykril/tlborm/)
-
-[syn]
-[quote] for quasiquoting
-## Declarative macros aka macro_rules!
-
-
-## Proc Macros
-## Hygiene
-I think macro_rules! is hygienic
-
-Hygiene is dealing with what environment variables in your macro refer to. The sort of easy version is to just paste in the code in the call site of the macro. 
-
-This kind of isn't what you want though. You almost certainly want to refer to libraries in scope at macro definition. If for example a function `foo` gets shadowed at the callsite.
-
-# Optimization
-flamegraph https://github.com/flamegraph-rs/flamegraph
-rust heap profiler dhat
-
-Make pools to improve performance?
-
-# Webassembly
-
-[https://rustwasm.github.io/](https://rustwasm.github.io/) The general webassembly site
-
-There is a web assembly tutorial
-
-[https://rustwasm.github.io/docs/book/introduction.html](https://rustwasm.github.io/docs/book/introduction.html)
-
-wasm-bindgen is a crate that auto builds javacript bindings given a macro annotation. This guide has the most stuff in it. web-sys and js-sys give useful bindings to things.
-
-[https://rustwasm.github.io/docs/wasm-bindgen/](https://rustwasm.github.io/docs/wasm-bindgen/)
-
-wasm-pack is a tool for building rust to webassembly projects
-
-[https://rustwasm.github.io/docs/wasm-pack/introduction.html](https://rustwasm.github.io/docs/wasm-pack/introduction.html)
-
-println! does not work unfortunately. You need to custom bind to console.log or use the web-sys bindings. It's kind of a pain in the ass [https://rustwasm.github.io/docs/wasm-bindgen/examples/console-log.html](https://rustwasm.github.io/docs/wasm-bindgen/examples/console-log.html)
-
-[https://www.nalgebra.org/](https://www.nalgebra.org/) nalgebra and ndarray are crates that give matrix and numerical stuff. They can bind to blas but also a lot of functionality is in pure rust, so it can be compiled to the web.
-
-Getting a webpage up that runs webassembly seems like an involved process. I thnk there is some preference to using web-pack. There is a lot of modern javascript features being used that I'm not familiar with. Guess I'm a grandpa. [https://javascript.info/](https://javascript.info/) Most importantly is the ES6 module system. Also some examples use await/async syntax to initialize the rust built webassembly.  [https://rustwasm.github.io/docs/wasm-bindgen/examples/without-a-bundler.html](https://rustwasm.github.io/docs/wasm-bindgen/examples/without-a-bundler.html)
-
-Serde seems like a useful route to getting stuff into and out of javascript. It is a serialization deserialization library.
-
-# Resources 
-[Rust to Assembly: Understanding the Inner Workings of Rust](https://www.eventhelix.com/rust/)
-
-[from stacks to trees](https://www.ralfj.de/blog/2023/06/02/tree-borrows.html)https://www.reddit.com/r/rust/comments/13y8a9b/from_stacks_to_trees_a_new_aliasing_model_for_rust/  https://perso.crans.org/vanille/treebor/
+[from stacks to trees](https://www.ralfj.de/blog/2023/06/02/tree-borrows.html)<https://www.reddit.com/r/rust/comments/13y8a9b/from_stacks_to_trees_a_new_aliasing_model_for_rust/>  <https://perso.crans.org/vanille/treebor/>
 [miri interpreter](https://github.com/rust-lang/miri/) interpreter on mir ir detects undefined behavior
 
-[im](https://docs.rs/im/latest/im/#) immutable data structure / maps. Hash array mapped tries. HAMT. 
+[im](https://docs.rs/im/latest/im/#) immutable data structure / maps. Hash array mapped tries. HAMT.
 
 [cargo-dist](https://blog.axo.dev/2023/02/cargo-dist)
 
 [embeddable interpeters](https://www.reddit.com/r/rust/comments/s63j6n/which_scripting_languages_work_well_embedded_with/)
+
 - rlua
 - [Rhai](https://github.com/rhaiscript/rhai)
 - [Rustpython](https://github.com/RustPython/RustPython) a python interpreter than can run in browser and be embedded
 
-[deflect](https://github.com/jswrenn/deflect) runtime reflectin of types via dwarf https://jack.wrenn.fyi/blog/deflect/
-rust atmics book https://marabos.nl/atomics/
+[deflect](https://github.com/jswrenn/deflect) runtime reflectin of types via dwarf <https://jack.wrenn.fyi/blog/deflect/>
+rust atmics book <https://marabos.nl/atomics/>
 
 [easy-smt](https://github.com/elliottt/easy-smt)
 
@@ -275,38 +387,41 @@ rust atmics book https://marabos.nl/atomics/
 - [rust script](https://rust-script.org/) I power my inline blogging with this.
 - [cyclone](https://pling.jondgoodwin.com/post/cyclone/) Interesting breakdown of some history
 - [little book of rust macros](https://danielkeep.github.io/tlborm/book/README.html)
-* https://news.ycombinator.com/item?id=25222750 - risp a rust lisp
-* https://altsysrq.github.io/proptest-book/intro.html
-* egg - e graph library https://docs.rs/egg/0.6.0/egg/ https://arxiv.org/abs/2004.03082
-* https://nnethercote.github.io/perf-book/
-* https://ferrous-systems.com/blog/dlx-in-rust/
-* https://hexgolems.com/2020/10/getting-started-with-ddlog/
-* https://www.stephendiehl.com/posts/exotic03.html effect systems are off to the side, but do they help explain lifetimes? divergence as an effect
-* crust of rust series 
-* Max Willsey https://www.mwillsey.com/blog/rust-intro
-* https://rust-unofficial.github.io/too-many-lists/
-* https://news.ycombinator.com/item?id=25610741 alhalf hour to learn rust. This guy has other good articles too
-* https://rust-unofficial.github.io/patterns/
-#warn clippy will give advice 
 
-https://rust-lang.github.io/chalk/book/recursive.html chalk is interesting
+- <https://news.ycombinator.com/item?id=25222750> - risp a rust lisp
+
+- <https://altsysrq.github.io/proptest-book/intro.html>
+- egg - e graph library <https://docs.rs/egg/0.6.0/egg/> <https://arxiv.org/abs/2004.03082>
+- <https://nnethercote.github.io/perf-book/>
+- <https://ferrous-systems.com/blog/dlx-in-rust/>
+- <https://hexgolems.com/2020/10/getting-started-with-ddlog/>
+- <https://www.stephendiehl.com/posts/exotic03.html> effect systems are off to the side, but do they help explain lifetimes? divergence as an effect
+- crust of rust series
+- Max Willsey <https://www.mwillsey.com/blog/rust-intro>
+- <https://rust-unofficial.github.io/too-many-lists/>
+- <https://news.ycombinator.com/item?id=25610741> alhalf hour to learn rust. This guy has other good articles too
+- <https://rust-unofficial.github.io/patterns/>
+
+# warn clippy will give advice
+
+<https://rust-lang.github.io/chalk/book/recursive.html> chalk is interesting
 
 modelling lifetimes as St monad. Moslty makes sense. Lifetimes are ordered though.
 Could one make an ST monad that uses a stack of scopes?
 
-deref trait 
+deref trait
 
 Rust ffi
-https://rust-embedded.github.io/book/interoperability/rust-with-c.html
-https://www.greyblake.com/blog/2017-08-10-exposing-rust-library-to-c/
-https://karroffel.gitlab.io/post/2019-05-15-rust/ Cbindgen
+<https://rust-embedded.github.io/book/interoperability/rust-with-c.html>
+<https://www.greyblake.com/blog/2017-08-10-exposing-rust-library-to-c/>
+<https://karroffel.gitlab.io/post/2019-05-15-rust/> Cbindgen
 
 6/2020
 Nom parsing
 
 It helps that you can use smart constructors that do the Box::new. That takes away some of the pain
 
-// https://stackoverflow.com/questions/51182640/is-it-possible-to-represent-higher-order-abstract-syntax-in-rust interesting example of HOAS
+// <https://stackoverflow.com/questions/51182640/is-it-possible-to-represent-higher-order-abstract-syntax-in-rust> interesting example of HOAS
 
     ```
     <code>    #[derive(Debug, Eq, PartialEq, Clone)]
@@ -406,7 +521,8 @@ The two layer design gives kind of a type level witness to the branch you are in
     
     </code>
 ```
-This pattern of giving each in an enum constructor it's own struct data type has the flavor of something oner might call an associated type constructor. If you wanted to associate a constructor with a type, you could give this tpye name as an associated type . Nvm. This is not what is meant by the term in rust. 
+
+This pattern of giving each in an enum constructor it's own struct data type has the flavor of something oner might call an associated type constructor. If you wanted to associate a constructor with a type, you could give this tpye name as an associated type . Nvm. This is not what is meant by the term in rust.
 
 This is trash. i hate this
 
@@ -422,17 +538,14 @@ fn id<A>(x : A) -> A { x}
 
 but without changing the implementation we can restrict the allowed types
 
-    
     <code>fn id_i64(x : i64) -> i64 { x }</code>
 
 Where the type constructor Id we don't really have this specialization available at define time.
 
-    
     <code>struct Id<A>(A);</code>
 
 However, we can build a type specialized smart constructor.
 
-    
     <code>struct Idi64INTERNAL<A> (A);
     fn Idi64(x : i64) -> Idi64INTERNAL<i64> { Idi64INTERNAL(x) }</code>
 
@@ -446,15 +559,17 @@ An example of this is in the standard library for Option
 
 map_or_else is exactly the eliminator form.
 
-Similarly 
+Similarly
 
 [https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else)
+
 ```
 pub fn [map_or_else](https://doc.rust-lang.org/std/option/enum.Option.html#method.map_or_else)<U, D, F>(self, default: D, f: F) -> U where  
 D: [FnOnce](https://doc.rust-lang.org/std/ops/trait.FnOnce.html)() -> U,  
 F: [FnOnce](https://doc.rust-lang.org/std/ops/trait.FnOnce.html)(T) -> U, `
 ```
-   ``` 
+
+   ```
     <code>
     fn elimOption<A,B>(x:Option<A>, some : Fn(A) -> B, none : B) -> B {
       match x {
@@ -474,7 +589,6 @@ Rust does not have great support for higher-kinded-types. In order to talk about
 
 A related trick that I think works the best is defunctionalization. You need to make a new type that means VecTag. Then we can make a typelevel function using a trait with associated types to apply it.
 
-    
    ```// every use site of gmatch reuqires an instance of App1 connected to a function symbol.
     trait App1<A> {
         type T;
@@ -790,4 +904,3 @@ sum \i
 argmin \i
 
 max \i
-

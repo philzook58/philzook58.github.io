@@ -14,3 +14,6 @@ SysML <https://en.wikipedia.org/wiki/Systems_Modeling_Language>
 AADL
 
 MBSE <https://en.wikipedia.org/wiki/Model-based_systems_engineering>
+
+<https://galois.com/news/galois-releases-mbse-training-materials-for-aadl-and-case-tools/>
+<https://github.com/GaloisInc/CASE-AADL-Tutorial/>

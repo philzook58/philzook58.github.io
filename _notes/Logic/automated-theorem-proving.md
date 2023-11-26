@@ -201,6 +201,77 @@ Wos book chapter
 thf(easymode, conjecture, ?[P : $i > $i] : ((P @ X) = X)).
 ```
 
+```bash
+echo '
+thf(f_type, type, f : $i > $i > $i).
+thf(f_type, type, g : $i > $i > $i).
+
+
+% thf(g_permutes_f, axiom, ![X:$i, Y:$i]:((f @ X @ Y) = (g @ Y @ X))).
+thf(conj, conjecture, ?[G: $i > $i > $i]: (![X:$i, Y:$i]: ( (f @ X @ Y) = (G @ Y @ X)) ) ).
+' > /tmp/example.p
+eprover-ho --auto --proof-object /tmp/example.p 
+```
+
+```bash
+echo '
+thf(unifythis, conjecture, ?[P : $i > $i] : (![X : $i]: ((P @ X) = X))).
+' > /tmp/example.p
+eprover-ho --auto /tmp/example.p --conjectures-are-questions #fails wth GaveUp
+eprover-ho --auto /tmp/example.p  --print-strategy > /tmp/strategy # succeeds
+eprover-ho --auto /tmp/example.p  --conjectures-are-questions --parse-strategy=/tmp/strategy #succeeds
+```
+
+```bash
+echo '
+%re
+thf(f_type, type, f : $i > $i > $i ).
+thf(unifythis, conjecture, ?[P : $i > $i > $i] : (![X : $i, Y : $i]: ((P @ X @ Y) = (f @ Y @ X)))).
+' > /tmp/example.p
+eprover-ho --auto /tmp/example.p --conjectures-are-questions #fails wth GaveUp
+eprover-ho --auto /tmp/example.p --print-strategy > /tmp/strategy # succeeds
+eprover-ho --auto /tmp/example.p --conjectures-are-questions #--parse-strategy=/tmp/strategy #succeeds
+```
+
+```bash
+
+echo '
+%re
+#thf(f_type, type, x : $i).
+thf(easymode, conjecture, ?[P : $i > $i] : (![X : $i]: ((P @ X) = X))).
+%thf(easymode, conjecture, ?[P : $i > $i] :((P @ x) = x)).
+' > /tmp/example.p
+eprover-ho --auto /tmp/example.p --conjectures-are-equations #fails
+eprover-ho --auto /tmp/example.p  --print-strategy > /tmp/strategy
+eprover-ho --auto /tmp/example.p  --conjectures-are-questions --parse-strategy=/tmp/strategy
+
+
+
+# --print-strategy #--conjectures-are-questions
+```
+
+- eprover-ho --auto /tmp/example.p --proof-object
+
+Conjectures-as-questions is segfaulting. Ok fixed.
+Hmm. Why is `--auto` necessary to make this work? Kind of odd behavior even if in the readme
+
+Lambda lifting
+
+```bash
+echo '
+thf(f_type, type, f : $i > $i ).
+thf(problem1, conjecture, ?[G : $i > $i]: (![X: $i]: ((f @ X) = (G @ X)))). ' > /tmp/example.p
+eprover-ho --auto /tmp/example.p  --conjectures-are-questions #--proof-object
+```
+
+```bash
+# This ought to be imposble. Ok Good.
+echo '
+thf(f_type, type, f : $i > $i ).
+thf(problem1, conjecture, ?[G : $i > $i]: (![X: $i, Y:$i]: ((f @ X) = (G @ Y)))). ' > /tmp/example.p
+eprover-ho --auto /tmp/example.p --proof-object
+```
+
 ## Structures
 
 In coq or lean we prove somwethign has properties, then we abstract it an use only the properties

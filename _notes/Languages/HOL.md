@@ -78,3 +78,80 @@ Querying
 ```isabelle
 {% include_relative isabelle/isabelleplay.thy %}
 ```
+
+The isabelle command line <https://stackoverflow.com/questions/48939929/verify-an-isabelle-proof-from-the-command-line>
+`isabelle build`
+`isabelle process -T`
+
+Isabelle system manual <https://isabelle.in.tum.de/doc/system.pdf>
+
+ROOT files
+
+```
+Usage: isabelle process [OPTIONS]
+
+  Options are:
+    -T THEORY    load theory
+    -d DIR       include session directory
+    -e ML_EXPR   evaluate ML expression on startup
+    -f ML_FILE   evaluate ML file on startup
+    -l NAME      logic session name (default ISABELLE_LOGIC="HOL")
+    -m MODE      add print mode for output
+    -o OPTION    override Isabelle system OPTION (via NAME=VAL or NAME)
+
+  Run the raw Isabelle ML process in batch mode.
+```
+
+```bash
+#isabelle process -e "1 + 1" # eval ML expr
+#isabelle process -e ’Thy_Info.get_theory "Main"’
+#isabelle process -T /home/philip/Documents/philzook58.github.io/_notes/Languages/isabelle/play
+cat <<'EOF' > /tmp/test.thy
+theory test
+imports Main
+begin
+lemma "1 + 1 = 2" by simp
+value "3::int"
+(* print_commands *)
+(* defining a datatype *)
+datatype 'a  MyList = MyNil | MyCons 'a "'a MyList"
+(* defining a function *)
+fun mylength :: "'a MyList \<Rightarrow> nat" where
+  "mylength MyNil = 0"
+| "mylength (MyCons x xs) = 1 + mylength xs"
+end
+EOF
+isabelle process -T /tmp/test
+
+```
+
+```bash
+isabelle console
+```
+
+https://github.com/isabelle-prover/mirror-isabelle
+
+
+PURE is the isabelle framework. The core rules are resolution?
+https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/thm.ML
+
+```
+(*Resolution: exactly one resolvent must be produced*)
+fun tha RSN (i, thb) =
+  (case Seq.chop 2 (biresolution NONE false [(false, tha)] i thb) of
+    ([th], _) => solve_constraints th
+  | ([], _) => raise THM ("RSN: no unifiers", i, [tha, thb])
+  | _ => raise THM ("RSN: multiple unifiers", i, [tha, thb]));
+
+(*Resolution: P \<Longrightarrow> Q, Q \<Longrightarrow> R gives P \<Longrightarrow> R*)
+fun tha RS thb = tha RSN (1,thb);
+```
+
+Higher order unfication https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/unify.ML
+
+simplifier https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/simplifier.ML
+https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/raw_simplifier.ML
+
+Example simple HOL def https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/Examples/Higher_Order_Logic.thy 
+
+https://github.com/isabelle-prover/mirror-isabelle/tree/master/src/Provers provers.

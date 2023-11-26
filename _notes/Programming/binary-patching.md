@@ -353,6 +353,14 @@ int main(){
 }
 ```
 
+# Checking
+
+diff readelf
+
+what can go wrong?
+
+models of loading
+
 # Resources
 
 <https://program-repair.org/index.html>

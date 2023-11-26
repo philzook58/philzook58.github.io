@@ -92,7 +92,7 @@ wordpress_id: 1865
 - [History](#history)
 - [Expert Systems](#expert-systems)
 - [Lambda Prolog](#lambda-prolog)
-    - [HO Unification](#ho-unification)
+  - [HO Unification](#ho-unification)
   - [LF](#lf)
     - [Twelf](#twelf)
   - [Rust Chalk Harrop](#rust-chalk-harrop)
@@ -2023,6 +2023,41 @@ Weaker semantics and choosing semantics.
 [easy to call into python now](https://swi-prolog.discourse.group/t/a-bundled-python-interface/6735)
  <https://www.swi-prolog.org/pldoc/doc_for?object=section(%27packages/janus.html%27)>
 
+<https://www.swi-prolog.org/pldoc/man?section=janus-python-package>
+`pip install git+https://github.com/SWI-Prolog/packages-swipy.git#egg=janus_swi`
+
+<https://www.swi-prolog.org/pldoc/man?section=janus-call-prolog>
+<https://swi-prolog.discourse.group/t/installing-janus-linking-error/6954> note neede same versin of janus a swipl --version installed python3 -m pip install git+<https://github.com/SWI-Prolog/packages-swipy.git@V9.1.18#egg=janus_swi>
+
+```python
+from janus_swi import *
+print(query_once("writeln('Hello world!')"))
+print(apply_once("user", "plus", 1, 2))
+print([a["D"] for a in query("between(1,6,D)")])
+
+import janus_swi as janus
+
+janus.consult("trains", """
+    train('Amsterdam', 'Haarlem').
+    train('Amsterdam', 'Schiphol').
+    """)
+print([d['Tuple'] for d in
+           janus.query("train(_From,_To),Tuple=_From-_To")])
+#prolog() # go into repl
+
+janus.consult("stlctype", """
+typeof(_,int(N), int) :- integer(N).
+typeof(G,plus(X,Y), int) :- typeof(G,X,int), typeof(G,Y,int).
+typeof(G,var(X),T) :- member(X-T,G).
+typeof(G,lam(X,B),T1-T2) :- typeof([X-T1|G],B,T2).
+""")
+print(list(janus.query("typeof([],plus(int(1),int(2)),T)")))
+print(janus.query_once("typeof([],lam(x,var(x)),T)"))
+```
+
+```prolog
+```
+
 swi
 
 ```prolog
@@ -3539,6 +3574,7 @@ mi(Gs, G) :- member(Gs,G1), subsumes_term(G1,G),
 ```
 
 # inductive logic programmingh
+
 Hyper in bratko
 
 [Inductive Logic Programming: From Machine Learning to Software Engineering](https://direct.mit.edu/books/book/4900/Inductive-Logic-ProgrammingFrom-Machine-Learning)

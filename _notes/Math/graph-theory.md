@@ -829,6 +829,62 @@ print(type(G.nodes[1]))
 print([type(n) for n in G.nodes])
 ```
 
+```python
+import sqlite3
+import networkx as nx
+def db_of_graph(conn, G):
+    con.executemany("INSERT INTO nodes VALUES (?)", map(lambda v : (v,),  G.nodes))
+    con.executemany("INSERT INTO edges VALUES (?, ?)", G.edges)
+def graph_of_db(con):
+    G = nx.DiGraph()
+    res = con.execute("SELECT * FROM nodes")
+    G.add_nodes_from(map(lambda x: x[0], res.fetchall()))
+    res = con.execute("SELECT * FROM edges")
+    G.add_edges_from(res.fetchall())
+    return G
+def query_of_graph(G):
+    selects = []
+    froms = []
+    wheres = []
+    for node in G:
+        froms += [f"nodes AS v{node}"]
+        selects += [f"v{node}.v AS v{node}"]
+    for i, (a,b) in enumerate(G.edges):
+        froms += [f"edges as e{i}"]
+        wheres += [f"e{i}.src = v{a}.v"  , f"e{i}.dst = v{b}.v"]
+    sql = "SELECT " + ", ".join(selects) + \
+          "\nFROM " +  ", ".join(froms) + \
+          "\nWHERE " + " AND ".join(wheres)
+    return sql
+G = nx.path_graph(7, create_using=nx.DiGraph)
+lhs = nx.path_graph(3, create_using=nx.DiGraph)
+con = sqlite3.connect(":memory:")
+
+con.execute("CREATE TABLE nodes(v)")
+con.execute("CREATE TABLE edges(src,dst)")
+db_of_graph(con, G)
+res = con.execute(query_of_graph(lhs))
+print(res.fetchall())
+# Result: [(0, 1, 2), (1, 2, 3), (2, 3, 4), (3, 4, 5), (4, 5, 6)]
+
+print(graph_of_db(con))
+"DELETE FROM nodes WHERE nodes.v = ?"
+"DELETE FROM edges where edges.src = ? OR edges.dst = ?"
+
+con.execute("DELETE FROM nodes")
+con.execute("DELETE FROM edges")
+colors = nx.complete_graph(2) # a two coloring
+db_of_graph(con,colors)
+# symmetrize. Maybe db_of_graph should do this. if not isinstanc(G,nx.DiGraph)
+con.execute("INSERT INTO edges SELECT edges.dst, edges.src FROM edges")
+
+res = con.execute("SELECT * FROM edges")
+res = print(res.fetchall())
+res = con.execute(query_of_graph(G))
+print(res.fetchall())
+# [(1, 0, 1, 0, 1, 0, 1), (0, 1, 0, 1, 0, 1, 0)]
+```
+
 examples:
 
 - term rewriting

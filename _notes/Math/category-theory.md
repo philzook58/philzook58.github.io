@@ -41,6 +41,7 @@ title: Category Theory
 - [Applied Category Theory](#applied-category-theory)
   - [Categorical Databases](#categorical-databases)
   - [Computational Category Theory](#computational-category-theory)
+    - [Catlab](#catlab)
 - [Resources](#resources)
 
 EPR?
@@ -274,6 +275,8 @@ Simplicial sets are indexed by a simplex with face inclusion relations. <https:/
 # Optics
 
 # Logic
+<https://mikeshulman.github.io/catlog/catlog.pdf> Categorical logic from a categorical point of view Mik Shulman
+Scott and Lambek book
 
 Rising Sea
 
@@ -490,6 +493,72 @@ Mappings between schema describe
 
 ## Computational Category Theory
 
+<https://x.com/AlexisToumi/status/1726528031584636953?s=20> <https://arxiv.org/abs/2311.10608> DisCoPy: the Hierarchy of Graphical Languages in Python
+
+Hypergraph equality using networkx
+
+```python
+from discopy.monoidal import Ty, Box, Layer, Diagram
+x, y, z = Ty('x'), Ty('y'), Ty('z')
+f, g, h = Box('f', x, y @ z), Box('g', y, z), Box('h', z, z)
+assert f >> g @ h == Diagram(
+dom=x, cod=z @ z, inside=(
+Layer(Ty(), f, Ty()),
+Layer(Ty(), g, z),
+Layer(z, h, Ty())))
+
+from discopy import monoidal, python
+from discopy.cat import factory, Category
+@factory # Ensure that composition of circuits remains a circuit.
+class Circuit(monoidal.Diagram):
+  ty_factory = monoidal.PRO # Use natural numbers as objects.
+  def __call__(self, *bits):
+    F = monoidal.Functor(
+    ob=lambda _: (bool, ), ar=lambda f: f.data,
+    cod=Category(python.Ty, python.Function))
+    return F(self)(bits)
+class Gate(monoidal.Box, Circuit):
+  """A gate is just a box in a circuit with a function as data."""
+NAND = Gate("NAND", 2, 1, data=lambda x, y: not (x and y))
+COPY = Gate("COPY", 1, 2, data=lambda x: (x, x))
+XOR = COPY @ COPY >> 1 @ (NAND >> COPY) @ 1 >> NAND @ NAND >> NAND
+CNOT = COPY @ 1 >> 1 @ XOR
+NOTC = 1 @ COPY >> XOR @ 1
+SWAP = CNOT >> NOTC >> CNOT # Exercise: Find a cheaper SWAP circuit!
+assert all(SWAP(x, y) == (y, x) for x in [True, False] for y in [True, False])
+
+from discopy import ribbon, drawing
+from discopy.cat import factory, Category
+x = ribbon.Ty('x')
+cup, cap, braid = ribbon.Cup(x.r, x), ribbon.Cap(x.r, x), ribbon.Braid(x, x)
+link = cap >> x.r @ cap @ x >> braid.r @ braid >> x.r @ cup @ x >> cup
+@factory
+class Kauffman(ribbon.Diagram):
+  ty_factory = ribbon.PRO
+class Cup(ribbon.Cup, Kauffman): pass
+class Cap(ribbon.Cap, Kauffman): pass
+class Sum(ribbon.Sum, Kauffman): pass
+Kauffman.cup_factory = Cup
+Kauffman.cap_factory = Cap
+Kauffman.sum_factory = Sum
+class Variable(ribbon.Box, Kauffman): pass
+Kauffman.braid = lambda x, y: (Variable('A', 0, 0) @ x @ y)\
++ (Cup(x, y) >> Variable('A', 0, 0).dagger() >> Cap(x, y))
+K = ribbon.Functor(ob=lambda _: 1, ar={}, cod=Category(ribbon.PRO, Kauffman))
+#drawing.Equation(link, K(link), symbol="$\\mapsto$").draw()
+
+
+from discopy.symmetric import Ty, Box, Swap, Diagram
+x, y, z = Ty('x'), Ty('y'), Ty('z')
+f = Box('f', x, y @ z)
+g, h = Box('g', z, x), Box('h', y, z)
+diagram_left = f >> Swap(y, z) >> g @ h
+diagram_right = f >> h @ g >> Swap(z, x)
+assert diagram_left != diagram_right
+with Diagram.hypergraph_equality:
+  assert diagram_left == diagram_right
+```
+
 - [Computational Category Theory](https://www.cs.man.ac.uk/~david/categories/book/book.pdf)
 - [evan patterson](https://www.epatters.org/wiki/algebra/computational-category-theory.html)
 
@@ -503,7 +572,7 @@ Mappings between schema describe
 
 homotopy.io
 globular
-dicopy
+
 cartographer
 
 From a programming perspective I think there are a couple contributions:
@@ -515,6 +584,8 @@ From a programming perspective I think there are a couple contributions:
 - Point free DSLs are really nice to work with as library/compiler writer. It makes optimizations way easier to recognize and implement correctly. Named references are phantom links attaching different points in a syntax tree and make it hard to manipulate them correctly. In slightly different (and vague) terms, category theory gives a methodology to turn abstract syntax graphs into trees by making all links very explicit.
 
 I can't comment much on what category theory contributes to mathematics, but I think there are similar points. I think category theory can make precise analogies between extremely disparate fields like logic, set theory, and linear algebra. I think categorical intuitions lead to clean definitions when specialized to some particular field. Combinatory categorical logic does make some aspects of logic less spooky.
+
+### Catlab
 
 # Resources
 

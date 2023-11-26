@@ -9,36 +9,32 @@ Ghidra is programmable in Java and python for the gui.
 
 The Ghidra decompiler is actually largely written in C++ and spoken to by the Java GUI frontend over some kind of protocol. You can find it in  `Ghidra/Features/Decompiler/src/decompile/` One can actually directily call functions of the decompiler. There are a couple projects that do this and more are being made everday it seems.
 
-
-
 The help docuemntation inside ghidra itself is useful and I'm not sure it is reflected online anywhere.
 
 shared projects and ghidra server - interesting. I'.ve never needed this,
-
-
 
 Ghidra has a [headless mode](https://ghidra.re/ghidra_docs/analyzeHeadlessREADME.html#examples) that is still using the Java stuff, but doesn't bring up the GUI window.
 
 ```
 analyzeHeadless PATH_TO_PROJECTS PROJECT_NAME -import /path/to/binary
 ```
-`-overwrite` 
+
+`-overwrite`
 `-process exe` analyze existing binary
 `-scriptpath path/to/script`  to add a script
 `-postScript scriptname` to actuallly run it. Also there is `-preScript`
 
-
 # general Workflow
+
 Figure out what functions are. Name them
 Correct types
 name variables
 
 bytes view allows hex editting
 
-
-
 ## Ghidra Scripting
-A lot of the juiciest stuff is in the FlatProgramAPI https://ghidra.re/ghidra_docs/api/ghidra/program/flatapi/FlatProgramAPI.html
+
+A lot of the juiciest stuff is in the FlatProgramAPI <https://ghidra.re/ghidra_docs/api/ghidra/program/flatapi/FlatProgramAPI.html>
 
 The ghidra api docs are pretty decent. I also like to open up the python console (Window > Python) and tab autocomplete just to see what is available.
 
@@ -49,12 +45,12 @@ currentProgram
 currentAddress
 ```
 
-
 ```
 import ensurepip
 ensurepip.bootstrap()
 import pip
 ```
+
 hmm. This is not so successful
 
 So. just import a list of tuples
@@ -63,7 +59,6 @@ So. just import a list of tuples
 
 
 ```
-
 
 ```python
 import ghidra
@@ -105,7 +100,6 @@ highsymbol
 I can go from varnode to high var?
 getlonedescend. getloneascend would also be useful
 
-
 ```python
 proj = ghidra.base.project.GhidraProject.createproject("/tmp/", "testproject", False)
 f = java.io.File("/bin/true")
@@ -116,6 +110,7 @@ api.analyzeAll()
 ```
 
 Widgets are available for quick GUI elements
+
 ```
 import docking.widgets 
 widg.OptionDialog.showInputMultilineDialog(
@@ -124,9 +119,10 @@ widg.OptionDialog.showInputMultilineDialog(
 BasicCodeBlockModel
 [high function](https://ghidra.re/ghidra_docs/api/ghidra/program/model/pcode/PcodeSyntaxTree.html#getBasicBlocks()) getbasicblocks
 
-https://ghidra.re/ghidra_docs/api/ghidra/program/model/pcode/PcodeBlockBasic.html
+<https://ghidra.re/ghidra_docs/api/ghidra/program/model/pcode/PcodeBlockBasic.html>
 start,address, stop address, iterate over pcode
 InSize, getIn
+
 ```python
 livein = {b.getStart() : set() for b in block}
 liveout = {b.getStart() : set() for b in block}
@@ -168,14 +164,14 @@ for pcode in blk.getIterator():
 
 
 ```
+
 confidence scores? do monte carlo allocation
 inline uniques
 
-
 getFalseOut, getTrueOUt
 
-
 ## Commands
+
 decomp_opt / decomp_dbg are command line tools hidden inside the ghidra directory structure. T
 
 To get it working you need to set an environment variable SLEIGHHOME=myghidradirectory It needs this to find the archicture files. THese are compiled from sleigh specs `.sla` files.
@@ -220,12 +216,8 @@ print param
 
 entry point of function can also be given manually
 
-
-
 parse line - to give C prototypes?
 parse file foo.h
-
-
 
 load fine mytest
 read symbols
@@ -236,18 +228,18 @@ disassemble
 rename param_1 argc
 print high iStack12
 
-
 pcode stuff: op.hh
 
 consolemain.cc
 funcdata.hh
 
 ## PCode
+
 Pcode is the intermediate representation that instructions from different architecures are lifted to. Doing so is the first step of disassembling.
 
 There is a difference between Raw pcode and high pcode. Raw comes right of an instruction, high pcode has a couple more constructs to encode higher level notions like phi nodes, function calls, etc. So Pcode kind of represents at least 2 IRs in a sense, that share datatypes.
 
-https://spinsel.dev/assets/2020-06-17-ghidra-brainfuck-processor-1/ghidra_docs/language_spec/html/pcoderef.html
+<https://spinsel.dev/assets/2020-06-17-ghidra-brainfuck-processor-1/ghidra_docs/language_spec/html/pcoderef.html>
 
 varnodes are inputs and outputs. address space, offset into space, and size
 
@@ -256,6 +248,7 @@ opcodes
 uniform address space notion. Registers ar modelling as a separate RAM. Temporary address space and constant adress space
 
 Basically its
+
 - COPY
 - STORE
 - LOAD
@@ -264,36 +257,34 @@ Basically its
 - and then a bunch of computational stuff like INT_ADD
 
 ## SLEIGH
+
 [implementing new archtrcture is ghidra slides](https://guedou.github.io/talks/2019_BeeRump/slides.pdf)
 
 [processors](https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/Processors)
 
 [anltr grammar of sleigh](https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/Framework/SoftwareModeling/src/main/antlr/ghidra/sleigh/grammar)
 
-xml scheme https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/Framework/SoftwareModeling/data/languages
+xml scheme <https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/Framework/SoftwareModeling/data/languages>
 
 [Specifying Representations of Machine Instructions](https://www.cs.tufts.edu/~nr/pubs/specifying.pdf) SLED paper, source of sleigh
-
 
 [The University of Queensland Binary Translator (UQBT) Framework](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.87.4982&rep=rep1&type=pdf)
 
 Huh, they called jit's "dynamic compilers"
 
-
 ## Diffing
+
 [patch diffing](https://ihack4falafel.github.io/Patch-Diffing-with-Ghidra/)
-https://www.zynamics.com/software.html bindiff binexport
-https://github.com/ubfx/BinDiffHelper
+<https://www.zynamics.com/software.html> bindiff binexport
+<https://github.com/ubfx/BinDiffHelper>
 
 Also ghidra has built in diffing
 
 ## Debugger
 
-
-
 ## Resources
-[formal semantics for ghidra](https://link.springer.com/chapter/10.1007/978-3-031-25803-9_7) high pcode. mentions interpeter for low pcode.
 
+[formal semantics for ghidra](https://link.springer.com/chapter/10.1007/978-3-031-25803-9_7) high pcode. mentions interpeter for low pcode.
 
 - [Ghidra Class](https://github.com/NationalSecurityAgency/ghidra/tree/master/GhidraDocs/GhidraClass)
 - [decompiler docs](https://grant-h.github.io/docs/ghidra/decompiler/index.html)
@@ -307,7 +298,6 @@ Also ghidra has built in diffing
 
 [Binary code coverage visualizer plugin for Ghidra](https://github.com/0ffffffffh/dragondance)
 
-
 [ghidra chatgpt](https://github.com/SourceDiver42/Ghidra-ChatGPT)
 
 [Ghidra script to export C pseudo-code on multiple files, including defined types](https://gist.github.com/borzacchiello/811288074a193fe571c8d6274f14f829)
@@ -315,3 +305,5 @@ Also ghidra has built in diffing
 [ghidra golf](https://ghidra.golf/)
 
 [pypcode](https://pypi.org/project/pypcode/) How to bind to the lifter.
+
+<https://github.com/niconaus/pcode-interpreter> a haskell pcode interpeter. niiice.
