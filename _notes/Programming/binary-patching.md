@@ -2,7 +2,20 @@
 layout: post
 title: Binary Patching
 ---
-
+- [Replacing and Deleting Code](#replacing-and-deleting-code)
+  - [Tools](#tools)
+  - [Fusing out a password check](#fusing-out-a-password-check)
+  - [Patching a Call](#patching-a-call)
+  - [Changing a Type](#changing-a-type)
+- [Adding Code](#adding-code)
+  - [Dynamic Interposition](#dynamic-interposition)
+  - [Code Caves](#code-caves)
+  - [Add Bounds Check](#add-bounds-check)
+  - [Null Check](#null-check)
+- [High Patching](#high-patching)
+- [Checking](#checking)
+- [Diffing](#diffing)
+- [Resources](#resources)
 
 Binary patching is an intimidating sounding topic. It is very low level and requires lots of fiddly little knowledge.
 
@@ -353,6 +366,66 @@ int main(){
 }
 ```
 
+# High Patching
+
+```python
+import subprocess
+import re
+from typing import List
+
+sysv_params = ["edi", "esi", "edx", "ecx", "r8d", "r9d"]
+sysv_callee_saved = ["rbx", "rbp", "r12", "r13", "r14", "r15"]
+sysv_caller_saved = []
+
+def multi_replace(text, rep):
+    # https://stackoverflow.com/questions/6116978/how-to-replace-multiple-substrings-of-a-string
+    rep = dict((re.escape(k), v) for k, v in rep.items()) 
+    pattern = re.compile("|".join(rep.keys()))
+    return pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
+
+Reg = str
+# Step 1: Compile a C file to assembly using GCC
+def compile_patch(c_code, in_c : str, in_reg : List[Reg], out_reg, saved=[]):
+    assert(len(in_reg) <= len(sysv_params))
+    assert(len(out_reg) <= len(sysv_params))
+
+    asm_file = "/tmp/dummy.S"
+    # Build dummy C func
+    # (int (*)(int)) consider using cast function pointer
+    with open("/tmp/dummy.c", 'w') as temp_file:
+        stub = f"""
+        int dummy_callback({out_reg});
+        int dummy_stub({in_c}) {{
+            //dummy_start:
+            {c_code}
+            //dummy_exit:
+            // int (*)(int)dummy_callback = return_address;
+            return dummy_callback({out_reg});
+
+        }}""" #;re
+        print(stub)
+        temp_file.write(stub)
+    try:
+        # positin ndependent, O2 for tail cal optimization 
+        subprocess.run(["gcc", "-O2", "-Wall", "-fPIC", "-S", "/tmp/dummy.c", "-o", asm_file], check=True)
+    except subprocess.CalledProcessError as e:
+        print("An error occurred during compilation:", e)
+        raise e
+
+
+    # Step 2: Read the assembly file and perform replacements
+    with open(asm_file, 'r') as file:
+      assembly_code = file.read()
+    swap_reg = {k : v for k,v in zip(sysv_params, in_reg)}
+    asm = multi_replace(assembly_code,swap_reg)
+    print(asm)
+    with open(asm_file, 'w') as file:
+      file.write(asm)
+
+compile_patch("a = a + b;", "int a, int b", ["eax", "ebx"], "a")
+
+```
+
 # Checking
 
 diff readelf
@@ -360,6 +433,93 @@ diff readelf
 what can go wrong?
 
 models of loading
+
+# Diffing
+
+[patch diffing](https://ihack4falafel.github.io/Patch-Diffing-with-Ghidra/)
+
+<https://www.zynamics.com/software.html> bindiff binexport
+<https://github.com/google/bindiff>
+binexport
+
+<https://github.com/ubfx/BinDiffHelper>
+
+Also ghidra has built in diffing
+
+<https://docs.angr.io/en/latest/_modules/angr/analyses/bindiff.html>
+
+<https://github.com/Wilfred/difftastic>
+
+<https://diffing.quarkslab.com/?ref=0xor0ne.xyz> diffing portal
+Quokka - binary export
+Qbindiff <https://diffing.quarkslab.com/qbindiff/doc/source/intro.html>
+
+<https://diffing.quarkslab.com/_downloads/14e50ff049b21492d2264e26531d2a43/thesis.pdf> elie mengin - binary diffing as network alignment
+
+<https://github.com/joxeankoret/diaphora> - Diaphora, the most advanced Free and Open Source program diffing tool.
+
+<https://github.com/SystemSecurityStorm/Awesome-Binary-Similarity>
+
+```
+objdump
+readelf
+#radare / ghidra
+diff
+difft
+```
+
+```bash
+echo "int foo(int x){return x*x + 3;}" > /tmp/foo1.c
+gcc -O1 /tmp/foo1.c -c -o /tmp/foo1.o -fverbose-asm
+echo "int foo(int x){return x*x + 5;}" > /tmp/foo2.c
+gcc -O1 /tmp/foo2.c -c -o /tmp/foo2.o -fverbose-asm
+
+objdump -d /tmp/foo1.o > /tmp/foo1.o.asm
+objdump -d /tmp/foo2.o > /tmp/foo2.o.asm
+#diff --color -C 2 /tmp/foo1.o.asm /tmp/foo2.o.asm
+difft /tmp/foo1.o.asm /tmp/foo2.o.asm
+
+readelf -a /tmp/foo1.o > /tmp/foo1.o.elf
+readelf -a /tmp/foo2.o > /tmp/foo2.o.elf
+#diff --color -C 2 /tmp/foo1.o.elf /tmp/foo2.o.elf
+difft /tmp/foo1.o.elf /tmp/foo2.o.elf
+
+# Make an html? markdown -> pdf
+# checklist
+# Make a CI thing?
+# Print some kind of diffed CFG? radare maybe
+# ghidra or angr
+# dump into a section
+"
+
+
+
+# Patching Checklist
+- [] metadata integrity
+- [] decompilation makes sense
+- [] Bug detected in original
+- [] No changes in unexpected places
+- [] Bug fixed in patched
+- [] Tested details: _______________________________
+
+# AI summary
+
+# Program Info
+## file1 
+size:
+md5
+
+
+## file2 
+
+# ReadElf Diff
+# Objdump Diff
+# Ghidra Diff
+
+"
+```
+
+bsdiff and bspatch <https://www.daemonology.net/bsdiff/> tools for diffing and applying patches <https://github.com/mendsley/bsdiff> <https://www.daemonology.net/papers/bsdiff.pdf>
 
 # Resources
 
@@ -457,3 +617,5 @@ Adding nops in places that are meant to be patcjable using inline asm
 <https://ofrak.com/docs/reference/ofrak/core/elf/load_alignment_modifier.html>
 
 <https://github.com/rems-project/linksem>
+
+<https://github.com/NixOS/patchelf> A small utility to modify the dynamic linker and RPATH of ELF executables. <https://github.com/NixOS/patchelf/blob/master/src/patchelf.cc> not insanely complicated.

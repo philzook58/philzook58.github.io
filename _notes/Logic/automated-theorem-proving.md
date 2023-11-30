@@ -15,6 +15,7 @@ title: Automated Theorem Proving
   - [Peano](#peano)
   - [ECTS](#ects)
   - [Set Theory](#set-theory)
+  - [Simplicial Set](#simplicial-set)
   - [Free Logic / Partial Functions](#free-logic--partial-functions)
   - [Query Containment](#query-containment)
 - [Systems](#systems)
@@ -23,6 +24,8 @@ title: Automated Theorem Proving
   - [Prover9](#prover9)
   - [Otter](#otter)
   - [LeanTAP and ilk](#leantap-and-ilk)
+- [Isabelle](#isabelle)
+  - [Twee](#twee)
   - [PyRes](#pyres)
   - [Zipperposition](#zipperposition)
   - [Datalog vs ATP](#datalog-vs-atp)
@@ -98,313 +101,6 @@ Sanity checks:
 3. If you have a simpler seeming axiom than the one that feels to most trustworthy, write them both and ask for equivalence to be proven. If it works, then you can be a little more sure that your simpler axiom is correct.
 
 ## Puzzles
-
-## Math
-
-Groups
-Lattices
-kleene algebra, kat
-
-Categories
-Set theory <https://en.wikipedia.org/wiki/List_of_set_identities_and_relation>
-Geometry
-
-### antiderivatives
-
-```vampire
-
-thf(manitype, type, mani : $tType). % manifold
-
-thf(consttype, type, const : $real > mani > $real ).
-
-thf(xtype, type, x : mani > $real ). % coordinate function
-thf(ytype, type, y : mani > $real ). % coordinate function
-thf(rtype, type, r : mani > $real ). % coordinate function
-
-thf(plustype, type, plus : (mani > $real) > (mani > $real) > mani > $real ). % coordinate function
-
-thf(plusaxioms,axiom, (plus @ X @ Y)  = (plus @ Y @ X)).
-
-
-thf(consttype, type, const : $real > mani > $real ).
-
-%thf(dtype, type, d : (mani > $real) >  ).
-thf(sintype, type, sin : (mani > $real) > mani > $real).
-
-%thf(powtype,type, > )
-
-```
-
-thf
-`^ [X] : X` is a lambda
-`[a,b,c]` is a built in tuple.
-`$i` is a universe of individuals
-`$o` is bools `$true` `$false`
-`$real` `$int`
-
-## ATP as a Logical Framework
-
-I am used to in the prolog and datalog context to consider the clauses not as classical logical clauses, but instead a description of inference rules. This is the attitude in Miller & Nadathur and [The Logic of Logic Programming](https://arxiv.org/abs/2304.13430)
-
-It seems to me that there is nothing preventing this interpretation for ATP as well. There are a numbr of axiom sets in the TPTP library that have thsi flavor
-
-```
-~ a  
-is the same as
-   a
--------
-This is how we express a goal.
-
-
-~a | b is
-
-   a
-------
-   b
-
-
-~a | ~c | b
-
-is
-
- a   c
-------
-   b
-
-```
-
-Putting together clauses (resolution) is interpreted as putting together inference rules to make proof fragments.
-
-```vampire
-% finite sets either by AC axioms or some primitive
-cnf(and_comm, axiom, and(A,B) = and(B,A)).
-cnf(and_assoc, axiom, and(A,and(B,C)) = and(and(A,B),C)).
-
-
-cnf(not_intro ,axiom,  ~ turnstile(and(C, not(A)), B) | turnstile(C , and(A,B)).
-
-```
-
-Multiple consequence logic. Smiley <https://en.wikipedia.org/wiki/Multiple-conclusion_logic>
-
-## Symbolic Execution
-
-Wos book chapter
-
-```vampire
-
-```
-
-## Lambda
-
-```vampire
-thf(easymode, conjecture, ?[P : $i > $i] : ((P @ X) = X)).
-```
-
-```bash
-echo '
-thf(f_type, type, f : $i > $i > $i).
-thf(f_type, type, g : $i > $i > $i).
-
-
-% thf(g_permutes_f, axiom, ![X:$i, Y:$i]:((f @ X @ Y) = (g @ Y @ X))).
-thf(conj, conjecture, ?[G: $i > $i > $i]: (![X:$i, Y:$i]: ( (f @ X @ Y) = (G @ Y @ X)) ) ).
-' > /tmp/example.p
-eprover-ho --auto --proof-object /tmp/example.p 
-```
-
-```bash
-echo '
-thf(unifythis, conjecture, ?[P : $i > $i] : (![X : $i]: ((P @ X) = X))).
-' > /tmp/example.p
-eprover-ho --auto /tmp/example.p --conjectures-are-questions #fails wth GaveUp
-eprover-ho --auto /tmp/example.p  --print-strategy > /tmp/strategy # succeeds
-eprover-ho --auto /tmp/example.p  --conjectures-are-questions --parse-strategy=/tmp/strategy #succeeds
-```
-
-```bash
-echo '
-%re
-thf(f_type, type, f : $i > $i > $i ).
-thf(unifythis, conjecture, ?[P : $i > $i > $i] : (![X : $i, Y : $i]: ((P @ X @ Y) = (f @ Y @ X)))).
-' > /tmp/example.p
-eprover-ho --auto /tmp/example.p --conjectures-are-questions #fails wth GaveUp
-eprover-ho --auto /tmp/example.p --print-strategy > /tmp/strategy # succeeds
-eprover-ho --auto /tmp/example.p --conjectures-are-questions #--parse-strategy=/tmp/strategy #succeeds
-```
-
-```bash
-
-echo '
-%re
-#thf(f_type, type, x : $i).
-thf(easymode, conjecture, ?[P : $i > $i] : (![X : $i]: ((P @ X) = X))).
-%thf(easymode, conjecture, ?[P : $i > $i] :((P @ x) = x)).
-' > /tmp/example.p
-eprover-ho --auto /tmp/example.p --conjectures-are-equations #fails
-eprover-ho --auto /tmp/example.p  --print-strategy > /tmp/strategy
-eprover-ho --auto /tmp/example.p  --conjectures-are-questions --parse-strategy=/tmp/strategy
-
-
-
-# --print-strategy #--conjectures-are-questions
-```
-
-- eprover-ho --auto /tmp/example.p --proof-object
-
-Conjectures-as-questions is segfaulting. Ok fixed.
-Hmm. Why is `--auto` necessary to make this work? Kind of odd behavior even if in the readme
-
-Lambda lifting
-
-```bash
-echo '
-thf(f_type, type, f : $i > $i ).
-thf(problem1, conjecture, ?[G : $i > $i]: (![X: $i]: ((f @ X) = (G @ X)))). ' > /tmp/example.p
-eprover-ho --auto /tmp/example.p  --conjectures-are-questions #--proof-object
-```
-
-```bash
-# This ought to be imposble. Ok Good.
-echo '
-thf(f_type, type, f : $i > $i ).
-thf(problem1, conjecture, ?[G : $i > $i]: (![X: $i, Y:$i]: ((f @ X) = (G @ Y)))). ' > /tmp/example.p
-eprover-ho --auto /tmp/example.p --proof-object
-```
-
-## Structures
-
-In coq or lean we prove somwethign has properties, then we abstract it an use only the properties
-
-```vampire
-thf(monoid_def, axiom, monoid(E, Op) <=> ( ! [X,Y,Z] : ( 
-    Op @ (Op @ X @ Y) @ Z = Op @ X @ (Op @ Y @ Z)
-    & Op @ E @ X = X
-    & Op @ X @ E = X
-))).
-
-
-```
-
-## Peano
-
-```vampire
-fof(myaxioms, axiom, 
-    nat(z)  % unnecessary?
-    & (nat(X) => nat(s(X)))
-    & (s(X) = s(Y) => X = Y) % need nat(X) nat(Y) ?
-    & s(X) != z
-
-    % induction is of course the sticky one
-    % & (((P @ z) & (! [X] : (P @ X => P @ (s(X))))) => P @ Y)
-
-).
-
-```
-
-[Getting Saturated with Induction](https://link.springer.com/chapter/10.1007/978-3-031-22337-2_15)
-
-## ECTS
-
-```vampire
-
-% don't connect posibly non well formed things
-cnf(comp_assoc, axiom, comp(X,comp(Y,Z)) = comp(comp(X,Y),Z)). 
-cnf(wf_comp, axiom, ~wf(F) | ~wf(G) | dom(F) != cod(G) 
-                            | wf(comp(F,G))).
-cnf(wf_id, axiom, wf(id(A))).
-cnf(comp_id_left, axiom, comp(id(cod(F)),F) = F).
-cnf(comp_id_right, axiom, comp(F,id(dom(F))) = F).
-
-cnf(term_final, axiom, cod(F) != unit | cod(G) != unit | dom(F) != dom(G) 
-                                            | F = G ).
-
-
-%fof(elem_def, axiom, elem(X,A) <=> ( comp(X,A) ) )
-
-
-
-```
-
-What about doing bash + vampire as a proof system
-
-What about universes?
-
-## Set Theory
-
-TPTP has tons of axiom sets for this. But let's play around
-
-```vampire
-fof(mystuff, axiom,
-    $true
-    %~ elem(X,empty)
-    & ((elem(X,A) | elem(X,B)) <=> elem(X,union(A,B)))
-    %& ((elem(X,A) & elem(X,B)) <=> elem(X,inter(A,B)))
-    %& (elem(X,sing(Y)) <=> (X = Y))
-    %& ( (![X] : (elem(X,A) <=> elem(X,B))) <=> (A = B)) % extensionality 
-    %& ( (![X] : (elem(X,A) => elem(X,B))) <=> sub(A,B)) 
-    
-).
-%fof(sub_equal, conjecture,   (sub(X,Y) & sub(Y,X)) <=> (X = Y) ).
-%fof(union_comm, conjecture, union(A,B) = union(B,A)).
-fof(union_assoc, conjecture, union(A,union(B,C)) = union(union(A,B),C)).
-```
-
-## Free Logic / Partial Functions
-
-See the category theory CAT003 example in TPTP with comments about paper by Scott [Identity and Existence in Intuitionist Logic](https://link.springer.com/chapter/10.1007/BFb0061839)
-Avigad book
-[Free logic article](https://plato.stanford.edu/entries/logic-free/)
-
-We don't want it necessarily to assume our function symbols are total. How do we model this?
-We could switch t a relational character. Functions are so gosh darn nice though.
-
-## Query Containment
-
-Queries are first order logical statements with perhaps some free variables. They ae evaluated (model checked) with respect to particular finite models. Asking if one statement implies another in all models is semantic entailment.
-Because `|-` and `|=` are the same thing here (? Really we are relying on soundness), We can write query containment as a simple theorem proving question
-
-```vampire
-fof(q1_def, axiom, q1(X) <=> (r(X,Y) & r(Y,X))). % just implication or biimplication?
-
-fof(q2_def, axiom, q2(X) <=> r(X,Y)). 
-
-fof(contain, conjecture, 
-q1(X) => q2(Q)
-).
-
-```
-
-This also implies a method for solving CSPs.
-
-```vampire
-
-% or really the full clark completion? Yea. I almost certainly do need it.
-fof(k3_edges, axiom, k3edge(a,b) & k3edge(b,c) & k3edge(c,a) & k3edge(b,a) & k3edge(c,b) & k3edge(a,c)
-    & ~k3edge(a,a) & ~k3edge(b,b) & ~k3edge(c,c)
-).
-
-fof(mygraph, axiom, edge(1,2)).
-
-fof(verts, axiom, vert(V) <=> (edge(V,X)) | edge(X,V)).
-
-fof(color3 , conjecture, edge(X,Y) => k3(color(X),color(Y)))
-```
-
-hhmmm.
-
-# Systems
-
-- Vampire
-- E Prover <https://wwwlehre.dhbw-stuttgart.de/~sschulz/E/E.html>
-- Zipperposition
-- <https://github.com/tammet/gkc> on an in memory database
-- [Twee: An Equational Theorem Prover](https://smallbone.se/papers/twee.pdf)
-
-## Vampire
-
-[First-Order Theorem Proving and VAMPIRE](https://publik.tuwien.ac.at/files/PubDat_225994.pdf)
-[vampire tutorial](https://github.com/vprover/ase17tutorial)
 
 ```vampire
 % https://www.tptp.org/TPTP/QuickGuide/Problems.html
@@ -554,7 +250,385 @@ fof(myquery, conjecture,
 
 ```
 
+## Math
+
+Groups
+Lattices
+kleene algebra, kat
+
+Categories
+Set theory <https://en.wikipedia.org/wiki/List_of_set_identities_and_relation>
+Geometry
+
+### antiderivatives
+
+```vampire
+
+thf(manitype, type, mani : $tType). % manifold
+
+thf(consttype, type, const : $real > mani > $real ).
+
+thf(xtype, type, x : mani > $real ). % coordinate function
+thf(ytype, type, y : mani > $real ). % coordinate function
+thf(rtype, type, r : mani > $real ). % coordinate function
+
+thf(plustype, type, plus : (mani > $real) > (mani > $real) > mani > $real ). % coordinate function
+
+thf(plusaxioms,axiom, (plus @ X @ Y)  = (plus @ Y @ X)).
+
+
+thf(consttype, type, const : $real > mani > $real ).
+
+%thf(dtype, type, d : (mani > $real) >  ).
+thf(sintype, type, sin : (mani > $real) > mani > $real).
+
+%thf(powtype,type, > )
+
+```
+
+thf
+`^ [X] : X` is a lambda
+`[a,b,c]` is a built in tuple.
+`$i` is a universe of individuals
+`$o` is bools `$true` `$false`
+`$real` `$int`
+
+```bash
+echo '
+%re
+thf(cox_type, type, cos : $real >  $real).
+thf(const_type, type, const : $real > $real > $real).
+thf(id_type, type, id : $real  > $real).
+thf(exp_type, type, exp : $real >  $real).
+thf(deriv_type, type, d : ($real > $real) > $real > $real).
+
+%thf(dx, axiom, ^[X : $real] : (d @ id) = ^[X]:  (d @ ([]))).
+thf(dx, axiom, (d @ (^[X : $real] : X)) = (^[X : $real]: 1)).
+
+
+%thf(antideriv, conjecture, ?[F : $real > $real] (![X : $real] : ( (exp @ (const @ X)) = d @ (F @ X) )).
+' > /tmp/calc.p
+#eprover-ho --auto /tmp/calc.p --conjectures-are-questions
+vampire /tmp/calc.p
+```
+
+## ATP as a Logical Framework
+
+I am used to in the prolog and datalog context to consider the clauses not as classical logical clauses, but instead a description of inference rules. This is the attitude in Miller & Nadathur and [The Logic of Logic Programming](https://arxiv.org/abs/2304.13430)
+
+It seems to me that there is nothing preventing this interpretation for ATP as well. There are a numbr of axiom sets in the TPTP library that have thsi flavor
+
+```
+~ a  
+is the same as
+   a
+-------
+This is how we express a goal.
+
+
+~a | b is
+
+   a
+------
+   b
+
+
+~a | ~c | b
+
+is
+
+ a   c
+------
+   b
+
+```
+
+Putting together clauses (resolution) is interpreted as putting together inference rules to make proof fragments.
+
+```vampire
+% finite sets either by AC axioms or some primitive
+cnf(and_comm, axiom, and(A,B) = and(B,A)).
+cnf(and_assoc, axiom, and(A,and(B,C)) = and(and(A,B),C)).
+
+
+cnf(not_intro ,axiom,  ~ turnstile(and(C, not(A)), B) | turnstile(C , and(A,B)).
+
+```
+
+Multiple consequence logic. Smiley <https://en.wikipedia.org/wiki/Multiple-conclusion_logic>
+
+## Symbolic Execution
+
+Wos book chapter
+
+```vampire
+
+```
+
+## Lambda
+
+```vampire
+thf(easymode, conjecture, ?[P : $i > $i] : ((P @ X) = X)).
+```
+
+```bash
+echo '
+thf(f_type, type, f : $i > $i > $i).
+thf(f_type, type, g : $i > $i > $i).
+
+
+% thf(g_permutes_f, axiom, ![X:$i, Y:$i]:((f @ X @ Y) = (g @ Y @ X))).
+thf(conj, conjecture, ?[G: $i > $i > $i]: (![X:$i, Y:$i]: ( (f @ X @ Y) = (G @ Y @ X)) ) ).
+' > /tmp/example.p
+eprover-ho --auto --proof-object /tmp/example.p 
+```
+
+```bash
+echo '
+thf(unifythis, conjecture, ?[P : $i > $i] : (![X : $i]: ((P @ X) = X))).
+' > /tmp/example.p
+eprover-ho  --auto /tmp/example.p --conjectures-are-questions #fails wth GaveUp
+#eprover-ho --auto /tmp/example.p  --print-strategy > /tmp/strategy # succeeds
+eprover-ho --auto /tmp/example.p  --conjectures-are-questions --parse-strategy=/tmp/strategy #succeeds
+#vampire --mode portfolio /tmp/example.p
+```
+
+```bash
+echo '
+;re
+(declare-sort I ())
+(assert (not (exists ((P (Array I I))) (forall ((X Int)) (= (select P X) X)))))
+;thf(unifythis, conjecture, ?[P : $i > $i] : (![X : $i]: ((P @ X) = X))).
+' > /tmp/example.smt2
+eprover-ho --auto /tmp/example.smt2 #--conjectures-are-questions #fails wth GaveUp
+
+```
+
+```bash
+echo '
+%re
+thf(f_type, type, f : $i > $i > $i ).
+thf(unifythis, conjecture, ?[P : $i > $i > $i] : (![X : $i, Y : $i]: ((P @ X @ Y) = (f @ Y @ X)))).
+' > /tmp/example.p
+eprover-ho --auto /tmp/example.p --conjectures-are-questions #fails wth GaveUp
+eprover-ho --auto /tmp/example.p --print-strategy > /tmp/strategy # succeeds
+eprover-ho --auto /tmp/example.p --conjectures-are-questions #--parse-strategy=/tmp/strategy #succeeds
+```
+
+```bash
+
+echo '
+%re
+#thf(f_type, type, x : $i).
+thf(easymode, conjecture, ?[P : $i > $i] : (![X : $i]: ((P @ X) = X))).
+%thf(easymode, conjecture, ?[P : $i > $i] :((P @ x) = x)).
+' > /tmp/example.p
+eprover-ho --auto /tmp/example.p --conjectures-are-equations #fails
+eprover-ho --auto /tmp/example.p  --print-strategy > /tmp/strategy
+eprover-ho --auto /tmp/example.p  --conjectures-are-questions --parse-strategy=/tmp/strategy
+
+
+
+# --print-strategy #--conjectures-are-questions
+```
+
+- eprover-ho --auto /tmp/example.p --proof-object
+
+Conjectures-as-questions is segfaulting. Ok fixed.
+Hmm. Why is `--auto` necessary to make this work? Kind of odd behavior even if in the readme
+
+Lambda lifting
+
+```bash
+echo '
+thf(f_type, type, f : $i > $i ).
+thf(problem1, conjecture, ?[G : $i > $i]: (![X: $i]: ((f @ X) = (G @ X)))). ' > /tmp/example.p
+eprover-ho --auto /tmp/example.p  --conjectures-are-questions #--proof-object
+```
+
+```bash
+# This ought to be imposble. Ok Good.
+echo '
+thf(f_type, type, f : $i > $i ).
+thf(problem1, conjecture, ?[G : $i > $i]: (![X: $i, Y:$i]: ((f @ X) = (G @ Y)))). ' > /tmp/example.p
+eprover-ho --auto /tmp/example.p --proof-object
+```
+
+## Structures
+
+In coq or lean we prove somwethign has properties, then we abstract it an use only the properties
+
+```vampire
+thf(monoid_def, axiom, monoid(E, Op) <=> ( ! [X,Y,Z] : ( 
+    Op @ (Op @ X @ Y) @ Z = Op @ X @ (Op @ Y @ Z)
+    & Op @ E @ X = X
+    & Op @ X @ E = X
+))).
+
+
+```
+
+## Peano
+
+```vampire
+fof(myaxioms, axiom, 
+    nat(z)  % unnecessary?
+    & (nat(X) => nat(s(X)))
+    & (s(X) = s(Y) => X = Y) % need nat(X) nat(Y) ?
+    & s(X) != z
+
+    % induction is of course the sticky one
+    % & (((P @ z) & (! [X] : (P @ X => P @ (s(X))))) => P @ Y)
+
+).
+
+```
+
+[Getting Saturated with Induction](https://link.springer.com/chapter/10.1007/978-3-031-22337-2_15)
+
+## ECTS
+
+```vampire
+
+% don't connect posibly non well formed things
+cnf(comp_assoc, axiom, comp(X,comp(Y,Z)) = comp(comp(X,Y),Z)). 
+cnf(wf_comp, axiom, ~wf(F) | ~wf(G) | dom(F) != cod(G) 
+                            | wf(comp(F,G))).
+cnf(wf_id, axiom, wf(id(A))).
+cnf(comp_id_left, axiom, comp(id(cod(F)),F) = F).
+cnf(comp_id_right, axiom, comp(F,id(dom(F))) = F).
+
+cnf(term_final, axiom, cod(F) != unit | cod(G) != unit | dom(F) != dom(G) 
+                                            | F = G ).
+
+
+%fof(elem_def, axiom, elem(X,A) <=> ( comp(X,A) ) )
+
+
+
+```
+
+What about doing bash + vampire as a proof system
+
+What about universes?
+
+## Set Theory
+
+TPTP has tons of axiom sets for this. But let's play around
+
+```vampire
+fof(mystuff, axiom,
+    $true
+    %~ elem(X,empty)
+    & ((elem(X,A) | elem(X,B)) <=> elem(X,union(A,B)))
+    %& ((elem(X,A) & elem(X,B)) <=> elem(X,inter(A,B)))
+    %& (elem(X,sing(Y)) <=> (X = Y))
+    %& ( (![X] : (elem(X,A) <=> elem(X,B))) <=> (A = B)) % extensionality 
+    %& ( (![X] : (elem(X,A) => elem(X,B))) <=> sub(A,B)) 
+    
+).
+%fof(sub_equal, conjecture,   (sub(X,Y) & sub(Y,X)) <=> (X = Y) ).
+%fof(union_comm, conjecture, union(A,B) = union(B,A)).
+fof(union_assoc, conjecture, union(A,union(B,C)) = union(union(A,B),C)).
+```
+
+<https://lawrencecpaulson.github.io/2022/02/02/Formalising_Math_Set_theory.html> dicsussed in this article also. Good access
+
+Art Quaife has a whole paper on NBG set theory <https://link.springer.com/article/10.1007/BF00263451> "Automated deduction in von Neumann-Bernays-Gödel set theory" It's also in hs thesis. This rules. <https://link.springer.com/epdf/10.1007/BF00263451?sharing_token=DMYVYRCAVaP61kk6cSO7R_e4RwlQNchNByi7wbcMAY7K-nOLlPOv92rkTo0zdkBRH1ERODIQa047sigWp8Z1p0NHwi3G_fwBKYangMYWPUABQfWSxir_V9ADxEz2QrhRhQiW5Sq5dAYb02p8l3YzVQ%3D%3D>
+belinfante
+
+<https://link.springer.com/article/10.1007/BF02328452> Set theory in first-order logic: Clauses for Gödel's axioms - Robert Boyer, Ewing Lusk, William McCune, Ross Overbeek, Mark Stickel & Lawrence Wos <https://link.springer.com/epdf/10.1007/BF02328452?sharing_token=Lu-d29xQHlQKnUAd_Fg2BPe4RwlQNchNByi7wbcMAY6sM0fmv_8YXIaliyF3Y4UE0bQhtBZKpKWX8GiVshMOVsmncPyXxm8V9-VnEQ-vPt2gqKtSzs2g3zPMCLQeDSWgwZdnCMT0Ae3SHVYV89KFjQ%3D%3D>
+
+<https://dl.acm.org/doi/10.5555/1762639.1762657> a fnite first order presentation of set theory
+
+<https://arxiv.org/pdf/cs/9311103.pdf> paulson - set theory in isabelle
+
+## Simplicial Set
+
+<https://math.jhu.edu/~eriehl/ssets.pdf>
+
+```vampire
+face
+
+d(J,d(I,X)) = d(I,d(J-1,X))) # J < I 
+d(I,s(I,X)) = X
+
+
+
+d1(X,d2(X)) = d1(d0(X),X)
+d1(d0(X),X) = d1(X,d2(X))
+d2(d1(X),X) = d2(X,d0(X))
+
+
+```
+
+## Free Logic / Partial Functions
+
+See the category theory CAT003 example in TPTP with comments about paper by Scott [Identity and Existence in Intuitionist Logic](https://link.springer.com/chapter/10.1007/BFb0061839)
+Avigad book
+[Free logic article](https://plato.stanford.edu/entries/logic-free/)
+
+We don't want it necessarily to assume our function symbols are total. How do we model this?
+We could switch t a relational character. Functions are so gosh darn nice though.
+
+## Query Containment
+
+Queries are first order logical statements with perhaps some free variables. They ae evaluated (model checked) with respect to particular finite models. Asking if one statement implies another in all models is semantic entailment.
+Because `|-` and `|=` are the same thing here (? Really we are relying on soundness), We can write query containment as a simple theorem proving question
+
+```vampire
+fof(q1_def, axiom, q1(X) <=> (r(X,Y) & r(Y,X))). % just implication or biimplication?
+
+fof(q2_def, axiom, q2(X) <=> r(X,Y)). 
+
+fof(contain, conjecture, 
+q1(X) => q2(Q)
+).
+
+```
+
+This also implies a method for solving CSPs.
+
+```vampire
+
+% or really the full clark completion? Yea. I almost certainly do need it.
+fof(k3_edges, axiom, k3edge(a,b) & k3edge(b,c) & k3edge(c,a) & k3edge(b,a) & k3edge(c,b) & k3edge(a,c)
+    & ~k3edge(a,a) & ~k3edge(b,b) & ~k3edge(c,c)
+).
+
+fof(mygraph, axiom, edge(1,2)).
+
+fof(verts, axiom, vert(V) <=> (edge(V,X)) | edge(X,V)).
+
+fof(color3 , conjecture, edge(X,Y) => k3(color(X),color(Y)))
+```
+
+hhmmm.
+
+# Systems
+
+- Vampire
+- E Prover <https://wwwlehre.dhbw-stuttgart.de/~sschulz/E/E.html>
+- Zipperposition
+- <https://github.com/tammet/gkc> on an in memory database
+- [Twee: An Equational Theorem Prover](https://smallbone.se/papers/twee.pdf)
+
+## Vampire
+
+[First-Order Theorem Proving and VAMPIRE](https://publik.tuwien.ac.at/files/PubDat_225994.pdf)
+[vampire tutorial](https://github.com/vprover/ase17tutorial)
+
+```bash
+vampire --show_options on
+```
+
+lots of intrigung little options
+
 vampire -av off --question_answering answer_literal
+--show_everything
+--show_ordering
+options about induction
+manual_cs manually pick clauses to select... ????
 
 ```vampire
 fof(a,axiom,prover(vampire)).
@@ -745,6 +819,64 @@ with the user"
 See prolog some
 [Build Your Own First-Order Prover](http://jens-otten.de/tutorial_cade19/)
 <https://www.philipzucker.com/javascript-automated-proving/>
+
+# Isabelle
+
+<https://www.tptp.org/Seminars/THF/SystemIsabelle.html>
+
+refute
+nitpick
+
+```vampire
+cnf(x ,axiom, x).
+cnf(notx ,axiom, ~x).
+```
+
+hmm this is not working.
+
+```bash
+echo '
+%thf(unifythis, conjecture, ?[P : $i > $i] : (![X : $i]: ((P @ X) = X))).
+cnf(x ,axiom, x).
+cnf(notx ,axiom, ~x).
+' > /tmp/example.p
+#isabelle tptp_sledgehammer 10 /tmp/example.p
+isabelle tptp_isabelle 10 /tmp/example.p
+```
+
+```markdown
+  tptp_graph - TPTP visualisation utility
+  tptp_isabelle - Isabelle tactics for TPTP competitive division
+  tptp_isabelle_hot - Isabelle tactics for TPTP demo division
+  tptp_nitpick - Nitpick for TPTP
+  tptp_refute - Refute for TPTP
+  tptp_sledgehammer - Sledgehammer for TPTP
+  tptp_translate - translate between TPTP formats
+```
+
+## Twee
+
+<https://nick8325.github.io/twee/>
+
+`stack install twee twee-lib jukebox minisat`
+
+```bash
+echo '
+fof(right_identity, axiom,
+    ![X]: f(X, e) = X).
+fof(right_inverse, axiom,
+    ![X]: f(X, i(X)) = e).
+fof(associativity, axiom,
+    ![X, Y, Z]: f(X, f(Y, Z)) = f(f(X, Y), Z)).
+% left inverse is also right inver
+fof(left_inverse, conjecture,
+    ![X]: f(i(X),X) = e).
+    ' > /tmp/group.p
+twee /tmp/group.p
+
+```
+
+Impressivly clear proof output
 
 ## PyRes
 

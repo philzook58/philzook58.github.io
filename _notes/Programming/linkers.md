@@ -245,6 +245,8 @@ LMA vs VMA load memoery address vs virtual memory address. Can differe when stor
 
 LLVM has DIBuilder in C++ but also textual access to dwarf <https://llvm.org/docs/SourceLevelDebugging.html>
 
+<https://dwarfstd.org/issues.html> dwarf 6 suggestins. nteresting
+
 ```bash
 echo "
 int fact(int x){
@@ -259,6 +261,99 @@ cat /tmp/fact.ll
 echo "
 
 "
+```
+
+Take dwarf from binary and splice in
+
+```bash
+echo "
+int fact(int n) {
+  acc_int: 
+  int acc = 1;
+  loop_start:
+  for(int i = 0; i < n; i++) {
+    acc_inc:
+      acc *= i;
+  }
+  myret:
+  return acc;
+}
+" > /tmp/fact.c
+gcc -g -c /tmp/fact.c -o /tmp/fact.o
+readelf -w /tmp/fact.o
+```
+
+```python
+# https://github.com/eliben/pyelftools/blob/master/examples/dwarf_location_info.py
+from elftools.elf.elffile import ELFFile
+from elftools.elf.sections import SymbolTableSection
+from collections import defaultdict
+import posixpath
+
+def lpe_filename(line_program, file_index):
+    # Retrieving the filename associated with a line program entry
+    # involves two levels of indirection: we take the file index from
+    # the LPE to grab the file_entry from the line program header,
+    # then take the directory index from the file_entry to grab the
+    # directory name from the line program header. Finally, we
+    # join the (base) filename from the file_entry to the directory
+    # name to get the absolute filename.
+    lp_header = line_program.header
+    file_entries = lp_header["file_entry"]
+
+    # File and directory indices are 1-indexed.
+    file_entry = file_entries[file_index - 1]
+    dir_index = file_entry["dir_index"]
+
+    # A dir_index of 0 indicates that no absolute directory was recorded during
+    # compilation; return just the basename.
+    if dir_index == 0:
+        return file_entry.name.decode()
+
+    directory = lp_header["include_directory"][dir_index - 1]
+    return posixpath.join(directory, file_entry.name).decode()
+    
+def line_entry_mapping(line_program):
+    filename_map = defaultdict(int)
+
+    # The line program, when decoded, returns a list of line program
+    # entries. Each entry contains a state, which we'll use to build
+    # a reverse mapping of filename -> #entries.
+    lp_entries = line_program.get_entries()
+    for lpe in lp_entries:
+        # We skip LPEs that don't have an associated file.
+        # This can happen if instructions in the compiled binary
+        # don't correspond directly to any original source file.
+        if not lpe.state or lpe.state.file == 0:
+            continue
+        filename = lpe_filename(line_program, lpe.state.file)
+        filename_map[filename] += 1
+
+    for filename, lpe_count in filename_map.items():
+        print("    filename=%s -> %d entries" % (filename, lpe_count))
+
+def dump_dwarf(filename):
+  with open(filename, "rb") as f:
+      elffile = ELFFile(f)
+      if not elffile.has_dwarf_info():
+          print('  file has no DWARF info')
+          return
+      dwarfinfo = elffile.get_dwarf_info()
+      for CU in dwarfinfo.iter_CUs():
+          print('  Found a compile unit at offset %s, length %s' % (
+              CU.cu_offset, CU['unit_length']))
+
+          # Every compilation unit in the DWARF information may or may not
+          # have a corresponding line program in .debug_line.
+          line_program = dwarfinfo.line_program_for_CU(CU)
+          if line_program is None:
+              print('  DWARF info is missing a line program for this CU')
+              continue
+
+          # Print a reverse mapping of filename -> #entries
+          line_entry_mapping(line_program)
+
+dump_dwarf("/tmp/fact.o")
 ```
 
 [Incomplete Debug Information](https://github.com/cristianassaiante/incomplete-debuginfo) testing for incompleteness of debug info

@@ -5,6 +5,8 @@ title: Agda / Idris
 
 [Certainty by Construction Maguire book](https://sandymaguire.me/blog/certainty-by-construction/)
 
+Stump Agda book
+
 <https://twitter.com/agdakx/status/1577952310243872769?s=20&t=UJrepWvNkFpXFRNY8yoWDA> agda2hs blog post jasper
 
 Martin Escardo
@@ -38,6 +40,10 @@ main = putStrLn "Hello world!"
 cd /tmp # Why do I have to do this? Me dunno.
 agda --compile /tmp/hello-world.agda
 ./hello-world
+```
+
+```bash
+agda --help
 ```
 
 [The hott game](https://thehottgameguide.readthedocs.io/en/latest/index.html)
@@ -96,10 +102,54 @@ Eh, they're similar enough. Wow. Idris. Takes me back
 
 [Idris 2: Quantitative Type Theory in Practice](https://arxiv.org/pdf/2104.00480.pdf)
 
+<https://gallais.github.io/teaching> idris 2 course <https://gallais.github.io/pdf/splv23_gallais_lecture_notes.pdf>
+
+<https://github.com/stefan-hoeck/idris2-tutorial>
+
 ```bash
-idris
+echo '
+module Main
+
+main : IO ()
+main = putStrLn "Hello world"
+
+x : Int
+x = 94
+
+foo : String
+foo = "Sausage machine"
+
+--bar : Char
+--bar = 
+
+quux : Bool
+quux = False
+
+data Tree = Leaf | Node Tree Bits8 Tree
+sum : Tree -> Nat
+sum t = case t of
+    Leaf => 0
+    Node l b r =>
+        let m = sum l
+            n = sum r
+        in (m + cast b + n)
+
+q : Nat
+q = S Z
+y = [1,2,3]
+
+-- import Data.Vect
+data Vect : Nat -> Type -> Type where
+    VNil : Vect Z a
+    VCons : a -> Vect n a -> Vect (S n) a
+' > /tmp/test.idr
+cd /tmp
+idris2 -c  test.idr
+
 
 ```
+
+Use pack? <https://github.com/stefan-hoeck/idris2-pack>
 
 Zanzi
 <https://zanzix.github.io/posts/bcc.html> Lambda Calculus And Bicartesian Closed Categories

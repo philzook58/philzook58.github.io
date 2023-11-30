@@ -2,6 +2,21 @@
 layout: post
 title: C
 ---
+- [Stuff](#stuff)
+  - [CPP](#cpp)
+  - [Make](#make)
+  - [CMake](#cmake)
+- [Loading](#loading)
+- [Sanitization](#sanitization)
+  - [Build Systems](#build-systems)
+  - [Stressing C compilers](#stressing-c-compilers)
+  - [Cosmocc](#cosmocc)
+- [Allocators](#allocators)
+- [GDB](#gdb)
+- [Misc](#misc)
+
+# Stuff
+
 [Beej's Guide to C](https://beej.us/guide/bgc/)
 
 <https://stackoverflow.com/questions/7237963/a-c-implementation-that-detects-undefined-behavior>
@@ -117,6 +132,32 @@ Csmith
 
 [a guide to undefined behavior](https://blog.regehr.org/archives/213)
 
+## Cosmocc
+
+<https://github.com/jart/cosmopolitan>
+
+```bash
+echo '
+// hello.c
+#include <stdio.h>
+
+int main() {
+  printf("hello world\n");
+}
+' > /tmp/hello.c
+~/Downloads/cosmocc/bin/cosmocc -o /tmp/hello /tmp/hello.c
+file /tmp/hello # /tmp/hello: DOS/MBR boot sector; partition 1 : ID=0x7f, active, start-CHS (0x0,0,1), end-CHS (0x3ff,255,63), startsector 0, 4294967295 sectors 
+# what
+/tmp/hello
+/tmp/hello --strace
+/tmp/hello --ftrace
+
+```
+
+the strace and ftrace options are cool. WHat else might go in there?
+
+ape command for "faster"?
+
 # Allocators
 
 [DieHard](https://github.com/emeryberger/DieHard) error resitant allocator
@@ -167,6 +208,13 @@ help command. lots of stuff
 - x/10x $sp  look at stack. x/s look at string
 - list *$rip shows you a few lines before and after
 - layout split asm src. tui disable. tui enable
+
+# Misc
+
+<https://github.com/nothings/stb> stb single-file public domain libraries for C/C++. stb_ds is a hash table and vector
+<http://nothings.org/stb_ds>
+
+<https://nullprogram.com/blog/2022/08/08/> The quick and practical "MSI" hash table
 
 <https://twitter.com/moyix/status/1556037995169562624?s=20&t=yqv3psiW3ByDbnVTBLr_GA> audit of list functions
 

@@ -244,6 +244,8 @@ Like exceptions except you can restrta from them
 The main theorem prover associated with common lisp. It is a granddaddy of a lot of other systems
 <https://github.com/acl2/acl2>
 
+<https://hilbert.math.wisc.edu/logic/kunen/ramsey.pdf> - ramsey theorem in ACL2
+
 # Other Lisps
 
 - [Carp](https://github.com/carp-lang/Carp)  <https://news.ycombinator.com/item?id=28875051>

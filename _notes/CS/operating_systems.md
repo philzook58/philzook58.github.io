@@ -10,12 +10,20 @@ title: Operating Systems
   - [Security](#security)
   - [Virtualization](#virtualization)
   - [Concurrency](#concurrency)
-- [File System](#file-system)
-- [docker](#docker)
+  - [Make](#make)
+  - [Seccomp](#seccomp)
+  - [Git](#git)
+  - [Emacs?](#emacs)
+  - [Alternate shells](#alternate-shells)
+  - [Command Line Tools](#command-line-tools)
+  - [docker](#docker)
+- [Windows](#windows)
+- [RTOS](#rtos)
 - [microkernels](#microkernels)
-- [seL4](#sel4)
+  - [seL4](#sel4)
 - [Hypervisors](#hypervisors)
 - [Bootloaders](#bootloaders)
+- [File System](#file-system)
 - [Stuff](#stuff)
 
 See also note on:
@@ -123,39 +131,65 @@ libuv
 libev
 libevent
 
-# File System
+## Make
 
-Disk sectors.
-Disk rotation speed
-Disk Seek time
+[Using Landlock to Sandbox GNU Make](https://justine.lol/make/)
+Limitting what make can access? Only should be allowed to access files it depends on explicitly in make rules
+pledge and unvil system calls <https://justine.lol/pledge/>
 
-RAID -  Redundant array of inexpensive disks. Copy data to multiple disks, or use error correction. RAID0 just interleaves disks for parallelism
-striping - put subsequent blocks on different disks
-RAID 1 - mirroring. Just rwwrite the same thing to multiple disks
+## Seccomp
 
-<https://github.com/klange/toaruos> complete operating system from scratch
+## Git
 
-Hypervisors - like OS for OSes
+Maybe git deserves it's own file
+<https://git-scm.com/docs/git-grep>
+git-bisect
 
-<https://twitter.com/Intel80x86/status/1560618407224963072?s=20&t=5ByjIVPCy80__MKWdWW1Aw>
-[hypervisor from scratch](https://github.com/SinaKarvandi/Hypervisor-From-Scratch)
-[5 Days To Virtualization: A Series On Hypervisor Development](https://revers.engineering/7-days-to-virtualization-a-series-on-hypervisor-development/)
+## Emacs?
 
-How do programs start?
+???
 
-Syscalls
+## Alternate shells
 
-Memory management
+There were those beautiful pictures on that one shell.
 
-Scheduling - interrupts
+<https://charm.sh/> charmbracelet
 
-# docker
+warp - <https://www.warp.dev/> for mac, linux comin
+oh my zsh
+fish
+
+## Command Line Tools
+
+awk
+jq
+
+<https://www.cyberciti.biz/open-source/command-line-hacks/ag-supercharge-string-search-through-directory-hierarchy/>
+<https://github.com/ggreer/the_silver_searcher>
+Searching through stuff
+"similar to ack but faster" supercharged grep
+
+grep -C 10
+
+gnu parallel
+
+[diffoscope](https://try.diffoscope.org/) recursively diff?
+
+## docker
+
+# Windows
+
+Registry
+WSL
+powershell
+
+# RTOS
 
 # microkernels
 
 <https://mirage.io/> mirage os
 
-# seL4
+## seL4
 
 Microkernel
 Functional correctness
@@ -196,6 +230,34 @@ Formal methods applied to booting
 [Formally Verifying Security Properties for OpenTitan Boot Code with Uppaal - 2021](https://projekter.aau.dk/projekter/files/422795285/P10__24_.pdf)
 
 [Model checking boot code from AWS data centers- 2020](http://www0.cs.ucl.ac.uk/staff/b.cook/fmsd2020.pdf) - CBMC
+
+# File System
+
+See also databases
+
+Disk sectors.
+Disk rotation speed
+Disk Seek time
+
+RAID -  Redundant array of inexpensive disks. Copy data to multiple disks, or use error correction. RAID0 just interleaves disks for parallelism
+striping - put subsequent blocks on different disks
+RAID 1 - mirroring. Just rwwrite the same thing to multiple disks
+
+<https://github.com/klange/toaruos> complete operating system from scratch
+
+Hypervisors - like OS for OSes
+
+<https://twitter.com/Intel80x86/status/1560618407224963072?s=20&t=5ByjIVPCy80__MKWdWW1Aw>
+[hypervisor from scratch](https://github.com/SinaKarvandi/Hypervisor-From-Scratch)
+[5 Days To Virtualization: A Series On Hypervisor Development](https://revers.engineering/7-days-to-virtualization-a-series-on-hypervisor-development/)
+
+How do programs start?
+
+Syscalls
+
+Memory management
+
+Scheduling - interrupts
 
 # Stuff
 

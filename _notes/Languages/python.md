@@ -22,8 +22,8 @@ title: Python
 - [Lark](#lark)
 - [libraries](#libraries)
 
-
 # Venv
+
 Venv makes an isolated python environment
 
 ```
@@ -33,7 +33,7 @@ source ./venv/bin/activate
 
 # Django
 
-https://www.djangoproject.com/
+<https://www.djangoproject.com/>
 
 Models create database entries for you. There is mapping of fields to databae
 Many-to-one relatioships. You can talk back
@@ -42,18 +42,14 @@ Views
 Templates
 Generic views
 
-
-
 Admin page
 
 Django rest framework
 Django channels
 
-
 # CFFI
+
 Ctypes is standard clib cffi is higher level one
-
-
 
 ```python
 from cffi import FFI
@@ -109,15 +105,15 @@ print(myfun())
 # Protocols
 
 # Abstract Base classes
-Metaclasses
 
+Metaclasses
 
 # Modules
 
 sqlite
 
-
 # python internals
+
 [python runtime services](https://docs.python.org/3/library/python.html)
 The `sys` module
 
@@ -130,28 +126,158 @@ print(sys.getsizeof("fooo"))
 
 ```
 
-
-https://devguide.python.org/
-https://github.com/python/cpython
-https://devguide.python.org/exploring/
+<https://devguide.python.org/>
+<https://github.com/python/cpython>
+<https://devguide.python.org/exploring/>
 
 Python/python.c
 MOdules/main.c
 
-
 python -h. when was the last time I looked at that?
 
 [understanding python bytecode](https://towardsdatascience.com/understanding-python-bytecode-e7edaae8734d)
-[the `dis` module](https://docs.python.org/3/library/dis.html) 
+[the `dis` module](https://docs.python.org/3/library/dis.html)
 [Hacking the CPython Interpreter](https://www.youtube.com/watch?v=1SqRRrmQHx0)
 
+`id` is apparently a pointer
+
+<https://mcla.ug/blog/cpython-hackage.html>
+<https://gist.github.com/mahmoudimus/295200> monkey patch built in types
+`ctypes.memmove`
+
+```python
+l = [1,2,3]
+print(id(l))
+import sys
+import ctypes
+
+# Example object
+obj = 0x123456789
+#obj = 0x1234
+# Getting the memory address and size of the object
+memory_address = id(obj)
+size_in_bytes = sys.getsizeof(obj)
+
+memory_address, size_in_bytes
+# Create a byte array at the memory address
+num_bytes = size_in_bytes
+byte_values = (ctypes.c_char * num_bytes).from_address(memory_address)
+
+# Extracting the raw bytes
+raw_memory_content = bytearray(byte_values)
+
+print(raw_memory_content)
+
+"""
+struct _longobject {
+    PyObject_VAR_HEAD
+    digit ob_digit[1];
+};
+
+typedef struct {
+    PyObject ob_base;
+    Py_ssize_t ob_size; /* Number of items in variable part */
+} PyVarObject;
+
+typedef struct _object {
+    _PyObject_HEAD_EXTRA
+    Py_ssize_t ob_refcnt;
+    PyTypeObject *ob_type;
+} PyObject;
+"""
+
+ctypes.c_ssize_t
+ctypes.c_void_p
+ctypes.POINTER(ctypes.c_uint)
+
+class PyObj(ctypes.Structure):
+    _fields_ = [
+        ("ob_refcnt", ctypes.c_ssize_t),
+        ("ob_type", ctypes.c_void_p),
+    ]
+class PyVarObj(ctypes.Structure):
+    _fields_ = [
+        ("ob_base", PyObj),
+        ("ob_size", ctypes.c_ssize_t),
+    ]
+class PyLong(ctypes.Structure):
+    _fields_ = [
+        ("head", PyVarObj),
+        ("ob_digit",  ctypes.c_uint * 10) #ctypes.POINTER(ctypes.c_uint)),
+    ]
+o = PyLong.from_address(id(obj))
+#print(o.ob_digit[0])
+varobj = o.head
+print(varobj.ob_base.ob_refcnt)
+varobj.ob_base.ob_refcnt += 10
+print(sys.getrefcount(obj)) # cooool
+print(varobj.ob_base.ob_refcnt)
+print(varobj.ob_base.ob_type)
+
+print(varobj.ob_size)
+print(size_in_bytes)
+
+print(o.ob_digit[0])
+print(obj)
+
+print(o.ob_digit[0] + o.ob_digit[1] * 2**30)
+```
+
+```python
+import os
+import sysconfig
+
+def find_python_h():
+    include_path = sysconfig.get_path('include')
+    python_h_path = os.path.join(include_path, 'Python.h')
+    return python_h_path
+
+print("Python.h should be located at:", find_python_h())
+
+from cffi import FFI
+ffi = FFI()
+
+ffi.cdef("#include <elf.h>")
+arg = ffi.new("char[]", b"world") 
+print(dir(arg))
+```
+
+```python
+from cffi import FFI
+ffibuilder = FFI()
+
+# cdef() expects a single string declaring the C types, functions and
+# globals needed to use the shared object. It must be in valid C syntax.
+ffibuilder.cdef("""
+    float pi_approx(int n);
+""")
+
+# set_source() gives the name of the python extension module to
+# produce, and some C source code as a string.  This C code needs
+# to make the declarated functions, types and globals available,
+# so it is often just the "#include".
+ffibuilder.set_source("_pi_cffi",
+"""
+     #include "pi.h"   // the C header of the library
+""",
+     libraries=['piapprox'])   # library name, for the linker
+
+if __name__ == "__main__":
+    ffibuilder.compile(verbose=True)
+```
+
+```python
+print(dir(int))
+```
 
 # Venv
+
 venv virtualenv conda pyenv
 
 # Async
 
 # Type Hints
+
 mypy
 
 # stdlib
@@ -163,6 +289,7 @@ itertools
 
 re expressions
 sqlite
+
 # C interop
 
 Cython
@@ -170,6 +297,7 @@ Cython
 # Pypy
 
 Huh. There's good stuff here. Yeah, it's a faster python intepreter. But it's a library too?
+
 # Hashcons
 
 ```python
@@ -306,7 +434,9 @@ print(th.concl)
 ```
 
 # Lark
-python parser generator. Pretty nice. 
+
+python parser generator. Pretty nice.
+
 ```python
 import lark
 #https://github.com/bzhan/holpy/blob/main/geometry/parser.py
@@ -332,7 +462,6 @@ print(rule_parser.parse("a(x) :- b(y)"))
 
 # libraries
 
-
 numpy
 scipy
 pandas
@@ -340,7 +469,7 @@ matplotlib
 tensroflow
 pytorch
 scikitlearn
-networkx 
+networkx
 opencv
 pygame
 beautiful soup
@@ -387,11 +516,10 @@ pyiodide
 
 [aesara](https://github.com/aesara-devs/aesara) Aesara is a Python library for defining, optimizing, and efficiently evaluating mathematical expressions involving multi-dimensional arrays.
 
-
-https://www.youtube.com/watch?v=DKns_rH8rrg&t=974s&ab_channel=EuroPythonConference jit compiler in 30 minutes.
+<https://www.youtube.com/watch?v=DKns_rH8rrg&t=974s&ab_channel=EuroPythonConference> jit compiler in 30 minutes.
 mmap huh.
 
-https://github.com/Maratyszcza/PeachPy
+<https://github.com/Maratyszcza/PeachPy>
 
 [hpy](https://hpyproject.org/) HPy provides a new API for extending Python in C. In other words, you use `#include <hpy.h>` instead of `#include <Python.h>`.
 
@@ -399,13 +527,12 @@ https://github.com/Maratyszcza/PeachPy
 
 [pydrofoil](https://github.com/pydrofoil/pydrofoil)
 
-https://github.com/JonnyWalker/PySNES
+<https://github.com/JonnyWalker/PySNES>
 
-https://github.com/bivab/eqsat
+<https://github.com/bivab/eqsat>
 
-https://github.com/bivab/pytri petri net model checker
+<https://github.com/bivab/pytri> petri net model checker
 
-https://github.com/AntonLydike/riscemu risc v emulator
+<https://github.com/AntonLydike/riscemu> risc v emulator
 
 [](https://github.com/hsinhaoyu/cont_frac) bill gosper's continued fractions
-

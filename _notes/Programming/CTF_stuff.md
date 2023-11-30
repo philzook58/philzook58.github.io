@@ -13,8 +13,10 @@ title: Binary Analysis & CTF stuff
       - [Types](#types)
       - [IR Tower](#ir-tower)
     - [Ghidra](#ghidra)
+    - [radare](#radare)
     - [Angr](#angr)
   - [Patching](#patching)
+  - [Diffing](#diffing)
   - [Binary reversing](#binary-reversing)
 - [Debuggers](#debuggers)
 - [Code Search](#code-search)
@@ -41,6 +43,7 @@ title: Binary Analysis & CTF stuff
   - [Browser](#browser)
   - [Automated Exploit Generation (AEG)](#automated-exploit-generation-aeg)
 - [Elf stuff](#elf-stuff)
+- [Virus](#virus)
 - [CTF](#ctf)
 - [What is Binary Analysis](#what-is-binary-analysis)
   - [Program Analysis](#program-analysis)
@@ -246,6 +249,29 @@ HLIL
 ### Ghidra
 
 See ghidra notes
+
+### radare
+
+<https://book.rada.re/first_steps/history.html>
+
+```bash
+radare2.ra
+radare2.radiff2
+radare2.sleighc
+
+```
+
+<https://github.com/radareorg/r2ghidra>
+
+```bash
+echo "
+int foo(int x) {return x*x + 1;}
+" > /tmp/foo.c
+gcc /tmp/foo.c -c -o /tmp/foo.o
+radare2.r2
+
+
+```
 
 ### Angr
 
@@ -627,6 +653,10 @@ print(stmts)
 
 See notes on patching
 
+## Diffing
+
+ see note on patching
+
 ## Binary reversing
 
 <https://corte.si/posts/visualisation/binvis/index.html> hilbert curves for binary vsiualization
@@ -763,6 +793,8 @@ trace:PATTERN   enable trace events
 
 Use "-d trace:help" to get a list of trace events.
 ```
+
+<https://github.com/eurecom-s3/symqemu/blame/master/tcg/tcg-op.c> it seems the meat of intrumentation is in tcg-op
 
 ## Fuzzing
 
@@ -1000,6 +1032,7 @@ jop rocket. blackhat talk
 [Block Oriented Programming](https://arxiv.org/pdf/1805.04767.pdf)
 
 ## Heap
+
 <https://c4ebt.github.io/2021/01/22/House-of-Rust.html> house of rust
 
 If you can overwrite a struct that contains a pointer, you can use this to obtain reads or writes when that pointer is read or written.
@@ -1157,8 +1190,39 @@ elf reverse
 [binary golf workshop](https://github.com/netspooky/bgws)
 <https://codegolf.stackexchange.com/> [size coding](http://www.sizecoding.org/wiki/Main_Page)
 [dead bytes](https://tmpout.sh/1/1.html) libgolf
-[UNIX ELF Parasites and virus - Silvio Cesare](https://ivanlef0u.fr/repo/madchat/vxdevl/vdat/tuunix02.htm)
 [Elf Binary Mangling Pt. 4: Limit Break](https://tmpout.sh/2/11.html)
+
+# Virus
+
+<https://www.vx-underground.org/#E:/root> vxunderground
+VXHeaven - mirror <https://github.com/opsxcq/mirror-vxheaven.org>
+tmp.out
+<https://tmpout.sh/3/02.html> second to hell interview <https://github.com/SPTHvx/SPTH>
+roy g biv
+hh86
+herm1t
+
+<https://spthvx.github.io/ezines/> ezines
+
+Language infection project
+Valhalla 0-4 zine
+Metamorphism, Formal grammars and Undecidable Code Mutatio
+"Polymorphism and Grammars" - qozah
+
+see herm1t's metamorphic Linux virus Linux.Lacrimae in [EOF #2](https://spthvx.github.io/ezines/eof2/) and his article “Recompiling the Metamorphism"
+
+From the design of a generic metamorphic engine to a black-box classification of antivirus detection techniques - tau obfuscation
+[UNIX ELF Parasites and virus - Silvio Cesare](https://ivanlef0u.fr/repo/madchat/vxdevl/vdat/tuunix02.htm)
+
+More virus ezines <https://ivanlef0u.fr/repo/madchat/vxdevl/vdat/ezines1.htm> ~2000 mostly
+
+<https://privacy-pc.com/articles/vx-the-virus-underground.html> initeresting little article
+
+<http://virus.wikidot.com/>
+
+<https://www.exploit-db.com/> also has zines in papers <https://gitlab.com/exploit-database/exploitdb>
+
+antivirus AV
 
 # CTF
 

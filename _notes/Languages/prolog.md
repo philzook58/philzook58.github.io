@@ -2048,14 +2048,11 @@ print([d['Tuple'] for d in
 janus.consult("stlctype", """
 typeof(_,int(N), int) :- integer(N).
 typeof(G,plus(X,Y), int) :- typeof(G,X,int), typeof(G,Y,int).
-typeof(G,var(X),T) :- member(X-T,G).
-typeof(G,lam(X,B),T1-T2) :- typeof([X-T1|G],B,T2).
+typeof(G,var(X),T) :- once(member(X-T,G)).
+typeof(G,lam(X,B),arr(T1,T2)) :- typeof([X-T1|G],B,T2).
 """)
 print(list(janus.query("typeof([],plus(int(1),int(2)),T)")))
-print(janus.query_once("typeof([],lam(x,var(x)),T)"))
-```
-
-```prolog
+print(janus.query_once("typeof([],lam(x,var(x)),T), numbervars(T,1,_, [functor_name(var)])"))
 ```
 
 swi
@@ -3476,10 +3473,14 @@ look at teyjus test folders?
 
 ### HO Unification
 
+see also unification notes
+
 forall exists forall problems
 Raising vs Skolemization
 
 ## LF
+
+see also type thery notes
 
 LF is of some relation to lambda prolog (being a prologish system with lambdas in it) although with some different aims. It is dependently typed (pi 2 I think?) in a way different from coq etc.
 

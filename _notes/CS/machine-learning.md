@@ -39,6 +39,7 @@ title: Machine Learning
     - [prompt engineering](#prompt-engineering)
     - [Transformers](#transformers)
   - [Large Language Models](#large-language-models)
+    - [Tools](#tools)
     - [Models](#models)
     - [Data sets](#data-sets)
     - [Openai](#openai)
@@ -348,6 +349,8 @@ google colab provides ~15gb vram free? colab pro gives a100
 
 ### prompt engineering
 
+<https://github.com/f/awesome-chatgpt-prompts>
+
 <https://www.promptingguide.ai/>
 Question answer format to give a couple examples
 Start a conversation
@@ -374,6 +377,8 @@ Automated the prompt engineering workflow. You could ask questions you know the 
 <https://en.wikipedia.org/wiki/Attention_(machine_learning)>
 
 ## Large Language Models
+
+The make it "more" meme. Puppy cuter until dissolved nto cosmos
 
 <https://openai.com/research/instruction-following> instructgpt RLHF reinfrocement learning human feedback
 
@@ -421,7 +426,49 @@ n-gram model - condtional probability of word window
 
 <https://github.com/imartinez/privateGPT> ingest a bunch of documents. chroma vector db
 
+### Tools
+
+<https://github.com/ggerganov/llama.cpp>
+
+<https://github.com/Mozilla-Ocho/llamafile> single file llama via cosmopolitan
+<https://github.com/simonw/llm>
+<https://github.com/TheR1D/shell_gpt/>
+<https://arxiv.org/pdf/2309.06551.pdf> Commands as AI Conversations. uses ld_prelod I think t intercede on readline ibrary
+
+<https://github.com/xtekky/gpt4free> is this using web interfaves to steal gpt4?
+
+<https://github.com/jmorganca/ollama>
+
+<https://github.com/simonw/symbex> ask about specific python functions
+
+llm vs shell-gpt. shell-gpt has more stars. nice colors
+What's a role?
+--chat hmm saved sessions
+--repl
+--describe shell
+--code
+-s will just execute them??? oh no it suggests and asks. Ok.
+Can pipe stuff in
+sgpt --install-integration
+
+```
+
+```
+
+llm might support local llms better. Can download them?
+
+<https://github.com/pytorch-labs/gpt-fast> faster inference using pytorch <https://news.ycombinator.com/item?id=38477197>
+
 ### Models
+
+<https://www.reddit.com/r/LocalLLaMA/top/?sort=top&t=month>
+<https://www.reddit.com/r/aivideo/>
+
+- llama 2
+- qwen
+- mistral
+- wizard coder python
+-
 
 <https://vectara.com/top-large-language-models/> useful summary. Probaby will be outdate in a month
 

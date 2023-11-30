@@ -38,6 +38,7 @@ title: Category Theory
 - [Logic](#logic)
   - [Poly](#poly)
 - [Internal Language](#internal-language)
+- [Combinatorial Species](#combinatorial-species)
 - [Applied Category Theory](#applied-category-theory)
   - [Categorical Databases](#categorical-databases)
   - [Computational Category Theory](#computational-category-theory)
@@ -275,6 +276,7 @@ Simplicial sets are indexed by a simplex with face inclusion relations. <https:/
 # Optics
 
 # Logic
+
 <https://mikeshulman.github.io/catlog/catlog.pdf> Categorical logic from a categorical point of view Mik Shulman
 Scott and Lambek book
 
@@ -476,6 +478,11 @@ dup = [symbols("x0"), symbols("x0")]
 
 What is this? Cody talks about this a lot.
 
+# Combinatorial Species
+
+Brent Yorgey thesis
+<https://en.wikipedia.org/wiki/Combinatorial_species>
+
 # Applied Category Theory
 
 [Compositional Modeling with Decorated Cospans - Baez](https://www.youtube.com/watch?v=skEsCiIM7S4&ab_channel=GReTASeminar)
@@ -490,6 +497,56 @@ What is this? Cody talks about this a lot.
 schema is a finite category
 Data lives over it
 Mappings between schema describe
+
+```python
+# table for dom, cod, and one per each morphism.
+# some knd of codd normal form
+"create table people(val)"
+"create table dog(val)"
+"create table strings(val)"
+
+# "Set" == Sql strings
+
+# create table mymorph(unique src, dst);
+# functional dependency
+"create table owner(primry key src, dst)"
+f = ("dogs", "people", "owner")
+dog_name = ("dogs", "strings", "dog_name")
+people_name = ("people", "strings", "people_name")
+
+def idd(a):
+  return (a,a, f"select {a} as src, {a} as dst from {a}")
+def compose(f,g):
+  (f[0], g[1], f"select {f[2]}.src as src, {g[2]}.dst as dst from {f[2]} join {g[2]} on {f[2]}.dst = {g[2]}.src")
+
+class Schema():
+  objs = []
+  morphs = []
+  eqs = []
+
+def check_schema():
+  for (dom,cod,t) in morphs:
+    "select f.src not in {dom}"
+    "select f.dst not in {cod}"
+  for eq in eqs:
+
+# a functor from one shcema to another
+class FinFunctor():
+  objmap = {}
+  arrmap = {}
+
+def check_functor(functor):
+
+class NatTrans():
+  pass
+
+class Adjunction():
+  pass
+
+
+```
+
+The chase for reapir -> datalog / egglog?
 
 ## Computational Category Theory
 

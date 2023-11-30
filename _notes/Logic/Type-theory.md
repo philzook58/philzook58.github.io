@@ -16,6 +16,7 @@ title: Type Theory
     - [CiC](#cic)
   - [PTS](#pts)
   - [LF](#lf)
+    - [Dedukti](#dedukti)
 - [Subtyping](#subtyping)
 - [Intersection Types](#intersection-types)
 - [Recursive Types](#recursive-types)
@@ -350,7 +351,6 @@ Twelf <http://twelf.org/wiki/Main_Page> <https://www.cs.cmu.edu/~fp/papers/cade9
 
 Abella
 Beluga
-dedukti
 
 There is a claim that LF (which is a corner of the lambda cube?) has enough power to do lots of good stuff for progamming language metahtoery bu not so much that your life sucks.
 [A Framework for Defining Logics harper honsell plotkin 93](https://homepages.inf.ed.ac.uk/gdp/publications/Framework_Def_Log.pdf)
@@ -358,6 +358,42 @@ judgements as types
 
 <https://en.wikipedia.org/wiki/Logical_framework> logical framework can refer to a general notion of a system you encode your logic into or a specific type theory
 lambda pi system <https://en.wikipedia.org/wiki/Dependent_type#First_order_dependent_type_theory>
+
+### Dedukti
+
+dedukti - see term rewriting
+
+<https://arxiv.org/abs/2311.07185>  Dedukti: a Logical Framework based on the λΠ-Calculus Modulo Theory
+<https://deducteam.github.io/>
+<https://github.com/Deducteam/lambdapi> is the assistant? VS code extension
+
+```bash
+echo "
+A  : Type.
+Nat: Type.
+Z  : Nat.
+S  : Nat -> Nat.
+
+def plus: Nat -> Nat -> Nat.
+[m]   plus  Z    m --> m
+[n,m] plus (S n) m --> S (plus n m).
+
+Listn : Nat -> Type.
+nil   : Listn Z.
+cons  : n: Nat -> A -> Listn n -> Listn (S n).
+
+def append: n: Nat -> Listn n -> m: Nat -> Listn m -> Listn (plus n m).
+[l2] append _ nil _ l2 --> l2
+[n,l1,m,l2,a]
+  append _ (cons n a l1) m l2 --> cons (plus n m) a (append n l1 m l2). " > /tmp/append.dk
+dk check /tmp/append.dk
+```
+
+<https://github.com/Deducteam/Dedukti/tree/master/examples> examples
+
+commands beautify, check, dep, meta, top a toplevel, prune
+
+kontroli is rust version
 
 # Subtyping
 

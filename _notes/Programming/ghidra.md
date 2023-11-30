@@ -13,12 +13,6 @@ The help docuemntation inside ghidra itself is useful and I'm not sure it is ref
 
 shared projects and ghidra server - interesting. I'.ve never needed this,
 
-Ghidra has a [headless mode](https://ghidra.re/ghidra_docs/analyzeHeadlessREADME.html#examples) that is still using the Java stuff, but doesn't bring up the GUI window.
-
-```
-analyzeHeadless PATH_TO_PROJECTS PROJECT_NAME -import /path/to/binary
-```
-
 `-overwrite`
 `-process exe` analyze existing binary
 `-scriptpath path/to/script`  to add a script
@@ -172,6 +166,55 @@ getFalseOut, getTrueOUt
 
 ## Commands
 
+Ghidra has a [headless mode](https://ghidra.re/ghidra_docs/analyzeHeadlessREADME.html#examples) that is still using the Java stuff, but doesn't bring up the GUI window.
+<https://static.grumpycoder.net/pixel/support/analyzeHeadlessREADME.html>
+
+```
+analyzeHeadless PATH_TO_PROJECTS PROJECT_NAME -import /path/to/binary
+```
+
+<https://github.com/galoget/ghidra-headless-scripts> simple headless scripts
+
+```bash
+echo '
+import sys
+from ghidra.app.decompiler import DecompInterface
+from ghidra.util.task import ConsoleTaskMonitor
+
+decompinterface = DecompInterface()
+decompinterface.openProgram(currentProgram);
+functions = currentProgram.getFunctionManager().getFunctions(True)
+
+with open("decompiled_output.c", "w") as output_file:
+    for function in list(functions):
+        # Add a comment with the name of the function
+        # print "// Function: " + str(function)
+        output_file.write("// Function: " + str(function))
+
+        # Decompile each function
+        decompiled_function = decompinterface.decompileFunction(function, 0, ConsoleTaskMonitor())
+        # Print Decompiled Code
+        print decompiled_function.getDecompiledFunction().getC()
+        #output_file.write(decompiled_function.getDecompiledFunction().getC())
+' > /tmp/decompile.py
+
+echo "
+int foo(int x){
+    return x*x + 1;
+}
+" > /tmp/foo.c
+# huh. ghidra doesn't support dwarf 5? That seems nuts.
+gcc -gdwarf-4 -c /tmp/foo.c -o /tmp/foo.o
+
+
+cd ~/Downloads/ghidra_10.4_PUBLIC/support
+rm -rf /tmp/ghidraproject
+mkdir /tmp/ghidraproject
+./analyzeHeadless /tmp/ghidraproject Project1 -import /tmp/foo.o -postScript /tmp/decompile.py #2>/dev/null
+#./analyzeHeadless /tmp/ghidraproject Project1 -log /tmp/ghidralog -process foo.o -postscript /tmp/decompile.py /tmp/decompile.c
+#cat /tmp/decompile.c
+```
+
 decomp_opt / decomp_dbg are command line tools hidden inside the ghidra directory structure. T
 
 To get it working you need to set an environment variable SLEIGHHOME=myghidradirectory It needs this to find the archicture files. THese are compiled from sleigh specs `.sla` files.
@@ -271,14 +314,6 @@ xml scheme <https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/
 [The University of Queensland Binary Translator (UQBT) Framework](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.87.4982&rep=rep1&type=pdf)
 
 Huh, they called jit's "dynamic compilers"
-
-## Diffing
-
-[patch diffing](https://ihack4falafel.github.io/Patch-Diffing-with-Ghidra/)
-<https://www.zynamics.com/software.html> bindiff binexport
-<https://github.com/ubfx/BinDiffHelper>
-
-Also ghidra has built in diffing
 
 ## Debugger
 

@@ -6,6 +6,7 @@ title: Calculus/Analysis
 - [Calc I](#calc-i)
 - [Derivatives](#derivatives)
 - [Integrals](#integrals)
+  - [Measure Theory](#measure-theory)
 - [Multivariate](#multivariate)
 - [Partial Derivatives](#partial-derivatives)
 - [Vector Calc](#vector-calc)
@@ -52,6 +53,23 @@ Taylor Series
 Infinitesimals
 
 # Integrals
+
+Fundamental theorem of calculus - an antiderivatve `F' = f`
+Area under curve
+Riemann integral - break up into rectangles $ lim_{n \to \infty} \sum_{i=1}^n f(i / n) \Delta x_i $. Unpack this. Does limit exist?
+
+## Measure Theory
+
+See also probability
+
+<https://en.wikipedia.org/wiki/Measure_(mathematics)>
+sigma algebra - set of sets closed under
+
+Lebesgue Measure
+
+Lebesgue Integral
+
+Measure theory for dummies - <https://vannevar.ece.uw.edu/techsite/papers/documents/UWEETR-2006-0008.pdf>
 
 # Multivariate
 

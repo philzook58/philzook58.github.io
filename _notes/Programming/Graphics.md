@@ -38,6 +38,8 @@ Siggraph
 
 Ray tracng in one weekend
 
+<https://github.com/vkoskiv/c-ray> ray tracgin in C. fancy looking with lots of features
+
 # Inkscape
 
 [Inkscape](https://inkscape.org/)

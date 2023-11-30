@@ -7,6 +7,7 @@ title: Probability
 - [Statistics](#statistics)
   - [Bayesian](#bayesian)
 - [Distributions](#distributions)
+- [Information](#information)
 - [Mathematical](#mathematical)
 
 See also:
@@ -58,6 +59,11 @@ Priors as regularization
 Gaussian
 Poisson
 Binomial
+
+# Information
+
+Entropy
+Mackay <https://www.inference.org.uk/itprnn/book.pdf> Information Theory, Inference, and Learning Algorithms <https://www.youtube.com/watch?v=BCiZc0n6COY&ab_channel=JakobFoerster>
 
 # Mathematical
 

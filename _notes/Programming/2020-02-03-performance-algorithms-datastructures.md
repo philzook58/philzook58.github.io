@@ -62,6 +62,8 @@ Network
 
 # SIMD
 
+<https://news.ycombinator.com/item?id=38443253> <https://mcyoung.xyz/2023/11/27/simd-base64/> Designing a SIMD Algorithm from Scratch
+
 [Filtering a vector with simd - rust](https://quickwit.io/blog/filtering%20a%20vector%20with%20simd%20instructions%20avx-2%20and%20avx-512/)
 
 [art of simd - slotkin](https://www.youtube.com/watch?v=vIRjSdTCIEU)
