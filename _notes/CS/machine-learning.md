@@ -96,6 +96,7 @@ Reading training curves
 debugging?
 
 # Supervised
+<https://arxiv.org/abs/1906.00855> drnets. overlapping sudoku patterns but also x ray diffractin data. give rules as feature, turn up penalty for violating rules. but also they don't pre say how to derive the variabes coming into the equations? <https://github.com/gomes-lab/DRNets-Nature-Machine-Intelligence>
 
 $$ \hat{y}_i = f(x_i; \theta) $$
 

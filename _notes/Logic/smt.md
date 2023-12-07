@@ -567,17 +567,7 @@ Implementing datalog as a minsat problem. Minimal model.
 
 [Synthesizing an Instruction Selection Rule Library from Semantic Specifications](https://pp.ipd.kit.edu/uploads/publikationen/buchwald18cgo.pdf)
 
-<https://archive.bar/pdfs/bar2020-preprint9.pdf> QSynth - A Program Synthesis based Approach for
-Binary Code Deobfuscation
-
-mixed Boolean arithmetic <https://github.com/softsec-unh/MBA-Solver/blob/main/README.md> mbasolver
-<https://github.com/quarkslab/sspam/blob/master/README.md>
-
-<https://github.com/RUB-SysSec/syntia/blob/master/README.md>
-<https://github.com/astean1001/ProMBA>
-
-<https://dl.acm.org/doi/pdf/10.1145/3453483.3454068> Boosting SMT Solver Performance on
-Mixed-Bitwise-Arithmetic Expressions
+See ctf obfuscation for mixed boolean arithmetic solvrs
 
 ## Constrained Horn Clauses
 
@@ -3671,6 +3661,8 @@ So does Z3. They are hard to interpret
 - [State of Proof Checking](https://github.com/Z3Prover/z3/discussions/5981)
 - [On proof generation and proof checking](https://github.com/Z3Prover/z3/discussions/4881)
 - [state of proofs slides](https://z3prover.github.io/slides/proofs.html)
+
+LFSC is an LF (logical framework). Lofical Framework with Side Conditions. <https://link.springer.com/article/10.1007/s10703-012-0163-3> "SMT proof checking using a logical framework"
 
 ## Proof Objects
 

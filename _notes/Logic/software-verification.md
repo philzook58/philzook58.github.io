@@ -26,18 +26,19 @@ title: Software Verification
   - [CEGAR](#cegar)
   - [IC3 / PDR](#ic3--pdr)
   - [Constrained Horn Clauses](#constrained-horn-clauses)
+- [Software Engineering](#software-engineering)
 - [Memory](#memory)
   - [Memory Safety](#memory-safety)
 - [Misc](#misc)
-  - [Fun old timey books](#fun-old-timey-books)
+    - [Fun old timey books](#fun-old-timey-books)
 - [old model checking notes](#old-model-checking-notes)
   - [wordpress\_id: 879](#wordpress_id-879)
 - [Old Sep Logic](#old-sep-logic)
 - [Old CHC / Invariants](#old-chc--invariants)
-  - [BTOR2](#btor2)
+    - [BTOR2](#btor2)
 - [Resources](#resources)
-  - [What is a query?](#what-is-a-query)
-  - [Program Verification](#program-verification)
+    - [What is a query?](#what-is-a-query)
+    - [Program Verification](#program-verification)
   - [Tricks](#tricks)
 - [Ideas](#ideas)
 
@@ -318,6 +319,22 @@ arguably all symbolic execution engines - the trick is to cut loops
 ## Constrained Horn Clauses
 
 [Prof. Daniel Kroening | Encodings CHCs for low level Code](https://www.youtube.com/watch?v=Flc8Cjx6OUI&list=PL9-ncTy2ag0FMw3BDhlKUGc_RGU1dok6M&index=18&ab_channel=INISeminarRoom1)
+
+# Software Engineering
+
+https://github.com/binsec/preca  PreCA : Precondition Constraint Acquisition
+
+https://dl.acm.org/doi/10.1145/3611643.3616296 semantic debugging AVICENNA
+
+https://dbgbench.github.io/
+
+spec synthesis
+
+automated program repair
+
+http://www.icse-conferences.org/ conference on software engineering
+FSE
+ASE
 
 # Memory
 

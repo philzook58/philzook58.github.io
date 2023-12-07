@@ -37,7 +37,7 @@ title: Answer Set Programming
   - [Tree 2 Graph](#tree-2-graph)
   - [Graph Matching / Edit Distance / Homomorphism](#graph-matching--edit-distance--homomorphism)
   - [Graph Minor](#graph-minor)
-  - [Finding Functors](#finding-functors)
+  - [Category Theory](#category-theory)
   - [Intuitionistic Logic](#intuitionistic-logic)
   - [Rewriting](#rewriting)
   - [Well founded / Coinduction](#well-founded--coinduction)
@@ -1008,6 +1008,9 @@ foo(@elem(X)) :- test(X).
 err(@error("this is a custom error")). 
 ```
 
+Ah, but I don't need to implement my own lambda term datatype, since Z3 supports lambdas + simplify.
+Anoher option, shell out to dedukti.
+
 ## Polynimal / Semirng
 
 Similar to lattices in some respects.
@@ -1381,6 +1384,8 @@ Ordering of atoms matters.
 
 ## Proofs
 
+See metamath draft
+
 In many cases, a "proof" is some artifact containing enough breadcrumbs to figure out the relevant bits of a trace of some proof search. If a system does not support this, it can be added sometimes as a tracing parameter.
 
 Every rule can store the appropriate bindings in an extra parameter. Then you can know what rules fired
@@ -1585,7 +1590,9 @@ Interesting maybe for query homomorphisms. Queries can be represented as graph.
 
 ## Graph Minor
 
-## Finding Functors
+## Category Theory
+
+Finding Functors
 
 ```clingo
 % tabulate a finite category
@@ -1613,6 +1620,27 @@ functorObj(A,B) :- functorHom(F,G), hom1(F,A,_), hom2(G,B,_).
 % plays nice with compose
 funHom(H1,H2) :- compose1(F1,G1,H1), compose2(F2,G2,H2), funHom(F1,F2), funHom(G1,G2). 
 
+
+```
+
+```clingo
+compose(cat1, id(a), id(a), id(a))
+
+% set of objects obj(C,A).
+% set of morphisms hom(C,F,A,B).
+dom(C,F,A) :- hom(C,F,A,_).
+cod(C,F,B) :- hom(C,F,_,B).
+
+comp(C,F, id(A),F ) :- dom(C,F,A).
+
+
+%error(@panic()) :- comp(C,F, G,H), comp(C,F, G,H), not F = G.
+%error(@panic()) :-
+
+
+```
+
+```clingo
 
 ```
 

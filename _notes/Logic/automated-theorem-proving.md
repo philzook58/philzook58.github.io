@@ -24,16 +24,18 @@ title: Automated Theorem Proving
   - [Prover9](#prover9)
   - [Otter](#otter)
   - [LeanTAP and ilk](#leantap-and-ilk)
-- [Isabelle](#isabelle)
+  - [Isabelle](#isabelle)
   - [Twee](#twee)
   - [PyRes](#pyres)
   - [Zipperposition](#zipperposition)
+  - [Zenon](#zenon)
+  - [Imandra](#imandra)
+- [Comparisons](#comparisons)
   - [Datalog vs ATP](#datalog-vs-atp)
   - [Prolog vs ATP](#prolog-vs-atp)
   - [ATP vs ITP](#atp-vs-itp)
-- [Imandra](#imandra)
-- [Strategies](#strategies)
 - [Methodology](#methodology-1)
+  - [Strategies](#strategies)
   - [Unification](#unification)
   - [Resolution](#resolution)
   - [Subsumption](#subsumption)
@@ -41,6 +43,8 @@ title: Automated Theorem Proving
   - [Paramodulation](#paramodulation)
   - [Demodulation](#demodulation)
   - [Superposition](#superposition)
+  - [Tableau](#tableau)
+  - [Connection](#connection)
 - [Literal Selection](#literal-selection)
 - [Term Indexing](#term-indexing)
   - [Path Indexing](#path-indexing)
@@ -48,6 +52,8 @@ title: Automated Theorem Proving
   - [Substitution trees](#substitution-trees)
   - [Feature Vectors](#feature-vectors)
 - [Theories](#theories)
+- [Proof](#proof)
+  - [Semi-Automated Bash](#semi-automated-bash)
 - [Higher Order](#higher-order)
 - [Misc](#misc)
 
@@ -820,7 +826,7 @@ See prolog some
 [Build Your Own First-Order Prover](http://jens-otten.de/tutorial_cade19/)
 <https://www.philipzucker.com/javascript-automated-proving/>
 
-# Isabelle
+## Isabelle
 
 <https://www.tptp.org/Seminars/THF/SystemIsabelle.html>
 
@@ -872,11 +878,69 @@ fof(associativity, axiom,
 fof(left_inverse, conjecture,
     ![X]: f(i(X),X) = e).
     ' > /tmp/group.p
-twee /tmp/group.p
+twee --explain-encoding --tstp --trace /tmp/trace mymodule /tmp/group.p
 
 ```
 
 Impressivly clear proof output
+
+```bash
+twee --expert-help
+```
+
+```bash
+echo "
+%re https://github.com/nick8325/twee/blob/master/tests/deriv.p
+% Axioms about arithmetic.
+
+cnf('commutativity of +', axiom,
+    '+'(X,Y) = '+'(Y,X)).
+cnf('associativity of +', axiom,
+    '+'(X, '+'(Y, Z)) = '+'('+'(X , Y) , Z)).
+cnf('commutativity of *', axiom,
+    '*'(X,Y) = '*'(Y , X)).
+cnf('associativity of *', axiom,
+    '*'(X , '*'(Y , Z)) = '*'('*'(X , Y) , Z)).
+cnf('plus 0', axiom,
+    '+'('0' , X) = X).
+cnf('times 0', axiom,
+    '*'('0' , X) = '0').
+cnf('times 1', axiom,
+    '*'('1' , X) = X).
+cnf('distributivity', axiom,
+    '*'(X,'+'(Y,Z)) = '+'('*'(X , Y) , '*'(X , Z))).
+cnf('minus', axiom,
+    '+'(X , '-'(X))= '0').
+cnf('derivative of 0', axiom,
+    d('0') = '0').
+cnf('derivative of 1', axiom,
+    d('1') = '0').
+cnf('derivative of x', axiom,
+    d(x) = '1').
+cnf('derivative of +', axiom,
+    d('+'(T,U)) = '+'(d(T) , d(U))).
+cnf('derivative of *', axiom,
+    d('*'(T,U)) = '+'(('*'(T,d(U))) , '*'(U,d(T)))).
+cnf('derivative of sin', axiom,
+    d(sin(T)) = '*'(cos(T),d(T))).
+cnf('derivative of cos', axiom,
+    d(cos(T)) = '-'('*'(sin(T),d(T)))).
+
+%fof(goal, conjecture,
+%    ?[T]: d(T) = '*'(d(x),'*'(x,cos(x)))).
+fof(goal, conjecture,
+    ?[T]: d(T) = '*'(x,cos(x))).
+    " > /tmp/deriv.p
+twee --tstp /tmp/deriv.p
+
+```
+
+<https://github.com/nick8325/jukebox>
+
+Can I extract terms by cost? `cost(T) = N` is problematic if we use actual equality. `cost_le(T,N) = true` may be better. `cost(foo(X), N) = or(cost(foo(X),N-1), cost())`. `cost_lt(startterm, 10) = true)` or `?[T]: cost(T,10) = true and T = startterm`
+Dump the datbase at the end and rewrite with it?
+Ground direct?
+Extend with lambda terms?
 
 ## PyRes
 
@@ -1019,6 +1083,28 @@ let () = List.iter (fun name -> print_endline name) names
 
 ```
 
+## Zenon
+
+<https://github.com/Deducteam/zenon_modulo>
+Wired in for producing dedukti and coq proofs.
+related to focalize project?
+
+```bash
+
+```
+
+## Imandra
+
+I don't know if this really belongs in this note
+Imandra is like ACL2 for ocaml I think
+python interface
+
+```python
+import imandra
+```
+
+# Comparisons
+
 ## Datalog vs ATP
 
 What makes an ATP that different from a datalog? Both are saturating. If I could limit of prune clauses of size > N, that might emulate a datalog. Or perhaps protect rule-rule resolution from happening.
@@ -1047,17 +1133,12 @@ Prolog `=` is unification. ATP `=` is rewrite/semantical.
 
 ```
 
-# Imandra
+# Methodology
 
-I don't know if this really belongs in this note
-Imandra is like ACL2 for ocaml I think
-python interface
+Given clause
+Discount loop
 
-```python
-import imandra
-```
-
-# Strategies
+## Strategies
 
 Relationship to focusing <http://web4.ensiie.fr/~guillaume.burel/download/LFAT.pdf>
 
@@ -1070,11 +1151,6 @@ atom ordering
 
 - Resonance Strategy
 - Weighting
-
-# Methodology
-
-Given clause
-Discount loop
 
 ## Unification
 
@@ -1221,6 +1297,16 @@ The discussion of the encoding of t = s is a bit goofy. Yes, `=` is commutative.
 `t != s === { __ {t,s} __ }`
 Multiset orderings
 
+## Tableau
+
+leantap - see prolog
+
+## Connection
+
+<http://www.leancop.de/> leancop
+<http://leancop.de/nanocop/> nanocop
+<https://github.com/01mf02/cop-rs> - meancop rust impl
+
 # Literal Selection
 
 Ordered resolution - order on literals, only resolve on biggest one (you want to get rid of big stuff)
@@ -1285,6 +1371,46 @@ Datatypes [Superposition with Datatypes and Codatatypes](https://hal.science/hal
 Arrays
 Arith [Beagle – A Hierarchic Superposition Theorem Prover](https://www.trustworthy.systems/publications/nicta_full_text/8726.pdf)
 
+# Proof
+
+dedukti
+lfsc
+alethe
+
+some provers are
+Directly outputting
+
+sledgehammer.
+Use fastest provers, get clues out, reconstruct using slower simpler system specific provers.
+
+## Semi-Automated Bash
+
+```bash
+# verify sig text
+function verify() {
+    openssl dgst -sha256 -verify /tmp/publickey.pem -signature $1 $2
+}
+
+function trust() {
+    openssl dgst -sha256 -sign /tmp/privatekey.pem $1
+}
+
+function infer() {
+    for hyp in hyps
+    do
+        verify $hyp $1
+    done
+    
+}
+
+
+openssl genrsa -out /tmp/privatekey.pem 2048
+echo "foo" > /tmp/foo
+trust /tmp/foo > /tmp/foo.sig
+verify /tmp/foo.sig /tmp/foo
+
+```
+
 # Higher Order
 
 Applicative encoding. Turn `f(x,y)` into `app(app(f,x),y)`. Wasteful and inefficint but it can work. Built in appreciation of higher order structure (currying basically?) is better
@@ -1302,6 +1428,7 @@ hammers
 [First-Order Proof Tactics in Higher-Order Logic Theorem Provers - Hurd](https://www.gilith.com/papers/metis.pdf) Metis
 
 # Misc
+<https://github.com/evhub/pyprover>
 
 [Uwe Waldemann - automated reasoning courses](https://people.mpi-inf.mpg.de/~uwe/lehre/)
 

@@ -436,6 +436,18 @@ models of loading
 
 # Diffing
 
+<https://github.com/clearbluejar/ghidriff> nice summary ghidra diffing
+
+This is not working right. I dunno why
+
+```bash
+echo "int bar(int x){printf(\"fofoo\");return x*x + 3;} int main(int x){return bar(x);}" > /tmp/foo1.c
+gcc -O1 -gdwarf-4 /tmp/foo1.c -o /tmp/foo1.o
+echo "int bar(int x){printf(\"fofofo\");return x*x + 5;} int main(int x){return bar(x);}" > /tmp/foo2.c
+gcc -O1 -gdwarf-4 /tmp/foo2.c -o /tmp/foo2.o
+ghidriff /tmp/foo1.o /tmp/foo2.o --engine VersionTrackingDiff
+```
+
 [patch diffing](https://ihack4falafel.github.io/Patch-Diffing-with-Ghidra/)
 
 <https://www.zynamics.com/software.html> bindiff binexport
@@ -477,12 +489,13 @@ gcc -O1 /tmp/foo2.c -c -o /tmp/foo2.o -fverbose-asm
 objdump -d /tmp/foo1.o > /tmp/foo1.o.asm
 objdump -d /tmp/foo2.o > /tmp/foo2.o.asm
 #diff --color -C 2 /tmp/foo1.o.asm /tmp/foo2.o.asm
-difft /tmp/foo1.o.asm /tmp/foo2.o.asm
+difft /tmp/foo1.o.asm /tmp/foo2.o.asm > /tmp/foo1.o.asm.diff
 
 readelf -a /tmp/foo1.o > /tmp/foo1.o.elf
 readelf -a /tmp/foo2.o > /tmp/foo2.o.elf
 #diff --color -C 2 /tmp/foo1.o.elf /tmp/foo2.o.elf
-difft /tmp/foo1.o.elf /tmp/foo2.o.elf
+difft /tmp/foo1.o.elf /tmp/foo2.o.elf > /tmp/foo1.o.elf.diff
+
 
 # Make an html? markdown -> pdf
 # checklist
@@ -490,10 +503,7 @@ difft /tmp/foo1.o.elf /tmp/foo2.o.elf
 # Print some kind of diffed CFG? radare maybe
 # ghidra or angr
 # dump into a section
-"
-
-
-
+echo "
 # Patching Checklist
 - [] metadata integrity
 - [] decompilation makes sense
@@ -503,20 +513,25 @@ difft /tmp/foo1.o.elf /tmp/foo2.o.elf
 - [] Tested details: _______________________________
 
 # AI summary
-
+TODO AI SUMMARY/SUGGESTIONS GOES HERE
 # Program Info
 ## file1 
-size:
-md5
-
-
+/tmp/foo1.o
+### Source
 ## file2 
+### Source
+
+# Patch Code
 
 # ReadElf Diff
+${cat /tmp/foo1.o.elf.diff}
 # Objdump Diff
+${cat /tmp/foo1.o.elf.diff}
 # Ghidra Diff
+TODO
+" | llm -s "Look for possible problems with the following binary patch and give a high level summary. This will go into a report for a human to look at later"
 
-"
+
 ```
 
 bsdiff and bspatch <https://www.daemonology.net/bsdiff/> tools for diffing and applying patches <https://github.com/mendsley/bsdiff> <https://www.daemonology.net/papers/bsdiff.pdf>
@@ -535,6 +550,18 @@ bsdiff and bspatch <https://www.daemonology.net/bsdiff/> tools for diffing and a
 [A Method to Evaluate CFG Comparison Algorithms](http://cfgsim.cs.arizona.edu/qsic14.pdf)
 
 <https://github.com/GJDuck/e9patch>
+
+```bash
+e9tool --help
+e9patch --help
+e9compile
+e9tool -M jmp -P print true --output /tmp/true.patch
+/tmp/true.patch
+```
+
+`--loader-static` That's interesting.
+`--loader-phdr` smash note, relro or stack phdr.
+plugins huh.
 
 [Reassembly is Hard: A Reflection on Challenges and Strategies](https://softsec.kaist.ac.kr/~sangkilc/papers/kim-usenix23.pdf)
 

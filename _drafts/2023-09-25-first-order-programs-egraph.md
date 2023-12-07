@@ -74,3 +74,40 @@ for block in blocks:
 
 liearity?
 e-substitution
+
+We build an interesting extraction problem. DAG extraction is useful because it is aware of inlining decisions and the tradeoffs
+
+```python
+from egglog import *
+
+egraph = EGraph()
+
+@egraph.class_
+class Matrix(Expr):
+    pass
+
+@egraph.function
+def add(m1: Matrix, m2: Matrix) -> Matrix: ...
+
+print(egraph)
+egraph.function("foo", i64)
+```
+
+```python
+from egglog import *
+egraph = EGraph()
+prog = """
+
+
+
+"""
+commands = egraph.parse_program()
+egraph.run_program(*commands)
+
+def function(name, *args):
+    return f"(function {name} ({args[:-1]}) {args[-1]})"
+
+egraph = EGraph()
+egraph.
+
+```

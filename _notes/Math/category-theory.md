@@ -480,7 +480,7 @@ What is this? Cody talks about this a lot.
 
 # Combinatorial Species
 
-Brent Yorgey thesis
+Brent Yorgey thesis <https://www.cis.upenn.edu/~sweirich/papers/yorgey-thesis.pdf>
 <https://en.wikipedia.org/wiki/Combinatorial_species>
 
 # Applied Category Theory

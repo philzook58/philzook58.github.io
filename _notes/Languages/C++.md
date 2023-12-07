@@ -3,12 +3,31 @@ layout: post
 title: C++
 ---
 
+# std
+
+string_view
+const
+regex
+fstream
+
+iterators `s.rbegin`
+`for(auto c : mystr)`
+
+`std::map mymap = {{1,"ffrd"}}`
+
+shared_ptr
+unique_ptr
+weak_ptr
+
+<https://github.com/mortennobel/cpp-cheatsheet>
+
 # constexpr
 
 [consetexpr maze](https://twitter.com/Cor3ntin/status/1507860690400419842?s=20&t=GsM8M-fHdbvp9M4n5S4-kg)
 [constexpr interpeter](https://twitter.com/cfbolz/status/1506182747584401411?s=20&t=GsM8M-fHdbvp9M4n5S4-kg)
 
 # Observable behavior
+
 <https://en.cppreference.com/w/cpp/language/as_if> as if rule
 <https://en.cppreference.com/w/c/language/eval_order> eval order
 
@@ -65,3 +84,5 @@ int main(){
 Google test
 
 google bench
+
+<https://github.com/microsoft/GSL> GSL: Guidelines Support Library

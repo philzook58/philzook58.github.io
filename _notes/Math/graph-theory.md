@@ -301,7 +301,7 @@ Fiedler. split nodes into positive and negative of first eigenvector. +-1 Indica
 
 <https://web.eecs.umich.edu/~imarkov/pubs/book/part_survey.pdf> huh using to reorder bdd
 hypergraph partitioning
-[High-Quality Multilevel Hypergraph Partitioning KaHyPar](https://kahypar.org/)
+[High-Quality Multilevel Hypergraph Partitioning KaHyPar](https://kahypar.org/) <https://github.com/kahypar/kahypar>
 <https://github.com/lnis-uofu/LSOracle> lsoracle. uses kayhyper
 Graph partitioning is useful in logic synthesis?
 

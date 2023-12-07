@@ -319,7 +319,10 @@ Huh, they called jit's "dynamic compilers"
 
 ## Resources
 
+<https://github.com/Nalen98/AngryGhidra/> angr in ghidra
+
 [formal semantics for ghidra](https://link.springer.com/chapter/10.1007/978-3-031-25803-9_7) high pcode. mentions interpeter for low pcode.
+<https://github.com/niconaus/pcode-interpreter> haskell pcode interpeter
 
 - [Ghidra Class](https://github.com/NationalSecurityAgency/ghidra/tree/master/GhidraDocs/GhidraClass)
 - [decompiler docs](https://grant-h.github.io/docs/ghidra/decompiler/index.html)

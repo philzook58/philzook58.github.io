@@ -11,10 +11,12 @@ title: Type Theory
   - [Simply Typed lambda Calculus (STLC)](#simply-typed-lambda-calculus-stlc)
   - [System T](#system-t)
   - [System F](#system-f)
+  - [PTS](#pts)
+    - [Lambda Cube](#lambda-cube)
   - [F Omega](#f-omega)
   - [CoC](#coc)
     - [CiC](#cic)
-  - [PTS](#pts)
+- [Martin Lof](#martin-lof)
   - [LF](#lf)
     - [Dedukti](#dedukti)
 - [Subtyping](#subtyping)
@@ -319,6 +321,27 @@ def interp(ctx, ty):
 
 ```
 
+## PTS
+
+Pure Type Systems
+Sorts, axioms
+
+System U
+
+### Lambda Cube
+
+<https://cstheory.stackexchange.com/questions/36054/how-do-you-get-the-calculus-of-constructions-from-the-other-points-in-the-lambda/>
+
+- stlc
+- stlc+type operators. Lambdas at the type level. Does any term have type $\lambda x. x -> x$? I don't think so. Could add constants like `List` but again, no term has this type.
+- system F. $\lambda 2$ Adds Big Lambda at at term and forall at type level. Polymorphic types. $\forall x. x -> x$
+- $F\omega$ $\lambda \omega$
+- $lambda P$
+
+Other interesting named systems don't fit in the cube though.
+
+"computational strength" LF has same computayional strength as stlc. what does that mean?
+
 ## F Omega
 
 first class type constructors.
@@ -333,19 +356,18 @@ Equi vs iso recursive types
 
 ### CiC
 
-Whole different ball game
+Whole different ball game (?)
 [Luo's thesis - An Extended Calculus of Constructions](https://era.ed.ac.uk/bitstream/handle/1842/12487/Luo1990.Pdf)
 [Proof on normalization of CIC and its consistency](https://coq.discourse.group/t/proof-on-normalization-of-cic-and-its-consistency/444)
 
-## PTS
+# Martin Lof
 
-Pure Type Systems
-Sorts, axioms
-
-System U
+A distinctin can be drawn
 
 ## LF
 
+$\lambda P$
+$\lambda \Pi$
 <http://www.cs.cmu.edu/~aldrich/sasylf/>
 Twelf <http://twelf.org/wiki/Main_Page> <https://www.cs.cmu.edu/~fp/papers/cade99.pdf>
 
@@ -359,6 +381,9 @@ judgements as types
 <https://en.wikipedia.org/wiki/Logical_framework> logical framework can refer to a general notion of a system you encode your logic into or a specific type theory
 lambda pi system <https://en.wikipedia.org/wiki/Dependent_type#First_order_dependent_type_theory>
 
+LFSC
+smtlib3 is also an LF?
+
 ### Dedukti
 
 dedukti - see term rewriting
@@ -369,31 +394,118 @@ dedukti - see term rewriting
 
 ```bash
 echo "
+(; https://deducteam.github.io/tutorial.html 
+Doesn't seem valid
+#NAME foo.
+
+;)
+
+(; declaring new types. 'static' ;)
 A  : Type.
 Nat: Type.
 Z  : Nat.
 S  : Nat -> Nat.
 
+(; def and just stating existence are different
+Notice the defnition of plus is open.
+;)
+def 1 := S Z.
+def 2 := S 1.
+
 def plus: Nat -> Nat -> Nat.
 [m]   plus  Z    m --> m
 [n,m] plus (S n) m --> S (plus n m).
+
+(; also fine? superfluous thugh. ;)
+[n,m] plus n (S m) --> S (plus n m).
+
+
+Bool : Type.
+true : Bool.
+false : Bool.
+
+def equal : Nat -> Nat -> Bool.
+[] equal Z Z --> true
+[n,m] equal (S n) (S m) --> equal n m
+[] equal (S _) Z --> false
+[]  equal Z (S _) --> false.
+(; avoiding intermediate periods makes it kind of a block of declarations.  ;)
+
+
+IsTrue : Bool -> Type.
+tt : IsTrue true.
+
+#CHECK tt : IsTrue (equal Z 1).
+#ASSERT tt : IsTrue (equal Z Z).
+#EVAL (equal Z Z).
+
+def test1 : IsTrue (equal (plus 1 1) 2) := tt.
+
+(; partial functions are fine? They just get stuck. ;)
+def pred : Nat -> Nat.
+[ n : Nat ] pred (S n) --> n.
 
 Listn : Nat -> Type.
 nil   : Listn Z.
 cons  : n: Nat -> A -> Listn n -> Listn (S n).
 
+(; Hmm. but.. I need to take in n?
+def length : n : Nat -> Listn n -> Nat.
+[] length _ nil --> Z.
+[n] length _ (cons _ _ tl) --> length tl 
+;)
+
+(; smart constructors. Huh. So because there is a normalizaton, we're chill.
+   WHat makes this a 'constructor'. Nothing really.
+;)
+Int : Type.
+def Diff : Nat -> Nat -> Int.
+[m,n] Diff (S m) (S n) --> Diff m n.
+
+def abs : Int -> Nat.
+[n] abs (Diff Z n) --> n.
+[n] abs (Diff n Z) --> n.
+
 def append: n: Nat -> Listn n -> m: Nat -> Listn m -> Listn (plus n m).
 [l2] append _ nil _ l2 --> l2
 [n,l1,m,l2,a]
-  append _ (cons n a l1) m l2 --> cons (plus n m) a (append n l1 m l2). " > /tmp/append.dk
-dk check /tmp/append.dk
+  append _ (cons n a l1) m l2 --> cons (plus n m) a (append n l1 m l2).
+
+#INFER nil.
+#PRINT \"hello world\".
+(;  partial equality. Neeeeeat. ;)
+def A_eq : A -> A -> Bool.
+[a] A_eq a a --> true.  
+
+  
+  (; Thi _does_ extend the power of equal, because stuck terms are also equal now. like pred Z ;)
+[ n : Nat ] equal n n --> true.
+  " > /tmp/append.dk
+dk check  /tmp/append.dk #-v 
 ```
+
+confluence checking. It tries to? Or maybe lambdapi does? "Correct by cnfluence"  `dk check --confluence=CMD`
+add new rules, confluence checking demonstrates that the new rules are "consistent" wth the old one?
+<https://termination-portal.org/wiki/TPDB> needs to support tpdb format. <http://cl-informatik.uibk.ac.at/software/csi/ho/>
+<http://cops.uibk.ac.at/?q=hrs> confluence problem database
+
+`dk meta` rewrites a dedukti file. Could I write an egraph as a file and then rewrite it?
 
 <https://github.com/Deducteam/Dedukti/tree/master/examples> examples
 
+<https://github.com/Deducteam/Dedukti/blob/master/README.md> manual
+
+```
+#CHECK t1 == t2.
+#CHECKNOT t1 == t2.
+#EVAL[10]
+#EVAL[SNF]
+```
+
 commands beautify, check, dep, meta, top a toplevel, prune
 
-kontroli is rust version
+kontroli is rust version <https://arxiv.org/pdf/2102.08766.pdf> Safe, Fast, Concurrent Proof Checking for the
+lambda-Pi Calculus Modulo Rewriting
 
 # Subtyping
 

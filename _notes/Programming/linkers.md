@@ -356,6 +356,68 @@ def dump_dwarf(filename):
 dump_dwarf("/tmp/fact.o")
 ```
 
+```python
+from elftools.elf.elffile import ELFFile
+from elftools.dwarf.descriptions import describe_DWARF_expr, set_global_machine_arch, describe_reg_name
+
+def get_file_line_column(die, dwarfinfo, cu):
+    decl_file = die.attributes.get('DW_AT_decl_file')
+    decl_line = die.attributes.get('DW_AT_decl_line')
+    decl_column = die.attributes.get('DW_AT_decl_column')
+
+    if decl_file:
+        file_index = decl_file.value
+        print(dwarfinfo.line_program_for_CU(cu).header)
+        file_name = dwarfinfo.line_program_for_CU(cu).header['file_entry'][file_index - 1].name.decode('utf-8')
+    else:
+        file_name = 'Unknown'
+
+    line_number = decl_line.value if decl_line else 'Unknown'
+    column_number = decl_column.value if decl_column else 'Unknown'
+
+    return file_name, line_number, column_number
+
+def process_file(filename):
+    with open(filename, 'rb') as f:
+        elffile = ELFFile(f)
+
+        if not elffile.has_dwarf_info():
+            print("No DWARF info found in the file.")
+            return
+
+        set_global_machine_arch(elffile.get_machine_arch())
+        dwarfinfo = elffile.get_dwarf_info()
+
+        for CU in dwarfinfo.iter_CUs():
+            print(CU)
+            for DIE in CU.iter_DIEs():
+                if DIE.tag in ['DW_TAG_label', 'DW_TAG_variable']:
+                    var_name = DIE.attributes['DW_AT_name'].value.decode('utf-8')
+                    file_name, line_number, column_number = get_file_line_column(DIE, dwarfinfo, CU)
+
+                    if DIE.tag == 'DW_TAG_variable':
+                        location = DIE.attributes.get('DW_AT_location')
+                        if location and location.value:
+                            loc_expr = describe_DWARF_expr(location.value, dwarfinfo.structs)
+                            opcode = location.value[0]
+                            # Assuming DW_OP_regx opcodes are in the range 0x50 to 0x6f (inclusive)
+                            if 0x50 <= opcode <= 0x6f:
+                                register_name = describe_reg_name(opcode, dwarfinfo.config)
+                                location_info = f'Register {register_name}'
+                            else:
+                                location_info = loc_expr
+                        else:
+                            location_info = 'Unknown'
+                    else:
+                        location_info = 'N/A for labels'
+
+                    print(f'Type: {DIE.tag}, Name: {var_name}, File: {file_name}, Line: {line_number}, Column: {column_number}, Location: {location_info}')
+
+process_file('/tmp/fact.o') # Replace with your ELF file name
+
+
+```
+
 [Incomplete Debug Information](https://github.com/cristianassaiante/incomplete-debuginfo) testing for incompleteness of debug info
 Debug info
 unwind tables

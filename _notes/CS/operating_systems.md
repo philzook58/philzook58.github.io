@@ -8,6 +8,7 @@ title: Operating Systems
   - [Resources](#resources)
   - [Kernel](#kernel)
   - [Security](#security)
+  - [Tracing](#tracing)
   - [Virtualization](#virtualization)
   - [Concurrency](#concurrency)
   - [Make](#make)
@@ -122,6 +123,23 @@ openbsd pledge, unveil
 [security things in Linux v...](https://outflux.net/blog/archives/category/security/)
 
 [kmsan](https://github.com/google/kmsan) KernelMemorySanitizer, a detector of uses of uninitialized memory in the Linux kernel
+
+## Tracing
+
+Where should this section go?
+debugging
+ebpf -
+<https://thume.ca/2023/12/02/tracing-methods/> <https://x.com/trishume/status/1732173206466003165?s=20>
+syscall errors to talk to bpf program
+Cannoli, e9patch
+
+<https://github.com/MattPD/cpplinks/blob/master/debugging.tracing.md> C++ debugging tracing
+ptrace
+perf
+strace
+
+PIN
+hardware counters
 
 ## Virtualization
 

@@ -114,6 +114,8 @@ That sounds fun
 
 <https://lean-fro.org/about/roadmap/> learn roadmap for lean focused research organization
 
+<https://github.com/PatrickMassot/leanblueprint>
+
 ### Build
 
 `elan` tool

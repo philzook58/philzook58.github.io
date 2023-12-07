@@ -44,6 +44,8 @@ title: Binary Analysis & CTF stuff
   - [Automated Exploit Generation (AEG)](#automated-exploit-generation-aeg)
 - [Elf stuff](#elf-stuff)
 - [Virus](#virus)
+- [(De)Obfuscation](#deobfuscation)
+  - [Mixed Boolean Arithmetic (MBA)](#mixed-boolean-arithmetic-mba)
 - [CTF](#ctf)
 - [What is Binary Analysis](#what-is-binary-analysis)
   - [Program Analysis](#program-analysis)
@@ -1223,6 +1225,57 @@ More virus ezines <https://ivanlef0u.fr/repo/madchat/vxdevl/vdat/ezines1.htm> ~2
 <https://www.exploit-db.com/> also has zines in papers <https://gitlab.com/exploit-database/exploitdb>
 
 antivirus AV
+
+metamorphic / polymorphic - mutate themselves to avoid simple detection
+Relationship to quines?
+
+# (De)Obfuscation
+
+<https://github.com/mrphrazer/obfuscation_detection>
+<https://obfuscator.re/omvll/> like obfuscation passes for llvm?
+<https://github.com/javascript-obfuscator/javascript-obfuscator>
+<https://github.com/HikariObfuscator/Hikari> llvm archived
+<https://github.com/Guardsquare/proguard> java
+<https://obfuscator.re/dprotect/> bytecode android
+<https://github.com/dashingsoft/pyarmor> python
+
+anti hooking - maybe more generally these are anti-RE techniques. debugger detection. VM detection.
+control flow breaking
+opaque constants
+
+virtual machine VM obfuscation <https://reverseengineering.stackexchange.com/questions/24956/virtual-machine-code-obfuscation-implementation-details>
+jit
+anti alias analysis
+self modification
+
+<https://tigress.wtf/index.html> - C source to source <https://tigress.wtf/transformations.html> list of transformations
+
+## Mixed Boolean Arithmetic (MBA)
+
+<https://arxiv.org/pdf/2209.06335.pdf> Efficient Deobfuscation of Linear Mixed Boolean-Arithmetic
+Expressions ∗
+
+<https://www.youtube.com/watch?v=5yDzbFz2yWo&ab_channel=HackInTheBoxSecurityConference> HITB2022SIN #LAB Advanced Code Obfuscation With MBA Expressions - Arnau Gàmez Montolio
+
+<https://archive.bar/pdfs/bar2020-preprint9.pdf> QSynth - A Program Synthesis based Approach for
+Binary Code Deobfuscation <https://github.com/quarkslab/qsynthesis>
+
+<https://secret.club/2022/08/08/eqsat-oracle-synthesis.html> <https://github.com/fvrmatteo/oracle-synthesis-meets-equality-saturation>
+
+mixed Boolean arithmetic <https://github.com/softsec-unh/MBA-Solver/blob/main/README.md> mbasolver
+<https://github.com/quarkslab/sspam/blob/master/README.md>
+
+<https://github.com/RUB-SysSec/syntia/blob/master/README.md>
+<https://github.com/astean1001/ProMBA>
+simb
+gamba
+goomba
+msynth <https://github.com/mrphrazer/msynth>
+
+<https://dl.acm.org/doi/pdf/10.1145/3453483.3454068> Boosting SMT Solver Performance on
+Mixed-Bitwise-Arithmetic Expressions
+
+Viruses try to obfuscate themselves t avd detection
 
 # CTF
 

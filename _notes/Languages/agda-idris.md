@@ -67,6 +67,8 @@ System F in Agda, for Fun and Profit
 
 <https://github.com/pigworker/CS410-17> cs 410 mcbride
 
+<https://github.com/jsiek/abstract-binding-trees> agda abstract bnding trees siek
+
 ## Well Typed Syntax
 
 <https://dl.acm.org/doi/pdf/10.1145/3498715> Formal Metatheory of Second-Order Abstract Syntax
@@ -96,6 +98,8 @@ mcbride thinning and substitution <https://www.youtube.com/watch?v=ahwCXcYHkXQ&t
 
 <https://bentnib.org/posts/2015-04-19-algebraic-approach-typechecking-and-elaboration.html> An algerbaic approahc to typchecking and elaboration - bob atkey
 
+<https://arxiv.org/abs/2310.13413> Scoped and Typed Staging by Evaluation . two level type theory embedded in agda allais. <https://gallais.github.io/publis.html> all sorts of great stuff
+
 # Idris
 
 Eh, they're similar enough. Wow. Idris. Takes me back
@@ -103,11 +107,12 @@ Eh, they're similar enough. Wow. Idris. Takes me back
 [Idris 2: Quantitative Type Theory in Practice](https://arxiv.org/pdf/2104.00480.pdf)
 
 <https://gallais.github.io/teaching> idris 2 course <https://gallais.github.io/pdf/splv23_gallais_lecture_notes.pdf>
+<https://arxiv.org/abs/2310.13441> Seamless, Correct, and Generic Programming over Serialised Data
 
 <https://github.com/stefan-hoeck/idris2-tutorial>
 
 ```bash
-echo '
+echo '--re
 module Main
 
 main : IO ()
@@ -149,6 +154,21 @@ idris2 -c  test.idr
 
 ```
 
+<https://github.com/stefan-hoeck/aoc23/tree/main/src> advent of code 2023
+
+```bash
+echo "
+--re idris2
+
+
+main : IO ()
+main = printLn 42
+
+" > /tmp/test.idr
+cd /tmp
+idris2  -x main test.idr
+```
+
 Use pack? <https://github.com/stefan-hoeck/idris2-pack>
 
 Zanzi
@@ -183,3 +203,5 @@ LABELLED STRUCTURES
 <https://github.com/adamgundry/type-inference/blob/master/src/Milner/Zipper.lhs> zipperized algorithm W <https://types.pl/@pigworker/111375156578265560> more n phd thesis
 
 <https://www.researchgate.net/profile/Peter-Dybjer/publication/226035566_Inductive_families/links/0f317532159fcea814000000/Inductive-families.pdf> dybjer inductive families
+
+<https://github.com/jfdm/velo-lang> <https://arxiv.org/abs/2301.12852> type theory as a language workbench

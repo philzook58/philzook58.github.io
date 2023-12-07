@@ -57,9 +57,50 @@ How is polymorphism represented
 
 # Combinators
 
+<https://courses.engr.illinois.edu/cs421/sp2012/project/turner-implementation.pdf> a new implementation technque for applicative laguages, turner 1979
+
 [When were combinators inveneted](https://twitter.com/code_report/status/1502854198005690371?s=20&t=NnxLD33Ap2wMOWoFXRFmHw)
 
 Supercombinators
+
+<https://www.youtube.com/watch?v=Zk5SJ79nOnA&ab_channel=ChalmersFunctionalProgrammingSeminarSeries> microhaskell augustsson <https://github.com/augustss/MicroHs>
+
+```C
+enum tag {APP, S, K, I };
+typedef struct cell {
+    tag tag;
+    union {
+        struct { struct cell *f, *g; } app;
+        struct { struct cell *x; } const_;
+        struct { struct cell *x; } I;
+    } u;
+} cell;
+
+cell* stack_ptr;
+cell* eval(cell* c){
+    switch(c->tag){
+        case APP:
+            stack_ptr = ;
+            stack += 1;
+        case S: /* S x y z = x z (y z) */
+            eval(c->u.S.f);
+            eval(c->u.S.g);
+            break;
+        case K:
+            return c->u.K.x;
+            break;
+        case I:
+            return c->u.I.x;
+            break;
+    }
+}
+```
+
+lambda to ski semanrically <https://okmij.org/ftp/tagless-final/ski.pdf>
+
+<https://crypto.stanford.edu/~blynn/lambda/kiselyov.html> ben lynn
+
+<https://byorgey.wordpress.com/2023/07/13/compiling-to-intrinsically-typed-combinators/>
 
 # HVM
 
