@@ -161,3 +161,29 @@ Harrison book Theorem Proving with Real Numbers <https://link.springer.com/book/
 Goldblatt
 
 Compactness is important here? Huh.
+
+Adding
+
+Trying to make infinitesimals rigorous
+
+Rings can have things like eps^2 = 0 by taking quotient rings.
+Something with R as a subfield.
+
+Constructing a model of hyperreals. Infinite sequences of reals. Quotient by equivlanec e relation of agreeing on cofinite set.
+
+A finite list of disagreement points
+
+```
+equiv(a,b,l) = forall n, a[n] = b[n] | n in l 
+```
+
+More equational than classical presentation?
+
+R is unique complete ordered field. So R*
+
+Transfer principle
+
+Ultrafilter.
+Ultrapower
+
+Internal set theory

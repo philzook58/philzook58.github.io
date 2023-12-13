@@ -358,6 +358,10 @@ No. nevermind. That isn't good enough.
 
 # Resources
 
+<https://github.com/sunfishcode/eyra> - avoiding libc dependency in rust? Running rust in rust
+<https://github.com/sunfishcode/mustang#readme>
+<https://github.com/sunfishcode/origin#readme> program an tread shutdown in rust
+
 [from stacks to trees](https://www.ralfj.de/blog/2023/06/02/tree-borrows.html)<https://www.reddit.com/r/rust/comments/13y8a9b/from_stacks_to_trees_a_new_aliasing_model_for_rust/>  <https://perso.crans.org/vanille/treebor/>
 [miri interpreter](https://github.com/rust-lang/miri/) interpreter on mir ir detects undefined behavior
 

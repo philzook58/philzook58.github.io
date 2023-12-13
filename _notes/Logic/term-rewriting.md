@@ -302,7 +302,7 @@ POLO
 Nontermination checking
 Online termination checking
 
-<https://link.springer.com/chapter/10.1007/978-3-642-32347-8_17> stopwhen you're almost full.
+<https://link.springer.com/chapter/10.1007/978-3-642-32347-8_17> stop when you're almost full. Adventures in constructive termination
 
 <https://github.com/TermCOMP/TPDB> termination problem database
 

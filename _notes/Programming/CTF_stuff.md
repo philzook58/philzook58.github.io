@@ -798,6 +798,27 @@ Use "-d trace:help" to get a list of trace events.
 
 <https://github.com/eurecom-s3/symqemu/blame/master/tcg/tcg-op.c> it seems the meat of intrumentation is in tcg-op
 
+TCG is generated against a global context variable.
+TCGContext
+
+core
+CPUState struct
+typedefs.h
+CPUArchstate
+
+TCG_REG enum one per arch
+target is the system we are emulating. target/whatever/cpu.h has CPUArchState. They are custom per istruvtion
+
+icnlude/tcg/.. has interesting tcg genrating signature
+
+plugin_gen
+tcg/reamme
+tcg variables
+
+trace. What is this? <https://qemu-project.gitlab.io/qemu/devel/tracing.html>
+
+tci - tiny code interpreter
+
 ## Fuzzing
 
 Mayhem

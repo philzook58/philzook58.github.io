@@ -65,7 +65,7 @@ kiselyov lambda to SKI semantically <http://okmij.org/ftp/tagless-final/ski.pdf>
 
 Explicit fresh and swap things.
 
-alphaprolog
+alphaprolog - see also note on prolog
 alphakanren
 mlts
 freshml
@@ -76,6 +76,10 @@ freshml
 
 <http://ozark.hendrix.edu/~yorgey/pub/GCBP-author-version.pdf> yorgey foner  What’s the Difference? A Functional Pearl on Subtracting Bijections
 
+See also note on automata for nominal automata.
+
+[Nominal logic, a first order theory of names and binding - pitts 2003](https://www.sciencedirect.com/science/article/pii/S089054010300138X)
+
 # Scope Graphs
 
 # Co-debruijn
@@ -85,6 +89,7 @@ Map -style. This one is new to me. Conor Mcbride's Everybody's got the be somewh
 Hash cons modulo alpha
 
 # Resources
+
 <https://github.com/rlepigre/ocaml-bindlib>
 <https://github.com/sweirich/lambda-n-ways>
 [Stephanie Weirich - How to Implement the Lambda Calculus, Quickly](https://www.youtube.com/watch?v=uhGqJ1A_PRE&ab_channel=Konfy)

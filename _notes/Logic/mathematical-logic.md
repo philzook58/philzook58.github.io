@@ -333,7 +333,10 @@ indexed sets
 
 ### Ordinals
 
+A well order is a total order such that every nonempty subset has a least element.
+
 A well ordered set is a set combined with a well order on it.
+
 Order isomporphic things are the ordinals
 
 A generalizatin of counting or position. In programming, it does come up whether we can index into a type. An infinitary generalization of this
@@ -341,6 +344,10 @@ A generalizatin of counting or position. In programming, it does come up whether
 Von Neummann, ordinal is the set of all things less than that ordinal.
 
 Ordinals are totally ordered?
+
+In some sense, successor + "limits" generates ordinals
+<https://en.wikipedia.org/wiki/Successor_ordinal> successor ordinal is smallest ordina larger. constructed as $a \cup \{a\}$ in von neuamann
+limit ordinal <https://en.wikipedia.org/wiki/Limit_ordinal> neither zero nor successor ordinal. For every ordinal a less than g, there is an ordinal b between a and g.
 
 [Transfinite induction](https://en.wikipedia.org/wiki/Transfinite_induction)
 

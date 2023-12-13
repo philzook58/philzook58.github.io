@@ -368,6 +368,8 @@ int main(){
 
 # High Patching
 
+{% raw %}
+
 ```python
 import subprocess
 import re
@@ -425,6 +427,8 @@ def compile_patch(c_code, in_c : str, in_reg : List[Reg], out_reg, saved=[]):
 compile_patch("a = a + b;", "int a, int b", ["eax", "ebx"], "a")
 
 ```
+
+{% endraw %}
 
 # Checking
 

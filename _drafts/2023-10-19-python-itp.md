@@ -1,3 +1,5 @@
+Knuckledragger: An approach to interactive theorem proving in python
+
 <https://chat.openai.com/share/1bf6bb1a-e224-4d53-a748-b2291994fbe6>
 
 Building an interactive proof kernel is one of those things that mayb you don't realize you can do. Like an operating system or a browser, it's just another kind of program.
