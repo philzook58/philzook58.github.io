@@ -5,6 +5,7 @@ title: Python
 - [Venv](#venv)
 - [Django](#django)
 - [CFFI](#cffi)
+- [Jupyter](#jupyter)
 - [Generators](#generators)
 - [Collections](#collections)
 - [Protocols](#protocols)
@@ -97,6 +98,10 @@ myfun = ctypes.cast(addr, ctypes.CFUNCTYPE(ctypes.c_long))
 print(myfun())
 
 ```
+
+# Jupyter
+
+{% jupyter_notebook "../../pynb/test.pynb" %}
 
 # Generators
 

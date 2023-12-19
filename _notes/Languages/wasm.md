@@ -39,6 +39,8 @@ enarx - trusted xecutin environment
 
 ## WASI
 
+<https://news.ycombinator.com/item?id=38634258>  Stop Hiding the Sharp Knives: The WebAssembly Linux Interface
+
 Webassembly system interface
 
 ### WABT

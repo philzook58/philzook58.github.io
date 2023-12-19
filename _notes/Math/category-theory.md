@@ -24,6 +24,7 @@ title: Category Theory
   - [Equalizers](#equalizers)
   - [Pullbacks](#pullbacks)
   - [PushOuts](#pushouts)
+  - [Cone](#cone)
 - [Functors](#functors)
   - [Adjunctions](#adjunctions)
 - [Natural Transformations](#natural-transformations)
@@ -180,6 +181,8 @@ Blog posts
 ## Pullbacks
 
 ## PushOuts
+
+## Cone
 
 # Functors
 
