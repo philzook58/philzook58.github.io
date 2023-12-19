@@ -113,6 +113,10 @@ Modules are libraries that add functionality to apache
     <rect x="52" y="51" width="138" height="91" fill="rgb(255, 255, 255)"/>
 </svg>
 
-![](../assets/test.drawio.svg)
+![a blue square](../../assets/test.drawio.svg)
+
+Hmm. Inline svg. svg preview of links. Image preview.
+
+Ok so make a foo.drawio.svg fle somewhere, then drag and drop a link into my notes.
 
 # Misc
