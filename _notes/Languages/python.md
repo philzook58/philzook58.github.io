@@ -101,7 +101,7 @@ print(myfun())
 
 # Jupyter
 
-{% jupyter_notebook "../../pynb/test.pynb" %}
+`%%bash`
 
 # Generators
 

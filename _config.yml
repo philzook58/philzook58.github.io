@@ -55,7 +55,7 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
-  - jekyll-jupyter-notebook
+  #- jekyll-jupyter-notebook
 exclude:
   - Gemfile
   - Gemfile.lock

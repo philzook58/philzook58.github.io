@@ -23,7 +23,7 @@ group :jekyll_plugins do
    gem "jekyll-feed", "~> 0.15.1"
    gem  "jekyll-sitemap"
    gem "jekyll-seo-tag"
-   gem "jekyll-jupyter-notebook"
+   #gem "jekyll-jupyter-notebook"
 end
 
 #gem "jekyll-sitemap", group: :jekyll_plugins
