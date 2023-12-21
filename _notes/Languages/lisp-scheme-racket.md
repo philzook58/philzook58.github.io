@@ -244,7 +244,106 @@ Like exceptions except you can restrta from them
 The main theorem prover associated with common lisp. It is a granddaddy of a lot of other systems
 <https://github.com/acl2/acl2>
 
+`sudo apt-get install acl2` works.
+
+proofpad? <http://proofpad.org/> online version too <http://new.proofpad.org/> There's a little tutorial button
+
+"sedan". Looks out of date, eclipse doesn't warm my heart. I dunno.
+
+applicative common lisp, it's a variant of common lisp using only pure (applicative) functions.
+
+```bash
+echo "
+(+ 1 1)
+(append (list 1 2) (list 3 4))
+(cons 1 nil)
+(car '(1 2 3)) ; cdr first rest
+(defun triple (x) (* 3 x))
+; Since TRIPLE is non-recursive, its admission is trivial.  We observe
+; that the type of TRIPLE is described by the theorem 
+; (ACL2-NUMBERP (TRIPLE X)).  We used primitive type reasoning.
+(endp nil) ; t
+(evenp 3) ; nil
+(equal t t)
+
+(defun hailstone (x)
+  (if (evenp x) ; condition
+      (/ x 2) ; what to do if it passes
+      (+ (* 3 x) 1))) ; what to do if it fails
+
+; uses guards. acl2 is proving termination
+(defun factorial (n)
+  (if (zp n)
+      1
+      (* n (factorial (- n 1)))))
+
+(thm (> (factorial n) 0)) ; QED
+
+:q ; exit acl2 rep back to lisp
+(lp) ; back to acl2
+
+:args assoc-eq ; guards and conditions associated wth
+
+(quit)
+
+; :mini-proveall
+
+" | acl2
+```
+
+Needs to reason about terminatin to define stuff.
+
 <https://hilbert.math.wisc.edu/logic/kunen/ramsey.pdf> - ramsey theorem in ACL2
+
+ACL2 hypperreals
+
+Gamboa course on discrete math has some vids <https://www.youtube.com/watch?v=R0vgJbskXbM&ab_channel=RubenGamboa>
+<https://arxiv.org/pdf/2205.11695.pdf> teaching acl2 gamboa
+<https://github.com/rubengamboa/acl2_bridge>
+<https://github.com/rubengamboa/acl2_jupyter>
+<https://github.com/rubengamboa/acl2-math-book>
+<https://github.com/rubengamboa/acl2-docker-images>
+<https://github.com/rubengamboa/acl2-docker-images/tree/main/context/acl2-notebooks/programming-tutorial> jupter notebooks
+
+rex page
+
+controller
+
+A computational logic handbook - book on ACL2
+
+"the little prover" is about a simplified versio nof acl2
+
+<https://www.cs.utexas.edu/users/moore/acl2/manuals/current/manual/?topic=ACL2____The_02Proof_02of_02the_02Associativity_02of_02App> the proof of the associativty of app
+
+<https://www.cs.utexas.edu/users/moore/acl2/v8-5/combined-manual/?topic=ACL2____GUARD> guards
+
+<https://www.cs.utexas.edu/users/moore/acl2/v8-5/combined-manual/?topic=ACL2____STATE> von nuemmanesque state. Reads to me like th state monad
+
+`(declare (xargs :guard (g x y)  :measure (m x y)))` xargs let's you state guard and measure
+
+Hmm. Totalize in the logic, but have partiality guard rails at metalevel?
+A global notion of ordinal and well founded?
+
+```z3
+;re
+; actually make a datatype? But then not extendable. Maybe that's ok.
+(declare-sort Atom)
+(declare-datatype Value
+  (cons (car Value) (cdr Value))
+  (nil)
+  (number Int)
+  (real Real)
+  (string String)
+  (atom Atom)
+)
+(declare-sort Value)
+(declare-fun cons (Value Value) Value)
+(define-const nil Value)
+(declare-fun car (Value) Value)
+(assert (forall ((x Value)) (= (car x) (ite (is-cons x) ()  nil)))
+
+
+```
 
 # Other Lisps
 

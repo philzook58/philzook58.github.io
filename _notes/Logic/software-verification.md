@@ -30,15 +30,15 @@ title: Software Verification
 - [Memory](#memory)
   - [Memory Safety](#memory-safety)
 - [Misc](#misc)
-    - [Fun old timey books](#fun-old-timey-books)
+  - [Fun old timey books](#fun-old-timey-books)
 - [old model checking notes](#old-model-checking-notes)
   - [wordpress\_id: 879](#wordpress_id-879)
 - [Old Sep Logic](#old-sep-logic)
 - [Old CHC / Invariants](#old-chc--invariants)
-    - [BTOR2](#btor2)
+  - [BTOR2](#btor2)
 - [Resources](#resources)
-    - [What is a query?](#what-is-a-query)
-    - [Program Verification](#program-verification)
+  - [What is a query?](#what-is-a-query)
+  - [Program Verification](#program-verification)
   - [Tricks](#tricks)
 - [Ideas](#ideas)
 
@@ -179,6 +179,9 @@ s2n-tls <https://github.com/aws/s2n-tls/tree/main/tests/cbmc>
 bounded proof vs harnes vs contracts
 
 <https://crates.io/crates/libcprover_rust/5.91.0> rust api
+
+<https://dl.acm.org/doi/pdf/10.1145/3551349.3559523> CBMC-SSM: Bounded Model Checking of C Programs with
+Symbolic Shadow Memory <https://github.com/diffblue/cbmc/issues/7757>
 
 ### Cpachecker
 
@@ -322,17 +325,17 @@ arguably all symbolic execution engines - the trick is to cut loops
 
 # Software Engineering
 
-https://github.com/binsec/preca  PreCA : Precondition Constraint Acquisition
+<https://github.com/binsec/preca>  PreCA : Precondition Constraint Acquisition
 
-https://dl.acm.org/doi/10.1145/3611643.3616296 semantic debugging AVICENNA
+<https://dl.acm.org/doi/10.1145/3611643.3616296> semantic debugging AVICENNA
 
-https://dbgbench.github.io/
+<https://dbgbench.github.io/>
 
 spec synthesis
 
 automated program repair
 
-http://www.icse-conferences.org/ conference on software engineering
+<http://www.icse-conferences.org/> conference on software engineering
 FSE
 ASE
 

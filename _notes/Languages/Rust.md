@@ -358,6 +358,9 @@ No. nevermind. That isn't good enough.
 
 # Resources
 
+<https://dimforge.com/> naalgebra
+ rapier physics salva fluid sim
+
 <https://github.com/sunfishcode/eyra> - avoiding libc dependency in rust? Running rust in rust
 <https://github.com/sunfishcode/mustang#readme>
 <https://github.com/sunfishcode/origin#readme> program an tread shutdown in rust

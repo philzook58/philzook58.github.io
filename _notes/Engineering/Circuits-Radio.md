@@ -19,6 +19,7 @@ title: Circuits & Radio
   - [Transmission Lines](#transmission-lines)
 - [Radio](#radio)
 - [Debugging / Measuring](#debugging--measuring)
+- [Simulation](#simulation)
 - [PCBs](#pcbs)
 - [Digital](#digital)
   - [Discrete Chips 7400](#discrete-chips-7400)
@@ -126,6 +127,13 @@ smith charts
 
 Multimeter
 Oscilloscope [scope tutorial](https://www.youtube.com/playlist?list=PL746BF38BC2E068E0)
+
+# Simulation
+
+Qucs
+
+<https://lushprojects.com/circuitjs/>
+<https://www.falstad.com/circuit/>
 
 # PCBs
 

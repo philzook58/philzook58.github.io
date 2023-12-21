@@ -15,6 +15,8 @@ title: Physics Sims
 [box2d](https://box2d.org/)
 chipmunk
 
+<https://rapier.rs/> rust physics engine
+<https://arewegameyet.rs/ecosystem/physics/>
 
 Position based dynamics
 Impulse based
@@ -22,15 +24,15 @@ Impulse based
 Collision detection
 
 # Fluids
-[Fluid Simulation for Computer Animation](https://www.cs.ubc.ca/~rbridson/fluidsimulation/) bridson
 
+[Fluid Simulation for Computer Animation](https://www.cs.ubc.ca/~rbridson/fluidsimulation/) bridson
 
 [Julia GMSH petsc fluid sim](https://twitter.com/francescverdugo/status/1487115027979063296?s=20&t=OSBR7Kcf7AOCicTAypA9yQ)
 
 ## 2021
 
 erin catto
-https://ubm-twvideo01.s3.amazonaws.com/o1/vault/gdc09/slides/04-GDC09_Catto_Erin_Solver.pdf
+<https://ubm-twvideo01.s3.amazonaws.com/o1/vault/gdc09/slides/04-GDC09_Catto_Erin_Solver.pdf>
 
 Discrete time and space?
 Allow some overlap?
@@ -38,7 +40,7 @@ Collisions using force fields
 
 Reduce everything to points
 Reduce everything to AABB
-Model paths as R -> R? But then how to 
+Model paths as R -> R? But then how to
 FRP?
 Hierarchy of scales?
 Collisions as discrete events is tough
@@ -50,14 +52,13 @@ inside(x,A) ? point query?
 
 javascript AD. Forward mode prob. No overloading sucks.
 
-
 ## 2017
 
 Good resources
 
-https://www.toptal.com/game/video-game-physics-part-ii-collision-detection-for-solid-objects
+<https://www.toptal.com/game/video-game-physics-part-ii-collision-detection-for-solid-objects>
 
-http://buildnewgames.com/gamephysics/
+<http://buildnewgames.com/gamephysics/>
 
 Ericson book on collision detection
 
@@ -65,11 +66,10 @@ Ian Millington Game Physics Engine
 
 Forum listing of resources
 
-http://www.bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=6&t=63
+<http://www.bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=6&t=63>
 
 I've seen a couple phd theses mentioned
 
-http://www.continuousphysics.com/ftp/pub/test/files/physics/papers/mirtichThesis.pdf
+<http://www.continuousphysics.com/ftp/pub/test/files/physics/papers/mirtichThesis.pdf>
 
-https://www.youtube.com/watch?v=wPKzwSxyhTI
-
+<https://www.youtube.com/watch?v=wPKzwSxyhTI>

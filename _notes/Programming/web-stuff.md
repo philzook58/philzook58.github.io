@@ -2,6 +2,26 @@
 layout: post
 title: Web Stuff
 ---
+- [Networking](#networking)
+- [HTTP](#http)
+- [HTML](#html)
+- [CSS](#css)
+- [Javascript](#javascript)
+  - [Frameworks](#frameworks)
+- [Serving](#serving)
+  - [Frameworks](#frameworks-1)
+    - [Template Engines](#template-engines)
+  - [WebServers](#webservers)
+    - [Apache](#apache)
+    - [Nginx](#nginx)
+  - [Databases](#databases)
+  - [CGI](#cgi)
+  - [WSGI](#wsgi)
+  - [Docker](#docker)
+  - [Kubernetes](#kubernetes)
+  - [Web platforms](#web-platforms)
+- [SVG](#svg)
+- [Misc](#misc)
 
 # Networking
 
@@ -26,8 +46,6 @@ htmx
 flexbox
 
 [cassius](https://cassius.uwplse.org/) vizassert. Constraint based. Z3 layout? Troika - a proof assistant version. Pavel and Zach
-
-## Frameworks
 
 Get some nicer default styling, often some kind of grid system for layout, mobile formatting etc.
 
@@ -55,6 +73,9 @@ What do these even do for you? Well, they are ecosystems of widgets and opiniona
 
 - React
 - [Vue](https://vuejs.org/)
+
+<https://threlte.xyz/> 3d web apps
+<https://svelte.dev/>
 
 # Serving
 
