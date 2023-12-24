@@ -3,6 +3,7 @@ layout: page
 title: Notes
 permalink: /notes/
 my_array:
+  - _Docket
   - CS
   - Languages
   - Logic

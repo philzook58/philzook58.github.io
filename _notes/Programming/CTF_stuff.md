@@ -20,12 +20,13 @@ title: Binary Analysis & CTF stuff
   - [Binary reversing](#binary-reversing)
 - [Debuggers](#debuggers)
 - [Code Search](#code-search)
+- [Dynamic Binary Instrumentation](#dynamic-binary-instrumentation)
 - [Emulation](#emulation)
   - [Qemu](#qemu)
-  - [Fuzzing](#fuzzing)
-    - [AFL](#afl)
-  - [Symbolic Execution](#symbolic-execution)
-  - [Vulnerabilities](#vulnerabilities)
+- [Fuzzing](#fuzzing)
+  - [AFL](#afl)
+- [Symbolic Execution](#symbolic-execution)
+- [Vulnerabilities](#vulnerabilities)
   - [Windows](#windows)
   - [Mitigations](#mitigations)
 - [Exploits](#exploits)
@@ -48,8 +49,8 @@ title: Binary Analysis & CTF stuff
   - [Mixed Boolean Arithmetic (MBA)](#mixed-boolean-arithmetic-mba)
 - [CTF](#ctf)
 - [What is Binary Analysis](#what-is-binary-analysis)
-  - [Program Analysis](#program-analysis)
-  - [How are binaries made](#how-are-binaries-made)
+    - [Program Analysis](#program-analysis)
+    - [How are binaries made](#how-are-binaries-made)
 - [Misc](#misc)
   - [GDB](#gdb)
 - [nmap](#nmap)
@@ -683,6 +684,12 @@ windbg
 Joern
 codeql
 
+# Dynamic Binary Instrumentation
+
+dynamorio <https://dynamorio.org/>
+frida  <https://frida.re/> injects a quickjs huh
+pin <https://www.intel.com/content/www/us/en/developer/articles/tool/pin-a-dynamic-binary-instrumentation-tool.html>
+
 # Emulation
 
 [qiling](https://qiling.io/)
@@ -819,7 +826,13 @@ trace. What is this? <https://qemu-project.gitlab.io/qemu/devel/tracing.html>
 
 tci - tiny code interpreter
 
-## Fuzzing
+# Fuzzing
+
+fusebmc  <https://github.com/kaled-alshmrany/FuSeBMC>
+
+test-comp <https://test-comp.sosy-lab.org/2024/> is basically fuzzing right?
+
+SBFT fuzz comp 2023 <https://arxiv.org/pdf/2304.10070.pdf> e AFL+++ AFLRUSTRUST7 AFLSMART++8  HASTEFUZZ9 LEARNPERFFUZZ LIBAFL LIBFUZZER PASTIS  and SYMSAN
 
 Mayhem
 [Fuzzy-sat](https://arxiv.org/pdf/2102.06580.pdf) running smt queries through a fuzzer
@@ -868,7 +881,7 @@ corpus grammar based fuzzing, differential fuzzing
 
 <https://github.com/airbus-cyber/ghidralligator> ghidra for fuzzing
 
-### AFL
+## AFL
 
 AFL.  [AFL++](https://aflplus.plus/) fork of afl
 
@@ -896,7 +909,7 @@ AFT qemu
 deferred forkserver
 <https://github.com/AFLplusplus/AFLplusplus/blob/stable/instrumentation/README.persistent_mode.md>
 
-## Symbolic Execution
+# Symbolic Execution
 
 [MAAT](https://maat.re/tutorials/get_started.html) Ttrail of bits using ghidra
 
@@ -913,7 +926,7 @@ panda <https://github.com/panda-re/panda> - built on qemu. record and replay exe
 
 [](https://github.com/analysis-tools-dev/dynamic-analysis)
 
-## Vulnerabilities
+# Vulnerabilities
 
 [CWE](https://cwe.mitre.org/index.html) - common weakenss enumeration
 <https://attack.mitre.org/>

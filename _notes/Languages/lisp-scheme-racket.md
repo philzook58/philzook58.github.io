@@ -7,16 +7,16 @@ title: Scheme Racket Lisp
 
 - [Implementations](#implementations)
 - [Scheme](#scheme)
-  - [Minikanren](#minikanren)
+    - [Minikanren](#minikanren)
 - [Racket](#racket)
-  - [Rosette](#rosette)
+    - [Rosette](#rosette)
 - [Common Lisp](#common-lisp)
   - [CLOS](#clos)
   - [Condition System](#condition-system)
   - [ACL2](#acl2)
 - [Other Lisps](#other-lisps)
 - [Compilation](#compilation)
-  - [Gambit compiling to javascript](#gambit-compiling-to-javascript)
+    - [Gambit compiling to javascript](#gambit-compiling-to-javascript)
 - [Misc](#misc)
 
 I'm really going to put scheme and common lisp in the same category?
@@ -288,6 +288,7 @@ echo "
 
 ; :mini-proveall
 
+; (include-book )
 " | acl2
 ```
 
@@ -307,8 +308,62 @@ Gamboa course on discrete math has some vids <https://www.youtube.com/watch?v=R0
 
 rex page
 
+<https://www.cs.utexas.edu/users/moore/publications/km97a.pdf> A Precise Description of the ACL2 Logic <https://cstheory.stackexchange.com/questions/32749/proof-software-for-primitive-recursive-arithmetic>
+<https://proofassistants.stackexchange.com/questions/1867/is-acl2-first-order-logic-and-is-this-a-limitation-for-proving-math> `:doc ordinals`
+
+Defines ordinals hmm
+<https://www.khoury.northeastern.edu/home/pete/pub/acl2-ordinal-arithmetic-acl2.pdf> odinal airthmetic in acl2. cantor normal form. epsilon 0
+
+```python
+from z3 import *
+U = Datatype('Univ')
+U.declare('cons', ('car', U), ('cdr', U))
+U.declare('bool', ('bool_val', BoolSort()))
+U.declare('real', ('real_val', RealSort()))
+U.declare('string', ('string_val', StringSort()))
+U.declare('int', ('int_val', IntSort()))
+U.declare('nil')
+U = U.create()
+print(dir(U))
+print(simplify(U.is_bool(U.bool(True))))
+print(simplify(U.int_val(U.int(1))))
+print(U.cons(U.int(1), U.nil))
+
+# Can I add operations?
+#U.__add__ = lambda self, other: U.int(self, other)
+car = U.car
+cdr = U.cdr
+cons = U.cons
+nil = U.nil
+
+def atom(x):
+    return Not(U.is_cons(x))
+def consp(x):
+    return U.is_cons(x)
+def integerp(x):
+    return U.is_int(x)
+
+
+Function("order", U, U, BoolSort())
+= RecursiveFunc()
+If(is_cons(x),
+  And(e0_ordinalp(car(x)), car(x) != U.int(0), 
+      e0_ordinalp(cdr(x)), 
+      Or(atom(cdr(x)), 
+      Not(e0-ord-<(car(x), cadr(x)))),
+  And(integerp(x), U.int_val(x) >= 0)))
+
+
+```
+
+<https://www.cs.utexas.edu/users/moore/publications/index.html> moore publications
+<https://www.cs.utexas.edu/users/moore/publications/gentle-intro-to-acl2-programming.html> gentl introduction
+CLI veirifed stack - linker loader? <https://www.cs.utexas.edu/users/moore/best-ideas/piton/index.html> piton
+
 controller
 
+Computer-Aided Reasoning: An Approach
+Computer-Aided Reasoning: ACL2 Case Studies
 A computational logic handbook - book on ACL2
 
 "the little prover" is about a simplified versio nof acl2
@@ -318,6 +373,8 @@ A computational logic handbook - book on ACL2
 <https://www.cs.utexas.edu/users/moore/acl2/v8-5/combined-manual/?topic=ACL2____GUARD> guards
 
 <https://www.cs.utexas.edu/users/moore/acl2/v8-5/combined-manual/?topic=ACL2____STATE> von nuemmanesque state. Reads to me like th state monad
+
+"history"
 
 `(declare (xargs :guard (g x y)  :measure (m x y)))` xargs let's you state guard and measure
 
