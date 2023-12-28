@@ -299,6 +299,97 @@ POLO
 
 # Termination
 
+aprove is pretty domainantn. C, llvm, haskell, java, prolog, trs,some integer transition stuff
+
+<https://aprove.informatik.rwth-aachen.de/download>
+
+AProve [http://aprove.informatik.rwth-aachen.de/index.asp?subform=home.html](http://aprove.informatik.rwth-aachen.de/index.asp?subform=home.html) aachen
+<https://github.com/aprove-developers/aprove-releases/releases> releases
+
+ecipse plugin. Huh
+
+```bash
+
+
+echo "
+[x,y]
+plus(0,y) -> y
+plus(s(x),y) -> s(plus(x,y))
+" > /tmp/plus.tes
+java -ea -jar ~/Downloads/aprove.jar  -m wst /tmp/plus.tes
+echo "
+(VAR x y)
+(RULES
+    plus(0,y) -> y
+    plus(s(x),y) -> s(plus(x,y))
+)
+" > /tmp/plus.trs
+java -ea -jar ~/Downloads/aprove.jar -p plain  -m wst /tmp/plus.trs
+# help for prolog https://aprove.informatik.rwth-aachen.de/help_new/logic.html
+echo "
+%query: append(b,f,f)
+append([],L,L).
+append([X|Xs],Ys,[X|Zs]) :- append(Xs,Ys,Zs).
+" > /tmp/append.pl
+java -ea -jar ~/Downloads/aprove.jar -p plain  -m wst /tmp/append.pl
+#java -ea -cp ~/Downloads/aprove.jar aprove.CommandLineInterface.PrologFrontendMain
+echo "
+{-# htermination mysum #-}
+mysum [] = 0
+mysum (x : x) = x + mysum xs"
+> /tmp/mysum.hs
+java -ea -jar ~/Downloads/aprove.jar -s mysum -m wst /tmp/mysum.hs 
+
+```
+
+Installed yices 1 so it would stop complainging.
+
+startTerm?
+-q QUERY is used to specify a query, e.g., to analyze arbitrary methods or to provide information about the method's arguments.
+The flag -b
+
+```
+#java -ea -cp ~/Downloads/aprove.jar aprove.CommandLineInterface.HaskellFrontendMain
+
+"
+sage: java -cp aprove.jar aprove.CommandLineInterface.HaskellFrontendMain [OPTION] HSFILE
+
+Haskell to QDP/Graph dump export from AProVE 2014.
+
+ -h, --help             print this help
+ -o, --outputDir DIR    directory in which TRSs will be dumped (default '.')
+ -t, --timeout SECONDS  timeout, in seconds (default 60)
+ -p, --proof            print proof for steps from input to TRSs
+ -g, --graph yes|no     export to Graph (default no)
+ -q, --query QUERY      a query which tells AProVE what to analyze
+ -s, --startTerm TERM   analyze termination starting with term TERM
+ -j, --json yes|no      export JSON (default no), conflicts with other output
+"
+```
+
+TTT innsbruck [http://eptcs.web.cse.unsw.edu.au/paper.cgi?ThEdu19.4](http://eptcs.web.cse.unsw.edu.au/paper.cgi?ThEdu19.4)
+
+<http://cl-informatik.uibk.ac.at/software/ceta/> ceta. Certified termination
+
+```bash
+ceta 
+#usage: ceta [(parameters) certificate | --version]
+#  
+#  A "certificate" is an XML file in the certification problem format (CPF 3.x).
+#  (manually setting a parameter overwrites information in CPF):
+##  --allow-assumptions    Allow (axiomatic) assumptions in the certificate.
+ # --inputf fname         Read input from separate file.
+ # --propertyf fname      Read property from separate file.
+ # --property p           Read property from string p.
+ # --answerf fname        Read answer from separate file.
+ # --answer a             Read answer from string a.
+ # --version              Print the version number (+ mercurial id).
+```
+
+koat
+loat
+cofloco
+
 Nontermination checking
 Online termination checking
 
@@ -308,6 +399,7 @@ Online termination checking
 
 <https://termination-portal.org/wiki/Termination_Portal>
 Termcomp 2022 <https://termination-portal.org/wiki/Termination_Competition_2022>
+<https://termcomp.github.io/Y2023/> 2023 results
 
 Dumping into a constraint solver. For a parametrzied family, conceivably one can build a constraint problem over the parameters that requires a rewrite system follows a term order. For an equational system, one could have the "or" of the two directions as part of the constraints.
 
@@ -366,10 +458,6 @@ An interesting discrete analog of this system would be a swapper. x0 >= 1 implie
 For a string rewriting system, the simplest thing is just look at some kind of count on the symbols. Maybe with some weighting. It may be that you are always decreasing. If just count doesn't work, you can try 2-grams or other features/combos. This feels something like a sherali-adams
 
 For term rewriting, we could try to ignore the parse structure and use the count as string rewrite as above. Polynomial interpetation appears to want to interpret a term that is applied as a polynomial. This seems like it would create difficult nonlinear constraints for both verification and synthesis. Although if you constrain each polynomial to be bounded integers, it may make sense to pound them into a sat solver. Ok if each intepretation is only linear, then the combined would still be linear for verification.
-
-AProve [http://aprove.informatik.rwth-aachen.de/index.asp?subform=home.html](http://aprove.informatik.rwth-aachen.de/index.asp?subform=home.html) aachen
-
-TTT innsbruck [http://eptcs.web.cse.unsw.edu.au/paper.cgi?ThEdu19.4](http://eptcs.web.cse.unsw.edu.au/paper.cgi?ThEdu19.4)
 
 Integer and Polynomial Programs. This means something rather different from integer programming. The idea is that all variables are integer, but you still have a notion of time. Guarded transitions. It seems likely I could compile this into an integer program. Reify inequality conditions.
 

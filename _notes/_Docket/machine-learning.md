@@ -77,6 +77,9 @@ See also:
 
 ## Large Language Models
 
+Dolphin is a dataset mimicking the microsoft orca paper. It uses derived conversations from gpt
+flowgpt is like some kind of prompt hosting place?
+
 Transformers
 <https://en.wikipedia.org/wiki/Attention_(machine_learning)>
 
@@ -130,8 +133,20 @@ n-gram model - condtional probability of word window
 
 ### Tools
 
-<https://github.com/LostRuins/koboldcpp> web gui
-<https://lmstudio.ai/> lm studio - local gui
+Axolotl vs unsloth for fintetuning
+
+<https://github.com/LostRuins/koboldcpp> web gui. An extension. Custom make then run kobold.py.
+
+exllamav2 people mention. Faster?
+
+<https://lmstudio.ai/> lm studio - local gui. THis was really ueasy to use. nice install. Needed to go ito setting t turn on gpu. Layer picking. This was a bit slower tan when I compiled kobold mysef even though all lama.cpp. 13 tok/s vs kobold had 24t/s for same hardware.
+
+Partial on cpu? So there are still advantages to using a gpu computer even if not al in vram.
+Context window defaults were rather small
+Diffrnt trunscation method options
+
+<https://github.com/jmorganca/ollama>
+
 oobabooga text-generation-webui <https://github.com/oobabooga/text-generation-webui>
 run on colab <https://www.youtube.com/watch?v=TP2yID7Ubr4&ab_channel=Aitrepreneur>
 
@@ -148,8 +163,6 @@ run on colab <https://www.youtube.com/watch?v=TP2yID7Ubr4&ab_channel=Aitrepreneu
 <https://arxiv.org/pdf/2309.06551.pdf> Commands as AI Conversations. uses ld_prelod I think t intercede on readline ibrary
 
 <https://github.com/xtekky/gpt4free> is this using web interfaves to steal gpt4?
-
-<https://github.com/jmorganca/ollama>
 
 <https://github.com/simonw/symbex> ask about specific python functions
 
@@ -176,6 +189,10 @@ llm might support local llms better. Can download them?
 <https://www.reddit.com/r/LocalLLaMA/top/?sort=top&t=month>
 <https://www.reddit.com/r/LocalLLaMA/wiki/index>
 <https://www.reddit.com/r/aivideo/>
+
+dolphin mstral 7b. pretty solid
+
+<https://www.reddit.com/r/LocalLLaMA/comments/18phq4q/dolphin_26_finetune_of_phi2_from_erhartform/> dolhin fine tune of phi 2. It's ok. Doesn't mantai the thrad long . 48tok/s on my 1080 kobodlcpp
 
 <https://llava-vl.github.io/> llava takes in images too. based on llama
 

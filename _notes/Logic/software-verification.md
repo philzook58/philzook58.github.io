@@ -8,6 +8,7 @@ title: Software Verification
   - [Bounded Model Checking](#bounded-model-checking)
     - [CBMC / ESBMC](#cbmc--esbmc)
     - [Cpachecker](#cpachecker)
+    - [Ultimate Automizer](#ultimate-automizer)
     - [Rust](#rust)
 - [Hoare Logic](#hoare-logic)
   - [Incorrectness Logic](#incorrectness-logic)
@@ -192,6 +193,41 @@ There is a yearly workshop
 introductin to cpachecker <https://sosy-lab.gitlab.io/research/tutorials/CPAchecker/ShortIntroductionCPAchecker.html>
 
 `script/cpa.sh`
+
+### Ultimate Automizer
+
+It's done really well in SVComp. Gold medal
+
+```bash
+" usage: Ultimate.py [-h] [--version] [--ultversion] [--config <dir>] [--data <dir>] [-ea] [--full-output] [--envdebug]
+                   [--spec <file>] [--architecture {32bit,64bit}] [--file <file>] [--validate <file>]
+                   [--witness-type {correctness_witness,violation_witness}] [--witness-dir <dir>]
+                   [--witness-name WITNESS_NAME]
+"
+
+echo "
+#include <assert.h>
+int main()
+{
+  int buffer[10];
+  buffer[20] = 10;
+  //@ assert 0 <= 1;
+}
+" > /tmp/overflow.c
+echo "
+CHECK( init(main()), LTL(G valid-free) )
+//CHECK( init(main()), LTL(G valid-deref) )
+//CHECK( init(main()), LTL(G valid-memtrack) )
+//CHECK( init(main()), LTL(G ! call(reach_error())) )
+" > /tmp/spec.prp
+Ultimate.py --architecture 64bit --file /tmp/overflow.c --spec /tmp/spec.prp --witness-type correctness_witness
+```
+
+ properties in ltl. Interesting.
+ <https://gitlab.com/sosy-lab/benchmarking/sv-benchmarks/-/tree/main/c/properties?ref_type=heads>
+
+It's quite annoying and somewhat useless seeming to supply .prp files.
+It seems acsl annotations work too. Can I trust that?
 
 ### Rust
 
@@ -927,8 +963,9 @@ One way we understand what a logic is is by seeing what it is talking about. It'
 A very useful method for me to understand computer science and logic papers is to translate the inference rule style notation into some function or relation. Often a checker function is easiest. The syntax of computer science notation (see Guy Steele talk) is off putting and confusing to me. You can directly translate stuff into inductive relations in Coq often. What about prolog?
 
 ```
+
 data Addr = Int -- Many choices here. It is interesting to consider a finite set of addresses
-data Value = Addr Addr | Bool Bool 
+data Value = Addr Addr | Bool Bool
 data HeapProp = Star HeapProp HeapProp | Emp | Singleton Addr Value |
 type Heap = Map Addr Value
 hasprop :: HeapProp -> Heap -> Bool

@@ -3,3 +3,7 @@ ultrafilter
 net
 chain
 antichain
+
+ordinal
+successor oridinal
+limit ordinal
