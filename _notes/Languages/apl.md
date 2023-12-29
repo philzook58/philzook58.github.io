@@ -76,6 +76,8 @@ combinators - shonfield curry
 <https://works.swarthmore.edu/cgi/viewcontent.cgi?article=1350&context=fac-physics> APL And The Numerical Solution Of High-Order Linear Differential Equations  1983
 <https://dl.acm.org/doi/abs/10.1145/384283.801095> an apl approach t differential equations
 
+<https://github.com/briangu/klongpy> <https://aplwiki.com/wiki/Klong>
+
 # J
 
 <https://www.jsoftware.com/#/README>

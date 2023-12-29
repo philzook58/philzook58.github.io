@@ -333,12 +333,35 @@ append([X|Xs],Ys,[X|Zs]) :- append(Xs,Ys,Zs).
 " > /tmp/append.pl
 java -ea -jar ~/Downloads/aprove.jar -p plain  -m wst /tmp/append.pl
 #java -ea -cp ~/Downloads/aprove.jar aprove.CommandLineInterface.PrologFrontendMain
+```
+
+```bash
 echo "
-{-# htermination mysum #-}
-mysum [] = 0
-mysum (x : x) = x + mysum xs"
+{-# htermination (mysum :: (List a) -> (List a))) #-}
+import qualified Prelude
+data MyBool = MyTrue | MyFalse
+data List a = Cons a (List a) | Nil
+mysum Nil = Nil
+mysum (Cons x xs) = mysum xs
+"
 > /tmp/mysum.hs
-java -ea -jar ~/Downloads/aprove.jar -s mysum -m wst /tmp/mysum.hs 
+java -ea -jar ~/Downloads/aprove.jar  -m wst /tmp/mysum.hs 
+
+```
+
+```bash
+echo "
+{-# htermination (foldr1 :: (a -> a -> a) -> (List a) -> a) #-}
+import qualified Prelude
+-- import List
+data MyBool = MyTrue | MyFalse
+data List a = Cons a (List a) | Nil
+
+foldr1 :: (a -> a -> a) -> (List a) -> a
+foldr1 f (Cons x Nil) = x
+foldr1 f (Cons x xs) = f x (foldr1 f xs)
+" > /tmp/fold.hs
+java -ea -jar ~/Downloads/aprove.jar  -m wst /tmp/fold.hs
 
 ```
 
@@ -369,7 +392,15 @@ Haskell to QDP/Graph dump export from AProVE 2014.
 
 TTT innsbruck [http://eptcs.web.cse.unsw.edu.au/paper.cgi?ThEdu19.4](http://eptcs.web.cse.unsw.edu.au/paper.cgi?ThEdu19.4)
 
+<http://cl-informatik.uibk.ac.at/software/ttt2/>
+
+```bash
+ttt2  /tmp/plus.trs
+```
+
 <http://cl-informatik.uibk.ac.at/software/ceta/> ceta. Certified termination
+
+<http://zenon.dsic.upv.es/muterm/> muterm
 
 ```bash
 ceta 

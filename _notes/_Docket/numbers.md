@@ -129,7 +129,8 @@ Nimbers
 Combinatorial Game theory
 Aaron N. Siegel's "Combinatorial Game Theory
 
-Fraise games.
+Fraise games. Ehrenfeucht-Fraïssé  <https://www.youtube.com/watch?v=ZS8PfP_JCdA&ab_channel=ThomasKern>
+<https://trkern.github.io/efg.html>
 
 `{|}` sets of available moves. Tic tac toe as a number ("ontinutatons") So programming languages have game semantics. Could one make a PL game?
 *, uparrow, double up, eps, omega.

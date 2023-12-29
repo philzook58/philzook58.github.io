@@ -116,6 +116,8 @@ That sounds fun
 
 <https://github.com/PatrickMassot/leanblueprint>
 
+<https://github.com/axiomed> organization of lean4 for software enginers. Parsers, color printing. Hmm.
+
 ### Build
 
 `elan` tool
