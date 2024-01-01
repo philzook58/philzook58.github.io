@@ -6,7 +6,7 @@ title: "Knuckledragger: Experimenting with a Python Proof Assistant"
 
 Something that I'm tinkering with is making a proof assistant in python.
 
-It's very preliminary, but I've place some ideas [here](https://github.com/philzook58/knuckledragger). I call it Knuckledragger (thanks Zach!). I have already done too much without writing about it. Write early, write often.
+It's very preliminary, but I've place some ideas [here](https://github.com/philzook58/knuckledragger). I call it Knuckledragger (thanks Zach!). I haven't done much, but it's too much done without writing about it. So here we are. Write early, write often.
 
 There are a few reasons to do this in python:
 
@@ -170,6 +170,8 @@ CPressey also has some very interesting python assistants <https://github.com/ca
 It amuses me that chaining together automated theorem provers + a proof db / certificate system is also buildable in bash. Why not? It'd be kind of nice even. Bash is the nicest language to call other programs in / has god support for splicing.
 
 A blog post a week this year? No matter how raw and uneditted? That'd be cool.
+
+I've got lots of little examples I want to explore using equational reasoning, set theory, calculus, ordinals, algebra, metatheory, software verification, etc. Fun fun!!!
 
 # Blah Blah Blah
 
