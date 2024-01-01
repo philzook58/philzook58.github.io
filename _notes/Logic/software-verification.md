@@ -9,6 +9,7 @@ title: Software Verification
     - [CBMC / ESBMC](#cbmc--esbmc)
     - [Cpachecker](#cpachecker)
     - [Ultimate Automizer](#ultimate-automizer)
+    - [Goblint](#goblint)
     - [Rust](#rust)
 - [Hoare Logic](#hoare-logic)
   - [Incorrectness Logic](#incorrectness-logic)
@@ -228,6 +229,9 @@ Ultimate.py --architecture 64bit --file /tmp/overflow.c --spec /tmp/spec.prp --w
 
 It's quite annoying and somewhat useless seeming to supply .prp files.
 It seems acsl annotations work too. Can I trust that?
+
+### Goblint
+<https://goblint.in.tum.de/>
 
 ### Rust
 

@@ -7,16 +7,16 @@ title: Scheme Racket Lisp
 
 - [Implementations](#implementations)
 - [Scheme](#scheme)
-    - [Minikanren](#minikanren)
+  - [Minikanren](#minikanren)
 - [Racket](#racket)
-    - [Rosette](#rosette)
+  - [Rosette](#rosette)
 - [Common Lisp](#common-lisp)
   - [CLOS](#clos)
   - [Condition System](#condition-system)
   - [ACL2](#acl2)
 - [Other Lisps](#other-lisps)
 - [Compilation](#compilation)
-    - [Gambit compiling to javascript](#gambit-compiling-to-javascript)
+  - [Gambit compiling to javascript](#gambit-compiling-to-javascript)
 - [Misc](#misc)
 
 I'm really going to put scheme and common lisp in the same category?
@@ -359,6 +359,8 @@ If(is_cons(x),
 <https://www.cs.utexas.edu/users/moore/publications/index.html> moore publications
 <https://www.cs.utexas.edu/users/moore/publications/gentle-intro-to-acl2-programming.html> gentl introduction
 CLI veirifed stack - linker loader? <https://www.cs.utexas.edu/users/moore/best-ideas/piton/index.html> piton
+[verified os stack](https://www.cs.utexas.edu/ftp/boyer/cli-reports/011.pdf)
+<https://www.cs.utexas.edu/ftp/boyer/cli-reports/022.pdf>
 
 controller
 
