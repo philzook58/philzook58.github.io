@@ -21,7 +21,7 @@ It is possible that I will be driven into agreeing using one of the existing sys
 
 Something I've experienced in using automated logic solvers ([z3](https://microsoft.github.io/z3guide/), [eprover](https://github.com/eprover/eprover), [egglog](https://github.com/egraphs-good/egglog)) is that one can perform nice big steps in a proof like rearranging expressions or facts about linear arithmetic, but that there are not facilities for chaining these results together. You also can't express axiom schema (like induction!) or definitional mechanisms. You can only bring the edges close together in file and wave your hands. I think his semi-automated corner of the design space is interesting. One puts all the meat in the solvers (and trusting that z3, eprover, etc are basically correct, de bruijn be damned) and has a light layer of trustable chaining and metaprogramming on top. This is not an unknown idea. It has been around since the very first solvers in the 50s and is similar to the approaches of [F*](https://www.fstar-lang.org/), [Liquid Haskell](https://ucsd-progsys.github.io/liquidhaskell/), and [Dafny](https://dafny.org/).
 
-A traditional inference chaining design can be seen in LCF style kernels, where inference rules are implemented as functions taking in an abstract datatype `theorem` and outputting a new `theorem`. I found it a revelation to read [chapter 6](https://www.cl.cam.ac.uk/~jrh13/atp/OCaml/lcf.ml) of John Harrison's book on this topic. You can look inside `theorem` to see the `formula`  `formula_of_proof : theorem -> formula` but there is not explicit function to do the opposite (except an `unsafe_axiom : formula -> theorem` primitive.). In a language like Ocaml, the immutability and type system give comfort that you can't make bad deductions through accidentaly mutating something you shouldn't have.
+A traditional inference chaining design can be seen in LCF style kernels, where inference rules are implemented as functions taking in an abstract datatype `theorem` and outputting a new `theorem`. I found it a revelation to read [chapter 6](https://www.cl.cam.ac.uk/~jrh13/atp/OCaml/lcf.ml) of John Harrison's book on this topic. You can look inside `theorem` to see the `formula`  `formula_of_proof : theorem -> formula` but there is not explicit function to do the opposite (except an `unsafe_axiom : formula -> theorem` primitive.). In a language like Ocaml, the immutability and type system give comfort that you can't make bad deductions through accidentally mutating something you shouldn't have.
 
 Python is extremely dynamic, mutable, and it is hard to protect your theorems. There are a few approaches to this chaining mechanism amenable to python.
 
@@ -32,7 +32,7 @@ Python is extremely dynamic, mutable, and it is hard to protect your theorems. T
 
 ## Commutativity of Addition
 
-As a toy example to demonstrate some ideas, here I prove the commutativity of peano addition using an induction axiom schema. This is not possible for Z3 on it's own.
+As a toy example to demonstrate some ideas, here I prove the commutativity of Peano addition using an induction axiom schema. This is not possible for Z3 on it's own.
 
 Of course, this is very easy using built in arithmetic.
 
@@ -42,11 +42,11 @@ x,y = Ints("x y")
 prove(x + y == y + x)
 ```
 
-This uses the "crypto" form I was referring to above which signs theorem via a secret key. `check` confirms the hash, `trust` is a primitive to make axioms. `infer` is a mega inferrance rule that admits anything that z3 can prove.
+This uses the "crypto" form I was referring to above which signs theorem via a secret key. `check` confirms the hash, `trust` is a primitive to make axioms. `infer` is a mega inference rule that admits anything that z3 can prove.
 
 In order to describe Natural number induction, we have some choices. We could either use a higher order axioms (since Z3 does support simply typed higher order functions called "Arrays") or we can use an axiom _schema_. An axiom schema is a family of axioms. We can implement such a family as an axiom  producing function (another interesting option not explored here is as a generator of axioms, which would enable a brute force automation technique).
 
-The commutativity of addition is a little funky to prove because it depends on the structure of hw you defined addition, which feels odd to naive mathematics. Indeed it feels odd from a certain perspective to say you "prover" commutativty. Isn't that part of the definition of addition? Well, here we define addition only be using structural recursion on the first argument, so no it is not. This is a formal and technical point sadly. You can compare what is done here to Coq for example <https://softwarefoundations.cis.upenn.edu/lf-current/Induction.html>.
+The commutativity of addition is a little funky to prove because it depends on the structure of hw you defined addition, which feels odd to naive mathematics. Indeed it feels odd from a certain perspective to say you "prover" commutativity. Isn't that part of the definition of addition? Well, here we define addition only be using structural recursion on the first argument, so no it is not. This is a formal and technical point sadly. You can compare what is done here to Coq for example <https://softwarefoundations.cis.upenn.edu/lf-current/Induction.html>.
 
 First we prove that `0 + x = x + 0` which again isn't quite obvious. Then we use that as a lemma in the full proof.
 
@@ -147,15 +147,15 @@ print(comm_add)
 
 Thanks to Zach Tatlock for inspiration on the name!
 
-I would love for knuckledragger to target relatively mundane engineering mathematics and computer science. I think the high falutin mathematical community is better served by higher powered systems. Type theory and set theory are too high a bar for most. I want things that a former physicist could appreciated, and I think I have the context for that.
+I would love for knuckledragger to target relatively mundane engineering mathematics and computer science. I think the high falutin' mathematical community is better served by higher powered systems. Type theory and set theory are too high a bar for most. I want things that a former physicist could appreciated, and I think I have the context for that.
 
-Metaprogramming in most systems is a janky mess, because building a metaprgramming system is a huge engineering undertaking. HOL Light seems like it has it right by directly just working in OCaml. That may be part of it's secret sauce (beside just being Harrison) to getting so much distance. Using a well supported existing language s the right call. Maybe Lean can pull off using itself as it's metaprogramming system. That'd be great. There's a lot of momentum there and Leo de Moura is a monster.
+Metaprogramming in most systems is a janky mess, because building a metaprogramming system is a huge engineering undertaking. HOL Light seems like it has it right by directly just working in OCaml. That may be part of it's secret sauce (beside just being Harrison) to getting so much distance. Using a well supported existing language s the right call. Maybe Lean can pull off using itself as it's metaprogramming system. That'd be great. There's a lot of momentum there and Leo de Moura is a monster.
 
 I fear using Z3 will fail complex quantifier reasoning. But I then may cash out to eprover/vampire which have good quantifier reasoning. Z3 is super useful, the python bindings are fantastic.
 
-A Tactic system can be orchestrated around the raw capablities above without sacrificaing the soundness of the kernel. Isar style, backwards goal, and calc tactics all seem fun. At what point of complexity of tactics is the kernel kind of irrelevant?
+A Tactic system can be orchestrated around the raw capabilities above without sacrificing the soundness of the kernel. Isar style, backwards goal, and calc tactics all seem fun. At what point of complexity of tactics is the kernel kind of irrelevant?
 
- I'm a weirdo that really likes funky programming languages and paradigms (functional, logic, depedently typed, etc). I have a lot of difficulty bringing my non PL friends on board anything that isn't python. It is a lost cause in my opinion. Do not expect the world at large to start using functional programming languages. Maybe we don't even actually want that.  [Mathematical Logic through Python](https://www.logicthrupython.org/)
+ I'm a weirdo that really likes funky programming languages and paradigms (functional, logic, dependently typed, etc). I have a lot of difficulty bringing my non PL friends on board anything that isn't python. It is a lost cause in my opinion. Do not expect the world at large to start using functional programming languages. Maybe we don't even actually want that.  [Mathematical Logic through Python](https://www.logicthrupython.org/)
 
 ACL2 is a good place to look for inspiration. I don't want the fanciest most expressive logic in the world. Python and lisp do have a certain kinship (see for example)
 
