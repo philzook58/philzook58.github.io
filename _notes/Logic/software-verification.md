@@ -231,7 +231,9 @@ It's quite annoying and somewhat useless seeming to supply .prp files.
 It seems acsl annotations work too. Can I trust that?
 
 ### Goblint
+
 <https://goblint.in.tum.de/>
+<https://github.com/goblint/analyzer>
 
 ### Rust
 
