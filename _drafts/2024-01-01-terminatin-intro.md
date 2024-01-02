@@ -21,3 +21,5 @@ There is a class of solver called a termination checker
 The core notion of a measure is some natural number that goes down and is bounded below by zero, like the length of a list. With enough squinting, other termination certificates are generalizations of this intuitive idea.
 
 The idea of a well-founded relation is in essence trying to just define what it means for something to eventually always stop and our basic notion of something that always stops is a decreasing natural number.
+
+<https://cstheory.stackexchange.com/questions/34316/is-there-a-good-notion-of-non-termination-and-halting-proofs-in-type-theory>

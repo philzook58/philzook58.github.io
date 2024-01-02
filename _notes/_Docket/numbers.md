@@ -3,11 +3,45 @@ layout: post
 title: Numbers
 ---
 
+- [Rationals](#rationals)
 - [Ordinals](#ordinals)
   - [Large Numbers](#large-numbers)
 - [Surreal Numbers](#surreal-numbers)
 - [Hyperreals](#hyperreals)
 - [Eudoxus Reals](#eudoxus-reals)
+
+# Rationals
+
+Stern Brocot <https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree>
+binary search
+mediant (a + c)/(b + d) is between a/b and c/d. vector addition on ration representation
+Is it a game?
+<https://www.ams.org/publicoutreach/feature-column/fcarc-stern-brocot> clock making and stern brocot
+
+```python
+class SternBrocot():
+  def __init__(self,x):
+    a = Fraction(0,1)
+    b = Fraction(1,1)
+    self.dirs = [] # stern brocot represents fraction as sequence of L/R
+    while num / den != a / b:
+      mediant(a,b)
+      if x < mediant
+        self.dirs.append('L')
+        a = c
+        b = d
+      elif x > mediant:
+        self.dirs.append('R')
+        a = c
+        b = d
+      else:
+        break
+
+```
+
+continued fractins - lanczos algorithm is best ratinal approximatin to eigenvalues? Computational Linear algebra over infinite vectors. What can be done? Can invert triangular matrices. Can of course take increasing finite slices. increasing low rank update?
+
+best ratinal apporxmation
 
 # Ordinals
 
@@ -98,6 +132,104 @@ hydra is kinda remniscent of hackenbush
 <https://en.wikipedia.org/wiki/Levi-Civita_field> contains infintesimal and infinite stuff
 
 <https://en.wikipedia.org/wiki/Epsilon_number> fixed points of exponential maps
+
+```python
+import math
+class Rational():
+  def __init__(self, numb, den):
+    gcd = math.gcd(num,den)
+    self.num = num / gcd
+    self.den = den / gcd
+  def __add__(self, other):
+    return Rational(self.num * other.den + other.num * self.den, self.den * other.den)
+  def __mul__(self, other):
+    return Rational(self.num * other.num, self.den * other.den)
+  def __sub__(self, other):
+    return Rational(self.num * other.den - other.num * self.den, self.den * other.den)
+  def __truediv__(self, other):
+    return Rational(self.num * other.den, self.den * other.num)
+  def __repr__(self):
+    return f"{self.num}/{self.den}"
+  def __eq__(self, other):
+    # or self.num * other.den == other.num * self.den
+    return self.num == other.num and self.den == other.den
+  def __lt__(self, other):
+    return self.num * other.den < other.num * self.den
+
+def Complex():
+    def __init_(self, real, imag):
+        self.real = real
+        self.imag = imag
+    def __add__(self, other):
+        return Complex(self.real + other.real, self.imag + other.imag)
+
+def BigNum():
+  self __init__(self,n):
+    self.digits = []
+    while n > 0:
+      self.digits.append(n % 10)
+      n = n // 10
+    def value(self):
+      return sum([d * 10 ** i for i, d in enumerate(self.digits)])
+  def __add__(self, other):
+    # cheating: return BigNum(self.value() + other.value())
+    res = []
+    carry = 0
+    for i in range(max(len(self.digits), len(other.digits))):
+      s = self.digits[i] if i < len(self.digits) else 0
+      o = other.digits[i] if i < len(other.digits) else 0
+      res.append((s + o + carry) % 10)
+      carry = (s + o + carry) // 10
+  #def __mul__(self,other):
+  #  res = BigNum(0)
+  #  for i in range(len(self.digits)):
+  #    for j in range(len(other.digits)):
+  #     res += BigNum(self.digits[i] * other.digits[j]) * BigNum(10 ** (i + j))
+  #  return res
+
+class Quaternion():
+  def __init__(self, c,i,j,k):
+    self.c = c
+    self.i = i
+    self.j = j
+    self.k = k
+  def __add__(self, other):
+    return Quaternion(self.c + other.c, self.i + other.i, self.j + other.j, self.k + other.k)
+  def __mul__(self, other):
+    return Quaternion(self.c * other.c - self.i * other.i - self.j * other.j - self.k * other.k,
+                      self.c * other.i + self.i * other.c + self.j * other.k - self.k * other.j,
+                      self.c * other.j - self.i * other.k + self.j * other.c + self.k * other.i,
+                      self.c * other.k + self.i * other.j - self.j * other.i + self.k * other.c)
+
+# https://en.wikipedia.org/wiki/Continued_fraction
+# Another way of representing fractions that has nice properties.
+def ContFrac():
+  # this is the euclidean algorithm
+  def __init__(self, num,den):
+    self.coeff = []
+    while num != 0:
+      self.coeff.append(num // den)
+      num, den = den, num % den
+
+def golden_ratio(): # an irratinal number with infinite expansion 
+  while True:
+    return 1
+
+
+# using built in complex and fraction
+from fractions import Fraction
+print(Fraction(1,10) )
+print(1 + 1.j)
+
+
+
+# another method, embedding into matrices
+import numpy
+def complex(r,i):
+  return np.array([[r,-i],[i,r]])
+```
+
+<https://docs.python.org/3/library/numbers.html#module-numbers> abstract based classes for numbers
 
 ## Large Numbers
 
