@@ -45,8 +45,30 @@ Generic views
 
 Admin page
 
-Django rest framework
+Django rest framework <https://www.django-rest-framework.org/>
 Django channels
+
+```python
+import django
+
+```
+
+```bash
+
+cd /tmp
+django-admin startproject mysite
+cd mysite
+ls # manage.py mysite
+#python3 manage.py runserver # 0.0.0.0:8000 optionally pick a port
+#cd mysite
+#ls # asgi.py  __init__.py  __pycache__  settings.py  urls.py  wsgi.py
+python3 manage.py startapp polls
+python3 manage.py
+python3 manage.py migrate
+python3 manage.py createsuperuser --username admin --email admin@example.com
+```
+
+manage.py
 
 # CFFI
 

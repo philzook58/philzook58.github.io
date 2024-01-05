@@ -16,6 +16,7 @@ title: C
 - [Misc](#misc)
 
 # Stuff
+<https://github.com/rswier/c4> C in 4 functions
 
 [Beej's Guide to C](https://beej.us/guide/bgc/)
 

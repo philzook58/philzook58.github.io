@@ -10,12 +10,16 @@ title: Numbers
 - [Hyperreals](#hyperreals)
 - [Eudoxus Reals](#eudoxus-reals)
 
+There are a loy of notions of "number"
+Some embed inside each other.
+It is interesting to see how to implement their representation in computers and how to actually evaluate their arithemtic / normalize them
+
 # Rationals
 
 Stern Brocot <https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree>
 binary search
 mediant (a + c)/(b + d) is between a/b and c/d. vector addition on ration representation
-Is it a game?
+Is it a game? Is this dstint from continued fractions?
 <https://www.ams.org/publicoutreach/feature-column/fcarc-stern-brocot> clock making and stern brocot
 
 ```python
@@ -39,7 +43,8 @@ class SternBrocot():
 
 ```
 
-continued fractins - lanczos algorithm is best ratinal approximatin to eigenvalues? Computational Linear algebra over infinite vectors. What can be done? Can invert triangular matrices. Can of course take increasing finite slices. increasing low rank update?
+continued fractins - Adding? Do I have t go down and then up? A "lens" into the whole and fractional part?
+lanczos algorithm is best ratinal approximatin to eigenvalues? Computational Linear algebra over infinite vectors. What can be done? Can invert triangular matrices. Can of course take increasing finite slices. increasing low rank update?
 
 best ratinal apporxmation
 
@@ -118,6 +123,7 @@ chapter 3 is on ordinals in coq
 <https://math.andrej.com/2008/02/02/the-hydra-game/> kirby and paris Accessible Independence Results for Peano Arithmetic
 <http://www.madore.org/~david/math/hydra.xhtml> javascript of the game
 hydra is kinda remniscent of hackenbush
+<https://www.youtube.com/watch?v=uWwUpEY4c8o&ab_channel=PBSInfiniteSeries> PBS infinite series on hydra game
 
 <https://en.wikipedia.org/wiki/Bachmann%E2%80%93Howard_ordinal> large countable ordinal
 <https://en.wikipedia.org/wiki/Kripke%E2%80%93Platek_set_theory> weak set theory. preciative part. Separation only works on delta_0 bounded formula. I like that
@@ -273,6 +279,8 @@ The game of quantifiers is how we discuss reals. Connection? We are reifying
 on off dud
 oof hi lo
 These are non well founded? Or just
+
+<https://www.youtube.com/@elwynberlekamp5528> berlekamp videos
 
 # Hyperreals
 

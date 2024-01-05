@@ -23,6 +23,8 @@ Circt - llvm project
 
 [SpecVerilog: Adapting Information Flow Control for Secure Speculation](https://www.cs.cornell.edu/andru/papers/specverilog/)
 
+<https://news.ycombinator.com/item?id=38843675>  A Simulated Annealing FPGA Placer <https://stefanabikaram.com/writing/fpga-sa-placer/>
+
 # Verilog
 
 Verilog is a bit dual brained. In one sense it is a hardware design language. In this sense it's almost just a netlist, aka a graph data structure describing a circuit. Each module can has ports which are wired up internally. Internal instantiations of modules are named.

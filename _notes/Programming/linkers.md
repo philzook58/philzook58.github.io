@@ -241,7 +241,60 @@ Not linking persay. But some useful stuff for manipulating object files
 
 LMA vs VMA load memoery address vs virtual memory address. Can differe when stored in romvs ram for example
 
+```
+man ld
+info ld
+ld --help
+```
+
+-q emit relocs
+-Wl forwards commands to linker in gcc
+--entry
+
+```bash
+echo '
+.extern _start
+_start:
+  mov $0x42, %rax
+  jmp fred
+  int3
+' > /tmp/tmp.s
+as /tmp/tmp.s -o /tmp/tmp.o
+readelf -a /tmp/tmp.o
+
+"
+# Relocation 
+Relocation section '.rela.text' at offset 0xa8 contains 1 entry:
+  Offset          Info           Type           Sym. Value    Sym. Name + Addend
+000000000008  000200000004 R_X86_64_PLT32    0000000000000000 fred - 4
+
+Symbol table '.symtab' contains 3 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT    1 _start
+     2: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT  UND fred
+"
+objdump -d /tmp/tmp.o
+```
+
+```bash
+echo "
+SECTIONS
+{
+. = 0x10000;
+.text : { *(.text) }
+. = 0x8000000;
+.data : { *(.data) }
+.bss : { *(.bss) }
+}
+" > /tmp.mylink.ld
+
+
+```
+
 # DWARF
+
+<https://github.com/sevaa/dwex> dwarf explorer gui based on pyelftools
 
 LLVM has DIBuilder in C++ but also textual access to dwarf <https://llvm.org/docs/SourceLevelDebugging.html>
 

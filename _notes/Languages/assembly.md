@@ -15,6 +15,7 @@ title: Assembly
 - [ARM](#arm)
 - [PowerPC](#powerpc)
 - [RISC V](#risc-v)
+- [6502](#6502)
 - [FORTH](#forth)
 - [High level assemlby / macros](#high-level-assemlby--macros)
 - [Typed Assembly](#typed-assembly)
@@ -23,8 +24,8 @@ title: Assembly
 - [Semantics / Specification](#semantics--specification)
 - [Misc](#misc)
 
-
 See also nots on:
+
 - computer architecture
 - performance
 - linkers
@@ -33,22 +34,24 @@ See also nots on:
 Godbolt compiler explorer is also very useful
 
 # Assemblers
+
 gas - gnu assembler
 [llvm-as](https://llvm.org/docs/CommandGuide/llvm-as.html)
-https://www.xorpd.net/pages/links.html
+<https://www.xorpd.net/pages/links.html>
 
 [yasm](http://yasm.tortall.net/)
 nasm
-fasm https://board.flatassembler.net/
+fasm <https://board.flatassembler.net/>
 
 [terse](http://www.terse.com/)
 command line flag
 
-[SASM - simple crossplatform IDE for NASM, MASM, GAS and FASM assembly languages](https://github.com/Dman95/SASM) http://dman95.github.io/SASM/
+[SASM - simple crossplatform IDE for NASM, MASM, GAS and FASM assembly languages](https://github.com/Dman95/SASM) <http://dman95.github.io/SASM/>
 
+Macro-11 <https://en.wikipedia.org/wiki/MACRO-11> PDP-11 macro assembly. Interesting [manual](http://bitsavers.trailing-edge.com/pdf/dec/pdp11/rsx11m_s/RSX11M_V2/DEC-11-OIMRA-A-D_MACRO_75.pdf)
 
-Macro-11 https://en.wikipedia.org/wiki/MACRO-11 PDP-11 macro assembly. Interesting [manual](http://bitsavers.trailing-edge.com/pdf/dec/pdp11/rsx11m_s/RSX11M_V2/DEC-11-OIMRA-A-D_MACRO_75.pdf)
 ## Debuggers
+
 I've come to realize that even forplaying around in assmbly, a debugger is pretty clutch
 
 - gdb - See notes in C.
@@ -58,6 +61,7 @@ I've come to realize that even forplaying around in assmbly, a debugger is prett
 - [x64dbg](https://github.com/x64dbg/x64dbg) windows only
 
 ## Directives
+
 [gas](https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_chapter/as_7.html) gas directives
 
 - `.equiv`
@@ -67,12 +71,15 @@ I've come to realize that even forplaying around in assmbly, a debugger is prett
 - `.eh_frame` maps address location return address and callee saved registers info. "exception handling"
 
 # x86
+
+<https://blog.jeff.over.bz/assembly/compilers/jit/2017/01/15/x86-assembler.html>  x86 assembler in 250 lines of C
+
 De facto standard for desktops
 
 [intel software develpoer manuals](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
 
-https://en.wikipedia.org/wiki/INT_(x86_instruction) int3 is a breakpoint instruction 
-https://twitter.com/pkhuong/status/1507790343151960073?s=20&t=GsM8M-fHdbvp9M4n5S4-kg
+<https://en.wikipedia.org/wiki/INT_(x86_instruction)> int3 is a breakpoint instruction
+<https://twitter.com/pkhuong/status/1507790343151960073?s=20&t=GsM8M-fHdbvp9M4n5S4-kg>
 
 [asmtutor](https://asmtutor.com/)
 
@@ -86,14 +93,14 @@ using strace is kind of cool
 
 - `mov` `movz` `movs`
 - `movsb` copy byte from esi to edi and inc/dec both. Useful string op
-- `cmov__` conditional mov based on flags. 
+- `cmov__` conditional mov based on flags.
 - `lea` calculates a pointer offset in one instruction. 3 operands, a shift and a constant add.
 - `add` `sub` `or` `xor` `inc` `dec`
 - `imul` `idiv` `mul`. one parameter. implicit rax as one operand. rdx:rax as implicit output
 - `syscall`
 - `test` `cmp` <https://stackoverflow.com/questions/39556649/in-x86-whats-difference-between-test-eax-eax-and-cmp-eax-0>
 - `jmp` `jnz` `jz` condition suffixes
-- `setxx` copy from flags 
+- `setxx` copy from flags
 - `call`
 - `push` `pop` `enter` `leave`
 - `loop` kind of a goofball. dec ecx and jump if zero. [Hmm slow?](https://stackoverflow.com/questions/35742570/why-is-the-loop-instruction-slow-couldnt-intel-have-implemented-it-efficiently)
@@ -102,22 +109,44 @@ using strace is kind of cool
 
 Addressing modes
 
-`rdi, rsi, rdx, rcx, r8-r11, rax ` are all good scratch registers. The first 6 of those are where function arguments go. rax is where return values go
+`rdi, rsi, rdx, rcx, r8-r11, rax` are all good scratch registers. The first 6 of those are where function arguments go. rax is where return values go
 
-rax accumulatr, rcx counter, rdx extended accumulator, rbx base of array,  https://en.wikipedia.org/wiki/X86#Purpose
+rax accumulatr, rcx counter, rdx extended accumulator, rbx base of array,  <https://en.wikipedia.org/wiki/X86#Purpose>
 
 ## BMI1 BMI2
-Bit manipulation instructions https://twitter.com/geofflangdale/status/1502481857375793153?s=20&t=j5MN13cFOkc3qH8tpATyNA
-apparently people can do crazy stuff with this https://twitter.com/pkhuong/status/1497332651891515395?s=20&t=j5MN13cFOkc3qH8tpATyNA
 
-pshufb 
+Bit manipulation instructions <https://twitter.com/geofflangdale/status/1502481857375793153?s=20&t=j5MN13cFOkc3qH8tpATyNA>
+apparently people can do crazy stuff with this <https://twitter.com/pkhuong/status/1497332651891515395?s=20&t=j5MN13cFOkc3qH8tpATyNA>
+
+pshufb
 pext
 pdep
 
-
 ## GAS
+
+Using qemu is nice even on native because we can use `-d` flag to dump cpu state and instruction. Then I dn't have to fiddle wth gdb or a gui or include printf functionlity or remember system call numbers for call / calling conventions. All great stuff, but annoying if you're interested in just fiddling with assembly.
+
+```bash
+echo '
+#include <sys/syscall.h>
+.extern _start
+_start:
+    mov $0x20,%rax
+    int3 # interrupt. execution will stop here. analog of printf debugging
+    mov $0x42,%rax
+    mov $60, %rax # exit syscall number for clean exit. or just let it segfault. yolo.
+    syscall
+    int $0x80
+    #int3
+' > /tmp/myprog.s
+gcc -nostdlib -static -o /tmp/myprog /tmp/myprog.s
+qemu-x86_64 -d in_asm,cpu -singlestep /tmp/myprog
+
+```
+
 <https://cs.lmu.edu/~ray/notes/gasexamples/> Seems like really good intro to assembly
 <https://jameshfisher.com/2018/03/10/linux-assembly-hello-world/>
+
 ```x86
 .global _start
 .data
@@ -165,6 +194,7 @@ _start:
 ```
 
 Using a function. RDI, RSI, RDX, RCX, R8, R9
+
 ```x86
 .global _start
 .text
@@ -202,9 +232,10 @@ ld /tmp/a.out -o /tmp/a2.out
 gdb /tmp/a2.out -ex run -ex 'info registers'
 
 ```
+
 ## nasm
 
-https://www.nasm.us/doc/
+<https://www.nasm.us/doc/>
 
 Nasm does seem a little nicer. x86 only though.
 
@@ -263,22 +294,21 @@ file /tmp/temp2
 /tmp/temp2
 ```
 
-[unix abi](https://gitlab.com/x86-psABIs) https://github.com/hjl-tools/x86-psABI/wiki/X86-psABI/
-
-
-
+[unix abi](https://gitlab.com/x86-psABIs) <https://github.com/hjl-tools/x86-psABI/wiki/X86-psABI/>
 
 ## memory barrier
+
 ## CET control enforcement technology
+
 `endbr` valid jump destinations for indirect jumps
 
-x86 forth 
+x86 forth
 
 # ARM
+<https://github.com/marcpaq/arpilisp> an arm lisp
 
 [](https://github.com/pkivolowitz/asm_book)
 Arm memory tagging extension
-
 
 [cpulator](https://cpulator.01xz.net/?sys=arm) online assembler and emulator for teaching pretty nice
 [Assembly Language Programming with ARM – Full Tutorial for Beginners](https://www.youtube.com/watch?v=gfmRrPjnEw4&t=1484s&ab_channel=freeCodeCamp.org)
@@ -323,21 +353,21 @@ mu = Uc(UC_ARCH_ARM64, UC_MODE_ARM)
 
 ```
 
-
 [ARMv8 A64 Quick Reference](https://courses.cs.washington.edu/courses/cse469/19wi/arm64.pdf)
 [](https://github.com/below/HelloSilicon)
 [asm tutor port](https://github.com/lirorc/arm-asm-examples)
+
 # PowerPC
 
-
 # RISC V
+
 [SAIL Risc V spec](https://github.com/riscv/sail-riscv)
 [riscv- coq](https://github.com/mit-plv/riscv-coq)
 
 [risc v J extesnions](https://news.ycombinator.com/item?id=30647151)
 [graphical assembler and cpu emulator](https://github.com/mortbopet/Ripes)
 
-https://www.cs.cornell.edu/courses/cs3410/2019sp/riscv/interpreter/# nice little interpeter to play with
+<https://www.cs.cornell.edu/courses/cs3410/2019sp/riscv/interpreter/#> nice little interpeter to play with
 [risc v from scratch](https://twilco.github.io/riscv-from-scratch/2019/04/27/riscv-from-scratch-2.html)
 [A Multipurpose Formal RISC-V Specification](https://people.csail.mit.edu/bthom/riscv-spec.pdf) hs-2-coq based
 [compcert risc-v backend](https://github.com/AbsInt/CompCert/tree/master/riscV)
@@ -347,6 +377,7 @@ https://www.cs.cornell.edu/courses/cs3410/2019sp/riscv/interpreter/# nice little
 
 [risc v virtual machine](https://github.com/LekKit/RVVM)
 [rvemu](https://github.com/d0iasm/rvemu) [Writing a RISC-V Emulator in Rust book](https://book.rvemu.app/)
+
 ```riscv
 # it's the sum of 1 to n
 addi a0, x0, 4
@@ -363,6 +394,7 @@ loop:
 
 <https://github.com/jameslzhu/riscv-card/blob/master/riscv-card.pdf> nice cheatsheet of instructions, registers
 registers
+
 - a0 a1 are arguments nad returns values
 - t0-t are temporaries
 - x0 or zero is zero register
@@ -371,30 +403,34 @@ registers
 
 instructions
 
-
-
-
 example risc5 programs. sort, search. vector matrix mult, string copy.
-https://marz.utk.edu/my-courses/cosc230/book/example-risc-v-assembly-programs/
+<https://marz.utk.edu/my-courses/cosc230/book/example-risc-v-assembly-programs/>
 
-  * [https://www.chiark.greenend.org.uk/~sgtatham/coroutines.html](https://www.chiark.greenend.org.uk/~sgtatham/coroutines.html)
-  * https://en.wikibooks.org/wiki/X86_Assembly
-  * https://en.wikibooks.org/wiki/Embedded_Systems
-  * https://www.ic.unicamp.br/~pannain/mc404/aulas/pdfs/Art%20Of%20Intel%20x86%20Assembly.pdf Art of Assembly DOS version. Good stuff in here. Some ways of implementing function calls I'd never considered
+- [https://www.chiark.greenend.org.uk/~sgtatham/coroutines.html](https://www.chiark.greenend.org.uk/~sgtatham/coroutines.html)
+- <https://en.wikibooks.org/wiki/X86_Assembly>
+- <https://en.wikibooks.org/wiki/Embedded_Systems>
+- <https://www.ic.unicamp.br/~pannain/mc404/aulas/pdfs/Art%20Of%20Intel%20x86%20Assembly.pdf> Art of Assembly DOS version. Good stuff in here. Some ways of implementing function calls I'd never considered
+
+# 6502
+
+<https://www.dabeaz.com/superboard/asm6502.py> 6502 assembler in python
 
 # FORTH
-https://en.wikipedia.org/wiki/Threaded_code
+
+<https://en.wikipedia.org/wiki/Threaded_code>
 
 - [Jonesforth](https://github.com/nornagon/jonesforth) super well annotated forth written in x86
-https://news.ycombinator.com/item?id=22801471
+<https://news.ycombinator.com/item?id=22801471>
 - [moving forth series](https://www.bradrodriguez.com/papers/)
-- 
+-
 
-https://en.wikipedia.org/wiki/Threaded_code
+<https://en.wikipedia.org/wiki/Threaded_code>
 
-https://gitlab.com/tsoding/porth
+<https://gitlab.com/tsoding/porth>
+
 # High level assemlby / macros
-https://en.wikipedia.org/wiki/High-level_assembler
+
+<https://en.wikipedia.org/wiki/High-level_assembler>
 
 The art of assembly book by Hyde
 
@@ -403,8 +439,7 @@ Auto flattening.
 `(loc,asm)` pairs
 `r0 == (r0, "")`
 
-
-https://github.com/nbenton/x86proved
+<https://github.com/nbenton/x86proved>
 [Coq: The world’s best macro assembler?](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/12/coqasm.pdf)
 
 # Typed Assembly
@@ -426,6 +461,7 @@ related to PCC (proof carryng code). Use type discipline
 The continuation is carried on the stack (typically). {eax:b4} is the calling convention on x86. {rax:b8} would be calling convention on x86_64. That continuation is threaded through everything (if we don't smash stack)
 
 A summation program annotated
+
 ```
 sum: ; {ecx:b4, ebx:{eax:b4}}
   mov eax, 0  ; int acc = 0;
@@ -610,9 +646,8 @@ So what is the type of `mov rax, 0`? How is fallthru represented?
 
 TAL led in some ways to Cyclone, which is turn heavily influenced rust
 
-
 What would a "well-typed" interpreter of assembly look like
-Mem, Reg -> 
+Mem, Reg ->
 
 Pierce - Advanced Topics has a chapter on TAL and PCC (4 and 5)
 
@@ -624,12 +659,10 @@ Pierce - Advanced Topics has a chapter on TAL and PCC (4 and 5)
 [Safe to the last instruction: automated verification of a type-safe operating system](https://dl.acm.org/doi/10.1145/1809028.1806610) - Verve a type safe operating system
 [Hawblitzel bibliography](https://dblp.org/pid/22/3053.html)
 
-
 [xi and harper - a dependently typed assembly langguae](https://www.cs.cmu.edu/~rwh/papers/dtal/icfp01.pdf)
 [singleton 2011- a depently typed assembly langguae](https://dl.acm.org/doi/10.1145/1929553.1929557)
 
 [Inferable object-oriented typed assembly language - Tate Chen hawblitzel](https://dl.acm.org/doi/10.1145/1806596.1806644) [youtube](https://www.youtube.com/watch?v=HjdA3W6Mg-c&t=252s&ab_channel=RossTate)
-
 
 ```prolog
 % pcode
@@ -638,6 +671,7 @@ hastype() :- .
 
 
 ```
+
 dwarf annotations as untrusted input?
 
 gradual typing is a natural fit
@@ -645,27 +679,26 @@ gradual typing is a natural fit
 
 # Proof Carrying Code
 
-
-
 foundational pcc - appell and felty
 [A Tutorial Example of the Semantic Approach to Foundational Proof-Carrying Code](https://link.springer.com/chapter/10.1007/978-3-540-32033-3_29)
-Chapter in Pierce 
+Chapter in Pierce
 [Necula's thesis](https://www.cs.princeton.edu/~appel/proofsem/papers/necula-thesis.ps)
 
 [INTERFACING COMPILERS, PROOF CHECKERS, AND PROOFS FOR FOUNDATIONAL PROOF-CARRYING CODE- Wu thesis](https://faculty.ist.psu.edu/wu/papers/wu-phd-thesis.pdf) annotation are untrusted.
-
 
 LF
 metamath0
 ebpf connection?
 
 # Verification
+
 [Verified Transformations and Hoare Logic: Beautiful Proofs for Ugly Assembly Language](https://link.springer.com/chapter/10.1007/978-3-030-63618-0_7)
 Galois' SAW
 [A verified, efficient embedding of a verifiable assembly language](https://dl.acm.org/doi/10.1145/3290376)
 F* land. [Vale - Verifying High-Performance Cryptographic Assembly Code](https://project-everest.github.io/assets/vale2017.pdf). Hmm. this is leveraging dafny
 
 # Semantics / Specification
+
 [L3 in cakeml](https://cakeml.org/itp22-armv8.pdf)
 [L3 risc v](https://github.com/SRI-CSL/l3riscv/tree/master)
 [L3 mips](https://github.com/acjf3/l3mips)
@@ -674,7 +707,6 @@ F* land. [Vale - Verifying High-Performance Cryptographic Assembly Code](https:/
 
 Sail
 ASL arm spec language
-
 
 [A Complete Formal Semantics of x86-64 User-Level Instruction Set Architecture](https://fsl.cs.illinois.edu/publications/dasgupta-park-kasampalis-adve-rosu-2019-pldi.pdf) K framework
 
@@ -705,8 +737,7 @@ cat /tmp/foo.v
 
 `sail -i` interpreter
 
-
-https://github.com/rems-project/isla/blob/master/doc/manual.adoc
+<https://github.com/rems-project/isla/blob/master/doc/manual.adoc>
 isla. It's more than a symbolic executor
 I can dump an IR of instruction semantics. Pseudo-smt. Has command statements too. Still. The expressions are smt expressions yea?
 
@@ -724,34 +755,23 @@ ed. 2006.
 [xorpd](https://www.xorpd.net/index.html)
 [xchg rax rax](https://www.xorpd.net/pages/xchg_rax/snip_00.html)
 [reversing hero](https://www.reversinghero.com/)
-[flatassembler](http://flatassembler.net/) 
-
+[flatassembler](http://flatassembler.net/)
 
 boot sector means they got the code under 512 bytes
 
-https://github.com/nanochess/bootBASIC boot sector basic
-https://nanochess.org/
-https://www.lulu.com/shop/oscar-toledo-gutierrez/programming-boot-sector-games/paperback/product-24188564.html?page=1&pageSize=4  <https://nanochess.org/store.html> programming boot sector games
-
+<https://github.com/nanochess/bootBASIC> boot sector basic
+<https://nanochess.org/>
+<https://www.lulu.com/shop/oscar-toledo-gutierrez/programming-boot-sector-games/paperback/product-24188564.html?page=1&pageSize=4>  <https://nanochess.org/store.html> programming boot sector games
 
 sectorlisp
 
-x86 forth 
+x86 forth
 
 [easy 6502 assembly](https://news.ycombinator.com/item?id=31548311) in browser assembler an emulator ebook
 
-
-
-[Some Assembly Required](https://github.com/hackclub/some-assembly-required) https://news.ycombinator.com/item?id=31909183
-
+[Some Assembly Required](https://github.com/hackclub/some-assembly-required) <https://news.ycombinator.com/item?id=31909183>
 
 Metamath zero - is there some simpler thing one could do? Why did metamath _really_ have to be written in assembly? Is this a trusted computing base thing?
 
-
 [peachpy](https://github.com/Maratyszcza/PeachPy) an assembly dsl in python
-https://docs.micropython.org/en/latest/pyboard/tutorial/assembler.html inline assembler in micropython
-
-
-
-
-
+<https://docs.micropython.org/en/latest/pyboard/tutorial/assembler.html> inline assembler in micropython

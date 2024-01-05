@@ -49,8 +49,8 @@ title: Binary Analysis & CTF stuff
   - [Mixed Boolean Arithmetic (MBA)](#mixed-boolean-arithmetic-mba)
 - [CTF](#ctf)
 - [What is Binary Analysis](#what-is-binary-analysis)
-    - [Program Analysis](#program-analysis)
-    - [How are binaries made](#how-are-binaries-made)
+  - [Program Analysis](#program-analysis)
+  - [How are binaries made](#how-are-binaries-made)
 - [Misc](#misc)
   - [GDB](#gdb)
 - [nmap](#nmap)
@@ -988,6 +988,7 @@ binary diversification - compiler differently every time. code reuse becomes way
 # Exploits
 
 ## Buffer Overflows
+<https://punkx.org/overflow/> a game version of buffer overflows. cool.
 
 [buffer overflow](https://en.wikipedia.org/wiki/Buffer_overflow)
 When a buffer overflow occurs you are writing to memory that possibly had a different purpose. Maybe other stack variables, maybe return address pointers, maybe over heap metadata.

@@ -1043,6 +1043,10 @@ SLD in tree search form? The stack is some kind of manifestation of the tree. We
 
 ## Abstract Machines / Implementation
 
+<https://www.cl.cam.ac.uk/~am21/research/funnel/prolog.c> C++ interpreter
+<https://github.com/Naereen/Tiny-Prolog-in-OCaml-OneFile> ocaml interp
+<https://t3x.org/lisp64k/prolog.html> lisp interp
+
 [Warren's Abstract Machine: A Tutorial Reconstruction.](http://wambook.sourceforge.net/wambook.pdf)
 
 Paul Tarau showing an interesting compilation strategy. <https://popl21.sigplan.org/details/PADL-2021-papers/5/A-Family-of-Unification-oblivious-Program-Transformations-and-Their-Applications>

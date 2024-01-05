@@ -23,3 +23,5 @@ The core notion of a measure is some natural number that goes down and is bounde
 The idea of a well-founded relation is in essence trying to just define what it means for something to eventually always stop and our basic notion of something that always stops is a decreasing natural number.
 
 <https://cstheory.stackexchange.com/questions/34316/is-there-a-good-notion-of-non-termination-and-halting-proofs-in-type-theory>
+
+`zero = cons(0,zero)` is "ok". It has a model N -> N? Maybe non terminating definitions can interfere with the foundation axiom in some bad way. or `fact(n) = n == 0? 1 : n * fact(n-1)` when `n < 0` runs off to infinity, but maybe some ordinal or hyperinteger model can handle it?

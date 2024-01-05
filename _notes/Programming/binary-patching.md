@@ -650,3 +650,10 @@ Adding nops in places that are meant to be patcjable using inline asm
 <https://github.com/rems-project/linksem>
 
 <https://github.com/NixOS/patchelf> A small utility to modify the dynamic linker and RPATH of ELF executables. <https://github.com/NixOS/patchelf/blob/master/src/patchelf.cc> not insanely complicated.
+
+<https://news.ycombinator.com/item?id=38856696> C and C++ Hot-Reload/Live Coding  [talk slides on how it works](https://liveplusplus.tech/downloads/THQ_Nordic_Dev_Summit_2023_Live++_Behind_the_Scenes.pptx) <https://github.com/MolecularMatters/raw_pdb>
+[Liberating the Smalltalk lurking in C and Unix" by Stephen Kell](https://www.youtube.com/watch?v=LwicN2u6Dro&ab_channel=StrangeLoopConference)
+Solaris dbx could "fix"
+<https://github.com/tsoding/musializer>
+<https://nullprogram.com/blog/2014/12/23/> Interactive Programming in C
+[handbmade hero loading game code dynamically](https://www.youtube.com/watch?v=WMSBRk5WG58&ab_channel=MollyRocket)

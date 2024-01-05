@@ -163,6 +163,7 @@ title: Datalog
   - [Choice Domain](#choice-domain-1)
   - [Negation](#negation-1)
   - [Souffle source](#souffle-source)
+  - [EPR datalog](#epr-datalog)
 - [Resources](#resources-1)
 - [include prelude.ml](#include-preludeml)
 - [class(slotname : f(x,y) , ) :-](#classslotname--fxy----)
@@ -6382,7 +6383,36 @@ What about guarded negation? For example if you turn off stratification but are 
 - ram, relational abstract machine
 -
 
+## EPR datalog
+
+Effectvely proposional reasning and datalog do have some commonalities. EPR is desidabe because of a finite universe.
+
+EPR is a cool fragment because z3 will actually return SAT models with quantifiers. It's the encoding of IVY. Does that mean IVY style modelling might be amenable to datalog?
+
+```python
+from z3 import *
+Atom = DeclareSort("Atom")
+a,b,c,x,y,z = Consts("a b c x y z", Atom)
+edge = Function("edge", Atom, Atom, BoolSort())
+path = Function("path", Atom, Atom, BoolSort())
+s = Solver()
+def Disjoint(*args):
+  return And([x != y for x in args for y in args if x is not y])
+s.add(Disjoint(a,b,c))
+print(Disjoint(a,b,c))
+s.add(ForAll([x,y], edge(x,y) == Or(And(x == a, y == b), And(x == b, y == c)) ))
+s.add(ForAll([x,y,z], path(x,z) == Or( And(path(x,y), edge(y,z))  ,
+                                        edge(x,z) )))
+print(s.check())
+print(s.model())
+
+
+```
+
 # Resources
+
+Flan. staged metaprogramming datalog rompf <https://popl24.sigplan.org/details/POPL-2024-popl-research-papers/88/Flan-An-Expressive-and-Efficient-Datalog-Compiler-for-Program-Analysis>
+
 <https://x.com/EvgSkvDev/status/1727168338475069465?s=20> logica <https://colab.research.google.com/drive/1KJ6xKSwpw5FWWkvUOyBCpAcU_jVZV7Gs?usp=sharing> <https://github.com/evgskv/logica> a sql based datalog. helllo nurse <https://logica.dev/>
 ython3 -m pip install logica
 
