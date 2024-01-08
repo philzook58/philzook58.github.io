@@ -130,6 +130,7 @@ with Dojo(theorem) as (dojo, init_state):
   assert isinstance(result, ProofFinished)
   print(result)
 ```
+<https://github.com/nomeata/lean-wf-induct>
 
 ### Build
 

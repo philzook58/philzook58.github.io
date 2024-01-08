@@ -10,14 +10,16 @@ title: Wasm/Emscripten
     - [Wasm modules](#wasm-modules)
     - [Writing Wasm directly](#writing-wasm-directly)
 - [Emscripten](#emscripten)
-  - [Command line Utility Conversion](#command-line-utility-conversion)
-  - [Souffle](#souffle)
+    - [Command line Utility Conversion](#command-line-utility-conversion)
+    - [Souffle](#souffle)
   - [Minizinc](#minizinc)
 - [Misc](#misc)
 
 sqlite fuzzler
 
 # WASM
+
+https://github.com/ktock/container2wasm convert container to wasm?
 
 [walloc](https://github.com/wingo/walloc) minimal malloc implementation for wasm. Makes for very small binary?
 

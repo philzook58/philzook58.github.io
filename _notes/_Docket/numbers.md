@@ -257,6 +257,72 @@ three = (two,None)
 neg_one = (None,zero)
 neg_two = (None,neg_one)
 neg_three = (None,neg_two)
+```
+
+Von Neumann
+
+```python
+_univ = 
+
+def internset(x):
+  x = frozenset(x)
+  if x in _univ:
+    return _univ[x]
+  else:
+    _univ[x] = x
+    return x
+# von neumann
+zero = internset([])
+def succ()
+def univ():
+  return internset(_univ)
+# https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory
+
+def pair(a,b):
+  return frozenset([a,b])
+def order_pair(a,b):
+  return frozenset(frozenset({a}), frozenset({a,b}))
+
+# separation axiom
+def separate(A, P):
+  return frozenset({x for x in A if P(x)})
+
+from itertools import chain, combinations
+
+def powerset(iterable):
+  #https://stackoverflow.com/questions/1482308/how-to-get-all-subsets-of-a-set-powerset
+  powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
+  s = list(iterable)
+  return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
+
+# NBG class? == P, just a indicator function.
+```
+
+```python
+
+def surreal(a,b):
+  if (a,b) in univ:
+    return univ[(a,b)]
+  else:
+    univ[(a,b)] = (a,b)
+    return (a,b)
+empty = frozenset()
+zero = surreal(empty,empty)
+one = surreal(frozenset(zero),empty)
+
+class Surreal():
+  def __init__(self, a, b):
+    self.a = a
+    self.b = b
+  def __le__(self, other):
+    #return self.a <= other.b
+  #def __add__(self)
+
+# surreal as pair of game trees
+tictactoe = [[],[],[]]
+
+
+
 
 ```
 

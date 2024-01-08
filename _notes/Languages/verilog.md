@@ -3,11 +3,21 @@ layout: post
 title: Verilog
 ---
 - [Verilog](#verilog)
+- [Verification](#verification)
 - [Logic Synthesis](#logic-synthesis)
-  - [Networks](#networks)
-  - [benchmarks](#benchmarks)
-  - [ABC](#abc)
-  - [AIG](#aig)
+    - [Networks](#networks)
+    - [benchmarks](#benchmarks)
+    - [ABC](#abc)
+    - [AIG](#aig)
+
+https://github.com/MiSTer-devel/Wiki_MiSTer/wiki - MiSTer FPGA DE10-nano reporduction of classic comptuers arcade games
+
+https://github.com/amaranth-lang amaranth hdl - reviousely nmigen. Installs yosys too
+
+https://f4pga.org/ gcc for fpga. Wrapper organzation for some open fpga toolchains
+
+https://icestudio.io/ gui 
+apio osss-cad-suite 
 
 HLS
 SystemC - C++ classes for event driven simulation. Kind of an embedded dsl verilog ish
@@ -26,6 +36,15 @@ Circt - llvm project
 <https://news.ycombinator.com/item?id=38843675>  A Simulated Annealing FPGA Placer <https://stefanabikaram.com/writing/fpga-sa-placer/>
 
 # Verilog
+Some of my blog posts
+[Simple Nand2Tetris Verilog CPU](https://www.philipzucker.com/nand2tetris-cpu/)
+[Nand2tetris in verilog and coq](https://www.philipzucker.com/nand2tetris-in-verilog-and-fpga-and-coq/)
+
+https://nandland.com/introduction-to-verilog-for-beginners-with-code-examples/ nandland
+https://www.fpga4fun.com/  http://fpga4fun.com/PongGame.html
+https://asic-world.com/verilog/veritut.html
+litex
+
 
 Verilog is a bit dual brained. In one sense it is a hardware design language. In this sense it's almost just a netlist, aka a graph data structure describing a circuit. Each module can has ports which are wired up internally. Internal instantiations of modules are named.
 
@@ -97,7 +116,46 @@ Dahlia
 
 Conal Elliott - circuits as categories
 
+
+# Verification
+see also:
+- automata
+
+
+https://github.com/diffblue/hw-cbmc bounded model checker based on cbmc
+
+```bash
+echo "
+module foo(input a, input b, output c);
+    //assign c = a & b;
+    assert property(c == a);
+endmodule
+" > /tmp/foo.v
+ebmc /tmp/foo.v --top foo -p "(a & b) == c" --trace
+
+```
+
+https://github.com/YosysHQ/oss-cad-suite-build
+Yosys bmc 
+sby driver for yosys. Why do I need a driver?
+eqy equivalnce checking
+mcy mutation testing (fuzzing)
+
+```bash
+yosys-smtbmc -s z3 /tmp/foo.v
+```
+
+The properetary tools have all sorts of stuff. Oh well.
+
+[modelc checking contest](https://mcc.lip6.fr/2023/) petri nets? Not seeing familiar systems here
+[hardware model checkers contest](http://fmv.jku.at/hwmcc20/)
+
+- AVR <https://github.com/aman-goel/avr> rocked the last competition
+- abc
+- Pono <http://theory.stanford.edu/~barrett/pubs/MIL+21.pdf>
+- nuxmv https://nuxmv.fbk.eu/ reimplementation of nusmv
 # Logic Synthesis
+Sam Cowards stuff. Could be fun
 
 Logic Optimizaton
 
