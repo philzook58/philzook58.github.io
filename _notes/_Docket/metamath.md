@@ -3,6 +3,9 @@ layout: post
 title: Metamath
 ---
 
+- [Metamath exe](#metamath-exe)
+- [Python Checker](#python-checker)
+
 Parsing is a proof obligation which is kind of cool / insane.
 since fol is _embedded_, the distinction between sets and predicates is interestingly flimsy? Tarski S2
 Disjointness and nominal logic?
@@ -104,6 +107,74 @@ drat
 datalog
 prolog
 congruence closure
+
+# Metamath exe
+
+Chapter 6 of the book
+
+```bash
+metamath
+```
+
+Commands:
+They have modifiers
+
+- `read`
+- `write`
+- `verify proof *`
+- `exit`
+- `open log`  `close log`
+- `erase`
+- `submit`
+- `beep`
+- `search`
+- `show proof`
+- `open tex` `close tex`
+
+Proof commands
+
+- `prove`
+- sanity `set unification_timout` `set empty_substition`  
+- `assign step laebel [/ no_unify]` `delete step`
+-
+
+```python
+import subprocess
+
+class Connection():
+    def __init__(self, path="metamath"):
+        self.path = path
+        self.proc = subprocess.Popen(path, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    def cmd(self, str):
+        self.proc.stdin.write(f"{str}")
+        self.proc.stdin.flush()
+        return self.proc.stdout.readline()
+    def read(self, path):
+        return self.cmd(f"read {path}\n")
+    def write(self, path):
+        self.proc.stdin.write(f"write {path}\n")
+        self.proc.stdin.flush()
+        return self.proc.stdout.readline()
+    def prove(self, label):
+        self.proc.stdin.write(f"prove {path}\n")
+        self.proc.stdin.flush()
+        return self.proc.stdout.readline()        
+
+import cmd
+
+class Metamath(cmd.Cmd):
+    prompt = "MM> "
+
+    def do_prove(self,arg):
+        print("Proving", arg)
+        self.connection.prove(arg)
+    def do_verify(self,arg):
+
+Metamath.cmdloop()
+
+```
+
+# Python Checker
 
 [metamath python checker](https://github.com/david-a-wheeler/mmverify.py/blob/master/mmverify.py)
 

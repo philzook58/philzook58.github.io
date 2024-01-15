@@ -50,6 +50,8 @@ best ratinal apporxmation
 
 # Ordinals
 
+Ordinals notations <https://en.wikipedia.org/wiki/Ordinal_notation> are lik systemaic ways of labelling ordinals. They don't described every posible ordinal.
+
 Ordinals are a generalizatin of numbrs
 
 Countable ordinals.

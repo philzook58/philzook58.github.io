@@ -1,4 +1,35 @@
 
+
+```C
+// singleton using static?
+typedef enum msg {INC, DEC, GET} msg;
+int mycounter(msg msg){
+    static int x = 0;
+    switch(msg){
+        case INC:
+            x++;
+            break;
+        case DEC:
+            x--;
+            break;
+        case GET:
+            return x;
+    }
+}
+
+int main(){
+    mycounter(INC);
+    mycounter(INC);
+    mycounter(INC);
+    mycounter(DEC);
+    int x = mycounter(GET);
+    printf("%d", x);
+}
+
+
+```
+
+
 https://en.wikipedia.org/wiki/Object-oriented_programming
 
 

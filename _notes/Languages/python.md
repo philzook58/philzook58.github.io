@@ -22,6 +22,7 @@ title: Python
 - [Holpy](#holpy)
 - [Lark](#lark)
 - [libraries](#libraries)
+- [Misc](#misc)
 
 # Venv
 
@@ -563,3 +564,7 @@ mmap huh.
 <https://github.com/AntonLydike/riscemu> risc v emulator
 
 [](https://github.com/hsinhaoyu/cont_frac) bill gosper's continued fractions
+
+# Misc
+
+<https://bernsteinbear.com//blog/typed-c-extensions/> Type information for faster Python C extensions <https://news.ycombinator.com/item?id=38988982>

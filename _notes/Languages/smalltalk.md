@@ -12,3 +12,5 @@ title: "Smalltalk"
 pharo
 
 gnu smalltalk
+
+<https://news.ycombinator.com/item?id=38966345> Smalltalk simplicity and consistency vs. other languages

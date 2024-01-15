@@ -49,8 +49,8 @@ title: Binary Analysis & CTF stuff
   - [Mixed Boolean Arithmetic (MBA)](#mixed-boolean-arithmetic-mba)
 - [CTF](#ctf)
 - [What is Binary Analysis](#what-is-binary-analysis)
-  - [Program Analysis](#program-analysis)
-  - [How are binaries made](#how-are-binaries-made)
+    - [Program Analysis](#program-analysis)
+    - [How are binaries made](#how-are-binaries-made)
 - [Misc](#misc)
   - [GDB](#gdb)
 - [nmap](#nmap)
@@ -1230,6 +1230,8 @@ elf reverse
 [Elf Binary Mangling Pt. 4: Limit Break](https://tmpout.sh/2/11.html)
 
 # Virus
+https://tmpout.sh/2/6.html Preloading the linker for fun and profit ~ elfmaster   
+https://arcana-technologies.io/blog/the-philosophy-of-elves-in-linux-threat-detection/
 
 <https://www.vx-underground.org/#E:/root> vxunderground
 VXHeaven - mirror <https://github.com/opsxcq/mirror-vxheaven.org>
