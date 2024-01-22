@@ -4,15 +4,15 @@ layout: post
 title: Metamath for Datalog Provenance
 ---
 
-One of the interesting things about Datalog is that it has a fairly simple notion of proof or provenance. Souffle supports this feature <https://souffle-lang.github.io/provenance>. What you want to know is how a row ended up in your database. Which rule fired and what extra variables were matched on? You can use this info for datalog as a theorem prover, or to enable incrementality or debuggability, or for rule selection synthesis.
+One of the interesting things about Datalog is that it has a fairly simple notion of proof or provenance. What you want to know is how a row ended up in your database. Which rule fired and what extra variables were matched on? Souffle supports this feature <https://souffle-lang.github.io/provenance>. You can use this info for datalog as a theorem prover, or to enable incrementality or debuggability, or for rule selection synthesis.
 
-I really love that the canonical Datalog program is the edge-path transitivity query and the simple obvious notion of "proof object" for connectivity in a graph is a path. There's something quite nice, elementary, and deep there.
+I really conceptually love that the canonical Datalog program is the edge-path transitivity query and the simple obvious notion of "proof object" for connectivity in a graph is a path. There's something quite nice, elementary, and deep there.
 
 There are a number of ways to record this provenance information. One is to add an extra field/column to every table that will contain a record datatype stating the rule used and any extra info necessary.
 
-Another is to just log out the records as you find them in linear order (or timestamps). Then a simple backwards search (prolog-like) process can reconstruct the proof. This is easier than not having this data because you only needs to search in the log above the current fact in question.
+Another is to just log out the records as you find them in linear order (or timestamps). Then a simple backwards search (prolog-like) process can reconstruct the proof. This is easier than not having this data because you only needs to search in the log above the current fact in question. You do have to search through the possibly applicable rules though. This search will be terminating at least (although at some point, why not just use prolog + tabling?).
 
-Or you can log out both the record and rule used.
+Or you can log out both the record and rule used. This makes it even easier and removes all nondeterminism in the proof reconstruction.
 
 Clingo <https://potassco.org/clingo/> is the easiest to install and metaprogram datalog system available today. You can pip install it, easily inject python functions into the grounding. This is extremely cool and useful. It is however actually advertised as an Answer Set Programming solver. Answer Set Programming is a logic programming paradigm which is sort of like datalog + SAT. It is commonly split into two stages, a grounder and solver. The grounder is more or less a datalog. Because it needs to share it's justification with the SAT-like solver it outputs a format that contains it.
 
