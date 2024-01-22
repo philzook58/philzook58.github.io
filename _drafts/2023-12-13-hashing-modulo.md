@@ -81,3 +81,34 @@ Resources:
 - Hash cons modulo alpha, criticism by paul.
 - Richard O-Keefe paper
 - Python hashing of frozensets
+
+```python
+
+_mytable = {}
+interned_ids = set()
+
+def intern(x):
+    if isinstance(x,tuple):
+        #x = tuple( intern(y) for y in x )
+        key = tuple(id(y) if id(y) in interned_ids else id(intern(y)) for y in x) # don't recursively intern
+    elif isinstance(x,str) or isinstance(x,int):
+        key = x
+    else:
+        assert False, f"not internable {x}"
+    x1 = _mytable.get(key)
+    if x1 is not None:
+        return x1
+    else:
+        _mytable[key] = x
+        interned_ids.add(id(x))
+        return x
+
+def fast_equals(x,y): #"fast"
+    x = intern(x)
+    y = intern(y)
+    return x is y
+    
+print(intern( (1,2,(3,4)) ) is intern( (1,2,(3,4)) ))
+print(id(intern((1,2,3))))
+print(_mytable)
+```

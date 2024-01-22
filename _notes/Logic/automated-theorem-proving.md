@@ -1412,6 +1412,7 @@ verify /tmp/foo.sig /tmp/foo
 ```
 
 # Higher Order
+<https://events.model.in.tum.de/mod23/lectures.html> jasmn banchette lectures
 
 Applicative encoding. Turn `f(x,y)` into `app(app(f,x),y)`. Wasteful and inefficint but it can work. Built in appreciation of higher order structure (currying basically?) is better
 Higher order lambda free.
@@ -1428,6 +1429,7 @@ hammers
 [First-Order Proof Tactics in Higher-Order Logic Theorem Provers - Hurd](https://www.gilith.com/papers/metis.pdf) Metis
 
 # Misc
+
 <https://github.com/evhub/pyprover>
 
 [Uwe Waldemann - automated reasoning courses](https://people.mpi-inf.mpg.de/~uwe/lehre/)

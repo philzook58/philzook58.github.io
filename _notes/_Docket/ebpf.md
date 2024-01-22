@@ -6,12 +6,12 @@ There's a doucmentary? what <https://www.youtube.com/watch?v=Wb_vD3XZYOA&ab_chan
 
 Seccomp filters
 
-
 ubpf
-https://github.com/iovisor/ubpf
-https://klyr.github.io/posts/playing_with_ubpf/
+<https://github.com/iovisor/ubpf>
+<https://klyr.github.io/posts/playing_with_ubpf/>
 
 `ubpf_test` `ubpf_plugiin`
+
 ```bash
 echo "
 static int idouble(int a) {
@@ -34,19 +34,24 @@ clang -O2 -target bpf -c /tmp/hello.c -o /tmp/hello.o
 /home/philip/Downloads/ubpf/build/bin/ubpf_test /tmp/hello.o
 ```
 
-https://www.brendangregg.com/blog/2019-01-01/learn-ebpf-tracing.html
+<https://www.brendangregg.com/blog/2019-01-01/learn-ebpf-tracing.html>
+
 ```bash
 #sudo opensnoop-bpfcc # see every open
 #sudo execsnoop-bpfcc # see every exec
 sudo bitesize-bpfcc #
 sudo stackcount-bpfcc # see every stack trace. hmm.
 ```
+
 execsnoop, opensnoop, ext4slower (or btrfs*, xfs*, zfs*), biolatency, biosnoop, cachestat, tcpconnect, tcpaccept, tcpretrans, runqlat, and profil
 
-https://github.com/iovisor/bcc
+<https://github.com/iovisor/bcc>
 bcc
+
 ```python
 from bcc import BPF
 
 BPF(text='int kprobe__sys_clone(void *ctx) { bpf_trace_printk("Hello, World!\\n"); return 0; }').trace_print()
 ```
+
+<https://blog.quarkslab.com/defeating-ebpf-uprobe-monitoring.html> uprobes

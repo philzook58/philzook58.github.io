@@ -10,7 +10,7 @@ As a straightforward task to get the ball rolling, let's implement some stuff ou
 
 The Handbook of Practical Logic and Automated Reasoning is quite a book. You can find the ocaml code extracted here <https://www.cl.cam.ac.uk/~jrh13/atp/>. I really am just going straight down the files and translating them very directly. It's pretty mindless. I do think there is value in converting such things though. I remember distinctly a time I was quite comfortable in Haskell, but has never used OCaml. Of course I could kind of read code like this, but it takes comprehension down to 70% let's say. If you only know python, it becomes even harder. But the true contents is not language specific.
 
-I'm doing this in a jupyter notebook in vs code and outputting to markdown via `jupyter nbconvert --to markdown myfile.ipynb`. Actually, I don't even have to do this. Jekyll is figuring it out somehow. Nice.
+I'm doing this in a jupyter notebook in vs code and outputting to markdown via `jupyter nbconvert --to markdown myfile.ipynb`.
 
 # Syntax Trees and Parsing
 

@@ -19,3 +19,8 @@ take an old image tweet and write it up
 caleb's unsat trick
 sanity checking of theories. Unsat core. Make sure hyps alone
 dump out  miniegglog
+
+copy and pacth compiler verified via pcode2c
+
+traat in python
+serverless deploys to github pages

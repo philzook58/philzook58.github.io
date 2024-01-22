@@ -35,6 +35,11 @@ source ./venv/bin/activate
 
 # Django
 
+whitenoise
+<https://whitenoise.readthedocs.io/en/stable/#>
+guvicorn
+gunicorn
+
 <https://www.djangoproject.com/>
 
 Models create database entries for you. There is mapping of fields to databae

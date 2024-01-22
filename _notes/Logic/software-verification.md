@@ -5,6 +5,7 @@ title: Software Verification
 - [Static Analysis](#static-analysis)
   - [SV-Comp](#sv-comp)
   - [Large Scale Linty](#large-scale-linty)
+    - [Semgrep](#semgrep)
   - [Bounded Model Checking](#bounded-model-checking)
     - [CBMC / ESBMC](#cbmc--esbmc)
     - [Cpachecker](#cpachecker)
@@ -107,6 +108,40 @@ Abstract interpretation
 Shape analysis - <https://github.com/kdudka/predator> predator
 
 Algebraic program analyis - Reps
+
+"SAST" - Static application security testing.
+
+### Semgrep
+
+<https://semgrep.dev/docs/getting-started/quickstart/>
+
+Hmm. be careful. auto is sending info back to semgrep
+
+```bash
+#python3 -m pip install semgrep
+semgrep --config auto
+```
+
+<https://blog.trailofbits.com/2024/01/12/how-to-introduce-semgrep-to-your-organization/>
+
+There's a registry of extra rules
+
+```bash
+semgrep --config "p/comment"
+
+```
+
+<https://semgrep.dev/explore>
+
+I gotta say, really slick marketting. That it opened up my brwoser and got some key from command line is impressive. And it told me some supply chain
+auto fix?
+
+```
+
+semgrep -e "mypattern"
+
+
+```
 
 ## Bounded Model Checking
 

@@ -27,6 +27,7 @@ title: Binary Analysis & CTF stuff
   - [AFL](#afl)
 - [Symbolic Execution](#symbolic-execution)
 - [Vulnerabilities](#vulnerabilities)
+  - [Web App](#web-app)
   - [Windows](#windows)
   - [Mitigations](#mitigations)
 - [Exploits](#exploits)
@@ -49,8 +50,8 @@ title: Binary Analysis & CTF stuff
   - [Mixed Boolean Arithmetic (MBA)](#mixed-boolean-arithmetic-mba)
 - [CTF](#ctf)
 - [What is Binary Analysis](#what-is-binary-analysis)
-    - [Program Analysis](#program-analysis)
-    - [How are binaries made](#how-are-binaries-made)
+  - [Program Analysis](#program-analysis)
+  - [How are binaries made](#how-are-binaries-made)
 - [Misc](#misc)
   - [GDB](#gdb)
 - [nmap](#nmap)
@@ -939,6 +940,10 @@ integer overflow <https://cwe.mitre.org/data/definitions/190.html>
 
 [Current State of Exploit Dev 2020](https://www.crowdstrike.com/blog/state-of-exploit-development-part-1/)
 
+## Web App
+
+Burp suite
+
 ## Windows
 
 [microsoft exploits and exploit kits](https://docs.microsoft.com/en-us/microsoft-365/security/intelligence/exploits-malware?view=o365-worldwide)
@@ -988,6 +993,7 @@ binary diversification - compiler differently every time. code reuse becomes way
 # Exploits
 
 ## Buffer Overflows
+
 <https://punkx.org/overflow/> a game version of buffer overflows. cool.
 
 [buffer overflow](https://en.wikipedia.org/wiki/Buffer_overflow)
@@ -1230,8 +1236,8 @@ elf reverse
 [Elf Binary Mangling Pt. 4: Limit Break](https://tmpout.sh/2/11.html)
 
 # Virus
-https://tmpout.sh/2/6.html Preloading the linker for fun and profit ~ elfmaster   
-https://arcana-technologies.io/blog/the-philosophy-of-elves-in-linux-threat-detection/
+<https://tmpout.sh/2/6.html> Preloading the linker for fun and profit ~ elfmaster
+<https://arcana-technologies.io/blog/the-philosophy-of-elves-in-linux-threat-detection/>
 
 <https://www.vx-underground.org/#E:/root> vxunderground
 VXHeaven - mirror <https://github.com/opsxcq/mirror-vxheaven.org>

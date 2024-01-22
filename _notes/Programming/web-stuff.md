@@ -106,9 +106,41 @@ Apache is super powerful.
 
 Modules are libraries that add functionality to apache
 
+Running this way is so hard
+
+```bash
+echo "Hello World" > /tmp/index.html
+echo "
+ServerName localhost
+IncludeOptional mods-enabled/*.load
+IncludeOptional mods-enabled/*.conf
+CustomLog /tmp/access.log combined
+ErrorLog /tmp/error.log
+#LoadModule mpm_event_module modules/mod_mpm_event
+#LoadModule mpm_prefork_module modules/mod_mpm_prefork.so
+Listen 8080
+Redirect "/" "http://otherserver.example.com/"
+" > /tmp/httpd.conf
+apache2 -f /tmp/httpd.conf -k start
+# apache2ctl
+
+#cat /etc/apache2/apache2.conf # good to look at the default config
+#apache2 -l # list modules
+```
+
 ### Nginx
 
 [nginx playgroud](https://jvns.ca/blog/2021/09/24/new-tool--an-nginx-playground/)
+
+```bash
+echo "
+
+" > /tmp/nginx.conf
+cat /etc/nginx/nginx.conf # good to look at the default config
+#nginx -c /tmp/nginx.conf
+nginx -h
+# -t test, -s signal, -c cong, -g directovies.
+```
 
 ## Databases
 

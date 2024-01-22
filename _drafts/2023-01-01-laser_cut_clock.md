@@ -19,3 +19,7 @@ Axles and spacers
 How do escapements work. A pendulum swings and that s a nce time keeping elements. The swinging of the pendulum is both powered by the escapement and also rate limits the rotatng of the escapement wheel. This wheel is gear up to the powr source and then to the actual clock hands. The minute and hour hand are gear together in a ratio of 12:1 (1 rotation of the minute hand is 1/12 a rotatin of the hour hand)
 
 A cool thing  recall is that you want the period of the pendulum swing to be decuopled from the rest of the clock., in particular the amount of force the spring is applying. As I recall, there is an argument you want to touch the pendulum only at the apex of the swing if possible.
+
+# Marble Machine
+
+There are a couple cool mechanisms and ideas in the marble machine

@@ -18,6 +18,7 @@ title: Circuits & Radio
   - [Filter Networks](#filter-networks)
   - [Transmission Lines](#transmission-lines)
 - [Radio](#radio)
+- [SDR](#sdr)
 - [Debugging / Measuring](#debugging--measuring)
 - [Simulation](#simulation)
 - [PCBs](#pcbs)
@@ -116,12 +117,16 @@ Waveguides
 Modulation
 Multipliers
 
-SDR
-RTL-SDR
 Complex signals
 smith charts
 
+# SDR
+
+RTL-SDR
 <https://en.wikipedia.org/wiki/In-phase_and_quadrature_components> IQ quadrature
+lime
+gnuradio
+hackrf one
 
 # Debugging / Measuring
 

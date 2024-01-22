@@ -378,6 +378,8 @@ R is unique complete ordered field. So R*
 Transfer principle
 
 Ultrafilter.
+What is a "large" set?
+
 Ultrafilter as a notion of truth. Relation to topos? Modal logic? Intuitionstic logic?
 
 Ultrapower.

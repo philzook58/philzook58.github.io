@@ -15,6 +15,14 @@ title: Binary Patching
 - [High Patching](#high-patching)
 - [Checking](#checking)
 - [Diffing](#diffing)
+- [Tools](#tools-1)
+  - [Shiva](#shiva)
+  - [DynamoRIO](#dynamorio)
+  - [PIN](#pin)
+  - [Dyninst](#dyninst)
+  - [Frida](#frida)
+  - [e9patch](#e9patch)
+    - [Patcherex](#patcherex)
 - [Resources](#resources)
 
 Binary patching is an intimidating sounding topic. It is very low level and requires lots of fiddly little knowledge.
@@ -276,6 +284,8 @@ diff -C 5 /tmp/add1.elf /tmp/add2.elf
 ```
 
 Ok, so now we need to jump to the code and then jump back.
+
+"detour" and "trampoline"
 
 <https://c9x.me/x86/html/file_module_x86_id_147.html>
 
@@ -540,18 +550,213 @@ TODO
 
 bsdiff and bspatch <https://www.daemonology.net/bsdiff/> tools for diffing and applying patches <https://github.com/mendsley/bsdiff> <https://www.daemonology.net/papers/bsdiff.pdf>
 
-# Resources
+# Tools
 
-<https://program-repair.org/index.html>
+## Shiva
 
-<https://codeflaws.github.io/> Nice chart of small patches
-![](https://codeflaws.github.io/images/dtable-1.png)
+<https://arcana-research.io/shiva/>
 
-<https://en.wikipedia.org/wiki/ROM_hacking>
-<https://en.wikipedia.org/wiki/Game_Genie>
+So how do i even build this thing?
+Why musl?
 
-<https://github.com/joxeankoret/diaphora> diaphora diffing tool
-[A Method to Evaluate CFG Comparison Algorithms](http://cfgsim.cs.arizona.edu/qsic14.pdf)
+libelfmaster <https://github.com/elfmaster/libelfmaster/blob/aarch64_support/libelfmaster_talk_hushcon.pdf>
+libelf
+lief
+<https://github.com/thorkill/eresi>
+
+<https://tmpout.sh/2/6.html> preloading the linker
+
+<https://github.com/aldelaro5/ghidra-ExportDwarfELFSymbols?tab=readme-ov-file> export ghidra elf
+<https://gist.github.com/x0nu11byt3/bcb35c3de461e5fb66173071a2379779> elf cheatsheet
+<https://github.com/gamozolabs/elfloader> - simple loader
+<https://github.com/DavidBuchanan314/stelf-loader?tab=readme-ov-file> stelathy elf loader.
+<https://github.com/arget13/DDexec> oh god is this using bash to examine elf data?
+<https://github.com/AonCyberLabs/Cexigua>
+
+<https://arcana-technologies.io/blog/the-philosophy-of-elves-in-linux-threat-detection/>
+
+kprobe
+ecfs
+binary protector
+kernel rootkit
+
+dynamic linker fuzzing
+
+<https://bitlackeys.org/#research>
+
+```bash
+echo "int foo(){
+    return 42;
+}
+" | gcc -O1 -c -o /tmp/foo.o -x c -
+objdump -d /tmp/foo.o
+```
+
+Copying over code a la jit and executing.
+
+```bash
+echo "
+#include <stdio.h>
+#include <stdint.h>
+#include <sys/mman.h>
+#include <string.h>
+
+uint8_t foo[] = {
+   0xf3, 0x0f, 0x1e, 0xfa,              //  endbr64 
+   0xb8, 0x2a, 0x00, 0x00, 0x00,        //  mov    $0xa,%eax
+   0xc3                    //  ret    
+};
+
+int main(){
+    printf(\"hello world\n\");
+    void* ptr = mmap(NULL, 4096, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    memcpy(ptr, foo, sizeof(foo));
+    int (*func)() = ptr;
+    int retval = func();
+    printf(\"%d\n\", retval);
+
+    return 0;
+}
+" | gcc -Wall -Wextra -o /tmp/a.out -x c -
+
+/tmp/a.out
+```
+
+<https://discourse.llvm.org/t/rfc-exposing-ghccc-calling-convention-as-preserve-none-to-clang/74233/28>
+
+```bash
+echo "
+int f(int x);
+__attribute__((regcall)) int foo(int x, int y, int z, int w){
+    [[clang::musttail]] return f(x + y + z + w);
+}
+" | clang -O1 -c -o /tmp/foo.o -x c -
+
+
+
+```
+
+<https://sillycross.github.io/2023/05/12/2023-05-12/> copy and patch
+
+ifunc <https://sourceware.org/glibc/wiki/GNU_IFUNC>
+<https://maskray.me/blog/2021-01-18-gnu-indirect-function>
+
+```bash
+echo "
+int get_x();
+int get_y();
+int f(int x);
+int foo(){
+    int x = get_x();
+    int y = get_y();
+    return f(x + y);
+} " | gcc -fPIC -x c -c -o /tmp/foo.o - 
+gcc -shared /tmp/foo.o -o /tmp/foo.so
+readelf -a /tmp/foo.so
+objdump -d /tmp/foo.so
+
+```
+
+bnd jmp instruction is intel mpx memory protection
+plt.sec is form other security protections
+
+```bash
+echo "
+// shiva style patch
+
+void special(){
+    reg = rax;
+
+}
+
+
+"
+
+```
+
+```bash
+#/lib/ld-linux.so.2 --list /bin/ls
+/lib64/ld-linux-x86-64.so.2 --list /bin/ls
+```
+
+```
+
+examining stuff just "printf" style seems kind of nice. I don't like using gdb even for normal stuff.
+How can I examine (disassemble) current address? I guess this modifies to curreent code
+https://en.wikipedia.org/wiki/Binary_File_Descriptor_library
+https://github.com/CyberGrandChallenge/binutils/blob/master/binutils/objdump.c
+libopcodes  https://blog.yossarian.net/2019/05/18/Basic-disassembly-with-libopcodes
+```bash
+echo '
+#include "bhd.h"
+
+int main(){
+    bfd_init();
+}
+' | gcc -lbfd -o /tmp/a.out -x c - 
+
+
+```
+
+Using llvm mcdiassembler
+
+```bash
+
+
+
+```
+
+ecfs <https://github.com/elfmaster/ecfs> <https://www.youtube.com/watch?v=fCJJnJ84MSE&t=1243s&ab_channel=DEFCONConference>  pocgtfo 7
+core dumps
+relationship if any to
+
+Lotan - leviathon security
+
+maskray
+symbol interposition
+code models. large code model
+relocation overflow <https://maskray.me/static/2023-05-relocation-overflow-and-code-models/slides.md>
+<https://maskray.me/blog/2021-08-29-all-about-global-offset-table>
+<https://maskray.me/blog/2021-09-19-all-about-procedure-linkage-table>
+<https://maskray.me/blog/2020-11-26-all-about-symbol-versioning>
+
+<https://maskray.me/blog/2021-05-16-elf-interposition-and-bsymbolic>
+"All programs should be built with -Bsymbolic and -fno-semantic-interposition. All symbols should be hidden by default."  <https://www.facebook.com/dan.colascione/posts/10107358290728348>
+<https://maskray.me/blog/2021-05-09-fno-semantic-interposition>
+
+## DynamoRIO
+
+## PIN
+
+## Dyninst
+
+## Frida
+
+What about frida?
+dyninst <https://www.dyninst.org/> <https://github.com/dyninst/dyninst>
+intel pin
+
+<https://github.com/frida/frida>
+injects quickjs
+
+```bash
+# injecting into binary. tracing all functions mtching a pattern
+echo "
+int foo( int x){
+    return x * 20;
+}
+
+int main(){
+    
+    printf(\"hello world\n %d\", foo(7));
+    return 0;
+}" | gcc -x c -o /tmp/a.out -
+objdump -d /tmp/a.out
+
+frida-trace -i "recv*" -i "read" -i "write" -i "foo" /tmp/a.out
+```
+
+## e9patch
 
 <https://github.com/GJDuck/e9patch>
 
@@ -566,6 +771,64 @@ e9tool -M jmp -P print true --output /tmp/true.patch
 `--loader-static` That's interesting.
 `--loader-phdr` smash note, relro or stack phdr.
 plugins huh.
+
+### Patcherex
+
+<https://github.com/mechaphish/compilerex> i need this?
+<https://github.com/angr/patcherex>
+<https://github.com/purseclab/Patcherex2>
+
+```python
+
+
+```
+
+# Resources
+
+<https://github.com/TsudaKageyu/minhook> The Minimalistic x86/x64 API Hooking Library for Windows
+
+<https://github.com/Zeex/subhook>
+
+Frida - dynamic interposition <https://github.com/dweinstein/awesome-frida> <https://github.com/iddoeldor/frida-snippets>
+
+<https://github.com/darfink/detour-rs> rust detouring
+<https://github.com/Jascha-N/minhook-rs/>
+<https://github.com/Justfr33z/trampoline>
+
+<https://github.com/8dcc/detour-lib> Simple C library for detour hooking in linux.
+
+Game cheat community is good at hooking <https://github.com/dsasmblr/game-hacking>
+
+<https://github.com/hasherezade/pe-sieve>
+
+"Instrumentation" is basically about patching. People instrument for logging or profiling por securty checks <https://github.com/topics/instrumentation>
+<https://github.com/google/orbit> binary instrumentation profiler
+
+Dynamic linking is basically a form of patching.
+"Hooking" <https://en.wikipedia.org/wiki/Hooking> <https://github.com/topics/hooking>
+
+<http://jbremer.org/x86-api-hooking-demystified/> gate
+
+Hook detection
+
+<https://github.com/BradDorney/Patcher> C++11 memory patching and code hooking library. Capstone
+
+<https://github.com/microsoft/Detours>  <https://github.com/microsoft/detours/wiki> <https://news.ycombinator.com/item?id=3022531> `mov edi,edi` hot patching. 5 nops before function. small jump there.
+
+<https://www.youtube.com/watch?v=juyQ5TsJRTA&ab_channel=SethJennings> kpatch.
+
+In Practical Binary Analysis, there is chapter 7 and appebndix B. A tool called elfinject
+
+<https://program-repair.org/index.html>
+
+<https://codeflaws.github.io/> Nice chart of small patches
+![](https://codeflaws.github.io/images/dtable-1.png)
+
+<https://en.wikipedia.org/wiki/ROM_hacking>
+<https://en.wikipedia.org/wiki/Game_Genie>
+
+<https://github.com/joxeankoret/diaphora> diaphora diffing tool
+[A Method to Evaluate CFG Comparison Algorithms](http://cfgsim.cs.arizona.edu/qsic14.pdf)
 
 [Reassembly is Hard: A Reflection on Challenges and Strategies](https://softsec.kaist.ac.kr/~sangkilc/papers/kim-usenix23.pdf)
 
@@ -640,6 +903,8 @@ with tempfile.NamedTemporaryFile(suffix=".c") as fp:
 {% endraw %}
 
 <https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-patchable_005ffunction_005fentry-function-attribute>
+
+ms_hook_prologue & hotpatch are also patching relating attributes <https://gcc.gnu.org/onlinedocs/gcc-4.9.2/gcc/Function-Attributes.html> old?
 
 Adding nops in places that are meant to be patcjable using inline asm
 

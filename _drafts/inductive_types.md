@@ -24,4 +24,4 @@ Mutually recursive datatypes is also a fiddly area.
 
 <http://adam.chlipala.net/papers/PhoasICFP08/> HOAS is fiddly
 <https://cstheory.stackexchange.com/questions/22157/w-types-vs-inductive-types>
-<https://mathoverflow.net/questions/402435/why-are-w-types-called-w> W types fit into this discussion somewhere
+<https://mathoverflow.net/questions/402435/why-are-w-types-called-w> W types fit into this discussion somewhere <https://ncatlab.org/nlab/show/W-type>

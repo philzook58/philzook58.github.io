@@ -4,6 +4,7 @@ title: Performance
 ---
 
 - [perf](#perf)
+  - [](#)
   - [Easyperf](#easyperf)
   - [Agner Fog](#agner-fog)
     - [manual 1](#manual-1)
@@ -25,6 +26,11 @@ See Also:
 - assembly
 - parallel
 - concurrency
+
+##
+
+ 1 billion row challenge 1brc <https://twitter.com/search?q=1brc&src=typed_query> <https://github.com/gunnarmorling/1brc> <https://www.morling.dev/blog/one-billion-row-challenge/> <https://github.com/gunnarmorling/1brc/discussions/categories/show-and-tell>
+ <https://news.ycombinator.com/item?id=39020906> remoe java unsafe
 
 ## Easyperf
 
@@ -87,6 +93,36 @@ simdjson
 judy arrays
 People are mentioned warming up the branch predictors on purpose somehow
 Branchless programming
+
+<https://twitter.com/lemire/status/1746276695030600182> estimating memory bandwidth <https://lemire.me/blog/2024/01/13/estimating-your-memory-bandwidth/>
+
+```bash
+"
+#include <chrono>
+#include <thread>
+#include <vector>
+#include <cstdint>
+#include <iostream>
+
+volatile size_t g_sum = 0;
+__attribute__ ((noinline))
+uint64_t sum(const uint8_t *data, size_t start, size_t len, size_t skip = 1) {
+    uint64_t sum = 0;
+    for (size_t i = start; i < len; i+= skip) {
+        sum += data[i];
+    }
+    g_sum += sum;
+    return sum;
+}
+" 
+
+
+```
+
+<https://github.com/cmuratori/blandwidth>
+<https://github.com/MattPD/cpplinks/blob/master/performance.tools.md#memory---benchmarking>
+
+<https://www.intel.com/content/www/us/en/developer/articles/tool/intelr-memory-latency-checker.html> intel memory latency checker
 
 # Memory
 

@@ -306,6 +306,7 @@ file /tmp/temp2
 x86 forth
 
 # ARM
+
 <https://github.com/marcpaq/arpilisp> an arm lisp
 
 [](https://github.com/pkivolowitz/asm_book)
@@ -415,9 +416,10 @@ example risc5 programs. sort, search. vector matrix mult, string copy.
 # 6502
 
 <https://www.dabeaz.com/superboard/asm6502.py> 6502 assembler in python
+
 # VAX
-https://en.wikipedia.org/wiki/VAX
-https://news.ycombinator.com/item?id=38901012 vax in fpga
+<https://en.wikipedia.org/wiki/VAX>
+<https://news.ycombinator.com/item?id=38901012> vax in fpga
 supposedly vax was a very nice assembly language. The ultimate cisc. Greg has mentioned some really cool macro programming abilities.
 
 # FORTH
@@ -448,6 +450,33 @@ Auto flattening.
 [Coq: The world’s best macro assembler?](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/12/coqasm.pdf)
 
 # Typed Assembly
+
+```bash
+echo "
+int foo(int x) {
+  return x + 42;
+}
+" | gcc -g -x c -c -o /tmp/foo.o -
+objdump -d /tmp/foo.o
+```
+
+```python
+import angr
+proj = angr.Project("/tmp/foo.o")
+foo = proj.loader.find_symbol("foo")
+cfg = proj.analyses.CFGFast()
+#print(dir(proj))
+print(dir(foo))
+foo = cfg.kb.functions["foo"]
+print(foo)
+from pypcode import Context, PcodePrettyPrinter
+ctx = Context("x86:LE:64:default")
+dx = ctx.disassemble(b"\x48\x35\x78\x56\x34\x12\xc3")
+for ins in dx.instructions:
+    print(f"{ins.addr.offset:#x}/{ins.length}: {ins.mnem} {ins.body}")
+  
+print(dir(foo))
+```
 
 Type preserving compilation
 Shift from alpha bound names to true names.
