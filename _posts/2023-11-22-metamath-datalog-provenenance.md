@@ -26,6 +26,7 @@ path(X,Z) :- edge(X,Y), path(Y,Z).
 ```
 
 ```
+Result:
 edge(1,2).
 edge(2,3).
 edge(3,4).
@@ -124,12 +125,6 @@ metamath 'read "/tmp/path.mm"' "verify proof *" "exit"
 
 # Bits and Bobbles
 
-There are other systems in the running for intermediate proof formats. [Dedukti](https://deducteam.github.io/), [alethe](https://arxiv.org/abs/2107.02354), LFSC, straight coq or lean etc.
-
- Now this very raw encoding may not play nice with set.mm. Maybe it should be more refined
-
-Does this enable datalog as a automated theorem prover for metamath developments?
-
 Sorry, I ran out of steam bringing the edges together between the clingo provenance and metamath. It's just muscle grease (I think)
 
 You can also observe the grounding from the python interface.
@@ -159,6 +154,14 @@ class Provenance(clingo.Observer):
 ctl.register_observer(Provenance())
 ctl.ground([("base", [])])
 ```
+
+There are other systems in the running for intermediate proof formats. [Dedukti](https://deducteam.github.io/), [alethe](https://arxiv.org/abs/2107.02354), LFSC, straight coq or lean etc.
+
+Clingo isn't pruning provenance the way souffle does. That may be an issue for very loopy programs. Clingo is nice for prototyping, but it isn't exactly meant for this provenance purpose. In general, I really wish clingo supported subsumption/lattice like constructs. I have ways to kind of hack it in using the python interface, but it's not ideal.
+
+ Now this very raw encoding may not play nice with set.mm. Maybe it should be more refined
+
+Does this enable datalog as a automated theorem prover for metamath developments?
 
 path proofs in metamath
 
