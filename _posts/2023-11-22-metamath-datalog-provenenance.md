@@ -4,7 +4,8 @@ layout: post
 title: Metamath for Datalog Provenance
 ---
 
-One of the interesting things about Datalog is that it has a fairly simple notion of proof or provenance. Souffle supports this feature <https://souffle-lang.github.io/provenance>. What you want to know is how a row ended up in your database. Which rule fired and what extra variables were matched on?
+One of the interesting things about Datalog is that it has a fairly simple notion of proof or provenance. Souffle supports this feature <https://souffle-lang.github.io/provenance>. What you want to know is how a row ended up in your database. Which rule fired and what extra variables were matched on? You can use this info for datalog as a theorem prover, or to enable incrementality or debuggability, or for rule selection synthesis.
+
 I really love that the canonical Datalog program is the edge-path transitivity query and the simple obvious notion of "proof object" for connectivity in a graph is a path. There's something quite nice, elementary, and deep there.
 
 There are a number of ways to record this provenance information. One is to add an extra field/column to every table that will contain a record datatype stating the rule used and any extra info necessary.
@@ -203,7 +204,9 @@ A timestamp can be sufficnet breadcrumb. Timestamp is similar to proof depth. Ta
 
 Optimization over datalog provenances?
 
-Set of support provenance. This doesn't work in datalog, because we can't detect loops. But we could use ASP negation.
+Set of support provenance. Instrad of tracking exact rules, track the base facts in your proof tree. The leaves of you proof tree.
+
+This doesn't work in datalog, because we can't detect loops. But we could use ASP negation?
 
 ```
 {support(path(A,B), edge(X,Y))} :- path(A,B), edge(X,Y), path(Y,Z), not support(edge(X,Y), path(Y,Z))
