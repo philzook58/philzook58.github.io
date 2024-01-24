@@ -50,10 +50,10 @@ title: Binary Analysis & CTF stuff
   - [Mixed Boolean Arithmetic (MBA)](#mixed-boolean-arithmetic-mba)
 - [CTF](#ctf)
 - [What is Binary Analysis](#what-is-binary-analysis)
-  - [Program Analysis](#program-analysis)
-  - [How are binaries made](#how-are-binaries-made)
+    - [Program Analysis](#program-analysis)
+    - [How are binaries made](#how-are-binaries-made)
 - [Misc](#misc)
-  - [GDB](#gdb)
+  - [Debuggers](#debuggers-1)
 - [nmap](#nmap)
       - [Digital forensics](#digital-forensics)
       - [pwn.college](#pwncollege)
@@ -1236,6 +1236,7 @@ elf reverse
 [Elf Binary Mangling Pt. 4: Limit Break](https://tmpout.sh/2/11.html)
 
 # Virus
+
 <https://tmpout.sh/2/6.html> Preloading the linker for fun and profit ~ elfmaster
 <https://arcana-technologies.io/blog/the-philosophy-of-elves-in-linux-threat-detection/>
 
@@ -1409,9 +1410,12 @@ People
 - elfmaster ryan oneill
 -
 
-## GDB
+## Debuggers
 
-<https://github.com/HyperDbg/HyperDbg>
+RAD Debugger <https://github.com/EpicGames/raddebugger>
+
+<https://github.com/HyperDbg/HyperDbg> machine architecture assisted debgged
+rr - time travel debugging
 
 - [pwndbg](https://browserpwndbg.readthedocs.io/en/docs/)
 - heap commands. For exminging heap structur

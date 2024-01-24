@@ -43,6 +43,15 @@ Serial port programing <https://www.cmrr.umn.edu/~strupp/serial.html>
 ioctl
 fcntl
 
+kernel newbies <https://kernelnewbies.org/>
+<https://linux-kernel-labs.github.io/refs/heads/master/index.html> labs
+
+kernel.org. download kernel source. wow it compresses well
+
+Building the kernel.
+
+`make menuconfig`
+
 ## System Calls
 
 [The Definitive Guide to Linux System Calls](https://blog.packagecloud.io/the-definitive-guide-to-linux-system-calls/) some nice info on how syscalls happens. Interrupt x80, `syscall` instruction etc. VDSO - v

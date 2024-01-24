@@ -18,7 +18,7 @@ title: Web Stuff
   - [CGI](#cgi)
   - [WSGI](#wsgi)
   - [Docker](#docker)
-  - [Kubernetes](#kubernetes)
+  - [DevOps](#devops)
   - [Web platforms](#web-platforms)
 - [SVG](#svg)
 - [Misc](#misc)
@@ -152,7 +152,50 @@ nginx -h
 
 ## Docker
 
-## Kubernetes
+## DevOps
+
+Kubernetes
+
+Sentry <https://glitchtip.com/> old was good new bad?
+
+datadog <https://docs.datadoghq.com/developers/community/libraries/>
+
+grafana
+
+argo rollout
+
+continuous profiling  <https://www.parca.dev/>
+
+<https://prometheus.io/>
+ monitoring observabiltiy
+
+ <https://snyk.io/> snyk developer security
+
+ Snort
+
+Stackstorm
+Zabbix
+Suricata
+
+canary pods. canary deployment
+
+self healing
+
+<https://landscape.lfai.foundation/>
+<https://radar.cncf.io/>
+
+splunk
+
+self registry? software bill of materials?
+
+sonatype
+jfrog
+
+web application firewall
+mod security <https://en.wikipedia.org/wiki/ModSecurity> "secrules"
+
+snort
+suricata <https://suricata.io/>
 
 ## Web platforms
 

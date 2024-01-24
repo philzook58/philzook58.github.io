@@ -3,7 +3,7 @@ layout: page
 title: Notes
 permalink: /notes/
 my_array:
-  - _Docket
+  - Docket
   - CS
   - Languages
   - Logic
@@ -12,6 +12,7 @@ my_array:
   - Physics
   - Programming
   - Engineering
+  - CyberSecurity
 ---
 More fluid than posts. Unfinished thoughts. Link Dumps. I will hopefully continually rearrange and crosslink these. It can look way more cogent in the [markdown sources](https://github.com/philzook58/philzook58.github.io/tree/master/_notes). I don't really look at the rendered version often.
 
