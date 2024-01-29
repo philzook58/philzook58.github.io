@@ -3,20 +3,20 @@ layout: post
 title: Performance
 ---
 
-- [perf](#perf)
-  - [](#)
-  - [Easyperf](#easyperf)
-  - [Agner Fog](#agner-fog)
-    - [manual 1](#manual-1)
+- [Profiling](#profiling)
 - [Estimating Maximum Possible Perf](#estimating-maximum-possible-perf)
 - [Instruction Level Parallelism (ILP)](#instruction-level-parallelism-ilp)
 - [SIMD](#simd)
 - [Memory](#memory)
+  - [Power](#power)
   - [Cache](#cache)
   - [Page](#page)
+- [Resources](#resources)
+  - [Easyperf](#easyperf)
+  - [Agner Fog](#agner-fog)
+    - [manual 1](#manual-1)
   - [Stuff](#stuff)
-
-# perf
+- [People](#people)
 
 See Also:
 
@@ -26,32 +26,17 @@ See Also:
 - assembly
 - parallel
 - concurrency
+- ebpf
+- fuzzing
 
-##
+# Profiling
 
- 1 billion row challenge 1brc <https://twitter.com/search?q=1brc&src=typed_query> <https://github.com/gunnarmorling/1brc> <https://www.morling.dev/blog/one-billion-row-challenge/> <https://github.com/gunnarmorling/1brc/discussions/categories/show-and-tell>
- <https://news.ycombinator.com/item?id=39020906> remoe java unsafe
+I mean. This is the whole name of the game really.
 
-## Easyperf
+<https://thume.ca/2023/12/02/tracing-methods/> All my favorite tracing tools: eBPF, QEMU, Perfetto, new ones I built and more - Tristan Hume
 
-Performance matters, it unlocks new applications, important for business
-python -> avx extensions: x60,000 in one example
-Measurement is really important and hard.
-CPU can overclock for a little bit. Try to control the environment
-
-Use statistical tests to determine if real change. student t for example
-Plot your benchmark data. Bimodal? Two different behaviors are happening
-microbenchmarks: be careful. Is it inlining a bunch of stuff? Anything except your exact final application and environment is a proxy. That the proxy at all represents the real behavior is fishy. Never forget that.
-System clock and system counters.
-
-## Agner Fog
-
-### manual 1
-
-Reduce data dependencies
-a[i++] may be faster than a[++i] because of a data dependency reduction
-bool in C++ outputs 0/1 but may have come from a source that didn't. This means it needs branching code for simple satuff
-short circuiting && ||, try to short circuit early
+Intel PT
+ebpf
 
 # Estimating Maximum Possible Perf
 
@@ -63,6 +48,10 @@ Network
 
 [latency numbers every programmer should know](https://colin-scott.github.io/personal_website/research/interactive_latency.html)
 [napkin math](https://www.youtube.com/watch?v=IxkSlnrRFqc)
+
+<https://twitter.com/lemire/status/1746276695030600182> estimating memory bandwidth <https://lemire.me/blog/2024/01/13/estimating-your-memory-bandwidth/>
+
+What kind of stuff is in _my_ cpu. How to estimate various parameters.
 
 # Instruction Level Parallelism (ILP)
 
@@ -93,8 +82,6 @@ simdjson
 judy arrays
 People are mentioned warming up the branch predictors on purpose somehow
 Branchless programming
-
-<https://twitter.com/lemire/status/1746276695030600182> estimating memory bandwidth <https://lemire.me/blog/2024/01/13/estimating-your-memory-bandwidth/>
 
 ```bash
 "
@@ -134,6 +121,15 @@ dhat check for memory allocation sites that are worst
 Can use vector to store fixed size chunks. Your own private malloc specialized for one size
 <https://en.wikipedia.org/wiki/Slab_allocation>
 
+memory overhead. Probably Powers of two. But allocator may have "slop" can lose a lot of memory that way
+
+## Power
+
+Power profiling is determining what is using electricity / battery life up.
+Very relevant to my common problem with my laptop dying
+
+<https://firefox-source-docs.mozilla.org/performance/#power-profiling>
+
 ## Cache
 
 ## Page
@@ -141,8 +137,41 @@ Can use vector to store fixed size chunks. Your own private malloc specialized f
 <https://www.computerenhance.com/p/powerful-page-mapping-techniques>
 [how to allocate huge tables](https://twitter.com/trascendentale/status/1462916354453946371?s=20&t=p3cq_31MG7DBts7HVR_-lg)
 
+# Resources
+
+## Easyperf
+
+Performance matters, it unlocks new applications, important for business
+python -> avx extensions: x60,000 in one example
+Measurement is really important and hard.
+CPU can overclock for a little bit. Try to control the environment
+
+Use statistical tests to determine if real change. student t for example
+Plot your benchmark data. Bimodal? Two different behaviors are happening
+microbenchmarks: be careful. Is it inlining a bunch of stuff? Anything except your exact final application and environment is a proxy. That the proxy at all represents the real behavior is fishy. Never forget that.
+System clock and system counters.
+
+## Agner Fog
+
+### manual 1
+
+Reduce data dependencies
+a[i++] may be faster than a[++i] because of a data dependency reduction
+bool in C++ outputs 0/1 but may have come from a source that didn't. This means it needs branching code for simple satuff
+short circuiting && ||, try to short circuit early
+
 ## Stuff
 
+rust perf book <https://nnethercote.github.io/perf-book/title-page.html>
+
+Intel PT
+LBR
+
+ 1 billion row challenge 1brc <https://twitter.com/search?q=1brc&src=typed_query> <https://github.com/gunnarmorling/1brc> <https://www.morling.dev/blog/one-billion-row-challenge/> <https://github.com/gunnarmorling/1brc/discussions/categories/show-and-tell>
+ <https://news.ycombinator.com/item?id=39020906> remoe java unsafe
+
+criterion <https://github.com/bheisler/criterion.rs>
+<https://github.com/bheisler/iai> use cachegrind for stable measurements in CI
 <https://github.com/sharkdp/hyperfine>  benchamrking commandline programs
 <https://github.com/dandavison/chronologer> timeline over git commit
 
@@ -326,6 +355,8 @@ Summary - cache aligned / cache aware data structures. B-trees. Compress data. A
 <https://speakerdeck.com/alblue/understanding-cpu-microarchitecture-for-performance?slide=62> reference
 <https://speakerdeck.com/alblue/understanding-cpu-microarchitecture-for-performance?slide=63> links
 
+# People
+
 Blog links neato:
 <https://easyperf.net/notes/>
 <https://epickrram.blogspot.com/>
@@ -336,3 +367,4 @@ Blog links neato:
 <https://www.agner.org/optimize/>
 <https://www.real-logic.co.uk/>
 <https://groups.google.com/g/mechanical-sympathy>
+nethrcote blog <https://nnethercote.github.io/>

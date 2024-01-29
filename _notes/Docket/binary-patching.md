@@ -8,8 +8,8 @@ title: Binary Patching
   - [Patching a Call](#patching-a-call)
   - [Changing a Type](#changing-a-type)
 - [Adding Code](#adding-code)
-  - [Dynamic Interposition](#dynamic-interposition)
-  - [Code Caves](#code-caves)
+    - [Dynamic Interposition](#dynamic-interposition)
+    - [Code Caves](#code-caves)
   - [Add Bounds Check](#add-bounds-check)
   - [Null Check](#null-check)
 - [High Patching](#high-patching)
@@ -784,6 +784,11 @@ plugins huh.
 ```
 
 # Resources
+
+<https://github.com/NixOS/patchelf/issues/533> <https://github.com/lone-lang/lone> <https://www.matheusmoreira.com/articles/self-contained-lone-lisp-applications> <https://news.ycombinator.com/item?id=39097681>
+
+<https://www.humprog.org/~stephen/#works-in-progress> liballocs libdlbind
+<https://github.com/stephenrkell/liballocs/> metalevel runtime services for unix procieess. Unix as smalltalk
 
 <https://github.com/TsudaKageyu/minhook> The Minimalistic x86/x64 API Hooking Library for Windows
 

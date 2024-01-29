@@ -53,13 +53,9 @@ Macro-11 <https://en.wikipedia.org/wiki/MACRO-11> PDP-11 macro assembly. Interes
 
 ## Debuggers
 
-I've come to realize that even forplaying around in assmbly, a debugger is pretty clutch
+See note on debuggers
 
-- gdb - See notes in C.
-- [cemu](https://github.com/hugsy/cemu) an ide of sorts for writing assembly and running it
-- [ollydbg]
-- [edb](https://github.com/eteran/edb-debugger) an ollydbg for linux. Seems nice. A graphical debugger.
-- [x64dbg](https://github.com/x64dbg/x64dbg) windows only
+I've come to realize that even forplaying around in assmbly, a debugger is pretty clutch
 
 ## Directives
 
@@ -418,6 +414,7 @@ example risc5 programs. sort, search. vector matrix mult, string copy.
 <https://www.dabeaz.com/superboard/asm6502.py> 6502 assembler in python
 
 # VAX
+
 <https://en.wikipedia.org/wiki/VAX>
 <https://news.ycombinator.com/item?id=38901012> vax in fpga
 supposedly vax was a very nice assembly language. The ultimate cisc. Greg has mentioned some really cool macro programming abilities.

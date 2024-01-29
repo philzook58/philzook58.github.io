@@ -392,6 +392,8 @@ arguably all symbolic execution engines - the trick is to cut loops
 
 # Invariants
 
+See Synthesis / induction
+
 ## CEGAR
 
 ## IC3 / PDR

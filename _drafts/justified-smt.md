@@ -34,6 +34,8 @@ Here's another example: parsing. Parsing as deduction. The existence of the pars
 
 Hmm. The well foundedness of strings themselves might save me here.
 
+parsing
+
 ```python
 from z3 import *
 sexp = Function("sexp", StringSort(), BoolSort())
@@ -41,3 +43,5 @@ s.add(ForAll([s],
     sexp(s) == Or(s == "()", And(s[0] == "(", sexp(s[1:-1]), s[-1] == ")"))))
 
 ```
+
+quoting

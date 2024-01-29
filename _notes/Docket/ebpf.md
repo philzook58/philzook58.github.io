@@ -55,3 +55,5 @@ BPF(text='int kprobe__sys_clone(void *ctx) { bpf_trace_printk("Hello, World!\\n"
 ```
 
 <https://blog.quarkslab.com/defeating-ebpf-uprobe-monitoring.html> uprobes
+
+cillium <https://github.com/cilium/ebpf> go library read modify and loadc

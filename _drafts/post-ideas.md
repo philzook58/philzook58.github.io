@@ -19,6 +19,7 @@ take an old image tweet and write it up
 caleb's unsat trick
 sanity checking of theories. Unsat core. Make sure hyps alone
 dump out  miniegglog
+take datalog or asp sections and cleanip and explain
 
 copy and pacth compiler verified via pcode2c
 

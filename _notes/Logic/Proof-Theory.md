@@ -110,6 +110,7 @@ Common axiom schema:
 Axiom schema are sort of a macro system thing that lets you avoid second order logic
 
 ### Rules of Inference
+
 <https://en.wikipedia.org/wiki/Logical_harmony> logical harmony. See notes of frank pfenning
 
 ## Hilbert systems
@@ -233,6 +234,8 @@ def Peano():
 
 ### Godel numbering
 
+Quotation - see note on macros?
+
 We can encode syntax as a number. The details don't matter that much except you need to be concrete to make sure things are working
 <https://en.wikipedia.org/wiki/G%C3%B6del_numbering>
 "arithmetization"
@@ -241,11 +244,80 @@ Sequences of numbers <https://en.wikipedia.org/wiki/G%C3%B6del_numbering_for_seq
 
 inference rules
 
+```python
+from z3 import *
+import functools
+import z3.z3consts as z3consts
+Formula = Datatype("Formula")
+Formula.declare("FAnd", ("arg0", Formula), ("arg1", Formula))
+Formula.declare("FOr", ("arg0", Formula), ("arg1", Formula))
+Formula.declare("FNot", ("arg0", Formula))
+Formula.declare("FBoolLit", ("arg0", BoolSort()))
+Formula.declare("FAtom", ("arg0", StringSort()))
+Formula = Formula.create()
+
+# match on z3 ast and return a Formula
+# This is a metalevel (python) function that observese syntax
+def quote(expr):
+  match expr.decl().kind():
+    case z3consts.Z3_OP_AND:
+      return functools.reduce(Formula.FAnd, map(quote, expr.children()))
+    case z3consts.Z3_OP_OR:
+      return Formula.FOr(quote(expr.arg(0)), quote(expr.arg(1)))
+    case z3consts.Z3_OP_NOT:
+      return Formula.FNot(quote(expr.arg(0)))
+    case z3consts.Z3_OP_TRUE:
+      return Formula.FBool(True)
+    case z3consts.Z3_OP_FALSE:
+      return Formula.FBool(False)
+    case z3consts.Z3_OP_UNINTERPRETED:
+      return Formula.FAtom(String(expr.decl().name()))
+    case _:
+      raise Exception("Unknown", expr)
+      
+a,b,c = Bools("a b c")
+expr = And(a,b,Or(c,Not(c)))
+print(quote(expr))
+
+```
+
+Quotation as a theoyr? HOL QE <https://arxiv.org/abs/1802.00405>
+"Interesting. They keep things consistent by not allowing eval to occur inside of quotation. This is a kinda like adding T-sentences, that say "the sentence 'P' is true iff P", for each sentence P that doesn't contain the predicate "is true", but at the level of an evaluation rule rather than as a bunch of new axioms.
+I wonder what other theories of truth you could lift into evaluation rules?
+For modal logic with quotes, there's provability logic, which is a modal logic where the box is supposed to mean "P is provable (in some formal system)". The big adequacy results for that involve translating the box into a first order sentence of arithmetic (or something similar) that you'd write with quasi-quotes (standing for Godel coding)
+
+" - Graham
+
+<https://proofassistants.stackexchange.com/questions/1055/what-provers-are-using-quote-quotations-or-quasiquotations>
+
+lisp-3
+
+<https://plato.stanford.edu/entries/truth-axiomatic/#TSent>
+<https://plato.stanford.edu/entries/quotation/>
+
+if we have formula objects, we really can make a relation R over them representing a single step of inference. Then standard translation of modal logic and provability logic
+
+<https://www.lesswrong.com/posts/ALCnqX6Xx8bpFMZq3/the-cartoon-guide-to-loeb-s-theorem> cartoon guide to lob's theorem
+
 ### Undefinability of Truth
 
 <https://en.wikipedia.org/wiki/Tarski%27s_undefinability_theorem>
 
 We can godel code statements. We cannot define the subset of coded statements that are true inside our system.
+
+<https://inference-review.com/article/loebs-theorem-and-currys-paradox> Löb’s Theorem and Curry’s Paradox
+
+"Suppose you've got a theory (just like, a first-order one for simplicity, FOL + some designated relations and function symbols maybe, and some axioms. Peano Arithmetic for example), that can represent its own syntax, in some sense, so that you've got a kind of "quotation function" ⌜:black_small_square:⌝ in the metalanguage such that for every sentence φ of the of the theory, there's some term ⌜φ⌝ in the language of the theory (usually built up in some kind of systematic way, like with Godel numbering).
+Then Tarskian truth is roughly some predicate T such that T(⌜φ⌝) :left_right_arrow: φ. The English language equivalent is the fact that the sentence "snow is white" is true if and only if snow is white.
+For any reasonably strong theory and reasonably simple quotation function, the theory ends up being able to reason enough about quotation that, for every definable predicate ψ of the language of the theory, there's some sentence φ of the language of the theory such that the theory proves φ :left_right_arrow: ψ(⌜φ⌝). (The fact that these biconditionals are always provable is the "diagonal lemma" - Gödel figured it out, Carnap wrote down the general pattern).
+You can't define a Tarskian truth predicate in _any model_ of the theory T (this is stronger than just the Tarski biconditionals not being provable).
+Suppose you _could_ define a predicate T in some model M of your theory such that, for every sentence φ of the language of T, M satisfies T(⌜φ⌝) :left_right_arrow: φ. Then ¬T(x) would also be a definable predicate, and you'd have a sentence L (for liar) such that ¬T(⌜L⌝) :left_right_arrow: L was provable in T, and satisfied by M. In that situation,
+  ¬T(⌜L⌝) ↔ L          (by diagonal lemma)
+           ↔ T(⌜L⌝)    (by T a truth predicate)
+But ¬T(⌜L⌝) :left_right_arrow: T(⌜L⌝) is unsatisfiable so it can't be true in M. Hence you can't define a predicate T like that.
+
+This gives you a slick non-constructive proof of Godel's first incompleteness theorem. If every truth of arithmetic were provable by PA, then "provable by PA" would be a definable truth predicate in the standard model of PA. But truth isn't definable in the standard model of PA. Therefore, not every truth of arithmetic is provable by PA.
+" - graham
 
 ### Diagonal Argument
 
@@ -254,6 +326,8 @@ We can godel code statements. We cannot define the subset of coded statements th
 ### Godel Completeness
 
 ### Godel Incompleteness
+
+<https://arxiv.org/pdf/2104.13792.pdf> A Mechanised Proof of G¨odel’s Incompleteness Theorems using Nominal Isabelle - Paulson
 
 ## Heyting Arithmetic
 

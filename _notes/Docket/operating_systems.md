@@ -51,6 +51,17 @@ kernel.org. download kernel source. wow it compresses well
 Building the kernel.
 
 `make menuconfig`
+Can git diff to see changes?
+Poking around
+General setup
+
+hmm. I needed to turn off debian certs
+
+process management
+memory management
+virtual file system
+device drivers
+arch
 
 ## System Calls
 

@@ -21,11 +21,6 @@ title: Binary Analysis & CTF stuff
 - [Debuggers](#debuggers)
 - [Code Search](#code-search)
 - [Dynamic Binary Instrumentation](#dynamic-binary-instrumentation)
-- [Emulation](#emulation)
-  - [Qemu](#qemu)
-- [Fuzzing](#fuzzing)
-  - [AFL](#afl)
-- [Symbolic Execution](#symbolic-execution)
 - [Vulnerabilities](#vulnerabilities)
   - [Web App](#web-app)
   - [Windows](#windows)
@@ -50,10 +45,9 @@ title: Binary Analysis & CTF stuff
   - [Mixed Boolean Arithmetic (MBA)](#mixed-boolean-arithmetic-mba)
 - [CTF](#ctf)
 - [What is Binary Analysis](#what-is-binary-analysis)
-    - [Program Analysis](#program-analysis)
-    - [How are binaries made](#how-are-binaries-made)
+  - [Program Analysis](#program-analysis)
+  - [How are binaries made](#how-are-binaries-made)
 - [Misc](#misc)
-  - [Debuggers](#debuggers-1)
 - [nmap](#nmap)
       - [Digital forensics](#digital-forensics)
       - [pwn.college](#pwncollege)
@@ -142,6 +136,8 @@ Ghidra repackaging:
 [ben's ll2l](https://gitlab.com/delysid/ll2l)
 
 ## Decompiler
+
+retypd
 
  <https://x.com/mahal0z/status/1717600833037377613?s=20> <https://www.zionbasque.com/files/publications/sailr_usenix24.pdf> Ahoy SAILR! There is No Need to DREAM of C: A Compiler-Aware Structuring Algorithm for Binary Decompilation
 Graph schema matching? Smart methodology. Take codebase, decompile, compare number of gotos in original vs decompiled functions. Find hotspots. Binary search for passes responsible
@@ -675,257 +671,20 @@ and What We Can Learn From It
 
 # Debuggers
 
-<https://github.com/x64dbg/x64dbg>
-<https://rr-project.org/>
-windbg
+See note on debuggers
 
 # Code Search
 
 <https://github.com/weggli-rs/weggli>
 Joern
 codeql
+semgrep
 
 # Dynamic Binary Instrumentation
 
 dynamorio <https://dynamorio.org/>
 frida  <https://frida.re/> injects a quickjs huh
 pin <https://www.intel.com/content/www/us/en/developer/articles/tool/pin-a-dynamic-binary-instrumentation-tool.html>
-
-# Emulation
-
-[qiling](https://qiling.io/)
-
-[Icicle: A Re-designed Emulator for Grey-Box Firmware Fuzzing](https://arxiv.org/pdf/2301.13346.pdf) <https://github.com/icicle-emu/icicle-emu> semantics powered by sleigh.
-
-## Qemu
-
-Qemu plugins
-Qemu has user land and system
-
-```bash
-echo '
-#include <stdio.h>
-int main(){
-  printf("hello world\n");
-  return 0;
-}
-' > /tmp/hello.c
-gcc /tmp/hello.c -o /tmp/hello
-qemu-x86_64  -strace -singlestep -d in_asm,cpu /tmp/hello 
-```
-
-options <https://www.qemu.org/docs/master/user/main.html>
-
-- strace
-- trace
-- plugin
-- d logs
-- singlestep (now one-insn-per-tb)
-
-```bash
-qemu-x86_64 --help
-+ qemu-x86_64 --help
-usage: qemu-x86_64 [options] program [arguments...]
-Linux CPU emulator (compiled for x86_64 emulation)
-
-Options and associated environment variables:
-
-Argument             Env-variable      Description
--h                                     print this help
--help                                  
--g port              QEMU_GDB          wait gdb connection to 'port'
--L path              QEMU_LD_PREFIX    set the elf interpreter prefix to 'path'
--s size              QEMU_STACK_SIZE   set the stack size to 'size' bytes
--cpu model           QEMU_CPU          select CPU (-cpu help for list)
--E var=value         QEMU_SET_ENV      sets targets environment variable (see below)
--U var               QEMU_UNSET_ENV    unsets targets environment variable (see below)
--0 argv0             QEMU_ARGV0        forces target process argv[0] to be 'argv0'
--r uname             QEMU_UNAME        set qemu uname release string to 'uname'
--B address           QEMU_GUEST_BASE   set guest_base address to 'address'
--R size              QEMU_RESERVED_VA  reserve 'size' bytes for guest virtual address space
--d item[,...]        QEMU_LOG          enable logging of specified items (use '-d help' for a list of items)
--dfilter range[,...] QEMU_DFILTER      filter logging based on address range
--D logfile           QEMU_LOG_FILENAME write logs to 'logfile' (default stderr)
--p pagesize          QEMU_PAGESIZE     set the host page size to 'pagesize'
--singlestep          QEMU_SINGLESTEP   run in singlestep mode
--strace              QEMU_STRACE       log system calls
--seed                QEMU_RAND_SEED    Seed for pseudo-random number generator
--trace               QEMU_TRACE        [[enable=]<pattern>][,events=<file>][,file=<file>]
--plugin              QEMU_PLUGIN       [file=]<file>[,<argname>=<argvalue>]
--version             QEMU_VERSION      display version information and exit
-
-Defaults:
-QEMU_LD_PREFIX  = /etc/qemu-binfmt/x86_64
-QEMU_STACK_SIZE = 8388608 byte
-
-You can use -E and -U options or the QEMU_SET_ENV and
-QEMU_UNSET_ENV environment variables to set and unset
-environment variables for the target process.
-It is possible to provide several variables by separating them
-by commas in getsubopt(3) style. Additionally it is possible to
-provide the -E and -U options multiple times.
-The following lines are equivalent:
-    -E var1=val2 -E var2=val2 -U LD_PRELOAD -U LD_DEBUG
-    -E var1=val2,var2=val2 -U LD_PRELOAD,LD_DEBUG
-    QEMU_SET_ENV=var1=val2,var2=val2 QEMU_UNSET_ENV=LD_PRELOAD,LD_DEBUG
-Note that if you provide several changes to a single variable
-the last change will stay in effect.
-
-See <https://qemu.org/contribute/report-a-bug> for how to report bugs.
-More information on the QEMU project at <https://qemu.org>.
-```
-
-```bash
-qemu-x86_64 -d help
-Log items (comma separated):
-out_asm         show generated host assembly code for each compiled TB
-in_asm          show target assembly code for each compiled TB
-op              show micro ops for each compiled TB
-op_opt          show micro ops after optimization
-op_ind          show micro ops before indirect lowering
-int             show interrupts/exceptions in short format
-exec            show trace before each executed TB (lots of logs)
-cpu             show CPU registers before entering a TB (lots of logs)
-fpu             include FPU registers in the 'cpu' logging
-mmu             log MMU-related activities
-pcall           x86 only: show protected mode far calls/returns/exceptions
-cpu_reset       show CPU state before CPU resets
-unimp           log unimplemented functionality
-guest_errors    log when the guest OS does something invalid (eg accessing a
-non-existent register)
-page            dump pages at beginning of user mode emulation
-nochain         do not chain compiled TBs so that "exec" and "cpu" show
-complete traces
-plugin          output from TCG plugins
-
-strace          log every user-mode syscall, its input, and its result
-trace:PATTERN   enable trace events
-
-Use "-d trace:help" to get a list of trace events.
-```
-
-<https://github.com/eurecom-s3/symqemu/blame/master/tcg/tcg-op.c> it seems the meat of intrumentation is in tcg-op
-
-TCG is generated against a global context variable.
-TCGContext
-
-core
-CPUState struct
-typedefs.h
-CPUArchstate
-
-TCG_REG enum one per arch
-target is the system we are emulating. target/whatever/cpu.h has CPUArchState. They are custom per istruvtion
-
-icnlude/tcg/.. has interesting tcg genrating signature
-
-plugin_gen
-tcg/reamme
-tcg variables
-
-trace. What is this? <https://qemu-project.gitlab.io/qemu/devel/tracing.html>
-
-tci - tiny code interpreter
-
-# Fuzzing
-
-fusebmc  <https://github.com/kaled-alshmrany/FuSeBMC>
-
-test-comp <https://test-comp.sosy-lab.org/2024/> is basically fuzzing right?
-
-SBFT fuzz comp 2023 <https://arxiv.org/pdf/2304.10070.pdf> e AFL+++ AFLRUSTRUST7 AFLSMART++8  HASTEFUZZ9 LEARNPERFFUZZ LIBAFL LIBFUZZER PASTIS  and SYMSAN
-
-Mayhem
-[Fuzzy-sat](https://arxiv.org/pdf/2102.06580.pdf) running smt queries through a fuzzer
-Angora
-SLF eclipser
-
-[fuzzing challeneges and reflection](https://mboehme.github.io/paper/IEEESoftware20.pdf)
-
-[fuzzing 22](https://twitter.com/c_cadar/status/1521828920869404677?s=20&t=kBQ6NNrdoK-tcIkhvRqktQ)
-
-[google fuzzbench](https://google.github.io/fuzzbench/)
-
-oss-fuzz
-
-[rode0day](https://rode0day.mit.edu/) rolling fuzzing competition
-
-Greybox
-
-- [libfuzzer](https://llvm.org/docs/LibFuzzer.html) `clagg++ -fsantizer=address,fuzzer myfile.cc` [tutorial](https://github.com/google/fuzzing/blob/master/tutorial/libFuzzerTutorial.md)
-- honggfuzz
-
-whitebox
-
-- klee
-- sage
-
-[Qsym](https://www.usenix.org/conference/usenixsecurity18/presentation/yun) hybrid fuzzing. concolic execution.
-
-[syzkaller](https://github.com/google/syzkaller) kernel fuzzer
-go-fuzz
-fuzzili
-winafl
-
-Fuzzers compile in extra information to give coverage guidance
-
-Fuzzers use a corpus of input
-
-Using fuzzer to solve csp.
-Write checker. Fuzz it. It's randomized search
-
-[Fuzzgym](https://arxiv.org/abs/1807.07490) makes a lot of sense to put neural heuristics in there
-
-<https://www.youtube.com/watch?v=sjLFf9q2NRc&ab_channel=FuzzingLabs-PatrickVentuzelo> afl++ qemy
-libfuzzer vs afl vs honggfuzz
-corpus grammar based fuzzing, differential fuzzing
-
-<https://github.com/airbus-cyber/ghidralligator> ghidra for fuzzing
-
-## AFL
-
-AFL.  [AFL++](https://aflplus.plus/) fork of afl
-
- [tutorials](https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/tutorials.md).
-
-compile using afl-clang-fast++ or use qemu mode.
-
-<https://github.com/mykter/afl-training> afl fuzzing training
-
-<https://afl-1.readthedocs.io/en/latest/user_guide.html>
-
-```bash
-echo "
-int main(){
-  if(x > 0){
-    assert(0);
-  }
-  return 42;
-}" > /tmp/bug.c
-afl-gcc /tmp/bug.c -o /tmp/bug
-afl-fuzz -i /tmp/corpus -o /tmp/out /tmp/bug
-```
-
-AFT qemu
-deferred forkserver
-<https://github.com/AFLplusplus/AFLplusplus/blob/stable/instrumentation/README.persistent_mode.md>
-
-# Symbolic Execution
-
-[MAAT](https://maat.re/tutorials/get_started.html) Ttrail of bits using ghidra
-
-<https://github.com/eurecom-s3/symcc>
-[symqemu](https://github.com/eurecom-s3/symqemu)
-
-[unicorn](https://www.unicorn-engine.org/) - ripped out the heart of qemu and made it programmatically accessible. Based on an old version of qemu though
-
-KLEE
-
-primus - bap's emulator framework
-
-panda <https://github.com/panda-re/panda> - built on qemu. record and replay executions
-
-[](https://github.com/analysis-tools-dev/dynamic-analysis)
 
 # Vulnerabilities
 
@@ -1409,18 +1168,6 @@ People
 
 - elfmaster ryan oneill
 -
-
-## Debuggers
-
-RAD Debugger <https://github.com/EpicGames/raddebugger>
-
-<https://github.com/HyperDbg/HyperDbg> machine architecture assisted debgged
-rr - time travel debugging
-
-- [pwndbg](https://browserpwndbg.readthedocs.io/en/docs/)
-- heap commands. For exminging heap structur
-
-- gef can track malloc and free. That makes sense
 
 cfi directives - call frame information
 

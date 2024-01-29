@@ -3,9 +3,9 @@ layout: post
 title: C
 ---
 - [Stuff](#stuff)
-  - [CPP](#cpp)
-  - [Make](#make)
-  - [CMake](#cmake)
+    - [CPP](#cpp)
+    - [Make](#make)
+    - [CMake](#cmake)
 - [Loading](#loading)
 - [Sanitization](#sanitization)
   - [Build Systems](#build-systems)
@@ -16,6 +16,7 @@ title: C
 - [Misc](#misc)
 
 # Stuff
+
 <https://github.com/rswier/c4> C in 4 functions
 
 [Beej's Guide to C](https://beej.us/guide/bgc/)
@@ -193,22 +194,7 @@ Top chunk, "the wilderness"
 
 # GDB
 
-[how debuggers work](https://eli.thegreenplace.net/2011/01/27/how-debuggers-work-part-2-breakpoints) int3 and ptrace
-
-[beej's quick guide to gdb](https://beej.us/guide/bggdb/)
-
-help command. lots of stuff
-
-- ni next instruction. next / nexti
-- si step stepi
-- info all-registers registers
-- where
-- jump
-- display $rax - always print rax. display/10i *$rip
-- x/10i $pc - next 10 instructions
-- x/10x $sp  look at stack. x/s look at string
-- list *$rip shows you a few lines before and after
-- layout split asm src. tui disable. tui enable
+ See debuggers note
 
 # Misc
 

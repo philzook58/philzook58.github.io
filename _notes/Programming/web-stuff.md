@@ -156,7 +156,7 @@ nginx -h
 
 Kubernetes
 
-Sentry <https://glitchtip.com/> old was good new bad?
+Sentry <https://glitchtip.com/> old was good new bad? crashpad dumping
 
 datadog <https://docs.datadoghq.com/developers/community/libraries/>
 
