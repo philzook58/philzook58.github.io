@@ -90,8 +90,11 @@ Another interesting tool to sort of spread spectrum apply static analyses to pro
 
 These are good things to run. Coming back clean is no guarantee of software quality, but it is a good sign.
 
-```python
-! python3 pip install codechecker #install codechecker
+```bash
+%%bash
+#install codechecker and other tools
+apt-get install cppcheck clang-tidy
+python3 -m pip install codechecker 
 ```
 
 ```python
