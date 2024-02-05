@@ -11,6 +11,7 @@ title: Web Stuff
 - [Serving](#serving)
   - [Frameworks](#frameworks-1)
     - [Template Engines](#template-engines)
+  - [Heroku](#heroku)
   - [WebServers](#webservers)
     - [Apache](#apache)
     - [Nginx](#nginx)
@@ -96,6 +97,20 @@ These are often tied to a particular framework. It's interesting that these temp
 
 - Jinja
 - Handlebar
+
+## Heroku
+
+procfile `web: gunicorn gettingstarted.wsgi`
+
+dynos
+
+`heroku ps:scale web=1` one server running
+`heroku open`
+`git push heroku master`
+`heroku local --port 5001`
+`heroku run bash`
+
+`heroku logs--tail`
 
 ## WebServers
 

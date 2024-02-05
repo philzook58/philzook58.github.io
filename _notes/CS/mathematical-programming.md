@@ -4,12 +4,8 @@ title: Mathematical Programming
 tags: optimization
 description: my notes about optimization
 ---
-
-# Optimization
-
-I should renamed this article to Mathematical Programming / Operations Research / maybe convex optimization. More generally, optimization also includes general non linear optimization. Things like gradient descent, genetic algorithms, interval stuff etc etc.
-
 - [Optimization](#optimization)
+    - [SAT vs SMT vs CSP vs MIP vs NLP](#sat-vs-smt-vs-csp-vs-mip-vs-nlp)
 - [Linear Programming](#linear-programming)
   - [Tricks](#tricks)
     - [Encoding equality in terms of inequality](#encoding-equality-in-terms-of-inequality)
@@ -49,6 +45,7 @@ I should renamed this article to Mathematical Programming / Operations Research 
   - [Lagrange Multipliers and Legendre Transformation](#lagrange-multipliers-and-legendre-transformation)
 - [Quadratic Programming](#quadratic-programming)
 - [Conic Programming](#conic-programming)
+- [Semi-Infinite Programming](#semi-infinite-programming)
 - [Semi definite programs](#semi-definite-programs)
   - [Tricks](#tricks-1)
   - [Applications](#applications-1)
@@ -87,6 +84,15 @@ I should renamed this article to Mathematical Programming / Operations Research 
     - [Highs](#highs)
     - [COPT](#copt)
 - [Resources](#resources-1)
+
+# Optimization
+
+I should renamed this article to Mathematical Programming / Operations Research / maybe convex optimization. More generally, optimization also includes general non linear optimization. Things like gradient descent, genetic algorithms, interval stuff etc etc.
+
+### SAT vs SMT vs CSP vs MIP vs NLP
+
+When and why?
+Hard to know.
 
 # Linear Programming
 
@@ -370,6 +376,12 @@ A Cone is a set that is closed under non-negative combinations of it's points. T
 
 # Conic Programming
 
+# Semi-Infinite Programming
+
+infintie number of constraints or variables
+
+EAGO.jl <https://github.com/PSORLab/EAGO.jl> <https://psorlab.github.io/EAGO.jl/dev/semiinfinite/semiinfinite/>
+
 # Semi definite programs
 
 optimization over positive semidefinite matrices. Very powerful
@@ -541,6 +553,8 @@ Online job submission to many solvers. Good place to find out about solvers
 Free and very fast linear programming solver.
 
 ## SCIP
+
+many parameters. Fuzz them?
 
 ## JuMP
 

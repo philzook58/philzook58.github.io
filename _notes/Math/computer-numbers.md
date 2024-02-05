@@ -71,6 +71,15 @@ You can represent an exact number by stating an exact polynomial it is the solut
 # Intervals
 
 # Floats
+
+<https://github.com/remi-garcia/jMCM>  <https://arxiv.org/pdf/2210.02742.pdf> Towards the Multiple Constant Multiplication at Minimal Hardware Cost - MILP for multplier circuit optimization
+<https://gitlab.com/kumm/pagsuite> suite contains optimization tools for the (pipelined) multiple constant multiplication ((P)MCM) problem
+
+FloPoCo is a generator of arithmetic cores <https://flopoco.org/>
+<https://digidev.digi.e-technik.uni-kassel.de/scalp/> scalp a linear programming wrapper
+
+<https://avolkova.org/software/> Anastasia Volkova <https://github.com/fixif> <https://gitlab.com/filteropt/firopt> filters and digital filters on fpga
+
 <https://ssvlab.github.io/lucasccordeiro/papers/nsv2020.pdf> An Efficient Floating-Point Bit-Blasting API for Verifying C Programs - esbmc
 
 <https://arith2023.arithsymposium.org/program.html> arith conference

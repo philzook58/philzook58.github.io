@@ -78,6 +78,8 @@ axiom schema
 ## Three Arrows
 
 [Why are in this system _three_ notions of “from this follows that” involved: the arrow, the turnstile and the vertical line? Two or infinitely many I could accept, but why _three_?](https://x.com/freekwiedijk/status/1717470234087407984?s=20)
+<https://x.com/yandereidiot/status/1752749605891326449?s=20> "It's cute to me how self-contained this example is in terms of teasing out the notion of "external hom (2)", "internal hom (3)", and whether or not they play nicely together "adjunction (1)"."
+(|-) is external hom, (=>) is internal hom, (---) is a meta-level operation.
 
 - I think there's kinda a literature (keyword: "metainference") about internalizing the (horizontal?) line as yet another symbol: <https://davewripley.rocks/papers/imst.pdf>, section 2 has the basic idea. Infinite hierarchies aplenty. This is probably a better reference, but it seems to be paywalled: <https://link.springer.com/article/10.1007/s10992-021-09615-7>
 - possibly related, that lower category theory also has three levels: category, functor, natural transformation.

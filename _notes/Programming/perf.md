@@ -130,6 +130,26 @@ Very relevant to my common problem with my laptop dying
 
 <https://firefox-source-docs.mozilla.org/performance/#power-profiling>
 
+powertop <https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/monitoring_and_managing_system_status_and_performance/managing-power-consumption-with-powertop_monitoring-and-managing-system-status-and-performance>
+
+<https://wiki.archlinux.org/title/Laptop_Mode_Tools>
+
+Hmm.
+wifi is using a lot of power
+
+intel_atomic_commit - huh. is this actually correlated with touching the touchpad?
+<https://community.frame.work/t/tracking-touchpad-interrupts-battery-usage-issues-idma64-2/13630>
+
+nic:docker0 is using a lot.
+sudo systemctl disable docker.service
+sudo ifconfig docker0 down
+sudo ifconfig br-557a6ccfc9fc down
+
+A mysterious br-something device is usng like 5W of power. <https://askubuntu.com/questions/814316/how-to-determine-identity-of-obscure-nicbr-devices-in-powertop?rq=1>
+INternet still works if I turn that off
+
+hrtimer_wakeup
+
 ## Cache
 
 ## Page

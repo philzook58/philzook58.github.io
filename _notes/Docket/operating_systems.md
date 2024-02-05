@@ -4,6 +4,12 @@ title: Operating Systems
 ---
 
 - [Linux](#linux)
+  - [Boot](#boot)
+  - [Interrupts](#interrupts)
+  - [Processes](#processes)
+  - [Memory](#memory)
+  - [Init](#init)
+  - [Modules](#modules)
   - [System Calls](#system-calls)
   - [Resources](#resources)
   - [Kernel](#kernel)
@@ -20,8 +26,10 @@ title: Operating Systems
   - [docker](#docker)
 - [Windows](#windows)
 - [RTOS](#rtos)
+  - [FreeRTOS](#freertos)
 - [microkernels](#microkernels)
   - [seL4](#sel4)
+  - [Unikernel](#unikernel)
 - [Hypervisors](#hypervisors)
 - [Bootloaders](#bootloaders)
 - [File System](#file-system)
@@ -62,6 +70,102 @@ memory management
 virtual file system
 device drivers
 arch
+
+dmesg
+
+## Boot
+
+<https://en.wikipedia.org/wiki/Booting_process_of_Linux>
+<https://0xax.gitbooks.io/linux-insides/content/Booting/>
+
+bios
+real mode <https://en.wikipedia.org/wiki/Real_mode>
+
+bootloader
+<https://en.wikipedia.org/wiki/Protected_mode>
+grub
+
+acpi <https://en.wikipedia.org/wiki/ACPI> Advanced Configuration and Power Interface
+<https://en.wikipedia.org/wiki/UEFI>
+
+kernel parameters. `sysct
+
+```bash
+sysctl -a
+```
+
+initramfs
+vmlinux
+
+startup_32
+start_kernel
+
+/sbin/init, pid 1 - often systemd. <https://en.wikipedia.org/wiki/Init>
+
+## Interrupts
+
+<https://0xax.gitbooks.io/linux-insides/content/Interrupts/>
+
+<https://en.wikipedia.org/wiki/Programmable_interrupt_controller>
+
+APIC advanced programmable interrupt controller
+<https://en.wikipedia.org/wiki/Advanced_Programmable_Interrupt_Controller>
+
+<https://en.wikipedia.org/wiki/Interrupt_descriptor_table>
+
+<https://en.wikipedia.org/wiki/Interrupt_request> Interrupt Request
+
+```bash
+cat /proc/interrupts
+#watch -n0.1 --no-title cat /proc/interrupts
+
+# IR-IO-APIC   17-fasteoi   idma64.1, i2c_designware.1
+# IR-PCI-MSI 32768-edge      i915
+
+```
+
+## Processes
+
+## Memory
+
+<https://en.wikipedia.org/wiki/Global_Descriptor_Table>
+
+tlb
+
+```bash
+free
+```
+
+available vs free. free is free, available is free + cache
+swap. vm.swappiness
+
+## Init
+
+daemon
+
+systemd <https://en.wikipedia.org/wiki/Systemd>
+units. service and others. mounts
+systemctl enable disable start stop
+conf files. You can override fields.
+udev <https://wiki.archlinux.org/title/Udev>
+
+## Modules
+
+<https://en.wikipedia.org/wiki/Loadable_kernel_module>
+
+<https://wiki.archlinux.org/title/Kernel_module>
+
+insmod barebones command line to insert a module
+modprobe - does depndency lookup
+modinfo
+lsmod see what's running
+
+```bash
+lsmod
+modprobe -c
+ls /etc/modprobe.d/ # blacklist.conf
+ls /lib/modules
+```
 
 ## System Calls
 
@@ -223,6 +327,10 @@ powershell
 
 # RTOS
 
+## FreeRTOS
+
+<https://www.freertos.org/FreeRTOS-quick-start-guide.html>
+
 # microkernels
 
 <https://mirage.io/> mirage os
@@ -232,6 +340,10 @@ powershell
 Microkernel
 Functional correctness
 But also binary level verification. Uses gcc but disassemblers result to verify
+
+## Unikernel
+
+MirageOS
 
 # Hypervisors
 

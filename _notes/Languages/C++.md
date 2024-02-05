@@ -34,6 +34,9 @@ weak_ptr
 # CMake
 
 # Misc
+<https://github.com/verateam/vera> I dunno about thizs one. Programmable tool for verification analysis
+
+<https://github.com/shuaimu/borrow-cpp/> borrow checker for c++
 
 <https://github.com/federico-busato/Modern-CPP-Programming> modern cpp course
 

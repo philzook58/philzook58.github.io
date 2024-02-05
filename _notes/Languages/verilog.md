@@ -1,23 +1,17 @@
 ---
 layout: post
-title: Verilog
+title: Verilog / FPGA
 ---
+- [FPGA](#fpga)
 - [Verilog](#verilog)
 - [Verification](#verification)
 - [Logic Synthesis](#logic-synthesis)
-    - [Networks](#networks)
-    - [benchmarks](#benchmarks)
-    - [ABC](#abc)
-    - [AIG](#aig)
-
-https://github.com/MiSTer-devel/Wiki_MiSTer/wiki - MiSTer FPGA DE10-nano reporduction of classic comptuers arcade games
-
-https://github.com/amaranth-lang amaranth hdl - reviousely nmigen. Installs yosys too
-
-https://f4pga.org/ gcc for fpga. Wrapper organzation for some open fpga toolchains
-
-https://icestudio.io/ gui 
-apio osss-cad-suite 
+  - [Yosys](#yosys)
+  - [nextpnr](#nextpnr)
+  - [Networks](#networks)
+  - [benchmarks](#benchmarks)
+  - [ABC](#abc)
+  - [AIG](#aig)
 
 HLS
 SystemC - C++ classes for event driven simulation. Kind of an embedded dsl verilog ish
@@ -33,18 +27,38 @@ Circt - llvm project
 
 [SpecVerilog: Adapting Information Flow Control for Secure Speculation](https://www.cs.cornell.edu/andru/papers/specverilog/)
 
-<https://news.ycombinator.com/item?id=38843675>  A Simulated Annealing FPGA Placer <https://stefanabikaram.com/writing/fpga-sa-placer/>
+# FPGA
+
+<https://funnyplaying.com/products/fpgbc-kit> fpga gameboy <https://github.com/makhowastaken/GWGBC_FW> GOWIN GW2ARLV18EQ144PC/7 20kLUT 144pin QFP package Aora SRAM based FPGA
+<https://github.com/YosysHQ/apicula> it's on the radar <https://www.reddit.com/r/GowinFPGA/wiki/tutorials/getting_started_tang>
+`python3 -m pip install apycula`
+
+analog retro is a cyclone V <https://www.analogue.co/developer> openfpga
+
+<https://github.com/MiSTer-devel/Wiki_MiSTer/wiki> - MiSTer FPGA DE10-nano reporduction of classic comptuers arcade games
+
+<https://github.com/amaranth-lang> amaranth hdl - reviousely nmigen. Installs yosys too
+
+<https://f4pga.org/> gcc for fpga. Wrapper organzation for some open fpga toolchains
+
+<https://icestudio.io/> gui
+apio osss-cad-suite
+
+<https://www.youtube.com/watch?v=gGN0g9jgsUc&ab_channel=PsychogenicTechnologies>
+ interesting channel
+
+<https://nostarch.com/gettingstartedwithfpgas> Getting Started with FPGAs book. From nandland Russell Merrick. Will's friend.
 
 # Verilog
+
 Some of my blog posts
 [Simple Nand2Tetris Verilog CPU](https://www.philipzucker.com/nand2tetris-cpu/)
 [Nand2tetris in verilog and coq](https://www.philipzucker.com/nand2tetris-in-verilog-and-fpga-and-coq/)
 
-https://nandland.com/introduction-to-verilog-for-beginners-with-code-examples/ nandland
-https://www.fpga4fun.com/  http://fpga4fun.com/PongGame.html
-https://asic-world.com/verilog/veritut.html
+<https://nandland.com/introduction-to-verilog-for-beginners-with-code-examples/> nandland
+<https://www.fpga4fun.com/>  <http://fpga4fun.com/PongGame.html>
+<https://asic-world.com/verilog/veritut.html>
 litex
-
 
 Verilog is a bit dual brained. In one sense it is a hardware design language. In this sense it's almost just a netlist, aka a graph data structure describing a circuit. Each module can has ports which are wired up internally. Internal instantiations of modules are named.
 
@@ -116,13 +130,13 @@ Dahlia
 
 Conal Elliott - circuits as categories
 
-
 # Verification
+
 see also:
+
 - automata
 
-
-https://github.com/diffblue/hw-cbmc bounded model checker based on cbmc
+<https://github.com/diffblue/hw-cbmc> bounded model checker based on cbmc
 
 ```bash
 echo "
@@ -135,8 +149,8 @@ ebmc /tmp/foo.v --top foo -p "(a & b) == c" --trace
 
 ```
 
-https://github.com/YosysHQ/oss-cad-suite-build
-Yosys bmc 
+<https://github.com/YosysHQ/oss-cad-suite-build>
+Yosys bmc
 sby driver for yosys. Why do I need a driver?
 eqy equivalnce checking
 mcy mutation testing (fuzzing)
@@ -153,8 +167,12 @@ The properetary tools have all sorts of stuff. Oh well.
 - AVR <https://github.com/aman-goel/avr> rocked the last competition
 - abc
 - Pono <http://theory.stanford.edu/~barrett/pubs/MIL+21.pdf>
-- nuxmv https://nuxmv.fbk.eu/ reimplementation of nusmv
+- nuxmv <https://nuxmv.fbk.eu/> reimplementation of nusmv
+
 # Logic Synthesis
+
+<https://news.ycombinator.com/item?id=38843675>  A Simulated Annealing FPGA Placer <https://stefanabikaram.com/writing/fpga-sa-placer/>
+
 Sam Cowards stuff. Could be fun
 
 Logic Optimizaton
@@ -260,6 +278,40 @@ X propagation
 <https://github.com/lsils/lstools-showcase>
 
 <https://github.com/google/skywater-pdk>
+
+### Yosys
+<https://yosyshq.net/yosys/documentation.html> the presentation is quite nice
+
+```bash
+# -p is inline commands
+#yosys -p "quit" 
+yosys -p "help"
+echo "
+module hello(input1, output1);
+    input input1;
+    output output1;
+  assign output1 = input1;
+endmodule // hello
+" > /tmp/example.v
+# synthesize
+yosys -o /tmp/example.blif -S /tmp/example.v
+cat /tmp/example.blif
+```
+
+commands: read_{aiger, blif, ilang,json,liberty,verilgo}, eval, flatten, hierarchy, proc, opt, techmap, abc, clean, write_blif,
+
+outputs write_*: aiger, blig, btor, edif, firrtl, ilang, text, json, intersynth, smtlib, smv, spice, connectivity, verilog,
+
+verific
+
+liberty files contain hardware maps?
+
+"synth" is a high level command that runs stuff like proc, memory, opt, techmap, etc.
+
+### nextpnr
+<https://github.com/YosysHQ/nextpnr>
+
+After synthesis it has to be placed and routed
 
 ### Networks
 

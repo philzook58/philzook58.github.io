@@ -122,6 +122,8 @@ smith charts
 
 # SDR
 
+<https://nostarch.com/field-expedient-sdr-volume-one> sdr book
+
 RTL-SDR
 <https://en.wikipedia.org/wiki/In-phase_and_quadrature_components> IQ quadrature
 lime
@@ -144,6 +146,8 @@ Qucs
 
 KiCAD
 DIY
+
+<https://github.com/atopile/atopile>
 
 # Digital
 

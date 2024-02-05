@@ -5,6 +5,8 @@ title: CAD
 
 - [CAD](#cad)
   - [Modelling](#modelling)
+  - [Games](#games)
+  - [VR / XR / AR](#vr--xr--ar)
   - [Background](#background)
 - [Photogrammetry](#photogrammetry)
 - [Computer Vision](#computer-vision)
@@ -15,6 +17,9 @@ title: CAD
 # CAD
 
 opencascade <https://dev.opencascade.org/> - open source brep engine
+<https://www.doscienceto.it/blog/posts/2024-01-23-ffi.html> <https://dev.opencascade.org/doc/overview/html/occt__tutorial.html> bottle tutorial
+OCCT
+<https://github.com/trelau/pyOCCT> <https://github.com/tpaviot/pythonocc-core>
 
 CGL
 
@@ -32,13 +37,15 @@ and Continuity](https://dl.acm.org/doi/pdf/10.1145/3341703) <https://www.youtube
 
 gmsh <http://gmsh.info/> meshing A three-dimensional finite element mesh generator with built-in pre- and post-processing facilities
 
-OpenSCAD
+OpenSCAD <https://nostarch.com/programmingopenscad>
 
 Onshape
 
 Freecad
 
 solidworks
+
+JoinABLe: Learning Bottom-up Assembly of Parametric CAD Joints  <https://arxiv.org/abs/2111.12772>
 
 ## Modelling
 
@@ -51,6 +58,39 @@ blender
 [online viewer for cad](https://news.ycombinator.com/item?id=34936831) use open cascade and emscripten.
 
 <https://news.ycombinator.com/item?id=38448653> meshgpt
+
+## Games
+
+Unity - The Big Dog
+
+Unreal Engine 4. Kind of scares me
+
+Godot - 3d and 2d. Kind of a Unity clone with
+
+Love - Lua, supposed to be simple. 2D. All programmatic
+
+PyGame - Old, and python. Lot's a support questions going to be avaiable. 2D
+
+pico8
+
+<https://www.gbstudio.dev/> drag and drop retro game creator
+
+## VR / XR / AR
+
+Space adventure zone
+
+WebVR is deprecated
+WebXR
+
+aframe <https://aframe.io/docs/1.5.0/introduction/> ctrl-alt-i opens up isnpector. pretty cool.
+<https://supermedium.com/>
+<https://en.wikipedia.org/wiki/GlTF> web gl scene format can be exported
+
+babylon
+
+three.js
+
+unity has a third party exporter
 
 ## Background
 
@@ -71,6 +111,8 @@ icp iterative
 slam
 
 # Graphics
+
+<https://nostarch.com/computer-graphics-scratch> grahics from scratch
 
 <https://www.cs.cmu.edu/~kmcrane/>> Keenan Crane. So good. <http://15462.courses.cs.cmu.edu/fall2021/>
 

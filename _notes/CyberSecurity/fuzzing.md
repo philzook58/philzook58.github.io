@@ -157,17 +157,31 @@ int main() {
 }
 " > /tmp/get_sign.c
 # need llvm bitcode
-clang-14  -emit-llvm -c -o /tmp/get_sign.bc /tmp/get_sign.c 
+clang-13  -emit-llvm -c -o /tmp/get_sign.bc /tmp/get_sign.c 
 #klee /tmp/get_sign.bc
-cd /tmp
-llvm-dis get_sign.bc
-klee get_sign.bc
-
+#cd /tmp
+#llvm-dis get_sign.bc
+#klee /tmp/get_sign.bc
+# I can't get this to work. I guess just use the docker.
+docker run -it -v /tmp/get_sign.bc:/tmp/get_sign.bc klee/klee klee /tmp/get_sign.bc
+ktest-tool /tmp/ktest-out-0/test000001.ktest
 ```
 
+files generated:
+
+- info
+- ktest files
+-
+
 klee.kleaver klee.env klee.stats klee.run klee.replay klee.ktest
+ktest-tool <https://klee.github.io/docs/tools/#ktest-tool>
+stats - coverage and other stuff in formats from all klee-out directoryes
+ktest-gen generate from command line args
+ktest-randgen random input
 
 <https://www.youtube.com/watch?v=z6bsk-lsk1Q&ab_channel=AdaLogics>  Introduction to symbolic execution with KLEE - adalogic
+
+gcov <https://gcc.gnu.org/onlinedocs/gcc/Gcov-Intro.html> <https://github.com/gcovr/gcovr> profling data / coverage of lines of code
 
 ## SymCC
 

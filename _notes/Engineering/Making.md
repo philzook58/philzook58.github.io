@@ -3,6 +3,11 @@ layout: post
 title: Making
 ---
 
+See
+
+- graphics CAD
+- Radio Circuits SDR
+
 # Laser Cutter
 
 K40
@@ -33,7 +38,7 @@ those stand alone units
 
 AVR. What supports avr
 
-i2c
+i2c  book of i2c <https://nostarch.com/book-i%C2%B2c>
 spi
 uart
 

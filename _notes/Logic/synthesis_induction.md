@@ -32,7 +32,7 @@ See also note on:
 <https://cseweb.ucsd.edu/~lerner/papers/parsify-pldi15.pdf>
 parser synthesis, grammar
 
-Sketch
+Sketch <https://github.com/asolarlez/sketch-backend>
 
 Courses:
 
@@ -82,6 +82,8 @@ cyclic proofs
 <https://dl.acm.org/doi/abs/10.1007/978-3-030-53518-6_8>  Induction with Generalization in Superposition Reasoning
 
 <https://link.springer.com/chapter/10.1007/978-3-662-46081-8_5> indcution for smt solvers eydnolds
+
+induction vs termination. Termination is kind of saying that execution is well founded. Induction is saying that the proof is well-founded.
 
 ## Cyclic Proofs
 

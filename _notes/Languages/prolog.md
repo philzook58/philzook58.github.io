@@ -3508,6 +3508,9 @@ Related to Pi2 a corner of the lambda cube.
 [The Next 700 Challenge Problems for Reasoning with Higher-Order Abstract Syntax Representations](https://link.springer.com/article/10.1007/s10817-015-9327-3)
 
 ### Twelf
+<https://github.com/chrisamaphone/lf-class>
+
+<https://cs.mcgill.ca/~bpientka/courses/comp523-08/cd.pdf> frank pfenning computation and deduction
 
 <http://twelf.plparty.org/live/>
 <http://twelf.org/wiki/About_The_Twelf_Project>
