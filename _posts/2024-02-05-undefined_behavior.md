@@ -70,7 +70,7 @@ dpkg -i ubuntu-20.04-cbmc-5.95.1-Linux.deb
     
     ** Results:
     /tmp/ex1.c function main
-    [2m[main.assertion.1] [0mline 5 assertion x != 12345: [32mSUCCESS[0m
+    [2m[main.assertion.1] [0mline 5 assertion x != 12345: [32mSUCCESS[0m
     
     ** 0 of 1 failed (1 iterations)
     VERIFICATION SUCCESSFUL
@@ -81,10 +81,10 @@ It was commented that your compiler's `-Wall -Wextra -Wpedantic` can check this 
 ! gcc -Wall -Wextra -Wpedantic /tmp/ex1.c -o /tmp/ex1 -fdiagnostics-plain-output
 ```
 
-    [01m[K/tmp/ex1.c:[m[K In function ‘[01m[Kmain[m[K’:
-    [01m[K/tmp/ex1.c:4:8:[m[K [01;35m[Kwarning: [m[K‘[01m[Kx[m[K’ is used uninitialized [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wuninitialized-Wuninitialized]8;;[m[K]
-        4 |     if [01;35m[K([m[Kx <= 42){
-          |        [01;35m[K^[m[K
+```
+/tmp/ex1.c: In function ‘main’:
+/tmp/ex1.c:4:8: warning: ‘x’ is used uninitialized [-Wuninitialized]
+```
 
 Another interesting tool to sort of spread spectrum apply static analyses to projects is [CodeChecker](https://codechecker.readthedocs.io/en/latest/). This applies some lighter weight larger scale analyses like [cppcheck](https://cppcheck.sourceforge.io/), infer, and the compiler built in analyzers. It also makes nice little html pages and has some kind of CI story.
 
@@ -278,11 +278,11 @@ int main(){
 ! clang -fsanitize=undefined /tmp/ex3.c -o /tmp/ex3 && /tmp/ex3
 ```
 
-    [1m/tmp/ex3.c:4:32:[1m[31m runtime error: [1m[0m[1mload of null pointer of type 'int'[1m[0m
+    [1m/tmp/ex3.c:4:32:[1m[31m runtime error: [1m[0m[1mload of null pointer of type 'int'[1m[0m
     SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /tmp/ex3.c:4:32 
     UndefinedBehaviorSanitizer:DEADLYSIGNAL
-    [1m[31m==33249==ERROR: UndefinedBehaviorSanitizer: SEGV on unknown address 0x000000000000 (pc 0x563890a65a7f bp 0x7ffde3c0d8b0 sp 0x7ffde3c0d890 T33249)
-    [1m[0m==33249==The signal is caused by a READ memory access.
+    [1m[31m==33249==ERROR: UndefinedBehaviorSanitizer: SEGV on unknown address 0x000000000000 (pc 0x563890a65a7f bp 0x7ffde3c0d8b0 sp 0x7ffde3c0d890 T33249)
+    [1m[0m==33249==The signal is caused by a READ memory access.
     ==33249==Hint: address points to the zero page.
         #0 0x563890a65a7f in main (/tmp/ex3+0x2ea7f) (BuildId: c9aba5b3a42c58e96d9e5e92c81c7a22b892dcf2)
         #1 0x7f73eb0abd8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
@@ -297,10 +297,10 @@ int main(){
 ! cerberus --exec /tmp/ex3.c
 ```
 
-    [1m/tmp/ex3.c:4:32:[0m [1;31merror:[0m [1m[1mundefined behaviour: [0mthe operand of the unary '*' operator has an invalid value[0m
+    [1m/tmp/ex3.c:4:32:[0m [1;31merror:[0m [1m[1mundefined behaviour: [0mthe operand of the unary '*' operator has an invalid value[0m
         printf("Value of x: %d\n", *x);
-    [1;32m                               ^~ [0m
-    [1m§6.5.3.2#4, sentence 4[0m: 
+    [1;32m                               ^~ [0m
+    [1m§6.5.3.2#4, sentence 4[0m: 
     4   The unary * operator denotes indirection. If the operand points to a function, the result is
         a function designator; if it points to an object, the result is an lvalue designating the
         object. If the operand has type ``pointer to type'', the result has type ``type''. If an
@@ -425,6 +425,7 @@ frama-c
 astree
 
 ## Clang-tidy
+
 <https://clang.llvm.org/extra/clang-tidy/>
 
 ```python
@@ -451,10 +452,10 @@ int main(){
 ! gcc -O3 -Wall -Wpedantic -Wextra  /tmp/ub.c -o /tmp/ub && /tmp/ub
 ```
 
-    [01m[K/tmp/ub.c:[m[K In function ‘[01m[Kmain[m[K’:
-    [01m[K/tmp/ub.c:5:6:[m[K [01;35m[Kwarning: [m[K‘[01m[Kx[m[K’ is used uninitialized [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wuninitialized-Wuninitialized]8;;[m[K]
-        5 |     [01;35m[Kx++[m[K;
-          |     [01;35m[K~^~[m[K
+    [01m[K/tmp/ub.c:[m[K In function ‘[01m[Kmain[m[K’:
+    [01m[K/tmp/ub.c:5:6:[m[K [01;35m[Kwarning: [m[K‘[01m[Kx[m[K’ is used uninitialized [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wuninitialized-Wuninitialized]8;;[m[K]
+        5 |     [01;35m[Kx++[m[K;
+          |     [01;35m[K~^~[m[K
     Value of x: 1
 
 ```python
@@ -502,6 +503,7 @@ cerberus --exec /tmp/ub.c
         (6.7.2.1).
 
 ## Codechecker
+
 <https://github.com/Ericsson/codechecker>
 That compile_commands.json might be kind of interesting
 
@@ -637,8 +639,8 @@ CodeChecker parse /tmp/reports -e html -o /tmp/reports.html
 ! cppcheck /tmp/ub.c
 ```
 
-    [32mChecking /tmp/ub.c ...[0m
-    [1m/tmp/ub.c:4:5: [31merror:[39m Uninitialized variable: x [uninitvar][0m
+    [32mChecking /tmp/ub.c ...[0m
+    [1m/tmp/ub.c:4:5: [31merror:[39m Uninitialized variable: x [uninitvar][0m
         x++;
         ^
 
