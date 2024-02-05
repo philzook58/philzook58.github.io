@@ -297,17 +297,19 @@ int main(){
 ! cerberus --exec /tmp/ex3.c
 ```
 
-    [1m/tmp/ex3.c:4:32:[0m [1;31merror:[0m [1m[1mundefined behaviour: [0mthe operand of the unary '*' operator has an invalid value[0m
-        printf("Value of x: %d\n", *x);
-    [1;32m                               ^~ [0m
-    [1m§6.5.3.2#4, sentence 4[0m: 
-    4   The unary * operator denotes indirection. If the operand points to a function, the result is
-        a function designator; if it points to an object, the result is an lvalue designating the
-        object. If the operand has type ``pointer to type'', the result has type ``type''. If an
-        invalid value has been assigned to the pointer, the behavior of the unary * operator is
-        undefined.102)
-        Forward references: storage-class specifiers (6.7.1), structure and union specifiers
-        (6.7.2.1).
+```
+/tmp/ex3.c:4:32: error: undefined behaviour: the operand of the unary '*' operator has an invalid value
+    printf("Value of x: %d\n", *x);
+                               ^~ 
+§6.5.3.2#4, sentence 4: 
+4   The unary * operator denotes indirection. If the operand points to a function, the result is
+    a function designator; if it points to an object, the result is an lvalue designating the
+    object. If the operand has type ``pointer to type'', the result has type ``type''. If an
+    invalid value has been assigned to the pointer, the behavior of the unary * operator is
+    undefined.102)
+    Forward references: storage-class specifiers (6.7.1), structure and union specifiers
+    (6.7.2.1).
+```
 
 # Bits and Bobbles
 
