@@ -333,16 +333,20 @@ I also do not consider it to be a a complete demonstration of the futility or us
 
 Here's my basic understanding of the distinction between undefine, unspecified, and implementation defined behavior.
 
-Undefined behavior:
 An imperative program is kind of like a `state -> state` function. If you were to write an interpreter of your target imperative language in a purely functional style, this comes very naturally. The interpreter has a type `program -> state -> state` and if you partially apply it, you get it's state transformer semantics. `x := x + 1;` gets parsed as something like `Assign("x", Plus(Var("x"), Lit(1))`.   It takes in an initial state, which is the value of variables and memory, and outputs a final state of new values of variables and memory. blahblahblahblah
 
-unspecified behavior:
+undefined behavior:
 If the program is allowed to fail, then the final state is not defined. Then we can model programs as `state -> option state`.
 
-implementation defined behavior:
+unspecified behavior:
 A different thing programs can do is do something, but it can be kind of random. This is unspecified behavior. Programs can be different choices of order of operations. We can think of programs as `state -> list state` with a list of possible final states.
-A slightly different notion is that programs can be implementation-defined. They still do something that isn't quite clear, but the implementation picks a consistent thing to do. We can model this purely functionally.
-`() -> option state`
+A slightly different notion is that programs can be implementation-defined.
+
+implementation defined
+They still do something that isn't quite clear, but the implementation picks a consistent thing to do. We can model this purely functionally.
+`impl_record -> state -> state`
+
+We can combine these things into `impl_record -> state -> option (list state)`
 
 It is not always obvious in unsafe languages where the boundary between totally well-defined, undefined, unspecified, and implementation defined.
 
