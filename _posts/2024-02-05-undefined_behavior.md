@@ -75,10 +75,10 @@ dpkg -i ubuntu-20.04-cbmc-5.95.1-Linux.deb
     ** 0 of 1 failed (1 iterations)
     VERIFICATION SUCCESSFUL
 
-It was commented that your compiler's `-Wall -Wextra -Wpedantic` can check this issue. It is good to enable and deal with all warnings somehow. Indeed, this program is obviously suspicious. These checks will not catch all problems and cannot satch some things CBMC can.
+It was commented that your compiler's `-Wall -Wextra -Wpedantic` can check this issue. It is good to enable and deal with all warnings somehow. Indeed, this program is obviously suspicious. These checks will not catch all problems and cannot catch some things CBMC can.
 
 ```python
-! gcc -Wall -Wextra -Wpedantic /tmp/ex1.c -o /tmp/ex1
+! gcc -Wall -Wextra -Wpedantic /tmp/ex1.c -o /tmp/ex1 -fdiagnostics-plain-output
 ```
 
     [01m[K/tmp/ex1.c:[m[K In function ‘[01m[Kmain[m[K’:
@@ -308,28 +308,28 @@ int main(){
 
 # Bits and Bobbles
 
+I am not an expert in undefined behavior. Take anything you read here with a grain of salt. (Honestly, take anything you read anywhere on this topic with a grain of salt. People say of a lot of confident wrong stuff.) This represents my best guess at the topic, using the best tools i know of.
+
+First off, you don't have to be _that_ scared. A mistake about undefined behavior is an unlikely cause of death. We are more likely to get cancer from some kind of slovenly corporate oversight about deodorant ingredients or basking in the wrong sunbeam.
+
+We all die some day anyway. It is hopefully a whiles off and hopefully won't be that horrifying or painful.
+
+On the other hand, I would nearly guarantee C and C++ are in the bioweapon, medical radiation, and nuclear stack. So it only takes one real nasty bug or even misconception to kill us all.
+
+Turn on s lot of [warnings](https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html) (`-Wall -Wextra -Wpedantic` is a start) when you are working in an unsafe language and deal with them. In principle, it is quite possible for the compiler to detect situations that humans are likely to be confused. It isn't perfect, but even precise language lawyering isn't perfect if it doesn't comply with this particular user's intuitions and intent.
+
 A true Achilles heal of all modelling and verification tools is the connection of the model back to physical reality or the mushy concept of human intent. A model or verification or optimization is only as good as it's weakest link.
 
 I do not have (and suspect there cannot be) a final satisfying answer to this problem.
 
 I also do not consider it to be a a complete demonstration of the futility or uselessness of checking of verification attempts.
 
-I am not an expert in undefined behavior. Take anything you read here with a grain of salt. (Honestly, take anything you read anywhere on this topic with a grain of salt. People say of a lot of confident wrong stuff.) This represents my best guess at the topic, using the best tools i know of.
-
-First off, you don't have to be _that_ scared. A mistake about undefined behavior is an unlikely cause of death. We are more likely to get cancer from some kind of slovenly corporate oversight about deodorant ingredients or basking in the wrong sunbeam.
-
-We all die some day anyway. It is hopefully a whiles off and won't be that horrifying or painful.
-
-On the other hand, I would nearly guarantee C and C++ are in the bioweapon, medical radiation, and nuclear stack. So it only takes one real nasty bug or even misconception to kill us all.
-
-Turn on s lot of [warnings](https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html) (`-Wall -Wextra -Wpedantic` is a start) when you are working in an unsafe language and deal with them. In principle, it is quite possible for the compiler to detect situations that humans are likely to be confused. It isn't perfect, but even precise language lawyering isn't perfect if it doesn't comply with this particular user's intuitions and intent.
-
 <https://en.wikipedia.org/wiki/Undefined_behavior>
 
-Here's my basic understanding.
+Here's my basic understanding of the distinction between undefine, unspecified, and implementation defined behavior.
 
 Undefined behavior:
-An imperative program is kind of like a `state -> state` function. If you were to write an interpreter of your target imperative language in a purely functional style, this comes very naturally. The interpreter has a type `program -> state -> state` and if you partially apply it, you get it's state transformer semantics. `x := x + 1;` gets parsed as something like `Assign("x", Plus(Var("x"), Lit(1))`.   It takes in an initial state, which is the value of variables and memory, and outputs a final state of new values of variables and memory.
+An imperative program is kind of like a `state -> state` function. If you were to write an interpreter of your target imperative language in a purely functional style, this comes very naturally. The interpreter has a type `program -> state -> state` and if you partially apply it, you get it's state transformer semantics. `x := x + 1;` gets parsed as something like `Assign("x", Plus(Var("x"), Lit(1))`.   It takes in an initial state, which is the value of variables and memory, and outputs a final state of new values of variables and memory. blahblahblahblah
 
 unspecified behavior:
 If the program is allowed to fail, then the final state is not defined. Then we can model programs as `state -> option state`.
