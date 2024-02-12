@@ -92,6 +92,9 @@ three.js
 
 unity has a third party exporter
 
+meta quest for business
+vr eable keybards
+
 ## Background
 
 b-rep <https://en.wikipedia.org/wiki/Boundary_representation>

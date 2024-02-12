@@ -689,6 +689,12 @@ K
 
 ### mCRL2
 
+```
+sudo add-apt-repository ppa:mcrl2/release-ppa
+sudo apt update
+sudo apt install mcrl2
+```
+
 [user manual](https://www.mcrl2.org/web/user_manual/introduction.html)
 [mCRL2](https://www.mcrl2.org/web/user_manual/index.html). Hmm. Impressive. ucrl2 language
 LPS format.
@@ -705,7 +711,8 @@ parametrised boolean equation systems
 
 Vending machine
 
-```
+```bash
+echo "
 act
   ins10, optA, acc10, putA, coin, ready ;
 proc
@@ -718,10 +725,10 @@ init
       { ins10|acc10 -> coin, optA|putA -> ready },
       User || Mach
   ) ) ;
-
-sort Nat;
-cons zero : Nat;
-successor : Nat —> Nat,
+" > /tmp/vm.mcrl2
+mcrl22lps /tmp/vm.mcrl2 /tmp/vm.lps
+lps2lts /tmp/vm.lps /tmp/vm.lts
+ltsgraph /tmp/vm.lts
 ```
 
 coursera course <https://www.coursera.org/learn/automata-system-validation/home/welcome>
@@ -792,7 +799,7 @@ Can we force equalities?
 codeql is an object oriented shellac on datalog
 logtalk
 weighted automata perform a merge like operation when states combine? "lumping"
-Options:
+Options
   -
 
 - When a subobservation completes (if objects are stable) it splits the universe.

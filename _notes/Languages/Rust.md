@@ -11,6 +11,7 @@ wordpress_id: 1849
 
 - [Assembly](#assembly)
 - [Unsafe](#unsafe)
+- [MIR](#mir)
 - [Arenas](#arenas)
 - [Lifetimes](#lifetimes)
 - [Globals Variables](#globals-variables)
@@ -122,6 +123,58 @@ cat /tmp/rustex.s
 # Unsafe
 
 <https://doc.rust-lang.org/reference/unsafety.html>
+<https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html>
+<https://doc.rust-lang.org/nightly/nomicon/>
+
+rawpointers, ffi, unions, mutable statics, unsafe traits
+
+<https://doc.rust-lang.org/std/ptr/index.html>
+
+<https://rustmagazine.org/issue-3/understand-unsafe-rust/>
+
+Miri reference interpreter <https://github.com/rust-lang/miri>
+
+```bash
+rustup +nightly component add miri
+```
+
+provnenace. <https://github.com/rust-lang/rfcs/pull/3559>  <https://github.com/rust-lang/rust/issues/95228> strict provenance <https://faultlore.com/blah/fix-rust-pointers/> <https://www.youtube.com/watch?v=d8hd_uv3Gvg&ab_channel=Rust>
+
+stacked borrows. tree borrows
+<https://www.ralfj.de/blog/2022/07/02/miri.html> The last two years in Miri
+<https://www.youtube.com/watch?v=svR0p6fSUYY> Unsafe Rust and Miri by Ralf Jung - Rust Zürisee June 2023
+<https://research.ralfj.de/thesis.html> Understanding and Evolving the Rust Programming Language
+
+```bash
+echo "
+use std::ptr;
+fn evil() {
+    {unsafe {
+        let x = 0i32;
+        let ptr = ptr::from_ref(&x);
+        ptr.offset(1).read();
+    }}
+}
+fn main(){evil()} " > /tmp/evil.rs
+rustc +nightly -Zmiri-track-raw-pointers /tmp/evil.rs
+
+```
+
+`hint::unreachable_unchecked()` <https://doc.rust-lang.org/std/hint/fn.unreachable_unchecked.html>
+
+<https://doc.rust-lang.org/std/mem/union.MaybeUninit.html>
+
+<https://doc.rust-lang.org/std/slice/fn.from_raw_parts.html>
+
+<https://www.youtube.com/watch?v=9E2v8pCUc48&ab_channel=Let%27sGetRusty>
+
+# MIR
+<https://rustc-dev-guide.rust-lang.org/mir/index.html>
+
+<https://github.com/rust-lang/a-mir-formality>
+<https://github.com/rust-lang/project-stable-mir> stable mir
+
+miri - see unsafe
 
 # Arenas
 
@@ -147,8 +200,24 @@ Lazy and once_cell are in nightly rust and std <https://github.com/rust-lang/rus
 
 ## Kani
 
+<https://model-checking.github.io/kani/getting-started.html>
 <https://blog.logrocket.com/using-kani-write-validate-rust-code-chatgpt/>
 <https://github.com/model-checking/kani>
+
+```bash
+cargo install --locked kani-verifier
+cargo kani setup
+```
+
+```bash
+echo "
+// File: test.rs
+#[kani::proof]
+fn main() {
+    assert!(1 == 2);
+} " > /tmp/test.rs
+kani /tmp/test.rs
+```
 
 ## RustBelt
 
@@ -358,6 +427,7 @@ No. nevermind. That isn't good enough.
 
 # Resources
 
+<https://github.com/evcxr/evcxr>  rust jupyter `evcxr_jupyter --install`
 <https://dimforge.com/> naalgebra
  rapier physics salva fluid sim
 

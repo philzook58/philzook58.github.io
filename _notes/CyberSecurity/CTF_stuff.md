@@ -135,8 +135,23 @@ Ghidra repackaging:
 
 [ben's ll2l](https://gitlab.com/delysid/ll2l)
 
+<https://github.com/simonlindholm/asm-differ>
+
 ## Decompiler
 
+Interesting. they are actuallyb trying to get source that compiles to exactly the assembly. They might have the original tool chain "matching" decompilation
+<https://decomp.me/>
+<https://github.com/simonlindholm/decomp-permuter>
+<https://github.com/matt-kempster/m2c> mips and powerpc decompiler
+
+<https://github.com/zeldaret/oot> ocarina of time deocmpilation <https://objmap.zeldamods.org/#/map/z3,0,0>
+<https://github.com/pmret/papermario> paper maro
+<https://github.com/pret/pokeemerald> <https://github.com/pret>
+
+<https://github.com/leoetlino/project-restoration>
+
+<https://github.com/trailofbits/BTIGhidra>
+bincat
 retypd
 
  <https://x.com/mahal0z/status/1717600833037377613?s=20> <https://www.zionbasque.com/files/publications/sailr_usenix24.pdf> Ahoy SAILR! There is No Need to DREAM of C: A Compiler-Aware Structuring Algorithm for Binary Decompilation
@@ -661,7 +676,12 @@ See notes on patching
 
 <https://corte.si/posts/visualisation/binvis/index.html> hilbert curves for binary vsiualization
 benford's law
+
 binwalk
+ofrak
+fra
+cwechecker
+
 entropy visualization
 
 <https://www.usenix.org/system/files/sec22-burk.pdf> Decomperson: How Humans Decompile
@@ -675,7 +695,11 @@ See note on debuggers
 
 # Code Search
 
+<https://github.com/bstee615/tree-climber>
+<https://github.com/langston-barrett/tree-sitter-souffle>
 <https://github.com/weggli-rs/weggli>
+<https://github.com/BrianHicks/tree-grepper> isn't semgrep basically a treesitter grepper?
+
 Joern
 codeql
 semgrep
@@ -687,6 +711,8 @@ frida  <https://frida.re/> injects a quickjs huh
 pin <https://www.intel.com/content/www/us/en/developer/articles/tool/pin-a-dynamic-binary-instrumentation-tool.html>
 
 # Vulnerabilities
+
+<https://github.com/river-li/awesome-uefi-security>
 
 [CWE](https://cwe.mitre.org/index.html) - common weakenss enumeration
 <https://attack.mitre.org/>

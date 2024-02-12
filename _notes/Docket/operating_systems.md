@@ -4,35 +4,37 @@ title: Operating Systems
 ---
 
 - [Linux](#linux)
-  - [Boot](#boot)
-  - [Interrupts](#interrupts)
-  - [Processes](#processes)
-  - [Memory](#memory)
-  - [Init](#init)
-  - [Modules](#modules)
-  - [System Calls](#system-calls)
-  - [Resources](#resources)
-  - [Kernel](#kernel)
-  - [Security](#security)
-  - [Tracing](#tracing)
-  - [Virtualization](#virtualization)
-  - [Concurrency](#concurrency)
-  - [Make](#make)
-  - [Seccomp](#seccomp)
-  - [Git](#git)
-  - [Emacs?](#emacs)
-  - [Alternate shells](#alternate-shells)
-  - [Command Line Tools](#command-line-tools)
-  - [docker](#docker)
+	- [Linux Boot](#linux-boot)
+	- [Interrupts](#interrupts)
+	- [Processes](#processes)
+	- [Memory](#memory)
+	- [File System](#file-system)
+	- [Init](#init)
+		- [systemd](#systemd)
+	- [Modules](#modules)
+	- [System Calls](#system-calls)
+	- [Resources](#resources)
+	- [Kernel](#kernel)
+	- [Security](#security)
+	- [Tracing](#tracing)
+	- [Virtualization](#virtualization)
+	- [Concurrency](#concurrency)
+	- [Make](#make)
+	- [Seccomp](#seccomp)
+	- [Git](#git)
+	- [Emacs?](#emacs)
+	- [Alternate shells](#alternate-shells)
+	- [Command Line Tools](#command-line-tools)
+	- [docker](#docker)
 - [Windows](#windows)
 - [RTOS](#rtos)
-  - [FreeRTOS](#freertos)
+	- [FreeRTOS](#freertos)
 - [microkernels](#microkernels)
-  - [seL4](#sel4)
-  - [Unikernel](#unikernel)
+	- [seL4](#sel4)
+	- [Unikernel](#unikernel)
 - [Hypervisors](#hypervisors)
 - [Bootloaders](#bootloaders)
-- [File System](#file-system)
+- [File System](#file-system-1)
 - [Stuff](#stuff)
 
 See also note on:
@@ -63,6 +65,9 @@ Can git diff to see changes?
 Poking around
 General setup
 
+currnt config `cat /boot/config-$(uname -r)` Rbuilding a kernel for ubuntu
+fakeroot?
+
 hmm. I needed to turn off debian certs
 
 process management
@@ -71,9 +76,36 @@ virtual file system
 device drivers
 arch
 
-dmesg
+dmesg `man dmesg`
+`dmesg -n 5` st level
+`dmesg --level=emerg,alert,crit,err,warn`
 
-## Boot
+smbios
+smbus
+
+```bash
+man sysfs.5
+```
+
+procfs
+sysfs
+debugfs
+<https://docs.kernel.org/filesystems/debugfs.html>
+<https://lwn.net/Articles/309298/>
+
+```bash
+sudo ls /sys/kernel/debug
+sudo cat /sys/kernel/debug/dell_laptop/rfkill
+```
+
+```
+ls /sys/kernel
+```
+
+htop. K toggles kernel threads. Kill signals. cpu affinity. l  open file, x file lock, s strace, tree view, space tag process, c tag and children, name search, name filter,
+strace is very fun. needs sudo
+
+## Linux Boot
 
 <https://en.wikipedia.org/wiki/Booting_process_of_Linux>
 <https://0xax.gitbooks.io/linux-insides/content/Booting/>
@@ -88,10 +120,19 @@ grub
 acpi <https://en.wikipedia.org/wiki/ACPI> Advanced Configuration and Power Interface
 <https://en.wikipedia.org/wiki/UEFI>
 
-kernel parameters. `sysct
+kernel parameters. `sysct <https://docs.kernel.org/admin-guide/kernel-parameters.html>
 
 ```bash
 sysctl -a
+```
+
+```bash
+ls /boot # some intertestying styuff in here
+# System.map kernel symbol table
+# vmlinuz is the kernel
+# initrd is iniital ram disk
+# efi folder. This is where efi partition is mounted
+# grub folder. grub.cfg has the grub options in it. x86_64-efi has grub modules
 ```
 
 initramfs
@@ -139,15 +180,93 @@ free
 available vs free. free is free, available is free + cache
 swap. vm.swappiness
 
+## File System
+
+inode <https://en.wikipedia.org/wiki/Inode>
+
+```bash
+df # "disk free"
+df -a # see everything
+df -i /dev/nvme0n1p7 # inodes
+ls -i /bin/true # inode of file
+# debugfs
+du # "disk usage"
+ncdu # optionally installable eaiser to read https://dev.yorhel.nl/ncdu netcurses disk usage
+```
+
+fsck - file system check <https://en.wikipedia.org/wiki/Fsck>
+
+dd
+
+inode + filesystm idntifies. inode is per filesystem
+
+<https://www.kernel.org/doc/html/latest/filesystems/ext4/index.html> ext4
+
+virtual file system - an abstraction so you can plug in different actual file systems
+<https://en.wikipedia.org/wiki/Procfs>
+sysfs
+devfs
+debugfs
+tmpfs - /tmp may be backed by ram
+
+<https://en.wikipedia.org/wiki/File_system>
+<https://en.wikipedia.org/wiki/Unix_filesystem>
+<https://en.wikipedia.org/wiki/Journaling_file_system> journal. physical journal. write entire copy of data. expensive. logical journalling just journal metadata
+File systems:
+<https://en.wikipedia.org/wiki/Ext4> - extents are contiguous ranges of blocks. 4 can be stored in inode. delayed allocation. <https://en.wikipedia.org/wiki/E2fsprogs> badblacks blkid dumpe2fs e2fsck e4defrag debugfs
+
+copy on write filesystems
+<https://en.wikipedia.org/wiki/ZFS>
+<https://en.wikipedia.org/wiki/Btrfs>
+
+<https://en.wikipedia.org/wiki/Sync_(Unix)>
+fsync
+
+rsync <https://linux.die.net/man/1/rsync> - remote sync
+
+mount
+
+block
+superblock
+
+<https://github.com/sysprog21/simplefs> simplefs - a simple file system for Linux
+
+<https://en.wikipedia.org/wiki/Disk_partitioning>
+
+MBR <https://en.wikipedia.org/wiki/Master_boot_record>
+bootsector code. 4 partition entries in classic.
+<https://en.wikipedia.org/wiki/Cylinder-head-sector> CHS addressing. anyiquated addressing
+
+<https://en.wikipedia.org/wiki/GUID_Partition_Table> GPT. logical block addressing <https://en.wikipedia.org/wiki/Logical_block_addressing>
+table header. glonal identifier for partition type. Ok. A pretty simple system
+
+RAID <https://en.wikipedia.org/wiki/RAID>
+
+<https://en.wikipedia.org/wiki/Parallel_ATA> ATAPI IDE
+<https://en.wikipedia.org/wiki/Serial_ATA>
+
+logical interface
+<https://en.wikipedia.org/wiki/Advanced_Host_Controller_Interface> AHCI
+<https://en.wikipedia.org/wiki/NVM_Express>
+
+<https://en.wikipedia.org/wiki/PCI_Express>
+
+<https://en.wikipedia.org/wiki/M.2> is a form factor
+
 ## Init
 
 daemon
 
-systemd <https://en.wikipedia.org/wiki/Systemd>
+### systemd
+
+<https://en.wikipedia.org/wiki/Systemd>
 units. service and others. mounts
 systemctl enable disable start stop
 conf files. You can override fields.
 udev <https://wiki.archlinux.org/title/Udev>
+
+`journalctl -f`. Lotso f filtering options
+journald
 
 ## Modules
 
@@ -166,6 +285,74 @@ modprobe -c
 ls /etc/modprobe.d/ # blacklist.conf
 ls /lib/modules
 ```
+
+<https://github.com/torvalds/linux/tree/drivers>
+can lookup lots of lsmod stuff in here
+<https://docs.kernel.org/driver-api/index.html>
+
+<https://github.com/sysprog21/lkmpg>
+<https://sysprog21.github.io/lkmpg/>
+
+```bash
+sudo cat /proc/modules
+```
+
+```bash
+ls /lib/modules/$(uname -r)
+```
+
+Hmm. I guess you really do have to buy into the kernel makefile. Fine.
+
+```bash
+mkdir /tmp/hellomod
+cd /tmp/hellomod
+echo "
+/* 
+ * hello-1.c - The simplest kernel module. 
+ */ 
+#include <linux/module.h> /* Needed by all modules */ 
+#include <linux/printk.h> /* Needed for pr_info() */ 
+ 
+int init_module(void) 
+{ 
+    pr_info(\"Hello world 1.\n\"); 
+ 
+    /* A non 0 return means init_module failed; module can't be loaded. */ 
+    return 0; 
+} 
+ 
+void cleanup_module(void) 
+{ 
+    pr_info(\"Goodbye world 1.\n\"); 
+} 
+ 
+MODULE_LICENSE(\"GPL\");
+" > hello-1.c
+
+echo "
+obj-m += hello-1.o
+PWD := \$(CURDIR) 
+all:
+ make -C /lib/modules/$(uname -r)/build M=\$(PWD) modules
+
+clean:
+ make -C /lib/modules/$(uname -r)/build M=\$(PWD) clean
+" > Makefile
+cat Makefile
+make
+```
+
+```bash
+cd /tmp/hellomod
+modinfo hello-1.ko
+sudo insmod hello-1.ko
+sudo rmmod hello_1
+sudo dmesg
+```
+
+retpololine
+
+/proc/kallsyms # all symbols kernel knows about inside modules and elsewhere.
 
 ## System Calls
 
@@ -351,14 +538,28 @@ MirageOS
 
 Booting is like a whole thing.
 
-UEFI
 BIOS basic input output system - loads first sector and runs it. 16 bit code
+
+UEFI <https://en.wikipedia.org/wiki/UEFI> <https://uefi.org/>
+<https://github.com/river-li/awesome-uefi-security>
+<https://github.com/Kostr/UEFI-Lessons>
+<https://github.com/tianocore/edk2>
+There's a python for uefi?
+/boot/efi/
+'System Volume Information' - windows stuff
+EFI/Boot   bootx64.efi  fbx64.efi  mmx64.efi
+EFI/windows
+EFI/dell
+EFI/ubuntu BOOTX64.CSV  grub.cfg  grubx64.efi  mmx64.efi - mokmanager. signing bootloader  shimx64.efi
+some funky business on secure boot
+
+ACPI - iasl. intel acpi dcompil;er/decompiler
 
 [UBOOT](https://en.wikipedia.org/wiki/Das_U-Boot)
 
 <https://superuser.com/questions/708196/what-is-difference-between-u-boot-and-bios>
 
-GRUB
+GRUB grand unified bootloader
 
 POST - power on self test
 

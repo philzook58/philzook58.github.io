@@ -3,6 +3,10 @@ layout: post
 title: Fuzzing
 ---
 
+- [Fuzzing](#fuzzing)
+  - [Code Coverage](#code-coverage)
+  - [Grammar](#grammar)
+  - [AFL](#afl)
 - [Symbolic Execution](#symbolic-execution)
   - [Reverse Execution](#reverse-execution)
   - [KLEE](#klee)
@@ -12,6 +16,8 @@ title: Fuzzing
 - [Instrumentation](#instrumentation)
   - [Sanitizers](#sanitizers)
   - [Valgrind](#valgrind)
+
+# Fuzzing
 
 <https://www.fuzzingbook.org/>
 fusebmc  <https://github.com/kaled-alshmrany/FuSeBMC>
@@ -73,7 +79,16 @@ corpus grammar based fuzzing, differential fuzzing
 
 ## AFL
 
+```
+git clone https://github.com/AFLplusplus/AFLplusplus
+cd AFLplusplus
+make distrib
+sudo make install
+```
+
 AFL.  [AFL++](https://aflplus.plus/) fork of afl
+
+<https://aflplus.plus/libafl-book/> book
 
  [tutorials](https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/tutorials.md).
 
@@ -193,12 +208,15 @@ SymQemu
 
 # Emulation
 
+<https://github.com/nevesnunes/ghidra-plays-mario>
+
 [qiling](https://qiling.io/)
 
 [Icicle: A Re-designed Emulator for Grey-Box Firmware Fuzzing](https://arxiv.org/pdf/2301.13346.pdf) <https://github.com/icicle-emu/icicle-emu> semantics powered by sleigh.
 
 ## Qemu
-
+<https://github.com/nyx-fuzz/QEMU-Nyx>
+<https://airbus-seclab.github.io/qemu_blog/>
 Qemu plugins
 Qemu has user land and system
 

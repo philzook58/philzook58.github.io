@@ -5,6 +5,7 @@ title: Python
 - [Venv](#venv)
 - [Django](#django)
 - [CFFI](#cffi)
+- [numba](#numba)
 - [Jupyter](#jupyter)
 - [Generators](#generators)
 - [Collections](#collections)
@@ -124,6 +125,33 @@ code = asm()
 ctypes.memmove(addr, code, len(code))
 myfun = ctypes.cast(addr, ctypes.CFUNCTYPE(ctypes.c_long))
 print(myfun())
+
+```
+
+<https://cppyy.readthedocs.io/en/latest/> cling like talking to python
+
+```python
+prog = """
+int foo(int x){
+    return x + x;
+}"""
+
+import cppyy
+cppyy.cppdef(prog)
+from cppyy.gbl import foo
+print(foo(3))
+print(cppyy.gbl.foo(3))
+cppyy.cppexec("std::cout << \"hello\" << std::endl;")
+cppyy.cppdef('#define HELLO "Hello, World!"')
+print(cppyy.macro("HELLO"))
+```
+
+# numba
+<https://numba.pydata.org/>
+
+```python
+import numba import njit
+
 
 ```
 

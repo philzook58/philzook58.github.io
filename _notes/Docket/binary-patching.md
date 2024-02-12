@@ -8,8 +8,8 @@ title: Binary Patching
   - [Patching a Call](#patching-a-call)
   - [Changing a Type](#changing-a-type)
 - [Adding Code](#adding-code)
-    - [Dynamic Interposition](#dynamic-interposition)
-    - [Code Caves](#code-caves)
+  - [Dynamic Interposition](#dynamic-interposition)
+  - [Code Caves](#code-caves)
   - [Add Bounds Check](#add-bounds-check)
   - [Null Check](#null-check)
 - [High Patching](#high-patching)
@@ -22,7 +22,7 @@ title: Binary Patching
   - [Dyninst](#dyninst)
   - [Frida](#frida)
   - [e9patch](#e9patch)
-    - [Patcherex](#patcherex)
+  - [Patcherex](#patcherex)
 - [Resources](#resources)
 
 Binary patching is an intimidating sounding topic. It is very low level and requires lots of fiddly little knowledge.
@@ -186,19 +186,19 @@ We could make this harder. Now there won't be code to twiddle. Really we are add
 
 ```bash
 echo "
-int foo(int x){
+int  __attribute__ ((noinline))  foo(int x){
     return x;
 }
 
-int foo_patched(int x){
+int  __attribute__ ((noinline))  foo_patched(int x){
     return x + 1;
 } 
 
-int main(){
-    return foo(5);
+int main(int argc){
+    return foo(argc); // It will inline foo, which raises the question of how to patch _that_. Very nasty.
 }
 " > /tmp/add1.c
-gcc /tmp/add1.c -O1 -g -o /tmp/add1
+gcc /tmp/add1.c -fno-inline-small-functions -O1 -g -o /tmp/add1
 objdump -d /tmp/add1
 ```
 
@@ -772,14 +772,25 @@ e9tool -M jmp -P print true --output /tmp/true.patch
 `--loader-phdr` smash note, relro or stack phdr.
 plugins huh.
 
-### Patcherex
+## Patcherex
 
 <https://github.com/mechaphish/compilerex> i need this?
 <https://github.com/angr/patcherex>
 <https://github.com/purseclab/Patcherex2>
 
-```python
+```bash
+echo "
+int foo(int x){
+    return 20;
+}
+"
+```
 
+```python
+import patcherex2
+
+patcherex2.RemoveInstructionPatch(addr,num_bytes=8)
+patcherex2.InsertInstructionPatch(addr,code)
 
 ```
 

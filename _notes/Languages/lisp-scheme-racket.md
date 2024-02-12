@@ -56,6 +56,8 @@ Gerbil is a system on top of Gambit approximately similar to racket
 
 <https://gitlab.com/spritely/guile-hoot> hoot is scheme to wasm
 
+<https://github.com/Calysto/calysto_scheme> jupyter enabled scheme
+
 ### Minikanren
 
 <http://minikanren.org/>
@@ -69,7 +71,7 @@ Gerbil is a system on top of Gambit approximately similar to racket
 (run 1 (q) (fresh (x y z) (== x q) (== 3 y)))
 ```
 
-[http://io.livecode.ch/](http://io.livecode.ch/) more minikanren examples [implementing microkanren (https://www.youtube.com/watch?v=0FwIwewHC3o)
+[http://io.livecode.ch/](http://io.livecode.ch/) more minikanren examples [implementing microkanren](https://www.youtube.com/watch?v=0FwIwewHC3o)
 
 [http://tca.github.io/veneer/examples/editor.html](http://tca.github.io/veneer/examples/editor.html) minikanren examples.
 
