@@ -91,8 +91,10 @@ What is disallowed:
 - Nonterminating functions. More on this another day.
 
 Overloading in python is a nice language feature that can make for some clean and fun library design. This is nice for example when you are writing logical expressions for a theorem prover like z3. It is somewhat unfortunate that you can't overload some particular constructs like `if else`, `and`, `or`, `not` expressions, comprehensions or `for`, `while`, `assert` statements. On choice is you can switch over to a bit clunkier syntax of using functions like `If(cond,the,else)`
+
 I did show a style of doing this for a weakest precondition analysis here. <https://www.philipzucker.com/weakest-precondition-z3py/>
-But a powerful, intriguing, but probably in poor taste is to get your hands on the python syntax tree. You can do this, python has very high amounts of metaprogrammability.
+
+But a powerful, intriguing, but probably in poor taste thing to do is to get your hands on the python syntax tree. You can do this, python has very high amounts of metaprogrammability.
 
 Here I wrote some functions and a decorator to recognize the aforementioned applicative python and convert it to a z3 expression.
 
@@ -255,7 +257,7 @@ Indexing into a field that does not exist for example. What do we do? The ACL2 w
 
 I'm undecided how to deal with generators. One could perhaps treat them as coinductive, but that is a can of worms.
 
-I haven't handled unpacking or python case statements. These are very useful, and should be unproblematic with the caveat they failing to unppack mst result in some default value error.
+I haven't handled unpacking or python case statements. These are very useful, and should be unproblematic with the caveat they failing to unpack mst result in some default value error.
 
 Class might be ok if immutable.
 
@@ -276,7 +278,7 @@ import imandra
 with imandra.session() as s:
     verify_result = s.verify("fun x -> x * x = 0 ")
 print("\n", verify_result)
-# oh wait... Its only a cloud service? I can't run it locally?
+# oh wait... Its only a cloud service? I can't run it locally? I'm pretty sure I did ths before
 ```
 
  They are untyped and garbage collected. There are first class functions and other features that are. Python is missing the rich macro system of lisp. Somehow or other, common lisp has a reputation of being performant because it has good jits I believe.
