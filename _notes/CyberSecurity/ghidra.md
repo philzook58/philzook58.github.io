@@ -345,3 +345,6 @@ Huh, they called jit's "dynamic compilers"
 [pypcode](https://pypi.org/project/pypcode/) How to bind to the lifter.
 
 <https://github.com/niconaus/pcode-interpreter> a haskell pcode interpeter. niiice.
+
+<https://github.com/rbran/sleigh-rs> sleigh parser
+<https://github.com/rbran/sleigh2rust>

@@ -37,3 +37,48 @@ greta ITGP
 chyp
 
 notions of equality
+
+<https://networkx.org/documentation/stable/reference/introduction.html#data-structure>
+
+```python
+edges = {(0,1), (2,3)}
+vertices = {0,1,2,3}
+
+Dict[Vert, Dict[Vert, Atrr]]
+
+```
+
+It's maintained symmetrically
+
+```python
+
+import networkx as nx
+G = nx.Graph()
+G.add_edge('A', 'B')
+G.add_edge('B', 'C')
+print(G.adj)
+
+```
+
+petrgaph . Looks like
+Vec<Node>
+Vec<Edge>
+
+node = {attr, first edge out, first edge in}
+Edge = {attr, next edge out, next edge in}
+
+circular lists?
+
+factored hyperedge
+([[a,b,c,d]  ], [[e,f,g,h]])
+You can plug in on of the choices of edge sequence. This is not so much a factored hyperedge as it is a graph cut.
+[(a,e), (b,f), (c,g), (d,h)] are cut edges, but then unzip
+to [a,b,c,d] [e,f,g,h], but then allow vertices to change.
+So factoring a hyperedge to "inside outside"
+[(1,2,3),(4,5)] list of hyberdges, 1,2 outside, 5 outside, 4 inside
+[(1,2), (4,)] [(3,), (5,)] They still zip together back to original hyperedges
+ok so what if I just do all independnt rewritings I can,
+Then do expansions?
+
+cut off single vertex
+[4,4,4], [1,2,3]

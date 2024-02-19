@@ -159,3 +159,7 @@ KBMAG
 automata to describe the multiplication operation
 
 # Resources
+
+<https://news.ycombinator.com/item?id=39396337>   
+Data Structures as Topological Spaces (2002) [pdf] (spatial-computing.org)
+<http://mgs.spatial-computing.org/>

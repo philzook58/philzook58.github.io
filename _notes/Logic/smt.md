@@ -3634,6 +3634,7 @@ Reuse z3 formula as formula
 ```
 
 # Proofs
+<https://ultimate.informatik.uni-freiburg.de/smtinterpol/smt2022.pdf>  A Simple Proof Format for SMT Jochen Hoenicke, Tanja Schindler <https://ultimate.informatik.uni-freiburg.de/smtinterpol/proof-format.html> RESOLUTE – A Simple Proof Format for SMT-LIB
 
 [Haniel Barbosa - Better SMT proofs for certifying compliance and correctness - IPAM at UCLA](https://www.youtube.com/watch?v=ygsY2LlWyQI&t=7s&ab_channel=InstituteforPure%26AppliedMathematics%28IPAM%29)
 

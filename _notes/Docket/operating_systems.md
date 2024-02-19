@@ -7,6 +7,7 @@ title: Operating Systems
 	- [Linux Boot](#linux-boot)
 	- [Interrupts](#interrupts)
 	- [Processes](#processes)
+		- [Scheduling](#scheduling)
 	- [Memory](#memory)
 	- [File System](#file-system)
 	- [Init](#init)
@@ -16,15 +17,16 @@ title: Operating Systems
 	- [Resources](#resources)
 	- [Kernel](#kernel)
 	- [Security](#security)
+	- [Seccomp](#seccomp)
 	- [Tracing](#tracing)
+		- [ebpf](#ebpf)
 	- [Virtualization](#virtualization)
 	- [Concurrency](#concurrency)
-	- [Make](#make)
-	- [Seccomp](#seccomp)
-	- [Git](#git)
-	- [Emacs?](#emacs)
 	- [Alternate shells](#alternate-shells)
 	- [Command Line Tools](#command-line-tools)
+		- [Make](#make)
+		- [Git](#git)
+		- [Emacs?](#emacs)
 	- [docker](#docker)
 - [Windows](#windows)
 - [RTOS](#rtos)
@@ -118,7 +120,11 @@ bootloader
 grub
 
 acpi <https://en.wikipedia.org/wiki/ACPI> Advanced Configuration and Power Interface
+<https://uefi.org/specs/ACPI/6.5/> spec. hmm special registers. AML machine language bytecode
+APM is old deprecated method. Many info tables.
+
 <https://en.wikipedia.org/wiki/UEFI>
+<https://uefi.org/specs/UEFI/2.10/> spec
 
 kernel parameters. `sysct <https://docs.kernel.org/admin-guide/kernel-parameters.html>
 
@@ -138,8 +144,12 @@ ls /boot # some intertestying styuff in here
 initramfs
 vmlinux
 
-startup_32
+<https://github.com/torvalds/linux/tree/v6.8-rc4/arch/x86/kernel>
+startup_32 <https://github.com/torvalds/linux/blob/master/arch/x86/boot/compressed/head_64.S>
 start_kernel
+<https://github.com/torvalds/linux/blob/master/init/main.c> generic initialization
+
+<https://github.com/torvalds/linux/tree/master/arch/x86/include/asm> hmm. `<asm.h/..>` stuff is found here
 
 /sbin/init, pid 1 - often systemd. <https://en.wikipedia.org/wiki/Init>
 
@@ -167,6 +177,20 @@ cat /proc/interrupts
 
 ## Processes
 
+### Scheduling
+
+<https://en.wikipedia.org/wiki/Scheduling_(computing)#Linux>
+
+<https://en.wikipedia.org/wiki/O(n)_scheduler> even older scheduler
+
+<https://en.wikipedia.org/wiki/O(1)_scheduler> old scheduler.
+
+<https://en.wikipedia.org/wiki/Completely_Fair_Scheduler> the SCHED_NORMAL default scheduler
+
+<https://en.wikipedia.org/wiki/Brain_Fuck_Scheduler>
+
+<https://github.com/torvalds/linux/tree/master/kernel/sched> kernel/sched folder
+
 ## Memory
 
 <https://en.wikipedia.org/wiki/Global_Descriptor_Table>
@@ -181,6 +205,8 @@ available vs free. free is free, available is free + cache
 swap. vm.swappiness
 
 ## File System
+
+<https://github.com/torvalds/linux/tree/master/fs>
 
 inode <https://en.wikipedia.org/wiki/Inode>
 
@@ -252,6 +278,26 @@ logical interface
 <https://en.wikipedia.org/wiki/PCI_Express>
 
 <https://en.wikipedia.org/wiki/M.2> is a form factor
+
+what is in `/`
+/var
+/run
+/boot
+/sys
+/proc
+/etc
+/dev
+/home /root
+/mnt
+/media
+/lost+found
+/bin
+/sbin
+/srv
+/swapfile
+/usr
+/tmp
+/lib
 
 ## Init
 
@@ -356,6 +402,9 @@ retpololine
 
 ## System Calls
 
+<https://github.com/torvalds/linux/tree/master/arch/x86/entry> transitioning syscall code
+<https://github.com/torvalds/linux/blob/master/arch/x86/entry/syscalls/syscall_64.tbl>
+
 [The Definitive Guide to Linux System Calls](https://blog.packagecloud.io/the-definitive-guide-to-linux-system-calls/) some nice info on how syscalls happens. Interrupt x80, `syscall` instruction etc. VDSO - v
 
 - `mmap`
@@ -435,6 +484,8 @@ openbsd pledge, unveil
 
 [kmsan](https://github.com/google/kmsan) KernelMemorySanitizer, a detector of uses of uninitialized memory in the Linux kernel
 
+## Seccomp
+
 ## Tracing
 
 Where should this section go?
@@ -452,6 +503,67 @@ strace
 PIN
 hardware counters
 
+### ebpf
+
+<https://ebpf.io/get-started/>
+There's a doucmentary? what <https://www.youtube.com/watch?v=Wb_vD3XZYOA&ab_channel=SpeakeasyProductions>
+
+<https://www.youtube.com/watch?v=J_EehoXLbIU&ab_channel=Computerphile> huh a computerphile. the hype machine is insane
+
+Seccomp filters
+
+ubpf
+<https://github.com/iovisor/ubpf>
+<https://klyr.github.io/posts/playing_with_ubpf/>
+
+`ubpf_test` `ubpf_plugiin`
+
+```bash
+echo "
+static int idouble(int a) {
+    int temp = 0;
+    while(a > 0){
+        temp +=  a;
+        a--;
+        }
+        return temp;
+}
+
+int bpf_prog(void *ctx) {
+        int a = 3;
+        a = idouble(a);
+
+        return (a);
+}
+" > /tmp/hello.c
+clang -O2 -target bpf -c /tmp/hello.c -o /tmp/hello.o
+/home/philip/Downloads/ubpf/build/bin/ubpf_test /tmp/hello.o
+```
+
+<https://www.brendangregg.com/blog/2019-01-01/learn-ebpf-tracing.html>
+
+```bash
+#sudo opensnoop-bpfcc # see every open
+#sudo execsnoop-bpfcc # see every exec
+sudo bitesize-bpfcc #
+sudo stackcount-bpfcc # see every stack trace. hmm.
+```
+
+execsnoop, opensnoop, ext4slower (or btrfs*, xfs*, zfs*), biolatency, biosnoop, cachestat, tcpconnect, tcpaccept, tcpretrans, runqlat, and profil
+
+<https://github.com/iovisor/bcc>
+bcc
+
+```python
+from bcc import BPF
+
+BPF(text='int kprobe__sys_clone(void *ctx) { bpf_trace_printk("Hello, World!\\n"); return 0; }').trace_print()
+```
+
+<https://blog.quarkslab.com/defeating-ebpf-uprobe-monitoring.html> uprobes
+
+cillium <https://github.com/cilium/ebpf> go library read modify and loadc
+
 ## Virtualization
 
 ## Concurrency
@@ -459,24 +571,6 @@ hardware counters
 libuv
 libev
 libevent
-
-## Make
-
-[Using Landlock to Sandbox GNU Make](https://justine.lol/make/)
-Limitting what make can access? Only should be allowed to access files it depends on explicitly in make rules
-pledge and unvil system calls <https://justine.lol/pledge/>
-
-## Seccomp
-
-## Git
-
-Maybe git deserves it's own file
-<https://git-scm.com/docs/git-grep>
-git-bisect
-
-## Emacs?
-
-???
 
 ## Alternate shells
 
@@ -503,6 +597,22 @@ grep -C 10
 gnu parallel
 
 [diffoscope](https://try.diffoscope.org/) recursively diff?
+
+### Make
+
+[Using Landlock to Sandbox GNU Make](https://justine.lol/make/)
+Limitting what make can access? Only should be allowed to access files it depends on explicitly in make rules
+pledge and unvil system calls <https://justine.lol/pledge/>
+
+### Git
+
+Maybe git deserves it's own file
+<https://git-scm.com/docs/git-grep>
+git-bisect
+
+### Emacs?
+
+???
 
 ## docker
 

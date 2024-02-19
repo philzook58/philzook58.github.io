@@ -8,8 +8,8 @@ title: Binary Patching
   - [Patching a Call](#patching-a-call)
   - [Changing a Type](#changing-a-type)
 - [Adding Code](#adding-code)
-  - [Dynamic Interposition](#dynamic-interposition)
-  - [Code Caves](#code-caves)
+    - [Dynamic Interposition](#dynamic-interposition)
+    - [Code Caves](#code-caves)
   - [Add Bounds Check](#add-bounds-check)
   - [Null Check](#null-check)
 - [High Patching](#high-patching)
@@ -194,7 +194,7 @@ int  __attribute__ ((noinline))  foo_patched(int x){
     return x + 1;
 } 
 
-int main(int argc){
+int main(int argc, char* argv[]){
     return foo(argc); // It will inline foo, which raises the question of how to patch _that_. Very nasty.
 }
 " > /tmp/add1.c
@@ -771,6 +771,39 @@ e9tool -M jmp -P print true --output /tmp/true.patch
 `--loader-static` That's interesting.
 `--loader-phdr` smash note, relro or stack phdr.
 plugins huh.
+
+```bash
+echo "
+    .global _start
+
+    .section .data
+helloMessage:
+    .string \"Hello, World!\n\"
+
+    .section .text
+_start:
+    # Write "Hello, World!" to stdout
+    mov \$1, %rax        # System call number for sys_write
+    mov \$1, %rdi        # File descriptor 1 (stdout)
+    lea helloMessage(%rip), %rsi  # Pointer to the message
+    mov \$14, %rdx       # Message length (including newline)
+    syscall             # Invoke the system call
+
+    # Exit the program
+    mov \$60, %rax       # System call number for sys_exit
+    xor %rdi, %rdi      # Exit status 0
+    syscall             # Invoke the system call
+" > /tmp/hello.s
+gcc -nostartfiles -no-pie -nostdlib /tmp/hello.s -o /tmp/hello
+/tmp/hello
+objdump -d /tmp/hello
+
+echo "
+int my_patch(){
+  
+}
+
+```
 
 ## Patcherex
 

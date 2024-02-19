@@ -37,3 +37,5 @@ Why am I stressed about doing this on monday now. It seem overwhelming. Hmm.
 physics
 
 use kicad scripting to make my gyrator grid. A blast from the past.
+
+knuth bendix
