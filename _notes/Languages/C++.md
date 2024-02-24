@@ -3,6 +3,36 @@ layout: post
 title: C++
 ---
 
+<https://learnxinyminutes.com/docs/c++/>
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <set>
+#include <map>
+#include <tuple>
+using namespace std;
+int main(){
+    cout << "hello world" << std::endl;
+    auto myvec = vector<int>{1,2,3,4,5};
+    myvec.push_back(6);
+    for (auto i : myvec){
+        cout << i << " ";
+    }
+    pair<int, int> biz = {1,2};
+    map<string, int> bar = {{"one", 1}, {"two", 2}};
+    bar.get("poop");
+    for (auto [key, value] : bar){
+        cout << key << " " << value << endl;
+    }
+    tuple<int,float,double> baz = {1, 2.0, 3.0};
+    return 0;
+}
+
+```
+
+<https://en.cppreference.com/w/cpp>
+
 # std
 
 string_view
@@ -21,6 +51,10 @@ weak_ptr
 
 <https://github.com/mortennobel/cpp-cheatsheet>
 
+## ranges
+
+# Boost
+
 # constexpr
 
 [consetexpr maze](https://twitter.com/Cor3ntin/status/1507860690400419842?s=20&t=GsM8M-fHdbvp9M4n5S4-kg)
@@ -31,9 +65,15 @@ weak_ptr
 <https://en.cppreference.com/w/cpp/language/as_if> as if rule
 <https://en.cppreference.com/w/c/language/eval_order> eval order
 
-# CMake
+# Build
+
+cmake
+
+[conan C/C++ pakcage manager](https://conan.io/)
+[vcpkg](https://vcpkg.io/en/index.html) <https://github.com/microsoft/vcpkg>
 
 # Misc
+<https://github.com/andreasfertig/cppinsights>
 
 <https://github.com/verateam/vera> I dunno about thizs one. Programmable tool for verification analysis
 
@@ -81,9 +121,6 @@ int main(){
 [Abseil](https://abseil.io/) - google C++ stdlib
 
 [Folly](https://github.com/facebook/folly) - something similar by facebook <https://news.ycombinator.com/item?id=29841271>
-
-[conan C/C++ pakcage manager](https://conan.io/)
-[vcpkg](https://vcpkg.io/en/index.html)
 
 Google test
 

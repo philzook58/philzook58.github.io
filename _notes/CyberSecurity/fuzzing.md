@@ -18,6 +18,22 @@ title: Fuzzing
   - [Valgrind](#valgrind)
 
 # Fuzzing
+<https://github.com/google/atheris>  <https://blog.trailofbits.com/2024/02/23/continuously-fuzzing-python-c-extensions/>
+
+```python
+import atheris
+
+with atheris.instrument_imports():
+  import some_library
+  import sys
+
+def TestOneInput(data):
+  some_library.parse(data)
+
+atheris.Setup(sys.argv, TestOneInput)
+atheris.Fuzz()
+
+```
 
 <https://www.fuzzingbook.org/>
 fusebmc  <https://github.com/kaled-alshmrany/FuSeBMC>
@@ -215,6 +231,7 @@ SymQemu
 [Icicle: A Re-designed Emulator for Grey-Box Firmware Fuzzing](https://arxiv.org/pdf/2301.13346.pdf) <https://github.com/icicle-emu/icicle-emu> semantics powered by sleigh.
 
 ## Qemu
+
 <https://github.com/nyx-fuzz/QEMU-Nyx>
 <https://airbus-seclab.github.io/qemu_blog/>
 Qemu plugins

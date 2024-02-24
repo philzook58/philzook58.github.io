@@ -75,6 +75,9 @@ Defunctionalizing these lambdas produces the first order form of ordinary reloca
 
 # Loading
 
+<https://github.com/MikhailProg/elf> small elf loader
+<https://github.com/robgjansen/elf-loader>   VDL: Virtualizing Dynamic Linker/Loader
+
 Auxiliary vector [getauxval and the axiliary vector](https://lwn.net/Articles/519085/) `LD_SHOW_AUXV=1`
 `fs/binfmt_elf.c` loads elf in kernel
 
@@ -113,6 +116,9 @@ ls /sys
 ```
 
 # Dynamic Linking
+<https://stackoverflow.com/questions/78023671/where-is-the-order-in-which-elf-relocations-are-applied-specified>
+
+<https://github.com/jserv/min-dl> minimal dynamic linker implementation for ELF, supporting x86_64 and Arm/Aarch64
 
 `man elf`
 

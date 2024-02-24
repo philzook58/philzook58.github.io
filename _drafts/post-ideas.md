@@ -39,3 +39,5 @@ physics
 use kicad scripting to make my gyrator grid. A blast from the past.
 
 knuth bendix
+
+tiger book

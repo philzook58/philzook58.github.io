@@ -28,3 +28,29 @@ activation points
 contributes
 
 using - like python with
+
+```javascript
+console.log("hello")
+tokens = [
+    ["LPAREN", `\\)`],
+    ["RPAREN", `\\(`],
+    ["NUMBER", `\\d+`],
+    ["PLUS", `\\+`],
+    ["MINUS", `\\-`],
+    ["TIMES", `\\*`],
+    ["DIVIDE", `\\/`],
+    ["WS", `\\s+`],
+
+]
+const re = RegExp(tokens.map(([name, pattern]) => `(?<${name}>${pattern})`).join("|"), "g")
+console.log(re)
+console.log("123 foo bar ()".matchAll(re))
+for(x in "123 foo bar ()".matchAll(re)) {
+    console.log(x)
+}
+
+```
+
+```typescript
+console.log("hello")
+```

@@ -82,3 +82,76 @@ Then do expansions?
 
 cut off single vertex
 [4,4,4], [1,2,3]
+
+```python
+# hiearchical graph data structure
+from dataclasses import dataclass
+
+"""
+@dataclass
+class Graph:
+    left: Graph
+    right: Graph
+    cross_edges: List[Tuple[Vertex, Vertex]]
+
+class Graph:
+    verts
+    #left
+    #rig
+    edges #may go from vert to vert or vert to a subgraph
+    subgraphs
+"""
+from collections import namedtuple
+
+Graph = namedtuple("Graph", ["left", "right", "cross_edges"])
+g12 = Graph(1,2,[(1,2)])
+g123 = Graph(g12, 3, [(2,3)])
+g1234 = Graph(g123, 4, [(3,4)])
+g56 = Graph(5,6,[(5,6)])
+g = Graph(g1234, g56, [(4,5)])
+
+print(g)
+
+
+import networkx as nx
+def nxify(g : Graph): #flatten out to nx graph
+    G = nx.Graph()
+    if isinstance(g, Graph):
+        Gl = nxify(g.left)
+        Gr = nxify(g.right)
+        G = nx.union(Gl, Gr)
+        G.add_edges_from(g.cross_edges)
+        return G
+
+
+def balance():
+    pass
+Choice = namedtuple("Choice", )
+
+def flatten(G):
+    # can yield nx.Graph by expansion
+
+def flatten():
+    # pull Choice node up to top
+def factor():
+    # rebalance and push choice nodes down when possible. Find shared substructure.
+    # or take nx.Graph and factor it. Hmm....
+```
+
+If there were no cross edges, then choice is `+` and join is `*` in terms of number of graph copies.
+Uh.. no, that is still true even if there are cross edges.
+
+graphs representations of lambdas
+alpha equiv
+
+<https://hackage.haskell.org/package/algebraic-graphs>
+<https://news.ycombinator.com/item?id=13123831>
+
+```
+data Graph a = Empty
+| Vertex a
+| Overlay (Graph a) (Graph a)
+| Connect (Graph a) (Graph a)
+```
+
+overlay is a union of edge and vertices. so vertices appear on both sides

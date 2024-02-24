@@ -19,6 +19,14 @@ See:
 
 - Verilog
 
+Sat competition
+
+Minisat
+glucose
+kissat
+
+<https://github.com/imandra-ai/minisat-ml?tab=readme-ov-file> minisat-ml ocaml.
+
 # BDD
 
 <https://www.cs.cmu.edu/~bryant/pubdir/fmcad22.pdf> tbuddy a proof generating sat solver

@@ -53,6 +53,32 @@ Network
 
 What kind of stuff is in _my_ cpu. How to estimate various parameters.
 
+```bash
+lscpu -C # cache
+#NAME ONE-SIZE ALL-SIZE WAYS TYPE        LEVEL SETS PHY-LINE COHERENCY-SIZE
+#L1d       48K     192K   12 Data            1   64        1             64
+#L1i       32K     128K    8 Instruction     1   64        1             64
+#L2       512K       2M    8 Unified         2 1024        1             64
+#L3         8M       8M   16 Unified         3 8192        1             64
+
+lscpu -e
+#CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ      MHZ
+#  0    0      0    0 0:0:0:0          yes 3900.0000 400.0000 1500.000
+#  1    0      0    1 1:1:1:0          yes 3900.0000 400.0000 1500.000
+#  2    0      0    2 2:2:2:0          yes 3900.0000 400.0000 1500.000
+#  3    0      0    3 3:3:3:0          yes 3900.0000 400.0000 1500.000
+#  4    0      0    0 0:0:0:0          yes 3900.0000 400.0000 1500.000
+#  5    0      0    1 1:1:1:0          yes 3900.0000 400.0000 1500.000
+#  6    0      0    2 2:2:2:0          yes 3900.0000 400.0000 2719.516
+#  7    0      0    3 3:3:3:0          yes 3900.0000 400.0000 2873.892
+
+#  Address sizes:         39 bits physical, 48 bits virtual
+# Vulnerabilities. That's ineresting
+```
+
+<https://en.wikichip.org/wiki/intel/core_i7/i7-1065g7>  my cpu
+Max 55.63 GiB/s Bandwidth Single 13.91 GiB/sDouble 27.82 GiB/sQuad 55.63 GiB/s
+
 # Instruction Level Parallelism (ILP)
 
 # SIMD
@@ -123,6 +149,17 @@ Can use vector to store fixed size chunks. Your own private malloc specialized f
 
 memory overhead. Probably Powers of two. But allocator may have "slop" can lose a lot of memory that way
 
+What every programmer should know about memory <https://people.freebsd.org/~lstewart/articles/cpumemory.pdf>
+
+RAM -
+DDR <https://en.wikipedia.org/wiki/Synchronous_dynamic_random-access_memory> double data rate.
+read cycle time - time between reads tosame row
+CAS latency - time from column to recieving data
+
+RAS, CAS, WE bits select command type
+
+Cache lines - 64 bytes. Even if you read/write 1 byte you're writing 64
+
 ## Power
 
 Power profiling is determining what is using electricity / battery life up.
@@ -181,6 +218,10 @@ bool in C++ outputs 0/1 but may have come from a source that didn't. This means 
 short circuiting && ||, try to short circuit early
 
 ## Stuff
+
+<https://github.com/google/highway> Performance-portable, length-agnostic SIMD with runtime dispatch
+
+<https://x.com/ashvardanian/status/1759819906160480651?s=20> <https://github.com/ashvardanian/StringZilla> <https://github.com/unum-cloud/ucall> <https://github.com/unum-cloud/usearch>
 
 rust perf book <https://nnethercote.github.io/perf-book/title-page.html>
 

@@ -243,6 +243,9 @@ Like exceptions except you can restrta from them
 
 ## ACL2
 
+<https://www.khoury.northeastern.edu/home/pete/research.html> Manolios teaches courses
+<https://www.cs.utexas.edu/users/hunt/research/index.html> Hunt
+
 The main theorem prover associated with common lisp. It is a granddaddy of a lot of other systems
 <https://github.com/acl2/acl2>
 

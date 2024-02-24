@@ -35,6 +35,7 @@ wordpress_id: 1849
   - [Ascent](#ascent)
 - [Traits](#traits)
   - [GAT](#gat)
+- [Concurrency](#concurrency)
 - [Async](#async)
 - [Resources](#resources)
 - [warn clippy will give advice](#warn-clippy-will-give-advice)
@@ -169,6 +170,7 @@ rustc +nightly -Zmiri-track-raw-pointers /tmp/evil.rs
 <https://www.youtube.com/watch?v=9E2v8pCUc48&ab_channel=Let%27sGetRusty>
 
 # MIR
+
 <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
 <https://github.com/rust-lang/a-mir-formality>
@@ -423,7 +425,18 @@ No. nevermind. That isn't good enough.
 
 <https://blog.logrocket.com/using-rust-gats-improve-code-app-performance/>
 
+# Concurrency
+
+<https://doc.rust-lang.org/nomicon/send-and-sync.html>
+Send - safe to send to threads. borrows. Sync. safe to share. marker traits
+atomics
+
 # Async
+
+<https://rust-lang.github.io/async-book/>
+traits
+
+Future
 
 # Resources
 

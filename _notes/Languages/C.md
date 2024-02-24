@@ -3,9 +3,9 @@ layout: post
 title: C
 ---
 - [Stuff](#stuff)
-    - [CPP](#cpp)
-    - [Make](#make)
-    - [CMake](#cmake)
+  - [CPP](#cpp)
+  - [Make](#make)
+  - [CMake](#cmake)
 - [Loading](#loading)
 - [Sanitization](#sanitization)
   - [Build Systems](#build-systems)
@@ -197,6 +197,7 @@ Top chunk, "the wilderness"
  See debuggers note
 
 # Misc
+<https://news.ycombinator.com/item?id=39436623> Cake <https://github.com/thradams/cake> C23 transpiler
 
 <https://github.com/nothings/stb> stb single-file public domain libraries for C/C++. stb_ds is a hash table and vector
 <http://nothings.org/stb_ds>

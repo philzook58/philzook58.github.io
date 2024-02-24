@@ -3042,6 +3042,13 @@ notx :- not x.
 ```
 
 # Misc
+<https://potassco.org/ngo/ngo.html> answer swet optimization.
+
+```bash
+ngo --help
+```
+
+clorm
 
 [Stable model semantics mnikanren](http://minikanren.org/workshop/2023/minikanren23-final3.pdf)
 

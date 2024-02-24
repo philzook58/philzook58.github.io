@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WebGL GPGPU Example</title>
+</head>
+
+<body>
+    <canvas id="gpgpuCanvas" width="1" height="1"></canvas>
+    <script>
+        // Get WebGL context
+        const canvas = document.getElementById('gpgpuCanvas');
+        const gl = canvas.getContext('webgl');
+
+        if (!gl) {
+            alert('WebGL not supported');
+            throw new Error('WebGL not supported');
+        }
+
+        // Vertex shader program
+        const vsSource = `
+    attribute vec4 aPosition;
+    void main() {
+        gl_Position = aPosition;
+    }
+`;
+
+        // Fragment shader program for computation
+        const fsSource = `
+    precision mediump float;
+    void main() {
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Simple red color
+    }
+`;
+
+        // Initialize a shader program
+        function initShaderProgram(gl, vsSource, fsSource) {
+            const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
+            const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+
+            const shaderProgram = gl.createProgram();
+            gl.attachShader(shaderProgram, vertexShader);
+            gl.attachShader(shaderProgram, fragmentShader);
+            gl.linkProgram(shaderProgram);
+
+            if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+                alert('Unable to initialize the shader program: ' + gl.getProgramInfoLog(shaderProgram));
+                return null;
+            }
+
+            return shaderProgram;
+        }
+
+        // Creates a shader of the given type, uploads the source and compiles it.
+        function loadShader(gl, type, source) {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                alert('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
+                gl.deleteShader(shader);
+                return null;
+            }
+
+            return shader;
+        }
+
+        // Main function to run the GPGPU task
+        function main() {
+            const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
+            gl.useProgram(shaderProgram);
+
+            // Further setup and computation logic goes here
+            // For example, setting up buffers, textures, and performing draw calls
+        }
+
+        main();
+
+
+
+    </script>
+</body>
+
+</html>
