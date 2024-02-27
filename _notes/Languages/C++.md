@@ -5,6 +5,8 @@ title: C++
 
 <https://learnxinyminutes.com/docs/c++/>
 
+{% raw %}
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -20,7 +22,7 @@ int main(){
         cout << i << " ";
     }
     pair<int, int> biz = {1,2};
-    map<string, int> bar = {{"one", 1}, {"two", 2}};
+    map<string, int> bar = { {"one", 1}, {"two", 2} };
     bar.get("poop");
     for (auto [key, value] : bar){
         cout << key << " " << value << endl;
@@ -28,9 +30,9 @@ int main(){
     tuple<int,float,double> baz = {1, 2.0, 3.0};
     return 0;
 }
-
 ```
 
+{% endraw %}
 <https://en.cppreference.com/w/cpp>
 
 # std
@@ -73,6 +75,7 @@ cmake
 [vcpkg](https://vcpkg.io/en/index.html) <https://github.com/microsoft/vcpkg>
 
 # Misc
+
 <https://github.com/andreasfertig/cppinsights>
 
 <https://github.com/verateam/vera> I dunno about thizs one. Programmable tool for verification analysis
