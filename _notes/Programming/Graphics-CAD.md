@@ -77,6 +77,8 @@ pico8
 
 ## VR / XR / AR
 
+<https://termux.dev/en/> sideloading
+
 Space adventure zone
 
 WebVR is deprecated

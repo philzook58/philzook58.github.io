@@ -25,6 +25,9 @@ Roofline model
 latency vs bandwidth
 arithmetic intensity
 
+SM streaming multiprocessor
+warp 32 threads
+
 ## Cuda
 
 tensor cores
@@ -213,6 +216,16 @@ Parallel Scan
 Sort
 Reduce
 parallel hashmap
+
+union find gpu?
+
+## Joins
+
+<https://moderngpu.github.io/join.html>
+<https://digitalcommons.usf.edu/etd/8484/>
+<https://www.usenix.org/system/files/atc23-shovon.pdf>  Towards Iterative Relational Algebra on the GPU. micinski usnenix '23 <https://github.com/harp-lab/usenixATC23>
+<https://github.com/harp-lab/gdlog>
+<https://github.com/harp-lab/GPUJoin>
 
 # PL
 

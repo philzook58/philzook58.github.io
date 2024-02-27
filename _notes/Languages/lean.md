@@ -135,6 +135,12 @@ with Dojo(theorem) as (dojo, init_state):
 
 <https://github.com/david-christiansen/bob24>
 
+<https://github.com/leanprover-community/lean-auto>
+<https://github.com/leanprover-community/duper> lean superposition prover
+<https://github.com/JOSHCLUNE/LeanSMTParser>
+
+<https://github.com/openai/lean-gym>
+
 ### Build
 
 `elan` tool
