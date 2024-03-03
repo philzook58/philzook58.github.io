@@ -141,6 +141,13 @@ with Dojo(theorem) as (dojo, init_state):
 
 <https://github.com/openai/lean-gym>
 
+<https://github.com/leanprover/leansat> check lrat certs
+
+<https://github.com/leanprover/LNSym> armv8 simulator
+<https://github.com/leanprover/LNSym/issues/18> elf parser issue
+
+<https://github.com/leanprover/leanbv>
+
 ### Build
 
 `elan` tool

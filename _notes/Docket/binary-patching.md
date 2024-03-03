@@ -23,6 +23,7 @@ title: Binary Patching
   - [Frida](#frida)
   - [e9patch](#e9patch)
   - [Patcherex](#patcherex)
+  - [PHDR patching](#phdr-patching)
 - [Resources](#resources)
 
 Binary patching is an intimidating sounding topic. It is very low level and requires lots of fiddly little knowledge.
@@ -827,9 +828,23 @@ patcherex2.InsertInstructionPatch(addr,code)
 
 ```
 
+## PHDR patching
+
+Move phdr to back end of binary, update the elf header pointer <https://github.com/rui314/mold/issues/1148>
+Move sections following phdr to back end to make space
+<https://github.com/NixOS/patchelf/issues/533>
+Asking for some space program header entries to fill in later.
+
+ <https://github.com/lone-lang/lone> <https://www.matheusmoreira.com/articles/self-contained-lone-lisp-applications> <https://news.ycombinator.com/item?id=39097681>
+
+```bash
+patchelf
+```
+
 # Resources
 
-<https://github.com/NixOS/patchelf/issues/533> <https://github.com/lone-lang/lone> <https://www.matheusmoreira.com/articles/self-contained-lone-lisp-applications> <https://news.ycombinator.com/item?id=39097681>
+<https://github.com/torvalds/linux/blob/master/fs/exec.c> where execve is defined
+<https://github.com/torvalds/linux/blob/master/fs/binfmt_elf.c>
 
 <https://www.humprog.org/~stephen/#works-in-progress> liballocs libdlbind
 <https://github.com/stephenrkell/liballocs/> metalevel runtime services for unix procieess. Unix as smalltalk

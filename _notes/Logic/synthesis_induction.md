@@ -73,6 +73,75 @@ Synesthesia
 
 # Induction
 
+Graph induction / functional induction <https://types.pl/@pigworker/112016003109279373> <https://types.pl/@pigworker/112016097261103609>
+<https://coq.inria.fr/doc/V8.13.0/refman/using/libraries/funind.html>
+Equations
+ACL2 induction <https://www.cs.utexas.edu/users/moore/acl2/manuals/current/manual/index-seo.php/ACL2____INDUCTION>
+
+Actually reify the callgraph.
+f : callgraph (stack?) -> args -> res, callgraph
+Then an outer loop can dispatch the callgraph I suppose. Analyze the graph/stack for decreasing-ness in some sense?
+One could generate a type defunctionalizing the call stack I guess.. (?)
+
+```lean
+inductive fib in out where
+  | base : fib 0 0 
+  | base : fib 1 1
+  | step : n > 1 -> fib n-1 a -> fib n-2 b -> fib n (a+b)
+
+-- Also, I'd get rid of the a+b in the step conclusion, in favour of an extra hypothesis involving the graph of +.
+
+-- fib n : ex m, fib n m := yada
+```
+
+Yes. This datatype really is a big call graph. This is kind of odd from a non depednent type perspective. A graph is usually not so shallowly represented.
+
+This is both the call graph (internally) and the _mathemtical_ graph of the function. the graph being the set of pairs or relation of input/output as you might find in set theory.
+
+A non loopy (infinite) call graph I guess is representable. Arguments supprssed
+
+```
+type baz = Base
+type bar = Baz of baz
+type foo = Bar of bar | Baz of baz 
+```
+
+And the graph is well founded. Only the projection onto function symbols without arguments becomes a loopy cyclic graph.
+
+Build a trace recognizer first. (traces are obviously destructively recognized / fib_trace is more obviously a well founded induction function)
+
+```python
+def fib_trace(tr):
+  match tr:
+    case ("base0", 0, 0):
+      return True
+    case ("base1", 1, 1):
+      return True
+    case ("step", n, res, tr_n1, tr_n2):
+      assert n > 1:
+      assert fib_trace(tr_n1)
+      assert fib_trace(tr_n2)
+      assert res == tr_n1[2] + tr_n2[2]
+      return True
+```
+
+```lean
+-- but actually we could do this non depednet trace in lean too
+inductive trace where
+ | base0 : n m : Nat -> trace
+ | base1 : n m : Nat -> trace
+ | step : n m : Nat -> trace -> trace -> trace
+
+
+def trace_recog1 : trace -> bool :=
+def trace_recog2 n m : trace -> Option (fib n m) := 
+ -- this does seem kind of leaky
+```
+
+bove capretta <https://gallium.inria.fr/blog/bove-reloaded/>
+<https://easychair.org/publications/open/wV7> djinn monotonic mcbride
+<https://inria.hal.science/hal-00691459/file/main.pdf> Partiality and Recursion in Interactive Theorem Provers - An Overview bove kruass sozeau
+
 <https://ceur-ws.org/Vol-3201/paper9.pdf> vampire approach to induction
 
 Chatper of auotmated reasoning handbook

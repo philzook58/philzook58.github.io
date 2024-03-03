@@ -132,6 +132,9 @@ robot wheel balance
 pendulum
 
 # Misc
+<https://github.com/HiroIshida/scikit-motionplan>
+
+<https://github.com/mi-lib/mi-lib-starter>  mi-lib is a collection of libraries developed for robot control and simulation
 
 <https://github.com/upkie/upkie> balancing robot design and controllers
 ali pexress has a couple. ball balancer.

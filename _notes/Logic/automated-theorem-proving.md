@@ -7,6 +7,7 @@ title: Automated Theorem Proving
   - [Methodology](#methodology)
   - [Puzzles](#puzzles)
   - [Math](#math)
+  - [Analysis](#analysis)
     - [antiderivatives](#antiderivatives)
   - [ATP as a Logical Framework](#atp-as-a-logical-framework)
   - [Symbolic Execution](#symbolic-execution)
@@ -265,6 +266,9 @@ kleene algebra, kat
 Categories
 Set theory <https://en.wikipedia.org/wiki/List_of_set_identities_and_relation>
 Geometry
+
+## Analysis
+<https://www.cs.utexas.edu/ftp/techreports/atp71.pdf> [3] W. W. Bledsoe. Some automatic proofs in analysis.
 
 ### antiderivatives
 
@@ -576,6 +580,11 @@ Avigad book
 
 We don't want it necessarily to assume our function symbols are total. How do we model this?
 We could switch t a relational character. Functions are so gosh darn nice though.
+
+LCF
+HOLCF
+IMPS <https://web.cs.wpi.edu/~guttman/pubs/imps-overview.pdf>
+partial horn logic
 
 ## Query Containment
 
@@ -1412,6 +1421,7 @@ verify /tmp/foo.sig /tmp/foo
 ```
 
 # Higher Order
+
 <https://events.model.in.tum.de/mod23/lectures.html> jasmn banchette lectures
 
 Applicative encoding. Turn `f(x,y)` into `app(app(f,x),y)`. Wasteful and inefficint but it can work. Built in appreciation of higher order structure (currying basically?) is better

@@ -7,16 +7,16 @@ title: Scheme Racket Lisp
 
 - [Implementations](#implementations)
 - [Scheme](#scheme)
-  - [Minikanren](#minikanren)
+    - [Minikanren](#minikanren)
 - [Racket](#racket)
-  - [Rosette](#rosette)
+    - [Rosette](#rosette)
 - [Common Lisp](#common-lisp)
   - [CLOS](#clos)
   - [Condition System](#condition-system)
   - [ACL2](#acl2)
 - [Other Lisps](#other-lisps)
 - [Compilation](#compilation)
-  - [Gambit compiling to javascript](#gambit-compiling-to-javascript)
+    - [Gambit compiling to javascript](#gambit-compiling-to-javascript)
 - [Misc](#misc)
 
 I'm really going to put scheme and common lisp in the same category?
@@ -242,6 +242,19 @@ Like exceptions except you can restrta from them
 [book](https://news.ycombinator.com/item?id=24867548)
 
 ## ACL2
+<https://www2.ccs.neu.edu/racket/pubs/ppdp09-ef.pdf> Making Induction Manifest in Modular ACL2 ∗
+
+<https://shigoel.github.io/> very cool. x86isa
+
+"Projects" <https://github.com/acl2/acl2/tree/master/books/projects>
+
+- <https://www.cs.utexas.edu/users/moore/acl2/manuals/current/manual/?topic=EXLD____EXECLOADER> ecexloader reads elg and macho?
+- <https://github.com/acl2/acl2/blob/master/books/projects/avr-isa/avr8_isa.lisp> avr isa
+- <http://www.cs.utexas.edu/users/moore/acl2/manuals/current/manual/?topic=ACL2____X86ISA> x86 isa
+- - <https://www.cs.utexas.edu/users/moore/acl2/manuals/current/manual/?topic=ACL2____EQUATIONAL> resolution paramodultTION PROVER
+- <https://www.cs.utexas.edu/users/moore/acl2/manuals/current/manual/?topic=SMT____SMTLINK> SMTLINK TALKing to smt solvers
+- <https://www.cs.utexas.edu/users/moore/acl2/manuals/current/manual/?topic=C____C> formalization of C
+- <https://github.com/acl2/acl2/tree/master/books/centaur> centaur. verilog parser and simplification tools.
 
 <https://www.khoury.northeastern.edu/home/pete/research.html> Manolios teaches courses
 <https://www.cs.utexas.edu/users/hunt/research/index.html> Hunt

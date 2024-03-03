@@ -165,3 +165,5 @@ Serial latch
 Art of electronics - didn't really like this one.
 ARRL handbook is really good actually
 <https://www.youtube.com/@w2aew>
+
+<https://github.com/paulhdietz/LEDSensors?tab=readme-ov-file> led as sensor

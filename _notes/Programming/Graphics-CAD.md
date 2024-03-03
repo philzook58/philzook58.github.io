@@ -47,6 +47,8 @@ solidworks
 
 JoinABLe: Learning Bottom-up Assembly of Parametric CAD Joints  <https://arxiv.org/abs/2111.12772>
 
+<https://github.com/mi-lib/zeo> Zeo - Z/Geometry and optics computation library
+
 ## Modelling
 
 <https://johanpeitz.itch.io/picocad>

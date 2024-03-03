@@ -15,5 +15,8 @@ lean_exe «myproject» {
 }
 
 require std from git "https://github.com/leanprover/std4" @ "main"
-require mathlib4 from git
+require mathlib from git
   "https://github.com/leanprover-community/mathlib4" @ "master"
+require aesop from git "https://github.com/JLimperg/aesop"
+require auto from git "https://github.com/leanprover-community/lean-auto.git" @ "main"
+require Duper from git "https://github.com/leanprover-community/duper.git" @ "main"

@@ -1,5 +1,5 @@
 
-There is something qute anjyable and compelling about building mechanisms.
+There is something qute enjoyable and compelling about building mechanisms.
 
 Many years ago we bought a 3d printer kit. It was quite illuminating to see the basic trcks and pieces one could buy or build. It s still very common to see RAMPS boards, gear belt, couplers, steppers, and aluminum extrusion. You can transfer these techniques to other projects.
 
