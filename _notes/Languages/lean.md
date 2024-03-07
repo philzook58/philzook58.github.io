@@ -148,6 +148,11 @@ with Dojo(theorem) as (dojo, init_state):
 
 <https://github.com/leanprover/leanbv>
 
+hint tactic
+rw?? a click and point tactic
+<http://www.moogle.ai>
+<https://github.com/namin/llm-verified-with-monte-carlo-tree-search>
+
 ### Build
 
 `elan` tool

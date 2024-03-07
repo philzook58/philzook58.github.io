@@ -155,3 +155,5 @@ data Graph a = Empty
 ```
 
 overlay is a union of edge and vertices. so vertices appear on both sides
+
+<https://news.ycombinator.com/item?id=39592444> why isn't there a native graph datatype
