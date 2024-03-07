@@ -6411,6 +6411,10 @@ print(s.model())
 
 # Resources
 
+https://github.com/jtpaasch/turtles abstract interpetation
+
+https://news.ycombinator.com/item?id=39606885#39610510 The missing graph datatype already exists
+
 Flan. staged metaprogramming datalog rompf <https://popl24.sigplan.org/details/POPL-2024-popl-research-papers/88/Flan-An-Expressive-and-Efficient-Datalog-Compiler-for-Program-Analysis>
 
 <https://x.com/EvgSkvDev/status/1727168338475069465?s=20> logica <https://colab.research.google.com/drive/1KJ6xKSwpw5FWWkvUOyBCpAcU_jVZV7Gs?usp=sharing> <https://github.com/evgskv/logica> a sql based datalog. helllo nurse <https://logica.dev/>
