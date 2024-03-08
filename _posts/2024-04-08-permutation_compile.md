@@ -3,7 +3,7 @@ date: 2024-03-08
 title: "Copy and Micropatch: Writing Binary Patches in C with Clang preserve_none"
 ---
 
-I've been working on writing intra-function binary patches using high level C code for a few years.
+I've been working on writing intra-function binary patches using high level C code for a few years. If it could be made easy and correct, it could unlock superpowers.
 
 It is really hard to precisely control some aspects of the assembly coming out of a C compiler. By design, the compiler has the ability to optimize and rearrange the code. This is a good thing, but it can be a problem if you want to write a binary patch in a high level language using a stock compiler.
 
@@ -90,12 +90,19 @@ Registers can be marked as unneeded by filling in their slot in the final tail c
 
 I wrote a small ghidra script to wrap calling a compiler in the copy and micropatch style <https://github.com/philzook58/pcode2c/blob/main/ghidra_scripts/compile.py> . It templates out the callng convention. Eventually I could fill in global addresses, pull in names from the ghidra decompiler, and other useful bits if people are excited about that.
 
-I thought maybe the varargs mechanism could be used to access the stack, but tinkring wth it for 10 minutes I wasn't getting good results.
+I thought maybe the varargs mechanism could be used to access the stack, but tinkering wth it for 10 minutes I wasn't getting good results.
 
 Maybe I can get CALLBACK to be set to the actual patch return address using a const function pointer?
 
 Play around in godbolt:
 <iframe width="800px" height="200px" src="https://godbolt.org/e#z:OYLghAFBqd5QCxAYwPYBMCmBRdBLAF1QCcAaPECAMzwBtMA7AQwFtMQByARg9KtQYEAysib0QXACx8BBAKoBnTAAUAHpwAMvAFYTStJg1AB9U8lJL6yAngGVG6AMKpaAVxYMQAZi6kHAGTwGTAA5dwAjTGIQACYNUgAHVAVCWwZnNw9YmMTk1IFA4LCWSOi4i0wrGwEhAiZiAgz3Tx8KqrTa%2BoJC0Iio2PiFOoamrJicoa6e4tKBgEoLVFdiZHYOAFINAEF1mK8g5DcsAGp1r0ch/EEAOgQz7E2tgHon44AlABEASVJ3oR/3h8ABq/N6OEHvAAcoIAnKCuL53lwckivPDpEiAKygrZAx4vTCqAhRBjHVxBAheGLGAjHcKuKhUKJJFLVBhnABC%2BKeaAYQ2OACoyRSqTTHuTBKLaULefz6YzmXk2acvB9jhAJQQAGySGmCuYaVQwjQmzniik6vWmJgEAjEPD04mmKAJYiYJTEABumGMDAEmDmc2Ox0cW38/g5W0cAGkNRbdbTiPhfprLYmUin43qk6pM4I08cVrnhfmE4XoSXtWXiHDKwXiAi81Xs8im/WuGi69WpG3u9iu9mmKo5mbtqmy9bbfbHT7jC63R7vb7/YHjvxUHHS9nkwP03he9vi%2BPs8gj1nExXj4na1fC43d3eUbeG53nz2Hw3%2B8%2BhyOAOxc7Zg2DF43WAPAhiiD8uA0Y4mAUFgIF2GIGw0JCRy8ACtiAwsUhVNViFw3YOULIdThiYjkVHLCgLwKgIAIvAVUcY5fz/TDsOw4hSLONUpCo7D1l/D5Hmw2iIAFeUmWIFl8lJe4eOOOI2JEjjgwkhkpJk5UFNQjCVODQThMAoCQOgvDjkkGJ%2BJMp44IQpCWFQT0yMxeIXN2TEUKQkAQCQ4gkPo6DA2s4Nb20VwGAAaxCwtMAIZZSVDcNIxjeidwY34c0y09fnCqLMtrBtEQbFEX0y99P0yn8qMMx4OAWWhOExXhPA4LRSFQThmIUJYVkwMifF4AhNHqhZIpAVzrg0LVMUxLwtV/PYuC1LxIUkbFGo4SQWpGjrOF4BQQHiYa2vq0g4FgJA0BYBI6CichKGu276GiZBDkMYAaWICLIr4OhiQIyhwl28IgnqABPTgeFIUHmGIcGAHlwm0TBrCh3hrrYQQEYYWhIdO0gsHpYBHDEWhDu4XgsBYD7xAJ/A3WsPBvQp9rCVR1xiXR8hBEqXbaAdLj4ecLBdrtPAWHRhYqAMYAFAANTwTAAHcEYSRhuf4QQRDEdgey1%2BQlDUXbdF8AwjBAUxjHMAXwkOyAFlQBI2QpgBaBGvF4JyontLB7YgBZLFRtl7AYJwXGaPQAiCXoSn6XwtLSUZPATpU0mmPpol8IOmZqYZGgjrJs8qYOOnzjO46zix8%2BTvRJgaCvZi4QPetWPRlcMAg1YIL4GH4KX9CanaCc6jhjlUSEtVdnVjneox1TtH6gwgXBCBIAbm6GkbA1IcbJBha4YS8SRJBWmJfy1SF5q4X9B624f2tHg6jtIE6tB3zaYgfr39tf7eFm9AxOwkggA%3D%3D"></iframe>
+
+More some other day about how to find space for patches.
+
+You may also have good success with:
+
+- Shiva <https://github.com/advanced-microcode-patching/shiva> . Dynamic bnary patchng via linker interposition. Some nice macros and techniques for hooking. Very powerful. Nice use manual <https://github.com/advanced-microcode-patching/shiva_user_manual> .  Defcon talk <https://www.youtube.com/watch?v=TDMWejaucdg&ab_channel=DEFCONConference>
+- Patcherex2 - <https://github.com/purseclab/Patcherex2> a python library with some nice patching functionality
 
 ### Permuting Assembly Registers
 
