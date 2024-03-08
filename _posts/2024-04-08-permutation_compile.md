@@ -69,7 +69,7 @@ Requiring the compiler to preserve this many registers may be undesirable. Actua
 
 This technique works on any stock compiler on any architecture if you swap out the x86-64 calling convention for that architectures. If your compiler doesn't do tail calls, that isn't a disaster. You may need to cut off call setup at the end of the function if this is the case.
 
-Because of considerations like this, the technique isn't _quite_ reliable enough to be totally automated without a human taking a peek at the assembly.
+Because of considerations like this, the technique isn't _quite_ reliable enough to be totally automated without a human taking a peek at the assembly. You may want to fiddle with the resulting assmbly, remove the CALLBACK jmp if you can patch in place, look for the still possible remaining clobbers. Still, it's a big help I think compared to writing assembly from complete scratch.
 
 With the new [`preserve_none`](https://discourse.llvm.org/t/rfc-exposing-ghccc-calling-convention-as-preserve-none-to-clang/74233/27) calling convetion available in clang-19, we get even more control. Now the calling convetion also gives us control over r11, r12, r13, r14, r15, and rax.
 
@@ -88,7 +88,7 @@ Registers can be marked as unneeded by filling in their slot in the final tail c
 
 # Bits and Bobbles
 
-I wrote a small ghidra script to wrap calling a compiler in the copy and micropatch style <https://github.com/philzook58/pcode2c/blob/main/ghidra_scripts/compile.py> . It templates out the callng convention. Eventually I could fill in global addresses, pull in names from the ghidra decompiler, and other useful bits if people are excited about that.
+I wrote a small ghidra script to wrap calling a compiler in the copy and micropatch style <https://github.com/philzook58/pcode2c/blob/main/ghidra_scripts/compile.py> . It templates out the callng convention. Eventually I could fill in global addresses, pull in names from the ghidra decompiler, and other useful bits if people are excited about that. I reccommend taking the output of he script and then using the Ghidra assembler to actually do the patch. Maybe this also could be more automated.
 
 I thought maybe the varargs mechanism could be used to access the stack, but tinkering wth it for 10 minutes I wasn't getting good results.
 
