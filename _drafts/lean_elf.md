@@ -14,6 +14,25 @@ int main(){
 "
 ```
 
+lean-cli.
+
+```lean
+
+inductive Form where
+    Var : String -> Form
+    Fn : String -> List Form
+```
+
+```lean
+
+def main : IO Unit := do
+    let bytes <- IO.FS.readFile "/bin/true"
+    let magic := ByteString.get bytes
+    return ()
+    
+
+```
+
 ## Dwarf write
 
 <https://github.com/gimli-rs/gimli/blob/master/crates/examples/src/bin/simple.rs>
