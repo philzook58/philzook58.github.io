@@ -1,5 +1,5 @@
 ---
-date: 2024-04-08
+date: 2024-03-08
 title: "Copy and Micropatch: Writing Binary Patches in C with Clang preserve_none"
 ---
 
@@ -26,6 +26,7 @@ This isn't enough though. You want to use `-O2` and the compiler can see that th
 So another nice trick is using a tail call giving it the output register values. This leaves the stack alone and just jumps to the new function (assuming that tail call optimization actually triggers). By giving it the same arguments, they _must_ be preserved.
 
 ```C
+#include <stdint.h>
 uint64_t CALLBACK(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 uint64_t PATCHCODE(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9){
     // Some random patch code here
@@ -36,6 +37,8 @@ uint64_t PATCHCODE(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint6
     return CALLBACK(rdi, rsi, rdx, rcx, r8, r9);
 }
 ```
+
+[godbolt](https://godbolt.org/#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,fontUsePx:'0',j:1,lang:___c,selection:(endColumn:1,endLineNumber:11,positionColumn:1,positionLineNumber:11,selectionStartColumn:1,selectionStartLineNumber:11,startColumn:1,startLineNumber:11),source:'%23include+%3Cstdint.h%3E%0Auint64_t+CALLBACK(uint64_t+rdi,+uint64_t+rsi,+uint64_t+rdx,+uint64_t+rcx,+uint64_t+r8,+uint64_t+r9)%3B%0Auint64_t+PATCHCODE(uint64_t+rdi,+uint64_t+rsi,+uint64_t+rdx,+uint64_t+rcx,+uint64_t+r8,+uint64_t+r9)%7B%0A++++//+Some+random+patch+code+here%0A++++if(rcx+%3E%3D+r8)%7B%0A++++++++rdi+%3D+rsi+*+rdx%3B+%0A++++%7D%0A++++//+End+patchcode%0A++++return+CALLBACK(rdi,+rsi,+rdx,+rcx,+r8,+r9)%3B%0A%7D%0A'),l:'5',n:'0',o:'C+source+%231',t:'0')),k:50.026214689265544,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:cg132,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:___c,libs:!(),options:'-O2',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1,wantOptInfo:'1'),l:'5',n:'0',o:'+x86-64+gcc+13.2+(Editor+%231)',t:'0')),k:49.97378531073447,l:'4',n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),version:4)
 
 Any arguments after the first six are placed on the stack. In this manner, you can also get read and write access to the stack by appending as many arguments as you need to get to the stack position of interest.
 
