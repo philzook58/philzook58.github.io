@@ -21,7 +21,7 @@ void PATCHCODE(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t 
 }
 ```
 
-This isn't enough though. You want to use `-O2` and the compiler can see that these aren't realy side effecting so will just delete this code. Plus there is no guarantee that the variable `rdi` stays in the registers `%rdi`. This is true only at exactly the function entry.
+This isn't enough though. You want to use `-O2` and the compiler can see that these statements aren't really side effecting so will just delete this code. There is no guarantee that the variable `rdi` stays in the registers `%rdi`. This is true only at exactly the function entry. The compiler has all sorts of sometimes surprising freedom.
 
 So another nice trick is using a tail call giving it the output register values. This leaves the stack alone and just jumps to the new function (assuming that tail call optimization actually triggers). By giving it the same arguments, they _must_ be preserved.
 
@@ -106,9 +106,9 @@ You may also have good success with:
 
 ### Permuting Assembly Registers
 
-An idea I also kind of like is that of applying a textual permutation of registers in the resulting assembly. Like serioualy as dumb as string search and replace of `%rax` -> `%rdi`. In this way you could turn abi registers into ones of interest, or permute a undesired clobber into an ok to clobber
+An idea I also kind of like is that of applying a textual permutation of registers in the resulting assembly. Like serioualy as dumb as string search and replace of `%rax` -> `%rdi`. In this way you could turn abi registers into ones of interest, or permute a undesired clobber into an ok to clobber.
 
-Never quite actually tried it though
+Never quite actually got it working. String mangling like this is icky althugh expedient. Maybe one should parse and then do it.
 
 {% raw %}
 
