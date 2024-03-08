@@ -11,7 +11,7 @@ The main thing you can guarantee about the binary is the ABI, in particular [cal
 
 An interesting technique for using an off the shelf compiler to compile C program fragments is to use ABI abuse to read, write, and preserve registers. This is inspired by [Copy and Patch JIT](https://news.ycombinator.com/item?id=38769874) like that which recently landed in the CPython interpreter.
 
-In the typical x64-64 calling convention the first 6 arguments are passed in registers and the rest on the stack. Because of this, I can directly read rdi, rsi, rdx, rcx, r8, r9.
+In the typical [x64-64 System V](https://wiki.osdev.org/System_V_ABI) calling convention the first 6 arguments are passed in registers and the rest on the stack. Because of this, I can directly read rdi, rsi, rdx, rcx, r8, r9.
 
 ```C
 void PATCHCODE(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9){
@@ -71,12 +71,12 @@ This technique works on any stock compiler on any architecture if you swap out t
 
 Because of considerations like this, the technique isn't _quite_ reliable enough to be totally automated without a human taking a peek at the assembly.
 
-With the new [`preserve_none`](https://discourse.llvm.org/t/rfc-exposing-ghccc-calling-convention-as-preserve-none-to-clang/74233/27) calling convetion available in clang-19, we get even more control. Now the calling convetion also gives us control over r10, r11, r12, r13, r14, r15, and rax.
+With the new [`preserve_none`](https://discourse.llvm.org/t/rfc-exposing-ghccc-calling-convention-as-preserve-none-to-clang/74233/27) calling convetion available in clang-19, we get even more control. Now the calling convetion also gives us control over r11, r12, r13, r14, r15, and rax.
 
 ```C
 uint64_t __attribute__((preserve_none))  CALLBACK(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9, uint64_t r11, uint64_t r12, uint64_t r13, uint64_t r14, uint64_t r15, uint64_t rax);
 uint64_t __attribute__((preserve_none)) foo(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9, uint64_t r11, uint64_t r12, uint64_t r13, uint64_t r14, uint64_t r15, uint64_t rax){
-       return CALLBACK(rdi, rsi, rdx, rcx, junk, r9, r11, r12, r13, r14, r15, rax);
+       return CALLBACK(rdi, rsi, rdx, rcx, r8, r9, r11, r12, r13, r14, r15, rax);
 }
 ```
 
@@ -94,7 +94,10 @@ I thought maybe the varargs mechanism could be used to access the stack, but tin
 
 Maybe I can get CALLBACK to be set to the actual patch return address using a const function pointer?
 
-### Permuting Assmbly Registers
+Play around in godbolt:
+<iframe width="800px" height="200px" src="https://godbolt.org/e#z:OYLghAFBqd5QCxAYwPYBMCmBRdBLAF1QCcAaPECAMzwBtMA7AQwFtMQByARg9KtQYEAysib0QXACx8BBAKoBnTAAUAHpwAMvAFYTStJg1AB9U8lJL6yAngGVG6AMKpaAVxYMQAZi6kHAGTwGTAA5dwAjTGIQACYNUgAHVAVCWwZnNw9YmMTk1IFA4LCWSOi4i0wrGwEhAiZiAgz3Tx8KqrTa%2BoJC0Iio2PiFOoamrJicoa6e4tKBgEoLVFdiZHYOAFINAEF1mK8g5DcsAGp1r0ch/EEAOgQz7E2tgHon44AlABEASVJ3oR/3h8ABq/N6OEHvAAcoIAnKCuL53lwckivPDpEiAKygrZAx4vTCqAhRBjHVxBAheGLGAjHcKuKhUKJJFLVBhnABC%2BKeaAYQ2OACoyRSqTTHuTBKLaULefz6YzmXk2acvB9jhAJQQAGySGmCuYaVQwjQmzniik6vWmJgEAjEPD04mmKAJYiYJTEABumGMDAEmDmc2Ox0cW38/g5W0cAGkNRbdbTiPhfprLYmUin43qk6pM4I08cVrnhfmE4XoSXtWXiHDKwXiAi81Xs8im/WuGi69WpG3u9iu9mmKo5mbtqmy9bbfbHT7jC63R7vb7/YHjvxUHHS9nkwP03he9vi%2BPs8gj1nExXj4na1fC43d3eUbeG53nz2Hw3%2B8%2BhyOAOxc7Zg2DF43WAPAhiiD8uA0Y4mAUFgIF2GIGw0JCRy8ACtiAwsUhVNViFw3YOULIdThiYjkVHLCgLwKgIAIvAVUcY5fz/TDsOw4hSLONUpCo7D1l/D5Hmw2iIAFeUmWIFl8lJe4eOOOI2JEjjgwkhkpJk5UFNQjCVODQThMAoCQOgvDjkkGJ%2BJMp44IQpCWFQT0yMxeIXN2TEUKQkAQCQ4gkPo6DA2s4Nb20VwGAAaxCwtMAIZZSVDcNIxjeidwY34c0y09fnCqLMtrBtEQbFEX0y99P0yn8qMMx4OAWWhOExXhPA4LRSFQThmIUJYVkwMifF4AhNHqhZIpAVzrg0LVMUxLwtV/PYuC1LxIUkbFGo4SQWpGjrOF4BQQHiYa2vq0g4FgJA0BYBI6CichKGu276GiZBDkMYAaWICLIr4OhiQIyhwl28IgnqABPTgeFIUHmGIcGAHlwm0TBrCh3hrrYQQEYYWhIdO0gsHpYBHDEWhDu4XgsBYD7xAJ/A3WsPBvQp9rCVR1xiXR8hBEqXbaAdLj4ecLBdrtPAWHRhYqAMYAFAANTwTAAHcEYSRhuf4QQRDEdgey1%2BQlDUXbdF8AwjBAUxjHMAXwkOyAFlQBI2QpgBaBGvF4JyontLB7YgBZLFRtl7AYJwXGaPQAiCXoSn6XwtLSUZPATpU0mmPpol8IOmZqYZGgjrJs8qYOOnzjO46zix8%2BTvRJgaCvZi4QPetWPRlcMAg1YIL4GH4KX9CanaCc6jhjlUSEtVdnVjneox1TtH6gwgXBCBIAbm6GkbA1IcbJBha4YS8SRJBWmJfy1SF5q4X9B624f2tHg6jtIE6tB3zaYgfr39tf7eFm9AxOwkggA%3D%3D"></iframe>
+
+### Permuting Assembly Registers
 
 An idea I also kind of like is that of applying a textual permutation of registers in the resulting assembly. Like serioualy as dumb as string search and replace of `%rax` -> `%rdi`. In this way you could turn abi registers into ones of interest, or permute a undesired clobber into an ok to clobber
 
@@ -175,7 +178,6 @@ ok what would it take for this to work?
 
 <https://godbolt.org/#z:OYLghAFBqd5QCxAYwPYBMCmBRdBLAF1QCcAaPECAMzwBtMA7AQwFtMQByARg9KtQYEAysib0QXACx8BBAKoBnTAAUAHpwAMvAFYTStJg1AB9U8lJL6yAngGVG6AMKpaAVxYMQAZi6kHAGTwGTAA5dwAjTGIQACYNUgAHVAVCWwZnNw9YmMTk1IFA4LCWSOi4i0wrGwEhAiZiAgz3Tx8KqrTa%2BoJC0Iio2PiFOoamrJicoa6e4tKBgEoLVFdiZHYOAFINAEF1mK8g5DcsAGp1r0ch/EEAOgQz7E2tgHon44AlABEASVJ3oR/3h8ABq/N6OEHvAAcoIAnKCuL53lwckivPDpEiAKygrZAx4vTCqAhRBjHVxBAheGLGAjHcKuKhUKJJFLVBhnABC%2BKeaAYQ2OACoyRSqTTHuTBKLaULefz6YzmXk2acvB9jhAJQQAGySGmCuYaVQwjQmzniik6vWmJgEAjEPD04mmKAJYiYJTEABumGMDAEmDmc2Ox0cW38/g5W0cAGkNRbdbTiPhfprLYmUin43qk6pM4I08cVrnhfmE4XoSXtWXiHDKwXiAi81Xs8im/WuGi69WpG3u9iu9mmKo5mbtqmy9bbfbHT7jC63R7vb7/YHjvxUHHS9nkwP03he9vi%2BPs8gj1nExXj4na1fC43d3eUbeG53nz2Hw3%2B8%2BhyOAOxc7Zg2DF43WAPAhiiD8uA0Y4mAUFgIF2GIGw0JCRy8ACtiAwsUhVNViFw3YOULIdThiYjkVHLCgLwKgIAIvAVUcY5fz/TDsOw4hSLONUpCo7D1l/D5Hmw2iIAFeUmWIFl8lJe4eOOOI2JEjjgwkhkpJk5UFNQjCVODQThMAoCQOgvDjkkGJ%2BJMp44IQpCWFQT0yMxeIXN2TEUKQkAQCQ4gkPo6DA2s4Nb20VwGAAaxCwtMAIZZSVDcNIxjeidwY34c0y09fnCqLMtrBtEQbFEX0y99P0yn8qMMx4OAWWhOExXhPA4LRSFQThmIUJYVkwMifF4AhNHqhZIpAVzrg0LVMUxLwtV/PYuC1LxIUkbFGo4SQWpGjrOF4BQQHiYa2vq0g4FgJA0BYBI6CichKGu276GiZBDkMYAaWICLIr4OhiQIyhwl28IgnqABPTgeFIUHmGIcGAHlwm0TBrCh3hrrYQQEYYWhIdO0gsHpYBHDEWhDu4XgsBYD7xAJ/A3WsPBvQp9rCVR1xiXR8hBEqXbaAdLj4ecLBdrtPAWHRhYqAMYAFAANTwTAAHcEYSRhuf4QQRDEdgey1%2BQlDUXbdF8AwjBAUxjHMAXwkOyAFlQBI2QpgBaBGvF4JyontLB7YgBZLFRtl7AYJwXGaPQAiCXoSn6XwtLSUZPATpU0mmPpol8IOmZqYZGgjrJs8qYOOnzjO46zix8%2BTvRJgaCvZi4QPetWPRlcMAg1YIL4GH4KX9CanaCc6jhjlUSEtVdnVjneox1TtH6gwgXBCBIAbm6GkbA1IcbJBha4YS8SRJBWmJfy1SF5q4X9B624f2tHg6jtIE6tB3zaYgfr39tf7eFm9AxOwkggA%3D%3D> Godbolt example
 iframe version. Hmmm. I like that
-<iframe width="800px" height="200px" src="https://godbolt.org/e#z:OYLghAFBqd5QCxAYwPYBMCmBRdBLAF1QCcAaPECAMzwBtMA7AQwFtMQByARg9KtQYEAysib0QXACx8BBAKoBnTAAUAHpwAMvAFYTStJg1AB9U8lJL6yAngGVG6AMKpaAVxYMQAZi6kHAGTwGTAA5dwAjTGIQACYNUgAHVAVCWwZnNw9YmMTk1IFA4LCWSOi4i0wrGwEhAiZiAgz3Tx8KqrTa%2BoJC0Iio2PiFOoamrJicoa6e4tKBgEoLVFdiZHYOAFINAEF1mK8g5DcsAGp1r0ch/EEAOgQz7E2tgHon44AlABEASVJ3oR/3h8ABq/N6OEHvAAcoIAnKCuL53lwckivPDpEiAKygrZAx4vTCqAhRBjHVxBAheGLGAjHcKuKhUKJJFLVBhnABC%2BKeaAYQ2OACoyRSqTTHuTBKLaULefz6YzmXk2acvB9jhAJQQAGySGmCuYaVQwjQmzniik6vWmJgEAjEPD04mmKAJYiYJTEABumGMDAEmDmc2Ox0cW38/g5W0cAGkNRbdbTiPhfprLYmUin43qk6pM4I08cVrnhfmE4XoSXtWXiHDKwXiAi81Xs8im/WuGi69WpG3u9iu9mmKo5mbtqmy9bbfbHT7jC63R7vb7/YHjvxUHHS9nkwP03he9vi%2BPs8gj1nExXj4na1fC43d3eUbeG53nz2Hw3%2B8%2BhyOAOxc7Zg2DF43WAPAhiiD8uA0Y4mAUFgIF2GIGw0JCRy8ACtiAwsUhVNViFw3YOULIdThiYjkVHLCgLwKgIAIvAVUcY5fz/TDsOw4hSLONUpCo7D1l/D5Hmw2iIAFeUmWIFl8lJe4eOOOI2JEjjgwkhkpJk5UFNQjCVODQThMAoCQOgvDjkkGJ%2BJMp44IQpCWFQT0yMxeIXN2TEUKQkAQCQ4gkPo6DA2s4Nb20VwGAAaxCwtMAIZZSVDcNIxjeidwY34c0y09fnCqLMtrBtEQbFEX0y99P0yn8qMMx4OAWWhOExXhPA4LRSFQThmIUJYVkwMifF4AhNHqhZIpAVzrg0LVMUxLwtV/PYuC1LxIUkbFGo4SQWpGjrOF4BQQHiYa2vq0g4FgJA0BYBI6CichKGu276GiZBDkMYAaWICLIr4OhiQIyhwl28IgnqABPTgeFIUHmGIcGAHlwm0TBrCh3hrrYQQEYYWhIdO0gsHpYBHDEWhDu4XgsBYD7xAJ/A3WsPBvQp9rCVR1xiXR8hBEqXbaAdLj4ecLBdrtPAWHRhYqAMYAFAANTwTAAHcEYSRhuf4QQRDEdgey1%2BQlDUXbdF8AwjBAUxjHMAXwkOyAFlQBI2QpgBaBGvF4JyontLB7YgBZLFRtl7AYJwXGaPQAiCXoSn6XwtLSUZPATpU0mmPpol8IOmZqYZGgjrJs8qYOOnzjO46zix8%2BTvRJgaCvZi4QPetWPRlcMAg1YIL4GH4KX9CanaCc6jhjlUSEtVdnVjneox1TtH6gwgXBCBIAbm6GkbA1IcbJBha4YS8SRJBWmJfy1SF5q4X9B624f2tHg6jtIE6tB3zaYgfr39tf7eFm9AxOwkggA%3D%3D"></iframe>
 
 ok what would it take for this to work?
 <https://github.com/llvm/llvm-project/pull/76868>
