@@ -762,7 +762,9 @@ We can get around this with an explicit `eval(t)` token and rules to move it aro
 - <https://dl.acm.org/doi/10.1145/3397677> Context-sensitive Rewriting Salvador Lucas
 
 There is a notion of context sensitive rewriting as one way of dealing with things like this.
-<https://aprove.informatik.rwth-aachen.de/help_new/trs.html#trs> There's some other interesting constructs here like equational. I don't know what they do.
+<https://aprove.informatik.rwth-aachen.de/help_new/trs.html#trs> 
+
+There's some other interesting variants. I don't know exactly what they do. There is rewriting modulo equations, realtive rewriting, innermost rewriting, conditional rewriting, outermost rewriting, higher order rewriting hrs, cycle rewriting, string rewriting.
 
 ```python
 %%file /tmp/ite2.trs
@@ -1010,11 +1012,15 @@ Another way is to show that you have an order preserving mapping into a nice wel
 
 The dependency pair framework is some important concept of how one proves termination in these solvers, but I don't understand it.
 
+Polynomials interpretation
+Matrix interpretations?
+
+
 # Other Formats
 
 AProVE takes in some interesting formats. See the webiste for more.
 
-Integer transition systems.
+Integer transition systems. KoAT LoAT are two solvers.
 
 ## String rewriting
 
