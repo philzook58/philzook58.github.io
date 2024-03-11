@@ -142,18 +142,7 @@ Here's a Peano plus.
 
     Fatal error: exception Xml_light_errors.Xml_error(_)
 
-Basically the same problem
-
-```python
-%%file /tmp/append.trs
-(VAR x y z)
-(RULES
-    append(nil,y) -> y
-    append(cons(x,z),y) -> cons(x, append(z,y))
-)
-```
-
-Here's what non termination loooks like
+This is what non termination looks like. This is a cogent definition of an infinite stream of 0, but certainly not terminating.
 
 ```python
 %%file /tmp/nonterm.trs
@@ -310,15 +299,6 @@ Here's what non termination loooks like
     NO
 
 Consider this reformulation of plus. It does not terminate. Funny huh.
-
-It's because we're used to the lazy execution semantics of if-then-else. The trs format is agnostic about the ordering rules are applied.
-It could keep adding `pred` to the terms and never reduce them.
-`PLUS(pred(pred(z0)), z1) to PLUS(pred(pred(pred(z0))), z1)`
-
-We can get around this with an explicit `eval(t)` token and rules to move it around. Or we could reformulate it back to how we had it above.
-
-- <https://spoofax.dev/background/stratego/strategic-rewriting/limitations-of-rewriting/>
-- <https://dl.acm.org/doi/10.1145/3397677> Context-sensitive Rewriting Salvador Lucas
 
 ```python
 %%file /tmp/ite.trs
@@ -771,6 +751,15 @@ We can get around this with an explicit `eval(t)` token and rules to move it aro
     
     (28)
     NO
+
+It's because we're used to the lazy execution semantics of if-then-else. The trs format is agnostic about the ordering rules are applied.
+It could keep adding `pred` to the terms and never reduce them.
+`PLUS(pred(pred(z0)), z1) to PLUS(pred(pred(pred(z0))), z1)`
+
+We can get around this with an explicit `eval(t)` token and rules to move it around. Or we could reformulate it back to how we had it above.
+
+- <https://spoofax.dev/background/stratego/strategic-rewriting/limitations-of-rewriting/>
+- <https://dl.acm.org/doi/10.1145/3397677> Context-sensitive Rewriting Salvador Lucas
 
 There is a notion of context sensitive rewriting as one way of dealing with things like this.
 <https://aprove.informatik.rwth-aachen.de/help_new/trs.html#trs> There's some other interesting constructs here like equational. I don't know what they do.
@@ -1637,6 +1626,15 @@ append([X|Xs],Ys,[X|Zs]) :- append(Xs,Ys,Zs).
 - <https://dafny.org/dafny/OnlineTutorial/Termination> dafny termination. decreases clauses
 - <https://www.cs.utexas.edu/users/moore/acl2/manuals/current/manual/index-seo.php/ACL2____MEASURE?path=3921/6451/3296/53/1001>
 - Maude termination assistant <https://maude.cs.uiuc.edu/tools/mta/>
+
+```python
+%%file /tmp/append.trs
+(VAR x y z)
+(RULES
+    append(nil,y) -> y
+    append(cons(x,z),y) -> cons(x, append(z,y))
+)
+```
 
 ```python
 import subprocess
