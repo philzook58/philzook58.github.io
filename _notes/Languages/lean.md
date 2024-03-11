@@ -3,6 +3,10 @@ layout: post
 title: Lean
 ---
 
+https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ITP.2023.24 An extensible user interface for lean 4. Proofwidgets paper
+
+
+
 - [Logic and Mechanical Reasoning](https://avigad.github.io/lamr/) [Logic and Mechanized Reasoning](https://avigad.github.io/lamr/logic_and_mechanized_reasoning.pdf)
 - [Theorem proving in lean4](https://leanprover.github.io/theorem_proving_in_lean4/)
 - [functional programming in lean](https://leanprover.github.io/functional_programming_in_lean/hello-world.html) Christianson
@@ -203,6 +207,12 @@ ring
 
 have have, show style proofs
 ```
+# Megaprogramming
+
+```lean
+{% include_relative lean/myproject/metaprog.lean %}
+```
+
 
 # Stuff
 

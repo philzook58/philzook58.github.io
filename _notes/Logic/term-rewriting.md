@@ -1407,6 +1407,11 @@ Redex, Maude, Spoofax, OTT, [Rascal](https://www.rascal-mpl.org/),  ATL and mode
 
 [K vs. Coq as Language Verification Frameworks](https://runtimeverification.com/blog/k-vs-coq-as-language-verification-frameworks-part-1-of-3/)
 
+## spoofax
+https://spoofax.dev/background/stratego/strategic-rewriting/term-rewriting/
+
+strategic rewriting
+
 # Other Systems
 
 Pure
