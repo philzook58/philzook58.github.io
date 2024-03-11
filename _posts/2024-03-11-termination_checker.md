@@ -5,7 +5,7 @@ title: "Termination Checkers: Playing with AProVE"
 
 An interesting category of solver that is not discussed much is that of termination checkers.
 
-I've been looking into this recently because I'd like to discharge the well formedness of recursive definitions in my python ITP [knuckledragger](https://github.com/philzook58/knuckledragger) by just calling one of these solvers.
+I've been looking into this recently because I'd like to discharge the well formedness of recursive definitions in my very unbaked python ITP [knuckledragger](https://github.com/philzook58/knuckledragger) by just calling one of these solvers.
 
 It's kind odd that lots of people just dump onto SMT solvers but most systems I know of that have termination questions don't dump onto these specialized termination solvers, they roll their own. Perhaps there is a good reason.
 
