@@ -1010,7 +1010,7 @@ One way of showing you are well founded is if you are a subrelation of another w
 
 Another way is to show that you have an order preserving mapping into a nice well founded order. This is kind of what measure functions do.
 
-The dependency pair framework is some important concept of how one proves termination in these solvers, but I don't understand it. <https://link.springer.com/chapter/10.1007/978-3-540-32275-7_21>
+The dependency pair framework is some important concept of how one proves termination in these solvers, but I don't understand it. <http://cl-informatik.uibk.ac.at/users/thiemann/paper/LPAR04DPFramework.pdf>
 
 Polynomials interpretation
 Matrix interpretations?
