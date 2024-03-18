@@ -42,7 +42,7 @@ knuth bendix
 
 tiger book
 
-
 call by push value. whats that?
 focussing. polarity
 
+I should try out more java stuff. eclipse. acl2 sedan.

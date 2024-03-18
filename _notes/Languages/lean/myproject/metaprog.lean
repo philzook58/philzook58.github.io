@@ -18,6 +18,8 @@ The lean system paper
 
 Qq library
 
+Metaprogrammingin Lean 2021 video pt 1
+https://www.youtube.com/watch?v=hxQ1vvhYN_U&t=66s&ab_channel=leanprovercommunity
 
 # Proof by reflection
 http://adam.chlipala.net/cpdt/html/Reflection.html
@@ -52,3 +54,29 @@ inductive pexpr : Type where
   | mul : pexpr -> pexpr -> pexpr
   | opp : pexpr -> pexpr
   | pow : pexpr -> Nat -> pexpr
+
+inductive pol : Type where
+  | const : ℂ -> pol
+  | var : Nat -> pol -> pol
+
+
+-- toy problem
+
+inductive tf_prop : Type where
+  | _true : tf_prop
+  | _false : tf_prop
+  | _and : tf_prop -> tf_prop -> tf_prop
+  | _or : tf_prop -> tf_prop -> tf_prop
+  | _not : tf_prop -> tf_prop
+  | _implies : tf_prop -> tf_prop -> tf_prop
+
+
+def tf_prop.eval : tf_prop -> Prop
+  | _true => True
+  | _false => False
+  | _and p1 p2 => p1.eval ∧ p2.eval
+  | _or p1 p2 => p1.eval ∨ p2.eval
+  | _not p => ¬ p.eval
+  | _implies p1 p2 => p1.eval → p2.eval
+
+#eval tf_prop.((_and _true _false).eval)

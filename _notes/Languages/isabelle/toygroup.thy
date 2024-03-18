@@ -1,0 +1,3 @@
+theory ToyGroup
+
+end

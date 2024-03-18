@@ -17,6 +17,8 @@ title: Term Rewriting
 - [Egraph](#egraph)
 - [String rewriting systems](#string-rewriting-systems)
 - [Graph Rewriting](#graph-rewriting)
+  - [Groove](#groove)
+  - [CHR](#chr)
   - [Term Indexing](#term-indexing)
   - [Order Sorted Logic](#order-sorted-logic)
 - [Systems](#systems)
@@ -27,6 +29,7 @@ title: Term Rewriting
     - [Category](#category)
   - [Eqlog](#eqlog)
   - [K](#k)
+  - [spoofax](#spoofax)
 - [Other Systems](#other-systems)
 - [TRaaT Rust](#traat-rust)
 - [2020 Term rewritng notes](#2020-term-rewritng-notes)
@@ -862,6 +865,18 @@ CHR is a ready to go (destructive) graph rewriting system
 Terms are graphs. So are DAGs
 Graphs may come in ported vs non ported forms. Are edges equivalent?
 
+### Groove
+
+Pretty cool video
+ideas:
+Ski rewriting
+optimal lambda graphs
+hash consing
+bisimular reduction?
+egraph rewriting
+
+### CHR
+
 ```prolog
 %re
 :- use_module(library(chr)).
@@ -976,6 +991,7 @@ See automated theorem proving.
 # Systems
 
 ## Maude
+
 <https://github.com/fadoss/umaudemc> unified model checking tool
 
 <https://github.com/hwayne/lets-prove-leftpad/tree/master/maude> proving leftpad in maude
@@ -1408,7 +1424,7 @@ Redex, Maude, Spoofax, OTT, [Rascal](https://www.rascal-mpl.org/),  ATL and mode
 [K vs. Coq as Language Verification Frameworks](https://runtimeverification.com/blog/k-vs-coq-as-language-verification-frameworks-part-1-of-3/)
 
 ## spoofax
-https://spoofax.dev/background/stratego/strategic-rewriting/term-rewriting/
+<https://spoofax.dev/background/stratego/strategic-rewriting/term-rewriting/>
 
 strategic rewriting
 

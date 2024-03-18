@@ -1,0 +1,31 @@
+theory toygroup imports Main
+begin
+
+typedecl mygrp
+
+axiomatization 
+  mult :: "mygrp \<Rightarrow> mygrp \<Rightarrow> mygrp" and eid :: "mygrp" and inv :: "mygrp \<Rightarrow> mygrp"
+  where
+  right_id : "mult a eid = a" and
+  right_inv : "mult a (inv a) = eid" and 
+  assoc : "mult a (mult b c) = mult (mutl a b) c"
+  
+
+
+lemma "mult a eid = a"
+  apply (rule right_id)
+  done
+
+lemma "mult a (mult eid eid) = a"
+  by (simp add: right_id)
+
+(* help "metis" *)
+lemma "mult eid a = a"
+  by (metis (full_types) right_id assoc right_inv)
+
+
+(* lemma "cos a \<le> 1" *)
+  
+
+
+end

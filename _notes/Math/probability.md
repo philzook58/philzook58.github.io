@@ -23,6 +23,15 @@ See also:
 
 # Statistics
 
+```python
+
+```
+
+student's t
+chi squared
+p value
+
+
 I should have more to say here?
 Probability
 Experimental design

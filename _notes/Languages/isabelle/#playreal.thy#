@@ -1,0 +1,8 @@
+theory playreal imports "HOL-Analysis.Analysis"
+begin
+
+lemma "cos x \<le> 1"
+  
+
+
+end

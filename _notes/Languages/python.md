@@ -25,6 +25,9 @@ title: Python
 - [libraries](#libraries)
 - [Misc](#misc)
 
+https://www.norvig.com/lispy.html cool lisp
+
+
 # Venv
 
 Venv makes an isolated python environment

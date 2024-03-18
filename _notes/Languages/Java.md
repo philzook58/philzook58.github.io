@@ -2,6 +2,43 @@
 layout: post
 title: Java
 ---
+- [Java](#java)
+  - [java runtime](#java-runtime)
+  - [javac](#javac)
+  - [jar](#jar)
+  - [build](#build)
+  - [Bytecode](#bytecode)
+- [Kotlin](#kotlin)
+- [Scala](#scala)
+
+# Java
+
+java has intersection types? <https://en.wikipedia.org/wiki/Intersection_type>
+
+<https://docs.oracle.com/en/java/javase/21/>
+java 21 has some pretty cool stuff <https://docs.oracle.com/en/java/javase/21/language/index.html#Java-Platform%2C-Standard-Edition>
+raw function execution <https://docs.oracle.com/en/java/javase/21/language/unnamed-classes-and-instance-main-methods.html>
+record  <https://docs.oracle.com/en/java/javase/21/language/records.html>
+patterns <https://docs.oracle.com/en/java/javase/21/language/pattern-matching.html>
+switch expressions
+<https://docs.oracle.com/en/java/javase/21/language/string-templates.html> template strings
+
+```java
+// cd "/tmp/" && javac --enable-preview --source 21 tempyjltsrm.java && java --enable-preview tempyjltsrm
+// java --enable-preview --source 21 myfile.java
+record Term(String head, Term[] args) {}
+
+// naked main "anonymous classes"
+void main() {
+    var t  = new Term("foo", new Term[0]); // local variable inference
+    System.out.println(STR."\{t}"); // string interpolation
+    switch(t) { // pattern matching
+        case Term(var h, var args) -> System.out.println(h);
+        default -> System.out.println("match fail");
+    }
+}
+
+```
 
 ```java
 
@@ -61,5 +98,6 @@ fun main(){
 # Scala
 
 ```scala
-hey
+// hello world
+
 ```
