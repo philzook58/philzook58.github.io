@@ -117,16 +117,22 @@ Superoptimization traditionally scales very poorly. Compiling with constraints c
 
 # VIBES and Minizinc
 
-I first started on the VIBES project <https://github.com/draperlaboratory/VIBES> . The hypothesis there was that binary patching requires unusual constraints and that superoptimization like abilities may make the difference between patching in place or requiring detours. These two cases are very different tiers of complexity and error-proneness. The situation in [micropatching](https://www.philipzucker.com/permutation_compile/) also is for very small programs, for which the slowness of constraint compiling is not an issue.
+I first started on the VIBES project <https://github.com/draperlaboratory/VIBES> . The hypothesis there was that binary patching requires unusual constraints and that superoptimization like abilities may make the difference between patching in place or requiring detours. These two cases are very different tiers of complexity and error-proneness. In [micropatching](https://www.philipzucker.com/permutation_compile/) we are compiling very small program fragments, for which the slowness of constraint compiling is not an issue.
 
 This proposal was highly inspired by the [Unison](https://unison-code.github.io/) compiler (not the distributed system one). You can find our [minizinc](https://www.minizinc.org/) model here <https://github.com/draperlaboratory/VIBES/blob/main/resources/minizinc/model.mzn> . It is a simplified form of the constraint model from Unison.
 
-[Source: Appendix A](https://arxiv.org/abs/1804.02452) of "Combinatorial Register Allocation and Instruction Scheduling"
+
+
+A few comments to help explain:
+
+The paper "Combinatorial Register Allocation and Instruction Scheduling" was crucial. In particular append A is a very useful artifact. 
+
+[Source: Appendix A](https://arxiv.org/abs/1804.02452)
 
 ![](/assets/unison/model_params.png)
 ![](/assets/unison/constraints.png)
 
-These are the solver variables. `reg` is a mapping from tmeporaries to possible registers. `issue` is a mapping from operation to issue cycle. The rest of the bits are constrained to make sense following the solution of these variables.
+These are the solver variables of our model. `reg` is a mapping from temporaries to possible registers. `issue` is a mapping from operation to issue cycle. The rest of the bits are constrained to make sense following the solution of these variables.
 
 ```minizinc
 %% ---------------------------------------------------------------
@@ -158,13 +164,13 @@ constraint forall (t in temp_t)(
 );
 ```
 
-Ultimately I think there were multiple problems with the approach. The choice of serialization of our data structures to and from minizinc was very painful. It has been asked before why we didn't use Z3. The answer is we were sticking close to the Unison design (we actually initially wanted to literally reuse [their model](https://github.com/unison-code/unison/blob/master/src/solvers/multi_backend/minizinc/code-generation.mzn), but it was completely incomprehensible to me after some weeks of trying to decrypt it), and that
+In the end I don't believe the hypothesis that this complexity was needed for micropatching was born out and we would have been better served by a more traditional compiler architecture. We became ensnared in the implementation issues of talking to the constraint solver and the concepts of the model were too rigid and complicated to explain easily to others or modify when inevitable surprises popped up. Serialization to and from minizinc was very painful. That these data structures were not easily hand editable or all that readable (they were human readable json, but gobs of complicated json) was a huge impediment to development and debugging when my bandwidth was already strapped. Live and learn.
 
-In the end I don't believe this hypothesis was born out and we would have been better served by a more traditional compiler architecture. We became ensnared in the implementation issues of talking to the constraint solver and the concepts of the model were too rigid and complicated to explain easily to others or modify when inevitable surprises popped up. Live and learn.
+It has been asked before why we didn't use Z3 as it has great bindings and we already used it elsewhere. The answer is we were sticking close to the Unison design (we actually initially wanted to literally reuse [their model](https://github.com/unison-code/unison/blob/master/src/solvers/multi_backend/minizinc/code-generation.mzn), but it was completely incomprehensible to me after some weeks of trying to decrypt it). There is a general question of when to use CSP, MIP, SAT, ASP, or SMT. I have never seen a good answer. This is a good research question that someone should attack. My heuristic is that if the community in question targets problems similar ot yours, try that one. CSP, MIP and ASP are better for optimization style problems as compared to satisfaction.
 
-That these data structures were not easily hand editable or all that readable (they were json, but gobs of complicated json) was a huge impediment to development and debugging when my bandwidth was already strapped.
+One thing not fully realized was a simplification of the model to get rid of the distinction between temporaries and operands. This subtle conceptual distinction caused a lot of communication issues amongst the team. I think with the ability to have multiple possible operations overlapping means this could be factored out.
 
-A not fully explored alternative was using a shallow embedding instead to encode the problem over to minizinc. Minizinc does not have good support for syntax trees as objects. However, it does support functions. So the idea was that instead of serializing to a pile of arrays, instead one can pretty print a program that looks like a relational representation of the program. This representation is immediately interpreted to constraint in the finally tagless style using minizinc function definitions.
+A not fully explored alternative was using a shallow embedding instead to encode the problem over to minizinc. This may have solved the pain that serialization caused us. Minizinc does not have good support for syntax trees as objects. However, it does support functions. So the idea was that instead of serializing to a pile of arrays, instead one can pretty print a program that looks like a relational representation of the program. This representation is immediately interpreted to constraint in the finally tagless style using minizinc function definitions.
 
 I had a mini version of this in this tweet <https://x.com/SandMouth/status/1530331356466712578?s=20>
 ![](/assets/unison/minizinc_tweet.jpeg)
