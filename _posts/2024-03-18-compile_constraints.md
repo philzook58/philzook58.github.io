@@ -3,19 +3,19 @@ date: 2024-03-18
 title: Compiling With Constraints
 ---
 
-There are lots of interesting little subproblems in compilation like [instruction selection](https://www.diva-portal.org/smash/get/diva2:951540/FULLTEXT01.pdf), [register allocation](https://en.wikipedia.org/wiki/Register_allocation) and [instruction scheduling](https://en.wikipedia.org/wiki/Instruction_scheduling). These can be expressed in declarative way to constraint solvers.
+There are lots of interesting little subproblems in compilation like [instruction selection](https://www.diva-portal.org/smash/get/diva2:951540/FULLTEXT01.pdf), [register allocation](https://en.wikipedia.org/wiki/Register_allocation) and [instruction scheduling](https://en.wikipedia.org/wiki/Instruction_scheduling). These can be expressed in declarative interlinked way to constraint solvers.
 
 I've been fiddling with probably 6 iterations of using constraint solvers for compiler backends over the last 3 years and never written a blog post on it. This is long over due, and still highly imperfect. I have found this post only gets harder to write and my standards rise. Write early, write often.
 
 # Basic Idea
 
-Register allocation is the backend problem most obviously castable as a constraint problem. It is often described as a variant of graph coloring (there are nuances [like coalescing](https://c9x.me/compile/bib/irc.pdf))  [Graph coloring](https://en.wikipedia.org/wiki/Graph_coloring) selects a color for each vertex in a graph such that no edge connects two nodes of the same color.
+Register allocation is the backend problem most obviously castable as a constraint problem. It is often described as a variant of graph coloring (there are nuances [like coalescing](https://c9x.me/compile/bib/irc.pdf)).  [Graph coloring](https://en.wikipedia.org/wiki/Graph_coloring) selects a color for each vertex in a graph such that no edge connects two nodes of the same color.
 
-Here's a toy implementation using z3. [Traversing backwards](https://news.ycombinator.com/item?id=33080799) through a block is a useful trick to analyze [liveness](https://en.wikipedia.org/wiki/Live-variable_analysis) while you're also building constraint.
+Here's a toy implementation over a single SSA block using z3. [Traversing backwards](https://news.ycombinator.com/item?id=33080799) through a block is a useful trick to analyze [liveness](https://en.wikipedia.org/wiki/Live-variable_analysis) while you're also building constraint.
 
-During this collection, you can also emit any constraints that are opcode specific. Some instructions like the [`mul`](https://www.aldeid.com/wiki/X86-assembly/Instructions/mul) instruction in x86 do not work on every kind of register. You can also collect up specific objective functions, for example biasing `mov` to go between the same registers. Spilling to the stack can be modelled by pseudo registers that you put a lot of weight on. Requiring the input or output parameters follow any calling convetion is again a simple extra constraint.
+During this collection, you can also emit any constraints that are opcode specific. Some instructions like the [`mul`](https://www.aldeid.com/wiki/X86-assembly/Instructions/mul) instruction in x86 do not work on every kind of register. You can also collect up specific objective functions, for example biasing `mov` to go between the same registers. Spilling to the stack can be modelled by pseudo registers that you put a lot of weight on. Requiring the input or output parameters follow any calling convention is again a simple extra constraint.
 
-Multiple blocks can be linked together in the same constraint solve by sharing variables. This may require packing in extra `mov` instructions between blocks to keep the problem solvable in general.
+Multiple blocks can be linked together in the same constraint solve by sharing variables. This may require packing in extra `mov` instructions between blocks to keep the problem solvable in general. See this [paper](https://arxiv.org/pdf/1804.02452.pdf) for more
 
 ```python
 from typing import List, Tuple
@@ -101,27 +101,28 @@ One might think the advantage of compiling with constraints is getting perfectly
 
 The advantage to compiling with constraints is that it short, declarative and rapidly flexible.
 
-It also is another attack on the phase ordering problem, similar to the pitch for [egraphs](https://egraphs.org/). The phase ordering problem is that these phases are interlinked, so there are uncomfortable compromises made in serializing them.
+It also is another attack on the phase ordering problem, similar to the pitch for [egraphs](https://egraphs.org/). The phase ordering problem is that these compiler phases are interlinked, so there are uncomfortable compromises made in serializing them.
 
 Mainly for me its just fun though. I like solvers.
 
-## Distinction To Supercompilation
+## Distinction To Superoptimization
 
-Supercompilation as I'll define it today is taking the semantics of assewmbly instructions, the semantics of your host program, making the constraint that they match and tossing it into a solver. This is vastly over simplified.
+[Superoptimization](https://en.wikipedia.org/wiki/Superoptimization) as I'll define it today is taking the semantics of assembly instructions, the semantics of your host program, making the constraint that they match and tossing it into a solver. This is vastly over simplified. Any even remotely pragmatic approach prunes the search space significantly using domain specific techniques.
 
-The different between this and compiling with constraints is that compilation does not take a deep semantical perspective. The deep semantics are encoded in the instruction selection table, which I am not commenting on.
+The difference between this and compiling with constraints is that compilation with constraints does not take a deep semantical perspective. The deep semantics are encoded in the instruction selection table, the generation of which I am not commenting on.
 
-Compiling with constraints is largely concern3ed only with the temporal dependency relationship. it takes a traditional compiler pipeline and takes it more declarative.
+Compiling with constraints is largely concerned only with the dependency relationship of operands and instructions. This is a more tractable abstraction than the full instruction semantics. It also can be viewed as taking a traditional compiler pipeline and making it more declarative.
 
-Supercompilation traditionally scales very poorly. Compiling with constraints could feasibly be done at a much larger more practical scale as the Unison compiler showed.
+Superoptimization traditionally scales very poorly. Compiling with constraints could feasibly be done at a much larger more practical scale as the Unison compiler showed.
 
 # VIBES and Minizinc
 
-I first started on the VIBES project <https://github.com/draperlaboratory/VIBES> . The hypothesis there was that binary patching requires unusual constraints and that supercompilation like abilities may make the difference between patching in place or requiring detours. These two cases are very different tiers of complexity and error-proneness. The situation in [micropatching](https://www.philipzucker.com/permutation_compile/) also is for very small programs, for which the slowness of constraint compiling is not an issue.
+I first started on the VIBES project <https://github.com/draperlaboratory/VIBES> . The hypothesis there was that binary patching requires unusual constraints and that superoptimization like abilities may make the difference between patching in place or requiring detours. These two cases are very different tiers of complexity and error-proneness. The situation in [micropatching](https://www.philipzucker.com/permutation_compile/) also is for very small programs, for which the slowness of constraint compiling is not an issue.
 
-This proposal was highly inspired by the [Unison](https://unison-code.github.io/) compiler (not the distributed system one). You can find our minizinc model here <https://github.com/draperlaboratory/VIBES/blob/main/resources/minizinc/model.mzn> . It is a simplified form of the constraint model from Unison.
+This proposal was highly inspired by the [Unison](https://unison-code.github.io/) compiler (not the distributed system one). You can find our [minizinc](https://www.minizinc.org/) model here <https://github.com/draperlaboratory/VIBES/blob/main/resources/minizinc/model.mzn> . It is a simplified form of the constraint model from Unison.
 
-[Source: Appendix A](https://arxiv.org/abs/1804.02452)
+[Source: Appendix A](https://arxiv.org/abs/1804.02452) of "Combinatorial Register Allocation and Instruction Scheduling"
+
 ![](/assets/unison/model_params.png)
 ![](/assets/unison/constraints.png)
 
@@ -159,36 +160,11 @@ constraint forall (t in temp_t)(
 
 Ultimately I think there were multiple problems with the approach. The choice of serialization of our data structures to and from minizinc was very painful. It has been asked before why we didn't use Z3. The answer is we were sticking close to the Unison design (we actually initially wanted to literally reuse [their model](https://github.com/unison-code/unison/blob/master/src/solvers/multi_backend/minizinc/code-generation.mzn), but it was completely incomprehensible to me after some weeks of trying to decrypt it), and that
 
-In the end I don't believe this hypthesis was born out and we would have been better served by a more traditional compiler architecture. We became ensnared in the implementation issues of talking to the constraint solver and the concepts of the model were too rigid and complicated to eplain easily to others or modify when inevitable surprises popped up. Live and learn.
+In the end I don't believe this hypothesis was born out and we would have been better served by a more traditional compiler architecture. We became ensnared in the implementation issues of talking to the constraint solver and the concepts of the model were too rigid and complicated to explain easily to others or modify when inevitable surprises popped up. Live and learn.
 
-That these data structures were not easily hand edittable or all that readable (they were json, but gobs of complicated json) was a huge impediment to developement and debugging when my bandwidth was already strapped.
+That these data structures were not easily hand editable or all that readable (they were json, but gobs of complicated json) was a huge impediment to development and debugging when my bandwidth was already strapped.
 
-A not fully explored alternative was using a shallow embedding instead to encode the problem over to minizinc. Minzinc does not have good support for syntax trees as objects. However, it does support functions. So the idea was that instead of serializing to a pile of arrays, instead one can pretty print a program that looks like a relational representation of the program. This representation is immeditaly interpreted to constraint in the finally tagless style using minzinc function definitions.
-
-```
-predicate insn_c(operation_t : id, list of temp_t : lhs, string : opcode, list of temp_t : rhs) = 
-    all_equal([start_cycle[t] | t in lhs]) /\
-    forall(t in lhs)(
-        live[t] /\ % definer active
-        issue[id] + 1 = start_cycle[t] /\
-        end_cycle[t] >= issue[id] + 1)
-        /\
-        forall(t2 in rhs)(
-            live[t2] /\ %user active
-            issue[id] >= start_cycle[t2] /\ % t2 is already defined
-            end_cycle[t2] >= issue[id]  % t2 ends
-        );
-
-
-...
-
-% example program
-constraint 
-           ins([T3]) /\ 
-           insn(1, [T1], "add", [T2,T3]) /\ 
-           insn(2, [T2], "mov", [T3]) /\ 
-           outs([T1]);
-```
+A not fully explored alternative was using a shallow embedding instead to encode the problem over to minizinc. Minizinc does not have good support for syntax trees as objects. However, it does support functions. So the idea was that instead of serializing to a pile of arrays, instead one can pretty print a program that looks like a relational representation of the program. This representation is immediately interpreted to constraint in the finally tagless style using minizinc function definitions.
 
 I had a mini version of this in this tweet <https://x.com/SandMouth/status/1530331356466712578?s=20>
 ![](/assets/unison/minizinc_tweet.jpeg)
@@ -257,61 +233,44 @@ constraint
 
 ## Answer Set Programming
 
-Answer set programming has a decent pitch in my opinion to being a natrual fit to this problem. One of the supposed utilities of datalog is that it is good for expressing fixed point [program analyses](https://users.cs.utah.edu/~blg/resources/notes/datalog-for-static-analysis/datalog-for-static-analysis.pdf). These fixed points are needed to handle loops in the control flow graphs. Answer set programming is a superset of datalog, so it too can express these anlasyes.
+Answer set programming has a decent pitch in my opinion to being a natural fit to this problem. One of the supposed utilities of datalog is that it is good for expressing fixed point [program analyses](https://users.cs.utah.edu/~blg/resources/notes/datalog-for-static-analysis/datalog-for-static-analysis.pdf). These fixed points are needed to handle loops in the control flow graphs. Answer set programming is a superset of datalog, so it too can express these analyses.
 
-What it adds on top of datalog is a SAT-like solver. Because of this, I would claim that you can naturally express program anlayses in the datalog style, and then make combuinatorial choices for register allocation, instruction selection, and instruction scheduling.
+What it adds on top of datalog is a SAT-like solver. Because of this, I would claim that you can naturally express program anlayses in the datalog style, and then make combinatorial choices for register allocation, instruction selection, and instruction scheduling.
 
 I showed how to use datalog for graph matching of instructions here <https://www.philipzucker.com/imatch-datalog/>
 
-There are bits and pieces of this below
+- [TOAST: Applying Answer Set Programming to Superoptimisation](https://link.springer.com/chapter/10.1007/11799573_21) <http://www.cs.bath.ac.uk/tom/toast/>
+- [Generating Optimal Code Using Answer Set Programming 2009](https://link.springer.com/chapter/10.1007/978-3-642-04238-6_57)
+- [Superoptimisation: Provably Optimal Code Generation using Answer Set Programmin - crick thesis](https://purehost.bath.ac.uk/ws/portalfiles/portal/187949093/UnivBath_PhD_2009_T_Crick.pdf)
 
-```python
+Having said all that, Greenberg was highly skeptical of this suggestion.
 
-#[(op,outs, ins)]
-
-
-Expr = Tuple[Op, Any]
-
-def simp(expr):
-    
-def isel_stmt(stmt):
-
-def isel_expr(expr):
-    match expr:
-        case ("add", x, y):
-        case ("mul", x, y):
-        case ("neg", x):
-        case ("load", x):
-        
-def eval(env, block):
-    for (op, outs, ins) in reversed(block):
-        pass
-
-
-
-
-
-```
+There are bits and pieces of this below. Perhaps I'll clean up and comment more on this another day.
 
 # Bits and Bobbles
 
 I have been chewing on this stuff for years, and have written more half baked stuff than I care to read.
 
-<https://bernsteinbear.com/blog/ddcg/> destination driven
-<https://github.com/tekknolagi/pyddcg>
-<https://github.com/tekknolagi/ddcg>
-<https://legacy.cs.indiana.edu/~dyb/pubs/ddcg.pdf>
+People are struggling with getting loopy multi block egraph compilers to work. I think integrating single block egraph solves with these techniques is fascinating axis to declaratively combine almost every piece of a backend. It's relatively straightforward seeming and does not require new insight to do. A single block can be seen as a purely functional expression and can have optimizing rewrites applied in a straightforward manner.
 
-One of my big regrets on the VIBES project was not writing up a checkpoint on the ideas and state of the constraint compiler aspect of it. There were a couple of reasons for this:
+Eli has mentioned that the "`-O4`" market is underserved. A compiler that ekes out a bit more performance at the cost of huge compile times could save big companies deplaying the same program to a bunch of servers a ton of money.
 
-1. It was not clear the degree to which it is allowed for me to write about work projects
-2. The state is and was highly imperfect
+Fancy egraph extraction is very similar to the declarative instruction selection problem. See [Complete and Practical Universal Instruction Selection](https://dl.acm.org/doi/10.1145/3126528).
+
+One of my big regrets on the VIBES project was not writing up a checkpoint on the ideas and state of the constraint compiler aspect of it when it was all fresh in my mind and exciting. I
 
 Nevertheless, it is quite a cool approach and even in it's imperfect state it is interesting
 
 [iterated register coalescing - appell and george](https://c9x.me/compile/bib/irc.pdf)
 
 An interesting perspective is staged metaprogramming. `code -> (constraints * (model -> asm))`
+
+destination driven is very clean and useful. It is also uses tge backwards processing liveness trick as i recall.
+
+- <https://bernsteinbear.com/blog/ddcg/>
+- <https://github.com/tekknolagi/pyddcg>
+- <https://github.com/tekknolagi/ddcg>
+- <https://legacy.cs.indiana.edu/~dyb/pubs/ddcg.pdf>
 
 It is a fairly mathemtical and precise problem and also practical feeling. It's quite fun.
 
@@ -2052,4 +2011,27 @@ def peephole(prog):
         if op == "mov" and len(in_ops) == 1 and in_ops[0] == out: # fuse out redundant movs
             continue
         out_prog.append((op, out, in_ops))
+
+
+#[(op,outs, ins)]
+
+
+Expr = Tuple[Op, Any]
+
+def simp(expr):
+    
+def isel_stmt(stmt):
+
+def isel_expr(expr):
+    match expr:
+        case ("add", x, y):
+        case ("mul", x, y):
+        case ("neg", x):
+        case ("load", x):
+        
+def eval(env, block):
+    for (op, outs, ins) in reversed(block):
+        pass
+
+
 ```
