@@ -10,9 +10,9 @@ I'm a physics/computer boy trying to find his place in the world. I try to keep 
 
 ![](/assets/me_waving.gif)
 
-An atom feed of the blog is here <https://www.philipzucker.com/feed.xml>
+I think my blog is representative of my interests in functional programming, compilers, formal methods, scientific computation, physics, and optimal control. If you are interested in hiring me, please drop me a line on [linkedin](https://www.linkedin.com/in/philip-zucker-4520ba90/).
 
-I think my blog is representative of my interests in functional programming, compilers, formal methods, scientific computation, physics, and optimal control. If you are interested in hiring me, please drop me a line on[linkedin](https://www.linkedin.com/in/philip-zucker-4520ba90/).
+An atom feed of the blog is here <https://www.philipzucker.com/feed.xml>
 
 Some of my friend's blogs:
 
