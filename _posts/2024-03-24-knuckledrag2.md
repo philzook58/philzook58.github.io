@@ -1,27 +1,23 @@
 ---
 date: 2024-03-24
-title: "Knuckledragger 2: ATP for Python ITP"
+title: "Knuckledragger update: ATP for Python Interactive Theorem Proving"
 ---
 
 Knuckledragger is the moniker I've given to an approach and [library](https://github.com/philzook58/knuckledragger) I'm developing to do interactive theorem proving in python with the heavy lifting done by pre existing automated solvers.
 
-I intend to match the base formalism of my system to what the automated solvers offer. This hopefully avoids some impedance mismatch that occurs in sledgehammer systems.
-
-The reason to use python is because it is available everywhere and has libraries for everything. It already has an excellent interactive ecosystem in the form of jupyter notebooks and you can easily standup web demos in the form of links to google collab
-
-That there isn't a good library already in python for unification, lambda evaluation, term indexing is somewhat mysterious to me.
+The reason to use python is because it is available everywhere and has libraries for everything. It already has an excellent interactive ecosystem in the form of jupyter notebooks and you can easily standup web demos in the form of links to google [colab](https://colab.research.google.com/github/philzook58/philzook58.github.io/blob/master/pynb/2024-03-24-knuckledrag2.ipynb)
 
 I've tried to avoid having much code. By [piggybacking on pyz3's ast](https://www.philipzucker.com/python-itp/) you can go pretty far. But there are limitations and at a certain point this is an awkward design. I'm not sure z3's support of quantifier reasoning is complete enough to go the distance.
 
-There are another older class of solver beside SMT. Roughly these are the resolution and superposition provers that compete in the [CASC](https://tptp.org/CASC/) automated reasoning competition. Two prominent systems are [vampire](https://vprover.github.io/) and [eprover](https://github.com/eprover/eprover). These solvers are saturation style, inferring more and more theorems until they find the goal. In this respect they are reminiscent of datalog and egraph saturation. This also more closely matches the definitions of logical reasoning as the minimal set of syntax reachable under inference rules from axioms. Most importantly, even though I usually poo poo this, the solvers chase completeness for their inference.
+There are another older class of solver beside SMT. Roughly these are the resolution and superposition provers that compete in the [CASC](https://tptp.org/CASC/) automated reasoning competition. I typically call this class of solvers ATPs (automated theorem provers) even though that sounds like a generic name. Two prominent systems are [vampire](https://vprover.github.io/) and [eprover](https://github.com/eprover/eprover). These solvers are saturation style, inferring more and more theorems until they find the goal. In this respect they are reminiscent of datalog and egraph saturation. This also more closely matches the definitions of logical deduction as finding syntax reachable under inference rules from axioms. Most importantly, even though I usually poo poo this, the solvers chase completeness for their inference. I've had some difficulty with z3's quantifier support where it just gives up even if I break the problem into the smallest piece I can come up with (a single instantiation I think. It was a while ago)
 
 # Terms
 
-For the purposes of a library, it is worth going verbose to offer more functionality. The lightest weight term type in python is a string tagged tuple. But really, for clarity, frozen dataclasses are quite nice. You get a lot of functionality for free and it is less weird. The weirder the library I build, probably the less people will use it.
+For the purposes of a library, it is worth going verbose to offer more functionality. The lightest weight term type in python is a string tagged tuple like `("add", ("lit", 1), ("var", "x"))`. But really, for clarity, frozen dataclasses are quite nice. You get a lot of functionality for free and it is less weird. The weirder the library I build, probably the less people will use it.
 
 Some core datatypes you'll see in theorem proving developments are variables and function symbols. A function symbol with no arguments is called a constant.
 
-Variables represents implicitly universally quantified pieces of statements. Like `f(f(X)) = f(X)` is the statement that `f` is idempotent. If we had quantifiers, this would be expressed as `forall x, f(f(x)) = f(x)`. There is no law that logic must contain quantifiers.
+Variables represents implicitly universally quantified pieces of statements. Like `f(f(X)) = f(X)` is the statement that `f` is idempotent. If we had quantifiers, this would be expressed as `forall x, f(f(x)) = f(x)`. There is no god given law that a "logic" must contain explicit quantifiers. That there is no god given "logic" at all was a revelation for me to learn at some point.
 
 I specialized out `Eq` because I want it to print infix, basically it is still just a 2-arity function symbol. A very special one that the solvers have a lot of support for.
 
@@ -76,13 +72,11 @@ def Consts(names):
 
 ## Sequents
 
-This setup is sparser than that is typical in first order logic, where I'd also have connectives like `and` and `or`.
+This setup is sparser than that is typical in first order logic, where I'd also have connectives like `and` and `or`. A sequent `[a,b,c] |- [d,e,f]` is the judgement that assuming `a` and `b` and `c`, `d` or `e` or `f` are true. More often than not, I will use a single conclusion.
 
-This is somewhat inspired by my understanding of the underpinnings of [Isabelle](https://isabelle.in.tum.de/). In isabelle, the base theory (Pure) let's you take sequents and unify them together to get new sequents. What we're doing here is a similar thing, but now we can discharge the unification obligation plus some search to the ATP.
+This is somewhat inspired by my understanding of the underpinnings of [Isabelle](https://isabelle.in.tum.de/). In Isabelle, the base theory (Pure) let's you take sequents and unify them together to get new sequents. What we're doing here is a similar thing, but now we can discharge the unification obligation plus some search to the ATP.
 
 I could equally have called the following a clause. The hypotheses are the negative literals and the conclusions are the positive literals.
-
-I find it a very interesting perspective to not consider these automated theorem provers as classical first order predicate logic reasoning, but instead as operating at various levels of metalogic. The resolution rule is itself constructing partial proof trees. Each clause is a sequent judgement. Perhaps this has something to do with multiple conclusion logic <https://en.wikipedia.org/wiki/Multiple-conclusion_logic>
 
 ```python
 @dataclass(frozen=True)
@@ -112,7 +106,7 @@ class Sequent():
 
 I recently tried an experiment in packaging eprover for easy installation and use from. I built a version using [cosmopolitan libc](https://github.com/jart/cosmopolitan) which produces a dat binary that works on linux, windows, mac, x86_64 or aarch64. Then I just included the binary in the repo. I needed to fiddle with a couple eprover makefiles to make the usage of cc, ar, ranlib no longer hardcoded, but otherwise it was fairly painless.
 
-Then I copied the binary, put it in my python package, committed it to the git repo, and added a line to my pyproject.toml stating I have extra data files. The `__init__.py` offers the path of this binary because it already can ask the `__file__` magic variable where itself is.
+Then I copied the binary, put it in my python package, committed it to the git repo, and added a line to my pyproject.toml stating I have extra data files. The `__init__.py` offers the path of this binary because it already can ask the `__file__` magic variable where itself is. I also offer a `__main__.py` that forwards the arguments of `python3 -m eprover /tmp/foo.p` . I saw this pattern here <https://simonwillison.net/2022/May/23/bundling-binary-tools-in-python-wheels/>
 
 The repo for this is here. <https://github.com/philzook58/pyeprover>
 I did the same thing for vampire, but did not compile using cosmopolitan. <https://github.com/philzook58/pyvampire>
@@ -186,7 +180,7 @@ class Theorem():
         return f"Theorem({self.formula()})"
 ```
 
-Some example usage. A simple involutive problem
+Some example usage. A simple idempotent problem
 
 ```python
 X,Y,Z,A,B,C = Vars("X Y Z A B C")
@@ -237,6 +231,12 @@ print(left_inv, left_id)
 
 Next I probably want the typed form of tptp supported and it is especially appealing to use `thf` which supports lambdas.
 
+I intend to match the base formalism of my system to what the automated solvers offer. This hopefully avoids some impedance mismatch that occurs in sledgehammer systems.
+
+I find it a very interesting perspective to not consider these automated theorem provers as classical first order predicate logic reasoning, but instead as operating at various levels of metalogic. The resolution rule is itself constructing partial proof trees. Each clause is a sequent judgement. Perhaps this has something to do with multiple conclusion logic <https://en.wikipedia.org/wiki/Multiple-conclusion_logic>
+
+That there isn't a good library already in python for unification, lambda evaluation, term indexing is somewhat mysterious to me.
+
 I wonder if I'm inching towards just building python versions of everything. Unification, simple resolution provers. We'll see. It's nice to have that stuff in the library if I do.
 
 I probably also should just make dataclasses for special logical formula constructos like ForAll, Exists, And, Or, Implies, etc.
@@ -246,6 +246,61 @@ HOLpy is a tour de force. They should've made it a library though. Making their 
 Isabelle is so good.
 
 There is probably a clean prolog version of this. asserta keyed theorems to a proof_db protected by assume/infer predicates. Lambda prolog and Amy Felty's tutorial. I'm not sure why I am unaware of something like this in the modern prolog community. The new python interop
+
+### Python Packaging and wrapping
+
+Packaging binaries for pip installation
+
+I have been enjoying pyproject.toml.
+
+A low brow way of packaging up a binary for usage and installation by pypi is to just put the binary in the folder and setup your pyproject to include it.
+
+I'm figuring it out here <https://github.com/philzook58/pyvampire/blob/main/pyproject.toml>
+
+static builds are preferable
+
+I got the good idea of wrapping stuff here
+<https://simonwillison.net/2022/May/23/bundling-binary-tools-in-python-wheels/>
+
+cibuildwheel is what Ian suggested. This does look pretty good.
+
+One way is to use setuptools to run a build. `build_ext` See pypcode
+
+`python3 -m build` will make a wheel
+
+# Cosmo
+
+Cosmopolitan is a tempting thing that might get you OS interoperability
+
+notes. Editted std/unistd to just unistd in picosat. Also in picosat remove CC setting line. I also need to make `export AR="cosmo-ar "
+removed CC setting line in eprover makefile. Actually maybe`make CC=../cosmoyada` would've worked.
+
+```
+make CC=$(pwd)/../bin/unknown-unknown-cosmo-cc AR="$(pwd)/../bin/unknown-unknown-cosmo-ar rcs" RANLIB=$(pwd)/../bin/unknown-unknown-cosmo-ranlib 
+```
+
+picosat is annoying in CONTRIB. Need to abstract out ar, ranlib
+   $(LN) ../$$subdir/.aarch64/$$subdir.a ./.aarch64;\ at line 146 of the Makefile.
+There is a copy step into lib which needs to also copy the aarch64 verison.
+
+distutils
+
+I wish I hadn't done poetry in snakelog
+
+Something I've been a bit of a tear on is wrapping external python projects that are not set up as packages into packages.
+
+Three projects which I think are phenomenal but not set up as packages are:
+
+- PyRes <https://github.com/eprover/PyRes> . This contains a TPTP parser and printer, and full resolution provers by one of the masters of the field.
+- holpy <https://github.com/bzhan/holpy> <https://arxiv.org/abs/1905.05970> There is a preposterous amount of functionality here.
+- metamath <https://github.com/david-a-wheeler/mmverify.py> A very simple module
+
+The basic layout of a python package is to have folder with the name of the package which has a `__init__.py` file in it. You can make a package with a `pyproject.toml` these days. You don't even have to upload to the PyPI repository, and you can still install via pi by giving it the url of the repo.
+
+- git submodule. This is nice because it is totally
+- branch
+
+A problem is the way these project may reference their other files.
 
 ```python
 # peano
