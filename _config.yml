@@ -20,11 +20,11 @@ description: A blog about life, programming, math, logic, and physics.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://www.philipzucker.com" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: sandmouth
-github_username:  philzook58
+github_username: philzook58
 
 mastodon:
-- username: sandmouth
-  instance: types.pl
+  - username: sandmouth
+    instance: types.pl
 
 google_analytics: G-EBC4529QNG
 
@@ -63,18 +63,18 @@ permalink: /:title/
 #plugins_dir:
 #  - jekyll-seo-tag
 
-defaults:
--
-  scope:
-    path: "pynb"
-  values:
-    image: true
--
-  scope:
-    path: ""
-  values:
-    image: /assets/logo.png
+feed:
+  excerpt_only: true
 
+defaults:
+  - scope:
+      path: "pynb"
+    values:
+      image: true
+  - scope:
+      path: ""
+    values:
+      image: /assets/logo.png
 
 collections:
   notes:
