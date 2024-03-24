@@ -1,0 +1,3 @@
+[submodule "pynb/thoughtbooks"]
+	path = pynb/thoughtbooks
+	url = https://github.com/philzook58/thoughtbooks

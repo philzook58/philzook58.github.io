@@ -7,16 +7,16 @@ title: Scheme Racket Lisp
 
 - [Implementations](#implementations)
 - [Scheme](#scheme)
-    - [Minikanren](#minikanren)
+  - [Minikanren](#minikanren)
 - [Racket](#racket)
-    - [Rosette](#rosette)
+  - [Rosette](#rosette)
 - [Common Lisp](#common-lisp)
   - [CLOS](#clos)
   - [Condition System](#condition-system)
   - [ACL2](#acl2)
 - [Other Lisps](#other-lisps)
 - [Compilation](#compilation)
-    - [Gambit compiling to javascript](#gambit-compiling-to-javascript)
+  - [Gambit compiling to javascript](#gambit-compiling-to-javascript)
 - [Misc](#misc)
 
 I'm really going to put scheme and common lisp in the same category?
@@ -242,6 +242,9 @@ Like exceptions except you can restrta from them
 [book](https://news.ycombinator.com/item?id=24867548)
 
 ## ACL2
+
+Metamathematics, Machines and Gödel's Proof - shankar <https://www.amazon.com/Metamathematics-Machines-Cambridge-Theoretical-Computer/dp/052142027X>
+
 <https://www2.ccs.neu.edu/racket/pubs/ppdp09-ef.pdf> Making Induction Manifest in Modular ACL2 ∗
 
 <https://shigoel.github.io/> very cool. x86isa

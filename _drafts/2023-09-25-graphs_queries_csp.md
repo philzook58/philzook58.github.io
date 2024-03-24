@@ -5,6 +5,11 @@ layout: post
 title: "SQL. homomorphisms and constraint satsfactin probems"
 ---
 
+Tree decomposition for dynamic programming
+
+
+## CSP
+
 
 SQL queries are enumerating homomorphisms between the query and the database. This perspective puts the query and the database on smilar footing, which feels odd.
 

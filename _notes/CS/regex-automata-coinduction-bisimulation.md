@@ -33,7 +33,7 @@ title: Automata, Regex, Coinduction, Bisimulation
   - [Partition Refinement](#partition-refinement)
   - [Model Checking](#model-checking)
 - [Misc](#misc)
-  - [Options:](#options)
+  - [Options](#options)
 
 See also:
 
@@ -43,6 +43,22 @@ See also:
 - model checking
 
 Breaking up into these categories is kind of arbitrary
+
+<https://github.com/LearnLib/automatalib> <https://github.com/Learnlib/learnlib> java libraries
+<https://www.brics.dk/automaton/>
+
+```java
+// export CLASSPATH=~/Downloads/automaton-1.12/dist/automaton.jar
+import dk.brics.automaton.Automaton;
+void main(String[] args){
+  var a = new Automaton();
+  System.out.println(a);
+}
+//
+```
+
+L*automata learning alexandra silva lecutre <https://youtu.be/b38uoZccGuU?si=wTEhJ1Xt6K5CT4IB> <https://rahul.gopinath.org/post/2024/01/04/lstar-learning-regular-languages/>
+angluin Learning Regular Sets from Queries and Counterexamples* <https://people.eecs.berkeley.edu/~dawnsong/teaching/s10/papers/angluin87.pdf>
 
 # Regular Expressions
 
@@ -467,7 +483,7 @@ Of what relationship is bisimulation to non-interference proofs? Bisimulation is
 Graph isomorphism - too striog?
 Trace equivalence - Too strong?
 
-There is a distinction between saying a given relation is a bisimulation and _defining_ it to be a bisimilar closure of something.
+There is a distinction between saying a given relation is a bisimulation and *defining* it to be a bisimilar closure of something.
 
 Least vs greatest fixed point
 
@@ -553,7 +569,7 @@ for n in range(10):
 
 The analog/dual of automata minimization is probably congruence closure. This jives nicely.
 The signature is the choice of functor.
-Refactoring the entire egraph into a _single_ dictionary. That's elegant.
+Refactoring the entire egraph into a *single* dictionary. That's elegant.
 
 Jules Jacobs, Thorsten Wißmann - [https://dl.acm.org/doi/abs/10.1145/3571245](fast coalgebraic bisimulation minimization)
 Different automata types can be described by a Functor, meaning a function or dictionsry from states to something that may also involve states.

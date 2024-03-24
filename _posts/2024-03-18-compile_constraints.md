@@ -265,6 +265,8 @@ Fancy egraph extraction is very similar to the declarative instruction selection
 
 One of my big regrets on the VIBES project was not writing up a checkpoint on the ideas and state of the constraint compiler aspect of it when it was all fresh in my mind and exciting. I
 
+<https://discuss.systems/@pkhuong/112118653338441212> Paul Khuong mentions an interesting idea using tree decomposition + dynamic programming for optimal search over the space 
+
 Nevertheless, it is quite a cool approach and even in it's imperfect state it is interesting
 
 [iterated register coalescing - appell and george](https://c9x.me/compile/bib/irc.pdf)

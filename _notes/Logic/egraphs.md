@@ -28,6 +28,40 @@ title: E-graphs
 - [CHR egraphs](#chr-egraphs)
 - [Misc](#misc)
 
+## egraphs meeting mathc 2023
+
+color egraphs easter egg repo
+theoery exploration
+just copy the uf.
+colored unions << eclasses
+<https://eytan.singher.co.il/index.html>
+<https://ieeexplore.ieee.org/abstract/document/10247797> assume operators
+
+ping ponging with min tiebreaking obviously converges.
+
+Is there a hierarchy of colors? or is it black with every color right under black?
+Do you recollect up identical colors? or label them?
+
+Metatheoyr.jl
+Integration with julia code. many primitives by default
+still needs proofs
+float point
+fast enough
+classical reqwrite rules. Do on entry, reuse also in egraph
+
+For herbie experts, Julia users have been interested in having herbie attached for a while. There is a nice mechanism to install an entire racket distro inside the julia package manager. <https://github.com/JuliaPackaging/BinaryBuilder.jl>
+
+equlity guided saturation. popl 24
+a lean tactic ges. ooooh
+a new student on first class binders
+<https://github.com/Bastacyclop/egg-sketches>
+
+Ground rewrite systems + eager rewriting.
+
+python egg rewritng
+prog_gen <https://egglog-python.readthedocs.io/latest/explanation/2024_03_17_community_talk.html>
+<https://egglog-python.readthedocs.io/latest/tutorials/sklearn.html#compiling-back-to-python-source>
+
 # E-Graph
 
 What is an e-graph?

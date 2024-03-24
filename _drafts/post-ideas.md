@@ -1,3 +1,8 @@
+
+pointed graphs. I saw that in dedukti too? answer set programing. Set programming.
+
+Truss optimization from thoughtbooks
+
 They should often be things I know really well.
 
 A spiel on ordinals

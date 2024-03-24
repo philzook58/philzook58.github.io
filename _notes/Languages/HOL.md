@@ -45,6 +45,33 @@ vampire /tmp/test.smt2
 
 # Isabelle
 
+metis <https://www.gilith.com/software/metis/>
+metitarski. Resolution + Qepcad
+
+FOLP first order logic with proofs. Interesting idea
+
+ZF
+
+typedecl
+judgement
+axiomatization
+
+argo smt solver. hmm
+
+HOL
+nonstadnard reals
+
+<https://isabelle.in.tum.de/library/>
+
+paulson's blog slaps <https://lawrencecpaulson.github.io/>
+
+semantic search <https://behemoth.cl.cam.ac.uk/search/> serapis
+
+isabelle isar reference manual is useful
+
+src/HOL directory
+impp mutablle nominal nonstandard-analysis
+
 [from lcf to isabelle](https://dl.acm.org/doi/pdf/10.1007/s00165-019-00492-1)
 [sel4](https://sel4.systems/) - verified microkernel
 
@@ -129,11 +156,10 @@ isabelle process -T /tmp/test
 isabelle console
 ```
 
-https://github.com/isabelle-prover/mirror-isabelle
-
+<https://github.com/isabelle-prover/mirror-isabelle>
 
 PURE is the isabelle framework. The core rules are resolution?
-https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/thm.ML
+<https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/thm.ML>
 
 ```
 (*Resolution: exactly one resolvent must be produced*)
@@ -147,11 +173,11 @@ fun tha RSN (i, thb) =
 fun tha RS thb = tha RSN (1,thb);
 ```
 
-Higher order unfication https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/unify.ML
+Higher order unfication <https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/unify.ML>
 
-simplifier https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/simplifier.ML
-https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/raw_simplifier.ML
+simplifier <https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/simplifier.ML>
+<https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/raw_simplifier.ML>
 
-Example simple HOL def https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/Examples/Higher_Order_Logic.thy 
+Example simple HOL def <https://github.com/isabelle-prover/mirror-isabelle/blob/master/src/Pure/Examples/Higher_Order_Logic.thy>
 
-https://github.com/isabelle-prover/mirror-isabelle/tree/master/src/Provers provers.
+<https://github.com/isabelle-prover/mirror-isabelle/tree/master/src/Provers> provers.

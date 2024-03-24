@@ -30,6 +30,15 @@ We can instead visualize space-time diagrams, but it holds less gutty feel.
 
 # General Relativity
 
+MIT course
+
+<https://www.gravityfromthegroundup.org/>
+Schutz
+Wald
+Carroll
+MTW
+Weinberg
+
 Metric and coordinates
 
 Curvature

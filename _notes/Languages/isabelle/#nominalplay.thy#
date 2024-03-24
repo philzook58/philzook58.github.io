@@ -1,0 +1,6 @@
+theory nominalplay imports "HOL-Nominal.Nominal" 
+begin
+
+
+
+end
