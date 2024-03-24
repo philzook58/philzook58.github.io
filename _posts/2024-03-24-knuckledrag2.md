@@ -1,6 +1,6 @@
 ---
 date: 2024-03-24
-title: "Knuckledragger 2: Automated Theorem Provers for"
+title: "Knuckledragger 2: ATP for Python ITP"
 ---
 
 Knuckledragger is the moniker I've given to an approach and [library](https://github.com/philzook58/knuckledragger) I'm developing to do interactive theorem proving in python with the heavy lifting done by pre existing automated solvers.
@@ -74,7 +74,7 @@ def Consts(names):
     return [Const(name) for name in names.split()]
 ```
 
-# Sequents
+## Sequents
 
 This setup is sparser than that is typical in first order logic, where I'd also have connectives like `and` and `or`.
 
@@ -108,8 +108,12 @@ class Sequent():
 
 ```
 
+# Packaging Eprover
+
 I recently tried an experiment in packaging eprover for easy installation and use from. I built a version using [cosmopolitan libc](https://github.com/jart/cosmopolitan) which produces a dat binary that works on linux, windows, mac, x86_64 or aarch64. Then I just included the binary in the repo. I needed to fiddle with a couple eprover makefiles to make the usage of cc, ar, ranlib no longer hardcoded, but otherwise it was fairly painless.
+
 Then I copied the binary, put it in my python package, committed it to the git repo, and added a line to my pyproject.toml stating I have extra data files. The `__init__.py` offers the path of this binary because it already can ask the `__file__` magic variable where itself is.
+
 The repo for this is here. <https://github.com/philzook58/pyeprover>
 I did the same thing for vampire, but did not compile using cosmopolitan. <https://github.com/philzook58/pyvampire>
 
@@ -119,16 +123,7 @@ Anyway, long story short is the following line should just work and then `eprove
 ! pip install git+https://github.com/philzook58/pyeprover
 ```
 
-    Defaulting to user installation because normal site-packages is not writeable
-    Collecting git+https://github.com/philzook58/pyeprover
-      Cloning https://github.com/philzook58/pyeprover to /tmp/pip-req-build-you9xdtl
-      Running command git clone --filter=blob:none --quiet https://github.com/philzook58/pyeprover /tmp/pip-req-build-you9xdtl
-      Resolved https://github.com/philzook58/pyeprover to commit 2804304505ad6e1fd9967ba88088a8cb8122d44d
-      Installing build dependencies ... [?25ldone
-    [?25h  Getting requirements to build wheel ... [?25ldone
-    [?25h  Installing backend dependencies ... [?25ldone
-    [?25h  Preparing metadata (pyproject.toml) ... [?25ldone
-    [?25h
+# Proofs and Theorems
 
 This is a variation of my proof data structure. There are different approaches possible to this. The important thing is you need a strong distinction between formulas and proven theorems. Here they are distinct because the `Theorem` is an index into a hidden `__proof_db` data structure that actually holds the formula/sequent.
 
@@ -137,6 +132,8 @@ The two ways of controlling the db are `assume` and `infer`. Assume let's you ju
 `infer` calls eprover. It takes in _`Theorem`_ hypotheses and a `Sequent` conclusion you want to prove. If it succeeds, it returns a `Theorem` pointing to the `Sequent` proven.
 
 It turns the hypotheses given into `cnf` TPTP formulas. It turns the conclusion info a `fof` formula, because `cnf` does not support the `conjecture` clause type and I don't want to skolemize and stuff if the solver already does this.
+
+Since I hold pointers to the previous theorems in the proof_db, it really is a proof data structure representing some kind of proof dag. Optionally, I can record the output of eprover, which contrains a lower tptp proof info.
 
 ```python
 import eprover
