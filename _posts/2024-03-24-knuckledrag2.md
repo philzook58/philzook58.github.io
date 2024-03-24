@@ -1,6 +1,6 @@
 ---
 date: 2024-03-24
-title: "Knuckledragger update: ATP for Python Interactive Theorem Proving"
+title: "Knuckledragger Update: ATP for Python Interactive Theorem Proving"
 ---
 
 Knuckledragger is the moniker I've given to an approach and [library](https://github.com/philzook58/knuckledragger) I'm developing to do interactive theorem proving in python with the heavy lifting done by pre existing automated solvers.
