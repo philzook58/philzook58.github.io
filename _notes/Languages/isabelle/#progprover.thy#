@@ -1,0 +1,23 @@
+theory progprover imports Main 
+begin
+(*
+https://isabelle.in.tum.de/dist/Isabelle2023/doc/prog-prove.pdf
+Concrete semantics http://concrete-semantics.org/
+
+*)
+
+(* ctrl click takes to deinfition *)
+datatype foo = Bar | Biz
+
+
+fun bumbo :: "foo \<Rightarrow> foo" where
+  "bumbo Bar = Biz" |
+  "bumbo Biz = Biz"
+
+
+lemma "rev (rev xs) = xs"
+  apply (rule List.rev_rev_ident)
+  done
+
+
+end

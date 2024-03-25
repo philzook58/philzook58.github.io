@@ -373,7 +373,7 @@ Well foundedness. We can write a recursor.
 def recurse(f):
     raise Exception("not well founded")
 
-Non well founded sets like Graham's thing
+Non well founded sets like Graham's thing <https://gist.github.com/gleachkr/884d8cdbb27b7e50b0c04686b78f2e9a>
 Aczel
 We can make loopy set structures if we take iterators / lazy data structures as our sets.
 
@@ -417,7 +417,10 @@ Relation to boolean equation systems?
 
 Kuper - Logic programming with sets
 
-Non well founded sets
+<https://ncatlab.org/nlab/files/WadlerMonads.pdf> There was a book in haskell by Wadler et all that may treat things similar to this post.
+In other languages, that sets of sets are possible is not surprising. Tries make sets canonical.
+
+Non well founded sets. Graham asks can I do in the same style? Maybe use an automata like minimization procedure. element of is an observation.
 
 The concept of a set within a set is a bit unfamiliar from a programming perspective. This rarely comes up?
 Typical set data structures require an ability to totally order or hash its elements. The subset relationship is almost a canonical example of a partial order.  Hashing of sets is interesting.

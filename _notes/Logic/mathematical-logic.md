@@ -250,6 +250,9 @@ FOL has a first class notion of universal quantification. Equational logic inste
 
 # Set Theory
 
+mahlo
+inaccessible cardinals
+
 Books:
 Halmos Naive Set Theory
 Jech Introduction

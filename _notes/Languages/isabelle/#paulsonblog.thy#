@@ -1,0 +1,9 @@
+theory paulsonblog imports Main 
+begin
+(*
+Playing with bits from pualsons blog
+
+*)
+
+
+end
