@@ -27,6 +27,7 @@ print(emp)
     frozenset()
 
 ## The Axiom of Extension
+
 <https://en.wikipedia.org/wiki/Axiom_of_extensionality>
 
 This axiom says that two sets with the same contents are equal.
@@ -50,6 +51,7 @@ emp is frozenset([])
     False
 
 ## The axiom schema of specification
+
 <https://en.wikipedia.org/wiki/Axiom_schema_of_specification>
 
 This is a super powerful set construction principle.
@@ -79,6 +81,7 @@ def intersect(X,Y):
 The [unrestricted comprehension](https://en.wikipedia.org/wiki/Frege%27s_theorem#Overview) principle doesn't require an $A$. Somehow it magically grabs all things that obey $P$. It is difficult to see how such a  thing could be contructed in python and indeed Frege's original formulation of unrestricted comprehension is inconsistent as show by Russell with his [famous paradox](https://en.wikipedia.org/wiki/Russell%27s_paradox)
 
 ## The Axiom of Pairing
+
 <https://en.wikipedia.org/wiki/Axiom_of_pairing>
 
 For any two sets there exists another set they both belong to.
@@ -104,6 +107,7 @@ print(f"{singleton(singleton(emp))=}")
     singleton(singleton(emp))=frozenset({frozenset({frozenset()})})
 
 ## Axiom of Unions
+
 <https://en.wikipedia.org/wiki/Axiom_of_union>
 
 For any collection of sets there exists a set that contains all the elements that belong to at least one set of the given collection.
@@ -177,6 +181,7 @@ assert all(union(x,intersect(y,z)) == intersect(union(x,y),union(x,z)) for x in 
 ```
 
 ## Axiom of Powers
+
 <https://en.wikipedia.org/wiki/Axiom_of_power_set>
 
 The powerset axiom let's you build a set of all subsets. There is a useful recipe <https://docs.python.org/3/library/itertools.html#itertools-recipes> that we can crib from itertools.
@@ -284,6 +289,7 @@ from_int(3)
 We're just starting to get into interesting stuff. But that's exactly where the post gets harder to write. Each of these deserves of day of thought and a post of its own.
 
 ## The Axiom of Choice
+
 <https://en.wikipedia.org/wiki/Axiom_of_choice>
 
 Families are functions into sets.
@@ -358,7 +364,7 @@ def reify() -> HashSet:
 
 ## Infinite Sets
 
-Can we include infinite sets? In some sense perhaps. I believe we can basically attach some ordinals. There are certain questions that won't be computable. `[from_int(i) for i integers()] in omega` is true, but python won't ever return true.
+Can we include infinite sets? In some sense perhaps. I believe we can basically attach some ordinals <https://github.com/ajcr/transfinite> . There are certain questions that won't be computable. `[from_int(i) for i integers()] in omega` is true, but python won't ever return true.
 
 Can we talk about induction?
 
