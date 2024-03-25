@@ -118,7 +118,6 @@ print(f"{bigunion(emp)==emp=}")
 ```
 
     bigunion(emp)==emp=True
-    frozenset()
 
 We can now derive the more familiar union operation.
 
@@ -207,15 +206,6 @@ def cartesian(A,B):
     C = power(power(union(A,B)))
     return specify(C, lambda x: any(x == pair(a,b) for a in A for b in B))
 
-
-def fst(z, A, B):
-    return bigunion(specify(A, lambda a: z == singleton(a)))
-
-def snd(z, A, B):
-    return bigunion(specify(B, lambda b: any(z == pair(a,b) for a in A)))
-
-
-
 ```
 
 ```python
@@ -237,8 +227,6 @@ assert(all(snd(pair(a,b), A, B) == b for A in testsets for B in testsets for a i
 
 ```
 
-    frozenset({frozenset()})
-
 # Relations, Functions, Dicts
 
 So set theory can encode functions and relations as sets of ordered pairs. The natural python encoding of a finite function is a dict.
@@ -256,14 +244,17 @@ There are multiple ways of encoding numbers. The relatively standard way is to e
 ```python
 
 zero = emp
-def succ(x: HashSet) -> HashSet:
+def succ(x):
     return union(x, singleton(x))
     #return eats(x, x)
 
 one = succ(emp)
 two = succ(one)
 three = succ(two)
-print(f"{[zero,one,two,three]=}")
+print(f"{one=}")
+print(f"{two=}")
+print(f"{three=}")
+
 
 from functools import cache
 @cache
@@ -276,7 +267,9 @@ def from_int(n):
 from_int(3)
 ```
 
-    [zero,one,two,three]=[frozenset(), frozenset({frozenset()}), frozenset({frozenset(), frozenset({frozenset()})}), frozenset({frozenset(), frozenset({frozenset(), frozenset({frozenset()})}), frozenset({frozenset()})})]
+    one=frozenset({frozenset()})
+    two=frozenset({frozenset(), frozenset({frozenset()})})
+    three=frozenset({frozenset(), frozenset({frozenset(), frozenset({frozenset()})}), frozenset({frozenset()})})
 
 
 
@@ -357,10 +350,11 @@ print(f"{hashset([x]) is hashset([y, y])=}")
 
 
 
-
-def reify() -> Hashset:
+def reify() -> HashSet:
     return hashset(univ.values())
 ```
+
+    hashset([x]) is hashset([y, y])=True
 
 ## Infinite Sets
 
@@ -382,20 +376,45 @@ The laziness allows the set to be deep (infinite depth to set) or wide (infinite
 ## Other Stuff
 
 Hereditarily Finite Sets
-Paulson <https://lawrencecpaulson.github.io/2022/02/23/Hereditarily_Finite.html> . Paulson's blog rules.
+Paulson <https://lawrencecpaulson.github.io/2022/02/23/Hereditarily_Finite.html> . Paulson's blog rules. <https://arxiv.org/abs/2104.14260>  <https://doi.org/10.4064/DM422-0-1> Świerczkowski. Useful alternative to peano arithmethmetic and godel encoding
 
 We are making a very constructive perspective on set theory. It'd be interesting to do a follow up post on python variations of computability, constructivity. I don't feel confident I know enough to write cogently.
 
 I've been using `any` and `all` without much comment, but these are natural analogs for bounded quantifiers. RCA0 is kind of pythony.
 
-set logic programming
-
-The concept of a set within a set is a bit unfamiliar from a programming perspective. This rarely comes up?
-Typical set data structures require an ability to totally order or hash its elements. The subset relationship is almost a canonical example of a partial order.  Hashing of sets is interesting.
-
 The system is missing the ability the talk about the hypothetical. A little bit of crazy talk, but maybe one way of doing this is using promises/futures. If a value is never forced, then it's contents do not matter. This is similar to inferring forall polymorphism or when a prolog query returns an unbound metavariable.
 
 As shownn here we can't really prover theorems about hypothetical sets. We can only compute a canononical form of concrete sets and wave our hands that union is associative and so on. We need to have more tricks. Applicative python a la acl2 <https://www.philipzucker.com/applicative_python/> ?
+
+set logic programming
+CLP(Set)
+
+<https://www.clpset.unipr.it/>
+`{log}` "setlog"
+JSetL
+
+[set unification](https://www.cambridge.org/core/journals/theory-and-practice-of-logic-programming/article/abs/set-unification/2B789EB32DCF9F77021DBE26FC691032)
+[Sets and constraint logic programming](https://dl.acm.org/doi/10.1145/365151.365169)
+
+G Rossi
+A Dovier
+E Pontelli
+
+herditraryl hybrid finite sets. Finite sets of finite sets + terms
+
+[Set Constraints in Logic Programming](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=ea756dcfc1db14307899a5b7d33b82fefbdc74c0)
+[Set constraints and logic programming - kozen](https://www.cs.cornell.edu/~kozen/Papers/sclp.pdf) CLP(SC)
+Herbrand atom ~ singleton set
+Aiken
+
+Relation to boolean equation systems?
+
+Kuper - Logic programming with sets
+
+Non well founded sets
+
+The concept of a set within a set is a bit unfamiliar from a programming perspective. This rarely comes up?
+Typical set data structures require an ability to totally order or hash its elements. The subset relationship is almost a canonical example of a partial order.  Hashing of sets is interesting.
 
 There is of course an empty set.
 
