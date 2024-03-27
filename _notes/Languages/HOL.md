@@ -44,6 +44,9 @@ vampire /tmp/test.smt2
 #
 
 # Isabelle
+<https://slawekk.wordpress.com/> isar mathlib <https://isarmathlib.org/index.html>
+
+<https://www.cl.cam.ac.uk/teaching/2122/L21/materials.html> pauleson course
 
 metis <https://www.gilith.com/software/metis/>
 metitarski. Resolution + Qepcad

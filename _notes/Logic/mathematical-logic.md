@@ -251,7 +251,9 @@ FOL has a first class notion of universal quantification. Equational logic inste
 # Set Theory
 
 mahlo
-inaccessible cardinals
+inaccessible cardinals. axiom of reaplcement
+grothendieck
+universes
 
 Books:
 Halmos Naive Set Theory

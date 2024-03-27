@@ -3,6 +3,7 @@ layout: post
 title: Verilog / FPGA
 ---
 - [FPGA](#fpga)
+  - [gowin](#gowin)
 - [Verilog](#verilog)
 - [Verification](#verification)
 - [Logic Synthesis](#logic-synthesis)
@@ -48,6 +49,28 @@ apio osss-cad-suite
  interesting channel
 
 <https://nostarch.com/gettingstartedwithfpgas> Getting Started with FPGAs book. From nandland Russell Merrick. Will's friend.
+
+## gowin
+
+<https://wiki.sipeed.com/hardware/en/tang/Tang-Nano-9K/Nano-9K.html>
+
+<https://wiki.sipeed.com/hardware/en/tang/Tang-Nano-Doc/install-the-ide.html#burn-in-linux>
+education edition
+<https://wiki.sipeed.com/hardware/en/tang/Tang-Nano-Doc/flash-in-linux.html>
+
+<https://github.com/trabucayre/openFPGALoader>
+Ok so I add a verilog file
+click "use DONE as regular io" in project config. What does that mean? error code pr2017
+add in pin constraints. change type of clock pin for some reason LVCMOS33 <https://en.wikipedia.org/wiki/LVCMOS>
+
+<https://wiki.sipeed.com/hardware/en/tang/Tang-Nano-Doc/flash-in-linux.html>
+Falshing. Insalled openfpgaloader.
+`sudo ./openFPGALoader -b tangnano9k pnr/Tang_nano_9K_LCD.fs` `-f` to more permanently flash
+
+<https://github.com/sipeed/TangNano-9K-example>
+ok this was pretty easy. Maybe the ide is eaiser than using open source tooling
+
+<https://learn.lushaylabs.com/tang-nano-series/>
 
 # Verilog
 
@@ -280,6 +303,7 @@ X propagation
 <https://github.com/google/skywater-pdk>
 
 ### Yosys
+
 <https://yosyshq.net/yosys/documentation.html> the presentation is quite nice
 
 ```bash
@@ -309,6 +333,7 @@ liberty files contain hardware maps?
 "synth" is a high level command that runs stuff like proc, memory, opt, techmap, etc.
 
 ### nextpnr
+
 <https://github.com/YosysHQ/nextpnr>
 
 After synthesis it has to be placed and routed
