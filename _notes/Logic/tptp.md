@@ -217,6 +217,7 @@ title: TPTP dump
     - [./MSC001-2.ax](#msc001-2ax)
     - [./MVA001-0.ax](#mva001-0ax)
     - [./NLP001+0.ax](#nlp0010ax)
+  - [Number Theory](#number-theory)
     - [./NUM001-0.ax](#num001-0ax)
     - [./NUM001-1.ax](#num001-1ax)
     - [./NUM001-2.ax](#num001-2ax)
@@ -234,13 +235,16 @@ title: TPTP dump
     - [./NUM007^4.ax](#num0074ax)
     - [./NUM008+0.ax](#num0080ax)
     - [./NUM009+0.ax](#num0090ax)
+  - [Philosophy](#philosophy)
     - [./PHI001^0.ax](#phi0010ax)
     - [./PHI002+0.ax](#phi0020ax)
     - [./PHI002+1.ax](#phi0021ax)
+  - [Planning](#planning)
     - [./PLA001-0.ax](#pla001-0ax)
     - [./PLA001-1.ax](#pla001-1ax)
     - [./PLA002+0.ax](#pla0020ax)
     - [./PRD001+0.ax](#prd0010ax)
+  - [Puzzles](#puzzles)
     - [./PUZ001-0.ax](#puz001-0ax)
     - [./PUZ002-0.ax](#puz002-0ax)
     - [./PUZ003-0.ax](#puz003-0ax)
@@ -248,19 +252,24 @@ title: TPTP dump
     - [./PUZ005+0.ax](#puz0050ax)
     - [./PUZ005-0.ax](#puz005-0ax)
     - [./PUZ006+0.ax](#puz0060ax)
+  - [Quantales](#quantales)
     - [./QUA001^0.ax](#qua0010ax)
     - [./QUA001^1.ax](#qua0011ax)
+  - [Relation Algebra](#relation-algebra)
     - [./REL001+0.ax](#rel0010ax)
     - [./REL001+1.ax](#rel0011ax)
     - [./REL001-0.ax](#rel001-0ax)
     - [./REL001-1.ax](#rel001-1ax)
+  - [Ring Theory](#ring-theory)
     - [./RNG001-0.ax](#rng001-0ax)
     - [./RNG002-0.ax](#rng002-0ax)
     - [./RNG003-0.ax](#rng003-0ax)
     - [./RNG004-0.ax](#rng004-0ax)
     - [./RNG005-0.ax](#rng005-0ax)
+  - [Robbins Algebra](#robbins-algebra)
     - [./ROB001-0.ax](#rob001-0ax)
     - [./ROB001-1.ax](#rob001-1ax)
+  - [Set Theory](#set-theory)
     - [./SET001-0.ax](#set001-0ax)
     - [./SET001-1.ax](#set001-1ax)
     - [./SET001-2.ax](#set001-2ax)
@@ -324,12 +333,13 @@ title: TPTP dump
     - [./TOP001-0.ax](#top001-0ax)
 
 # Axioms
+
 I took a dump of every axiom file less than 500 lines long. Many are clearly computer generated.
 The SET007 is a dump of Mizar definitions. Also automated but somewhat readable
 ITP001 is a dump of ITP problems
 
-
 ## Agents
+
 ### ./AGT001+0.ax
 
 ```vampire
@@ -530,6 +540,7 @@ Very long 774
 Very long 1128
 
 ## Abstract Algebra
+
 ### ./ALG001-0.ax
 
 ```vampire
@@ -1991,7 +2002,9 @@ cnf(compose_codomain,axiom,
 %--------------------------------------------------------------------------
 
 ```
+
 ## Combinatory Logic
+
 ### ./COL001-0.ax
 
 ```vampire
@@ -2326,7 +2339,9 @@ cnf(cls_Comb_Oparcontract_Ointros__4_0,axiom,
 %------------------------------------------------------------------------------
 
 ```
+
 ## Computing Theory
+
 ### ./COM001+0.ax
 
 ```vampire
@@ -2884,7 +2899,9 @@ fof('alpha-equiv-FreeVar',axiom,
 %------------------------------------------------------------------------------
 
 ```
+
 ## Commonsense Reasoning
+
 ### ./CSR001+0.ax
 
 ```vampire
@@ -3418,7 +3435,9 @@ Very long 20418
 ### ./CSR006+0.ax
 
 Very long 35192
+
 ## Data Structures
+
 ### ./DAT001_0.ax
 
 ```vampire
@@ -4040,7 +4059,9 @@ tff(ax_30,axiom,
 %------------------------------------------------------------------------------
 
 ```
+
 ## Field Theory
+
 ### ./FLD001-0.ax
 
 ```vampire
@@ -4362,7 +4383,9 @@ cnf(different_identities,axiom,
 %--------------------------------------------------------------------------
 
 ```
+
 ## Geometry
+
 ### ./GEO001-0.ax
 
 ```vampire
@@ -7649,7 +7672,9 @@ fof(aA8,axiom,
 ### ./GEO012+0.ax
 
 Very long 621
+
 ## Graph Theory
+
 ### ./GRA001+0.ax
 
 ```vampire
@@ -7803,7 +7828,9 @@ fof(shortest_path_properties,axiom,
 %------------------------------------------------------------------------------
 
 ```
+
 ## Group Theory
+
 ### ./GRP001-0.ax
 
 ```vampire
@@ -8631,7 +8658,9 @@ cnf(left_cancellation,axiom,
 %--------------------------------------------------------------------------
 
 ```
+
 ## Homological Algebra
+
 ### ./HAL001+0.ax
 
 ```vampire
@@ -8802,7 +8831,9 @@ fof(subtract_distribution,axiom,
 %--------------------------------------------------------------------------
 
 ```
+
 ## Henkin Models
+
 ### ./HEN001-0.ax
 
 ```vampire
@@ -9001,7 +9032,9 @@ cnf(identity_is_largest,axiom,
 %--------------------------------------------------------------------------
 
 ```
+
 ## Hardware Creation
+
 ### ./HWC001-0.ax
 
 ```vampire
@@ -9111,7 +9144,9 @@ cnf(not_definition2,axiom,
 %--------------------------------------------------------------------------
 
 ```
+
 ## Hardware Verification
+
 ### ./HWV001-0.ax
 
 ```vampire
@@ -9765,7 +9800,9 @@ Very long 573
 ### ./HWV004-0.ax
 
 Very long 706
+
 ## Kleene Algebra
+
 ### ./KLE001+0.ax
 
 ```vampire
@@ -10520,7 +10557,9 @@ fof(order,axiom,
 %------------------------------------------------------------------------------
 
 ```
+
 ## Knowledge Representation
+
 ### ./KRS001+0.ax
 
 ```vampire
@@ -10817,7 +10856,9 @@ fof(non_thm_spt,axiom,
 %------------------------------------------------------------------------------
 
 ```
+
 ## Lattice Theory
+
 ### ./LAT001-0.ax
 
 ```vampire
@@ -11625,7 +11666,9 @@ cnf(cls_Tarski_Ocl_A_58_ACompleteLattice_A_61_61_ATrue_0,axiom,
 %------------------------------------------------------------------------------
 
 ```
+
 ## Logic Calculi
+
 ### ./LCL001-0.ax
 
 ```vampire
@@ -16725,6 +16768,8 @@ cnf(definition_of_at,axiom,
 
 Very long 3080612
 
+## Number Theory
+
 ### ./NUM001-0.ax
 
 ```vampire
@@ -17592,7 +17637,51 @@ cnf(integer_function2,axiom,
 
 ### ./NUM005+0.ax
 
-Very long 796
+```
+%------------------------------------------------------------------------------
+% File     : NUM005+0 : TPTP v8.2.0. Released v3.1.0.
+% Domain   : Number Theory
+% Axioms   : Translating from nXXX to rdn notation
+% Version  : Especial.
+% English  : RDN format is "Reverse Decimal Notation". It stores the digits
+%            of a decimal integer in reverse order.
+
+% Refs     :
+% Source   : [TPTP]
+% Names    :
+
+% Status   : Satisfiable
+% Syntax   : Number of formulae    :  256 ( 256 unt;   0 def)
+%            Number of atoms       :  256 (   0 equ)
+%            Maximal formula atoms :    1 (   1 avg)
+%            Number of connectives :    0 (   0   ~;   0   |;   0   &)
+%                                         (   0 <=>;   0  =>;   0  <=;   0 <~>)
+%            Maximal formula depth :    1 (   1 avg)
+%            Maximal term depth    :    5 (   2 avg)
+%            Number of predicates  :    1 (   1 usr;   0 prp; 2-2 aty)
+%            Number of functors    :  260 ( 260 usr; 256 con; 0-2 aty)
+%            Number of variables   :    0 (   0   !;   0   ?)
+% SPC      : 
+
+% Comments :
+%------------------------------------------------------------------------------
+fof(rdn0,axiom,
+    rdn_translate(n0,rdn_pos(rdnn(n0))) ).
+
+fof(rdn1,axiom,
+    rdn_translate(n1,rdn_pos(rdnn(n1))) ).
+
+fof(rdn2,axiom,
+    rdn_translate(n2,rdn_pos(rdnn(n2))) ).
+
+fof(rdn3,axiom,
+    rdn_translate(n3,rdn_pos(rdnn(n3))) ).
+
+fof(rdn4,axiom,
+    rdn_translate(n4,rdn_pos(rdnn(n4))) ).
+
+... and so on
+```
 
 ### ./NUM005+1.ax
 
@@ -18690,6 +18779,8 @@ fof(axiom_7a,axiom,
 
 ```
 
+## Philosophy
+
 ### ./PHI001^0.ax
 
 ```vampire
@@ -19030,6 +19121,8 @@ fof(can_be_conceived_as_non_existing,axiom,
 
 ```
 
+## Planning
+
 ### ./PLA001-0.ax
 
 ```vampire
@@ -19252,12 +19345,12 @@ fof(place_object_block_on_destination,axiom,
               & destination(Z,I) )
            => on(X,Z,s(I)) ) ) ) ).
 
-%	All( x, block, ! member( x, fixed),
-%	    All( y, block, ! eql( x, y),
-%		Disj(
-%		     Not( L2("object",  x, i));
-%		     Not( L2("source", y, i));
-%		     Not( L3("on", x, y, 1 + i)))));
+% All( x, block, ! member( x, fixed),
+%     All( y, block, ! eql( x, y),
+%  Disj(
+%       Not( L2("object",  x, i));
+%       Not( L2("source", y, i));
+%       Not( L3("on", x, y, 1 + i)))));
 fof(remove_object_block_from_source,axiom,
     ! [I,X] :
       ( nonfixed(X)
@@ -19269,11 +19362,11 @@ fof(remove_object_block_from_source,axiom,
               & source(Y,I) )
            => ~ on(X,Y,s(I)) ) ) ) ).
 
-%	All( y, block, ! member( y, fixed),
-%	    Disj(
-%		 Not( L2("source", y, i));
-%		 L2("clear", y, 1 + i);
-%		 ));
+% All( y, block, ! member( y, fixed),
+%     Disj(
+%   Not( L2("source", y, i));
+%   L2("clear", y, 1 + i);
+%   ));
 fof(clear_source_after_removal,axiom,
     ! [I,Y] :
       ( nonfixed(Y)
@@ -19281,10 +19374,10 @@ fof(clear_source_after_removal,axiom,
           & source(Y,I) )
        => clear(Y,s(I)) ) ) ).
 
-%	All( z, block, ! member( z, fixed),
-%	    Disj(
-%		 Not( L2("destination", z, i));
-%		 Not( L2("clear", z, 1 + i))));
+% All( z, block, ! member( z, fixed),
+%     Disj(
+%   Not( L2("destination", z, i));
+%   Not( L2("clear", z, 1 + i))));
 fof(not_clear_destination_after_placement,axiom,
     ! [I,Z] :
       ( nonfixed(Z)
@@ -19302,20 +19395,20 @@ fof(object_block_on_source,axiom,
               & source(Y,I) )
            => on(X,Y,I) ) ) ) ).
 
-%	All( x, block, ! member( x, fixed),
-%	    Disj(
-%		 Not( L2("object",  x, i));
-%		 L2("clear", x, i)));
+% All( x, block, ! member( x, fixed),
+%     Disj(
+%   Not( L2("object",  x, i));
+%   L2("clear", x, i)));
 fof(object_block_is_clear,axiom,
     ! [I,X] :
       ( nonfixed(X)
      => ( object(X,I)
        => clear(X,I) ) ) ).
 
-%	All( z, block, ! member( z, fixed),
-%	    Disj(
-%		 Not( L2("destination", z, i));
-%		 L2("clear", z, i)));
+% All( z, block, ! member( z, fixed),
+%     Disj(
+%   Not( L2("destination", z, i));
+%   L2("clear", z, i)));
 fof(destination_block_is_clear,axiom,
     ! [I,Z] :
       ( nonfixed(Z)
@@ -19330,12 +19423,12 @@ fof(non_destination_remains_clear,axiom,
           & clear(W,I) )
        => clear(W,s(I)) ) ) ).
 
-%	All( v, block, ! member( v, fixed),
-%	    All( w, block, !eql( v, w),
-%		Disj(
-%		     L2("object",  v, i);
-%		     Not( L3("on", v, w, i)) ;
-%		     L3("on", v, w, 1 + i))));
+% All( v, block, ! member( v, fixed),
+%     All( w, block, !eql( v, w),
+%  Disj(
+%       L2("object",  v, i);
+%       Not( L3("on", v, w, i)) ;
+%       L3("on", v, w, 1 + i))));
 fof(non_object_remains_on,axiom,
     ! [I,V] :
       ( nonfixed(V)
@@ -19355,12 +19448,12 @@ fof(non_source_remains_not_clear,axiom,
           & ~ clear(W,I) )
        => ~ clear(W,s(I)) ) ) ).
 
-%	All( v, block, ! member( v, fixed),
-%	    All( w, block, ! eql( v, w),
-%		Disj(
-%		     L2("object",  v, i);
-%		     L3("on", v, w, i) ;
-%		     Not( L3("on", v, w, 1 + i)))));
+% All( v, block, ! member( v, fixed),
+%     All( w, block, ! eql( v, w),
+%  Disj(
+%       L2("object",  v, i);
+%       L3("on", v, w, i) ;
+%       Not( L3("on", v, w, 1 + i)))));
 fof(non_object_remains_not_on,axiom,
     ! [I,V] :
       ( nonfixed(V)
@@ -19372,12 +19465,12 @@ fof(non_object_remains_not_on,axiom,
               & ~ on(V,W,I) )
            => ~ on(V,W,s(I)) ) ) ) ).
 
-%	All( v, block, ! member( v, fixed),
-%	    All( w, block, ! eql( v, w),
-%		Disj(
-%		     L2("destination", w, i);
-%		     L3("on", v, w, i);
-%		     Not( L3("on", v, w, 1 + i)))));
+% All( v, block, ! member( v, fixed),
+%     All( w, block, ! eql( v, w),
+%  Disj(
+%       L2("destination", w, i);
+%       L3("on", v, w, i);
+%       Not( L3("on", v, w, 1 + i)))));
 fof(non_destination_remains_not_on,axiom,
     ! [I,V] :
       ( nonfixed(V)
@@ -19398,11 +19491,11 @@ fof(only_one_object_block,axiom,
          => ~ ( object(X1,I)
               & object(X2,I) ) ) ) ).
 
-%	All( y1, block, 1,
-%	    All( y2, block, ! eql( y1, y2),
-%		Disj(
-%		     Not( L2("source", y1, i));
-%		     Not( L2("source", y2, i)))));
+% All( y1, block, 1,
+%     All( y2, block, ! eql( y1, y2),
+%  Disj(
+%       Not( L2("source", y1, i));
+%       Not( L2("source", y2, i)))));
 fof(only_one_source_block,axiom,
     ! [I,Y1] :
       ( a_block(Y1)
@@ -19412,11 +19505,11 @@ fof(only_one_source_block,axiom,
          => ~ ( source(Y1,I)
               & source(Y2,I) ) ) ) ).
 
-%	All( z1, block, 1,
-%	    All( z2, block, ! eql( z1, z2),
-%		Disj(
-%		     Not( L2("destination", z1, i));
-%		     Not( L2("destination", z2, i)))));
+% All( z1, block, 1,
+%     All( z2, block, ! eql( z1, z2),
+%  Disj(
+%       Not( L2("destination", z1, i));
+%       Not( L2("destination", z2, i)))));
 fof(only_one_destination_block,axiom,
     ! [I,Z1] :
       ( a_block(Z1)
@@ -19432,20 +19525,20 @@ fof(object_is_not_source,axiom,
      => ~ ( object(X,I)
           & source(X,I) ) ) ).
 
-%	All( x, block, ! member( x, fixed),
-%	    Disj(
-%		 Not( L2("object",  x, i));
-%		 Not( L2("destination", x, i))));
+% All( x, block, ! member( x, fixed),
+%     Disj(
+%   Not( L2("object",  x, i));
+%   Not( L2("destination", x, i))));
 fof(object_is_not_destination,axiom,
     ! [I,X] :
       ( nonfixed(X)
      => ~ ( object(X,I)
           & destination(X,I) ) ) ).
 
-%	All( y, block, y,
-%	    Disj(
-%		 Not( L2("source", y, i));
-%		 Not( L2("destination", y, i))));
+% All( y, block, y,
+%     Disj(
+%   Not( L2("source", y, i));
+%   Not( L2("destination", y, i))));
 fof(source_is_not_destination,axiom,
     ! [I,Y] :
       ( a_block(Y)
@@ -19515,6 +19608,8 @@ fof(fixed_not_on_anything,axiom,
 ### ./PRD001+0.ax
 
 Very long 7340
+
+## Puzzles
 
 ### ./PUZ001-0.ax
 
@@ -20199,7 +20294,7 @@ cnf(subfield_7_7,hypothesis,
 %----about the fields in a given subfield.
 %----Perhaps more readable formulation of the axioms is like
 %----subfield(I,J) ->
-%----	( el(I,J,X) & el(s(I),s(J),X1) -> -(X = X1)).
+%---- ( el(I,J,X) & el(s(I),s(J),X1) -> -(X = X1)).
 %----which translates to
 cnf(subfield_diagonal_1,hypothesis,
     ( ~ subfield(I,J)
@@ -20344,6 +20439,8 @@ cnf(value_somewhere_in_column,hypothesis,
 ### ./PUZ006+0.ax
 
 Very long 44452
+
+## Quantales
 
 ### ./QUA001^0.ax
 
@@ -20544,6 +20641,8 @@ thf(test_definition,axiom,
 %------------------------------------------------------------------------------
 
 ```
+
+## Relation Algebra
 
 ### ./REL001+0.ax
 
@@ -20777,6 +20876,8 @@ cnf(modular_law_2_16,axiom,
 %------------------------------------------------------------------------------
 
 ```
+
+## Ring Theory
 
 ### ./RNG001-0.ax
 
@@ -21225,6 +21326,8 @@ cnf(distribute2,axiom,
 
 ```
 
+## Robbins Algebra
+
 ### ./ROB001-0.ax
 
 ```vampire
@@ -21309,7 +21412,7 @@ cnf(next_integer,axiom,
 %--------------------------------------------------------------------------
 
 ```
-
+## Set Theory
 ### ./SET001-0.ax
 
 ```vampire
@@ -21678,11 +21781,1277 @@ cnf(transitivity_for_equal_elements,axiom,
 
 ### ./SET003-0.ax
 
-Very long 709
+```
+%--------------------------------------------------------------------------
+% File     : SET003-0 : TPTP v8.2.0. Released v1.0.0.
+% Domain   : Set Theory
+% Axioms   : Set theory axioms based on Godel set theory
+% Version  : [BL+86] axioms.
+% English  :
+
+% Refs     : [BL+86] Boyer et al. (1986), Set Theory in First-Order Logic:
+%          : [Wos88] Wos (1988), Automated Reasoning - 33 Basic Research Pr
+%          : [McC92] McCune (1992), Email to G. Sutcliffe
+% Source   : [McC92]
+% Names    :
+
+% Status   : Satisfiable
+% Syntax   : Number of clauses     :  141 (  11 unt;  20 nHn; 118 RR)
+%            Number of literals    :  355 (  47 equ; 197 neg)
+%            Maximal clause size   :    8 (   2 avg)
+%            Maximal term depth    :    4 (   1 avg)
+%            Number of predicates  :   14 (  13 usr;   0 prp; 1-5 aty)
+%            Number of functors    :   59 (  59 usr;   6 con; 0-5 aty)
+%            Number of variables   :  320 (  28 sgn)
+% SPC      : 
+
+% Comments : Requires EQU001-0.ax
+%          : These axioms are based on Godel's axioms for set theory.
+%          : These axioms are also used in [Wos88] p.225.
+%--------------------------------------------------------------------------
+%----Axiom A-1, little sets are sets (omitted because all objects are sets)
+
+%----Axiom A-2, elements of sets are little sets.
+cnf(a2,axiom,
+    ( ~ member(X,Y)
+    | little_set(X) ) ).
+
+%----Axiom A-3, principle of extensionality
+cnf(extensionality1,axiom,
+    ( little_set(f1(X,Y))
+    | X = Y ) ).
+
+cnf(extensionality2,axiom,
+    ( member(f1(X,Y),X)
+    | member(f1(X,Y),Y)
+    | X = Y ) ).
+
+cnf(extensionality3,axiom,
+    ( ~ member(f1(X,Y),X)
+    | ~ member(f1(X,Y),Y)
+    | X = Y ) ).
+
+%----Axiom a-4, existence of nonordered pair
+cnf(non_ordered_pair1,axiom,
+    ( ~ member(U,non_ordered_pair(X,Y))
+    | U = X
+    | U = Y ) ).
+
+cnf(non_ordered_pair2,axiom,
+    ( member(U,non_ordered_pair(X,Y))
+    | ~ little_set(U)
+    | U != X ) ).
+
+cnf(non_ordered_pair3,axiom,
+    ( member(U,non_ordered_pair(X,Y))
+    | ~ little_set(U)
+    | U != Y ) ).
+
+cnf(non_ordered_pair4,axiom,
+    little_set(non_ordered_pair(X,Y)) ).
+
+%----Definition of singleton set
+cnf(singleton_set,axiom,
+    singleton_set(X) = non_ordered_pair(X,X) ).
+
+%----Definition of ordered pair
+cnf(ordered_pair,axiom,
+    ordered_pair(X,Y) = non_ordered_pair(singleton_set(X),non_ordered_pair(X,Y)) ).
+
+%----Definition of ordered pair predicate
+cnf(ordered_pair_predicate1,axiom,
+    ( ~ ordered_pair_predicate(X)
+    | little_set(f2(X)) ) ).
+
+cnf(ordered_pair_predicate2,axiom,
+    ( ~ ordered_pair_predicate(X)
+    | little_set(f3(X)) ) ).
+
+cnf(ordered_pair_predicate3,axiom,
+    ( ~ ordered_pair_predicate(X)
+    | X = ordered_pair(f2(X),f3(X)) ) ).
+
+cnf(ordered_pair_predicate4,axiom,
+    ( ordered_pair_predicate(X)
+    | ~ little_set(Y)
+    | ~ little_set(Z)
+    | X != ordered_pair(Y,Z) ) ).
+
+%----Axiom of first
+cnf(first1,axiom,
+    ( ~ member(Z,first(X))
+    | little_set(f4(Z,X)) ) ).
+
+cnf(first2,axiom,
+    ( ~ member(Z,first(X))
+    | little_set(f5(Z,X)) ) ).
+
+cnf(first3,axiom,
+    ( ~ member(Z,first(X))
+    | X = ordered_pair(f4(Z,X),f5(Z,X)) ) ).
+
+cnf(first4,axiom,
+    ( ~ member(Z,first(X))
+    | member(Z,f4(Z,X)) ) ).
+
+cnf(first5,axiom,
+    ( member(Z,first(X))
+    | ~ little_set(U)
+    | ~ little_set(V)
+    | X != ordered_pair(U,V)
+    | ~ member(Z,U) ) ).
+
+%----Axiom of second
+cnf(second1,axiom,
+    ( ~ member(Z,second(X))
+    | little_set(f6(Z,X)) ) ).
+
+cnf(second2,axiom,
+    ( ~ member(Z,second(X))
+    | little_set(f7(Z,X)) ) ).
+
+cnf(second3,axiom,
+    ( ~ member(Z,second(X))
+    | X = ordered_pair(f6(Z,X),f7(Z,X)) ) ).
+
+cnf(second4,axiom,
+    ( ~ member(Z,second(X))
+    | member(Z,f7(Z,X)) ) ).
+
+cnf(second5,axiom,
+    ( member(Z,second(X))
+    | ~ little_set(U)
+    | ~ little_set(V)
+    | X != ordered_pair(U,V)
+    | ~ member(Z,V) ) ).
+
+%----Axiom B-1, element relation
+cnf(element_relation1,axiom,
+    ( ~ member(Z,estin)
+    | ordered_pair_predicate(Z) ) ).
+
+cnf(element_relation2,axiom,
+    ( ~ member(Z,estin)
+    | member(first(Z),second(Z)) ) ).
+
+cnf(element_relation3,axiom,
+    ( member(Z,estin)
+    | ~ little_set(Z)
+    | ~ ordered_pair_predicate(Z)
+    | ~ member(first(Z),second(Z)) ) ).
+
+%----Axiom B-2, intersection
+cnf(intersection1,axiom,
+    ( ~ member(Z,intersection(X,Y))
+    | member(Z,X) ) ).
+
+cnf(intersection2,axiom,
+    ( ~ member(Z,intersection(X,Y))
+    | member(Z,Y) ) ).
+
+cnf(intersection3,axiom,
+    ( member(Z,intersection(X,Y))
+    | ~ member(Z,X)
+    | ~ member(Z,Y) ) ).
+
+%----Axiom B-3, complement
+cnf(complement1,axiom,
+    ( ~ member(Z,complement(X))
+    | ~ member(Z,X) ) ).
+
+cnf(complement2,axiom,
+    ( member(Z,complement(X))
+    | ~ little_set(Z)
+    | member(Z,X) ) ).
+
+%----Definition of union
+cnf(union,axiom,
+    union(X,Y) = complement(intersection(complement(X),complement(Y))) ).
+
+%----Axiom B-4, domain
+cnf(domain1,axiom,
+    ( ~ member(Z,domain_of(X))
+    | ordered_pair_predicate(f8(Z,X)) ) ).
+
+cnf(domain2,axiom,
+    ( ~ member(Z,domain_of(X))
+    | member(f8(Z,X),X) ) ).
+
+cnf(domain3,axiom,
+    ( ~ member(Z,domain_of(X))
+    | Z = first(f8(Z,X)) ) ).
+
+cnf(domain4,axiom,
+    ( member(Z,domain_of(X))
+    | ~ little_set(Z)
+    | ~ ordered_pair_predicate(Xp)
+    | ~ member(Xp,X)
+    | Z != first(Xp) ) ).
+
+%----Axiom B-5, cross product
+cnf(cross_product1,axiom,
+    ( ~ member(Z,cross_product(X,Y))
+    | ordered_pair_predicate(Z) ) ).
+
+cnf(cross_product2,axiom,
+    ( ~ member(Z,cross_product(X,Y))
+    | member(first(Z),X) ) ).
+
+cnf(cross_product3,axiom,
+    ( ~ member(Z,cross_product(X,Y))
+    | member(second(Z),Y) ) ).
+
+cnf(cross_product4,axiom,
+    ( member(Z,cross_product(X,Y))
+    | ~ little_set(Z)
+    | ~ ordered_pair_predicate(Z)
+    | ~ member(first(Z),X)
+    | ~ member(second(Z),Y) ) ).
+
+%----Axiom B-6, converse
+cnf(converse1,axiom,
+    ( ~ member(Z,converse(X))
+    | ordered_pair_predicate(Z) ) ).
+
+cnf(converse2,axiom,
+    ( ~ member(Z,converse(X))
+    | member(ordered_pair(second(Z),first(Z)),X) ) ).
+
+cnf(converse3,axiom,
+    ( member(Z,converse(X))
+    | ~ little_set(Z)
+    | ~ ordered_pair_predicate(Z)
+    | ~ member(ordered_pair(second(Z),first(Z)),X) ) ).
+
+%----Axiom B-7, rotate_right
+cnf(rotate_right1,axiom,
+    ( ~ member(Z,rotate_right(X))
+    | little_set(f9(Z,X)) ) ).
+
+cnf(rotate_right2,axiom,
+    ( ~ member(Z,rotate_right(X))
+    | little_set(f10(Z,X)) ) ).
+
+cnf(rotate_right3,axiom,
+    ( ~ member(Z,rotate_right(X))
+    | little_set(f11(Z,X)) ) ).
+
+cnf(rotate_right4,axiom,
+    ( ~ member(Z,rotate_right(X))
+    | Z = ordered_pair(f9(Z,X),ordered_pair(f10(Z,X),f11(Z,X))) ) ).
+
+cnf(rotate_right5,axiom,
+    ( ~ member(Z,rotate_right(X))
+    | member(ordered_pair(f10(Z,X),ordered_pair(f11(Z,X),f9(Z,X))),X) ) ).
+
+cnf(rotate_right6,axiom,
+    ( member(Z,rotate_right(X))
+    | ~ little_set(Z)
+    | ~ little_set(U)
+    | ~ little_set(V)
+    | ~ little_set(W)
+    | Z != ordered_pair(U,ordered_pair(V,W))
+    | ~ member(ordered_pair(V,ordered_pair(W,U)),X) ) ).
+
+%----Axiom B-8, flip_range
+cnf(flip_range1,axiom,
+    ( ~ member(Z,flip_range_of(X))
+    | little_set(f12(Z,X)) ) ).
+
+cnf(flip_range2,axiom,
+    ( ~ member(Z,flip_range_of(X))
+    | little_set(f13(Z,X)) ) ).
+
+cnf(flip_range3,axiom,
+    ( ~ member(Z,flip_range_of(X))
+    | little_set(f14(Z,X)) ) ).
+
+cnf(flip_range4,axiom,
+    ( ~ member(Z,flip_range_of(X))
+    | Z = ordered_pair(f12(Z,X),ordered_pair(f13(Z,X),f14(Z,X))) ) ).
+
+cnf(flip_range5,axiom,
+    ( ~ member(Z,flip_range_of(X))
+    | member(ordered_pair(f12(Z,X),ordered_pair(f14(Z,X),f13(Z,X))),X) ) ).
+
+cnf(flip_range6,axiom,
+    ( member(Z,flip_range_of(X))
+    | ~ little_set(Z)
+    | ~ little_set(U)
+    | ~ little_set(V)
+    | ~ little_set(W)
+    | Z != ordered_pair(U,ordered_pair(V,W))
+    | ~ member(ordered_pair(U,ordered_pair(W,V)),X) ) ).
+
+%----Definition of successor
+cnf(successor,axiom,
+    successor(X) = union(X,singleton_set(X)) ).
+
+%----Definition of empty set
+cnf(empty_set,axiom,
+    ~ member(Z,empty_set) ).
+
+%----Definition of universal set
+cnf(universal_set,axiom,
+    ( member(Z,universal_set)
+    | ~ little_set(Z) ) ).
+
+%----Axiom C-1, infinity
+cnf(infinity1,axiom,
+    little_set(infinity) ).
+
+cnf(infinity2,axiom,
+    member(empty_set,infinity) ).
+
+cnf(infinity3,axiom,
+    ( ~ member(X,infinity)
+    | member(successor(X),infinity) ) ).
+
+%----Axiom C-2, sigma (union of elements)
+cnf(sigma1,axiom,
+    ( ~ member(Z,sigma(X))
+    | member(f16(Z,X),X) ) ).
+
+cnf(sigma2,axiom,
+    ( ~ member(Z,sigma(X))
+    | member(Z,f16(Z,X)) ) ).
+
+cnf(sigma3,axiom,
+    ( member(Z,sigma(X))
+    | ~ member(Y,X)
+    | ~ member(Z,Y) ) ).
+
+cnf(sigma4,axiom,
+    ( ~ little_set(U)
+    | little_set(sigma(U)) ) ).
+
+%----Definition of subset
+cnf(subset1,axiom,
+    ( ~ subset(X,Y)
+    | ~ member(U,X)
+    | member(U,Y) ) ).
+
+cnf(subset2,axiom,
+    ( subset(X,Y)
+    | member(f17(X,Y),X) ) ).
+
+cnf(subset3,axiom,
+    ( subset(X,Y)
+    | ~ member(f17(X,Y),Y) ) ).
+
+%----Definition of proper subset
+cnf(proper_subset1,axiom,
+    ( ~ proper_subset(X,Y)
+    | subset(X,Y) ) ).
+
+cnf(proper_subset2,axiom,
+    ( ~ proper_subset(X,Y)
+    | X != Y ) ).
+
+cnf(proper_subset3,axiom,
+    ( proper_subset(X,Y)
+    | ~ subset(X,Y)
+    | X = Y ) ).
+
+%----Axiom C-3, powerset
+cnf(powerset1,axiom,
+    ( ~ member(Z,powerset(X))
+    | subset(Z,X) ) ).
+
+cnf(powerset2,axiom,
+    ( member(Z,powerset(X))
+    | ~ little_set(Z)
+    | ~ subset(Z,X) ) ).
+
+cnf(powerset3,axiom,
+    ( ~ little_set(U)
+    | little_set(powerset(U)) ) ).
+
+%----Definition of relation
+cnf(relation1,axiom,
+    ( ~ relation(Z)
+    | ~ member(X,Z)
+    | ordered_pair_predicate(X) ) ).
+
+cnf(relation2,axiom,
+    ( relation(Z)
+    | member(f18(Z),Z) ) ).
+
+cnf(relation3,axiom,
+    ( relation(Z)
+    | ~ ordered_pair_predicate(f18(Z)) ) ).
+
+%----Definition of single-valued set
+cnf(single_valued_set1,axiom,
+    ( ~ single_valued_set(X)
+    | ~ little_set(U)
+    | ~ little_set(V)
+    | ~ little_set(W)
+    | ~ member(ordered_pair(U,V),X)
+    | ~ member(ordered_pair(U,W),X)
+    | V = W ) ).
+
+cnf(single_valued_set2,axiom,
+    ( single_valued_set(X)
+    | little_set(f19(X)) ) ).
+
+cnf(single_valued_set3,axiom,
+    ( single_valued_set(X)
+    | little_set(f20(X)) ) ).
+
+cnf(single_valued_set4,axiom,
+    ( single_valued_set(X)
+    | little_set(f21(X)) ) ).
+
+cnf(single_valued_set5,axiom,
+    ( single_valued_set(X)
+    | member(ordered_pair(f19(X),f20(X)),X) ) ).
+
+cnf(single_valued_set6,axiom,
+    ( single_valued_set(X)
+    | member(ordered_pair(f19(X),f21(X)),X) ) ).
+
+cnf(single_valued_set7,axiom,
+    ( single_valued_set(X)
+    | f20(X) != f21(X) ) ).
+
+%----Definition of function
+cnf(function1,axiom,
+    ( ~ function(Xf)
+    | relation(Xf) ) ).
+
+cnf(function2,axiom,
+    ( ~ function(Xf)
+    | single_valued_set(Xf) ) ).
+
+cnf(function3,axiom,
+    ( function(Xf)
+    | ~ relation(Xf)
+    | ~ single_valued_set(Xf) ) ).
+
+%----Axiom C-4, image and substitution
+cnf(image_and_substitution1,axiom,
+    ( ~ member(Z,image(X,Xf))
+    | ordered_pair_predicate(f22(Z,X,Xf)) ) ).
+
+cnf(image_and_substitution2,axiom,
+    ( ~ member(Z,image(X,Xf))
+    | member(f22(Z,X,Xf),Xf) ) ).
+
+cnf(image_and_substitution3,axiom,
+    ( ~ member(Z,image(X,Xf))
+    | member(first(f22(Z,X,Xf)),X) ) ).
+
+cnf(image_and_substitution4,axiom,
+    ( ~ member(Z,image(X,Xf))
+    | second(f22(Z,X,Xf)) = Z ) ).
+
+cnf(image_and_substitution5,axiom,
+    ( member(Z,image(X,Xf))
+    | ~ little_set(Z)
+    | ~ ordered_pair_predicate(Y)
+    | ~ member(Y,Xf)
+    | ~ member(first(Y),X)
+    | second(Y) != Z ) ).
+
+cnf(image_and_substitution6,axiom,
+    ( ~ little_set(X)
+    | ~ function(Xf)
+    | little_set(image(X,Xf)) ) ).
+
+%----Definition of disjoint
+cnf(disjoint1,axiom,
+    ( ~ disjoint(X,Y)
+    | ~ member(U,X)
+    | ~ member(U,Y) ) ).
+
+cnf(disjoint2,axiom,
+    ( disjoint(X,Y)
+    | member(f23(X,Y),X) ) ).
+
+cnf(disjoint3,axiom,
+    ( disjoint(X,Y)
+    | member(f23(X,Y),Y) ) ).
+
+%----Axiom D, regularity
+cnf(regularity1,axiom,
+    ( X = empty_set
+    | member(f24(X),X) ) ).
+
+cnf(regularity2,axiom,
+    ( X = empty_set
+    | disjoint(f24(X),X) ) ).
+
+%----Axiom E, choice
+cnf(choice1,axiom,
+    function(f25) ).
+
+cnf(choice2,axiom,
+    ( ~ little_set(X)
+    | X = empty_set
+    | member(f26(X),X) ) ).
+
+cnf(choice3,axiom,
+    ( ~ little_set(X)
+    | X = empty_set
+    | member(ordered_pair(X,f26(X)),f25) ) ).
+
+%----Definition of range_of
+cnf(range_of1,axiom,
+    ( ~ member(Z,range_of(X))
+    | ordered_pair_predicate(f27(Z,X)) ) ).
+
+cnf(range_of2,axiom,
+    ( ~ member(Z,range_of(X))
+    | member(f27(Z,X),X) ) ).
+
+cnf(range_of3,axiom,
+    ( ~ member(Z,range_of(X))
+    | Z = second(f27(Z,X)) ) ).
+
+cnf(range_of4,axiom,
+    ( member(Z,range_of(X))
+    | ~ little_set(Z)
+    | ~ ordered_pair_predicate(Xp)
+    | ~ member(Xp,X)
+    | Z != second(Xp) ) ).
+
+%----Definition of identity relation
+cnf(identity_relation1,axiom,
+    ( ~ member(Z,identity_relation)
+    | ordered_pair_predicate(Z) ) ).
+
+cnf(identity_relation2,axiom,
+    ( ~ member(Z,identity_relation)
+    | first(Z) = second(Z) ) ).
+
+cnf(identity_relation3,axiom,
+    ( member(Z,identity_relation)
+    | ~ little_set(Z)
+    | ~ ordered_pair_predicate(Z)
+    | first(Z) != second(Z) ) ).
+
+%----Definition of restrict
+cnf(restrict,axiom,
+    restrict(X,Y) = intersection(X,cross_product(Y,universal_set)) ).
+
+%----Definition of one-to-one function
+cnf(one_to_one_function1,axiom,
+    ( ~ one_to_one_function(Xf)
+    | function(Xf) ) ).
+
+cnf(one_to_one_function2,axiom,
+    ( ~ one_to_one_function(Xf)
+    | function(converse(Xf)) ) ).
+
+cnf(one_to_one_function3,axiom,
+    ( one_to_one_function(Xf)
+    | ~ function(Xf)
+    | ~ function(converse(Xf)) ) ).
+
+%----Definition of apply
+cnf(apply1,axiom,
+    ( ~ member(Z,apply(Xf,Y))
+    | ordered_pair_predicate(f28(Z,Xf,Y)) ) ).
+
+cnf(apply2,axiom,
+    ( ~ member(Z,apply(Xf,Y))
+    | member(f28(Z,Xf,Y),Xf) ) ).
+
+cnf(apply3,axiom,
+    ( ~ member(Z,apply(Xf,Y))
+    | first(f28(Z,Xf,Y)) = Y ) ).
+
+cnf(apply4,axiom,
+    ( ~ member(Z,apply(Xf,Y))
+    | member(Z,second(f28(Z,Xf,Y))) ) ).
+
+cnf(apply5,axiom,
+    ( member(Z,apply(Xf,Y))
+    | ~ ordered_pair_predicate(W)
+    | ~ member(W,Xf)
+    | first(W) != Y
+    | ~ member(Z,second(W)) ) ).
+
+%----Definition of apply to 2 arguments
+cnf(apply_to_two_arguments,axiom,
+    apply_to_two_arguments(Xf,X,Y) = apply(Xf,ordered_pair(X,Y)) ).
+
+%----Definition of maps
+cnf(maps1,axiom,
+    ( ~ maps(Xf,X,Y)
+    | function(Xf) ) ).
+
+cnf(maps2,axiom,
+    ( ~ maps(Xf,X,Y)
+    | domain_of(Xf) = X ) ).
+
+cnf(maps3,axiom,
+    ( ~ maps(Xf,X,Y)
+    | subset(range_of(Xf),Y) ) ).
+
+cnf(maps4,axiom,
+    ( maps(Xf,X,Y)
+    | ~ function(Xf)
+    | domain_of(Xf) != X
+    | ~ subset(range_of(Xf),Y) ) ).
+
+%----Definition of closed
+cnf(closed1,axiom,
+    ( ~ closed(Xs,Xf)
+    | little_set(Xs) ) ).
+
+cnf(closed2,axiom,
+    ( ~ closed(Xs,Xf)
+    | little_set(Xf) ) ).
+
+cnf(closed3,axiom,
+    ( ~ closed(Xs,Xf)
+    | maps(Xf,cross_product(Xs,Xs),Xs) ) ).
+
+cnf(closed4,axiom,
+    ( closed(Xs,Xf)
+    | ~ little_set(Xs)
+    | ~ little_set(Xf)
+    | ~ maps(Xf,cross_product(Xs,Xs),Xs) ) ).
+
+%----Definition of compose
+cnf(compose1,axiom,
+    ( ~ member(Z,compose(Xf,Xg))
+    | little_set(f29(Z,Xf,Xg)) ) ).
+
+cnf(compose2,axiom,
+    ( ~ member(Z,compose(Xf,Xg))
+    | little_set(f30(Z,Xf,Xg)) ) ).
+
+cnf(compose3,axiom,
+    ( ~ member(Z,compose(Xf,Xg))
+    | little_set(f31(Z,Xf,Xg)) ) ).
+
+cnf(compose4,axiom,
+    ( ~ member(Z,compose(Xf,Xg))
+    | Z = ordered_pair(f29(Z,Xf,Xg),f30(Z,Xf,Xg)) ) ).
+
+cnf(compose5,axiom,
+    ( ~ member(Z,compose(Xf,Xg))
+    | member(ordered_pair(f29(Z,Xf,Xg),f31(Z,Xf,Xg)),Xf) ) ).
+
+cnf(compose6,axiom,
+    ( ~ member(Z,compose(Xf,Xg))
+    | member(ordered_pair(f31(Z,Xf,Xg),f30(Z,Xf,Xg)),Xg) ) ).
+
+cnf(compose7,axiom,
+    ( member(Z,compose(Xf,Xg))
+    | ~ little_set(Z)
+    | ~ little_set(X)
+    | ~ little_set(Y)
+    | ~ little_set(W)
+    | Z != ordered_pair(X,Y)
+    | ~ member(ordered_pair(X,W),Xf)
+    | ~ member(ordered_pair(W,Y),Xg) ) ).
+
+%----Definition of a homomorphism
+cnf(homomorphism1,axiom,
+    ( ~ homomorphism(Xh,Xs1,Xf1,Xs2,Xf2)
+    | closed(Xs1,Xf1) ) ).
+
+cnf(homomorphism2,axiom,
+    ( ~ homomorphism(Xh,Xs1,Xf1,Xs2,Xf2)
+    | closed(Xs2,Xf2) ) ).
+
+cnf(homomorphism3,axiom,
+    ( ~ homomorphism(Xh,Xs1,Xf1,Xs2,Xf2)
+    | maps(Xh,Xs1,Xs2) ) ).
+
+cnf(homomorphism4,axiom,
+    ( ~ homomorphism(Xh,Xs1,Xf1,Xs2,Xf2)
+    | ~ member(X,Xs1)
+    | ~ member(Y,Xs1)
+    | apply(Xh,apply_to_two_arguments(Xf1,X,Y)) = apply_to_two_arguments(Xf2,apply(Xh,X),apply(Xh,Y)) ) ).
+
+cnf(homomorphism5,axiom,
+    ( homomorphism(Xh,Xs1,Xf1,Xs2,Xf2)
+    | ~ closed(Xs1,Xf1)
+    | ~ closed(Xs2,Xf2)
+    | ~ maps(Xh,Xs1,Xs2)
+    | member(f32(Xh,Xs1,Xf1,Xs2,Xf2),Xs1) ) ).
+
+cnf(homomorphism6,axiom,
+    ( homomorphism(Xh,Xs1,Xf1,Xs2,Xf2)
+    | ~ closed(Xs1,Xf1)
+    | ~ closed(Xs2,Xf2)
+    | ~ maps(Xh,Xs1,Xs2)
+    | member(f33(Xh,Xs1,Xf1,Xs2,Xf2),Xs1) ) ).
+
+cnf(homomorphism7,axiom,
+    ( homomorphism(Xh,Xs1,Xf1,Xs2,Xf2)
+    | ~ closed(Xs1,Xf1)
+    | ~ closed(Xs2,Xf2)
+    | ~ maps(Xh,Xs1,Xs2)
+    | apply(Xh,apply_to_two_arguments(Xf1,f32(Xh,Xs1,Xf1,Xs2,Xf2),f33(Xh,Xs1,Xf1,Xs2,Xf2))) != apply_to_two_arguments(Xf2,apply(Xh,f32(Xh,Xs1,Xf1,Xs2,Xf2)),apply(Xh,f33(Xh,Xs1,Xf1,Xs2,Xf2))) ) ).
+
+%--------------------------------------------------------------------------
+```
 
 ### ./SET004-0.ax
 
-Very long 554
+```
+%--------------------------------------------------------------------------
+% File     : SET004-0 : TPTP v8.2.0. Bugfixed v2.1.0.
+% Domain   : Set Theory
+% Axioms   : Set theory axioms based on NBG set theory
+% Version  : [Qua92] axioms.
+% English  :
+
+% Refs     : [Qua92] Quaife (1992), Automated Deduction in von Neumann-Bern
+% Source   : [Qua92]
+% Names    :
+
+% Status   : Satisfiable
+% Syntax   : Number of clauses     :   91 (  29 unt;   8 nHn;  62 RR)
+%            Number of literals    :  181 (  39 equ;  84 neg)
+%            Maximal clause size   :    5 (   1 avg)
+%            Maximal term depth    :    6 (   1 avg)
+%            Number of predicates  :   10 (   9 usr;   0 prp; 1-3 aty)
+%            Number of functors    :   38 (  38 usr;   8 con; 0-3 aty)
+%            Number of variables   :  176 (  25 sgn)
+% SPC      : 
+
+% Comments :
+% Bugfixes : v2.1.0 - Clause compatible4 fixed
+%--------------------------------------------------------------------------
+%----GROUP 1:          AXIOMS AND BASIC DEFINITIONS.
+
+%----Axiom A-1:  sets are classes (omitted because all objects are
+%----classes).
+
+%----Definition of < (subclass).
+%----a:x:a:y:((x < y) <=> a:u:((u e x) ==> (u e y))).
+cnf(subclass_members,axiom,
+    ( ~ subclass(X,Y)
+    | ~ member(U,X)
+    | member(U,Y) ) ).
+
+cnf(not_subclass_members1,axiom,
+    ( member(not_subclass_element(X,Y),X)
+    | subclass(X,Y) ) ).
+
+cnf(not_subclass_members2,axiom,
+    ( ~ member(not_subclass_element(X,Y),Y)
+    | subclass(X,Y) ) ).
+
+%----Axiom A-2: elements of classes are sets.
+%----a:x:(x < universal_class).
+%----Singleton variables OK.
+cnf(class_elements_are_sets,axiom,
+    subclass(X,universal_class) ).
+
+%----Axiom A-3: principle of extensionality.
+%----a:x:a:y:((x = y) <=> (x < y) & (y < x)).
+cnf(equal_implies_subclass1,axiom,
+    ( X != Y
+    | subclass(X,Y) ) ).
+
+cnf(equal_implies_subclass2,axiom,
+    ( X != Y
+    | subclass(Y,X) ) ).
+
+cnf(subclass_implies_equal,axiom,
+    ( ~ subclass(X,Y)
+    | ~ subclass(Y,X)
+    | X = Y ) ).
+
+%----Axiom A-4: existence of unordered pair.
+%----a:u:a:x:a:y:((u e {x, y}) <=> (u e universal_class)
+%----& (u = x | u = y)).
+%----a:x:a:y:({x, y} e universal_class).
+cnf(unordered_pair_member,axiom,
+    ( ~ member(U,unordered_pair(X,Y))
+    | U = X
+    | U = Y ) ).
+
+%----(x e universal_class), (u = x) --> (u e {x, y}).
+%----Singleton variables OK.
+cnf(unordered_pair2,axiom,
+    ( ~ member(X,universal_class)
+    | member(X,unordered_pair(X,Y)) ) ).
+
+%----(y e universal_class), (u = y) --> (u e {x, y}).
+%----Singleton variables OK.
+cnf(unordered_pair3,axiom,
+    ( ~ member(Y,universal_class)
+    | member(Y,unordered_pair(X,Y)) ) ).
+
+%----Singleton variables OK.
+cnf(unordered_pairs_in_universal,axiom,
+    member(unordered_pair(X,Y),universal_class) ).
+
+%----Definition of singleton set.
+%----a:x:({x} = {x, x}).
+cnf(singleton_set,axiom,
+    unordered_pair(X,X) = singleton(X) ).
+
+%----See Theorem (SS6) for memb.
+
+%----Definition of ordered pair.
+%----a:x:a:y:([x,y] = {{x}, {x, {y}}}).
+cnf(ordered_pair,axiom,
+    unordered_pair(singleton(X),unordered_pair(X,singleton(Y))) = ordered_pair(X,Y) ).
+
+%----Axiom B-5'a: Cartesian product.
+%----a:u:a:v:a:y:(([u,v] e cross_product(x,y)) <=> (u e x) & (v e y)).
+%----Singleton variables OK.
+cnf(cartesian_product1,axiom,
+    ( ~ member(ordered_pair(U,V),cross_product(X,Y))
+    | member(U,X) ) ).
+
+%----Singleton variables OK.
+cnf(cartesian_product2,axiom,
+    ( ~ member(ordered_pair(U,V),cross_product(X,Y))
+    | member(V,Y) ) ).
+
+cnf(cartesian_product3,axiom,
+    ( ~ member(U,X)
+    | ~ member(V,Y)
+    | member(ordered_pair(U,V),cross_product(X,Y)) ) ).
+
+%----See Theorem (OP6) for 1st and 2nd.
+
+%----Axiom B-5'b: Cartesian product.
+%----a:z:(z e cross_product(x,y) --> ([first(z),second(z)] = z)
+%----Singleton variables OK.
+cnf(cartesian_product4,axiom,
+    ( ~ member(Z,cross_product(X,Y))
+    | ordered_pair(first(Z),second(Z)) = Z ) ).
+
+%----Axiom B-1: E (element relation).
+%----(E < cross_product(universal_class,universal_class)).
+%----a:x:a:y:(([x,y] e E) <=> ([x,y] e cross_product(universal_class,
+%----universal_class)) (x e y)).
+cnf(element_relation1,axiom,
+    subclass(element_relation,cross_product(universal_class,universal_class)) ).
+
+cnf(element_relation2,axiom,
+    ( ~ member(ordered_pair(X,Y),element_relation)
+    | member(X,Y) ) ).
+
+cnf(element_relation3,axiom,
+    ( ~ member(ordered_pair(X,Y),cross_product(universal_class,universal_class))
+    | ~ member(X,Y)
+    | member(ordered_pair(X,Y),element_relation) ) ).
+
+%----Axiom B-2: * (intersection).
+%----a:z:a:x:a:y:((z e (x * y)) <=> (z e x) & (z e y)).
+%----Singleton variables OK.
+cnf(intersection1,axiom,
+    ( ~ member(Z,intersection(X,Y))
+    | member(Z,X) ) ).
+
+%----Singleton variables OK.
+cnf(intersection2,axiom,
+    ( ~ member(Z,intersection(X,Y))
+    | member(Z,Y) ) ).
+
+cnf(intersection3,axiom,
+    ( ~ member(Z,X)
+    | ~ member(Z,Y)
+    | member(Z,intersection(X,Y)) ) ).
+
+%----Axiom B-3: complement.
+%----a:z:a:x:((z e ~(x)) <=> (z e universal_class) & -(z e x)).
+cnf(complement1,axiom,
+    ( ~ member(Z,complement(X))
+    | ~ member(Z,X) ) ).
+
+cnf(complement2,axiom,
+    ( ~ member(Z,universal_class)
+    | member(Z,complement(X))
+    | member(Z,X) ) ).
+
+%---- Theorem (SP2) introduces the null class O.
+
+%----Definition of + (union).
+%----a:x:a:y:((x + y) = ~((~(x) * ~(y)))).
+cnf(union,axiom,
+    complement(intersection(complement(X),complement(Y))) = union(X,Y) ).
+
+%----Definition of & (exclusive or). (= symmetric difference).
+%----a:x:a:y:((x y) = (~(x * y) * ~(~(x) * ~(y)))).
+cnf(symmetric_difference,axiom,
+    intersection(complement(intersection(X,Y)),complement(intersection(complement(X),complement(Y)))) = symmetric_difference(X,Y) ).
+
+%----Definition of restriction.
+%----a:x(restrict(xr,x,y) = (xr * cross_product(x,y))).
+%----This is extra to the paper
+cnf(restriction1,axiom,
+    intersection(Xr,cross_product(X,Y)) = restrict(Xr,X,Y) ).
+
+cnf(restriction2,axiom,
+    intersection(cross_product(X,Y),Xr) = restrict(Xr,X,Y) ).
+
+%----Axiom B-4: D (domain_of).
+%----a:y:a:z:((z e domain_of(x)) <=> (z e universal_class) &
+%---- -(restrict(x,{z},universal_class) = O)).
+%----next is subsumed by A-2.
+%------> (domain_of(x) < universal_class).
+cnf(domain1,axiom,
+    ( restrict(X,singleton(Z),universal_class) != null_class
+    | ~ member(Z,domain_of(X)) ) ).
+
+cnf(domain2,axiom,
+    ( ~ member(Z,universal_class)
+    | restrict(X,singleton(Z),universal_class) = null_class
+    | member(Z,domain_of(X)) ) ).
+
+%----Axiom B-7: rotate.
+%----a:x:(rotate(x) <  cross_product(cross_product(universal_class,
+%----universal_class),universal_class)).
+%----a:x:a:u:a:v:a:w:(([[u,v],w] e rotate(x)) <=> ([[u,v],w]]
+%---- e cross_product(cross_product(universal_class,universal_class),
+%----universal_class)) & ([[v,w],u]] e x).
+%----Singleton variables OK.
+cnf(rotate1,axiom,
+    subclass(rotate(X),cross_product(cross_product(universal_class,universal_class),universal_class)) ).
+
+cnf(rotate2,axiom,
+    ( ~ member(ordered_pair(ordered_pair(U,V),W),rotate(X))
+    | member(ordered_pair(ordered_pair(V,W),U),X) ) ).
+
+cnf(rotate3,axiom,
+    ( ~ member(ordered_pair(ordered_pair(V,W),U),X)
+    | ~ member(ordered_pair(ordered_pair(U,V),W),cross_product(cross_product(universal_class,universal_class),universal_class))
+    | member(ordered_pair(ordered_pair(U,V),W),rotate(X)) ) ).
+
+%----Axiom B-8: flip.
+%----a:x:(flip(x) <  cross_product(cross_product(universal_class,
+%----universal_class),universal_class)).
+%----a:z:a:u:a:v:a:w:(([[u,v],w] e flip(x)) <=> ([[u,v],w]
+%----e cross_product(cross_product(universal_class,universal_class),
+%----universal_class)) & ([[v,u],w] e x).
+%----Singleton variables OK.
+cnf(flip1,axiom,
+    subclass(flip(X),cross_product(cross_product(universal_class,universal_class),universal_class)) ).
+
+cnf(flip2,axiom,
+    ( ~ member(ordered_pair(ordered_pair(U,V),W),flip(X))
+    | member(ordered_pair(ordered_pair(V,U),W),X) ) ).
+
+cnf(flip3,axiom,
+    ( ~ member(ordered_pair(ordered_pair(V,U),W),X)
+    | ~ member(ordered_pair(ordered_pair(U,V),W),cross_product(cross_product(universal_class,universal_class),universal_class))
+    | member(ordered_pair(ordered_pair(U,V),W),flip(X)) ) ).
+
+%----Definition of inverse.
+%----a:y:(inverse(y) = domain_of(flip(cross_product(y,V)))).
+cnf(inverse,axiom,
+    domain_of(flip(cross_product(Y,universal_class))) = inverse(Y) ).
+
+%----Definition of R (range_of).
+%----a:z:(range_of(z) = domain_of(inverse(z))).
+cnf(range_of,axiom,
+    domain_of(inverse(Z)) = range_of(Z) ).
+
+%----Definition of domain.
+%----a:z:a:x:a:y:(domain(z,x,y) = first(notsub(restrict(z,x,{y}),O))).
+cnf(domain,axiom,
+    first(not_subclass_element(restrict(Z,X,singleton(Y)),null_class)) = domain(Z,X,Y) ).
+
+%----Definition of range.
+%----a:z:a:x:(range(z,x,y) = second(notsub(restrict(z,{x},y),O))).
+cnf(range,axiom,
+    second(not_subclass_element(restrict(Z,singleton(X),Y),null_class)) = range(Z,X,Y) ).
+
+%----Definition of image.
+%----a:x:a:xr:((xr image x) = range_of(restrict(xr,x,V))).
+cnf(image,axiom,
+    range_of(restrict(Xr,X,universal_class)) = image(Xr,X) ).
+
+%----Definition of successor.
+%----a:x:(successor(x) = (x + {x})).
+cnf(successor,axiom,
+    union(X,singleton(X)) = successor(X) ).
+
+%----Explicit definition of successor_relation.
+%------> ((cross_product(V,V) * ~(((E ^ ~(inverse((E + I)))) +
+%----(~(E) ^ inverse((E + I)))))) = successor_relation).
+%----Definition of successor_relation from the Class Existence Theorem.
+%----a:x:a:y:([x,y] e successor_relation <=> x e V & successor(x) = y).
+%----The above FOF does not agree with the book
+cnf(successor_relation1,axiom,
+    subclass(successor_relation,cross_product(universal_class,universal_class)) ).
+
+cnf(successor_relation2,axiom,
+    ( ~ member(ordered_pair(X,Y),successor_relation)
+    | successor(X) = Y ) ).
+
+%----This is what's in the book and paper. Does not change axiom.
+% input_clause(successor_relation3,axiom,
+%     [--equal(successor(X),Y),
+%      --member(X,universal_class),
+%      ++member(ordered_pair(X,Y),successor_relation)]).
+
+%----This is what I got by email from Quaife
+cnf(successor_relation3,axiom,
+    ( successor(X) != Y
+    | ~ member(ordered_pair(X,Y),cross_product(universal_class,universal_class))
+    | member(ordered_pair(X,Y),successor_relation) ) ).
+
+%----Definition of inductive a:x:(inductive(x) <=> null_class
+%----e x & (successor_relation image x) < x)).
+cnf(inductive1,axiom,
+    ( ~ inductive(X)
+    | member(null_class,X) ) ).
+
+cnf(inductive2,axiom,
+    ( ~ inductive(X)
+    | subclass(image(successor_relation,X),X) ) ).
+
+cnf(inductive3,axiom,
+    ( ~ member(null_class,X)
+    | ~ subclass(image(successor_relation,X),X)
+    | inductive(X) ) ).
+
+%----Axiom C-1: infinity.
+%----e:x:((x e V) & inductive(x) & a:y:(inductive(y) ==> (x < y))).
+%----e:x:((x e V) & (O e x) & ((successor_relation image x) < x)
+%----        & a:y:((O e y) & ((successor_relation image y) < y) ==>
+%----(x < y))).
+cnf(omega_is_inductive1,axiom,
+    inductive(omega) ).
+
+cnf(omega_is_inductive2,axiom,
+    ( ~ inductive(Y)
+    | subclass(omega,Y) ) ).
+
+cnf(omega_in_universal,axiom,
+    member(omega,universal_class) ).
+
+%----These were commented out in the set Quaife sent me, and are not
+%----in the paper true --> (null_class e omega).
+%----true --> ((successor_relation image omega) < omega).
+%----(null_class e y), ((successor_relation image y) < y) -->
+%----(omega < y). true --> (omega e universal_class).
+
+%----Definition of U (sum class).
+%----a:x:(sum_class(x) = domain_of(restrict(E,V,x))).
+cnf(sum_class_definition,axiom,
+    domain_of(restrict(element_relation,universal_class,X)) = sum_class(X) ).
+
+%----Axiom C-2: U (sum class).
+%----a:x:((x e V) ==> (sum_class(x) e V)).
+cnf(sum_class2,axiom,
+    ( ~ member(X,universal_class)
+    | member(sum_class(X),universal_class) ) ).
+
+%----Definition of P (power class).
+%----a:x:(power_class(x) = ~((E image ~(x)))).
+cnf(power_class_definition,axiom,
+    complement(image(element_relation,complement(X))) = power_class(X) ).
+
+%----Axiom C-3: P (power class).
+%----a:u:((u e V) ==> (power_class(u) e V)).
+cnf(power_class2,axiom,
+    ( ~ member(U,universal_class)
+    | member(power_class(U),universal_class) ) ).
+
+%----Definition of compose.
+%----a:xr:a:yr:((yr ^ xr) < cross_product(V,V)).
+%----a:u:a:v:a:xr:a:yr:(([u,v] e (yr ^ xr)) <=> ([u,v]
+%----e cross_product(V,V)) & (v e (yr image (xr image {u})))).
+%----Singleton variables OK.
+cnf(compose1,axiom,
+    subclass(compose(Yr,Xr),cross_product(universal_class,universal_class)) ).
+
+cnf(compose2,axiom,
+    ( ~ member(ordered_pair(Y,Z),compose(Yr,Xr))
+    | member(Z,image(Yr,image(Xr,singleton(Y)))) ) ).
+
+cnf(compose3,axiom,
+    ( ~ member(Z,image(Yr,image(Xr,singleton(Y))))
+    | ~ member(ordered_pair(Y,Z),cross_product(universal_class,universal_class))
+    | member(ordered_pair(Y,Z),compose(Yr,Xr)) ) ).
+
+%----7/21/90 eliminate SINGVAL and just use FUNCTION.
+%----Not eliminated in TPTP - I'm following the paper
+cnf(single_valued_class1,axiom,
+    ( ~ single_valued_class(X)
+    | subclass(compose(X,inverse(X)),identity_relation) ) ).
+
+cnf(single_valued_class2,axiom,
+    ( ~ subclass(compose(X,inverse(X)),identity_relation)
+    | single_valued_class(X) ) ).
+
+%----Definition of function.
+%----a:xf:(function(xf) <=> (xf < cross_product(V,V)) & ((xf
+%----^ inverse(xf)) < identity_relation)).
+cnf(function1,axiom,
+    ( ~ function(Xf)
+    | subclass(Xf,cross_product(universal_class,universal_class)) ) ).
+
+cnf(function2,axiom,
+    ( ~ function(Xf)
+    | subclass(compose(Xf,inverse(Xf)),identity_relation) ) ).
+
+cnf(function3,axiom,
+    ( ~ subclass(Xf,cross_product(universal_class,universal_class))
+    | ~ subclass(compose(Xf,inverse(Xf)),identity_relation)
+    | function(Xf) ) ).
+
+%----Axiom C-4: replacement.
+%----a:x:((x e V) & function(xf) ==> ((xf image x) e V)).
+cnf(replacement,axiom,
+    ( ~ function(Xf)
+    | ~ member(X,universal_class)
+    | member(image(Xf,X),universal_class) ) ).
+
+%----Axiom D: regularity.
+%----a:x:(-(x = O) ==> e:u:((u e V) & (u e x) & ((u * x) = O))).
+cnf(regularity1,axiom,
+    ( X = null_class
+    | member(regular(X),X) ) ).
+
+cnf(regularity2,axiom,
+    ( X = null_class
+    | intersection(X,regular(X)) = null_class ) ).
+
+%----Definition of apply (apply).
+%----a:xf:a:y:((xf apply y) = sum_class((xf image {y}))).
+cnf(apply,axiom,
+    sum_class(image(Xf,singleton(Y))) = apply(Xf,Y) ).
+
+%----Axiom E: universal choice.
+%----e:xf:(function(xf) & a:y:((y e V) ==> (y = null_class) |
+%----((xf apply y) e y))).
+cnf(choice1,axiom,
+    function(choice) ).
+
+cnf(choice2,axiom,
+    ( ~ member(Y,universal_class)
+    | Y = null_class
+    | member(apply(choice,Y),Y) ) ).
+
+%----GROUP 2:             MORE SET THEORY DEFINITIONS.
+
+%----Definition of one_to_one (one-to-one function).
+%----a:xf:(one_to_one(xf) <=> function(xf) & function(inverse(xf))).
+cnf(one_to_one1,axiom,
+    ( ~ one_to_one(Xf)
+    | function(Xf) ) ).
+
+cnf(one_to_one2,axiom,
+    ( ~ one_to_one(Xf)
+    | function(inverse(Xf)) ) ).
+
+cnf(one_to_one3,axiom,
+    ( ~ function(inverse(Xf))
+    | ~ function(Xf)
+    | one_to_one(Xf) ) ).
+
+%----Definition of S (subset relation).
+cnf(subset_relation,axiom,
+    intersection(cross_product(universal_class,universal_class),intersection(cross_product(universal_class,universal_class),complement(compose(complement(element_relation),inverse(element_relation))))) = subset_relation ).
+
+%----Definition of I (identity relation).
+cnf(identity_relation,axiom,
+    intersection(inverse(subset_relation),subset_relation) = identity_relation ).
+
+%----Definition of diagonalization.
+%----a:xr:(diagonalise(xr) = ~(domain_of((identity_relation * xr)))).
+cnf(diagonalisation,axiom,
+    complement(domain_of(intersection(Xr,identity_relation))) = diagonalise(Xr) ).
+
+%----Definition of Cantor class.
+cnf(cantor_class,axiom,
+    intersection(domain_of(X),diagonalise(compose(inverse(element_relation),X))) = cantor(X) ).
+
+%----Definition of operation.
+%----a:xf:(operation(xf) <=> function(xf) & (cross_product(domain_of(
+%----domain_of(xf)),domain_of(domain_of(xf))) = domain_of(xf))
+%----& (range_of(xf) < domain_of(domain_of(xf))).
+cnf(operation1,axiom,
+    ( ~ operation(Xf)
+    | function(Xf) ) ).
+
+cnf(operation2,axiom,
+    ( ~ operation(Xf)
+    | cross_product(domain_of(domain_of(Xf)),domain_of(domain_of(Xf))) = domain_of(Xf) ) ).
+
+cnf(operation3,axiom,
+    ( ~ operation(Xf)
+    | subclass(range_of(Xf),domain_of(domain_of(Xf))) ) ).
+
+cnf(operation4,axiom,
+    ( ~ function(Xf)
+    | cross_product(domain_of(domain_of(Xf)),domain_of(domain_of(Xf))) != domain_of(Xf)
+    | ~ subclass(range_of(Xf),domain_of(domain_of(Xf)))
+    | operation(Xf) ) ).
+
+%----Definition of compatible.
+%----a:xh:a:xf1:a:af2: (compatible(xh,xf1,xf2) <=> function(xh)
+%----& (domain_of(domain_of(xf1)) = domain_of(xh)) & (range_of(xh)
+%----< domain_of(domain_of(xf2)))).
+%----Singleton variables OK.
+cnf(compatible1,axiom,
+    ( ~ compatible(Xh,Xf1,Xf2)
+    | function(Xh) ) ).
+
+%----Singleton variables OK.
+cnf(compatible2,axiom,
+    ( ~ compatible(Xh,Xf1,Xf2)
+    | domain_of(domain_of(Xf1)) = domain_of(Xh) ) ).
+
+%----Singleton variables OK.
+cnf(compatible3,axiom,
+    ( ~ compatible(Xh,Xf1,Xf2)
+    | subclass(range_of(Xh),domain_of(domain_of(Xf2))) ) ).
+
+cnf(compatible4,axiom,
+    ( ~ function(Xh)
+    | domain_of(domain_of(Xf1)) != domain_of(Xh)
+    | ~ subclass(range_of(Xh),domain_of(domain_of(Xf2)))
+    | compatible(Xh,Xf1,Xf2) ) ).
+
+%----Definition of homomorphism.
+%----a:xh:a:xf1:a:xf2: (homomorphism(xh,xf1,xf2) <=>
+%---- operation(xf1) & operation(xf2) & compatible(xh,xf1,xf2) &
+%---- a:x:a:y:(([x,y] e domain_of(xf1)) ==> (((xf2 apply [(xh apply x),
+%----(xh apply y)]) = (xh apply (xf1 apply [x,y])))).
+%----Singleton variables OK.
+cnf(homomorphism1,axiom,
+    ( ~ homomorphism(Xh,Xf1,Xf2)
+    | operation(Xf1) ) ).
+
+%----Singleton variables OK.
+cnf(homomorphism2,axiom,
+    ( ~ homomorphism(Xh,Xf1,Xf2)
+    | operation(Xf2) ) ).
+
+cnf(homomorphism3,axiom,
+    ( ~ homomorphism(Xh,Xf1,Xf2)
+    | compatible(Xh,Xf1,Xf2) ) ).
+
+cnf(homomorphism4,axiom,
+    ( ~ homomorphism(Xh,Xf1,Xf2)
+    | ~ member(ordered_pair(X,Y),domain_of(Xf1))
+    | apply(Xf2,ordered_pair(apply(Xh,X),apply(Xh,Y))) = apply(Xh,apply(Xf1,ordered_pair(X,Y))) ) ).
+
+cnf(homomorphism5,axiom,
+    ( ~ operation(Xf1)
+    | ~ operation(Xf2)
+    | ~ compatible(Xh,Xf1,Xf2)
+    | member(ordered_pair(not_homomorphism1(Xh,Xf1,Xf2),not_homomorphism2(Xh,Xf1,Xf2)),domain_of(Xf1))
+    | homomorphism(Xh,Xf1,Xf2) ) ).
+
+cnf(homomorphism6,axiom,
+    ( ~ operation(Xf1)
+    | ~ operation(Xf2)
+    | ~ compatible(Xh,Xf1,Xf2)
+    | apply(Xf2,ordered_pair(apply(Xh,not_homomorphism1(Xh,Xf1,Xf2)),apply(Xh,not_homomorphism2(Xh,Xf1,Xf2)))) != apply(Xh,apply(Xf1,ordered_pair(not_homomorphism1(Xh,Xf1,Xf2),not_homomorphism2(Xh,Xf1,Xf2))))
+    | homomorphism(Xh,Xf1,Xf2) ) ).
+
+%--------------------------------------------------------------------------
+
+```
 
 ### ./SET004-1.ax
 
@@ -23690,7 +25059,9 @@ thf(church_rosser,definition,
 %------------------------------------------------------------------------------
 
 ```
+
 ## Semantic Web
+
 ### ./SWB001+0.ax
 
 Very long 3690

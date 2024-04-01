@@ -44,6 +44,7 @@ vampire /tmp/test.smt2
 #
 
 # Isabelle
+
 <https://slawekk.wordpress.com/> isar mathlib <https://isarmathlib.org/index.html>
 
 <https://www.cl.cam.ac.uk/teaching/2122/L21/materials.html> pauleson course
@@ -67,6 +68,7 @@ nonstadnard reals
 <https://isabelle.in.tum.de/library/>
 
 paulson's blog slaps <https://lawrencecpaulson.github.io/>
+<https://github.com/lawrencecpaulson/lawrencecpaulson.github.io/tree/main/Isabelle-Examples>
 
 semantic search <https://behemoth.cl.cam.ac.uk/search/> serapis
 
