@@ -1,10 +1,10 @@
 ---
 date: 2024-04-12
-title: "EGRAPHS2024 submission: E-graphs and Automated Reasoning"
+title: "EGRAPHS 2024 submission: E-graphs and Automated Reasoning"
 layout: post
 ---
 
-Welp, I got an abstract submitted to EGRAPHS2024 "E-graphs and Automated Reasoning: Looking back to look forward".
+Welp, I got an abstract submitted to [EGRAPHS 2024](https://pldi24.sigplan.org/home/egraphs-2024) "E-graphs and Automated Reasoning: Looking back to look forward".
 
 It's not anonymous submission and I asked if it's ok to write this BP.
 
