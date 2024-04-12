@@ -1,17 +1,20 @@
 ---
 date: 2024-04-12
-title: "EGRAPHS2024 abstract: E-graphs and Automated Reasoning: Looking back to look forward"
+title: "EGRAPHS2024 submission: E-graphs and Automated Reasoning"
+layout: post
 ---
 
-Welp, I got an abstract submitted.
+Welp, I got an abstract submitted to EGRAPHS2024 "E-graphs and Automated Reasoning: Looking back to look forward".
 
 It's not anonymous submission and I asked if it's ok to write this BP.
 
 So here's the pdf <https://github.com/philzook58/egraphs2024-talk/blob/main/egraphs2024.pdf>
 
-Maybe I'll get some comments for edits before the deadline in a couple hours. If I don't end up making the cut, oh well.
+Maybe I'll get some comments for edits before the deadline in a couple hours. If I don't end up making the cut, oh well. It was good to write it up.
 
 This was mentally a tough one. As I was writing on Wednesday I got driven into such an incredible funk of self reproach and loathing that I thought I would never feel happiness again. But then on thursday I felt ok. I have no idea how to write papers and get very stressed out by it.
+
+It's interesting. I think I can tell that from the eyes of others, my self doubt of this sort seems ludicrous. I'm not an idiot. I'm in the ballpark of being halfway through life (a third? the singularity might help.), when exactly would I have done enough for those feelings to go away? It appears confidence comes from within and that no amount of reading new math textbooks is going to heal your self doubt. On the other hand, I was once told a story of a Nobel prize winner, behind closed doors, saying that it felt pretty great. So maybe I'm wrong. Maybe I just need to win a Nobel prize. Should get on that.
 
 I do worry that the subject matter is just an accumulation of things already pointed out. But perhaps that is the value. It is very similar in some parts to posts Yihong <https://effect.systems/blog/ta-completion.html> and Oliver have written. The "joy" of competing with younger smarter peopler. But I think the emphasis is very different and there is a new central thesis there.
 
@@ -29,7 +32,7 @@ Do some cool diagrams or animations for my talk? Manim?
 
 It was a great relief to have Max say that works in progress were ok. I do think I have enough to be worth 15 minutes of peoples time and I really do think the e-graphs as ground rewrite system perspective clears up a lot of mysticism about how one might approach e-graph extensions.
 
-Really the abstract is written almost against my own myopic and ignorant perspective from a few years ago in regards to the greater context of egraphs in automated reasoning. Certainly automated reasoning experts must think there is no content to this talk. Egraphs are congrence closure, congruence closure is a subproblem of those treated in the 60s. This is all in the textbooks (term rewriting and all that, automated reasoning: an introduction). But I hadn't read any of those textbooks at that point and a drive to understand e-graphs has been the thread leading me through these things. I haven't seen anybody say this all in exactly the way I'm saying either though. I dunno.
+Really the abstract is written almost against my own myopic and ignorant perspective from a few years ago in regards to the greater context of e-graphs in automated reasoning. Certainly automated reasoning experts must think there is no content to this talk. E-graphs are congruence closure, congruence closure is a subproblem of those treated in the 60s. This is all in the textbooks (term rewriting and all that, automated reasoning: an introduction). But I hadn't read any of those textbooks at that point and a drive to understand e-graphs has been the thread leading me through these things. I haven't seen anybody say this all in exactly the way I'm saying either though. I dunno.
 
 ## Bits and Bobbles
 
