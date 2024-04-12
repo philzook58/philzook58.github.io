@@ -14,7 +14,9 @@ Maybe I'll get some comments for edits before the deadline in a couple hours. If
 
 This was mentally a tough one. As I was writing on Wednesday I got driven into such an incredible funk of self reproach and loathing that I thought I would never feel happiness again. But then on thursday I felt ok. I have no idea how to write papers and get very stressed out by it.
 
-It's interesting. I think I can tell that from the eyes of others, my self doubt of this sort seems ludicrous. I'm not an idiot. I'm in the ballpark of being halfway through life (a third? the singularity might help.), when exactly would I have done enough for those feelings to go away? It appears confidence comes from within and that no amount of reading new math textbooks is going to heal your self doubt. On the other hand, I was once told a story of a Nobel prize winner, behind closed doors, saying that it felt pretty great. So maybe I'm wrong. Maybe I just need to win a Nobel prize. Should get on that.
+It's interesting. I think I can tell that from the eyes of others, my self doubt of this sort seems ludicrous. I'm not an idiot. I'm in the ballpark of being halfway through life (a third? the singularity might help.), when exactly would I have done enough for those feelings to go away? It appears confidence and self worth comes from within and that no amount of reading new math textbooks or twitter likes is going to heal your self doubt. On the other hand, I was once told a story of a Nobel prize winner, behind closed doors, saying that it felt pretty great. So maybe I'm wrong. Maybe I just need to win a Nobel prize. Should get on that.
+
+I guess I'm bringing this up in the hopes that you, dear reader, take it easy on yourself. You're good. I believe in you.
 
 I do worry that the subject matter is just an accumulation of things already pointed out. But perhaps that is the value. It is very similar in some parts to posts Yihong <https://effect.systems/blog/ta-completion.html> and Oliver have written. The "joy" of competing with younger smarter peopler. But I think the emphasis is very different and there is a new central thesis there.
 
