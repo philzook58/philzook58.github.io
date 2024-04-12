@@ -1,3 +1,38 @@
+<https://ctms.engin.umich.edu/CTMS/index.php?example=InvertedPendulum&section=SystemModeling> matlab simulink
+
+<https://www.youtube.com/watch?v=qjhAAQexzLg&ab_channel=SteveBrunton> steve brunton
+
+chracterizing the system.
+Pendulum length. Natural frequency
+
+The basic pumping controller adds energy to the pendulum. You want to move the motor in sync with the angular velcoity. The direciton you want to move chanes depending on whether you arer above or below the horizontal.
+
+TB220A1
+<https://www.sparkfun.com/products/14451> SparkFun Motor Driver - Dual TB6612FNG
+
+# include "STM32encoder.h"
+
+STM32encoder enc(TIM4);
+
+<https://github.com/gianni-carbone/STM32encoder/tree/dc6cf689438c36cee86296a8c01e3f34aacef692> we needed to download the zip
+
+A3 seems to work for reasing pendulum data
+
+The screen
+B5 scl
+B4 sda
+
+Adafruit 1306 library seems to be working. SPI control. SCL pin I assume is MOSI
+
+```
+// Declaration for SSD1306 display connected using software SPI (default case):
+#define OLED_MOSI   PB4
+#define OLED_CLK   PB5
+#define OLED_DC    PA15
+#define OLED_CS    12
+#define OLED_RESET PB3
+```
+
 So A4 is a user led
 
 We installed stmduino
@@ -67,3 +102,5 @@ energy controller
 boot0 boot1 pin.
 
 <https://github.com/stlink-org/stlink>
+
+<https://github.com/philzook58/cart_pole> our old repo ?
