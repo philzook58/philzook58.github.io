@@ -82,14 +82,14 @@ We can take a peek at the assembly
 A quick summary of the assembly:
 
 - The first arguments are in rdi,rsi,rdx. These are `n` `a` `b` respectively.
-- First the loop iniitalizes by setting `i` in `eax` to 0. Then it jumps to the loop break check
+- First the loop initializes by setting `i` in `eax` to 0. Then it jumps to the loop break check
 - 0x1177 compares `i` with `n`
 - The body of the loop is in 0x117b. It loads memory from `a[i] into`r8d` and then compares it with with memory in `b[i]`
 - A jump returns to loop top at 0x1174 where `i` in `%eax` is incremented if the are equal
 - Otherwise it returns false=0 in `eax` at `0x118d`
 - If the loop is done it jumps from 0x1179 to 0x118e and returns 1 in `%eax`
 
-I can dump this assembly out into a C interpreter using my pcode2c tool. You can see there is a very direct correspondence to the assembly (many C lines to 1 assembly line). There is a central switch-case that siwtches on the program counter and performs the pocde operations.
+I can dump this assembly out into a C interpreter using my pcode2c tool. You can see there is a very direct correspondence to the assembly (many C lines to 1 assembly line). There is a central switch-case that switches on the program counter and performs the pcode operations.
 
 ```python
 !python3 -m pcode2c /tmp/all_equal --start-address 0x1169 --file-offset 0x1169 --size 0x2b > /tmp/all_equal_pcode.c
@@ -243,7 +243,7 @@ int main() {
 
 ```
 
-Because I exported debug data with `-g` when I called `gcc`, there is useful translation validation data in the debug section.  Let's take a look at the big dump. Scroll on past and I'll point out some stuff
+Because I exported debug data with `-g` when I called `gcc`, there is useful translation validation data in the debug section.  Let's take a look at the big dump. I put most of it at the end of the post
 
 ```python
 !objdump -W /tmp/all_equal
@@ -265,6 +265,183 @@ Because I exported debug data with `-g` when I called `gcc`, there is useful tra
       DW_CFA_offset: r16 (rip) at cfa-8
       DW_CFA_nop
       DW_CFA_nop
+
+....
+
+```
+
+Let's point out some interesting stuff in particular
+
+```
+
+ <2><16d>: Abbrev Number: 4 (DW_TAG_formal_parameter)
+    <16e>   DW_AT_name        : n
+    <170>   DW_AT_decl_file   : 1
+    <170>   DW_AT_decl_line   : 3
+    <170>   DW_AT_decl_column : 16
+    <171>   DW_AT_type        : <0x118>
+    <175>   DW_AT_location    : 1 byte block: 55        (DW_OP_reg5 (rdi))
+ <2><177>: Abbrev Number: 4 (DW_TAG_formal_parameter)
+    <178>   DW_AT_name        : a
+    <17a>   DW_AT_decl_file   : 1
+    <17a>   DW_AT_decl_line   : 3
+    <17a>   DW_AT_decl_column : 23
+    <17b>   DW_AT_type        : <0x1ab>
+    <17f>   DW_AT_location    : 1 byte block: 54        (DW_OP_reg4 (rsi))
+ <2><181>: Abbrev Number: 4 (DW_TAG_formal_parameter)
+    <182>   DW_AT_name        : b
+    <184>   DW_AT_decl_file   : 1
+    <184>   DW_AT_decl_line   : 3
+    <184>   DW_AT_decl_column : 32
+    <185>   DW_AT_type        : <0x1ab>
+    <189>   DW_AT_location    : 1 byte block: 51        (DW_OP_reg1 (rdx))
+
+```
+
+These entries say that the parameters to the function are in rdi, rsi rdx, but we already expected that from the calling conventions.
+
+More interesting is `i`
+
+```
+
+ <3><190>: Abbrev Number: 19 (DW_TAG_variable)
+    <191>   DW_AT_name        : i
+    <193>   DW_AT_decl_file   : 1
+    <194>   DW_AT_decl_line   : 4
+    <195>   DW_AT_decl_column : 13
+    <196>   DW_AT_type        : <0x118>
+    <19a>   DW_AT_location    : 0x14 (location list)
+    <19e>   DW_AT_GNU_locviews: 0xc
+
+```
+
+In the .debug_loclists section we can see
+
+```
+
+    Offset   Begin            End              Expression
+    00000014 v000000000000002 v000000000000000 views at 0000000c for:
+             000000000000116d 0000000000001174 (DW_OP_lit0; DW_OP_stack_value)
+    0000001a v000000000000000 v000000000000000 views at 0000000e for:
+             0000000000001174 000000000000118d (DW_OP_reg0 (rax))
+    0000001f v000000000000000 v000000000000000 views at 00000010 for:
+             000000000000118d 000000000000118e (DW_OP_reg2 (rcx))
+    00000024 v000000000000000 v000000000000000 views at 00000012 for:
+             000000000000118e 0000000000001193 (DW_OP_reg0 (rax))
+
+```
+
+Indeed looking at the assembly, these chunks correspond to pieces of the `for` loop, incrementing `i` by 1. We also use i to index into the arrays and it is temporarily see that it is copied over to `rcx` at addresses `0x117e` to `0x1182`
+
+I don't know what it is getting at with the DW_OP_stack_value code. `i` is never on the stack in any obvious sense. Perhaps I need to dig into the DWARF spec of perhaps this is nonsense.
+
+```
+
+/tmp/all_equal.c:4 (discriminator 2)
+    1174: 83 c0 01              add    $0x1,%eax
+/tmp/all_equal.c:4 (discriminator 1)
+    1177: 39 f8                 cmp    %edi,%eax
+    1179: 7d 13                 jge    118e <equal+0x25> (File Offset: 0x118e)
+
+```
+
+The `addr2line` command line program can map addresses to lines using this dwarf information. The table itself is bit tough to read. It's a compact representation.
+I already put some flags on the `objdump` above.
+
+```python
+!addr2line -a -e /tmp/all_equal 0x1169 0x1174 0x1186 0x1188
+```
+
+    0x0000000000001169
+    /tmp/all_equal.c:3
+    0x0000000000001174
+    /tmp/all_equal.c:4 (discriminator 2)
+    0x0000000000001186
+    /tmp/all_equal.c:5
+    0x0000000000001188
+    /tmp/all_equal.c:6
+
+Ok, so how can we use this to perform translation validation?
+
+Well, I can annotate my original function with calls to the interpreter. By setting breakpoint addresses and then asserting that variables are in the appropriate level locations.
+
+One typically annoying thing is that DWARf annotates with respect to syntactic positions. The line table can encode line and column information in the source, which is nice because it is highly generic with respect to language, but obviously a bummer because it can be very unclear semantically what a particular syntactic position corresponds to.
+
+It is kind of cool though that also if I want to annotate the original source, it is in principle a very easy syntactic insertion. I've been writing a tool to do this but have lost steam on doing so, so I think it is best to just get the idea out the showing how this can be done manually.
+
+Basically, I'd want my [`pcode2c.dwarf_annot`](https://github.com/philzook58/pcode2c/blob/main/pcode2c/dwarf_annot.py) tool to do something like this:
+
+```python
+%%file /tmp/all_equal_debug.c
+#include <assert.h>
+#include <stdbool.h>
+bool equal(int n, int a[], int b[]) {
+  for (int i = 0; i < n; i++) {
+
+    pcode2c(&state, 0x117b);
+    assert(i == state.reg[RAX]);
+    pcode2c(&state, 0x117e); //continue
+    
+    if (a[i] != b[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+```
+
+While I could write `dwarf_annot` to get this started, I would anticipate it being loosy goosy enough toi need hand tweaking.
+
+The basic idea though is this:
+
+- For every line table entry, insert a call to `pcode2c(&state , addr );` at the syntactic position stated by the line table
+- At these possitions, if we fall in the loclist range of a dwarf annotated `DW_TAG_variable`, output an assertion that the C variable has the same contents as the DWARF expression describing where it should be (`DW_OP_reg0 (rax)` for example)
+
+# Bits and Bobbles
+
+This post is almost more aspirational than true. I think the basic vision makes sense but I have a hard time getting cbmc to run on these examples.
+
+I'm running out of motivation on pcode2c. There is a huge hill of getting the semantics tighter, improving usability (reducing harness code needed), increasing scale. A constant fear is CBMC not scaling. It does ok on small stuff.
+
+The big "killer" application of this was supposed to be micropatching. You need to verify the locations of variables internal to a function if you want to hijack them with a trustworthy tiny pacth.
+
+It is pretty nice having a hackable little interpreter you can toss print statements and whatnot into.
+
+CBMC got some more printf support which was crucial for me to interpret their counterexample traces. I grep out the printf statements from the rest
+
+Maybe make a standalone pcode interpreter? Ghidra has an interpreter and maybe I should work on pulling it out. It's a C++ thing. I feel like mine is more direct, but so what.
+
+It is a confusing thing, because debug info is not guaranteed. And yet if it is possible to generate it, the compiler should.
+
+It'd be cool to do ghidra plays mario usjing pcode2c <https://github.com/nevesnunes/ghidra-plays-mario>
+
+There could be a more self contained "asmbmc". I didn't do this for two reasons
+
+- I wanted to be decoupled from specifically cbmc's IR. I haven't really moved beyond cbmc though. It is not the obvious top  contender in the SVComp
+- I wanted the flexibility to control the interpreter from C and run it through gcc
+- I wanted to compare against C implementations of the same function as "spec"
+
+# PCode2C pt 2: DWARF Verification via Ghidra and CBMC
+
+Comparative verification is a really useful paradigm
+
+- Spec writing. It is easier for users to grok that you are compring two programs rather than bringing in a complicated logic.
+- Comper correctness
+
+My basic model of what a dwarf correctness property is is that it should be specifying optionally observable effects.
+
+`{impl_defined} -> State -> Option State`
+`{impl_defined} -> Interaction`
+`type Interaction = Out Value interaction | Input (Value -> interaction)`
+
+`type compiler = prog1 : HighCode -> (prog2 : LowCode, exec_high prog1 ~ exec_low prog2)`
+
+What is `~` though?
+Effects
+
+## Objecdump Dwarf dump
+
+```
     
     00000018 0000000000000014 0000001c FDE cie=00000000 pc=0000000000001080..00000000000010a6
       DW_CFA_advance_loc: 4 to 0000000000001084
@@ -813,164 +990,4 @@ Because I exported debug data with `-g` when I called `gcc`, there is useful tra
         0000000c 000000000000116d 000000000000118d 
         0000000f 0000000000001193 0000000000001194 
         00000012 <End of list>
-
-Let's point out some interesting stuff in particular
-
 ```
- <2><16d>: Abbrev Number: 4 (DW_TAG_formal_parameter)
-    <16e>   DW_AT_name        : n
-    <170>   DW_AT_decl_file   : 1
-    <170>   DW_AT_decl_line   : 3
-    <170>   DW_AT_decl_column : 16
-    <171>   DW_AT_type        : <0x118>
-    <175>   DW_AT_location    : 1 byte block: 55        (DW_OP_reg5 (rdi))
- <2><177>: Abbrev Number: 4 (DW_TAG_formal_parameter)
-    <178>   DW_AT_name        : a
-    <17a>   DW_AT_decl_file   : 1
-    <17a>   DW_AT_decl_line   : 3
-    <17a>   DW_AT_decl_column : 23
-    <17b>   DW_AT_type        : <0x1ab>
-    <17f>   DW_AT_location    : 1 byte block: 54        (DW_OP_reg4 (rsi))
- <2><181>: Abbrev Number: 4 (DW_TAG_formal_parameter)
-    <182>   DW_AT_name        : b
-    <184>   DW_AT_decl_file   : 1
-    <184>   DW_AT_decl_line   : 3
-    <184>   DW_AT_decl_column : 32
-    <185>   DW_AT_type        : <0x1ab>
-    <189>   DW_AT_location    : 1 byte block: 51        (DW_OP_reg1 (rdx))
-```
-
-These entries say that the parameters to the function are in rdi, rsi rdx, but we already expected that from the calling conventions.
-
-More interesting is `i`
-
-```
- <3><190>: Abbrev Number: 19 (DW_TAG_variable)
-    <191>   DW_AT_name        : i
-    <193>   DW_AT_decl_file   : 1
-    <194>   DW_AT_decl_line   : 4
-    <195>   DW_AT_decl_column : 13
-    <196>   DW_AT_type        : <0x118>
-    <19a>   DW_AT_location    : 0x14 (location list)
-    <19e>   DW_AT_GNU_locviews: 0xc
-```
-
-In the .debug_loclists section we can see
-
-```
-    Offset   Begin            End              Expression
-    00000014 v000000000000002 v000000000000000 views at 0000000c for:
-             000000000000116d 0000000000001174 (DW_OP_lit0; DW_OP_stack_value)
-    0000001a v000000000000000 v000000000000000 views at 0000000e for:
-             0000000000001174 000000000000118d (DW_OP_reg0 (rax))
-    0000001f v000000000000000 v000000000000000 views at 00000010 for:
-             000000000000118d 000000000000118e (DW_OP_reg2 (rcx))
-    00000024 v000000000000000 v000000000000000 views at 00000012 for:
-             000000000000118e 0000000000001193 (DW_OP_reg0 (rax))
-```
-
-Indeed looking at the assembly, these chunks correspond to pieces of the `for` loop, incrementing `i` by 1. We also use i to index into the arrays and it is temporarily see that it is copied over to `rcx` at addresses `0x117e` to `0x1182`
-
-I don't know what it is getting at with the DW_OP_stack_value code. `i` is never on the stack in any obvious sense. Perhaps I need to dig into the DWARF spec of perhaps this is nonsense.
-
-```
-/tmp/all_equal.c:4 (discriminator 2)
-    1174: 83 c0 01              add    $0x1,%eax
-/tmp/all_equal.c:4 (discriminator 1)
-    1177: 39 f8                 cmp    %edi,%eax
-    1179: 7d 13                 jge    118e <equal+0x25> (File Offset: 0x118e)
-```
-
-The `addr2line` command line program can map addresses to lines using this dwarf information. The table itself is bit tough to read. It's a compact representation.
-I already put some flags on the `objdump` above.
-
-```python
-!addr2line -a -e /tmp/all_equal 0x1169 0x1174 0x1186 0x1188
-```
-
-    0x0000000000001169
-    /tmp/all_equal.c:3
-    0x0000000000001174
-    /tmp/all_equal.c:4 (discriminator 2)
-    0x0000000000001186
-    /tmp/all_equal.c:5
-    0x0000000000001188
-    /tmp/all_equal.c:6
-
-Ok, so how can we use this to perform translation validation?
-
-Well, I can annotate my original function with calls to the interpreter. By setting breakpoint addresses and then asserting that variables are in the appropriate level locations.
-
-One typically annoying thing is that DWARf annotates with respect to syntactic positions. The line table can encode line and column information in the source, which is nice because it is highly generic with respect to language, but obviously a bummer because it can be very unclear semantically what a particular syntactic position corresponds to.
-
-It is kind of cool though that also if I want to annotate the original source, it is in principle a very easy syntactic insertion. I've been writing a tool to do this but have lost steam on doing so, so I think it is best to just get the idea out the showing how this can be done manually.
-
-Basically, I'd want my [`pcode2c.dwarf_annot`](https://github.com/philzook58/pcode2c/blob/main/pcode2c/dwarf_annot.py) tool to do something like this:
-
-```python
-%%file /tmp/all_equal_debug.c
-#include <assert.h>
-#include <stdbool.h>
-bool equal(int n, int a[], int b[]) {
-  for (int i = 0; i < n; i++) {
-
-    pcode2c(&state, 0x117b);
-    assert(i == state.reg[RAX]);
-    pcode2c(&state, 0x117e); //continue
-    
-    if (a[i] != b[i]) {
-      return false;
-    }
-  }
-  return true;
-}
-```
-
-While I could write `dwarf_annot` to get this started, I would anticipate it being loosy goosy enough toi need hand tweaking.
-
-The basic idea though is this:
-
-- For every line table entry, insert a call to `pcode2c(&state , addr );` at the syntactic position stated by the line table
-- At these possitions, if we fall in the loclist range of a dwarf annotated `DW_TAG_variable`, output an assertion that the C variable has the same contents as the DWARF expression describing where it should be (`DW_OP_reg0 (rax)` for example)
-
-# Bits and Bobbles
-
-This post is almost more aspirational than true. I think the basic vision makes sense but I have a hard time getting cbmc to run on these examples.
-
-I'm running out of motivation on pcode2c. There is a huge hill of getting the semantics tighter, improving usability (reducing harness code needed), increasing scale. A constant fear is CBMC not scaling. It does ok on small stuff.
-
-The big "killer" application of this was supposed to be micropatching. You need to verify the locations of variables internal to a function if you want to hijack them with a trustworthy tiny pacth.
-
-It is pretty nice having a hackable little interpreter you can toss print statements and whatnot into.
-
-CBMC got some more printf support which was crucial for me to interpret their counterexample traces. I grep out the printf statements from the rest
-
-Maybe make a standalone pcode interpreter? Ghidra has an interpreter and maybe I should work on pulling it out. It's a C++ thing. I feel like mine is more direct, but so what.
-
-It is a confusing thing, because debug info is not guaranteed. And yet if it is possible to generate it, the compiler should.
-
-It'd be cool to do ghidra plays mario usjing pcode2c <https://github.com/nevesnunes/ghidra-plays-mario>
-
-There could be a more self contained "asmbmc". I didn't do this for two reasons
-
-- I wanted to be decoupled from specifically cbmc's IR. I haven't really moved beyond cbmc though. It is not the obvious top  contender in the SVComp
-- I wanted the flexibility to control the interpreter from C and run it through gcc
-- I wanted to compare against C implementations of the same function as "spec"
-
-# PCode2C pt 2: DWARF Verification via Ghidra and CBMC
-
-Comparative verification is a really useful paradigm
-
-- Spec writing. It is easier for users to grok that you are compring two programs rather than bringing in a complicated logic.
-- Comper correctness
-
-My basic model of what a dwarf correctness property is is that it should be specifying optionally observable effects.
-
-`{impl_defined} -> State -> Option State`
-`{impl_defined} -> Interaction`
-`type Interaction = Out Value interaction | Input (Value -> interaction)`
-
-`type compiler = prog1 : HighCode -> (prog2 : LowCode, exec_high prog1 ~ exec_low prog2)`
-
-What is `~` though?
-Effects
