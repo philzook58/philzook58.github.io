@@ -266,9 +266,7 @@ Because I exported debug data with `-g` when I called `gcc`, there is useful tra
       DW_CFA_nop
       DW_CFA_nop
 
-....
-
-```
+      ....
 
 Let's point out some interesting stuff in particular
 
@@ -395,7 +393,7 @@ While I could write `dwarf_annot` to get this started, I would anticipate it bei
 The basic idea though is this:
 
 - For every line table entry, insert a call to `pcode2c(&state , addr );` at the syntactic position stated by the line table
-- At these possitions, if we fall in the loclist range of a dwarf annotated `DW_TAG_variable`, output an assertion that the C variable has the same contents as the DWARF expression describing where it should be (`DW_OP_reg0 (rax)` for example)
+- At these positions, if we fall in the loclist range of a dwarf annotated `DW_TAG_variable`, output an assertion that the C variable has the same contents as the DWARF expression describing where it should be (`DW_OP_reg0 (rax)` for example)
 
 # Bits and Bobbles
 
@@ -439,7 +437,7 @@ My basic model of what a dwarf correctness property is is that it should be spec
 What is `~` though?
 Effects
 
-## Objecdump Dwarf dump
+## Objdump Dwarf dump
 
 ```
     
