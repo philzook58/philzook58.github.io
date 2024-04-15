@@ -10,12 +10,15 @@ Much of the information is currently nonrigorous, at a best effort by compilers 
 "Where Did My Variable Go? Poking Holes in Incomplete Debug Information" <https://arxiv.org/pdf/2211.09568.pdf> is a really interesting paper on techniques to validate dwarf debug information. See the references and citations for more
 
 Checking debug info dynamically is conceptually pretty straightforward. Devil in details though.
-One approach is to compare `-O0` execution/debug data with higher optimization levels using. Presumably `-O0` is the less likely to omit or incorrectly generate debug data.
-You could also run an assembly program in a debugger in sync with a C interpreter (like <https://github.com/kframework/c-semantics>  <https://www.cl.cam.ac.uk/~pes20/cerberus/> <https://www.reddit.com/r/ProgrammingLanguages/comments/hf441y/an_interpreter_for_c/> ). Set a breakpoint at every position the debug data should have an opinion and compare. Maybe throw a fuzzer on it.
+
+One approach is to compare `-O0` execution/debug data with higher optimization levels using a debugger, running two binaries in sync. Presumably `-O0` is the less likely to omit or incorrectly generate debug data.
+
+You could also run an assembly program in a debugger in sync with a C interpreter (like <https://github.com/kframework/c-semantics>  <https://www.cl.cam.ac.uk/~pes20/cerberus/> <https://www.reddit.com/r/ProgrammingLanguages/comments/hf441y/an_interpreter_for_c/> ). Set a breakpoint at every position the debug data should have an opinion and compare.
+Maybe throw a fuzzer on it.
 
 These are all viable, but because of the particular hammer I've been forging, it makes sense to do this same process using CBMC, the C bounded model checker.
 
-I've been working on a tool [pcode2c](https://github.com/philzook58/pcode2c) which uses [ghidra pcode](https://github.com/angr/pypcode) lifting and generates a specialized C interpreter for that binary. In other words, static binary translation to C. This is not decompilation really, because I make zero effort to make readable idiomatic C, recover loops, recover types. All of that decreases the connection to the original binary.
+I've been working on a tool [pcode2c](https://github.com/philzook58/pcode2c) which uses [ghidra pcode](https://github.com/angr/pypcode) lifting and generates a specialized C interpreter for that binary. In other words, static binary translation to C. This is not "decompilation" really, because I make zero effort to make readable idiomatic C, recover loops, recover types. All of that decreases the connection to the original binary.
 
 Here is a baby C example from  <https://www.mimuw.edu.pl/~alx/konstruowanie/ACSL-by-Example.pdf> It's a function that takes in a size parameter, and checks if two arrays of that size are equal.
 
@@ -239,58 +242,6 @@ int main() {
 }
 
 ```
-
-```python
-! cbmc --unwinding-assertions --bounds-check --pointer-check /tmp/all_equal.c
-```
-
-    CBMC version 5.95.1 (cbmc-5.95.1) 64-bit x86_64 linux
-    Parsing /tmp/all_equal.c
-    Converting
-    Type-checking all_equal
-    file /tmp/all_equal.c line 13 function main: function 'assert' is not declared
-    Generating GOTO Program
-    Adding CPROVER library (x86_64)
-    Removal of function pointers and virtual functions
-    Generic Property Instrumentation
-    Running with 8 object bits, 56 offset bits (default)
-    Starting Bounded Model Checking
-    Unwinding loop equal.0 iteration 1 file /tmp/all_equal.c line 3 function equal thread 0
-    Unwinding loop equal.0 iteration 2 file /tmp/all_equal.c line 3 function equal thread 0
-    Unwinding loop equal.0 iteration 3 file /tmp/all_equal.c line 3 function equal thread 0
-    Unwinding loop equal.0 iteration 4 file /tmp/all_equal.c line 3 function equal thread 0
-    Unwinding loop equal.0 iteration 5 file /tmp/all_equal.c line 3 function equal thread 0
-    Unwinding loop equal.0 iteration 6 file /tmp/all_equal.c line 3 function equal thread 0
-    Unwinding loop equal.0 iteration 7 file /tmp/all_equal.c line 3 function equal thread 0
-    Unwinding loop equal.0 iteration 8 file /tmp/all_equal.c line 3 function equal thread 0
-    Unwinding loop equal.0 iteration 9 file /tmp/all_equal.c line 3 function equal thread 0
-    Unwinding loop equal.0 iteration 10 file /tmp/all_equal.c line 3 function equal thread 0
-    Runtime Symex: 0.00280368s
-    size of program expression: 75 steps
-    simple slicing removed 0 assignments
-    Generated 121 VCC(s), 0 remaining after simplification
-    Runtime Postprocess Equation: 1.1252e-05s
-    
-    ** Results:
-    /tmp/all_equal.c function equal
-    [2m[equal.pointer_dereference.1] [0mline 4 dereference failure: pointer NULL in a[(signed long int)i]: [32mSUCCESS[0m
-    [2m[equal.pointer_dereference.2] [0mline 4 dereference failure: pointer invalid in a[(signed long int)i]: [32mSUCCESS[0m
-    [2m[equal.pointer_dereference.3] [0mline 4 dereference failure: deallocated dynamic object in a[(signed long int)i]: [32mSUCCESS[0m
-    [2m[equal.pointer_dereference.4] [0mline 4 dereference failure: dead object in a[(signed long int)i]: [32mSUCCESS[0m
-    [2m[equal.pointer_dereference.5] [0mline 4 dereference failure: pointer outside object bounds in a[(signed long int)i]: [32mSUCCESS[0m
-    [2m[equal.pointer_dereference.6] [0mline 4 dereference failure: invalid integer address in a[(signed long int)i]: [32mSUCCESS[0m
-    [2m[equal.pointer_dereference.7] [0mline 4 dereference failure: pointer NULL in b[(signed long int)i]: [32mSUCCESS[0m
-    [2m[equal.pointer_dereference.8] [0mline 4 dereference failure: pointer invalid in b[(signed long int)i]: [32mSUCCESS[0m
-    [2m[equal.pointer_dereference.9] [0mline 4 dereference failure: deallocated dynamic object in b[(signed long int)i]: [32mSUCCESS[0m
-    [2m[equal.pointer_dereference.10] [0mline 4 dereference failure: dead object in b[(signed long int)i]: [32mSUCCESS[0m
-    [2m[equal.pointer_dereference.11] [0mline 4 dereference failure: pointer outside object bounds in b[(signed long int)i]: [32mSUCCESS[0m
-    [2m[equal.pointer_dereference.12] [0mline 4 dereference failure: invalid integer address in b[(signed long int)i]: [32mSUCCESS[0m
-    
-    /tmp/all_equal.c function main
-    [2m[main.assertion.1] [0mline 13 assertion return_value_equal: [32mSUCCESS[0m
-    
-    ** 0 of 13 failed (1 iterations)
-    VERIFICATION SUCCESSFUL
 
 Because I exported debug data with `-g` when I called `gcc`, there is useful translation validation data in the debug section.  Let's take a look at the big dump. Scroll on past and I'll point out some stuff
 
