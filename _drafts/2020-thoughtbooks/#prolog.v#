@@ -1,0 +1,159 @@
+Require Import stdpp.base.
+
+Inductive plusRel : nat -> nat -> nat -> Prop :=
+| PlusO : forall x, plusRel O x x
+| PlusS : forall x y z, plusRel x y z -> plusRel (S x) y (S z)
+.
+
+Hint Constructors plusRel.
+
+Theorem calc8 : exists x, plusRel 9 5 x.  eauto 11. Defined.
+
+Print calc8.
+
+
+Theorem calc' : exists x, plusRel x 4 5. eauto. Defined.
+Print calc'.
+
+(*  
+
+That's good clean fun
+
+
+*)
+
+
+Inductive myappend (a : Type) : list a -> list a -> list a -> Prop :=
+| Nilo : forall xs, myappend a [] xs xs
+| appendo : forall x xs ys zs, myappend a xs ys zs -> myappend a (x :: xs) ys (x :: zs)
+                                                              .
+Hint Constructors myappend.
+                                                              
+Theorem calapp : exists l, myappend _ [1 ; 2] [3 ; 4] l. eauto. Defined.
+
+Search "proj".
+Print calapp.                                                              
+
+Search (list _ -> nat).
+
+(* conversion of any function to a relation via equality *)
+
+Theorem len1 : forall a, length (A:= a) [] = 0. intros; simpl; auto. Qed.
+Theorem len2 : forall a x n xs, length (A:= a) (xs) = n -> length (x :: xs) = S n.
+  intros; simpl; auto. Qed.
+
+Hint Resolve len1 len2 : mydb.
+
+Example calc_len2 : exists xs : list nat, length xs = 2. eauto with mydb. Abort.
+
+(* Print calc_len2.*)
+
+Ltac find_if := match goal with
+                | [ |- if ?X then _ else _ ] => destruct X
+                end.
+
+
+Theorem hmm : forall (a b c : bool) ,
+    if a then  if b then True else True else if c then True else True.
+  intros. repeat find_if; auto. Qed.
+
+Search (list ?a -> list ?b -> list (?a * ?b)).
+(*  ? are ubnification variables. And they are avaliable surprisingly often. *)
+
+
+Ltac find_if_inside :=
+  match goal with
+  | [ |- context[if ?X  then _ else _] ] => destruct X end.
+
+Ltac my_tsuto :=
+  repeat match goal with
+         | [ H : ?P |- ?P] => exact H
+         | [ |- True ] => constructor
+         | [ |- _ /\ _ ] => constructor
+         | [ |- _ -> _ ] => intro
+         end.
+
+
+
+
+Inductive isEven : nat -> Prop :=
+| Even_O : isEven O
+| Even_SS : forall n, isEven n -> isEven (S (S n))
+                                         .
+
+Theorem even256 : isEven 256. repeat constructor. Qed. 
+
+Search (_ -> Set).
+Print Decision.
+Print "{ _ } + { _ }".
+(* 
+Definition check_even : forall n , Decision (isEven n).
+  Hint Constructors isEven. refine (fix F (n : nat) : Decision (isEven n)  := match n with
+                                               | O => left Even_O
+                                               | S O => right _
+                                               | S (S n') => _ 
+                                               end).
+ unfold not. intros. inversion H.     Qed.
+
+ *)
+
+
+Inductive taut : Set :=
+| TautTrue : taut
+| TautAnd : taut -> taut -> taut
+| TautOr : taut -> taut -> taut
+| TautImp : taut -> taut -> taut
+.
+
+Fixpoint tautDenote (t : taut) : Prop :=
+  match t with
+   | TautTrue => True
+   | TautAnd t1 t2 => tautDenote t1 /\ tautDenote t2
+   | TautOr t1 t2 => tautDenote t1 \/ tautDenote t2
+   | TautImp t1 t2 => tautDenote t1 -> tautDenote t2
+                                                  end.
+
+Theorem tautTrue : forall t, tautDenote t.
+  induction t; simpl; tauto. Qed.
+
+Ltac tautReify P :=
+  match P with
+  | True => TautTrue
+  | ?P1 /\ ?P2 =>
+    let t1 := tautReify P1 in
+    let t2 := tautReify P2 in
+    constr:(TautAnd t1 t2)
+  | ?P1 \/ ?P2 =>
+    let t1 := tautReify P1 in
+    let t2 := tautReify P2 in
+    constr:(TautOr t1 t2)
+  | ?P1 -> ?P2 =>
+    let t1 := tautReify P1 in
+    let t2 := tautReify P2 in
+    constr:(TautImp t1 t2)
+  end.
+
+Ltac obvious :=
+  match goal with
+  | [ |- ?P ] =>
+    let t := tautReify P in
+    exact (tautTrue t)
+  end.
+
+Section monoid.
+  Variable A : Set.
+  Variable e : A.
+  Variable f : A -> A -> A.
+  Infix "+" := f.
+  Hypothesis assoc : forall a b c, (a + b) + c = a + (b + c).
+  Hypothesis identl : forall a, e + a = a.
+  Hypothesis identr : forall a, a + e = a.
+  
+
+  Inductive mexp : Set :=
+  |  Ident : mexp
+  | Var : A -> mexp
+  | Op : mexp -> mexp -> mexp .
+
+
+  

@@ -1,0 +1,2634 @@
+[tool-version] Z3 4.8.8
+[mk-app] #1 true
+[mk-app] #2 false
+[mk-app] #1 true
+[mk-app] #2 false
+[mk-app] #3 pi
+[mk-app] #4 euler
+[mk-var] datatype#0 0
+[mk-var] datatype#1 1
+[mk-app] datatype#2 insert datatype#0 datatype#1
+[mk-app] datatype#3 pattern datatype#2
+[mk-app] datatype#4 head datatype#2
+[mk-app] datatype#5 = datatype#0 datatype#4
+[mk-quant] datatype#6 constructor_accessor_axiom 2 datatype#3 datatype#5
+[attach-var-names] datatype#6 (;k!0) (;List)
+[mk-app] datatype#7 tail datatype#2
+[mk-app] datatype#8 = datatype#1 datatype#7
+[mk-quant] datatype#9 constructor_accessor_axiom 2 datatype#3 datatype#8
+[attach-var-names] datatype#9 (;k!0) (;List)
+[mk-app] #5 bv
+[attach-meaning] #5 bv #b1
+[mk-app] #6 bv
+[attach-meaning] #6 bv #b0
+[attach-meaning] #5 bv #b1
+[attach-meaning] #6 bv #b0
+[attach-meaning] #6 bv #b0
+[mk-var] #7 0
+[mk-var] #8 1
+[mk-var] #9 2
+[mk-var] #10 3
+[mk-var] #11 4
+[mk-var] #12 5
+[mk-var] #13 6
+[mk-var] #14 7
+[mk-var] #15 8
+[mk-var] #16 9
+[mk-var] #17 10
+[mk-var] #18 11
+[mk-var] #19 12
+[mk-var] #20 13
+[mk-var] #21 14
+[mk-app] #22 + #15 #13
+[mk-proof] #23 true-axiom #1
+[attach-enode] #1 0
+[attach-enode] #2 0
+[mk-app] #24 * #7 #8
+[mk-app] #25 x
+[mk-app] #26 diff #24 #25
+[mk-app] #27 Real
+[attach-meaning] #27 arith 1
+[mk-app] #28 - #27
+[mk-app] #29 diff #8 #25
+[mk-app] #30 * #28 #29 #7
+[mk-app] #31 diff #7 #25
+[mk-app] #32 * #28 #31 #8
+[mk-app] #33 + #26 #30 #32
+[mk-app] #34 Real
+[attach-meaning] #34 arith 0
+[mk-app] #35 = #33 #34
+[mk-app] #36 * #8 #7
+[mk-app] #37 diff #36 #25
+[mk-app] #38 pattern #37
+[mk-quant] #39 k!12 2 #38 #35
+[attach-var-names] #39 (|z| ; |Real|) (|y| ; |Real|)
+[mk-proof] #40 asserted #39
+[mk-app] #41 Real
+[attach-meaning] #41 arith (- 1)
+[inst-discovered] theory-solving 0 arith# ; #28
+[mk-app] #42 = #28 #41
+[instance] 0 #42
+[attach-enode] #42 0
+[end-of-instance]
+[mk-app] #42 = #28 #41
+[mk-proof] #43 rewrite #42
+[mk-app] #44 * #41 #29 #7
+[mk-app] #45 = #30 #44
+[mk-proof] #46 monotonicity #43 #45
+[mk-app] #47 * #7 #29
+[attach-meaning] #41 arith (- 1)
+[mk-app] #48 * #41 #47
+[inst-discovered] theory-solving 0 arith# ; #44
+[mk-app] #49 = #44 #48
+[instance] 0 #49
+[attach-enode] #49 0
+[end-of-instance]
+[mk-app] #49 = #44 #48
+[mk-proof] #50 rewrite #49
+[mk-app] #51 = #30 #48
+[mk-proof] #52 trans #46 #50 #51
+[mk-app] #53 * #41 #31 #8
+[mk-app] #54 = #32 #53
+[mk-proof] #55 monotonicity #43 #54
+[mk-app] #56 * #8 #31
+[attach-meaning] #41 arith (- 1)
+[mk-app] #57 * #41 #56
+[inst-discovered] theory-solving 0 arith# ; #53
+[mk-app] #58 = #53 #57
+[instance] 0 #58
+[attach-enode] #58 0
+[end-of-instance]
+[mk-app] #58 = #53 #57
+[mk-proof] #59 rewrite #58
+[mk-app] #60 = #32 #57
+[mk-proof] #61 trans #55 #59 #60
+[mk-app] #62 + #26 #48 #57
+[mk-app] #63 = #33 #62
+[mk-proof] #64 monotonicity #52 #61 #63
+[mk-proof] #65 rewrite #63
+[mk-app] #53 = #62 #34
+[mk-app] #54 = #35 #53
+[mk-proof] #55 monotonicity #65 #54
+[mk-proof] #58 rewrite #54
+[inst-discovered] theory-solving 0 arith# ; #36
+[mk-app] #63 = #36 #24
+[instance] 0 #63
+[attach-enode] #63 0
+[end-of-instance]
+[mk-app] #63 = #36 #24
+[mk-proof] #65 rewrite #63
+[mk-app] #55 = #37 #26
+[mk-proof] #59 monotonicity #65 #55
+[mk-proof] #60 rewrite #55
+[mk-app] #63 pattern #26
+[mk-app] #65 = #38 #63
+[mk-proof] #59 monotonicity #60 #65
+[mk-proof] #61 rewrite #65
+[mk-quant] #55 k!12 2 #63 #53
+[attach-var-names] #55 (|z| ; |Real|) (|y| ; |Real|)
+[mk-lambda] #60 null 2 #58
+[mk-proof] #59 proof-bind #60
+[mk-app] #44 = #39 #55
+[mk-proof] #45 quant-intro #59 #44
+[mk-proof] #42 mp #40 #45 #55
+[mk-app] #43 + #8 #7
+[mk-app] #65 diff #43 #25
+[mk-app] #61 + #65 #30 #32
+[mk-app] #46 = #61 #34
+[mk-app] #49 pattern #65
+[mk-quant] #50 k!16 2 #49 #46
+[attach-var-names] #50 (|z| ; |Real|) (|y| ; |Real|)
+[mk-proof] #51 asserted #50
+[mk-app] #52 + #7 #8
+[inst-discovered] theory-solving 0 arith# ; #43
+[mk-app] #64 = #43 #52
+[instance] 0 #64
+[attach-enode] #64 0
+[end-of-instance]
+[mk-app] #64 = #43 #52
+[mk-proof] #66 rewrite #64
+[mk-app] #67 diff #52 #25
+[mk-app] #68 = #65 #67
+[mk-proof] #69 monotonicity #66 #68
+[mk-proof] #70 rewrite #68
+[attach-meaning] #41 arith (- 1)
+[inst-discovered] theory-solving 0 arith# ; #28
+[mk-app] #64 = #28 #41
+[instance] 0 #64
+[attach-enode] #64 0
+[end-of-instance]
+[mk-app] #64 = #28 #41
+[mk-proof] #66 rewrite #64
+[mk-app] #69 * #41 #29 #7
+[mk-app] #71 = #30 #69
+[mk-proof] #72 monotonicity #66 #71
+[attach-meaning] #41 arith (- 1)
+[inst-discovered] theory-solving 0 arith# ; #69
+[mk-app] #73 = #69 #48
+[instance] 0 #73
+[attach-enode] #73 0
+[end-of-instance]
+[mk-app] #73 = #69 #48
+[mk-proof] #74 rewrite #73
+[mk-app] #75 = #30 #48
+[mk-proof] #76 trans #72 #74 #75
+[mk-app] #77 * #41 #31 #8
+[mk-app] #78 = #32 #77
+[mk-proof] #79 monotonicity #66 #78
+[attach-meaning] #41 arith (- 1)
+[inst-discovered] theory-solving 0 arith# ; #77
+[mk-app] #80 = #77 #57
+[instance] 0 #80
+[attach-enode] #80 0
+[end-of-instance]
+[mk-app] #80 = #77 #57
+[mk-proof] #81 rewrite #80
+[mk-app] #82 = #32 #57
+[mk-proof] #83 trans #79 #81 #82
+[mk-app] #84 + #67 #48 #57
+[mk-app] #85 = #61 #84
+[mk-proof] #86 monotonicity #70 #76 #83 #85
+[mk-app] #87 + #48 #57 #67
+[inst-discovered] theory-solving 0 arith# ; #84
+[mk-app] #88 = #84 #87
+[instance] 0 #88
+[attach-enode] #88 0
+[end-of-instance]
+[mk-app] #88 = #84 #87
+[mk-proof] #89 rewrite #88
+[mk-app] #90 = #61 #87
+[mk-proof] #91 trans #86 #89 #90
+[mk-app] #92 = #87 #34
+[mk-app] #93 = #46 #92
+[mk-proof] #94 monotonicity #91 #93
+[attach-meaning] #41 arith (- 1)
+[mk-app] #95 * #41 #67
+[mk-app] #96 + #47 #56 #95
+[mk-app] #97 = #96 #34
+[inst-discovered] theory-solving 0 arith# ; #92
+[mk-app] #98 = #92 #97
+[instance] 0 #98
+[attach-enode] #98 0
+[end-of-instance]
+[mk-app] #98 = #92 #97
+[mk-proof] #99 rewrite #98
+[mk-app] #100 = #46 #97
+[mk-proof] #101 trans #94 #99 #100
+[mk-app] #102 pattern #67
+[mk-app] #103 = #49 #102
+[mk-proof] #104 monotonicity #70 #103
+[mk-proof] #105 rewrite #103
+[mk-quant] #104 k!16 2 #102 #97
+[attach-var-names] #104 (|z| ; |Real|) (|y| ; |Real|)
+[mk-lambda] #106 null 2 #101
+[mk-proof] #107 proof-bind #106
+[mk-app] #108 = #50 #104
+[mk-proof] #109 quant-intro #107 #108
+[mk-proof] #103 mp #51 #109 #104
+[mk-app] #105 * #25 #25
+[mk-app] #110 diff #105 #25
+[mk-app] #111 Real
+[attach-meaning] #111 arith 2
+[mk-app] #112 - #111
+[mk-app] #113 * #112 #25
+[mk-app] #114 + #110 #113
+[mk-app] #115 = #114 #34
+[mk-proof] #116 asserted #115
+[mk-app] #117 Real
+[attach-meaning] #117 arith (- 2)
+[inst-discovered] theory-solving 0 arith# ; #112
+[mk-app] #118 = #112 #117
+[instance] 0 #118
+[attach-enode] #118 0
+[end-of-instance]
+[mk-app] #118 = #112 #117
+[mk-proof] #119 rewrite #118
+[mk-app] #120 * #117 #25
+[mk-app] #121 = #113 #120
+[mk-proof] #122 monotonicity #119 #121
+[mk-proof] #123 rewrite #121
+[mk-app] #118 + #110 #120
+[mk-app] #119 = #114 #118
+[mk-proof] #122 monotonicity #123 #119
+[mk-app] #124 + #120 #110
+[inst-discovered] theory-solving 0 arith# ; #118
+[mk-app] #125 = #118 #124
+[instance] 0 #125
+[attach-enode] #125 0
+[end-of-instance]
+[mk-app] #125 = #118 #124
+[mk-proof] #126 rewrite #125
+[mk-app] #127 = #114 #124
+[mk-proof] #128 trans #122 #126 #127
+[mk-app] #129 = #124 #34
+[mk-app] #130 = #115 #129
+[mk-proof] #131 monotonicity #128 #130
+[mk-app] #132 * #111 #25
+[attach-meaning] #41 arith (- 1)
+[mk-app] #133 * #41 #110
+[mk-app] #134 + #132 #133
+[mk-app] #135 = #134 #34
+[inst-discovered] theory-solving 0 arith# ; #129
+[mk-app] #136 = #129 #135
+[instance] 0 #136
+[attach-enode] #136 0
+[end-of-instance]
+[mk-app] #136 = #129 #135
+[mk-proof] #137 rewrite #136
+[mk-app] #138 = #115 #135
+[mk-proof] #139 trans #131 #137 #138
+[mk-proof] #140 mp #116 #139 #135
+[mk-app] #141 diff #25 #25
+[mk-app] #142 = #141 #27
+[mk-proof] #143 asserted #142
+[mk-app] #144 = #142 #142
+[mk-proof] #145 refl #144
+[mk-app] #144 * #25 #25 #25
+[mk-app] #145 diff #144 #25
+[mk-app] #146 Real
+[attach-meaning] #146 arith 3
+[mk-app] #147 - #146
+[mk-app] #148 * #147 #25 #25
+[mk-app] #149 + #145 #148
+[mk-app] #150 = #149 #34
+[mk-app] #151 not #150
+[mk-proof] #152 asserted #151
+[mk-app] #153 Real
+[attach-meaning] #153 arith (- 3)
+[inst-discovered] theory-solving 0 arith# ; #147
+[mk-app] #154 = #147 #153
+[instance] 0 #154
+[attach-enode] #154 0
+[end-of-instance]
+[mk-app] #154 = #147 #153
+[mk-proof] #155 rewrite #154
+[mk-app] #156 * #153 #25 #25
+[mk-app] #157 = #148 #156
+[mk-proof] #158 monotonicity #155 #157
+[attach-meaning] #153 arith (- 3)
+[mk-app] #159 * #153 #105
+[inst-discovered] theory-solving 0 arith# ; #156
+[mk-app] #160 = #156 #159
+[instance] 0 #160
+[attach-enode] #160 0
+[end-of-instance]
+[mk-app] #160 = #156 #159
+[mk-proof] #161 rewrite #160
+[mk-app] #162 = #148 #159
+[mk-proof] #163 trans #158 #161 #162
+[mk-app] #164 + #145 #159
+[mk-app] #165 = #149 #164
+[mk-proof] #166 monotonicity #163 #165
+[mk-app] #167 + #159 #145
+[inst-discovered] theory-solving 0 arith# ; #164
+[mk-app] #168 = #164 #167
+[instance] 0 #168
+[attach-enode] #168 0
+[end-of-instance]
+[mk-app] #168 = #164 #167
+[mk-proof] #169 rewrite #168
+[mk-app] #170 = #149 #167
+[mk-proof] #171 trans #166 #169 #170
+[mk-app] #172 = #167 #34
+[mk-app] #173 = #150 #172
+[mk-proof] #174 monotonicity #171 #173
+[mk-app] #175 * #146 #105
+[attach-meaning] #41 arith (- 1)
+[mk-app] #176 * #41 #145
+[mk-app] #177 + #175 #176
+[mk-app] #178 = #177 #34
+[inst-discovered] theory-solving 0 arith# ; #172
+[mk-app] #179 = #172 #178
+[instance] 0 #179
+[attach-enode] #179 0
+[end-of-instance]
+[mk-app] #179 = #172 #178
+[mk-proof] #180 rewrite #179
+[mk-app] #181 = #150 #178
+[mk-proof] #182 trans #174 #180 #181
+[mk-app] #183 not #178
+[mk-app] #184 = #151 #183
+[mk-proof] #185 monotonicity #182 #184
+[mk-proof] #186 rewrite #184
+[mk-proof] #153 mp #152 #186 #183
+[attach-meaning] #5 bv #b1
+[attach-meaning] #6 bv #b0
+[attach-meaning] #5 bv #b1
+[attach-meaning] #6 bv #b0
+[attach-meaning] #6 bv #b0
+[attach-enode] #1 0
+[attach-enode] #2 0
+[attach-meaning] #6 bv #b0
+[attach-enode] #1 0
+[attach-enode] #2 0
+[attach-meaning] #6 bv #b0
+[attach-enode] #1 0
+[attach-enode] #2 0
+[attach-meaning] #6 bv #b0
+[attach-enode] #1 0
+[attach-enode] #2 0
+[attach-meaning] #41 arith (- 1)
+[inst-discovered] theory-solving 0 arith# ; #28
+[instance] 0 #64
+[end-of-instance]
+[mk-app] #154 * #29 #7
+[attach-meaning] #41 arith (- 1)
+[mk-app] #155 * #41 #154
+[inst-discovered] theory-solving 0 arith# ; #69
+[mk-app] #156 = #69 #155
+[instance] 0 #156
+[attach-enode] #156 0
+[end-of-instance]
+[mk-app] #156 = #69 #155
+[mk-proof] #157 rewrite #156
+[mk-app] #158 = #30 #155
+[mk-proof] #159 trans #72 #157 #158
+[mk-app] #160 * #31 #8
+[attach-meaning] #41 arith (- 1)
+[mk-app] #161 * #41 #160
+[inst-discovered] theory-solving 0 arith# ; #77
+[mk-app] #162 = #77 #161
+[instance] 0 #162
+[attach-enode] #162 0
+[end-of-instance]
+[mk-app] #162 = #77 #161
+[mk-proof] #163 rewrite #162
+[mk-app] #164 = #32 #161
+[mk-proof] #165 trans #79 #163 #164
+[mk-app] #166 + #26 #155 #161
+[mk-app] #167 = #33 #166
+[mk-proof] #168 monotonicity #159 #165 #167
+[mk-proof] #169 rewrite #167
+[mk-app] #168 = #166 #34
+[mk-app] #170 = #35 #168
+[mk-proof] #171 monotonicity #169 #170
+[mk-proof] #172 rewrite #170
+[mk-quant] #167 k!12 2 #38 #168
+[attach-var-names] #167 (|z| ; |Real|) (|y| ; |Real|)
+[mk-lambda] #169 null 2 #172
+[mk-proof] #171 proof-bind #169
+[mk-app] #173 = #39 #167
+[mk-proof] #174 quant-intro #171 #173
+[mk-proof] #156 mp #40 #174 #167
+[attach-meaning] #41 arith (- 1)
+[inst-discovered] theory-solving 0 arith# ; #28
+[instance] 0 #64
+[end-of-instance]
+[attach-meaning] #41 arith (- 1)
+[inst-discovered] theory-solving 0 arith# ; #69
+[mk-app] #157 = #69 #155
+[instance] 0 #157
+[attach-enode] #157 0
+[end-of-instance]
+[mk-app] #157 = #69 #155
+[mk-proof] #158 rewrite #157
+[mk-app] #159 = #30 #155
+[mk-proof] #162 trans #72 #158 #159
+[attach-meaning] #41 arith (- 1)
+[inst-discovered] theory-solving 0 arith# ; #77
+[mk-app] #163 = #77 #161
+[instance] 0 #163
+[attach-enode] #163 0
+[end-of-instance]
+[mk-app] #163 = #77 #161
+[mk-proof] #164 rewrite #163
+[mk-app] #165 = #32 #161
+[mk-proof] #179 trans #79 #164 #165
+[mk-app] #180 + #65 #155 #161
+[mk-app] #181 = #61 #180
+[mk-proof] #182 monotonicity #162 #179 #181
+[mk-proof] #185 rewrite #181
+[mk-app] #182 = #180 #34
+[mk-app] #187 = #46 #182
+[mk-proof] #188 monotonicity #185 #187
+[mk-proof] #189 rewrite #187
+[mk-quant] #188 k!16 2 #49 #182
+[attach-var-names] #188 (|z| ; |Real|) (|y| ; |Real|)
+[mk-lambda] #190 null 2 #189
+[mk-proof] #191 proof-bind #190
+[mk-app] #192 = #50 #188
+[mk-proof] #193 quant-intro #191 #192
+[mk-proof] #163 mp #51 #193 #188
+[attach-meaning] #117 arith (- 2)
+[inst-discovered] theory-solving 0 arith# ; #112
+[mk-app] #164 = #112 #117
+[instance] 0 #164
+[attach-enode] #164 0
+[end-of-instance]
+[mk-app] #164 = #112 #117
+[mk-proof] #165 rewrite #164
+[mk-proof] #179 monotonicity #165 #121
+[mk-proof] #164 rewrite #119
+[mk-app] #165 = #118 #34
+[mk-app] #179 = #115 #165
+[mk-proof] #157 monotonicity #164 #179
+[mk-proof] #158 rewrite #179
+[mk-proof] #157 mp #116 #158 #165
+[mk-app] #159 = #142 #142
+[mk-proof] #162 refl #159
+[mk-app] #159 Real
+[attach-meaning] #159 arith (- 3)
+[inst-discovered] theory-solving 0 arith# ; #147
+[mk-app] #162 = #147 #159
+[instance] 0 #162
+[attach-enode] #162 0
+[end-of-instance]
+[mk-app] #162 = #147 #159
+[mk-proof] #181 rewrite #162
+[mk-app] #185 * #159 #25 #25
+[mk-app] #194 = #148 #185
+[mk-proof] #195 monotonicity #181 #194
+[attach-meaning] #159 arith (- 3)
+[mk-app] #196 * #159 #105
+[inst-discovered] theory-solving 0 arith# ; #185
+[mk-app] #197 = #185 #196
+[instance] 0 #197
+[attach-enode] #197 0
+[end-of-instance]
+[mk-app] #197 = #185 #196
+[mk-proof] #198 rewrite #197
+[mk-app] #199 = #148 #196
+[mk-proof] #200 trans #195 #198 #199
+[mk-app] #201 + #145 #196
+[mk-app] #202 = #149 #201
+[mk-proof] #203 monotonicity #200 #202
+[mk-proof] #204 rewrite #202
+[mk-app] #162 = #201 #34
+[mk-app] #181 = #150 #162
+[mk-proof] #185 monotonicity #204 #181
+[mk-proof] #194 rewrite #181
+[mk-app] #202 not #162
+[mk-app] #204 = #151 #202
+[mk-proof] #185 monotonicity #194 #204
+[mk-proof] #195 rewrite #204
+[mk-proof] #181 mp #152 #195 #202
+[mk-app] #164 = #167 #167
+[mk-proof] #194 refl #164
+[mk-app] #164 = #188 #188
+[mk-proof] #194 refl #164
+[mk-app] #164 = #165 #165
+[mk-proof] #194 refl #164
+[mk-app] #164 = #142 #142
+[mk-proof] #194 refl #164
+[mk-app] #164 = #202 #202
+[mk-proof] #194 refl #164
+[mk-app] #164 = #167 #167
+[mk-proof] #194 refl #164
+[mk-app] #164 = #188 #188
+[mk-proof] #194 refl #164
+[mk-app] #164 = #165 #165
+[mk-proof] #194 refl #164
+[mk-app] #164 = #142 #142
+[mk-proof] #194 refl #164
+[mk-app] #164 = #202 #202
+[mk-proof] #194 refl #164
+[mk-app] #164 = #167 #167
+[mk-proof] #194 rewrite #164
+[mk-proof] #185 mp #156 #194 #167
+[mk-app] #197 = #188 #188
+[mk-proof] #198 rewrite #197
+[mk-proof] #199 mp #163 #198 #188
+[mk-app] #200 = #165 #165
+[mk-proof] #203 rewrite #200
+[mk-proof] #205 mp #157 #203 #165
+[mk-app] #206 = #142 #142
+[mk-proof] #207 rewrite #206
+[mk-proof] #208 mp #143 #207 #142
+[mk-app] #209 = #202 #202
+[mk-proof] #210 rewrite #209
+[mk-proof] #211 mp #181 #210 #202
+[inst-discovered] theory-solving 0 arith# ; #166
+[mk-app] #212 = #166 #166
+[instance] 0 #212
+[attach-enode] #212 0
+[end-of-instance]
+[mk-app] #212 = #166 #166
+[mk-proof] #213 rewrite #212
+[mk-app] #214 = #168 #168
+[mk-proof] #215 monotonicity #213 #214
+[mk-proof] #216 rewrite #214
+[mk-proof] #214 refl #164
+[inst-discovered] theory-solving 0 arith# ; #43
+[mk-app] #214 = #43 #43
+[instance] 0 #214
+[attach-enode] #214 0
+[end-of-instance]
+[mk-app] #214 = #43 #43
+[mk-proof] #216 rewrite #214
+[mk-app] #212 = #65 #65
+[mk-proof] #213 monotonicity #216 #212
+[mk-proof] #215 rewrite #212
+[mk-app] #214 = #180 #180
+[mk-proof] #216 monotonicity #215 #214
+[inst-discovered] theory-solving 0 arith# ; #180
+[instance] 0 #214
+[end-of-instance]
+[mk-proof] #213 rewrite #214
+[mk-proof] #217 trans #216 #213 #214
+[mk-app] #218 = #182 #182
+[mk-proof] #219 monotonicity #217 #218
+[mk-proof] #220 rewrite #218
+[mk-proof] #212 refl #197
+[inst-discovered] theory-solving 0 arith# ; #118
+[mk-app] #212 = #118 #118
+[instance] 0 #212
+[attach-enode] #212 0
+[end-of-instance]
+[mk-app] #212 = #118 #118
+[mk-proof] #215 rewrite #212
+[mk-proof] #218 monotonicity #215 #200
+[mk-proof] #218 mp #205 #203 #165
+[mk-proof] #220 refl #206
+[inst-discovered] theory-solving 0 arith# ; #201
+[mk-app] #220 = #201 #201
+[instance] 0 #220
+[attach-enode] #220 0
+[end-of-instance]
+[mk-app] #220 = #201 #201
+[mk-proof] #214 rewrite #220
+[mk-app] #216 = #162 #162
+[mk-proof] #213 monotonicity #214 #216
+[mk-proof] #217 rewrite #216
+[mk-proof] #220 monotonicity #217 #209
+[mk-proof] #214 mp #211 #220 #202
+[mk-proof] #212 refl #164
+[mk-proof] #212 refl #197
+[mk-proof] #212 refl #200
+[mk-proof] #212 refl #206
+[mk-proof] #212 refl #209
+[attach-meaning] #6 bv #b0
+[attach-enode] #1 0
+[attach-enode] #2 0
+[mk-proof] #212 asserted #167
+[inst-discovered] theory-solving 0 arith# ; #154
+[mk-app] #215 = #154 #47
+[instance] 0 #215
+[attach-enode] #215 0
+[end-of-instance]
+[mk-app] #215 = #154 #47
+[mk-proof] #213 rewrite #215
+[mk-app] #219 = #155 #48
+[mk-proof] #221 monotonicity #213 #219
+[mk-proof] #222 rewrite #219
+[inst-discovered] theory-solving 0 arith# ; #160
+[mk-app] #215 = #160 #56
+[instance] 0 #215
+[attach-enode] #215 0
+[end-of-instance]
+[mk-app] #215 = #160 #56
+[mk-proof] #213 rewrite #215
+[mk-app] #221 = #161 #57
+[mk-proof] #223 monotonicity #213 #221
+[mk-proof] #224 rewrite #221
+[mk-app] #215 = #166 #62
+[mk-proof] #213 monotonicity #222 #224 #215
+[mk-proof] #223 rewrite #215
+[mk-app] #213 = #168 #53
+[mk-proof] #225 monotonicity #223 #213
+[mk-proof] #226 rewrite #213
+[inst-discovered] theory-solving 0 arith# ; #36
+[mk-app] #215 = #36 #24
+[instance] 0 #215
+[attach-enode] #215 0
+[end-of-instance]
+[mk-app] #215 = #36 #24
+[mk-proof] #223 rewrite #215
+[mk-app] #225 = #37 #26
+[mk-proof] #227 monotonicity #223 #225
+[mk-proof] #228 rewrite #225
+[mk-app] #215 = #38 #63
+[mk-proof] #223 monotonicity #228 #215
+[mk-proof] #227 rewrite #215
+[mk-lambda] #225 null 2 #226
+[mk-proof] #228 proof-bind #225
+[mk-app] #223 = #167 #55
+[mk-proof] #229 quant-intro #228 #223
+[mk-proof] #221 mp #212 #229 #55
+[mk-proof] #224 asserted #188
+[inst-discovered] theory-solving 0 arith# ; #43
+[mk-app] #219 = #43 #52
+[instance] 0 #219
+[attach-enode] #219 0
+[end-of-instance]
+[mk-app] #219 = #43 #52
+[mk-proof] #222 rewrite #219
+[mk-proof] #215 monotonicity #222 #68
+[inst-discovered] theory-solving 0 arith# ; #154
+[mk-app] #219 = #154 #47
+[instance] 0 #219
+[attach-enode] #219 0
+[end-of-instance]
+[mk-app] #219 = #154 #47
+[mk-proof] #222 rewrite #219
+[mk-app] #215 = #155 #48
+[mk-proof] #227 monotonicity #222 #215
+[mk-proof] #230 rewrite #215
+[inst-discovered] theory-solving 0 arith# ; #160
+[mk-app] #219 = #160 #56
+[instance] 0 #219
+[attach-enode] #219 0
+[end-of-instance]
+[mk-app] #219 = #160 #56
+[mk-proof] #222 rewrite #219
+[mk-app] #227 = #161 #57
+[mk-proof] #231 monotonicity #222 #227
+[mk-proof] #232 rewrite #227
+[mk-app] #219 = #180 #84
+[mk-proof] #222 monotonicity #70 #230 #232 #219
+[inst-discovered] theory-solving 0 arith# ; #84
+[instance] 0 #88
+[end-of-instance]
+[mk-app] #231 = #180 #87
+[mk-proof] #233 trans #222 #89 #231
+[mk-app] #234 = #182 #92
+[mk-proof] #235 monotonicity #233 #234
+[attach-meaning] #41 arith (- 1)
+[inst-discovered] theory-solving 0 arith# ; #92
+[instance] 0 #98
+[end-of-instance]
+[mk-app] #236 = #182 #97
+[mk-proof] #237 trans #235 #99 #236
+[mk-app] #238 = #49 #102
+[mk-proof] #239 monotonicity #70 #238
+[mk-proof] #240 rewrite #238
+[mk-lambda] #239 null 2 #237
+[mk-proof] #241 proof-bind #239
+[mk-app] #242 = #188 #104
+[mk-proof] #243 quant-intro #241 #242
+[mk-proof] #238 mp #224 #243 #104
+[mk-proof] #240 asserted #165
+[inst-discovered] theory-solving 0 arith# ; #118
+[instance] 0 #125
+[end-of-instance]
+[mk-app] #244 = #165 #129
+[mk-proof] #245 monotonicity #126 #244
+[attach-meaning] #41 arith (- 1)
+[inst-discovered] theory-solving 0 arith# ; #129
+[instance] 0 #136
+[end-of-instance]
+[mk-app] #246 = #165 #135
+[mk-proof] #247 trans #245 #137 #246
+[mk-proof] #248 mp #240 #247 #135
+[mk-proof] #249 refl #206
+[mk-proof] #249 asserted #202
+[mk-app] #250 + #196 #145
+[inst-discovered] theory-solving 0 arith# ; #201
+[mk-app] #251 = #201 #250
+[instance] 0 #251
+[attach-enode] #251 0
+[end-of-instance]
+[mk-app] #251 = #201 #250
+[mk-proof] #252 rewrite #251
+[mk-app] #253 = #250 #34
+[mk-app] #254 = #162 #253
+[mk-proof] #255 monotonicity #252 #254
+[attach-meaning] #41 arith (- 1)
+[inst-discovered] theory-solving 0 arith# ; #253
+[mk-app] #256 = #253 #178
+[instance] 0 #256
+[attach-enode] #256 0
+[end-of-instance]
+[mk-app] #256 = #253 #178
+[mk-proof] #257 rewrite #256
+[mk-app] #258 = #162 #178
+[mk-proof] #259 trans #255 #257 #258
+[mk-app] #260 = #202 #183
+[mk-proof] #261 monotonicity #259 #260
+[mk-proof] #262 rewrite #260
+[mk-proof] #261 mp #249 #262 #183
+[begin-check] 0
+[mk-app] #250 = #55 #55
+[mk-proof] #251 refl #250
+[mk-app] #250 = #55 #1
+[mk-proof] #251 iff-true #221 #250
+[mk-app] #252 = #104 #104
+[mk-proof] #253 refl #252
+[mk-app] #252 = #104 #1
+[mk-proof] #253 iff-true #238 #252
+[mk-app] #254 = #135 #135
+[mk-proof] #255 refl #254
+[mk-proof] #254 refl #206
+[mk-app] #254 = #183 #183
+[mk-proof] #255 refl #254
+[mk-app] #254 = #178 #2
+[mk-proof] #255 iff-false #261 #254
+[mk-app] #254 = #183 #183
+[mk-proof] #255 refl #254
+[mk-app] #254 = #178 #2
+[mk-proof] #255 iff-false #261 #254
+[mk-proof] #252 refl #206
+[mk-app] #252 = #135 #135
+[mk-proof] #253 refl #252
+[mk-app] #252 = #104 #104
+[mk-proof] #253 refl #252
+[mk-app] #252 = #104 #1
+[mk-proof] #253 iff-true #238 #252
+[mk-app] #250 = #55 #55
+[mk-proof] #251 refl #250
+[mk-app] #250 = #55 #1
+[mk-proof] #251 iff-true #221 #250
+[mk-app] #250 = #55 #55
+[mk-proof] #251 refl #250
+[mk-app] #250 = #104 #104
+[mk-proof] #251 refl #250
+[mk-app] #250 = #135 #135
+[mk-proof] #251 refl #250
+[mk-proof] #250 refl #206
+[mk-app] #250 = #183 #183
+[mk-proof] #251 refl #250
+[mk-app] #250 ~ #53 #53
+[mk-proof] #251 refl #250
+[mk-lambda] #252 null 2 #251
+[mk-proof] #253 proof-bind #252
+[mk-app] #254 ~ #55 #55
+[mk-proof] #255 nnf-pos #253 #254
+[mk-proof] #256 mp~ #221 #255 #55
+[mk-app] #257 = #55 #55
+[mk-proof] #258 refl #257
+[mk-app] #257 ~ #97 #97
+[mk-proof] #258 refl #257
+[mk-lambda] #259 null 2 #258
+[mk-proof] #263 proof-bind #259
+[mk-app] #264 ~ #104 #104
+[mk-proof] #265 nnf-pos #263 #264
+[mk-proof] #266 mp~ #238 #265 #104
+[mk-app] #267 = #104 #104
+[mk-proof] #268 refl #267
+[mk-app] #267 ~ #135 #135
+[mk-proof] #268 refl #267
+[mk-app] #267 = #135 #135
+[mk-proof] #268 refl #267
+[mk-app] #267 ~ #142 #142
+[mk-proof] #268 refl #267
+[mk-proof] #267 refl #206
+[mk-app] #267 ~ #183 #183
+[mk-proof] #268 refl #267
+[mk-app] #267 = #183 #183
+[mk-proof] #268 refl #267
+[mk-app] #267 = #55 #55
+[mk-proof] #268 refl #267
+[mk-app] #267 = #104 #104
+[mk-proof] #268 refl #267
+[mk-app] #267 = #135 #135
+[mk-proof] #268 refl #267
+[mk-proof] #267 refl #206
+[mk-app] #267 = #183 #183
+[mk-proof] #268 refl #267
+[mk-app] #267 = #55 #55
+[mk-proof] #268 refl #267
+[mk-app] #267 = #104 #104
+[mk-proof] #268 refl #267
+[mk-app] #267 = #135 #135
+[mk-proof] #268 refl #267
+[mk-proof] #267 refl #206
+[mk-app] #267 = #183 #183
+[mk-proof] #268 refl #267
+[mk-app] #267 = #55 #55
+[mk-proof] #268 refl #267
+[mk-app] #267 = #104 #104
+[mk-proof] #268 refl #267
+[mk-app] #267 = #135 #135
+[mk-proof] #268 refl #267
+[mk-proof] #267 refl #206
+[mk-app] #267 = #183 #183
+[mk-proof] #268 refl #267
+[mk-app] #267 = #55 #55
+[mk-proof] #268 rewrite #267
+[mk-proof] #269 mp #256 #268 #55
+[mk-app] #267 = #104 #104
+[mk-proof] #268 rewrite #267
+[mk-proof] #269 mp #266 #268 #104
+[mk-app] #267 = #135 #135
+[mk-proof] #268 rewrite #267
+[mk-proof] #269 mp #248 #268 #135
+[mk-app] #267 = #183 #183
+[mk-proof] #268 rewrite #267
+[mk-proof] #269 mp #261 #268 #183
+[mk-app] #267 = #55 #55
+[mk-proof] #268 refl #267
+[mk-app] #267 = #104 #104
+[mk-proof] #268 refl #267
+[mk-app] #267 = #135 #135
+[mk-proof] #268 refl #267
+[mk-proof] #267 refl #206
+[mk-app] #267 = #183 #183
+[mk-proof] #268 refl #267
+[mk-app] #267 = #55 #55
+[mk-proof] #268 refl #267
+[mk-app] #267 = #104 #104
+[mk-proof] #268 refl #267
+[mk-app] #267 = #135 #135
+[mk-proof] #268 refl #267
+[mk-proof] #267 refl #206
+[mk-app] #267 = #183 #183
+[mk-proof] #268 refl #267
+[mk-app] #267 = #55 #55
+[mk-proof] #268 refl #267
+[mk-app] #267 = #104 #104
+[mk-proof] #268 refl #267
+[mk-app] #267 = #135 #135
+[mk-proof] #268 refl #267
+[mk-proof] #267 refl #206
+[mk-app] #267 = #183 #183
+[mk-proof] #268 refl #267
+[mk-app] #267 = #55 #55
+[mk-proof] #268 refl #267
+[mk-app] #267 = #104 #104
+[mk-proof] #268 refl #267
+[mk-app] #267 = #135 #135
+[mk-proof] #268 refl #267
+[mk-proof] #267 refl #206
+[mk-app] #267 = #183 #183
+[mk-proof] #268 refl #267
+[mk-app] #267 = #55 #55
+[mk-proof] #268 refl #267
+[mk-app] #267 = #104 #104
+[mk-proof] #268 refl #267
+[mk-app] #267 = #135 #135
+[mk-proof] #268 refl #267
+[mk-proof] #267 refl #206
+[mk-app] #267 = #183 #183
+[mk-proof] #268 refl #267
+[mk-app] #267 = #55 #55
+[mk-proof] #268 refl #267
+[mk-app] #267 = #104 #104
+[mk-proof] #268 refl #267
+[mk-app] #267 = #135 #135
+[mk-proof] #268 refl #267
+[mk-proof] #267 refl #206
+[mk-app] #267 = #183 #183
+[mk-proof] #268 refl #267
+[mk-app] #267 = #55 #55
+[mk-proof] #268 refl #267
+[mk-app] #267 = #104 #104
+[mk-proof] #268 refl #267
+[mk-app] #267 = #135 #135
+[mk-proof] #268 refl #267
+[mk-proof] #267 refl #206
+[mk-app] #267 = #183 #183
+[mk-proof] #268 refl #267
+[assign] #55 justification -1: 
+[assign] #104 justification -1: 
+[attach-enode] #25 0
+[attach-enode] #111 0
+[attach-enode] #132 0
+[attach-enode] #105 0
+[attach-enode] #110 0
+[attach-enode] #41 0
+[attach-enode] #133 0
+[attach-enode] #134 0
+[attach-enode] #34 0
+[attach-enode] #135 0
+[mk-app] #267 <= #134 #34
+[mk-app] #268 >= #134 #34
+[assign] #135 justification -1: 
+[attach-enode] #141 0
+[attach-enode] #27 0
+[attach-enode] #142 0
+[assign] #142 justification -1: 
+[attach-enode] #146 0
+[attach-enode] #175 0
+[attach-enode] #144 0
+[attach-enode] #145 0
+[attach-enode] #176 0
+[attach-enode] #177 0
+[attach-enode] #178 0
+[mk-app] #269 <= #177 #34
+[mk-app] #270 >= #177 #34
+[assign] (not #178) justification -1: 
+[mk-app] #271 = #55 #1
+[mk-proof] #272 iff-true #256 #271
+[mk-app] #273 = #104 #1
+[mk-proof] #274 iff-true #266 #273
+[mk-app] #275 = #178 #2
+[mk-proof] #276 iff-false #261 #275
+[assign] #267 clause p4 (not p3)
+[mk-app] #3 string
+[mk-app] #4 string
+[mk-app] #5 string
+[mk-app] #6 string
+[mk-app] #7 cr
+[mk-app] #8 compose #7 #4
+[mk-app] #9 string
+[mk-app] #10 compose #9 #3 #8 #6
+[mk-app] #11 indent #10
+[mk-app] #12 string
+[mk-app] #13 compose #12 #5
+[mk-app] #14 indent #13
+[mk-app] #15 compose #14 #11
+[mk-app] #16 compose #9 #4
+[mk-app] #17 compose #9 #3 #16 #6
+[mk-app] #18 indent #17
+[mk-app] #19 compose #14 #18
+[mk-app] #20 choice #19 #15
+[mk-app] #21 string
+[mk-app] #22 compose
+[mk-app] #23 compose #9 #21 #22 #6
+[mk-app] #24 indent #23
+[mk-app] #25 string
+[mk-app] #26 compose #12 #25 #24
+[mk-app] #27 choice #26 #26
+[mk-app] #28 compose #9 #4 #8 #6
+[mk-app] #29 indent #28
+[mk-app] #30 compose #14 #29
+[mk-app] #31 compose #9 #4 #16 #6
+[mk-app] #32 indent #31
+[mk-app] #33 compose #14 #32
+[mk-app] #34 choice #33 #30
+[mk-app] #35 string
+[mk-app] #36 compose #9 #34 #8 #6
+[mk-app] #37 indent #36
+[mk-app] #38 compose #12 #35
+[mk-app] #39 indent #38
+[mk-app] #40 compose #39 #37
+[mk-app] #41 compose #9 #33 #16 #6
+[mk-app] #42 indent #41
+[mk-app] #43 compose #39 #42
+[mk-app] #44 choice #43 #40
+[mk-app] #45 compose #7 #44
+[mk-app] #46 compose #9 #27 #45 #6
+[mk-app] #47 indent #46
+[mk-app] #48 compose #14 #47
+[mk-app] #49 compose #9 #43
+[mk-app] #50 compose #9 #26 #49 #6
+[mk-app] #51 indent #50
+[mk-app] #52 compose #14 #51
+[mk-app] #53 choice #52 #48
+[mk-app] #54 string
+[mk-app] #55 compose #7 #53
+[mk-app] #56 compose #9 #20 #55 #6
+[mk-app] #57 indent #56
+[mk-app] #58 compose #12 #54
+[mk-app] #59 indent #58
+[mk-app] #60 compose #59 #57
+[mk-app] #61 compose #9 #52
+[mk-app] #62 compose #9 #19 #61 #6
+[mk-app] #63 indent #62
+[mk-app] #64 compose #59 #63
+[mk-app] #65 choice #64 #60
+[mk-app] #66 string
+[mk-app] #67 string
+[mk-app] #68 string
+[mk-app] #69 compose #7 #67
+[mk-app] #70 compose #9 #66 #69 #6
+[mk-app] #71 indent #70
+[mk-app] #72 compose #12 #68
+[mk-app] #73 indent #72
+[mk-app] #74 compose #73 #71
+[mk-app] #75 compose #9 #67
+[mk-app] #76 compose #9 #66 #75 #6
+[mk-app] #77 indent #76
+[mk-app] #78 compose #73 #77
+[mk-app] #79 choice #78 #74
+[mk-app] #80 compose #9 #65 #22 #6
+[mk-app] #81 indent #80
+[mk-app] #82 compose #12 #66 #81
+[mk-app] #83 compose #9 #64 #22 #6
+[mk-app] #84 indent #83
+[mk-app] #85 compose #12 #66 #84
+[mk-app] #86 choice #85 #82
+[mk-app] #87 string
+[mk-app] #88 compose #22 #6
+[mk-app] #89 indent #88
+[mk-app] #90 compose #12 #86
+[mk-app] #91 indent #90
+[mk-app] #92 compose #91 #89
+[mk-app] #93 compose #12 #85
+[mk-app] #94 indent #93
+[mk-app] #95 compose #94 #89
+[mk-app] #96 choice #95 #92
+[mk-app] #97 indent #96
+[mk-app] #98 compose #7 #79
+[mk-app] #99 indent #98
+[mk-app] #100 compose #87 #97 #99 #6
+(let ((a!1 (+ (* 2.0 x) (* (- 1.0) (diff (* x x) x)))))
+  (<= a!1 0.0)) 
+(not [mk-app] #87 string
+[mk-app] #66 string
+[mk-app] #12 string
+[mk-app] #54 string
+[mk-app] #58 cr
+[mk-app] #59 compose #58 #66
+[mk-app] #5 string
+[mk-app] #13 compose #5 #87 #59 #54
+[mk-app] #14 indent #13
+[mk-app] #3 string
+[mk-app] #9 compose #3 #12
+[mk-app] #4 indent #9
+[mk-app] #16 compose #4 #14
+[mk-app] #6 compose #5 #66
+[mk-app] #17 compose #5 #87 #6 #54
+[mk-app] #18 indent #17
+[mk-app] #19 compose #4 #18
+[mk-app] #25 choice #19 #16
+[mk-app] #21 string
+[mk-app] #22 compose
+[mk-app] #23 compose #5 #21 #22 #54
+[mk-app] #24 indent #23
+[mk-app] #26 string
+[mk-app] #35 compose #3 #26 #24
+[mk-app] #38 choice #35 #35
+[mk-app] #39 compose #5 #66 #59 #54
+[mk-app] #31 indent #39
+[mk-app] #32 compose #4 #31
+[mk-app] #33 compose #5 #66 #6 #54
+[mk-app] #41 indent #33
+[mk-app] #42 compose #4 #41
+[mk-app] #43 choice #42 #32
+[mk-app] #49 string
+[mk-app] #50 compose #5 #43 #59 #54
+[mk-app] #51 indent #50
+[mk-app] #52 compose #3 #49
+[mk-app] #61 indent #52
+[mk-app] #62 compose #61 #51
+[mk-app] #63 compose #5 #42 #6 #54
+[mk-app] #64 indent #63
+[mk-app] #83 compose #61 #64
+[mk-app] #84 choice #83 #62
+[mk-app] #85 compose #58 #84
+[mk-app] #93 compose #5 #38 #85 #54
+[mk-app] #94 indent #93
+[mk-app] #88 compose #4 #94
+[mk-app] #89 compose #5 #83
+[mk-app] #95 compose #5 #35 #89 #54
+[mk-app] #7 indent #95
+[mk-app] #8 compose #4 #7
+[mk-app] #10 choice #8 #88
+[mk-app] #11 string
+[mk-app] #15 compose #58 #10
+[mk-app] #20 compose #5 #25 #15 #54
+[mk-app] #27 indent #20
+[mk-app] #28 compose #3 #11
+[mk-app] #29 indent #28
+[mk-app] #30 compose #29 #27
+[mk-app] #34 compose #5 #8
+[mk-app] #36 compose #5 #19 #34 #54
+[mk-app] #37 indent #36
+[mk-app] #40 compose #29 #37
+[mk-app] #44 choice #40 #30
+[mk-app] #45 string
+[mk-app] #46 string
+[mk-app] #47 string
+[mk-app] #48 compose #58 #46
+[mk-app] #53 compose #5 #45 #48 #54
+[mk-app] #55 indent #53
+[mk-app] #56 compose #3 #47
+[mk-app] #57 indent #56
+[mk-app] #60 compose #57 #55
+[mk-app] #65 compose #5 #46
+[mk-app] #80 compose #5 #45 #65 #54
+[mk-app] #81 indent #80
+[mk-app] #82 compose #57 #81
+[mk-app] #86 choice #82 #60
+[mk-app] #90 compose #5 #44 #22 #54
+[mk-app] #91 indent #90
+[mk-app] #92 compose #3 #45 #91
+[mk-app] #96 compose #5 #40 #22 #54
+[mk-app] #97 indent #96
+[mk-app] #68 compose #3 #45 #97
+[mk-app] #72 choice #68 #92
+[mk-app] #73 string
+[mk-app] #67 compose #22 #54
+[mk-app] #75 indent #67
+[mk-app] #76 compose #3 #72
+[mk-app] #77 indent #76
+[mk-app] #78 compose #77 #75
+[mk-app] #69 compose #3 #68
+[mk-app] #70 indent #69
+[mk-app] #71 compose #70 #75
+[mk-app] #74 choice #71 #78
+[mk-app] #79 indent #74
+[mk-app] #98 compose #58 #86
+[mk-app] #99 indent #98
+[mk-app] #100 compose #73 #79 #99 #54
+(let ((a!1 (+ (* 2.0 x) (* (- 1.0) (diff (* x x) x)))))
+  (= a!1 0.0))) 
+
+[assign] #268 clause p5 (not p3)
+[mk-app] #73 string
+[mk-app] #45 string
+[mk-app] #3 string
+[mk-app] #11 string
+[mk-app] #28 cr
+[mk-app] #29 compose #28 #45
+[mk-app] #12 string
+[mk-app] #9 compose #12 #73 #29 #11
+[mk-app] #4 indent #9
+[mk-app] #87 string
+[mk-app] #5 compose #87 #3
+[mk-app] #66 indent #5
+[mk-app] #6 compose #66 #4
+[mk-app] #54 compose #12 #45
+[mk-app] #17 compose #12 #73 #54 #11
+[mk-app] #18 indent #17
+[mk-app] #19 compose #66 #18
+[mk-app] #26 choice #19 #6
+[mk-app] #21 string
+[mk-app] #22 compose
+[mk-app] #23 compose #12 #21 #22 #11
+[mk-app] #24 indent #23
+[mk-app] #35 string
+[mk-app] #49 compose #87 #35 #24
+[mk-app] #52 choice #49 #49
+[mk-app] #61 compose #12 #45 #29 #11
+[mk-app] #33 indent #61
+[mk-app] #41 compose #66 #33
+[mk-app] #42 compose #12 #45 #54 #11
+[mk-app] #63 indent #42
+[mk-app] #64 compose #66 #63
+[mk-app] #83 choice #64 #41
+[mk-app] #89 string
+[mk-app] #95 compose #12 #83 #29 #11
+[mk-app] #7 indent #95
+[mk-app] #8 compose #87 #89
+[mk-app] #34 indent #8
+[mk-app] #36 compose #34 #7
+[mk-app] #37 compose #12 #64 #54 #11
+[mk-app] #40 indent #37
+[mk-app] #96 compose #34 #40
+[mk-app] #97 choice #96 #36
+[mk-app] #68 compose #28 #97
+[mk-app] #69 compose #12 #52 #68 #11
+[mk-app] #70 indent #69
+[mk-app] #67 compose #66 #70
+[mk-app] #75 compose #12 #96
+[mk-app] #71 compose #12 #49 #75 #11
+[mk-app] #58 indent #71
+[mk-app] #59 compose #66 #58
+[mk-app] #13 choice #59 #67
+[mk-app] #14 string
+[mk-app] #16 compose #28 #13
+[mk-app] #25 compose #12 #26 #16 #11
+[mk-app] #38 indent #25
+[mk-app] #39 compose #87 #14
+[mk-app] #31 indent #39
+[mk-app] #32 compose #31 #38
+[mk-app] #43 compose #12 #59
+[mk-app] #50 compose #12 #19 #43 #11
+[mk-app] #51 indent #50
+[mk-app] #62 compose #31 #51
+[mk-app] #84 choice #62 #32
+[mk-app] #85 string
+[mk-app] #93 string
+[mk-app] #94 string
+[mk-app] #88 compose #28 #93
+[mk-app] #10 compose #12 #85 #88 #11
+[mk-app] #15 indent #10
+[mk-app] #20 compose #87 #94
+[mk-app] #27 indent #20
+[mk-app] #30 compose #27 #15
+[mk-app] #44 compose #12 #93
+[mk-app] #90 compose #12 #85 #44 #11
+[mk-app] #91 indent #90
+[mk-app] #92 compose #27 #91
+[mk-app] #72 choice #92 #30
+[mk-app] #76 compose #12 #84 #22 #11
+[mk-app] #77 indent #76
+[mk-app] #78 compose #87 #85 #77
+[mk-app] #74 compose #12 #62 #22 #11
+[mk-app] #79 indent #74
+[mk-app] #47 compose #87 #85 #79
+[mk-app] #56 choice #47 #78
+[mk-app] #57 string
+[mk-app] #46 compose #22 #11
+[mk-app] #65 indent #46
+[mk-app] #80 compose #87 #56
+[mk-app] #81 indent #80
+[mk-app] #82 compose #81 #65
+[mk-app] #48 compose #87 #47
+[mk-app] #53 indent #48
+[mk-app] #55 compose #53 #65
+[mk-app] #60 choice #55 #82
+[mk-app] #86 indent #60
+[mk-app] #98 compose #28 #72
+[mk-app] #99 indent #98
+[mk-app] #100 compose #57 #86 #99 #11
+(let ((a!1 (+ (* 2.0 x) (* (- 1.0) (diff (* x x) x)))))
+  (>= a!1 0.0)) 
+(not [mk-app] #57 string
+[mk-app] #85 string
+[mk-app] #87 string
+[mk-app] #14 string
+[mk-app] #39 cr
+[mk-app] #31 compose #39 #85
+[mk-app] #3 string
+[mk-app] #5 compose #3 #57 #31 #14
+[mk-app] #66 indent #5
+[mk-app] #73 string
+[mk-app] #12 compose #73 #87
+[mk-app] #45 indent #12
+[mk-app] #54 compose #45 #66
+[mk-app] #11 compose #3 #85
+[mk-app] #17 compose #3 #57 #11 #14
+[mk-app] #18 indent #17
+[mk-app] #19 compose #45 #18
+[mk-app] #35 choice #19 #54
+[mk-app] #21 string
+[mk-app] #22 compose
+[mk-app] #23 compose #3 #21 #22 #14
+[mk-app] #24 indent #23
+[mk-app] #49 string
+[mk-app] #89 compose #73 #49 #24
+[mk-app] #8 choice #89 #89
+[mk-app] #34 compose #3 #85 #31 #14
+[mk-app] #42 indent #34
+[mk-app] #63 compose #45 #42
+[mk-app] #64 compose #3 #85 #11 #14
+[mk-app] #37 indent #64
+[mk-app] #40 compose #45 #37
+[mk-app] #96 choice #40 #63
+[mk-app] #75 string
+[mk-app] #71 compose #3 #96 #31 #14
+[mk-app] #58 indent #71
+[mk-app] #59 compose #73 #75
+[mk-app] #43 indent #59
+[mk-app] #50 compose #43 #58
+[mk-app] #51 compose #3 #40 #11 #14
+[mk-app] #62 indent #51
+[mk-app] #74 compose #43 #62
+[mk-app] #79 choice #74 #50
+[mk-app] #47 compose #39 #79
+[mk-app] #48 compose #3 #8 #47 #14
+[mk-app] #53 indent #48
+[mk-app] #46 compose #45 #53
+[mk-app] #65 compose #3 #74
+[mk-app] #55 compose #3 #89 #65 #14
+[mk-app] #28 indent #55
+[mk-app] #29 compose #45 #28
+[mk-app] #9 choice #29 #46
+[mk-app] #4 string
+[mk-app] #6 compose #39 #9
+[mk-app] #26 compose #3 #35 #6 #14
+[mk-app] #52 indent #26
+[mk-app] #61 compose #73 #4
+[mk-app] #33 indent #61
+[mk-app] #41 compose #33 #52
+[mk-app] #83 compose #3 #29
+[mk-app] #95 compose #3 #19 #83 #14
+[mk-app] #7 indent #95
+[mk-app] #36 compose #33 #7
+[mk-app] #97 choice #36 #41
+[mk-app] #68 string
+[mk-app] #69 string
+[mk-app] #70 string
+[mk-app] #67 compose #39 #69
+[mk-app] #13 compose #3 #68 #67 #14
+[mk-app] #16 indent #13
+[mk-app] #25 compose #73 #70
+[mk-app] #38 indent #25
+[mk-app] #32 compose #38 #16
+[mk-app] #84 compose #3 #69
+[mk-app] #76 compose #3 #68 #84 #14
+[mk-app] #77 indent #76
+[mk-app] #78 compose #38 #77
+[mk-app] #56 choice #78 #32
+[mk-app] #80 compose #3 #97 #22 #14
+[mk-app] #81 indent #80
+[mk-app] #82 compose #73 #68 #81
+[mk-app] #60 compose #3 #36 #22 #14
+[mk-app] #86 indent #60
+[mk-app] #94 compose #73 #68 #86
+[mk-app] #20 choice #94 #82
+[mk-app] #27 string
+[mk-app] #93 compose #22 #14
+[mk-app] #44 indent #93
+[mk-app] #90 compose #73 #20
+[mk-app] #91 indent #90
+[mk-app] #92 compose #91 #44
+[mk-app] #88 compose #73 #94
+[mk-app] #10 indent #88
+[mk-app] #15 compose #10 #44
+[mk-app] #30 choice #15 #92
+[mk-app] #72 indent #30
+[mk-app] #98 compose #39 #56
+[mk-app] #99 indent #98
+[mk-app] #100 compose #27 #72 #99 #14
+(let ((a!1 (+ (* 2.0 x) (* (- 1.0) (diff (* x x) x)))))
+  (= a!1 0.0))) 
+
+[eq-expl] #25 root
+[eq-expl] #105 root
+[new-match] 0x32eea78 #55 #63 #25 #25 ; #110 (#25 #25) (#105 #105)
+[mk-app] #277 * #25 #141
+[mk-app] #278 * #41 #277
+[mk-app] #279 + #110 #278 #278
+[mk-app] #280 = #279 #34
+[attach-meaning] #117 arith (- 2)
+[mk-app] #281 * #117 #277
+[mk-app] #282 + #110 #281
+[inst-discovered] theory-solving 0 arith# ; #279
+[mk-app] #283 = #279 #282
+[instance] 0 #283
+[attach-enode] #283 0
+[end-of-instance]
+[mk-app] #283 = #279 #282
+[mk-proof] #284 rewrite #283
+[mk-app] #285 = #282 #34
+[mk-app] #286 = #280 #285
+[mk-proof] #287 monotonicity #284 #286
+[mk-proof] #288 rewrite #286
+[mk-app] #283 not #55
+[mk-app] #284 or #283 #285
+[mk-app] #287 or #283 #280
+[mk-proof] #289 quant-inst #287
+[mk-app] #290 = #287 #284
+[mk-proof] #291 monotonicity #288 #290
+[mk-app] #292 = #284 #284
+[mk-proof] #293 rewrite #292
+[mk-proof] #294 trans #291 #293 #290
+[mk-proof] #295 mp #289 #294 #284
+[instance] 0x32eea78 #289 ; 1
+[attach-enode] #277 1
+[attach-enode] #117 1
+[attach-enode] #281 1
+[attach-enode] #282 1
+[attach-enode] #285 1
+[mk-app] #296 <= #282 #34
+[mk-app] #297 >= #282 #34
+[assign] #285 justification -1: [mk-app] #27 string
+[mk-app] #68 string
+[mk-app] #73 string
+[mk-app] #4 string
+[mk-app] #61 cr
+[mk-app] #33 compose #61 #68
+[mk-app] #87 string
+[mk-app] #12 compose #87 #27 #33 #4
+[mk-app] #45 indent #12
+[mk-app] #57 string
+[mk-app] #3 compose #57 #73
+[mk-app] #85 indent #3
+[mk-app] #11 compose #85 #45
+[mk-app] #14 compose #87 #68
+[mk-app] #17 compose #87 #27 #14 #4
+[mk-app] #18 indent #17
+[mk-app] #19 compose #85 #18
+[mk-app] #49 choice #19 #11
+[mk-app] #21 string
+[mk-app] #22 string
+[mk-app] #23 compose #61 #21
+[mk-app] #24 compose #87 #49 #23 #4
+[mk-app] #89 indent #24
+[mk-app] #75 compose #57 #22
+[mk-app] #59 indent #75
+[mk-app] #43 compose #59 #89
+[mk-app] #64 compose #87 #21
+[mk-app] #37 compose #87 #19 #64 #4
+[mk-app] #40 indent #37
+[mk-app] #51 compose #59 #40
+[mk-app] #62 choice #51 #43
+[mk-app] #74 compose
+[mk-app] #65 compose #74 #4
+[mk-app] #55 indent #65
+[mk-app] #28 compose #57 #62
+[mk-app] #29 indent #28
+[mk-app] #83 compose #29 #55
+[mk-app] #95 compose #57 #51
+[mk-app] #7 indent #95
+[mk-app] #36 compose #7 #55
+[mk-app] #60 choice #36 #83
+[mk-app] #86 string
+[mk-app] #94 compose #87 #86 #74 #4
+[mk-app] #88 indent #94
+[mk-app] #10 string
+[mk-app] #93 compose #57 #10 #88
+[mk-app] #44 choice #93 #93
+[mk-app] #15 compose #87 #68 #23 #4
+[mk-app] #39 indent #15
+[mk-app] #31 compose #59 #39
+[mk-app] #5 compose #87 #68 #64 #4
+[mk-app] #66 indent #5
+[mk-app] #54 compose #59 #66
+[mk-app] #35 choice #54 #31
+[mk-app] #8 compose #61 #27 #61 #35
+[mk-app] #34 compose #87 #44 #8 #4
+[mk-app] #42 indent #34
+[mk-app] #63 compose #85 #42
+[mk-app] #96 compose #87 #27 #87 #54
+[mk-app] #71 compose #87 #93 #96 #4
+[mk-app] #58 indent #71
+[mk-app] #50 compose #85 #58
+[mk-app] #79 choice #50 #63
+[mk-app] #47 compose #87 #27 #23 #4
+[mk-app] #48 indent #47
+[mk-app] #53 compose #59 #48
+[mk-app] #46 compose #87 #27 #64 #4
+[mk-app] #9 indent #46
+[mk-app] #6 compose #59 #9
+[mk-app] #26 choice #6 #53
+[mk-app] #52 compose #61 #68 #61 #26
+[mk-app] #41 compose #87 #44 #52 #4
+[mk-app] #97 indent #41
+[mk-app] #80 compose #85 #97
+[mk-app] #81 compose #87 #68 #87 #6
+[mk-app] #82 compose #87 #93 #81 #4
+[mk-app] #20 indent #82
+[mk-app] #90 compose #85 #20
+[mk-app] #91 choice #90 #80
+[mk-app] #92 string
+[mk-app] #30 compose #61 #79 #61 #91
+[mk-app] #72 compose #87 #62 #30 #4
+[mk-app] #70 indent #72
+[mk-app] #25 compose #57 #92
+[mk-app] #38 indent #25
+[mk-app] #69 compose #38 #70
+[mk-app] #84 compose #87 #50 #87 #90
+[mk-app] #76 compose #87 #51 #84 #4
+[mk-app] #77 indent #76
+[mk-app] #78 compose #38 #77
+[mk-app] #67 choice #78 #69
+[mk-app] #13 string
+[mk-app] #16 string
+[mk-app] #32 compose #61 #13
+[mk-app] #56 compose #87 #67 #32 #4
+[mk-app] #98 indent #56
+[mk-app] #99 compose #57 #16
+[mk-app] #100 indent #99
+[mk-app] #101 compose #100 #98
+[mk-app] #102 compose #87 #13
+[mk-app] #103 compose #87 #78 #102 #4
+[mk-app] #104 indent #103
+[mk-app] #105 compose #100 #104
+[mk-app] #106 choice #105 #101
+[mk-app] #107 indent #60
+[mk-app] #108 string
+[mk-app] #109 compose #108 #107
+[mk-app] #110 compose #61 #109
+[mk-app] #111 compose #87 #106 #110 #4
+[mk-app] #112 indent #111
+[mk-app] #113 string
+[mk-app] #114 compose #57 #113 #112
+[mk-app] #115 indent #36
+[mk-app] #116 compose #108 #115
+[mk-app] #117 compose #87 #116
+[mk-app] #118 compose #87 #105 #117 #4
+[mk-app] #119 indent #118
+[mk-app] #120 compose #57 #113 #119
+[mk-app] #121 choice #120 #114
+[mk-app] #122 string
+[mk-app] #123 compose #87 #122 #74 #4
+[mk-app] #124 indent #123
+[mk-app] #125 compose #57 #68 #124
+[mk-app] #126 choice #125 #125
+[mk-app] #127 compose #57 #27 #124
+[mk-app] #128 choice #127 #127
+[mk-app] #129 compose #61 #128
+[mk-app] #130 compose #129 #4
+[mk-app] #131 indent #130
+[mk-app] #132 compose #57 #126
+[mk-app] #133 indent #132
+[mk-app] #134 compose #133 #131
+[mk-app] #135 compose #87 #127
+[mk-app] #136 compose #135 #4
+[mk-app] #137 indent #136
+[mk-app] #138 compose #57 #125
+[mk-app] #139 indent #138
+[mk-app] #140 compose #139 #137
+[mk-app] #141 choice #140 #134
+[mk-app] #142 compose #61 #121
+[mk-app] #143 indent #142
+[mk-app] #144 compose #87 #141 #74
+[mk-app] #145 indent #144
+[mk-app] #146 compose #87 #140 #74
+[mk-app] #147 indent #146
+[mk-app] #148 choice #147 #145
+[mk-app] #149 string
+[mk-app] #150 compose #57 #149
+[mk-app] #151 compose #150 #148 #143 #4
+[mk-app] #152 compose #87 #120
+[mk-app] #153 indent #152
+[mk-app] #154 compose #150 #147 #153 #4
+[mk-app] #155 choice #154 #151
+(forall ((y Real) (z Real))
+  (! (= (+ (diff (* z y) x) (* (- 1.0) z (diff y x)) (* (- 1.0) y (diff z x)))
+        0.0)
+     :pattern ((diff (* z y) x)))) 
+
+[end-of-instance]
+[assign] #296 clause p11 (not p10)
+[mk-app] #57 string
+[mk-app] #149 string
+[mk-app] #150 string
+[mk-app] #68 cr
+[mk-app] #87 compose #68 #57
+[mk-app] #122 string
+[mk-app] #74 compose #122 #57 #87 #150
+[mk-app] #4 indent #74
+[mk-app] #123 string
+[mk-app] #124 compose #123 #149
+[mk-app] #125 indent #124
+[mk-app] #138 compose #125 #4
+[mk-app] #139 compose #122 #57
+[mk-app] #27 compose #122 #57 #139 #150
+[mk-app] #127 indent #27
+[mk-app] #135 compose #125 #127
+[mk-app] #136 choice #135 #138
+[mk-app] #137 string
+[mk-app] #140 compose #122 #136 #87 #150
+[mk-app] #146 indent #140
+[mk-app] #147 compose #123 #137
+[mk-app] #113 indent #147
+[mk-app] #16 compose #113 #146
+[mk-app] #99 compose #122 #135 #139 #150
+[mk-app] #100 indent #99
+[mk-app] #92 compose #113 #100
+[mk-app] #25 choice #92 #16
+[mk-app] #38 string
+[mk-app] #22 compose
+[mk-app] #75 compose #122 #38 #22 #150
+[mk-app] #59 indent #75
+[mk-app] #73 string
+[mk-app] #3 compose #123 #73 #59
+[mk-app] #85 choice #3 #3
+[mk-app] #14 indent #74
+[mk-app] #17 compose #113 #14
+[mk-app] #18 indent #27
+[mk-app] #19 compose #113 #18
+[mk-app] #21 choice #19 #17
+[mk-app] #64 compose #68 #57 #68 #21
+[mk-app] #37 compose #122 #85 #64 #150
+[mk-app] #40 indent #37
+[mk-app] #51 compose #125 #40
+[mk-app] #10 compose #122 #57 #122 #19
+[mk-app] #86 compose #122 #3 #10 #150
+[mk-app] #94 indent #86
+[mk-app] #88 compose #125 #94
+[mk-app] #93 choice #88 #51
+[mk-app] #5 string
+[mk-app] #66 compose #68 #93
+[mk-app] #54 compose #122 #25 #66 #150
+[mk-app] #96 indent #54
+[mk-app] #71 compose #123 #5
+[mk-app] #58 indent #71
+[mk-app] #50 compose #58 #96
+[mk-app] #46 compose #122 #88
+[mk-app] #9 compose #122 #92 #46 #150
+[mk-app] #6 indent #9
+[mk-app] #81 compose #58 #6
+[mk-app] #82 choice #81 #50
+[mk-app] #20 string
+[mk-app] #90 string
+[mk-app] #84 compose #68 #20
+[mk-app] #76 compose #122 #82 #84 #150
+[mk-app] #77 indent #76
+[mk-app] #78 compose #123 #90
+[mk-app] #13 indent #78
+[mk-app] #102 compose #13 #77
+[mk-app] #103 compose #122 #20
+[mk-app] #104 compose #122 #81 #103 #150
+[mk-app] #105 indent #104
+[mk-app] #108 compose #13 #105
+[mk-app] #95 choice #108 #102
+(<= (+ (diff (* x x) x) (* (- 2.0) x (diff x x))) 0.0) 
+(not [mk-app] #123 string
+[mk-app] #90 string
+[mk-app] #78 string
+[mk-app] #13 cr
+[mk-app] #5 compose #13 #123
+[mk-app] #71 string
+[mk-app] #58 compose #71 #123 #5 #78
+[mk-app] #137 indent #58
+[mk-app] #147 string
+[mk-app] #113 compose #147 #90
+[mk-app] #149 indent #113
+[mk-app] #124 compose #149 #137
+[mk-app] #125 compose #71 #123
+[mk-app] #122 compose #71 #123 #125 #78
+[mk-app] #57 indent #122
+[mk-app] #139 compose #149 #57
+[mk-app] #150 choice #139 #124
+[mk-app] #27 string
+[mk-app] #127 compose #71 #150 #5 #78
+[mk-app] #135 indent #127
+[mk-app] #99 compose #147 #27
+[mk-app] #100 indent #99
+[mk-app] #92 compose #100 #135
+[mk-app] #73 compose #71 #139 #125 #78
+[mk-app] #38 indent #73
+[mk-app] #22 compose #100 #38
+[mk-app] #75 choice #22 #92
+[mk-app] #59 string
+[mk-app] #3 compose
+[mk-app] #18 compose #71 #59 #3 #78
+[mk-app] #19 indent #18
+[mk-app] #10 string
+[mk-app] #86 compose #147 #10 #19
+[mk-app] #94 choice #86 #86
+[mk-app] #88 indent #58
+[mk-app] #46 compose #100 #88
+[mk-app] #9 indent #122
+[mk-app] #6 compose #100 #9
+[mk-app] #81 choice #6 #46
+[mk-app] #20 compose #13 #123 #13 #81
+[mk-app] #103 compose #71 #94 #20 #78
+[mk-app] #104 indent #103
+[mk-app] #105 compose #149 #104
+[mk-app] #108 compose #71 #123 #71 #6
+[mk-app] #68 compose #71 #86 #108 #78
+[mk-app] #87 indent #68
+[mk-app] #74 compose #149 #87
+[mk-app] #4 choice #74 #105
+[mk-app] #138 string
+[mk-app] #136 compose #13 #4
+[mk-app] #140 compose #71 #75 #136 #78
+[mk-app] #146 indent #140
+[mk-app] #16 compose #147 #138
+[mk-app] #25 indent #16
+[mk-app] #85 compose #25 #146
+[mk-app] #14 compose #71 #74
+[mk-app] #17 compose #71 #22 #14 #78
+[mk-app] #21 indent #17
+[mk-app] #64 compose #25 #21
+[mk-app] #37 choice #64 #85
+[mk-app] #40 string
+[mk-app] #51 string
+[mk-app] #93 compose #13 #40
+[mk-app] #66 compose #71 #37 #93 #78
+[mk-app] #54 indent #66
+[mk-app] #96 compose #147 #51
+[mk-app] #50 indent #96
+[mk-app] #82 compose #50 #54
+[mk-app] #84 compose #71 #40
+[mk-app] #76 compose #71 #64 #84 #78
+[mk-app] #77 indent #76
+[mk-app] #102 compose #50 #77
+[mk-app] #95 choice #102 #82
+(= (+ (diff (* x x) x) (* (- 2.0) x (diff x x))) 0.0)) 
+
+[assign] #297 clause p12 (not p10)
+[mk-app] #147 string
+[mk-app] #51 string
+[mk-app] #96 string
+[mk-app] #50 cr
+[mk-app] #138 compose #50 #147
+[mk-app] #16 string
+[mk-app] #25 compose #16 #147 #138 #96
+[mk-app] #27 indent #25
+[mk-app] #99 string
+[mk-app] #100 compose #99 #51
+[mk-app] #90 indent #100
+[mk-app] #113 compose #90 #27
+[mk-app] #149 compose #16 #147
+[mk-app] #71 compose #16 #147 #149 #96
+[mk-app] #123 indent #71
+[mk-app] #125 compose #90 #123
+[mk-app] #78 choice #125 #113
+[mk-app] #122 string
+[mk-app] #57 compose #16 #78 #138 #96
+[mk-app] #139 indent #57
+[mk-app] #73 compose #99 #122
+[mk-app] #38 indent #73
+[mk-app] #22 compose #38 #139
+[mk-app] #10 compose #16 #125 #149 #96
+[mk-app] #59 indent #10
+[mk-app] #3 compose #38 #59
+[mk-app] #18 choice #3 #22
+[mk-app] #19 string
+[mk-app] #86 compose
+[mk-app] #9 compose #16 #19 #86 #96
+[mk-app] #6 indent #9
+[mk-app] #108 string
+[mk-app] #68 compose #99 #108 #6
+[mk-app] #87 choice #68 #68
+[mk-app] #74 indent #25
+[mk-app] #14 compose #38 #74
+[mk-app] #17 indent #71
+[mk-app] #21 compose #38 #17
+[mk-app] #64 choice #21 #14
+[mk-app] #40 compose #50 #147 #50 #64
+[mk-app] #84 compose #16 #87 #40 #96
+[mk-app] #76 indent #84
+[mk-app] #77 compose #90 #76
+[mk-app] #102 compose #16 #147 #16 #21
+[mk-app] #13 compose #16 #68 #102 #96
+[mk-app] #5 indent #13
+[mk-app] #58 compose #90 #5
+[mk-app] #137 choice #58 #77
+[mk-app] #124 string
+[mk-app] #150 compose #50 #137
+[mk-app] #127 compose #16 #18 #150 #96
+[mk-app] #135 indent #127
+[mk-app] #92 compose #99 #124
+[mk-app] #75 indent #92
+[mk-app] #94 compose #75 #135
+[mk-app] #88 compose #16 #58
+[mk-app] #46 compose #16 #3 #88 #96
+[mk-app] #81 indent #46
+[mk-app] #20 compose #75 #81
+[mk-app] #103 choice #20 #94
+[mk-app] #104 string
+[mk-app] #105 string
+[mk-app] #4 compose #50 #104
+[mk-app] #136 compose #16 #103 #4 #96
+[mk-app] #140 indent #136
+[mk-app] #146 compose #99 #105
+[mk-app] #85 indent #146
+[mk-app] #37 compose #85 #140
+[mk-app] #93 compose #16 #104
+[mk-app] #66 compose #16 #20 #93 #96
+[mk-app] #54 indent #66
+[mk-app] #82 compose #85 #54
+[mk-app] #95 choice #82 #37
+(>= (+ (diff (* x x) x) (* (- 2.0) x (diff x x))) 0.0) 
+(not [mk-app] #99 string
+[mk-app] #105 string
+[mk-app] #146 string
+[mk-app] #85 cr
+[mk-app] #124 compose #85 #99
+[mk-app] #92 string
+[mk-app] #75 compose #92 #99 #124 #146
+[mk-app] #122 indent #75
+[mk-app] #73 string
+[mk-app] #38 compose #73 #105
+[mk-app] #51 indent #38
+[mk-app] #100 compose #51 #122
+[mk-app] #90 compose #92 #99
+[mk-app] #16 compose #92 #99 #90 #146
+[mk-app] #147 indent #16
+[mk-app] #149 compose #51 #147
+[mk-app] #96 choice #149 #100
+[mk-app] #71 string
+[mk-app] #123 compose #92 #96 #124 #146
+[mk-app] #125 indent #123
+[mk-app] #10 compose #73 #71
+[mk-app] #59 indent #10
+[mk-app] #3 compose #59 #125
+[mk-app] #108 compose #92 #149 #90 #146
+[mk-app] #19 indent #108
+[mk-app] #86 compose #59 #19
+[mk-app] #9 choice #86 #3
+[mk-app] #6 string
+[mk-app] #68 compose
+[mk-app] #17 compose #92 #6 #68 #146
+[mk-app] #21 indent #17
+[mk-app] #102 string
+[mk-app] #13 compose #73 #102 #21
+[mk-app] #5 choice #13 #13
+[mk-app] #58 indent #75
+[mk-app] #88 compose #59 #58
+[mk-app] #46 indent #16
+[mk-app] #81 compose #59 #46
+[mk-app] #20 choice #81 #88
+[mk-app] #104 compose #85 #99 #85 #20
+[mk-app] #93 compose #92 #5 #104 #146
+[mk-app] #66 indent #93
+[mk-app] #54 compose #51 #66
+[mk-app] #82 compose #92 #99 #92 #81
+[mk-app] #50 compose #92 #13 #82 #146
+[mk-app] #138 indent #50
+[mk-app] #25 compose #51 #138
+[mk-app] #27 choice #25 #54
+[mk-app] #113 string
+[mk-app] #78 compose #85 #27
+[mk-app] #57 compose #92 #9 #78 #146
+[mk-app] #139 indent #57
+[mk-app] #22 compose #73 #113
+[mk-app] #18 indent #22
+[mk-app] #87 compose #18 #139
+[mk-app] #74 compose #92 #25
+[mk-app] #14 compose #92 #86 #74 #146
+[mk-app] #64 indent #14
+[mk-app] #40 compose #18 #64
+[mk-app] #84 choice #40 #87
+[mk-app] #76 string
+[mk-app] #77 string
+[mk-app] #137 compose #85 #76
+[mk-app] #150 compose #92 #84 #137 #146
+[mk-app] #127 indent #150
+[mk-app] #135 compose #73 #77
+[mk-app] #94 indent #135
+[mk-app] #103 compose #94 #127
+[mk-app] #4 compose #92 #76
+[mk-app] #136 compose #92 #40 #4 #146
+[mk-app] #140 indent #136
+[mk-app] #37 compose #94 #140
+[mk-app] #95 choice #37 #103
+(= (+ (diff (* x x) x) (* (- 2.0) x (diff x x))) 0.0)) 
+
+[mk-app] #298 <= #141 #27
+[mk-app] #299 >= #141 #27
+[assign] #298 justification -1: [mk-app] #73 string
+[mk-app] #77 string
+[mk-app] #135 string
+[mk-app] #94 cr
+[mk-app] #113 compose #94 #73
+[mk-app] #22 string
+[mk-app] #18 compose #22 #73 #113 #135
+[mk-app] #71 indent #18
+[mk-app] #10 string
+[mk-app] #59 compose #10 #77
+[mk-app] #105 indent #59
+[mk-app] #38 compose #105 #71
+[mk-app] #51 compose #22 #73
+[mk-app] #92 compose #22 #73 #51 #135
+[mk-app] #99 indent #92
+[mk-app] #90 compose #105 #99
+[mk-app] #146 choice #90 #38
+[mk-app] #16 string
+[mk-app] #147 string
+[mk-app] #149 compose #94 #16
+[mk-app] #108 compose #22 #146 #149 #135
+[mk-app] #19 indent #108
+[mk-app] #86 compose #10 #147
+[mk-app] #102 indent #86
+[mk-app] #6 compose #102 #19
+[mk-app] #68 compose #22 #16
+[mk-app] #17 compose #22 #90 #68 #135
+[mk-app] #21 indent #17
+[mk-app] #13 compose #102 #21
+[mk-app] #46 choice #13 #6
+(= (diff x x) 1.0) 
+
+[assign] #299 justification -1: [mk-app] #10 string
+[mk-app] #147 string
+[mk-app] #86 string
+[mk-app] #102 cr
+[mk-app] #77 compose #102 #10
+[mk-app] #59 string
+[mk-app] #105 compose #59 #10 #77 #86
+[mk-app] #22 indent #105
+[mk-app] #73 string
+[mk-app] #51 compose #73 #147
+[mk-app] #135 indent #51
+[mk-app] #92 compose #135 #22
+[mk-app] #99 compose #59 #10
+[mk-app] #90 compose #59 #10 #99 #86
+[mk-app] #16 indent #90
+[mk-app] #68 compose #135 #16
+[mk-app] #17 choice #68 #92
+[mk-app] #21 string
+[mk-app] #13 string
+[mk-app] #94 compose #102 #21
+[mk-app] #113 compose #59 #17 #94 #86
+[mk-app] #18 indent #113
+[mk-app] #71 compose #73 #13
+[mk-app] #38 indent #71
+[mk-app] #146 compose #38 #18
+[mk-app] #149 compose #59 #21
+[mk-app] #108 compose #59 #68 #149 #86
+[mk-app] #19 indent #108
+[mk-app] #6 compose #38 #19
+[mk-app] #46 choice #6 #146
+(= (diff x x) 1.0) 
+
+[push] 0
+[assign] (not #270) decision axiom
+[assign] #269 clause p8 p9
+[mk-app] #73 string
+[mk-app] #13 string
+[mk-app] #71 string
+[mk-app] #38 string
+[mk-app] #147 cr
+[mk-app] #51 compose #147 #13 #147 #13
+[mk-app] #135 string
+[mk-app] #59 compose #135 #73 #51 #38
+[mk-app] #10 indent #59
+[mk-app] #99 string
+[mk-app] #86 compose #99 #71
+[mk-app] #90 indent #86
+[mk-app] #16 compose #90 #10
+[mk-app] #68 compose #135 #13 #135 #13
+[mk-app] #21 compose #135 #73 #68 #38
+[mk-app] #149 indent #21
+[mk-app] #108 compose #90 #149
+[mk-app] #19 choice #108 #16
+[mk-app] #6 string
+[mk-app] #102 compose
+[mk-app] #77 compose #135 #6 #102 #38
+[mk-app] #105 indent #77
+[mk-app] #22 string
+[mk-app] #92 compose #99 #22 #105
+[mk-app] #17 choice #92 #92
+[mk-app] #94 compose #135 #13 #51 #38
+[mk-app] #113 indent #94
+[mk-app] #18 compose #90 #113
+[mk-app] #146 compose #135 #13 #68 #38
+[mk-app] #46 indent #146
+[mk-app] #81 compose #90 #46
+[mk-app] #82 choice #81 #18
+[mk-app] #50 string
+[mk-app] #138 compose #147 #13
+[mk-app] #25 compose #135 #82 #138 #38
+[mk-app] #74 indent #25
+[mk-app] #14 compose #99 #50
+[mk-app] #64 indent #14
+[mk-app] #40 compose #64 #74
+[mk-app] #76 compose #135 #13
+[mk-app] #4 compose #135 #81 #76 #38
+[mk-app] #136 indent #4
+[mk-app] #140 compose #64 #136
+[mk-app] #37 choice #140 #40
+[mk-app] #85 compose #147 #37
+[mk-app] #124 compose #135 #17 #85 #38
+[mk-app] #75 indent #124
+[mk-app] #122 compose #90 #75
+[mk-app] #100 compose #135 #140
+[mk-app] #96 compose #135 #92 #100 #38
+[mk-app] #123 indent #96
+[mk-app] #125 compose #90 #123
+[mk-app] #3 choice #125 #122
+[mk-app] #9 string
+[mk-app] #5 compose #147 #3
+[mk-app] #58 compose #135 #19 #5 #38
+[mk-app] #88 indent #58
+[mk-app] #20 compose #99 #9
+[mk-app] #104 indent #20
+[mk-app] #93 compose #104 #88
+[mk-app] #66 compose #135 #125
+[mk-app] #54 compose #135 #108 #66 #38
+[mk-app] #27 indent #54
+[mk-app] #78 compose #104 #27
+[mk-app] #57 choice #78 #93
+[mk-app] #139 string
+[mk-app] #87 string
+[mk-app] #84 string
+[mk-app] #137 compose #147 #87
+[mk-app] #150 compose #135 #139 #137 #38
+[mk-app] #127 indent #150
+[mk-app] #103 compose #99 #84
+[mk-app] #95 indent #103
+[mk-app] #7 compose #95 #127
+[mk-app] #65 compose #135 #87
+[mk-app] #55 compose #135 #139 #65 #38
+[mk-app] #36 indent #55
+[mk-app] #115 compose #95 #36
+[mk-app] #116 choice #115 #7
+[mk-app] #117 compose #135 #57 #102 #38
+[mk-app] #118 indent #117
+[mk-app] #119 compose #99 #139 #118
+[mk-app] #120 compose #135 #78 #102 #38
+[mk-app] #152 indent #120
+[mk-app] #153 compose #99 #139 #152
+[mk-app] #154 choice #153 #119
+[mk-app] #126 string
+[mk-app] #132 compose #102 #38
+[mk-app] #133 indent #132
+[mk-app] #61 compose #99 #154
+[mk-app] #128 indent #61
+[mk-app] #129 compose #128 #133
+[mk-app] #130 compose #99 #153
+[mk-app] #131 indent #130
+[mk-app] #134 compose #131 #133
+[mk-app] #141 choice #134 #129
+[mk-app] #144 indent #141
+[mk-app] #145 compose #147 #116
+[mk-app] #148 indent #145
+[mk-app] #33 compose #126 #144 #148 #38
+(let ((a!1 (+ (* 3.0 x x) (* (- 1.0) (diff (* x x x) x)))))
+  (<= a!1 0.0)) 
+[mk-app] #126 string
+[mk-app] #139 string
+[mk-app] #99 string
+[mk-app] #9 string
+[mk-app] #20 cr
+[mk-app] #104 compose #20 #139 #20 #139
+[mk-app] #71 string
+[mk-app] #86 compose #71 #126 #104 #9
+[mk-app] #90 indent #86
+[mk-app] #73 string
+[mk-app] #135 compose #73 #99
+[mk-app] #13 indent #135
+[mk-app] #68 compose #13 #90
+[mk-app] #38 compose #71 #139 #71 #139
+[mk-app] #21 compose #71 #126 #38 #9
+[mk-app] #149 indent #21
+[mk-app] #108 compose #13 #149
+[mk-app] #22 choice #108 #68
+[mk-app] #6 string
+[mk-app] #102 compose
+[mk-app] #77 compose #71 #6 #102 #9
+[mk-app] #105 indent #77
+[mk-app] #92 string
+[mk-app] #50 compose #73 #92 #105
+[mk-app] #14 choice #50 #50
+[mk-app] #64 compose #71 #139 #104 #9
+[mk-app] #146 indent #64
+[mk-app] #46 compose #13 #146
+[mk-app] #81 compose #71 #139 #38 #9
+[mk-app] #76 indent #81
+[mk-app] #4 compose #13 #76
+[mk-app] #136 choice #4 #46
+[mk-app] #140 string
+[mk-app] #100 compose #20 #139
+[mk-app] #96 compose #71 #136 #100 #9
+[mk-app] #123 indent #96
+[mk-app] #125 compose #73 #140
+[mk-app] #66 indent #125
+[mk-app] #54 compose #66 #123
+[mk-app] #27 compose #71 #139
+[mk-app] #78 compose #71 #4 #27 #9
+[mk-app] #120 indent #78
+[mk-app] #152 compose #66 #120
+[mk-app] #153 choice #152 #54
+[mk-app] #130 compose #20 #153
+[mk-app] #131 compose #71 #14 #130 #9
+[mk-app] #132 indent #131
+[mk-app] #133 compose #13 #132
+[mk-app] #134 compose #71 #152
+[mk-app] #147 compose #71 #50 #134 #9
+[mk-app] #51 indent #147
+[mk-app] #59 compose #13 #51
+[mk-app] #10 choice #59 #133
+[mk-app] #16 string
+[mk-app] #19 compose #20 #10
+[mk-app] #17 compose #71 #22 #19 #9
+[mk-app] #94 indent #17
+[mk-app] #113 compose #73 #16
+[mk-app] #18 indent #113
+[mk-app] #82 compose #18 #94
+[mk-app] #138 compose #71 #59
+[mk-app] #25 compose #71 #108 #138 #9
+[mk-app] #74 indent #25
+[mk-app] #40 compose #18 #74
+[mk-app] #37 choice #40 #82
+[mk-app] #85 string
+[mk-app] #124 string
+[mk-app] #75 string
+[mk-app] #122 compose #20 #124
+[mk-app] #3 compose #71 #85 #122 #9
+[mk-app] #5 indent #3
+[mk-app] #58 compose #73 #75
+[mk-app] #88 indent #58
+[mk-app] #93 compose #88 #5
+[mk-app] #57 compose #71 #124
+[mk-app] #117 compose #71 #85 #57 #9
+[mk-app] #118 indent #117
+[mk-app] #119 compose #88 #118
+[mk-app] #154 choice #119 #93
+[mk-app] #61 compose #71 #37 #102 #9
+[mk-app] #128 indent #61
+[mk-app] #129 compose #73 #85 #128
+[mk-app] #141 compose #71 #40 #102 #9
+[mk-app] #144 indent #141
+[mk-app] #84 compose #73 #85 #144
+[mk-app] #103 choice #84 #129
+[mk-app] #95 string
+[mk-app] #87 compose #102 #9
+[mk-app] #65 indent #87
+[mk-app] #55 compose #73 #103
+[mk-app] #36 indent #55
+[mk-app] #115 compose #36 #65
+[mk-app] #137 compose #73 #84
+[mk-app] #150 indent #137
+[mk-app] #127 compose #150 #65
+[mk-app] #7 choice #127 #115
+[mk-app] #116 indent #7
+[mk-app] #145 compose #20 #154
+[mk-app] #148 indent #145
+[mk-app] #33 compose #95 #116 #148 #9
+(let ((a!1 (+ (* 3.0 x x) (* (- 1.0) (diff (* x x x) x)))))
+  (>= a!1 0.0)) 
+
+[attach-meaning] #41 arith (- 1)
+[mk-app] #300 * #41 #25
+[mk-app] #301 + #277 #300
+[attach-enode] #300 0
+[attach-enode] #301 0
+[eq-expl] #141 lit #142 ; #27
+[eq-expl] #27 root
+[eq-expl] #25 th arith ; #277
+[eq-expl] #277 root
+[new-match] 0x32ef3e0 #55 #63 #25 #141 ; #141 (#25 #25) (#25 #277)
+[mk-app] #302 * #277 #27
+[mk-app] #303 diff #302 #25
+[mk-app] #304 diff #27 #25
+[mk-app] #305 * #277 #304
+[mk-app] #306 * #41 #305
+[mk-app] #307 diff #277 #25
+[mk-app] #308 * #27 #307
+[mk-app] #309 * #41 #308
+[mk-app] #310 + #303 #306 #309
+[mk-app] #311 = #310 #34
+[inst-discovered] theory-solving 0 arith# ; #302
+[mk-app] #312 = #302 #277
+[instance] 0 #312
+[attach-enode] #312 0
+[end-of-instance]
+[mk-app] #312 = #302 #277
+[mk-proof] #313 rewrite #312
+[mk-app] #314 = #303 #307
+[mk-proof] #315 monotonicity #313 #314
+[mk-proof] #316 rewrite #314
+[mk-app] #312 * #25 #141 #304
+[inst-discovered] theory-solving 0 arith# ; #305
+[mk-app] #313 = #305 #312
+[instance] 0 #313
+[attach-enode] #313 0
+[end-of-instance]
+[mk-app] #313 = #305 #312
+[mk-proof] #315 rewrite #313
+[mk-app] #317 * #41 #312
+[mk-app] #318 = #306 #317
+[mk-proof] #319 monotonicity #315 #318
+[mk-proof] #320 rewrite #318
+[inst-discovered] theory-solving 0 arith# ; #308
+[mk-app] #319 = #308 #307
+[instance] 0 #319
+[attach-enode] #319 0
+[end-of-instance]
+[mk-app] #319 = #308 #307
+[mk-proof] #321 rewrite #319
+[mk-app] #322 * #41 #307
+[mk-app] #323 = #309 #322
+[mk-proof] #324 monotonicity #321 #323
+[mk-proof] #325 rewrite #323
+[mk-app] #324 + #307 #317 #322
+[mk-app] #326 = #310 #324
+[mk-proof] #327 monotonicity #316 #320 #325 #326
+[inst-discovered] theory-solving 0 arith# ; #324
+[mk-app] #328 = #324 #317
+[instance] 0 #328
+[attach-enode] #328 0
+[end-of-instance]
+[mk-app] #328 = #324 #317
+[mk-proof] #329 rewrite #328
+[mk-app] #330 = #310 #317
+[mk-proof] #331 trans #327 #329 #330
+[mk-app] #332 = #317 #34
+[mk-app] #333 = #311 #332
+[mk-proof] #334 monotonicity #331 #333
+[mk-app] #335 = #312 #34
+[inst-discovered] theory-solving 0 arith# ; #332
+[mk-app] #336 = #332 #335
+[instance] 0 #336
+[attach-enode] #336 0
+[end-of-instance]
+[mk-app] #336 = #332 #335
+[mk-proof] #337 rewrite #336
+[mk-app] #338 = #311 #335
+[mk-proof] #339 trans #334 #337 #338
+[mk-app] #340 or #283 #335
+[mk-app] #341 or #283 #311
+[mk-proof] #342 quant-inst #341
+[mk-app] #343 = #341 #340
+[mk-proof] #344 monotonicity #339 #343
+[mk-app] #345 = #340 #340
+[mk-proof] #346 rewrite #345
+[mk-proof] #347 trans #344 #346 #343
+[mk-proof] #348 mp #342 #347 #340
+[instance] 0x32ef3e0 #342 ; 2
+[attach-enode] #304 2
+[attach-enode] #312 2
+[attach-enode] #335 2
+[mk-app] #349 <= #312 #34
+[mk-app] #350 >= #312 #34
+[assign] #335 justification -1: [mk-app] #95 string
+[mk-app] #85 string
+[mk-app] #73 string
+[mk-app] #16 string
+[mk-app] #113 cr
+[mk-app] #18 compose #113 #85
+[mk-app] #99 string
+[mk-app] #135 compose #99 #95 #18 #16
+[mk-app] #13 indent #135
+[mk-app] #126 string
+[mk-app] #71 compose #126 #73
+[mk-app] #139 indent #71
+[mk-app] #38 compose #139 #13
+[mk-app] #9 compose #99 #85
+[mk-app] #21 compose #99 #95 #9 #16
+[mk-app] #149 indent #21
+[mk-app] #108 compose #139 #149
+[mk-app] #92 choice #108 #38
+[mk-app] #6 string
+[mk-app] #102 string
+[mk-app] #77 compose #113 #6
+[mk-app] #105 compose #99 #92 #77 #16
+[mk-app] #50 indent #105
+[mk-app] #140 compose #126 #102
+[mk-app] #125 indent #140
+[mk-app] #66 compose #125 #50
+[mk-app] #81 compose #99 #6
+[mk-app] #76 compose #99 #108 #81 #16
+[mk-app] #4 indent #76
+[mk-app] #27 compose #125 #4
+[mk-app] #78 choice #27 #66
+[mk-app] #120 compose
+[mk-app] #152 compose #120 #16
+[mk-app] #134 indent #152
+[mk-app] #147 compose #126 #78
+[mk-app] #51 indent #147
+[mk-app] #59 compose #51 #134
+[mk-app] #138 compose #126 #27
+[mk-app] #25 indent #138
+[mk-app] #74 compose #25 #134
+[mk-app] #40 choice #74 #59
+[mk-app] #141 string
+[mk-app] #144 compose #99 #141 #120 #16
+[mk-app] #84 indent #144
+[mk-app] #137 string
+[mk-app] #150 compose #126 #137 #84
+[mk-app] #87 choice #150 #150
+[mk-app] #65 compose #99 #85 #77 #16
+[mk-app] #127 indent #65
+[mk-app] #20 compose #125 #127
+[mk-app] #104 compose #99 #85 #81 #16
+[mk-app] #86 indent #104
+[mk-app] #90 compose #125 #86
+[mk-app] #68 choice #90 #20
+[mk-app] #22 compose #113 #95 #113 #68
+[mk-app] #14 compose #99 #87 #22 #16
+[mk-app] #64 indent #14
+[mk-app] #146 compose #139 #64
+[mk-app] #46 compose #99 #95 #99 #90
+[mk-app] #136 compose #99 #150 #46 #16
+[mk-app] #100 indent #136
+[mk-app] #96 compose #139 #100
+[mk-app] #123 choice #96 #146
+[mk-app] #54 compose #99 #95 #77 #16
+[mk-app] #153 indent #54
+[mk-app] #130 compose #125 #153
+[mk-app] #131 compose #99 #95 #81 #16
+[mk-app] #132 indent #131
+[mk-app] #133 compose #125 #132
+[mk-app] #10 choice #133 #130
+[mk-app] #19 compose #113 #85 #113 #10
+[mk-app] #17 compose #99 #87 #19 #16
+[mk-app] #94 indent #17
+[mk-app] #82 compose #139 #94
+[mk-app] #37 compose #99 #85 #99 #133
+[mk-app] #61 compose #99 #150 #37 #16
+[mk-app] #128 indent #61
+[mk-app] #129 compose #139 #128
+[mk-app] #103 choice #129 #82
+[mk-app] #55 string
+[mk-app] #36 compose #113 #123 #113 #103
+[mk-app] #115 compose #99 #78 #36 #16
+[mk-app] #7 indent #115
+[mk-app] #116 compose #126 #55
+[mk-app] #75 indent #116
+[mk-app] #58 compose #75 #7
+[mk-app] #88 compose #99 #96 #99 #129
+[mk-app] #124 compose #99 #27 #88 #16
+[mk-app] #57 indent #124
+[mk-app] #117 compose #75 #57
+[mk-app] #118 choice #117 #58
+[mk-app] #119 string
+[mk-app] #122 string
+[mk-app] #3 compose #113 #119
+[mk-app] #5 compose #99 #118 #3 #16
+[mk-app] #93 indent #5
+[mk-app] #154 compose #126 #122
+[mk-app] #145 indent #154
+[mk-app] #148 compose #145 #93
+[mk-app] #33 compose #99 #119
+[mk-app] #12 compose #99 #117 #33 #16
+[mk-app] #45 indent #12
+[mk-app] #11 compose #145 #45
+[mk-app] #49 choice #11 #148
+[mk-app] #23 indent #40
+[mk-app] #24 string
+[mk-app] #89 compose #24 #23
+[mk-app] #43 compose #113 #89
+[mk-app] #62 compose #99 #49 #43 #16
+[mk-app] #44 indent #62
+[mk-app] #15 string
+[mk-app] #39 compose #126 #15 #44
+[mk-app] #31 indent #74
+[mk-app] #35 compose #24 #31
+[mk-app] #8 compose #99 #35
+[mk-app] #34 compose #99 #11 #8 #16
+[mk-app] #42 indent #34
+[mk-app] #63 compose #126 #15 #42
+[mk-app] #79 choice #63 #39
+[mk-app] #47 string
+[mk-app] #48 compose #99 #47 #120 #16
+[mk-app] #53 indent #48
+[mk-app] #26 compose #126 #85 #53
+[mk-app] #52 choice #26 #26
+[mk-app] #41 compose #126 #95 #53
+[mk-app] #97 choice #41 #41
+[mk-app] #80 compose #113 #97
+[mk-app] #91 compose #80 #16
+[mk-app] #30 indent #91
+[mk-app] #72 compose #126 #52
+[mk-app] #70 indent #72
+[mk-app] #69 compose #70 #30
+[mk-app] #67 compose #99 #41
+[mk-app] #32 compose #67 #16
+[mk-app] #56 indent #32
+[mk-app] #98 compose #126 #26
+[mk-app] #101 indent #98
+[mk-app] #106 compose #101 #56
+[mk-app] #28 choice #106 #69
+[mk-app] #29 compose #113 #79
+[mk-app] #83 indent #29
+[mk-app] #60 compose #99 #28 #120
+[mk-app] #107 indent #60
+[mk-app] #109 compose #99 #106 #120
+[mk-app] #110 indent #109
+[mk-app] #111 choice #110 #107
+[mk-app] #112 string
+[mk-app] #114 compose #126 #112
+[mk-app] #121 compose #114 #111 #83 #16
+[mk-app] #142 compose #99 #63
+[mk-app] #143 indent #142
+[mk-app] #151 compose #114 #110 #143 #16
+[mk-app] #155 choice #151 #121
+(forall ((y Real) (z Real))
+  (! (= (+ (diff (* z y) x) (* (- 1.0) z (diff y x)) (* (- 1.0) y (diff z x)))
+        0.0)
+     :pattern ((diff (* z y) x)))) 
+
+[end-of-instance]
+[assign] #349 clause p16 (not p15)
+[mk-app] #126 string
+[mk-app] #112 string
+[mk-app] #114 string
+[mk-app] #85 cr
+[mk-app] #99 compose #85 #126
+[mk-app] #47 string
+[mk-app] #120 compose #47 #126 #99 #114
+[mk-app] #16 indent #120
+[mk-app] #48 string
+[mk-app] #53 compose #48 #112
+[mk-app] #26 indent #53
+[mk-app] #98 compose #26 #16
+[mk-app] #101 compose #47 #126
+[mk-app] #95 compose #47 #126 #101 #114
+[mk-app] #41 indent #95
+[mk-app] #67 compose #26 #41
+[mk-app] #32 choice #67 #98
+[mk-app] #56 string
+[mk-app] #106 compose #47 #56 #99 #114
+[mk-app] #109 indent #106
+[mk-app] #110 compose #26 #109
+[mk-app] #15 compose #47 #56 #101 #114
+[mk-app] #122 indent #15
+[mk-app] #154 compose #26 #122
+[mk-app] #145 choice #154 #110
+[mk-app] #55 string
+[mk-app] #116 compose #85 #32 #85 #145
+[mk-app] #75 compose #47 #126 #116 #114
+[mk-app] #102 indent #75
+[mk-app] #140 compose #48 #55
+[mk-app] #125 indent #140
+[mk-app] #73 compose #125 #102
+[mk-app] #71 compose #47 #67 #47 #154
+[mk-app] #139 compose #47 #126 #71 #114
+[mk-app] #9 indent #139
+[mk-app] #21 compose #125 #9
+[mk-app] #149 choice #21 #73
+[mk-app] #108 string
+[mk-app] #6 string
+[mk-app] #81 compose #85 #108
+[mk-app] #76 compose #47 #149 #81 #114
+[mk-app] #4 indent #76
+[mk-app] #27 compose #48 #6
+[mk-app] #137 indent #27
+[mk-app] #141 compose #137 #4
+[mk-app] #144 compose #47 #108
+[mk-app] #84 compose #47 #21 #144 #114
+[mk-app] #150 indent #84
+[mk-app] #104 compose #137 #150
+[mk-app] #86 choice #104 #141
+(<= (* x (diff x x) (diff 1.0 x)) 0.0) 
+(not [mk-app] #48 string
+[mk-app] #6 string
+[mk-app] #27 string
+[mk-app] #137 cr
+[mk-app] #55 compose #137 #48
+[mk-app] #140 string
+[mk-app] #125 compose #140 #48 #55 #27
+[mk-app] #112 indent #125
+[mk-app] #53 string
+[mk-app] #26 compose #53 #6
+[mk-app] #47 indent #26
+[mk-app] #126 compose #47 #112
+[mk-app] #101 compose #140 #48
+[mk-app] #114 compose #140 #48 #101 #27
+[mk-app] #95 indent #114
+[mk-app] #41 compose #47 #95
+[mk-app] #67 choice #41 #126
+[mk-app] #56 string
+[mk-app] #15 compose #140 #56 #55 #27
+[mk-app] #122 indent #15
+[mk-app] #154 compose #47 #122
+[mk-app] #71 compose #140 #56 #101 #27
+[mk-app] #139 indent #71
+[mk-app] #9 compose #47 #139
+[mk-app] #21 choice #9 #154
+[mk-app] #108 string
+[mk-app] #144 compose #137 #67 #137 #21
+[mk-app] #84 compose #140 #48 #144 #27
+[mk-app] #150 indent #84
+[mk-app] #104 compose #53 #108
+[mk-app] #85 indent #104
+[mk-app] #99 compose #85 #150
+[mk-app] #120 compose #140 #41 #140 #9
+[mk-app] #16 compose #140 #48 #120 #27
+[mk-app] #98 indent #16
+[mk-app] #32 compose #85 #98
+[mk-app] #106 choice #32 #99
+[mk-app] #109 string
+[mk-app] #110 string
+[mk-app] #145 compose #137 #109
+[mk-app] #116 compose #140 #106 #145 #27
+[mk-app] #75 indent #116
+[mk-app] #102 compose #53 #110
+[mk-app] #73 indent #102
+[mk-app] #149 compose #73 #75
+[mk-app] #81 compose #140 #109
+[mk-app] #76 compose #140 #32 #81 #27
+[mk-app] #4 indent #76
+[mk-app] #141 compose #73 #4
+[mk-app] #86 choice #141 #149
+(= (* x (diff x x) (diff 1.0 x)) 0.0)) 
+
+[assign] #350 clause p17 (not p15)
+[mk-app] #53 string
+[mk-app] #110 string
+[mk-app] #102 string
+[mk-app] #73 cr
+[mk-app] #108 compose #73 #53
+[mk-app] #104 string
+[mk-app] #85 compose #104 #53 #108 #102
+[mk-app] #6 indent #85
+[mk-app] #26 string
+[mk-app] #47 compose #26 #110
+[mk-app] #140 indent #47
+[mk-app] #48 compose #140 #6
+[mk-app] #101 compose #104 #53
+[mk-app] #27 compose #104 #53 #101 #102
+[mk-app] #114 indent #27
+[mk-app] #95 compose #140 #114
+[mk-app] #41 choice #95 #48
+[mk-app] #56 string
+[mk-app] #71 compose #104 #56 #108 #102
+[mk-app] #139 indent #71
+[mk-app] #9 compose #140 #139
+[mk-app] #120 compose #104 #56 #101 #102
+[mk-app] #16 indent #120
+[mk-app] #98 compose #140 #16
+[mk-app] #32 choice #98 #9
+[mk-app] #109 string
+[mk-app] #81 compose #73 #41 #73 #32
+[mk-app] #76 compose #104 #53 #81 #102
+[mk-app] #4 indent #76
+[mk-app] #141 compose #26 #109
+[mk-app] #137 indent #141
+[mk-app] #55 compose #137 #4
+[mk-app] #125 compose #104 #95 #104 #98
+[mk-app] #112 compose #104 #53 #125 #102
+[mk-app] #126 indent #112
+[mk-app] #67 compose #137 #126
+[mk-app] #15 choice #67 #55
+[mk-app] #122 string
+[mk-app] #154 string
+[mk-app] #21 compose #73 #122
+[mk-app] #144 compose #104 #15 #21 #102
+[mk-app] #84 indent #144
+[mk-app] #150 compose #26 #154
+[mk-app] #99 indent #150
+[mk-app] #106 compose #99 #84
+[mk-app] #145 compose #104 #122
+[mk-app] #116 compose #104 #67 #145 #102
+[mk-app] #75 indent #116
+[mk-app] #149 compose #99 #75
+[mk-app] #86 choice #149 #106
+(>= (* x (diff x x) (diff 1.0 x)) 0.0) 
+(not [mk-app] #26 string
+[mk-app] #154 string
+[mk-app] #150 string
+[mk-app] #99 cr
+[mk-app] #109 compose #99 #26
+[mk-app] #141 string
+[mk-app] #137 compose #141 #26 #109 #150
+[mk-app] #110 indent #137
+[mk-app] #47 string
+[mk-app] #140 compose #47 #154
+[mk-app] #104 indent #140
+[mk-app] #53 compose #104 #110
+[mk-app] #101 compose #141 #26
+[mk-app] #102 compose #141 #26 #101 #150
+[mk-app] #27 indent #102
+[mk-app] #114 compose #104 #27
+[mk-app] #95 choice #114 #53
+[mk-app] #56 string
+[mk-app] #120 compose #141 #56 #109 #150
+[mk-app] #16 indent #120
+[mk-app] #98 compose #104 #16
+[mk-app] #125 compose #141 #56 #101 #150
+[mk-app] #112 indent #125
+[mk-app] #126 compose #104 #112
+[mk-app] #67 choice #126 #98
+[mk-app] #122 string
+[mk-app] #145 compose #99 #95 #99 #67
+[mk-app] #116 compose #141 #26 #145 #150
+[mk-app] #75 indent #116
+[mk-app] #149 compose #47 #122
+[mk-app] #73 indent #149
+[mk-app] #108 compose #73 #75
+[mk-app] #85 compose #141 #114 #141 #126
+[mk-app] #6 compose #141 #26 #85 #150
+[mk-app] #48 indent #6
+[mk-app] #41 compose #73 #48
+[mk-app] #71 choice #41 #108
+[mk-app] #139 string
+[mk-app] #9 string
+[mk-app] #32 compose #99 #139
+[mk-app] #81 compose #141 #71 #32 #150
+[mk-app] #76 indent #81
+[mk-app] #4 compose #47 #9
+[mk-app] #55 indent #4
+[mk-app] #15 compose #55 #76
+[mk-app] #21 compose #141 #139
+[mk-app] #144 compose #141 #41 #21 #150
+[mk-app] #84 indent #144
+[mk-app] #106 compose #55 #84
+[mk-app] #86 choice #106 #15
+(= (* x (diff x x) (diff 1.0 x)) 0.0)) 
+
+[mk-app] #351 Real
+[attach-meaning] #351 arith (/ (- 1) 2)
+[mk-app] #352 * #351 #134
+[attach-meaning] #351 arith (/ (- 1) 2)
+[mk-app] #353 * #351 #282
+[mk-app] #354 + #352 #353
+[attach-meaning] #41 arith (- 1)
+[mk-app] #355 * #41 #141
+[mk-app] #356 + #27 #355
+[mk-app] #357 * #25 #356
+[mk-app] #358 + #357 #354
+[mk-app] #355 Real
+[attach-meaning] #355 arith (/ (- 1) 2)
+[mk-app] #356 * #355 #134
+[attach-meaning] #355 arith (/ (- 1) 2)
+[mk-app] #357 * #355 #282
+[mk-app] #351 + #356 #357
+[attach-meaning] #41 arith (- 1)
+[mk-app] #352 * #41 #141
+[mk-app] #353 + #27 #352
+[mk-app] #354 * #25 #353
+[mk-app] #358 + #354 #351
+[mk-app] #352 Real
+[attach-meaning] #352 arith (/ (- 1) 2)
+[mk-app] #353 * #352 #134
+[attach-meaning] #352 arith (/ (- 1) 2)
+[mk-app] #354 * #352 #282
+[mk-app] #355 + #353 #354
+[attach-meaning] #41 arith (- 1)
+[mk-app] #356 * #41 #141
+[mk-app] #357 + #27 #356
+[mk-app] #351 * #25 #357
+[mk-app] #358 + #351 #355
+[attach-meaning] #5 bv #b1
+[attach-meaning] #6 bv #b0
+[attach-meaning] #5 bv #b1
+[attach-meaning] #6 bv #b0
+[attach-meaning] #6 bv #b0
+[attach-enode] #1 0
+[attach-enode] #2 0
+[attach-meaning] #6 bv #b0
+[attach-enode] #1 0
+[attach-enode] #2 0
+[attach-meaning] #5 bv #b1
+[attach-meaning] #6 bv #b0
+[attach-meaning] #5 bv #b1
+[attach-meaning] #6 bv #b0
+[attach-meaning] #6 bv #b0
+[attach-enode] #1 0
+[attach-enode] #2 0
+[attach-meaning] #6 bv #b0
+[attach-enode] #1 0
+[attach-enode] #2 0
+[eof]

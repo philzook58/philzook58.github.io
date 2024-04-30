@@ -1,0 +1,31 @@
+fof( axiom1, axiom, ![Varf, VarA, VarD, VarB, Varh, Varg, VarC]: constcompose(constcompose(Varf, Varg), Varh) = constcompose(Varf, constcompose(Varg, Varh))).
+fof( axiom2, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constid(VarB)) = Varf).
+fof( axiom3, axiom, ![Varf, VarA, VarB]: constcompose(constid(VarA), Varf) = Varf).
+
+% these are object axioms... :(
+% fof( axiom4, axiom, ![VarA, VarB, VarC]: constotimes(constotimes(VarA, VarB), VarC) = constotimes(VarA, constotimes(VarB, VarC))).
+% fof( axiom5, axiom, ![VarA]: constotimes(VarA, constmunit()) = VarA).
+% fof( axiom6, axiom, ![VarA]: constotimes(constmunit(), VarA) = VarA).
+
+fof( axiom7, axiom, ![VarZ, Varf, VarA, VarB, Varh, VarX, VarY, Varg, VarC]: constotimes(constotimes(Varf, Varg), Varh) = constotimes(Varf, constotimes(Varg, Varh))).
+fof( axiom8, axiom, ![VarZ, Varf, VarA, Vark, VarB, Varh, VarX, VarY, Varg, VarC]: constcompose(constotimes(Varf, Varg), constotimes(Varh, Vark)) = constotimes(constcompose(Varf, Varh), constcompose(Varg, Vark))).
+fof( axiom9, axiom, ![VarA, VarB]: constid(constotimes(VarA, VarB)) = constotimes(constid(VarA), constid(VarB))).
+fof( axiom10, axiom, ![VarA, VarB]: constcompose(constbraid(VarA, VarB), constbraid(VarB, VarA)) = constid(constotimes(VarA, VarB))).
+fof( axiom11, axiom, ![VarA, VarB, VarC]: constbraid(VarA, constotimes(VarB, VarC)) = constcompose(constotimes(constbraid(VarA, VarB), constid(VarC)), constotimes(constid(VarB), constbraid(VarA, VarC)))).
+fof( axiom12, axiom, ![VarA, VarB, VarC]: constbraid(constotimes(VarA, VarB), VarC) = constcompose(constotimes(constid(VarA), constbraid(VarB, VarC)), constotimes(constbraid(VarA, VarC), constid(VarB)))).
+fof( axiom13, axiom, ![Varf, VarA, VarD, VarB, Varg, VarC]: constcompose(constotimes(Varf, Varg), constbraid(VarB, VarD)) = constcompose(constbraid(VarA, VarC), constotimes(Varg, Varf))).
+fof( axiom14, axiom, ![VarA]: constcompose(constmcopy(VarA), constotimes(constmcopy(VarA), constid(VarA))) = constcompose(constmcopy(VarA), constotimes(constid(VarA), constmcopy(VarA)))).
+fof( axiom15, axiom, ![VarA]: constcompose(constmcopy(VarA), constotimes(constdelete(VarA), constid(VarA))) = constid(VarA)).
+fof( axiom16, axiom, ![VarA]: constcompose(constmcopy(VarA), constotimes(constid(VarA), constdelete(VarA))) = constid(VarA)).
+fof( axiom17, axiom, ![VarA]: constcompose(constmcopy(VarA), constbraid(VarA, VarA)) = constmcopy(VarA)).
+fof( axiom18, axiom, ![VarA, VarB]: constmcopy(constotimes(VarA, VarB)) = constcompose(constotimes(constmcopy(VarA), constmcopy(VarB)), constotimes(constotimes(constid(VarA), constbraid(VarA, VarB)), constid(VarB)))).
+fof( axiom19, axiom, ![VarA, VarB]: constdelete(constotimes(VarA, VarB)) = constotimes(constdelete(VarA), constdelete(VarB))).
+fof( axiom20, axiom, constmcopy(constmunit()) = constid(constmunit())).
+fof( axiom21, axiom, constdelete(constmunit()) = constid(constmunit())).
+fof( axiom22, axiom, ![Varf, VarA, VarB, Varg, VarC]: constpair(Varf, Varg) = constcompose(constmcopy(VarC), constotimes(Varf, Varg))).
+fof( axiom23, axiom, ![VarA, VarB]: constproj1(VarA, VarB) = constotimes(constid(VarA), constdelete(VarB))).
+fof( axiom24, axiom, ![VarA, VarB]: constproj2(VarA, VarB) = constotimes(constdelete(VarA), constid(VarB))).
+fof( axiom25, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constmcopy(VarB)) = constcompose(constmcopy(VarA), constotimes(Varf, Varf))).
+fof( axiom26, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constdelete(VarB)) = constdelete(VarA)).
+
+fof( q, conjecture,  ![VarA,VarB] : constpair(constproj1(VarA,VarB), constproj2(VarA,VarB)) = constotimes( constid(VarA), constid(VarB) )  ).

@@ -1,0 +1,2 @@
+tff(example,conjecture, ? [X:$int,Y:$int]:
+$greatereq($sum(X,Y),0)).

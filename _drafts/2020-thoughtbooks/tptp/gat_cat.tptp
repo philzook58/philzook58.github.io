@@ -1,0 +1,27 @@
+
+% A very literal translation from the GAT signature.
+% ⊣ becomes <= first order implication
+% typing is internalized into the theory
+
+% tt is a special value for TYPE
+%fof(type_hom,  axiom,  ![A,B] : (ty(hom(A,B)) = tt <= (ty(A) = ob & ty(B) = ob))).
+%fof(type_ob,   axiom,  ty(ob) = tt).
+
+
+fof(type_id, axiom, ![A] : ((ty(id(A)) = hom(A,A)) <=  (ty(A) = ob))).
+%fof(type_comp , axiom, ![F,G,A,B,C] : ((ty(comp( F,G )) = hom(A,C)) <= (ty(A) = ob &  ty(B) = ob  &  ty(C) = ob  &  ty(F) = hom(A,B)  &  ty(G) = hom(B,C)))).
+
+
+%fof( comp_assoc , axiom,  ! [F,G,H,A,B,C,D] : (comp(comp(F,G),H) = comp(F,comp(G,H)) <= (ty(A) = ob & ty(B) = ob & ty(C) = ob & ty(D) = ob & ty(F) = hom(A,B) & ty(G) = hom(B,C) & ty(H) = hom(C,D)))).
+fof( id_left, axiom,  ![A,B,F] : ((comp(id(A),F) = F) <= (ty(A) = ob & ty(B) = ob & ty(F) = hom(A,B)))).
+%fof( id_right, axiom, ![A,B,F] : (comp(F,id(B)) = F <= (ty(A) = ob & ty(B) = ob & ty(F) = hom(A,B)))).
+
+
+%fof( id_simp, conjecture, ![A] : ((comp(id(A),id(A)) = id(A)) <= (ty(A) = ob & ty(id(A)) = hom(A,A)))).
+%fof( id_simp, conjecture, ![A] : ((comp(id(A),id(A)) = id(A)) <= (ty(A) = ob))).
+%fof( id_exists, conjecture, ![A] : ? [F] : ![G, B] :  ((comp(F,G) = G) <=  ( ty(F) = hom(A,A) & ty(A) = ob & ty(G) = hom(A,B) & ty(B) = ob )  ) ).
+fof( id_exists, conjecture,  ? [F] :  ((comp(F,g) = g) <=  ( ty(F) = hom(a,a) & ty(a) = ob & ty(g) = hom(a,b) & ty(b) = ob )  ) ).
+
+% ## SZS status Theorem
+% # SZS answers Tuple [([id(a)]|[X1]|[X2]|[X3])|_]
+% sure looks like it "found" id(a)

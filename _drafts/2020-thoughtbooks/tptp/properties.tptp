@@ -1,0 +1,78 @@
+
+
+include('cat.tptp').
+
+%fof(monic_def, axiom,  
+%    ![M] : (monic(M) <=> (! [F,G,MF,MG] : ((comp(M, F, MF) & comp(M,G,MG) & MF = MG & dom(F) = dom(G) & cod(F) = cod(G)) => F = G)))).
+
+fof(monic_def, axiom,  
+    ![M] : (monic(M) <=> (! [F,G] : (( ? [H] : (comp(M, F, H) & comp(M,G,H))) => F = G)))).
+
+
+fof(iso_def, axiom, ![F] : (iso(F) <=> (? [G] : (comp(F,G,dom(G)  ) & comp(G,F,dom(F)) ) ) )).
+
+% The scope matters.
+%fof(epic_def, axiom ,  
+%    ![E, F, G, H] : (epic(E) <=> ((comp(F, E, H) & comp(G,E,H)) => F = G))).
+
+fof(commute_square_def, axiom, 
+    ![F,G,H,K] : (commute_square(F,G,H,K) <=> (? [M] : (comp(F,G,M) & comp(H,K,M))))).
+
+%fof(product_def, axiom,
+%    ![X,Y,Z,P1,P2] : product(X, Y, Z, P1, P2) <=> 
+%        (cod(P1) = X & cod(P2) = Y & dom(P1) = Z & dom(P2) = Z) &
+%        ![F,G] : ((cod(F) = X & cod(G) = Y & dom(F) = dom(G)) =>
+%            ?[FG] : comp(FG,P1,F) & comp(FP,P2,G))
+%    ).
+
+%fof(pullback_def, axiom,
+%   ![F,G,P1,P2] : (pullback(F,G,P1,P2) <=> % actually commute square might already imply everything
+%        ((dom(P1) = dom(P2) & cod(P1) = dom(F) & cod(P2) = dom(F) & cod(F) = cod(G) & commute_square(F,P1,G,P2)) &
+%        (![Q1,Q2] : ((dom(Q1) = dom(Q2) & cod(Q1) = cod(P1) & cod(Q2) = cod(P2) & commute_square(F,Q1,G,Q2)) => 
+%            (?[U] :  (comp(P1,U,Q1) & comp(P2,U,Q2)))))))).
+
+
+fof(pullback_def, axiom,
+   ![F,G,P1,P2] : (pullback(F,G,P1,P2) <=>
+        (commute_square(F,P1,G,P2) &
+        (![Q1,Q2] : (commute_square(F,Q1,G,Q2) => 
+            (?[U] : (! [U1] : ((comp(P1,U1,Q1) & comp(P2,U1,Q2)) <=> (U1 = U))))
+        ))))).
+
+        %           ?[U] : (comp(P1,U,Q1) & comp(P2,U,Q2) & 
+        %              ( ! [U1] : ((comp(P1,U1,Q1) & comp(P2,U1,Q2) ) => U1 = U))))))).
+
+fof(pullback_monic, conjecture, ![M, F, P1,P2] : ((monic(M) & pullback(F,M,P1,P2)) => monic(P1))).
+
+%fof(pullback_monic, conjecture, ![M, P1,P2] : ((monic(M) & pullback(cod(M),M,P1,P2)) => monic(P1))).
+
+% could I be stating the theorem wrong?
+%fof(pullback_monic, conjecture, ![M, F, P1,P2] : ((iso(M) & pullback(F,M,P1,P2)) => iso(P1))).
+
+%fof(pullback_id, conjecture, ![F] : pullback(F,cod(F), dom(F) , F )).
+%fof(pullback_id, conjecture, ![F] : pullback(cod(F),cod(F), cod(F) , cod(F) )).
+
+%fof(pullback_square, conjecture, ![M, F, P1,P2] : (pullback(F,M,P1,P2) => commute_square(M,P2,F,P1))).
+%fof(pullback_square, conjecture, ![M, F, P1,P2] : (pullback(F,M,P1,P2) => commute_square(M,P2,F,P1))).
+
+%fof(id_monic, conjecture, ![F] : monic(dom(F))).
+%fof(id_monic, conjecture, ![F] : monic(cod(F))).
+
+
+% fof(iso_monic, conjecture, ![F, G] :  ((   comp( F,G,dom(G)) & comp(G,F, dom(F) )  ) =>  monic(G) )   ).
+% fof(iso_monic, conjecture, ![F, G] :  ((   comp( F,G,dom(G)) )   =>  monic(G) )   ).
+
+
+
+%fof( pasting_square,conjecture,   ![A,B,C,D, I,J,K, BI, CJ] : ((square_commute(A,B,C,D) & square_commute(D,I,J,K) & comp(B,I, BI) & comp( C, J,CJ)) 
+%                                                        =>  square_commute( A,BI, CJ,K ) )).
+
+%fof(pullback_monic, conjecture, ![M] : (monic(M)  => (![F,P1,P2] : (pullback(F,M,P1,P2) => monic(P1))))).
+%fof(what, conjecture, $true).
+
+% fof(cat_is_cartesian, axiom, ![X,Y] : ? [Z, P1, P2] : product(X,Y,Z,P1,P2) ).
+% fof( def_prod,func, axiom : ![X,Y] : product( X,Y,prodZ(X,Y), prodp1(X,Y), prodp1(X,Y)  )).
+% same thing though since cat is cartesian gets skolemised.
+
+
+

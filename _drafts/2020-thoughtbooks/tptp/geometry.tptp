@@ -1,0 +1,30 @@
+
+
+
+
+
+fof( sup_symm , axiom, supp(A,B) <=> supp(B, A)  ) % one way? Should be able to prove 2 way from one way
+fof( sup_trans , axiom, (supp(A,B) & supp (B,C)) => (C = A)  ) % use = as congruence
+
+
+% true for any relation not just supp
+%fof( sup_trans , axiom, (supp(A,B) &  A = C) => supp(C,B)  )
+
+% sup-lements of confruent angles are congurent
+% fof(conjecture,    (supp(A,B) & supp(C,D) &  A = C) => B = D  )
+
+
+% sum(a,b,c)  % angle sum. axiomatization of addition basically. 
+% sum(A, zero, A)
+% sum(zero, A, A)
+% sum(A,B,C) <=> sum(B,A,C)
+% assoicatiovty 
+% complementary(a,b) = sum(a,b,ninety)
+% supplementary(a,b) <=> sum(A,B,oneeighty)
+% sum(ninety,ninety, oineeighty)
+% 
+
+% bisect(A,B) <=> sum(A,A,B)
+
+% vertical angle theorem. But this is an axiom basically of supplementary, unless I define supplemnatary in terms of sum
+% sup(A,B) & sup(B,C) => C = A 

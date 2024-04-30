@@ -1,0 +1,16 @@
+fof( axiom1, axiom, ![Varf, VarA, VarD, VarB, Varh, Varg, VarC]: constcompose(constcompose(Varf, Varg), Varh) = constcompose(Varf, constcompose(Varg, Varh))).
+fof( axiom2, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constid(VarB)) = Varf).
+fof( axiom3, axiom, ![Varf, VarA, VarB]: constcompose(constid(VarA), Varf) = Varf).
+fof( axiom4, axiom, ![Varf, VarA, VarB, Varg, VarC]: constpair(Varf, Varg) = constcompose(constmcopy(VarC), constotimes(Varf, Varg))).
+fof( axiom5, axiom, ![VarA, VarB]: constproj1(VarA, VarB) = constotimes(constid(VarA), constdelete(VarB))).
+fof( axiom6, axiom, ![VarA, VarB]: constproj2(VarA, VarB) = constotimes(constdelete(VarA), constid(VarB))).
+fof( axiom7, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constmcopy(VarB)) = constcompose(constmcopy(VarA), constotimes(Varf, Varf))).
+fof( axiom8, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constdelete(VarB)) = constdelete(VarA)).
+
+fof( axiom9, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constdelete(VarB)) = constdelete(VarA)).
+
+%fof( q, conjecture, ![Varf, Varh, Varg, Varj ]: constcompose(constcompose(constcompose(Varf, Varg), Varh), Varj) = constcompose(Varf, constcompose(Varg, constcompose(Varh,Varj)) )).
+fof( q, conjecture,  ![VarA,VarB] : constpair(constproj1(VarA,VarB), constproj2(VarA,VarB)) = constotimes( constid(VarA), constid(VarB) )  ).
+
+
+%pair(proj1(A,B), proj2(A,B)) = otimes(id(A), id(B))

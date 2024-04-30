@@ -1,0 +1,166 @@
+- I like code.
+- What means anything
+- compute can still be a very abstract word
+
+### language
+
+Going between any of these communities is tremendous culture shock
+
+languagee shapes minds. 
+
+# hasdkell
+- Cut my teeth in Haskell. Stuck in a particular style and analogy. It is beautiful because composition becomes well typed. But this is also constraining
+
+By this I include agda idirs and coq,
+maybe ocaml
+
+- There's more than one way to bake a fish
+- I found it extremely freeing to try to use
+
+- Very remniscent of well typed linear algerba.
+- Functors and map. Kind of a problem.
+
+- Constrained Categories
+
+## Julia
+
+Julia is acceptable to the scientific and engieering community in a way that Haskell is not. I was entranced by Haskell, but I am an irresponsible POS
+
+- Julia is acceptable to the scientific and engieering community in a way that Haskell is not. I was entranced by Haskell, but I am an irresponsible POS
+- Catlab has critical mass
+- Julia has the ability tyo implement novel algorithms at acceptable speed.
+- Community with really interesting ideas and open to others.
+
+I'm not using idiomatic Julia persay. I kind of avoided the feature that is it's main claim to fame: mutliple dispatch. 
+It's a way of achieving overloading
+
+
+## flat representation 
+
+Interesting structures only occur by not collapsing these notions. Are finite sets the same thing as an integer?
+Equality vs isomorphism
+
+Using tuples, we represented the monoidal product, however it can be useful to flatten this structure, making the product associative on the nose rather thanm just an isomorphism. This gives useful canonical forms and flattens an unnecessary pointer indirection.
+
+It is not all rosy though.
+
+
+head = x -> x[1]
+tail = x -> x[2:end]
+slice(a,b) = x -> x[a:b]
+fst(x::Ob{(A,B)}) where {A,B} = x[1:A]
+
+## matrices
+
+- 2 common choices for a monoidal product
+  - Direct product - This why lies quantum mechanics and probability
+  - Direct Sum - Considered more rarely. More approrpate for linear dynamical systems.
+  
+There is a well known category of matrices that uses the Kronecker product as it's monoidal product. 
+I am going to use an alternative monoidal product though, the direct sum.
+
+https://github.com/AlgebraicJulia/Catlab.jl/blob/master/src/categorical_algebra/Matrices.jl
+# Block diagonal only implemented for sparse matrices.
+blockdiag(A::AbstractMatrix...) = cat(A..., dims=(1,2))
+
+
+
+# automatic diff
+
+The point of putting the backwards pass function where it is to to close over the input variable. If you closure convert the lens, it takes this form
+
+This is the existential form of a lens
+Exsitetnail types have something to do with object oriented programming. backwards : e -> dy -> dx
+
+If you defunctionalize instead you get a data structure. This is a Wengert tape data structure.
+
+## symboilic differentiation
+d(id) = id
+d(oplus(f,g))
+d(compose(f,g)) = compose(d(f), f(g)) # but no. This isn't right.
+
+
+# Dual numbers
+
+# Cotangent spaces
+
+# Relations
+
+composition is an inner join
+
+This is a sprase array representation of a boolean valued matrix.
+You can consider a dense matrix, and it is conceptually convenient to do so. Perhaps computationally convenenit
+interval pacing and adjunctions
+
+
+#Linear relations
+
+Linear relations are an abstraction at a similar level of power as linear maps
+And roughly equally exectuable
+
+linear equations are everywqhere
+1. We want things to be linear because it is an understandable domain
+2. Things are sometimes smooth and sometimes only lightly nonlinear at the scale we care about
+
+My canonical example here is circuits
+Things connected by linear relations are usually deomcposably connected.
+This is because of the low dimensionality of space 1,2,3
+
+We can collect up a pile of linear equations until eventually they describe a subspace of size 0, a point, a solution
+
+
+
+Generators and relations
+
+
+# Layin all out there
+You can often lay out an entire computation lazily.
+This almost amounts to just recording the computation and doing nothing
+We can internalize the equality constraint
+Sometimes this is really useful as you can count on a good solver to not do stupid stuff that you might
+
+This brings us to our next chapter
+
+
+
+
+%%shell
+set -e
+
+#---------------------------------------------------#
+JULIA_VERSION="1.5.2" # any version ≥ 0.7.0
+JULIA_PACKAGES="IJulia BenchmarkTools Plots"
+JULIA_PACKAGES_IF_GPU="CuArrays"
+JULIA_NUM_THREADS=2
+#---------------------------------------------------#
+
+if [ -n "$COLAB_GPU" ] && [ -z `which julia` ]; then
+  # Install Julia
+  JULIA_VER=`cut -d '.' -f -2 <<< "$JULIA_VERSION"`
+  echo "Installing Julia $JULIA_VERSION on the current Colab Runtime..."
+  BASE_URL="https://julialang-s3.julialang.org/bin/linux/x64"
+  URL="$BASE_URL/$JULIA_VER/julia-$JULIA_VERSION-linux-x86_64.tar.gz"
+  wget -nv $URL -O /tmp/julia.tar.gz # -nv means "not verbose"
+  tar -x -f /tmp/julia.tar.gz -C /usr/local --strip-components 1
+  rm /tmp/julia.tar.gz
+
+  # Install Packages
+  if [ "$COLAB_GPU" = "1" ]; then
+      JULIA_PACKAGES="$JULIA_PACKAGES $JULIA_PACKAGES_IF_GPU"
+  fi
+  for PKG in `echo $JULIA_PACKAGES`; do
+    echo "Installing Julia package $PKG..."
+    julia -e 'using Pkg; pkg"add '$PKG'; precompile;"'
+  done
+
+  # Install kernel and rename it to "julia"
+  echo "Installing IJulia kernel..."
+  julia -e 'using IJulia; IJulia.installkernel("julia", env=Dict(
+      "JULIA_NUM_THREADS"=>"'"$JULIA_NUM_THREADS"'"))'
+  KERNEL_DIR=`julia -e "using IJulia; print(IJulia.kerneldir())"`
+  KERNEL_NAME=`ls -d "$KERNEL_DIR"/julia*`
+  mv -f $KERNEL_NAME "$KERNEL_DIR"/julia  
+
+  echo ''
+  echo "Success! Please reload this page and jump to the next section."
+fi

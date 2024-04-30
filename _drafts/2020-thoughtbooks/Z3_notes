@@ -1,0 +1,53 @@
+
+
+In an ideal world, computers would understand us better than we understand ourselves.
+
+The formal languages of mathematics and logic were developed to raise the level of precision and 
+obtainable in those fields.
+
+It is not unreasonable that these languages are a good starting point for specifying
+ and understanding precise models of what software does.
+ To borrow the methods, tools, and culture of these fields as a starting point.
+
+Code is already precise.
+
+A good specification for a program is precise, succinct, and removes all "unnecessary" detail.
+The purpose of this is so that the specification can be debugged more easily than the full implementation.
+And yes, specifications need to be debugged similarly to how code does?
+
+Declarative programming results when a system derives it's implementation from a specification like language
+
+Formal methods does typically require implementing a specification and an implementation. So in some sense it is double the work
+
+Part of the goal of research in this field is to reduce the burden. Make both tasks easier and interleave into a single task.
+
+
+Comments are to some degree an indication of a gap between the intent of the programmer and what the code actually implies.
+
+Comments can be an english translation of literally what a spec says.
+
+It is not a silver bullet
+
+- Many business problems are so poorly defined as to make specification impossible
+- Expensive
+- Slow
+- Hard
+
+When do it
+- Human life on the line
+- Millions or billions of dollars on the line
+- For fun.
+
+Alternatives?
+- Certification processes
+
+
+What is Z3?
+
+Z3 is a program that understands queries phrased in a particular language of mathematics and logic.
+It can tell the validity of simple logic puzzles, run circuits backwards, solve sudokus, and bash bits.
+It is highly optimized to be performant and designed to be particarly suitable for the needs of software verification.
+
+Nadia's video
+Course by Kuper
+ http://composition.al/blog/2020/09/20/course-retrospective-smt-solving-and-solver-aided-systems/

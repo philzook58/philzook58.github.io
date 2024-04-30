@@ -1,0 +1,95 @@
+fof( axiom8, axiom, ![VarZ, Varf, VarA, Vark, VarB, Varh, VarX, VarY, Varg, VarC]: ((constcompose(constotimes(Varf, Varg), constotimes(Varh, Vark)) 
+    = constotimes(constcompose(Varf, Varh), constcompose(Varg, Vark))) <= (typo(VarZ, constOb) &
+	typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(Vark, constHom(VarY, VarZ)) &
+	typo(VarB, constOb) &
+	typo(Varh, constHom(VarB, VarC)) &
+	typo(VarX, constOb) &
+	typo(VarY, constOb) &
+	typo(Varg, constHom(VarX, VarY)) &
+	typo(VarC, constOb)))).
+
+ %   fof( q, conjecture, ![VarZ, Varf, VarA, Vark, VarB, Varh, VarX, VarY, Varg, VarC]: ((constcompose(constotimes(Varf, Varg), constotimes(Varh, Vark)) = constotimes(constcompose(Varf, Varh), constcompose(Varg, Vark))) <= (typo(VarZ, constOb) &
+%	typo(Varf, constHom(VarA, VarB)) &
+%	typo(VarA, constOb) &
+%	typo(Vark, constHom(VarY, VarZ)) &
+%	typo(VarB, constOb) &
+%	typo(Varh, constHom(VarB, VarC)) &
+%	typo(VarX, constOb) &
+%	typo(VarY, constOb) &
+%	typo(Varg, constHom(VarX, VarY)) &
+%	typo(VarC, constOb)))).
+
+fof( type_axiom2 , axiom, 
+                    ![Varf,VarA,VarB,Varg,VarC]: 
+                        (typo( constcompose(Varf, Varg) , constHom(VarA, VarC) ) <=
+                            (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb) &
+	typo(Varg, constHom(VarB, VarC)) &
+	typo(VarC, constOb))) ).
+
+fof( type_axiom3 , axiom, 
+                    ![VarA,VarB]: 
+                        (typo( constotimesO(VarA, VarB) , constOb ) <=
+                            (typo(VarA, constOb) &
+	typo(VarB, constOb))) ).
+
+fof( type_axiom4 , axiom, 
+                    ![Varf,VarA,VarD,VarB,Varg,VarC]: 
+                        (typo( constotimes(Varf, Varg) , constHom(constotimesO(VarA, VarC), constotimesO(VarB, VarD)) ) <=
+                            (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarD, constOb) &
+	typo(VarB, constOb) &
+	typo(Varg, constHom(VarC, VarD)) &
+	typo(VarC, constOb))) ).
+
+
+fof( type_axiom7 , axiom, 
+                    ![VarA]: 
+                        (typo( constmcopy(VarA) , constHom(VarA, constotimesO(VarA, VarA)) ) <=
+                           (typo(VarA, constOb))) ).
+
+% 45 seconds with this in!
+%fof( type_axiom8 , axiom, 
+%                    ![VarA]: 
+%                        (typo( constdelete(VarA) , constHom(VarA, constmunit) ) <=
+%                            (typo(VarA, constOb))) ).
+
+% This shitter is just generating theorems about typing.
+% ok, i could avoid a lot of need for typing if I pregenerate a ton of typings.
+
+
+%fof( type_axiom1 , axiom, 
+%                   ![VarA]: 
+%                        (typo( constid(VarA) , constHom(VarA, VarA) ) <=
+%                            (typo(VarA, constOb))) ).
+
+fof( type_axiom5 , axiom, typo( constmunit , constOb ) ).
+
+fof( q, conjecture,  ![A,B]: (
+      constcompose(constotimes(constmcopy(A), constmcopy(B))  ,
+                constotimes(constotimes( constid(A) , constdelete(A)) , constotimes( constdelete(B)  , constid(B)) ) )
+      = 
+     constotimes(constcompose(constmcopy(A), constotimes( constid(A), constdelete(A) ))   ,
+       constcompose(constmcopy(B), constotimes( constdelete(B), constid(B) )))
+
+ <= ( typo(A, constOb) & typo(B, constOb) 
+ & typo(constid(A), constHom(A,A))
+  & typo(constid(B), constHom(B,B)) 
+ & typo(constmcopy(B), constHom(B, constotimesO(B,B)))
+ & typo(constmcopy(A), constHom(A, constotimesO(A,A)))    
+ & typo( constdelete(A) , constHom(A, constmunit) )  
+ & typo( constdelete(B) , constHom(B, constmunit) )  
+ & typo( constotimes( constid(A) , constdelete(A))  , constHom( constotimesO( A , A )  ,  constotimesO( A , constmunit)  )   )
+ & typo( constotimes( constdelete(B)  , constid(B))  , constHom( constotimesO(B , B )  ,  constotimesO( constmunit, B)  )   )
+ 
+ )  )).
+
+
+
+%   <= ( typo(A, constOb) & typo(B, constOb)   )  ))  .
+
+%fof( q, conjecture,  x = x).

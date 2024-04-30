@@ -1,0 +1,45 @@
+%fof( axiom1, axiom, ![Varf, VarA, VarD, VarB, Varh, Varg, VarC]: constcompose(constcompose(Varf, Varg), Varh) = constcompose(Varf, constcompose(Varg, Varh))).
+%fof( axiom2, axiom, ![Varf, VarA, VarB]: constcompose(Varf, constid(VarB)) = Varf).
+%fof( axiom3, axiom, ![Varf, VarA, VarB]: constcompose(constid(VarA), Varf) = Varf).
+
+% Yeah.. I made all id equal each other. 
+% This is crap.
+%
+%fof( q, conjecture,  ![VarA,VarB] : constid(VarA) = constid(VarB)).
+%fof( q, conjecture,  constid(a) = constid(a)).
+
+
+fof( taxiom1 , axiom, 
+![VarA]: 
+    (typo( constid(VarA) , constHom(VarA, VarA) ) <=
+        (typo(VarA, constOb))) ).
+fof( taxiom2 , axiom, 
+![Varf,VarA,VarB,Varg,VarC]: 
+    (typo( constcompose(Varf, Varg) , constHom(VarA, VarC) ) <=
+        (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb) &
+	typo(Varg, constHom(VarB, VarC)) &
+	typo(VarC, constOb))) ).
+
+
+fof( axiom1, axiom, ![Varf, VarA, VarD, VarB, Varh, Varg, VarC]: (constcompose(constcompose(Varf, Varg), Varh) = constcompose(Varf, constcompose(Varg, Varh)) <= (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarD, constOb) &
+	typo(VarB, constOb) &
+	typo(Varh, constHom(VarC, VarD)) &
+	typo(Varg, constHom(VarB, VarC)) &
+	typo(VarC, constOb)))).
+fof( axiom2, axiom, ![Varf, VarA, VarB]: (constcompose(Varf, constid(VarB)) = Varf <= (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb)))).
+fof( axiom3, axiom, ![Varf, VarA, VarB]: (constcompose(constid(VarA), Varf) = Varf <= (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb)))).
+
+%fof( q, conjecture,  ![VarA,VarB] : (constid(VarA) = constid(VarB) <=  (  typo(VarA,constOb) & typo(VarB, constOb) ) )).
+%fof( q, conjecture,  0 = 1 ).
+% ok vampire says this is no longer a theorem
+
+% what else could I check?
+% tripl composition

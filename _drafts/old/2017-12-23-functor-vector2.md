@@ -5,7 +5,7 @@ date:   2017-12-21 19:27:12 -0400
 categories: haskell quantum linear
 ---
 
-There is an interesting interplay between category theory, logic, computer science, topology, and physics. 
+There is an interesting interplay between category theory, logic, computer science, topology, and physics.
 
 Woah. That's heavy, man.
 
@@ -14,14 +14,13 @@ I suppose this entire article is in my meager way emulating the spirit of the Ro
 
 Vectors are a ubiquitous notion in science and engineering and mastery of them pays off. Vectors are the mathematical language necessary to describe quantum mechanics.
 
-Vectors are almost entirely synonymous with arrays for numerical purposes. 
+Vectors are almost entirely synonymous with arrays for numerical purposes.
 
 This is unfortunate and mind closing, similar to saying that programming is only assembly language. It is indeed true that a vector expressed in an array form will be the fastest on actual computer hardware, but for a sophisticated application the inherent complication requires powerful abstractions in order for mere mortals to be able to grapple with the problem.
 
 WARNING: This article is NOT about using high performance vectors of this type. For that I forward you to the libraries vector, hmatrix, accelerate, and repa.
 
 I am giving myself the leeway to not worry about performance until much later in the series and frankly it is not my primary concern.
-
 
 Given that I am explicitly ignoring performance, fully demonstrating that I am an out of touch functional programmer that doesn't work on anything real, why should you still give a shit what I have to say?
 
@@ -33,21 +32,19 @@ So that said, let's go on a journey that touches almost every Haskell concept I 
 
 Please contact me with any suggestions. This article will forever be a work in progress.
 
-
 ## Baby Bear, Momma Bear, and Papa Bear Vectors
 
 I'd like to sketch an important classification between different vector spaces.
 
-The way I see it, there are three broad classes of numerical vectors, classified basically by their size. One can talk about the asymptotic size of vector spaces in terms of some natural parameter, similarly to how one classifies the complexity of algorithms. 
+The way I see it, there are three broad classes of numerical vectors, classified basically by their size. One can talk about the asymptotic size of vector spaces in terms of some natural parameter, similarly to how one classifies the complexity of algorithms.
 
 There are baby vectors, vectors of a constant size $O(1)$. These are the 2,3, and 4 dimensional vectors that are intensely useful for geometry and physics and the first ones you usually learn. These are the vectors of displacement or rotations, forces and momentums. These kinds of vectors are pretty intuitive (they are little arrows we can draw), have great visualizations, and very interesting specialized techniques like Geometric Algebra or quaternions.
 
 The next level up are the medium vectors, polynomial in size $O(n^d)$. The vectors represent classical fields in the physics sense of the word, like displacement fields or the electromagnetc field. They have a couple numbers for every point in a discretized space. So $n$ is the number of lattice points in one direction and $d$ is the dimensionality for example. These are the vectors you use when you are doing finite element simulations for simulating the flexing of a plane wing or fluid flow around a dog and are the vectors for which the typical applications of numerical linear algebra lie. Another exmaple of vectors of this size is noisy collected data that you want to perform a least squares fit on. Basically, almost everything in commonplace engineering and science falls into this category that isn't a use of baby vectors.
 
-The BIG vectors are the vectors that represent many-body quantum mechanics, quantum field theory or similarly the probability distributions of many correlated variables. These Mondo vectors grow exponentially $O(2^n)$ in the problem size, where n may be the number of particles or number of random variables. The Kronecker product is of paramount importance here, giving you a method to docompose these vectors in terms of simpler, smaller pieces. 
+The BIG vectors are the vectors that represent many-body quantum mechanics, quantum field theory or similarly the probability distributions of many correlated variables. These Mondo vectors grow exponentially $O(2^n)$ in the problem size, where n may be the number of particles or number of random variables. The Kronecker product is of paramount importance here, giving you a method to docompose these vectors in terms of simpler, smaller pieces.
 
 The ultimate goal of this series is to ascend a sequence of abstraction to get a good handle on these BIG vectors and a focus on the Kronecker product.
-
 
 ## Vectors as Functors on the Basis Type and the Linear Monad
 
@@ -62,6 +59,7 @@ newtype LVec number basis = LVec {runLVec :: [(basis,number)]}.
 I consistently feel a pull to abstract further from this type, but it is so convenient, and it is built in terms of some of the most basic Haskell constructs, pairs and lists. Let us use this type as our starting point.
 
 We can easily define vector addition and scalar multiplication for this data type.
+
 ```haskell
 vadd = ++
 smult s = LVec . fmap \(b,n) -> (b, s * n) . runLVec
@@ -69,11 +67,11 @@ smult s = LVec . fmap \(b,n) -> (b, s * n) . runLVec
 
 It is a touch goofy that we don't collect terms of the same basis element under addition. This would happen automatically if we were to use HashMaps.
 
-There are two choices for what we want this type to be a functor in, and either are useful, however the choice we make at this time is a functor in the basis type. What we have then is the Free Vector space over the basis. By Free, I mean that every basis element is linearly independent. 
+There are two choices for what we want this type to be a functor in, and either are useful, however the choice we make at this time is a functor in the basis type. What we have then is the Free Vector space over the basis. By Free, I mean that every basis element is linearly independent.
 
 ``` haskell
 instance Functor (LVec n) where
-	fmap f = LVec . fmap (\(b,n) -> (f b, n)) . runLVec 
+ fmap f = LVec . fmap (\(b,n) -> (f b, n)) . runLVec 
 ```
 
 The Functor instance allows us to fmap functions on the basis to linear extensions. These are basically permutation matrices.
@@ -87,8 +85,8 @@ directProd :: forall a b. (LVec a f, LVec b f) -> LVec (a,b) f
 directSum :: forall a b. (LVec a f, LVec b f) -> LVec (Either a b) f
 ```
 
-
 ### Linear Monad
+
 One wants to enforce that vectors are to only be acted upon linearly. One can achieve this through a monad pattern, similar to how the monad pattern protects stateful code from leaking into pure code.
 
 I do not know that Piponi invented this concept, in fact I think he did not, but his execellent blog articles certainly popularize it.
@@ -103,10 +101,8 @@ Another perspective is that the type signature `a -> m b` should be viewed as `a
 type LinOp = basis -> LVec basis number
 ```
 
-
 One way to define a linear map is to define it's action on the basis elements. The entire linear map is then defined uniquely by demanding linearity. $A(a \hat{e}_1 + b \hat{e}_2)=a A\hat{e}_1 + b A \hat{e}_2$ This is very common.
 The repetitive pipework that this monad abstracts over is the breaking up of a vector into it's basis elements, using the definition of the linear operator on those, then multiplying by the component of that basis elements and summing the entire result.
-
 
 ``` haskell
 instance (Num n) => Monad (Vec n) where
@@ -131,7 +127,7 @@ The arrow (->) is also known as the Reader functor in Haskell terminology. The c
 
 ### Direct Sum and Product
 
-There are a number of common Haskell combinators that we can use 
+There are a number of common Haskell combinators that we can use
 
 ```haskell
 directsum :: Vec a c -> Vec b c -> Vec (Either a b) c
@@ -143,7 +139,7 @@ directproduct u v = \(x, y) -> (u x) * (v y)
 
 ### Dual Vectors
 
-The Dual of vectors are linear valued functions of vectors. 
+The Dual of vectors are linear valued functions of vectors.
 
 ``` haskell
 type Dual v number = v -> number  
@@ -153,22 +149,20 @@ This is an interesting higher-order function given that vectors are functions.
 It converts the basis from contravariant to covariant position. Check out this Phil Freeman talk for more. Every time you cross into the arguments of a higher order function, you flip between contravariant and covariant. Or more mechanically, every time you cross a ) and then an -> going from right to left you flip.
 Contravariant functors consume their arguments while covariant functors in some sense produce or hold them. In this case the dual vector will produce basis elements to hand to the vector and then manipulate the produced coefficients linearly.
 
-It's interesting that the dual of the dual converts back to contravariant position. 
+It's interesting that the dual of the dual converts back to contravariant position.
 
 and in fact there is a natural sense in which the ```Dual Dual ~ Id```
 
 ```forall t. ((a -> t) -> t) -> n ~ a -> n```
 
-This is an example of the use of the Yoneda Lemma which states that 
+This is an example of the use of the Yoneda Lemma which states that
 ```forall t. (a -> t) -> f t ~ f a```, in this case ```f = Id```.
 
-Taking the Dual twice brings us back to a Covariant Functor, so it is not insane that 
-
+Taking the Dual twice brings us back to a Covariant Functor, so it is not insane that
 
 We see here a tantalizing connection between the covariant and contravariant notion in Functors and the same words used in vector context.
 
 There is a sensible manner in which the Dual Dual v is isomorphic to v itself in a manner that is not dependant on the basis or the field.
-
 
 The dualizing operator IS the metric.
 The metric is an operator that takes two vectors and gives their dot product.
@@ -180,27 +174,31 @@ For finite enumerable types there is a straightforward natural metric
 For quasi-infinite types like a float, we need to specify an integration routine. This is the metric. Dual vectors have the integration routine already built into them.
 
 ### Foldable
+
 (Enum a, Bounded a) => Foldable (a -> a -> f)
-	fold f = fold $ fmap (\x -> f x x) enumerate
+ fold f = fold $ fmap (\x -> f x x) enumerate
 
 trace = fold
 
 (Enum a, Bounded a) => Foldable (a->f) -> (a->f) -> f
-	fold a b = fold $ fmap (\x -> (a x) * (b x)) enumerate
+ fold a b = fold $ fmap (\x -> (a x) * (b x)) enumerate
 
-	Foldable (a->f, a->f)  where
-	
-
+ Foldable (a->f, a->f)  where
+ 
 ### Linear Operators
+
 The most straightforward implementation of a linear operator is just as a plain function from vectors to vectors.
+
 ```haskell
 type LinOp a b c = Vec a c -> Vec b c
 ```
+
 Compared to the Linear monad, it is disappointing that this does not enforce linearity in the slightest, but it is very simple.
 
 ## Category Theory & Vectors
 
-### Other Vectors can be transformed to Functions.
+### Other Vectors can be transformed to Functions
+
 What about vectors data types that aren't literally function types? Well there is a way to transform back and forth between these vectors and functions.
 You can write a function that returns that result of indexing into a vector.
 \i -> v !! i = (!!) v
@@ -208,10 +206,10 @@ and given a finite basis, you can probe all the values and fill the vector out.
 
 To say that a vector is basically (->) basis is to say that vectors are Representable functors with the Representation type given by the basis. This is a Haskell typeclass that corresponds to an equivlanet concept in category theory.
 
-A Category is a set of objects and morphisms. One perspective is that Category theory is a simple formalized theory of functions. You get many of the important properties of functions without looking deeply into their implementation. Functions can be composed if one's codomain matches the other's domain. Certain ways of composing functions may be 
+A Category is a set of objects and morphisms. One perspective is that Category theory is a simple formalized theory of functions. You get many of the important properties of functions without looking deeply into their implementation. Functions can be composed if one's codomain matches the other's domain. Certain ways of composing functions may be
 
-The resource that I learned basically everything I know about category theory is Bartosz Milewski's Category Theory for Programmer's, which I cannot reccomend enough. 
-The category of Sets 
+The resource that I learned basically everything I know about category theory is Bartosz Milewski's Category Theory for Programmer's, which I cannot reccomend enough.
+The category of Sets
 
 The category of Posets is an interesting one.
 The category of inequalities. You can compose inequalities. Functors are inequality preserving maps, in other words mono
@@ -231,9 +229,8 @@ Functors are types that are containers of other types. They may hold one or more
 On the other hand, Functors are a mainfestation of the category theoretical functor. This functor is a mapping between categories, mapping objects to objects and morphisms to morphisms such that it plays nice with the composition of morphisms, i.e. it does not matter whether the composition occurs before or after the mapping.
 parametric type variables are basically a systematic way of treating pointers. How is it possilbe that the function ```id :: forall a. a -> a``` could possibly work for every type a? It is because a is basically a pointer reference and pointers are a uniform description of all possible types. All pointers are 64-bit integers referring to some spot in memory. Later on in your Haskell learns, you find out about other Kinds than \*, like unboxed types. These are not compatible with the types of \* because they are not pointer references and can't be treated the same way.
 
-
-Natural transformations are mappings between functors. 
-Natural transformations are functions of the form 
+Natural transformations are mappings between functors.
+Natural transformations are functions of the form
 ```type Nat f g = forall a. f a -> g a```
 From the container perspective, these are functions that can only rearrange the container structure and not touch the contained objects. They can copy or discard objects.
 Like smushing a ```Tree a``` into a ```List a``` for example.
@@ -241,14 +238,13 @@ If you ever see a bare type parameter not in a functor, mentally add an ```Ident
 
 Limits are objects of type ```forall a. f a```. Since they need to work for any ```a```, they won't have one in there. For example ```Nothing``` is a value ```forall a. Maybe a``` and ```[]``` is a value of ```forall a. [a]```
 
-
-## Representable Functors and Vectors. 
+## Representable Functors and Vectors
 
 There is a pattern with a name in category theory. If a Functor ```f a``` is basically the same thing as the function functor ```b -> a``` (the Reader functor) for some type ```b```, it is called a representable functor. These are very special functors that inherit lots of properties.
 
 A type family is an advanced Haskell topic, although if you're a brave strong dog, it isn't that scary. Type families are a syntax that let's you define type-level functions: functions that you give a type and they output a type. You could already do this with (List a) for example, but now you can pattern match on the type, letting you decide to do very different things if you're given an Int versus a String.
 
-The Rep type family let's you 
+The Rep type family let's you
 There is an interesting idea that perhaps Rep should be called Ln (The natural logarithm, let's not use Log. There are already plenty of Log types for recording errors in a file and stuff). In Haskell, there are sum, product, and function types. There is funky algebra for these types. Let's suppose you had a couple finite enums which you took the sums and products of. How do you calculate the number of possible enum values now? It turns out, very aptly, that you translate Sum types into $+$ and Product types into $\times$. For function types, if you think about it ```(a -> b)``` gets counted as $b^a$. This is because you have b possible choices for every value of a that you give the function.
 Product types have sum types as their representation type. Just like the log of a product is the sum of the logs of the factors. $\ln(abc) = \ln(a) + \ln(b) + \ln(c)$.  
 
@@ -267,35 +263,33 @@ In this case ```f a = ((Rep f) -> a) -> a```
 
 ```tabulate``` is the upper indexed metric $g^{ij}$ and ```index``` is the lower indexed metric $g_{ij}$
 
-We are truly living in sin from a Haskell perspective. This is a fully indexed formulation of taking the inner product. 
-
+We are truly living in sin from a Haskell perspective. This is a fully indexed formulation of taking the inner product.
 
 ## The Kronecker Product
-From the perspective of the basis, this densification operation is actually a natural transformation. For any basis we can densify the product of two vectors into 
+
+From the perspective of the basis, this densification operation is actually a natural transformation. For any basis we can densify the product of two vectors into
+
 ``` haskell
 densify :: forall a b. (Vec a f, Vec b f) -> Vec (a,b) f
 ```
+
 densification is something to be avoided. Every time you densify your space requirements explode.
 What one can do is create a new vector ```Vec (Vec a f, Vec b f) f``` and pray to god.
 
-
 This doesn't feel much like a functor in Haskell.
 
-
 Implanting C as a 1-dimensional vector space. This is the unit object
+
 ``` haskell
 unit :: Vec () f
 ```
 
 vassoc is directly inherited from the associativty of the tuples
+
 ```
 vassoc :: forall a b c. Vec ((a,b),c) f -> Vec (a,(b,c)) f 
 vassoc = fmap assoc
 ```
-
-
-
-
 
 ### String Diagrams for the Kronecker Product
 
@@ -304,8 +298,6 @@ TODO: Graphics for all of these.
 In multidimensional linear algebra, the indices can get out of control. In General relativity, there are a ton
 
 There are also a ton of indices flying around in quantum field theory. A very mathematical perspective on Feynman Diagrams is that they are representating a very complicated multilinear expression with indices flying all over the place. To be perfectly honest, although I think it is clear that something like this is going on, I do not really know how to nail down satisfactorily what vector spaces we're talking about despite having tried for years. The identical particle statistics in partiuclar really fuck up the clarity of the situation.
-
-
 
 It is the fact that in many situations there are corresponding input and output indices that makes Einstein summation convention work. If you ever seen two indices it is understood that you should sum over them.
 
@@ -327,28 +319,27 @@ In some cases, there may be special boxes that you may wish to denote with speci
 
 You can form cups and caps. The caps represent performing an inner product between those two vector lines. There are now less indices that before. Cups are a bit more peculiar. They correspond to kroneckering the metric into the state. This can be useful, for example for representing a maximally entangled pair of states in quantum information.
 
-
-###Monoidal Categories
+### Monoidal Categories
 
 Monoidal categories are categories with some special structure. They possess a couple of associated functor and natural transformations that have to obey certain laws.
 They are a generalization of the structure that appears in vector spaces under the kronecker product. They require a densify operator (which under the right perspective is a functor. This isvery confusing from the Haskell point of view) called the tensor product.
 
-The associativity of the kronecker product translates to 
+The associativity of the kronecker product translates to
 
 What is very interesting though is that if you look at the list of monoidal categories, The category of functors is on there, with morphisms given by natrual transformations. The tensor product is functor composition.
 
-
-## String Diagrams for Functors and Natural Transformations.
+## String Diagrams for Functors and Natural Transformations
 
 <sup>[1](#stringhaskell)</sup>
 
 Functors form a monoidal category with the tensor product given by composition.
 
-
 ### Kan Extensions
+
 Maybe. If I ever understand these and if they are useful.
 
 ### Maybe Ends and CoEnds
+
 If I every understand these and they actually help. There may, ideally, be a connection actual summation of indices.
 
 ## Functor Vector
@@ -359,19 +350,17 @@ Yes, I think so.
 
 We can do that by changing our earlier focus on the interplay etween the vector and it's basis and instead on focusing on the kroncker product.
 
-The functor vector paradigm is that a vector is a functor 
+The functor vector paradigm is that a vector is a functor
 data V a
 where a is a type parameter where we intend to place the other functors.
 
 Vectors are Functors.
-Matrices are Natural Transformations. 
+Matrices are Natural Transformations.
 The Kronecker Product is Functor composition.
 The Direct Sum is Functor Product.
-Vector Summation is perhaps 
+Vector Summation is perhaps
 
 Because of the polymorphic nature of the type, you cannot affect vector deeper in the
-
-
 
 A vector made of many kroncker products is represented by a functor made by the composition of many functors.
 
@@ -381,13 +370,10 @@ You decided how deep into the indices you want to go with  the number of fmaps y
 fmap . fmap . fmap
 ```
 
-
-
-
-
 ### Recovering Ordinary Vectors with Unit ()
 
 ### The Scalar Functor
+
 Any monoid can be lifted to a monad.
 
 This is already in base.
@@ -403,23 +389,23 @@ type Scalar n a = (Product n , a)
 Scalar is a Functor and Monad in ```a``` already with ```join``` given by the monoidal product ```mappend```.
 
 ### Adjunctions
+
 The representable nature of vectors gets lifted into the notion that functor vectors are the right adjoint of their index functors.
 
 One way of defining an adjunction is as an isomorphism between type
 
 L a -> b
-and 
+and
 a -> R b
 
-wintessed by the implementation 
-
+wintessed by the implementation
 
 leftAdjunct :: (f a -> b) -> a -> u b
 rightAdjunct :: (a -> u b) -> f a -> b
 
 The implementation should obey these laws.
 leftAdjunct . rightAdjunt = id
-rightAdjunct . leftAdjunct = id 
+rightAdjunct . leftAdjunct = id
 
 An adjunctions
 
@@ -434,10 +420,10 @@ It is mentioned that the right adjoint has to be representable because in Haskel
 What we can do is lift our idea of a functor as representable to the new Functor Vector idea.
 Instead of having a Rep type, instead we define a Left Adjunct, which is going to beasically be the same thing as the Rep type except with a type parameter avialble for functorial composition.
 
-
-The index functor 
-data ind_V a 
+The index functor
+data ind_V a
 has a type parameter for the slot where the rest of the index structure will go.
+
 ```haskell
 type Bit a = Either a a
 data Bit a = Zero a | One a
@@ -459,7 +445,7 @@ Swapping the order of lines is implemented by sequenceA :: t (s a) -> s (t a).
 
 Swapping is pretty easy since all of them are implemented by product vectors.
 Things get funky though when the are index by non sum types. i.e. trees. i.e. anyons.
-How do you enumerate the number of indices? Nabc. Counting is non-trivial. Use default 
+How do you enumerate the number of indices? Nabc. Counting is non-trivial. Use default
 
 ### Functor Oriented Programming
 
@@ -470,9 +456,7 @@ In recursion schemes, it is an essential trick to put a type parameter where you
 
 ### Fix & Free
 
-
-
-Data Types a la Carte does something similar. you can split a DSL up into much smaller combinable pieces. Part of the essential trick there 
+Data Types a la Carte does something similar. you can split a DSL up into much smaller combinable pieces. Part of the essential trick there
 
 This is the type level version of the fix combinator. The fix combinator is very confusing. It does not calculate the fixed point in a numerical sense. It calculates the fixed point in a funky domain theoretic sense.
 
@@ -481,7 +465,6 @@ It does compute the fixed point of a function if you add in a termination condit
 fix let's you convert a function to a value. Very weird.
 
 Free let's you have arbitrary qubits.
-
 
 ## Sharing and BDDs
 
@@ -499,7 +482,6 @@ make Vacuum graphs. The heap thing
 
 Data.Reify
 
-
 The Binary Decision Diagrams is a really super cool data structure. It is a way of representing arbitrary mutiple bit functions that if you are both smart and lucky can just shred through impossible seeming questions and computations.
 if you have a small BDD of your question, you can answer SAT questions no prob. You can even easily count SAT
 However, there are some functions for which no small BDD exists. bitwsie multiplication is evidently in this class, which makes sense because otherwise factorization would be easily sovlable via a BDD method.
@@ -510,25 +492,22 @@ I'd love to know what Thorsten Altenkirch was talking about Kan Extensions in th
 
 Can we make ends and coends correspond somehow to index contraction?
 
-
 ## Who am I
 
 As a graduate student I studied the Fractional Quantum Hall Effect, states of matter that exist in very, very cold semiconductor samples which possess peculiar particles called anyons. Describing the quantum state of a collection of anyons is somewhat obscurely expressed in the language of category theory<sup>[1](#kitaev1)</sup>. This is really what let me to the start of my Haskell, functional programming, and logic journey.
 
 I've spent some quality time with numpy, an array library for python. It really is a very powerful, very useful library with awesome abstractions. However, I think MONDO vectors fall outside of its domain of use.
 
-
 ## Footnotes
 
-<a name="kitaev1">1</a>: https://arxiv.org/abs/cond-mat/0506438
+<a name="kitaev1">1</a>: <https://arxiv.org/abs/cond-mat/0506438>
 
-<a name="recursionschemes">1</a>: http://blog.sumtypeofway.com/
+<a name="recursionschemes">1</a>: <http://blog.sumtypeofway.com/>
 
-<a name="functororiented">1</a>: http://r6.ca/blog/20171010T001746Z.html
+<a name="functororiented">1</a>: <http://r6.ca/blog/20171010T001746Z.html>
 
-<a name="rosettastone">1</a>: https://arxiv.org/abs/0903.0340
+<a name="rosettastone">1</a>: <https://arxiv.org/abs/0903.0340>
 
-<a name="naperian">1</a>: https://www.cs.ox.ac.uk/people/jeremy.gibbons/publications/aplicative.pdf & https://www.youtube.com/watch?v=D1sT0xNrHIQ
+<a name="naperian">1</a>: <https://www.cs.ox.ac.uk/people/jeremy.gibbons/publications/aplicative.pdf> & <https://www.youtube.com/watch?v=D1sT0xNrHIQ>
 
-<a name="stringhaskell">1</a>: https://parametricity.com/posts/2015-07-18-braids.html
-
+<a name="stringhaskell">1</a>: <https://parametricity.com/posts/2015-07-18-braids.html>

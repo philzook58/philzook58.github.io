@@ -1,0 +1,10 @@
+include('cat.tptp').
+
+%fof( codcod, conjecture, ![F] : cod(cod(F)) = cod(F) ).
+%fof( domdom, conjecture, ![F] : dom(dom(F)) = dom(F) ).
+
+fof(commute_square_def, axiom, 
+    ![F,G,H,K] : (commute_square(F,G,H,K) <=> (? [M] : (comp(F,G,M) & comp(H,K,M))))).
+
+fof( pasting_square,conjecture,   ![A,B,C,D, I,J,K, BI, CJ] : ((commute_square(B,A,D,C) & commute_square(I,D,K,J) & comp(I,B, IB) & comp( J, C,JC)) 
+                                                        =>  commute_square( IB,A, K,JC ) )).

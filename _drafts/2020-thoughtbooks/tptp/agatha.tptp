@@ -1,0 +1,14 @@
+fof(e1 , axiom, (? [X] : (lives(X) & killed(X,agatha))) ).
+fof(e2 , axiom, lives(agatha) ).
+fof(e3 , axiom, lives(butler) ).
+fof(e4 , axiom, lives(charles) ).
+fof(e5 , axiom, (! [X] : ( lives(X) => (((X = agatha) | (X = charles)) | (X = butler)) )) ).
+fof(e6 , axiom, (! [X,Y] : ( killed(X,Y) => hates(X,Y) )) ).
+fof(e7 , axiom, (! [X,Y] : ( killed(X,Y) => ( ~ richer(X,Y) ) )) ).
+fof(e8 , axiom, (! [X] : ( hates(agatha,X) => ( ~ hates(charles,X) ) )) ).
+fof(e9 , axiom, (! [X] : ( (X != butler) => hates(agatha,X) )) ).
+fof(e10 , axiom, (! [X] : ( ( ~ richer(X,agatha) ) => hates(butler,X) )) ).
+fof(e11 , axiom, (! [X] : ( hates(agatha,X) => hates(butler,X) )) ).
+fof(e12 , axiom, (! [X] : (? [Y] : ( ~ hates(X,Y) ))) ).
+fof(e13 , axiom, (agatha != butler) ).
+fof(gfoo, conjecture, killed(agatha,agatha)).

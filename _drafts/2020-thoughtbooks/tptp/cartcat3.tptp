@@ -1,0 +1,188 @@
+fof( type_axiom1 , axiom, 
+                    ![VarA]: 
+                        (typo( constid(VarA) , constHom(VarA, VarA) ) <=
+                            (typo(VarA, constOb))) ).
+fof( type_axiom2 , axiom, 
+                    ![Varf,VarA,VarB,Varg,VarC]: 
+                        (typo( constcompose(Varf, Varg) , constHom(VarA, VarC) ) <=
+                            (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb) &
+	typo(Varg, constHom(VarB, VarC)) &
+	typo(VarC, constOb))) ).
+fof( type_axiom3 , axiom, 
+                    ![VarA,VarB]: 
+                        (typo( constotimes(VarA, VarB) , constOb ) <=
+                            (typo(VarA, constOb) &
+	typo(VarB, constOb))) ).
+fof( type_axiom4 , axiom, 
+                    ![Varf,VarA,VarD,VarB,Varg,VarC]: 
+                        (typo( constotimes(Varf, Varg) , constHom(constotimes(VarA, VarC), constotimes(VarB, VarD)) ) <=
+                            (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarD, constOb) &
+	typo(VarB, constOb) &
+	typo(Varg, constHom(VarC, VarD)) &
+	typo(VarC, constOb))) ).
+fof( type_axiom5 , axiom, typo( constmunit , constOb ) ).
+fof( type_axiom6 , axiom, 
+                    ![VarA,VarB]: 
+                        (typo( constbraid(VarA, VarB) , constHom(constotimes(VarA, VarB), constotimes(VarB, VarA)) ) <=
+                            (typo(VarA, constOb) &
+	typo(VarB, constOb))) ).
+fof( type_axiom7 , axiom, 
+                    ![VarA]: 
+                        (typo( constmcopy(VarA) , constHom(VarA, constotimes(VarA, VarA)) ) <=
+                            (typo(VarA, constOb))) ).
+fof( type_axiom8 , axiom, 
+                    ![VarA]: 
+                        (typo( constdelete(VarA) , constHom(VarA, constmunit) ) <=
+                            (typo(VarA, constOb))) ).
+fof( type_axiom9 , axiom, 
+                    ![Varf,VarA,VarB,Varg,VarC]: 
+                        (typo( constpair(Varf, Varg) , constHom(VarA, constotimes(VarB, VarC)) ) <=
+                            (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb) &
+	typo(Varg, constHom(VarA, VarC)) &
+	typo(VarC, constOb))) ).
+fof( type_axiom10 , axiom, 
+                    ![VarA,VarB]: 
+                        (typo( constproj1(VarA, VarB) , constHom(constotimes(VarA, VarB), VarA) ) <=
+                            (typo(VarA, constOb) &
+	typo(VarB, constOb))) ).
+fof( type_axiom11 , axiom, 
+                    ![VarA,VarB]: 
+                        (typo( constproj2(VarA, VarB) , constHom(constotimes(VarA, VarB), VarB) ) <=
+                            (typo(VarA, constOb) &
+	typo(VarB, constOb))) ).
+
+% custom to detect associativty 
+%fof( axiom1, axiom, ![Varf, VarA, VarD, VarB, Varh, Varg, VarC]: (constcompose(constcompose(Varf, Varg), Varh) = constcompose(Varf, constcompose(Varg, Varh)) )).
+fof( axiom1, axiom, ![Varf, VarA, VarD, VarB, Varh, Varg, VarC]: (constcompose(constcompose(Varf, Varg), Varh) = constcompose(Varf, constcompose(Varg, Varh)) <= (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarD, constOb) &
+	typo(VarB, constOb) &
+	typo(Varh, constHom(VarC, VarD)) &
+	typo(Varg, constHom(VarB, VarC)) &
+	typo(VarC, constOb)))).
+fof( axiom2, axiom, ![Varf, VarA, VarB]: (constcompose(Varf, constid(VarB)) = Varf <= (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb)))).
+fof( axiom3, axiom, ![Varf, VarA, VarB]: (constcompose(constid(VarA), Varf) = Varf <= (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb)))).
+fof( axiom4, axiom, ![VarA, VarB, VarC]: (constotimes(constotimes(VarA, VarB), VarC) = constotimes(VarA, constotimes(VarB, VarC)) <= (typo(VarA, constOb) &
+	typo(VarB, constOb) &
+	typo(VarC, constOb)))).
+fof( axiom5, axiom, ![VarA]: (constotimes(VarA, constmunit) = VarA <= (typo(VarA, constOb)))).
+fof( axiom6, axiom, ![VarA]: (constotimes(constmunit, VarA) = VarA <= (typo(VarA, constOb)))).
+% this one doesn't need shielding does it?
+fof( axiom7, axiom, ![VarZ, Varf, VarA, VarB, Varh, VarX, VarY, Varg, VarC]: (constotimes(constotimes(Varf, Varg), Varh) = constotimes(Varf, constotimes(Varg, Varh)) <= (typo(VarZ, constOb) &
+	typo(Varf, constHom(VarA, VarX)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb) &
+	typo(Varh, constHom(VarC, VarZ)) &
+	typo(VarX, constOb) &
+	typo(VarY, constOb) &
+	typo(Varg, constHom(VarB, VarY)) &
+	typo(VarC, constOb)))).
+fof( axiom8, axiom, ![VarZ, Varf, VarA, Vark, VarB, Varh, VarX, VarY, Varg, VarC]: ((constcompose(constotimes(Varf, Varg), constotimes(Varh, Vark)) = constotimes(constcompose(Varf, Varh), constcompose(Varg, Vark))) <= (typo(VarZ, constOb) &
+	typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(Vark, constHom(VarY, VarZ)) &
+	typo(VarB, constOb) &
+	typo(Varh, constHom(VarB, VarC)) &
+	typo(VarX, constOb) &
+	typo(VarY, constOb) &
+	typo(Varg, constHom(VarX, VarY)) &
+	typo(VarC, constOb)))).
+fof( axiom9, axiom, ![VarA, VarB]: (constid(constotimes(VarA, VarB)) = constotimes(constid(VarA), constid(VarB)) <= (typo(VarA, constOb) &
+	typo(VarB, constOb)))).
+fof( axiom10, axiom, ![VarA, VarB]: (constcompose(constbraid(VarA, VarB), constbraid(VarB, VarA)) = constid(constotimes(VarA, VarB)) <= (typo(VarA, constOb) &
+	typo(VarB, constOb)))).
+fof( axiom11, axiom, ![VarA, VarB, VarC]: (constbraid(VarA, constotimes(VarB, VarC)) = constcompose(constotimes(constbraid(VarA, VarB), constid(VarC)), constotimes(constid(VarB), constbraid(VarA, VarC))) <= (typo(VarA, constOb) &
+	typo(VarB, constOb) &
+	typo(VarC, constOb)))).
+fof( axiom12, axiom, ![VarA, VarB, VarC]: (constbraid(constotimes(VarA, VarB), VarC) = constcompose(constotimes(constid(VarA), constbraid(VarB, VarC)), constotimes(constbraid(VarA, VarC), constid(VarB))) <= (typo(VarA, constOb) &
+	typo(VarB, constOb) &
+	typo(VarC, constOb)))).
+fof( axiom13, axiom, ![Varf, VarA, VarD, VarB, Varg, VarC]: (constcompose(constotimes(Varf, Varg), constbraid(VarB, VarD)) = constcompose(constbraid(VarA, VarC), constotimes(Varg, Varf)) <= (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarD, constOb) &
+	typo(VarB, constOb) &
+	typo(Varg, constHom(VarC, VarD)) &
+	typo(VarC, constOb)))).
+fof( axiom14, axiom, ![VarA]: (constcompose(constmcopy(VarA), constotimes(constmcopy(VarA), constid(VarA))) = constcompose(constmcopy(VarA), constotimes(constid(VarA), constmcopy(VarA))) <= (typo(VarA, constOb)))).
+fof( axiom15, axiom, ![VarA]: (constcompose(constmcopy(VarA), constotimes(constdelete(VarA), constid(VarA))) = constid(VarA) <= (typo(VarA, constOb)))).
+fof( axiom16, axiom, ![VarA]: (constcompose(constmcopy(VarA), constotimes(constid(VarA), constdelete(VarA))) = constid(VarA) <= (typo(VarA, constOb)))).
+fof( axiom17, axiom, ![VarA]: (constcompose(constmcopy(VarA), constbraid(VarA, VarA)) = constmcopy(VarA) <= (typo(VarA, constOb)))).
+fof( axiom18, axiom, ![VarA, VarB]: (constmcopy(constotimes(VarA, VarB)) = constcompose(constotimes(constmcopy(VarA), constmcopy(VarB)), constotimes(constotimes(constid(VarA), constbraid(VarA, VarB)), constid(VarB))) <= (typo(VarA, constOb) &
+	typo(VarB, constOb)))).
+fof( axiom19, axiom, ![VarA, VarB]: (constdelete(constotimes(VarA, VarB)) = constotimes(constdelete(VarA), constdelete(VarB)) <= (typo(VarA, constOb) &
+	typo(VarB, constOb)))).
+fof( axiom20, axiom, (constmcopy(constmunit) = constid(constmunit) )).
+fof( axiom21, axiom, (constdelete(constmunit) = constid(constmunit) )).
+fof( axiom22, axiom, ![Varf, VarA, VarB, Varg, VarC]: (constpair(Varf, Varg) = constcompose(constmcopy(VarC), constotimes(Varf, Varg)) <= (typo(Varf, constHom(VarC, VarA)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb) &
+	typo(Varg, constHom(VarC, VarB)) &
+	typo(VarC, constOb)))).
+fof( axiom23, axiom, ![VarA, VarB]: (constproj1(VarA, VarB) = constotimes(constid(VarA), constdelete(VarB)) <= (typo(VarA, constOb) &
+	typo(VarB, constOb)))).
+fof( axiom24, axiom, ![VarA, VarB]: (constproj2(VarA, VarB) = constotimes(constdelete(VarA), constid(VarB)) <= (typo(VarA, constOb) &
+	typo(VarB, constOb)))).
+fof( axiom25, axiom, ![Varf, VarA, VarB]: (constcompose(Varf, constmcopy(VarB)) = constcompose(constmcopy(VarA), constotimes(Varf, Varf)) <= (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb)))).
+fof( axiom26, axiom, ![Varf, VarA, VarB]: (constcompose(Varf, constdelete(VarB)) = constdelete(VarA) <= (typo(Varf, constHom(VarA, VarB)) &
+	typo(VarA, constOb) &
+	typo(VarB, constOb)))).
+
+fof( q, conjecture,  ![VarA,VarB] : (constpair(constproj1(VarA,VarB), constproj2(VarA,VarB)) = constotimes( constid(VarA), constid(VarB) )  <=   ( typo(VarA, constOb) & typo(VarB,constOb) )  )). 
+
+
+%fof( q, conjecture,   (constpair(constproj1(a,b), constproj2(a,b)) = constotimes( constid(a), constid(b) )  <=   ( typo(a, constOb) & typo(b,constOb) )  )). 
+%fof( q, conjecture,  ![VarA]: ((constcompose(constid(VarA), constcompose(constid(VarA), constid(VarA))) = constid(VarA))  <=   ( typo(VarA, constOb) ))). 
+%fof( q, conjecture,  ![VarA]: ((constcompose(constid(VarA), constcompose(constid(VarA), constid(VarA))) = constid(VarA))  <=   ( typo(VarA, constOb) ))). 
+%fof( q, conjecture,  ![VarA]: ((constcompose(constid(VarA), constcompose(constid(VarA), constid(VarA))) = constid(VarA))  <=   ( typo(VarA, constOb) ))). 
+%fof( q, conjecture,  constbraid(constmunit,constmunit) = constid(constotimes(constmunit,constmunit))). 
+%fof( q, conjecture,  constid(constmunit) = constid(constotimes(constmunit,constmunit))). 
+%fof( q, conjecture,  ![A,B]: (constotimes(constid(A),constid(B)) = constid(constotimes(A,B)) <= ( typo(A, constOb) & typo(B, constOb)   )  ))  . 
+
+%fof( q, conjecture,  ![A,B]: (
+%      constotimes(constcompose(constmcopy(A), constotimes( constid(A), constdelete(A) ))   ,
+%       constcompose(constmcopy(B), constotimes( constid(B), constdelete(B) )))
+%      = 
+%     constid(constotimes(A,B)) <= ( typo(A, constOb) & typo(B, constOb)   )  ))  . 
+
+%fof( q, conjecture,  ![A,B]: (
+%      constcompose(constotimes(constmcopy(A), constmcopy(B))  ,
+%          constotimes( constid(A) , constotimes(  constdelete(A) , constotimes( constdelete(B)  , constid(B)) )    ))
+%      = 
+%     constotimes(constcompose(constmcopy(A), constotimes( constid(A), constdelete(A) ))   ,
+%       constcompose(constmcopy(B), constotimes( constid(B), constdelete(B) )))
+%    <= ( typo(A, constOb) & typo(B, constOb)   )  ))  . 
+
+%fof( q, conjecture,  ![A,B]: (
+%      constcompose(constotimes(constmcopy(A), constmcopy(B))  ,
+%          constotimes(constotimes( constid(A) , constdelete(A)) , constotimes( constdelete(B)  , constid(B)) ) )
+%      = 
+%     constotimes(constcompose(constmcopy(A), constotimes( constid(A), constdelete(A) ))   ,
+%       constcompose(constmcopy(B), constotimes( constdelete(B), constid(B) )))
+%    <= ( typo(A, constOb) & typo(B, constOb)   )  ))  .
+
+%fof( q, conjecture, ![VarZ, Varf, VarA, Vark, VarB, Varh, VarX, VarY, Varg, VarC]: ((constcompose(constotimes(Varf, Varg), constotimes(Varh, Vark)) = constotimes(constcompose(Varf, Varh), constcompose(Varg, Vark))) <= (typo(VarZ, constOb) &
+%	typo(Varf, constHom(VarA, VarB)) &
+%	typo(VarA, constOb) &
+%	typo(Vark, constHom(VarY, VarZ)) &
+%	typo(VarB, constOb) &
+%	typo(Varh, constHom(VarB, VarC)) &
+%	typo(VarX, constOb) &
+%	typo(VarY, constOb) &
+%	typo(Varg, constHom(VarX, VarY)) &
+%	typo(VarC, constOb)))).
+
+
+
+% could we remove all typo(A,Ob) instances?

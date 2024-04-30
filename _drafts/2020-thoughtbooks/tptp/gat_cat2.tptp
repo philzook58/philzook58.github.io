@@ -1,0 +1,25 @@
+
+include(gat_cat.tptp).
+
+ty(comp2(Alpha,Beta)) = hom2(comp(F,H )  ,  comp(G,K) ) <= 
+                                               ty(A) = ob & ty(B) = ob & ty(C) = ob &
+                                               ty(F) = hom(A,B) & ty(G) = hom(A,B) & 
+                                               ty(H) = hom(B,C) & ty(K) = hom(B,C)
+
+
+
+
+% can I reuse id like this? Or should this be id2?
+ty(id(F)) = hom2(F,F) <= ty(A) = ob & ty(B) = ob & ty(F) = hom(A,B)
+
+ty(comp(Alpha,Beta)) = hom2(F,H)  <= 
+                                               ty(A) = ob & ty(B) = ob &
+                                               ty(F) = hom(A,B) & ty(G) = hom(A,B) & 
+                                               ty(H) = hom(A,B)
+
+% hmm. This is true. Or is it even necessarily true? Useful ever?
+hom(A,B) != ob
+hom2(A,B) != hom(F,G)
+hom2(A,B) != ob
+
+% if solvers have built in capability for lists and asscoiativty, maybe wanna use it
