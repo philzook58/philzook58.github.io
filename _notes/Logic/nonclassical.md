@@ -17,6 +17,7 @@ title: Non Classical Logic
 - [Non-monotonic logic](#non-monotonic-logic)
 
 # Modal
+<https://en.wikipedia.org/wiki/Modal_companion>
 
 Modal logical operators.
 Provable
@@ -53,6 +54,7 @@ TLA+-adjacent solvers: <https://github.com/black-sat/black>
 "
 
 ## Provability Logic
+
 <https://plato.stanford.edu/entries/logic-provability/>
 See proof theory
 
