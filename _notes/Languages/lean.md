@@ -2,6 +2,28 @@
 layout: post
 title: Lean
 ---
+html in lean... <https://voidma.in/> <https://github.com/leanprover-community/ProofWidgets4>
+Scilean
+lean-hog house of frpah in lean <https://github.com/katjabercic/Lean-HoG>
+penrose for automatic daigramming <https://penrose.cs.cmu.edu/>
+venn diragrsm
+
+string diagrams and commutiative sdiagrams
+
+verbose lean by matrick massot <https://github.com/PatrickMassot/verbose-lean4> writes in
+a lean port of tarksi's world
+
+vlada sedlacek ecudiean geneotry <https://github.com/ianjauslin-rutgers/pythagoras4> ?
+tarksi world
+
+<https://github.com/vbeffara/RMT4> riemann mapping theorem
+
+<https://github.com/ianjauslin-rutgers/leanblueprint-extract> extacrt blueprints
+
+lean extensible
+html tags
+ #html
+robert lewis discrete math <https://github.com/brown-cs22/CS22-Lean-2024>
 
 <https://github.com/leanprover/SampCert>
 
