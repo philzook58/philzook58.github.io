@@ -1,3 +1,20 @@
+
+We can also consider the semidecidable equality case.
+
+sets = absorptive monoid
+multisets = commutative monoid
+lists = monoid
+tree
+
+Lattice data structures.
+Multisets of incomparable elements, we ought to be able to tune between having a total order and a partial order.
+The more total the order is, the better we can do.
+Equality
+partially ordered <https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html>
+total ordered
+
+Maybe a set of chains of some kind
+
 Hash cons modulo theories
 Hash Cons modulo symmetry
 

@@ -154,4 +154,8 @@ If you bottow your host powers, you kind of don't know what you're borrowing
 That's the beauty and danger of it
 
 
+<https://www.ps.uni-saarland.de/extras/fol-completeness-ext/> coq fol completeness.
+game semanitcs
+algebraic  semantics
+
 -/
