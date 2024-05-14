@@ -1,6 +1,6 @@
 ---
 title: Hashing Modulo Theories
-date: 05-14-24
+date: 2024-05-14
 ---
 
 Hashing <https://en.wikipedia.org/wiki/Hash_function> is a scrambly function that turns a datastructure into an integer.
