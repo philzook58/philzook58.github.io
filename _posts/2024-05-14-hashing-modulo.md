@@ -9,14 +9,16 @@ We anticipate that hash functions will have collisions. They have to. Good hash 
 
 It is "wrong" though if there is some notion of equality the hash function does not respect.
 
-Consider for example `(4,8)` representing the fraction $\frac{4}{8}$. In our intended meaning this is "equal" to `(1,2)`, but if I use python's default hashing function, they will map to different integers
+Consider for example `(4,8)` representing the fraction $\frac{4}{8}$. In our intended meaning this is "equal" to `(1,2)` aka $\frac{1}{2}$ , but if I use python's default hashing function, they will map to different integers
 
 ```python
 print(hash((4,8))) # 2714140458487201590
 print(hash((1,2))) # -3550055125485641917
 ```
 
-More pragmatically, if I have some kind of AVL tree or red-black tree data structure representing a set or dictionary, the exact balancing is irrelevant. If I use an ordinary tree hashing algorithm, identical sets will map to different hashes, which is wrong. Sets are useful in all sorts of ways, but in particular I the application I find most interesting is to hash sets that correspond to contexts in a automated theorem prover context (egglog,datalog , other).
+More pragmatically, if I have some kind of AVL tree or red-black tree data structure representing a set or dictionary, the exact balancing is actually irrelevant internals. If I use an ordinary tree hashing algorithm on these, logically "identical" sets will map to different hashes, which is wrong. So what do you do?
+
+Sets are useful in all sorts of ways, but in particular I the application I find most interesting is to hash sets that correspond to contexts in a automated theorem prover context (egglog, datalog, other).
 
 Another example that I care about a lot is alpha invariant expressions. If the intended meaning of an expression is intended to be invariant to non-clashing renamings aka permutations of the variable labels. For example, `foo(X,Y,X) = foo(Z,W,Z) != foo(X,Y,Z)`. This shows up in theorem proving contexts.
 
@@ -28,7 +30,7 @@ There are at least 3 methods to fight this problem
 
 # Canonization
 
-Like the rational example, the obvious solution if it is available is to reduce your structure to a canonical form and then hash that. We should immeditalte reduce `(4,8)` to `(1,2)` and only store that.
+Like the rational example, the obvious solution if it is available is to reduce your structure to a canonical form and then hash that. We should immediately reduce `(4,8)` to `(1,2)` and only store that caonnical version. The python built in `Fraction` is something like that.
 
 ```python
 from fractions import Fraction
@@ -38,20 +40,22 @@ print(hash(Fraction(1,2))) # 1152921504606846976
 
 For sets, dictionarys, multisets, there are multiple options.
 
-The obvious one is to sort the elements (or sort the hashes of the elements) of the set into a list. This list is canonical. Then you can use regular list hashing.
+The obvious one is to sort the elements (or sort the hashes of the elements) of the set into a list. This list is canonical. Then you can use regular ordered list hashing.
 
 ```python
 print(hash(tuple(sorted([3,4,5])))) # 4003026094496801395
 print(hash(tuple(sorted([4,5,3])))) # 4003026094496801395
 ```
 
-One nice one is to use a trie, which is a canonical tree that represents the set (This may kick the can a little since each internal node of the tree is also a dictionary).
+One nice thing to use for sets of sequences is a trie, which is a canonical tree that represents the set (This may kick the can a little since each internal node of the tree is also a dictionary). Integers can be considered a sequences of bits <https://en.wikipedia.org/wiki/Radix_tree>
 
-Canonization is a simple method that works pretty well. It can be expensive to keep recanonizing or it may not be obvious that you even can canonize.
+Canonization is a simple method that works pretty well.
 
-I did something like this for first class sets in datalog here <https://www.philipzucker.com/contextual-datalog/>
+But, it can be expensive to keep recanonizing or it may not be obvious that you even can canonize.
 
-One way to create a canonical alpha equivalent term is to label the variables by a traversal order (pre-order, post-order). This isn't perfect because you need to possibly rename every time you plug a term in.
+I did something like this for first class sets in datalog here <https://www.philipzucker.com/contextual-datalog/>. I represented them using a list algerbaic datatypes that I wrote sorting routines for.
+
+One way to create a canonical alpha equivalent term is to label the variables by a traversal order (pre-order, post-order). This isn't perfect because you need to possibly rename every time you plug a term in. Maybe there is some smart traversal?
 
 For a general equational theory, you might orient it's equations into rules and complete them to get a canonizing rewrite system. Then you can just hash these caononical forms. This is not always possible however.
 
@@ -59,11 +63,13 @@ For a general equational theory, you might orient it's equations into rules and 
 
 There is an analogy between the syntactic expressions for certain algebraic theories and data structures.
 
-- A tree is like a binary operator with no relations
+- A tree is like a binary operator with no relations.
 - a list is the free monoid with appending as the binary operation. It is an associative binary operator. `(x + y) + z = x + (y + z)`
 - a multiset is a commutative associative monoid.
-- a set is an [idempotent](https://en.wikipedia.org/wiki/Idempotence), associative commutative monoid.  `x+x=x`
-- a unordered tree is like a commutative operator without associativity
+- a set is an [idempotent](https://en.wikipedia.org/wiki/Idempotence) associative commutative monoid.  `x+x=x`
+- a tree with unordered children is like a commutative operator without associativity. This kind of thing shows up in finite set theory where there are sets of sets of sets. <https://www.philipzucker.com/finiteset/>
+
+See also the Boom hierarchy <https://link.springer.com/chapter/10.1007/978-1-4471-3236-3_1>
 
 One way to build a hash function is to find a homomorphism from these theories into the integers. In order words, some kind of integer operator that respects the symmettries of the datastructure.
 
@@ -73,7 +79,7 @@ One example of such things is `xor`, `or`, `and` on your integers. This way lies
 
 A different approach is to try and invent some invariants that respect the undelrying symetries of your structure. These invariants do not have to completely describe the original structure ,but they may tend to resolve collisions well enough. There is a tradeoff of the cost of canonicalization/invariant calculation to the cost of a bad hash collision.
 
-Note that `hash(x) = 42` isn't "wrong" in the sense that collisions are allowed, but it is very wrong in intent. This will cause very bad collisions and ruin any sort of performance guarantees you hoped to ahiceve with hashing.
+Note that `hash(x) = 42` isn't "wrong" in the sense that collisions are allowed, but it is very wrong in intent. This will cause very bad collisions and ruin any sort of performance guarantees you hoped to achieve with hashing.
 
 An invariant of a set or multiset would be it's size for example.
 
@@ -158,6 +164,8 @@ If you have a normalization procedure that can
 
 Another example which really inspired this post is the question of how to hash a tree that has a notion of alpha equivalence (where names of variables don't really matter). Examples of these things are lambda binders, summation symbol indices, the dummy variable name for an integral, etc. [Hashing Modulo Alpha-Equivalence](https://arxiv.org/abs/2105.02856) presents a scheme for doing this.
 
+egraphs in a sense are an answer to how can you hash modulo an equational theory with no good properties. It keeps refining and fixing up your hash dynamically
+
 Lambda syntax requires variables to also be scoped. This may be a separate concern.
 
 de Bruijn indices is famously a canonical representation of closed lambda terms. Why is this not a solution to the problem?
@@ -224,7 +232,7 @@ print(f"{hash(bar(x,y))=} {hash(bar(x,y))=}")
 print(f"{set([ bar(x,x), bar(y,y), bar(y,x), bar(x,y) ])=}")
 ```
 
-# draft
+## draft
 
 It is useful to consider invariants of the equivalence class of structures. One invariant is the tree derived by replacing every variable with the same marker. An invariant from `("foo", ("var", 0), ("var", 1))` is `("foo", "marker", "marker")`
 Another invariant is the number of variables, the set of counts of variables, or the confusion size.
@@ -236,8 +244,6 @@ Hashing and Hash consing are related but distinct concerns. Hash consing is also
 
 If you only use interned data, you can replace structural equality `==` with physical equality `is`, since every equal thing is literally the same object in memory. This is much faster, especially when you consider structural equality may require traversing some big tree.
 
-egraphs in a sense are an answer to how can you hash modulo an equational theory with no good properties. It keeps refining and fixing up your hash dynamically
-
 False positive and false negatives
 
 Definitely equal,
@@ -248,7 +254,7 @@ Physical equality
 
 Big integers, arbitrarily large integers often
 
-# Canonization
+### Canonization
 
 One technique to
 Binary search trees
@@ -318,7 +324,7 @@ print(id(intern((1,2,3))))
 print(_mytable)
 ```
 
-# Old draft - Reifying sets with Patricia Tries - 2020-12-06
+## Old draft - Reifying sets with Patricia Tries - 2020-12-06
 
 There is something enticing about internalizing notions of sets or relations into datalog. As Cody said, going meta is the one move.
 
