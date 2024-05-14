@@ -102,6 +102,8 @@ Hash modulo scoped alpha <https://arxiv.org/abs/2105.02856> where you want your 
 
 Co-debruijn, upon which the technique in the paper above is based, makes a canonical tree form for lambda terms by making a little tree map from the position the variable is bound to wehre it is used. That's smart. <https://arxiv.org/pdf/1807.04085> <https://jesper.sikanda.be/posts/1001-syntax-representations.html>
 
+I'm cribbing on the name "Satisfiability Modulo Theories" for the title of this post. Hash Modulo Alpha is something that has been published and discussed, but I think this is kind of a part of a more general concept of hashing which respecting interesting notions of equality.
+
 <https://www.preprints.org/manuscript/201710.0192/v1/download>   Ricard O’Keefe How to Hash a Set.
 
 Graph hashing is OP. You can map hashing modulo alpha into graphs by making `var` nodes for every variables. It fits into the above framework.
