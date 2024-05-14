@@ -123,6 +123,10 @@ Depth first labelling. Non compositional. There might be some smart traversal th
 - See Term Indexing in Handbook of automated reasoning <https://dl.acm.org/doi/10.5555/778522.778535>
 - Variant / subsumption tabling in prolog <https://www.swi-prolog.org/pldoc/man?section=tabling-subsumptive>
 
+More Boom hierarchy
+<https://www.cl.cam.ac.uk/events/owls/slides/maaike.pdf>
+<https://www.youtube.com/watch?v=kGDSPxXtKdg>
+
 In a dependent type theory kind of context, this all gets kind of funky. If it is undecidable to determine if there is a proof two things are even equal what can you do then?
 
 We are somewhat used to having an issue that some datatypes do not implement Order typeclasses or interfaces. Or perhaps they are only partially ordered. That's another fun twist.
