@@ -135,6 +135,9 @@ tictactoe
 
 ```
 
+clopen games
+open games topology
+
 ## Surreal Numbers
 
 HACKENBUSH: a window to a new world of math <https://www.youtube.com/watch?v=ZYj4NkeGPdM&t=2818s&ab_channel=OwenMaitzen> Owen Maitzen rip.
@@ -232,6 +235,28 @@ class Surreal():
 tictactoe = [[],[],[]]
 
 
+
+
+```
+
+```python
+from dataclasses import dataclass
+@dataclass(frozen=True)
+class Game():
+  l : frozenset["Game"]
+  r : frozenset["Game"]
+  def __ge__(self,other):
+    return not any(xr <= other for xr in self.r) and not any(x <= yl for yl in other.l)
+  def __eq__(self,other):
+    return self <= other and self >= other
+
+zero = Game(frozenset(), frozenset())
+one = Game(frozenset([zero]), frozenset())
+negone = Game(frozenset(), frozenset([zero]))
+print(zero == zero)
+print(zero <= one)
+print(negone >= one)
+print(negone == one)
 
 
 ```
