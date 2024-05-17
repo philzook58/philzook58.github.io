@@ -2,6 +2,7 @@
 layout: post
 title: Agda / Idris
 ---
+intro to agda siek <https://www.youtube.com/watch?v=0GEHHxjfqV4&t=2s&ab_channel=DavidBroman>
 
 [Certainty by Construction Maguire book](https://sandymaguire.me/blog/certainty-by-construction/)
 
@@ -69,6 +70,10 @@ System F in Agda, for Fun and Profit
 
 <https://github.com/jsiek/abstract-binding-trees> agda abstract bnding trees siek
 
+<https://github.com/gallais/CS410-2024>
+<https://github.com/fredrikNordvallForsberg/CS410-22>
+<https://www.youtube.com/@fredrikforsberggmail/videos>
+
 ## Well Typed Syntax
 
 <https://dl.acm.org/doi/pdf/10.1145/3498715> Formal Metatheory of Second-Order Abstract Syntax
@@ -100,7 +105,10 @@ mcbride thinning and substitution <https://www.youtube.com/watch?v=ahwCXcYHkXQ&t
 
 <https://arxiv.org/abs/2310.13413> Scoped and Typed Staging by Evaluation . two level type theory embedded in agda allais. <https://gallais.github.io/publis.html> all sorts of great stuff
 
+<https://blog.20squares.xyz/open-games-bootcamp-i/>
+
 # Idris
+<https://zanzix.github.io/posts/3-rec-idris.html> recusion schemes in idris
 
 Eh, they're similar enough. Wow. Idris. Takes me back
 
@@ -205,3 +213,27 @@ LABELLED STRUCTURES
 <https://www.researchgate.net/profile/Peter-Dybjer/publication/226035566_Inductive_families/links/0f317532159fcea814000000/Inductive-families.pdf> dybjer inductive families
 
 <https://github.com/jfdm/velo-lang> <https://arxiv.org/abs/2301.12852> type theory as a language workbench
+
+elimination with a motive
+<http://www.e-pig.org/downloads/elim.pdf>
+
+fording - mcbride's thesis. removing indices by adding equations. Kind of like that why of modelling gadts with internal equality constraints? <https://types.pl/@pigworker/112447459833849192>
+"Elimination with a motive is about two things
+Fording on the fly. So "black" becomes "any colour you like as long as it's black";
+Maximising the strength of inductive hypotheses in a situation where lexicographic recursion is our expected mode of operation."
+
+once again indices vs parameters rears its head
+
+<https://gist.github.com/MonoidMusician/38798eea759e9950c7dcb4c3a7680325>
+<https://twitter.com/kamatsu8/status/1430614007048720392>
+
+<https://arxiv.org/abs/2309.14187>  Two tricks to trivialize higher-indexed families
+
+<https://www.cl.cam.ac.uk/~jdy22/papers/frex-indexing-modulo-equations-with-free-extensions.pdf> Frex: indexing modulo equations with free extensions
+<https://github.com/frex-project/idris-frex>
+
+Conor McBride, Ornamental algebras, algebraic ornaments the type
+
+Maybe mcbride works metnally in dependently typed emtatheory
+
+<https://cybercat.institute/2024/04/08/modular-error-reporting/>

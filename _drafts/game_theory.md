@@ -48,7 +48,7 @@ Introducing Model Theory with Ehrenfeucht-Fraïssé Games on Linear Orderings
 Seperability of structures via formula.
 
 Model theory and finite model theory. What structures can EF gamers seperate? Finite models EF games are reasonably computable. QBF?
-descriptive set theory
+descriptive set theory <https://en.wikipedia.org/wiki/Descriptive_set_theory>
 
 Determinacy <https://en.wikipedia.org/wiki/Determinacy>
 
@@ -108,6 +108,11 @@ Noam Nisan <https://www.cs.cmu.edu/~sandholm/cs15-892F13/algorithmic-game-theory
 Mechanism design
 auction
 
+Generalized geography game. Take graph. pick node, someone has to pick a node coming out. No repeats.
+If you considered the graph of ordinal less than this is cody's death game. uh. maybe. even or odd can win. ordinals gives advatnage.
+
+pebble game- came up in finite model theory
+
 # Combinatorial game thoery
 
  <https://en.wikipedia.org/wiki/Combinatorial_game_theory>
@@ -137,6 +142,14 @@ tictactoe
 
 clopen games
 open games topology
+
+Implement some kind of lazy game tree?
+
+```
+def 
+
+
+```
 
 ## Surreal Numbers
 

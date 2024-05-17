@@ -52,5 +52,9 @@ structure State where
   memory : Nat -> Nat -> UInt8
   pc : Nat
 
+def main : IO Unit :=
+  IO.println "hello world!"
+  --let p := pcode.binop {opcode := binopcode.INT_ADD, output := {space := X86.ram, offset := 0, size := 4}, input1 := {space := X86.ram, offset := 4, size := 4}, input2 := {space := X86.ram, offset := 8, size := 4}}
+  --IO.println (toJson p)
 
 -- parser of json. Autiderive some kind of parser?

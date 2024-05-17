@@ -137,6 +137,14 @@ Also in egglog, this is all funky. A set of things in egglog only has a bound on
 
 Automata minimization is the analog of coinductive hash consning. You need to seal the automata off / forget some observations. Monotonically forgetting observations monotonically compresses automata.
 
+Hashing modulo beta is interesting. Canonization is assured sort of with the appropriate type system with strong normalization. The type indeed is an invariant of a reducing expression. What other kinds of invariants exist modulo beta reduction? Beta reduction won't produce new uninterpreted symbols, but it can remove them. The "worst" type inside the term may be going down (Cody mentioned something from some girard book).
+
+Clarke, D.E., Devadas, S., Dijk, M., Gassend, B., Suh, G.E.: Incremental multiset hash functions and their application to memory integrity checking.
+
+Suppose you wanted to hash a dag. Hashconsing unifies all dags or trees to the minimal dag. But what if you want to separately identify different dags. Kind of an alpha invariant term is a dag where Var nodes can be identified/compressed or not. Everything else should be maximally shared.
+<https://stackoverflow.com/questions/14532164/hash-value-for-directed-acyclic-graph> hmm there is reason to believe that isomorphism between dags is hard. Still one (I) suspects there may be a very effective algorithm of some kind.
+<https://en.wikipedia.org/wiki/Graph_isomorphism_problem#GI-complete_classes_of_graphs> Oh but is this for unordered children?
+
 sets = absorptive monoid
 multisets = commutative monoid
 lists = monoid
