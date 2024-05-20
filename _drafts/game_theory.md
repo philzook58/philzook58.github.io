@@ -115,6 +115,8 @@ pebble game- came up in finite model theory
 
 # Combinatorial game thoery
 
+knot games -region c rossing lcahnge thjeroem  <https://kpknudson.com/my-favorite-theorem/2023/11/12/episode-89-allison-henrich> <https://www.sci.osaka-cu.ac.jp/math/OCAMI/news/gamehp/etop/gametop.html> region select, a game using knot thoery
+
  <https://en.wikipedia.org/wiki/Combinatorial_game_theory>
 
 partisan games <https://en.wikipedia.org/wiki/Partisan_game>

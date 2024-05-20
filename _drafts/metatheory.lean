@@ -158,4 +158,7 @@ That's the beauty and danger of it
 game semanitcs
 algebraic  semantics
 
+https://homepages.math.uic.edu/~marker/math502-F15/mm.pdf
+david marker metamathematics
+
 -/
