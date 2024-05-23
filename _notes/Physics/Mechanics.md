@@ -187,7 +187,7 @@ quantum chaos
 # Fluids
 
 <https://www.youtube.com/watch?v=iKAVRgIrUOU&t=648&ab_channel=TenMinutePhysics> 17 - How to write an Eulerian fluid simulator with 200 lines of code.
-
+https://news.ycombinator.com/item?id=40429878  Fast real time fluid simulator based on MPM algorithm
 # Acoustics
 
 # Continuous Media

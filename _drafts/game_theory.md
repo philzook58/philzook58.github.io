@@ -139,6 +139,31 @@ def nim_move(heaps): # heaps is a list of integers. This is the size of the heap
 tictactoe
 
 ```python
+import lolviz
+
+
+emp = ([],[])
+lose = emp
+lwin = ([lose], [])
+rwin = ([], [lose])
+
+
+def move(board):
+  if done(board):
+    if "x" == win(board):
+      return lwin
+    if "o" == win(board):
+      return rwin
+    else:
+      # draw ?
+  else:
+    return (allmoves("x", board), allmoves("o", board))
+    
+
+gametree = move([[]])
+lolviz.treevia(gametree)
+
+
 
 ```
 

@@ -1,4 +1,11 @@
 
+Spinrad efficient graph representat6ions
+Hashing graphs in particular representations can be easier
+Graph class style thinking applied to partial orders?
+Seq(mul(), mul(), exp)
+Complemtnary rep. Not egdes and pos edges. Good for highly connected stuff
+<https://en.wikipedia.org/wiki/Implicit_graph>
+
 There is a collection of ideas that I sprayed at graham and Caleb last week that i haven't written about.
 
 A long whiles back, in dicussions with Metatheory.jl and Catlab.jl, a lot of people were of the opinion that the appropriate data structure for catogerical rewriting should be instrinsically graph-like. The relatively "boring' methodology of braking up a string diagram into terms and recovering the various notions of associativity and commutativty intrinsic to the graphical notation feels off.
