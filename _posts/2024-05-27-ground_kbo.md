@@ -24,12 +24,12 @@ For some term rewriting simplifiers we may write, we can know thew thing isn't g
 
 If we want to show that a particular term rewriting system has this nontermination property, we need to find a term ordering. This term ordering has to comply with the fact that the left and right hand side of rules contain pattern variables, which may stand in for any term. This puts pretty strong and complicated constraints on the term ordering.
 
-I find the definition of the knuth bendix ordering pretty confusing. And yet, when you consider the ground case, it all becomes much simpler and more obvious. This is a general rule of thumb for understand many techniques in automated reasoning. The ground stuff is a subcase and much easer.
+I find the definition of the knuth bendix ordering pretty confusing. And yet, when you consider the ground case, it all becomes much simpler and more obvious. This is a general rule of thumb for understanding many techniques in automated reasoning. The ground stuff is a subcase and much easer. Here is the definition from "Term Rewriting and All That"
 
 ![knuth bendix ordering](/assets/traat/kbo.png)
 
 1. KBO1 says that if the term sizes are different, the bigger one is larger.
-2. KBO2 is the tiebreaking rules for equal sized terms. 2a is not relevant to the ground case. 2b says to break ties using the head symbol. 2c says to recurse lexicographically (compare in order) into the arguments.
+2. KBO2 is the tiebreaking rules for equal sized terms. 2a is not relevant to the ground case. 2b says to break ties using the head symbol. 2c says if the heads are equal to recurse lexicographically (compare in order) into the arguments.
 
 Pretty straightforward actually. Compare by size. Tie break by head symbol and then recurse into arguments.
 
@@ -80,10 +80,12 @@ assert ground_kbo((x + x) + x, x + (x + x)) == Order.GT
 assert ground_kbo((z + z) + z, x * x) == Order.GT
 ```
 
-Why is this interesting? Well, one reason is that it let's you build an egraph. Completion over ground equations is the same thing as congruence closure. Completion for ground equations is guaranteed to terminate because you only produce terms smaller than the largest one you started with. Eventually you run out of terms.
-Critical pairs for ground terms is merely finding a one term as a subterm in another.
+Why is this interesting? Well, one reason is that it let's you build an egraph. Completion over ground equations is the same thing as congruence closure. I think this road leads to extensions of the egraph that include lambdas (using ground versions of higher order kbo) and principled built in destructive rewriting (under what conditions does adding ground equations to a "good" non ground rewrite system retain the good properties?)
 
 # Bits and Bobbles
+
+Completion for ground equations is guaranteed to terminate because you only produce terms smaller than the largest one you started with. Eventually you run out of terms.
+Critical pairs for ground terms is merely finding a one term as a subterm in another.
 
 Working over z3 asts I think is a good idea. It let's me bop in and out of z3 and complies with thew current direction I'm going in knuckledragger. Z3 is a vast raft of functionality.
 
