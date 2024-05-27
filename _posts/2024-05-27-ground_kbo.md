@@ -80,7 +80,11 @@ assert ground_kbo((x + x) + x, x + (x + x)) == Order.GT
 assert ground_kbo((z + z) + z, x * x) == Order.GT
 ```
 
-Why is this interesting? Well, one reason is that it let's you build an egraph. Completion over ground equations is the same thing as congruence closure. I think this road leads to extensions of the egraph that include lambdas (using ground versions of higher order kbo) and principled built in destructive rewriting (under what conditions does adding ground equations to a "good" non ground rewrite system retain the good properties?)
+Why is this interesting? Well, one reason is that it let's you build an egraph. Completion over ground equations is the same thing as congruence closure. I think this road leads to extensions of the egraph that include lambdas (using ground versions of higher order kbo) and principled built in destructive rewriting (under what conditions does adding ground equations to a "good" non ground rewrite system retain the good properties?). I'm coming back around to these ideas. I got stumped and side tracked last time, but they still seem good.
+
+- <https://www.philipzucker.com/egraph-ground-rewrite/>
+- <https://www.philipzucker.com/ground-rewrite-2/>
+<https://pldi24.sigplan.org/details/egraphs-2024-papers/13/E-graphs-and-Automated-Reasoning-Looking-back-to-look-forward>
 
 # Bits and Bobbles
 
