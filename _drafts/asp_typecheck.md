@@ -53,3 +53,7 @@ See frank pfenning where he has different notions of arrow.
 slog
 egglog
 functional compiling
+
+Another related idea:
+Pick priorities for parser operators to mnimize parentheses
+Pick juxtaposition operator to minimize parentheses. How would I do this?

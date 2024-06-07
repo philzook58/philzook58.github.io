@@ -84,7 +84,7 @@ Why is this interesting? Well, one reason is that it let's you build an egraph. 
 
 - <https://www.philipzucker.com/egraph-ground-rewrite/>
 - <https://www.philipzucker.com/ground-rewrite-2/>
-<https://pldi24.sigplan.org/details/egraphs-2024-papers/13/E-graphs-and-Automated-Reasoning-Looking-back-to-look-forward>
+<https://pldi24.sigplan.org/details/egraphs-2024-papers/13/E-graphs-and-Automated-Reasoning-Looking-back-to-look-forward> Giving a talk next month.
 
 # Bits and Bobbles
 

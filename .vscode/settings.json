@@ -21,6 +21,5 @@
         "**/*_adt.pvs": false,
         "**/*.log": true,
         "**/.vscode": true
-    },
-    "julia.environmentPath": "/home/philip/Documents/philzook58.github.io"
+    }
 }

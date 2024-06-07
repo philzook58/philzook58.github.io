@@ -34,18 +34,18 @@ title: Type Theory
 - [Judgement](#judgement)
 - [Inference Rules](#inference-rules)
 - [Computation Rules](#computation-rules)
-  - [Conversion vs Reduction vs Expansion](#conversion-vs-reduction-vs-expansion)
+    - [Conversion vs Reduction vs Expansion](#conversion-vs-reduction-vs-expansion)
 - [Pattern Matching](#pattern-matching)
 - [Metatheory](#metatheory)
-  - [Mechanized Metatheory](#mechanized-metatheory)
-  - [Decidability of type checking](#decidability-of-type-checking)
-  - [Princiapl Types](#princiapl-types)
-  - [Consistency](#consistency)
-  - [Progress](#progress)
-  - [Preservation, Subject Reduction](#preservation-subject-reduction)
-  - [Normalization](#normalization)
-  - [normalization by evaluation](#normalization-by-evaluation)
-  - [Canonicity](#canonicity)
+    - [Mechanized Metatheory](#mechanized-metatheory)
+    - [Decidability of type checking](#decidability-of-type-checking)
+    - [Princiapl Types](#princiapl-types)
+    - [Consistency](#consistency)
+    - [Progress](#progress)
+    - [Preservation, Subject Reduction](#preservation-subject-reduction)
+    - [Normalization](#normalization)
+    - [normalization by evaluation](#normalization-by-evaluation)
+    - [Canonicity](#canonicity)
   - [Computation rules](#computation-rules-1)
     - [Completeness](#completeness)
     - [Soundness](#soundness)
@@ -63,10 +63,10 @@ title: Type Theory
     - [Inconsistent Combinations](#inconsistent-combinations)
     - [Extensionality](#extensionality)
 - [Equality](#equality)
-  - [Extensional vs Intensional](#extensional-vs-intensional)
-  - [Observational Type Theory](#observational-type-theory)
-  - [Judgemental/Definitional / Propositional](#judgementaldefinitional--propositional)
-  - [Univalence](#univalence)
+    - [Extensional vs Intensional](#extensional-vs-intensional)
+    - [Observational Type Theory](#observational-type-theory)
+    - [Judgemental/Definitional / Propositional](#judgementaldefinitional--propositional)
+    - [Univalence](#univalence)
   - [HOTT](#hott)
     - [Older](#older)
 - [Logical Relations](#logical-relations)
@@ -730,6 +730,10 @@ Preservation is very reminiscent of verifying that types are an invariant, or th
 ### Normalization
 
 <https://www.pls-lab.org/en/Normalization>
+
+<https://proofassistants.stackexchange.com/questions/1135/constructive-proof-of-strong-normalization-for-simply-typed-lambda-calculus>
+
+Altenkirch  the4sis <https://www.cs.nott.ac.uk/%7Epsztxa/publ/phd93.pdf> Constructions, inductive types and strong normalizaTION
 
 ### normalization by evaluation
 
@@ -1690,6 +1694,11 @@ tactics are perhaps another operational interpetation of inference rules
 <https://www.youtube.com/watch?v=S0HvfXq3454&ab_channel=Z%C3%BCrichFriendsofHaskell>
 
 # Misc
+<https://www.danielgratzer.com/courses/type-theory-s-2024/lecture-notes.pdf> Principles of Dependent Type Theory - Angiuli, Gratzer
+
+<http://strictlypositive.org/thesis.pdf> mcbride's thesis. pattern matching
+
+<https://proofassistants.stackexchange.com/questions/1135/constructive-proof-of-strong-normalization-for-simply-typed-lambda-calculus>
 
 [smalltt](https://github.com/AndrasKovacs/smalltt) a demo for high performance type theory elaboration. Really good readme too
 [elboration seminar](https://www.youtube.com/playlist?list=PL2ZpyLROj5FOt99f_KCxARvd1hDqKns5b)

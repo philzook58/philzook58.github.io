@@ -3634,6 +3634,7 @@ Reuse z3 formula as formula
 ```
 
 # Proofs
+
 <https://ultimate.informatik.uni-freiburg.de/smtinterpol/smt2022.pdf>  A Simple Proof Format for SMT Jochen Hoenicke, Tanja Schindler <https://ultimate.informatik.uni-freiburg.de/smtinterpol/proof-format.html> RESOLUTE – A Simple Proof Format for SMT-LIB
 
 [Haniel Barbosa - Better SMT proofs for certifying compliance and correctness - IPAM at UCLA](https://www.youtube.com/watch?v=ygsY2LlWyQI&t=7s&ab_channel=InstituteforPure%26AppliedMathematics%28IPAM%29)
@@ -4821,6 +4822,9 @@ n-queens custom csp
 also can be used to watch quantifier instantion.
 
 # Resources
+<https://arxiv.org/abs/2404.16122>  Generalized Optimization Modulo Theories
+<https://arxiv.org/abs/2405.03057> Verifying SQL Queries using Theories of Tables and Relations
+<https://arxiv.org/abs/2205.08095> Reasoning About Vectors using an SMT Theory of Sequences
 
 [Speeding up smt solving via compiler optimizers](https://helloqirun.github.io/papers/FSE_23_Ben.pdf) toss smt into llvm, extract smt back out. llvm optmizations so good they simplify the formula. crazy.
 
