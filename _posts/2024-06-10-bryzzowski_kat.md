@@ -3,7 +3,7 @@ title: Knuckledraggin' Kleene Algebra
 date: 2024-06-10
 ---
 
-I was in the audience watching Alexandra Silva teach Kleene Algerab with tests last week
+I was in the audience watching Alexandra Silva teach Kleene Algebra with tests last week
 <https://www.cs.uoregon.edu/research/summerschool/summer24/topics.php#Silva>
 
 She gave some example problems
@@ -15,7 +15,7 @@ goal = Implies(x*y == y*z, star(x) * y == y * star(z))
 
 ```
 
-I thought it's a fun example to try out knuckledragger, my z3 based python proof assistant.
+I thought it's a fun example to try out [knuckledragger](https://github.com/philzook58/knuckledragger), my z3 based python proof assistant.
 
 Kleene algebra is also very interesting in that it has an axiom that is the analog of induction, but does not require persay bringing in higher order logic. Food for thought.
 
@@ -133,7 +133,11 @@ xlemma(star(star(x)) == star(x), by=kleene + [_4])
 
 # Bits and Bobbles
 
-I'm flagging a bit on proving the others. Oppurtunity for another blog post!
+I'm flagging a bit on proving the others. Opportunity for another blog post!
+
+Finishing out the homework problems.
+
+Actually doing kleene algebra modulo tests could be neat.
 
 But this has made it tempting that I would like something akin to an apply tactic and also the ability to toss into twee.
 
