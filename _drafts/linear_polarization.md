@@ -2,10 +2,36 @@
 title: Linear Logic
 ---
 
-https://bitbucket.org/fpfenning/snax/src/main/
+<https://bitbucket.org/fpfenning/snax/src/main/>
 snax
 
+```python
+from dataclasses import dataclass
+from typing import Callable
+Arr = Callable
 
+@dataclass
+
+type Type = bool | int | Arr[Type,Type]
+from enum import Enum
+Expr = Enum("Expr", "Lam App Var")
+def eval(e):
+    match e:
+        case Expr.Lam, x, body:
+            return body
+
+
+
+
+def eval(x):
+    match type(x):
+        case Arr[a,b]:
+
+
+
+
+
+```
 
 Linear lgic.
 

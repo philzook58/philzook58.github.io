@@ -1,4 +1,77 @@
 
+Logical relations. A relation defined inductively on types (often)
+
+But then we induct on typing derivations to show that terms stay in the semantic relation.
+
+```python
+from z3 import *
+Type = Datatype("Type")
+Type.declare("Bool")
+Type.declare("Arr", ("a", Type), (b, Type))
+Type.declare("ForAll", ("a", ArraySort(StringSort(),Type)))
+Type.declare("TVar", ("v", StringSort()))
+
+# Any = Term
+Any = Datatype("Any")
+Any.declare("Fun", ("x", ArraySort(StringSort(),Any))) # not ok. But if I stick to wf, it is ok. hmm
+Any.declare("Bool", ("x", BoolSort()))
+Any.declare("BigLambda", ("x", ArraySort(Type, Any)))
+
+
+
+def typeof(sort): #wf
+    wf = Function("wtypeof", sort, Type, BoolSort())
+    match sort:
+
+
+parametric = Function("para", Type, Any, Any, BoolSort()) #?
+
+
+Context = ArraySort(StringSort(), Type)
+C
+Subst = ArraySort(StringSort(), Any)
+
+wf_def = ForAll([x], wf(ctx, x, ty) == Or(ty == Type.Bool,  And(Type.is_TVar(ty), ctx[Type.t(ty)) == Type.Bool))
+```
+
+```python
+
+Bool = [(True, True), (False,False)]
+Int = [(i,i) for i in range(8)]
+
+# a function
+Not = [(x, not x) for x in [True,False]]
+
+
+# imagine a world where we implement using strings?
+[(i, str(i)) for i in range(10)]  # decimal strrings/ hex strings
+[(i, "1" * i) for i in range(10)]  # unary strings
+
+# This is a parametric function. 
+id_ = Bool + Int
+
+
+
+Arr = Callable
+
+# a test if parametric?
+def parametric(ty):
+    def res(R):
+        match ty:
+            case bool:
+                return R in Bool
+            case int:
+                return R in Int
+            case Arr[a,b]:
+                input = parametric(a)
+                [f[x], g[y]  for (x,y) in input for (f,g) in R for]
+
+#step indexing
+
+
+
+```
+
 The opening paragraph to Reynolds paper is more interesting maybe than the body.
 
 It considers constructing complex numbers as t-theta radius angle pairs vs x-y cartesian components.
