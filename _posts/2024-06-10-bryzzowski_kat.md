@@ -3,7 +3,7 @@ title: Knuckledraggin' Kleene Algebra
 date: 2024-06-10
 ---
 
-I was in the audience watching Alexandra Silva teach Kleene Algerab with tests last week. Very good stuff.
+I was in the audience watching Alexandra Silva teach Kleene Algerab with tests last week
 <https://www.cs.uoregon.edu/research/summerschool/summer24/topics.php#Silva>
 
 She gave some example problems
@@ -12,6 +12,7 @@ She gave some example problems
 a* a* = a*
 a** = a*
 goal = Implies(x*y == y*z, star(x) * y == y * star(z))
+
 ```
 
 I thought it's a fun example to try out knuckledragger, my z3 based python proof assistant.
@@ -145,6 +146,10 @@ Proof pruning via unsat core would be helpful
 Z3 has built in regex, so reflecting to them might be interesintg
 
 Using general purpose equational reasoning for kleene algerba is obscene. There are special automata thingies for it. Some things are decidable. I think this is kind of the benefit of KAT.
+
+A while back I did something similar in egglog inspired by something Greenberg was doing in egg 1 <https://github.com/philzook58/egg-smol/blob/scratchpad2/tests/kleene.egg>
+
+KAT modulo theories. Port to python?
 
 Ideas on overloading
 
