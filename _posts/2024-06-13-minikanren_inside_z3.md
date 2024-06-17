@@ -5,7 +5,7 @@ date: 2024-06-13
 
 Z3 actually has a logic programming language inside it if you know how to look. This makes it one the easiest to pull off the shelf because Z3 has so much work put into it and excellent bindings. It also is perhaps one of the most declarative logic programming languages available with very cool strong theory support.
 
-Here I talked about how to use Z3 to make a minikanren, keeping the search in the python metalayer. <https://www.philipzucker.com/minikanren-z3py/> This is still a useful and interesting idea. I mention that the metalevel `conj` and `disj` can be replaced by z3's `And` and `Or` but at the cost of a quantifier. This is still true.
+Here I talked about how to use Z3 to make a [minikanren](http://minikanren.org/), keeping the search in the python metalayer. <https://www.philipzucker.com/minikanren-z3py/> This is still a useful and interesting idea. I mention that the metalevel `conj` and `disj` can be replaced by z3's `And` and `Or` but at the cost of a quantifier. This is still true.
 
 I find myself revisiting these old ideas with hopefully more sophisticated perspective.
 
@@ -43,7 +43,7 @@ In a stricter sense that z3 implements something akin to multi sorted first orde
 
 The thing Z3 (or any smt solver) tries to do is return models that satisfy the constraints. It does not really have an operational semantics.
 
-What the axioms actually say is that `path` is transitive with respect to `edge`. This is _not_ the same as saying `path` is the transitive closure of `edge`.
+What the axioms actually say is that `path` is transitive with respect to `edge`. This is _not_ the same as saying `path` is the transitive closure of `edge`. Transitive closure is inexpressible in a certain generic sense inside first order logic <https://math.stackexchange.com/questions/1286141/transitive-closure-and-first-order-logic> . As with many no-go theorems, I'm not sure there isn't perhaps a way around achieving the spirit of the objective that avoids the preconditions of the theorem.
 
 The transitive closure is the _least_ transitive relation. Z3 is still free to overapproximate `path`. A simple useful test case is to consider whether `path=True` still works even when it's not
 
