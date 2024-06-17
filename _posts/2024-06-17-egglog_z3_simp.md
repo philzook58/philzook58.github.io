@@ -96,7 +96,7 @@ print(res)
 # Bits and Bobbles
 
 I might need to parse back the egglog. There's a chance the sexpr reader can do it. Some kind of preludes might be necessary to deal with egglog primitives.
-Some kind of smtlib prelude rules would be nice for egglog.
+Some kind of smtlib prelude rules would be nice for egglog. Ping ponging between z3's simplify and egglog's might be nice, to avoid having to write out all the stuff z3 already does good.
 Bitvectors in particular. Arbitrary sized bitvectors in particular particular.
 
 One of the ideas behind knuckledragger is bolt whatever solver I think I can trust into the kernel with as little overhead as possible. I just sort of want a system to track my calls to solvers that I feel chain together.
