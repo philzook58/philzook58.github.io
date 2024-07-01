@@ -10,6 +10,8 @@ title: Intrinsically Sorted Lists and Tuples, Nats, Lists, Free Monads
 wordpress_id: 2519
 ---
 
+Unordered pairs <https://byorgey.github.io/blog/posts/2024/06/25/unordered-n-tuple-product.html>
+`(a -> Bool) -> Either Bool (a,a)` That's neat. You find the pieces of a set by using separation predictaes (a form of observation?). You could use separation. It's kind of like delayed notion of ordering. The obvious (a -> Bool) is (> 42) as a splitter for a tree. Observations like these work even in egglog sets.
 
 Sometimes you can express interesting datatypes that feel like they might require dependent types using ordinary datatypes.
 A nonempty list is a simple example. This could be represented as a dependent sum `{l : list | l != nil}`, but obviously it is representable as `type 'a nonempty = 'a * 'a list`. You simply unroll the list one layer and remove the nil case. Maybe this is clunky to keep making new types for different prpoperties.
@@ -120,7 +122,7 @@ Difference lists and the integers [[https://en.wikipedia.org/wiki/Difference_lis
     zero ~ ('s, 'z, 'z) , (('s,'z1, 'z1), 'z, 'z1 )
     We can use unification to kind of replace higher order functions.</code>
 
-What's next up the chain? An even higher kinded type. Nat :: *, List ::* -> _, Free :: (_ -> _) -> (_ -> *).  It looks like some kind of bird. `BirdParty :: ((* -> *) -> (* -> *)) -> ((* -> *) -> (* -> *))`
+What's next up the chain? An even higher kinded type. Nat :: _, List ::_ -> _, Free :: (_ -> _) -> (_ -> *).  It looks like some kind of bird. `BirdParty :: ((* -> *) -> (* -> *)) -> ((* -> *) -> (* -> *))`
 
 Is this related to the homotopy path idea? Paths need fancy types because we want to make sure they stay continuous. An intrisnic way to enforce this is to use udlr directions. Bad paths are then unrepresentable. However, There may be obstructions to doing this globally. Boundaries. Perhaps those obstructions are exactly homotopy or some topological concept? We can't get a global chart equivalent to a grid? It seems like a solidly 2 dimensional shape can be triangulated. We need a mapping of moves + position -> newposition.
 
