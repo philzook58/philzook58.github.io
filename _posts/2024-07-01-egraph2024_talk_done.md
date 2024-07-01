@@ -156,7 +156,7 @@ union find.
 The pieces of a simple union find algorithm can be dignified via
 reference to these rules.
 
-``` {.python language="Python" basicstyle="\\tiny"}
+```python
 class UF():
   def __init__(self):
       self.rules = {}
