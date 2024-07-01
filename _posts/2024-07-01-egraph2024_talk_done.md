@@ -52,6 +52,7 @@ Another great year!
 ## Other notes / thoughts from conference
 
 - Max B is into serialization and hashing. The Ground completion egraph is easy to write down canononically, whereas the egg egraph it is not obvious (general graph hashing / isomorphism techniques?). Each rewrite rules is a tuple. Terms have an ordering to them. Write down the tuples in order. That is a canonical representation of the egraph that is hashable via the usual structural means.  <https://www.philipzucker.com/hashing-modulo/>
+- The GRS egraphs might be nice for the "use egraph to get full equational system" problem of QEL <https://pldi23.sigplan.org/details/egraphs-2023-papers/8/Partially-Complete-Quantifier-Elimination> (they wanted to use it for fast quantifier elimination)
 - Refinement in egraphs. A possibly a very useful thing if it can be straightened out. ALive2, refining optimizations. Good question from Zach
 - Seems like someone in the UW crew as attacking the hyperreals. Fantastic!
 - I'm excited for possible future collaborations with Max B and CF in more serious compiler work. Good convos.
