@@ -1,5 +1,5 @@
 ---
-title: EGraphs as Ground Completion and EGRAPHS 2024 notes
+title: EGraphs as Ground Completion Talk and EGRAPHS 2024 notes
 date: 2024-07-01
 ---
 
