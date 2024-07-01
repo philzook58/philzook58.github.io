@@ -3,9 +3,9 @@ title: EGraphs as Ground Completion and EGRAPHS 2023 notes
 date: 2024-07-01
 ---
 
-I'm back from Copenhagen! It was really fantastic time. I really wish I had stayed for Thursday and Friday as i was still having great conversations. It wasn't clear when I was booking if I would get any time from work, so I tried to hedge things a little. I looked into changing my flights around and it would've doubled the cost of my trip. Oh well, live and learn.
+I'm back from Copenhagen! It was really fantastic time. I really wish I had stayed for Thursday and Friday as I was still having great conversations. It wasn't clear when I was booking if I would get any time from work, so I tried to hedge things a little. I looked into changing my flights around and it would've doubled the cost of my trip. Oh well, live and learn.
 
-I rerecorded a version of my talk while i still remember roughly how to give it. Unfortunately, it seems the stream of my high energy audience version has a stuttering problem
+I rerecorded a version of my talk while I still remember roughly how to give it. Unfortunately, it seems the stream of my high energy audience version has a stuttering problem
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/74VP0SbNHDE?si=FFaR9ExzA_GMM-yD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
@@ -14,12 +14,16 @@ I rerecorded a version of my talk while i still remember roughly how to give it.
 Ground completion gives a canonical rewrite system that is as visualisable as regular egraphs, but has better scoping and is more ready for extensions.
 
 $$  mul(a, two) \rightarrow shift(a, one) $$
+
 $$  mul(a, one) \rightarrow a $$
+
 $$ div(two, two) \rightarrow one $$
+
 $$  div(shift(a, one), two) \rightarrow a $$
 
 Can be drawn as (representing rewrite arrows as red dotted arrows)
 ![ground rewrite egraph](/assets/egraph2024/egraph2.svg)
+
 Whereas the egg diagram looks like
 ![egg egraph ](/assets/egraph2024/egraphs_1.svg)
 
@@ -34,24 +38,29 @@ Another great year!
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/JPA8QwLHNzo?si=73qlWZNhvUF4cVPh&amp;start=1572" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-- The highlight may have been the slotted egraphs talk. I think they are really on to something. For my money, I just want a solution to alpha equivalence in the egraph, which this may be a functioning version of. I have a suspicion that their solution can be cast as ground nominal completion if that's what you're into. <https://pldi24.sigplan.org/details/egraphs-2024-papers/10/Slotted-E-Graphs>
+- The highlight may have been the slotted egraphs talk, which I actually missed (I was chatting in the hall but I watched it that night). I think they are really on to something. For my money, I just want a solution to alpha equivalence in the egraph, which this may be a functioning version of. I have a suspicion that their solution can be cast as ground nominal completion if that's what you're into. <https://pldi24.sigplan.org/details/egraphs-2024-papers/10/Slotted-E-Graphs>. Slots are wires. Maybe integrate the permutation union find (you can tag the dges of a union find with group elements <https://www.philipzucker.com/union-find-groupoid/>)? This seems similar to why Kmett was thinking about such things anyway. He was doing something nominal. <https://youtu.be/KxeHGcbh-4c?t=1254>
 - The hyperegraphs talk was attacking some things along lines I have been musing about. I have not been going category theory, but I think there is an argument that we keep trying to model graphs (usually program graphical IRs) as terms by cutting them up in fairly arbitrary algebraic flavored ways. There _is_ an possible indirection for graphs/hypergraphs analogous to that in the egraph. If I wanted to cut a little chunk out of the egraph and replace it using a rewrite rule, I can keep both copies if I put a boundary class hyperedge around the region I'm cutting. Non overlapping graph/hypergraph rewriting can chare a lot of structure in this way. For overlapping structure, you need to expand out / push this boundary enough that you can find your complete pattern. Maintaining this mushing around of hypedge eclasses seems annoying. Recollecting up shared structure / "canonization" I think can be done greddily and imperfectly via something analgoous to the FM algorithm for greedily improving partitioning. I think in their presentation they did not give any clues to how to implement such a thing, so the idea of "baked in structure" seems false without that. Maybe mathematically its baked in but that isn't quite enough. <https://en.wikipedia.org/wiki/Fiduccia%E2%80%93Mattheyses_algorithm>  <https://pldi24.sigplan.org/details/egraphs-2024-papers/9/Equivalence-Hypergraphs-E-Graphs-for-Monoidal-Theories>
 - The SpEQ paper is honestly shocking (in an impressive way). I would describe it as kind of like instruction selection for big kernels like MKL. The use case barely skirted around issues of alpha equivalence in the egraph. Rules are intrinsically alpha equivalent so that's fine, but also because they weren't generating new stuff. It also reminds me a bit of Jimmy Koppel's code search YOGO <https://www.jameskoppel.com/publication/yogo/>
 - Hardware continutes to be very intriguing. A lot of promise there. Clock gating. Data gaating. Transparent latch
 - Test Set reduction. Interesting use case
 - The monoidal category talk reminds me a lot of a line of work I was pursuing and actually brought me into egraphs [Rewriting Monoidal Categories in the Browser with Egg](https://www.philipzucker.com/rust-category/)
-- The disequality talk I thought was quite enjoyable and illuminating. "Forbid" is a magic word for disequality in egraphs and was considered by Nelson. Disequality edges in the graph. Things you aren't equal to is kind of a set/lattice like analysis you can tag. Maybe it would be nice to just have a pull request into egg putting this feature in there if its as easy to do as the slides suggest? <https://pldi24.sigplan.org/details/egraphs-2024-papers/14/Disequalities-in-E-Graphs-An-Experiment>
+- The disequality talk I thought was quite enjoyable and illuminating. "Forbid" is a magic word for disequality in egraphs and was considered by Nelson. Disequality edges in the graph. Things you aren't equal to is kind of a set/lattice like analysis you can tag. Maybe it would be nice to just have a pull request into egg putting this feature in there if its as easy to do as the slides suggest? <https://pldi24.sigplan.org/details/egraphs-2024-papers/14/Disequalities-in-E-Graphs-An-Experiment>. Would it be nice to reify equality edges in the diagram too? Is it not meaningful?
 
-- Refinement in egraphs. A possibly a very useful thing if it can be straightended out. ALive2. Good question from Zach
+## Other notes / thoughts from conference
+
+- Refinement in egraphs. A possibly a very useful thing if it can be straightened out. ALive2, refining optimizations. Good question from Zach
 - Seems like someone in the UW crew as attacking the hyperreals. Fantastic!
 - I'm excited for possible future collaborations with Max B and CF in more serious compiler work. Good convos.
 - Z3 inside Z3 for hilbert choice
 - JIT is interesating. Linearized control flow but with contexts coming from guards/asserts
 - Cheney List copying
 - Householder <https://www.cs.princeton.edu/~zkincaid/> ? What was Zach talking about?
-- Eva compiler for Reals. Daisy
+- Eva compiler for Reals. Daisy. Comparison of float32 vs float16 instead of attack reals? More useful even sometimes since the "spec" is some program people know works and we just want to reduce bitwidth for speed or something. Also if changing float size does something weird, something is fishy anyway.
 - Bombe game <https://store.steampowered.com/app/2262930/Bombe/>. Is prolog like?
-- Hydra
+- Hydra <https://users.cs.utah.edu/~regehr/generalization-oopsla24.pdf> Hydra: Generalizing Peephole Optimizations with Program
+Synthesis
+- Solver for arbitrary bitvector length?
+- Rudi thinks I should seriously bench mark bottom up ematching. It is important to have an outsider believe in something.
 
 # My Talk Abstract
 
