@@ -200,14 +200,25 @@ $$foo(biz(baz), bar) = bar$$
 
 becomes
 
-$$bar = e1$$ $$baz = e2$$ $$biz(e2) = e3$$ $$foo(e3,e1) = e4$$
+$$bar = e1$$
+
+$$baz = e2$$
+
+$$biz(e2) = e3$$
+
+$$foo(e3,e1) = e4$$
+
 $$e4 = e1$$
 
 With an appropriate ground term ordering that puts every $e$ less than
 any function symbol will orient the system into the form
 
 $$bar \rightarrow e1$$ $$baz \rightarrow e2$$
-$$biz(e2) \rightarrow  e3$$ $$foo(e3,e1) \rightarrow e4$$
+
+$$biz(e2) \rightarrow  e3$$
+
+$$foo(e3,e1) \rightarrow e4$$
+
 $$e4 \rightarrow e1$$
 
 Completing a ground system of this sort will put it in a canonical form.
@@ -715,8 +726,6 @@ cnf(false, conjecture, a = e).
 - Ground completion "solves" ground equalities
 - E-graph "solves" ground equalities
 
- <font size="10">
-
 | TRS | Egraph |
 |------|--------|
 | Canonical Term | EClass |
@@ -724,8 +733,6 @@ cnf(false, conjecture, a = e).
 | Run Rules | Extract |
 | Term Orders | Extract Objective |
 | KBO Weights  |  Weights |
-
-<font size="10">
 
 ```python
 %%file /tmp/groundshift.p
@@ -824,9 +831,13 @@ $$foo(biz(baz), bar) = bar$$
 ----------------------
 
 $$bar \rightarrow e1$$
+
 $$baz \rightarrow e2$$
+
 $$biz(e2) \rightarrow  e3$$
+
 $$foo(e3,e1) \rightarrow e4$$
+
 $$e4 \rightarrow e1$$
 
 - Two types of rules
@@ -859,17 +870,12 @@ $$e4 \rightarrow e1$$
 
 # Strategies
 
-<font size="10">
-
-<center> $\frac{A \lor B \quad \neg A \lor C}{B \lor C} $ </center>
-</font>
+ $\frac{A \lor B \quad \neg A \lor C}{B \lor C} $
 
 - Incomplete but pragmatic limitations on resolution
   - Set of Support - Rules vs EGraph
   - Prolog
   - Datalog ~ Hyperresolution + UR-resolution
-
-<font size="5">
 
 | Prop | Equational |
 |------|------------|
@@ -883,8 +889,6 @@ $$e4 \rightarrow e1$$
 | Lambda Prolog | ? |
 | Hypothetical Datalog | ? |
 | Minikanren | ? |
-
-</font>
 
 # The Main Points of The Talk
 
