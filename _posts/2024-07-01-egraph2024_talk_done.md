@@ -12,6 +12,7 @@ I rerecorded a version of my talk while I still remember roughly how to give it.
 # The Big Takeaway From My Talk
 
 Ground completion gives a canonical rewrite system that is as visualisable as regular egraphs, but has better scoping and is more ready for extensions.
+The standard [egg](https://egraphs.org/) example of turning multiply by two into shift by 1, vs noticing a division cancellation becomes the rewrite system
 
 $$  mul(a, two) \rightarrow shift(a, one) $$
 
@@ -22,9 +23,11 @@ $$ div(two, two) \rightarrow one $$
 $$  div(shift(a, one), two) \rightarrow a $$
 
 Can be drawn as (representing rewrite arrows as red dotted arrows)
+
 ![ground rewrite egraph](/assets/egraph2024/egraph2.svg)
 
 Whereas the egg diagram looks like
+
 ![egg egraph ](/assets/egraph2024/egraphs_1.svg)
 
 Note that
