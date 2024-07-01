@@ -12,7 +12,7 @@ I rerecorded a version of my talk while I still remember roughly how to give it.
 # The Big Takeaway From My Talk
 
 Ground completion gives a canonical rewrite system that is as visualisable as regular egraphs, but has better scoping and is more ready for extensions.
-The standard [egg](https://egraphs.org/) example of turning multiply by two into shift by 1, vs noticing a division cancellation becomes the rewrite system
+The standard [egg](https://egraphs.org/) example of ground equations describing multiply by two = shift by 1, and noticing a division cancellation becomes upon equational/knuth bendix completion the ground rewrite system
 
 $$  mul(a, two) \rightarrow shift(a, one) $$
 
