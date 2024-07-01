@@ -52,15 +52,21 @@ Another great year!
 - Seems like someone in the UW crew as attacking the hyperreals. Fantastic!
 - I'm excited for possible future collaborations with Max B and CF in more serious compiler work. Good convos.
 - Z3 inside Z3 for hilbert choice
-- JIT is interesating. Linearized control flow but with contexts coming from guards/asserts
+- JIT is interesating. Linearized control flow but with contexts coming from guards/asserts. Superposition on inline vs not in egraph a la Oliver?
 - Cheney List copying
 - Householder <https://www.cs.princeton.edu/~zkincaid/> ? What was Zach talking about?
 - Eva compiler for Reals. Daisy. Comparison of float32 vs float16 instead of attack reals? More useful even sometimes since the "spec" is some program people know works and we just want to reduce bitwidth for speed or something. Also if changing float size does something weird, something is fishy anyway.
 - Bombe game <https://store.steampowered.com/app/2262930/Bombe/>. Is prolog like?
 - Hydra <https://users.cs.utah.edu/~regehr/generalization-oopsla24.pdf> Hydra: Generalizing Peephole Optimizations with Program
 Synthesis
+- "Coninductive" Egraphs. Useful for PEGs? Mark some things as object like identifiers. Observations go in ground completion egraph `head(s) -> 3; tail(s) -> s1`.Run automata minimization on them.
 - Solver for arbitrary bitvector length?
 - Rudi thinks I should seriously bench mark bottom up ematching. It is important to have an outsider believe in something.
+- Gotta get in on that sparse tensor shit
+- SSI is kind of like ASSUME nodes <https://dspace.mit.edu/bitstream/handle/1721.1/86578/48072795-MIT.pdf>
+- Hyperreal Asbtract rewrite system and lyapunov functions? Insane talk.
+- Refcells lambdas. Linear typing. Prolog lambdas. Unification variables are a "resource"
+- Prolog continuations  / CPS and Nat decuct -> sequent calc
 
 # My Talk Abstract
 
