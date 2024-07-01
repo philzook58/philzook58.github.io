@@ -3,7 +3,7 @@ title: EGraphs as Ground Completion Talk and EGRAPHS 2024 notes
 date: 2024-07-01
 ---
 
-I'm back from Copenhagen! It was really fantastic time. I really wish I had stayed for Thursday and Friday as I was still having great conversations. It wasn't clear when I was booking if I would get any time from work, so I tried to hedge things a little. I looked into changing my flights around and it would've doubled the cost of my trip. Oh well, live and learn.
+I'm back from Copenhagen! It was really fantastic time. Thanks everyone for the chats and saying you read my blog / enjoyed my talk! I really wish I had stayed for Thursday and Friday as I was still having great conversations. It wasn't clear when I was booking if I would get any time from work, so I tried to hedge things a little. I looked into changing my flights around and it would've doubled the cost of my trip. Oh well, live and learn.
 
 I rerecorded a version of my talk while I still remember roughly how to give it. Unfortunately, it seems the stream of my high energy audience version has a stuttering problem
 
@@ -70,6 +70,7 @@ Synthesis
 - Hyperreal Asbtract rewrite system and lyapunov functions? Insane talk.
 - Refcells lambdas. Linear typing. Prolog lambdas. Unification variables are a "resource"
 - Prolog continuations  / CPS and Nat decuct -> sequent calc
+- Their geese are like ours, but wrong.
 
 # My Talk Abstract
 
