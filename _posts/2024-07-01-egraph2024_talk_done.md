@@ -550,16 +550,12 @@ fof(goal, conjecture, true = false).
 - Find = Convergent Dynamical System
 - Convergent Dynamic System = Confluent Abstract Rewrite System
 
-<font size="10">
-
 | TRS | UF |
 |------|---------------|
 | Run TRS  |           Find    |
 |  Add equation   |        Union     |
 | R/L simplify | Compression |
 | Term Ordering | Tie Breaking |
-
-</font>
 
 ```python
 %%file /tmp/unionfind.p
