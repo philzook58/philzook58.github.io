@@ -316,7 +316,7 @@ We can also support rules and multipatterns
                 self.solver.add(And(rhs))
 ```
 
-Z3 _also_ has an extremely convenient hash cons implementation.
+Z3 can also be used for subsumption checks to see if new info is redundant with respect to already derived data, or perhaps to back subsume already derived constraints. I figured for a first pass, just let z3 have it all. It probably has it's own more efficient subsumption mechanisms than me doing it manually
 
 The newly exposed egraph innards. Only from C++ api? Undocumented, unsupported. <https://x.com/BjornerNikolaj/status/1764793235246076313>
 
