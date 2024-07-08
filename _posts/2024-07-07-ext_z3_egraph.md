@@ -3,7 +3,7 @@ title: An External Z3 Egraph for Egraphs Modulo Theories
 date: 2024-07-07
 ---
 
-`EMT = SMT - SAT`
+`EMT ~ SMT - SAT`
 
 Satisfiability Modulo Theories is basically SAT + Egraph + bits of other things like linear programming. The egg paper ematching algorithm is based off the one described for z3. Even if it isn't intended for the use case, one feels like the z3 egraph and ematcher would be mighty convenient thing for equality saturation.
 
@@ -294,6 +294,8 @@ print(E)
     EGraph(R=[(1 + 2 + z, 3 + z), (1 + 2 + z, 3 + z), (y, 2), (x, 1)], E=[], T={Real: {2, 3 + z, z, 1, 2 + z}})
 
 # Bits and Bobbles
+
+`EMT ~ SMT - SAT` is slightly inaccurate because we want minimal models. Also we want the `simp : Term -> Term` mode rather than `prove_eq : Term -> Term -> Bool` mode
 
 If you wanted to, you could do the same thing here with egg or egglog, by reflecting every equality learned into a solver object held by the egraph. This solver is then available for use in guards.
 
