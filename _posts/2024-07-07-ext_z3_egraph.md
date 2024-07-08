@@ -368,3 +368,50 @@ s.model()
  a = S!val!0,
  c = S!val!2,
  i = [S!val!3 &rarr; S!val!7, S!val!5 &rarr; S!val!7, else &rarr; S!val!6]]
+
+# Another approach
+
+Interesting idea, instead of using the reduction via `R` to do s subsumption check in `union` or to ematch into `T` we can cast both as smt queries themselves.
+
+Quite brute force, quite a lot of z3 calls.
+Something like this.
+
+```python
+
+from dataclasses import dataclass
+from z3 import *
+@dataclass
+class EGraph():
+    E: list[tuple(ExprRef, ExprRef)]
+    T: dict[SortRef]
+    def __init__(self):
+        self.E = []
+        self.T = defaultdict(set)
+        self.solver = Solver()
+    def add_term(self, t):
+        self.T[t.sort()].add(t)
+        if is_app(t):
+            for t in t.children():
+                self.add_term(t)
+    def union(self, t1, t2, reason=None):
+        # use solver for subsumption check rather than reducing.
+        self.solver.push()
+        self.solver.add(t1 != t2)
+        res = self.solver.check()
+        self.solver.pop()
+        if res == sat: # non redundant info
+            self.solver.assert_and_track(t1 == t2, ) # add and track?
+            self.E.append((t1,t2, reason)) # add reason
+    def rw(self, sorts, f):
+        for xs in product(*[self.T[sort] for sort in sort]): # maybe I could internalize this loop into z3 too?
+            lhs, rhs = f(xs)
+            self.solver.push()
+            # this avoids the reduction step to check if in self.T
+            self.solver.add(Not(Or(lhs == t for t in self.T[lhs.sort()]))
+            res = self.solver.check() # can give unsat core reason for why lhs == pat[xs]. Is this actually  useful?
+            self.solver.pop()
+            if res == unsat:
+                core = self.get_unsat_core()
+
+                self.union(lhs, rhs, reason=("rule", core))
+```

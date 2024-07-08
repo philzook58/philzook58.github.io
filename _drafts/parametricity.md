@@ -1,4 +1,7 @@
 
+Positive and negative information flow.
+Relational models lifted to probablistic programming languages could talk about a notion of cross entropy.
+
 Logical relations. A relation defined inductively on types (often)
 
 But then we induct on typing derivations to show that terms stay in the semantic relation.
