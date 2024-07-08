@@ -297,7 +297,7 @@ print(E)
 
 `EMT ~ SMT - SAT` is slightly inaccurate because we want minimal models. Also we want the `simp : Term -> Term` mode rather than `prove_eq : Term -> Term -> Bool` mode
 
-If you wanted to, you could do the same thing here with egg or egglog, by reflecting every equality learned into a solver object held by the egraph. This solver is then available for use in guards.
+If you wanted to, you could do the same thing here with egg or egglog, by reflecting every equality learned into a solver object held by the egraph. This solver is then available for use in guards. You could extract at each step, or maintain a map from eclasses to special consts `Const("e54", Sort)`.
 
 An alternative approach might be the have z3_formula be objects inside your egraph, an external datatype like f64 or string. This is somewhat like the formulog approach.
 
