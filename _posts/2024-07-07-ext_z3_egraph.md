@@ -299,6 +299,8 @@ print(E)
 
 If you wanted to, you could do the same thing here with egg or egglog, by reflecting every equality learned into a solver object held by the egraph. This solver is then available for use in guards. You could extract at each step, or maintain a map from eclasses to special consts `Const("e54", Sort)`.
 
+Could I used z3 to achievea notion of context / conditional equality? Twee style ite?
+
 An alternative approach might be the have z3_formula be objects inside your egraph, an external datatype like f64 or string. This is somewhat like the formulog approach.
 
 We can also support rules and multipatterns
