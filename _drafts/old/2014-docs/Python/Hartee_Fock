@@ -1,0 +1,32 @@
+
+
+#array of basis orbital functions
+def orbital(x,y,z,n,l,m,Z):
+    return Laguerre*SphericalHamronic
+
+
+basis = 
+
+#Find Matrix Elements
+def coulomb(r1, Z1, r2, Z2):
+  #  integrate orbital 1 * orbital 2 * coulomb
+
+
+# overlap integrals
+def overlap(r1, Z1, r2, Z2):
+    #integrate orbital 1 times orbital 2
+    
+
+def kinetic(r1, Z1, r2, Z2):
+
+#Find Kinetic Energy Elements
+
+
+
+#Hartree Fock Section
+def exchange:
+
+
+def repulsion:
+
+

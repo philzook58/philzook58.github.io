@@ -1,0 +1,9 @@
+import numpy as np
+import scipy as sp
+import matplotlib.pyplot as plt
+from scipy import linalg
+
+
+points = np.arange(1,5)
+A = np.vander(points)
+print A

@@ -1,0 +1,11 @@
+import matplotlib.pyplot as plt
+import scipy as sp
+import numpy as np
+import scipy.linalg as linalg
+import scipy.integrate as integ
+import Matlib
+
+
+#Do 2d wave equation
+#2d laplace
+#compare to 

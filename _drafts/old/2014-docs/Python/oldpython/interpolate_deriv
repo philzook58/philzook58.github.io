@@ -1,0 +1,16 @@
+import numpy as np
+import scipy as sp
+import matplotlib.pyplot as plt
+from scipy.optimize import fmin
+from scipy import interpolate
+
+
+
+dx = 0.1
+x = np.linspace(0,10,100)
+y = np.sin(x)
+plt.plot(x,y)
+tck = interpolate.splrep(x,y,s=0)
+dy = interpolate.splev(x,tck,der=1)
+plt.plot(x,dy)
+plt.show()

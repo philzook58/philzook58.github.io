@@ -1,0 +1,45 @@
+import numpy as np
+import scipy as sp
+import matplotlib.pyplot as plt
+from scipy.optimize import fmin
+
+
+x2 = np.linspace(0,1,4)
+x3 = np.linspace(0,1,5)
+x6 = np.linspace(0,1,8)
+x25 = np.linspace(0,1,27)
+
+y2 = np.sin(x2)
+
+y3 = np.sin(x3)
+y6=np.sin(x6)
+y25=np.sin(x25)
+
+
+def f(x):
+    return np.sin(sp.pi*5*x)
+
+    
+def chunkplot(N):
+    x = np.linspace(0,1,N+2)
+    y =  f(x)
+    plt.plot(x,y,label=str(N)+" Chunks")
+    #plt.legend((str(N)+" Chunks"))
+
+
+x = np.linspace(0,1,200)
+y = f(x)
+plt.plot(x,y,label="Actual")
+chunkplot(2)
+#chunkplot(3)
+chunkplot(6)
+#chunkplot(25)
+
+"""
+plt.plot(x2,y2,x3,y3,x6,y6,x25,y25)
+plt.legend(("2 Chunks","3 Chunks","6 Chunks","25,Chunks"))
+"""
+plt.legend()
+plt.show()
+            
+

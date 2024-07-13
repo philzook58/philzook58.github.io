@@ -18,6 +18,12 @@ youtube-dl is the way to go I guess
 
 <https://github.com/yt-dlp> hmm this is better?
 
+<https://www.youtube.com/playlist?list=WL>
+
+```
+yt-dlp --cookies-from-browser firefox --flat-playlist --dump-json "https://www.youtube.com/playlist?list=WL" > watchlater.json
+```
+
 chatgpt made this script for extraction
 
 ```python
@@ -80,6 +86,748 @@ if __name__ == "__main__":
 ```
 
 # YouTube Playlists
+
+## watch later
+
+### [Claudio Sacerdoti Coen: A taste of ELPI](https://www.youtube.com/watch?v=Yi82LcqHvLg)
+
+### [William Farmer: An Alternative Approach to Formal Mathematics](https://www.youtube.com/watch?v=8M6FE-fCMjI)
+
+### [Josef Urban: Autoformalization - ten years into the game](https://www.youtube.com/watch?v=4JeezEGc_gQ)
+
+### [Staged Relational Interpreters: Running Backwards, Faster](https://www.youtube.com/watch?v=mmEsaJwG2xk)
+
+### [Wasm Research Day 2024 – Andreas Rossberg, Engineering a Formal Language Spec](https://www.youtube.com/watch?v=-ntvbzlPclc)
+
+### [Tutorial: "Cool Trick in Matrix Analysis" by Frederik vom Ende](https://www.youtube.com/watch?v=VJunryudw2o)
+
+### [2021 LLVM Dev Mtg “A New Approach to Removing Redundant Conditions in LLVM”](https://www.youtube.com/watch?v=1hm5ZVmBEvo)
+
+### [Mohammad Abdulaziz: Formalising the Theory of Combinatorial Optimisation](https://www.youtube.com/watch?v=VtSJSiXs06g)
+
+### [Jaques Carette: Unavoidable Mathematics](https://www.youtube.com/watch?v=FKLXhX2z0Dg)
+
+### ["On the Mathematical Necessity of the Infinite" by Hugh Woodin](https://www.youtube.com/watch?v=KI4yrWzRSWI)
+
+### [[PLDI'24] Reyjavik - EGRAPHS (Jun 24th)](https://www.youtube.com/watch?v=JPA8QwLHNzo)
+
+### [OPLSS'24: Steve Zdancewic [3/4]](https://www.youtube.com/watch?v=hUzwsT0PvQU)
+
+### [Ekaterina Verbitskaia "Enabling Relational Programming through Specialization"](https://www.youtube.com/watch?v=E__s4gdGMiU)
+
+### [Nicolas Thiéry: Categories, axioms, constructions in SageMath: Modeling mathematics for fun/profit](https://www.youtube.com/watch?v=SrSAlRH03mk)
+
+### [C*-Algebra Course Lecture 1](https://www.youtube.com/watch?v=LuXGxlcqPD8)
+
+### [OPLSS'24: Paul Downen [4/4]](https://www.youtube.com/watch?v=RMJFKwsqmWY)
+
+### [OPLSS'24: Steve Zdancewic [2/4]](https://www.youtube.com/watch?v=Mm9oQI2uQxY)
+
+### [13 - Multi-Way / Worst-Case Optimal Join Algorithms (CMU Advanced Databases / Spring 2023)](https://www.youtube.com/watch?v=knyIDmbJQno)
+
+### [Introduction to the seL4 proofs - seL4 Summit 2020](https://www.youtube.com/watch?v=AdakDMYu4lM)
+
+### [GHC's Runtime System - Ben Gamari - 2023 GHC Contributor's Workshop](https://www.youtube.com/watch?v=5vKBFnTsCcE)
+
+### [Introduction to Haskell execution and garbage collection internals – Maxim Koltsov](https://www.youtube.com/watch?v=vvLDerKtUWE)
+
+### [Call C code quickly and compatibly with CFFI (Zachary Voase)](https://www.youtube.com/watch?v=EdUa5Sbf-4U)
+
+### [How to Write a Paper in a Weekend (By Prof. Pete Carr)](https://www.youtube.com/watch?v=UY7sVKJPTMA)
+
+### [Lennart Augustsson - MicroHaskell](https://www.youtube.com/watch?v=Zk5SJ79nOnA)
+
+### [Dedukti & LambdaPi - Frederic Blanqui](https://www.youtube.com/watch?v=XnZTADrsiHQ)
+
+### [Locknote: How Badly Do We Want Correct Compilers? - John Regehr - NDC TechTown 2023](https://www.youtube.com/watch?v=tMYYrR-hazI)
+
+### [DEF CON 31 - Revolutionizing ELF binary patching w Shiva   - ElfMaster](https://www.youtube.com/watch?v=TDMWejaucdg)
+
+### [Tuning Linux for Performance - I Wanna Go Fast! - Anthony Nocentino - PSConfEU 2023](https://www.youtube.com/watch?v=RMtyLCQLHzE)
+
+### [Linux Performance Tools, Brendan Gregg, part 1 of 2](https://www.youtube.com/watch?v=FJW8nGV4jxY)
+
+### [Understanding Linux Interrupt Subsystem - Priya Dixit, Samsung Semiconductor India Research](https://www.youtube.com/watch?v=LOCsN3V1ECE)
+
+### [[ICFP'22] Beyond Relooper: Recursive Translation of Unstructured Control Flow to Structu…](https://www.youtube.com/watch?v=qAeEWKr9wfU)
+
+### [Peter Koepke: FOL from a Naproche perspective](https://www.youtube.com/watch?v=shM0KCwBukY)
+
+### [Guillaume Allais: Syntaxes for Binding and their Semantics](https://www.youtube.com/watch?v=CUAHrhdpcXU)
+
+### [Josef Urban: Theorem Proving and AI](https://www.youtube.com/watch?v=M0fVmNZBIrg)
+
+### [Steve Awodey: What is HoTT?](https://www.youtube.com/watch?v=vxIlCaO6rEY)
+
+### [Freek Wiedijk: Even more on HOL Light (3)](https://www.youtube.com/watch?v=R-3kPIHB2RA)
+
+### [Optimal transport for fluid simulations - Bruno Levy - Shape seminar](https://www.youtube.com/watch?v=-DVD73sKLJs)
+
+### [Interactive Theorem Proving, Guest Lecture - Introduction to HOL, by Magnus Myreen](https://www.youtube.com/watch?v=uvMjgKcZDec)
+
+### [Generation of Compiler Backends from Formal Models of Hardware (Gus Smith's PhD Defense)](https://www.youtube.com/watch?v=ePPksgj3qBs)
+
+### [Stephen Mell: Linear Logic is a Language for Structured Data](https://www.youtube.com/watch?v=DVcPId7rKkI)
+
+### [Milner Award Lecture: The Type Soundness Theorem That You Really Want to Prove (and now you can)](https://www.youtube.com/watch?v=8Xyk_dGcAwk)
+
+### [Datalog](https://www.youtube.com/watch?v=M5fwAkJqAVw)
+
+### [Mario Carneiro: Lessons from Metamath](https://www.youtube.com/watch?v=aEYhBl-S2EE)
+
+### [HC34-T2: Heterogeneous Compilation in MLIR](https://www.youtube.com/watch?v=VFexAjUoTZI)
+
+### [Evan Patterson: Domain specific Logics for Scientific Modeling  Theory and Practice](https://www.youtube.com/watch?v=5ZmUbYvTSPU)
+
+### [Steve Vickers: "The Fundamental Theorem of Calculus: point-free"](https://www.youtube.com/watch?v=L6LPEFteLts)
+
+### [Lie Algebras - Lecture 1: part 1/2](https://www.youtube.com/watch?v=TUY2whPbhBI)
+
+### [On Voevodsky's univalence principle - André Joyal](https://www.youtube.com/watch?v=HRBShaxIblI)
+
+### [NCNGT 2022 – An introduction to Teichmüller theory](https://www.youtube.com/watch?v=9bHh30t7Eg8)
+
+### [Aaron Naber - Introduction to Yang Mills Theory 1 [2017]](https://www.youtube.com/watch?v=MTsIVSWiCxU)
+
+### [Anthony Zee Group Theory in a Nutshell for Physicists 1/5 part 1](https://www.youtube.com/watch?v=lEovyfCFtBs)
+
+### [Andrej Bauer & Mario Carneiro: Type universes](https://www.youtube.com/watch?v=f4yYkuTMoLw)
+
+### [Distributed Systems 7.2: Linearizability](https://www.youtube.com/watch?v=noUNH3jDLC0)
+
+### [The Stern-Brocot tree, matrices and wedges | Real numbers and limits Math Foundations 97](https://www.youtube.com/watch?v=qPeD87HJ0UA)
+
+### [Andrej Bauer: Constructive Mathematics - How to not believe in the Law of Excluded Middle](https://www.youtube.com/watch?v=96iHUx0aGDs)
+
+### [Stanislaw Krajewski: Can our understanding of numbers be programmed into a computer?](https://www.youtube.com/watch?v=A347MjEobVc)
+
+### [Volker Halbach: Self-reference, truth, and provability](https://www.youtube.com/watch?v=ZCXPopVG5pw)
+
+### [Anton Freund：Well ordering principles and a uniform Kruskal theorem](https://www.youtube.com/watch?v=F_3MZyBZYyQ)
+
+### [Albert Visser: Provability Logic and Modalised Fixed Points](https://www.youtube.com/watch?v=nVIXtS4ewPs)
+
+### [Volker Halbach: Self-reference and intensionality in metamathematics](https://www.youtube.com/watch?v=gKjnVc9cw3I)
+
+### [Ralf Schindler: How many real numbers are there?](https://www.youtube.com/watch?v=A6jpniJ1klQ)
+
+### [The Art of Ordinal Analysis](https://www.youtube.com/watch?v=SYEdNs5jo3g)
+
+### [Fedor Pakhomov: Kripke-Platek set theory](https://www.youtube.com/watch?v=VT42H4G48wk)
+
+### [Interactive Theorem Proving, Guest Lecture - Introduction to Agda, by Jeremy Siek](https://www.youtube.com/watch?v=0GEHHxjfqV4)
+
+### [CS208 W05P03 Interactive Proof with Or and Not](https://www.youtube.com/watch?v=sqJxNGv3IZ0)
+
+### [Maaike Zwart, "Distributive Laws in the Boom Hierarchy"](https://www.youtube.com/watch?v=kGDSPxXtKdg)
+
+### [Mojo🔥: a deep dive on ownership with Chris Lattner](https://www.youtube.com/watch?v=9ag0fPMmYPQ)
+
+### [Quantum Optics 1: Review of basic quantum mechanics](https://www.youtube.com/watch?v=rxILmK0yn7w)
+
+### [OntologyTalk: An Interview with Dr. Chad Brown, Part 1](https://www.youtube.com/watch?v=dWT-mbpscro)
+
+### [OntologyTalk: An Interview with Prof. Stephan Schulz](https://www.youtube.com/watch?v=W8fitH97gwY)
+
+### [Lógica Clásica de Orden Superior: Automatización y Aplicaciones Seleccionadas](https://www.youtube.com/watch?v=XaxCeVOMfQ4)
+
+### [Simon Peyton Jones | Making a Faster Curry with Extensional Types](https://www.youtube.com/watch?v=tnY_zAY1Qnc)
+
+### [David McAllester - Dependent Type Theory from the Perspective of Mathematics, Physics, and (...)](https://www.youtube.com/watch?v=qHTqj_7QHzA)
+
+### [Duality in Action](https://www.youtube.com/watch?v=lyStOfi5tKw)
+
+### [Emmanuel Candès - A Taste of Conformal Prediction](https://www.youtube.com/watch?v=YzTzN3RyFrk)
+
+### [Current Status on Black Holes and Information Paradox -  Suvrat Raju (Part 1)](https://www.youtube.com/watch?v=Fi2QiJRibco)
+
+### [Proof Complexity and Meta-Complexity Tutorial (1)](https://www.youtube.com/watch?v=5fPNG1kanTA)
+
+### [Proof complexity - an introduction - Avi Wigderson](https://www.youtube.com/watch?v=9oHTkDdmax0)
+
+### [Manuel Hermenegildo on How to Best Teach Prolog](https://www.youtube.com/watch?v=yn3YvNMpr28)
+
+### [David S Warren on the Mathematics of Prolog](https://www.youtube.com/watch?v=5Ml7AcaY8DE)
+
+### [Lecture 1: Introduction to p-adic numbers](https://www.youtube.com/watch?v=eb5esieNIfg)
+
+### [New Directions in Cylindrical Algebraic Decomposition](https://www.youtube.com/watch?v=QIPXz28p1aM)
+
+### [Simple Orbit Tutorial | GMAT (NASA's General Mission Analysis Tool)](https://www.youtube.com/watch?v=jvF7rSYQ8WI)
+
+### [Christian Jendreiko on Generative Logic, Teaching Prolog in Art & Design](https://www.youtube.com/watch?v=tHh9zjNazz4)
+
+### [Inverted Pendulum on a Cart [Control Bootcamp]](https://www.youtube.com/watch?v=qjhAAQexzLg)
+
+### [Michael Rathjen: Proof Theory: From Arithmetic to Set Theory](https://www.youtube.com/watch?v=R2kzPcNEiQE)
+
+### [Mark Bickford: Constructive Set Theory in Nuprl Type Theory](https://www.youtube.com/watch?v=DLJbP9pwnts)
+
+### [Matthew Croughan - Nix The Planet - SCaLE 21x](https://www.youtube.com/watch?v=6iviTZfiLGU)
+
+### [1. Introduction and the geometric viewpoint on physics.](https://www.youtube.com/watch?v=iRVfaR3N5K4)
+
+### [Angluin's Algorithm for Learning DFAs | Ullas Aparanji | CSAUSS17](https://www.youtube.com/watch?v=WvnNkVh4ob4)
+
+### [Automata Learning -- Infinite Alphabets and Application to Verification](https://www.youtube.com/watch?v=b38uoZccGuU)
+
+### [Efficient P2P Databases with IPLD Prolly Trees - Mauve Signweaver](https://www.youtube.com/watch?v=TblRt1NA39U)
+
+### [Lecture 1: Overview (Discrete Differential Geometry)](https://www.youtube.com/watch?v=8JCR6z3GLVI)
+
+### [Intro to Tree Transducers](https://www.youtube.com/watch?v=xNwcS_4mJQ4)
+
+### [Tree language to bottom up tree automaton](https://www.youtube.com/watch?v=GQA7HP5zV5M)
+
+### [Intro to Tree Automata](https://www.youtube.com/watch?v=ANf7FpHoq0w)
+
+### [GReTA seminar: In the Groove - Part 2](https://www.youtube.com/watch?v=M76z7EWKALQ)
+
+### [GReTA seminar #24: "Tutorial on Graph Transformation Concepts and Applications"](https://www.youtube.com/watch?v=kNOtZ7P4FHk)
+
+### [Fast and Small - What are the Costs of Language Features - Andreas Fertig](https://www.youtube.com/watch?v=Bt7KzFxcbgc)
+
+### [GTC 2022 - CUDA: New Features and Beyond - Stephen Jones, CUDA Architect, NVIDIA](https://www.youtube.com/watch?v=SAm4gwkj2Ko)
+
+### [How CUDA Programming Works | GTC 2022](https://www.youtube.com/watch?v=n6M8R8-PlnE)
+
+### [How GPU Computing Works | GTC 2021](https://www.youtube.com/watch?v=3l10o0DYJXg)
+
+### [Lisp Ireland, February 2024 Meetup - Lisp & Hardware Verification with ACL2](https://www.youtube.com/watch?v=iFEb9p54x_Q)
+
+### [Composition Intuition by Conor Hoekstra | Lambda Days 2023](https://www.youtube.com/watch?v=Mj8jxYS-hi4)
+
+### [[Private video]](https://www.youtube.com/watch?v=7mL8_-pBEq0)
+
+### [Linux fstab File Basics | What you need to know](https://www.youtube.com/watch?v=jZrNtYj2wAI)
+
+### [Linux HowTo | Build Your Own Ubuntu](https://www.youtube.com/watch?v=U42Ln3k7VK0)
+
+### [Learning the Linux File System](https://www.youtube.com/watch?v=HIXzJ3Rz9po)
+
+### [Why does this Rust program leak memory?](https://www.youtube.com/watch?v=YB6LTaGRQJg)
+
+### [Unsafe Rust is not C](https://www.youtube.com/watch?v=DG-VLezRkYQ)
+
+### [Unsafe Rust and Miri by Ralf Jung - Rust Zürisee June 2023](https://www.youtube.com/watch?v=svR0p6fSUYY)
+
+### [Rust NYC: Jon Gjengset - Demystifying unsafe code](https://www.youtube.com/watch?v=QAz-maaH0KM)
+
+### [Writing Unsafe Rust](https://www.youtube.com/watch?v=9E2v8pCUc48)
+
+### [Modernizing verified crypto with Rust: introducing HACL-Rust and Eurydice](https://www.youtube.com/watch?v=0sYntQ8qAKE)
+
+### [understanding mmap, the workhorse behind keeping memory access efficient in linux](https://www.youtube.com/watch?v=8hVLcyBkSXY)
+
+### [Advanced SIMD Algorithms in Pictures - Denis Yaroshevskiy - Meeting C++ 2023](https://www.youtube.com/watch?v=vGcH40rkLdA)
+
+### [Turner, Bird, Eratosthenes: An Eternal Burning Thread](https://www.youtube.com/watch?v=xGFcwRi8y9g)
+
+### [Introduction to SolveSpace](https://www.youtube.com/watch?v=8JaQCG9PO2c)
+
+### [Learn 3D Design with SolveSpace](https://www.youtube.com/watch?v=IlY1YFid8HA)
+
+### ["Control Flow Integrity in the Linux Kernel" - Kees Cook (LCA 2020)](https://www.youtube.com/watch?v=0Bj6W7qrOOI)
+
+### [Hardware-Assisted Fine-Grained Control-Flow Integrity: Adding Lasers to Intel's CET/IBT](https://www.youtube.com/watch?v=FzGIM1218Ok)
+
+### [Towards a Policy-Agnostic Control-Flow Integrity Implementation](https://www.youtube.com/watch?v=71W6HiEZUdY)
+
+### [Heap profiling Rust programs with DHAT](https://www.youtube.com/watch?v=AJhKaoyc4pY)
+
+### [2019 LLVM Developers’ Meeting: A. Warzynski “Writing an LLVM Pass: 101”](https://www.youtube.com/watch?v=ar7cJl2aBuU)
+
+### [Fuzzing combined with symbolic execution: a demonstration on SymCC and AFL.](https://www.youtube.com/watch?v=zmC-ptp3W3k)
+
+### [Symbolic execution by compilation with SymCC](https://www.youtube.com/watch?v=htDrNBiL7Y8)
+
+### [GReTA seminar: In the Groove](https://www.youtube.com/watch?v=gkxHVQIlD-E)
+
+### [Heather Macbeth | Approaches to the formalization of differential geometry](https://www.youtube.com/watch?v=oiOpudgC0J4)
+
+### [Virus.Win9x.CIH/Chernobyl Destroying a Physical Computer](https://www.youtube.com/watch?v=RrnWFAx5vJg)
+
+### [Debugging millions of crashes - Stack Walk Episode 5](https://www.youtube.com/watch?v=GtME7C5lsJY)
+
+### [A first look into how WinDbg works](https://www.youtube.com/watch?v=QStC084UrgY)
+
+### [Stephen Kell - Dragging Unix into the 1980s (and beyond?) - liveness and source-level reflection](https://www.youtube.com/watch?v=nwrCestQTaw)
+
+### [Dan Ingalls - 40 Years Of Fun With Computers](https://www.youtube.com/watch?v=LWxZQXi_Clk)
+
+### [Keynote: Kids programming with Smalltalk by Hilaire Fernandes](https://www.youtube.com/watch?v=HSplPRsM5Tc)
+
+### [Workshop: Develop end user GUI application with Cuis by Hilaire Fernandes](https://www.youtube.com/watch?v=E3eDDSPCf7c)
+
+### [John Harrison: Adventures in Verifying Arithmetic (IJCAR A)](https://www.youtube.com/watch?v=2F3tQL-SmgI)
+
+### [The Origins of APL - 1974](https://www.youtube.com/watch?v=8kUQWuK1L4w)
+
+### [HACKENBUSH: a window to a new world of math](https://www.youtube.com/watch?v=ZYj4NkeGPdM)
+
+### [Introduction to Proof Theory II: Invertibility, Cut-Elimination, and Proof-search](https://www.youtube.com/watch?v=hUO2D0Smh0w)
+
+### [Introduction to Proof Theory I: Sequent Calculus](https://www.youtube.com/watch?v=grjMRgmjddE)
+
+### [René Thiemann: Certifying Termination Proofs: From Term Rewriting to SMT Solving and Back (FSCD A)](https://www.youtube.com/watch?v=i_vd9VCf0MY)
+
+### [[IWC 2021] The quest for modular confluence of rewrite rules in type theory](https://www.youtube.com/watch?v=9Ly-qEA0-IE)
+
+### [GEO1004 | 2022 -- Course introduction](https://www.youtube.com/watch?v=SLhT1OTr2bM)
+
+### [Boundary Representation (B-Rep) - Techniques For Geometric Modeling - CAD/CAM/CAE](https://www.youtube.com/watch?v=aafsBz50O-Q)
+
+### [TopoTalk 01](https://www.youtube.com/watch?v=B8dfa6awEXk)
+
+### [The Continuity of Splines](https://www.youtube.com/watch?v=jvPPXbo87ds)
+
+### [1.1 Welcome to "Introduction to Parametric Modeling"](https://www.youtube.com/watch?v=5489Gc8U42I)
+
+### [Simon Peyton Jones (Epic Games) Talk - IRIF's Distinguished Talk Series](https://www.youtube.com/watch?v=q1-KQ3QDe0U)
+
+### [Calculus WITHOUT limits!](https://www.youtube.com/watch?v=dyjlRi8nuw0)
+
+### [The Art of SIMD Programming by Sergey Slotin](https://www.youtube.com/watch?v=vIRjSdTCIEU)
+
+### [2016 LLVM Developers’ Meeting: N. Lopes “Undefined Behavior: Long Live Poison!"](https://www.youtube.com/watch?v=_-3Iiads1EM)
+
+### [Mr. Me](https://www.youtube.com/watch?v=CO34WnUMijc)
+
+### [Shoehorn with Teeth](https://www.youtube.com/watch?v=YBBu5FLGquE)
+
+### [Joel Hass - Lecture 1 - Algorithms and complexity in the theory of knots and manifolds - 18/06/18](https://www.youtube.com/watch?v=_hIG7O7bHhc)
+
+### [big plot holes in reality](https://www.youtube.com/watch?v=xdufGjj4vEc)
+
+### [Joe Kachmar Presents: Low-Level Programming in Haskell with Levity Polymorphism](https://www.youtube.com/watch?v=Ip51xutCDPo)
+
+### [The Inner Donkey - A Donkey's Personality](https://www.youtube.com/watch?v=f3BjzsG5UZ0)
+
+### [The World’s Most Aggressive Telemarketer - Key & Peele](https://www.youtube.com/watch?v=3znzIslrQXg)
+
+### [5-3 Matroids](https://www.youtube.com/watch?v=fdjvPRyJkVo)
+
+### [Peter Zoller: Introduction to quantum optics - Lecture 1](https://www.youtube.com/watch?v=zEAwL9GAPCo)
+
+### [What is FOC? (Field Oriented Control) And why you should use it! || BLDC Motor](https://www.youtube.com/watch?v=Nhy6g9wGHow)
+
+### [Compose Conference - Pi-Forall: How to use and implement a dependently-typed language](https://www.youtube.com/watch?v=6klfKLBnz9k)
+
+### [Atomic Clocks Lecture III](https://www.youtube.com/watch?v=1fxt5AXdyT8)
+
+### [Fernando Brandao: Quantum speed-ups for semidefinite programming](https://www.youtube.com/watch?v=nqlA9YxMZwI)
+
+### [Banach Spaces part 1](https://www.youtube.com/watch?v=Fl21lutUIXk)
+
+### [[Private video]](https://www.youtube.com/watch?v=-q7bPmxv4LQ)
+
+### [GRCon16 - Sniffing and Dissecting nRF24L with GNU Radio and Wireshark, Marc Newlin](https://www.youtube.com/watch?v=WhsE6cwguRs)
+
+### [Everything you always wanted to know About Antennas (but were afraid to ask) || Frank Rutter K3AW](https://www.youtube.com/watch?v=LEigIMS6bo4)
+
+### [HIW 2014: Dependent Haskell](https://www.youtube.com/watch?v=O805YjOsQjI)
+
+### [Position Tracking for Virtual Reality using Wi-Fi](https://www.youtube.com/watch?v=8mnd5qt63e8)
+
+### [Cosmology, Max Tegmark | Lecture 1 of 3](https://www.youtube.com/watch?v=TEyfGPPLCBo)
+
+### [F-algebras or: How I Learned to Stop Worrying and Love the Type System](https://www.youtube.com/watch?v=PK4SOaAGVfg)
+
+### [Live-Coding Mathematics Your First Clojure Proof - Frederic Peschanski](https://www.youtube.com/watch?v=5YTCY7wm0Nw)
+
+### [CS 436: Distributed Computer Systems - Lecture 1](https://www.youtube.com/watch?v=w8KFPWkK0bI)
+
+### ["A Quantum Future of Computation, " Matthias Troyer, Microsoft Research](https://www.youtube.com/watch?v=zXZJvuI7nZE)
+
+### [010 Quantum algorithms for matrix multiplication](https://www.youtube.com/watch?v=MhSkooQn8nY)
+
+### [Lamport TLA+ Course Lecture 1: Introduction to TLA+ (Old Mirror, See Description)](https://www.youtube.com/watch?v=U8-kVWMgQ18)
+
+### [DEFCON 20: Making Sense of Static - New Tools for Hacking GPS](https://www.youtube.com/watch?v=wyEKakfqNkk)
+
+### [F*: Tactics, SMT, and metaprogramming](https://www.youtube.com/watch?v=mY1zRBtSznE)
+
+### [Collaborative Music with Elm and Phoenix - Josh Adams](https://www.youtube.com/watch?v=0OTPTNJji1I)
+
+### [Stanford Lecture: Donald Knuth - "Bayesian trees and BDDs" (2011)](https://www.youtube.com/watch?v=axUgEAgrSB8)
+
+### [LambdaConf 2015 - A Practical Introduction to Haskell GADTs Richard Eisenberg](https://www.youtube.com/watch?v=6snteFntvjM)
+
+### [Bay Area Category Group - Delimited continuations and co-monads](https://www.youtube.com/watch?v=uN3hyzywzZk)
+
+### [Bartosz Milewski: Haskell -- The Pseudocode Language for C++ Template Metaprogramming (Part 1)](https://www.youtube.com/watch?v=GjhsSzRtTGY)
+
+### [A Tutorial on Reinforcement Learning I](https://www.youtube.com/watch?v=fIKkhoI1kF4)
+
+### [Andreas Doering: "Topos mini-course 1"](https://www.youtube.com/watch?v=v1vtBYDWiB4)
+
+### [User-Friendly Tools for Random Matrices I](https://www.youtube.com/watch?v=pyYwzu9le_w)
+
+### [The meta-theory of dependent type theories - Vladimir Voevodsky](https://www.youtube.com/watch?v=e20dCMrAYOM)
+
+### [Spectral Methods for Matrices and Tensors](https://www.youtube.com/watch?v=WMhYm9_eXlA)
+
+### [Khronos Meetup Oslo: Lisping on the GPU](https://www.youtube.com/watch?v=XEtlxJsPR40)
+
+### [Lecture 1 (CEM) -- Introduction to CEM](https://www.youtube.com/watch?v=l_CZFyJd4WI)
+
+### [CS75 (Summer 2012) Lecture 9 Scalability Harvard Web Development David Malan](https://www.youtube.com/watch?v=-W9F__D3oY4)
+
+### [Friday Hacks #112 - Make your own LLVM compiler - NUS Hackers](https://www.youtube.com/watch?v=OhkwPSvyBu0)
+
+### [18 MPI Domain Decomposition](https://www.youtube.com/watch?v=CM1BSkKH5WU)
+
+### [What Sparsity and l1 Optimization Can Do For You](https://www.youtube.com/watch?v=663xmsgywio)
+
+### [Hierarchical Interpolative Factorization](https://www.youtube.com/watch?v=53mmZKSoWps)
+
+### [Chebfun](https://www.youtube.com/watch?v=cQp-kB9EOQs)
+
+### [Customized Computer Generated Hologram (CGH) [Part 1/3]](https://www.youtube.com/watch?v=xNkN17iyxi8)
+
+### [[Private video]](https://www.youtube.com/watch?v=eh2UDKhL_qs)
+
+### [Wavelets And Multiresolution Analysis Part 1](https://www.youtube.com/watch?v=f2xSZTcHEnw)
+
+### [Supersymmetry & Grand Unification: Lecture 1](https://www.youtube.com/watch?v=W6srShxBCrk)
+
+### [Renormalization Group 1 - Shankar](https://www.youtube.com/watch?v=8fIgT4TqvGM)
+
+### [001 Introduction to fast direct solvers for elliptic PDEs - Gunnar Martinsson](https://www.youtube.com/watch?v=suPsIS97rQI)
+
+### [Modern Optimization Methods in Python | SciPy 2015 Tutorial | Mike McKerns](https://www.youtube.com/watch?v=avRx2cdNZmk)
+
+### [Multibody Dynamics and Control with Python | SciPy 2015 Tutorial | Jason Moore & James Crist](https://www.youtube.com/watch?v=mdo2NYtA-xY)
+
+### [Numerical Algebraic Geometry](https://www.youtube.com/watch?v=eK3sIjboaxA)
+
+### [CGAL  Part 1 of N  Introduction](https://www.youtube.com/watch?v=Mk-NH2-_hMo)
+
+### [IGS'16 Summer School: Laplace-Beltrami: The Swiss Army Knife of Geometry Processing](https://www.youtube.com/watch?v=IwS-mRhPDGg)
+
+### [IGS'16 Summer School: Optimization in Geometry Processing](https://www.youtube.com/watch?v=jFkxvnSqTRk)
+
+### [Python Powered Computational Geometry](https://www.youtube.com/watch?v=zWhMc3am7ao)
+
+### [The Convex Geometry of Inverse Problems](https://www.youtube.com/watch?v=pcIGP9X9E40)
+
+### [01. Algebraic geometry - Sheaves (Nickolas Rollick)](https://www.youtube.com/watch?v=93cyKWOG5Ag)
+
+### [Ugo Bruzzo - Algebraic geometry for physicists, part 1](https://www.youtube.com/watch?v=5TKUyLMe2X0)
+
+### [ECE 804 - Spring 2013 - Lecture 001 with Dr. Michael Robinson](https://www.youtube.com/watch?v=223-0x2KNOg)
+
+### [Semantic Foundations for Probabilistic Programming](https://www.youtube.com/watch?v=lTpfagkYaw4)
+
+### [A Personal Viewpoint on Probabilistic Programming](https://www.youtube.com/watch?v=TFXcVlKqPlM)
+
+### [Stanford Lecture: Donald Knuth - "Fun With Binary Decision Diagrams (BDDs)" (June 5, 2008)](https://www.youtube.com/watch?v=SQE21efsf7Y)
+
+### [PLSE: Leonardo de Moura, "The Lean Theorem Prover"](https://www.youtube.com/watch?v=69ytTKfSSgc)
+
+### [Gordon Plotkin - Robin Milner: A Craftsman of Tools for the Mind](https://www.youtube.com/watch?v=Jg5VCLb2cMo)
+
+### [Patrick Hayden | The Quantum Computational Universe - 1 of 2](https://www.youtube.com/watch?v=AqWuyeh0SxQ)
+
+### [Fermions & Spin Liquids I - Lee](https://www.youtube.com/watch?v=W5PIXhMUB4w)
+
+### [Connections between physics and deep learning](https://www.youtube.com/watch?v=5MdSE-N0bxs)
+
+### [Analyzing Programs with Z3](https://www.youtube.com/watch?v=ruNFcH-KibY)
+
+### [Erik Demaine: Algorithms Meet Art, Puzzles, and Magic](https://www.youtube.com/watch?v=WlO80TOMK7Y)
+
+### [Mini Crash Course: Tensor Networks](https://www.youtube.com/watch?v=YN2YBB0viKo)
+
+### [Tensor Network Renormalization - G. Vidal - 2/24/2015](https://www.youtube.com/watch?v=iAvpqJ7FqHA)
+
+### [Intro to Recursion (Haskell)](https://www.youtube.com/watch?v=w1tTs5vn_zo)
+
+### [Tutorial "Homotopy Theory and Topological Defects" - Randall Kamien](https://www.youtube.com/watch?v=hMfng_Z_uB8)
+
+### [Introduction to Fluid Mechanics II - Brenner](https://www.youtube.com/watch?v=zpGJ6pHD_8c)
+
+### [The Density Matrix Renormalization Group I - White](https://www.youtube.com/watch?v=4bCFXBYIdMY)
+
+### [Prof. Zahid Hasan, "Topological Insulators, Berry Phase and Helical Dirac Fermions", Part 1 of 4](https://www.youtube.com/watch?v=Pa26MERKbAs)
+
+### [Steven Kivelson | Superconductivity and Quantum Mechanics at the Macro-Scale - 1 of 2](https://www.youtube.com/watch?v=Yx666k2XH8E)
+
+### [Felienne Hermans: Program Derivation for Functional Languages - λC 2016](https://www.youtube.com/watch?v=fBe9P28O8qI)
+
+### [MuniHac 2016: Beautiful folds are practical, too](https://www.youtube.com/watch?v=6a5Ti0r8Q2s)
+
+### [Applied String Theory (Lecture 1) Dam Thanh Son](https://www.youtube.com/watch?v=of4QwCKrOIQ)
+
+### [Introduction to Plasma Physics I: Magnetohydrodynamics - Matthew Kunz](https://www.youtube.com/watch?v=A9pUXEI128U)
+
+### [Topological States of Matter](https://www.youtube.com/watch?v=zHwqubFQrFY)
+
+### [06  Introduction to Dependent Types](https://www.youtube.com/watch?v=LXvP1A97oAM)
+
+### [ICFP 2014: Depending on Types - Stephanie Weirich](https://www.youtube.com/watch?v=rhWMhTjQzsU)
+
+### [ZuriHac2016: Parallelizing and Distributing Scientific Software in Haskell](https://www.youtube.com/watch?v=4py8BYIw1DI)
+
+### [ZuriHac 2016: Generic (and type-level) Programming with Generics-sop](https://www.youtube.com/watch?v=sQxH349HOik)
+
+### [Into the Core - Squeezing Haskell into Nine Constructors by Simon Peyton Jones](https://www.youtube.com/watch?v=uR_VzYxvbxg)
+
+### [André JOYAL - 1/4 A crash course in topos theory : the big picture](https://www.youtube.com/watch?v=Ro8KoFFdtS4)
+
+### [A first proof  with Coq (Frobenius rule)](https://www.youtube.com/watch?v=z861PoZPGqk)
+
+### [Five Stages of Accepting Constructive Mathematics](https://www.youtube.com/watch?v=zmhd8clDd_Y)
+
+### [Conal Elliott - Generic FFT - Silicon Valley Haskell](https://www.youtube.com/watch?v=Qam6t9EN5SQ)
+
+### [Jeffrey Brown - FGL, Digraphs With Text](https://www.youtube.com/watch?v=lJ7_vMhfm5Y)
+
+### [William Oliver: "Quantum Engineering of Superconducting Qubits"](https://www.youtube.com/watch?v=Jgc20Xc8IpA)
+
+### [ZuriHac 2016: Monad Homomorphisms](https://www.youtube.com/watch?v=YTaNkWjd-ac)
+
+### [Conor McBride - Worldly Type Systems](https://www.youtube.com/watch?v=9v4_FQm-b4I)
+
+### [Conor McBride - Dependently-Typed Metaprogramming 1/8: Introduction via Vectors](https://www.youtube.com/watch?v=08sPfcYbN1c)
+
+### [The Algebra of Algebraic Data Types](https://www.youtube.com/watch?v=YScIPA8RbVE)
+
+### [Devon Stewart - Higher Order Abstract Syntax](https://www.youtube.com/watch?v=d36y3NYmxH8)
+
+### [Generic Programming in Haskell (1 of 2): Introduction](https://www.youtube.com/watch?v=0nOnv9WvafQ)
+
+### [C9 Lectures: Dr. Ralf Lämmel - Going Bananas](https://www.youtube.com/watch?v=3DoqZOcn1ro)
+
+### [Recursion Schemes](https://www.youtube.com/watch?v=Zw9KeP3OzpU)
+
+### [Phil Freeman - Fun with Profunctors](https://www.youtube.com/watch?v=OJtGECfksds)
+
+### [Co-Monads - Presented by David Overton](https://www.youtube.com/watch?v=TSyGryuMh-U)
+
+### [Parsing Stuff in Haskell](https://www.youtube.com/watch?v=r_Enynu_TV0)
+
+### [Category Theory Lulz - Ken Scambler](https://www.youtube.com/watch?v=jDhMDgU7Koc)
+
+### [David Sankel: The Intellectual Ascent to Agda](https://www.youtube.com/watch?v=vy5C-mlUQ1w)
+
+### [The Lost Art of Denotational Semantics](https://www.youtube.com/watch?v=pQyH0p-XJzE)
+
+### [Bartosz Milewski  - Truth about Types (Lambda Days 2016)](https://www.youtube.com/watch?v=dgrucfgv2Tw)
+
+### [Category Theory, The essence of interface-based design - Erik Meijer](https://www.youtube.com/watch?v=JMP6gI5mLHc)
+
+### [Bartosz Milewski. Categories for the Working C++ Programmer](https://www.youtube.com/watch?v=eCUfzvz7Z20)
+
+### [Elementary Category Theory and Some Insightful Examples](https://www.youtube.com/watch?v=CkD_pLPjSAI)
+
+### [Topological quantum computing with Majorana Fermions](https://www.youtube.com/watch?v=Xyfsr-coriQ)
+
+### [Topological Superconductors (Lecture 1) - Anthony Leggett - 2016](https://www.youtube.com/watch?v=YxZ-1G7MtIk)
+
+### [Seth Lloyd: Quantum Machine Learning](https://www.youtube.com/watch?v=wkBPp9UovVU)
+
+### [A Scalable Quantum Programming Language - Benoit Valiron - June 9 2015](https://www.youtube.com/watch?v=5GbjYXlBbUM)
+
+### [SIUC Seminar Louis Kauffman Non Commutativity and Discrete Physics](https://www.youtube.com/watch?v=MDQd0uoT0lg)
+
+### [Knots and Quantum Theory | Edward Witten, Charles Simonyi Professor](https://www.youtube.com/watch?v=8nA17Id4JyU)
+
+### [SIUC Seminar Louis Kauffman Introduction to Topological Quantum Computing](https://www.youtube.com/watch?v=r_e0yMWRB4w)
+
+### [Programming in Agda - Lecture 1 - Ulf Norell](https://www.youtube.com/watch?v=NrSW7YsneVg)
+
+### [Bob Coecke: "A survey of categorical quantum mechanics"](https://www.youtube.com/watch?v=6GEp2rSd2Qs)
+
+### [John Baez: "Duality in logic and physics"](https://www.youtube.com/watch?v=7d5jhPmVQ1w)
+
+### [John Baez: "Network Theory: Overview"](https://www.youtube.com/watch?v=p9VmyR-OMpM)
+
+### [Functional Patterns in C++, 1. Functors](https://www.youtube.com/watch?v=ph7qt0pkPkc)
+
+### [C9 Lectures: Dr. Erik Meijer - Functional Programming Fundamentals Chapter 12 of 13](https://www.youtube.com/watch?v=vos_D8bdoUE)
+
+### [Lenses, Folds, and Traversals](https://www.youtube.com/watch?v=cefnmjtAolY)
+
+### [Erlang Factory SF 2016 - Keynote - John Hughes - Why Functional Programming Matters](https://www.youtube.com/watch?v=Z35Tt87pIpg)
+
+### [[Deleted video]](https://www.youtube.com/watch?v=-jablEX5E_U)
+
+### [Philip Wadler and Erik Meijer: On Programming Language Theory and Practice](https://www.youtube.com/watch?v=9SBR_SnrEiI)
+
+### [Expert to Expert: Brian Beckman and Erik Meijer - Inside the .NET Reactive Framework (Rx)](https://www.youtube.com/watch?v=looJcaeboBY)
+
+### [C9 Lectures: Greg Meredith - Monadic Design Patterns for the Web - Introduction to Monads](https://www.youtube.com/watch?v=nCqZ2GT6CJo)
+
+### [MIT Godel Escher Bach Lecture 1](https://www.youtube.com/watch?v=lWZ2Bz0tS-s)
+
+### [Adventure with Types in Haskell - Simon Peyton Jones (Lecture 1)](https://www.youtube.com/watch?v=6COvD8oynmI)
+
+### [BayHac Free Monads Talk](https://www.youtube.com/watch?v=OGUuGL0AgYs)
+
+### [Exact Real Arithmetic in Haskell - Mitchell Riley - BFPG 2015-05](https://www.youtube.com/watch?v=LJQgYBQFtSE)
+
+### ["Strange Loops: Capturing Knots With Powerful Notations" by Katherine Ye](https://www.youtube.com/watch?v=Wahc9Ocka1g)
+
+### ["Propositions as Types" by Philip Wadler](https://www.youtube.com/watch?v=IOiZatlZtGU)
+
+### [EmberConf 2016: How to Build a Compiler by James Kyle](https://www.youtube.com/watch?v=Tar4WgAfMr4)
+
+### [SLAM A 00](https://www.youtube.com/watch?v=B2qzYCeT9oQ)
+
+### [HAR 2009 - l Design and Build a 2 MeV Cyclotron](https://www.youtube.com/watch?v=Uvf_z7a-enc)
+
+### [Quantum Cooling to (Near) Absolute Zero](https://www.youtube.com/watch?v=7jT5rbE69ho)
+
+### [Introduction to Scott Miller and Dragon Innovation - DragonInnovation.com](https://www.youtube.com/watch?v=84VxN9K_PMM)
+
+### [László Miklós Bíró - Tempest, the hidden source of data leakage](https://www.youtube.com/watch?v=8HV70b-DpE0)
+
+### [Beaglebone: Introduction to GPIOs - Using Device Tree Overlays under Linux 3.8+](https://www.youtube.com/watch?v=wui_wU1AeQc)
+
+### [Transparent Microchip Experiments - Part 2 - MOSFETs](https://www.youtube.com/watch?v=F-D6xzllrno)
+
+### [Parsing with Derivatives](https://www.youtube.com/watch?v=ZzsK8Am6dKU)
+
+### [DIY No Frills AD9850/Arduino Antenna Analyzer](https://www.youtube.com/watch?v=C6YxD72sX_Y)
+
+### [Introduction to Phase Locked Loops](https://www.youtube.com/watch?v=0jzLDe950AY)
+
+### [Category Theory by Tom LaGatta](https://www.youtube.com/watch?v=o6L6XeNdd_k)
+
+### [Brian Beckman: Don't fear the Monad](https://www.youtube.com/watch?v=ZhuHCtR3xq8)
+
+### [Netflix JavaScript Talks - Async JavaScript with Reactive Extensions](https://www.youtube.com/watch?v=XRYN2xt11Ek)
+
+### [1. Course introduction](https://www.youtube.com/watch?v=p2J7wSuFRl8)
+
+### [[Deleted video]](https://www.youtube.com/watch?v=VTS9O0CoVng)
+
+### [Tobias Jesso Jr. - How Could You Babe](https://www.youtube.com/watch?v=uu1Ko02P7vk)
+
+### [PLD FPGA Design flow (Sec 4-1)](https://www.youtube.com/watch?v=hrTOFjIsM6I)
+
+### [CYMATICS: Science Vs. Music - Nigel Stanford](https://www.youtube.com/watch?v=Q3oItpVa9fs)
+
+### [Ady Stern (Weizmann Institute) Topological Quantum Computing III](https://www.youtube.com/watch?v=gq1dnZksA4A)
+
+### [#1 -- Introduction to FPGA and Verilog](https://www.youtube.com/watch?v=yvqkg44_DQA)
+
+### [Correlated Electrons in Two Dimensions: The Fractional Quantum Hall Effect and More](https://www.youtube.com/watch?v=K7VLeXoTIk0)
+
+### [Aharonov-Bohm Interferometry in Non-abelian Quantum Hall States](https://www.youtube.com/watch?v=fjiyvsPwge0)
+
+### [Experiments on Macroscopic Quantum Coherence (Lecture 1) - Anthony Leggett 2012](https://www.youtube.com/watch?v=1_qlt7v3gGw)
+
+### [Prof. Nick Bonesteel, "Topological Quantum Computation", Lecture 1 of 3](https://www.youtube.com/watch?v=sB5AGbk5Z4Y)
+
+### [Burrello 1](https://www.youtube.com/watch?v=B-4FqBrNyIk)
+
+### [Kevin Walker's lectures on Topological Quantum Field Theory (part 1 of 8)](https://www.youtube.com/watch?v=ocDKyn2h4_g)
+
+### [Niles Johnson: Visualizations of the Hopf fibration](https://www.youtube.com/watch?v=QXDQsmL-8Us)
+
+### [Topological Quantum Field Theory and the Cobordism Hypothesis -- Part 1](https://www.youtube.com/watch?v=Bo8GNfN-Xn4)
+
+### [Quantum Techniques for Stochastic Mechanics - Part 1 of 4](https://www.youtube.com/watch?v=vGHj5dJLOJs)
+
+### [Steve Simon - Topological Quantum Computing (Part 1) - CSSQI 2012](https://www.youtube.com/watch?v=FAiiXp9IoBk)
+
+### [The Physics of Superconducting Devices - Anthony Leggett - Lecture #1 - 2014](https://www.youtube.com/watch?v=ZSmqdlHS1oU)
+
+### [Welcome Address](https://www.youtube.com/watch?v=vP1JSaSzj8Y)
+
+### [Ady Stern (Weizmann Institute) Topological Quantum Computing II](https://www.youtube.com/watch?v=Vu7cT-l-FHY)
+
+### [Quantum Computing & the Entanglement - John Preskill](https://www.youtube.com/watch?v=3XbQpUtqgnU)
+
+### [John Preskill - Introduction to Quantum Information (Part 1) - CSSQI 2012](https://www.youtube.com/watch?v=Q4xBlSi_fOs)
+
+### [Quantum Information | John Preskill](https://www.youtube.com/watch?v=LWsMWpQIobI)
+
+### [Supersymmetry, Jim Gates | Lecture 1 of 3 (Muslim defending child rape in description/comments)](https://www.youtube.com/watch?v=eh4kIKoJ7Do)
+
+### [Richard Feynman Computer Science Lecture - Hardware, Software and Heuristics](https://www.youtube.com/watch?v=EKWGGDXe5MA)
+
+### [Morse Theory: Lecture 1](https://www.youtube.com/watch?v=yun73TgUDyg)
+
+### [Quantum Transport, Lecture 1: Introduction](https://www.youtube.com/watch?v=ATpC2Plbi8g)
+
+### [Lighting a match with water](https://www.youtube.com/watch?v=f6QR2AN6_es)
+
+### [3. Integrator & Diffrentiator.mpg](https://www.youtube.com/watch?v=VtQllqiTZQY)
+
+### [Group Theory 15 , Generators of Cyclic Groups](https://www.youtube.com/watch?v=_ecibercr9s)
+
+### [Henriques: Extended Conformal Field Theories from Frobenius Algebras (Part 3)](https://www.youtube.com/watch?v=AWAWBZVsduw)
+
+### [Physics@FOM Veldhoven 2012, Charles Kane, Master class](https://www.youtube.com/watch?v=si6ldpWeQ8c)
+
+### [D19ILL tutorialPart1   Broadband](https://www.youtube.com/watch?v=MX-Vzgvg2PQ)
+
+### [[Deleted video]](https://www.youtube.com/watch?v=phnv3qwZKAo)
+
+### [Praise a Wicked Game - Fatboy Slim vs Chris Isaak](https://www.youtube.com/watch?v=7W3_XSaZB10)
+
+### [Mod-22 Lec-44 Boundary - Layer Theory (Contd. )](https://www.youtube.com/watch?v=sVaxm3-A-oo)
+
+### [The Idea of a Riemann Surface](https://www.youtube.com/watch?v=hh-q1q4bmBo)
+
+### [Lecture - 1 Representations of Dynamical Systems](https://www.youtube.com/watch?v=mkfU9zVNGkQ)
+
+### [Introduction](https://www.youtube.com/watch?v=3yUmkxjhz6I)
+
+### [Mod-01 Lec-01 Fibers and Yarns : Terms Definitions and Relations](https://www.youtube.com/watch?v=mfOZPGvUsro)
+
+### [Mod-01 Lec-01 Introduction to Helicopter Aerodynamics and Dynamics](https://www.youtube.com/watch?v=KdH2-rKEyNY)
+
+### [Mod-01 Lec-01 Importance of Thermal Radiation](https://www.youtube.com/watch?v=aLwJKZ1Gf3g)
+
+### [Mod-01 Lec-01 Introduction to Plasmas](https://www.youtube.com/watch?v=wO2HS7hcSb8)
+
+### [Mod-01 Lec-01 Introduction: Vertex cover and independent set](https://www.youtube.com/watch?v=Gc8emFk-2vc)
+
+### [Differential Topology with Prof. John W. Milnor Lecture III](https://www.youtube.com/watch?v=fEqL7Wy9DR4)
+
+### [Lecture 2:  Differential Geometry of Curves](https://www.youtube.com/watch?v=VihJM3AvY6E)
+
+### [Intro to differential forms (part 1)](https://www.youtube.com/watch?v=M5wrnwlm8lw)
+
+### [Lecture 01 Introduction to Computer Vision](https://www.youtube.com/watch?v=715uLCHt4jE)
+
+### [Functional Analysis - Lecture 3 - UCCS MathOnline](https://www.youtube.com/watch?v=anbrZIOD76o)
+
+### [Mathematical Statistics I - Lecture 1 - UCCS MathOnline](https://www.youtube.com/watch?v=a55zaWVWYhM)
+
+### [Breakbot - Baby I'm Yours (feat. Irfane) [Official Video]](https://www.youtube.com/watch?v=6okxuiiHx2w)
+
+### [Math448Lecture01](https://www.youtube.com/watch?v=hbi5PT3C8Uw)
+
+### [Optimization Math442Lecture01pt1](https://www.youtube.com/watch?v=oazrSA-2zEo)
+
+### [[Private video]](https://www.youtube.com/watch?v=pVWqETGnbNU)
+
+### [[Private video]](https://www.youtube.com/watch?v=aZNfpH1J0fo)
+
+### [[Private video]](https://www.youtube.com/watch?v=9tctSW1lFwE)
+
+### [[old series] Abstract Algebra Lecture 01 Part 1](https://www.youtube.com/watch?v=nsJMDTMgAao)
+
+### [AlgTop0: Introduction to Algebraic Topology](https://www.youtube.com/watch?v=kdpbfOzkJzI)
+
+### [Real Analysis, Lecture 1: Constructing the Rational Numbers](https://www.youtube.com/watch?v=sqEyWLGvvdw)
+
+### [Functional Analysis - Lecture 1 - UCCS MathOnline](https://www.youtube.com/watch?v=ebesx6pF8mg)
+
+### [Gohan Goes Mystic For First Time (HD) DBZ Dragon Ball Z](https://www.youtube.com/watch?v=EQrK3UYlzr0)
+
+### [Deadlift 275 Nov 21 2012](https://www.youtube.com/watch?v=adeH71150ps)
+
+### [Lecture 20 | Introduction to Linear Dynamical Systems](https://www.youtube.com/watch?v=qoCa7kMLXNg)
+
+### [Lecture 16 | Introduction to Linear Dynamical Systems](https://www.youtube.com/watch?v=3Gl082gAZGc)
+
+### [Lecture 2 | Convex Optimization I (Stanford)](https://www.youtube.com/watch?v=P3W_wFZ2kUo)
 
 ## prog3.json
 

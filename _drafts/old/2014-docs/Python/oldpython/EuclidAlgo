@@ -1,0 +1,14 @@
+large = 1234 # larger number
+small = 1123 # smaller number
+a = large
+b = small
+while a != b:
+    c = a - b
+    if c > b:
+        a = c
+    else if: c < b:
+        a = b
+        b = c
+        
+print "Greatest common divisor of " + str(large) + " & " str(small) +
+" is " + b

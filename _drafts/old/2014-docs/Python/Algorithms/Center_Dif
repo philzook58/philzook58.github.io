@@ -1,0 +1,9 @@
+import numpy as np
+from scipy import linalg
+
+size = 6
+firstrow = np.zeros(size)
+firstrow[-1] = -1
+firstrow[0] = 0
+firstrow[1] = 1
+linalg.circulant(firstrow)

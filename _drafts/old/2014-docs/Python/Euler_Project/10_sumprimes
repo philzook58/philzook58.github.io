@@ -1,0 +1,19 @@
+def addprime(primelist):
+    guess = primelist[-1]
+    notprime = True
+    while notprime:
+        notprime = False
+        guess += 2
+        for a in primelist:
+            if guess % a == 0:
+                notprime = True
+                break
+    primelist.append(guess)
+
+
+end = 2000000
+
+primes = [2,3]
+while primes[-1] < end:
+    addprime(primes)
+print sum(primes)

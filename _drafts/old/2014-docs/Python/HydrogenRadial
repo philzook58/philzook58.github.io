@@ -1,0 +1,27 @@
+import matplotlib.pyplot as plt
+import scipy as sp
+import numpy as np
+import scipy.linalg as linalg
+import scipy.integrate as integ
+import Matlib
+
+
+N=50
+
+dx = 1
+L = dx * N
+hbar = 4.135e-15 
+m = 1
+
+K = hbar**2 /2 / m * Matlib.K(N)
+
+r = np.linspace(0,L/2,num=N)
+
+V0 = hbar**2*l(l+1)/r**2 - e**2 / r
+V[0]=0
+
+V = np.diag(V0)
+
+H = K + V
+
+linalg.eigspomething(

@@ -1,0 +1,13 @@
+puzzle[10][10]
+
+
+
+def loadpuzzle(i):
+    
+def row(i):
+    return puzzle[i][:]
+def column(j):
+    return[:][j]
+
+print row(0)
+print column(0)

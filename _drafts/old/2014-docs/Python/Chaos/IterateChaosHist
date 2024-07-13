@@ -1,0 +1,21 @@
+import numpy as np
+import scipy as sp
+import matplotlib.pyplot as plt
+
+
+seedvalue = 0.1 #Initial value to start iterating on
+
+binnum = 100
+
+# Iteration function
+def func(y):
+    return y**2-2
+
+
+x = np.zeros(1000)
+
+for i in range(1,1000):
+    x[i]=func(x[i-1])
+
+plt.hist(x,binnum)
+plt.show()

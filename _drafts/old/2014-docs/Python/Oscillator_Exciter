@@ -1,0 +1,31 @@
+import numpy as np
+import scipy as sp
+import matplotlib.pyplot as plt
+
+
+F = 1 # Force amplitude
+k = 50
+hifreq = 100
+lowfreq= 20
+sweepfreq = .1 #Should be much lower than the others
+
+
+tarray = np.linspace(0,1/sweepfreq,100)
+
+
+def freq(t):
+    return lowfreq + (hifreq-lowfreq) t * sweepfreq
+
+def func(y,t):
+    x = y[0]
+    v = y[1]
+    dx = v
+    dv = -k*x + F * np.sin(freq(t)*t)
+    return [dx,dv]
+
+
+sol = scipy.integrate.odeint(func,[0,0],tarray)
+
+
+plt.plot(tarray,sol)
+plt.show()

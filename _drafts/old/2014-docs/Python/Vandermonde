@@ -1,0 +1,10 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy as sp
+
+
+points = np.linspace(0,1,11)
+polyterm = 3
+V = np.vander(points,polyterm)
+print points
+print V

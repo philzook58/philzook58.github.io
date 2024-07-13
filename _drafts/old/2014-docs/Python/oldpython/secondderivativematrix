@@ -1,0 +1,7 @@
+import numpy as np
+import scipy as sp
+import matplotlib.pyplot as plt
+
+
+size = 5
+print np.tri(5,k=1)-np.tri(5,k=-2)-3*np.identity(5) 
