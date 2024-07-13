@@ -214,6 +214,14 @@ I jibbered about this on twitter more than I realized. Well, it's good to have i
 
 A trickier question that bore these ideas is how to do justified equality in z3. i wanted to mimic egglog / egg since the z3 model is kind of the egraph. Equality is very slippery. It'll ruin your justifications out from under your feet.
 
+Mark Nelson comments that ASP calls the sufficiency conditions for ASP to be ok as "tight conditions" <https://x.com/mm_jj_nn/status/1811131182228082804>
+First order logic inductive defintiions FO(ID) may be related to the ideas above <http://cs.engr.uky.edu/ai/papers.dir/VL65Final.pdf>
+<https://ojs.aaai.org/aimagazine/index.php/aimagazine/article/view/2679>  First Order Logic with Inductive Definitions for Model-Based Problem Solving
+
+<https://lawrencecpaulson.github.io/papers/Aczel-Inductive-Defs.pdf> An Introduction to Inductive
+Definitions *
+PETER ACZEL
+
 example of proof parameter tracking using DCGs
 <https://x.com/SandMouth/status/1558473206239006720>
 

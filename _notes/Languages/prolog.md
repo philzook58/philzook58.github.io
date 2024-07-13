@@ -3141,6 +3141,7 @@ findall bagor setof are aggregation of solutions. They are reifying predicates k
 <https://www.swi-prolog.org/pack/list?p=function_expansion> a macro for function expansion
 
 ## Lambda
+<https://www.youtube.com/watch?v=Yi82LcqHvLg&ab_channel=HausdorffCenterforMathematics> a taste of elpi
 
 Oh sweet mysterious lambda
 
@@ -3508,6 +3509,7 @@ Related to Pi2 a corner of the lambda cube.
 [The Next 700 Challenge Problems for Reasoning with Higher-Order Abstract Syntax Representations](https://link.springer.com/article/10.1007/s10817-015-9327-3)
 
 ### Twelf
+
 <https://github.com/chrisamaphone/lf-class>
 
 <https://cs.mcgill.ca/~bpientka/courses/comp523-08/cd.pdf> frank pfenning computation and deduction

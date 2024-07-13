@@ -1,0 +1,2591 @@
+---
+layout: post
+title: Github stars
+---
+
+It's MY data.
+
+- <https://github.com/JeffCarpenter/export-stars/tree/master/export_stars>
+
+Edit to
+to get
+
+```
+
+    auth = Auth.Login(USERNAME    PASSSWORD) 
+    #gh = Github(args.token    retry=config_retry()) if args.token else Github(retry=config_retry())
+    gh = Github(auth=auth)
+
+```
+
+Find and replace comma by spaces. Pandoc didn't work so good. find and replace `\n<` with `\n- <`
+
+# Stars
+
+up to page 43
+
+- <https://github.com/stable-Kanren/stable-Kanren>   "Simple miniKanren    with only ==    fresh    and conde. A good starting point for exploratory hacking."
+- <https://github.com/asweigart/pyautogui>   A cross-platform GUI automation Python module for human beings. Used to programmatically control the mouse & keyboard.
+- <https://github.com/kitao/pyxel>   A retro game engine for Python
+- <https://github.com/georgestagg/pandoc-wasm>   "The universal document converter    compiled for WebAssembly and running in the browser."
+- <https://github.com/a16z/halmos>   A symbolic testing tool for EVM smart contracts
+- <https://github.com/standardml/twelf>   The Twelf Programming Language
+- <https://github.com/robsimmons/dusa>   A petrifyingly good logic programming language
+- <https://github.com/alpha-asp/Alpha>   A lazy-grounding Answer-Set Programming system
+- <https://github.com/QuentinWach/Introduction-to-Fluid-Simulations>   Open-source 📚 book providing a hands-on introduction to 🌊 fluid simulations in Python.
+- <https://github.com/zherczeg/sljit>   Platform independent low-level JIT compiler
+- <https://github.com/soegaard/pyffi>   Use Python from Racket
+- <https://github.com/emacsmirror/geiser>   GNU Emacs and Scheme talk to each other
+- <https://github.com/friguzzi/bddem>   bddem is a SWI-Prolog pack for using Binary Decision Diagrams
+- <https://github.com/rzese/trill>   TRILL is a tableau reasoner able to compute probability of queries from probabilistic knowledge bases.
+- <https://github.com/friguzzi/matrix>   "Operations with matrices    SWI pack"
+- <https://github.com/friguzzi/cplint>   cplint is a suite of programs for reasoning with probabilistic logic programs
+- <https://github.com/jdyb/first-order-miniKanren-guile>   miniKanren with a first-order representation of the search space (ported to Guile)
+- <https://github.com/michaelballantyne/hosted-minikanren>   An optimizing compiler implementation of miniKanren for Racket
+- <https://github.com/schemedoc/awesome-scheme>   A curated list of awesome Scheme libraries and resources
+- <https://github.com/moratori/clover>   "A experimental prover written in Common Lisp    based on clause resolution and Knuth-Bendix completion algorithm."
+- <https://github.com/webyrd/relational-amb>   A Relational Exploration of McCarthy's amb
+- <https://github.com/koka-lang/madoko>   Madoko is a fast markdown processor for high quality academic and technical articles
+- <https://github.com/Gbury/archsat>   "A proof-producing SMT/McSat solver    handling polymorphic first-order logic    and using an SMT/McSat core extended using Tableaux    Superposition and Rewriting."
+- <https://github.com/smimram/ocaml-alg>   Algebraic structures in OCaml.
+- <https://github.com/schemedoc/surveys>   Scheme Surveys
+- <https://github.com/riscv-software-src/opensbi>   RISC-V Open Source Supervisor Binary Interface
+- <https://github.com/namin/reflective-towers>   software archaeology of reflective towers of interpreters
+- <https://github.com/nikitadanilov/3-lisp>   "3-lisp implementation from Procedural Reflection in Programming Languages    volume i.    Brian Cantwell Smith"
+- <https://github.com/lparolari/bachelor-thesis>   Bachelor thesis: design and implementation in Picat of a set constraint solver.
+- <https://github.com/lparolari/setlog-picat>   "Pure implementation of {log} in Picat    a logic language."
+- <https://github.com/fnogatz/CHR-Linear-Equation-Solver>   Linear Equation Solving using Constraint Handling Rules
+- <https://github.com/lem-project/lem>   Common Lisp editor/IDE with high expansibility
+- <https://github.com/namin/clpset-miniKanren>   CLP(Set) in miniKanren
+- <https://github.com/BluQRP/DX_UnO>   An Arduino based HF DIGITAL MODES MULTI BAND QRPp Transceiver
+- <https://github.com/brandonwillard/mk-rewrite-completion>   Research into rewrite-rule completion in miniKanren
+- <https://github.com/medovina/natty>   Natty is a natural-language proof assistant with an embedded automatic prover for higher-order logic.  It is in an early stage of development.
+- <https://github.com/white-flame/eurisko>   Doug Lenat's EURISKO from SAIL archives circa 1981
+- <https://github.com/mark-watson/free-older-books-and-software>   I used to have PDFs for my books on my web site - I moved them to this public repo.
+- <https://github.com/google-research/raksha>
+- <https://github.com/remko/waforth>   Small but complete dynamic Forth Interpreter/Compiler for and in WebAssembly
+- <https://github.com/deepset-ai/haystack>   ":mag: LLM orchestration framework to build customizable    production-ready LLM applications. Connect components (models    vector DBs    file converters) to pipelines or agents that can interact with your data. With advanced retrieval methods    it's best suited for building RAG    question answering    semantic search or conversational agent chatbots."
+- <https://github.com/YosysHQ/oss-cad-suite-build>   Multi-platform nightly builds of open source digital design and verification tools
+- <https://github.com/f4pga/f4pga-arch-defs>   FOSS architecture definitions of FPGA hardware useful for doing PnR device generation.
+- <https://github.com/uwsampl/lakeroad>   FPGA synthesis tool powered by program synthesis
+- <https://github.com/adolfont/KEMS>   A KE-based Multi-Strategy Tableau Prover
+- <https://github.com/amaranth-lang/amaranth>   A modern hardware definition language and toolchain based on Python
+- <https://github.com/metalibm/metalibm>   Code generation tool to generate mathematical libraries
+- <https://github.com/lowRISC/ibex>   "Ibex is a small 32 bit RISC-V CPU core    previously known as zero-riscy."
+- <https://github.com/raburton/rboot>   An open source bootloader for the ESP8266
+- <https://github.com/vincentloechner/PolyhedralCompilers>
+- <https://github.com/danielreuter/autofunction>   functions that write themselves
+- <https://github.com/tekknolagi/skybison>   A fork of Instagram's experimental performance oriented greenfield implementation of Python. It features small objects; a moving GC; hidden classes; bytecode inline caching; type-specialized bytecode; an experimental template JIT.
+- <https://github.com/facebookarchive/skybison>   Instagram's experimental performance oriented greenfield implementation of Python.
+- <https://github.com/soarlab/pysmt>   pySMT: A library for SMT formulae manipulation and solving
+- <https://github.com/soarlab/fpsyn>   Synthesis of rigorous floating-point predicates
+- <https://github.com/memoryleak47/egraph-sandbox>
+- <https://github.com/theoremprover-museum/PRESS>   PRolog Equation Solving System
+- <https://github.com/theoremprover-museum/otter>   The first theorem prover and model generator for first-order logic with equality from the Argonne group that was widely distributed.
+- <https://github.com/theoremprover-museum/lambdaclam>
+- <https://github.com/theoremprover-museum/clam3>   "Prolog implementation of proof planner with critics    and some higher-order unification    in the v3 branch of Clam."
+- <https://github.com/kanaka/warpy>   WebAssembly interpreter in RPython
+- <https://github.com/0xSh4dy/learning_llvm>
+- <https://github.com/flijnzaad/natural-natural-deduction>   """Natural"" Natural Deduction: a Theorem Prover for Propositional Logic"
+- <https://github.com/VeriNum/vcfloat>   VCFloat: A Unified Coq Framework for Verifying C Programs with Floating-Point Computations
+- <https://github.com/facebookincubator/cinder>   Cinder is Meta's internal performance-oriented production version of CPython.
+- <https://github.com/nocotan/awesome-information-geometry>   About A collection of AWESOME things about information geometry Topics
+- <https://github.com/AndrasKovacs/antifunext>   antifunext
+- <https://github.com/willow-ahrens/Finch.jl>   Sparse tensors in Julia and more! Datastructure-driven array programing language.
+- <https://github.com/xdslproject/xdsl>   A Python Compiler Design Toolkit
+- <https://github.com/soarlab/gelpia>   Rigorous Global Branch-and-Bound Optimizer
+- <https://github.com/malyzajko/daisy>
+- <https://github.com/wilson-labs/cola>   Compositional Linear Algebra
+- <https://github.com/pypa/flit>   Simplified packaging of Python modules
+- <https://github.com/alpaylan/VerySmallFoot>   A modern implementation for the Smallfoot Automated Verification Framework for Separation Logic
+- <https://github.com/rljacobson/Mod>   A RIIR for Maude's state-of-the-art pattern matching algorithms
+- <https://github.com/uwsampl/churchroad>
+- <https://github.com/gussmith23/glenside>   "A pure    low-level tensor program representation enabling tensor program optimization via program rewriting. See the web demo at <https://gussmith23.github.io/glenside-web-demo/>"
+- <https://github.com/zesterer/chumsky>   "Write expressive    high-performance parsers with ease."
+- <https://github.com/openai/miniF2F>   Formal to Formal Mathematics Benchmark
+- <https://github.com/codyroux/knuth-bendix>   A naive knuth-bendix completion implementation
+- <https://github.com/nick8325/equinox>   Paradox model finder and equinox theorem prover for first-order logic.
+- <https://github.com/manzt/anywidget>   jupyter widgets made easy
+- <https://github.com/Zdancewic/oplss2024>   OPLSS 2024 Coq Development
+- <https://github.com/EasyCrypt/easycrypt>   EasyCrypt: Computer-Aided Cryptographic Proofs
+- <https://github.com/ElifUskuplu/Stlc_deBruijn>   Simply Typed Lambda Calculus with de Bruijn indices
+- <https://github.com/neel-krishnaswami/linearml>   A simple implementation of linear type theory
+- <https://github.com/andykitchen/linear-logic>   Linear logic theorem prover and proof explorer
+- <https://github.com/MLton/mlton>   The MLton repository
+- <https://github.com/merrymercy/awesome-tensor-compilers>   A list of awesome compiler projects and papers for tensor computation and deep learning.
+- <https://github.com/IITH-Compilers/ml-llvm-project>
+- <https://github.com/IITH-Compilers/IR2Vec>   "Implementation of IR2Vec    published in ACM TACO"
+- <https://github.com/IITH-Compilers/bullseye>   BullsEye: A Scalable cache miss calculator for affine programs
+- <https://github.com/IITH-Compilers/ML-Compiler-Bridge>   Library to interface Compilers and ML models for ML-Enabled Compiler Optimizations
+- <https://github.com/zwang4/awesome-machine-learning-in-compilers>   Must read research papers and links to tools and datasets that are related to using machine learning for compilers and systems optimisation
+- <https://github.com/baco-authors/baco>
+- <https://github.com/jupyter-xeus/xeus-cling>   Jupyter kernel for the C++ programming language
+- <https://github.com/noolsjs/nools>   Rete based rules engine written in javascript
+- <https://github.com/bollu/rete>   An implementation of the rete algorithm from 'Production Matching for Large Learning Systems'
+- <https://github.com/jstrieb/poker-chipper>   "Optimally allocate poker chips using constrained    nonlinear optimization"
+- <https://github.com/cuda-mode/awesomeMLSys>   An ML Systems Onboarding list
+- <https://github.com/google/benchmark>   A microbenchmark support library
+- <https://github.com/chronoxor/CppBenchmark>   Performance benchmark framework for C++ with nanoseconds measure precision
+- <https://github.com/FredTingaud/bench-runner>   Docker runner for build-bench
+- <https://github.com/wcphkust/LLM-PLSE-paper>
+- <https://github.com/vusec/stickytags>
+- <https://github.com/mmaroti/vuampire>
+- <https://github.com/TOTBWF/lean-rz>   Realizability theory in lean
+- <https://github.com/microsoft/Phi-3CookBook>   "This is a Phi-3 book for getting started with Phi-3. Phi-3    a family of open AI models developed by Microsoft. Phi-3 models are the most capable and cost-effective small language models (SLMs) available    outperforming models of the same size and next size up across a variety of language    reasoning    coding    and math benchmarks. "
+- <https://github.com/ambros-gleixner/MIPcc23>   The MIP Workshop 2023 Computational Competition
+- <https://github.com/ambros-gleixner/VIPR>   Verifying Integer Programming Results
+- <https://github.com/gleachkr/ProofML>   "MathML    but for proofs"
+- <https://github.com/halide/Halide>   "a language for fast    portable data-parallel computation"
+- <https://github.com/uwplse/rake>   compiling DSLs to high-level hardware instructions
+- <https://github.com/wbhart/russell>   Automated mathematician
+- <https://github.com/gallais/CS410-2024>   Content of the CS410 lectures
+- <https://github.com/frex-project/idris-frex>
+- <https://github.com/securesystemslab/LLVM-MCA-Daemon>
+- <https://github.com/harp-lab/slog-lang1>   Slog 1.0
+- <https://github.com/sad0p/d0zer>   Elf binary infector written in Go.
+- <https://github.com/ai4reason/Prover9>   "Prover9 is an automated theorem prover for first-order and equational logic    and Mace4 searches for finite models and counterexamples."
+- <https://github.com/rizinorg/rz-ghidra>   Deep ghidra decompiler and sleigh disassembler integration for rizin
+- <https://github.com/warpdotdev/Warp>   "Warp is a modern    Rust-based terminal with AI built in so you and your team can build great software    faster."
+- <https://github.com/ggerganov/ggweb>   Template for C++ GUI apps that can run in the browser
+- <https://github.com/ocornut/imgui>   Dear ImGui: Bloat-free Graphical User interface for C++ with minimal dependencies
+- <https://github.com/webyrd/linear-logic-multiset-rewriting>   Logic for story telling!
+- <https://github.com/JulianKemmerer/PipelineC>   A C-like hardware description language (HDL) adding high level synthesis(HLS)-like automatic pipelining as a language construct/compiler feature.
+- <https://github.com/fredrrom/connections>   "Reinforcement learning environments for classical    intuitionistic    and modal first-order connection calculi."
+- <https://github.com/zsoltzombori/lemma>   Using lemmas to aid automated theorem proving for Condensed Detachment Problems
+- <https://github.com/atp-lptp/automated-theorem-proving-for-prolog-verification>   Automated Theorem Proving for Prolog Verification
+- <https://github.com/cfiorentini/intuitR>   Efficient SAT-based theorem prover for Intuituionistic Propositional Logic
+- <https://github.com/cfiorentini/intuitRIL>   A prover for intermediate logics
+- <https://github.com/koengit/intuit>   An automated theorem prover for intuitionistic propostional logic
+- <https://github.com/cfiorentini/clausificationIPL>
+- <https://github.com/brown-cs22/CS22-Lean-2024>
+- <https://github.com/brown-cs22/CS22-Lean-2023>   "Lean course materials for Brown CS 22    Spring 2023"
+- <https://github.com/vbeffara/RMT4>   The Riemann mapping theorem
+- <https://github.com/ianjauslin-rutgers/pythagoras4>   Many proofs of the Pythagoras theorem - Lean 4
+- <https://github.com/PatrickMassot/verbose-lean4>   Natural language tactics to teach mathematics using Lean 4
+- <https://github.com/katjabercic/Lean-HoG>
+- <https://github.com/uxmal/reko>   Reko is a binary decompiler.
+- <https://github.com/potassco/qasp2qbf>   🧊 A translator from quantified answer set programming to quantified boolean formula
+- <https://github.com/narteche/QBDef>   A very general generator to create QBF instances in popular formats given the formal definition of a formula family.
+- <https://github.com/noxdafox/clipspy>   Python CFFI bindings for the 'C' Language Integrated Production System CLIPS
+- <https://github.com/almostearthling/pyclips>   PyCLIPS - a Python module to integrate CLIPS into Python
+- <https://github.com/seahorn/clam>   Static Analyzer for LLVM bitcode based on Abstract Interpretation
+- <https://github.com/gleachkr/TermRewriting>   Lean formalizations of results from Term Rewriting and All That
+- <https://github.com/UDC-GAC/polybench-python>   "PolyBench/Python is the reimplementation of PolyBench in the Python programming language. It is a benchmark suite of 30 numerical computations with static control flow    extracted from operations in various application domains (linear algebra computations    image processing    physics simulation    dynamic programming    statistics    etc.)."
+- <https://github.com/MatthiasJReisinger/PolyBenchC-4.2.1>   PolyBench/C benchmark suite (version 4.2.1 beta) from  <http://web.cse.ohio-state.edu/~pouchet/software/polybench/>
+- <https://github.com/laforest/FPGADesignElements>   A self-contained online book containing a library of FPGA design modules and related coding/design guides.
+- <https://github.com/SeaOfNodes/Simple>   A Simple showcase for the Sea-of-Nodes compiler IR
+- <https://github.com/cliffclick/aa>   Cliff Click Language Hacking
+- <https://github.com/BlackHolePerturbationToolkit/Teukolsky>   A Mathematica package for computing solutions to the Teukolsky equation.
+- <https://github.com/CedarEDA/CedarSim.jl>   Analog Circuit Simulator
+- <https://github.com/Gopiandcode/deriving-such-that>
+- <https://github.com/cfallin/weval>
+- <https://github.com/OpenFreeEnergy/openfe>   The Open Free Energy toolkit
+- <https://github.com/RuleBasedIntegration/IntegrationRules>   All integration rules categorized and downloadable as PDF
+- <https://github.com/RedPRL/mugen>   ♾️ A library for universe levels and universe polymorphism
+- <https://github.com/mikeshulman/narya>   A proof assistant for higher-dimensional type theory
+- <https://github.com/leanprover/SampCert>   SampCert : Verified Differential Privacy
+- <https://github.com/usi-verification-and-security/opensmt>   The opensmt solver
+- <https://github.com/flintlib/flint>   FLINT (Fast Library for Number Theory)
+- <https://github.com/flintlib/python-flint>   Python bindings for Flint and Arb
+- <https://github.com/mskashi/kv>   kv - a C++ Library for Verified Numerical Computation
+- <https://github.com/leoprover/Leo-III>   An Automated Theorem Prover for Classical Higher-Order Logic with Henkin Semantics
+- <https://github.com/pysmt/pysmt>   pySMT: A library for SMT formulae manipulation and solving
+- <https://github.com/stanford-oval/storm>   An LLM-powered knowledge curation system that researches a topic and generates a full-length report with citations.
+- <https://github.com/thierry-martinez/mbqc-rs>   MBQC simulation back-end written in Rust
+- <https://github.com/tekknolagi/scrapscript>   "A functional    content-addressable programming language."
+- <https://github.com/lisa-analyzer/lisa>   📚 a modular easy to use Library for Static Analysis aiming at multi-language analysis
+- <https://github.com/nanochess/RayTracer>   Ray Tracer in 483 bytes (x86 boot sector)
+- <https://github.com/codyroux/compact-php>   "A proof of a finitary pigeon hole principle via compactness and the infinitary version    in Lean."
+- <https://github.com/BrunoLevy/geogram>   a programming library with geometric algorithms
+- <https://github.com/dora-rs/dora>   "DORA (Dataflow-Oriented Robotic Application) is middleware designed to streamline and simplify the creation of AI-based robotic applications. It offers low latency    composable    and distributed dataflow capabilities. Applications are modeled as directed graphs    also referred to as pipelines."
+- <https://github.com/remysucre/gj-vs-binary>
+- <https://github.com/ARCHER2-HPC/archer2-fortran-intro>   Introduction to Modern Fortran
+- <https://github.com/JakWai01/lurk>   A pretty (simple) alternative to strace
+- <https://github.com/kovach/etch>
+- <https://github.com/xldenis/whycode>
+- <https://github.com/TartanLlama/dwarbf>   A Brainfuck interpreter embedded inside DWARF debug information
+- <https://github.com/qilingframework/qiling>   A True Instrumentable Binary Emulation Framework
+- <https://github.com/revng/revng-c>
+- <https://github.com/ddccc/Unification>   fol unification algorithms
+- <https://github.com/mukeshtiwari/Semiring_graph_algorithm>   Semiring for short
+- <https://github.com/the-little-prover/j-bob>
+- <https://github.com/abetlen/llama-cpp-python>   Python bindings for llama.cpp
+- <https://github.com/aishwaryanr/awesome-generative-ai-guide>   "A one stop repository for generative AI research updates    interview resources    notebooks and much more!"
+- <https://github.com/kahypar/mt-kahypar>   Mt-KaHyPar (Multi-Threaded Karlsruhe Hypergraph Partitioner) is a shared-memory multilevel graph and hypergraph partitioner equipped with parallel implementations of techniques used in the best sequential partitioning algorithms. Mt-KaHyPar can partition extremely large hypergraphs very fast and with high quality.
+- <https://github.com/ai4eda/awesome-AI4EDA>   "This repo awesome-AI4EDA contains the source for the webpage: <https://ai4eda.github.io>    which is a curated paper list of awesome AI for EDA."
+- <https://github.com/binji/smolnes>   NES emulator in <5000 bytes of C
+- <https://github.com/CohenCyril/LFTCM2024_Rocq>   Coq/Rocq practice session @ Lean For The Curious Mathematicians 2024
+- <https://github.com/abrudz/aplcart>   A novel approach to finding your way in APL
+- <https://github.com/sipeed/TangNano-9K-example>   TangNano-9K-example project
+- <https://github.com/TPTPWorld/SyntaxBNF>   "BNF for the TPTP languages    and parser generator"
+- <https://github.com/pigworker/Samizdat>   being bits and pieces I'm inclined to leave lying around
+- <https://github.com/JonathanGorard/Categorica>   Categorica: a pure and applied category theory framework for the Wolfram Language
+- <https://github.com/AlgebraicJulia/GATlab.jl>   GATlab: a computer algebra system based on generalized algebraic theories (GATs)
+- <https://github.com/AlgebraicJulia/Decapodes.jl>   A framework for composing and simulating multiphysics systems
+- <https://github.com/AlgebraicJulia/Kittenlab.jl>   A simplified Catlab.jl for teaching
+- <https://github.com/andreasabel/agda-automata>   Formalisation of automata in Agda
+- <https://github.com/cplaursen/Brownian_Motion>   Formalisation of the Wiener process in Isabelle/HOL
+- <https://github.com/rdoelman/ZernikePolynomials.jl>   A package to work with Zernike Polynomials in the Julia programming language.
+- <https://github.com/goodlibs/goodlibs>   Download books from a 📚 Goodreads shelf using ⛵ Library Genesis.
+- <https://github.com/beling/bsuccinct-rs>   Rust libraries and programs focused on succinct data structures
+- <https://github.com/ahgamut/superconfigure>   wrap autotools configure scripts to build with Cosmopolitan Libc
+- <https://github.com/sarah-ek/faer-rs>   Linear algebra foundation for the Rust programming language
+- <https://github.com/gleachkr/Vampire-Nix>   A quick repackaging of a recent vampire version
+- <https://github.com/verse-lab/lean-ssr>   LeanSSR: an SSReflect-Like Tactic Language for Lean
+- <https://github.com/rems-project/linksem>   Semantic model for aspects of ELF static linking and DWARF debug information
+- <https://github.com/grantjenks/py-tree-sitter-languages>   Binary Python wheels for all tree sitter languages.
+- <https://github.com/eurecom-s3/symqemu>   SymQEMU: Compilation-based symbolic execution for binaries
+- <https://github.com/LearnLib/automatalib>   "A free    open-source Java library for modeling automata    graphs    and transition systems"
+- <https://github.com/LearnLib/learnlib>   "A free    open-source Java library for automata learning algorithms"
+- <https://github.com/trailofbits/vscode-weaudit>   Create code bookmarks and code highlights with a click.
+- <https://github.com/aprove-developers/KoAT2-Releases>   Complexity Analysis Tool for Integer Programs
+- <https://github.com/aprove-developers/LoAT>   Loop Acceleration Tool for Integer Programs
+- <https://github.com/mit-plv/softmul>   Proving that a system with software trap handlers for unimplemented instructions behaves as if they were implemented in hardware
+- <https://github.com/instadeepai/jumanji>   🕹️ A diverse suite of scalable reinforcement learning environments in JAX
+- <https://github.com/mrphrazer/reverser_ai>   Provides automated reverse engineering assistance through the use of local large language models (LLMs) on consumer hardware.
+- <https://github.com/playfultechnology/pid-invertedpendulum>
+- <https://github.com/JamesGallicchio/LeanColls>   WIP collections library for Lean 4
+- <https://github.com/oscar-system/Singular.jl>   Julia package for the Singular library
+- <https://github.com/draperlaboratory/ELFSage>   A toy ELF parser/validator
+- <https://github.com/mlweiss/buchberger_algorithms>   A Python implementation of a polynomial library and Buchberger's Algorithm
+- <https://github.com/thery/grobner>   A fornalisation of Grobner basis in ssreflect
+- <https://github.com/Deducteam/lambdapi-logics>   Logic files for Lambdapi
+- <https://github.com/Deducteam/lambdapi>   Proof assistant based on the λΠ-calculus modulo rewriting
+- <https://github.com/Deducteam/SizeChangeTool>   A termination checker for higher-order rewriting with dependent types
+- <https://github.com/matthewhague/sat-css-tool>   Minify CSS files through refactoring
+- <https://github.com/JuliaGPU/AMDGPU.jl>   AMD GPU  (ROCm) programming in Julia
+- <https://github.com/albertan017/LLM4Decompile>   Reverse Engineering: Decompiling Binary Code with Large Language Models
+- <https://github.com/lurk-lab/Wasm.lean>   A WebAssembly implementation in Lean4
+- <https://github.com/deadbits/InsecureProgramming>   mirror of gera's insecure programming examples | <http://community.coresecurity.com/~gera/InsecureProgramming/>
+- <https://github.com/SWI-Prolog/swipl-devel>   SWI-Prolog Main development repository
+- <https://github.com/SWI-Prolog/npm-swipl-wasm>   SWI-Prolog WebAssembly build as a NPM package
+- <https://github.com/msoos/minisat-v1.14>   MiniSat v1.14
+- <https://github.com/ondrik/libvata>   VATA Tree Automata Library
+- <https://github.com/Dyalog/ride>   Cross-platform IDE for Dyalog APL
+- <https://github.com/tip-org/benchmarks>   Tons of Inductive Problems: The Benchmarks
+- <https://github.com/tip-org/tools>
+- <https://github.com/danr/hipspec>   A hip inductive theorem prover!
+- <https://github.com/draperlaboratory/cozy>
+- <https://github.com/vosen/ZLUDA>   CUDA on AMD GPUs
+- <https://github.com/x86y/beacon>   A native and a cross platform guide for BQN array programming language
+- <https://github.com/mlochbaum/BQN>   An APL-like programming language
+- <https://github.com/dpiponi/colabs>   Some colabs
+- <https://github.com/dpiponi/SASL>   A simple and educational compiler for the SASL programming language
+- <https://github.com/Dyalog/pynapl>   Dyalog APL ←→ Python interface
+- <https://github.com/triska/trs>   Reason about Term Rewriting Systems
+- <https://github.com/leanprover-community/batteries>   "The ""batteries included"" extended library for the Lean programming language and theorem prover"
+- <https://github.com/micropython/micropython>   MicroPython - a lean and efficient Python implementation for microcontrollers and constrained systems
+- <https://github.com/Dyalog/dyalog-jupyter-kernel>   A Jupyter kernel for Dyalog APL
+- <https://github.com/kspalaiologos/asmbf>   The only true brainfuck-targetting assembler.
+- <https://github.com/kspalaiologos/qbdiff>   building and applying patches to binary files
+- <https://github.com/kspalaiologos/kamilalisp>   "A functional    flexible and concise Lisp."
+- <https://github.com/libvmi/libvmi>   The official home of the LibVMI project is at <https://github.com/libvmi/libvmi>.
+- <https://github.com/leanprover/lean4-cli>   A Lean 4 library for configuring Command Line Interfaces and parsing command line arguments.
+- <https://github.com/hcheval/formalized-proof-mining>   Lean implementation of aspects of proof mining
+- <https://github.com/java-decompiler/jd-gui>   A standalone Java Decompiler GUI
+- <https://github.com/konsoletyper/teavm>   "Compiles Java bytecode to JavaScript    WebAssembly and C"
+- <https://github.com/i-net-software/JWebAssembly>   Java bytecode to WebAssembly compiler
+- <https://github.com/mthom/scryer-shen>
+- <https://github.com/jtpaasch/turtles>   Abstract interpretation in datalog.
+- <https://github.com/namin/llm-verified-with-monte-carlo-tree-search>   LLM verified with Monte Carlo Tree Search
+- <https://github.com/morph-labs/llm-verified-with-monte-carlo-tree-search>   LLM verified with Monte Carlo Tree Search
+- <https://github.com/Qiskit/rustworkx>   A high performance Python graph library implemented in Rust.
+- <https://github.com/ec-jones/cycleq>   Cyclic equational reasoning for Haskell
+- <https://github.com/DLR-RM/stable-baselines3>   "PyTorch version of Stable Baselines    reliable implementations of reinforcement learning algorithms. "
+- <https://github.com/xairy/linux-kernel-exploitation>   A collection of links related to Linux kernel security and exploitation
+- <https://github.com/jimy-byerley/pymadcad>   " Simple yet powerful CAD (Computer Aided Design) library    written with Python."
+- <https://github.com/cdcseacave/openMVS>   open Multi-View Stereo reconstruction library
+- <https://github.com/google/draco>   Draco is a library for compressing and decompressing 3D geometric meshes and point clouds. It is intended to improve the storage and transmission of 3D graphics.
+- <https://github.com/meshpro/pygalmesh>   :spider_web: A Python interface to CGAL's meshing tools
+- <https://github.com/meshpro/dmsh>   :spider_web: Simple mesh generator inspired by distmesh.
+- <https://github.com/inducer/meshpy>   "2D/3D simplicial mesh generator interface for Python (Triangle    TetGen    gmsh)"
+- <https://github.com/mpasha3/trips-py>   Techniques for Regularization of Inverse Problems in Python (TRIPs-Py).
+- <https://github.com/paulhdietz/LEDSensors>   LED as Sensors workshop from SIGGRAPH 2018
+- <https://github.com/the-virtual-brain/tvb-gdist>   Geodesic Library (adaptation by TVB Team)
+- <https://github.com/coloria-dev/coloria>   :rainbow: Tools for color research
+- <https://github.com/nschloe/meshio>   :spider_web: input/output for many mesh formats
+- <https://github.com/nschloe/pygmsh>   :spider_web: Gmsh for Python
+- <https://github.com/pyvista/scikit-gmsh>   Scikit for Gmsh to generate 3D finite element mesh
+- <https://github.com/pyvista/tetgen>   A Python interface to the C++ TetGen library to generate tetrahedral meshes of any 3D polyhedral domains
+- <https://github.com/shapely/shapely>   Manipulation and analysis of geometric objects
+- <https://github.com/tekknolagi/pyddcg>   A small implementation of destination-driven code generation in Python
+- <https://github.com/tekknolagi/ddcg>   Implementation of destination-driven code generation with control destinations. See [post.md](post.md)
+- <https://github.com/amenzhinsky/go-memexec>   Run code from memory
+- <https://github.com/Netflix/bpftop>   "bpftop provides a dynamic real-time view of running eBPF programs. It displays the average runtime    events per second    and estimated total CPU % for each program."
+- <https://github.com/codinuum/cca>   Code Continuity Analysis Framework
+- <https://github.com/aau-cns/Lie-plusplus>   A C++ header-only Eigen-based Library for Lie group operations
+- <https://github.com/mi-lib/mi-lib-starter>   A starter's kit of mi-lib
+- <https://github.com/mi-lib/zm>   ZM - a handy mathematics library
+- <https://github.com/mi-lib/roki>   RoKi - Robot Kinetics library
+- <https://github.com/mi-lib/zeo>   Zeo - Z/Geometry and optics computation library
+- <https://github.com/immunant/dwarf-writer>   Updates DWARF debug sections and ELF symbols with info obtained through disassembly
+- <https://github.com/maude-lang/Maude>   Language based on Rewriting Logic
+- <https://github.com/Deducteam/coq-hol-light>   HOL-Light library in Coq
+- <https://github.com/leanprover/leanbv>
+- <https://github.com/leanprover/LNSym>   Armv8 Native Code Symbolic Simulator in Lean
+- <https://github.com/leanprover/leansat>   This package provides an interface and foundation for verified SAT reasoning
+- <https://github.com/leanprover/subverso>
+- <https://github.com/koalaman/shellcheck>   "ShellCheck    a static analysis tool for shell scripts"
+- <https://github.com/harp-lab/Assemblage>   The repo holds Assemblage
+- <https://github.com/harp-lab/GPUJoin>
+- <https://github.com/harp-lab/usenixATC23>
+- <https://github.com/moderngpu/moderngpu>   Patterns and behaviors for GPU computing
+- <https://github.com/JOSHCLUNE/LeanSMTParser>
+- <https://github.com/JOSHCLUNE/DuperDemo>
+- <https://github.com/leanprover-community/lean-auto>   Experiments in automation for Lean
+- <https://github.com/leanprover-community/duper>
+- <https://github.com/upkie/upkie>   Open-source wheeled biped robots
+- <https://github.com/david-christiansen/bob24>
+- <https://github.com/andreasfertig/cppinsights>   C++ Insights - See your source code with the eyes of a compiler
+- <https://github.com/xuexue/neuralkanren>   Neural Guided Constraint Logic Programming for Program Synthesis
+- <https://github.com/google/atheris>
+- <https://github.com/google/highway>   "Performance-portable    length-agnostic SIMD with runtime dispatch"
+- <https://github.com/unum-cloud/ustore>   "Multi-Modal Database replacing MongoDB    Neo4J    and Elastic with 1 faster ACID solution    with NetworkX and Pandas interfaces    and bindings for C 99    C++ 17    Python 3    Java    GoLang 🗄️"
+- <https://github.com/unum-cloud/uform>   "Pocket-Sized Multimodal AI for content understanding and generation across multilingual texts    images    and 🔜 video    up to 5x faster than OpenAI CLIP and LLaVA 🖼️ & 🖋️"
+- <https://github.com/unum-cloud/usearch>   "Fast Open-Source Search & Clustering engine × for Vectors & 🔜 Strings × in C++    C    Python    JavaScript    Rust    Java    Objective-C    Swift    C#    GoLang    and Wolfram 🔍"
+- <https://github.com/unum-cloud/ucall>   "Web Serving and Remote Procedure Calls at 50x lower latency and 70x higher bandwidth than FastAPI    implementing JSON-RPC & REST over io_uring ☎️"
+- <https://github.com/ashvardanian/StringZilla>   "Up to 10x faster strings for C    C++    Python    Rust    and Swift    leveraging SWAR and SIMD on Arm Neon and x86 AVX2 & AVX-512-capable chips to accelerate search    sort    edit distances    alignment scores    etc 🦖"
+- <https://github.com/threatrack/ghidra-patchdiff-correlator>   This project tries to provide additional Ghidra Version Tracking Correlators suitable for patch diffing.
+- <https://github.com/petercunha/Pine>   ":evergreen_tree: Aimbot powered by real-time object detection with neural networks    GPU accelerated with Nvidia. Optimized for use with CS:GO."
+- <https://github.com/Polytonic/Chlorine>   Dead Simple OpenCL
+- <https://github.com/inducer/pyopencl>   "OpenCL integration for Python    plus shiny features"
+- <https://github.com/ProjectPhysX/FluidX3D>   "The fastest and most memory efficient lattice Boltzmann CFD software    running on all GPUs via OpenCL. Free for non-commercial use."
+- <https://github.com/boostorg/compute>   A C++ GPU Computing Library for OpenCL
+- <https://github.com/KhronosGroup/OpenCL-Guide>   A guide to help developers get up and running quickly with the OpenCL programming framework
+- <https://github.com/ThePoetCoder/APL-to-NumPy>   Converting APL Primitives to NumPy Expressions
+- <https://github.com/petersn/sat-synthesis>   CEGIS loop for exact synthesis of minimal circuits using SAT solvers
+- <https://github.com/LASER-UMASS/TacTok>   The TacTok automated Coq proof script synthesis tool
+- <https://github.com/inducer/loopy>   A code generator for array-based code on CPUs and GPUs
+- <https://github.com/NVIDIA/cuCollections>
+- <https://github.com/muhos/gpu4bmc>   A fully configurable interface of ParaFROST solver with CBMC model checker
+- <https://github.com/Danil6969/Ghidra-Nvidia-GPU>   Collection of Nvidia specs for Ghidra
+- <https://github.com/manya-bansal/mosaic>
+- <https://github.com/triton-lang/triton>   Development repository for the Triton language and compiler
+- <https://github.com/cuda-mode/resource-stream>   CUDA related news and material links
+- <https://github.com/cuda-mode/lectures>   Material for cuda-mode lectures
+- <https://github.com/thorkill/eresi>   The ERESI Reverse Engineering Software Interface
+- <https://github.com/aignacio/nox>   RISC-V Nox core
+- <https://github.com/dafny-lang/Dafny-VMC>   VMC: a Library for Verified Monte Carlo Algorithms
+- <https://github.com/imandra-ai/imandra-stdlib>   Standard library for [Imandra](https://imandra.ai)
+- <https://github.com/thradams/cake>   Cake a C23 front end and transpiler written in C
+- <https://github.com/microsoft/vcpkg>   "C++ Library Manager for Windows    Linux    and MacOS"
+- <https://github.com/STEllAR-GROUP/hpx>   The C++ Standard Library for Parallelism and Concurrency
+- <https://github.com/robgjansen/elf-loader>   Fork of <http://code.nsnam.org/thehajime/elf-loader/> for unlimited dlmopen namespaces
+- <https://github.com/jserv/min-dl>   "minimal dynamic linker implementation for ELF    supporting x86_64 and Arm/Aarch64"
+- <https://github.com/MikhailProg/elf>   small elf loader
+- <https://github.com/NVIDIA/thrust>   [ARCHIVED] The C++ parallel algorithms library. See <https://github.com/NVIDIA/cccl>
+- <https://github.com/NVIDIA/cccl>   CUDA Core Compute Libraries
+- <https://github.com/rapidsai/cugraph>   cuGraph - RAPIDS Graph Analytics Library
+- <https://github.com/skypjack/entt>   Gaming meets modern C++ - a fast and reliable entity component system (ECS) and much more
+- <https://github.com/icedland/iced>   "Blazing fast and correct x86/x64 disassembler    assembler    decoder    encoder for Rust    .NET    Java    Python    Lua"
+- <https://github.com/secure-foundations/provably-safe-sandboxing-wasm-usenix22>   "Top-level companion software artifact for the paper ""Provably-Safe Multilingual Software Sandboxing using WebAssembly"""
+- <https://github.com/trendmicro/tlsh>
+- <https://github.com/Nalen98/GhidraEmu>   Native Pcode emulator
+- <https://github.com/BrunoLevy/TinyPrograms>   "Tiny programs from various sources    for testing softcores"
+- <https://github.com/shellphish/how2heap>   A repository for learning various heap exploitation techniques.
+- <https://github.com/willem-pennings/balancing-cube>   A cube that balances itself in a corner or edge using reaction wheels
+- <https://github.com/awslabs/llrt>   "LLRT (Low Latency Runtime) is an experimental    lightweight JavaScript runtime designed to address the growing demand for fast and efficient Serverless applications."
+- <https://github.com/Kostr/UEFI-Lessons>   Lessons to get to know UEFI programming in Linux with the help of EDKII
+- <https://github.com/magcius/noclip.website>   A digital museum of video game levels
+- <https://github.com/rbran/ice-kola>
+- <https://github.com/rbran/sleigh-rs>   Ghidra Sleight (PCode) parsing library in Rust.
+- <https://github.com/rbran/sleigh2rust>   Generate Rust Emulators and Disassemblers from Ghidra Sleigh.
+- <https://github.com/rbran/sleigh3rust>   A demontration of disassemblers generated by sleigh2rust
+- <https://github.com/sysprog21/shecc>   A self-hosting and educational C optimizing compiler
+- <https://github.com/sysprog21/concurrent-programs>   "Complementary Concurrency Programs for course ""Linux Kernel Internals"""
+- <https://github.com/sysprog21/rv32emu>   Compact and Efficient RISC-V RV32I[MAFC] emulator
+- <https://github.com/sysprog21/lkmpg>   The Linux Kernel Module Programming Guide (updated for 5.0+ kernels)
+- <https://github.com/cpplint/cpplint>   Static code checker for C++
+- <https://github.com/rust-lang/a-mir-formality>   a model of MIR and the Rust type/trait system
+- <https://github.com/rambasnet/CPP-Fundamentals>   Jupyter Notebooks for Learning CS Foundational Concepts using C++
+- <https://github.com/ben-marshall/awesome-open-hardware-verification>   A List of Free and Open Source Hardware Verification Tools and Frameworks
+- <https://github.com/diffblue/hw-cbmc>   The HW-CBMC and EBMC Model Checkers for Verilog
+- <https://github.com/fadoss/umaudemc>   Unified Maude model-checking tool
+- <https://github.com/evcxr/evcxr>
+- <https://github.com/river-li/awesome-uefi-security>   👓A collection of papers/tools/exploits for UEFI security.
+- <https://github.com/bstee615/tree-climber>   Program analysis tools built on tree-sitter (<https://github.com/tree-sitter/tree-sitter>).
+- <https://github.com/nevesnunes/ghidra-plays-mario>   Playing NES ROMs with Ghidra's PCode Emulator
+- <https://github.com/trailofbits/BTIGhidra>   Binary Type Inference Ghidra Plugin
+- <https://github.com/louismerlin/concrete.css>   A simple and to the point classless CSS framework
+- <https://github.com/dolphin-emu/dolphin>   "Dolphin is a GameCube / Wii emulator    allowing you to play games for these two platforms on PC with improvements."
+- <https://github.com/zeldamods/objmap>   Breath of the Wild object map
+- <https://github.com/leoetlino/project-restoration>   A Majora's Mask 3D patch that restores some mechanics from the original game to get the best of both worlds
+- <https://github.com/pmret/papermario>   Decompilation of Paper Mario (2000)
+- <https://github.com/zeldaret/oot>   Decompilation of The Legend of Zelda: Ocarina of Time
+- <https://github.com/simonlindholm/decomp-permuter>   Randomly permute C files to better match a target binary
+- <https://github.com/decompme/decomp.me>   Collaborative decompilation and reverse engineering website
+- <https://github.com/simonlindholm/asm-differ>   Assembly diff script
+- <https://github.com/matt-kempster/m2c>   A MIPS and PowerPC decompiler.
+- <https://github.com/miguelpagano/nominal-sets>
+- <https://github.com/L-TChen/BiSig>   "Bidirectional Binding Signature and Bidirectional Type Synthesis    Generically"
+- <https://github.com/Calysto/calysto_scheme>   A Scheme kernel for Jupyter that can use Python libraries
+- <https://github.com/trailofbits/cb-multios>   "DARPA Challenges Sets for Linux    Windows    and macOS"
+- <https://github.com/atopile/atopile>   "Design circuit boards with code! ✨ Get software-like design reuse 🚀    validation    version control and collaboration in hardware; starting with electronics ⚡️"
+- <https://github.com/trelau/pyOCCT>   Python bindings for OpenCASCADE via pybind11.
+- <https://github.com/remi-garcia/jMCM>
+- <https://github.com/airbus-seclab/bincat>   "Binary code static analyser    with IDA integration. Performs value and taint analysis    type reconstruction    use-after-free and double-free detection"
+- <https://github.com/trabucayre/openFPGALoader>   Universal utility for programming FPGA
+- <https://github.com/metareflection/clpllm>   CLP(LLM) -- using an LLM as a constraint solver
+- <https://github.com/Ericsson/codechecker>   "CodeChecker is an analyzer tooling    defect database and viewer extension for the Clang Static Analyzer and Clang Tidy"
+- <https://github.com/danmar/cppcheck>   static analysis of C/C++ code
+- <https://github.com/shuaimu/refcell-cpp>
+- <https://github.com/trailofbits/differ>   Detecting Inconsistencies in Feature or Function Evaluations of Requirements
+- <https://github.com/rems-project/cerberus>   Cerberus C semantics
+- <https://github.com/chrismaltby/gb-studio>   A quick and easy to use drag and drop retro game creator for your favourite handheld video game system
+- <https://github.com/chrisamaphone/lf-class>   Logical Frameworks Class
+- <https://github.com/makhowastaken/GWGBC_FW>   Firmware repository for the Funnyplaying FPGA GBC
+- <https://github.com/AlgebraicGeometricModeling/AlgebraicGeometricModeling.github.io>   Documentation for Algebraic Geometric Modeling
+- <https://github.com/AlgebraicGeometricModeling/JointDiag.jl>   Joint diagonalisation of pencil of matrices
+- <https://github.com/YosysHQ/apicula>   Project Apicula 🐝: bitstream documentation for Gowin FPGAs
+- <https://github.com/weggli-rs/weggli>   weggli is a fast and robust semantic search tool for C and C++ codebases. It is designed to help security researchers identify interesting functionality in large codebases.
+- <https://github.com/rust-minidump/rust-minidump>   "Type definitions    parsing    and analysis for the minidump file format."
+- <https://github.com/KaisenAmin/c_std>   Implementation of C++ standard libraries in C
+- <https://github.com/geohot/qira>   QEMU Interactive Runtime Analyser
+- <https://github.com/dzervas/frinja>   Frida plugin for Binary Ninja
+- <https://github.com/trishullab/copra>   COPRA: An in-COntext PRoof Agent which uses LLMs like GPTs to prove theorems in formal languages.
+- <https://github.com/malleable-systems/malleable.systems>   Website for the malleable systems and software community
+- <https://github.com/dylibso/hermit>   Actually Portable WebAssembly compiler toolchain for self-contained cross-platform binaries
+- <https://github.com/AkechiShiro/slides-talks>   My own cybersecurity research talks/slides
+- <https://github.com/joscoh/why3-semantics>   Formal Semantics for Why3
+- <https://github.com/streaksu/Gloire>   An OS built with the Ironclad kernel and GNU tools
+- <https://github.com/motib/LearnSAT>   SAT solver for education
+- <https://github.com/dsasmblr/game-hacking>   "Tutorials    tools    and more as related to reverse engineering video games."
+- <https://github.com/DavidBuchanan314/stelf-loader>   "A stealthy ELF loader - no files    no execve    no RWX"
+- <https://github.com/AonCyberLabs/Cexigua>   Linux based inter-process code injection without ptrace(2)
+- <https://github.com/arget13/DDexec>   "A technique to run binaries filelessly and stealthily on Linux by ""overwriting"" the shell's process with another."
+- <https://github.com/gamozolabs/elfloader>   An architecture-agnostic ELF file flattener for shellcode
+- <https://github.com/google/orbit>   C/C++ Performance Profiler
+- <https://github.com/Zeex/subhook>   "Simple hooking library for C/C++ (x86 only    32/64-bit    no dependencies)"
+- <https://github.com/BradDorney/Patcher>   "Lightweight C++11 library with a tidy API    built using Capstone    to facilitate creating and tracking function-level and instruction-level hooks    or other arbitrary memory patches."
+- <https://github.com/TsudaKageyu/minhook>   The Minimalistic x86/x64 API Hooking Library for Windows
+- <https://github.com/darfink/detour-rs>   A cross-platform detour library written in Rust
+- <https://github.com/purseclab/Patcherex2>   A versatile and easy-to-use static binary patching tool.
+- <https://github.com/gunnarmorling/1brc>   1️⃣🐝🏎️ The One Billion Row Challenge -- A fun exploration of how quickly 1B rows from a text file can be aggregated with Java
+- <https://github.com/cmuratori/blandwidth>   A compact memory bandwidth tester for x64 CPUs
+- <https://github.com/dyninst/dyninst>   "DyninstAPI: Tools for binary instrumentation    analysis    and modification."
+- <https://github.com/woodruffw/mollusc>   "Pure-Rust libraries for parsing    interpreting    and analyzing LLVM"
+- <https://github.com/codyroux/traat-lean>   "Lean formalization of selected lemmas from ""Term Rewriting and All That"""
+- <https://github.com/edubart/lester>   Minimal Lua test framework
+- <https://github.com/arcana-technologies/arcana.elfscan>   "ELF binary forensics tool for APT    virus    backdoor and rootkit detection"
+- <https://github.com/ktock/container2wasm>   Container to WASM converter
+- <https://github.com/kudu-dynamics/ghidra-haskell>
+- <https://github.com/sevaa/dwex>   DWARF Explorer - a GUI utility for navigating the DWARF debug information
+- <https://github.com/MolecularMatters/raw_pdb>   A C++11 library for reading Microsoft Program DataBase PDB files
+- <https://github.com/rapid7/mettle>   "This is an implementation of a native-code Meterpreter    designed for portability    embeddability    and low resource utilization."
+- <https://github.com/Naereen/Tiny-Prolog-in-OCaml-OneFile>   "A tiny implementation of a small subset of the Prolog language    🐫 in OCaml. With small and fun examples."
+- <https://github.com/rswier/c4>   C in four functions
+- <https://github.com/marcpaq/b1fipl>   A Bestiary of Single-File Implementations of Programming Languages
+- <https://github.com/bzhan/mars>
+- <https://github.com/briangu/klongpy>   High-Performance Klong array language in Python.
+- <https://github.com/Nalen98/eBPF-for-Ghidra>   eBPF Processor for Ghidra
+- <https://github.com/finite-element/finite-element-course>   The implementation exercise for the final year finite element course given in the Maths Department of Imperial College London
+- <https://github.com/dzaima/CBQN>   a BQN implementation in C
+- <https://github.com/janhq/jan>   "Jan is an open source alternative to ChatGPT that runs 100% offline on your computer. Multiple engine support (llama.cpp    TensorRT-LLM)"
+- <https://github.com/SJTU-IPADS/PowerInfer>   High-speed Large Language Model Serving on PCs with Consumer-grade GPUs
+- <https://github.com/calebegg/proof-pad>   A web IDE for ACL2 using a Kubernetes based backend. Evolution of <https://github.com/calebegg/proof-pad-classic>
+- <https://github.com/huggingface/candle>   Minimalist ML framework for Rust
+- <https://github.com/CADmium-Co/CADmium>   A CAD program that runs in the browser
+- <https://github.com/Open-Cascade-SAS/OCCT>   "Open CASCADE Technology (OCCT) is an open-source software development platform for 3D CAD    CAM    CAE. This is a clone of the official repository located on <https://dev.opencascade.org/>. Please use official development portal for registering issues and providing patches."
+- <https://github.com/dimforge/parry>   2D and 3D collision-detection library for Rust.
+- <https://github.com/dimforge/rapier>   2D and 3D physics engines focused on performance.
+- <https://github.com/hannobraun/fornjot>   "Early-stage b-rep CAD kernel    written in the Rust programming language."
+- <https://github.com/ricosjp/truck>   Truck is a Rust CAD Kernel.
+- <https://github.com/lean-dojo/LeanCopilot>   LLMs as Copilots for Theorem Proving in Lean
+- <https://github.com/sunfishcode/eyra>   Rust programs written entirely in Rust
+- <https://github.com/ptal/pcp>   Constraint programming in Rust
+- <https://github.com/evhub/pyprover>   Resolution theorem proving for predicate logic in pure Python.
+- <https://github.com/jsiek/abstract-binding-trees>   "Abstract binding trees (abstract syntax trees plus binders)    as a library in Agda"
+- <https://github.com/01mf02/cop-rs>   Connection provers in Rust
+- <https://github.com/open-obfuscator/o-mvll>   :electron: O-MVLL is a LLVM-based obfuscator for native code (Android & iOS)
+- <https://github.com/clearbluejar/ghidriff>   Python Command-Line Ghidra Binary Diffing Engine
+- <https://github.com/nektos/act>   Run your GitHub Actions locally 🚀
+- <https://github.com/pytorch-labs/gpt-fast>   Simple and efficient pytorch-native transformer text generation in <1000 LOC of python.
+- <https://github.com/gregr/first-order-miniKanren>   miniKanren with a first-order representation of the search space
+- <https://github.com/TheR1D/shell_gpt>   "A command-line productivity tool powered by AI large language models like GPT-4    will help you accomplish your tasks faster and more efficiently."
+- <https://github.com/vkoskiv/c-ray>   "c-ray is a small    simple path tracer written in C"
+- <https://github.com/SystemSecurityStorm/Awesome-Binary-Similarity>   An awesome & curated list of binary code similarity papers
+- <https://github.com/Mozilla-Ocho/llamafile>   Distribute and run LLMs with a single file.
+- <https://github.com/SPTHvx/SPTH>   Second Part To Hell's artworks: artificial (life/evolution/intelligence)
+- <https://github.com/stefan-hoeck/idris2-pack>
+- <https://github.com/astean1001/ProMBA>   MBA deobfuscator via Program Synthesis and Term Rewriting
+- <https://github.com/EvgSkv/logica>   "Logica is a logic programming language that compiles to SQL. It runs on Google BigQuery    PostgreSQL and SQLite."
+- <https://github.com/augustss/MicroHs>   Haskell implemented with combinators
+- <https://github.com/softsec-unh/MBA-Solver>
+- <https://github.com/GaloisInc/CASE-AADL-Tutorial>   A Tutorial for tools developed on the DARPA CASE program
+- <https://github.com/jtpaasch/data-flow-ppa>   Data-flow analyses from the PPA book
+- <https://github.com/angr/patcherex>   "Shellphish's automated patching engine    originally created for the Cyber Grand Challenge."
+- <https://github.com/niconaus/pcode-interpreter>
+- <https://github.com/bollu/linker-koans>   "Snippets that explore how linkers work    one flag at a time."
+- <https://github.com/hernanponcedeleon/Dat3M>   A verification tool for many memory models
+- <https://github.com/harp-lab/gdlog>
+- <https://github.com/newca12/awesome-rust-formalized-reasoning>   "An exhaustive list of all Rust resources regarding automated or semi-automated formalization efforts in any area    constructive mathematics    formal algorithms    and program verification."
+- <https://github.com/sharkdp/hyperfine>   A command-line benchmarking tool
+- <https://github.com/advanced-microcode-patching/shiva>   A custom ELF linker/loader for installing ET_REL binary patches at runtime
+- <https://github.com/Paper-Proof/paperproof>   Lean theorem proving interface which feels like pen-and-paper proofs.
+- <https://github.com/calyxir/calyx>   Intermediate Language (IL) for Hardware Accelerator Generators
+- <https://github.com/blanchette/logical_verification_2023>   Hitchhiker's Guide to Logical Verification (2023 Edition)
+- <https://github.com/ptdecker/cbasics>   Kernighan and Ritchie The C Programming Language Code Examples
+- <https://github.com/AliveToolkit/alive2>   Automatic verification of LLVM optimizations
+- <https://github.com/mmirman/caledon>   higher order dependently typed logic programing
+- <https://github.com/ToposInstitute/polytt>   A type theory with native support for Polynomial Functors.
+- <https://github.com/ToposInstitute/poly>
+- <https://github.com/amblafont/unification>   Notes (and implementation) of unification with binders
+- <https://github.com/mojaie/MolecularGraph.jl>   Graph-based molecule modeling toolkit for cheminformatics
+- <https://github.com/model-checking/kani>   Kani Rust Verifier
+- <https://github.com/tokio-rs/loom>   Concurrency permutation testing tool for Rust.
+- <https://github.com/diffblue/cbmc>   C Bounded Model Checker
+- <https://github.com/dynamicslab/pysindy>   A package for the sparse identification of nonlinear dynamical systems from data
+- <https://github.com/RobinKa/egga>   Symbolic Geometric Algebra with E-Graphs
+- <https://github.com/UoYCS-plasma/GP2>   The rule-based graph programming language GP 2
+- <https://github.com/jenshweber/grape>   Grape - Graph Rewriting and Persistence Engine
+- <https://github.com/bpinaud/Porgy>   Visual graph rewriting platform
+- <https://github.com/jakobandersen/mod>
+- <https://github.com/codespecs/daikon>   Dynamic detection of likely invariants
+- <https://github.com/hannorein/rebound>   💫 An open-source multi-purpose N-body code.
+- <https://github.com/jjdishere/EG>   Formalizing Euclidean Geometry in Lean
+- <https://github.com/FlorentAvellaneda/EvalMaxSAT>   State-of-the-art MaxSAT Solver & Library Based on Unsat Core Guided Techniques
+- <https://github.com/mogproject/twinwidth-2023>   PACE 2023
+- <https://github.com/manpen/twin_width>
+- <https://github.com/lnis-uofu/LSOracle>   IDEA project source files
+- <https://github.com/kahypar/kahypar>   KaHyPar (Karlsruhe Hypergraph Partitioning) is a multilevel hypergraph partitioning framework providing direct k-way and recursive bisection based partitioning algorithms that compute solutions of very high quality.
+- <https://github.com/pdm-book/community>
+- <https://github.com/conal/MemoTrie>   Trie-based memo functions
+- <https://github.com/sosy-lab/cpachecker>   "CPAchecker    the Configurable Software-Verification Platform (read-only mirror)"
+- <https://github.com/hopv/hoice>   An ICE-based predicate synthesizer for Horn clauses.
+- <https://github.com/hopv/MoCHi>   MoCHi: Model Checker for Higher-Order Programs
+- <https://github.com/rebryant/pgbdd>   "Proof-generated    BDD-based SAT solver"
+- <https://github.com/vwxyzjn/cleanrl>   "High-quality single file implementation of Deep Reinforcement Learning algorithms with research-friendly features (PPO    DQN    C51    DDPG    TD3    SAC    PPG)"
+- <https://github.com/danijar/dreamerv3>   Mastering Diverse Domains through World Models
+- <https://github.com/calebh/dihash>   "Python implementation of directed graph hashing    from the paper ""Directed Graph Hashing"""
+- <https://github.com/joxeankoret/diaphora>   "Diaphora    the most advanced Free and Open Source program diffing tool."
+- <https://github.com/gleachkr/OL-Slides>
+- <https://github.com/leanprover-community/mathematics_in_lean>   The user home repository for the Mathematics in Lean tutorial.
+- <https://github.com/acl2/acl2>   ACL2 System and Books as Maintained by the Community
+- <https://github.com/akissinger/chyp>   An interactive theorem prover for string diagrams
+- <https://github.com/facebook/SPARTA>   SPARTA is a library of software components specially designed for building high-performance static analyzers based on the theory of Abstract Interpretation.
+- <https://github.com/inpefess/gym-saturation>   a collection of Gymnasium environments for saturation provers
+- <https://github.com/rems-project/isla>   Symbolic execution tool for Sail ISA specifications
+- <https://github.com/JanWielemaker/rocks-predicates>   Put predicates into a RocksDB database
+- <https://github.com/SWI-Prolog/packages-swipy>   Python interface for SWI-Prolog
+- <https://github.com/sharpie7/circuitjs1>   Electronic Circuit Simulator in the Browser
+- <https://github.com/narijauskas/PRONTO.jl>   A Julia implementation of PRONTO
+- <https://github.com/JuliaGraphs/GraphsOptim.jl>   A package for graph optimization algorithms that rely on mathematical programming.
+- <https://github.com/sandialabs/Prove-It>   A tool for proving and organizing general theorems using Python.
+- <https://github.com/lucaferranti/GeometricTheoremProver.jl>   A Julia library for automated deduction in Euclidean geometry.
+- <https://github.com/WaterLily-jl/WaterLily.jl>   Fast and simple fluid simulator in Julia
+- <https://github.com/BioJulia/BioTutorials>   Tutorial Notebooks of BioJulia
+- <https://github.com/BioJulia/GenomicFeatures.jl>   Tools for genomic features in Julia.
+- <https://github.com/gamma-opt/DecisionProgramming.jl>   "DecisionProgramming.jl is a Julia package for solving multi-stage decision problems under uncertainty    modeled using influence diagrams. Internally    it relies on mathematical optimization. Decision models can be embedded within other optimization models."
+- <https://github.com/carstenbauer/ThreadPinning.jl>   Readily pin Julia threads to CPU processors
+- <https://github.com/MilesCranmer/SymbolicRegression.jl>   Distributed High-Performance Symbolic Regression in Julia
+- <https://github.com/worlddynamics/WorldDynamics.jl>   An open-source framework written in Julia for global integrated assessment models.
+- <https://github.com/ThummeTo/DifferentiableEigen.jl>   The current implementation of `LinearAlgebra.eigen` does not support sensitivities. DifferentiableEigen.jl offers an `eigen` function that is differentiable by every AD-framework with support for ChainRulesCore.jl or ForwardDiff.jl.
+- <https://github.com/ThummeTo/FMIFlux.jl>   "FMIFlux.jl is a free-to-use software library for the Julia programming language    which offers the ability to place FMUs (fmi-standard.org) everywhere inside of your ML topologies and still keep the resulting model trainable with a standard (or custom) FluxML training process."
+- <https://github.com/modelica/fmi-standard>   Specification of the Functional Mock-up Interface (FMI)
+- <https://github.com/arminbiere/aiger>   AIGER And-Inverter-Graph Library
+- <https://github.com/usi-verification-and-security/golem>   Solver for Constrained Horn Clauses
+- <https://github.com/NYU-MLDA/OpenABC>   OpenABC-D is a large-scale labeled dataset generated by synthesizing open source hardware IPs. This dataset can be used for various graph level prediction problems in chip design.
+- <https://github.com/lsils/lstools-showcase>   Showcase examples for EPFL logic synthesis libraries
+- <https://github.com/lsils/benchmarks>   EPFL logic synthesis benchmarks
+- <https://github.com/SRI-CSL/l3riscv>   An executable specification of the RISCV ISA in L3.
+- <https://github.com/anishathalye/chroniton>   A tool for formally verifying constant-time software against hardware 🕰️
+- <https://github.com/ianarawjo/ChainForge>   An open-source visual programming environment for battle-testing prompts to LLMs.
+- <https://github.com/lm-sys/FastChat>   "An open platform for training    serving    and evaluating large language models. Release repo for Vicuna and Chatbot Arena."
+- <https://github.com/bitsandbytes-foundation/bitsandbytes>   Accessible large language models via k-bit quantization for PyTorch.
+- <https://github.com/rust-lang/miri>   An interpreter for Rust's mid-level intermediate representation
+- <https://github.com/UKPLab/sentence-transformers>   Multilingual Sentence & Image Embeddings with BERT
+- <https://github.com/zylon-ai/private-gpt>   "Interact with your documents using the power of GPT    100% privately    no data leaks"
+- <https://github.com/oobabooga/text-generation-webui>   A Gradio web UI for Large Language Models.
+- <https://github.com/nlpxucan/WizardLM>   "LLMs build upon Evol Insturct: WizardLM    WizardCoder    WizardMath"
+- <https://github.com/proot-me/proot>   "chroot    mount --bind    and binfmt_misc without privilege/setup for Linux"
+- <https://github.com/0xAX/asm>   Learning assembly for Linux x86_64
+- <https://github.com/matthieu-m/ghost-cell>   An implementation of Joshua Yanovski's Ghost Cell paper.
+- <https://github.com/fdopen/ppx_cstubs>   preprocessor for easier stub generation with ocaml-ctypes
+- <https://github.com/fugue-re/fugue-core>   A binary analysis framework written in Rust.
+- <https://github.com/B2R2-org/B2R2>   "B2R2 is a collection of useful algorithms    functions    and tools for binary analysis."
+- <https://github.com/kaled-alshmrany/FuSeBMC>   FuSeBMC is a novel Energy-Efficient Test Generator that exploits fuzzing and BMC engines to detect security vulnerabilities in real-world C programs.
+- <https://github.com/ayazhafiz/plts>   A collection of programming languages and type systems.
+- <https://github.com/monoxgas/sRDI>   Shellcode implementation of Reflective DLL Injection. Convert DLLs to position independent shellcode
+- <https://github.com/UlfNorell/x86-agda>   "Inline    type safe X86-64 assembly programming in Agda"
+- <https://github.com/endrazine/wcc>   The Witchcraft Compiler Collection
+- <https://github.com/wies/grasshopper>   An automated deductive program verifier.
+- <https://github.com/eqlog/eqlog>   Datalog with equality for rust
+- <https://github.com/Unstructured-IO/unstructured>   "Open source libraries and APIs to build custom preprocessing pipelines for labeling    training    or production machine learning pipelines. "
+- <https://github.com/rems-project/sail>   Sail architecture definition language
+- <https://github.com/CEisenhofer/ModalZ3>
+- <https://github.com/leanprover-community/aesop>   White-box automation for Lean 4
+- <https://github.com/comby-tools/comby>   A code rewrite tool for structural search and replace that supports ~every language.
+- <https://github.com/joshrule/term-rewriting-rs>   a Rust implementation of first-order term rewriting systems (TRS)
+- <https://github.com/yallop/ocaml-flap>   A deterministic parser with fused lexing
+- <https://github.com/nmslib/hnswlib>   Header-only C++/python library for fast approximate nearest neighbors
+- <https://github.com/facebookresearch/faiss>   A library for efficient similarity search and clustering of dense vectors.
+- <https://github.com/UQ-PAC/BASIL>
+- <https://github.com/facebookresearch/segment-anything>   "The repository provides code for running inference with the SegmentAnything Model (SAM)    links for downloading the trained model checkpoints    and example notebooks that show how to use the model."
+- <https://github.com/formal-land/coq-of-rust>   Formal verification tool for Rust: check 100% of execution cases of your programs 🦀 to make applications with no bugs! ✈️ 🚀 ⚕️ 🏦
+- <https://github.com/jfeser/bitarray>   Fast vectorized bitarrays for OCaml
+- <https://github.com/quadratichq/quadratic>   "Quadratic | Technical Spreadsheet with Python    SQL    and AI"
+- <https://github.com/eatonphil/one-pass-code-generation-in-v8>   One-pass Code Generation in V8 (Archive)
+- <https://github.com/uelis/modular>   Implementation of modular translation for call-by-value PCF
+- <https://github.com/mAarnos/Serkr>   An automated theorem prover for first order logic.
+- <https://github.com/koka-lang/libmprompt>   Robust multi-prompt delimited control and effect handlers in C/C++
+- <https://github.com/koka-lang/libhandler>   Libhandler implements algebraic effects and handlers in portable C99. Monads for free in C.
+- <https://github.com/lark-parser/lark>   "Lark is a parsing toolkit for Python    built with a focus on ergonomics    performance and modularity."
+- <https://github.com/madvorak/lean3-tactic-lean4>   Reference sheet for people who know Lean 3 and want to write tactic-based proofs in Lean 4
+- <https://github.com/slibby05/rice>   an optimizing curry compiler
+- <https://github.com/tammet/gkc>   A reasoning system for large knowledge bases.
+- <https://github.com/katef/libfsm>   DFA regular expression library & friends
+- <https://github.com/silentbicycle/theft>   "property-based testing for C: generate input to find obscure bugs    then reduce to minimal failing input"
+- <https://github.com/uwdb/Cosette>   Cosette is an automated SQL solver.
+- <https://github.com/digama0/mmj2>   mmj2 GUI Proof Assistant for the Metamath project
+- <https://github.com/nppoly/cyac>   High performance Trie and Ahocorasick automata (AC automata) Keyword Match & Replace Tool for python
+- <https://github.com/owl-toolkit/owl>
+- <https://github.com/abuseofnotation/category-theory-illustrated>   A book about category theory
+- <https://github.com/ravenbeutner/FsOmegaLib>
+- <https://github.com/whatisaphone/genawaiter>   Stackless generators on stable Rust.
+- <https://github.com/01mf02/kontroli-rs>   Alternative implementation of the logical framework Dedukti in Rust
+- <https://github.com/MiniZinc/minizinc-playground>   MiniZinc playground using WebAssembly
+- <https://github.com/d0iasm/rvemu-for-book>   "Reference implementation for the book ""Writing a RISC-V Emulator in Rust""."
+- <https://github.com/d0iasm/rvemu>   RISC-V emulator for CLI and Web written in Rust with WebAssembly. It supports xv6 and Linux (ongoing).
+- <https://github.com/LekKit/RVVM>   The RISC-V Virtual Machine
+- <https://github.com/ptitSeb/box64>   "Box64 - Linux Userspace x86_64 Emulator with a twist    targeted at ARM64 Linux devices"
+- <https://github.com/langston-barrett/duckalog>   Datalog engine based on DuckDB
+- <https://github.com/AUTOMATIC1111/stable-diffusion-webui>   Stable Diffusion web UI
+- <https://github.com/acorrenson/WiSE>   A formally verified bug finder
+- <https://github.com/acorrenson/metamatix>   A verified implementation of a metamath proof checker
+- <https://github.com/AntonLydike/riscemu>   RISC-V emulator in python
+- <https://github.com/JonnyWalker/PySNES>
+- <https://github.com/pydrofoil/pydrofoil>   "A fast RISC-V emulator based on the RISC-V Sail model    and an experimental ARM one"
+- <https://github.com/facebook/ocamlrep>   "Sets of libraries and tools to write applications and libraries mixing OCaml and Rust. These libraries will help keeping your types and data structures synchronized    and enable seamless exchange between OCaml and Rust"
+- <https://github.com/uwplse/potpie>   "Proof Object Transformation    Preserving Imp Embeddings: the first proof compiler to be formally proven correct"
+- <https://github.com/mohanson/pywasm>   A WebAssembly interpreter written in pure Python
+- <https://github.com/SkySkimmer/coq-lean-import>
+- <https://github.com/digama0/mizar-rs>   Alternative Mizar proof checker (<http://mizar.org/>) written in Rust
+- <https://github.com/maximecb/uvm>   "Fun    portable    minimalistic virtual machine."
+- <https://github.com/frank2/packer-tutorial>   A tutorial on how to write a packer for Windows!
+- <https://github.com/siddhartha-gadgil/lean-loris>   Experiments with some ways of automating reasoning in lean 4
+- <https://github.com/opencompl/lean-mlir-old>   embedding MLIR in LEAN
+- <https://github.com/inflex-io/early>   Add early return to any do-expression
+- <https://github.com/Kha/do-supplement>   "Supplement of the ICFP'22 paper ""‘do’ Unchained: Embracing Local Imperativity in a Purely Functional Language"""
+- <https://github.com/leanprover-community/quote4>   "Intuitive    type-safe expression quotations for Lean 4."
+- <https://github.com/leanprover-community/lean4-metaprogramming-book>
+- <https://github.com/Jaxan/nominal-lstar>   "Code for ""Learning nominal automata"""
+- <https://github.com/kettle11/tangle>   Radically simple multiplayer / networked WebAssembly
+- <https://github.com/mCRL2org/mCRL2>   The Git repository for the mCRL2 toolset.
+- <https://github.com/aesara-devs/aesara>   "Aesara is a Python library for defining    optimizing    and efficiently evaluating mathematical expressions involving multi-dimensional arrays."
+- <https://github.com/potassco/clinguin>   🐧 Clingo Interactive UI
+- <https://github.com/flxzt/rnote>   Sketch and take handwritten notes.
+- <https://github.com/flix/book>   The Flix Programming Book
+- <https://github.com/zhangir-azerbayev/lean-chat>
+- <https://github.com/Carnap/Carnap>   A formal logic framework that runs in the browser
+- <https://github.com/CTSRD-CHERI/sail-cheri-riscv>   CHERI-RISC-V model written in Sail
+- <https://github.com/dafny-lang/compiler-bootstrap>   "A work-in-progress reimplementation of Dafny's compiler    in Dafny"
+- <https://github.com/cnlohr/mini-rv32ima>   A tiny C header-only risc-v emulator.
+- <https://github.com/ucsd-progsys/liquid-fixpoint>   Horn Clause Constraint Solving for Liquid Types
+- <https://github.com/c-cube/mc2>   "[research] A modular SMT solver in OCaml    based on mcSAT"
+- <https://github.com/chriskiehl/Gooey>   Turn (almost) any Python command line program into a full GUI application with one line
+- <https://github.com/netspooky/bgws>
+- <https://github.com/tmpout/elfs>   A collection of interesting ELF files for inspiration and testing
+- <https://github.com/netspooky/xx>   "The xx file format. Turn your hex dumps into art    then into binary data."
+- <https://github.com/trailofbits/vast>   VAST is an experimental compiler pipeline designed for program analysis of C and C++. It provides a tower of IRs as MLIR dialects to choose the best fit representations for a program analysis or further program abstraction.
+- <https://github.com/fnogatz/CHR.js>   Compile and run Constraint Handling Rules (CHR) in JavaScript
+- <https://github.com/slebok/zoo>   Grammar Zoo
+- <https://github.com/catseye/Philomath>   MIRROR of <https://codeberg.org/catseye/Philomath> : An LCF-style theorem prover written in C89 (a.k.a ANSI C)
+- <https://github.com/catseye/Eqthy>   MIRROR of <https://codeberg.org/catseye/Eqthy> : A simple formalized language for equational proofs
+- <https://github.com/julesjacobs/boa>   Partition refinement
+- <https://github.com/Bastacyclop/egg-sketches>   "sketches for egg: a flexible    high-performance e-graph library"
+- <https://github.com/marijnheule/minisat>   MiniSAT 2.2 with DRUP support and OSX compilation
+- <https://github.com/d-krupke/cpsat-primer>   Using and Understanding OR-Tools' CP-SAT: A Primer and Cheat Sheet
+- <https://github.com/mortbopet/Ripes>   A graphical processor simulator and assembly editor for the RISC-V ISA
+- <https://github.com/elliottt/easy-smt>   Easy SMT solver interaction
+- <https://github.com/wulfdewolf/lp2pb>   a translator that creates PB constraints from an ASP program
+- <https://github.com/RustPython/RustPython>   A Python Interpreter written in Rust
+- <https://github.com/langston-barrett/rdf-star-souffle>   "A toolkit for reasoning about RDF-star in Soufflé    including an OWL reasoner"
+- <https://github.com/caviar-trs/caviar>   Implementing Halide's TRS inside of EGG
+- <https://github.com/soot-oss/SootUp>   A new version of Soot with a completely overhauled architecture
+- <https://github.com/JacquesCarette/Notes>
+- <https://github.com/pkivolowitz/asm_book>   "A book teaching assembly language programming on the ARM 64 bit ISA. Along the way    good programming practices and insights into code development are offered which apply directly to higher level languages."
+- <https://github.com/stassa/louise>   Polynomial-time Meta-Interpretive Learning
+- <https://github.com/GrammaTech/gtirb>   Intermediate Representation for Binary analysis and transformation
+- <https://github.com/c-cube/sidekick>   "A modular library for CDCL(T) SMT solvers    with [wip] proof generation."
+- <https://github.com/usethesource/rascal>   "The implementation of the Rascal meta-programming language (including interpreter    type checker    parser generator    compiler and JVM based run-time system)"
+- <https://github.com/fadoss/maude-bindings>   Language bindings for Maude
+- <https://github.com/jswrenn/deflect>   Reflection via DWARF.
+- <https://github.com/SourceDiver42/Ghidra-ChatGPT>
+- <https://github.com/OCamlPro/owi>   WebAssembly Swissknife
+- <https://github.com/zydeco-lang/zydeco>   a proof-of-concept programming language based on Call-by-push-value
+- <https://github.com/boyland/sasylf>   Educational Proof Assistant for Type Theory
+- <https://github.com/lorenzleutgeb/cqf>   "Conjunctive Query Fun    or ""How to use a database for SAT solving"""
+- <https://github.com/mgree/kmt>   Kleene algebra modulo theories
+- <https://github.com/egraphs-good/egglog-python>   Python bindings for the egg-smol rust library
+- <https://github.com/LPCIC/elpi-lang>   visual studio code extension for Elpi
+- <https://github.com/trailofbits/binrec-tob>   BinRec: Dynamic Binary Lifting and Recompilation
+- <https://github.com/ydewit/lean-souffle>   Uses souffle to analyse Lean's LCNF representation
+- <https://github.com/Dman95/SASM>   "SASM - simple crossplatform IDE for NASM    MASM    GAS and FASM assembly languages"
+- <https://github.com/asmjit/asmjit>   Low-latency machine code generation
+- <https://github.com/acorrenson/minilog>   A verified Implementation of a mini prolog
+- <https://github.com/MiniZinc/minizinc-js>   Use MiniZinc in the browser or with NodeJS
+- <https://github.com/aws-samples/how-to-write-more-correct-software-workshop>
+- <https://github.com/mandiant/Ghidrathon>   The FLARE team's open-source extension to add Python 3 scripting to Ghidra.
+- <https://github.com/cozodb/cozo>   "A transactional    relational-graph-vector database that uses Datalog for query. The hippocampus for AI!"
+- <https://github.com/binsec/haunted>   Binsec/Haunted is an extension of Binsec to verify speculative constant-time and detect Spectre attacks.
+- <https://github.com/trailofbits/divergent-representations>   CodeQL and Binary Ninja scripts to accompany the blog post
+- <https://github.com/langston-barrett/treeedb>   "Generate Soufflé Datalog types    relations    and facts that represent ASTs from a variety of programming languages."
+- <https://github.com/Gui774ume/krie>   Linux Kernel Runtime Integrity with eBPF
+- <https://github.com/art-w/sherlodoc>   Fuzzy type search for OCaml documentation
+- <https://github.com/StrongerXi/naive-egraph>
+- <https://github.com/langston-barrett/tree-sitter-souffle>   A tree-sitter grammar for Soufflé Datalog
+- <https://github.com/langston-barrett/souffle-lint>   A linter for Soufflé Datalog
+- <https://github.com/OCADml/OSCADml>   OpenSCAD DSL for OCaml
+- <https://github.com/agershun/picatjs>   Picat programming language in JavaScript
+- <https://github.com/bmourad01/ocamlchess>   UCI-compatible chess engine in OCaml.
+- <https://github.com/modular-macros/staged-streams.ocaml-macros>   Strymonas for OCaml with modular macros
+- <https://github.com/holgerthies/coq-aern>
+- <https://github.com/nocodb/nocodb>   🔥 🔥 🔥 Open Source Airtable Alternative
+- <https://github.com/polytypic/loko-ml>   Lower-Kinded Optics for OCaml
+- <https://github.com/bzhan/auto2>   A best-first-search theorem prover implemented in Isabelle
+- <https://github.com/wingo/walloc>   "A small malloc implementation    for use in WebAssembly"
+- <https://github.com/GaloisInc/cclyzerpp>   cclyzer++ is a precise and scalable pointer analysis for LLVM code.
+- <https://github.com/awslabs/rust-smt-ir-examples>
+- <https://github.com/jaalonso/Libros_de_Logica>   Recopilación de libros de lógica
+- <https://github.com/intel/hyperscan>   High-performance regular expression matching library
+- <https://github.com/algebraic-solving/msolve>   Library for Polynomial System Solving through Algebraic Methods
+- <https://github.com/alt-romes/hegg>   Fast equality saturation in Haskell
+- <https://github.com/HyperDbg/HyperDbg>   State-of-the-art native debugging tool
+- <https://github.com/SinaKarvandi/Hypervisor-From-Scratch>   Source code of a multiple series of tutorials about the hypervisor. Available at: <https://rayanfam.com/tutorials>
+- <https://github.com/stephenrkell/liballocs>   Meta-level run-time services for Unix processes... a.k.a. dragging Unix into the 1980s
+- <https://github.com/rems-project/c-verif-mark>
+- <https://github.com/monadius/ocaml_simple_interval>   A simple and portable floating-point interval arithmetic library in OCaml
+- <https://github.com/oxfordcontrol/Clarabel.rs>   Clarabel.rs: Interior-point solver for convex conic optimisation problems in Rust.
+- <https://github.com/adamgundry/type-inference>   Unification and type inference algorithms
+- <https://github.com/google/mlir-hs>   Haskell bindings for MLIR
+- <https://github.com/cp-algorithms/cp-algorithms>   Algorithm and data structure articles for <https://cp-algorithms.com> (based on <http://e-maxx.ru>)
+- <https://github.com/duckdb/duckdb>   DuckDB is an analytical in-process SQL database management system
+- <https://github.com/redballoonsecurity/ofrak>   "OFRAK: unpack    modify    and repack binaries."
+- <https://github.com/trealla-prolog/trealla>   "A compact    efficient Prolog interpreter written in plain-old C."
+- <https://github.com/gretay-js/ocamlfdo>   Feedback-directed optimizer for OCaml
+- <https://github.com/ezaffanella/PPLite>   PPLite: convex polyhedra library for Abstract Interpretation
+- <https://github.com/Wilfred/difftastic>   a structural diff that understands syntax 🟥🟩
+- <https://github.com/microsoft/llvm-mctoll>   llvm-mctoll
+- <https://github.com/bytecodealliance/regalloc2>   A new register allocator
+- <https://github.com/greghendershott/fear-of-macros>   A practical guide to Racket macros
+- <https://github.com/microsoft/z3guide>   Tutorials and courses for Z3
+- <https://github.com/ekmett/nbe-in-java-19>   a throwaway implementation of normalization by evaluation
+- <https://github.com/alhassy/easy-extensibility>   "Making VSCode extensions ON-THE-FLY    without the ceremony of creating a new node project!"
+- <https://github.com/stepchowfun/proofs>   My personal repository of formally verified mathematics.
+- <https://github.com/dwarfmaster/commutative-diagrams>   A coq plugin to deal with commutative diagrams
+- <https://github.com/valour01/arm_disasssembler_study>   "This is the repository for paper ""An Empirical Study on ARM Disassembly Tools"" accepted to ISSTA 2020"
+- <https://github.com/mflatt/gc-demo>
+- <https://github.com/Robert-van-Engelen/tinylisp>   "Lisp in 99 lines of C and how to write one yourself. Includes 20 Lisp primitives    garbage collection and REPL. Includes tail-call optimized versions for speed and reduced memory use."
+- <https://github.com/Gopiandcode/guile-ocaml>   GNU Guile Scheme bindings for OCaml
+- <https://github.com/WasmCert/WasmCert-Coq>   A mechanisation of Wasm in Coq
+- <https://github.com/thierry-martinez/metapp>   Meta-preprocessor for OCaml
+- <https://github.com/plut/ConstructiveGeometry.jl>   Algorithms and syntax for building CSG objects within Julia.
+- <https://github.com/cucapra/diospyros>   Search-based compiler for high-performance DSP programming
+- <https://github.com/smtcoq/sniper>
+- <https://github.com/leanprover-community/iris-lean>   "Lean 4 port of Iris    a higher-order concurrent separation logic framework"
+- <https://github.com/tlringer/ml-for-proofs>   An open bibliography of machine learning for formal proof papers
+- <https://github.com/lassepe/LiftedTrajectoryGames.jl>   A neural network accelerated solver for mixed-strategy solutions of trajectory games. Do you even lift?
+- <https://github.com/hackclub/some-assembly-required>   📖 An approachable introduction to Assembly.
+- <https://github.com/exo-lang/exo>   Exocompilation for productive programming of hardware accelerators
+- <https://github.com/opencompl/egg-tactic-code>
+- <https://github.com/angr/pypcode>   Python bindings to Ghidra's SLEIGH library for disassembly and lifting to P-Code IR
+- <https://github.com/StarCrossPortal/sleighcraft>   sleigh craft!
+- <https://github.com/black-binary/sleigh>   A (SLEIGH) disassembler that supports multiple architectures
+- <https://github.com/ezrosent/frawk>   an efficient awk-like language
+- <https://github.com/Dargones/libraries>   Libraries useful for Dafny programs
+- <https://github.com/Z3Prover/doc>   Documentation
+- <https://github.com/sampsyo/cs6120>   advanced compilers
+- <https://github.com/osa1/mincaml>   A MinCaml compiler implemented in Rust
+- <https://github.com/penteract/HigherOrderHornRefinement>
+- <https://github.com/sarsko/CreuSAT>   CreuSAT - A formally verified SAT solver written in Rust and verified with Creusot.
+- <https://github.com/oflatt/intervals-good>   A rust interval arithmetic library which provides flags that detect domain errors.
+- <https://github.com/riswords/quiche>
+- <https://github.com/GJDuck/e9patch>   A powerful static binary rewriting tool
+- <https://github.com/ashwinraghav/Cqual>   Type qualifiers for C
+- <https://github.com/carlini/printf-tac-toe>   tic-tac-toe in a single call to printf
+- <https://github.com/bkerler/exploit_me>   Very vulnerable ARM/AARCH64 application (CTF style exploitation tutorial with 14 vulnerability techniques)
+- <https://github.com/dbuenzli/rel>   Relational database programming for OCaml (unreleased)
+- <https://github.com/Bw3ll/JOP_ROCKET>   "This framework enables user to discover JOP gagdets and can automate building a complete JOP chain to bypass DEP. JOP ROCKET is the ultimate solution for Windows jump-oriented programming. JOP ROCKET also finds the novel two-gadget dispatcher    which greatly expands what is possible with JOP."
+- <https://github.com/leanprover/functional_programming_in_lean>   A book about functional programming in Lean
+- <https://github.com/tmpout/awesome-elf>
+- <https://github.com/magmide/magmide>   A dependently-typed proof language intended to make provably correct bare metal code possible for working software engineers.
+- <https://github.com/arminbiere/gimsatul>
+- <https://github.com/voodoos/mlts>
+- <https://github.com/favonia/ocaml-objdump>   🖨️ Printing OCaml Runtime Representations
+- <https://github.com/skilldrick/easy6502>
+- <https://github.com/skilldrick/6502js>   A JavaScript 6502 assembler and simulator
+- <https://github.com/revng/vscode-llvm-ir>   VSCode extension for the LLVM IR language
+- <https://github.com/symforce-org/symforce>   "Fast symbolic computation    code generation    and nonlinear optimization for robotics"
+- <https://github.com/hugsy/cemu>   Cheap EMUlator: lightweight multi-architecture assembly playground
+- <https://github.com/tchajed/futex-tutorial>
+- <https://github.com/eteran/edb-debugger>   edb is a cross-platform AArch32/x86/x86-64 debugger.
+- <https://github.com/horsicq/XELFViewer>   "ELF file viewer/editor for Windows    Linux and MacOS."
+- <https://github.com/jonsterling/lcf-sequent-calculus-example>   A self-contained implementation of forward and backward inference for intuitionistic propositional logic
+- <https://github.com/tomprimozic/type-systems>   Implementations of various type systems in OCaml.
+- <https://github.com/ocaml-multicore/ocaml5-tutorial>   A hands-on tutorial on the new parallelism features in OCaml 5
+- <https://github.com/awslabs/typecart>
+- <https://github.com/aws/aws-encryption-sdk-dafny>   AWS Encryption SDK for Dafny
+- <https://github.com/shaobo-he/handbook-of-practical-logic-and-automated-reasoning-in-racket>
+- <https://github.com/tammet/json-ld-logic>   JSON representation of first-order logic formulas
+- <https://github.com/iovisor/ubpf>   Userspace eBPF VM
+- <https://github.com/peridot/peridot>   The Peridot Programming Language
+- <https://github.com/angr/angrop>
+- <https://github.com/arthurpaulino/LeanMySQL>   A MySQL API for Lean 4
+- <https://github.com/ufmg-smite/lean-smt>   Tactics for discharging Lean goals into SMT solvers.
+- <https://github.com/jameysharp/optir>   Compiler optimizer for arbitrary control flow based on equality saturation
+- <https://github.com/xorpd/asm_prog_ex_yasm>   Assembly Language Adventures exercises for Yasm on Linux
+- <https://github.com/oriansj/stage0>   A set of minimal dependency bootstrap binaries
+- <https://github.com/pascutto/cachecache>   Efficient caching library for OCaml
+- <https://github.com/peermaps/eyros>   interval database
+- <https://github.com/LaurentMazare/ocaml-wasmtime>   OCaml WebAssembly runtime powered by Wasmtime
+- <https://github.com/vilterp/datalog-ts>   a datalog interpreter in typescript
+- <https://github.com/sampsyo/bril>   an educational compiler intermediate representation
+- <https://github.com/janestreet/magic-trace>   magic-trace collects and displays high-resolution traces of what a process is doing
+- <https://github.com/nobody-famous/alive>   Common Lisp Extension for VSCode
+- <https://github.com/R-O-C-K-E-T/Factorio-SAT>   Enhancing the Factorio experience with SAT solvers
+- <https://github.com/let-def/grenier>   "Misc algorithms in OCaml (HyperLogLog    jump consistent hashing)"
+- <https://github.com/josephg/diamond-types>   The world's fastest CRDT. WIP.
+- <https://github.com/dglittle/shelf>
+- <https://github.com/y-crdt/y-crdt>   Rust port of Yjs
+- <https://github.com/s-arash/ascent>   logic programming in Rust
+- <https://github.com/salsa-rs/salsa>   "A generic framework for on-demand    incrementalized computation. Inspired by adapton    glimmer    and rustc's query system."
+- <https://github.com/automerge/automerge>   "A JSON-like data structure (a CRDT) that can be modified concurrently by different users    and merged again automatically. "
+- <https://github.com/automerge/automerge-classic>   "A JSON-like data structure (a CRDT) that can be modified concurrently by different users    and merged again automatically."
+- <https://github.com/racket/zuo>   A tiny Racket for scripting
+- <https://github.com/bob-carpenter/ad-handbook>   Automatic Differentiation Handbook
+- <https://github.com/IPDSnelting/tba-2021>   "Materials for the course ""theorem prover lab: applications in programming languages"" at KIT    SS2021 edition"
+- <https://github.com/bgavran/Lens_Resources>   Theory and Applications of Lenses and Optics
+- <https://github.com/ept/crdt-website>   Source of the crdt.tech website
+- <https://github.com/lengyijun/polonius-proof>
+- <https://github.com/frankmcsherry/dynamic-datalog>   "Engines    queries    and data for dynamic Datalog computation"
+- <https://github.com/TimelyDataflow/timely-dataflow>   A modular implementation of timely dataflow in Rust
+- <https://github.com/libfirm/libfirm>   graph based intermediate representation and backend for optimising compilers
+- <https://github.com/vnmakarov/mir>   A lightweight JIT compiler based on MIR (Medium Internal Representation) and C11 JIT compiler and interpreter based on MIR
+- <https://github.com/andrejbauer/notes-on-realizability>   Lecture notes on realizability
+- <https://github.com/brog45/chrplay>   Learning CHR in SWI-Prolog
+- <https://github.com/eliben/pyelftools>   Parsing ELF and DWARF in Python
+- <https://github.com/let-def/owee>   OCaml library to work with DWARF format
+- <https://github.com/alviano/wasp>
+- <https://github.com/DeMaCS-UNICAL/I-DLV>   The new intelligent grounder of the logic-based Artificial Intelligence system DLV
+- <https://github.com/potassco/guide>   "🦮 An introduction to our Answer Set Programming tools focusing on gringo    clingo    and clasp."
+- <https://github.com/donatellosantoro/Llunatic>   The Llunatic Mapping and Cleaning Chase Engine
+- <https://github.com/graphik-team/graal>   "Graal is a Java toolkit for querying knowledge bases within the framework of existential rules    aka Datalog+/-. See Graal's homepage: "
+- <https://github.com/dbunibas/chasebench>   Benchmarking the Chase
+- <https://github.com/ott-lang/ott>   The Ott tool for writing definitions of programming languages and calculi
+- <https://github.com/season-lab/fuzzy-sat>   An approximate solver for concolic execution
+- <https://github.com/lanl-ansi/rosetta-opf>   AC-OPF Implementations in Various NLP Modeling Frameworks
+- <https://github.com/vshymanskyy/awesome-wasm-tools>   "😎 A curated list of awesome    language-agnostic WebAssembly tools"
+- <https://github.com/cvxgrp/cvxpygen>   Code generation with CVXPY
+- <https://github.com/yallop/ocaml-charset>   Fast char sets
+- <https://github.com/travitch/datalog>   A pure Haskell implementation of Datalog
+- <https://github.com/ercoppa/symbolic-execution-tutorial>   Tutorial on Symbolic Execution. Hands-on session is based on the angr framework.
+- <https://github.com/ocaml-multicore/saturn>   Lock-free data structures for multicore OCaml
+- <https://github.com/heidihoward/distributed-consensus-reading-list>   A list of papers about distributed consensus.
+- <https://github.com/HigherOrderCO/HVM>   "A massively parallel    optimal functional runtime in Rust"
+- <https://github.com/rustwasm/walrus>   Walrus is a WebAssembly transformation library 🌊🐘
+- <https://github.com/nickmain/cchr>   Copy of the CCHR Constraint Handling Rules implementation in C
+- <https://github.com/awto/chr2sql>   CHR2 to SQL conversion
+- <https://github.com/awto/effectfuljs>   JavaScript embedded effects compiler
+- <https://github.com/yallop/generalized-partial-computation-bibliography>   Generalized Partial Computation Bibliography
+- <https://github.com/cesena/ghidra2dwarf>   🐉 Export ghidra decompiled code to dwarf sections inside ELF binary
+- <https://github.com/ALSchwalm/dwarfexport>   Export dwarf debug information from IDA Pro
+- <https://github.com/aryx/yacfe>   Yacfe (Yet Another C Front-End) is mainly an OCaml API to write style-preserving source-to-source transformations such as refactorings on C source code.
+- <https://github.com/asperti/BOHM1.1>   "Bologna Optimal Higher-Order Machine    Version 1.1"
+- <https://github.com/riscv/riscv-j-extension>   Working Draft of the RISC-V J Extension Specification
+- <https://github.com/pfalcon/ssabook>   "Mirror of InriaForge SSABook repository: <https://gforge.inria.fr/projects/ssabook/> (was scheduled for retirement at the end of 2020    was still online as of 2021-03    but then gone by 2021-09)."
+- <https://github.com/mirage/ocaml-pcap>   OCaml code for generating and analysing pcap (packet capture) files
+- <https://github.com/pqwy/ocaml-papi>   Performance Application Programming Interface for OCaml
+- <https://github.com/banach-space/llvm-tutor>   A collection of out-of-tree LLVM passes for teaching and learning
+- <https://github.com/sqlancer/sqlancer>   Automated testing to find logic and performance bugs in database systems
+- <https://github.com/ultimate-pa/smtinterpol>   SMTInterpol interpolating SMT solver
+- <https://github.com/regehr/ub-canaries>   collection of C/C++ programs that try to get compilers to exploit undefined behavior
+- <https://github.com/nadia-polikarpova/cyclegg>   Cyclic theorem prover for equalitional reasoning using egraphs
+- <https://github.com/parallel-rust-cpp/shortcut-comparison>   Performance comparison of parallel Rust and C++
+- <https://github.com/hellerve/microml>   "A minimal ML    type-inferred    compiled    and/or interpreted in less than 750 lines"
+- <https://github.com/xldenis/rhb-specs>
+- <https://github.com/ivg/framespector>   stack frame inspector
+- <https://github.com/tlringer/plugin-tutorial>   "Yet another plugin tutorial    this time as an exercise for 598"
+- <https://github.com/WojciechMula/toys>   "Storage for my snippets    toy programs    etc."
+- <https://github.com/backtrace-labs/umash>   UMASH: a fast enough hash and fingerprint with collision bounds
+- <https://github.com/google/sanitizers>   "AddressSanitizer    ThreadSanitizer    MemorySanitizer"
+- <https://github.com/JuliaMath/Bessels.jl>   Bessel functions for real arguments and orders
+- <https://github.com/ptarau/LeanProlog>
+- <https://github.com/simonbyrne/Remez.jl>   Remez algorithm for computing minimax polynomial approximations
+- <https://github.com/MagpieBridge/MagpieBridge>   MagpieBridge LSP Framework --- A simple solution for your analysis IDE integration
+- <https://github.com/goblint/cil>   C Intermediate Language
+- <https://github.com/goblint/analyzer>   Static analysis framework for C
+- <https://github.com/cil-project/cil>   C Intermediate Language
+- <https://github.com/lifting-bits/sleigh>   Unofficial CMake build for Ghidra's C++ SLEIGH code
+- <https://github.com/Veykril/tlborm>   The Little Book of Rust Macros (updated fork)
+- <https://github.com/plt-amy/1lab>   "A formalised    cross-linked reference resource for mathematics done in Homotopy Type Theory"
+- <https://github.com/chunky/sqlraytracer>   Everyone writes a Raytracer eventually. This is mine.
+- <https://github.com/pyamg/pyamg>   Algebraic Multigrid Solvers in Python
+- <https://github.com/johnwhitington/mlbook>   OCaml from the Very Beginning
+- <https://github.com/rljacobson/lifetimes>   A lifetime inference algorithm for the Rust programming language written in Soufflé.
+- <https://github.com/dhondta/dronesploit>   Drone pentesting framework console
+- <https://github.com/sslotin/amh-code>   "Complete implementations from ""Algorithms for Modern Hardware"""
+- <https://github.com/domschrei/mallob>   Malleable Load Balancer. Massively Parallel Logic Backend. Award-winning SAT solving for the cloud.
+- <https://github.com/CertiGraph/CertiGraph>   A library for verifying graph-manipulating programs. Powered by Coq and VST. Compatible with CompCert.
+- <https://github.com/CertiGraph/CertiGC>   A formally verified generational garbage collector.
+- <https://github.com/backtracking/ocaml-bazaar>
+- <https://github.com/draperlaboratory/VIBES>   "Verified    Incremental    Binary Editing with Synthesis"
+- <https://github.com/Embedded-SW-VnV/osdp>
+- <https://github.com/pdarragh/camlrack>   S-Expression parsing and matching for OCaml.
+- <https://github.com/rizinorg/rz-tracetest>   Testing of RzIL against real traces
+- <https://github.com/egraphs-good/egglog>   egraphs + datalog!
+- <https://github.com/mvr/at>   Effective Algebraic Topology in Haskell
+- <https://github.com/flypitch/flypitch>   A formal proof of the independence of the continuum hypothesis
+- <https://github.com/thehottgame/TheHoTTGame>   Attracting mathematicians (others welcome too) with no experience in proof verification interested in HoTT and able to use Agda for HoTT
+- <https://github.com/RRZE-HPC/kerncraft>   Loop Kernel Analysis and Performance Modeling Toolkit
+- <https://github.com/RRZE-HPC/OSACA>   Open Source Architecture Code Analyzer
+- <https://github.com/SRI-CSL/libpoly>   LibPoly is a C library for manipulating polynomials
+- <https://github.com/appliedfm/coq-vsu-int_or_ptr>
+- <https://github.com/appliedfm/vstyle-tools>   A formatter/linter for Coq source
+- <https://github.com/leaningtech/webvm>   Virtual Machine for the Web
+- <https://github.com/vehicle-lang/vehicle>   A toolkit for enforcing logical specifications on neural networks
+- <https://github.com/bobatkey/modulog>   A Datalog implementation with an OCaml inspired module system
+- <https://github.com/bobatkey/sott>   Simplified Observational Type Theory
+- <https://github.com/ocaml-multicore/parallel-programming-in-multicore-ocaml>   Tutorial on Multicore OCaml parallel programming with domainslib
+- <https://github.com/corwin-of-amber/ocaml-wasm>   "The core OCaml system: compilers    runtime system    base libraries; WebAssembly port based on wasi-kernel"
+- <https://github.com/diku-dk/dpp-e2021-pub>   Data Parallel Programming
+- <https://github.com/xavierleroy/canonical-binary-tries>   "Coq development accompanying the paper ""Efficient Extensional Binary Tries"""
+- <https://github.com/leanprover-community/lean4-samples>   Code samples for Lean 4
+- <https://github.com/janestreet/tracing>   Tracing library
+- <https://github.com/validsdp/validsdp>   A Coq tactic for proving multivariate inequalities using SDP solvers
+- <https://github.com/takenobu-hs/WebAssembly-illustrated>   WebAssembly (Wasm) illustrated
+- <https://github.com/let-def/hotcaml>   Hotcaml: an interpreter with watching and reloading
+- <https://github.com/bitwuzla/bitwuzla>   "Bitwuzla is a Satisfiability Modulo Theories (SMT) solver for the theories of fixed-size bit-vectors    floating-point arithmetic    arrays and uninterpreted functions and their combinations. Its name is derived from an Austrian dialect expression that can be translated as “someone who tinkers with bits”."
+- <https://github.com/msp-strath/TypOS>   being an operating system for typechecking processes
+- <https://github.com/nanochess/bootOS>   bootOS is a monolithic operating system in 512 bytes of x86 machine code.
+- <https://github.com/ImperialCollegeLondon/formalising-mathematics-2022>   Lean 3 material for Kevin Buzzard's Jan-Mar 2022 course on formalising mathematics. Lean 4 version available here: <https://github.com/ImperialCollegeLondon/formalising-mathematics-2024>
+- <https://github.com/hellerve/programming-talks>   Awesome & interesting talks about programming
+- <https://github.com/lecopivo/SciLean>   Scientific computing in Lean 4
+- <https://github.com/ocaml/ocaml>   "The core OCaml system: compilers    runtime system    base libraries"
+- <https://github.com/fredrikekre/Literate.jl>   Simple package for literate programming in Julia
+- <https://github.com/realworldocaml/mdx>   Execute code blocks inside your documentation
+- <https://github.com/MichaelRawson/tptp>   Crate for reading TPTP files.
+- <https://github.com/linoscope/CAMLBOY>   A Game Boy emulator written in OCaml that runs in your browser 🐫 🎮
+- <https://github.com/SRI-CSL/yices2>   The Yices SMT Solver
+- <https://github.com/avast/retdec>   RetDec is a retargetable machine-code decompiler based on LLVM.
+- <https://github.com/luc-tielen/eclair-lang>   "A minimal    fast Datalog implementation in Haskell that compiles to LLVM IR"
+- <https://github.com/AndrasKovacs/elaboration-zoo>   Minimal implementations for dependent type checking and elaboration
+- <https://github.com/philzook58/z3-rise4fun>   Z3 tutorials from the rise4fun website
+- <https://github.com/radekm/ocaml-tptp>   Library for reading and writing FOF and CNF formulas in TPTP format
+- <https://github.com/lifting-bits/dds>   Dr. Disassembler
+- <https://github.com/jprendes/emception>   Run Emscripten in the browser
+- <https://github.com/gambit/gambit>   Gambit is an efficient implementation of the Scheme programming language.
+- <https://github.com/rafael-fuente/diffractsim>   ✨🔬 A flexible diffraction simulator for exploring and visualizing physical optics.
+- <https://github.com/rafael-fuente/Python-Raytracer>   A basic Ray Tracer that exploits numpy arrays and functions to work reasonably fast.
+- <https://github.com/rui314/chibicc>   A small C compiler
+- <https://github.com/rui314/mold>   Mold: A Modern Linker 🦠
+- <https://github.com/konn/laurent>   "Formal power series and Laurent series    cubically"
+- <https://github.com/shinh/elvm>   EsoLangVM Compiler Infrastructure
+- <https://github.com/zachjs/sv2v>   SystemVerilog to Verilog conversion
+- <https://github.com/JWally/jsLPSolver>   "Simple OOP javaScript library to solve linear programs    and mixed integer linear programs"
+- <https://github.com/ispc/ispc>   Intel® Implicit SPMD Program Compiler
+- <https://github.com/awslabs/rust-smt-ir>
+- <https://github.com/ras52/bootstrap>   Richard's compiler bootstrap experiment
+- <https://github.com/CPMpy/cpmpy>   "Constraint Programming and Modeling library in Python    based on numpy    with direct solver access."
+- <https://github.com/lecopivo/lean4-karray>
+- <https://github.com/arthurpaulino/NumLean>   A Lean 4 package for heavy numerical computations
+- <https://github.com/joehendrix/lean-sat-checker>   A work in progress proof checker for LRAT files written in Lean.
+- <https://github.com/zayenz/advent-of-code-2021>
+- <https://github.com/ccodel/verified-encodings>   Verifying encodings into propositional logic in Lean
+- <https://github.com/vsiddhu/SDP-Quantum-OR>   This repository contains code for the following paper: Five Starter Pieces: Quantum Information Science via Semi-definite Programs. arXiv:2112.08276
+- <https://github.com/nschloe/perfplot>   :chart_with_upwards_trend: Performance analysis for Python snippets
+- <https://github.com/hjwdzh/QuadriFlow>   QuadriFlow: A Scalable and Robust Method for Quadrangulation
+- <https://github.com/dendibakh/perf-ninja>   This is an online course where you can learn and master the skill of low-level performance analysis and tuning.
+- <https://github.com/higham/what-is>   Important concepts in numerical linear algebra and related areas
+- <https://github.com/sigma-py/quadpy>   ":triangular_ruler: Numerical integration (quadrature    cubature) in Python"
+- <https://github.com/coalton-lang/coalton>   "Coalton is an efficient    statically typed functional programming language that supercharges Common Lisp."
+- <https://github.com/AndrasKovacs/smalltt>   Demo for high-performance type theory elaboration
+- <https://github.com/bedrocksystems/BRiCk>   Formalization of C++ for verification purposes.
+- <https://github.com/chrisamaphone/interactive-lp>   Project materials related to logic programming for interactive/reactive systems. Contains the Ceptre programming language.
+- <https://github.com/wujuihsuan2016/LL_prover>   A Linear Logic Prover implemented in OCaml
+- <https://github.com/drjdn/p5scm>   This a simple scheme implementation using pa_schemer from camlp5
+- <https://github.com/tachukao/ocaml-mujoco>   OCaml bindings to MuJoCo
+- <https://github.com/schemedoc/bibliography>   Bibliography of Scheme research (readscheme.org and beyond)
+- <https://github.com/udem-dlteam/ribbit>   "A small and portable Scheme implementation with AOT and incremental compilers that fits in 4K.  It supports closures    tail calls    first-class continuations and a REPL."
+- <https://github.com/bzhan/holpy>   Implementation of higher-order logic in Python
+- <https://github.com/racket/datalog>
+- <https://github.com/sumiya11/Groebner.jl>   Groebner bases in (almost) pure Julia
+- <https://github.com/alcides/AoC2021Lean4>   My Solutions using Lean 4 for the 2021 edition of the Advent of Code
+- <https://github.com/leanprover/LeanInk>   LeanInk is a command line helper tool for Alectryon which aims to ease the integration of Lean 4.
+- <https://github.com/Gopiandcode/SWIPL-OCaml>   SWI-Prolog Bindings for OCaml: <https://gopiandcode.github.io/SWIPL-OCaml/swipl/index.html>
+- <https://github.com/mitchellh/advent-2021-sql>   Advent of Code 2021 using SQL (PostgreSQL-flavored)
+- <https://github.com/polytypic/f-omega-mu>   Fωμ type checker and compiler
+- <https://github.com/Anniepoo/swiplchrtut>   Tutorial for the CHR system
+- <https://github.com/vincentdchan/ocaml-binaryen-dsl>   Write WAT DSL in OCaml.
+- <https://github.com/mb64/simple-lambda-prolog>   A simple λProlog interpreter
+- <https://github.com/thehottgame/theHoTTGameGuide>
+- <https://github.com/janestreet/pythonlib>   A library to help writing wrappers around ocaml code for python
+- <https://github.com/neel-krishnaswami/proof-checker>   A simple proof checker
+- <https://github.com/elfshaker/elfshaker>   elfshaker stores binary objects efficiently
+- <https://github.com/tammet/logictools>   "The goal is to help studying logic and solvers by providing easy-to-use    pure browser-based javascript tools for both full classical predicate logic and propositional formulas. "
+- <https://github.com/AlexAltea/capstone.js>   Capstone disassembler framework for JavaScript
+- <https://github.com/slasser/CoStar>   "A parser based on the ALL(*) algorithm    implemented and verified in Coq."
+- <https://github.com/sajattack/Hack_MiSTer>   Nand2Tetris Hack Computer for MiSTer FPGA
+- <https://github.com/MattFerraro/causticsEngineering>   This repo demonstrates generating 3D surface meshes from input images
+- <https://github.com/microsoft/mimalloc>   mimalloc is a compact general purpose allocator with excellent performance.
+- <https://github.com/aprolog-lang/aprolog>   αProlog
+- <https://github.com/twhughes/Adjoint-Workshop>   Gentle introduction and demo of the adjoint variable method for electromagnetic inverse design
+- <https://github.com/bencbartlett/3D-printed-mirror-array>   3D-printable hexagonal mirror array capable of reflecting sunlight into arbitrary patterns
+- <https://github.com/ocaml-multicore/effects-examples>   Examples to illustrate the use of algebraic effects in Multicore OCaml
+- <https://github.com/Jonathan2251/lbd>
+- <https://github.com/f0rki/mapping-high-level-constructs-to-llvm-ir>   A guide that explains how high level programming language constructs are mapped to the LLVM intermediate language.
+- <https://github.com/nanochess/bootBASIC>   bootBASIC is a BASIC language in 512 bytes of x86 machine code.
+- <https://github.com/arbipher/llvm-ocaml-tutorial>   The LLVM tutorial using OCaml
+- <https://github.com/dinosaure/gilbraltar>   MirageOS on RPi4
+- <https://github.com/egraphs-good/snake-egg>   Python bindings for egg
+- <https://github.com/analysis-tools-dev/dynamic-analysis>   "⚙️ A curated list of dynamic analysis tools and linters for all programming languages    binaries    and more."
+- <https://github.com/fpottier/loop>
+- <https://github.com/vmware/chap>   "chap analyzes un-instrumented core files for leaks    memory growth    and corruption"
+- <https://github.com/omlins/julia-gpu-course>   "GPU Programming with Julia - course at the Swiss National Supercomputing Centre (CSCS)    ETH Zurich"
+- <https://github.com/evdenis/cvehound>   Check linux sources dump for known CVEs.
+- <https://github.com/slasser/AllStar>
+- <https://github.com/duasfl8r/propagator.py>   "A propagator network in Python    inspired by Radul & Sussman's The Art of the Propagator"
+- <https://github.com/jcubic/jquery.terminal>   jQuery Terminal Emulator - JavaScript library for creating web-based terminals with custom commands
+- <https://github.com/LIPS-scheme/lips>   Scheme based powerful lisp interpreter in JavaScript
+- <https://github.com/conal/talk-2021-can-tensor-programming-be-liberated>   "Talk: ""Can Tensor Programming Be Liberated from the Fortran Data Paradigm?"""
+- <https://github.com/klange/toaruos>   "A completely-from-scratch hobby operating system: bootloader    kernel    drivers    C library    and userspace including a composited graphical UI    dynamic linker    syntax-highlighting text editor    network stack    etc."
+- <https://github.com/wangjie212/TSSOS>   A sparse polynomial optimization tool based on the moment-SOS hierarchy.
+- <https://github.com/AssemblyScript/wabt.js>   "A buildbot for wabt.js    a port of WABT to the Web    with TypeScript support."
+- <https://github.com/wasdk/wasmcodeexplorer>   Simple WebAssembly binary file explorer
+- <https://github.com/wasm3/wasm3>   🚀 A fast WebAssembly interpreter and the most universal WASM runtime
+- <https://github.com/jart/cosmopolitan>   build-once run-anywhere c library
+- <https://github.com/jart/sectorlisp>   Bootstrapping LISP in a Boot Sector
+- <https://github.com/ilya-klyuchnikov/hosc>   Higher-Order Supercompiler
+- <https://github.com/deepmarker/ocaml-simdjson>   Parsing gigabytes of JSON per second
+- <https://github.com/CyberGrandChallenge/samples>   DARPA Cyber Grand Challenge Sample Challenges
+- <https://github.com/RedPRL/cooltt>   😎TT
+- <https://github.com/metagol/metagol>   Metagol - an inductive logic programming system
+- <https://github.com/logic-and-learning-lab/Popper>   An inductive logic programming system
+- <https://github.com/real-logic/aeron>   "Efficient reliable UDP unicast    UDP multicast    and IPC message transport"
+- <https://github.com/andreas-abel/uiCA>   uops.info Code Analyzer
+- <https://github.com/elfmaster/libelfmaster>   "Secure ELF parsing/loading library for forensics reconstruction of malware    and robust reverse engineering tools"
+- <https://github.com/metaocaml/metaocaml-bibliography>   MetaML and MetaOCaml bibliography
+- <https://github.com/BIT-SYS/KDR>   List of Linux kernel data races found in recent 5 years
+- <https://github.com/cirosantilli/x86-bare-metal-examples>   "Dozens of minimal operating systems to learn x86 system programming. Tested on Ubuntu 17.10 host in QEMU 2.10 and real hardware. Userland cheat at: <https://github.com/cirosantilli/linux-kernel-module-cheat#userland-assembly> ARM baremetal setup at: <https://github.com/cirosantilli/linux-kernel-module-cheat#baremetal-setup>
+- <https://github.com/codyroux/hoare-toy>   A tiny toy formalization of Hoare logic for IMP with a proof of soundness
+- <https://github.com/zyantific/zydis>   Fast and lightweight x86/x86-64 disassembler and code generation library
+- <https://github.com/smolkaj/nice-parser>   Nice parsers in OCaml without the boilerplate
+- <https://github.com/wala/WALA>   "T.J. Watson Libraries for Analysis    with frontends for Java    Android    and JavaScript    and may common static program analyses"
+- <https://github.com/soot-oss/soot>   Soot - A Java optimization framework
+- <https://github.com/ocaml-sf/learn-ocaml>   A Web Application for Learning OCaml
+- <https://github.com/shonfeder/um-abt>   An OCaml library implementing unifiable  abstract binding trees (UABTs)
+- <https://github.com/nevillegrech/gigahorse-toolchain>   A binary lifter and analysis framework for Ethereum smart contracts
+- <https://github.com/pmundkur/flowcaml>   Flowcaml compiler
+- <https://github.com/jscl-project/jscl>   A Lisp-to-JavaScript compiler bootstrapped from Common Lisp
+- <https://github.com/willcrichton/tyrade>   A pure functional language for type-level programming in Rust
+- <https://github.com/willcrichton/flowistry>   Flowistry is an IDE plugin for Rust that helps you focus on relevant code.
+- <https://github.com/patricoferris/jsoo-p5>   Js_of_ocaml bindings for the p5.js library
+- <https://github.com/nickdrozd/reazon>   miniKanren for Emacs
+- <https://github.com/mirage/repr>
+- <https://github.com/ejgallego/pycoq>   Python bindings for the Coq interactive proof assistant
+- <https://github.com/UniMath/SymmetryBook>   "This book will be an undergraduate textbook written in the univalent style    taking advantage of the presence of symmetry in the logic at an early stage."
+- <https://github.com/uwplse/coq-plugin-lib>   Library of useful utility functions for Coq plugins
+- <https://github.com/dbousque/lymp>   Use Python functions and objects from OCaml
+- <https://github.com/xavierleroy/cdf-mech-sem>   "Coq development for the course ""Mechanized semantics""    Collège de France    2019-2020"
+- <https://github.com/tum-pbs/pbdl-book>   Welcome to the Physics-based Deep Learning Book (v0.2)
+- <https://github.com/Symbolica/Symbolica>   Symbolica's open-source symbolic execution engine.
+- <https://github.com/jsiek/B522-PL-Foundations>   "Course Webpage for B522 Programming Language Foundations    Spring 2020    Indiana University"
+- <https://github.com/dynaroars/dig>   "DIG is a numerical invariant generation tool. It infers program invariants or properties over (i) program execution traces or (ii) program source code.  DIG supports many forms of numerical invariants    including nonlinear equalities    octagonal and  interval properties    min/max-plus relations    and congruence relations."
+- <https://github.com/verse-lab/ego>   EGraphs in OCaml
+- <https://github.com/thierry-martinez/pyast>   Python versioned abstract syntax trees and interface to the Python parser
+- <https://github.com/avigad/lamr>   Logic and Mechanized Reasoning
+- <https://github.com/ekzhang/crepe>   Datalog compiler embedded in Rust as a procedural macro
+- <https://github.com/rust-lang/datafrog>   A lightweight Datalog engine in Rust
+- <https://github.com/nikomatsakis/polonius.next>   experimental datalog rules for a next gen polonius
+- <https://github.com/leanprover/theorem_proving_in_lean4>   Theorem Proving in Lean 4
+- <https://github.com/kripken/llvm.js>   LLVM compiled to JavaScript using Emscripten
+- <https://github.com/nasa/FPRoCK>   "FPRoCK is a software library for checking satisfiability of a set of mixed real and floating-point constraints. If this set of constraints has at least one solution    it returns one of the solutions    otherwise it returns UNSAT indicating that the set is unsatisfiable."
+- <https://github.com/RocketRace/easy_z3>   Using z3's never been easier (maybe)
+- <https://github.com/openai/lean-gym>
+- <https://github.com/soren-n/bidi-higher-rank-poly>   "Didactic implementation of the type checker described in ""Complete and Easy Bidirectional Typechecking for Higher-Rank Polymorphism"" written in OCaml"
+- <https://github.com/dylanpeifer/deepgroebner>   Applications of reinforcement learning to Groebner basis computation.
+- <https://github.com/gzuidhof/coi-serviceworker>   Cross-origin isolation (COOP and COEP) through a service worker for situations in which you can't control the headers (e.g. GH pages)
+- <https://github.com/xrq-phys/Pfaffine>   ☕️ Pfaffian caffeine for Geminal wavefunction brews.
+- <https://github.com/c-cube/smtlib-utils>   "A parser and some utils for SMTLIB. For a fully compliant parser    see <https://github.com/Gbury/dolmen/>."
+- <https://github.com/seahorn/verify-c-common>
+- <https://github.com/BerkeleyAutomation/rlqp>   Accelerating Quadratic Optimization with Reinforcement Learning
+- <https://github.com/langjam/langjam>
+- <https://github.com/graphitemaster/fpinspect>   Inspect floating point computations
+- <https://github.com/mfherbst/juliacon_dft_workshop>   A mathematical look on density-functional theory and DFTK
+- <https://github.com/CVC4/signatures>   Proof signatures for CVC4
+- <https://github.com/maleadt/juliacon21-gpu_workshop>   Material for the 2021 GPU workshop at JuliaCon
+- <https://github.com/saravsak/JuliaCon2021>   Materials for Quantum Computing with Julia workshop at JuliaCon 2021
+- <https://github.com/c-cube/quip>   [wip] Proof format and checker for first-order and higher-order theorem provers
+- <https://github.com/ivanceras/svgbob>   Convert your ascii diagram scribbles into happy little SVG
+- <https://github.com/ocamllabs/ocaml-memory-model>
+- <https://github.com/mossr/BeautifulAlgorithms.jl>   Concise and beautiful algorithms written in Julia
+- <https://github.com/Drup/module-experiments>
+- <https://github.com/termite-analyser/llvm2smt>   OCaml library to transform an Llvm control flow graph in an SMT formula.
+- <https://github.com/termite-analyser/z3overlay>   An overlay for the OCaml Z3 binding.
+- <https://github.com/jeff5/very-slow-jython>   Very slowly rethinking Jython through toy implementations
+- <https://github.com/kc0bfv/pcode-emulator>   A PCode Emulator for Ghidra.
+- <https://github.com/HackOvert/GhidraSnippets>   Python snippets for Ghidra's Program and Decompiler APIs
+- <https://github.com/remixlabs/wasicaml>   Translate OCaml bytecode to WebAssembly
+- <https://github.com/sylefeb/Silice>   "Silice is an easy-to-learn    powerful hardware description language    that simplifies designing hardware algorithms with parallelism and pipelines."
+- <https://github.com/revng/revng>   revng: the core repository of the rev.ng project
+- <https://github.com/effectfully/inference-in-agda>   A tutorial on how Agda infers things
+- <https://github.com/unison-code/uni-instr-sel>   Universal instruction selection
+- <https://github.com/ranjitjhala/pliss21-tutorial>   Materials for Intro to Refinement Types Tutorial at PLISS 2021
+- <https://github.com/wilcoxjay/mypyvy>   "A language for symbolic transitions system    inspired by Ivy."
+- <https://github.com/dricketts/teaching-concurrency>   Specifications and safety proofs in different tools of a simple concurrent algorithm
+- <https://github.com/BrunoLevy/learn-fpga>   "Learning FPGA    yosys    nextpnr    and RISC-V "
+- <https://github.com/storm-framework/storm>   Static security for database-backed Haskell applications using Liquid Haskell
+- <https://github.com/bitwuzla/ocaml-bitwuzla>   Bitwuzla SMT solver repackaged for convenient use in opam.
+- <https://github.com/yihozhang/egraph-sqlite>   egraph on top of sqlite
+- <https://github.com/bootleg/ret-sync>   ret-sync is a set of plugins that helps to synchronize a debugging session (WinDbg/GDB/LLDB/OllyDbg2/x64dbg) with IDA/Ghidra/Binary Ninja disassemblers.
+- <https://github.com/aman-goel/avr>   Reads a state transition system and performs property checking
+- <https://github.com/zshipko/ocaml-bimage>   Composable image processing library for OCaml
+- <https://github.com/LogicalAtomist/principia>   The Principia Rewrite
+- <https://github.com/stedolan/counterexamples>   Counterexamples in Type Systems
+- <https://github.com/uuverifiers/eldarica>   The Eldarica model checker
+- <https://github.com/leuschel/logen>   Offline partial evaluation system for Prolog written using the cogen approach
+- <https://github.com/vbpf/ebpf-verifier>   eBPF verifier based on abstract interpretation
+- <https://github.com/binsec/Rel>   Binsec/Rel is an extension of Binsec that implements relational symbolic execution for constant-time verification and secret-erasure at binary-level.
+- <https://github.com/stateright/stateright>   A model checker for implementing distributed systems.
+- <https://github.com/diogit/defunc-ppx>   A PPX that defunctionalizes a function in CPS.
+- <https://github.com/coq-community/bignums>   "Coq library of arbitrarily large numbers    providing BigN    BigZ    BigQ that used to be part of the standard library [maintainers=@proux01   @erikmd]"
+- <https://github.com/jsvine/markovify>   "A simple    extensible Markov chain generator."
+- <https://github.com/fmlab-iis/coq-nbits>   A (non-dependent) bit-vector library for Coq
+- <https://github.com/schani/forthlisp>   A Small Lisp in Forth
+- <https://github.com/JuliaStaging/JuliaVariables.jl>   The implementation of NameResolution.jl for Julia language.
+- <https://github.com/bramvdbogaerde/z3-wasm>   Scripts and Javascript Glue code to use Z3 in the browser using WASM
+- <https://github.com/namin/blond>   the reflective tower Blond by Olivier Danvy & Karoline Malmkjær
+- <https://github.com/astampoulis/makam>   The Makam Metalanguage
+- <https://github.com/flupe/generics>
+- <https://github.com/JuliaCompilerPlugins/Mixtape.jl>   A static method overlay and optimization tool with configurable code generation and execution.
+- <https://github.com/MichaelRawson/satcop>   Connection tableaux with SAT solving.
+- <https://github.com/mmottl/res>   OCaml library for resizable arrays and strings
+- <https://github.com/ocaml-dune/csexp>   Minimal support for Canonical S-expressions
+- <https://github.com/facebookresearch/pybulletX>   The lightweight PyBullet wrapper for robotics researchers. Scale your research with less boilerplate.
+- <https://github.com/coq-contribs/persistent-union-find>   Correctness proof of the Ocaml implementation of a persistent union-find data structure.
+- <https://github.com/kalmarek/KnuthBendix.jl>   Pure Julia implementation of the Knuth-Bendix completion (focused primarily on groups and monoids)
+- <https://github.com/JuliaLabs/ISL.jl>
+- <https://github.com/sarahzrf/coq-depleted>
+- <https://github.com/agda/agda-language-server>   Language Server for Agda
+- <https://github.com/microsoft/OpticSim.jl>   Optical Simulation software
+- <https://github.com/LogtalkDotOrg/logtalk3>   Logtalk - declarative object-oriented logic programming language
+- <https://github.com/uds-psl/coq-library-undecidability>   A library of mechanised undecidability proofs in the Coq proof assistant.
+- <https://github.com/uds-psl/churchs-thesis-coq>   "Mechanisation of the paper ""Church’s thesis and related axioms in Coq’s type theory"""
+- <https://github.com/philzook58/z3_tutorial>   Jupyter notebooks for tutorial on the Z3 SMT solver
+- <https://github.com/proofcert/fpc-elpi>
+- <https://github.com/ocaml-gospel/gospel>   A tool-agnostic formal specification language for OCaml.
+- <https://github.com/JunoLab/Traceur.jl>
+- <https://github.com/fonsp/Pluto.jl>   🎈 Simple reactive notebooks for Julia
+- <https://github.com/creusot-rs/creusot>   Creusot helps you prove your code is correct in an automated fashion.
+- <https://github.com/tizoc/ocaml-interop>   OCaml<->Rust FFI with an emphasis on safety.
+- <https://github.com/xavierleroy/cdf-program-logics>   Companion Coq development for Xavier Leroy's 2021 lectures on program logics
+- <https://github.com/Chris00/ocaml-interval>   An interval library for OCaml
+- <https://github.com/stonebuddha/eopl>   "Essentials of Programming Languages    with OCaml implementations & Coq proofs"
+- <https://github.com/JuliaSymbolics/Symbolics.jl>   Symbolic programming for the next generation of numerical software
+- <https://github.com/muraliadithya/mini-sygus>   a constraint-based syntax-guided synthesis (SyGuS) engine
+- <https://github.com/purdue-cap/DryadSynth>   A SyGuS Solver
+- <https://github.com/arminbiere/satch>   SAT Solver SATCH
+- <https://github.com/affeldt-aist/infotheo>   A Coq formalization of information theory and linear error-correcting codes
+- <https://github.com/backtracking/program-proofs-with-why3>   "Some programs from Rustan Leino's ""Program Proofs""    in Why3."
+- <https://github.com/cpressey/Some-Papers-I-Really-Liked>   I refer you to the name of the repository
+- <https://github.com/GaloisInc/lean4-balance-car>   Lean4 port of Arduino balance car controller
+- <https://github.com/lexi-lambda/racket-higher-rank>
+- <https://github.com/INRIA/zelus>   A synchronous language with ODEs
+- <https://github.com/tkf/Kaleido.jl>   Some useful lenses
+- <https://github.com/mechtaev/maxsmt-playground>   Collection of MaxSMT solvers
+- <https://github.com/pku-msv-lab/angelix>   Semantic program repair system for C programs
+- <https://github.com/squaresLab/BugZoo>   Keep your bugs contained. A platform for studying historical software bugs.
+- <https://github.com/codyroux/tinymatch>   "A teeny language with nats    lists and pattern matching    static and dynamic semantics and a proof of progress and preservation."
+- <https://github.com/wielandbrendel/computational_physics_2020>   Short hands-on introduction to ML for physicists
+- <https://github.com/JuliaSymbolics/Metatheory.jl>   "Makes Julia reason with equations. General purpose metaprogramming    symbolic computation and algebraic equational reasoning library for the Julia programming language: E-Graphs & equality saturation    term rewriting and more."
+- <https://github.com/voodoos/elpi-js>   JS binders and tools to interact with the Elpi lambda-prolog interpreter written in OCaml.
+- <https://github.com/ptarau/LogicTransformers>   "Transformers from Horn Clause Programs to Code Running  on Lightweight Python     Swift    Julia and C-based VMs "
+- <https://github.com/lpw25/girards-paradox>   "A ""implementation"" of Girard's paradox in OCaml"
+- <https://github.com/agurfinkel/spacer-on-jupyter>
+- <https://github.com/chc-comp/chc-tools>   Tools for manipulating CHC and related files
+- <https://github.com/nilehmann/liquid-rust>
+- <https://github.com/dmurfet/mf>   Computing with matrix factorisations
+- <https://github.com/executablebooks/jupyter-book>   "Create beautiful    publication-quality books and documents from computational content."
+- <https://github.com/JasonGross/coq-union-find>   A repository for playing with union-find in Coq
+- <https://github.com/bmitc/nand2tetris>   "Original course HDL solutions    F# implementations for the software stack    and VHDL implementations for the hardware stack for the nand2tetris course and The Elements of Computing Systems book."
+- <https://github.com/jozefg/nbe-for-mltt>   Normalization by Evaluation for Martin-Löf Type Theory
+- <https://github.com/serras/dddeu21>   """Being Formal Yet Lightweight""    presented at DDD Europe 2021"
+- <https://github.com/kmill/lean4-raytracer>   A simple raytracer written in Lean 4
+- <https://github.com/arnabd88/Satire>   Scalable yet rigorous Floating-point Error Analysis
+- <https://github.com/JohnWCartmell/Theory>   "Papers on aspects of Generalised Algebraic Theories    Contextual Categories and Mathematical Theory Of Data"
+- <https://github.com/eurecom-s3/symcc>   SymCC: efficient compiler-based symbolic execution
+- <https://github.com/zshipko/ocaml-rs>   OCaml extensions in Rust
+- <https://github.com/vocal-project/vocal>
+- <https://github.com/ocaml-gospel/cameleer>   A Deductive Verification Tool for OCaml Programs
+- <https://github.com/ptarau/TypesAndProofs>   Type inference algorithms and intuitionistic propositional theorem provers solving type inhabitation problems
+- <https://github.com/triska/the-power-of-prolog>   Introduction to modern Prolog
+- <https://github.com/JuliaTeX/TreeView.jl>   Draw Julia syntax trees as a graph
+- <https://github.com/rwbarton/advent-of-lean-4>   Advent of Code 2020 solutions in Lean 4
+- <https://github.com/flintlib/arb>   Arb has been merged into FLINT -- use <https://github.com/flintlib/flint/> instead
+- <https://github.com/effectfully-ou/sketches>   A Haskell blog
+- <https://github.com/souffle-lang/souffle>   Soufflé is a variant of Datalog for tool designers crafting analyses in Horn clauses. Soufflé synthesizes a native parallel C++ program from a logic specification.
+- <https://github.com/floodsung/Deep-Reasoning-Papers>   "Recent Papers including Neural Symbolic Reasoning    Logical Reasoning    Visual Reasoning    planning and any other topics connecting deep learning and reasoning"
+- <https://github.com/egraphs-good/egg>   "egg is a flexible    high-performance e-graph library"
+- <https://github.com/martin-cs/symfpu>   A (concrete or symbolic) implementation of IEEE-754 / SMT-LIB floating-point
+- <https://github.com/biotomas/ipasir>   The Standard Interface for Incremental Satisfiability Solving
+- <https://github.com/marijnheule/microsat>   microsat
+- <https://github.com/bytekid/mkbtt>   a Knuth-Bendix completion tool combining termination tools and multi-completion
+- <https://github.com/newptcai/BeeEncoder.jl>   A Julia interface to BEE (Ben-Gurion University Equi-propagation Encoder) for SAT problem
+- <https://github.com/y-256/libdivsufsort>   A lightweight suffix-sorting library
+- <https://github.com/jix/varisat>   SAT solver written in Rust
+- <https://github.com/shinh/sedlisp>   Lisp implementation in sed
+- <https://github.com/mtanneau/MathOptPresolve.jl>   Presolve routines for mathematical optimization
+- <https://github.com/aviatesk/JET.jl>   An experimental code analyzer for Julia. No need for additional type annotations.
+- <https://github.com/TotalVerb/SExpressions.jl>   Assorted s-expression utilities for Julia
+- <https://github.com/HoTT-Intro/Agda>   Agda formalisation of the Introduction to Homotopy Type Theory
+- <https://github.com/jozefg/pcf>   A small compiler for PCF
+- <https://github.com/alhassy/CalcCheck>   Abridged lecture notes for CompSci/SfwrEng 2DM3 2020 and documentation on CalcCheck
+- <https://github.com/tofgarion/spark-by-example>   "SPARK by Example is an adaptation of ACSL by Example for SPARK 2014    a programming language which is a formally verified subset of Ada"
+- <https://github.com/hwayne/lets-prove-leftpad>   Proving leftpad correct two-dozen different ways
+- <https://github.com/boogie-org/boogie>   Boogie
+- <https://github.com/google/lisp-koans>   "Common Lisp Koans is a language learning exercise in the same vein as the ruby koans    python koans and others.   It is a port of the prior koans with some modifications to highlight lisp-specific features.  Structured as ordered groups of broken unit tests    the project guides the learner progressively through many Common Lisp language features. "
+- <https://github.com/felipenoris/JuliaPackageWithRustDep.jl>   Example of a Julia Package with Rust dependency.
+- <https://github.com/Viasat/salt>
+- <https://github.com/agl/critbit>   Critbit trees in C
+- <https://github.com/sorear/smetamath-rs>   sorear's Metamath system engine - version 3 Rust
+- <https://github.com/UCSD-PL/proverbot9001>
+- <https://github.com/thierry-martinez/metaquot>   OCaml syntax extension for quoting code
+- <https://github.com/mit-pdos/xv6-riscv-fall19>   6.S081/6.828 lab repo for fall 2019
+- <https://github.com/mph-/lcapy>   Lcapy is a Python package for symbolic linear circuit analysis and signal processing.  It uses SymPy for symbolic mathematics.
+- <https://github.com/peterlefanulumsdaine/palmgren-archive>   Research material of Erik Palmgren (1963–2019)
+- <https://github.com/cobusve/TLAPLUS_DeadlockEmpire>   Specs and models for solving the DeadlockEmpire problems using TLA+ and TLC
+- <https://github.com/SRI-CSL/llvm2smt>   Experimental translation of llvm to smt.
+- <https://github.com/cpitclaudel/alectryon>   A collection of tools for writing technical documents that mix Coq code and prose.
+- <https://github.com/backtracking/creal>   An exact real arithmetic (aka constructive reals) for OCaml
+- <https://github.com/flintlib/calcium>   Calcium has been merged into FLINT -- use <https://github.com/flintlib/flint/> instead
+- <https://github.com/obilaniu/libpfc>   A small library and kernel module for easy access to x86 performance monitor counters under Linux.
+- <https://github.com/travisdowns/uarch-bench>   A benchmark for low-level CPU micro-architectural features
+- <https://github.com/pascallanger/DIY-Multiprotocol-TX-Module>   Multiprotocol TX Module (or MULTI-Module) is a 2.4GHz transmitter module which controls many different receivers and models.
+- <https://github.com/odow/PATH.jl>   A Julia interface to the PATH solver
+- <https://github.com/JuliaMath/Richardson.jl>   Richardson extrapolation in Julia
+- <https://github.com/matbesancon/NORBiP.jl>   JuMP-based package for near-optimal robust bilevel optimization
+- <https://github.com/NVlabs/imaginaire>   NVIDIA's Deep Imagination Team's PyTorch Library
+- <https://github.com/plasma-umass/coz>   Coz: Causal Profiling
+- <https://github.com/plasma-umass/scalene>   "Scalene: a high-performance    high-precision CPU    GPU    and memory profiler for Python with AI-powered optimization proposals"
+- <https://github.com/dddrrreee/cs140e-20win>   cs140e course materials.
+- <https://github.com/chkwon/PATHSolver.jl>   provides a Julia wrapper for the PATH Solver for solving mixed complementarity problems
+- <https://github.com/baggepinnen/ControlSystemIdentification.jl>   "System Identification toolbox    compatible with ControlSystems.jl"
+- <https://github.com/kayceesrk/cs3100_f19>   CS3100: Paradigms of Programming at CSE IITM (Fall 2019)
+- <https://github.com/intel/pcm>   Intel® Performance Counter Monitor (Intel® PCM)
+- <https://github.com/ocaml-ppx/cinaps>   Trivial Metaprogramming tool using the OCaml toplevel
+- <https://github.com/infiniteopt/InfiniteOpt.jl>   An intuitive modeling interface for infinite-dimensional optimization problems.
+- <https://github.com/axch/rules>   "An extensible pattern matching    pattern dispatch    and term rewriting system for MIT Scheme."
+- <https://github.com/uncle-betty/trust-but-verify>   Can CVC4 LFSC proofs be transliterated to Agda?
+- <https://github.com/blanchette/logical_verification_2020>   Companion files for Logical Verification 2020–2021 at VU Amsterdam
+- <https://github.com/ranjitjhala/sprite-lang>   An tutorial-style implementation of liquid/refinement types for a subset of Ocaml/Reason.
+- <https://github.com/JuliaStaging/GeneralizedGenerated.jl>   A generalized version of Julia generated functions @generated to allow closures in generated functions and avoid the use of runtime eval or invokelatest.
+- <https://github.com/MasonProtter/StaticModules.jl>   Static module-like namespaces for julia
+- <https://github.com/swadey/LispSyntax.jl>   lisp-like syntax in julia
+- <https://github.com/coq-community/coqffi>   Automatically generates Coq FFI bindings to OCaml libraries [maintainer=@lthms]
+- <https://github.com/MikeInnes/Effects.jl>   Like a kick in the monads
+- <https://github.com/tkf/ThreadsX.jl>   Parallelized Base functions
+- <https://github.com/DavidJaz/DynamicalSystemsBook>
+
+## stars 2 page 43
+
+- <https://github.com/fisherdj/miniAdapton>   a minimal implementation of incremental computation in Scheme
+- <https://github.com/wenkokke/schmitty>   Agda bindings to SMT-LIB2 compatible solvers.
+- <https://github.com/OpenLogicProject/OpenLogic>   "An open-source    customizable intermediate logic textbook"
+- <https://github.com/ishmandoo/regex_xword>
+- <https://github.com/viebel/klipse>   Klipse is a JavaScript plugin for embedding interactive code snippets in tech blogs.
+- <https://github.com/LPCIC/elpi>   Embeddable Lambda Prolog Interpreter
+- <https://github.com/alaingiorgetti/enum>   Formal Combinatorics
+- <https://github.com/tkoolen/MINLPTrajOpt>
+- <https://github.com/felix-lang/felix>   The Felix Programming Language
+- <https://github.com/kelu124/awesome-latticeFPGAs>   :book: List of FPGA Lattice boards using open tools
+- <https://github.com/RJDennis/SmolyakApprox.jl>   A Julia package to approximate multivariate continuous functions using Smolyak's method.
+- <https://github.com/Boolector/boolector>   "A Satisfiability Modulo Theories (SMT) solver for the theories of fixed-size bit-vectors    arrays and uninterpreted functions."
+- <https://github.com/TermCOMP/TPDB>   The Termination Problem Database
+- <https://github.com/awodey/CatLogNotes>   Categorical Logic Notes
+- <https://github.com/RBornat/jape>   "Jape    a configurable proof editor (best at natural deduction and sequent calculus)"
+- <https://github.com/sneeuwballen/zipperposition>   "An automatic theorem prover in OCaml for typed higher-order logic with equality and datatypes    based on superposition+rewriting; and Logtk    a supporting library for manipulating terms    formulas    clauses    etc."
+- <https://github.com/HarvardPL/formulog>   Datalog with support for SMT queries and first-order functional programming
+- <https://github.com/OpenQuadruped/spot_mini_mini>   Dynamics and Domain Randomized Gait Modulation with Bezier Curves for Sim-to-Real Legged Locomotion.
+- <https://github.com/Jutho/TensorKit.jl>   "A Julia package for large-scale tensor computations    with a hint of category theory"
+- <https://github.com/Jutho/TensorOperations.jl>   Julia package for tensor contractions and related operations
+- <https://github.com/SRI-CSL/sally>   A model checker for infinite-state systems.
+- <https://github.com/rfourquet/BitIntegers.jl>   Fixed-width integers similar to builtin ones
+- <https://github.com/viperproject/axiom-profiler>   The axiom profiler for exploring and visualizing SMT solver quantifier instantiations (made via E-matching).
+- <https://github.com/tau-prolog/tau-prolog>   An open source Prolog interpreter in JavaScript
+- <https://github.com/uw-unsat/jitsynth>
+- <https://github.com/arminbiere/kissat>
+- <https://github.com/nick8325/twee>   An equational theorem prover based on Knuth-Bendix completion
+- <https://github.com/neel-krishnaswami/ott-example>   OTT in Agda
+- <https://github.com/ericfinster/catt.io>   Revised Omega-categorical Typechecker
+- <https://github.com/timholy/SnoopCompile.jl>   Making packages work faster with more extensive precompilation
+- <https://github.com/cau-placc/julia-curry>   A compiler from Curry programs into Julia programs
+- <https://github.com/HarrisonGrodin/Completion.jl>   Knuth-Bendix completion algorithm
+- <https://github.com/LaurentMazare/ocaml.jl>   Prototype code for some Julia-OCaml bindings
+- <https://github.com/dewey92/typed-fp-good-reads>   📚 List of useful resources to learn typed FP
+- <https://github.com/sweirich/challenge>   Strongly-typed System F in Haskell
+- <https://github.com/TobiaMarcucci/sos4hjb>   Approximate solution of the Hamilton-Jacobi-Bellman equations using Sums-of-Squares optimization.
+- <https://github.com/ocaml-multicore/multicore-opam>   OPAM repo for OCaml multicore development
+- <https://github.com/roberthoenig/FirstOrderLogic.jl>   "Julia package for parsing    manipulating and evaluating formulas in first-order logic."
+- <https://github.com/stepchowfun/theorem-prover>   An automated theorem prover for first-order logic.
+- <https://github.com/verivital/ARCH-COMP2020>   ARCH Competition AINNCS 2020 - Benchmarks description
+- <https://github.com/skbaek/Ethics>   "I.I-XI of Spinoza's Ethics    formalized in Coq"
+- <https://github.com/FluxML/Mjolnir.jl>   "A little less conversation    a little more abstraction"
+- <https://github.com/ucsd-progsys/lh-plugin-demo>   A small package that demonstrates how to use LiquidHaskell as a GHC plugin
+- <https://github.com/eprover/PyRes>   Pedagogical first-order prover in Python
+- <https://github.com/eprover/eprover>
+- <https://github.com/mit-plv/rupicola>   Gallina to Bedrock2 compilation toolkit
+- <https://github.com/coq-community/coqdocjs>   "Collection of scripts to improve the output of coqdoc [maintainers=@chdoc   @palmskog]"
+- <https://github.com/samuelgruetter/coq-smt-notations>   A quick hack to ask any SMT solver if your Coq goal is true
+- <https://github.com/DeepSpec/InteractionTrees>   A Library for Representing Recursive and Impure Programs in Coq
+- <https://github.com/ghorvath78/iltcme>   Inverse Laplace transform based on concentrated matrix-exponential functions
+- <https://github.com/google-research/dex-lang>   Research language for array processing in the Haskell/ML family
+- <https://github.com/JacquesCarette/TheoriesAndDataStructures>   Showing how some simple mathematical theories naturally give rise to some common data-structures
+- <https://github.com/amahboubi/lia4mathcomp>   Preprocessing goals featuring mathcomp style operations before applying the lia tactic.
+- <https://github.com/boogie-org/symdiff>   SymDiff-Differential-Program-Verifier
+- <https://github.com/uwplse/herbgrind>   A Valgrind tool for Herbie
+- <https://github.com/purescript-python/pspy-tutorials-linear-algebra>   a demo to show type-safe linear algebra with purescript python
+- <https://github.com/purescript-python/purescript-python>   A Python backend for PureScript.
+- <https://github.com/wenkokke/agda-exec-tc>   A repository with examples of using the system call primitive execTC.
+- <https://github.com/xgrommx/agda-ecosystem>
+- <https://github.com/oisdk/agda-ring-solver>   "A fast    easy-to-use ring solver for agda with step-by-step solutions"
+- <https://github.com/idris-lang/Idris2>   A purely functional programming language with first class types
+- <https://github.com/pigworker/ProgrammerCommaCon>   being a collection of Agda-facilitated ramblings
+- <https://github.com/effectfully/OTT>   Observational Type Theory as an Agda library
+- <https://github.com/zhaoyonghe/Z3ExamplesForOCaml>
+- <https://github.com/michalkonecny/aern2>   A Haskell library for Approximating Exact Real Numbers (AERN) based on interval computation. (aern2 is a rewrite of aern.)
+- <https://github.com/jmlowenthal/staged-streams.agda>   An implementation of the staged Strymonas streams library in Agda for C
+- <https://github.com/mit-plv/koika>   A core language for rule-based hardware design 🦑
+- <https://github.com/yallop/effects-bibliography>   A collaborative bibliography of work related to the theory and practice of computational effects
+- <https://github.com/nasa/Kodiak>   Library for rigorous verification of non-linear arithmetic
+- <https://github.com/nasa/PRECiSA>   Program Round-off Error Certifier via Static Analysis
+- <https://github.com/ligurio/practical-fm>   A gently curated list of companies using verification formal methods in industry
+- <https://github.com/natebragg/bankroll>   Wrapper for COIN-OR CLP and CBC
+- <https://github.com/esbmc/esbmc>   The efficient SMT-based context-bounded model checker (ESBMC)
+- <https://github.com/nasa/pvslib>   NASA PVS Library of Formal Developments
+- <https://github.com/edeforas/Astree>   Astree is a free open source optical ray tracing and design software
+- <https://github.com/phadej/staged>   Staged Streams and other stuff
+- <https://github.com/coq-contribs/maple-mode>   A Maple Mode for Coq
+- <https://github.com/stedolan/ppx_stage>   Staged metaprogramming in stock OCaml
+- <https://github.com/stedolan/malfunction>   Malfunctional Programming
+- <https://github.com/johnmyleswhite/julia_tutorials>   Tutorials on Julia topics
+- <https://github.com/webyrd/summer-scheming>   Summer Scheming!!!!!!
+- <https://github.com/c-cube/trustee>   [wip] A LCF-style kernel of trust intended for certified ATP and proof checking for FOL/HOL.
+- <https://github.com/akabe/slap>   BLAS and LAPACK binding in OCaml with type-based static size checking for matrix operations
+- <https://github.com/c-cube/batsat-ocaml>   OCaml bindings for batsat (<https://github.com/c-cube/batsat>)
+- <https://github.com/c-cube/batsat>   A (parametrized) Rust SAT solver originally based on MiniSat
+- <https://github.com/binsec/binsec>   BINSEC binary-level open-source platform
+- <https://github.com/ramsdell/chase>
+- <https://github.com/ktahar/ocaml-lp>   LP and MIP modeling in OCaml
+- <https://github.com/akr/codegen>   Coq plugin for monomorphization and C code generation
+- <https://github.com/pi8027/efficient-finfun>
+- <https://github.com/feiwang3311/Lantern>
+- <https://github.com/soarlab/FPTuner>   Rigorous Floating-Point Mixed-Precision Tuner
+- <https://github.com/chakravala/Reduce.jl>   Symbolic parser for Julia language term rewriting using REDUCE algebra
+- <https://github.com/dmbaturin/ocamlbook.org>   A free (as in freedom) OCaml textbook
+- <https://github.com/wenkokke/swillprover>   a linear logic prover based on Naoyuki Tamura's llprover that works under SWI Prolog
+- <https://github.com/LexiFi/landmarks>   A Simple Profiling Library for OCaml
+- <https://github.com/QuickChick/QuickChick>   Randomized Property-Based Testing Plugin for Coq
+- <https://github.com/sisl/aa228-notebook>   IJulia notebooks for AA228/CS238 Decision Making Under Uncertainty course at Stanford University
+- <https://github.com/JuliaPOMDP/POMDPs.jl>   "MDPs and POMDPs in Julia - An interface for defining    solving    and simulating fully and partially observable Markov decision processes on discrete and continuous spaces."
+- <https://github.com/FreeProving/free-compiler>   A Haskell to Coq compiler that represents effectful programs with the free monad
+- <https://github.com/RuleBasedIntegration/Rubi>   Rubi for Mathematica
+- <https://github.com/thautwarm/MatchCore.jl>   "non-extensible/hardcoded pattern matching    core of MLStyle"
+- <https://github.com/korsbo/Latexify.jl>   "Convert julia objects to LaTeX equations    arrays or other environments. "
+- <https://github.com/bollu/mathemagic>   Toybox of explanations of mathematics. Initial focus on (discrete) differential geometry
+- <https://github.com/akabe/ocaml-jupyter>   An OCaml kernel for Jupyter (IPython) notebook
+- <https://github.com/IHaskell/IHaskell>   A Haskell kernel for the Jupyter project.
+- <https://github.com/cduret/ats3d>   3d engine with ATS
+- <https://github.com/JuliaSymbolics/SymbolicSAT.jl>   for you with the good questions
+- <https://github.com/fredrik-johansson/fungrim>   Fungrim: the Mathematical Functions Grimoire
+- <https://github.com/thautwarm/MLStyle.jl>   Julia functional programming infrastructures and metaprogramming facilities
+- <https://github.com/edemaine/fold>   "FOLD file format for origami models    crease patterns    etc."
+- <https://github.com/ahumenberger/Z3.jl>   Julia interface to Z3
+- <https://github.com/metaocaml/metaocaml-opam>   A repository of MetaOCaml packages
+- <https://github.com/HPAC/matchpy>   A library for pattern matching on symbolic expressions in Python.
+- <https://github.com/JuliaSymbolics/SymbolicUtils.jl>   "Symbolic expressions    rewriting and simplification"
+- <https://github.com/mit-plv/rewriter>   Reflective PHOAS rewriting/pattern-matching-compilation framework for simply-typed equalities and let-lifting
+- <https://github.com/tuura/selective-theory-coq>   Selective applicative functors laws and theorems
+- <https://github.com/libsemigroups/libsemigroups_cppyy>   Python package for using the C++ library libsemigroups via cppyy
+- <https://github.com/tchajed/ltac2-tutorial>   Ltac2 tutorial
+- <https://github.com/yallop/ocaml-asp>   "Algebraic    staged parsing for OCaml: typed    compositional    and faster than yacc"
+- <https://github.com/rain-1/continuations-study-group>
+- <https://github.com/homalg-project/LoopIntegrals>   Compute master integrals using commutative and noncommutative methods from computational algebraic geometry
+- <https://github.com/ezyang/logitext>   "Beautiful    interactive visualizations of logical inference"
+- <https://github.com/gambitproject/gte>   "Game Theory Explorer:  Build    explore and solve extensive form games."
+- <https://github.com/BartoszMilewski/Publications>   "Misc. publications    conference slides    etc. For more    go to <http://BartoszMilewski.com>"
+- <https://github.com/strymonas/staged-streams.ocaml>
+- <https://github.com/INRIA/velus>   A Lustre compiler in Coq
+- <https://github.com/mpmath/mpmath>   Python library for arbitrary-precision floating-point arithmetic
+- <https://github.com/BRiAl/BRiAl>   Successor to PolyBoRi
+- <https://github.com/mthom/scryer-prolog>   A modern Prolog implementation written mostly in Rust.
+- <https://github.com/RoboticExplorationLab/TrajectoryOptimization.jl>   A fast trajectory optimization library written in Julia
+- <https://github.com/punkdit/bruhat>   symbolic manipulations in geometry and representation theory
+- <https://github.com/vprover/vampire>   The Vampire Theorem Prover
+- <https://github.com/maths/PRESS>   PRolog Equation Solving System
+- <https://github.com/Normaliz/Normaliz>   "Normaliz is an open source tool for computations in affine monoids    vector configurations    lattice polytopes    and rational cones."
+- <https://github.com/oscar-system/Oscar.jl>   "A comprehensive open source computer algebra system for computations in algebra    geometry    and number theory."
+- <https://github.com/homalg-project/CAP_project>   "CAP project -- Categories    Algorithms    and Programming"
+- <https://github.com/homalg-project/HomalgProject.jl>   The homalg project compatibility package for Julia
+- <https://github.com/oscar-system/OscarPolytope.jl>   Polytopes for OSCAR
+- <https://github.com/abiggerhammer/hammer>   "Parser combinators for binary formats    in C. Yes    in C. What? Don't look at me like that."
+- <https://github.com/mmcco/verified-parser-example>   A minimal example of a formally verified parser using ocamllex and Menhir's Coq backend.
+- <https://github.com/facebookarchive/BOLT>   Binary Optimization and Layout Tool - A linux command-line utility used for optimizing performance of binaries
+- <https://github.com/qfpl/propagator-examples>
+- <https://github.com/project-oak/oak>   Meaningful control of data in distributed systems.
+- <https://github.com/project-oak/silveroak>   "Formal specification and verification of hardware    especially for security and privacy."
+- <https://github.com/GregTJ/stable-fluids>   A minimal Stable Fluids inspired fluid solver with Python and NumPy.
+- <https://github.com/nadia-polikarpova/synquid>
+- <https://github.com/thery/nlcertify>   NLCertify is a software package for handling formal certification of nonlinear inequalities
+- <https://github.com/martinbiel/StochasticPrograms.jl>   Julia package for formulating and analyzing stochastic recourse models.
+- <https://github.com/rust-bakery/nom>   Rust parser combinator framework
+- <https://github.com/icebreaker-fpga/icebreaker>   Small and low cost FPGA educational and development board
+- <https://github.com/enjoy-digital/litex>   "Build your hardware    easily!"
+- <https://github.com/JuliaReach/RangeEnclosures.jl>   Enclosures of real-valued functions in Julia
+- <https://github.com/iliasam/OpenTOFLidar>   Open Source TOF Lidar
+- <https://github.com/math-comp/hierarchy-builder>   High level commands to declare a hierarchy based on packed classes
+- <https://github.com/sdiehl/paris-fp>   Paris Functional Programming Meetup
+- <https://github.com/m-labs/nmigen>   A refreshed Python toolbox for building complex digital hardware. See <https://gitlab.com/nmigen/nmigen>
+- <https://github.com/blegat/SwitchOnSafety.jl>   Julia Package for computing [controlled] invariant sets of Hybrid Systems using Sum Of Squares Programming
+- <https://github.com/sdiehl/pyrewrite>   Python term rewriting
+- <https://github.com/SWI-Prolog/tabled-prolog-book>   Programming in Tabled Prolog by David S Warren
+- <https://github.com/GeoCoq/GeoCoq>   A formalization of geometry in Coq based on Tarski's axiom system
+- <https://github.com/negrinho/sane_tikz>   Reconquer the canvas: beautiful Tikz figures without clunky Tikz code
+- <https://github.com/fredefox/cat>   A formalization of category theory in cubical Agda
+- <https://github.com/arlk/ConvexBodyProximityQueries.jl>   A fast module for computing proximity queries between convex bodies in 2D/3D
+- <https://github.com/sheaf/acts>   Haskell library for semigroup actions and torsors
+- <https://github.com/JBakouny/Scallina>   A Coq-based synthesis of Scala programs which are correct-by-construction
+- <https://github.com/hendriktews/proof-tree>   proof tree display for Proof General
+- <https://github.com/pronenewbits/Arduino_Constrained_MPC_Library>   A compact Constrained Model Predictive Control (MPC) library with Active Set based Quadratic Programming (QP) solver for Teensy4/Arduino system (or any real time embedded system in general)
+- <https://github.com/ocamllabs/vscode-ocaml-platform>   Visual Studio Code extension for OCaml
+- <https://github.com/malrev/ABD>    Course materials for Advanced Binary Deobfuscation by NTT Secure Platform Laboratories
+- <https://github.com/muratak17/Recursion-Schemes-in-Coq>
+- <https://github.com/bmsherman/finite>   Facts about isomorphisms and finite types in Coq
+- <https://github.com/AlgebraicJulia/Petri.jl>   A Petri net modeling framework for the Julia programming language
+- <https://github.com/B-Lang-org/bsc>   Bluespec Compiler (BSC)
+- <https://github.com/plfa/plfa.github.io>   An introduction to programming language theory in Agda
+- <https://github.com/codyroux/NbE-experiments>
+- <https://github.com/TOTBWF/cubical-categories>   Category theory formalized in cubical agda
+- <https://github.com/kmammou/v-hacd>   Automatically exported from code.google.com/p/v-hacd
+- <https://github.com/jpfairbanks/SemanticModels.jl>   A julia package for representing and manipulating model semantics
+- <https://github.com/JuliaMath/FixedPointNumbers.jl>   fixed point types for julia
+- <https://github.com/JuliaMath/AccurateArithmetic.jl>   "Calculate with error-free    faithful    and compensated transforms and extended significands."
+- <https://github.com/ffevotte/StochasticArithmetic.jl>   Stochastic Arithmetic to diagnose Floating-Point problems in Julia
+- <https://github.com/acados/acados>   Fast and embedded solvers for nonlinear optimal control
+- <https://github.com/mitmath/18303>   18.303 - Linear PDEs course
+- <https://github.com/mitmath/18S096>   18.S096 three-week course at MIT
+- <https://github.com/mitmath/18369>   18.369/8.315 - Mathematical Methods in Nanophotonics course
+- <https://github.com/matbesancon/BilevelOptimization.jl>   JuMP-based toolbox for solving bilevel optimization problems
+- <https://github.com/JuliaPolynomialMatrices/PolynomialMatrices.jl>   Polynomial matrices in Julia
+- <https://github.com/tensorflow/deepmath>   Experiments towards neural network theorem proving
+- <https://github.com/nadia-polikarpova/cse291-program-synthesis>   Program Synthesis Course
+- <https://github.com/TyGuS/suslik>   Synthesis of Heap-Manipulating Programs from Separation Logic
+- <https://github.com/IagoAbal/haskell-z3>   Haskell bindings to Microsoft's Z3 API (unofficial).
+- <https://github.com/Wikunia/ConstraintSolver.jl>   ConstraintSolver in Julia: Blog posts ->
+- <https://github.com/appliedcategorytheory/TikZWD>   A TikZ library of wiring diagrams
+- <https://github.com/corazza/idris-sdl2>   SDL2 bindings for my game in Idris
+- <https://github.com/chakravala/Grassmann.jl>   ⟨Grassmann-Clifford-Hodge⟩ multilinear differential geometric algebra
+- <https://github.com/jasonmorton/Typeclass.jl>   multiparameter typeclasses for Julia
+- <https://github.com/zwegner/x86-sat>   "Basic SAT model of x86 instructions using Z3    autogenerated from Intel docs"
+- <https://github.com/mroughan/SurrealNumbers.jl>   Implementation of Conway's Surreal Numbers
+- <https://github.com/soarlab/FPTaylor>   Tool for Rigorous Estimation of Round-Off Floating-Point Errors
+- <https://github.com/blambov/RealLib>   Library for exact real number computations
+- <https://github.com/psg-mit/smooth>   An arbitrary-precision differentiable programming language.
+- <https://github.com/lairez/ExactPredicates.jl>   Fast and exact geometrical predicates in the Euclidean plane
+- <https://github.com/0xZ0F/Z0FCourse_ReverseEngineering>   Reverse engineering focusing on x64 Windows.
+- <https://github.com/pschanely/CrossHair>   An analysis tool for Python that blurs the line between testing and type systems.
+- <https://github.com/bovine3dom/Nauty.jl>   A small Julia wrapper for nauty
+- <https://github.com/tulip-control/dd>   "Binary Decision Diagrams (BDDs) in pure Python and Cython wrappers of CUDD    Sylvan    and BuDDy"
+- <https://github.com/dpsanders/ExactReals.jl>   Exact real arithmetic in Julia
+- <https://github.com/coq-community/awesome-coq>   "A curated list of awesome Coq libraries    plugins    tools    verification projects    and resources [maintainer=@palmskog]"
+- <https://github.com/bolt12/laop>   Linear Algebra of Programming - Algebraic Matrices in Haskell
+- <https://github.com/codyroux/broad-coq-tutorial>   Some unstructured notes concerning the Broad tutorial to take place in March 2020
+- <https://github.com/blanchette/logical_verification_2019>   Repository for the course Logical Verification 2019–2020 at VU Amsterdam
+- <https://github.com/LS-Lab/KeYmaeraX-release>   KeYmaera X: An aXiomatic Tactical Theorem Prover for Hybrid Systems (release)
+- <https://github.com/xgrommx/coq-ecosystem>
+- <https://github.com/anton-trunov/coq-lecture-notes>   Coq Lecture Notes (WIP)
+- <https://github.com/uhub/awesome-coq>   "A curated list of awesome Coq frameworks    libraries and software."
+- <https://github.com/zehaochen19/vanilla-lang>   An implementation of a predicative polymorphic language with bidirectional type inference and algebraic data types
+- <https://github.com/expipiplus1/exact-real>   Exact real arithmetic in Haskell
+- <https://github.com/clintonmead/haskell_bits>
+- <https://github.com/joaquimg/BilevelJuMP.jl>   Bilevel optimization in JuMP
+- <https://github.com/jump-dev/Dualization.jl>   Automatic dualization feature for MathOptInterface.jl
+- <https://github.com/thery/FlocqLecture>
+- <https://github.com/thery/PolTac>   Tactic for polynomial manipulations
+- <https://github.com/ejgallego/coq-serapi>   Coq Protocol Playground with Se(xp)rialization of Internal Structures.
+- <https://github.com/coq-community/vscoq>   "A Visual Studio Code extension for Coq [maintainers=@rtetley   @maximedenes   @huynhtrankhanh   @thery   @Blaisorblade]"
+- <https://github.com/LPCIC/coq-elpi>   Coq plugin embedding elpi
+- <https://github.com/antoinemine/apron>   Apron Numerical Abstract Domain Library
+- <https://github.com/pyapron/pyapron>   pyApron: A library for numerical abstract domains manipulation based on Apron
+- <https://github.com/taichi-dev/taichi_elements>   High-performance multi-material continuum physics engine in Taichi
+- <https://github.com/AlexandreDecan/portion>   "portion    a Python library providing data structure and operations for intervals."
+- <https://github.com/tobydriscoll/fnc-extras>   Extra materials for *Fundamentals of Numerical Computation* by Driscoll and Braun.
+- <https://github.com/VERIMAG-Polyhedra/VplTactic>   A Coq Tactic for Arithmetic (based on VPL)
+- <https://github.com/bachirelkhadir/Convex-Quaternary-Quartics-Are-Sum-of-Squares>
+- <https://github.com/damien-pous/relation-algebra>   Relation algebra library for Coq
+- <https://github.com/Lysxia/coq-recursion-schemes>   recursion-schemes in Coq
+- <https://github.com/RobertBaruch/nmigen-tutorial>   A tutorial for using nmigen
+- <https://github.com/olofk/fusesoc>   Package manager and build abstraction tool for FPGA/ASIC development
+- <https://github.com/GaloisInc/why3>   Haskell support for the Why3 input format
+- <https://github.com/chrisdone-archive/duet>   "A tiny language    a subset of Haskell aimed at aiding teachers teach Haskell"
+- <https://github.com/mjendrusch/assoc>   Hacky monoidahedra in Python.
+- <https://github.com/discopy/discopy>   The Python toolkit for computing with string diagrams.
+- <https://github.com/dafny-lang/dafny>   Dafny is a verification-aware programming language
+- <https://github.com/flyspeck/flyspeck>   The formal proof of the Kepler conjecture
+- <https://github.com/taschini/pyinterval>   PyInterval — Interval arithmetic in Python
+- <https://github.com/maxpumperla/deep_learning_and_the_game_of_go>   "Code and other material for the book ""Deep Learning and the Game of Go"""
+- <https://github.com/tssm/up-to-date-real-world-haskell>   I'm trying to update the Real World Haskell book
+- <https://github.com/ChrisPenner/j-lang-haskell>   JLang combinators in Haskell
+- <https://github.com/mechmotum/cyipopt>   Cython interface for the interior point optimzer IPOPT
+- <https://github.com/moorepants/resonance>   Learning Mechanical Vibration Engineering Through Computation
+- <https://github.com/AppliedMechanics-EAFIT/SolidsPy>   2D-Finite Element Analysis with Python
+- <https://github.com/janattig/LatticePhysics.jl>   Lattice Construction for Applications in Physics
+- <https://github.com/gpetiot/Frama-C-StaDy>   Static & Dynamic Verification of C programs
+- <https://github.com/s-falke/kittel-koat>   KITTeL/KoAT
+- <https://github.com/aeflores/CoFloCo>   CoFloCo is a static analysis tool written in prolog to infer automatically symbolic complexity bounds of imperative and recursive programs.
+- <https://github.com/tchajed/goose>   Goose converts a small subset of Go to Coq
+- <https://github.com/kmicinski/program-analysis>   Program analysis grad seminar at SU (2019)
+- <https://github.com/ron-rivest/MIT-6.S898-climate-change>   Public class website for MIT 6.S898 / 12.S992 climate change seminar Fall 2019
+- <https://github.com/pigworker/potato>   being an experiment with potato power
+- <https://github.com/ishmandoo/helpful-robots>
+- <https://github.com/avigad/boole>   The Boole Interactive Reasoning Assistant
+- <https://github.com/avigad/arwm>   Automated Reasoning for the Working Mathematician
+- <https://github.com/arpra-project/arpra>   Arpra is a C library for analyzing the propagation of numerical error in arbitrary precision IEEE-754 floating-point computations.
+- <https://github.com/bollu/discrete-differential-geometry>   An elegant implementation of discrete diffgeo in haskell
+- <https://github.com/damianavila/RISE>   "RISE: ""Live"" Reveal.js Jupyter/IPython Slideshow Extension"
+- <https://github.com/MetaBorgCube/From-Definitional-Interpreter-To-Symbolic-Executor>   A literate Haskell exploration of how to derive symbolic executors from definitional interpreters
+- <https://github.com/dblalock/bolt>   10x faster matrix and vector operations
+- <https://github.com/GiggleLiu/metaprog_turtorial>   A tutorial on meta programming - materials for the group meeting
+- <https://github.com/jump-dev/SumOfSquares.jl>   Sum of Squares Programming for Julia
+- <https://github.com/Keno/julia-wasm>   Running julia on wasm
+- <https://github.com/coverdrive/MDP-DP-RL>   "Markov Decision Processes    Dynamic Programming and Reinforcement Learning"
+- <https://github.com/makepad/makepad>   "Makepad is a creative software development platform for Rust that compiles to wasm/webGL    osx/metal    windows/dx11 linux/opengl"
+- <https://github.com/ufrisk/MemProcFS>   MemProcFS
+- <https://github.com/JuliaIntervals/TaylorModels.jl>   Rigorous function approximation using Taylor models in Julia
+- <https://github.com/TimelyDataflow/differential-dataflow>   An implementation of differential dataflow using timely dataflow on Rust.
+- <https://github.com/zstone1/coq-complex>   "A complex analysis library in Coq    based on Coqueliqot"
+- <https://github.com/vmware/differential-datalog>   DDlog is a programming language for incremental computation. It is well suited for writing programs that continuously update their output in response to input changes. A DDlog programmer does not write incremental algorithms; instead they specify the desired input-output mapping in a declarative manner.
+- <https://github.com/rntz/datafun>   Research on integrating datalog & lambda calculus via monotonicity types
+- <https://github.com/conal/paper-2020-higher-order-ad>   "Higher-order    higher-order automatic differentiation"
+- <https://github.com/KingoftheHomeless/Cofree-Traversable-Functors>   Implementation of Cofree Traversable Functors in Haskell
+- <https://github.com/QBobWatson/gt-linalg>   "Interactive Linear Algebra    free online textbook at Georgia Tech"
+- <https://github.com/RussTedrake/manipulation>   Course notes for MIT manipulation class
+- <https://github.com/jlerouge/GEMpp>   A Graph Extraction and Matching C++ software
+- <https://github.com/palash1992/GEM>
+- <https://github.com/friendly-haskell/friendly-haskell.github.io>
+- <https://github.com/inhabitedtype/httpaf>   "A high performance    memory efficient    and scalable web server written in OCaml"
+- <https://github.com/declanoller/haskell-vae>   Learning about Haskell with Variational Autoencoders
+- <https://github.com/jscoq/jscoq>   A port of Coq to Javascript -- Run Coq in your Browser
+- <https://github.com/formal-land/coq-of-ocaml>   Formal verification for OCaml
+- <https://github.com/uwplse/pumpkin-pi>   An extension to PUMPKIN PATCH with support for proof repair across type equivalences.
+- <https://github.com/uwplse/PUMPKIN-PATCH>   "Proof Updater Mechanically Passing Knowledge Into New Proofs    Assisting The Coq Hacker"
+- <https://github.com/Beluga-lang/Beluga>   Contextual types meet mechanized metatheory!
+- <https://github.com/HPAC/ReLAPACK>   Recursive LAPACK Collection
+- <https://github.com/jtassarotti/coq-proba>   A Probability Theory Library for the Coq Theorem Prover
+- <https://github.com/PyDMD/PyDMD>   Python Dynamic Mode Decomposition
+- <https://github.com/jagot/MatrixPolynomials.jl>
+- <https://github.com/ChrisPenner/mad-props>   "Forward-propagating Constraint Solver monad. Good for solving Sudoku    N-Queens    etc."
+- <https://github.com/digama0/mm0>   Metamath Zero specification language
+- <https://github.com/natebragg/MegiddoLP>   An implementation of Megiddo's LP algorithm
+- <https://github.com/natebragg/smudge>   A domain-specific language for state machines.
+- <https://github.com/natebragg/ratl>
+- <https://github.com/deepmodeling/dpgen>   The deep potential generator to generate a deep-learning based model of interatomic potential energy and force field
+- <https://github.com/heirung/pytope>   "Minimal package for operations on polytopes    zonotopes    and invariant sets."
+- <https://github.com/mlss-2019/tutorials>
+- <https://github.com/slasser/vermillion>   LL(1) parser generator verified in Coq
+- <https://github.com/gallais/agdarsec>   Total Parser Combinators in Agda
+- <https://github.com/anuyts/menkar>   The multimode presheaf proof-assistant
+- <https://github.com/arrayfire/arrayfire-haskell>   Haskell bindings to ArrayFire
+- <https://github.com/v923z/micropython-ulab>   "a numpy-like fast vector module for micropython    circuitpython    and their derivatives"
+- <https://github.com/codyroux/name-the-biggest-number>
+- <https://github.com/CliMA/Oceananigans.jl>   "🌊  Julia software for fast    friendly    flexible    ocean-flavored fluid dynamics on CPUs and GPUs"
+- <https://github.com/mmaz/racecar_fall19>   MIT 6A01: Mens et Manus - Autonomous RACECAR Robotics
+- <https://github.com/coq-community/paramcoq>   Coq plugin for parametricity [maintainer=@proux01]
+- <https://github.com/cvxgrp/cvxpylayers>   Differentiable convex optimization layers
+- <https://github.com/sympy/sympy>   A computer algebra system written in pure Python
+- <https://github.com/morganstanley/hobbes>   A language and an embedded JIT compiler
+- <https://github.com/hadolint/hadolint>   "Dockerfile linter    validate inline bash    written in Haskell"
+- <https://github.com/byuflowlab/Snopt.jl>   Julia interface to SNOPT (must obtain a licensed copy of SNOPT separately)
+- <https://github.com/daly/axiom>   "Axiom is a free    open source computer algebra system"
+- <https://github.com/ERGO-Code/HiGHS>   Linear optimization software
+- <https://github.com/VictorCMiraldo/agda-rw>   This is the place where (more or less) stable releases of my RW library will be published.
+- <https://github.com/VictorCMiraldo/generics-mrsop>
+- <https://github.com/peterwittek/ncpol2sdpa>   Solve global polynomial optimization problems of either commutative variables or noncommutative operators through a semidefinite programming (SDP) relaxation
+- <https://github.com/marcoeilers/nagini>   "Nagini is a static verifier for Python 3    based on the Viper verification infrastructure."
+- <https://github.com/viperproject/prusti-dev>   "A static verifier for Rust    based on the Viper verification infrastructure."
+- <https://github.com/tchajed/coq-array>   Coq library for array indexing and subslicing
+- <https://github.com/perciplex/raas-starter>
+- <https://github.com/perciplex/gym-raas>   OpenAI gym environments for RaaS
+- <https://github.com/tomverbeure/panologic-g2>   Pano Logic G2 Reverse Engineering Project
+- <https://github.com/PyMesh/PyMesh>   Geometry Processing Library for Python
+- <https://github.com/Yixin-Hu/TetWild>   Robust Tetrahedral Meshing in the Wild.
+- <https://github.com/aqreed/PyVLM>   Vortex Lattice Method library written in Python
+- <https://github.com/dpiponi/Wattage>   A small library for working with formal power series
+- <https://github.com/dpiponi/formal-weyl>   The algebra for formal power series in elements of the Weyl algebra
+- <https://github.com/peterdsharpe/AeroSandbox>   "Aircraft design optimization made fast through modern automatic differentiation. Composable analysis tools for aerodynamics    propulsion    structures    trajectory design    and much more."
+- <https://github.com/OpenVOGEL/Tucan>   "Tucan remains among the simplest and most user friendly programs for aerodynamics based on vortex lattice methods. This project is unique in many ways    while the most prominent feature is that it is entirely based in .NET. Recompiling the project is very easy and you can have tons of fun extending the source code."
+- <https://github.com/tulip-control/polytope>   Geometric operations on polytopes of any dimension
+- <https://github.com/zachjweiner/pystella>   A code generator for grid-based PDE solving on CPUs and GPUs
+- <https://github.com/ChrisPenner/wc>   Beating unix `wc` in Haskell
+- <https://github.com/sisl/NeuralVerification.jl>   Methods to soundly verify deep neural networks
+- <https://github.com/mstksg/wavelets>   wavelet decomposition in haskell
+- <https://github.com/ishmandoo/trickle-tracker>   Backcountry water source predictions
+- <https://github.com/imandra-ai/minisat-ml>   Faithful reimplementation of Minisat 2.2 in OCaml.
+- <https://github.com/uwplse/reincarnate-aec>   Reincarnate Artifact for ICFP 2018
+- <https://github.com/Andromedans/andromeda>   A proof assistant for general type theories
+- <https://github.com/leanprover/lean4>   Lean 4 programming language and theorem prover
+- <https://github.com/owlbarn/owlbarn.github.io>   Owl Project Page - Owl You Need Is Owl
+- <https://github.com/hari-sikchi/safeRL>   Safe Reinforcement Learning algorithms
+- <https://github.com/evincarofautumn/Toody>   A two-dimensional parser combinator library.
+- <https://github.com/carstenbauer/JuliaWorkshop19>   Advanced Julia for undergraduate physicists
+- <https://github.com/philzook58/FlapPyBird-MPC>   Model Predictive Control of a Flappy Bird Clone using Mixed Integer Programming
+- <https://github.com/AdaCore/spark2014>   "SPARK 2014 is the new version of SPARK    a software development technology specifically designed for engineering high-reliability applications."
+- <https://github.com/isovector/compiling-to-categories-redux>   we're TRYING AGAIN with @maybevoid
+- <https://github.com/philzook58/rel>   Explorations in relations and the algebra of programming
+- <https://github.com/typeclasses/haskell-phrasebook>   The Haskell Phrasebook: a quick intro to Haskell via small annotated example programs
+- <https://github.com/AlgebraicJulia/Catlab.jl>   A framework for applied category theory in the Julia language
+- <https://github.com/statebox/awesome-applied-ct>   ACT community resources
+- <https://github.com/kth-step/HolBA>   Binary analysis in HOL
+- <https://github.com/alhassy/AgdaCheatSheet>   Basics of the dependently-typed functional language Agda ^_^
+- <https://github.com/drouhling/LaSalle>   A formal proof of LaSalle's invariance principle
+- <https://github.com/affeldt-aist/coq-robot>   Mathematics of Rigid Body Transformationss using Coq and MathComp
+- <https://github.com/affeldt-aist/monae>   Monadic effects and equational reasonig in Coq
+- <https://github.com/homotopy-io/homotopy-webclient>
+- <https://github.com/NickHu/naperian-functors>   A Haskell library for containers of statically known shape and size.
+- <https://github.com/granule-project/granule>   A statically-typed linear functional language with graded modal types for fine-grained program reasoning
+- <https://github.com/ericniebler/range-v3>   "Range library for C++14/17/20    basis for C++20's std::ranges"
+- <https://github.com/MichielStock/Kronecker.jl>   A general-purpose toolbox for efficient Kronecker-based algebra.
+- <https://github.com/konn/equational-reasoning-in-haskell>   Agda-style equational reasoning in Haskell
+- <https://github.com/plotters-rs/plotters>   "A rust drawing library for high quality data plotting for both WASM and native    statically and realtimely 🦀 📈🚀"
+- <https://github.com/weld-project/weld>   High-performance runtime for data analytics applications
+- <https://github.com/Michael-F-Bryan/adventures-in-motion-control>   A realistic simulator for a 3D printer motion controller
+- <https://github.com/Michael-F-Bryan/gcode-rs>   A streaming gcode parser built with embedded applications in mind
+- <https://github.com/scikit-hep/awkward-0.x>   Manipulate arrays of complex data structures as easily as Numpy.
+- <https://github.com/mitmath/18336>   18.336 - Fast Methods for Partial Differential and Integral Equations
+- <https://github.com/backtracking/ocaml-hashcons>   OCaml hash-consing library
+- <https://github.com/SciML/SciMLBook>   Parallel Computing and Scientific Machine Learning (SciML): Methods and Applications (MIT 18.337J/6.338J)
+- <https://github.com/mseri/contact-integrators>   "Notebooks and implementations for Bravetti    Seri    Vermeeren    Zadra ""Numerical integration in celestial mechanics:  a case for contact geometry"""
+- <https://github.com/ucla-vision/xivo>   X Inertial-aided Visual Odometry
+- <https://github.com/patryk-kubiczek/learning-GF>   Machine learning Green functions from perturbation theories and ED
+- <https://github.com/psg-mit/marshall>   Our modifications of the Marshall language for exact real arithmetic and examples
+- <https://github.com/pootle/pimotors>   "A collection of classes to drive motors directly connected to a Raspberry Pi    with smart feedback control"
+- <https://github.com/andrejbauer/spartan-type-theory>   Spartan type theory
+- <https://github.com/neel-krishnaswami/inverse-bidirectional-typechecking>   A Toy Inverse Bidirectional Typechecker
+- <https://github.com/mseri/owlde-demo-icfp2019>   Demos for OwlDE ICFP 2019 talk
+- <https://github.com/mykter/afl-training>   Exercises to learn how to fuzz with American Fuzzy Lop
+- <https://github.com/trailofbits/deepstate>   A unit test-like interface for fuzzing and symbolic execution
+- <https://github.com/perciplex/raas>   Reality as a Service: OpenAI Gym environments in real life
+- <https://github.com/LeventErkok/sbv>   SMT Based Verification in Haskell. Express properties about Haskell programs  and automatically prove them using SMT solvers.
+- <https://github.com/slovnicki/pLam>   An interpreter for learning and exploring pure λ-calculus
+- <https://github.com/ishmandoo/smart-step>
+- <https://github.com/iu-parfunc/lvars>   The LVish Haskell library
+- <https://github.com/draperlaboratory/cbat_tools>   Program analysis tools developed at Draper on the CBAT project.
+- <https://github.com/mit-frap/spring18>   "Problem Sets for MIT 6.822 Formal Reasoning About Programs    Spring 2018"
+- <https://github.com/graninas/Functional-Design-and-Architecture>   "Code and materials for my book ""Functional Design and Architecture"""
+- <https://github.com/graninas/cpp_functional_programming>   List of materials about functional programming in C++
+- <https://github.com/tlaplus/vscode-tlaplus>   TLA+ language support for Visual Studio Code
+- <https://github.com/coq/coq>   "Coq is a formal proof management system. It provides a formal language to write mathematical definitions    executable algorithms and theorems together with an environment for semi-interactive development of machine-checked proofs. "
+- <https://github.com/jozefg/blott>   An experimental type checker for a modal dependent type theory.
+- <https://github.com/ksluckow/awesome-symbolic-execution>   "A curated list of awesome symbolic execution resources including essential research papers    lectures    videos    and tools."
+- <https://github.com/klee/klee>   KLEE Symbolic Execution Engine
+- <https://github.com/backtracking/ocaml-bdd>   A simple BDD library for OCaml
+- <https://github.com/OCamlPro/ocplib-simplex>   "A library implementing a simplex algorithm    in a functional style    for solving systems of linear inequalities"
+- <https://github.com/arlencox/QUICr>   QUICr parametric abstract domain for sets
+- <https://github.com/arlencox/SETr>   Abstract domain library for sets
+- <https://github.com/thierry-martinez/pyml>   OCaml bindings for Python
+- <https://github.com/arlencox/mlbdd>   A not-quite-so-simple Binary Decision Diagrams implementation for OCaml
+- <https://github.com/tklengyel/drakvuf>   DRAKVUF Black-box Binary Analysis
+- <https://github.com/mishmash/Pfaffian.jl>   Julia port of Michael Wimmer's implementation of efficient numerical computation of the Pfaffian
+- <https://github.com/LaurentMazare/ocaml-torch>   OCaml bindings for PyTorch
+- <https://github.com/google/AFL>   american fuzzy lop - a security-oriented fuzzer
+- <https://github.com/barbagroup/FMM_tutorial>   A step-by-step introduction to treecode.
+- <https://github.com/FStarLang/FStar>   A Proof-oriented Programming Language
+- <https://github.com/KastnerRG/pp4fpgas>   Parallel Programming for FPGAs -- An open-source high-level synthesis book
+- <https://github.com/yallop/fomega>   System Fω interpreter for use in Advanced Functional Programming course
+- <https://github.com/mirage/mirage>   MirageOS is a library operating system that constructs unikernels
+- <https://github.com/togatoga/togasat>   A Header-Only CDCL SAT Solver for Programming Contest
+- <https://github.com/martinescardo/TypeTopology>   "Logical manifestations of topological concepts    and other things    via the univalent point of view."
+- <https://github.com/mitchellwrosen/haskell-papers>   <https://mitchellwrosen.github.io/haskell-papers>
+- <https://github.com/Chakazul/Lenia>   Lenia - Mathematical Life Forms
+- <https://github.com/arminbiere/cadical>   CaDiCaL SAT Solver
+- <https://github.com/isovector/type-sets>   type level sets
+- <https://github.com/fkie-cad/cwe_checker>   cwe_checker finds vulnerable patterns in binary executables
+- <https://github.com/janestreet/core_kernel>   Jane Street's standard library overlay (kernel)
+- <https://github.com/JonathanSalwan/Triton>   "Triton is a dynamic binary analysis library. Build your own program analysis tools    automate your reverse engineering    perform software verification or just emulate code."
+- <https://github.com/Nemocas/AbstractAlgebra.jl>   Generic abstract algebra functionality in pure Julia (no C dependencies)
+- <https://github.com/BigEd/XSOC-xr16>   "System-on-a-Chip for FPGA    with xr16 RISC core and LCC port"
+- <https://github.com/lonsing/qratpreplus>   "QRATPre+    a preprocessor for quantified Boolean formulas."
+- <https://github.com/fraunhoferfokus/acsl-by-example>   "Public snapshots of ""ACSL by Example"""
+- <https://github.com/evdenis/verker>   Linux kernel library functions formally verified.
+- <https://github.com/evdenis/acsl-proved>   Fully proved small C functions (examples for verification course).
+- <https://github.com/mokus0/polynomial>   Haskell library for manipulating and evaluating polynomials
+- <https://github.com/discus-lang/salt>   The compilation target that functional programmers always wanted.
+- <https://github.com/discus-lang/ddc>   The Disco Discus Compiler
+- <https://github.com/qfpl/state-machine-testing-course>   Course for learning how to apply property-based state-machine testing
+- <https://github.com/drom/awesome-hdl>   Hardware Description Languages
+- <https://github.com/wyager/CPU>   CPU Building Tutorial
+- <https://github.com/YosysHQ/yosys>   Yosys Open SYnthesis Suite
+- <https://github.com/agentm/project-m36>   Project: M36 Relational Algebra Engine
+- <https://github.com/sparverius/ats-acc>   Pretty-print error messages of the ATS Compiler
+- <https://github.com/sigrlami/haskellcosm>   "Collecting information about Haskell ecosystem - companies    communities    media    etc."
+- <https://github.com/seL4/l4v>   seL4 specification and proofs
+- <https://github.com/plum-umd/cgc>   Constructive Galois connections
+- <https://github.com/nmwsharp/polyscope>   A C++ & Python viewer for 3D data like meshes and point clouds
+- <https://github.com/google/python-fire>   Python Fire is a library for automatically generating command line interfaces (CLIs) from absolutely any Python object.
+- <https://github.com/HarrisonGrodin/Rewrite.jl>   An efficient symbolic term rewriting engine
+- <https://github.com/nobrakal/tungsten>   Bring fusion to everyone
+- <https://github.com/vydd/sketch>   "A Common Lisp framework for the creation of electronic art    visual design    game prototyping    game making    computer graphics    exploration of human-computer interaction    and more."
+- <https://github.com/emina/kodkod>   Kodkod solver for relational logic
+- <https://github.com/msakai/toysolver>   My sandbox for experimenting with solver algorithms.
+- <https://github.com/agraef/pure-lang>   Pure programming language
+- <https://github.com/pyodide/pyodide>   Pyodide is a Python distribution for the browser and Node.js based on WebAssembly
+- <https://github.com/austinEng/WebGL-PIC-FLIP-Fluid>   PIC/FLIP Fluid with WebGL
+- <https://github.com/letouzey/coq-minicalc>   Toy demo of lexing/parsing in Coq
+- <https://github.com/bollu/blaze>   "Haskell re-implementation of STOKE    the stochastic superoptimizer "
+- <https://github.com/cpitclaudel/z3.wasm>   WASM builds of the Z3 SMT solver
+- <https://github.com/mharrys/fluids-2d>   Real-time fluid dynamics running on the GPU with the help of WebGL and Three.js
+- <https://github.com/thma/LtuPatternFactory>   "Lambda the ultimate Pattern Factory: FP    Haskell    Typeclassopedia vs Software Design Patterns"
+- <https://github.com/Bodigrim/poly>   "Fast polynomial arithmetic in Haskell (dense and sparse    univariate and multivariate    usual and Laurent)"
+- <https://github.com/Graphegon/pygraphblas>   GraphBLAS for Python
+- <https://github.com/ucsd-progsys/liquid-sf>   "Port ""Software Foundations"" to LiquidHaskell"
+- <https://github.com/princeton-vl/CoqGym>   A Learning Environment for Theorem Proving with the Coq proof assistant
+- <https://github.com/patriciogonzalezvivo/glslViewer>   Console-based GLSL Sandbox for 2D/3D shaders
+- <https://github.com/emina/rosette>   "The Rosette solver-aided host language    sample solver-aided DSLs    and demos"
+- <https://github.com/declanoller/RWG_benchmarking>   Analyzing Reinforcement Learning Benchmarks with Random Weight Guessing
+- <https://github.com/yuanming-hu/spgrid_topo_opt>   "Narrow-Band Topology Optimization on a Sparsely Populated Grid    ACM Transactions on Graphics (SIGGRAPH Asia 2018)"
+- <https://github.com/ranjitjhala/CAV19-tutorial>   Slides for CAV 2019 tutorial on Refinement Types
+- <https://github.com/parsonsmatt/unification>   implementation of the first order logic unification algorithm in Haskell
+- <https://github.com/edwinb/Idris2-boot>   "A dependently typed programming language    a successor to Idris"
+- <https://github.com/dbuenzli/trel>   Relational programming for OCaml (unreleased)
+- <https://github.com/c-cube/choice>   "Choice operator in OCaml    providing a backtracking monad"
+- <https://github.com/PLTools/OCanren>   Statically typed embedding of miniKanren relational programming language into OCaml
+- <https://github.com/sjoerdvisscher/one-liner>   Constraint-based generics
+- <https://github.com/lehins/massiv-simd>
+- <https://github.com/nuprl/10PL>   "10 papers that all PhD students in programming languages ought to know    for some value of 10"
+- <https://github.com/lehins/MonadicParty2019>   This repo contains most of the material that will be presented at MonadicParty in Poznan
+- <https://github.com/seungeunrho/minimalRL>   Implementations of basic RL algorithms with minimal lines of codes! (pytorch based)
+- <https://github.com/roglo/coq_real>   Real Numbers using LPO
+- <https://github.com/penkovsky/10-days-of-grad>   Neural Networks and Deep Learning
+- <https://github.com/system-f/fp-course>   Functional Programming Course
+- <https://github.com/jtdaugherty/brick>   A declarative Unix terminal UI library written in Haskell
+- <https://github.com/GaloisInc/gadt-starter>   Introductory example of GADTs for teaching purposes
+- <https://github.com/gelisam/frp-zoo>   Comparing many FRP implementations by reimplementing the same toy app in each.
+- <https://github.com/etorreborre/registry>   Components as records of functions for Haskell
+- <https://github.com/ekmett/monad-ran>   "Right Kan extension transformers covering the entire MTL    IO    ST s    and STM in Haskell in a generalization of continuation passing style"
+- <https://github.com/janestreet/hardcaml>   Hardcaml is an OCaml library for designing hardware.
+- <https://github.com/janestreet/learn-ocaml-workshop>   Exercises and projects for Jane Street's OCaml Workshop
+- <https://github.com/yallop/ocaml-ctypes>   Library for binding to C libraries using pure OCaml
+- <https://github.com/wilbowma/dissertation>   "The source for ""Compiling with Dependent Types"" (my dissertation)"
+- <https://github.com/JuliaDynamics/DrWatson.jl>   The perfect sidekick to your scientific inquiries
+- <https://github.com/Lysxia/coq-ceres>   Coq library for serialization to S-expressions
+- <https://github.com/JeffreySarnoff/FastRationals.jl>   Arithmetic with small and with very large rationals is made fast.
+- <https://github.com/Kolaru/BranchAndPrune.jl>   Branch and prune interface for Julia
+- <https://github.com/SymbioticEDA/MARLANN>   Multiply-Accumulate and Rectified-Linear Accelerator for Neural Networks
+- <https://github.com/Holmusk/three-layer>   :three: :cake: Architecture of the Haskell web applications
+- <https://github.com/crossbeam-rs/crossbeam>   Tools for concurrent programming in Rust
+- <https://github.com/Spirit-of-Oberon/ProjectOberon2013>   Project Oberon (New Edition 2013) Unofficial Mirror
+- <https://github.com/statebox/idris-ct>   formally verified category theory library
+- <https://github.com/coin-or/python-mip>   Python-MIP: collection of Python tools for the modeling and solution of Mixed-Integer Linear programs
+- <https://github.com/declanoller/neat>   Playing OpenAI games with Neuroevolution
+- <https://github.com/declanoller/robot_car>   Creating a physical robot that learns to play a game with reinforcement learning!
+- <https://github.com/ishmandoo/imitation_car>
+- <https://github.com/ishmandoo/trajectory_optimization>
+- <https://github.com/ishmandoo/cube_puzzle>
+- <https://github.com/jaycech3n/Isabelle-HoTT>   An experimental implementation of homotopy type theory in the interactive proof assistant Isabelle
+- <https://github.com/trailofbits/indurative>   Easily create authenticated data structures
+- <https://github.com/OPLSS/oplss-notes-2019>   Notes and handouts from OPLSS 2019
+- <https://github.com/falsandtru/haskell-examples>
+- <https://github.com/jespercockx/ohrid19-agda>   Material for the Agda course at the EUTYPES Summer School '19 in Ohrid
+- <https://github.com/haskell/attoparsec>   A fast Haskell library for parsing ByteStrings
+- <https://github.com/leanprover-community/lean-perfectoid-spaces>   Perfectoid spaces in the Lean formal theorem prover.
+- <https://github.com/odow/MathOptFormat.jl>   Read and write a variety of mathematical optimization file formats
+- <https://github.com/githwxi/ATS-Temptory>   For supporting template-based programming
+- <https://github.com/jwiegley/coq-haskell>   A library for formalizing Haskell types and functions in Coq
+- <https://github.com/EgbertRijke/HoTT-Intro>   An introductory course to Homotopy Type Theory
+- <https://github.com/PIQuIL/QuCumber>   Neural Network Many-Body Wavefunction Reconstruction
+- <https://github.com/armijnhemel/binaryanalysis-ng>   Binary Analysis Next Generation (BANG)
+- <https://github.com/SciML/SciMLBenchmarks.jl>   "Scientific machine learning (SciML) benchmarks    AI for science    and (differential) equation solvers. Covers Julia    Python (PyTorch    Jax)    MATLAB    R"
+- <https://github.com/JuliaIntervals/IntervalConstraintProgramming.jl>   Calculate rigorously the feasible region for a set of real-valued inequalities with Julia
+- <https://github.com/PrincetonUniversity/VST>   Verified Software Toolchain
+- <https://github.com/cswiercz/smale>   Smale's alpha theory for certifiable numerical root finding.
+- <https://github.com/DeifiliaTo/chebApprox>   implementation of chebyshev polynomial representation of functions
+- <https://github.com/sadraddini/polytrajectory>   Polytopic Trajectories for Time Varying Linear Systems
+- <https://github.com/robrix/path>   A lambda calculus to explore type-directed program synthesis.
+- <https://github.com/robrix/semilattices>   "join and meet semilattices    lower and upper bounds."
+- <https://github.com/timholy/Revise.jl>   Automatically update function definitions in a running Julia session
+- <https://github.com/jump-dev/PolyJuMP.jl>   A JuMP extension for Polynomial Optimization
+- <https://github.com/BinaryAnalysisPlatform/bap>   Binary Analysis Platform
+- <https://github.com/MatthiasNickles/diff-SAT>   "Probabilistic Answer Set Programming and Probabilistic SAT solving    based on Differentiable Satisfiability "
+- <https://github.com/math-comp/multinomials>   Multinomials for the Mathematical Components library.
+- <https://github.com/coq-community/math-classes>   "A library of abstract interfaces for mathematical structures in Coq [maintainer=@spitters   @Lysxia]"
+- <https://github.com/coq-community/corn>   "Coq Repository at Nijmegen [maintainers=@spitters   @VincentSe   @Lysxia]"
+- <https://github.com/mit-plv/fiat-crypto>   Cryptographic Primitive Code Generation by Fiat
+- <https://github.com/UCSD-PL/veridrone>   Foundational Verification of Hybrid Systems
+- <https://github.com/leanprover-community/mathlib>   Lean 3's obsolete mathematical components library: please use mathlib4
+- <https://github.com/dselsam/certigrad>   Bug-free machine learning on stochastic computation graphs
+- <https://github.com/leanprover/logic_and_proof>   CMU Undergrad Course
+- <https://github.com/leanprover/lean3>   Lean Theorem Prover
+- <https://github.com/bollu/diffgeo>   A formalization of synthetic differential geometry in Coq using infinitesimal analysis
+- <https://github.com/ds4dm/learn2branch>   Exact Combinatorial Optimization with Graph Convolutional Neural Networks (NeurIPS 2019)
+- <https://github.com/XRobots/openDog>   CAD and code for each episode of my open source dog series
+- <https://github.com/avigad/polya>   A heuristic procedure for proving inequalities
+- <https://github.com/ths-rwth/smtrat>
+- <https://github.com/tungvx/raSAT>   raSAT - an smt solver for polynomial constraints
+- <https://github.com/jyp/glpk-hs>   Haskell bindings to glpk
+- <https://github.com/VERIMAG-Polyhedra/VPL>   Verimag Polyhedra Library
+- <https://github.com/janestreet/core>   Jane Street Capital's standard library overlay
+- <https://github.com/owlbarn/owl>   Owl - OCaml Scientific Computing @ <https://ocaml.xyz>
+- <https://github.com/alhassy/OCamlCheatSheet>   Reference of basic commands to get comfortable with OCaml.
+- <https://github.com/OCamlverse/ocamlverse.github.io>   Documentation of everything relevant in the OCaml world
+- <https://github.com/ocaml-community/awesome-ocaml>   "A curated collection of awesome OCaml tools    frameworks    libraries and articles."
+- <https://github.com/juan-pablo-vielma/INFORMS-ALIO-2019-JuMP-Tutorial>   JuMP tutorial for the 2019 INFORMS-ALIO meeting
+- <https://github.com/githwxi/ATS-Postiats>   ATS2: Unleashing the Potentials of Types and Templates
+- <https://github.com/githwxi/ATS-Xanadu>   Bootstrapping ATS3
+- <https://github.com/calebwin/emu>   The write-once-run-anywhere GPGPU library for Rust
+- <https://github.com/agda/agda-categories>   A new Categories library for Agda
+- <https://github.com/tree-sitter/tree-sitter>   An incremental parsing system for programming tools
+- <https://github.com/github/semantic>   "Parsing    analyzing    and comparing source code across many languages"
+- <https://github.com/rdeits/Mayday.jl>   "Sums-of-Squares optimization in Julia    powered by JuMP"
+- <https://github.com/ibex-team/ibex-lib>   IBEX is a C++ library for constraint processing over real numbers.
+- <https://github.com/dreal/dreal4>   Automated Reasoning in Nonlinear Theories of Reals
+- <https://github.com/dreal/DReal.jl>   Nonlinear Constraint Solving and Optimization
+- <https://github.com/IainNZ/JuMPeR.jl>   Julia for Mathematical Programming - extension for Robust Optimization
+- <https://github.com/nomeata/inspection-testing>   Inspection Testing for Haskell
+- <https://github.com/mit-plv/riscv-coq>   RISC-V Specification in Coq
+- <https://github.com/embotech/ecos>   A lightweight conic solver for second-order cone programming.
+- <https://github.com/urweb/urweb>   The Ur/Web programming language
+- <https://github.com/HumanCompatibleAI/adversarial-policies>   Find best-response to a fixed policy in multi-agent RL
+- <https://github.com/statebox/cql>   CQL: Categorical Query Language implementation in Haskell
+- <https://github.com/HiroIshida/robust-tube-mpc>   An example code for robust model predictive control using tube
+- <https://github.com/MassimoLauria/cnfgen>   CNF generator in DIMACS format. It produces common families of CNFs.
+- <https://github.com/david-christiansen/pie-hs>   An implementation of Pie in Haskell
+- <https://github.com/glegrain/STM32-with-macOS>
+- <https://github.com/jaspervdj/patat>   Terminal-based presentations using Pandoc
+- <https://github.com/robertgoss/Lie>   Some haskell code for manipulating Lie Algebras/ Root Systems
+- <https://github.com/BurntSushi/quickcheck>   Automated property based testing for Rust (with shrinking).
+- <https://github.com/Magalame/fastest-matrices>   Benchmark of the main linear algebra libraries in Haskell
+- <https://github.com/HuwCampbell/grenade>   Deep Learning in Haskell
+- <https://github.com/jump-dev/JuMP.jl>   "Modeling language for Mathematical Optimization (linear    mixed-integer    conic    semidefinite    nonlinear)"
+- <https://github.com/harshshukla7/SPLIT>
+- <https://github.com/erickerrigan/protoip>   IP prototyping in FPGA hardware
+- <https://github.com/statusfailed/pp>   probabilistic programming in Haskell
+- <https://github.com/JuliaLinearAlgebra/ArnoldiMethod.jl>   "The Arnoldi Method with Krylov-Schur restart    natively in Julia."
+- <https://github.com/matt-noonan/gdp>   Ghosts of Departed Proofs
+- <https://github.com/cvxgrp/diffcp>   Differentiation through cone programs
+- <https://github.com/foges/pogs>   Proximal Operator Graph Solver
+- <https://github.com/phadej/idioms-plugins>   Hack idiom-brackets using GHC Source Plugin (8.6+)
+- <https://github.com/frank-lang/frank>   Frank compiler
+- <https://github.com/pigworker/shonky>   "being some experiments    working towards some equipment I wish I had"
+- <https://github.com/YanbaruRobotics/PythonPilot>   An Open Source Python Framework for Prototyping ADAS and Autonomous Vehicles
+- <https://github.com/HuStmpHrrr/agda-categories-1>
+- <https://github.com/cr-marcstevens/m4gb>   M4GB: Efficient Groebner Basis algorithm
+- <https://github.com/forsyde/forsyde-shallow>   ForSyDe's Haskell-embedded Domain Specific Language
+- <https://github.com/forsyde/forsyde-atom>   A shallow-embedded DSL for modeling cyber-physical systems
+- <https://github.com/TobiaMarcucci/pympc>
+- <https://github.com/umangm/realsyn>   Automated Controller Synthesis
+- <https://github.com/tulip-control/tulip-control>   Temporal Logic Planning toolbox
+- <https://github.com/ariadne-cps/ariadne>   C++ framework for rigorous computation on cyber-physical systems
+- <https://github.com/viryfrederic/3plib>   A library for planar projections of convex bodies and certain classes of nonconvex bodies.
+- <https://github.com/scmu/foundations-harper>   Agda proofs for some of the theorems in Robert Harper's Practical Foundations of Programming Languages.
+- <https://github.com/Coq-Polyhedra/Coq-Polyhedra>   Formalizing convex polyhedra in Coq
+- <https://github.com/haudren/pyparma>   "Bindings to the parma polyhedra library    allowing to use double description from Python."
+- <https://github.com/stephane-caron/pypoman>   Python module for polyhedral geometry
+- <https://github.com/scmu/aopa>   Algebra of Programming in Agda: Dependent Types for Relational Program Derivation
+- <https://github.com/pcapriotti/agda-categories>   Category theory and algebra
+- <https://github.com/algebraic-graphs/agda>   The theory of algebraic graphs formalised in Agda
+- <https://github.com/ekmett/codex>   UI experiments for coda
+- <https://github.com/gallais/agda-sizedIO>   IO using sized types and copatterns
+- <https://github.com/alhassy/gentle-intro-to-reflection>   A slow-paced introduction to reflection in Agda. ---Tactics!
+- <https://github.com/advancedtelematic/quickcheck-state-machine>   Test monadic programs using state machine based models
+- <https://github.com/caterinaurban/apronpy>
+- <https://github.com/sifive/Kami>   "Kami - a DSL for designing Hardware in Coq    and the associated semantics and theorems for proving its correctness. Kami is inspired by Bluespec. It is actually a complete rewrite of an older version from MIT"
+- <https://github.com/harpocrates/inline-rust>   Use snippets of Rust inline in your Haskell programs
+- <https://github.com/thoughtpolice/rv32-sail>   32-bit RISC-V Emulator
+- <https://github.com/riscvarchive/ISA_Formal_Spec_Public_Review>   Locus site for Public Review of Several RISC-V ISA Formal Specs
+- <https://github.com/vmchale/hs-ats>   Home of the fast-arithmetic library for number theory in ATS and Haskell.
+- <https://github.com/vmchale/atspkg>   Build tool for ATS.
+- <https://github.com/DataKinds/charm>   A [ functional stack ] based language.
+- <https://github.com/kind2-mc/kind2>   Multi-engine SMT-based automatic model checker for safety properties of Lustre programs
+- <https://github.com/haskell-works/relation>
+- <https://github.com/m4lvin/HasCacBDD>   "λ🎄 Haskell bindings for CacBDD    a Binary Decision Diagram (BDD) package with dynamic cache management."
+- <https://github.com/catseye/Quylthulg>   MIRROR of <https://codeberg.org/catseye/Quylthulg> : A functional language with goto's inside data structures
+- <https://github.com/bollu/simplexhc>   compiler with polyhedral optmization for a lazy functional programming language
+- <https://github.com/yihming/aihaskell>   Abstract Interpretation Framework written in Haskell
+- <https://github.com/seahorn/seahorn>   SeaHorn Verification Framework
+- <https://github.com/eth-sri/diffai>   A certifiable defense against adversarial examples by training neural networks to be provably robust
+- <https://github.com/eth-sri/fastsmt>   Learning to Solve SMT Formulas Fast
+- <https://github.com/eth-sri/ELINA>   ELINA: ETH LIbrary for Numerical Analysis
+- <https://github.com/Copilot-Language/copilot-theorem>   (DEPRECATED) A library for using model-checking techiques with Copilot programs
+- <https://github.com/koengit/satplus>
+- <https://github.com/Feldspar/raw-feldspar>   Resource-AWare Feldspar
+- <https://github.com/cat-milk/Anime-Girls-Holding-Programming-Books>   Anime Girls Holding Programming Books
+- <https://github.com/cohomolo-gy/haskell-resources>   A List of Foundational Haskell Papers
+- <https://github.com/dpndnt/library>   Library of the ##dependent distributed research support group
+- <https://github.com/ethul/purescript-freeap>   Free applicative functors for PureScript
+- <https://github.com/prismmodelchecker/prism>   The main development version of the PRISM model checker.
+- <https://github.com/moves-rwth/storm>   A Modern Probabilistic Model Checker
+- <https://github.com/tlaplus/Examples>   A collection of TLA⁺ specifications of varying complexities
+- <https://github.com/tweag/capability>   Extensional capabilities and deriving combinators
+- <https://github.com/GlasgowEmbedded/glasgow>   Scots Army Knife for electronics
+- <https://github.com/philzook58/lens-algebra>   "Type level algebraic ""proofs"" using lens combinators"
+- <https://github.com/Apress/practical-tla-plus>   Source Code for 'Practical TLA+' by Hillel Wayne
+- <https://github.com/philzook58/search>   doinking around with search stuff. Nothin to see here.
+- <https://github.com/Lysxia/system-F>   Formalization of the polymorphic lambda calculus and its parametricity theorem
+- <https://github.com/klntsky/haskell-holes-th>   TIP solver for simply typed lambda calculus. Can automatically infer code from type definitions. (TemplateHaskell)
+- <https://github.com/goldfirere/funeq>   Haskell files to allow easy comparison of functions in repl.it
+- <https://github.com/martinescardo/HoTT-UF-Agda-Lecture-Notes>   Lecture notes on univalent foundations of mathematics with Agda
+- <https://github.com/khibino/haskell-relational-record>   "This repository includes a joined query generator based on typefull relational algebra    and mapping tools between SQL values list and Haskell record type."
+- <https://github.com/teyjus/teyjus>   An efficient implementation of the higher-order logic programming language Lambda Prolog
+- <https://github.com/namin/inc>   an incremental approach to compiler construction
+- <https://github.com/namin/staged-miniKanren>   "staged relational interpreters: running with holes    faster"
+- <https://github.com/TravisWhitaker/data-compat>   Define Backwards Compatibility Schemes for Arbitrary Data
+- <https://github.com/thautwarm/idris-cam>   Sucessor: <https://github.com/thautwarm/Quick-Backend>
+- <https://github.com/Lysxia/coq-mtl>   Formalized laws for mtl
+- <https://github.com/L-TChen/FiniteSets>   Fintie Sets in Cubical Agda
+- <https://github.com/tlaplus/tlaplus>   TLC is a model checker for specifications written in TLA+. The TLA+Toolbox is an IDE for TLA+.
+- <https://github.com/sat-group/open-wbo>   Open-WBO: state-of-the-art MaxSAT and Pseudo-Boolean solver
+- <https://github.com/jespercockx/popl19-tutorial>   "Files for the tutorial ""Correct-by-construction programming in Agda"" at POPL '19 in Cascais"
+- <https://github.com/k-tsushima/Shin-Barliman>   "Research project: Program synthesis using updated interface    template and types."
+- <https://github.com/MedeaMelana/Magic>   Haskell implementation of Magic: The Gathering
+- <https://github.com/oisdk/semiring-num>   library with a semiring class and some useful semirings
+- <https://github.com/conal/convolution-paper>   Generalized Convolution and Efficient Language Recognition
+- <https://github.com/tkoolen/Parametron.jl>   Efficiently solving instances of a parameterized family of (possibly mixed-integer) linear/quadratic optimization problems in Julia
+- <https://github.com/kcsongor/register-machine-type>   Universal Register Machine implemented at the type-level of Haskell
+- <https://github.com/joom/hezarfen>   "a theorem prover for intuitionistic propositional logic in Idris    with metaprogramming features"
+- <https://github.com/sgorsten/linalg>   "linalg.h is a single header    public domain    short vector math library for C++"
+- <https://github.com/AndrasKovacs/singleton-nats>   Unary natural numbers relying on the singletons infrastructure
+- <https://github.com/MaisaMilena/JuiceMaker>   [in progress] Using Agda - for programmers
+- <https://github.com/gdeest/isl-bindings>   Low and high-level Haskell bindings to the Integer Set Library
+- <https://github.com/rreusser/rreusser.github.io>   rreusser.github.io
+- <https://github.com/cfsamson/pixar_raytracer>   Ported to Rust from <https://mattwarren.org/2019/03/01/Is-CSharp-a-low-level-language/>
+- <https://github.com/RussTedrake/underactuated>   The course text for MIT 6.832 (and 6.832x on edX)
+- <https://github.com/hakank/hakank>   My public programs and models - mostly combinatorial problems and puzzles
+- <https://github.com/mrk-its/rust-robbo>   Rust implementation of classic 8-bit Atari game
+- <https://github.com/adrianopolus/probSAT>   The probSAT SAT Solver
+- <https://github.com/flannelhead/blackstar>   A black hole raytracer written in Haskell
+- <https://github.com/root-project/cling>   The cling C++ interpreter
+- <https://github.com/NewForester/apl-py>   APL interpreter implemented in Python
+- <https://github.com/aaronjanse/asciidots>   Esolang inspired by ASCII art
+- <https://github.com/iu-parfunc/gibbon>   A compiler for functional programs on serialized data
+- <https://github.com/iu-parfunc/verified-instances>   Verified instances for parallel programming.
+- <https://github.com/wmww/Python-plus-plus>   "A framework for creating Python/C++ polyglots    programs valid in both programming languages"
+- <https://github.com/JohnEarnest/ok>   An open-source interpreter for the K5 programming language.
+- <https://github.com/Co-dfns/Co-dfns>   "High-performance    Reliable    and Parallel APL"
+- <https://github.com/gfx-rs/wgpu>   "A cross-platform    safe    pure-Rust graphics API."
+- <https://github.com/bgamari/optimization>   Some numerical optimization methods implemented in Haskell
+- <https://github.com/RyanGlScott/eliminators>   Dependently typed elimination functions using singletons
+- <https://github.com/discus-lang/iron>   Coq formalizations of functional languages.
+- <https://github.com/ray-project/ray>   Ray is a unified framework for scaling AI and Python applications. Ray consists of a core distributed runtime and a set of AI Libraries for accelerating ML workloads.
+- <https://github.com/pervognsen/bitwise>   Bitwise is an educational project where we create the software/hardware stack for a computer from scratch.
+- <https://github.com/Munksgaard/session-types>
+- <https://github.com/alphaville/optimization-engine>   Nonconvex embedded optimization: code generation for fast real-time optimization
+- <https://github.com/withoutboats/shifgrethor>   garbage collection
+- <https://github.com/quil-lang/quilc>   The optimizing Quil compiler.
+- <https://github.com/convexbrain/Totsu>   First-order conic solver for convex optimization problems
+- <https://github.com/chrisdone-archive/sandbox>   Small random demonstrations of code
+- <https://github.com/rust-lang/rust-playground>   The Rust Playground
+- <https://github.com/rust-unofficial/too-many-lists>   Learn Rust by writing Entirely Too Many linked lists
+- <https://github.com/EbTech/rust-algorithms>   Common data structures and algorithms in Rust
+- <https://github.com/evincarofautumn/kitten>   A statically typed concatenative systems programming language.
+- <https://github.com/simongog/sdsl-lite>   Succinct Data Structure Library 2.0
+- <https://github.com/ekmett/succinct>   playground for working with succinct data structures
+- <https://github.com/pythonesque/dependent_traits>   A dependent type system built entirely in Rust's trait system (WIP).
+- <https://github.com/andrejbauer/homotopy-type-theory-course>   "A course on homotopy theory and type theory    taught jointly with Jaka Smrekar"
+- <https://github.com/bodil/higher>   Your favourite Haskell type classes for Rust
+- <https://github.com/zeux/meshoptimizer>   Mesh optimization library that makes meshes smaller and faster to render
+- <https://github.com/owo-lang/minitt-rs>   "Dependently-typed lambda calculus    Mini-TT    extended and implemented in Rust"
+- <https://github.com/hedgehogqa/haskell-hedgehog>   "Release with confidence    state-of-the-art property testing for Haskell."
+- <https://github.com/MatthewDaggitt/agda-routing>   An Agda library for reasoning about asynchronous iterative algorithms and network routing problems
+- <https://github.com/ocharles/zero-to-quake-3>   Implementing Quake 3 in Haskell & Vulkan
+- <https://github.com/ekmett/reflection>   Reifies arbitrary Haskell terms into types that can be reflected back into terms
+- <https://github.com/ekmett/guanxi>   Relational programming in Haskell. Mostly developed on twitch.
+- <https://github.com/haskell-works/bits-extra>
+- <https://github.com/paf31/haskell-slides>
+- <https://github.com/HIPS/autograd>   Efficiently computes derivatives of numpy code.
+- <https://github.com/serde-rs/serde>   Serialization framework for Rust
+- <https://github.com/rust-ndarray/ndarray>   "ndarray: an N-dimensional array with array views    multidimensional slicing    and efficient operations"
+- <https://github.com/springer13/tcl>   Tensor Contraction C++ Library
+- <https://github.com/OpenPAL/TypeAndProof>   <https://openpal.github.io/TypeAndProof/>
+- <https://github.com/OUPL/MLCert>   Certified Machine Learning
+- <https://github.com/polysemy-research/polysemy>   ":gemini: higher-order    no-boilerplate monads"
+- <https://github.com/netket/netket>   Machine learning algorithms for many-body quantum systems
+- <https://github.com/topocm/topocm_content>   Course on topology in condensed matter
+- <https://github.com/mishmash/QuantumHallED.jl>   A Julia code for performing exact diagonalization of fractional quantum Hall systems
+- <https://github.com/SpM-lab/SpM>   Sparse modeling tool for analytical continuation of imaginary-time Green's function
+- <https://github.com/HugoStrand/pyed>   Exact diagonalization for finite quantum systems
+- <https://github.com/pomerol-ed/gftools>   Green's function DSL
+- <https://github.com/pomerol-ed/pomerol>   "Exact diagonalization    Lehmann's representation    Two-particle Green's functions"
+- <https://github.com/issp-center-dev/HPhi>   Quantum Lattice Model Simulator Package
+- <https://github.com/conal/lambda-ccc>   Convert lambda expressions to CCC combinators
+- <https://github.com/jyp/dante>
+- <https://github.com/vmchale/recursion_schemes>   Recursion schemes for Idris
+- <https://github.com/ekmett/constraints>   Tools for programming with ConstraintKinds in GHC
+- <https://github.com/Lysxia/coq-simple-io>   IO for Gallina
+- <https://github.com/mcarton/rust-herbie-lint>   A rustc plugin to check for numerical instability
+- <https://github.com/3b1b/manim>   Animation engine for explanatory math videos
+- <https://github.com/TerrorJack/template-haskell-jailbreak>   Black magic to workaround a Template Haskell stage restriction.
+- <https://github.com/project-everest/mitls-fstar>   Verified implementation of TLS 1.3 in F*
+- <https://github.com/alx741/graphite>   Haskell graphs and networks library
+- <https://github.com/reanimate/reanimate>   Haskell library for building declarative animations based on SVG graphics
+- <https://github.com/sdleffler/type-operators-rs>   A macro for defining type operators in Rust.
+- <https://github.com/gtestault/primitive-recursive-functions>   Implementation of game of life and a bunch of primitive recursive functions at the type level in rust
+- <https://github.com/Feldspar/feldspar-language>   The goal of the Feldspar project is to define a high-level language that allows description of high-performance digital signal processing algorithms.
+- <https://github.com/jamii/rust-tagless>
+- <https://github.com/rust-lang/chalk>   An implementation and definition of the Rust trait system using a PROLOG-like logic solver
+- <https://github.com/rodrimati1992/type_level>   Libraries for declaring and using type-level values.
+- <https://github.com/paholg/typenum>   Compile time numbers in Rust.
+- <https://github.com/lloydmeta/frunk>   "Funktional generic type-level programming in Rust: HList    Coproduct    Generic    LabelledGeneric    Validated    Monoid and friends."
+- <https://github.com/Centril/refl>   Provides a Refl encoding in Rust
+- <https://github.com/mpickering/three-level>   A three stage program you definitely want to write
+- <https://github.com/dmjio/Julio>   Julia embedded in Haskell
+- <https://github.com/Argonne-National-Laboratory/PIPS>   Parallel solvers for optimization problems
+- <https://github.com/clash-lang/clash-compiler>   Haskell to VHDL/Verilog/SystemVerilog compiler
+- <https://github.com/ssloy/tinyraycaster>   486 lines of C++: old-school FPS in a weekend
+- <https://github.com/klntsky/purescript-array-views>   Defer multiple 𝚜𝚕𝚒𝚌𝚎 calls on 𝙰𝚛𝚛𝚊𝚢.
+- <https://github.com/morphismtech/squeal>   "Squeal    a deep embedding of SQL in Haskell"
+- <https://github.com/ghc/ghc>   Mirror of the Glasgow Haskell Compiler. Please submit issues and patches to GHC's Gitlab instance (<https://gitlab.haskell.org/ghc/ghc>). First time contributors are encouraged to get started with the newcomers info (<https://gitlab.haskell.org/ghc/ghc/wikis/contributing>).
+- <https://github.com/RyanGlScott/ghc-software-foundations>   "The Software Foundations book    in GHC"
+- <https://github.com/goldfirere/singletons>   Fake dependent types in Haskell using singletons
+- <https://github.com/ghc-proposals/ghc-proposals>   Proposed compiler and language changes for GHC and GHC/Haskell
+- <https://github.com/philzook58/not-bad-ccc>   Another tact on compiling to categories without a plugin
+- <https://github.com/philzook58/cart_pole>   A physical and virtual cartpole
+- <https://github.com/philzook58/nand2coq>   Build an educational formally verified version of the Nand 2 Tetris course using Coq (and other formal tools).
+- <https://github.com/philzook58/fib-anyon>   An implementation of Fibonacci Anyons in Haskell
+- <https://github.com/prove-rs/z3.rs>   Rust bindings for the Z3 solver.
+- <https://github.com/Kha/electrolysis>   Simple verification of Rust programs via functional purification in Lean 2(!)
+- <https://github.com/rust-lang-nursery/wg-verification>   Verification working group
+- <https://github.com/ramda/ramda>   :ram: Practical functional Javascript
+- <https://github.com/calmm-js/partial.lenses>   "Partial lenses is a comprehensive    high-performance optics library for JavaScript"
+- <https://github.com/purescript/purescript-type-equality>   Type equality constraints
+- <https://github.com/cvxopt/cvxopt>   CVXOPT -- Python Software for Convex Optimization
+- <https://github.com/UlfNorell/insane>   Toy typechecker for Insanely Dependent Types
+- <https://github.com/VictorTaelin/ESCoC>   "A nano ""theorem prover""."
+- <https://github.com/danspielman/Laplacians.jl>   "Algorithms inspired by graph Laplacians: linear equation solvers    sparsification    clustering    optimization    etc."
+- <https://github.com/metrix-ai/potoki>
+- <https://github.com/joaomilho/awesome-idris>   𝛌 Awesome Idris resources
+- <https://github.com/pigworker/Syrup>   being a programming language for sequential circuits
+- <https://github.com/metaocaml/ber-metaocaml>   Unofficial git mirror of the BER MetaOCaml patchset.
+- <https://github.com/chpatrick/codec>   Easy bidirectional serialization in Haskell
+- <https://github.com/Lysxia/profunctor-monad>   Bidirectional programming in Haskell with monadic profunctors
+- <https://github.com/pigworker/CS410-18>   being the teaching materials and exercises for CS410 in the 2018/19 session
+- <https://github.com/reinerp/indexed>   "Haskell98 indexed functors    monads    comonads"
+- <https://github.com/BurntSushi/advent-of-code>   Rust solutions to AoC 2018
+- <https://github.com/vmchale/linear>   Linear lenses in Blodwen
+- <https://github.com/HuwCampbell/idris-lens>   van Laarhoven lenses for Idris
+- <https://github.com/tweag/asterius>   "DEPRECATED in favor of ghc wasm backend    see <https://www.tweag.io/blog/2022-11-22-wasm-backend-merged-in-ghc>"
+- <https://github.com/haskell-numerics/hmatrix-sundials>   Haskell interface to the sundials suite of nonlinear and differential/algebraic equation solvers
+- <https://github.com/cvc5/cvc5>   cvc5 is an open-source automatic theorem prover for Satisfiability Modulo Theories (SMT) problems.
+- <https://github.com/m-labs/migen>   A Python toolbox for building complex digital hardware
+- <https://github.com/YosysHQ/nextpnr>   nextpnr portable FPGA place and route tool
+- <https://github.com/recursion-schemes/recursion-schemes>   "Generalized bananas    lenses and barbed wire"
+- <https://github.com/stefaj/cplex-haskell>   Haskell bindings for CPLEX
+- <https://github.com/evaleev/libint>   Libint: high-performance library for computing Gaussian integrals in quantum mechanics
+- <https://github.com/Tiramisu-Compiler/tiramisu>   A polyhedral compiler for expressing fast and portable data parallel algorithms
+- <https://github.com/ucsd-progsys/mist>   A tiny language for teaching and experimenting with Refinement Types
+- <https://github.com/alanz/HaRe>   The Haskell Refactoring Tool
+- <https://github.com/seagreen/hermetic>   Strategy game in Haskell (PRs: :x:)
+- <https://github.com/tkoolen/PlanarConvexHulls.jl>   2D convex hulls and related functionality
+- <https://github.com/coq-contribs/containers>   Containers: a typeclass-based library of finite sets/maps
+- <https://github.com/coq-community/topology>   "General topology in Coq [maintainers=@amiloradovsky   @Columbus240   @stop-cran]"
+- <https://github.com/coq-contribs/bdds>   "BDD algorithms and proofs in Coq    by reflection"
+- <https://github.com/mit-plv/riscv-semantics>   A formal semantics of the RISC-V ISA in Haskell
+- <https://github.com/mit-plv/fiat>   Mostly Automated Synthesis of Correct-by-Construction Programs
+- <https://github.com/mit-plv/reification-by-parametricity>   "Fast Setup for Proof by Reflection    in Two Lines of Ltac."
+- <https://github.com/mit-plv/bbv>   Bedrock Bit Vector Library
+- <https://github.com/walck/learn-physics>   "A library of functions for vector calculus    calculation of electric field    electric flux    magnetic field    and other quantities in mechanics and electromagnetic theory."
+- <https://github.com/walck/cyclotomic>   A subfield of the complex numbers for exact calculation.
+- <https://github.com/vlopezj/coq-course>   Coq course at Chalmers CSE
+- <https://github.com/flycheck/flycheck>   On the fly syntax checking for GNU Emacs
+- <https://github.com/cpitclaudel/company-coq>   A Coq IDE build on top of Proof General's Coq mode
+- <https://github.com/immunant/c2rust>   Migrate C code to Rust
+- <https://github.com/herbie-fp/herbie>   Optimize floating-point expressions for accuracy
+- <https://github.com/unisonweb/unison>   A friendly programming language from the future
+- <https://github.com/raysan5/raylib>   A simple and easy-to-use library to enjoy videogames programming
+- <https://github.com/DevJac/raylib-haskell>   Haskell bindings to raylib
+- <https://github.com/ucsd-progsys/230-wi19-web>   Public course materials for CSE 230 (Winter 2019)
+- <https://github.com/robol/MPSolve>   Multiprecision Polynomial Solver
+- <https://github.com/TOTBWF/tactic-haskell>   Tactic Metaprogramming in Haskell
+- <https://github.com/albertoruiz/hTensor>   Multidimensional arrays and simple tensor computations
+- <https://github.com/isovector/thinking-with-types>   📖 source material for Thinking with Types
+- <https://github.com/natefaubion/purescript-cst>   A concrete-syntax tree and parser for the PureScript language
+- <https://github.com/Frama-C/Frama-C-snapshot>   Release snapshots of the Frama-C platform for source code analysis
+- <https://github.com/thomashoneyman/purescript-halogen-realworld>   Exemplary real world application built with PureScript + Halogen
+- <https://github.com/verifast/verifast>   Research prototype tool for modular formal verification of C and Java programs
+- <https://github.com/GaloisInc/ivory>   The Ivory EDSL
+- <https://github.com/awesomo4000/awesome-provable>   A curated set of links to formal methods involving provable code.
+- <https://github.com/stanislaw/awesome-safety-critical>   List of resources about programming practices for writing safety-critical software.
+- <https://github.com/AbsInt/CompCert>   The CompCert formally-verified C compiler
+- <https://github.com/microsoft/checkedc>   "Checked C is an extension to C that lets programmers write C code that is guaranteed by the compiler to be type-safe.  The goal is to let people easily make their existing C code type-safe and eliminate entire classes of errors. Checked C does not address use-after-free errors. This repo has a wiki for Checked C    sample code    the specification    and test code."
+- <https://github.com/jwiegley/control-theory>   "Control theory in Haskell: Data structures    algorithms and adapters"
+- <https://github.com/rust-embedded/wg>   Coordination repository of the embedded devices Working Group
+- <https://github.com/alhassy/interactive-way-to-c>   Learning C program proving using Emacs --reminiscent of Coq proving with Proof General.
+- <https://github.com/isocpp/CppCoreGuidelines>   "The C++ Core Guidelines are a set of tried-and-true guidelines    rules    and best practices about coding in C++"
+- <https://github.com/liuq/QuadProgpp>   A C++ library for Quadratic Programming which implements the Goldfarb-Idnani active-set dual method.
+- <https://github.com/lanl-ansi/Katana.jl>   A Cutting-Plane Based Solver for Convex NLPs
+- <https://github.com/kul-optec/nmpc-codegen-python>   Python version of nmpc-codegen
+- <https://github.com/kul-optec/superscs>   Fast conic optimization in C
+- <https://github.com/cvxgrp/scs>   Splitting Conic Solver
+- <https://github.com/locuslab/icnn>   Input Convex Neural Networks
+- <https://github.com/MPC-Berkeley/barc>   Main branch for BARC related code
+- <https://github.com/migarstka/barc>   Main branch for BARC related code
+- <https://github.com/alex-mckenna/optimum>   Declarative Optimization in Haskell
+- <https://github.com/oxfordcontrol/COSMO.jl>   "COSMO: Accelerated ADMM-based solver for convex conic optimisation problems (LP    QP    SOCP    SDP    ExpCP    PowCP). Automatic chordal decomposition of sparse semidefinite programs."
+- <https://github.com/ds4dm/Tulip.jl>   Interior-point solver in pure Julia
+- <https://github.com/coin-or/MibS>   A solver for mixed integer bilevel programs
+- <https://github.com/coin-or/Gravity>   Mathematical Modeling for Optimization and Machine Learning
+- <https://github.com/sadraddini/pypolycontain>   "A Toolbox For Polytopic Objects    Operations    and Containment Problems"
+- <https://github.com/sadraddini/PWA-Control>   Control of piecewise affine systems
+- <https://github.com/thautwarm/RSolve>   Ask for solutions.
+- <https://github.com/cvxgrp/cone_prog_refine>   Cone program refinement
+- <https://github.com/alhassy/CatsCheatSheet>   This project is to contain a listing of common theorems in elementary category theory.
+- <https://github.com/alhassy/multistage-programming-taha>   A Haskell implementation of the code within Walid Taha's ``A Gentle Introduction to Multi-stage Programming''
+- <https://github.com/evhub/coconut>   "Simple    elegant    Pythonic functional programming."
+- <https://github.com/probcomp/notebook>   jupyter/datascience-notebook with probcomp libraries
+- <https://github.com/probcomp/Gen.jl>   A general-purpose probabilistic programming system with programmable inference
+- <https://github.com/HackerPoet/NonEuclidean>   A Non-Euclidean Rendering Engine for 3D scenes.
+- <https://github.com/gap-system/gap>   "Main development repository for GAP - Groups    Algorithms    Programming    a System for Computational Discrete Algebra"
+- <https://github.com/sigurdschneider/lvc>   LVC verified compiler
+- <https://github.com/coq-community/coqeal>   "The Coq Effective Algebra Library [maintainers=@CohenCyril   @proux01]"
+- <https://github.com/sweirich/replib>   Replib: generic programming  & Unbound: generic treatment of binders
+- <https://github.com/haskell-rewriting/term-rewriting>   Yet another haskell term rewriting library
+- <https://github.com/ComputationWithBoundedResources/gubs>   constraint solver for polynomial inequalities
+- <https://github.com/ComputationWithBoundedResources/tct-trs>   Automatic complexity analysis tool for term rewrite systems
+- <https://github.com/sweirich/dth>   Examples of Dependently-typed programs in Haskell
+- <https://github.com/sweirich/tal>   "An implementation of Typed Assembly Language (Morrisett    Walker    Crary    Glew)"
+- <https://github.com/ucsd-progsys/liquidhaskell>   Liquid Types For Haskell
+- <https://github.com/mstksg/auto>   "Haskell DSL and platform providing denotational    compositional api for discrete-step    locally stateful    interactive programs    games & automations.  <http://hackage.haskell.org/package/auto>"
+- <https://github.com/gelisam/category-syntax>   "do-notation for Category and ""Arrow without arr"""
+- <https://github.com/remoteinterview/compilebox>   Compile and run user-submitted code in a docker based sandbox.
+- <https://github.com/haskell-streaming/streaming>   "An optimized general monad transformer for streaming applications    with a simple prelude of functions"
+- <https://github.com/hrpan/tetris_mcts>   MCTS project for Tetris
+- <https://github.com/KCL-Planning/ROSPlan>   The ROSPlan framework provides a generic method for task planning in a ROS system.
+- <https://github.com/KCL-Planning/VAL>   The plan validation system.
+- <https://github.com/haskell-beam/beam>   "A type-safe    non-TH Haskell SQL library and ORM"
+- <https://github.com/sleexyz/hylogen>   GLSL embedded in Haskell
+- <https://github.com/adbuerger/pycombina>   pycombina - Solving binary approximation problems in Python
+- <https://github.com/dkouzoup/hanging-chain-acado>   Benchmark of QP solvers for Optimal Control
+- <https://github.com/nothings/stb>   stb single-file public domain libraries for C/C++
+- <https://github.com/Lysxia/advent-of-coq-2018>   "Advent of Code 2018    in Coq! (<https://adventofcode.com/2018>)"
+- <https://github.com/MaybeJustJames/zephyr>   Tree shaking breeze for PureScript CoreFn AST
+- <https://github.com/zanesterling/cloth-simulation>   An implementation of Large Steps in Cloth Simulation for CSE328
+- <https://github.com/polyml/polyml>   Poly/ML
+- <https://github.com/HOL-Theorem-Prover/HOL>   "Canonical sources for HOL4 theorem-proving system.   Branch develop is where “mainline development” occurs; when develop passes our regression tests    master is merged forward to catch up."
+- <https://github.com/CakeML/cakeml>   CakeML: A Verified Implementation of ML
+- <https://github.com/ilyasergey/pnp>   Lecture notes for a short course on proving/programming in Coq via SSReflect.
+- <https://github.com/ml4tp/gamepad>   A Learning Environment for Theorem Proving
+- <https://github.com/tchajed/coq-tricks>   Tricks you wish the Coq manual told you
+- <https://github.com/smtcoq/smtcoq>   Communication between Coq and SAT/SMT solvers
+- <https://github.com/imdea-software/fcsl-pcm>   Partial Commutative Monoids
+- <https://github.com/webyrd/Barliman>   Prototype smart text editor
+- <https://github.com/seantalts/hasktrip>   Datalog implementation in Haskell. Experimental proving ground for knowledge-base ideas.
+- <https://github.com/ocramz/taco-hs>   Haskell port of the Tensor Algebra COmpiler
+- <https://github.com/ocramz/sparse-linear-algebra>   Numerical computation in native Haskell
+- <https://github.com/mit-plv/kami>   A Platform for High-Level Parametric Hardware Specification and its Modular Verification
+- <https://github.com/mateogianolio/vectorious>   Linear algebra in TypeScript.
+- <https://github.com/hdgarrood/purescript-polynomials>
+- <https://github.com/pure-c/purec>   C backend for PureScript
+- <https://github.com/andyarvanitis/purescript-native>   A native compiler backend for PureScript (via C++ or Golang)
+- <https://github.com/paulyoung/purescript-corefn>   A library for working with the PureScript functional core.
+- <https://github.com/hgourvest/glpk.js>   GNU Linear Programming Kit for Javascript
+- <https://github.com/anj1/AlgebraicNumbers.jl>   Exact representation and calculation with roots (e.g. square roots) and their addition/multiplication
+- <https://github.com/haskell/haskell-ide-engine>   The engine for haskell ide-integration. Not an IDE
+- <https://github.com/liffiton/minicard>   MiniCard: An efficient cardinality solver based on MiniSAT
+- <https://github.com/diegcif/SumsOfSquares.m2>   A sum of squares package for Macaulay 2
+- <https://github.com/sums-of-squares/sos>   Information page for running sos solvers
+- <https://github.com/mlubin/jlSimplex>   Proof-of-concept implementation of the (dual) simplex algorithm for linear programming in Julia.
+- <https://github.com/RayTracing/InOneWeekend>   DEPRECATED — Head to the raytracing.github.io repo for the new home
+- <https://github.com/svaksha/Julia.jl>   Curated decibans of Julia programming language.
+- <https://github.com/JuliaML/Reinforce.jl>   "Abstractions    algorithms    and utilities for reinforcement learning in Julia"
+- <https://github.com/yalmip/YALMIP>   MATLAB toolbox for optimization modeling
+- <https://github.com/albertocasagrande/BinaryDecisionDiagrams>   A Julia package for BDD and OBDD
+- <https://github.com/blegat/HybridSystems.jl>   Hybrid Systems definitions in Julia
+- <https://github.com/omega-icl/mcpp>   "A C++ library for constructing    manipulating    and bounding factorable functions"
+- <https://github.com/JuliaStochOpt/StochDynamicProgramming.jl>   A package for discrete-time optimal stochastic control
+- <https://github.com/JuliaStochOpt/StructDualDynProg.jl>   Implementation of SDDP (Stochastic Dual Dynamic Programming) using the StructJuMP modeling interface
+- <https://github.com/blegat/SetProg.jl>   Set Programming with JuMP
+- <https://github.com/lanl-ansi/Alpine.jl>   A Julia/JuMP-based Global Optimization Solver for Non-convex Programs
+- <https://github.com/lanl-ansi/Juniper.jl>   A JuMP-based Nonlinear Integer Program Solver
+- <https://github.com/PSORLab/EAGO.jl>   A development environment for robust and global optimization
+- <https://github.com/vtjeng/MIPVerify.jl>   Evaluating Robustness of Neural Networks with Mixed Integer Programming
+- <https://github.com/schmrlng/MotionPlanning.jl>   Robotic motion planning in Julia
+- <https://github.com/coq-community/coq-ext-lib>   "A library of Coq definitions    theorems    and tactics. [maintainers=@gmalecha   @liyishuai] "
+- <https://github.com/csmith-project/creduce>   "C-Reduce    a C and C++ program reducer"
+- <https://github.com/blandry/crazyflie-tools>   A collection of tools to develop controllers for the Crazyflie using Drake
+- <https://github.com/HarvardAgileRoboticsLab/gym-drake>   Glue between Drake and OpenAI Gym.
+- <https://github.com/PtFEM/PtFEM.jl>   """Programming the Finite Element Method"" by I M Smith    D V Griffiths and L Margetts"
+- <https://github.com/JuliaAlgebra/SemialgebraicSets.jl>   Extension of MultivariatePolynomials to semialgebraic sets
+- <https://github.com/jwmerrill/Pnums.jl>   Unums 2.0 for Julia
+- <https://github.com/JuliaIntervals/ValidatedNumerics.jl>   Rigorous floating-point calculations with interval arithmetic in Julia
+- <https://github.com/madeleineudell/MultiConvex.jl>   Extension of Convex.jl for disciplined multiconvex optimization
+- <https://github.com/cvxgrp/dmcp>   A CVXPY extension for multi-convex programming
+- <https://github.com/cvxgrp/ncvx>
+- <https://github.com/cvxgrp/qcqp>   A CVXPY extension for handling nonconvex QCQP via Suggest-and-Improve framework
+- <https://github.com/cvxgrp/dccp>   A CVXPY extension for convex-concave programming
+- <https://github.com/cvxgrp/cvxflow>
+- <https://github.com/cvxgrp/miqp_admm>   ADMM for Mixed-Integer Quadratic Programming
+- <https://github.com/rdeits/LVIS-dev>   Experimental implementation of LVIS in Julia
+- <https://github.com/erincatto/box2d>   Box2D is a 2D physics engine for games
+- <https://github.com/cbfinn/gps>   Guided Policy Search
+- <https://github.com/suragnair/alpha-zero-general>   A clean implementation based on AlphaZero for any game in any framework + tutorial + Othello/Gobang/TicTacToe/Connect4 and more
+- <https://github.com/haskell-numerics/hmatrix>   Linear algebra and numerical computation
+- <https://github.com/simondlevy/BreezySLAM>   "Simple    efficient    open-source package for Simultaneous Localization and Mapping"
+- <https://github.com/Unity-Technologies/ml-agents>   The Unity Machine Learning Agents Toolkit (ML-Agents) is an open-source project that enables games and simulations to serve as environments for training intelligent agents using deep reinforcement learning and imitation learning.
+- <https://github.com/wavebitscientific/functional-fortran>   Functional programming for modern Fortran
+- <https://github.com/mila-iqia/myia>   Myia prototyping
+- <https://github.com/mcmtroffaes/pycddlib>   A Python wrapper for Komei Fukuda's cddlib.
+- <https://github.com/JuliaAlgebra/DynamicPolynomials.jl>   Multivariate polynomials implementation of commutative and non-commutative variables
+- <https://github.com/juan-pablo-vielma/Dagstuhl-Seminar-18081>   JuMP demo for Dagstuhl Seminar 18081
+- <https://github.com/Argonne-National-Laboratory/DSPsolver.jl>
+- <https://github.com/StructJuMP/StructJuMP.jl>   A block-structured optimization framework for JuMP
+- <https://github.com/joehuchette/LiftedHierarchies.jl>   "Hierarchical relaxations for mixed-integer optimization (Lasserre    Sherali-Adams    etc.)"
+- <https://github.com/mvcisback/py-AIGAR>   py-AIGAR: Tools for analyzing aiger circuits.
+- <https://github.com/mvcisback/py-aiger-bv>   pyAiger-BV: Extension of pyAiger for manipulating sequential bitvector circuits.
+- <https://github.com/berkeley-abc/abc>   ABC: System for Sequential Logic Synthesis and Formal Verification
+- <https://github.com/mvcisback/py-metric-temporal-logic>   Python library for working with Metric Temporal Logic (MTL)
+- <https://github.com/mvcisback/py-aiger>   py-aiger: A python library for manipulating sequential and combinatorial circuits encoded using `and` & `inverter` gates (AIGs).
+- <https://github.com/yangjiaolong/Go-ICP>   Implementation of the Go-ICP algorithm for globally optimal 3D pointset registration
+- <https://github.com/sschnug/pyMIQP>   Mixed Integer Quadratic Programming for Python (using MINLP-solver Bonmin)
+- <https://github.com/cvxpy/cvxpy>   A Python-embedded modeling language for convex optimization problems.
+- <https://github.com/joehuchette/PiecewiseLinearOpt.jl>   Solve optimization problems containing piecewise linear functions
+- <https://github.com/meshcat-dev/meshcat-python>   WebGL-based 3D visualizer for Python
+- <https://github.com/rdeits/ConditionalJuMP.jl>   Automatic transformation of implications and complementarity into mixed-integer models in Julia
+- <https://github.com/serge-sans-paille/pythran>   Ahead of Time compiler for numeric kernels
+- <https://github.com/lonsing/depqbf>   "DepQBF    a solver for quantified boolean formulae (QBF)."
+- <https://github.com/ltentrup/quabs>   QuAbS is a circuit-based QBF solver
+- <https://github.com/ltentrup/caqe>   CAQE is a solver for quantified Boolean formulas
+- <https://github.com/JacquesCarette/pi-dual>   Collaborative work on reversible computing
+- <https://github.com/JacquesCarette/finally-tagless>   Repo of the original work on finally tagless (and a lot of other metaocaml work besides)
+- <https://github.com/psi4/psi4>   Open-Source Quantum Chemistry – an electronic structure package in C++ driven by Python
+- <https://github.com/natefaubion/purescript-spork>   Elm-like for PureScript
+- <https://github.com/tharina/BlackHoodie-2018-Workshop>   Slides and challenges for my binary exploitation workshop at BlackHoodie 2018.
+- <https://github.com/owo-lang/OwO>   Placeholder for the OwO compiler
+- <https://github.com/ekmett/discrimination>   Fast linear time sorting and discrimination for a large class of data types
+- <https://github.com/inQWIRE/QWIRE>   A quantum circuit language and formal verification tool
+- <https://github.com/thephoeron/quipper-language>   "Quipper: embedded    scalable functional programming language for quantum computing (unofficial fork)"
+- <https://github.com/Qiskit/qiskit>   "Qiskit is an open-source SDK for working with quantum computers at the level of extended quantum circuits    operators    and primitives."
+- <https://github.com/qosf/awesome-quantum-software>   Curated list of open-source quantum software projects.
+- <https://github.com/Cobord/Quantum-Computer-Things>
+- <https://github.com/artiste-qb-net/qubiter>   "Python tools for reading    writing    compiling    simulating quantum computer circuits. Includes numpy and tensorflow backends. “Quantum Space    the final frontier. These are the voyages of the starship Qubiter. Its five-year mission: to explore strange new worlds    to seek out new life and new civilizations    to boldly go where no man has gone before.”"
+- <https://github.com/JorenB/quantum-compiling>   MATLAB code for performing quantum compilation by use of the Solovay-Kitaev algorithm. Includes several optimizations and procedures for analyzing non-universal models.
+- <https://github.com/amosr/limp-cbc>   Coin-OR/CBC bindings for Haskell
+- <https://github.com/amosr/limp>   "ideally    this will become a pure Haskell library for Linear Integer/Mixed Programming"
+- <https://github.com/Machine-Learning-Tokyo/DL-workshop-series>   Material used for Deep Learning related workshops for Machine Learning Tokyo (MLT)
+- <https://github.com/BrianEnigma/nginx-pi-rtmp>   Scripts to build an RTMP-friendly nginx in a sandbox + RasPi video stream helper scripts. Run it directly on the Pi or in the cloud.
+- <https://github.com/meelgroup/approxmc>   Approximate Model Counter
+- <https://github.com/msoos/cryptominisat>   An advanced SAT solver
+- <https://github.com/mmjb/T2>   T2 Temporal Prover
+- <https://github.com/dwavesystems/qbsolv>   "Qbsolv   a decomposing solver    finds a minimum value of a large quadratic unconstrained binary optimization (QUBO) problem by splitting it into pieces solved either via a D-Wave system or a classical tabu solver.   (Note that qbsolv by default uses its internal classical solver.  Access to a D-Wave system must be arranged separately.)"
+- <https://github.com/usdot-fhwa-stol/carma-platform>   CARMA Platform is built on robot operating system (ROS) and utilizes open source software (OSS) that enables Cooperative Driving Automation (CDA) features to allow Automated Driving Systems to interact and cooperate with infrastructure and other vehicles through communication. Doxygen Source Code Documentation :
+- <https://github.com/PistonDevelopers/piston>   A modular game engine written in Rust
+- <https://github.com/bollu/SCEV-coq>   LLVM's loop analysis theory (Scalar Evolution) formalized in Coq
+- <https://github.com/uw-biorobotics/IKBT>   A python package to solve robot arm inverse kinematics in symbolic form
+- <https://github.com/Phylliade/ikpy>   An Inverse Kinematics library aiming performance and modularity
+- <https://github.com/locuslab/lcp-physics>   A differentiable LCP physics engine in PyTorch.
+- <https://github.com/locuslab/mpc.pytorch>   A fast and differentiable model predictive control (MPC) solver for PyTorch.
+- <https://github.com/locuslab/qpth>   A fast and differentiable QP solver for PyTorch.
+- <https://github.com/MarkusRabe/cadet>   A fast and certifying solver for quantified Boolean formulas.
+- <https://github.com/moehle/cvxpy_codegen>   "Embedded code generation for convex optimization    based on CVXPY"
+- <https://github.com/Pyomo/pyomo>   An object-oriented algebraic modeling language in Python for structured optimization problems.
+- <https://github.com/dmoverton/finite-domain>   Finite domain constraint solver in Haskell
+- <https://github.com/JuliaIntervals/CRlibm.jl>   Correctly-rounded mathematical functions for Julia
+- <https://github.com/jckantor/ND-Pyomo-Cookbook>   A repository of Pyomo examples.
+- <https://github.com/scipopt/PySCIPOpt>   Python interface for the SCIP Optimization Suite
+- <https://github.com/OpenOCL/OpenOCL>   Open Optimal Control Library for Matlab. Trajectory Optimization and non-linear Model Predictive Control (MPC)  toolbox.
+- <https://github.com/meco-group/rtPGM>   real-time Proximal Gradient Method for linear MPC
+- <https://github.com/meco-group/omg-tools>   Optimal Motion Generation-tools: motion planning made easy
+- <https://github.com/vincenzoml/topochecker>   "Topochecker    a topological model checker"
+- <https://github.com/joehuchette/ISCO-spring-school>   Material for the ISCO 2018 spring school: “Advanced Mixed Integer Programming Formulation Techniques”
+- <https://github.com/rtqichen/torchdiffeq>   Differentiable ODE solvers with full GPU support and O(1)-memory backpropagation.
+- <https://github.com/rigetti/pyquil>   A Python library for quantum programming using Quil.
+- <https://github.com/tesseract-robotics/trajopt>   Trajectory Optimization Motion Planner for ROS
+- <https://github.com/quantumlib/OpenFermion-Cirq>   Quantum circuits for simulations of quantum chemistry and materials.
+- <https://github.com/santinic/pampy>   Pampy: The Pattern Matching for Python you always dreamed of.
+- <https://github.com/openai/baselines>   OpenAI Baselines: high-quality implementations of reinforcement learning algorithms
+- <https://github.com/openai/gym>   A toolkit for developing and comparing reinforcement learning algorithms.
+- <https://github.com/openai/spinningup>   An educational resource to help anyone learn deep reinforcement learning.
+- <https://github.com/openai/roboschool>   "DEPRECATED: Open-source software for robot simulation    integrated with OpenAI Gym."
+- <https://github.com/linbox-team/linbox>   "LinBox - C++ library for exact    high-performance linear algebra "
+- <https://github.com/dalum/Sylvia.jl>   A simple symbolic library with a pretty name 🧚🏻
+- <https://github.com/marijnheule/drat-trim>   The DRAT-trim proof checker
+- <https://github.com/davewathaverford/the-omega-project>   "Tools from Pugh et al.'s ""Omega Project"" for constraint-based compiler tools: The ""Omega Library"" for constraint manipulation; The ""Omega Calculator"" (text interface); the ""Omega Test"" for depedence analysis; the ""Uniform Library"" for code transformation; and the ""Code generation"" library for generating the transformed code. I am experimenting with tracking bugs with Lighthouse    but am not yet sure I've got it configure right --- see <http://davew_haverford.lighthouseapp.com/projects/13658-the-omega-project/overview> (if you can; if you can't    email <davew@cs.haverford.edu>)."
+- <https://github.com/osqp/miosqp>   MIQP solver based on OSQP
+- <https://github.com/stephane-caron/pymanoid>   Humanoid robotics prototyping environment based on OpenRAVE
+- <https://github.com/mariohsouto/ProxSDP.jl>   Semidefinite programming optimization solver
+- <https://github.com/williamhunter/topy>   Topology Optimization using Python
+- <https://github.com/DGtal-team/DGtal>   Digital Geometry Tools and Algorithm Library
+- <https://github.com/RobotLocomotion/drake>   Model-based design and verification for robotics.
+- <https://github.com/JuliaGeometry/GeometryTypes.jl>   Geometry types for Julia
+- <https://github.com/JuliaIntervals/IntervalArithmetic.jl>   Library for validated numerics using interval arithmetic
+- <https://github.com/lanl-ansi/PowerModels.jl>   A Julia/JuMP Package for Power Network Optimization
+- <https://github.com/JuliaAlgebra/MultivariatePolynomials.jl>   Multivariate polynomials interface
+- <https://github.com/JuliaArrays/LazyArrays.jl>   Lazy arrays and linear algebra in Julia
+- <https://github.com/jump-dev/Cbc.jl>   A Julia interface to the Coin-OR Branch and Cut solver (CBC)
+- <https://github.com/taskflow/taskflow>   A General-purpose Task-parallel Programming System using Modern C++
+- <https://github.com/cupy/cupy>   NumPy & SciPy for GPU
+- <https://github.com/UlfNorell/agda-prelude>   Programming library for Agda
+- <https://github.com/tensor-compiler/taco>   The Tensor Algebra Compiler (taco) computes sparse tensor expressions on CPUs and GPUs
+- <https://github.com/JuliaApproximation/ContinuumArrays.jl>   A package for representing quasi arrays with continuous indices
+- <https://github.com/barbagroup/CFDPython>   "A sequence of Jupyter notebooks featuring the ""12 Steps to Navier-Stokes"" <http://lorenabarba.com/>  "
+- <https://github.com/idris-hackers/software-foundations>   Software Foundations in Idris
+- <https://github.com/thofma/Hecke.jl>   Computational algebraic number theory
+- <https://github.com/GaloisInc/crucible>   Crucible is a library for symbolic simulation of imperative programs
+- <https://github.com/vellvm/vellvm>   The Vellvm (Verified LLVM) coq development.
+- <https://github.com/MetaCoq/metacoq>   "Metaprogramming    verified meta-theory and implementation of Coq in Coq"
+- <https://github.com/coq-community/aac-tactics>   "Coq plugin providing tactics for rewriting universally quantified equations    modulo associative (and possibly commutative) operators [maintainer=@palmskog]"
+- <https://github.com/VMLS-book/VMLS.jl>
+- <https://github.com/philzook58/ad-lens>   Automatic Differentiation using Pseudo Lenses. Neat.
+- <https://github.com/homalg-project/homalg_project>   Deposited packages of the homalg project
+- <https://github.com/mit-aera/Blackbird-Dataset>
+- <https://github.com/oscar-system/oscar-website>   Dev repo for the oscar website
+- <https://github.com/mghasemi/Irene>   Irene is a python package that aims to be a toolkit for global optimization problems that can be realized algebraically. It generalizes Lasserre's Relaxation method to handle theoretically any optimization problem with bounded feasibility set. The method is based on solutions of generalized truncated moment problems over commutative real algebras.
+- <https://github.com/cpeikert/Lol>   Λ ⚬ λ: Functional Lattice Cryptography
+- <https://github.com/cpeikert/ALCHEMY>   A Language and Compiler for Homomorphic Encryption Made easY
+- <https://github.com/djanka2/blockSQP>
+- <https://github.com/csu-hmc/opty>   A library for using direct collocation in the optimization of dynamic systems.
+- <https://github.com/baggepinnen/DifferentialDynamicProgramming.jl>   A package for solving Differential Dynamic Programming and trajectory optimization problems.
+- <https://github.com/giaf/blasfeo>   Basic linear algebra subroutines for embedded optimization
+- <https://github.com/giaf/hpipm>   High-performance interior-point-method QP and QCQP solvers
+- <https://github.com/JuliaGeometry/Descartes.jl>   Software Defined Solid Modeling
+- <https://github.com/giaf/hpmpc>   Library for High-Performance implementation of solvers for MPC.
+- <https://github.com/GaloisInc/blt>   Lattice-based integer linear programming solver
+- <https://github.com/4ti2/4ti2>   "A software package for algebraic    geometric and combinatorial problems on linear spaces. By R. Hemmecke    R. Hemmecke    M. Köppe    P. Malkin    M. Walter"
+- <https://github.com/latte-int/latte>   "LattE integrale    software for counting lattice points and integration over convex polytopes"
+- <https://github.com/HigherOrderCO/Kind1>   A next-gen functional language
+- <https://github.com/NCAlgebra/NC>   NCAlgebra - Non Commutative Algebra Package for Mathematica
+- <https://github.com/wd5gnr/verifla>   Fork of OpenVeriFla - FPGA debugging logic analyzer to use with your designs - examples (so far) for ice40/IceStorm
+- <https://github.com/lukaszcz/coqhammer>   CoqHammer: An Automated Reasoning Hammer Tool for Coq - Proof Automation for Dependent Type Theory
+- <https://github.com/llee454/functional-algebra>   "This package provides a Coq formalization of abstract algebra using a functional programming style. The modules contained within the package span monoids    groups    rings    and fields and provides both axiom definitions for these structures and proofs of foundational results. The current package contains over 800 definitions and proofs.  "
+- <https://github.com/coq-contribs/coq-contribs>
+- <https://github.com/mcgordonite/idris-binary-rationals>   An idris rational number type built from paths in the Stern Brocot tree
+- <https://github.com/ValeevGroup/tiledarray>   "A massively-parallel    block-sparse tensor framework written in C++"
+- <https://github.com/VMML/vmmlib>   A templatized C++ vector and matrix math library
+- <https://github.com/ITensor/ITensor>   A C++ library for efficient tensor network calculations
+- <https://github.com/libxerus/xerus>   "A general purpose library for numerical calculations with higher order tensors    Tensor-Train Decompositions / Matrix Product States and other Tensor Networks"
+- <https://github.com/juanjosegarciaripoll/tensor>   "C++ library for numerical arrays and tensor objects and operations with them    designed to allow Matlab-style programming."
+- <https://github.com/romeric/Fastor>   A lightweight high performance tensor algebra framework for modern C++
+- <https://github.com/egison/egison>   The Egison Programming Language
+- <https://github.com/jwiegley/category-theory>   An axiom-free formalization of category theory in Coq for personal study and practical work
+- <https://github.com/SciML/Sundials.jl>   "Julia interface to Sundials    including a nonlinear solver (KINSOL)    ODE's (CVODE and ARKODE)    and DAE's (IDA) in a SciML scientific machine learning enabled manner"
+- <https://github.com/lehins/massiv>   Efficient Haskell Arrays featuring Parallel computation
+- <https://github.com/JuliaPolyhedra/Polyhedra.jl>   Polyhedral Computation Interface
+- <https://github.com/agda/agda-stdlib>   The Agda standard library
+- <https://github.com/diku-dk/futhark>   :boom::computer::boom: A data-parallel functional programming language
+- <https://github.com/chakravala/Dendriform.jl>   Dendriform di-algebra algorithms to compute using Loday's arithmetic on groves of planar binary trees
+- <https://github.com/Stefan-Endres/shgo>   Simplicial Homology Global Optimization
+- <https://github.com/Libbum/spherical-cow>   A high volume fraction sphere packing library
+- <https://github.com/ryukinix/discrete-mathematics>   A computational way to study discrete mathematics using Haskell
+- <https://github.com/nschloe/awesome-scientific-computing>   :sunglasses: Curated list of awesome software for numerical analysis and scientific computing
+- <https://github.com/andrenarchy/krypy>   Krylov subspace methods package for Python
+- <https://github.com/engnadeau/pybotics>   The Python Toolbox for Robotics
+- <https://github.com/kpeeters/cadabra2>   A field-theory motivated approach to computer algebra.
+- <https://github.com/odlgroup/odl>   Operator Discretization Library  <https://odlgroup.github.io/odl/>
+- <https://github.com/fplll/fplll>   Lattice algorithms using floating-point arithmetic
+- <https://github.com/casadi/casadi>   "CasADi is a symbolic framework for numeric optimization implementing automatic differentiation in forward and reverse modes on sparse matrix-valued computational graphs. It supports self-contained C-code generation and interfaces state-of-the-art codes such as SUNDIALS    IPOPT etc. It can be used from C++    Python or Matlab/Octave."
+- <https://github.com/rossant/awesome-math>   A curated list of awesome mathematics resources
+- <https://github.com/PavelTrutman/SDPinComputerVision>   "Master's thesis ""Semidefinite Programming for Geometric Problems in Computer Vision""."
+- <https://github.com/Macaulay2/M2>   "The primary source code repository for Macaulay2    a system for computing in commutative algebra    algebraic geometry and related fields."
+- <https://github.com/janverschelde/PHCpack>   "The primary source code repository for PHCpack    a software package to solve polynomial systems with homotopy continuation methods."
+- <https://github.com/ofloveandhate/bertini_real>   software for real algebraic sets
+- <https://github.com/bertiniteam/b2>   Bertini 2.0:  The redevelopment of Bertini in C++.
+- <https://github.com/spechub/Hets>   The Heterogeneous Tool Set
+- <https://github.com/konn/computational-algebra>   General-Purpose Computer Algebra System as an EDSL in Haskell
+- <https://github.com/google/snappy>   A fast compressor/decompressor
+- <https://github.com/mit-aera/FlightGoggles>   A framework for photorealistic hardware-in-the-loop agile flight simulation using Unity3D and ROS. Developed by MIT AERA group.
+- <https://github.com/antalsz/hs-to-coq>   Convert Haskell source code to Coq source code
+- <https://github.com/mattam82/Coq-Equations>   A function definition package for Coq
+- <https://github.com/edwinb/Blodwen>   A prototype successor to Idris
+- <https://github.com/math-comp/analysis>   Mathematical Components compliant Analysis Library
+- <https://github.com/ethz-adrl/ifopt>   "An Eigen-based    light-weight C++ Interface to Nonlinear Programming Solvers (Ipopt    Snopt)"
+- <https://github.com/robot-locomotion/dwl>   The Dynamic Whole-body Locomotion library (DWL)
+- <https://github.com/anassinator/ilqr>   Iterative Linear Quadratic Regulator with auto-differentiatiable dynamics models
+- <https://github.com/ethz-adrl/towr>   "A light-weight    Eigen-based C++ library for trajectory optimization for legged robots."
+- <https://github.com/yrlu/quadrotor>   "Quadrotor control    path planning and trajectory optimization"
+- <https://github.com/mikeroberts3000/flashlight>   Flashlight is a lightweight Python library for analyzing and solving quadrotor control problems.
+- <https://github.com/cedille/cedille>   "Cedille    a dependently typed programming languages based on the Calculus of Dependent Lambda Eliminations"
+- <https://github.com/RedPRL/redtt>   """Between the darkness and the dawn    a red cube rises!"":  a proof assistant for cartesian cubical type theory"
+- <https://github.com/analysis-tools-dev/static-analysis>   "⚙️ A curated list of static analysis (SAST) tools and linters for all programming languages    config files    build tools    and more. The focus is on tools which improve code quality."
+- <https://github.com/facebook/infer>   "A static analyzer for Java    C    C++    and Objective-C"
+- <https://github.com/mortberg/cubicaltt>   Experimental implementation of Cubical Type Theory
+- <https://github.com/mit-plv/bedrock2>   A work-in-progress language and compiler for verified low-level programming
+- <https://github.com/coq-community/dedekind-reals>   A formalization of the Dedekind real numbers in Coq [maintainer=@andrejbauer]
+- <https://github.com/cmeiklejohn/distributed-data-structures>   Distributed Data Structures in Coq
+- <https://github.com/DistributedComponents/verdi-chord>   An implementation of the Chord lookup protocol verified in Coq using the Verdi framework
+- <https://github.com/uwplse/cheerios>   Formally verified Coq serialization library with support for extraction to OCaml
+- <https://github.com/jozefg/learn-tt>   A collection of resources for learning type theory and type theory adjacent fields.
+- <https://github.com/jozefg/higher-order-unification>   A small implementation of higher-order unification
+- <https://github.com/gizatt/drake_periscope_tutorial>
+- <https://github.com/nunoplopes/alive>   Alive: Automatic LLVM's Instcombine Verifier
+- <https://github.com/psi4/psi4numpy>   Combining Psi4 and Numpy for education and development.
+- <https://github.com/math-comp/mcb>   Mathematical Components (the Book)
+- <https://github.com/math-comp/math-comp>   Mathematical Components
+- <https://github.com/aa755/ROSCoq>   Robots powered by Constructive Reals
+- <https://github.com/JuliaLinearAlgebra/HierarchicalMatrices.jl>   Julia package for hierarchical matrices
+- <https://github.com/JuliaFEM/JuliaFEM.jl>   "The JuliaFEM software library is a framework that allows for the distributed processing of large Finite Element Models across clusters of computers using simple programming models. It is designed to scale up from single servers to thousands of machines    each offering local computation and storage."
+- <https://github.com/HarrisonGrodin/Simplify.jl>   Algebraic simplification in Julia
+- <https://github.com/skleinbo/Ising>   Study the Ising model!
+- <https://github.com/JuliaHomotopyContinuation/HomotopyContinuation.jl>   A Julia package for solving systems of polynomials via homotopy continuation.
+- <https://github.com/JuliaFirstOrder/ProximalAlgorithms.jl>   Proximal algorithms for nonsmooth optimization in Julia
+- <https://github.com/JuliaFirstOrder/ProximalOperators.jl>   Proximal operators for nonsmooth optimization in Julia
+- <https://github.com/JuliaApproximation/FastTransforms.jl>   :rocket: Julia package for orthogonal polynomial transforms :snowboarder:
+- <https://github.com/JuliaDSP/DSP.jl>   "Filter design    periodograms    window functions    and other digital signal processing functionality"
+- <https://github.com/dask/dask>   Parallel computing with task scheduling
+- <https://github.com/QuantEcon/GameTheory.jl>   Algorithms and data structures for game theory in Julia
+- <https://github.com/grin-compiler/grin>   GRIN is a compiler back-end for lazy and strict functional languages with whole program optimization support.
+- <https://github.com/quantumlib/OpenFermion>   The electronic structure package for quantum computers.
+- <https://github.com/tonyday567/numhask>   "A haskell numeric prelude    providing a clean structure for numbers and operations that combine them."
+- <https://github.com/qfpl/hpython>   Haskell language tools for Python
+- <https://github.com/RedPRL/sml-redprl>   The People's Refinement Logic
+- <https://github.com/turion/rhine>   Haskell Functional Reactive Programming framework with type-level clocks
+- <https://github.com/JuliaReach/Reachability.jl>   Reachability and Safety of Nondeterministic Dynamical Systems
+- <https://github.com/JuliaReach/LazySets.jl>   Scalable symbolic-numeric set computations in Julia
+- <https://github.com/QuSpin/QuSpin>   A python wrapper for doing ED calculations on many-body systems
+- <https://github.com/chkwon/Complementarity.jl>   provides a modeling interface for mixed complementarity problems (MCP) and math programs with equilibrium problems (MPEC) via JuMP
+- <https://github.com/siconos/siconos>   Simulation framework for nonsmooth dynamical systems
+- <https://github.com/xhub/EMP.jl>   Extended Mathematical Programming in Julia
+- <https://github.com/serokell/o-clock>   :hourglass: Type-safe time units in Haskell
+- <https://github.com/pigworker/CS410-17>   being the lecture materials and exercises for the 2017/18 session of CS410 Advanced Functional Programming at the University of Strathclyde
+- <https://github.com/jump-dev/Pajarito.jl>   A solver for mixed-integer convex optimization
+- <https://github.com/JuliaApproximation/ApproxFun.jl>   Julia package for function approximation
+- <https://github.com/LightAndLight/parametricity-proofs>   Proofs of the number of inhabitants of polymorphic functions
+- <https://github.com/XanaduAI/strawberryfields>   "Strawberry Fields is a full-stack Python library for designing    simulating    and optimizing continuous variable (CV) quantum optical circuits."
+- <https://github.com/quantumlib/Cirq>   "A python framework for creating    editing    and invoking Noisy Intermediate Scale Quantum (NISQ) circuits."
+- <https://github.com/achlipala/frap>   Formal Reasoning About Programs
+- <https://github.com/mrakgr/The-Spiral-Language>   Functional language with intensional polymorphism and first-class staging.
+- <https://github.com/pysathq/pysat>   A toolkit for SAT-based prototyping in Python
+- <https://github.com/bmsherman/blog>
+- <https://github.com/aolofsson/oh>   Verilog library for ASIC and FPGA designers
+- <https://github.com/pyg-team/pytorch_geometric>   Graph Neural Network Library for PyTorch
+- <https://github.com/keera-studios/haskell-game-programming>   "A central repository of Haskell Game Programming resources    put together by Keera Studios"
+- <https://github.com/higgsfield-ai/higgsfield>   "Fault-tolerant    highly scalable GPU orchestration    and a machine learning framework designed for training models with billions to trillions of parameters"
+- <https://github.com/iliasam/Laser_tape_reverse_engineering>   Alternative firmware for a cheap X-40 laser tape measure
+- <https://github.com/VictorTaelin/abstract-algorithm>   Optimal evaluator of λ-calculus terms.
+- <https://github.com/MarcFontaine/stm32hs>   STM32 microcontroller hacking in Haskell / ST-Link USB driver
+- <https://github.com/GaloisInc/estimator>   State-space estimation algorithms and models
+- <https://github.com/GaloisInc/smaccmpilot-build>   An umbrella repository including all of the dependencies to build the smaccmpilot project
+- <https://github.com/ghorn/dynobud>   your dynamic optimization buddy
+- <https://github.com/ghorn/Plot-ho-matic>   easy real-time line plotting in haskell
+- <https://github.com/mikeizbicki/subhask>   Type safe interface for working in subcategories of Hask
+- <https://github.com/adamwalker/sdr>   Software defined radio library in Haskell
+- <https://github.com/c---/ArduinoUSBLinker>   Arduino based USB Linker protocol
+- <https://github.com/taichi-dev/taichi>   "Productive    portable    and performant GPU programming in Python."
+- <https://github.com/AtsushiSakai/PythonRobotics>   Python sample codes for robotics algorithms.
+- <https://github.com/potassco/clingo>   🤔 A grounder and solver for logic programs.
+- <https://github.com/e-ale/Slides>   Instructional Slides for E-ALE courses
+- <https://github.com/pqina/filepond>   🌊 A flexible and fun JavaScript file upload library
+- <https://github.com/athanclark/cassowary-haskell>   A haskell implementation of the Cassowary linear programming solver.
+- <https://github.com/sharkdp/cube-composer>   A puzzle game inspired by functional programming
+- <https://github.com/sharkdp/insect>   High precision scientific calculator with support for physical units
+- <https://github.com/Gabriella439/slides>   Slides from talks that I give
+- <https://github.com/dritchie/adnn>   Javascript neural networks on top of general scalar/tensor reverse-mode automatic differentiation.
+- <https://github.com/tuhdo/os01>   Bootstrap yourself to write an OS from scratch. A book for self-learner.
+- <https://github.com/compiling-to-categories/concat>   Compiling to Categories
+- <https://github.com/leftaroundabout/manifolds>   Coordinate-free hypersurfaces as Haskell types
+- <https://github.com/leftaroundabout/linearmap-family>   "Purely-functional    coordinate-free linear algebra"
+- <https://github.com/felipeZ/Haskell-abinitio>   contains a package in Haskell to calculate the electronic structure properties of molecules using the Hartree-Fock method
+- <https://github.com/ee227c/ee227c.github.io>   EE227C (Spring 2018) Course page
+- <https://github.com/turbo/js>   turbo.js - perform massive parallel computations in your browser with GPGPU.
+- <https://github.com/amoffat/gpgpu.js>
+- <https://github.com/passy/awesome-recursion-schemes>   Resources for learning and using recursion schemes.
+- <https://github.com/hunterloftis/pbr>   a Physically Based Renderer (PBR) in Go
+- <https://github.com/facebookresearch/Detectron>   "FAIR's research platform for object detection research    implementing popular algorithms like Mask R-CNN and RetinaNet."
+- <https://github.com/tensorflow/minigo>   An open-source implementation of the AlphaGoZero algorithm
+- <https://github.com/binhnguyennus/awesome-scalability>   "The Patterns of Scalable    Reliable    and Performant Large-Scale Systems"
+- <https://github.com/CMU-Perceptual-Computing-Lab/openpose>   "OpenPose: Real-time multi-person keypoint detection library for body    face    hands    and foot estimation"
+- <https://github.com/hmemcpy/milewski-ctfp-pdf>   Bartosz Milewski's 'Category Theory for Programmers' unofficial PDF and LaTeX source
+- <https://github.com/heathermiller/dist-prog-book>
+- <https://github.com/mietek/formal-logic>   TODO
+- <https://github.com/chopengauer/nrf_analyze>
+- <https://github.com/terkelg/awesome-creative-coding>   "Creative Coding: Generative Art    Data visualization    Interaction Design    Resources."
+- <https://github.com/openalpr/openalpr>   Automatic License Plate Recognition library
+- <https://github.com/angrave/SystemProgramming>   Angrave's Crowd-Sourced System Programming Book used at UIUC
+- <https://github.com/EricssonResearch/openwebrtc>   A cross-platform WebRTC client framework based on GStreamer
+- <https://github.com/terryum/awesome-deep-learning-papers>   The most cited deep learning papers
+- <https://github.com/fastai/numerical-linear-algebra>   Free online textbook of Jupyter notebooks for fast.ai Computational Linear Algebra course
+- <https://github.com/dennybritz/reinforcement-learning>   "Implementation of Reinforcement Learning Algorithms. Python    OpenAI Gym    Tensorflow. Exercises and Solutions to accompany Sutton's Book and David Silver's course."
+- <https://github.com/Sumith1896/tusSAT>   "A SAT solver implementation in VHDL    team tussle"
+- <https://github.com/hexagon5un/hackaday-forth>   Mecrisp-Stellaris Forth Plus Extra Goodies
+- <https://github.com/jrh13/hol-light>   The HOL Light theorem prover
+- <https://github.com/Pomax/BezierInfo-2>   "The development repo for the Primer on Bézier curves    <https://pomax.github.io/bezierinfo>"
+- <https://github.com/gurugio/lowlevelprogramming-university>   How to be low-level programmer
+- <https://github.com/japaric-archived/copper>   DEPRECATED in favor of <https://github.com/rust-embedded/book>
+- <https://github.com/rust-embedded/discovery>   Discover the world of microcontrollers through Rust!
+- <https://github.com/donnemartin/system-design-primer>   Learn how to design large-scale systems. Prep for the system design interview.  Includes Anki flashcards.
+- <https://github.com/jopohl/urh>   Universal Radio Hacker: Investigate Wireless Protocols Like A Boss
+- <https://github.com/jslee02/awesome-robotics-libraries>   :sunglasses: A curated list of robotics libraries and software
+- <https://github.com/symengine/symengine>   "SymEngine is a fast symbolic manipulation library    written in C++"
+- <https://github.com/bulletphysics/bullet3>   "Bullet Physics SDK: real-time collision detection and multi-physics simulation for VR    games    visual effects    robotics    machine learning etc."
+- <https://github.com/barbagroup/numba_tutorial_scipy2016>   Numba tutorial materials for Scipy 2016
+- <https://github.com/mmckerns/tuthpc>   "Tutorial on ""Efficient Python for High-Performance Computing"""
+- <https://github.com/mmckerns/tutmom>   "Tutorial on ""Modern Optimization Methods in Python"""
+- <https://github.com/simbody/simbody>   "High-performance C++ multibody dynamics/physics library for simulating articulated biomechanical and mechanical systems like vehicles    robots    and the human skeleton."
+- <https://github.com/oxford-cs-deepnlp-2017/lectures>    Oxford Deep NLP 2017 course
+- <https://github.com/nmwsharp/DDGSpring2016>   Code repository for 15-869 Discrete Differential Geometry at CMU in Spring 2016.
+- <https://github.com/Haskell-Things/ImplicitCAD>   "A math-inspired CAD program in haskell. CSG    bevels    and shells; 2D & 3D geometry; 2D gcode generation..."
+- <https://github.com/dawsonjon/FPGA-TX>   FPGA based transmitter
+- <https://github.com/rougier/from-python-to-numpy>   "An open-access book on numpy vectorization techniques    Nicolas P. Rougier    2017"
+- <https://github.com/amilsted/evoMPS>   An implementation of the time dependent variational principle for matrix product states
+- <https://github.com/wpoely86/Hubbard-GPU>   Calculate the groundstate energy of 1D and 2D Fermi-Hubbard model on the GPU with Cuda.
+- <https://github.com/wyager/HaSKI>   Cλash/Haskell FPGA-based SKI calculus evaluator
+- <https://github.com/JennyList/LanguageSpy>   Open source code from the Language Spy radio kits
+- <https://github.com/ptrkrysik/multi-rtl>   Multi-channel receiver with use of RTL-SDR dongles
+- <https://github.com/steshaw/plt>   Programming Language Theory λΠ
+- <https://github.com/Z3Prover/z3>   The Z3 Theorem Prover
+- <https://github.com/sweirich/pi-forall>   A demo implementation of a simple dependently-typed language
+- <https://github.com/andrejbauer/plzoo>   Programming Languages Zoo
+- <https://github.com/ribault/bootstrap-2d-Python>   "Numerically computing correlation functions in 2d CFT    using Jupyter Notebooks."
+- <https://github.com/papers-we-love/papers-we-love>   Papers from the computer science community to read and discuss.
+- <https://github.com/andrejbauer/marshall>   Real number computation software
+- <https://github.com/sdiehl/wiwinwlh>   What I Wish I Knew When Learning Haskell
+- <https://github.com/sdiehl/write-you-a-haskell>   Building a modern functional compiler from first principles. (<http://dev.stephendiehl.com/fun/>)
+- <https://github.com/Gabriella439/post-rfc>   Blog post previews in need of peer review
+- <https://github.com/lihaoyi/macropy>   "Macros in Python: quasiquotes    case classes    LINQ and more!"
+- <https://github.com/madmaze/pytesseract>   A Python wrapper for Google Tesseract
+- <https://github.com/drhastings/cameragl>   Renders raspberry pi camera feed to opengl texture.
+- <https://github.com/jbhuang0604/awesome-computer-vision>   A curated list of awesome computer vision resources
+- <https://github.com/kjw0612/awesome-deep-vision>   A curated list of deep learning resources for computer vision
+- <https://github.com/0xAX/linux-insides>   A little bit about a linux kernel
+- <https://github.com/davidedc/Algebrite>   Computer Algebra System in Javascript (Typescript)
+- <https://github.com/evanw/theta>
+- <https://github.com/aphyr/distsys-class>   Class materials for a distributed systems lecture series
+- <https://github.com/jamiebuilds/the-super-tiny-compiler>   :snowman: Possibly the smallest compiler ever
+- <https://github.com/jezen/is-thirteen>   Check if a number is equal to 13.
+- <https://github.com/BVLC/caffe>   Caffe: a fast open framework for deep learning.
+- <https://github.com/danieldjohnson/biaxial-rnn-music-composition>   A recurrent neural network designed to generate classical music.
+- <https://github.com/projecthorus/wenet>   "Wenet (""The Swift One"") - Transmit and Receive code for the Project Horus High-Speed Imagery Payload."
+- <https://github.com/ha7ilm/csdr>   A simple DSP library and command-line tool for Software Defined Radio.
+- <https://github.com/googledatalab/datalab>   Interactive tools and developer experiences for Big Data on Google Cloud Platform.
+- <https://github.com/dbrattli/OSlash>   "Functors    Applicatives    And Monads in Python"
+- <https://github.com/fulldecent/system-bus-radio>   Transmits AM radio on computers without radio transmitting hardware.
+- <https://github.com/KaTeX/KaTeX>   Fast math typesetting for the web.
+- <https://github.com/reactjs/react-router-tutorial>
+- <https://github.com/FPGAwars/apio>   :seedling: Open source ecosystem for open FPGA boards
+- <https://github.com/FPGAwars/icestudio>   :snowflake: Visual editor for open FPGA boards
+- <https://github.com/enaqx/awesome-react>   A collection of awesome things regarding React ecosystem
+- <https://github.com/binder-project/binder>   reproducible executable environments
+- <https://github.com/tesseract-ocr/tesseract>   Tesseract Open Source OCR Engine (main repository)
+- <https://github.com/josephmisiti/awesome-machine-learning>   "A curated list of awesome Machine Learning frameworks    libraries and software."
+- <https://github.com/travisgoodspeed/md380tools>   Python tools and patched firmware for the TYT-MD380
+- <https://github.com/cyphunk/JTAGenum>   "Given an Arduino compatible microcontroller or Raspberry PI (experimental)    JTAGenum scans pins[] for basic JTAG functionality and can be used to enumerate the Instruction Register for undocumented instructions. Props to JTAG scanner and Arduinull which came before JTAGenum and forwhich much of the code and logic is based on.  Feel free to branch and modify religiously (readme    credits    whatever)"
+- <https://github.com/tejeez/rtl_coherent>   Synchronized RTL-SDR receivers and direction finding
+- <https://github.com/patchvonbraun/simple_ra>   Simple (hah) integrated radio astronomy receiver for Gnu Radio
+- <https://github.com/threeme3/WsprryPi>   Bareback LF/MF/HF/VHF WSPR transmitter using a Raspberry Pi
+- <https://github.com/makestuff/libfpgalink>   LIB:Library for interacting with an FPGA over USB
+- <https://github.com/dwelch67/raspberrypi>   Raspberry Pi ARM based bare metal examples
+- <https://github.com/F5OEO/rpitx>   RF transmitter for Raspberry Pi
+- <https://github.com/ha7ilm/rpitx-app-note>   Application note on using GNU Radio and csdr with rpitx
+- <https://github.com/simonyiszk/minidemod>   A really-really simple demodulator intended to teach Software Defined Radio to newcomers.
+- <https://github.com/xmikos/qspectrumanalyzer>   "Spectrum analyzer for multiple SDR platforms (PyQtGraph based GUI for soapy_power    hackrf_sweep    rtl_power    rx_power and other backends)"
+- <https://github.com/mp3guy/Kintinuous>   Real-time large scale dense visual SLAM system
+- <https://github.com/mp3guy/ElasticFusion>   Real-time dense visual SLAM system
+- <https://github.com/jeelabs/esp-link>   "esp8266 wifi-serial bridge    outbound TCP    and arduino/AVR/LPC/NXP programmer"
+- <https://github.com/tinkerlog/PaintMachine>
+- <https://github.com/barbagroup/AeroPython>   Classical Aerodynamics of potential flow using Python and Jupyter Notebooks
+- <https://github.com/jlevy/the-art-of-command-line>   "Master the command line    in one page"
+- <https://github.com/ghcjs/ghcjs>   "Haskell to JavaScript compiler    based on GHC"
+- <https://github.com/sindresorhus/awesome>   😎 Awesome lists about all kinds of interesting topics
+- <https://github.com/scijs/ndarray-ops>   ndarray operations
+- <https://github.com/estools/escodegen>   ECMAScript code generator
+- <https://github.com/estools/estraverse>   ECMAScript JS AST traversal functions
+- <https://github.com/stackgl/shader-school>   :mortar_board: A workshopper for GLSL shaders and graphics programming
+- <https://github.com/NaturalNode/node-lapack>
+- <https://github.com/philzook58/sample_app>   Rails sample application
+- <https://github.com/philzook58/demo_app>   demo of ruby on rails
+- <https://github.com/philzook58/Railstest>   Pay no Heed. Just testing out Ruby on Rails

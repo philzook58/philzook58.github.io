@@ -179,6 +179,7 @@ def
 ```
 
 ## Surreal Numbers
+https://www.sciencedirect.com/science/article/pii/S2352711018302152  Practically surreal: Surreal arithmetic in Julia
 
 HACKENBUSH: a window to a new world of math <https://www.youtube.com/watch?v=ZYj4NkeGPdM&t=2818s&ab_channel=OwenMaitzen> Owen Maitzen rip.
 
