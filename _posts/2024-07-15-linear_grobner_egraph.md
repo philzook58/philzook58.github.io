@@ -168,10 +168,10 @@ We will use sympy symbols `ei` to rerpesent our eclasses and the stock sympy gro
 
 | Atomic Eq  | Poly Eq  | Linear Eq |
 |------------|----------|----------|
-| union find | Grobner  | Row Echelon |
-| union      | Buchberger | Gaussian Elim   |
-| union      | add eq   | add row  |
-| find       | reduce   | zero-out vec |
+| union find | Grobner    | Row Echelon |
+| union      | Buchberger  | Gaussian Elim   |
+| union      | add eq     | add row  |
+| find       | reduce/poly divide/remainder | zero-out vec ~ invert |
 
 Curiously and interestingly now, you can multiply and add eclasses.
 
