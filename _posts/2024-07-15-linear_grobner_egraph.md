@@ -166,12 +166,12 @@ Ok, an egraph is basically some kind of node table associating eclasses to enode
 
 We will use sympy symbols `ei` to rerpesent our eclasses and the stock sympy groebner basis routines to do the union find action. The point of the union find is you can add new equalities and you can normalize an eclass by calling find.
 
-| Atomic Eq  | Poly Eq  | Linear Eq |
+| Atomic Eq  | Linear Eq | Poly Eq  |
 |------------|----------|----------|
-| union find | Grobner    | Row Echelon |
-| union      | Buchberger  | Gaussian Elim   |
-| union      | add eq     | add row  |
-| find       | reduce/poly divide/remainder | zero-out vec ~ invert |
+| union find | Row Echelon | Grobner    |
+| union      | Gaussian Elim | Buchberger  |
+| union      | add row | add eq     |
+| find       | zero out vec ~ invert | reduce/poly divide/remainder |
 
 Curiously and interestingly now, you can multiply and add eclasses.
 
