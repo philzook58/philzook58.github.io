@@ -297,6 +297,7 @@ print(E)
     EGraph(poly_eqs=[e0 - e2, e1**2 + e4**2 - 1, e3 - e4], hashcons={('bar',): e2, ('sin', e2): e1, ('biz',): e2, ('cos', e2): e4}, eclasses=[e0, e1, e2, e3, e4])
 
 ## Bottom Up E-matching
+
 <https://www.philipzucker.com/bottom_up/>
 
 Again, I think bottom up ematching is the way to go when you need to integrate theories into egraph rewriting. Bottom up e-matching guesses what goes into the pattern variables. You can maintain some explicit set of variable guess terms (every term you've explicitly mentioned previously) or similarly just throw in all the eclasses. Then you can normalize them with respect to the egraph and permit the rule to fire if the lhs falls in some heuristic set. The set is commonly the set of terms held in the egraph. Here I just always allow the rule to fire. This is probably more eager than you'd like.
@@ -452,6 +453,10 @@ That x - y kiund of looks like a finite difference, anything to do with that? ho
 Can we make any sense of an occurs check in this linear form? Unification?
 
 ## Egraphs are Ground Completion, Grobner is Knuth Bendix
+
+Gaussian elimination and grobner bases are more like E-ground completion (ground completion in a background theory E). The "variables" appearsing in these equations are really 0-arity constants, not variables in the sense of term rewriting. This may help explain why they are terminating, akin to how ground completion is terminating.
+
+Ground completion modulo just associativity is not terminating though, since it is just string rewriting. A funny world
 
 I'll note that associativity added into ground equations makes knuth bendix completion undecidable.
 
