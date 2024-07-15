@@ -51,7 +51,7 @@ We can rewrite the simple equations `x0 = x2` as `x0 - x2 = 0`. This can be seen
 
 When we have multiple equations, these each become a row in a constraint matrix `Ax = 0`.
 
-For example, the equations `x0 = x1, x1 = x2, x1 = x2, x3 = x4` becomes the rows of the matrix R
+For example, the equations `x0 = x1, x1 = x2, x1 = x2, x3 = x4` becomes the rows of the matrix A
 
 ```python
 import sympy as sp
@@ -166,10 +166,12 @@ Ok, an egraph is basically some kind of node table associating eclasses to enode
 
 We will use sympy symbols `ei` to rerpesent our eclasses and the stock sympy groebner basis routines to do the union find action. The point of the union find is you can add new equalities and you can normalize an eclass by calling find.
 
-| union find | groebner |
-|------------|----------|
-| union      | add eq   |
-| find       | reduce   |
+| Atomic Eq  | Poly Eq  | Linear Eq |
+|------------|----------|----------|
+| union find | Grobner  | Row Echelon |
+| union      | Buchberger | Gaussian Elim   |
+| union      | add eq   | add row  |
+| find       | reduce   | zero-out vec |
 
 Curiously and interestingly now, you can multiply and add eclasses.
 
