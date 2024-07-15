@@ -431,7 +431,7 @@ Faster grobner. msolve <https://msolve.lip6.fr/> . singular
 
 Intermixing with non real valued teories. No problem. Use regular union find for those sorts.
 
-Linear inequalities seem to fit better into egraph modulo theories just mirroring into an smt solver for guards.
+Linear inequalities seem to fit better into egraph modulo theories just mirroring into an smt solver for guards. <https://www.philipzucker.com/ext_z3_egraph/>
 
 graver basis for integer linear <https://en.wikipedia.org/wiki/Graver_basis> . simple two monomial equations.
 
