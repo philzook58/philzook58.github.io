@@ -354,6 +354,8 @@ I basically never implement extraction. Does anything fishy happen? I don't thin
 maybe there is a way to bootstrap off of the sympy simplify rules like I could off of z3's. I'm not actually sure I have to opaquify to sympy in the from of the `ei`. Maybe sympy is happy doing groebner bases over compound terms? Then I could take the GRS strategy. This is the analog of what I did for z3 here <https://www.philipzucker.com/ext_z3_egraph/>
 I have noticed in the past it is quite hard to stop sympy from doing simplification when you construct terms. `evaluate=False` didn't seem like a panacea
 
+Another interesting thing sympy can do for us is factor polynomials. Could throw that in the mix.
+
 ```python
 # yeah, seems like I didn't need the node table. I could just use sympy terms.
 # but ultimately I want to also bolt in other stuff?
@@ -439,6 +441,14 @@ graver basis for integer linear <https://en.wikipedia.org/wiki/Graver_basis> . s
 
 The Shostak method to the best I understand it is combining theories by using the theories to eliminate variables rather than just propagate equations.
 Linear arithemtic knows how to isolate variables. Sweet. Do that, assert that variable to the egraph. There are piles of papers on shostak's method. Decrypting them is a project on its own. One wonders what the point of writing is when reading is so hard. I dunno. All these theory papers don't illuminate for my taste really. I seek a mall intuitive kernel, like a sentence or two, some hokey pseudo code.
+
+A "soft egraph" which tries to take low rank views?
+eivenvectors
+could use svd or qr?
+
+That x - y kiund of looks like a finite difference, anything to do with that? homology, homotopty, equality, ideations. Encoding higher equalities linear using mesh curl stuff?
+
+Can we make any sense of an occurs check in this linear form? Unification?
 
 ## Egraphs are Ground Completion, Grobner is Knuth Bendix
 
@@ -533,12 +543,6 @@ What are my options for decompositions. LU, QR, eigen, svd
 - 2022: "First-Order Subsumption via SAT Solving." by Jakob Rath, Armin Biere and Laura Kovács
 - 2023: "SAT-Based Subsumption Resolution" by Robin Coutelier, Jakob Rath, Michael Rawson and Laura Kovács
 - 2024: "SAT Solving for Variants of First-Order Subsumption" by Robin Coutelier, Jakob Rath, Michael Rawson, Armin Biere and Laura Kovács
-
-A "soft egraph" which tries to take low rank views?
-eivenvectors
-could use svd or qr?
-That x - y kiund of looks like a finite difference, anything to do with that? homology, homotopty, equality, ideations. Encoding higher equalities linear using mesh curl stuff?
-Can we make any sense of an occurs check in this linear form?
 
 Semiring considerations?
 
