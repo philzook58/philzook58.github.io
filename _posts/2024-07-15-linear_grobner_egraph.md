@@ -168,8 +168,8 @@ We will use sympy symbols `ei` to rerpesent our eclasses and the stock sympy gro
 
 | Atomic Eq  | Linear Eq | Poly Eq  |
 |------------|----------|----------|
-| union find | Row Echelon | Grobner    |
-| union      | Gaussian Elim | Buchberger  |
+| union find | Row Echelon | Grobner  Basis  |
+| union      | Gaussian Elim | Buchberger Algo |
 | union      | add row | add eq     |
 | find       | zero out vec ~ invert | reduce/poly divide/remainder |
 
@@ -345,7 +345,9 @@ E
 
 # Bits and Bobbles
 
-Fully normalizing the to the grobner basis may be overkill. It tends to be a property of egraphs that they are self healing in the face of incomplete canonicalization / hash consing. They can recover later. <https://en.wikipedia.org/wiki/Wu%27s_method_of_characteristic_set> My impression of Wu's method is that it very successful but slightly more ad hoc method for doing geoemtric theorem proving while still using the same basic idea of polynomial division that grobner bases do.
+Fully normalizing the to the grobner basis may be overkill. It tends to be a property of egraphs that they are self healing in the face of incomplete canonicalization / hash consing. They can recover later. <https://en.wikipedia.org/wiki/Wu%27s_method_of_characteristic_set> My impression of Wu's method is that it very successful but slightly more ad hoc method for doing geometric theorem proving while still using the same basic idea of polynomial division that grobner bases do.
+
+I pointed out specifically the linear subcase gauss egraph of the grobner egraph because this is probably going to be more tractable at scale.
 
 lex monomial ordering is typically not the best performing one to my understanding. It is the easiest to interpret though. I think other orders ought to work fine.
 
