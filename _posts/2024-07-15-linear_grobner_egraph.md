@@ -173,6 +173,8 @@ We will use sympy symbols `ei` to rerpesent our eclasses and the stock sympy gro
 
 Curiously and interestingly now, you can multiply and add eclasses.
 
+Rebuild is just congruence closure and sympy's buchberger grobner basis discovery smashed together in a fixed point loop.
+
 ```python
 from dataclasses import dataclass
 EClass = sp.Symbol
@@ -215,7 +217,7 @@ class EGraph:
     def rebuild(self):
         # simple naive dumb rebuild step. Could be optimized signifcantly
         while True:
-            #rebuild "union find"
+            #rebuild "union find", buchberhe
             self.poly_eqs = list(sp.groebner(self.poly_eqs, *self.eclasses))
 
             # rebuild hashcons"
@@ -228,7 +230,7 @@ class EGraph:
                 if eclass != None:
                     self.union(v,eclass)
                 newhashcons[enode] = self.find(v)
-            if self.hashcons == newhashcons:
+            if self.hashcons == newhashcons: # reached fixed point
                 return
             self.hashcons = newhashcons   
     def add_term(self, t):
