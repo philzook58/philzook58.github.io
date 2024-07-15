@@ -57,7 +57,6 @@ For example, the equations `x0 = x1, x1 = x2, x1 = x2, x3 = x4` becomes the rows
 
 ```python
 import sympy as sp
-from sympy.printing.mathml import print_mathml
 A =   sp.Matrix([
     [1,-1, 0,0, 0],  # x0 = x1
     [0, 1,-1,0, 0],  # x1 = x2
@@ -65,50 +64,33 @@ A =   sp.Matrix([
     [0, 0, 0,1,-1],  # x3 = x4
    # [0, 1, 0,0,-1],
     ])
-print_mathml(A)
+sp.pprint(A)
 
 ```
 
-    <matrix>
-     <matrixrow>
-      <cn>1</cn>
-      <cn>-1</cn>
-      <cn>0</cn>
-      <cn>0</cn>
-      <cn>0</cn>
-     </matrixrow>
-     <matrixrow>
-      <cn>0</cn>
-      <cn>1</cn>
-      <cn>-1</cn>
-      <cn>0</cn>
-      <cn>0</cn>
-     </matrixrow>
-     <matrixrow>
-      <cn>0</cn>
-      <cn>1</cn>
-      <cn>-1</cn>
-      <cn>0</cn>
-      <cn>0</cn>
-     </matrixrow>
-     <matrixrow>
-      <cn>0</cn>
-      <cn>0</cn>
-      <cn>0</cn>
-      <cn>1</cn>
-      <cn>-1</cn>
-     </matrixrow>
-    </matrix>
+    ⎡1  -1  0   0  0 ⎤
+    ⎢                ⎥
+    ⎢0  1   -1  0  0 ⎥
+    ⎢                ⎥
+    ⎢0  1   -1  0  0 ⎥
+    ⎢                ⎥
+    ⎣0  0   0   1  -1⎦
 
 We can get the reduced row echelon form. This is using row additions turn turn the leading coefficients to 1 and clear out that coefficient from the lower rows.
 <https://en.wikipedia.org/wiki/Row_echelon_form>
 
 ```python
 # reduced row echelon form
-A.rref()[0]
+sp.pprint(A.rref()[0])
 ```
 
-$\displaystyle \left[\begin{matrix}1 & 0 & -1 & 0 & 0\\0 & 1 & -1 & 0 & 0\\0 & 0 & 0 & 1 & -1\\0 & 0 & 0 & 0 & 0\end{matrix}\right]$
+    ⎡1  0  -1  0  0 ⎤
+    ⎢               ⎥
+    ⎢0  1  -1  0  0 ⎥
+    ⎢               ⎥
+    ⎢0  0  0   1  -1⎥
+    ⎢               ⎥
+    ⎣0  0  0   0  0 ⎦
 
  The row echelon form gives us a notion of normalizing a linear expression.
 
@@ -158,8 +140,9 @@ sp.reduced(x0, G)
 
     ([1, 0, 0], x2)
 
+More examples of canonical forms coming from this system
+
 ```python
-# more examples
 print(f"{sp.reduced(x0, G)=}")
 print(f"{sp.reduced(x1, G)=}")
 print(f"{sp.reduced(x2, G)=}")
@@ -314,12 +297,6 @@ print(E)
     sin(bar)**2 + cos(bar)**2 == e1**2 + e4**2
     EGraph(poly_eqs=[e1**2 + e4**2 - 1], hashcons={('bar',): e0, ('sin', e0): e1, ('biz',): e2, ('cos', e2): e3, ('cos', e0): e4}, eclasses=[e0, e1, e2, e3, e4])
     EGraph(poly_eqs=[e0 - e2, e1**2 + e4**2 - 1, e3 - e4], hashcons={('bar',): e2, ('sin', e2): e1, ('biz',): e2, ('cos', e2): e4}, eclasses=[e0, e1, e2, e3, e4])
-
-```python
-
-```
-
-$\displaystyle \operatorname{Poly}{\left( 1, e_{1}, e_{4}, domain=\mathbb{Z} \right)}$
 
 ## Bottom Up E-matching
 
