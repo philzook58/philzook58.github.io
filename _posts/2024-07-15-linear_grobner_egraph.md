@@ -29,8 +29,6 @@ This might result in a union find that looks like
 
 `x3 -> x4`
 
-![union find](/assets/uf.svg)
-
 ```python
 from graphviz import Digraph
 
@@ -43,7 +41,7 @@ for edge in uf:
 dot
 ```
 
-![svg](2024-07-15-linear_grobner_egraph_files/2024-07-15-linear_grobner_egraph_2_0.svg)
+![union find](/assets/uf.svg)
 
 ## Linear Algebra and Unions Finds
 
@@ -129,7 +127,7 @@ G
 
 $\displaystyle \operatorname{GroebnerBasis}\left(\left( x_{0} - x_{2}, \  x_{1} - x_{2}, \  x_{3} - x_{4}\right), \left( x_{0}, \  x_{1}, \  x_{2}, \  x_{3}, \  x_{4}\right)\right)$
 
-When we have a grobner basis in hand, we can reduced a polynomial expression to a canonical form via a process of multinomial division. `sympy` implements this is [`sympy.redcued`](https://docs.sympy.org/latest/modules/polys/reference.html#sympy.polys.polytools.reduced)
+When we have a grobner basis in hand, we can reduced a polynomial expression to a canonical form via a process of multinomial division. `sympy` implements this is [`sympy.reduced`](https://docs.sympy.org/latest/modules/polys/reference.html#sympy.polys.polytools.reduced)
 
 Here we see `x0` reduces to the canonical `x2`, the same as the above union find.
 
@@ -252,7 +250,7 @@ class EGraph:
 
 ```
 
-Fooling around a little with a toy egraph example. We can do algebra on eclasses because they are sympy variables. Here I assert $bar^2 = foo(bar)$
+Fooling around a little with a toy egraph example. We can do algebra on eclasses because they are sympy variables. Here I assert $bar^2 = foo(foo(bar))$
 
 ```python
 E = EGraph()
