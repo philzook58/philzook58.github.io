@@ -357,6 +357,8 @@ A represntation that is "off by 1" from the above is polynomials as just another
 
 I basically never implement extraction. Does anything fishy happen? I don't think so.
 
+What is the commutative algerba perspective on this? Perhaps we are working in a polynomial ring with compound generators like `x0,x1, foo(x1), foo(x0)`. We now can also normalize the compound generators with respect to the current grobner basis, notice congruence closure equalities, add them in and loop until fixed point. Again, not very mathy sounding. What about `foo(x1 + x0)`? The picked generator set is somewhat similar to my T set of searchable eclasses.
+
 maybe there is a way to bootstrap off of the sympy simplify rules like I could off of z3's. I'm not actually sure I have to opaquify to sympy in the from of the `ei`. Maybe sympy is happy doing groebner bases over compound terms? Then I could take the GRS strategy. This is the analog of what I did for z3 here <https://www.philipzucker.com/ext_z3_egraph/>
 I have noticed in the past it is quite hard to stop sympy from doing simplification when you construct terms. `evaluate=False` didn't seem like a panacea
 
