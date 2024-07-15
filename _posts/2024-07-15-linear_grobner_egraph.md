@@ -297,6 +297,7 @@ print(E)
     EGraph(poly_eqs=[e0 - e2, e1**2 + e4**2 - 1, e3 - e4], hashcons={('bar',): e2, ('sin', e2): e1, ('biz',): e2, ('cos', e2): e4}, eclasses=[e0, e1, e2, e3, e4])
 
 ## Bottom Up E-matching
+<https://www.philipzucker.com/bottom_up/>
 
 Again, I think bottom up ematching is the way to go when you need to integrate theories into egraph rewriting. Bottom up e-matching guesses what goes into the pattern variables. You can maintain some explicit set of variable guess terms (every term you've explicitly mentioned previously) or similarly just throw in all the eclasses. Then you can normalize them with respect to the egraph and permit the rule to fire if the lhs falls in some heuristic set. The set is commonly the set of terms held in the egraph. Here I just always allow the rule to fire. This is probably more eager than you'd like.
 
