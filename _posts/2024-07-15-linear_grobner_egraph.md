@@ -29,6 +29,8 @@ This might result in a union find that looks like
 
 `x3 -> x4`
 
+![union find](/assets/uf.svg)
+
 ```python
 from graphviz import Digraph
 
@@ -55,7 +57,7 @@ For example, the equations `x0 = x1, x1 = x2, x1 = x2, x3 = x4` becomes the rows
 
 ```python
 import sympy as sp
-
+from sympy.printing.mathml import print_mathml
 A =   sp.Matrix([
     [1,-1, 0,0, 0],  # x0 = x1
     [0, 1,-1,0, 0],  # x1 = x2
@@ -63,11 +65,40 @@ A =   sp.Matrix([
     [0, 0, 0,1,-1],  # x3 = x4
    # [0, 1, 0,0,-1],
     ])
-A
+print_mathml(A)
 
 ```
 
-$\displaystyle \left[\begin{matrix}1 & -1 & 0 & 0 & 0\\0 & 1 & -1 & 0 & 0\\0 & 1 & -1 & 0 & 0\\0 & 0 & 0 & 1 & -1\end{matrix}\right]$
+    <matrix>
+     <matrixrow>
+      <cn>1</cn>
+      <cn>-1</cn>
+      <cn>0</cn>
+      <cn>0</cn>
+      <cn>0</cn>
+     </matrixrow>
+     <matrixrow>
+      <cn>0</cn>
+      <cn>1</cn>
+      <cn>-1</cn>
+      <cn>0</cn>
+      <cn>0</cn>
+     </matrixrow>
+     <matrixrow>
+      <cn>0</cn>
+      <cn>1</cn>
+      <cn>-1</cn>
+      <cn>0</cn>
+      <cn>0</cn>
+     </matrixrow>
+     <matrixrow>
+      <cn>0</cn>
+      <cn>0</cn>
+      <cn>0</cn>
+      <cn>1</cn>
+      <cn>-1</cn>
+     </matrixrow>
+    </matrix>
 
 We can get the reduced row echelon form. This is using row additions turn turn the leading coefficients to 1 and clear out that coefficient from the lower rows.
 <https://en.wikipedia.org/wiki/Row_echelon_form>
@@ -342,6 +373,8 @@ Semiring semantics. Is this getting close to an interesting intertwined notion o
 A represntation that is "off by 1" from the above is polynomials as just another kind of container. Containers have a theory specific notion of rebuilding. Sets for example deduplicate and sort on rebuilding (they may have discovered new equations, so sets could shrink). Polynomials are just another container for eclasses. Enodes are just an ordered fixed size array container. <https://www.philipzucker.com/bottom_up/>
 
 "Proof producing" row echelon form is working with the augmented matrix (stacking on an identity matrix) <https://en.wikipedia.org/wiki/Augmented_matrix>. `E * [R | I] = [E*R | E] = S`. There was something similar you can do for groebner bases I mentioned here. <https://www.philipzucker.com/computing-syzygy-modules-in-sympy/> extra variables to track how you derived the grobner basis from your original equations. One new variable per equation `f`. I barely understand what I'm talking about here. A lesson for the future to write better? Or just evidence my mind changes.
+
+I basically never implement extraction. Does anything fishy happen? I don't think so.
 
 maybe there is a way to bootstrap off of the sympy simplify rules like I could off of z3's. I'm not actually sure I have to opaquify to sympy in the from of the `ei`. Maybe sympy is happy doing groebner bases over compound terms? Then I could take the GRS strategy. This is the analog of what I did for z3 here <https://www.philipzucker.com/ext_z3_egraph/>
 I have noticed in the past it is quite hard to stop sympy from doing simplification when you construct terms. `evaluate=False` didn't seem like a panacea
