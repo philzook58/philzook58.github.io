@@ -99,6 +99,8 @@ Each nonzero row of this matrix can be interpreted as a normalizing rewrite syst
 
 Such a rewrite system can also be seen as a forest of equivalence classes, aka the union find. The rhs are the roots of the tree and the lhs are the children of the roots.
 
+But of course, we don't have to use the simple equations a union find already supports. We can assert any linear combination of variables is equal to another linear combo. And we can still use reduced row echelon form to normalize / find a canonical form of a linear expression given these equational constraints. It appears that we can basically slide these matrix operations right into the egraph, replacing the union find as a generalization.
+
 Any linear expression we write down can be put into a canonical form by running these rules. I'm not exactly sure how to express this elegantly in linear algebraic language, but it is obviously imperatively doable. Take your input vector, go down each row and use it to replace that column. This is similar to inverting? Let's just move on to groebner bases where it's more obvious.
 
 As an alternative motivation for the connection between union finds and linear algebra, note that union finds are useful for finding connected components in a graph. Adjacency matrices are also an encoding of the graph and connected component (or interestingly approximate connected component) information can be extracted via linear algebraic or spectral means. So there is similar junk in there.
