@@ -427,6 +427,8 @@ class EGraph1():
 
 Quine Mclusky <https://en.wikipedia.org/wiki/Quine%E2%80%93McCluskey_algorithm> might be a good replacement for grobner in boolean theories. Not sure what it is though
 
+If you leaned into the gauss version, these matrices are going to be extremely sparse. You may want to use a union find when you don't need linear combinations and only use the matrix methods when you do.
+
 Faster grobner. msolve <https://msolve.lip6.fr/> . singular
 
 Intermixing with non real valued teories. No problem. Use regular union find for those sorts.
