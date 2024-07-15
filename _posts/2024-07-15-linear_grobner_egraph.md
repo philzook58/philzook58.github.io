@@ -354,7 +354,7 @@ I basically never implement extraction. Does anything fishy happen? I don't thin
 maybe there is a way to bootstrap off of the sympy simplify rules like I could off of z3's. I'm not actually sure I have to opaquify to sympy in the from of the `ei`. Maybe sympy is happy doing groebner bases over compound terms? Then I could take the GRS strategy. This is the analog of what I did for z3 here <https://www.philipzucker.com/ext_z3_egraph/>
 I have noticed in the past it is quite hard to stop sympy from doing simplification when you construct terms. `evaluate=False` didn't seem like a panacea
 
-Another interesting thing sympy can do for us is factor polynomials. Could throw that in the mix.
+Another interesting thing sympy can do for us is factor polynomials. Could throw that in the mix. We could increase our searchable term set to include factors
 
 ```python
 # yeah, seems like I didn't need the node table. I could just use sympy terms.
