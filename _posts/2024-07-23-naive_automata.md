@@ -234,6 +234,7 @@ closed = {1}
 This feels ensnared with ideas of closed / open as in closed world assumption <https://en.wikipedia.org/wiki/Closed-world_assumption> and closed vs open/extensible datatypes <https://www.andres-loeh.de/OpenDatatypes.pdf> .
 
 ## Misc
+<https://www.philipzucker.com/notes/CS/regex-automata-coinduction-bisimulation/> More automata notes by me. Bunch of random links
 
 Co-egraphs: next time. PEGs are basically streams. Streams are coalgebraic. Have an enode map `dict[ENode, EId]` and a Co-enode/observation map, `dict[OId, Obs]` Observations can include EId. Not exactly clear how disjoint to make EId vs OId (object id). Akin to maude or mcrl2 distinction between term-y stuff and state-y stuff. Rebuilding Does both union find congruence compaction and automata compaction. Observations must go down monotonically.
 
