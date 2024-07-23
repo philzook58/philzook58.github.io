@@ -96,6 +96,8 @@ plt.show()
 
 ![png](2024-07-23-naive_automata_files/2024-07-23-naive_automata_3_0.png)
 
+![](/assets/automata.png)
+
 # Observation is Key
 
 Mushing around the ideas that seem to be behind these sort of automata and generalizations a paradigm shows up. I don't really know exactly what I'd want to call this paradigm, but the following keywords are important.
@@ -179,6 +181,8 @@ for i in range(6): # iterate to stabilization
     partition map:  {1: [1], 2: [2, 3], 3: [2, 3], 4: [4, 5], 5: [4, 5]}
     partition map:  {1: [1], 2: [2, 3], 3: [2, 3], 4: [4, 5], 5: [4, 5]}
     partition map:  {1: [1], 2: [2, 3], 3: [2, 3], 4: [4, 5], 5: [4, 5]}
+
+This is the most naive version of the algorithm. It can be significantly improved. See the paper for more <https://arxiv.org/abs/2204.12368> . Naive is important though
 
 # Bits and Bobbles
 
@@ -285,8 +289,7 @@ CoCaml <https://www.cs.cornell.edu/projects/CoCaml/>
 - informal formal set theory - Formal set theory but without using much explicit formalism of first order logic / symbol manipulation. We are kind of intrigued by encodings. This is probably where most of. Set Theory textbooks. "Naive Set Theory" by halmos
 - formal formal set theory - for serious being very careful about symbolic manipulations at the level it is all computer implementable. There are constructions presented in textbooks that I don't really know how to break down into basic axiomatic components. This is probably a pretty serious and useful homework exercise in each case. And maybe research paper worthy if it ends up not being as trivial as assumed.
 
-(What is formal informal set theory?)\
-s
+(What is formal informal set theory?)
 
 # Datalog Ramblings
 
