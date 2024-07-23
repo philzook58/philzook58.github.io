@@ -285,7 +285,8 @@ CoCaml <https://www.cs.cornell.edu/projects/CoCaml/>
 - informal formal set theory - Formal set theory but without using much explicit formalism of first order logic / symbol manipulation. We are kind of intrigued by encodings. This is probably where most of. Set Theory textbooks. "Naive Set Theory" by halmos
 - formal formal set theory - for serious being very careful about symbolic manipulations at the level it is all computer implementable. There are constructions presented in textbooks that I don't really know how to break down into basic axiomatic components. This is probably a pretty serious and useful homework exercise in each case. And maybe research paper worthy if it ends up not being as trivial as assumed.
 
-(What is formal informal set theory?)
+(What is formal informal set theory?)\
+s
 
 # Datalog Ramblings
 
