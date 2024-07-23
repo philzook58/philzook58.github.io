@@ -1925,7 +1925,7 @@ Atomic set labels.
 Extensionality
 elem relation
 
-Wellfoundedness is optional, becomes nonwellfounded set theory which is neat.
+Wellfoundedness is optional, becomes nonwellfounded set theory which is neat. Pointed graphs
 
 ```clingo
 set(empty).
@@ -3042,6 +3042,7 @@ notx :- not x.
 ```
 
 # Misc
+
 <https://potassco.org/ngo/ngo.html> answer swet optimization.
 
 ```bash
