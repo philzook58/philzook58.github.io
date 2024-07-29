@@ -168,7 +168,7 @@ for i in range(6): # iterate to stabilization
     # obs is the Automaton map with state ids replaced by  
     obs = dfa_map(partmap, ex1)
     partmap = {}
-    for group_obs, equivs in itertools.groupby(states, lambda state: obs[state]):
+    for group_obs, equivs in itertools.groupby(sorted(states, lambda state: obs[state]), lambda state: obs[state]):
         equivs = list(equivs)
         for id_ in equivs:
             partmap[id_] = equivs
