@@ -1,4 +1,6 @@
 
+Gathering data so I can use LLLM summaries / smart search on my blog and get everything
+
 ```python
 import tweepy
 

@@ -234,6 +234,7 @@ closed = {1}
 This feels ensnared with ideas of closed / open as in closed world assumption <https://en.wikipedia.org/wiki/Closed-world_assumption> and closed vs open/extensible datatypes <https://www.andres-loeh.de/OpenDatatypes.pdf> .
 
 ## Misc
+
 <https://www.philipzucker.com/notes/CS/regex-automata-coinduction-bisimulation/> More automata notes by me. Bunch of random links
 
 Co-egraphs: next time. PEGs are basically streams. Streams are coalgebraic. Have an enode map `dict[ENode, EId]` and a Co-enode/observation map, `dict[OId, Obs]` Observations can include EId. Not exactly clear how disjoint to make EId vs OId (object id). Akin to maude or mcrl2 distinction between term-y stuff and state-y stuff. Rebuilding Does both union find congruence compaction and automata compaction. Observations must go down monotonically.
@@ -291,6 +292,74 @@ CoCaml <https://www.cs.cornell.edu/projects/CoCaml/>
 - formal formal set theory - for serious being very careful about symbolic manipulations at the level it is all computer implementable. There are constructions presented in textbooks that I don't really know how to break down into basic axiomatic components. This is probably a pretty serious and useful homework exercise in each case. And maybe research paper worthy if it ends up not being as trivial as assumed.
 
 (What is formal informal set theory?)
+
+## Observation Tree Form
+
+We can fused out the concept of state ids, but things get more ocnfusing. This is the old arena with integer indices vs pointers design choice.
+
+There is a conception that the states should be identified with their observation trees.
+We can build infinite trees in python using knot tying. This is a different way of doing it than generators, although less general
+We could write the compaction loop in this form without converting back to dict form.
+
+These are rational trees
+
+<https://x.com/SandMouth/status/1815886804999963028>
+
+```python
+s = [
+    {"accept" : False},
+    {"accept" : False},
+    {"accept" : False},
+    {"accept" : True},
+    {"accept" : True}
+]
+
+s[0]["a"] = s[1]
+s[0]["b"] = s[2]
+s[1]["a"] = s[3]
+s[1]["b"] = s[2]
+s[2]["a"] = s[4]
+s[2]["b"] = s[2]
+s[3]["a"] = s[4]
+s[3]["b"] = s[3]
+s[4]["a"] = s[3]
+s[4]["b"] = s[3]
+
+# we can convert it back to the dict form using `id`
+{ id(x) : (x["accept"], id(x["a"]), id(x["b"]))  for x in s}
+
+# run automata
+def run_string(abba):
+    state = s[0]
+    for c in abba:
+        state = state[c]
+    return state["accept"]
+```
+
+```python
+# simplest self knot
+l = []
+l.append(l)
+l
+
+# a cons stream of infinite 0
+zeros = [0]
+zeros.append(zeros)
+zeros
+
+# alternating 0,1,0,1,0,1...
+z0 = [0]
+z1 = [1]
+z0.append(z1)
+z1.append(z0)
+
+#vs generator form
+# more flexible, can hold arbitrary computation
+def zeros1():
+    yield 0
+    yield from zeros1()
+
+```
 
 # Datalog Ramblings
 
