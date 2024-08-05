@@ -4,13 +4,19 @@ date: 2024-08-05
 ---
 
 
-I've been working on Knuckledragger for a while and I need to write to categorize ideas and design decisions.
+I've been working on Knuckledragger, my Z3 based semi-automated python proof assistant, on and off for 6 months (or arguably [five years](https://www.philipzucker.com/programming-and-interactive-proving-with-z3py/)). I've realized I've done a bunch of stuff and despite writing often, not written the slightest bit about much of it.
+
+So here is a fast sketchy run down of:
+
+- The basic design and kernel
+- Ideas and starts on theories like intervals, complex numbers, set theory, groups, linear algebra, software verification
+- Convenience systems like tactics, syntax, and systematic approaches to induction principles and refinements.
 
 Repo is here <https://github.com/philzook58/knuckledragger>
 
 Got a new logo! Been adding docs, tutorials, CI, etc. All that software jazz.
 
-![New logo!](https://raw.githubusercontent.com/philzook58/knuckledragger/main/logo.webp)
+<img src="https://raw.githubusercontent.com/philzook58/knuckledragger/main/logo.webp" alt="drawing" width="400"/>
 
 Previous posts in this vein:
 
@@ -21,18 +27,23 @@ Previous posts in this vein:
 
 A design principle I've narrowed in on is piggy packing on the z3 AST datatypes for my theorem datatypes.
 
-I was toying with making my own first order logic / higher order logic AST in python and then interpreting it into Z3. So far, I think this is an unnecessary indirection and was just burning time, lines of code, and design energy to no benefit. Z3 already has a feature rich access api and maybe the only thing I would have added to my type is built in polymorphism/sort generics.
+I [was toying](https://github.com/philzook58/knuckledragger/blob/c02b9521aafdc141364179119256955fcf37ef34/thoughts/knuckledrag2.py) with making my own first order logic / higher order logic AST in python and then interpreting it into Z3. So far, I think this is an unnecessary indirection and was just burning time, lines of code, and design energy to no benefit. Z3 already has a feature rich access api and maybe the only thing I would have added to my type is built in polymorphism/sort generics.
 
-This has the benefit that if you know how to write z3 python, you know how to write knuckeldragger. If you know smtlib, you know knuckledragger. And regardless of the fate of knuckledragger, these are useful skills.
+This has the benefit that if you know how to write z3 python, you know how to write knuckledragger. If you know smtlib, you know knuckledragger. And regardless of the fate of knuckledragger, these are useful skills.
+
+This has the downside of me having no control over how Z3 did things. I'm monkey patching in new functions onto ExprRef pretty often, which isn't great for python tooling and maybe tougher for reading by humans. Things that I would make attributes of a custom class or wrapper I'm instead sometimes putting into a global dictionary to be looked up (single dispatch overloading in particular I'm thinking of).
+
+On the whole I think the positives outweigh the negatives.
 
 # The Kernel
+
 <https://github.com/philzook58/knuckledragger/blob/main/knuckledragger/kernel.py>
 
-The core principle of knuckledragger is that it is just as thin as possible framework to chain calls to automated theorem provers in a principled way. By restricting our logic to more or less what the solvers already offer, we get a lot of distance and usability for free. The less code I write the better
+The core principle of knuckledragger is that it is just as thin as possible framework to chain calls to automated theorem provers in a principled way. By restricting our logic to more or less what the solvers already offer, we get a lot of distance and usability for free. The less code I write the better.
 
-I have a lot of experience using z3 to model problems in python. I like it. However, there is a need to break it up. Z3 does not have a mechanism to distinguish between theorems to be proved and theorems proven.
+I have a [lot of experience](https://colab.research.google.com/github/philzook58/z3_tutorial/blob/master/Z3%20Tutorial.ipynb) using z3 to model problems in python. I like it. However, there is a need to break it up. Z3 does not have a mechanism to distinguish between theorems to be proved and theorems proven.
 
-I had been considering signing Proofs cryptographically or other scams, but I've reverted to a pretty straightforward protected Proof datatype.
+I had been considering [signing Proofs cryptographically](https://www.philipzucker.com/python-itp/) or other scams, but I've reverted to a pretty straightforward protected Proof datatype.
 
 The details of what follows have been simplified a bit from what is actually in the library, which has more convenience and safety checks <https://github.com/philzook58/knuckledragger/blob/main/knuckledragger/kernel.py>
 
@@ -76,9 +87,27 @@ def define(name: str, args: list[z3.ExprRef], body: z3.ExprRef) -> z3.FuncDeclRe
 
 You also are going to often to want to make recursive definitions. `define` should check if you are making a recursive definition, but does not currently.
 
-My current idea about `define_fix` is to write your definition body in the fixpoint style using a python lambda.
+My current idea about `define_fix` is to write your definition body in the fixpoint style using a python lambda. I can record all the subcalls easily, which I prefer to digging through the AST. The termination could be discharged via default measure relations or by a call to aprove or similar termination checker.
 
-Having these global functions and global dictionaries is a bit goofy. It might be nice to separate into different contexts.
+```python
+def define_fix(name: str, args: list[z3.ExprRef], retsort, fix_lam) -> z3.FuncDeclRef:
+    sorts = [arg.sort() for arg in args]
+    sorts.append(retsort)
+    f = z3.Function(name, *sorts)
+
+    # wrapper to record calls
+    calls = set()
+
+    def record_f(*args):
+        calls.add(args)
+        return f(*args)
+
+    defn = define(name, args, fix_lam(record_f))
+    # TODO: check for well foundedness/termination, custom induction principle.
+    return defn
+```
+
+Having these global `lemma` / `define` functions and global `defns` dictionaries is a bit goofy. It might be nice to separate into different contexts.
 
 # Applications and Theories
 
@@ -88,9 +117,9 @@ These are the sorts of theories I've been attacking to varying success.
 
 ## Nats
 
-A basic datatype that you expect in a theorem prover is the natural numbers. There is a school of thought that the naturals are the root of mathematics.
+A basic datatype that you expect in a theorem prover is the natural numbers. There is a school of thought that the naturals are the root of mathematics ("God made the integers; all else is the work of man.").
 
-From my perspective, it is unfortunate that smtlib does not offer a built in natural type. Instead it offers an integer type.
+From my perspective, it is unfortunate that smtlib does not offer a built in natural type. Instead it offers an integer type. So two different options for naturals are to cut them out of the built in integers or to use a Peano algerbaic datatype.
 
 ### Peano
 
@@ -98,7 +127,7 @@ We can model Naturals using an algebraic datatype consisting of a zero and succe
 
 This is a principled way of constructing them via a textbook style. It was by first inclination but now I have my doubts.
 
-<https://www.philipzucker.com/sqrt2_2/> I wrote a bit about this here. I also toyed with an interesting style of defining via reflection into the Ints.
+<https://www.philipzucker.com/sqrt2_2/> I wrote a bit about this here. I also toyed with an interesting style of defining via reflection into the Ints using `reflect` `reify` combinators.
 
 You can define arithmetic (plus, times, etc) on these things via structural indiction.
 
@@ -127,11 +156,23 @@ Nats can be perceived as part of a general phenomenon of a sort that is a subset
 
 Nats a subset of Ints, but ints are in turn a subset of the reals. There is also utility in considering the nonnegative reals as an entity of interest (real induction).
 
-There are "induction" principles that directly work over Ints, like two sided induction. Maybe these are useful.
+There are "induction" principles that directly work over Ints, like two sided induction. Maybe these are useful. <https://math.stackexchange.com/questions/4867269/how-does-one-perform-induction-on-integers-in-both-directions>
+
+```python
+# something like this cutting out the integers and getting a result statement as weakened to integers
+def induct(P):
+    return kd.axiom(And(P(0), kd.QForAll([n], n >= 0, P(n), P(n+1))) == kd.QForAll([n], n >= 0, P(n)))
+# or this assuming P is true for all values <= 0
+def induct2(P):
+    return kd.axiom(And(kd.QForAll([n], n <= 0, P(n)), kd.QForAll([n], n >= 0, P(n), P(n+1))) == ForAll([n, P(n)]))
+#or this double sided induction moving outward from 0 rather than just forward.
+def induct3(P):
+    return kd.axiom(And(P(0), ForAll([n], P(n) == P(n+1))) == ForAll([n], P(n)))
+```
 
 ## Lists
 
-Lists are a useful and prominent type. We can define an induction principle similar to the above. Everythign needs to be paramatrized on the sort in question.
+Lists are a useful and prominent type. We can define an induction principle similar to the above. Everything needs to be parametrized on the sort in question.
 
 Sequences are a built in that may serve better <https://microsoft.github.io/z3guide/docs/theories/Sequences/> . They are basically a free monoid type but with some useful stuff that you'd need to define for your own list type.
 
@@ -154,9 +195,10 @@ def induct(T: z3.SortRef, P) -> kd.kernel.Proof:
 
 ## Reals
 
-Lots and lots of junk on the reals.
+I've been thinking about the reals a lot because I want knuckledragger to be good at the kinds of things I would do in an engineering or physics context.
+Also I want to do basic calculus.
 
-Convergence is a painful thing to deal with. A bit surprising to me, but obvious in hindsight is that you need a good theory of rounding/floor. That's how you derive the appropriate N for proofs of convergence. <https://www.philipzucker.com/analysis_knuckle/>
+Lots and lots of junk on the reals.
 
 Avoiding all the epsilon-delta calculus pain seems desirable, so I've been considering alternatives.
 
@@ -174,6 +216,10 @@ Avoiding all the epsilon-delta calculus pain seems desirable, so I've been consi
 <https://www.cs.dartmouth.edu/~doug/powser.html>
 
 ### Rounding
+
+Convergence is a painful thing to deal with. A bit surprising to me, but obvious in hindsight is that you need a good theory of rounding/floor. That's how you derive the appropriate N for proofs of convergence. <https://www.philipzucker.com/analysis_knuckle/>
+
+Rounding is actually kind of tricky. The z3 built ins `ToReal` and `ToInt` are a start, but they don't have that strong of reasoning power. They need to be helped along a little. This s actually evidence I think of the utility of knuckledragger. I could not get some basic theorems to go through in one shot through z3, but with some guidance I could. This probably has to do with seeding the ematching mechanism or preventing z3 from using some built in theory where it can't make use of the appropriate high level reasoning.
 
 ```python
 import knuckledragger as kd
@@ -326,6 +372,8 @@ rational trignometry. <https://web.maths.unsw.edu.au/~norman/Rational1.htm>
 "angles don't exist" Only the combo sin(theta) not raw theta.
 <https://en.wikipedia.org/wiki/List_of_trigonometric_identities>
 
+A simple but good test problem is bounding the value of `e` from first principles.
+
 ## Sets
 
 Attempting a ZF like set theory. We can postulate a undefined sort `Set` and give it some properties. Everything is defined by it's relation to `elem` which is awkward. `ArraySort(Set,BoolSort())` is a useful stand-in for classes.
@@ -391,7 +439,11 @@ elem_inter2 = kd.lemma(ForAll([A,B,x], elem(x, inter(A,B)) == elem(x,A) & elem(x
 
 ```
 
+Alternative set theories are intriguing <https://plato.stanford.edu/entries/settheory-alternative/> <https://en.wikipedia.org/wiki/List_of_alternative_set_theories> . Mizar is supposedly based around Tarski Grothedieck
+
 ## Linear Algebra
+
+Linear algebra is ubiquitously useful and an algebraic theory. I want to attack numpy problems. I the ability to make correctness bounds on numpy operations.
 
 ### Fixed Dimension
 
@@ -455,7 +507,12 @@ We could also declare some uninterpreted sort called `Grp`
 
 In some respects, there are roots in this project in my experiences trying to use Z3 and other ATPs as a category theory prover.
 
+- <https://www.philipzucker.com/category-theory-in-the-e-automated-theorem-prover/>
+- <https://www.philipzucker.com/theorem-proving-for-catlab-2-lets-try-z3-this-time-nope/>
+
 I think I knew how to write fully safe axioms, but they had lots of side conditions I thought were redundant. Knuckledragger is principled enough that I could prove these side conditions are unneeded.
+
+Some general helper/tactic framework for embedding Generalized Algebraic theories into z3 seems possible. Discharging typing obligations early, since they are fairly automatic. Help to write/generate the right typing assumptions.
 
 ## Software
 
@@ -464,6 +521,106 @@ I think I knew how to write fully safe axioms, but they had lots of side conditi
 Two things systems I think are interesting are modelling the Nand2Tetris CPU and RiscV cpus. The first for educational value, the second maybe could actually be useful.
 
 The general plan is to define instruction datatypes, a state datatype,
+
+```python
+# a sketch
+
+import knuckledragger as kd
+from z3 import *
+
+RVInsn = Datatype("RVInsn")
+RVInsn.declare("ADD", ("rd", BitVecSort(5)), ("rs1", BitVecSort(5)), ("rs2", BitVecSort(5)))
+RVInsn = RVInsn.create()
+
+RVState = Datatype("RVState")
+RVState.declare("mk", ("reg", ArraySort(BitVecSort(5), BitVecSort(32))), ("pc", BitVecSort(32)), ("mem", ArraySort(BitVecSort(32), BitVecSort(8))))
+RVState = RVState.create()
+
+insn = Const("insn", RVInsn)
+st = Const("st", RVState)
+addr = Const("addr", BitVecSort(32))
+
+load32 = kd.define("load32", [st, addr], 
+  Concat(Select(st.mem, addr + i) for i in range(4))
+)
+reg = Const("reg", )
+
+regwrite = kd.define("regwrite", [st, reg, addr],
+                       If(reg == 0, st, # r0 is not a real register.
+                       
+                       )
+  Store(st.reg, insn.rd, load32(st, st.reg[insn.rs1]) + load32(st, st.reg[insn.rs2]))
+)
+
+exec_insn = kd.define("exec_insn", [insn,st],
+  If(insn.is_ADD, 
+                RVState.mk(
+                Store(st.reg, insn.rd, st.reg[insn.rs1] + st.reg[insn.rs2]),
+                st.pc + 1,
+                st.mem
+                ),
+)
+
+```
+
+Some nand2tetris circuitry buildup
+
+```python
+import knuckledragger as kd
+from knuckledragger import lemma, axiom, define
+
+from z3 import *
+
+B = BoolSort()
+BV1 = BitVecSort(1)
+x,y,z,w,u,v = Consts("x y z w u v", BV1)
+"""
+CNand = Function("Nand", B,B,B,B)
+nand_def = axiom(ForAll([x,y,z], CNand(x,y,z) == 
+     Or(And(x == True,  y == True,  z == False),
+        And(x == True,  y == False, z == True),
+        And(x == False, y == True,  z == True),
+        And(x == False, y == False, z == True))))
+"""
+
+CNand = define("CNand", [x,y,z], Or(
+    And(x == 1, y == 1, z == 0),
+    And(x == 1, y == 0, z == 1),
+    And(x == 0, y == 1, z == 1),
+    And(x == 0, y == 0, z == 1)))
+
+
+test1 = lemma(CNand(True,True,False), by=[CNand.defn])
+
+nand_fun = lemma(ForAll([x,y,z], CNand(x,y,z) == (~(x & y) == z)), by=[CNand.defn])
+nand_fun
+
+CNot = define("CNot", [x,y], CNand(x,x,y))
+lemma(ForAll([x,y], CNot(x,y) == (~x == y)), by=[CNand.defn, CNot.defn])
+
+cnot_fun = lemma(ForAll([x,y], CNot(x,y) == (~x == y)), by=[nand_fun, CNot.defn])
+
+
+CAnd = define("CAnd", [x,y,z], Exists([w], And(CNand(x,y,w), CNot(w,z))))
+
+cand_fun = lemma(ForAll([x,y,z], CAnd(x,y,z) == (x & y == z)), by=[cnot_fun, nand_fun, CAnd.defn])
+
+
+COr = define("COr", [x,y,z], Exists([w,u], And(CNot(x,w), CNot(y,u), 
+                                                   CNand(w,u,z))))
+
+cor_fun = lemma(ForAll([x,y,z], COr(x,y,z) == ((x | y) == z)), by=[cnot_fun, nand_fun, COr.defn])
+
+a,b,out,sel,sela,selb,notsel = Consts("a b out sel sela selb notsel", BV1)
+Mux = define("Mux", [a,b,sel,out], Exists([sela,selb,notsel], And(
+    CNot(sel, notsel), 
+    CAnd(notsel, a, sela),
+    CAnd(sel, b, selb),
+    COr(sela, selb, out))))
+
+mux_fun = lemma(ForAll([a,b,sel,out], Mux(a,b,sel,out) == (out == If(sel == 0, a, b))), by=[Mux.defn, cnot_fun, cand_fun, cor_fun])
+
+```
 
 ### Hoare and WP
 
@@ -524,6 +681,8 @@ sub = kd.notation.sub.define([i, j], Interval.mk(i.lo - j.hi, i.hi - j.lo))
 # and so on
 ```
 
+I'm particular interested in the ability of interval analysis to give verified bounds on differential / integral equations. There is a fixed point procedure for iteratively improving an approximate solutions to an ODE  $y'(t) = Ly(t)$,   $y_{n+1}(t) = y(0) + \int y'_{n}(t)dt = y(0) + \int Ly_{n}(t)dt $. This is picard-lindelof iteration / born approximation / other names. If you lift this to intervals, the integral of intervals is seinsibly over approximable. If you can find a interval approximation of y that maps into itself, you can eventually show the true solution must lie within there. A neat kind of bootstrapping.
+
 - <https://www.philipzucker.com/z3_diff/>
 - <https://www.philipzucker.com/z3-cegar-interval/>
 - <https://www.philipzucker.com/more-stupid-z3py-tricks-simple-proofs/>
@@ -555,9 +714,11 @@ The built in support for Real <-> Float reasoning is pretty weak. I'm not comfor
 
 This is honestly one of the most useful things knuckledragger offers right now.
 
-Python has single dispatch in the standard library. <https://peps.python.org/pep-0443/> Hence, I consider this to be an accepted python pattern.
+Python has single dispatch in the standard library. <https://peps.python.org/pep-0443/> <https://docs.python.org/3/library/functools.html#functools.singledispatch> Hence, I consider this to be an accepted python pattern.
 
 But I can't dispatch on the python class because z3 python does not produce different classes for different sorts. So the thing needs to be modified slightly to dispatch on sorts. This is not too hard to achieve. By monkey patching these dispatch objects onto the operators for `ExprRef`, we can overload the operators.
+
+ <https://github.com/philzook58/knuckledragger/blob/c02b9521aafdc141364179119256955fcf37ef34/knuckledragger/notation.py#L54>
 
 ```python
 class SortDispatch:
@@ -596,6 +757,8 @@ It is an extremely useful overload to enable getting the fields of z3 datatype v
 
 Python `__getattr__` is what gets called when a field is not found on the class as a fallback. The following snippet then searches through
 
+<https://github.com/philzook58/knuckledragger/blob/c02b9521aafdc141364179119256955fcf37ef34/knuckledragger/notation.py#L103>
+
 ```python
 def lookup_cons_recog(self, k):
     """
@@ -630,6 +793,8 @@ Syntax via <https://github.com/lark-parser/lark> . lark is a very nice arser gen
 A thing I really like is calc tactics. These let you write an equational proof. I've moved over to using a Calc python class as it enables better syntax.
 It can be used either by chaining or by mutation.
 It is not part of the kernel. It discharges it's obligations through the kernel function `lemma`. When you call `c.qed()` it takes all the equational step lemmas it has found and asks the kernel if they combine from the total left hand side to right hand side.
+
+<https://github.com/philzook58/knuckledragger/blob/c02b9521aafdc141364179119256955fcf37ef34/knuckledragger/tactics.py#L5>
 
 ```python
 class Calc:
@@ -696,15 +861,15 @@ def simp2(t: z3.ExprRef) -> z3.ExprRef:
 
 I should make a mechanism to store simp databases.
 
+<https://github.com/AliveToolkit/alive2/blob/fc3ea52ba741306e1595d46753aa2795ca4aaab2/smt/solver.cpp#L584> tactic usage in alive2, the only place I've heard of it happening usefully.
+
 ### Other
 
-+ Backwards
+- Backwards
 - Mizar / Isar combinstors
-
-- Unification
+- Unification helper for z3 ast might be nice
 - Binders
-- Egraph
-- <https://github.com/AliveToolkit/alive2/blob/fc3ea52ba741306e1595d46753aa2795ca4aaab2/smt/solver.cpp#L584>
+- Egraph - Maybe my external z3 egraph is good for a tactic. There is also a z3 tactic "euf-completion" which is intriguing
 
 ## Alternative Solvers
 
@@ -729,21 +894,59 @@ def lemma_db():
 
 ## Refinement and Partiality
 
-Projections
-Free logic
+This is a complicated subject and needs to be a post in its own right.
 
-- predicates describing the subset. `Even
-- Projection functions. These are the analog of choice functions to the predicate functions. A projection function is idempotent `proj(prof(x)) = x`. A projection function defines a subset such that `proj(x) = x`. Because of idempotency `proj(x)` always obeys this condition.
-- New sorts by fiat
+It is a consistent need to have a good mechanism to talk about subsets of some sort. Dependent type theories use sum types for this. This isn't quite an option.
+
+One low effort thing that helps is a notion of quantified forall and exists combinators. These get you a lot of distancew for not too much. If I tag sorts with a special property `wf` for their well formedness condition, these combinators automatically add that upon quantifying over a variable of that sort.
+
+```python
+def QForAll(vs, *hyp_conc):
+    """Quantified ForAll
+
+    Shorthand for `ForAll(vars, Implies(And(hyp[0], hyp[1], ...), conc))`
+
+    If variables have a property `wf` attached, this is added as a hypothesis.
+
+    """
+    conc = hyp_conc[-1]
+    hyps = hyp_conc[:-1]
+    hyps = [v.wf for v in vs if hasattr(v, "wf")] + list(hyps)
+    if len(hyps) == 0:
+        return z3.ForAll(vs, conc)
+    elif len(hyps) == 1:
+        return z3.ForAll(vs, z3.Implies(hyps[0], conc))
+    else:
+        hyp = z3.And(hyps)
+        return z3.ForAll(vs, z3.Implies(hyp, conc))
+
+
+def QExists(vs, *concs):
+    """Quantified Exists
+
+    Shorthand for `ForAll(vars, And(conc[0], conc[1], ...))`
+
+    If variables have a property `wf` attached, this is anded into the properties.
+    """
+    concs = [v.wf for v in vs if hasattr(v, "wf")] + list(concs)
+    if len(concs) == 1:
+        z3.Exists(vars, concs[0])
+    else:
+        z3.Exists(vars, z3.And(concs))
+```
+
+- Free logic <https://plato.stanford.edu/entries/logic-free/> . The `E` predicate is much like my `wf`. Identical maybe.
+
+There are some design choices for how to build refinement sorts/ subsets.
+
+- predicates describing the subset. `Even(x) = Exists([y], x == 2*y)`
+- Projection functions. These are the analog of choice functions to the predicate functions. A projection function is idempotent `proj(prof(x)) = x`. A projection function defines a subset such that `proj(x) = x`. Because of idempotency `proj(x)` always obeys this condition. `proj_even(x) = 2 * (x / 2)`
+- New sorts by fiat `E = DeclareSort("Even"), inj = Function("inj", Int, E), proj = Function("proj", E, Int), Implies(Even(x), proj(inj(x)) == x)`
 - Newtype sorts combined with projection functions. The newtypes can also contain useful witnesses. `type Even = Even {x : Int, y : Int}`  `wf(e) = e.x == 2*e.y`
-
-### Well Formedness wrangling
-
-Bounded Quantifiers
 
 ## Existentials
 
-Manual skolemization is probably wise. You can often find
+Manual skolemization is probably wise. You can often find a natural candidate for naming these things when you do it manually. THis is important, because you can then help z3 along. Z3 is not strong at nested quantifiers. Maybe with Vampire coming online, I can suffer more quantifier nesting.
 
 For example `even(x) = exists y, x == 2*y`. However, there is an obvious definition
 
@@ -765,6 +968,58 @@ def open_binder(lam: z3.QuantifierRef):
 ## Induction
 
 Don't have a great answer. I have built wrappers around the z3 Datatype mechanism to derive induction and recursion definitions. Not in love with it.
+
+A very preliminary prototype
+
+```python
+from knuckledragger.kernel import *
+from z3 import *
+class Datatype(z3.Datatype):
+    def create(self):
+        DT = super().create()  # z3 already checks for positivity.
+        PredSort = ArraySort(DT, BoolSort())
+        # construct an induction principle.
+        P = FreshConst(PredSort, prefix="P")
+        hyps = []
+        for i in range(DT.num_constructors()):
+            constructor = DT.constructor(i)
+            args = [
+                FreshConst(constructor.domain(j), prefix="a")
+                for j in range(constructor.arity())
+            ]
+            acc = P[constructor(*args)]
+            for arg in args:
+                if arg.sort() == DT:
+                    acc = QForAll([arg], P[arg], acc)
+                else:
+                    acc = ForAll([arg], acc)
+            hyps.append(acc)
+        x = FreshConst(DT, prefix="x")
+        conc = ForAll([x], P[x])
+        induct = Lambda([P], Implies(And(hyps), conc))
+        induct_ax = trust(ForAll([P], induct[P] == True))
+
+        # recursor
+
+        # store inside the data type?
+        DT.induct = induct
+        DT.induct_ax = induct_ax
+        #DT.rec = rec
+        return DT
+
+def recursor(name, *cases, DT):
+    assert all(case.range() == DT for case in cases)
+    f = z3.RecFunction(name, DT, )  # also freshness needs to be checked
+
+
+def define_rec(name, args, body, measure=None):
+    sig = [arg.sort() for arg in args]
+    f = z3.RecFunction(name, *sig)  # also freshness needs to be checked. Yikes.
+    # TODO check termination and totality of definition
+    RecAddDefinition(f, body)
+    fun_def = infer([], ForAll(args, f(*args) == body))
+    return f, fun_def
+```
 
 ### Inductive Relations
 
