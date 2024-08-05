@@ -355,7 +355,7 @@ PACE <https://pacechallenge.org/past/>
 - steiner tree
 
 <https://en.wikipedia.org/wiki/User:David_Eppstein/Graph_Algorithms>
-
+https://github.com/ArrogantGao/TreeWidthSolver.jl
 ### Easy
 
 Topological sort
