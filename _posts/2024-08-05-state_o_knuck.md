@@ -208,8 +208,7 @@ Avoiding all the epsilon-delta calculus pain seems desirable, so I've been consi
 - convergence
 - intermediate value theorem. Axiomatizing that bisection means something is a relative of completeness.
 - extended reals. <https://en.wikipedia.org/wiki/Extended_real_number_line> Make an algebraic datatype with special +- infinity constructors. Relatedly can work with projectively extended <https://en.wikipedia.org/wiki/Projectively_extended_real_line> with only a single infinity
-- Try Eudoxus reals?
--
+- Try Eudoxus reals? <https://en.wikipedia.org/wiki/Construction_of_the_real_numbers#Construction_from_integers_(Eudoxus_reals)> . Harrison recommended somewhere.
 
 ### Formal Power Series
 
