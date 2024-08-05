@@ -710,6 +710,8 @@ The built in support for Real <-> Float reasoning is pretty weak. I'm not comfor
 
 # Features
 
+Moving on from applications, we can discuss the niceties of syntax or general modelling problems of being in multi-sorted first orderlv logic.
+
 ## Overloading
 
 This is honestly one of the most useful things knuckledragger offers right now.
@@ -892,6 +894,8 @@ def lemma_db():
     return db
 ```
 
+These databases might be useful for machine learning training sets and for extracting theorem prover competition benchmarks. By erasing intermediate nodes in the proof tree, you can make a sequence of harder and harder problem, until you ask for the top level theorem given only the leaf axioms of the proof.
+
 ## Refinement and Partiality
 
 This is a complicated subject and needs to be a post in its own right.
@@ -1026,7 +1030,7 @@ def define_rec(name, args, body, measure=None):
 A useful modelling capability is inductive relations, which are served by dependent type definitions in systems like lean and coq.
 Dependent types are not necessary for some version of inductive relations though.
 
-In my Justified SMT post, I discussed the basic idea of how I intend to encode this. You can use the clark completion to define all the ways a relation can become true. If you add an extra parameter to the relation that describes the tree and existential witnesses of the proof, these become well founded relations. Induction over the relation is really induction over this proof object.
+In my Justified SMT post <https://www.philipzucker.com/minikanren_inside_z3/> , I discussed the basic idea of how I intend to encode this. You can use the clark completion to define all the ways a relation can become true. If you add an extra parameter to the relation that describes the tree and existential witnesses of the proof, these become well founded relations. Induction over the relation is really induction over this proof object.
 
 These are related to refinements in that we need an extra consistency condition that the proof object attached to the relation actually checks.
 
@@ -1039,11 +1043,11 @@ Another intriguing option is the addition of an open or closed `Any` universe. O
 
 ## Context
 
-It would be nice sometimes to not have to keep repeating `ForAll([x], foo, bar, biz)` all the time and keep some lemmas in the `by` clause by default. One solution is to make local lemma wrappers. Could do something trickier or more stateful though. Not sure
+It would be nice sometimes to not have to keep repeating `ForAll([x], foo, bar, biz)` all the time and keep some lemmas in the `by` clause by default. One solution is to make local lemma wrappers. Could do something trickier or more stateful though. Not sure.
 
 ```python
 def local_lemma(thm,by=[]):
-    return kd.lemma(kd.QForAll([x], foo, bar, thm), by=by + [my_default_lemma])
+    return kd.lemma(kd.QForAll([x], foo, bar, thm), by=by + my_default_lemmas)
 ```
 
 ## Algebraic Hierarchy
@@ -1117,6 +1121,18 @@ length = kd.define("length", [x], c.expr())
 ```
 
 One possibility to sanity check the totality of your cases is to put a fresh variable in the otherwise and then do a relational check `prove(e1 == e2)` where `e1` and `e2` only differ by the fresh constant in the otherwise default case. If this check does not pass, your cases are not total. And you can achieve this without going to a Maybe or keeping aside some other special error value. Kind of cute.
+
+## Speed
+
+Am I hanging myself by being in python? I find myself worrying about eventually needing everything cached and how complicated that will be. So far, everything runs fast.
+
+It would be good to line profile
+
+## Machine Learning
+
+I haven't done much of anything yet. Lemma databases might be helpful for this.
+
+Copilot rules though. It does a decent job of filling in both my theorem statements and proofs.
 
 # Bits and Bobbles
 
