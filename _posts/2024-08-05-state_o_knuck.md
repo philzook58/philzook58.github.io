@@ -570,6 +570,10 @@ R4 = RN(4)
 
 A more mathy thing to do is consider all finite vector spaces.
 
+It'd be nice to attack it at the level of Linear Algerba done right <https://linear.axler.net/> Or Halmos Finite Dimensional Vector Spaces.
+
+Could go totally axiomatic
+
 Lists seemed somewhat natural, but actually were a bit awkward.
 
 A universe to work in for finite dimensional algebra is using `Z >> R == ArraySort(IntSort(), RealSort())` as a vector space. This has all finite dimensional subspaces in it.
@@ -899,12 +903,6 @@ class Calc:
         self.vars = vars
         self.terms = [lhs]
         self.lemmas = []
-
-    def ForAll(self, body):
-        if len(self.vars) == 0:
-            return body
-        else:
-            return z3.ForAll(self.vars, body)
 
     def eq(self, rhs, by=[]):
         self.lemmas.append(kd.lemma(self.ForAll(self.terms[-1] == rhs), by=by))
