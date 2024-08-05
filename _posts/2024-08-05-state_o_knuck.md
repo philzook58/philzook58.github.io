@@ -203,17 +203,88 @@ Lots and lots of junk on the reals.
 Avoiding all the epsilon-delta calculus pain seems desirable, so I've been considering alternatives.
 
 - formal power series, streams, Nat -> R
-- Real induction. These might be useful axiom schema to throw in as a version of completeness of the reals.
+- Real induction. These might be useful axiom schema to throw in as a version of completeness of the reals. <https://math.stackexchange.com/questions/4202/induction-on-real-numbers>
 - sequences
 - convergence
-- intermediate value theorem
+- intermediate value theorem. Axiomatizing that bisection means something is a relative of completeness.
 - extended reals. <https://en.wikipedia.org/wiki/Extended_real_number_line> Make an algebraic datatype with special +- infinity constructors. Relatedly can work with projectively extended <https://en.wikipedia.org/wiki/Projectively_extended_real_line> with only a single infinity
+- Try Eudoxus reals?
+-
 
 ### Formal Power Series
 
 [Formal power series](https://en.wikipedia.org/wiki/Formal_power_series) are "just" `N >> R`. They have pointwise addition and a convolutional multiplication. These are normal perfectly computable things. Also division, composition, and inversion. You can also define operations analogous to differentiation and integration. So they're a cool algebraic thing. You need to show they converge if you want to connect back to more ordinary definitions
 
-<https://www.cs.dartmouth.edu/~doug/powser.html>
+<https://www.cs.dartmouth.edu/~doug/powser.html> My all time favorite pearl about power series in haskell.
+
+Sympy and sage also have support for these power series like things.
+
+Streams are supported in cvc5 <https://cvc5.github.io/docs/cvc5-1.0.0/api/python/pythonic/dt.html> . This could be an alternative encoding. Or perhaps take coinduction as an inspiration for our modelling.
+
+```python
+# a sketch. Doesn't really work yet.
+import knuckledragger as kd
+from z3 import *
+Powser = IntSort() >> RealSort()
+n,m = Ints("n m")
+a,b,c = Consts("a b c", Powser)
+x,y,z = Reals("x y z")
+fP0 = kd.define("P0", [], K(IntSort(), RealVal(0)))
+P0 = fP0()
+P0.defn = fP0.defn
+series = kd.define("series", [x], Store(P0, IntVal(0), x)) #Lambda([n], If(n == 0, x, 0))
+add = kd.define("add", [a,b], Lambda([n], a[n] + b[n]))
+kd.notation.add.register(Powser, add)
+add_comm = kd.lemma(ForAll([a], a + P0 == a), by=[add.defn, P0.defn])
+add_assoc = kd.lemma(ForAll([a,b,c], a + (b + c) == (a + b) + c), by=[add.defn])
+add_series = kd.lemma(ForAll([x,y], series(x) + series(y) == series(x + y)), by=[add.defn, series.defn, P0.defn])
+
+
+# tail?
+shift = kd.define("shift", [a], Lambda([n], a[n+1])) # Lambda([n], If(n >= 1, a[n + 1], 0))
+mul = Function("mul", Powser, Powser, Powser)
+kd.notation.mul.register(Powser, mul)
+#mul = kd.define("mul", [a,b], Lambda([n], If(n == 0, a[n] * b[n], 
+#                                                     shift(a) * b + series(a[0]) * shift(b))))
+#mul = kd.define("mul", [a,b], Lambda([n], Sum([m], a[m] * b[n-m]))
+# could use smul(a[0], b) instead of series(a[0]) * shift(b)
+
+# a projection
+powser = kd.define("powser", [a], Lambda([n], If(m < 0, RealVal(0), a[m])))
+is_powser = kd.define("is_powser", [a], powser(a) == a)
+powser_idem = kd.lemma(ForAll([a], powser(powser(a)) == powser(a)), by=[powser.defn])
+
+def powser_induct(P):
+    return kd.axiom(Implies( ForAll([a], Implies(is_powser(a) & P(a), P(shift(a)))),
+                             #----------------------------------
+                             ForAll([a], Implies(is_powser(a), P(a)))))
+```
+
+### Differentiation
+
+I think the seeds of an approach can be found here <https://www.philipzucker.com/z3_diff/>
+
+We can axiomatize a reasonable syntactic-ish differentiation operation. It isn't connected automatically to the analytic definition, and it can't be since differentiation is not a total operation on functions.
+
+A "yoneda-like" trick is useful to define a `sin = sinR . : (R -> R) -> (R -> R)` function because it automatically associates all `compose` to the right.
+
+```python
+# sketch
+RFun = ArraySort(R,R)
+derive = Function("derive", RFun, RFun) #diff?
+sin,cos,exp = Consts("sin cos exp", RFun)
+
+dsin = derive(sin) == cos
+dcos = derive(cos) == -sin
+dexp = derive(exp) == exp
+
+chain = ForAll([f,g], derive(comp(f,g)) == derive(g) * comp(derive(f),g))
+dsum = ForAll([f,g], derive(f + g) == derive(f) + derive(g))
+dmul = ForAll([f,g], derive(f * g) == derive(f) * derive(g))
+c = Real("c")
+dconst = ForAll([c], derive(K(R,c)) == K(R,0))
+dx = derive(Lambda([x], x)) == K(R,1)
+```
 
 ### Rounding
 
@@ -253,6 +324,25 @@ Sequences of R can have an equivalence structure put on them that gives you infi
 Or can directly axiomatize it and directly build a transfer schema. Doing this makes me uncomfrotable. The schema to do this requires traversal of the ast and tracking of which definitions are tainted by the `std` predicate.
 
 acl2(R) uses the hyperreals.
+
+- <https://www.researchgate.net/publication/220532005_Nonstandard_analysis_in_ACL2> Gamboa thesis Hyperreals in ACL2 acl2(r). There's also a chapter in Applications of ACL2 book. Some follow up works. I saw someone
+- <https://www.youtube.com/watch?v=U-y8UNccnIw&t=909s&ab_channel=Galois> max von hippel is using acl2(r)
+
+There is a line of older automated reasoning work claiming the hyperreals makes problems way easier (Bledsoe and Ballantyne). The Hyperreals kind of algebrize calculus.
+
+- <https://www.cs.utexas.edu/ftp/techreports/atp71.pdf> [3] W. W. Bledsoe. Some automatic proofs in analysis.
+- <https://www.sciencedirect.com/science/article/abs/pii/0004370272900410> computer assisted limit theorems 9172 bledsoe
+- <https://link.springer.com/article/10.1023/A:1005843328643>  The Heine–Borel Challenge Problem. In Honor of Woody Bledsoe
+- Bledsoe, W.: Challenge problems in elementary analysis, Journal of Automated Reasoning 6 (1990),
+- Bledsoe, W. W.: Heine–Borel Theorem Analogy Example, Technical Report Memo ATP 124, University of Texas Computer Science Dept., Austin, TX, 1994.
+- <https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=70050293723ef74d0747323be1cd06eabe5ebbc5> Non resolution theorem proving
+- Ballantyne, M. and Bennett, W., Graphing methods for topological proofs, The University of
+Texas at Austin Math. Dept. Memo ATP-7 (1973).
+- Ballantyne, A. M. and Bledsoe, W. W., Automatic proofs of theorems in analysis using nonstandard techniques, The University of Texas at Austin Math. Dept. Memo ATP-23 (July
+1975); J. ACM, to appear, July 1977. -
+- A. Michael Ballantyne: The Metatheorist: Automatic Proofs of Theorems in Analysis Using Non-Standard Techniques, Part II.
+- Isabelle Hyperreals <https://isabelle.in.tum.de/library/HOL/HOL-Nonstandard_Analysis/Hyperreal.html>
+- <https://www.cl.cam.ac.uk/~lp15/papers/Isabelle/fleuriot-princip-CADE.pdf> hyperreals applied to newton
 
 ### Complex
 
@@ -313,7 +403,7 @@ norm2 = kd.define("norm2", [z], z * conj(z))
 
 While z3 has good built in powers `x**4`, it does not have great reasoning principles for abstract powers `x**n`
 
-There is reason to believe I may have to axiomatize it. Power is kind of special. It is a homomorphism between the group of addition and multiplication
+There is reason to believe I may have to axiomatize it. Power is kind of special. It is a homomorphism between the group of addition and multiplication. <https://en.wikipedia.org/wiki/Exponential_field>
 
 ```python
 x = Real("x")
@@ -347,7 +437,7 @@ z3 really doesn't like reasoning over its native powers. It's best to wrap them 
 
 They're tricky. Basically they kind of need calculus.
 
-Sine and cosine don't actually because the addition formula (which are relatives of the )
+Sine and cosine don't actually because the addition formula (which are relatives of the summation formula for powers)
 
 Would it be good to define sine and cosine through the complex numbers? Maybe.
 
@@ -871,7 +961,7 @@ I should make a mechanism to store simp databases.
 - Mizar / Isar combinstors
 - Unification helper for z3 ast might be nice
 - Binders
-- Egraph - Maybe my external z3 egraph is good for a tactic. There is also a z3 tactic "euf-completion" which is intriguing
+- Egraph - Maybe my external z3 egraph <https://www.philipzucker.com/ext_z3_egraph/> is good for a tactic. There is also a z3 tactic "euf-completion" which is intriguing
 
 ## Alternative Solvers
 
@@ -1041,6 +1131,8 @@ This can be got around by writing generic functions/definitions such that they t
 
 Another intriguing option is the addition of an open or closed `Any` universe. One can define a datatype `ClosedAny` or declare an uninterpreted sort `OpenAny` that has injectors and projectors from all other types. Things that have to be generic can work over this type sometimes. Without auto conversions, this may be rather clunky. It is interesting the relationship between this Any type and type theory universes.
 
+Staging might be interesting to explore to remove overhead of the dynamic typing approach. Often the types will resaolve to something concrete.
+
 ## Context
 
 It would be nice sometimes to not have to keep repeating `ForAll([x], foo, bar, biz)` all the time and keep some lemmas in the `by` clause by default. One solution is to make local lemma wrappers. Could do something trickier or more stateful though. Not sure.
@@ -1135,6 +1227,12 @@ I haven't done much of anything yet. Lemma databases might be helpful for this.
 Copilot rules though. It does a decent job of filling in both my theorem statements and proofs.
 
 # Bits and Bobbles
+
+Gordon plotkin, decision procedure for partial derivatives <https://www.youtube.com/watch?v=j_w6GNUIQDo&ab_channel=AppliedCategoryTheory%40UCR>
+
+Marshall <https://github.com/andrejbauer/marshall>  <https://dl.acm.org/doi/pdf/10.1145/3341703> MarshallB . Awesome exact real system. Based around a principle that refining reals don't have equality. So the language has a more pirmitve thing than Bools, the sierpinski truth value (a stream that eventually ends in Unit).
+
+<https://codac.io/>  Interval tubes for robotics
 
 # Meta Z3
 
