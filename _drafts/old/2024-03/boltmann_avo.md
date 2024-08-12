@@ -24,3 +24,7 @@ So this fact that these constants are inverse is really a relative of the anthro
 pV = nRT
 
 Maybe another way of putting it is there is 1humanlength = 1meter  like how 1 lightmeter = c  
+
+<https://news.ycombinator.com/item?id=41208988>
+<https://roitman.io/blog/91>
+A wonderful coincidence or an expected connection: why π² ≈ g.

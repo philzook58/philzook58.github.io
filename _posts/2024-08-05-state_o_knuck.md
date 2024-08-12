@@ -924,7 +924,7 @@ A simplification tactic is at the core of a good experience. You hammer on these
 
 I thought maybe I'd need an extensive metaprogramming system to do this but now I'm not so sure.
 
-Actually for the first time I found the z3 Tactic system super useful. I can give a `Goal` the defns database or maybe other simp databases and use demodulator, simplify, elim-predicates, macro-finder as promising simplifiers. By making a dummy variable "knuckle_goal" I can track what is my original term. This is not trusted kernel code. Once i have a suspected good simplified term, I can send it to `lemma` to actually confirm.
+Actually for the first time I found the z3 Tactic system super useful. I can give a `Goal` the defns database or maybe other simp databases and use demodulator, simplify, elim-predicates, macro-finder as promising simplifiers. By making a dummy variable "knuckle_goal" I can track what is my original term (I saw caleb do this trick). This is not trusted kernel code. Once i have a suspected good simplified term, I can send it to `lemma` to actually confirm.
 
 ```python
 def simp(t: z3.ExprRef) -> z3.ExprRef:
