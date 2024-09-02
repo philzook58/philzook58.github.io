@@ -13,7 +13,7 @@ We need to excite the system in a repeatable way. We might
 - Slowly "turn on" the nonlinear term to a steady state linear system. This is not typically experimentally feasible, so kind of a goofy thing to say.
 - Sweep the frequencies in a slow controlled manner
 
-The second is probably a lot more common because it's easy to set up and the plots coming out of oscilloscopes and things directly correspond to some experimental curve. It is also not uncommon for the time scale of the system to be much much faster than a reasonable sweep rate.
+The latter is probably a lot more common because it's easy to set up and the plots coming out of oscilloscopes and things directly correspond to some experimental curve. It is also not uncommon for the time scale of the system to be much much faster than a reasonable sweep rate.
 
 However, these notions do not necessarily reduce to the same thing. Linear systems are very forgiving, but nonlinear systems can change the respond depending on how you excite them. In particular, there is hysteresis in the respond curve of an upsweep vs a down sweep of frequencies.
 
