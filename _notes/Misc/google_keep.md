@@ -2,9 +2,343 @@
 layout: post
 title: Google Keep
 ---
-Export: Highlight, select copy to google doc.
+Export Method: Highlight, select copy to google doc.
 
-#
+# 2024-08
+
+What’s the right way to QuickCheck floating-point routines? | blog :: Brent -> [String]
+
+<https://byorgey.wordpress.com/2019/02/24/whats-the-right-way-to-quickcheck-floating-point-routines/>
+
+<https://dl.acm.org/doi/pdf/10.1145/177492.177726>
+
+Tla plus paper
+
+[2405.18341] The Ross-Darboux-Stieltjes Integral
+
+<https://arxiv.org/abs/2405.18341>
+
+Barycentric interpolation via the AAA algorithm
+
+<http://guettel.com/rktoolbox/examples/html/example_aaa.html>
+
+<https://people.maths.ox.ac.uk/trefethen/nak_sete_tref_revised.pdf>
+
+Aaa algorthm for rational approximation
+
+CCLemma: E-Graph Guided Lemma Discovery for Inductive Equational Proofs | Proceedings of the ACM on Programming Languages
+
+<https://dl.acm.org/doi/10.1145/3674653>
+
+<https://github.com/yihozhang/Halide/tree/yihozhang-eqsat-roundtrip/src/egglog>
+
+Bits, Math and Performance(?)
+
+<http://bitmath.blogspot.com/search?updated-max=2023-04-12T17:11:00-07:00&max-results=20>
+
+Cool automated bit math identity finding
+
+<https://microsoft.github.io/z3guide/programming/Proof%20Logs/>
+
+<https://news.ycombinator.com/item?id=41322758> Python’s Preprocessor (pydong.org) codec abuse
+
+<https://news.ycombinator.com/item?id=41315359> SIMD Matters: Graph Coloring (box2d.org)
+
+<https://iopscience.iop.org/article/10.1088/1361-6633/ac03aa/meta>
+
+<https://www.cl.cam.ac.uk/~jrh13/slides/intel-8jan98/slides.pdf>
+
+Harrison floating point of tqng exp
+
+CS 6120: An Interpreter for the btor2 Model Checking Language
+
+<https://www.cs.cornell.edu/courses/cs6120/2023fa/blog/btor2i/>
+
+MicroZed Chronicles: Beyond Basics—Intermediate FPGA Projects
+
+<https://www.adiuvoengineering.com/post/microzed-chronicles-beyond-basics-intermediate-fpga-projects>
+
+Measure, Integration & Real Analysis
+
+<https://measure.axler.net/>
+
+What Is a Fréchet Derivative? – Nick Higham
+
+<https://nhigham.com/2020/06/23/what-is-a-frechet-derivative/>
+
+Closed-Form 3x3 Matrix Decompositions
+
+<https://theorangeduck.com/page/closed-form-matrix-decompositions>
+
+cranberry_blog/StretchyReflections.md at master · AlexSabourinDev/cranberry_blog · GitHub
+
+<https://github.com/AlexSabourinDev/cranberry_blog/blob/master/StretchyReflections.md>
+
+Serverless AI Inference with Gemma 2 using Mozilla's llamafile on AWS Lambda
+
+<https://www.unremarkable.ai/serverless-ai-inference-with-gemma-2-using-mozillas-llamafile-on-aws-lambda/>
+
+Numerical analytic continuation - Wikipedia
+
+<https://en.m.wikipedia.org/wiki/Numerical_analytic_continuation>
+
+<https://www.cl.cam.ac.uk/~jrh13/papers/complex.pdf>
+
+Complex polynomial quant elim hol light
+
+ChocoPy: A Programming Language for Compilers Courses
+
+<https://chocopy.org/>
+
+RiscEmu Documentation! — RiscEmu 2.0.0a2 documentation
+
+<https://riscemu.readthedocs.io/en/latest/index.html>
+
+Slides | slides
+
+<https://maaslalani.com/slides/>
+
+Exact Polygonal Filtering: Using Green's Theorem and Clipping for Anti-Aliasing | Hacker News
+
+<https://news.ycombinator.com/item?id=41253461>
+
+Font with Built-In Syntax Highlighting | Hacker News
+
+<https://news.ycombinator.com/item?id=41245159>
+
+<https://news.ycombinator.com/item?id=41208988>
+
+<https://markjgillespie.com/Research/harnack-tracing/HarnackTracing.pdf>
+
+Hrmaonic function tracing
+
+Harnack's inequality - Wikipedia
+
+<https://en.wikipedia.org/wiki/Harnack%27s_inequality>
+
+Poisson kernel - Wikipedia
+
+<https://en.wikipedia.org/wiki/Poisson_kernel>
+
+[2408.04564] First steps towards Computational Polynomials in Lean
+
+<https://arxiv.org/abs/2408.04564>
+
+<https://people.bath.ac.uk/masjhd/JHD-CA.pdf>
+
+Davenport computer algebra
+
+HFT.m
+
+<https://www.axler.net/HFT_Math.html>
+
+Harmonic function theory mathematica
+
+blog :: Brent -> [String] - Competitive Programming in Haskell: tree path decomposition, part II
+
+<https://byorgey.github.io/blog/posts/2024/08/08/TreeDecomposition.html>
+
+ICPP – Running C++ in anywhere like a script | Hacker News
+
+<https://news.ycombinator.com/item?id=41151013>
+
+<https://ntrs.nasa.gov/api/citations/20205005199/downloads/Intern_presentation_2020%2008-04.pdf>
+
+Pvs lemma selection
+
+<https://inria.hal.science/hal-01386986/document>
+
+Learning based lemma selection blanchette
+
+Category: RISC-v Bytes · Daniel Mangum
+
+<https://danielmangum.com/categories/risc-v-bytes/>
+
+[2408.01441] Group Theory in Physics: An Introduction with Mathematica
+
+<https://arxiv.org/abs/2408.01441>
+
+Streams, Calculational Proofs and Dafny | Hacker News
+
+<https://news.ycombinator.com/item?id=41178596>
+
+Crafting formulas: Lambdas all the way down | Hacker News
+
+<https://news.ycombinator.com/item?id=41169244>
+
+Limit inferior and limit superior - Wikipedia
+
+<https://en.m.wikipedia.org/wiki/Limit_inferior_and_limit_superior#:~:text=In%20this%20context%2C%20the%20inner,of%20tails%20of%20the%20sequence>.
+
+<https://link.springer.com/chapter/10.1007/978-3-642-38574-2_12>
+
+Scheduling Model in LLVM | Hacker News
+
+<https://news.ycombinator.com/item?id=41161831>
+
+Debin | Proceedings of the 2018 ACM SIGSAC Conference on Computer and Communications Security
+
+<https://dl.acm.org/doi/abs/10.1145/3243734.3243866?casa_token=yTQzsHDVOz4AAAAA:g_RnrfXFtOuZ3ecY2hc55lbNWD6jSnyLCIldZVPZVgBX_mwS_60vmFHESuhTznLZX4Zg1LTgodDu>
+
+[1206.6940] Practical Groebner Basis Computation
+
+<https://arxiv.org/abs/1206.6940>
+
+Clang vs. Clang | Hacker News
+
+<https://news.ycombinator.com/item?id=41146860>
+
+Primitive Recursive Functions for a Working Programmer | Hacker News
+
+<https://news.ycombinator.com/item?id=41146278>
+
+A Survey of General-purpose Polyhedral Compilers | ACM Transactions on Architecture and Code Optimization
+
+<https://dl.acm.org/doi/abs/10.1145/3674735>
+
+<https://pat.keldysh.ru/~grechanik/doc/indprover-eqsat-extended.pdf>
+
+Codatatype egraph supercompiler russian
+
+<https://gitlab.com/feynmanintegrals/fire>
+
+Using computation to teach the properties of the van der Waals fluid | American Journal of Physics | AIP Publishing
+
+<https://pubs.aip.org/aapt/ajp/article/81/10/776/1057533/Using-computation-to-teach-the-properties-of-the>
+
+AJP- Computational Physics
+
+<https://www.aapt.org/Publications/AJP/Readers/computational_physics.cfm>
+
+<https://arxiv.org/pdf/2205.00879>
+
+Invitation formal power series
+
+Coinductive Definitions | The n-Category Café
+
+<https://golem.ph.utexas.edu/category/2011/07/coinductive_definitions.html>
+
+Proof by Coinduction | The n-Category Café
+
+<https://golem.ph.utexas.edu/category/2009/09/proof_by_coinduction.html>
+
+SAM 2: Segment Anything in Images and Videos | Hacker News
+
+<https://news.ycombinator.com/item?id=41104523>
+
+Freiling's axiom of symmetry - Wikipedia
+
+<https://en.m.wikipedia.org/wiki/Freiling%27s_axiom_of_symmetry>
+
+<https://www.cs.uwyo.edu/~ruben/static/pdf/acl2r-theory.pdf>
+
+reference request - Unification and Gaussian Elimination - Theoretical Computer Science Stack Exchange
+
+<https://cstheory.stackexchange.com/questions/12326/unification-and-gaussian-elimination>
+
+<https://www3.risc.jku.at/education/courses/ss2011/rw/1-intro.pdf>
+
+Canonical reduction sustems in symbolic mathemtics
+
+F. Riesz's theorem - Wikipedia
+
+<https://en.wikipedia.org/wiki/F._Riesz%27s_theorem>
+
+Bril: An Intermediate Language for Teaching Compilers | Hacker News
+
+<https://news.ycombinator.com/item?id=41084318>
+
+Every VM tutorial you ever studied is wrong (and other compiler/interpreter-related knowledge) · GitHub
+
+<https://gist.github.com/o11c/6b08643335388bbab0228db763f99219>
+
+<https://libisl.sourceforge.io/tutorial.pdf>
+
+Isl tutorial polyhedr
+
+Bril: An Intermediate Language for Teaching Compilers | Hacker News
+
+<https://news.ycombinator.com/item?id=41084318>
+
+algebra_with_sympy API documentation
+
+<https://gutow.github.io/Algebra_with_Sympy/algebra_with_sympy.html>
+
+Towards a new SymPy: part 2 - Polynomials — blog documentation
+
+<https://oscarbenjamin.github.io/blog/czi/post2.html>
+
+LLL and sympy
+
+<https://groups.google.com/g/sympy/c/X8RjnLr2gOU>
+
+Building Lattice Reduction (LLL) Intuition – kel.bz
+
+<https://kel.bz/post/lll/>
+
+<https://goens.org/publications/fernandez-mir-cicm-24/cicm24.pdf>
+
+<https://web.archive.org/web/20200211213303id_/https://publikationen.sulb.uni-saarland.de/bitstream/20.500.11880/25047/1/RR_92_01.pdf>
+
+Unification semuring solving
+
+Recursion theory on the reals and continuous-time computation - ScienceDirect
+
+<https://www.sciencedirect.com/science/article/pii/0304397595002480>
+
+What is Entropy? | Azimuth
+
+<https://johncarlosbaez.wordpress.com/2024/07/20/what-is-entropy/>
+
+NCAlgebra Homepage: NonCommutative Algebra Software and Examples.
+
+<https://mathweb.ucsd.edu/~ncalg/>
+
+An introduction to commutative and noncommutative Gröbner bases - ScienceDirect
+
+<https://www.sciencedirect.com/science/article/pii/0304397594902836>
+
+Word Processing in Groups - Wikipedia
+
+<https://en.wikipedia.org/wiki/Word_Processing_in_Groups>
+
+Computation with Finitely Presented Groups
+
+<https://www.cambridge.org/core/books/computation-with-finitely-presented-groups/B4EA39C60B0A6253AA46A9D80443B9C7>
+
+[WSRP24] Monoids, String-Rewriting, Confluence, and the Knuth-Bendix Algorithm - Online Technical Discussion Groups—Wolfram Community
+
+<https://community.wolfram.com/groups/-/m/t/3217387>
+
+Iscalc: An Interactive Symbolic Computation Framework (System Description) | SpringerLink
+
+<https://link.springer.com/chapter/10.1007/978-3-031-38499-8_33>
+
+<https://4chan-science.fandom.com/wiki/Physics_Textbook_Recommendations>
+
+francois.boulier/DifferentialAlgebra: Differential Algebra is an algebraic theory for handling systems of polynomial (hence nonlinear) differential equations with respect to finitely many differentiations (it thus handles ODE and PDE). The main tool provided by this project is a differential elimination method which permits to simplify such systems. Examples of applications can be found in the gallery directory. - Codeberg.org
+
+<https://codeberg.org/francois.boulier/DifferentialAlgebra>
+
+<https://proof.sandia.gov/>
+
+Writing a BIOS bootloader for 64-bit mode from scratch | Hacker News
+
+<https://news.ycombinator.com/item?id=40959742>
+
+<https://www.sciencedirect.com/science/article/pii/S2352711018302152>
+
+Practically surreal: Surreal arithmetic in Julia
+
+<https://project-coco.uibk.ac.at/ARI/index.php>
+
+Confluence competition
+
+Scheme books
+
+<https://erkin.party/scheme/bibliography/>
+
+# 2024-05
 
 <https://project-coco.uibk.ac.at/ARI/index.php>
 
