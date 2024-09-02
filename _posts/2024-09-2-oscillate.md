@@ -79,7 +79,7 @@ Instantaneous frequency is an odd concept. It's very intuitive, but if you try t
 <https://en.wikipedia.org/wiki/Short-time_Fourier_transform>
 <https://en.wikipedia.org/wiki/Spectrogram>
 
-- <https://www.youtube.com/watch?v=eRnM5zVQsMc> Frequency Response Curves for Linear & Nonlinear Oscillators | Lecture 19 - Shane Ross
+- <https://www.youtube.com/watch?v=eRnM5zVQsMc> Frequency Response Curves for Linear & Nonlinear Oscillators - Lecture 19 - Shane Ross
 - Averaging Theory for Weakly Nonlinear Oscillators  <https://www.youtube.com/watch?v=UzQU1nyM-No>
 - <https://www.youtube.com/watch?v=kkN13nEn2WA&list=PL5EH0ZJ7V0jV7kMYvPcZ7F9oaf_YAlfbI&index=22> Lecture 22: Introduction to the method of multiple scales - Strogatz
 
