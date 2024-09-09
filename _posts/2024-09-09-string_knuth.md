@@ -3,7 +3,7 @@ title: String Knuth Bendix
 date: 2024-09-09
 ---
 
-I've become entranced by all the varieties of the knuth bendix algorithm as of late.
+I've become entranced by all the [varieties](https://cstheory.stackexchange.com/questions/12326/unification-and-gaussian-elimination) of the knuth bendix completion algorithm as of late.
 
 Knuth Bendix completion is a kind of equational reasoning algorithm. Given some generators of an equivalence relation like `X + 0 = X` it converts them into a "good" rewriting system like `X + 0 -> X`.
 
