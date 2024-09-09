@@ -9,7 +9,7 @@ Knuth Bendix completion is a kind of equational reasoning algorithm. Given some 
 
 Knuth Bendix does not have to be over terms. It can be over other things that have a notion of overlapping and ordering, graphs, strings, multisets, polynomials, etc. There are ways perhaps of modelling these things as terms, which is a unifying, but there can be computational and mental overhead in doing so.
 
-Strings are in particular an interesting example and actually the original thing Knuth and Bendix were considering (I think).
+Strings are in particular an interesting example and actually the original thing [Knuth and Bendix](https://www.cs.tufts.edu/~nr/cs257/archive/don-knuth/knuth-bendix.pdf) were considering (I think).
 
 When we say strings, we mean the same thing as sequences. There isn't anything intrinsically textual about what we're doing.
 
@@ -184,7 +184,7 @@ Here's a nice example from <https://haskellformaths.blogspot.com/2010/05/string-
 
 ![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjXLtSpN3WX0ZQr_HhiXMvJuS5gmRzufJk36492TLrFr_dkyTBYIJA46ROYoVQZkmkIlrWNpJxLQP8w6T2dUu00g-6eXDxEK52yyA8AkXqvNNigY14YuVOVcVhEVBRtorgZUnOLllCW9AO1/s400/squaresyms.GIF)
 
-`a` and `b` generate rotations and flips of a square. These eqautions aren't normalizing though as is. We can run them through Knuth Bendix to get a normalizing set of rules.
+`a` and `b` generate rotations and flips of a square. These equations aren't normalizing though as is. We can run them through Knuth Bendix to get a normalizing set of rules.
 
 A nice trick is to encode the inverse as a negative. These are opaque identitifiers and I have done nothin special in KB for accounting for inverses, but it is nice from a python syntax perspective.
 
@@ -472,6 +472,10 @@ def KBgoal(E, goal):
 
 # could also do binary combinations as goals. and / or / not  of = !=
 ```
+
+to be even more goal driven, we should generate critical pairs coming from the goal terms first. This is a bit (exactly?) like set of support. mark new rules as "tainted" by a goal term. This is interesting in the simplifcation driven context also. If we insist on a particular hyperesolution / UR resolution total grounding, we get egraph saturation.
+
+The only thing we need to make egraph saturation complwete is throw in a KB step on the rules every once in a while.
 
 ```python
 
