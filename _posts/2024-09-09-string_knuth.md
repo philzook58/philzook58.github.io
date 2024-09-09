@@ -7,7 +7,7 @@ I've become entranced by all the varieties of the knuth bendix algorithm as of l
 
 Knuth Bendix completion is a kind of equational reasoning algorithm. Given some generators of an equivalence relation like `X + 0 = X` it converts them into a "good" rewriting system like `X + 0 -> X`.
 
-Knuth bendix does not have to be over terms. It can be over other things that have a notion of overlapping and ordering, graphs, strings, multisets, polynomials, etc. There are ways perhaps of modelling these things as terms, which is a unifying, but there can be computational and mental overhead in doing so.
+Knuth Bendix does not have to be over terms. It can be over other things that have a notion of overlapping and ordering, graphs, strings, multisets, polynomials, etc. There are ways perhaps of modelling these things as terms, which is a unifying, but there can be computational and mental overhead in doing so.
 
 Strings are in particular an interesting example and actually the original thing Knuth and Bendix were considering (I think).
 
@@ -180,8 +180,10 @@ def KB(E):
     return R
 ```
 
-Here's a nice examlpe from <https://haskellformaths.blogspot.com/2010/05/string-rewriting-and-knuth-bendix.html> .
+Here's a nice example from <https://haskellformaths.blogspot.com/2010/05/string-rewriting-and-knuth-bendix.html> .
+
 ![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjXLtSpN3WX0ZQr_HhiXMvJuS5gmRzufJk36492TLrFr_dkyTBYIJA46ROYoVQZkmkIlrWNpJxLQP8w6T2dUu00g-6eXDxEK52yyA8AkXqvNNigY14YuVOVcVhEVBRtorgZUnOLllCW9AO1/s400/squaresyms.GIF)
+
 `a` and `b` generate rotations and flips of a square. These eqautions aren't normalizing though as is. We can run them through Knuth Bendix to get a normalizing set of rules.
 
 A nice trick is to encode the inverse as a negative. These are opaque identitifiers and I have done nothin special in KB for accounting for inverses, but it is nice from a python syntax perspective.
@@ -259,7 +261,7 @@ for x,y in E:
 
 # Bits and Bobbles
 
-Note that GAP already ships a string knuth bendix
+Note that GAP already ships a string knuth bendix. This is accessible from python via sage <https://www.sagemath.org/>
 
 ```python
 #https://doc.sagemath.org/html/en/reference/groups/sage/groups/finitely_presented.html
@@ -294,6 +296,10 @@ Useful books:
 - Charles Sims book - Computation with Finitely Presented Groups
 - Term Rewriting and All That
 
+<https://community.wolfram.com/groups/-/m/t/3217387>   Monoids, string-rewriting, confluence, and the Knuth-Bendix Algorithm - Mathematica
+
+<https://haskellformaths.blogspot.com/2010/05/string-rewriting-and-knuth-bendix.html>
+
 The automata anlge is really intriguing, becayse I'd hope I could use off the shelf high perf stuff to achieve the rewriting. Maybe BurntSushi?
 
 Word processing in groups
@@ -314,8 +320,6 @@ Computational group theory. Orbits. Caleb's graph hashing. Cayley Graph. Nauty
 Free monoid
 I can totalize the groupoid of paths into path fragment sequences?
 Use string KB a la grobner egraphs. String
-
-<https://haskellformaths.blogspot.com/2010/05/string-rewriting-and-knuth-bendix.html>
 
 ![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjXLtSpN3WX0ZQr_HhiXMvJuS5gmRzufJk36492TLrFr_dkyTBYIJA46ROYoVQZkmkIlrWNpJxLQP8w6T2dUu00g-6eXDxEK52yyA8AkXqvNNigY14YuVOVcVhEVBRtorgZUnOLllCW9AO1/s400/squaresyms.GIF)
 
