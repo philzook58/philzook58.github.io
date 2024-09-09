@@ -13,7 +13,7 @@ Strings are in particular an interesting example and actually the original thing
 
 When we say strings, we mean the same thing as sequences. There isn't anything intrinsically textual about what we're doing.
 
-Having said that, it is neat an intriguing that you can use the commonly available string manipulation libraries to achieve string rewriting needs. String rewriting is the analog of repeatedly applying find/replace rules.
+Having said that, it is neat that you can use the commonly available string manipulation libraries to achieve string rewriting needs. String rewriting is the analog of repeatedly applying find/replace rules.
 
 Try it out on colab: <https://colab.research.google.com/github/philzook58/philzook58.github.io/blob/master/pynb/2024-09-09-string_knuth.ipynb>
 
@@ -282,6 +282,8 @@ G.simplification_isomorphism()
 Where I'm going with my next post is to tie in string rewriting to an egraph giving a "seqeunce egraph". The "characters" of the string are ground terms. Because this egraph embeds string rewriting, it isn't guaranteed to terminate.
 
 I want this because programs often have sequence of instructions. Instrinsic associativity in the style of <https://www.philipzucker.com/linear_grobner_egraph/> seems useful.
+
+<https://github.com/sympy/sympy/blob/master/sympy/combinatorics/rewritingsystem.py> hmm also here
 
 <https://github.com/gap-packages/kbmag>
 
