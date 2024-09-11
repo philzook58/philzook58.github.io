@@ -261,6 +261,8 @@ for x,y in E:
 
 # Bits and Bobbles
 
+This post was aided by many discussions with Cody Roux, my friend / personal term rewriting serf.
+
 Note that GAP already ships a string knuth bendix. This is accessible from python via sage <https://www.sagemath.org/>
 
 ```python
