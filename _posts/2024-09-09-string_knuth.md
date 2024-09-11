@@ -37,7 +37,7 @@ But actually for my purposes, I don't want to be restricted to just sequences of
 
 # Rewriting Tuples
 
-In order to do matching, I need to know when one tuple is a subsequence of another.
+In order to do matching, I need to know when one tuple is a [substring](https://en.wikipedia.org/wiki/Substring) (I originally called this [subsequence](https://en.wikipedia.org/wiki/Subsequence), but have been informed that has another technical meaning).
 
 ```python
 def subseq(s,t):
