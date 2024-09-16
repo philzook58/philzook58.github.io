@@ -57,19 +57,19 @@ uf
 
 In some respects, this is more persistant/immutable than a union find is typically presented. People immediately go for path compression in `find`, but it isn't necessary for functional correctness. The main trick of the proof producing union find is keeping around a copy of the uncompressed tree.
 
-This union find does not maintain the ability to easily enumerate the members of an equivalence class. You can still do a full sweep over `uf` and find them. That is what bottom up ematching does and it is very simple. But for some purposes, like top down matching, this is extremely inefficient.
+This union find does not maintain the ability to easily enumerate the members of an equivalence class. You can still do a full sweep over `uf` to find them. That is what bottom up ematching does and it is very simple. The cost is amoritized there because you aren't focussing on one eclass in particular. But for some purposes, like top down matching, this is extremely inefficient.
 
 So how does one cheaply maintain the ability to enumerate the members of an equivalence class?
 
-I have in the past seen maintaining a mapping from eids to a vectors of equivalent eids. This needs to be fixed up all the time, smushing together the vectors on unions. This is roughly what egg does I think.
+I have in the past seen maintaining a mapping from eids to a vectors/sets of equivalent eids. This needs to be fixed up all the time, smushing together the vectors on unions. This is roughly what egg does I think.
 
 My understanding from the [Z3 version](https://z3prover.github.io/papers/z3internals.html#sec-equality-and-uninterpreted-functions) of this is that you can maintain a doubly linked list of the members of an equivalence class. When `union` merges two equivalence classes, you can splice these two loops together. This version is at the bottom of the post.
 
 But what was done in the acyclic egraph instead is clever.
 
-When a `union` occurs, `makeset` is called instead of making one root asymmetrically point to the other. `makeset` creates a new identifier which we can use to point to a "union node" with the two old roots as left and right children. You can then enumerate out of the eclass by traversing this tree. It is persistent in that you can choose to enumerate out of the eclass as it was at the time of creation, or call find to enumerate as it is now.
+When a `union` occurs, `makeset` is called instead of making one root asymmetrically point to the other. `makeset` creates a new identifier which we can use to point to a "union node" with the two old roots as left and right children. You can then enumerate out of the eclass by traversing this tree. It is persistent in that you can choose to enumerate out of the eclass as it was at the time of creation, or call `find` to enumerate as it is now.
 
-This `unode` tree is basically the right side up version of the converse tree in `uf`.
+This `unode` tree is basically the "right side up" version of the converse tree in `uf`.
 
 ```python
 from dataclasses import dataclass
