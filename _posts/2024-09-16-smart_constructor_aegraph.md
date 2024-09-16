@@ -61,7 +61,7 @@ This union find does not maintain the ability to easily enumerate the members of
 
 So how does one cheaply maintain the ability to enumerate the members of an equivalence class?
 
-I have in the past seen maintaining a mapping from eids to a vectors of . This needs to be fixed up all the time, smushing together the vectors on unions.
+I have in the past seen maintaining a mapping from eids to a vectors of equivalent eids. This needs to be fixed up all the time, smushing together the vectors on unions. This is roughly what egg does I think.
 
 My understanding from the [Z3 version](https://z3prover.github.io/papers/z3internals.html#sec-equality-and-uninterpreted-functions) of this is that you can maintain a doubly linked list of the members of an equivalence class. When `union` merges two equivalence classes, you can splice these two loops together. This version is at the bottom of the post.
 
@@ -123,6 +123,8 @@ uf
 ```
 
     UF(uf=[3, 3, 2, 3], unodes=[None, None, None, (0, 1)])
+
+Calling these eids might be a bit off base at this point, since the eids uniquely correspond both to the members themselves and previous equivalence classes.
 
 Question: This is the main thing I think of when I hear persistent union find <https://usr.lmf.cnrs.fr/~jcf/publis/puf-wml07.pdf> . How do they compare?
 
@@ -471,6 +473,21 @@ There is some design choice on where you want to insert `find` operations, call 
 Top down ematching is a relative of extraction. You locally do a small extraction enumerating all the term heads.
 
 - <https://egraphs.zulipchat.com/#narrow/stream/375765-egg.2Fegglog/topic/incrementally.20.22discovering.22.20e-graphs.20from.20union-find/near/467682535>
+
+Chris comments:
+
+"woah, super-cool! on my queue to read in depth but after a skim just now, one thing I thought to note:
+
+I think by reiterating over the egraph and reinserting what you find, you can achieve the same effect as equality saturation. So I don’t think the acyclicity is a stopper from doing regular egraph stuff.
+
+I’m not really sure what the acyclicity means.
+
+The main requirement that forces acyclicity is the "elaboration" back into the CFG -- at least the extracted nodes have to be acyclic, but extraction is easier to do if the egraph overall is acyclic. There is also a subtle point around dominance and SSA properties that turns out to be important: after extraction at least, the extracted node should not depend on another node that transitively depends on some fixed node (in the "skeleton") that does not dominate it; otherwise there's no way to compute it. Easier to maintain this property as we build the aegraph -- so we winnow down the set of nodes based on a notion of "available blocks" (where in the domtree is the value first available)
+
+Acyclicity is also I think related to the single-pass rewriting, but in a more heuristic way: one is more certain the rewrite is complete after a single pass if no cyclic dependencies exist. But you could get around that with another pass, as I think you alude to
+
+So basically: representing control flow structure is what forces acyclicity, because SSA is acyclic (and "from acyclicity we come, to acyclicity we must return")
+"
 
 - <https://github.com/bytecodealliance/wasmtime/blob/main/cranelift/codegen/src/egraph.rs>
 - <https://github.com/bytecodealliance/wasmtime/blob/main/cranelift/codegen/src/egraph/elaborate.rs>
