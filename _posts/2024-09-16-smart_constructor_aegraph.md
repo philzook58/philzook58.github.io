@@ -3,15 +3,15 @@ title: Acyclic Egraphs and Smart Constructors
 date: 2024-09-16
 ---
 
-That there are egraph's in the [Cranelift JIT](https://github.com/bytecodealliance/rfcs/blob/main/accepted/cranelift-egraph.md) is a very important proof of concept that a seriously engineered piece of software can use the techniques. It was also really interesting to see the changes that were made.
+That there are egraphs in the [Cranelift JIT](https://github.com/bytecodealliance/rfcs/blob/main/accepted/cranelift-egraph.md) is very important as a proof of concept that a seriously engineered piece of software can use some variation of egraphs.
 
-Right before [Chris Fallin's talk](https://cfallin.org/pubs/egraphs2023_aegraphs_slides.pdf) on the subject, Gilbert and I were musing about how one might go from smart constructors to egraphs.
+Right before [Chris Fallin's talk](https://cfallin.org/pubs/egraphs2023_aegraphs_slides.pdf) on the subject, Gilbert and I were musing about how one might go from smart constructors to egraphs, and it felt like he answered it.
 
 Max Bernstein ([great blog!!](https://bernsteinbear.com/)) and I have been chatting about egraphs since we met at PLDI. He recently made a post about how he sees this fitting into the framework of a toy optimizing JIT <https://bernsteinbear.com/blog/whats-in-an-egraph/> I have some complementary thoughts on this topic that I wanted to share.
 
-Some really interesting discussion was happening here. <https://egraphs.zulipchat.com/#narrow/stream/375765-egg.2Fegglog/topic/incrementally.20.22discovering.22.20e-graphs.20from.20union-find/near/468293645>
+Some really interesting discussion initiated by him was happening here. <https://egraphs.zulipchat.com/#narrow/stream/375765-egg.2Fegglog/topic/incrementally.20.22discovering.22.20e-graphs.20from.20union-find/near/468293645>
 
-Fallin's summary of the essential points are:
+Fallin's summary of the essential points of the aegraph are:
 
 1. A Persistent Union Find using Union Nodes
 2. Eager rewriting
@@ -25,19 +25,7 @@ The union node part of the aegraph can be extracted in just an enumerating union
 
 A union find is a forest of equivalence classes. Unlike a typical AST tree representation, the children point up to their parents in this tree. One could call this a converse tree. It is this way so that you can chase the pointers to the canonical root of the equivalence class.
 
-There are 3 styles to union find:
-
-1. Use malloced cells that use pointers to their parents
-2. Use a vector arena and indices to represent their parents
-3. Use a dictionary data structure to represent the parents
-
-These 3 are really the same thing, but different enough you should be aware.
-
-Between 1 and 3, note that computers ship with a privileged fastest associative map, pointers to memory locations.
-
-Between 2 and 3, you often will bundle the vector arena with a hashcons map if you want to perform unions on anything besides uninterpreted integer identifiers.
-
-A basic union find in the style 2 looks like this:
+A basic union find looks like this:
 
 ```python
 from dataclasses import dataclass, field
@@ -69,7 +57,9 @@ uf
 
 In some respects, this is more persistant/immutable than a union find is typically presented. People immediately go for path compression in `find`, but it isn't necessary for functional correctness. The main trick of the proof producing union find is keeping around a copy of the uncompressed tree.
 
-This union find does not maintain the ability to easily enumerate the members of an equivalence class. You can do a full sweep over `uf` and find them. That is what bottom up ematching does. It is very simple. My understanding from the [Z3 version](https://z3prover.github.io/papers/z3internals.html#sec-equality-and-uninterpreted-functions) of this is that you can maintain a doubly linked list of the members of an equivalence class. When `union` merges two equivalence classes, you can splice these two loops together. This version is at the bottom of the post.
+This union find does not maintain the ability to easily enumerate the members of an equivalence class. You can do a full sweep over `uf` and find them. That is what bottom up ematching does. It is very simple.
+
+My understanding from the [Z3 version](https://z3prover.github.io/papers/z3internals.html#sec-equality-and-uninterpreted-functions) of this is that you can maintain a doubly linked list of the members of an equivalence class. When `union` merges two equivalence classes, you can splice these two loops together. This version is at the bottom of the post.
 
 But what was done in the acyclic egraph is very interesting.
 
@@ -207,9 +197,9 @@ div(mul(a,two),two)
 
 ## Multiterms
 
-Note we have missed out on an optimization by being too eager in our rewriting. The multiplication turned into a bit shift before the divide could do a more useful rewrite.
+Note we have missed out on [an optimization](https://egraphs.org/) by being too eager in our rewriting. The `a*2` multiplication turned into a bit shift before the divide `(a * 2) / 2` could do a more useful rewrite.
 
-What we have is a nonconfluent but terminating rewrite system.
+What we have is a nonconfluent but terminating rewrite system. Nonconfluence is a possible model of the phase ordering problem.
 
 We can instead construct multiterms, outputting all the possible rewrites. This is one way of fixing nonconfluence. We need to do some search. We can then extract the best term out of our options.
 
@@ -298,7 +288,7 @@ So we can mix together these two ideas into an AEGraph data structure.
 
 I keep the `enodes` and `unodes` lists separate because I feel they have separate concerns. But they are intimately related. Exactly one of them should be a `None`.
 
-As a simple, but monstrously indulgent way of implementing ematching, I have the generator `term_view`, which will partially expand out all terms from an eid in the egraph. One wold want to instead implement a pattern language, compile to abstract machine, or do codegen to search for your patterns.
+As a simple, but monstrously indulgent way of implementing ematching, I have the generator `term_view`, which will partially expand out all terms from an eid in the egraph, leaving leaves at `depth` unexpanded. One wold want to instead implement a pattern language, compile to abstract machine, or do codegen to search for your patterns. But this is a nice way to do an embedded DSL style reusing python pattern matching. You can see that the smart constructors look very similar to the above simpler versions.
 
 ```python
 from dataclasses import dataclass
@@ -460,7 +450,9 @@ assert E.find(divnode) == E.find(a)
 
 I think by reiterating over the egraph and reinserting what you find, you can achieve the same effect as equality saturation. So I don't think the acyclicity is a stopper from doing regular egraph stuff.
 
-I'm not really sure what the acyclicty means.
+I'm not really sure what the acyclicity means.
+
+I tend to be working in higher level languages and while I am vaguely aware of the needs of memory management, they don't jump out and bite me. More's the pity. I would like to understand what I am missing that more performance oriented people can see.
 
 There is some design choice on where you want to insert `find` operations, call smart constructors vs dumb constructors, maybe early stop search. Wrong choices may be non terminating.
 
@@ -472,6 +464,18 @@ Top down ematching is a relative of extraction. You locally do a small extractio
 - <https://github.com/bytecodealliance/wasmtime/blob/main/cranelift/codegen/src/egraph/elaborate.rs>
 - <https://github.com/bytecodealliance/wasmtime/blob/main/cranelift/codegen/src/egraph/cost.rs>
 - <https://github.com/bytecodealliance/wasmtime/blob/main/cranelift/codegen/src/opts.rs>
+
+There are 3 styles to union find:
+
+1. Use malloced cells that use pointers to their parents
+2. Use a vector arena and indices to represent their parents
+3. Use a dictionary data structure to represent the parents
+
+These 3 are really the same thing, but different enough you should be aware.
+
+Between 1 and 3, note that computers ship with a privileged fastest associative map, pointers to memory locations.
+
+Between 2 and 3, you often will bundle the vector arena with a hashcons map if you want to perform unions on anything besides uninterpreted integer identifiers.
 
 Another thing we can do with smart constructors is hashcons / intern them.
 This gives us a fast syntactic equality check
