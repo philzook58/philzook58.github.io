@@ -120,6 +120,8 @@ uf
 
     UF(uf=[3, 3, 2, 3], unodes=[None, None, None, (0, 1)])
 
+Question. This is the main persistent union find <https://usr.lmf.cnrs.fr/~jcf/publis/puf-wml07.pdf> . How do they compare?
+
 # Eager E-matching and Smart Constructors
 
 Another piece that was interesting about the aegraph was that ematching was done at construction time.
