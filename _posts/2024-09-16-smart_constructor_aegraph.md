@@ -3,9 +3,9 @@ title: Acyclic Egraphs and Smart Constructors
 date: 2024-09-16
 ---
 
-That there are egraphs in the [Cranelift JIT](https://github.com/bytecodealliance/rfcs/blob/main/accepted/cranelift-egraph.md) is very important as a proof of concept that a seriously engineered piece of software can use some variation of egraphs.
+That there are egraphs in the [Cranelift JIT](https://github.com/bytecodealliance/rfcs/blob/main/accepted/cranelift-egraph.md) is important as a proof of concept that a seriously engineered piece of production software can fruitfully use some (very intriguing!) variation of egraphs.
 
-Right before [Chris Fallin's talk](https://cfallin.org/pubs/egraphs2023_aegraphs_slides.pdf) on the subject, Gilbert and I were musing about how one might go from smart constructors to egraphs, and it felt like he answered it.
+Right before [Chris Fallin's talk](https://cfallin.org/pubs/egraphs2023_aegraphs_slides.pdf) on the subject, Gilbert and I were musing about how one might go from smart constructors to egraphs, and it felt like Chris answered it.
 
 Max Bernstein ([great blog!!](https://bernsteinbear.com/)) and I have been chatting about egraphs since we met at PLDI. He recently made a post about how he sees this fitting into the framework of a toy optimizing JIT <https://bernsteinbear.com/blog/whats-in-an-egraph/> I have some complementary thoughts on this topic that I wanted to share.
 
@@ -21,9 +21,9 @@ You can try this post out here <https://colab.research.google.com/github/philzoo
 
 # Persistent Union Find
 
-The union node part of the aegraph can be extracted in just an enumerating union find without the enode complication.
+I think the "union node" idea of the aegraph can be examined in the context of just a union find. We can throw on the extra machinery of the full egraph later.
 
-A union find is a forest of equivalence classes. Unlike a typical AST tree representation, the children point up to their parents in this tree. One could call this a converse tree. It is this way so that you can chase the pointers to the canonical root of the equivalence class.
+A union find is a forest of equivalence classes. Unlike a typical AST tree representation, the children point up to their parents in this tree. One could call this a converse tree. This is so that you can chase the pointers to the canonical root of the equivalence class.
 
 A basic union find looks like this:
 
@@ -57,15 +57,19 @@ uf
 
 In some respects, this is more persistant/immutable than a union find is typically presented. People immediately go for path compression in `find`, but it isn't necessary for functional correctness. The main trick of the proof producing union find is keeping around a copy of the uncompressed tree.
 
-This union find does not maintain the ability to easily enumerate the members of an equivalence class. You can do a full sweep over `uf` and find them. That is what bottom up ematching does. It is very simple.
+This union find does not maintain the ability to easily enumerate the members of an equivalence class. You can still do a full sweep over `uf` and find them. That is what bottom up ematching does and it is very simple. But for some purposes, like top down matching, this is extremely inefficient.
+
+So how does one cheaply maintain the ability to enumerate the members of an equivalence class?
+
+I have in the past seen maintaining a mapping from eids to a vectors of . This needs to be fixed up all the time, smushing together the vectors on unions.
 
 My understanding from the [Z3 version](https://z3prover.github.io/papers/z3internals.html#sec-equality-and-uninterpreted-functions) of this is that you can maintain a doubly linked list of the members of an equivalence class. When `union` merges two equivalence classes, you can splice these two loops together. This version is at the bottom of the post.
 
-But what was done in the acyclic egraph is very interesting.
+But what was done in the acyclic egraph instead is clever.
 
-Instead of making one root asymmetrically point to the other upon `union`, instead `makeset` is called. This creates a new identifier which we can use a mapping to store the (normal directed) tree of children. These new nodes can be called union nodes or unodes.
+When a `union` occurs, `makeset` is called instead of making one root asymmetrically point to the other. `makeset` creates a new identifier which we can use to point to a "union node" with the two old roots as left and right children. You can then enumerate out of the eclass by traversing this tree. It is persistent in that you can choose to enumerate out of the eclass as it was at the time of creation, or call find to enumerate as it is now.
 
-This tree is some kind of rearrangement of the idea of the above linked list. You can then enumerate out of the eclass by traversing this tree. It is persistent in that you can choose to enumerate out of the eclass as it was at the time of creation, or call find to enumerate as it is now.
+This `unode` tree is basically the right side up version of the converse tree in `uf`.
 
 ```python
 from dataclasses import dataclass
@@ -120,15 +124,15 @@ uf
 
     UF(uf=[3, 3, 2, 3], unodes=[None, None, None, (0, 1)])
 
-Question. This is the main persistent union find <https://usr.lmf.cnrs.fr/~jcf/publis/puf-wml07.pdf> . How do they compare?
+Question: This is the main thing I think of when I hear persistent union find <https://usr.lmf.cnrs.fr/~jcf/publis/puf-wml07.pdf> . How do they compare?
 
 # Eager E-matching and Smart Constructors
 
 Another piece that was interesting about the aegraph was that ematching was done at construction time.
 
-This is reminiscent of the approach of rewriting smart constructors.
+This is reminiscent of the approach of smart constructors that rewrite.
 
-Very simple dumb constructors for a term represented as tuples might look like this
+Simple dumb constructors for a term represented as tuples might look like this
 
 ```python
 def const(x : int):
@@ -201,7 +205,7 @@ div(mul(a,two),two)
 
 Note we have missed out on [an optimization](https://egraphs.org/) by being too eager in our rewriting. The `a*2` multiplication turned into a bit shift before the divide `(a * 2) / 2` could do a more useful rewrite.
 
-What we have is a nonconfluent but terminating rewrite system. Nonconfluence is a possible model of the phase ordering problem.
+What we have is a nonconfluent but terminating rewrite system. Nonconfluence is a possible way of mathematically modelling the phase ordering problem.
 
 We can instead construct multiterms, outputting all the possible rewrites. This is one way of fixing nonconfluence. We need to do some search. We can then extract the best term out of our options.
 
@@ -278,7 +282,9 @@ extract(div(mul(a,two),two))
 
 You know, brute force is kind of nice. We don't give it a shot nearly enough.
 
-Eagerly expanding out the terms ion the constructors is expensive. The only reason we need to do this is because we need to search to apply our rewrite patterns.
+Eagerly expanding out the terms in the constructors is expensive. The only reason we need to do this is because we need to search to apply our rewrite patterns.
+
+We could partially fight this by using `set` data structures to remove duplication in our multiterms. We could also checkpoint with local `extract` functions interspersed during construction. This would be a [local search](https://en.wikipedia.org/wiki/Local_search_(optimization)) heuristic, performing exact optimization over tractable small regions.
 
 The egraph can be thought of as a way to keep the shared structure compacted or unexpanded.
 
@@ -453,6 +459,10 @@ assert E.find(divnode) == E.find(a)
 I think by reiterating over the egraph and reinserting what you find, you can achieve the same effect as equality saturation. So I don't think the acyclicity is a stopper from doing regular egraph stuff.
 
 I'm not really sure what the acyclicity means.
+
+Eager ematching does not necessarily require top down ematching. One could maintain a set of partial terms associated with each eid. This would be a form of eager bottom up ematching. Making the automaton of when to throw out a partial term seems annoying though. All the rewrite rules will be intermixed with each other in an awful way. Top down seems much easier to do.
+
+"Destructive" rewrite rules are possible. If a rule is so good, you could just return from the smart constructor early instead returning the default constructor.
 
 I tend to be working in higher level languages and while I am vaguely aware of the needs of memory management, they don't jump out and bite me. More's the pity. I would like to understand what I am missing that more performance oriented people can see.
 
