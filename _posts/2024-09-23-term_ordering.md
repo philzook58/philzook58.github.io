@@ -13,36 +13,38 @@ You can fiddle around with the post here <https://colab.research.google.com/gith
 
 # Term Orderings with Variables Have to Be Partial
 
-A lot of the confusion comes from having to deal with variables in your terms, which are used to achieve pattern matching on the left hand side of rules. This idea of pattern matching is too dang useful to avoid though.
+A lot of the confusion comes from having to deal with variables in your terms.
 
-For ground terms (no variables), things are more straightforward <https://www.philipzucker.com/ground_kbo/> Size of terms works fine
+Variable are really useful thought. They achieve pattern matching. Pattern matching is too dang useful to avoid.
 
-Similarly strings are more straightforward. Order by size, then tie break lexicographically. This is called shortlex <https://www.philipzucker.com/string_knuth/>
+For ground terms (no variables), things are more straightforward <https://www.philipzucker.com/ground_kbo/> Size of terms more or less works fine.
+
+Similarly strings are more straightforward. Order by size, then tie break lexicographically. This is called shortlex <https://www.philipzucker.com/string_knuth/> . Via flattening, ground terms are a subproblem of strings. This is not the case if your term language includes pattern variables.
 
 It is useful to consider a demon trying to subvert your picked order. Variables are intended to stand in for some arbitrary other term. If the demon can pick a term to instantiate your variable that switches your opinion on the ordering, the demon has won.
 
-That is why `x = y` can never be ordered (at least if you have any opinions about concrete terms). If I say `x > y` the demon will instantiate `y` to something awful likec `f(f(f(f(f(f(f(f(f(a)))))))`and `x` to something nice like `a`.
+That is why `x = y` can never be ordered (at least if you have any opinions about concrete terms). If I say `x > y` the demon will instantiate `y` to something awful like `f(f(f(f(f(f(f(f(f(a)))))))`and `x` to something nice like `a`.
 
 # Homeomorphic Embedding
 
-The homeomorphic is embedding is the weakest simplification ordering where a term is larger than any of it's subterms. The some degree it is defined as assuming the subterm property and then making the order closed under substitution.
+The homeomorphic embedding is the weakest (non strict) simplification ordering where a term is larger than any of it's subterms (the subterm property). The some degree it is defined as assuming this subterm property and then making the order closed under instantiation of variables.
 
 When you shrink a term by fusing out some inner nodes, it gets smaller in some sense. You can't keep cutting and fusing nodes forever. You'll eventually be left with a leaf and be stuck.
 
 The relationship between a fused out tree and the original is the homeomorphic embedding.
 
-The definition given in TRAAT can be read as an algorithm for finding an embedding. This algorithm is a straightforward recursive search. Your current pair is either a pair that are identified or a pair for which the one side was fused away and replaced with one of it's children.
-
-The embedding is not a strict order though.
+The definition given in Term Rewriting and All That (TRAAT) can be read as an algorithm for finding an embedding. This algorithm is a straightforward recursive search. Your current pair is either a pair that are identified or a pair for which the one side was fused away and replaced with one of it's children.
 
 ![](/assets/traat/homeo.png)
 
 ```python
+! pip install z3-solver # I'm just using z3 as a handy ast, nothing more.
+```
+
+```python
 from z3 import *
-# I'm just using z3 as a handy ast, nothing more.
 
 # definition traat 5.4.2
-#@log_arguments
 def homeo(s,t):
     if is_var(s) and s.eq(t):
         return True
@@ -84,9 +86,6 @@ def naive_lex(t,s):
 a,b = z3.Ints("a b")
 naive_lex(a+b, b+a)
 naive_lex(b, a+b)
-
-
-
 ```
 
     False
