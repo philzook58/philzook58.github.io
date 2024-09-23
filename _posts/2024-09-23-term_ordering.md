@@ -3,7 +3,7 @@ title: Term Ordering Etudes
 date : 2024-09-23
 ---
 
-Term orderings are a key concept in term rewriting and equational reasoning. Equational reasoning is of my preferred form of mathematics and compiler simplification. In particular, well founded term orders, meaning terminating, term orderings are used to prove termination and orient equations into terminating rewrite systems during completion. This orientation enables simplication and subsumption of your equational set, which leads to be efficiency gains over naive equational search.
+Term orderings are a key concept in term rewriting and equational reasoning. Equations are my preferred form of mathematics. In particular, well founded term orders, meaning terminating, term orderings are used to prove termination and orient equations into terminating rewrite systems during completion. This orientation enables simplification and subsumption of your equational set, which leads to be efficiency gains over naive equational search.
 
 I've found the definitions of term orderings to be so dense as to be inscrutable.
 
@@ -15,7 +15,7 @@ You can fiddle around with the post here <https://colab.research.google.com/gith
 
 A lot of the confusion comes from having to deal with variables in your terms.
 
-Variable are really useful thought. They achieve pattern matching. Pattern matching is too dang useful to avoid.
+Variable are really useful though. They achieve pattern matching. Pattern matching is too dang useful to avoid.
 
 For ground terms (no variables), things are more straightforward <https://www.philipzucker.com/ground_kbo/> Size of terms more or less works fine.
 
@@ -27,7 +27,7 @@ That is why `x = y` can never be ordered (at least if you have any opinions abou
 
 # Homeomorphic Embedding
 
-The homeomorphic embedding is the weakest (non strict) simplification ordering where a term is larger than any of it's subterms (the subterm property). The some degree it is defined as assuming this subterm property and then making the order closed under instantiation of variables.
+The homeomorphic embedding is the weakest (non strict) simplification ordering where a term is larger than any of it's subterms (the subterm property). The some degree it is defined as taking the subterm property and then making the order closed under instantiation of variables.
 
 When you shrink a term by fusing out some inner nodes, it gets smaller in some sense. You can't keep cutting and fusing nodes forever. You'll eventually be left with a leaf and be stuck.
 
@@ -81,32 +81,44 @@ def naive_lex(t,s):
                 return False
         return False
     else:
-        return (t.decl().name(), t.decl().arity()) < (s.decl().name(), s.decl().arity())
+        dt, ds = t.decl(), s.decl()
+        return (dt.name(), dt.get_id()) > (s.decl().name(), ds.get_id())
     
-a,b = z3.Ints("a b")
-naive_lex(a+b, b+a)
-naive_lex(b, a+b)
 ```
 
-    False
+Cody points out this counterexample to the lexicographic ordering. The naive lex ordering says `g(p) > g(g(p))`.
 
 ```python
-("+", ("*", 1, 3), 2) < ("+", ("*", 1, 3), 4) 
+g = Function('g', IntSort(), IntSort())
+p = Int('p')
+naive_lex(g(p),  g(g(p)))
 ```
 
     True
 
-The problem with this, even for ground terms, is that it is not well founded. There is an infinite decreasing chain of terms
+But if we run this system, we obviously have an infinite chain of rewrites.
 
 ```python
-assert ("b",) > ("a", "b") > ("a", "a", "b") > ("a", "a", "a", "b") > ("a", "a", "a", "a", "b") # ... and so on
+t = g(p)
+for i in range(10):
+    t = z3.substitute(t, (g(p), g(g(p))))
+    print(t)
 ```
+
+    g(g(p))
+    g(g(g(p)))
+    g(g(g(g(p))))
+    g(g(g(g(g(p)))))
+    g(g(g(g(g(g(p))))))
+    g(g(g(g(g(g(g(p)))))))
+    g(g(g(g(g(g(g(g(p))))))))
+    g(g(g(g(g(g(g(g(g(p)))))))))
+    g(g(g(g(g(g(g(g(g(g(p))))))))))
+    g(g(g(g(g(g(g(g(g(g(g(p)))))))))))
 
 It can be fixed up though. The exact leap of logic here that makes the definition obvious eludes me. You can take pieces of the homeomorphic embedding and mix them in with the pieces of a naive lexicographic ordering.
 
-There is anm intuitive sense in which we want to push bad symbols down and good symbols up. Cody has pointed out an intuition with respect to functional programming definitions. We have an order in which we define our functions in a program. We can recursively call ourselves with complex arguments, but the arguments should involve simpler stuff.
-
-This may also be seen as macro definitions. Macro expansion for a well stratified (bodies only have previously defined symbols) sequence of macros obviously terminates no matter how explosive the growth of the macros are.
+There is anm intuitive sense in which we want to push bad symbols down and good symbols up. Cody has pointed out an intuition with respect to functional programming definitions. We have an order in which we define our functions in a program. We can recursively call ourselves with complex arguments, but the arguments should involve simpler stuff, and the result of the recursive call should feed into simpler functions. More examples later.
 
 ![](/assets/traat/lpo.png)
 
@@ -141,7 +153,7 @@ def lpo(s,t):
                     else:
                         return False
                 raise Exception("Should be unreachable if s == t", s,t)
-            elif (f.name(), f.arity()) > (g.name(), g.arity()): # lpo2b
+            elif (f.name(), f.get_id()) > (g.name(), g.get_id()): # lpo2b. tie break equal names but idfferent sorts on unique id.
                 return True
             else:
                 return False
@@ -226,7 +238,7 @@ check_lpo_rules(rules)
 
     b_plus(b_plus(Var(0), Var(1)), Var(2)) >_lpo b_plus(Var(0), b_plus(Var(1), Var(2))) : True
 
-Distributivity has to eventually finish. This is despite it making the term bigger and duplicating `v0`. It is making progress by pushing `mul` underneath `plus`
+Distributivity (FOILing out) obviously intuitively has to eventually finish. This is despite it making the term bigger and duplicating `v0`. It is making progress by pushing `mul` underneath `plus`
 
 ```python
 rules = [mul(v0, plus(v1, v2)) == plus(mul(v0, v1), mul(v0, v2))]
@@ -261,6 +273,9 @@ check_lpo_rules(rules)
 
 # Bits and Bobbles
 
+Discussions with Cody Roux as always are crucial.
+Graham, Caleb, Sam and Nate also were a big help.
+
 <https://www.cs.tau.ac.il/~nachum/papers/printemp-print.pdf> 33 examples of termination
 
 <https://homepage.divms.uiowa.edu/~fleck/181content/taste-fixed.pdf> a taste of rewriting
@@ -282,6 +297,8 @@ For ordered resolution, the analog is probably that you want as many prolog-like
 A different opposite intuition might be that you want to decompile your problem into the highest abstract terms. Usually reasoning at the abstract level can make simple what is very complex at the low level.
 
 This is related to the dogma of the dependent typists that you want equality to be decidable by evaluating terms.
+
+This may also be seen as dignifying macro definitions. Macro expansion for a well stratified (bodies only have previously defined symbols) sequence of macros obviously terminates no matter how explosive the growth of the macros are. So size isn't really the issue there. But an ordered count of symbols is sufficient in this case. Plus really I think macros terminate by induction on the number of rules you've defined. empty rule sets terminates. If you have a rule set that terminates and add a new rule that is only defined in previous symbols, this also terminates.
 
 I find Kruskal's theorem <https://en.wikipedia.org/wiki/Kruskal%27s_tree_theorem> quite unilluminating and disturbing. I don't get it.
 
@@ -319,6 +336,11 @@ def wreath(s,t,n):
     else:
         return False
 
+```
+
+```python
+("+", ("*", 1, 3), 2) < ("+", ("*", 1, 3), 4) 
+assert ("b",) > ("a", "b") > ("a", "a", "b") > ("a", "a", "a", "b") > ("a", "a", "a", "a", "b") # ... and so on
 ```
 
 What are our examples
