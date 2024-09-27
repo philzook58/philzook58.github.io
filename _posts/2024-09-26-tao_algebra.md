@@ -10,12 +10,15 @@ Terence Tao has put forward an interesting equational reasoning challenge.
 - <https://mathoverflow.net/questions/450890/is-there-an-identity-between-the-commutative-identity-and-the-constant-identity/450905#450905>
 - <https://github.com/teorth/equational_theories>
 
-It is reminiscent of a famous success story of automated theorem proving, proving the robbins algebras are boolean <https://www.cs.unm.edu/~mccune/papers/robbins/> a previously unsolved conjecture which was shown by Bill McCune's EQP solver in 1996. Hopefully solvers are a lot more powerful now.
+It is reminiscent of a famous success story of automated theorem proving, proving the robbins algebras are boolean <https://www.cs.unm.edu/~mccune/papers/robbins/> a previously unsolved conjecture which was shown by Bill McCune's EQP solver in 1996.
+
+It seems likely to me that Tao's individual problems are easier than this one. Int addition, solvers are a lot more powerful now. However, I also think the Robbins problem required expert tweaking of the solver.
 
 I've been fiddling with building a semi-automated proof assistant in python called Knuckledragger.  <https://github.com/philzook58/knuckledragger>
 
-Knuckledragger is structured around Z3, but recently I've been bolting in the various automated solvers. Z3 is excellent at many things (first class at the grounded problems one often encounters in software verification), but not necessarily designed to be the best at universal algebraic problems.
+Knuckledragger is structured around Z3, but recently I've been bolting in all the automated solvers I can get my hands on.
 
+Z3  <https://microsoft.github.io/z3guide/docs/logic/intro/> is excellent at many things (first class at the grounded problems one often encounters in software verification), but not necessarily designed to be the best at universal algebraic problems.
 For these, Vampire, eprover, Twee, Zipperposition, and Prover9 are good candidates. I judge this somewhat by examining the CASC <https://tptp.org/CASC/J12/> results
 
 Even if you don't buy into what I'm generally doing in Knuckledragger (a system to weave these solver calls Hilbert style into larger proofs), I think having easy installation and programmatic access to the solvers in python could be quite useful.
@@ -76,13 +79,13 @@ print(s.proof().decode())
 
     unsat
     Here is the input problem:
-      Axiom 1 (flattening): mul_8e3 = mul_8e(y_91, x_92).
-      Axiom 2 (flattening): mul_8e2 = mul_8e(x_92, y_91).
+      Axiom 1 (flattening): mul_8e3 = mul_8e(y_90, x_91).
+      Axiom 2 (flattening): mul_8e2 = mul_8e(x_91, y_90).
       Axiom 3 (ax_0): mul_8e(mul_8e(X, X), Y) = mul_8e(Y, X).
-      Goal 1 (ax_1): mul_8e(x_92, y_91) = mul_8e(y_91, x_92).
+      Goal 1 (ax_1): mul_8e(x_91, y_90) = mul_8e(y_90, x_91).
     
-    1. mul_8e(y_91, x_92) -> mul_8e3
-    2. mul_8e(x_92, y_91) -> mul_8e2
+    1. mul_8e(y_90, x_91) -> mul_8e3
+    2. mul_8e(x_91, y_90) -> mul_8e2
     3. mul_8e(mul_8e(X, X), Y) -> mul_8e(Y, X)
     4. mul_8e(X, mul_8e(Y, Y)) -> mul_8e(X, Y)
     5. mul_8e(X, Y) <-> mul_8e(Y, X)
@@ -93,23 +96,23 @@ print(s.proof().decode())
     % SZS output start Proof
     Axiom 1 (ax_0): mul_8e(mul_8e(X, X), Y) = mul_8e(Y, X).
     
-    Goal 1 (ax_1): mul_8e(x_92, y_91) = mul_8e(y_91, x_92).
+    Goal 1 (ax_1): mul_8e(x_91, y_90) = mul_8e(y_90, x_91).
     Proof:
-      mul_8e(x_92, y_91)
+      mul_8e(x_91, y_90)
     = { by axiom 1 (ax_0) R->L }
-      mul_8e(mul_8e(y_91, y_91), x_92)
+      mul_8e(mul_8e(y_90, y_90), x_91)
     = { by axiom 1 (ax_0) R->L }
-      mul_8e(mul_8e(x_92, x_92), mul_8e(y_91, y_91))
+      mul_8e(mul_8e(x_91, x_91), mul_8e(y_90, y_90))
     = { by axiom 1 (ax_0) R->L }
-      mul_8e(mul_8e(mul_8e(y_91, y_91), mul_8e(y_91, y_91)), mul_8e(x_92, x_92))
+      mul_8e(mul_8e(mul_8e(y_90, y_90), mul_8e(y_90, y_90)), mul_8e(x_91, x_91))
     = { by axiom 1 (ax_0) }
-      mul_8e(mul_8e(mul_8e(y_91, y_91), y_91), mul_8e(x_92, x_92))
+      mul_8e(mul_8e(mul_8e(y_90, y_90), y_90), mul_8e(x_91, x_91))
     = { by axiom 1 (ax_0) }
-      mul_8e(mul_8e(y_91, y_91), mul_8e(x_92, x_92))
+      mul_8e(mul_8e(y_90, y_90), mul_8e(x_91, x_91))
     = { by axiom 1 (ax_0) }
-      mul_8e(mul_8e(x_92, x_92), y_91)
+      mul_8e(mul_8e(x_91, x_91), y_90)
     = { by axiom 1 (ax_0) }
-      mul_8e(y_91, x_92)
+      mul_8e(y_90, x_91)
     % SZS output end Proof
     
     RESULT: Unsatisfiable (the axioms are contradictory).
@@ -173,6 +176,19 @@ I also added the ability to access the solver directly. This has been useful for
       mul_8e(y_91, x_92)
     
     RESULT: Unsatisfiable (the axioms are contradictory).
+
+# Z3
+
+In this case, Z3 itself does just fine on this problem. There really wasn't a need to bolt in all these other guys. CVC5 also works
+
+```python
+s = smt.Solver()
+s.add(smt.ForAll([x,y], (x * x) * y == y * x))
+s.add(smt.Not(smt.ForAll([x,y], x * y == y * x))) # Negate the theorem to be proved for a refutation
+print(s.check())
+```
+
+    unsat
 
 # Vampire
 
