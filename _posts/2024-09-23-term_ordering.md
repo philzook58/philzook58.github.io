@@ -281,7 +281,10 @@ Graham, Caleb, Sam and Nate also were a big help.
 <https://homepage.divms.uiowa.edu/~fleck/181content/taste-fixed.pdf> a taste of rewriting
 `f(f(x)) -> g(f(x))`
 
-<https://www.sciencedirect.com/science/article/pii/0304397582900263> orderings for term-reiwritng systems. The OG recursive path ordering paper. It is often th3e case that original work is more readable than later explanations. This may be because the onus of demonstrating the idea is sensible at all is on the original author.
+<https://www.sciencedirect.com/science/article/pii/0304397582900263> orderings for term-reiwritng systems. The OG recursive path ordering paper. It is often th3e case that original work is
+more readable than later explanations. This may be because the onus of demonstrating the idea is sensible at all is on the original author.
+
+Even though I wrote it, and it is normal python, I find it basically impossible to run lpo in my head.
 
 Why do we want to consider orderings in our automated reasoning / search algorithms?
 
