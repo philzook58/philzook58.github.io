@@ -14,17 +14,11 @@ It is reminiscent of a famous success story of automated theorem proving, provin
 
 I've been fiddling with building a semi-automated proof assistant in python called Knuckledragger.  <https://github.com/philzook58/knuckledragger>
 
-Knuckledragger is structured around Z3, but recently I've been bolting in the various automated solvers. Z3 is excellent at many things (first class at the grounded problems one often encoutners in software verification), but weaker at quantifier reasoning or equational reasoning.
+Knuckledragger is structured around Z3, but recently I've been bolting in the various automated solvers. Z3 is excellent at many things (first class at the grounded problems one often encounters in software verification), but not necessarily designed to be the best at universal algebraic problems.
 
 For these, Vampire, eprover, Twee, Zipperposition, and Prover9 are good candidates. I judge this somewhat by examining the CASC <https://tptp.org/CASC/J12/> results
 
-What I've done is built a pretty printer to the first order and higher order TPTP format. This printer is wrapper around by a Solver object that mimics exactly Z3's python api so that I can swap it in.
-
-Even if you don't buy into what I'm generally doing in Knuckledragger (a system to weave these results kind of Hilbert style into larger proofs), I think having easy installation and programmatic access to the solvers in python could be quite useful.
-
-Access to the solvers is not new. Isabelle <https://isabelle.in.tum.de/> and Why3 <https://www.why3.org/>   also both have these solvers accessible if you prefer.
-
-The TPTP organization <https://www.tptp.org/> , largely orchestrated by Geoff Sutcliffe, has many resources, but especially System on TPTP <https://tptp.org/cgi-bin/SystemOnTPTP> , which lets you submit problem files online without installing these solvers.
+Even if you don't buy into what I'm generally doing in Knuckledragger (a system to weave these solver calls Hilbert style into larger proofs), I think having easy installation and programmatic access to the solvers in python could be quite useful.
 
 One big advantage of python is the massive preexisting ecosystem and infrastructure. Case in point. You can try this blog post out on Google collab quite easily by clicking this link <https://colab.research.google.com/github/philzook58/philzook58.github.io/blob/master/pynb/2024-09-26-tao_algebra.ipynb>
 
@@ -73,7 +67,7 @@ mul = smt.Function("mul", T, T, T)
 kd.notation.mul.define([x,y], mul(x,y)) # This gives us multiplication notation.
 
 s = solvers.TweeSolver()
-s.add(smt.ForAll([x,y,z], (x * x) * y == y * x))
+s.add(smt.ForAll([x,y], (x * x) * y == y * x))
 s.add(smt.Not(smt.ForAll([x,y], x * y == y * x))) # Negate the theorem to be proved for a refutation
 s.set("timeout", 1000)
 print(s.check())
@@ -121,7 +115,9 @@ print(s.proof().decode())
     RESULT: Unsatisfiable (the axioms are contradictory).
     
 
-You can see the file actually being generated. I have not yet turned on mangling the filename. You can see the constants do need to be mangled with a unique identifier
+What I've done is built a pretty printer to the first order and higher order TPTP format.
+
+You can see the file actually being generated. I have not yet turned on mangling the filename, which I should someday to enable parallel solve calls. You can see the constants do need to be mangled with a unique identifier
 
 ```python
 ! cat /tmp/twee.p
@@ -185,7 +181,7 @@ Vampire very often wins many categories of the CASC competition. It is one of th
 ```python
 # This one actually uses the smt printer
 s = solvers.VampireSolver()
-s.add(smt.ForAll([x,y,z], (x * x) * y == y * x))
+s.add(smt.ForAll([x,y], (x * x) * y == y * x))
 s.add(smt.Not(smt.ForAll([x,y], x * y == y * x)))
 s.set("timeout", 1000)
 print(s.check())
@@ -212,7 +208,7 @@ The next two solvers also support higher order reasoning (they accept lambda ter
 
 ```python
 s = solvers.VampireTHFSolver()
-s.add(smt.ForAll([x,y,z], (x * x) * y == y * x))
+s.add(smt.ForAll([x,y], (x * x) * y == y * x))
 s.add(smt.Not(smt.ForAll([x,y], x * y == y * x)))
 s.set("timeout", 1000)
 print(s.check())
@@ -372,7 +368,7 @@ print(s.proof().decode())
 
 ```python
 s = solvers.EProverTHFSolver()
-s.add(smt.ForAll([x,y,z], (x * x) * y == y * x))
+s.add(smt.ForAll([x,y], (x * x) * y == y * x))
 s.add(smt.Not(smt.ForAll([x,y], x * y == y * x)))
 s.set("timeout", 1000)
 print(s.check())
@@ -445,3 +441,7 @@ print(s.proof().decode())
 # What's Next
 
 It seems there is already code to enumerate possible axioms made of a multiplication operation. Should do that.
+
+Access to the solvers is not new. Isabelle <https://isabelle.in.tum.de/> and Why3 <https://www.why3.org/>   also both have these solvers accessible if you prefer.
+
+The TPTP organization <https://www.tptp.org/> , largely orchestrated by Geoff Sutcliffe, has many resources, but especially System on TPTP <https://tptp.org/cgi-bin/SystemOnTPTP> , which lets you submit problem files online without installing these solvers.
