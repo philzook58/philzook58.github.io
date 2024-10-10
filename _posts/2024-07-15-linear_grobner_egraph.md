@@ -217,7 +217,7 @@ class EGraph:
         else:
             return t1
     def rebuild(self):
-        # simple naive dumb rebuild step. Could be optimized signifcantly
+        # simple naive dumb rebuild step. Could be optimized significantly
         while True:
             #rebuild "union find", buchberhe
             self.poly_eqs = list(sp.groebner(self.poly_eqs, *self.eclasses))
