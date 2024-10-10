@@ -74,7 +74,7 @@ sp.pprint(A)
     ⎢                ⎥
     ⎣0  0   0   1  -1⎦
 
-We can get the reduced row echelon form. This is using row additions turn turn the leading coefficients to 1 and clear out that coefficient from the lower rows.
+We can get the reduced row echelon form. This is using row additions to turn the leading coefficients to 1 and clear out that coefficient from the lower rows.
 <https://en.wikipedia.org/wiki/Row_echelon_form>
 
 ```python
