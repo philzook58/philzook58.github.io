@@ -164,7 +164,7 @@ print(f"{sp.reduced(3*x0 + 25*x4 - 8*x3, G)=}") # another way of writing same li
 
 Ok, an egraph is basically some kind of node table associating eclasses to enodes + a union find.
 
-We will use sympy symbols `ei` to rerpesent our eclasses and the stock sympy groebner basis routines to do the union find action. The point of the union find is you can add new equalities and you can normalize an eclass by calling find.
+We will use sympy symbols `ei` to represent our eclasses and the stock sympy groebner basis routines to do the union find action. The point of the union find is you can add new equalities and you can normalize an eclass by calling find.
 
 | Atomic Eq  | Linear Eq | Poly Eq  |
 |------------|----------|----------|
