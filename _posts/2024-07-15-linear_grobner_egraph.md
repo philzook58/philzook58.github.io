@@ -464,7 +464,7 @@ Can we make any sense of an occurs check in this linear form? Unification?
 
 ## Egraphs are Ground Completion, Grobner is Knuth Bendix
 
-Gaussian elimination and grobner bases are more like E-ground completion (ground completion in a background theory E). The "variables" appearsing in these equations are really 0-arity constants, not variables in the sense of term rewriting. This may help explain why they are terminating, akin to how ground completion is terminating.
+Gaussian elimination and grobner bases are more like E-ground completion (ground completion in a background theory E). The "variables" appearing in these equations are really 0-arity constants, not variables in the sense of term rewriting. This may help explain why they are terminating, akin to how ground completion is terminating.
 
 Ground completion modulo just associativity is not terminating though, since it is just string rewriting. A funny world
 
