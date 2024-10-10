@@ -74,7 +74,7 @@ sp.pprint(A)
     ⎢                ⎥
     ⎣0  0   0   1  -1⎦
 
-We can get the reduced row echelon form. This is using row additions turn turn the leading coefficients to 1 and clear out that coefficient from the lower rows.
+We can get the reduced row echelon form. This is using row additions to turn the leading coefficients to 1 and clear out that coefficient from the lower rows.
 <https://en.wikipedia.org/wiki/Row_echelon_form>
 
 ```python
@@ -164,7 +164,7 @@ print(f"{sp.reduced(3*x0 + 25*x4 - 8*x3, G)=}") # another way of writing same li
 
 Ok, an egraph is basically some kind of node table associating eclasses to enodes + a union find.
 
-We will use sympy symbols `ei` to rerpesent our eclasses and the stock sympy groebner basis routines to do the union find action. The point of the union find is you can add new equalities and you can normalize an eclass by calling find.
+We will use sympy symbols `ei` to represent our eclasses and the stock sympy groebner basis routines to do the union find action. The point of the union find is you can add new equalities and you can normalize an eclass by calling find.
 
 | Atomic Eq  | Linear Eq | Poly Eq  |
 |------------|----------|----------|
@@ -217,7 +217,7 @@ class EGraph:
         else:
             return t1
     def rebuild(self):
-        # simple naive dumb rebuild step. Could be optimized signifcantly
+        # simple naive dumb rebuild step. Could be optimized significantly
         while True:
             #rebuild "union find", buchberhe
             self.poly_eqs = list(sp.groebner(self.poly_eqs, *self.eclasses))
@@ -464,7 +464,7 @@ Can we make any sense of an occurs check in this linear form? Unification?
 
 ## Egraphs are Ground Completion, Grobner is Knuth Bendix
 
-Gaussian elimination and grobner bases are more like E-ground completion (ground completion in a background theory E). The "variables" appearsing in these equations are really 0-arity constants, not variables in the sense of term rewriting. This may help explain why they are terminating, akin to how ground completion is terminating.
+Gaussian elimination and grobner bases are more like E-ground completion (ground completion in a background theory E). The "variables" appearing in these equations are really 0-arity constants, not variables in the sense of term rewriting. This may help explain why they are terminating, akin to how ground completion is terminating.
 
 Ground completion modulo just associativity is not terminating though, since it is just string rewriting. A funny world
 
