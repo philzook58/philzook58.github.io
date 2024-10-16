@@ -7,18 +7,18 @@ date: 2024-10-16
 
 In this blog post <https://www.philipzucker.com/linear_grobner_egraph/> I described a methodology for extending the egraph by replacing the union find with more theory specific equational solvers. From this perspective, the union find (ground atomic equations) is in a spectrum of theories for which knuth bendix completion is guaranteed to terminate. When we have a class of equations that are guaranteed to be completable, it means we can throw together discovered application specific equations and get a normalizing rewrite system out.
 
-The union find is a normalizer for ground atomic equations like `a = b, b = c`, whereas row echelon from and groebner bases are normalizers for linear and polynomials equations. Once we have a normalizer, we can canonize our "eclass ids". When we "union" we insert a new application specific equation into the theory solver.
+The union find is a normalizer for ground atomic equations like `a = b, b = c`, whereas [row echelon form](https://en.wikipedia.org/wiki/Row_echelon_form) and [Groebner bases](https://en.wikipedia.org/wiki/Gr%C3%B6bner_basis) are normalizers for linear and polynomials equations. Once we have a normalizer, we can canonize our "eclass ids". When we "union" we insert a new application specific equation into the theory solver.
 
 An interesting common theme that I think is developing is that of "structured eids". This is the place we can place theory specific equational solvers. Other examples that have this feel are the extra structure in slotted egraphs, which carry the bound variable slots in the eid or colored egraphs where eids carry a context. In hindsight, egg 1.0 style analyses can be seen as a kind of a lattice "structured eid" consisting of a tuple of regular eid and lattice value. Another structured eid example is the "group" union find that can tag union find edges with a group action <https://www.philipzucker.com/union-find-groupoid/> .
 
-String knuth bendix <https://www.philipzucker.com/string_knuth/> is what you might use if you want an intrinsic bolted in notion of concatenation, a "sequence egraph". In other words, wee can label some operators as intrinsically associative. String knuth bendix is not guaranteed to terminate and is less well behaved than Groebner basis production. In this case the "structured eids" are strings/lists/vectors/sequences of eids.
+String knuth bendix <https://www.philipzucker.com/string_knuth/> is what you might use if you want an intrinsic bolted in notion of concatenation, a "sequence egraph". In other words, we can label some operators as intrinsically associative. String knuth bendix is not guaranteed to terminate and is less well behaved than Groebner basis production. In this case the "structured eids" are strings/lists/vectors/sequences of eids.
 
 A common request is for associative and commutative theory. I a little bit suspect people want this for operators that are actually commutative ring-like, for which groebner basis are more appropriate. Nevertheless, there _is_ a thing that is guaranteed to complete the equations for AC theories.
 
 You can view this AC solving thing from different angles.
 
-- Groebner bases for toric/binomial systems like `x y^2 z - x = 0`. Under buchberger's algorithm, this binomial structure is maintained. You can write this as `x y^2 z = x`. The "AC-ness" is coming from that multiplication is associative and commutative in commutative algebra. Each monomial is a multiset of the variables.
-- Hilbert bases - hilbert bases are generating set of cone (positive combination of vector) restricted to lattice (integer) points. <https://en.wikipedia.org/wiki/Hilbert_basis_(linear_programming)>
+- Groebner bases for two term toric/binomial systems like `x y^2 z - x = 0`. Under Buchberger's algorithm, this binomial structure is maintained. You can write this as `x y^2 z = x`. The "AC-ness" is coming from that multiplication is associative and commutative in commutative algebra. Each monomial is a multiset of the variables.
+- Hilbert bases - Hilbert bases are a generating set of cone (positive combination of vector) restricted to lattice (integer) points. <https://en.wikipedia.org/wiki/Hilbert_basis_(linear_programming)>
 - Graver bases - <https://en.wikipedia.org/wiki/Graver_basis> are a finite basis of the integer points of `Ax=0` such that any vector can be written as a linear positive integer sum of them and they are minimal according to a well founded (terminating) order.
 - Ground Multiset Completion
 
@@ -34,7 +34,7 @@ If I have no axioms, I can use a tree. `(("x","y"),("z","x"))`
 
 If I have C, I should sort these tuples. `(("x","y"),("x","z"))`
 
-If I have A, I can drop parens. a List is appropriate `["x", "y", "z", "x"]
+If I have A, I can drop parens. a List is appropriate `["x", "y", "z", "x"]`
 
 If I have AC, I should sort the list `["x", "x", "y", "z"]` or equivalently collect up the multiple counts `[("x", 2), ("y", 1), ("z", 1)]`. This is a multiset data structure. Maybe you want to use a dictionary `{"x": 2, "y": 1, "z": 1}`. Same diff.
 
@@ -333,7 +333,11 @@ assert rewrite(ms("p", 117), R) == [('d', 1), ('n', 1), ('p', 2), ('q', 4)]
 
 Next time, bolting this into the egraph structure. It is the same thing as bolting in Groebner bases.
 
+Note that if we use multisets of size 1, the multiset completion becomes a union find.
+
 There is also a sense in which associativity (A), commutativity (I), distributivity (D), and idempotency (I) feel a bit more structural than linearity
+
+Question: How much disance do we get from normalizing containers a la here <https://www.philipzucker.com/bottom_up/> instead of going full completion? It is way simpler. Enodes and containers are put on the same level.
 
 Is there a way of bolting linear inequalities into this framework? Graver and Hilbert are in some sense dealing with inequalities and equalities. `Ax=0` `x>=0` normal form of LP problem makes it feel like completion could work.
 
