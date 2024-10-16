@@ -1,5 +1,5 @@
 ---
-title: "Towards an AC Egraph : Grobner, Graver and Ground Multiset Rewriting"
+title: "Towards an AC Egraph : Groebner, Graver and Ground Multiset Rewriting"
 date: 2024-10-16
 ---
 
@@ -11,13 +11,13 @@ The union find is a normalizer for ground atomic equations like `a = b, b = c`, 
 
 An interesting common theme that I think is developing is that of "structured eids". This is the place we can place theory specific equational solvers. Other examples that have this feel are the extra structure in slotted egraphs, which carry the bound variable slots in the eid or colored egraphs where eids carry a context. In hindsight, egg 1.0 style analyses can be seen as a kind of a lattice "structured eid" consisting of a tuple of regular eid and lattice value. Another structured eid example is the "group" union find that can tag union find edges with a group action <https://www.philipzucker.com/union-find-groupoid/> .
 
-String knuth bendix <https://www.philipzucker.com/string_knuth/> is what you might use if you want an intrinsic bolted in notion of concatenation, a "sequence egraph". In other words, wee can label some operators as intrinsically associative. String knuth bendix is not guaranteed to terminate and is less well behaved than Grobner basis production. In this case the "structured eids" are strings/lists/vectors/sequences of eids.
+String knuth bendix <https://www.philipzucker.com/string_knuth/> is what you might use if you want an intrinsic bolted in notion of concatenation, a "sequence egraph". In other words, wee can label some operators as intrinsically associative. String knuth bendix is not guaranteed to terminate and is less well behaved than Groebner basis production. In this case the "structured eids" are strings/lists/vectors/sequences of eids.
 
 A common request is for associative and commutative theory. I a little bit suspect people want this for operators that are actually commutative ring-like, for which groebner basis are more appropriate. Nevertheless, there _is_ a thing that is guaranteed to complete the equations for AC theories.
 
 You can view this AC solving thing from different angles.
 
-- Grobner bases for toric/binomial systems like `x y^2 z - x = 0`. Under buchberger's algorithm, this binomial structure is maintained. You can write this as `x y^2 z = x`. The "AC-ness" is coming from that multiplication is associative and commutative in commutative algebra. Each monomial is a multiset of the variables.
+- Groebner bases for toric/binomial systems like `x y^2 z - x = 0`. Under buchberger's algorithm, this binomial structure is maintained. You can write this as `x y^2 z = x`. The "AC-ness" is coming from that multiplication is associative and commutative in commutative algebra. Each monomial is a multiset of the variables.
 - Hilbert bases - hilbert bases are generating set of cone (positive combination of vector) restricted to lattice (integer) points. <https://en.wikipedia.org/wiki/Hilbert_basis_(linear_programming)>
 - Graver bases - <https://en.wikipedia.org/wiki/Graver_basis> are a finite basis of the integer points of `Ax=0` such that any vector can be written as a linear positive integer sum of them and they are minimal according to a well founded (terminating) order.
 - Ground Multiset Completion
@@ -184,9 +184,9 @@ def rewrite(s, R):
     return s
 ```
 
-The next thing we need for completion is a notion of mutliset ordering. This is the analog in grobner bases of a monomial ordering or in term rewriting of a term ordering like knuth bnedix ordering of path ordering.
+The next thing we need for completion is a notion of mutliset ordering. This is the analog in Groebner bases of a monomial ordering or in term rewriting of a term ordering like knuth bnedix ordering of path ordering.
 
-The ordering I use here is order multisets but size, then tie break lexicogrpahically. This is the analog of the graded lexicographic ordering in grobner bases and shortlex ordering in string rewriting.
+The ordering I use here is order multisets but size, then tie break lexicogrpahically. This is the analog of the graded lexicographic ordering in Groebner bases and shortlex ordering in string rewriting.
 
 ```python
 def ms_order(xs,ys):
@@ -257,7 +257,7 @@ def KB(E):
 
 # An example problem
 
-An example problem that I've seen a couple different places is to optimize a change making problem between pennies, quarters, nickels and dimes. This doesn't illuminate the egraph thing, but it does show that our multiset completion is working and the connection to grobner bases and integer programming.
+An example problem that I've seen a couple different places is to optimize a change making problem between pennies, quarters, nickels and dimes. This doesn't illuminate the egraph thing, but it does show that our multiset completion is working and the connection to Groebner bases and integer programming.
 
 We want 117 cents. Use the fewest coins.
 
@@ -294,7 +294,7 @@ d.value, n.value, p.value, q.value
 
     (array([1.]), array([1.]), array([2.]), array([4.]))
 
-We can also solve this using grobner bases
+We can also solve this using Groebner bases
 <https://mattpap.github.io/masters-thesis/html/src/groebner.html#integer-optimization>
 
 We can see that the exponents of the reduced term are the number of coins of each type.
@@ -331,7 +331,7 @@ assert rewrite(ms("p", 117), R) == [('d', 1), ('n', 1), ('p', 2), ('q', 4)]
 
 # Bits and Bobbles
 
-Next time, bolting this into the egraph structure. It is the same thing as bolting in grobner bases.
+Next time, bolting this into the egraph structure. It is the same thing as bolting in Groebner bases.
 
 There is also a sense in which associativity (A), commutativity (I), distributivity (D), and idempotency (I) feel a bit more structural than linearity
 
@@ -366,7 +366,7 @@ AC is like homology, abelian groups, the abelianization.
 
 There are a couple other systems that are available as normalizers. One of which treats
 
-Discussion of AC and grobner here.
+Discussion of AC and Groebner here.
 <https://egraphs.zulipchat.com/#narrow/stream/328972-general/topic/Linear.20and.20Polynomial.20Equations/near/454054609>
 
 Pavel Panchekha started an interesting conversation here
@@ -383,7 +383,7 @@ Remy asked an insightful questions about how this is any different from greedy d
 
 <https://mattpap.github.io/masters-thesis/html/src/groebner.html#integer-optimization>
 
-toric grobner bases
+toric Groebner bases
 toric ideals.
 binomials ideals I've also seen?
 <https://link.springer.com/chapter/10.1007/3-540-54522-0_102> Buchberger algorithm and integer programming. Conti and Traverso
@@ -400,7 +400,7 @@ Hilbert bases vs Graver
 Hilbert basis is generating set of cone (positive ocminbation of vector) restriected to lattice points.
 Graver is positive orthant + linear equality + integer?
 
-I'm pretty confused on why Quine mcluskey has to do with grobner
+I'm pretty confused on why Quine mcluskey has to do with Groebner
 x^2 = x
 xbar + x = 1
 
@@ -424,7 +424,7 @@ Shostak’s congruence closure as completion.
 
 SO we can pick a symbol per sort to be represented as AC.
 Why is that?
-Why can't we pick both plus and times? Well, one should use grobner if you have full ring
+Why can't we pick both plus and times? Well, one should use Groebner if you have full ring
 AC^2
 When I merge x*x*x = y + y + y, how am I supposed to resolve this?
 _{x,x,x} = +{y,y,y}   but_ + aren't enodes. they're tags.
@@ -646,7 +646,7 @@ lawrence polynomials is the name associated
 graver for MILP
 graver for bilevel? It does "domimate" the system, which smells right.
 
-Yeah, fun grobner applications.
+Yeah, fun Groebner applications.
 
 Classical feynman diagrams
 Mathemtically speaking, quite similar to linkages. These give distance constraints, which are also quadratic.
@@ -666,7 +666,7 @@ SOLVING INTEGER PROGRAMING
 
 ## Multiset Rewrite / AC / Graver
 
-Bimonomial grobner seems like a match for AC.
+Bimonomial Groebner seems like a match for AC.
 This is related to graver via "lawrence polynomials"
 
 a monomial is a multiset of literals.
