@@ -1,5 +1,5 @@
 ---
-title: "Towards an AC Egraph : Groebner, Graver and Ground Multiset Rewriting"
+title: "Towards an AC Egraph: Groebner, Graver and Ground Multiset Rewriting"
 date: 2024-10-16
 ---
 
