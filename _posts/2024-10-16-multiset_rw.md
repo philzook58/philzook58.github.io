@@ -345,6 +345,8 @@ proofs are also arguably a kind of strucutred eid. I mentioned something like th
 
 Another interesting thing to do is make symbolic lattices or groups that refer back to the egraph to discver their equalities. There was discussion of this way back about whether "merge" functions had to involve primitives or if they could be regular egraph expressions.
 
+We could perhaps have strucutedc eids be terms themselves for which we have a normalizing a priori rewrite system. Some parts of terms become eid strcuture, and some parts become enodes.
+
 4ti2 is a special built system for this sort of thing. They have good fast algorithms probably. It is a command line program. It has some python stuff to write to it. <https://4ti2.github.io/>
 
 I think I need a custom implementation though in order to get intermixing.
