@@ -11,15 +11,15 @@ Group theory has many applications. Symmetries lead to good solution methods. Ph
 
 A [subgroup](https://en.wikipedia.org/wiki/Subgroup) of a group is a set of group operations that are closed under the operations. 2D rotations are a subgroup of 3D rotations, or the even permutations are a subgroup of the permutations.
 
-You can define multiplying against a set of group elements as mapping the multiplication over all the elements of the set. When you do this to a subgroup, those are the cosets of that subgroup <https://en.wikipedia.org/wiki/Coset> . Because group multiplication is invertible, this action is not compressive and you can map the subgroup to tile and partition the entire group with cosets. In this way we can decompose groups.
+You can define multiplying against a set of group elements as mapping the multiplication over all the elements of the set. When you do this to a subgroup, those are the cosets of that subgroup <https://en.wikipedia.org/wiki/Coset> . Because group multiplication is invertible, this group action is doesn't compress these sets and you can use the subgroup to tile/partition the entire group with cosets. In this way we can decompose and study groups. It's a bit abstract.
 
 # Finitely Presented Groups
 
-To start attacking questions about a particular group, we need to ask how it is described / represented? This is a common theme about any problem actually, not just group theory.
+To start attacking questions about a particular group, we need to ask how it is described / represented. This is a common theme about any computational problem actually, not just group theory.
 
 A multiplication table (as a python dictionary for example) suffices for rather small finite groups.  This table gets unusably big pretty fast. For permutation groups of elements n, there are n! group elements.
 
-So pretty often you need to come at the group from the side. Sometimes you might describe the group in terms of its action of some other set, like the set of all rubik's cube positions.
+So often you need to come at the group from the side. Sometimes you might describe the group in terms of its action of some other set, like the set of all rubik's cube positions. You similarly might describe it as some subgroup of a fixed finite permutation group.
 
 In some cases, a group is described as a finite number of generators and relations/equations between those generators. These are called finitely [presented groups](https://en.wikipedia.org/wiki/Presentation_of_a_group). For example `<a | a**8 = 1>` is a finite presentation of the [cyclic group](https://en.wikipedia.org/wiki/Cyclic_group) of order 8. There's a nice table here <https://en.wikipedia.org/wiki/Presentation_of_a_group#Examples>. This is what we'll work with.
 
