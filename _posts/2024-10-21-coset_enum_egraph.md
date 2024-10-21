@@ -3,8 +3,7 @@ title: "Coset Enumeration using Equality Saturation"
 date: 2024-10-21
 ---
 
-As I was digging into computational group theory
-<https://en.wikipedia.org/wiki/Computational_group_theory> for string knuth bendix completion goodness  <https://www.philipzucker.com/string_knuth/> I noted that coset enumeration aka [Todd-Coxeter](https://en.wikipedia.org/wiki/Todd%E2%80%93Coxeter_algorithm) , one of the mainstay algorithms of computational group theory, mechanically looks quite a bit like equality saturation. This is interesting in it's own right but also as a source of controlled benchmarks for equality saturation systems.
+As I was digging into [computational group theory](https://en.wikipedia.org/wiki/Computational_group_theory) for [string Knuth Bendix completion](https://www.philipzucker.com/string_knuth/) goodness I noted that coset enumeration aka [Todd-Coxeter](https://en.wikipedia.org/wiki/Todd%E2%80%93Coxeter_algorithm) , one of the mainstay algorithms of computational group theory, mechanically looks quite a bit like equality saturation. This is interesting in it's own right but also as a source of controlled benchmarks for equality saturation systems.
 
 [Groups](https://en.wikipedia.org/wiki/Group_theory) are a particular algebraic structure for describing things with symmetry. Symmetries are changes that somehow leave something alone. Familiar examples include rotations and [permutations](https://en.wikipedia.org/wiki/Permutation_group). You can compose these things and invert them.
 
