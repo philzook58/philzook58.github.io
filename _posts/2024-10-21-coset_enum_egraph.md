@@ -4,23 +4,25 @@ date: 2024-10-21
 ---
 
 As I was digging into computational group theory
-<https://en.wikipedia.org/wiki/Computational_group_theory> for string knuth bendix goodness  <https://www.philipzucker.com/string_knuth/> I noted that coset enumeration aka Todd-Coxeter <https://en.wikipedia.org/wiki/Todd%E2%80%93Coxeter_algorithm> , one of the mainstay algorithms, mechanically looks quite a bit like equality saturation. This is interesting in it's own right but also as a source of controlled benchmarks for equality saturation systems.
+<https://en.wikipedia.org/wiki/Computational_group_theory> for string knuth bendix completion goodness  <https://www.philipzucker.com/string_knuth/> I noted that coset enumeration aka Todd-Coxeter <https://en.wikipedia.org/wiki/Todd%E2%80%93Coxeter_algorithm> , one of the mainstay algorithms of computational group theory, mechanically looks quite a bit like equality saturation. This is interesting in it's own right but also as a source of controlled benchmarks for equality saturation systems.
 
-Groups are a particular algebraic structure for describing things with symmetry. Symmetries are changes that somehow leave something alone. Familiar examples include rotations and permutations. You can compose these things and invert them. Symmetries lead to good solution methods. PDEs become solvable by symmetry, symmetry breaking is important to reduce combinatorial search space
+[Groups](https://en.wikipedia.org/wiki/Group_theory) are a particular algebraic structure for describing things with symmetry. Symmetries are changes that somehow leave something alone. Familiar examples include rotations and [permutations](https://en.wikipedia.org/wiki/Permutation_group). You can compose these things and invert them.
 
-A subgroup of a group is a set of group operations that are closed under the operations. 2D rotations are a subgroup of 3D rotations, or the even permutations are a subgroup of the permutations.
+Group theory has many applications. Symmetries lead to good solution methods. Physical PDEs become solvable by symmetry, [symmetry breaking](https://en.wikipedia.org/wiki/Symmetry-breaking_constraints) is important to reduce combinatorial search space. Graph isomorphisms are graph symmetries.
+
+A [subgroup](https://en.wikipedia.org/wiki/Subgroup) of a group is a set of group operations that are closed under the operations. 2D rotations are a subgroup of 3D rotations, or the even permutations are a subgroup of the permutations.
 
 You can define multiplying against a set of group elements as mapping the multiplication over all the elements of the set. When you do this to a subgroup, those are the cosets of that subgroup <https://en.wikipedia.org/wiki/Coset> . Because group multiplication is invertible, this action is not compressive and you can map the subgroup to tile and partition the entire group with cosets. In this way we can decompose groups.
 
 # Finitely Presented Groups
 
-To start attacking questions about a particular group, we need to ask how it is described / represented?
+To start attacking questions about a particular group, we need to ask how it is described / represented? This is a common theme about any problem actually, not just group theory.
 
-A multiplication table suffices for rather small groups. For permutation groups of elements n, there are n! group elements. This table gets unusable pretty fast.
+A multiplication table (as a python dictionary for example) suffices for rather small finite groups.  This table gets unusably big pretty fast. For permutation groups of elements n, there are n! group elements.
 
 So pretty often you need to come at the group from the side. Sometimes you might describe the group in terms of its action of some other set, like the set of all rubik's cube positions.
 
-In some cases, a group is described as a finite number of generators and relations/equations between those generators. These are called finitely presented groups. This is what we'll work with.
+In some cases, a group is described as a finite number of generators and relations/equations between those generators. These are called finitely [presented groups](https://en.wikipedia.org/wiki/Presentation_of_a_group). For example `<a | a**8 = 1>` is a finite presentation of the [cyclic group](https://en.wikipedia.org/wiki/Cyclic_group) of order 8. There's a nice table here <https://en.wikipedia.org/wiki/Presentation_of_a_group#Examples>. This is what we'll work with.
 
 Here we make a group generated as strings `abbbaaaabbbbaaa` but we identify `aa = 1` and `bbb = 1`. Sympy has a coset enumeration thing in it for us.
 
@@ -63,6 +65,8 @@ The first coset table is just `[0,0,0,0]` which corresponds to G considered as a
 | 3 | 2 | 2    | 3 | 3    |
 
 The coset ids don't mean much of anything. We can see some similarity to eclass ids in that respect.
+
+For a more performant implementation, look at GAP <https://www.gap-system.org/>
 
 ## Equality Saturation
 
@@ -223,7 +227,7 @@ Here I run an egglog program describing the left action on the subgroup generate
 
 There is a common thread amongst the things I'm looking at. It's all equations, baby. Completion is perhaps a common perspective.
 
-Coset-enumeration really actually ought to saturate, which is kind of interesting.
+Coset-enumeration really actually ought to saturate, which is kind of interesting. Many equality saturation problems we don't think will saturate.
 
 Coset enumeration as a benchmark is a bit off base from other applications because its weird. One could compare to GAPs speed. Presumably egglog loses badly, but it gives you a "speed of light".
 
