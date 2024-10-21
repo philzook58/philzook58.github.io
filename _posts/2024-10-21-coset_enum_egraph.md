@@ -3,11 +3,9 @@ title: "Coset Enumeration using Equality Saturation"
 date: 2024-10-21
 ---
 
-As I was digging into [computational group theory](https://en.wikipedia.org/wiki/Computational_group_theory) for [string Knuth Bendix completion](https://www.philipzucker.com/string_knuth/) goodness I noted that coset enumeration aka [Todd-Coxeter](https://en.wikipedia.org/wiki/Todd%E2%80%93Coxeter_algorithm) , one of the mainstay algorithms of computational group theory, mechanically looks quite a bit like equality saturation. This is interesting in it's own right but also as a source of controlled benchmarks for equality saturation systems.
+As I was digging into [computational group theory](https://en.wikipedia.org/wiki/Computational_group_theory) for [string Knuth Bendix completion](https://www.philipzucker.com/string_knuth/) goodness I noted that coset enumeration aka [Todd-Coxeter](https://en.wikipedia.org/wiki/Todd%E2%80%93Coxeter_algorithm) , one of the mainstay algorithms of computational group theory, mechanically looks quite a bit like equality saturation. This is interesting in its own right but also as a source of controlled benchmarks for equality saturation systems.
 
 [Groups](https://en.wikipedia.org/wiki/Group_theory) are a particular algebraic structure for describing things with symmetry. Symmetries are changes that somehow leave something alone. Familiar examples include rotations and [permutations](https://en.wikipedia.org/wiki/Permutation_group). You can compose these things and invert them.
-
-Group theory has many applications. Symmetries lead to good solution methods. Physical PDEs become solvable by symmetry, [symmetry breaking](https://en.wikipedia.org/wiki/Symmetry-breaking_constraints) is important to reduce combinatorial search space. Graph isomorphisms are graph symmetries.
 
 A [subgroup](https://en.wikipedia.org/wiki/Subgroup) of a group is a set of group operations that are closed under the operations. 2D rotations are a subgroup of 3D rotations, or the even permutations are a subgroup of the permutations.
 
@@ -235,6 +233,8 @@ coset enumeration can useful use many heuristic choices on how to proceed. Maybe
 There is a common trick in the egraph world. You often want to model sequences, but you don't want to throw in all the associations. So you bias your rules in the tail carrying form foo*bar -> biz*baz` becomes `foo(bar(x)) -> biz(baz(x))`
 
 There are other ways of modelling the egglog program. An explicit `(act (A) (H)) binary group action function`G -> GSet -> GSet` is another possibility. You want to be careful if you explicit model the group multiplication `mul : G -> G -> G` to avoid associativity blowup and also the possibility of
+
+Group theory has many applications. Symmetries lead to good solution methods. Physical PDEs become solvable by symmetry, [symmetry breaking](https://en.wikipedia.org/wiki/Symmetry-breaking_constraints) is important to reduce combinatorial search space. Graph isomorphisms are graph symmetries.
 
 This is akin to taking the free monoid and turning it into a right associated list.
 
