@@ -252,7 +252,7 @@ You can also embed colored graph canonization into uncolored by replacing the co
 
 Tensor symmettries. Two sided action by groups. permute labels vs permuting the slots.
 
-Slotted egraphs
+Slotted egraphs <https://michel.steuwer.info/files/publications/2024/EGRAPHS-2024.pdf> food for thought. The same sort of permutation thinking is relevant.
 
 Semiring <https://arxiv.org/abs/2105.14435> Convergence of Datalog over (Pre-) Semirings
 
