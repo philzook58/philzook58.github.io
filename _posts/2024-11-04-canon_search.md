@@ -6,15 +6,15 @@ date: 2024-11-04
 There are many interesting syntactic and semantic objects that hold a notion of symmetry that a simple syntax tree can't quite capture.
 
 - Sets `{1,3,5,2}`
-- Integral expressions $\int dx e^{-x^2}$
-- Sums $\sum_i a_i$
-- lambdas $\lambda x. (x x)$,
+- Integral expressions $\int dx e^{-x^2}$ have dummy variables
+- Sums $\sum_i a_i$ have dummy indices
+- lambdas $\lambda x. (x x)$, have bound variables
 - [resolution clauses](https://en.wikipedia.org/wiki/Resolution_(logic)) $ p(X) \lor q(X,Y)$
 - [conjunctive database queries](https://en.wikipedia.org/wiki/Conjunctive_query) $R(a,b) \land R(b,c) \land R(c,a)$,
 - Graphs
 - indexful [tensor](https://en.wikipedia.org/wiki/Tensor) expressions $T_{ijk}\epsilon_{ij}$
 
-You sometimes want to manipulate these objects, index them for fast lookup, or check for equality. I discussed some strategies here <https://www.philipzucker.com/hashing-modulo/>. In short some possible approaches are
+You sometimes want to manipulate these objects, index them for fast lookup, or check for equality modulo these intrinsic symmetries. I discussed some strategies here <https://www.philipzucker.com/hashing-modulo/>. In short some possible approaches are
 
 - Canonize to a unique form
 - Find a homomorphism into the integers
@@ -26,11 +26,11 @@ For lambda terms, a common canonical representation is [de bruijn indices](https
 
 For binderless alpha invariant things, like a term with unification variables, you can label the variables via a traversal. For example `f(X,Y,Y)`  becomes `f(V0, V1, V1)` traversing left to right. This particular strategy isn't stable and therefore is inefficient upon building a new term using this as a subterm, but it is conceptually ok.
 
-But when you start combining set-like things (Associative, commutative and idempotent) with variables, one gets stumped though. This is the case for clauses, tensor expressions, and conjuctive queries. Procedures to name the variables and the procedure to sort the set are entangled. Which do we do first?
+But when you start combining set-like things (Associative, commutative and idempotent) with variables, one gets stumped though. This is the case for clauses, tensor expressions, and conjunctive queries. Procedures to name the variables and the procedure to sort the set are entangled. Which do we do first?
 
-One idea is to use a non-ground [term ordering](https://www.cs.unm.edu/~mccune/prover9/manual/2009-11A/term-order.html) to sort the sets. These non-ground term orderings are intrinsically partial though. Also they are way more complicated than anything we've discussed so far. This is more for dealing with substitution problems than alpha invariance problems. It is overkill.
+One idea is to use a non-ground [term ordering](https://www.cs.unm.edu/~mccune/prover9/manual/2009-11A/term-order.html) to sort the sets. These non-ground term orderings are intrinsically partial though. Also they are way more complicated than anything we've discussed so far. They are more for dealing with substitution problems than alpha invariance problems. It is overkill.
 
-You can also replace variables with a single marker type `V` and use that term as a invariant. This is kind of the idea used in discrimination tries.
+You can also replace variables with a marker node `V` and use that term as a invariant. `f(X,Y,Y)` becomes `f(V,V,V)`. This is kind of the idea used in discrimination tries. This is an invariant, but it is lossy. It doesn't distinguish between `f(X,Y)` and `f(X,X)`.
 
 But how do we actually achieve the canonization approach rather than fingerprinting?
 
