@@ -68,22 +68,22 @@ Another revelation is that I don't have to pay attention to the rather group the
 There are multiple reasonable variations on the definition of graph. There are also many representations of graphs possible on a computer.
 <https://en.wikipedia.org/wiki/Graph_(abstract_data_type)>
 
-For today, let us say that a graph is a set of edges and that edges are a set of two nodes.
+For today, let us say that a graph is a set of edges and that edges are a set of two nodes. Here is such a representation of the two edge graph `{{3,2}, {0,1}}` in python:
 
 ```python
-{frozenset([4,3]), frozenset([1,2])}
+{frozenset([3,2]), frozenset([0,1])}
 ```
 
 We immediately are tempted to stores undirected edges as sorted tuples because `frozenset` is so annoying to type.
 
 ```python
-[(3,4), (1,2)]
+[(2,3), (0,1)]
 ```
 
 And of course, we should sort that list. Looks off as is.
 
 ```python
-[(1,2), (3,4)]
+[(0,1), (2,3)]
 ```
 
 But actually, unless we seriously have meaningful labels for the nodes, the numbers are meaningless. They are merely a necessary evil bookkeeping device. When I draw a graph on the page, I don't write the numbers.
