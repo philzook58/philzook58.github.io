@@ -3,7 +3,16 @@ title: "Tensors and Graphs: Canonization by Search"
 date: 2024-11-04
 ---
 
-Sets `{1,3,5,2}`, integral expressions $\int dx e^{-x^2}$, sums $\sum_i a_i$, lambdas $\lambda x. x x$, [resolution clauses](https://en.wikipedia.org/wiki/Resolution_(logic)) $ p(X) \lor q(X,Y)$, [conjunctive database queries](https://en.wikipedia.org/wiki/Conjunctive_query) $R(a,b) \land R(b,c) \land R(c,a)$, graphs, and indexful [tensor](https://en.wikipedia.org/wiki/Tensor) expressions $T_{ijk}\epsilon_{ij}$ are all interesting little objects.
+There are many interesting syntactic and semantic objects that hold a notion of symmetry that a simple syntax tree can't quite capture.
+
+- Sets `{1,3,5,2}`
+- Integral expressions $\int dx e^{-x^2}$
+- Sums $\sum_i a_i$
+- lambdas $\lambda x. (x x)$,
+- [resolution clauses](https://en.wikipedia.org/wiki/Resolution_(logic)) $ p(X) \lor q(X,Y)$
+- [conjunctive database queries](https://en.wikipedia.org/wiki/Conjunctive_query) $R(a,b) \land R(b,c) \land R(c,a)$,
+- Graphs
+- indexful [tensor](https://en.wikipedia.org/wiki/Tensor) expressions $T_{ijk}\epsilon_{ij}$
 
 You sometimes want to manipulate these objects, index them for fast lookup, or check for equality. I discussed some strategies here <https://www.philipzucker.com/hashing-modulo/>. In short some possible approaches are
 
@@ -11,13 +20,13 @@ You sometimes want to manipulate these objects, index them for fast lookup, or c
 - Find a homomorphism into the integers
 - Find invariants / fingerprints
 
-For sets for example, canonizing a list representation of a set can be done by simply sorting it. Very natural, Eazy peasy.
+For sets for example, canonizing a list representation of a set can be done by simply sorting and deduping it. `{1,3,5,2}` becomes `[1,2,3,5]`. Very natural, Eazy peasy.
 
-For lambda terms, a common canonical representation is [de bruijn indices](https://en.wikipedia.org/wiki/De_Bruijn_index), which name variables by the number of binders you need to cross to reach their binding lambda.
+For lambda terms, a common canonical representation is [de bruijn indices](https://en.wikipedia.org/wiki/De_Bruijn_index) $\lambda x. (x x)$ becomes `lam(app(var(0),var(0)))`, which name variables by the number of binders you need to cross to reach their binding lambda.
 
 For binderless alpha invariant things, like a term with unification variables, you can label the variables via a traversal. For example `f(X,Y,Y)`  becomes `f(V0, V1, V1)` traversing left to right. This particular strategy isn't stable and therefore is inefficient upon building a new term using this as a subterm, but it is conceptually ok.
 
-But when you start combining set-like things (Associative, commutative and idempotent) with variables, one gets stumped though. Procedures to name the variables and the procedure to sort the set are entangled. Which do we do first?
+But when you start combining set-like things (Associative, commutative and idempotent) with variables, one gets stumped though. This is the case for clauses, tensor expressions, and conjuctive queries. Procedures to name the variables and the procedure to sort the set are entangled. Which do we do first?
 
 One idea is to use a non-ground [term ordering](https://www.cs.unm.edu/~mccune/prover9/manual/2009-11A/term-order.html) to sort the sets. These non-ground term orderings are intrinsically partial though. Also they are way more complicated than anything we've discussed so far. This is more for dealing with substitution problems than alpha invariance problems. It is overkill.
 
@@ -25,7 +34,7 @@ You can also replace variables with a single marker type `V` and use that term a
 
 But how do we actually achieve the canonization approach rather than fingerprinting?
 
-## Variables + AC ~ Graph Isomorphism ===> Search
+## Variables + AC ~ Graph Isomorphism -> Search
 
 I was stumped for while on how to canonize clause-like things, coming up with this and that criteria on naming the variables and breaking ties.
 
@@ -34,7 +43,7 @@ An important revelation is to note that this problem is no going to be solvable 
 Consider canonizing the set of terms `{f(X,X), f(X,Y)}`.
 
 We can take a step back from particular procedures and note that we are looking through the space of labellings of variables.
-`{f(v1,v1), f(v1,v0)}` or `{f(v0,v0), f(v0,v1)}` are the options here considering only vairables namings. In combination with list permutations this becomes `[f(v1,v1), f(v1,v0)]` or `[f(v0,v0), f(v0,v1)]` or `[f(v0,v1), f(v0,v0)]` or `[f(v1,v0), f(v1,v1)]`.
+`{f(v1,v1), f(v1,v0)}` or `{f(v0,v0), f(v0,v1)}` are the options here considering only variable namings. In combination with set permutations this becomes `[f(v1,v1), f(v1,v0)]` or `[f(v0,v0), f(v0,v1)]` or `[f(v0,v1), f(v0,v0)]` or `[f(v1,v0), f(v1,v1)]`.
 
 Our procedures are trying to come up with some method to select one in particular.
 
@@ -48,7 +57,7 @@ So that's the recipe:
 2. put some total ordering on it
 3. the minimum one is the canonical form.
 
-This is a search problem throughout the space of possible representations, which will be typically very large. When we look at a particular problem, we will see many optimizations, propagations, and pruning steps that are possible. Many of the symmetries will factor. We can use noticed invariants to prune the space. For simple problems, these observations will prune the space down into a polynomial time algorithm.
+This is a search problem throughout the space of possible representations, which will be typically very large. When we look at a particular problem, we will see many optimizations, propagations, and pruning steps that are possible. Many of the symmetries will factor into smaller subproblems. A well picked total ordering will hopefully have good propagation properties, easy to compute, and be compositional in some sense. We can use noticed invariants to prune the space. For simple problems, these observations will prune the space down into a polynomial time algorithm.
 
 In general though, it won't.
 
@@ -65,23 +74,17 @@ For today, let us say that a graph is a set of edges and that edges are a set of
 {frozenset([4,3]), frozenset([1,2])}
 ```
 
-    {frozenset({3, 4}), frozenset({1, 2})}
-
 We immediately are tempted to stores undirected edges as sorted tuples because `frozenset` is so annoying to type.
 
 ```python
 [(3,4), (1,2)]
 ```
 
-    [(3, 4), (1, 2)]
-
 And of course, we should sort that list. Looks off as is.
 
 ```python
 [(1,2), (3,4)]
 ```
-
-    [(1, 2), (3, 4)]
 
 But actually, unless we seriously have meaningful labels for the nodes, the numbers are meaningless. They are merely a necessary evil bookkeeping device. When I draw a graph on the page, I don't write the numbers.
 
@@ -185,7 +188,7 @@ We can represent a tensor expressions as a list of tuples, where the first field
 
 $T_{ij}R_{jlk}T_{kl}$ becomes `[("T", i,k), ("R", j,l,k), ("T", k,l)])`.
 
-It looks very similar to the above with a smart constructor removing the AC symmettry of the multiplication, defining a permutation action on the index names, and then canonizing via search. Because we put the tensor names first, it will be in sorted order by tensor name. This means we obviously don't have to brute search all permutations, but it is a nice one linear to do so. Other orderings may be fruitful for different reasons.
+It looks very similar to the above with a `texpr` smart constructor removing the AC symmettry of the multiplication, `act` defining a permutation action on the index names, and then `canon` canonizing via search. Because we put the tensor names first, it will be in sorted order by tensor name. This means we obviously don't have to brute search all permutations, but it is a nice one linear to do so. Other orderings may be fruitful for different reasons.
 
 ```python
 import itertools
@@ -217,11 +220,11 @@ External unsummed over indices can be dealt with by representing them using some
 We can embed graph canonization into this problem by making a two index "tensor" called edge. The expression then becomes the same thing as our graph edge set. You may want to pet in both permutations of the edge tensor.
 `[("edge", i, j), ("edge", j, i), ("edge", k, l), ("edge", l, k)]` is the same as the graph `[(i,j), (j,i), (k,l), (l,k)]`.
 
-We can embed this problem into labelled/colored graph canonization.
-
-You can also embed colored graph canonization into uncolored by replacing the colors with edges to unique little graph clusters. That borders of ridiculous though.
+We can embed this problem into labelled/colored graph canonization. `F_{i,i}F_{i,j}` can be embedded as the vertex labelled graph.
 
 ![](/assets/tensor_graph.png)
+
+We use numbered child vertices to distinguish with port of F things go into. `V` nodes have no intrinsic name but express equality constraint between variables names.
 
 # Bits and Bobbles
 
@@ -244,6 +247,8 @@ It's AC + implicit binders which is hard to canonize.
 It is that <https://en.wikipedia.org/wiki/Einstein_notation> makes the order of the binder implicit and non existant. But that reflects the interchange law of the implicit summation symbols. CQs and clauses often use unification variables with implicit binders, which have the same issue.
 
 Caleb was the one who first twigged me onto graph canonization frOM his graph hashing work <https://arxiv.org/pdf/2002.06653>
+
+You can also embed colored graph canonization into uncolored by replacing the colors with edges to unique little graph clusters. That borders of ridiculous though.
 
 Tensor symmettries. Two sided action by groups. permute labels vs permuting the slots.
 
