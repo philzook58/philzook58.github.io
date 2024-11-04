@@ -59,7 +59,7 @@ So that's the recipe:
 
 This is a search problem throughout the space of possible representations, which will be typically very large. When we look at a particular problem, we will see many optimizations, propagations, and pruning steps that are possible. Many of the symmetries will factor into smaller subproblems. A well picked total ordering will hopefully have good propagation properties, easy to compute, and be compositional in some sense. We can use noticed invariants to prune the space. For simple problems, these observations will prune the space down into a polynomial time algorithm.
 
-In general though, it won't.
+In general though, it won't. Sometimes we have to canonize by at least _some_ search.
 
 ## Big Dummy Graph Canonization
 
