@@ -1,0 +1,203 @@
+#-----------------------------------------------------------
+# Vivado v2024.1.2 (64-bit)
+# SW Build 5164865 on Thu Sep  5 14:36:28 MDT 2024
+# IP Build 5164407 on Fri Sep  6 08:18:11 MDT 2024
+# SharedData Build 5164864 on Thu Sep 05 13:09:09 MDT 2024
+# Start of session at: Thu Oct 31 16:17:48 2024
+# Process ID: 374645
+# Current directory: /home/philip/philzook58.github.io
+# Command line: vivado -mode tcl
+# Log file: /home/philip/philzook58.github.io/vivado.log
+# Journal file: /home/philip/philzook58.github.io/vivado.jou
+# Running On        :philip-ThinkPad-Z13-Gen-2
+# Platform          :Ubuntu
+# Operating System  :Ubuntu 22.04.5 LTS
+# Processor Detail  :AMD Ryzen 7 PRO 7840U w/ Radeon 780M Graphics
+# CPU Frequency     :400.000 MHz
+# CPU Physical cores:8
+# CPU Logical cores :16
+# Host memory       :66042 MB
+# Swap memory       :2147 MB
+# Total Virtual     :68190 MB
+# Available Virtual :38406 MB
+#-----------------------------------------------------------
+add_files -help
+add_files
+
+Description: 
+Add sources to the active fileset
+
+Syntax: 
+add_files  [-fileset <arg>] [-of_objects <args>] [-norecurse] [-copy_to <arg>]
+           [-force] [-scan_for_includes] [-quiet] [-verbose] [<files>...]
+
+Returns: 
+list of file objects that were added
+
+Usage: 
+  Name                  Description
+  ---------------------------------
+  [-fileset]            Fileset name
+  [-of_objects]         Filesets or sub-designs or RMs to add the files to
+  [-norecurse]          Do not recursively search in specified directories
+  [-copy_to]            Copy the file to the specified directory before 
+                        adding it to project
+  [-force]              Overwrite the existing file when -copy_to is used
+  [-scan_for_includes]  Scan and add any included files found in the 
+                        fileset's RTL sources
+  [-quiet]              Ignore command errors
+  [-verbose]            Suspend message limits during command execution
+  [<files>]             Name of the files and/or directories to add. Must be 
+                        specified if -scan_for_includes is not used.
+
+Categories: 
+Project, Simulation
+
+Description:
+
+  Adds one or more source files, or the source file contents of one or more
+  directories, to the specified fileset in the current project. Valid source
+  files include HDL sources (VHDL, Verilog, SystemVerilog, and related header
+  files), netlist sources (DCP, EDIF, and NGC), and memory interface files
+  (BMM, MIF, MEM, ELF).
+
+  IP and Block Design sources are not added through the add_files command.
+  These are compound files that are supported by separate commands such as
+  import_ip, read_bd, and read_ip.
+
+  For every file added to a project the AMD Vivado™ Design Suite attempts to
+  store and maintain both a relative path and an absolute path to the file or
+  directory. When a project is opened, these paths are used to locate the
+  files and directories. By default the Vivado Design Suite applies a
+  Relative First approach to resolving paths, searching the relative path
+  first, then the absolute path. You can use the PATH_MODE property to change
+  how the Vivado tool resolves file paths or properties for specific objects.
+  For more information, see the Vivado Design Suite Properties Reference
+  Guide (UG912).
+
+  Important: Adding multiple files one at a time can cause noticeable
+  performance degradation. It is more efficient to use a single add_files
+  command to import a list of files:
+
+    add_files {file1 file2 file3 ... fileN}
+
+  The Vivado tool does not read the contents of a file automatically when the
+  file is added to the project with add_files, but rather reads the file
+  contents when they are needed. For instance, a constraints file is not read
+  when added to the design until needed by synthesis, timing, or
+  implementation. To read the file at the time of adding it to the design,
+  use the read_xxx command instead.
+
+  Tip: When running the Vivado tool in Non-Project mode, in which there is no
+  project file to maintain and manage the various project source files, you
+  should use the read_xxx commands to read the contents of source files into
+  the in-memory design. Refer to the Vivado Design Suite User Guide: Design
+  Flows Overview (UG892) for more information on Non-Project mode.
+
+  The add_files command adds them by reference to the specified fileset. This
+  is different from the import_files command, which copies the file into the
+  local project folders as well as adding them to the specified fileset.
+
+  This command returns the files that were added, or returns an error if it
+  fails.
+
+Arguments:
+
+  -fileset <name> - (Optional) The fileset to which the specified source
+  files should be added. An error is returned if the specified fileset does
+  not exist. If no fileset is specified the files are added to the source
+  fileset by default.
+
+  -norecurse - (Optional) Do not recurse through subdirectories of any
+  specified directories. Without this argument, the tool searches through any
+  subdirectories for additional source files that can be added to a project.
+
+  -copy_to <arg> - (Optional) Copy the selected files to the specified
+  directory before adding the files to the project. This option lets you move
+  files from their current location to a new folder to reference as part of
+  the source structure for a project.
+
+  -force - (optional) Overwrite any existing files of the same name as the
+  specified files, in the destination directory, when you use the -copy_to
+  option.
+
+  -scan_for_includes - (Optional) Scan Verilog source files for any `include
+  statements and add these referenced files to the specified fileset. By
+  default, `include files are not added to the fileset.
+
+  -quiet - (Optional) Execute the command quietly, returning no messages from
+  the command. The command also returns TCL_OK regardless of any errors
+  encountered during execution.
+
+  Note: Any errors encountered on the command-line, while launching the
+  command, will be returned. Only errors occurring inside the command will be
+  trapped.
+
+  -verbose - (Optional) Temporarily override any message limits and return
+  all messages from this command.
+
+  Note: Message limits can be defined with the set_msg_config command.
+
+  <files> - (Optional) One or more file names or directory names to be added
+  to the fileset. If a directory name is specified, all valid source files
+  found in the directory, and in subdirectories of the directory, are added
+  to the fileset.
+
+  Note: If the path is not specified as part of the file name, the tool will
+  search for the specified file in the current working directory and then in
+  the directory from which the tool was launched.
+
+Examples:
+
+  The following example adds a file called rtl.v to the current project:
+
+    add_files rtl.v
+
+  In the preceding example the tool looks for the rtl.v file in the current
+  working directory since no file path is specified, and the file is added to
+  the source fileset as a default since no fileset is specified.
+
+  The following example adds a file called top.xdc to the constrs_1
+  constraint fileset, as well as any appropriate source files found in the
+  project_1 directory and subdirectories:
+
+    add_files -fileset constrs_1 -quiet c:/Design/top.xdc c:/Design/project_1
+
+  In addition, the tool ignores any command line errors because the -quiet
+  argument was specified.
+
+  If the -norecurse option had been specified then only constraint files
+  found in the project_1 directory would have been added, but subdirectories
+  would not be searched.
+
+  The following example adds an existing IP core file to the current project:
+
+    add_files -norecurse C:/Data/ip/c_addsub_v11_0_0.xci
+
+  Note: Use the import_ip command to import the IP file into the local
+  project folders.
+
+  The following example reads a top-level design netlist, and the char_fifo
+  IP in a Non-Project Mode design:
+
+    # Read top-level EDIF and IP DCP
+    read_edif ./sources/wave_gen.edif
+    add_files ./my_IP/char_fifo/char_fifo.xci
+
+  Note: Either add_files or read_ip can be used reading in an IP core. All
+  output products of the IP, including a design checkpoint ( DCP), will be
+  read as needed.
+
+  The following example adds an existing DSP module, created in System
+  Generator, into the current project:
+
+    add_files C:/Data/model1.mdl
+
+See Also:
+
+   *  import_files
+   *  import_ip
+   *  read_ip
+   *  read_verilog
+   *  read_vhdl
+   *  read_xdc
