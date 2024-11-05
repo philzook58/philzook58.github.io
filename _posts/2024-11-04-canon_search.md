@@ -68,7 +68,7 @@ Another revelation is that I don't have to pay attention to the rather group the
 There are multiple reasonable variations on the definition of graph. There are also many representations of graphs possible on a computer.
 <https://en.wikipedia.org/wiki/Graph_(abstract_data_type)>
 
-For today, let us say that a graph is a set of edges and that edges are a set of two nodes. Here is such a representation of the two edge graph `{{3,2}, {0,1}}` in python:
+For today, let us say that a graph is a set of edges and that edges are a set of two nodes. Here is such a representation of the two edge graph {% raw %} `{{3,2}, {0,1}}` {% endraw %} in python:
 
 ```python
 {frozenset([3,2]), frozenset([0,1])}
