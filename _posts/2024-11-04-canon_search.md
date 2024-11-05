@@ -188,7 +188,7 @@ We can represent a tensor expressions as a list of tuples, where the first field
 
 $T_{ij}R_{jlk}T_{kl}$ becomes `[("T", i,k), ("R", j,l,k), ("T", k,l)])`.
 
-It looks very similar to the above with a `texpr` smart constructor removing the AC symmettry of the multiplication, `act` defining a permutation action on the index names, and then `canon` canonizing via search. Because we put the tensor names first, it will be in sorted order by tensor name. This means we obviously don't have to brute search all permutations, but it is a nice one linear to do so. Other orderings may be fruitful for different reasons.
+It looks very similar to the above with a `texpr` smart constructor removing the AC symmetry of the multiplication, `act` defining a permutation action on the index names, and then `canon` canonizing via search. Because we put the tensor names first, it will be in sorted order by tensor name. This means we obviously don't have to brute search all permutations, but it is a nice one liner to do so. Other orderings may be fruitful for different reasons.
 
 ```python
 import itertools
@@ -217,14 +217,16 @@ canon(t)
 
 External unsummed over indices can be dealt with by representing them using some other marker, like a string or something, that is not acted upon by the permutations.
 
-We can embed graph canonization into this problem by making a two index "tensor" called edge. The expression then becomes the same thing as our graph edge set. You may want to pet in both permutations of the edge tensor.
-`[("edge", i, j), ("edge", j, i), ("edge", k, l), ("edge", l, k)]` is the same as the graph `[(i,j), (j,i), (k,l), (l,k)]`.
+We can embed graph canonization into this problem by making a two index "tensor" called `edge`. This embedding shows that tensor canonization is no easier than graph canonization and we should expect some search to be required. The tensor expression then becomes the same thing as our graph edge set. You may want to pet in both permutations of the edge tensor. For example,
+`[("edge", i, j), ("edge", j, i), ("edge", k, l), ("edge", l, k)]` is the basically the same as the graph `[(i,j), (j,i), (k,l), (l,k)]`.
 
-We can embed this problem into labelled/colored graph canonization. `F_{i,i}F_{i,j}` can be embedded as the vertex labelled graph.
+Going the other way, we can embed tensor canonization into labelled/colored graph canonization. `F_{i,i}F_{i,j}` can be embedded as the vertex labelled graph. This may be useful if we want to use nauty off the shelf for tensor canonization. There are other encodings possible.
 
 ![](/assets/tensor_graph.png)
 
-We use numbered child vertices to distinguish with port of F things go into. `V` nodes have no intrinsic name but express equality constraint between variables names.
+We use numbered child vertices to distinguish with port of F things go into. This is because nauty's definition of graph doesn't have ports/orderings to the edges attached to a vertex, so we need to break that symmetry. `V` nodes have no intrinsic name but express equality constraint between variables names as graph connections.
+
+Sometimes these things are encoded as hypergraphs, where variables are represented by hyperedges, which are sets of more than one vertex. more or less that is the same thing.
 
 # Bits and Bobbles
 
