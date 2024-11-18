@@ -1,18 +1,19 @@
 ---
-date: 2024-11-13
+date: 2024-11-18
 title: "SQL, Homomorphisms and Constraint Satisfaction Problems"
 ---
 
 Database queries are a pretty surprisingly powerful tool that can solve seemingly intractable problems.
 
-It is a fun coding challenge to do things in SQL. I've seen people solve sudokus or do [advent of code](https://github.com/mitchellh/advent-2021-sql), or you can build a datalog on SQL with a little metaprogramming (maybe even fully internally). It is also possible to build a CHR (constraint handling rules) system on SQL or a graph rewriting system on SQL. Here I talk about how one can use SQL queries to do graph instruction matching <https://www.philipzucker.com/imatch-datalog/> .
+It is a fun coding challenge to do things in SQL. I've seen people solve sudokus or do [advent of code](https://github.com/mitchellh/advent-2021-sql), or you can build a datalog on SQL with a little metaprogramming (maybe even fully internally). It is also possible to build a [CHR (constraint handling rules) system on SQL](https://github.com/awto/chr2sql) or a graph rewriting system on SQL. Here I talk about how one can use SQL queries to do graph instruction matching <https://www.philipzucker.com/imatch-datalog/> .
 
-SQL is a feature rich language, it is not surprising that you can do these things from that perspective, using this and that odd feature.
+SQL is a feature rich language, it is not surprising that you can do these things from that perspective, using this and that odd feature. But even the simple idealized "SELECT FROM WHERE" core of SQL has a lot of power.
 
-The core of SQL is basically "SELECT FROM WHERE" statements. These statements can be idealized in a couple different ways.
-They are basically conjunctive queries <https://en.wikipedia.org/wiki/Conjunctive_query#Relationship_to_other_query_languages> . Each table is a logical predicate, each variable is bound to a row of a column. The SELECT fields are bits that aren't being existentially bound and therefore hidden, aka free variables.
+From a logical perspective, this core is basically conjunctive queries <https://en.wikipedia.org/wiki/Conjunctive_query#Relationship_to_other_query_languages> . Each table is a logical predicate, each variable is bound to a row of a column. The SELECT fields are bits that aren't being existentially bound and therefore hidden, aka free variables.
 
-$\exists y. edge(x,y) \land path(y,z)$ is the predicate form of the query ```SELECT edge.a, path.b from edge, path WHERE edge.b = path.a```. There is a little bit of rearrangement from the entry centric view of predicates to the row centric view of SQL. I amc not aware of a way to easily give a name to a particular entry in sql. I used this correspondence to describe how to either build a datalog engine on sql, or hand compile your datalog rules to sql <https://www.philipzucker.com/tiny-sqlite-datalog/> .
+$\exists y. edge(x,y) \land path(y,z)$ is the predicate form of the query ```SELECT edge.a, path.b from edge, path WHERE edge.b = path.a```. There is a little bit of rearrangement from the entry centric view of predicates to the row centric view of SQL. I am not aware of a way to easily give a name to a particular entry in sql. I used this correspondence to describe how to either build a datalog engine on sql, or hand compile your datalog rules to sql <https://www.philipzucker.com/tiny-sqlite-datalog/> .
+
+# SQL, Loops, and CSP
 
 From a more imperative perspective, SELECT-FROM-WHERE statements are basically for loops. SQL is an odd language in that the FROM comes after the SELECT. This puts a row variables binding site after its binding point.
 
@@ -27,8 +28,8 @@ Search problems can be solved by brute force loops. Enumerate all possibilities 
 
 So in this manner SQL is a constraint solver.
 
-An example constraint satisfaction puzzle is the send more money puzzle <https://en.wikipedia.org/wiki/Verbal_arithmetic> in which we need to find digist such that `SEND + MORE = MONEY`.
-A pure python version of the send more money puzzle is
+An example constraint satisfaction puzzle is the send more money puzzle <https://en.wikipedia.org/wiki/Verbal_arithmetic> in which we need to find digits `S,E,N,D,M,O,R,Y` such that `SEND + MORE = MONEY`.
+A pure python version of the send more money puzzle with simplistic pruning is
 
 ```python
 def solve_send_money():
@@ -231,8 +232,7 @@ def graph_of_db(con):
     return G
 ```
 
-The form of these simple `FROM-SELECT-WHERE` queries (conjuctive queries) is remarkably similar to a database itself.
-In the Alice book <http://webdam.inria.fr/Alice/> , I've seen this referred to as
+The form of these simple `FROM-SELECT-WHERE` queries (conjuctive queries) is remarkably similar to a database itself, but with symbolic entries. Each FROM would become a row in this symbolic database. We can for example convert a graph also into a query that will find the image of the graph in the database. The solutions to this query are graph homomorphisms.
 
 ```python
 def query_of_graph(G,unique=False):
@@ -376,7 +376,7 @@ print(res.fetchall())
 
 <https://berkeley-cs294-248.github.io/>  CS294-248: Topics in Database Theory
 
-Alice book <http://webdam.inria.fr/Alice/> Foundations of Databases
+Alice book <http://webdam.inria.fr/Alice/> Foundations of Databases. I know there is some discussion of query containment involvinf something like a "symbolic" database corresponding to a query.
 
 <https://www.youtube.com/watch?v=mykR7mP5Zdk&t=269s&ab_channel=SimonsInstitute>  Logic and Databases Phokion Kolaitis
 
