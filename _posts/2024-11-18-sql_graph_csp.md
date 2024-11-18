@@ -529,24 +529,3 @@ out, inner , in
 
 dynamic tree decomposition
 hyprgraph data structure
-
-```python
-g1 = {(1,2), (2,3)}  # graph as set of (directed) edges
-g2 = {{1,2}, {2,3}} #graph as sets of undirected edges
-
-# ((multi)graph as map from named edges to src target vertices.
-src = {"e1" : 1}
-dst = {"e1" : 2}
-
-{"e1": (1,2)}
-
-# hypergraph as named edges
-{"e1": {1,2,3}, "e2": {2,3,4}}
-
-g = {{1,2,3}, {2,3,4}} # set of sets of vertices as hypergraph
-
-#partition tree representation
-g = ( [edges_between] , g1, g2  )
-
-# rebalancing
-```
