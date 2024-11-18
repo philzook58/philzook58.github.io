@@ -72,6 +72,8 @@ solve_send_money()
 
     762 ms ± 35 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 
+#### SQL Send More Money
+
 We can write the same thing in SQL and execute using duckdb or sqlite. Duckdb is a bit faster and is faster than the pure python version.
 
 ```python
@@ -126,6 +128,8 @@ conn.execute(query).fetchone()
 ```
 
     240 ms ± 16.7 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+
+#### Bonus: C Send More Money
 
 This does raise the question of comparing to a C version. Quite a bit faster indeed.
 
@@ -265,6 +269,8 @@ con.execute("CREATE TABLE edges(src,dst)")
 
     <sqlite3.Cursor at 0x7b99507714c0>
 
+#### Some Examples
+
 We can make a graph and insert the appropriate edge table into the database.
 
 ```python
@@ -303,6 +309,8 @@ con.execute(query_of_graph(lhs)).fetchall()
 ```
 
     [(0, 1, 2), (1, 2, 3), (2, 3, 4), (3, 4, 5), (4, 5, 6)]
+
+#### Automorphisms
 
 We can also find all homomorphisms of the graph into itself, of which there is only one for the directed graph.
 
@@ -348,6 +356,8 @@ res.fetchall()
 ```
 
     [(0, 1, 2, 3), (3, 2, 1, 0)]
+
+#### Graph Coloring
 
 We can also implement a coloring as an homomorphism into the fully connected graph, representing the colors and allowed edges between colors.
 
