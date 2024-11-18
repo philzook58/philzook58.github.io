@@ -15,7 +15,7 @@ $\exists y. edge(x,y) \land path(y,z)$ is the predicate form of the query ```SEL
 
 # SQL, Loops, and CSP
 
-From a more imperative perspective, SELECT-FROM-WHERE statements are basically for loops. SQL is an odd language in that the FROM comes after the SELECT. This puts a row variables binding site after its binding point.
+From a more imperative perspective, SELECT-FROM-WHERE statements are basically for loops. SQL is an odd language in that the FROM comes after the SELECT. This puts a row variables binding site after their usage points. Maybe this isn't _that_ crazy considering set comprehension `{x for x in A if x > 0}` is quite similar.
 
 | SQL               | Python |
 | `FROM mytable as row_a` | `for row_a in mytable:` |
@@ -236,7 +236,7 @@ def graph_of_db(con):
     return G
 ```
 
-The form of these simple `FROM-SELECT-WHERE` queries (conjuctive queries) is remarkably similar to a database itself, but with symbolic entries. Each FROM would become a row in this symbolic database. We can for example convert a graph also into a query that will find the image of the graph in the database. The solutions to this query are graph homomorphisms.
+The form of these simple `FROM-SELECT-WHERE` queries (conjuctive queries) is remarkably similar to a database itself, but with symbolic entries. Each FROM would become a row in this symbolic database. We can for example convert a graph also into a query that will find the image of the graph in the database. The solutions to this query are graph homomorphisms. When codegenning SQL I find maintaining separate `select` `from` `where` lists to be a useful thing.
 
 ```python
 def query_of_graph(G,unique=False):
@@ -391,6 +391,10 @@ Alice book <http://webdam.inria.fr/Alice/> Foundations of Databases. I know ther
 Have you tried rubbing a database on it? <https://www.hytradboi.com/> Databases used for sometimes unusual purposes
 
 <https://www.youtube.com/watch?v=mykR7mP5Zdk&t=269s&ab_channel=SimonsInstitute>  Logic and Databases Phokion Kolaitis
+
+<https://dl.acm.org/doi/10.1145/3018882.3018893> Language-integrated query with ordering, grouping and outer joins  <https://okmij.org/ftp/meta-programming/index.html#SQUR>  
+It is also noted that moanadic comprehension can do sql stuf <https://ncatlab.org/nlab/files/WadlerMonads.pdf> <https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/monad_comprehensions.html> <https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/generalised_list_comprehensions.html#generalised-list-comprehensions> <https://dl.acm.org/doi/10.1145/2034675.2034678>
+LINQ is a whole thing
 
 Query containment. Since you can make a sql query to find homomorphisms, you can check query containment as a sql query itself. Isn't that fun?
 
