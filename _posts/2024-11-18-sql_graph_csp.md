@@ -24,7 +24,7 @@ From a more imperative perspective, SELECT-FROM-WHERE statements are basically f
 
 A thing SQL engines do is that they rearrange and optimize these loops and refactor them into joins and other things. Python for loops however execute just like you say it (slowly).
 
-Search problems can be solved by brute force loops. Enumerate all possibilities and take the ones that work.
+Search problems over finite spaces can be solved by brute force loops. Enumerate all possibilities and take the ones that work.
 
 So in this manner SQL is a constraint solver.
 
