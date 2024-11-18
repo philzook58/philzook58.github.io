@@ -388,6 +388,8 @@ print(res.fetchall())
 
 Alice book <http://webdam.inria.fr/Alice/> Foundations of Databases. I know there is some discussion of query containment involvinf something like a "symbolic" database corresponding to a query.
 
+Have you tried rubbing a database on it? <https://www.hytradboi.com/> Databases used for sometimes unusual purposes
+
 <https://www.youtube.com/watch?v=mykR7mP5Zdk&t=269s&ab_channel=SimonsInstitute>  Logic and Databases Phokion Kolaitis
 
 Query containment. Since you can make a sql query to find homomorphisms, you can check query containment as a sql query itself. Isn't that fun?
