@@ -382,6 +382,9 @@ print(res.fetchall())
 
 Try it out on colab: <https://colab.research.google.com/github/philzook58/philzook58.github.io/blob/master/pynb/2024-11-18-sql_graph_csp.ipynb>
 
+Hacker news comments. <https://news.ycombinator.com/item?id=42195994>
+`babel_` points out that clang vs gcc is due to autovectorization <https://godbolt.org/z/xfdxGvMYP>
+
 <https://dl.acm.org/doi/pdf/10.1145/335168.335209> Constraint Satisfaction and Database Theory: a Tutorial Moshe Y. Vardi
 
 <https://users.soe.ucsc.edu/~kolaitis/talks/csp-oxford.pdf>  Constraint Satisfaction and Logic Phokion G. Kolaitis
