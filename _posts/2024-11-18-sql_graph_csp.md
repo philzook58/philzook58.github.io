@@ -380,6 +380,8 @@ print(res.fetchall())
 
 # Bits and Bobbles
 
+Try it out on colab: <https://colab.research.google.com/github/philzook58/philzook58.github.io/blob/master/pynb/2024-11-18-sql_graph_csp.ipynb>
+
 <https://dl.acm.org/doi/pdf/10.1145/335168.335209> Constraint Satisfaction and Database Theory: a Tutorial Moshe Y. Vardi
 
 <https://users.soe.ucsc.edu/~kolaitis/talks/csp-oxford.pdf>  Constraint Satisfaction and Logic Phokion G. Kolaitis
@@ -426,6 +428,66 @@ When people talk about datalog being PSPACE co
 
 Tree decomposition for dynamic programming
 
+## Sql query plans
+
+sqlite query plan is basically the same loops <https://www.sqlite.org/eqp.html> <https://www.sqlite.org/queryplanner-ng.html>
+
+```python
+import sqlite3
+import duckdb
+query = """
+EXPLAIN QUERY PLAN WITH RECURSIVE digits(digit) AS (
+    SELECT 0
+    UNION ALL
+    SELECT digit + 1
+    FROM digits
+    WHERE digit < 9
+)
+SELECT s.digit AS S, e.digit AS E, n.digit AS N, d.digit AS D,
+       m.digit AS M, o.digit AS O, r.digit AS R, y.digit AS Y
+FROM digits s, digits e, digits n, digits d, digits m, digits o, digits r, digits y
+WHERE s.digit <> e.digit AND s.digit <> n.digit AND s.digit <> d.digit AND s.digit <> m.digit AND
+      s.digit <> o.digit AND s.digit <> r.digit AND s.digit <> y.digit AND
+      e.digit <> n.digit AND e.digit <> d.digit AND e.digit <> m.digit AND
+      e.digit <> o.digit AND e.digit <> r.digit AND e.digit <> y.digit AND
+      n.digit <> d.digit AND n.digit <> m.digit AND n.digit <> o.digit AND
+      n.digit <> r.digit AND n.digit <> y.digit AND
+      d.digit <> m.digit AND d.digit <> o.digit AND d.digit <> r.digit AND
+      d.digit <> y.digit AND
+      m.digit <> o.digit AND m.digit <> r.digit AND m.digit <> y.digit AND
+      o.digit <> r.digit AND o.digit <> y.digit AND
+      r.digit <> y.digit AND
+      s.digit <> 0 AND m.digit <> 0 AND
+      (1000 * s.digit + 100 * e.digit + 10 * n.digit + d.digit) +
+      (1000 * m.digit + 100 * o.digit + 10 * r.digit + e.digit) =
+      (10000 * m.digit + 1000 * o.digit + 100 * n.digit + 10 * e.digit + y.digit);
+"""
+conn = sqlite3.connect(":memory:")
+conn.execute(query).fetchall()
+
+```
+
+```
+[(3, 0, 0, 'MATERIALIZE digits'),
+ (7, 3, 0, 'SETUP'),
+ (8, 7, 0, 'SCAN CONSTANT ROW'),
+ (21, 3, 0, 'RECURSIVE STEP'),
+ (22, 21, 0, 'SCAN digits'),
+ (46, 0, 0, 'SCAN s'),
+ (50, 0, 0, 'SCAN m'),
+ (57, 0, 0, 'SCAN o'),
+ (65, 0, 0, 'SCAN n'),
+ (76, 0, 0, 'SCAN e'),
+ (90, 0, 0, 'SCAN d'),
+ (107, 0, 0, 'SCAN r'),
+ (127, 0, 0, 'SCAN y')]
+ ```
+
+ Using
+
+```WITH digits(digit) AS (
+    VALUES (0), (1), (2), (3), (4), (5), (6), (7), (8), (9)
+)``` with duckdb was if anything slower that using with recursive.
 ## CSP
 
 SQL queries are enumerating homomorphisms between the query and the database. This perspective puts the query and the database on smilar footing, which feels odd.
