@@ -202,15 +202,15 @@ Hmm. My system clang vs gcc is another 5x? That's kind of surprising. I have a n
 
 # Relation and Graph Homomorphisms
 
-There is another perspective on what SQL is doing. It is finding a mapping (a homomorphism) between the query and the database.
+There is another perspective on what SQL is doing. It is finding a mapping (a [homomorphism](https://en.wikipedia.org/wiki/Homomorphism)) between the query and the database.
 
-We have intuition about databases that comes from typically thinking about small queries (< 100 tables reference in FROM statements) and big databases (millions, billions or more of rows).
+We have intuition about databases that comes from typically thinking about small queries (< 100 tables referenced in FROM statements) and big databases (millions, billions or more of rows).
 
 The running time of naive nested loops is exponential in the number of loops. Considered as a function of the size the of query, database queries are quite computationally expensive.
 
-I have heard that I should be scared of subgraph matching or graph isomorphism because they are NP ish. But in many common cases, the size of the patterns is pretty small, and the size of the database is pretty big. So the problem is not that hard.
+[Graph homomorphisms](https://en.wikipedia.org/wiki/Graph_homomorphism) are a particular familiar case of a homomorphism. Graphs can be easily mapped into database tables as an edge table with two columns.
 
-Graphs can be easily mapped into database tables as an edge table with two columns.
+I have heard that I should be scared of [subgraph matching](https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem) or [graph isomorphism](https://en.wikipedia.org/wiki/Graph_isomorphism) because they are NP ish. But in many common cases, the size of the patterns is pretty small, and the size of the database is pretty big. So the problem is not that hard.
 
 Here for example I can turn a networkx graph into a sqlite table
 
@@ -395,6 +395,9 @@ Have you tried rubbing a database on it? <https://www.hytradboi.com/> Databases 
 <https://dl.acm.org/doi/10.1145/3018882.3018893> Language-integrated query with ordering, grouping and outer joins  <https://okmij.org/ftp/meta-programming/index.html#SQUR>  
 It is also noted that moanadic comprehension can do sql stuf <https://ncatlab.org/nlab/files/WadlerMonads.pdf> <https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/monad_comprehensions.html> <https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/generalised_list_comprehensions.html#generalised-list-comprehensions> <https://dl.acm.org/doi/10.1145/2034675.2034678>
 LINQ is a whole thing
+
+Note newtorkx has its own homomorphism and ismorphisms functionality. Going to SQl may or may not be more efficient. <https://networkx.org/documentation/stable/reference/algorithms/isomorphism.html> <https://networkx.org/documentation/stable/reference/algorithms/isomorphism.vf2.html#graph-matcher> Everything has bindings to sqlite though. Pretty convenient and flexible.
+<https://pallini.di.uniroma1.it/> nauty and traces are high performance isomorphism / automorphism/ canonization solvers
 
 Query containment. Since you can make a sql query to find homomorphisms, you can check query containment as a sql query itself. Isn't that fun?
 
