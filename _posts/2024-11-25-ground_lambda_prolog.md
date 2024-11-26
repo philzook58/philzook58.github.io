@@ -182,6 +182,8 @@ G ::= True | A | G ∧ G | G ∨ G | D ⊃ G | ∀x G
 D ::= A | G ⊃ D | D ∧ D
 ```
 
+Now we need to carry `ps` through our functions because we can locally add to it. These are kind of hypothetical goals. <https://www.philipzucker.com/harrop-checkpoint/>
+
 ```python
 def harrop(ps, g):
     def right(ps, g):
@@ -285,7 +287,7 @@ We  represented  magic as concrete terms, but it could have been data on how to 
 Like the signature
 magic could have been [succ, ]
 
-But subtitutions are also kind of data not too disimilar from a method to genraete terms.
+But substitutions are also kind of data not too disimilar from a method to generate terms.
 We're unifying for the term generator, synthesizing the term generator.
 A substitution takes in useful terms (as the vars) and outputs new useful terms with those filled in.
 
