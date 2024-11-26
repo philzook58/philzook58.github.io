@@ -6,7 +6,7 @@ date: 2024-11-25
 
 Today, I thought I'd be writing a [lambda prolog](https://en.wikipedia.org/wiki/%CE%9BProlog) interpreter. While trying to explain what it's doing, I got kind of mired in some other interesting ideas.
 
-Prolog is a logic programming language. It's two most interesting features are built in backtracking search and unification. These combined can make for some powerful party tricks.
+[Prolog](https://en.wikipedia.org/wiki/Prolog) is a [logic programming](https://en.wikipedia.org/wiki/Logic_programming) language. It's two most interesting features are built in backtracking search and unification. These combined can make for some powerful party tricks.
 
 Unification is kind of a mess I think and I try to avoid it. Unification is a way to be lazy at certain spots about exactly what ground term you're talking about. Terms with unification variables are kind of an abstract domain for representing possibly infinite sets of terms and unification is a way to form intersections of the sets.
 
@@ -24,7 +24,7 @@ A few random koans about the distinction between goals and programs.
 
 - Goals are the things entered at the prolog command line at `?-`. They are formula we are trying to prove.
 - Programs are the clauses written in prolog files. They are axioms.
-- Goals are on the right of the sequent `|-` and programs are on the left `|-`
+- Goals are on the right of the sequent and programs are on the left of the sequent. `programs |- goal`
 - It is important to note a strong distinction between goals and programs/axioms. Goals come from the top, programs come from the bottom.
 - Programs are the things that can be used in forward inference, goals do backward inference.
 - Variables in programs are universally quantified, variables in goals are implicitly existentially quantified.
@@ -41,15 +41,13 @@ The right rules of the sequent calculus break down goals.
 
 ![](/assets/right_harrop.png)
 
-The left rules break down a focused program formula.
+The left rules break down a [focused](https://en.wikipedia.org/wiki/Focused_proof) program formula.
 
 - If our program matches our goal, we're good. This is a `refl` or `ax` rule
 - if our program is `A /\ B` we can break it down into using either `A` or `B`
 - if our program is `A -> B`, if we can use it to prove the current goal using `B` if we can prove the new goal `A`.
 
 ![](/assets/left_harrop.png)
-
-I'm using z3 as a handy logical syntax tree.
 
 Proplog has the even more restricted goal and program formula describe by this grammar
 
@@ -58,7 +56,7 @@ G ::= True | A | G ∧ G | G ∨ G
 D ::= A | G ⊃ D | D ∧ D
 ```
 
-The python code reflects the sequent calculus rules quite directly. It returns None when it fails and `True` when it succeeds. Failure is not intended to mean that the goal is false, just that we failed to prove it.
+The python code reflects the sequent calculus rules quite directly. I'm using z3 as a handy logical syntax tree. It returns None when it fails and `True` when it succeeds. Failure is not intended to mean that the goal is false, just that we failed to prove it.
 
 ```python
 from z3 import *
@@ -108,7 +106,7 @@ assert not horn(ps, And(a,d))
 
 Ok, but we'd like to extend the formulas we can treat. Actual prolog can handle `forall` quantifiers in programs clauses and `exists` quantifier in goals. They are the implicit binders of the unification variables.
 
-In Nadathur and Miller, they introduce this not using unification, but instead magicking up the right term when you need to open a binder. I kind of like this.
+In Nadathur and Miller, they introduce this not using unification, but instead magicking up the right term when you need to open a binder. I kind of like this. In backwards proof tactics in Coq for example, this is the difference between using [`exists`](https://coq.inria.fr/doc/v8.19/refman/proofs/writing-proofs/reasoning-inductives.html#coq:tacn.exists) and [[`eexists`](https://coq.inria.fr/doc/v8.19/refman/language/extensions/evars.html).
 
 The horn procedure now takes a list of magic terms to try when a binder needs to be instantiated. It's a cute brute force method. `magic` could also perhaps be an infinite generator or just the signature (a list of `FuncDeclRef`), with a built in generator inside of `horn` of all possible terms.
 
@@ -129,11 +127,8 @@ def horn(ps, g, magic):
         elif is_app(g) and not is_true(g) and not is_false(g) and not is_or(g):
             return decide(g)
         elif is_quantifier(g) and g.is_exists():
-            # get all well typed magic terms
+            # try all well typed magic terms
             return any(right(substitute_vars(g.body(), t)) for t in magic if t.sort() == g.var_sort(0))
-            #for t in magic:
-            #    if t.sort() == g.var_sort(0)
-            #        if right(substitute_vars(g.body(), t))
 
     def decide(g):
         return any(left(p,g) for p in ps)
