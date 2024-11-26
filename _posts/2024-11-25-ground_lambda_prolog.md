@@ -4,15 +4,13 @@ date: 2024-11-25
 ---
 
 
-Today, I thought today I'd be writing a lambda prolog interpreter. While trying to explain what it's doing, I got kind of mired in some other interesting ideas.
+Today, I thought today I'd be writing a [lambda prolog](https://en.wikipedia.org/wiki/%CE%9BProlog) interpreter. While trying to explain what it's doing, I got kind of mired in some other interesting ideas.
 
 Prolog is a logic programming language. It's two most interesting features are built in backtracking search and unification. These combined can make for some powerful party tricks.
 
-Unification is kind of a mess I think and I often try to avoid it. Unification is kind of a way to be lazy at certain spots about exactly what ground term you're talking about. Terms with unification variables are kind of an abstract domain for representing possibly infinite sets of terms and unification is a way to form intersections of the sets.
+Unification is kind of a mess I think and I try to avoid it. Unification is a way to be lazy at certain spots about exactly what ground term you're talking about. Terms with unification variables are kind of an abstract domain for representing possibly infinite sets of terms and unification is a way to form intersections of the sets.
 
-From a proof search perspective, when you open a existential binder in a goal or use a universally quantified axiom, the simplest thing to do would to just to have the term in hand at that moment (the `exists` tactic vs the `eexists` tactic). Unification let's you delay that choice and use further search to prune it down. It's some kind of bizarre time traveling, sending information back in time, and entangled across branches of your search space. It sucks.
-
-So it is interesting that you can make prolog variations that just cuts out support for the formula that require unification or replaces the mechanism with a weaker but simpler term guessing mechanism. Certainly this weaker mechanism is pretty incomplete, but I think prolog+unification is also effectively incomplete and only has some character of completeness because we design our programs and axiomatizations around it's strengths and avoid its weaknesses.
+So it is interesting that you can make prolog variations that just cuts out support for the formula that require unification or replaces the mechanism with a weaker but simpler term guessing mechanism. This weaker mechanism is pretty incomplete, but I think prolog+unification is also effectively incomplete and only has some character of completeness because we design our programs and axiomatizations around it's strengths and avoid its weaknesses.
 
 # Proplog
 
@@ -274,6 +272,10 @@ def harrop(ps, g, magic):
 
 # Bits and Bobbles
 
+It is interesting and perhaps informative to consider how much prolog is left if you cut out the unification.
+
+From a proof search perspective, when you open a existential binder in a goal or use a universally quantified axiom, the simplest thing to do would to just to have the term in hand at that moment (the `exists` tactic vs the `eexists` tactic). Unification let's you delay that choice and use further search to prune it down. It's some kind of bizarre time traveling, sending information back in time, and entangled across branches of your search space. It sucks.
+
 Yea, I dunno.
 
 We could use a z3 solve maybe for magic. If e is a fresh const of the needed type.
@@ -400,7 +402,7 @@ def horn(ps, g):
     return right(g)
 ```
 
-# Fancier Equality
+## Fancier Equality
 
 In a sense from the get go we built a ground lambda prolog, because z3 terms can have lambdas in them just fine.
 
