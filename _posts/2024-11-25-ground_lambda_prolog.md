@@ -4,25 +4,21 @@ date: 2024-11-25
 ---
 
 
-Today, I thought today I'd be writing a [lambda prolog](https://en.wikipedia.org/wiki/%CE%9BProlog) interpreter. While trying to explain what it's doing, I got kind of mired in some other interesting ideas.
+Today, I thought I'd be writing a [lambda prolog](https://en.wikipedia.org/wiki/%CE%9BProlog) interpreter. While trying to explain what it's doing, I got kind of mired in some other interesting ideas.
 
 Prolog is a logic programming language. It's two most interesting features are built in backtracking search and unification. These combined can make for some powerful party tricks.
 
 Unification is kind of a mess I think and I try to avoid it. Unification is a way to be lazy at certain spots about exactly what ground term you're talking about. Terms with unification variables are kind of an abstract domain for representing possibly infinite sets of terms and unification is a way to form intersections of the sets.
 
-So it is interesting that you can make prolog variations that just cuts out support for the formula that require unification or replaces the mechanism with a weaker but simpler term guessing mechanism. This weaker mechanism is pretty incomplete, but I think prolog+unification is also effectively incomplete and only has some character of completeness because we design our programs and axiomatizations around it's strengths and avoid its weaknesses.
+So it is interesting that you can make prolog variations that just cuts out support for the formula that require unification or replaces the unification mechanism with a weaker but simpler term guessing mechanism. This weaker mechanism is pretty incomplete, but I think prolog+unification is also effectively incomplete and only has some character of completeness because we design our programs and axiomatizations around it's strengths and avoid its weaknesses.
 
 # Proplog
 
-What makes prolog a logic programming language is that prolog execution can also be seen as proof search. Indeed, prolog's origin live in noticing strategies resolution theorem proving with good implementation properties (maybe. I think also it came out of some wacky linguistic grammar stuff <https://arxiv.org/pdf/2201.10816>).
+What makes prolog a logic programming language is that prolog execution can also be seen as proof search. Indeed, prolog's origin live in noticing strategies for resolution theorem proving with good implementation properties (maybe. I think also it came out of some wacky linguistic grammar stuff <https://arxiv.org/pdf/2201.10816>).
 
-You can write a prolog interpreter where it mirrors the rules of a sequent calculus.
+You can write a prolog interpreter in a style where it mirrors the rules of a sequent calculus. I use the book "Programming in Higher Order Logic" by Nadathur and Miller, a text I find myself returning to and gaining something repeatedly.
 
-I use the book "Programming in Higher Order Logic" by Nadathur and Miller, a text I find myself returning to and gaining something repeatedly.
-
-I've seen a restricted form of prolog that only has propositions referred to as Proplog. See for example chapter 1 in Maiaer and Warren computing with logic.
-
-We can make the procedure mirror the right and left rules of a sequent calculus.
+I've seen a restricted form of prolog that only has propositions referred to as Proplog. See for example chapter 1 in Maiaer and Warren computing with logic. I think this is an appropriate name for this subset of horn clauses, even though I don't persay require atomic propositions.
 
 A few random koans about the distinction between goals and programs.
 
@@ -30,7 +26,7 @@ A few random koans about the distinction between goals and programs.
 - Programs are the clauses written in prolog files. They are axioms.
 - Goals are on the right of the sequent `|-` and programs are on the left `|-`
 - It is important to note a strong distinction between goals and programs/axioms. Goals come from the top, programs come from the bottom.
-- Programs are the things that can be used in forweartd inference, goalas do backward inference.
+- Programs are the things that can be used in forward inference, goals do backward inference.
 - Variables in programs are universally quantified, variables in goals are implicitly existentially quantified.
 - Goals are queries, programs are answers.
 - Goals are negative and programs are positive (or vice versa. Depends how you define negative and positive).
@@ -55,12 +51,14 @@ The left rules break down a focused program formula.
 
 I'm using z3 as a handy logical syntax tree.
 
-Proplog has the even more restricted goal and program formula describe by
+Proplog has the even more restricted goal and program formula describe by this grammar
 
 ```
 G ::= True | A | G ∧ G | G ∨ G
 D ::= A | G ⊃ D | D ∧ D
 ```
+
+The python code reflects the sequent calculus rules quite directly. It returns None when it fails and `True` when it succeeds. Failure is not intended to mean that the goal is false, just that we failed to prove it.
 
 ```python
 from z3 import *
