@@ -12,14 +12,14 @@ edge(1,2).
 edge(2,3).
 ```
 
-Then you have rules that iteratively derive new facts from the currently existing facts. The is done by making a database query out of the body of the rule, and inserting the head with the found values.
+Then you have rules that iteratively derive new facts from the currently existing facts. This is done by making a database query out of the body of the rule, and inserting the head with the found values.
 
 ```prolog
 path(X,Y) :- edge(X,Y).  % if there is an edge, there is a path
 path(X,Y) :- edge(X,Z), path(Z,Y). % You can paste an edge on the end of a path to get a new path.
 ```
 
-A good datalog is [souffle](https://souffle-lang.github.io/simple).
+[souffle](https://souffle-lang.github.io/simple) is a good dastaloig
 
 ```python
 %%file /tmp/path.dl
@@ -134,9 +134,9 @@ Oh wow, sweet. That was easy. Blog post over.
 
 No, sorry.
 
-Really rule of thumb is that you should never be running either vampire or eprover without a `--mode` or `--auto` flag. The default modes are enormously slower.
+Really, a rule of thumb is that you should never be running either vampire or eprover without a `--mode` or `--auto` flag. The default modes are enormously slower.
 
-In `casc_sat` mode we get piles of difficult to interpret garbage.
+In `casc_sat` mode we get piles of difficult to interpret garbage for vampire.
 
 ```python
 ! vampire --mode casc_sat /tmp/path.p
@@ -202,191 +202,9 @@ In `casc_sat` mode we get piles of difficult to interpret garbage.
     %         edge(b,a) undefined in model
     %         edge(b,a) undefined in model
     %         edge(b,a) undefined in model
-    %         edge(b,b) undefined in model
-    %         edge(b,a) undefined in model
-    %         edge(b,a) undefined in model
-    %         edge(b,'fmb_$i_10') undefined in model
-             & ~edge('fmb_$i_3',a)
-             & ~edge('fmb_$i_3',b)
-             & ~edge('fmb_$i_3','fmb_$i_3')
-    %         edge('fmb_$i_3',a) undefined in model
-    %         edge('fmb_$i_3',a) undefined in model
-    %         edge('fmb_$i_3',a) undefined in model
-    %         edge('fmb_$i_3',b) undefined in model
-    %         edge('fmb_$i_3',a) undefined in model
-    %         edge('fmb_$i_3',a) undefined in model
-    %         edge('fmb_$i_3','fmb_$i_10') undefined in model
-             & ~edge(a,a)
-             & ~edge(a,b)
-             & ~edge(a,'fmb_$i_3')
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,b) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,'fmb_$i_10') undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,b) undefined in model
-    %         edge(a,'fmb_$i_3') undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,b) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,'fmb_$i_10') undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,b) undefined in model
-    %         edge(a,'fmb_$i_3') undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,b) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,'fmb_$i_10') undefined in model
-    %         edge(b,a) undefined in model
-    %         edge(b,b) undefined in model
-    %         edge(b,'fmb_$i_3') undefined in model
-    %         edge(b,a) undefined in model
-    %         edge(b,a) undefined in model
-    %         edge(b,a) undefined in model
-    %         edge(b,b) undefined in model
-    %         edge(b,a) undefined in model
-    %         edge(b,a) undefined in model
-    %         edge(b,'fmb_$i_10') undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,b) undefined in model
-    %         edge(a,'fmb_$i_3') undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,b) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,'fmb_$i_10') undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,b) undefined in model
-    %         edge(a,'fmb_$i_3') undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,b) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,a) undefined in model
-    %         edge(a,'fmb_$i_10') undefined in model
-    %         edge('fmb_$i_10',a) undefined in model
-    %         edge('fmb_$i_10',b) undefined in model
-    %         edge('fmb_$i_10','fmb_$i_3') undefined in model
-    %         edge('fmb_$i_10',a) undefined in model
-    %         edge('fmb_$i_10',a) undefined in model
-    %         edge('fmb_$i_10',a) undefined in model
-    %         edge('fmb_$i_10',b) undefined in model
-    %         edge('fmb_$i_10',a) undefined in model
-    %         edge('fmb_$i_10',a) undefined in model
-    %         edge('fmb_$i_10','fmb_$i_10') undefined in model
     
-    ).
-    
-    tff(declare_path,type,path: ($i * $i) > $o).
-    tff(predicate_path,axiom,
-               path(a,a)
-             & path(a,b)
-             & path(a,'fmb_$i_3')
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,b) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,'fmb_$i_10') undefined in model
-             & path(b,a)
-             & path(b,b)
-             & path(b,'fmb_$i_3')
-    %         path(b,a) undefined in model
-    %         path(b,a) undefined in model
-    %         path(b,a) undefined in model
-    %         path(b,b) undefined in model
-    %         path(b,a) undefined in model
-    %         path(b,a) undefined in model
-    %         path(b,'fmb_$i_10') undefined in model
-             & path('fmb_$i_3',a)
-             & path('fmb_$i_3',b)
-             & path('fmb_$i_3','fmb_$i_3')
-    %         path('fmb_$i_3',a) undefined in model
-    %         path('fmb_$i_3',a) undefined in model
-    %         path('fmb_$i_3',a) undefined in model
-    %         path('fmb_$i_3',b) undefined in model
-    %         path('fmb_$i_3',a) undefined in model
-    %         path('fmb_$i_3',a) undefined in model
-    %         path('fmb_$i_3','fmb_$i_10') undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,b) undefined in model
-    %         path(a,'fmb_$i_3') undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,b) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,'fmb_$i_10') undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,b) undefined in model
-    %         path(a,'fmb_$i_3') undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,b) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,'fmb_$i_10') undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,b) undefined in model
-    %         path(a,'fmb_$i_3') undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,b) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,'fmb_$i_10') undefined in model
-    %         path(b,a) undefined in model
-    %         path(b,b) undefined in model
-    %         path(b,'fmb_$i_3') undefined in model
-    %         path(b,a) undefined in model
-    %         path(b,a) undefined in model
-    %         path(b,a) undefined in model
-    %         path(b,b) undefined in model
-    %         path(b,a) undefined in model
-    %         path(b,a) undefined in model
-    %         path(b,'fmb_$i_10') undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,b) undefined in model
-    %         path(a,'fmb_$i_3') undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,b) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,'fmb_$i_10') undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,b) undefined in model
-    %         path(a,'fmb_$i_3') undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,b) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,a) undefined in model
-    %         path(a,'fmb_$i_10') undefined in model
-    %         path('fmb_$i_10',a) undefined in model
-    %         path('fmb_$i_10',b) undefined in model
-    %         path('fmb_$i_10','fmb_$i_3') undefined in model
-    %         path('fmb_$i_10',a) undefined in model
-    %         path('fmb_$i_10',a) undefined in model
-    %         path('fmb_$i_10',a) undefined in model
+    ... Blah blah blah blah...
+
     %         path('fmb_$i_10',b) undefined in model
     %         path('fmb_$i_10',a) undefined in model
     %         path('fmb_$i_10',a) undefined in model
@@ -499,7 +317,19 @@ However, we can get it to terminate with a reasonable database if we start tweak
     
     # Unprocessed non-unit clauses:
     
-    
+
+In particular focus on the positive unit clause section
+
+```
+    # Processed positive unit clauses:
+    cnf(i_0_3, plain, (edge(a,b))).
+    cnf(i_0_4, plain, (edge(b,c))).
+    cnf(i_0_7, plain, (path(b,c))).
+    cnf(i_0_8, plain, (path(a,b))).
+    cnf(i_0_11, plain, (path(c,c))).
+    cnf(i_0_13, plain, (path(b,b))).
+    cnf(i_0_15, plain, (path(c,b))).
+```
 
 So these provers in their rawest black box form can't really be used as datalogs, but if we peer under the covers a bit at the operational mechanisms, we can do it.
 
@@ -521,19 +351,21 @@ Our nontermination with eprover is because yea, this would just keep growing bec
 
 An idea that is both simple and complex is that of [Term Orderings](https://www.cs.unm.edu/~mccune/prover9/manual/2009-11A/term-order.html). Sometimes, it makes sense to have an ordering on terms (simpler, smaller, faster, more expanded/foiled, defined earlier are all possible natural partial orders on terms). Having this play nice with unification variables/substitution and/or theories and/or alpha renaming and/or [lambda computation](https://arxiv.org/abs/1506.03943) is quite a bit trickier (rewrite and simplification orderings).
 
-Ordered resolution uses a term ordering sort of as a recipe on how to orient a `|` clause into a directed `:-` rule. If the largest literal is positive ("productive clauses"), it picked as the head. Other positive literals become negations in the body of the rule. If the largest literal is negative, then the entire clause is a constraint (Kind of a rule with head false `:- a, b, c.` You see these sorts of things in answer set programming, or you could see it if you are trying to refutation prove using datalog `false() :- a(),b(),c().`).
+Ordered resolution kind of uses a term ordering sort of as a recipe on how to orient a `|` clause into a directed `:-` rule. If the largest literal is positive ("productive clauses"), it picked as the head. Other positive literals become negations in the body of the rule. If the largest literal is negative, then the entire clause is a constraint (Kind of a rule with head false `:- a, b, c.` You see these sorts of things in answer set programming, or you could see it if you are trying to refutation prove using datalog `false() :- a(),b(),c().`).
 
-At the same time, this ordering puts an ordering on the possible [Herbrand models](https://en.wikipedia.org/wiki/Herbrand_structure) (Herbrand models are sets of ground terms) of the theory, and it becomes possible to speak of a minimal model as we do in the context of datalog. A big distinction between SAT solvers and ATPs and Datalog/Answer Set Programming is a notion of ["justification"](https://www.philipzucker.com/minikanren_inside_z3/). Datalog only derives facts that are forced to be true. SAT solvers seemingly give you a random model if there is one. Datalog gives you a particular "best" model. There is a sense in which SAT solvers are also giving you a minimal model. It is minimal with respect to the current internal backtracking trail of the solvers, so a perspective on SAT is that it is building both a model and "good" literal ordering, or pivoting its literal ordering on the fly.
+At the same time, a term ordering puts an ordering on the possible [Herbrand models](https://en.wikipedia.org/wiki/Herbrand_structure) (Herbrand models are sets of ground terms) of the theory, and it becomes possible to speak of a minimal model as we do in the context of datalog.
+
+A big distinction between SAT solvers and ATPs and Datalog/Answer Set Programming is a notion of ["justification"](https://www.philipzucker.com/minikanren_inside_z3/). Datalog only derives facts that are forced to be true. SAT solvers seemingly give you a random model if there is one. Datalog gives you a particular "best" model.
+
+Interestingly, in light of ordered resolution, there is a sense in which SAT solvers are also giving you a minimal model. It is minimal with respect to the current internal backtracking trail of the solvers, so a perspective on SAT is that it is building both a model and "good" literal ordering, or pivoting its literal ordering on the fly.
 
 From the perspective of refutation proving, when one wants to show there can't be a satisfying model, it is sufficient to show there can't be a minimal model.
 
 This is reminiscent of the notion of [symmetry breaking](https://en.wikipedia.org/wiki/Symmetry-breaking_constraints) in optimization that if there is some symmetry in your model (all reds can be swapped with blues in a graph coloring for example or permutations of vehicles in a routing problem), that it is useful to put an an extra ordering constraint to reduce the search space (prefer reds).
 
-A term ordering naturally extends to an ordering on clauses.
+A term ordering naturally extends to an ordering on clauses. During the datalog like process to produce a minimal model (going in order through the clauses), if we hit a failing constraint, then there should have been an ordered resolution step possible to make a rule in an earlier "strata" that would have avoided the constraint failure. Carefully describing this idea is the proof of completeness of ordered resolution.
 
-During the datalog like process to produce a minimal model, if we hit a failing constraint, then there should have been an ordered resolution step possible to make a rule in an earlier "strata" that would have avoided the constraint failure. Carefully describing this idea is the proof of completeness of ordered resolution.
-
-The literal selection function is basically an arbitrary function from clauses to literals. It is surprising to find that much flexibility.
+The literal selection function is basically an arbitrary function from clauses to literals. It is surprising to find that much flexibility. I don't have an intuitive feeling explanation for why this should be allowed.
 
 Frankly, it's all a little confusing. `--literal-selection-strategy="SelectNegativeLiterals"` is sufficient to make our particular example saturate. Other possible options also work.
 
@@ -541,7 +373,7 @@ See slide 13 <https://www.tcs.ifi.lmu.de/lehre/ws-2024-25/atp/slides07-more-reso
 
 ![](/assets/ordered_resolve.png)
 
-The key thing that is making our example terminate is probably "Nothing is Selected in D \/ B". The "rule" clauses have negative literlas in them, so they will have something selected by the SelectNegativeLiterals strategy. The facts are a single positive unit literal, so will never have anything selected.
+The key thing that is making our example terminate is probably "Nothing is Selected in D \/ B". The "rule" clauses have negative literals in them, so they will have something selected by the `SelectNegativeLiterals` strategy. The facts are a single positive unit literal, so will never have anything selected.
 
 # Super Datalog and Beyond
 
@@ -555,7 +387,7 @@ These superposition systems however go far beyond datalog. It is under the capab
 - Contextual Egraphs <https://github.com/eytans/easter-egg> <https://arxiv.org/abs/2305.19203>
 - Lambda egraphs via the new HO extensions to eprover
 
-## Call Graphs as Ordering in Prolog and Datalog
+### Call Graphs as Ordering in Prolog and Datalog
 
 Prolog and Datalog have a couple different notions of ordering in them.
 
@@ -564,7 +396,7 @@ Prolog and Datalog have a couple different notions of ordering in them.
 
 Prolog like goals are encoded as negated literals.
 
-## Given Clause and Semi Naive Evaluation
+### Given Clause is kind of like Semi Naive Evaluation
 
 Most if not all resolution style saturating theorem provers are organized around a given clause loops.
 
@@ -576,7 +408,7 @@ Both Datalog and resolution can be executed in the naive style where you do a fu
 
 The clause selection heuristics pick which clause to pick to be the given clause.
 
-## Question Answering
+### Question Answering and Prolog
 
 Question answering mode in ATPs gives you prolog like capabilities to return a substitution that makes the goal true.
 
@@ -667,9 +499,9 @@ fof(add_g, conjecture, ?[X,Y]: add(X,Y,s(s(z)))).
     % ------------------------------
     % ------------------------------
 
-# Equational Reasoning
+### Equational Reasoning
 
-## Union Find
+#### Union Find
 
 In a my egraphs 2024 talk <https://www.philipzucker.com/egraph2024_talk_done/> , I showed how to use Twee to get a union find. This is the same idea using eprover
 
@@ -721,7 +553,7 @@ cnf(ax3, axiom, d = e).
     
     
 
-## Egraph
+#### Egraph
 
 I also mentioned in the talk how you can use knuth bendix completion to build an egraph out of ground equations, represent by its ground ocmpleted rewrite system
 
@@ -781,7 +613,7 @@ fof(cancel, axiom, myterm = div(mul(a,two), two)).
     
     
 
-## Knuth Bendix Completion
+#### Knuth Bendix Completion
 
 Knuth Bendix completion is a way to possibly turn a system of equations into a conlfuent terminating rewrite system. One example where t5his is possible is the free group. The default ordering of E is Knuth Bendix Ordering.
 
@@ -864,9 +696,9 @@ cnf(ax3, axiom, mul(inv(X), X) = e).
     
     
 
-## Egglog
+#### Egglog
 
-The essence of [egglog](https://github.com/egraphs-good/egglog) in the same way the essence of datalog is the transitivity query is the connected component compression query.
+The essence of [egglog](https://github.com/egraphs-good/egglog) in the same way the essence of datalog is the transitivity query is the connected component compression query (<https://kmicinski.com/assets/byods.pdf> section 5.4).
 
 Here the compressed database holds a union find (The `=` facts, which are oriented according to the default term ordering). Notice that `path(b,b)` is deduped with respect to `path(d,d)` because they are expressing the same information.
 
@@ -983,33 +815,33 @@ cnf(path_eq, axiom, X = Y | ~path(X,Y) | ~path(Y,X)).
 !egglog /tmp/eq.egg
 ```
 
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m Declared sort node.
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m Declared function a.
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m Declared function b.
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m Declared function c.
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m Declared function d.
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m Declared function edge.
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m Declared function path.
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m Declared rule (rule ((edge x y))
+    Declared sort node.
+    Declared function a.
+    Declared function b.
+    Declared function c.
+    Declared function d.
+    Declared function edge.
+    Declared function path.
+    Declared rule (rule ((edge x y))
               ((path x y))
                  ).
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m Declared rule (rule ((edge x y)
+    Declared rule (rule ((edge x y)
                (path y z))
               ((path x z))
                  ).
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m Declared rule (rule ((path x y)
+     Declared rule (rule ((path x y)
                (path y x))
               ((union x y))
                  ).
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m Ran schedule (repeat 10 (run)).
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m Report: Rule (rule ((edge x y)        (path y z))       ((path x z))          ): search 0.000s, apply 0.000s, num matches 9
+    Ran schedule (repeat 10 (run)).
+    Report: Rule (rule ((edge x y)        (path y z))       ((path x z))          ): search 0.000s, apply 0.000s, num matches 9
         Rule (rule ((edge x y))       ((path x y))          ): search 0.000s, apply 0.000s, num matches 7
         Rule (rule ((path x y)        (path y x))       ((union x y))          ): search 0.000s, apply 0.000s, num matches 5
         Ruleset : search 0.000s, apply 0.000s, rebuild 0.000s
         
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m Printing up to 100 tuples of table path: 
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m    (path (b) (b))
-    [0m[38;5;8m[[0m[0m[32mINFO [0m[0m[38;5;8m][0m    (path (a) (b))
+    Printing up to 100 tuples of table path: 
+    (path (b) (b))
+    (path (a) (b))
     (
        (path (b) (b))
        (path (a) (b))
