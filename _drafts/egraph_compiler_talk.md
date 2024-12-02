@@ -1,10 +1,24 @@
 ---
 marp: true
 paginate: true
+theme: gaia
 ---
 
-## EGraphs and Compilers: Good and Getting Better
 
+<!--
+Tasks:
+- review papers
+- make diagram
+- expand egraph basics section
+
+## EGraphs and Compilers: Good and Getting Better
+-->
+## Egraphs, Compilers, and YOU
+
+<style scoped>
+p { text-align: center; }
+</style>
+![width:10cm](/assets/eggman.webp)
 Philip Zucker
 
 ---
@@ -68,6 +82,20 @@ more declarative
 
 <!-- 
 Compact and beautiful are correlated with efficient and effective.
+
+Mathematics in engineering and physics
+Compilers
+Rchily expressive
+- \int u dv = uv - \int v du
+- \sum_i \sum_j a_{ij} = \sum_j \sum_i a_{ij}
+
+- Relation algebra
+- peephole
+
+https://leahneukirchen.org/caudex/equational-reasoning.html
+http://www.mathmeth.com/read.shtml
+https://inst.eecs.berkeley.edu/~cs294-260/sp24/2024-01-24-haskell-rewriting 
+deforestation
 -->
 
 <!--
@@ -120,6 +148,43 @@ If I were to nanopass it I'd go the other way.
 - Fast
 - Simple
 - Declarative-ish
+<!-- 
+Show incremenetal simplifcation diagram?
+-->
+$$
+\begin{aligned}
+& c(b + a \times 0) + 7 + -cb + 6 + x \\
+&= c(b + 0) + 7 + -cb + 6 + x \quad && X\times 0 \rightarrow 0\\
+&= cb + 7 + -cb + 6 + x \quad && X + 0 \rightarrow X \\
+\end{aligned}
+$$
+
+---
+
+## Suboptimality
+
+$$
+\begin{aligned}
+& c(b + a \times 0) + 7 + -cb + 6 + x \\
+&= c(b + 0) + 7 + -cb + 6 + x \quad && X\times 0 \rightarrow 0\\
+&= cb + 7 + -cb + 6 + x \quad && X + 0 \rightarrow X \\
+\end{aligned}
+$$
+
+---
+
+## Suboptimality
+
+$$
+\begin{aligned}
+& c(b + a \times 0) + 7 + -cb + 6 + x \\
+&= c(b + 0) + 7 + -cb + 6 + x \quad && X\times 0 \rightarrow 0\\
+&= cb + 7 + -cb + 6 + x \quad && X + 0 \rightarrow X \\
+&= cb - cb + 7 + 6 + x \quad && \textcolor{red}{X + Y \rightarrow Y + X} \\
+&= 0 + 7 + 6 + x \quad && X - X \rightarrow 0 \\
+&= 13 + x \quad && \text{const prop}
+\end{aligned}
+$$
 
 ---
 
@@ -129,33 +194,100 @@ If I were to nanopass it I'd go the other way.
 - Result is order dependent
 - Missed optimization opportunities
 <!-- 
+Redundant Load
+
 GCC rules
+https://github.com/gcc-mirror/gcc/blob/master/gcc/passes.def
 
 Graph Rewriting to transform loops in CFG.
-Sea of Nodes. -->
+Sea of Nodes. 
+
+Which analyses interact. Good example?
+-->
 $$a * 2 / 2 \rightarrow (a \ll 1) / 2$$
 $$a * 2 / 2 \rightarrow a$$
 
 ---
 
-## Equational Search
+# Redundant Loads
 
-- Don't destroy / mutate
-- Just explore the equality space
+```c
+v2 = x1 + 1;
+v3 = mem[v2];
+// ... mutation of mem[v1 + 1]?
+v10 = v1 + 1;
+v11 = mem[v10];
+```
+
+```C
+v2 = x1 + 1;
+v3 = mem[v2];
+// ... no mutation of mem[v1 + 1].
+v10 = v2;
+v11 = v3;
+```
+
+---
+
+<https://github.com/gcc-mirror/gcc/blob/master/gcc/passes.def>
+
+```
+NEXT_PASS (pass_cselim);
+…
+NEXT_PASS (pass_cse_sincos);
+NEXT_PASS (pass_cse_reciprocals);
+…
+NEXT_PASS (pass_cse);
+…
+NEXT_PASS (pass_cse_after_global_opts);
+…
+NEXT_PASS (pass_cse2);
+…
+NEXT_PASS (pass_postreload_cse);
+```
+
+---
+
+## Brute Equational Search
+
+<!-- 
+Draw lots of little dags
+
+- Don't destructively mutate
 - Maximize sharing
+
+- Just explore the equality space
+
 - Rewrites at top vs bottom
-![](/assets/egraph_share.png)
+-->
+<style scoped>
+p { text-align: center; }
+</style>
+![](/assets/eqsearch.png)
+
+---
+
+## Sharing is Caring (about memory)
+
+<style scoped>
+p { text-align: center; }
+</style>
+
+![width:25cm center](/assets/egraph_share.png)
 
 ---
 
 ## EGraphs
 
+- Bipartite graph of eclass and enodes
+- Compact Representation of a system of Ground Equalities
+<!--
 What are they?
 
 - Mechanical : Compact Data Structure for equivalent trees
 - Logical : Congruence closure
 
-- bipartite graph of eclass and enodes
+-->
 
 <!-- 
 
@@ -166,6 +298,9 @@ rewriter at bottom with sharing
 
 more egraph
 class
+
+Pull literally from max's slides and say source: Max Willsey
+https://simons.berkeley.edu/sites/default/files/2023-12/LADT23-3%20Slides%20-%20Max%20Willsey.pdf
 -->
 
 <!-- Two mantras: Flat and Shared -->
@@ -184,7 +319,11 @@ $$a * 2 / 2 = (a \ll 1) / 2 = a$$
   - E-match pattern: $X * Y / Y$
   - Assert: $a * 2 / 2 = a$
 - Extract out best term
+- [egg](https://github.com/egraphs-good/egg) :egg: Rust library
 
+![width:20cm bg right](https://egraphs.org/assets/4-egraphs.svg)
+<!-- Egraph only grows. We only learn. Monotonic. 
+psuedo code?
 ```python
 root = egraph.insert(a * 2 / 2)
 for i in range(N):
@@ -193,43 +332,62 @@ for i in range(N):
 return egraph.extract(root)
 ```
 
-<!-- Egraph only grows. We only learn. Monotonic. 
-psuedo code?
 -->
-- [egg](https://github.com/egraphs-good/egg) :egg: Rust library
 
 ---
 
-# An EGraphy Compiler Tapas
+# An EGraph-y Compiler Tapas
+
+<style scoped>
+p { text-align: center; }
+</style>
+![width:12cm](/assets/comp_tapas.webp)
 
 ---
 
 ## Cranelift
 
 - Production quality JIT backend for [wasmtime](https://github.com/bytecodealliance/wasmtime/tree/main/cranelift)
+
 - Your compiler already has (most of) an egraph in it
+  - EGraph ~ Global Value Numbering
+<!--
+-Rust
+
+Get some numbers?
+
   - GVN
   - CSE
-<!--
+
 - Getting into and out of egraph is a significant transformation
 - Common subexpression elimination
 - similar global value numbering
 - 
 -->
 
-- [Acyclic EGraphs and smart constructors](https://www.philipzucker.com/smart_constructor_aegraph/)
-
 <!-- 
 Put numbers 
+- [Acyclic EGraphs and smart constructors](https://www.philipzucker.com/smart_constructor_aegraph/)
 
 - The CFG is not fully in the egraph.
+https://cfallin.org/pubs/egraphs2023_aegraphs_slides.pdf
 
 <https://www.philipzucker.com/smart_constructor_aegraph/>
 <https://vimeo.com/843540328>
 -->
+
 ---
 
-## Egglog
+## Control Flow
+
+- Single Block
+- Super Block
+- PEGs
+- RVSDG
+
+---
+
+## Egglog (PLDI '23)
 
 <!-- 
 On a different axis.
@@ -243,6 +401,7 @@ Datalog combined with
   - $cols(A) = rows(C) \rightarrow (A \otimes B) \cdot (C \otimes D) = (A \cdot C) \otimes (B \cdot D)$
 
 <!-- 
+https://dl.acm.org/doi/10.1145/3591239
 Guarded
 and finding terms
 
@@ -280,26 +439,51 @@ And a huge list of projects
 
 ### Tensors
 
-- Tensat
-- Glenside
-- SPORES
-- $\Delta$SD
+- Tensat, Glenside, SPORES, $\Delta$SD
 
-![right:50% w:500](/assets/tensat.png)
+<style scoped>
+p { text-align: center; }
+</style>
+
+![w:900px](/assets/tensat.png)
 
 <!-- pull stuff from their slide decks.
 Maybe just pull this section or glide over it.
 I don't feel that comfortable going into depth
 
+https://slideslive.com/38952736/oral-equality-saturation-for-tensor-graph-superoptimization
+
+https://pl.cs.princeton.edu/generals/slides/dh7120.pdf
  -->
 ---
 
-## SpEQ
+## SpEQ (PLDI '24)
 
 - Find patterns corresponding to Kernels <!-- YOGO -->
+
+<!-- 
 - Loops via fold
-  - Slotted Egraphs <!-- EGRAPHS 2024 -->
+  - Slotted Egraphs
 - Image here
+https://pnwplse.org/slides/2024/Avery%20Laird.pdf
+-->
+
+```C
+for (j = 0; j < lastrow - firstrow + 1; j++) {
+ sum = 0.0;
+ for (k = rowstr[j]; k < rowstr[j+1]; k++)
+ sum = sum + a[k]*p[colidx[k]];
+ q[j] = sum;
+}
+```
+
+```C
+if (preconditions(a, rowstr, colidx)) {
+ very_fast_spmv(a, rowstr, ..., p, q);
+} else {
+ // execute original code
+}
+```
 
 ---
 
@@ -307,10 +491,15 @@ I don't feel that comfortable going into depth
 
 - Diospyros & Isaria
 - Vector algebra
-  - $ab+cd+de \rightarrow ab+cd+de+0*0 \rightarrow Vec4(a,b,c,0) \cdot Vec4(b,d,e,0)$
+
+$$
+ab+cd+de \rightarrow ab+cd+de+0*0 \rightarrow Vec4(a,b,c,0) \cdot Vec4(b,d,e,0)
+$$
+
 - Synthesis using Ruler
 
 <!--
+https://jamesbornholt.com/papers/isaria-asplos24.pdf
 Decompilation
 Speed of getting new IRs
 Specialty instructions
@@ -353,16 +542,20 @@ Lakeroad
 
 #### Egraphs and Automated Reasoning
 
+- EGraphs come from automated reasoning
+- Usage modes
+  - `prove : Term -> Term -> Bool`
+  - `simplify : Term -> Term`
+- Automated Reasoning can make compilers
+- The fully declarative compiler
+<!-- 
 - Demodulation
 - Paramodulation
 - Knuth Bendix
 
 - Superposition
-- `simplify : Term -> Term`
-- `prove : Term -> Term -> Bool`
-- Automated Reasoning can make compilers
-- The fully declarative compiler
-<!-- 
+- 
+
 TPTP simplify category
 Vampire EProver etc could be amazing simplification engines.
 
@@ -370,16 +563,113 @@ Vampire EProver etc could be amazing simplification engines.
 
 ---
 
-#### Egraphs Modulo Theories
+<style scoped>
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
+
+| Propositions | Equations |
+|------|------------|
+| Resolution     |   Paramodulation         |
+| Ordered Resolution | Superposition |
+| ? | Knuth Bendix Completion |
+| Ground Ordered Resolution | EGraph |
+| Prolog | Functional Logic Programming |
+| Datalog | Egglog |
+
+<!--
+/ Ground Completion / Ground Superposition
+
+ ? | Decomdulation | 
+| ?  | Completion |
+| ASP | ? |
+| Lambda Prolog | ? |
+| Hypothetical Datalog | ? |
+| Minikanren | ? |
+-->
+
+---
+
+# Egraphs as Rewrite Systems
+
+<style scoped>
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
+
+| TRS | Egraph |
+|------|--------|
+| Canonical Term | EClass |
+| R/L-simplify | Canonization |
+| Run Rules | Extract |
+| Term Orders | Extract Objective |
+| KBO Weights  |  Weights |
+
+---
+
+<!--
+# WAKEUP! THE MOST IMPORTANT SLIDE
+<center> <img src="/assets//egraph2.svg">
+<img src="assets/egraphs2024/egraphs_1.svg">
+</center>
+[svg](egraphs_talk_files/egraphs_talk_29_0.svg)
+
+[svg](egraphs_talk_files/egraphs_talk_29_1.svg)
+$$  mul(a, two) \rightarrow shift(a, one) $$
+$$  mul(a, one) \rightarrow a $$
+$$ div(two, two) \rightarrow one $$
+$$  div(shift(a, one), two) \rightarrow a $$
+
+-->
+<style scoped>
+p { text-align: center; }
+</style>
+![](/assets/egraph2024/egraphs_1.svg) ![](/assets/egraph2024/egraph2.svg)
+
+$$
+\begin{aligned}
+    a \times 2 &\rightarrow a \ll 1 \\
+    a \times 1 &\rightarrow a \\
+    2 / 2 &\rightarrow 1 \\
+    (a \ll 1) / 2 &\rightarrow a
+\end{aligned}
+$$
+
+---
+
+#### EGraphs Modulo Theories-lite
+
+- ENodes are ordered
+- Containers
+  - Sets  `{a,b,c}`
+  - Multisets  `{a,a,a,b}`
+  - Polynomials
+  - Vectors `[a,b,c,a]`
+- [Bottom Up E-matching](https://www.philipzucker.com/bottom_up/)
+
+---
+
+#### EGraphs Modulo Theories
+
+- Canonicalization by Ground E-Knuth Bendix
 
 <!-- 
 Egphs and automated reasoning
 
--->
 - Ground E-Knuth Bendix
 - Equations $\rightarrow_{KB}$ "Good" Rules
 
----
+-->
+<style scoped>
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
 
 |  Theory | Algorithm  | Example  |
 |---|---|---|
@@ -388,6 +678,7 @@ Egphs and automated reasoning
 | Linear  | Gaussian Elimination   |  $3a + b = c$ |
 | Polynomial  | Groebner Bases   |  $s^2 + c^2 = 1$ |
 | Multiset / AC | Graver Bases   |  $\{a,a,b\} = \{b,b,c\}$ |
+| Associativity | String Completion | `dec; inc; = nop;`   |
 
 <!--
 
@@ -417,8 +708,7 @@ Oh wait. Combinators often have lots of AC problems
 
   -->
 
----
-
+<!--
 #### AC Egraphs
 
 - Combinator approaches and common theories have AC symbols
@@ -427,7 +717,9 @@ Oh wait. Combinators often have lots of AC problems
 - <https://www.philipzucker.com/multiset_rw/>
 
 ---
+-->
 
+<!-- 
 ## A Wrinkle: Side Effects
 
 - Purely functional modelling of state:
@@ -438,13 +730,15 @@ Oh wait. Combinators often have lots of AC problems
 - Order between
 - Side Effecting Skeleton
 
+-->
+
 <!-- 
 State isn't really perceived as that big of a wrinkle.
 
 Although lead in to sequence egraphs is interesting
 -->
 
----
+<!-- 
 
 ### Sequence Egraphs
 
@@ -453,8 +747,9 @@ Although lead in to sequence egraphs is interesting
 - Intrinsically imperative reasoning is possible
 - Math doesn't own reasoning.
 
-<!-- - An irony maybe is that even getting to and from the egraph or SSA constitutes a pretty significant transformation
 -->
+
+<!-- - An irony maybe is that even getting to and from the egraph or SSA constitutes a pretty significant transformation
 
 - Peephole  Optimization
 
@@ -466,13 +761,7 @@ Sequential first
 Sequence Egraphs here?
 
 ---
-
-# Control Flow
-
-- Single Block
-- Super Block
-- PEGs
-- RVSDG
+-->
 
 <!--
 # Loops
@@ -502,8 +791,9 @@ Sequence Egraphs here?
 ---
 
 -->
----
 
+<!--
+---
 #### CFG Super Blocks
 
 - tails calls ~ jumps
@@ -528,26 +818,37 @@ let rec entry_block() =
     loop_head()
 
 ```
-
+-->
 ---
 
-#### PEGs and Co-Egraphs
+#### [Co-Egraphs](https://www.philipzucker.com/coegraph/)
 
-- Modelling programs as a stream of blocks
-- Stream combinators
+- PEGs: Modelling programs as stream combinators
+- Observations go down
+- Unobserved Eids are maximally observed
+- Observational Minimization
+
+`enodes : Enode -> eid`
+`obs : eid -> ObsRecord`
+
+<style scoped>
+p { text-align: center; }
+</style>
+
+![width:10cm](/assets/coegraphs/double.png)
+$$ \{  f(f(f(\dots)))  \} $$
+
+<!--
+How to hash cons rational trees
+
+https://arxiv.org/abs/2204.12368 Fast Coalgebraic Bisimilarity Minimization
+
 - Flavored in SSA terminology
 -
-
----
-
-# Co-egraphs
-
-<https://www.philipzucker.com/coegraph/>
 
 Co-egraphs
 A way to get rational terms into the egraph. Compress bisimilarity
 
-<!--
 Don't make this one full slide
 ---
 
@@ -564,6 +865,15 @@ speciality IRs
 
 ---
 
+### An EGraphs for every Occasion
+
+- HyperEgraphs
+- Sequence EGraphs
+- Extraction and Compiling with Constraints
+- Context, color, and assume nodes
+<!--
+---
+
 ### Hyperegraphs
 
 - Graph Rewriting
@@ -576,6 +886,9 @@ speciality IRs
   - Series Parallel Graphs
 - Open question: How to elegantly bake this in to a data structure?
 
+-->
+
+<!--
 ---
 
 ### A Wrinkle: Undefined Behavior
@@ -590,6 +903,10 @@ speciality IRs
 - I would say this is an open issue
 - In some ways equality saturation is useful because it has an implicit notion of well definedness
 
+- Chained Resolution
+
+-->
+<!--
 ---
 
 ### Wrinkle: Context
@@ -601,6 +918,9 @@ speciality IRs
 ---
 
 ### Extraction and VIBES
+
+-->
+
 <!--
 
 ```
@@ -660,10 +980,9 @@ ISLE
 
 # Thanks
 
-<https://github.com/philzook58/awesome-egraphs>
-
-- egraph community
-- zulip
+- <https://github.com/philzook58/awesome-egraphs>
+- [egraph community](https://egraphs.org/)
+- [zulip](https://egraphs.zulipchat.com/)
 
 ---
 

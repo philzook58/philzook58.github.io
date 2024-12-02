@@ -49,7 +49,7 @@ The left rules break down a [focused](https://en.wikipedia.org/wiki/Focused_proo
 
 ![](/assets/left_harrop.png)
 
-Proplog has the even more restricted goal and program formula describe by this grammar
+Proplog has the restricted goal `G` and program formula `D` describe by this grammar
 
 ```
 G ::= True | A | G ∧ G | G ∨ G
@@ -106,7 +106,7 @@ assert not horn(ps, And(a,d))
 
 Ok, but we'd like to extend the formulas we can treat. Actual prolog can handle `forall` quantifiers in programs clauses and `exists` quantifier in goals. They are the implicit binders of the unification variables.
 
-In Nadathur and Miller, they introduce this not using unification, but instead magicking up the right term when you need to open a binder. I kind of like this. In backwards proof tactics in Coq for example, this is the difference between using [`exists`](https://coq.inria.fr/doc/v8.19/refman/proofs/writing-proofs/reasoning-inductives.html#coq:tacn.exists) and [[`eexists`](https://coq.inria.fr/doc/v8.19/refman/language/extensions/evars.html).
+In Nadathur and Miller, they introduce these binders not using unification, but instead magicking up the right term when you need to open a binder. I kind of like this. In backwards proof tactics in Coq for example, this is the difference between using [`exists`](https://coq.inria.fr/doc/v8.19/refman/proofs/writing-proofs/reasoning-inductives.html#coq:tacn.exists) and [[`eexists`](https://coq.inria.fr/doc/v8.19/refman/language/extensions/evars.html).
 
 The horn procedure now takes a list of magic terms to try when a binder needs to be instantiated. It's a cute brute force method. `magic` could also perhaps be an infinite generator or just the signature (a list of `FuncDeclRef`), with a built in generator inside of `horn` of all possible terms.
 
