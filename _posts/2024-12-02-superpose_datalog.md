@@ -852,6 +852,12 @@ cnf(path_eq, axiom, X = Y | ~path(X,Y) | ~path(Y,X)).
 
 # Bits and Bobbles
 
+Most interesting knobs on eprover
+
+- term-ordering. KBO vs LPO. precendence and weights
+- clause priority. -x -H -D
+- selection strategy
+
 Altogether I find vampire more confusing to control when being used off label. I can kind of more or less interpret the various command line options to eprover in terms of the underlying calculus. Eprover also ships with a latex manual <https://github.com/eprover/eprover/blob/master/DOC/eprover.tex> which clarifies at least some things. Combining this + experimentation + Blanchette slides + Bachmair Ganzinger handbook of automated reasoning article is the only thing I've got.
 
 I'm intrigued at the idea of using eprover as an operational mechanism rather than a solver for first order logic. A surface language which exposes more things like selection and clause ordering would be nice. I want a happy controllable predictable medium between datalog, prolog, and atp.
