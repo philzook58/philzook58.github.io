@@ -850,7 +850,7 @@ cnf(path_eq, axiom, X = Y | ~path(X,Y) | ~path(Y,X)).
     )
     
 
-# Bits and Bobbles 2
+# Bits and Bobbles
 
 Altogether I find vampire more confusing to control when being used off label. I can kind of more or less interpret the various command line options to eprover in terms of the underlying calculus. Eprover also ships with a latex manual <https://github.com/eprover/eprover/blob/master/DOC/eprover.tex> which clarifies at least some things. Combining this + experimentation + Blanchette slides + Bachmair Ganzinger handbook of automated reasoning article is the only thing I've got.
 
