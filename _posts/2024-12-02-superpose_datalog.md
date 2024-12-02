@@ -19,7 +19,7 @@ path(X,Y) :- edge(X,Y).  % if there is an edge, there is a path
 path(X,Y) :- edge(X,Z), path(Z,Y). % You can paste an edge on the end of a path to get a new path.
 ```
 
-[souffle](https://souffle-lang.github.io/simple) is a good dastaloig
+[souffle](https://souffle-lang.github.io/simple) is a nice example datalog system
 
 ```python
 %%file /tmp/path.dl
