@@ -617,6 +617,8 @@ fof(cancel, axiom, myterm = div(mul(a,two), two)).
 
 Knuth Bendix completion is a way to possibly turn a system of equations into a conlfuent terminating rewrite system. One example where t5his is possible is the free group. The default ordering of E is Knuth Bendix Ordering.
 
+Maybe you're better off using Twee or [Waldmeister](https://www.mpi-inf.mpg.de/departments/automation-of-logic/software/waldmeister/download) (btw where is the waldmeister source? Is it still developed?). Not sure.
+
 <https://www.metalevel.at/trs/>
 
 ```python
@@ -2231,7 +2233,7 @@ cnf(ax3, axiom, mul(inv(X), X) = e).
 
 ## Unification
 
-Raw usage. Equality resolution rule ought to put unifier into ans predicate.
+Raw usage. Equality resolution rule ought to put unifier into `ans` predicate.
 
 `er` is equality resolution. Interesting.
 I needed to give it a selection to make it do this
