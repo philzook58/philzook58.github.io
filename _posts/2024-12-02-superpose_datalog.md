@@ -383,7 +383,7 @@ These superposition systems however go far beyond datalog. It is under the capab
 - Prolog
 - Egraphs
 - Equality Saturation
-- Hypothetical Datalog <https://www.philipzucker.com/contextual-datalog/>
+- Hypothetical Datalog <https://www.philipzucker.com/contextual-datalog/>. The non unit clauses are hypotheticals like `cnf(i_0_9, plain, (path(X1,c)|~edge(b,X1))).`
 - Contextual Egraphs <https://github.com/eytans/easter-egg> <https://arxiv.org/abs/2305.19203>
 - Lambda egraphs via the new HO extensions to eprover
 
