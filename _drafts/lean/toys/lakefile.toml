@@ -1,0 +1,24 @@
+name = "toys"
+version = "0.1.0"
+defaultTargets = ["toys"]
+
+[[lean_lib]]
+name = "Toys"
+
+[[lean_exe]]
+name = "toys"
+root = "Main"
+
+[[require]]
+name = "batteries"
+scope = "leanprover-community"
+rev = "main"
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+
+
+[[require]]
+name = "aesop"
+scope = "leanprover-community"
