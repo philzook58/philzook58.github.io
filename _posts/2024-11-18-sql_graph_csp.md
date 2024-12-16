@@ -385,6 +385,8 @@ Try it out on colab: <https://colab.research.google.com/github/philzook58/philzo
 Hacker news comments. <https://news.ycombinator.com/item?id=42195994>
 `babel_` points out that clang vs gcc is due to autovectorization <https://godbolt.org/z/xfdxGvMYP>
 
+One could query a sqlite database and build a SQL query corresponding to the database (an insanely enormous one sometimes, one FROM for every row in the db, WHEREs expressing the entries and foreign key corresondances) to find homomorphisms from one db to another.
+
 <https://dl.acm.org/doi/pdf/10.1145/335168.335209> Constraint Satisfaction and Database Theory: a Tutorial Moshe Y. Vardi
 
 <https://users.soe.ucsc.edu/~kolaitis/talks/csp-oxford.pdf>  Constraint Satisfaction and Logic Phokion G. Kolaitis

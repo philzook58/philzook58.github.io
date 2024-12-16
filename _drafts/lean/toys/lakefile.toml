@@ -22,3 +22,12 @@ scope = "leanprover-community"
 [[require]]
 name = "aesop"
 scope = "leanprover-community"
+
+[[require]]
+name = "scilean"
+scope = "lecopivo"
+
+[[require]]
+name = "egg"
+git = "https://github.com/marcusrossel/lean-egg"
+rev = "main"
