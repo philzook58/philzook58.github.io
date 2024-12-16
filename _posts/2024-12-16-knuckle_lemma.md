@@ -1,5 +1,5 @@
 ---
-title: 'Lean-style' Tactics in Knuckledragger
+title: "'Lean-style' Tactics in Knuckledragger"
 date: 2024-12-16
 ---
 
