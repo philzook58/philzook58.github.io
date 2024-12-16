@@ -20,7 +20,9 @@ Since my last big [summary](https://www.philipzucker.com/state_o_knuck/), I've
 - Tossed in [aprove](https://github.com/philzook58/knuckledragger/blob/main/kdrag/solvers/aprove.py), a termination checker. Not sure what I'm gonna do with this one. Currently knuckledragger offers nothing in regards to checking termination of your recursive definitions
 - Tossed in [gappa](https://github.com/philzook58/knuckledragger/blob/main/kdrag/solvers/gappa.py)
 - Tossed in some [sympy](https://github.com/philzook58/knuckledragger/blob/main/kdrag/theories/real/sympy.py) and flint translators. I do not currently trust sympy's results. I'm willing to trust flint as an axiom schema.
-- Tossed in some [real](https://github.com/philzook58/knuckledragger/blob/main/kdrag/theories/real/__init__.py) axioms. I don't feel that bad about just axiomatizing them. I mean come on. `sin(0) = 0`. Don't be an ass. Having said that, I wouldn't be surprised if I got a couple wrong. <https://arxiv.org/pdf/0708.3721> This is an interesting paper stating some rigourous upper and lower approximations of common transcendental functions I saw in the Metitarski paper.
+- Tossed in some [real](https://github.com/philzook58/knuckledragger/blob/main/kdrag/theories/real/__init__.py) axioms. I don't feel that bad about just axiomatizing them. I mean come on. `sin(0) = 0`. Don't be an ass. Having said that, I wouldn't be surprised if I got a couple wrong. <https://arxiv.org/pdf/0708.3721> This is an interesting paper stating some rigourous upper and lower approximations of common transcendental functions I saw in the [Metitarski](https://www.cl.cam.ac.uk/~lp15/papers/Arith/) paper.
+- I added a dumb [Julia](https://julialang.org/) wrapper I haven't done much with yet. <https://github.com/philzook58/Knuckledragger.jl> Could be nice to explore multiple dispatch, nicer syntax and macros that Julia offers. Other interesting high performance stuff.
+- Levent Erkok added a knuckledragger like feature to Haskell's SBV <https://hackage.haskell.org/package/sbv-11.0/docs/Data-SBV-Tools-KnuckleDragger.html> I am very happy that these ideas are landing somewhere.
 - Tossing in the start of some lark parsers for prolog, tptp, etc
 
 One of the latest additions was actually building a bit of a tactic system that feels akin to lean's, coq's, isabelle's, etc. One thing I really like is that it is just python. If you want to metaprogram, use loops and `try`. Sequencing is python sequencing. The slight cost, like almost all embedded dsls, is that python syntax won't be quite as clean. I think it's pretty good though.
@@ -29,7 +31,7 @@ One of the latest additions was actually building a bit of a tactic system that 
 
 "The purpose of computing is insight, not numbers." - [Richard Hamming](https://en.wikipedia.org/wiki/Richard_Hamming)
 
-I've resisted for a while building a tactic system that looks like Lean, Isabelle's or Coq's, since I kind of wanted to explore this wacky super Hilbert system. I'd hoped (foolishly perhaps), that careful logical manipulation would be unnecessary and that Giving just the highlights with the solver filling in the gaps would work. This isn't the right perspective. Even _if_ the solvers were perfect, you aren't. Sometimes I give the solvers the wrong theorem to prove, or the wrong lemmas to do it with. Also, the purpose of interactive theorem proving and for that matter a majority of scientific and mathematical computing is _understanding_, not the result itself (businesses would disagree).
+I've resisted for a while building a tactic system that looks like Lean, Isabelle's or Coq's, since I kind of wanted to explore this wacky super Hilbert system. I'd hoped (foolishly perhaps), that careful logical manipulation would be unnecessary and that just giving the highlights with the solver filling in the gaps would work. This isn't the right perspective. Even _if_ the solvers were perfect, you aren't. Sometimes I give the solvers the wrong theorem to prove, or the wrong lemmas to do it with. I saw some lectures (podcast?) by Larry Paulson where he made a similar point. Also, the purpose of interactive theorem proving and for that matter a majority of scientific and mathematical computing is _understanding_, not the result itself (businesses would disagree).
 
 # Usage examples
 
@@ -62,11 +64,11 @@ You can see I tried to mimic how the basic tactics look in lean <https://leanpro
 
 The lemma calls return `GoalCtx` objects so that you can see what the system wants at each point interactively in Jupyter.
 
-You can also record these for blog posts which is nice. It is annoying to record these things in Coq, lean, etc. There are systems for it (Alectryon, maybe other lean blogging stuff?) but it isn't super mainstream.
+You can also record these for blog posts which is nice. It is annoying to record these things in Coq, lean, etc. There are systems for it ([Alectryon](https://github.com/cpitclaudel/alectryon), isabelle has nice stuff, maybe other lean blogging stuff?) but it isn't super mainstream.
 
 A cute syntax is to put the steps into list parens `[]`. This let's you structure it using python syntax, and record the intermediate states for when I want to show the intermediate goals in a blog post like this. The walrus `:=` also let's you record your introduced variables inline. Max bernstein showed me a similar pythony list trick for embedded compiler DSLs. It's nice. There is no magic there though, and you don't have to do it if you don't want to.
 
-These proofs steps internally record breadcrumbs about the actual knuckledragger kernel proof inside the `Lemma` object, which is discharged when you call `l.qed()`. I believe this is also true in Coq, lean etc that `qed` actually does the non trivial work of actuall checking your proof term in those systems.
+These proofs steps internally record breadcrumbs about the actual knuckledragger kernel proof inside the `Lemma` object, which is discharged when you call `l.qed()`. I believe this is also true in Coq, lean etc that `qed` actually does the non trivial work of actually checking your proof term in those systems.
 
 Here is a slightly different proof by cases. `auto` just discharges the current goal via `z3`
 
@@ -544,6 +546,10 @@ class Lemma:
 
 # Bits and Bobbles
 
+Calling them "lean"-style in the post is ridiculous, because this ctyle of tactic precedes lean by a lot. But I did model my particular choice of tactic names after lean's, so whatever. Makes for a punchier title.
+
+<https://www.philipzucker.com/programming-and-interactive-proving-with-z3py/> I wrote a similar set of ideas 5 years ago (yikes). The main difference here is that I didn't have the idea of using the logical kernel of Knuckledragger. Maybe in some respects what I did here is better or simpler.
+
 I hope that these lemma breadcrumbs are sufficient for the final `qed` lemma to finish. There is not guarantee of it, and this failure would be quite frustrating.
 
 It was useful to peek on the goalstack and the pop only once I know it will succeed. Then the `Lemma` object isn't mutated until the tactium is successful.
@@ -556,8 +562,6 @@ I haven't bolted in induction yet. It might not be that bad. I do have induction
 
 I might need new axioms to perform generalization. That the multi arity quantifiers are one-shot might be a problem.
 
-<https://www.philipzucker.com/programming-and-interactive-proving-with-z3py/> I wrote a similar set of ideas 5 years ago (yikes). The main difference here is that I didn't have the idea of using the logical kernel of Knuckledragger. Maybe in some respects what I did here is better or simpler.
-
 A general blog post on translation of natural deduction to hilbert style systems could be interesting. In a sense, this is what my tactic is doing, albiet in an unprincipled way. When Hilbert stykle was established but before nat deduct was taken for granted, this was probably fairly crucial
 
 A tactics system manipulates partial proofs.
@@ -567,6 +571,8 @@ What the hell are partial proofs? Good question.
 A tactics system can be implemented in a fairly imperative way.
 
 There are backwards tactics that manipulate the goal and forward tactics that manipulate the context.
+
+tactics have something to do with lenses. You move backwards, breaking apat the goal, but then there is a forward "thing" that builds the actual proof object and remembers pieces. Food for thought.
 
 ### Backwards
 
@@ -597,6 +603,44 @@ Good discussion of LCF in Harrison's handbook of practical logic and automated r
 Prove some of those lemmas follow each other
 
 The modulus vs non modulus version.
+
+```python
+from kdrag.all import *
+IntList = smt.Datatype("IntList")
+IntList.declare("nil")
+IntList.declare("cons", ("car", smt.IntSort()), ("cdr", IntList))
+IntList = IntList.create()
+
+x = smt.Const("x", IntList)
+length = smt.Function("length", IntList, smt.IntSort())
+length = kd.define("length", [x], smt.If(x.is_nil, 0, 1 + length(x.cdr)))
+
+# fails
+#kd.kernel.lemma(kd.QForAll([x], length(x) >= 0), by=[length.defn])
+l = kd.Lemma(smt.ForAll([x], length(x) >= 0))
+#x1 = l.intros()
+import kdrag.theories.datatypes as dt
+intinduct = dt.induct(IntList)
+#l.apply(intinduct)
+l.apply(intinduct) # So. Forall x, (stuff), P(x)) vs stuff => forall x, P(x).
+l.split()
+[
+    a := l.intros(),
+    l.intros(),
+    l.z3simp(),
+    hd := l.intros(),
+    l.unfold(length),
+    l.auto() # auto(by=[length.defn])
+]
+[
+    l.z3simp(),
+    l.unfold(length),
+    l.auto()
+]
+l.qed()
+```
+
+&#8870;ForAll(x, length(x) >= 0)
 
 ```python
 from kdrag.all import *
@@ -885,5 +929,12 @@ def factor():
 def simplify(l):
     
 ```
+
+```python
+
+
+```
+
+&#8870;ForAll(x, length(x) >= 0)
 
 I susepct
