@@ -3,19 +3,19 @@ title: Symbolic Execution by Overloading `__bool__`
 date: 2024-12-23
 ---
 
-A few months ago I saw a talk on buildit, <https://buildit.so/> a really neat project. One thing I came away with was a neat trick for getting non-overloadable syntax to be overloadable.
+A few months ago I saw a talk on buildit, <https://buildit.so/> a really neat project that achieves staged metaprogramming as a C++ library. I love the central tenets of being in a mainstream language and not requiring a modified compiler. Right on, brother. One thing I came away with was a neat trick for getting non-overloadable syntax to be overloadable.
 
-The interesting observation, which seems clear in hindsight (the best observations are), is that bool conversion _is_ overloadable by writing a `__bool__` function on the Z3 class. With a little hackery, you can record all the paths through a piece of fairly pure python code.
+The interesting observation, which seems clear in hindsight (the best observations are), is that bool conversion _is_ overloadable by writing a `__bool__` function on the Z3 class. With a little hackery, you can record all the paths through a piece of fairly pure python code. In this way you can simply achieve symbolic execution of python code without the usual expected rigamarole, or symbolically reflect python code as pure z3 expressions.
 
-# Partial Evaluation and MetaProgramming Z3
+# Partial Evaluation and Metaprogramming Z3
 
 I have noted for a while after tinkering with [MetaOCaml](https://okmij.org/ftp/ML/MetaOCaml.html) that metaprogramming z3 in python has a lot of the flavor of staged metaprogramming (big surprise? Maybe there's not much content to the observation).
 
 Some metaprogramming frameworks or styles look very different from unstaged code. You explicitly call all sorts of weird functions to construct code obects.
 
-A really cool flavor of staged metaprogramming takes the unstaged code and adds some annotations to get staged code. The more similar the staged code looks to the original, the better. It probably takes some kind of quotation, overloading, or introspection mechanism to achieve this.
+A really cool flavor of staged metaprogramming takes the unstaged code and adds some annotations to get staged code. The more similar the staged code looks to the original, the better. It probably takes some kind of language level feature like quotation, overloading, or introspection to achieve this.
 
-A canonical example of staged metaprogramming is unrolling a power function. Here is a simple example of an unstaged recursive power function operating on regular python ints.
+A canonical example of staged metaprogramming is unrolling a power function (Ershov). Here is a simple example of an unstaged recursive power function operating on regular python ints.
 
 ```python
 def mypow(x : int, n : int):
@@ -30,7 +30,7 @@ mypow(2,3)
 
     8
 
-You can instead use very similar looking code to code gen using strings to represent code. f-strings make for some nice quotation mechanism. What is very cute is that the following looks just like the above. We interpret the parameter `n` as being known as "compile time"/static and the parameter `x` as being known as "run time"/dynamic.
+You can instead use very similar looking code to codegen code-strings. The python [f-strings](https://docs.python.org/3/reference/lexical_analysis.html#f-strings) feature (which are being continually improved. I'm hopeful for [tagged strings](https://peps.python.org/pep-0750/)) make for some nice quotation mechanism. What is very cute is that the following looks just like the above. We interpret the parameter `n` as being known as "compile time"/static and the parameter `x` as being known as "run time"/dynamic.
 
 ```python
 def Code(t):return str
@@ -72,7 +72,7 @@ I think of there being 2 notable design points of symbolic execution / . Do you 
 
 Some things in python really aren't overloadable though. `if-then-else` blocks, `while`, chained comparison, `and or not` operators are all not overloadable. So you need to change things around to use `z3.If`. This is kind of a bummer.
 
-## Overloading __bool__
+## Overloading `__bool__`
 
 But actually, you can overload these features indirectly. When the conditions aren't bools, the overloadable `__bool__` function is called on the class. You can monkey patch in one to z3.
 
