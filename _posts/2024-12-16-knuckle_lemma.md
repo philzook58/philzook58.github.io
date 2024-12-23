@@ -574,6 +574,8 @@ There are backwards tactics that manipulate the goal and forward tactics that ma
 
 tactics have something to do with lenses. You move backwards, breaking apat the goal, but then there is a forward "thing" that builds the actual proof object and remembers pieces. Food for thought.
 
+Non terminating definitions aren't necessarily unsound or even implying new nonstandard elements of you domain. The classic mistake of `fact(x) = if x == 0 then 1 else x * fact(x - 1)` rather than something like `fact(x) = if x <= 0 then 1 else x * fact(x-1)` is a fine "definition" of `fact(x) == 0 if x < 0`. Depends what you mean by definition maybe.
+
 ### Backwards
 
 Many backwards tactics correspond to the rules of [natural deduction](https://plato.stanford.edu/entries/natural-deduction/) read from below to inference line moving up.
