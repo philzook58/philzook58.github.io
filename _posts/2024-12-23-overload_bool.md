@@ -275,9 +275,13 @@ bfor
 
 # Bits and Bobbles
 
+Edit: Comments from <https://news.ycombinator.com/item?id=42499599#42502212> : <https://github.com/pschanely/CrossHair> Crosshair is a nice looking package that does similar things. It references this paper <https://hoheinzollern.wordpress.com/wp-content/uploads/2008/04/seer1.pdf>  A Peer Architecture for Lightweight Symbolic Execution
+Alessandro Bruni Tim Disney and Cormac Flanagan  which also does very similar things. I think there is some value in just monkey patching Z3 rather than building more wrapper structures. THis is a principle I've been following in knuckledragger <https://github.com/philzook58/knuckledragger>
+CF mentions that RPython does something similar to this for recording traces for JIT. Partial eval and JIT are quite related. JIT is kind of partial eval happening at runtime.
+
 If I want to be careful, I should make sure limit is not reached and also if the result is ever None, a return was being forgotten.
 
-Could combine the technique with hypothesis to get concolic testing.
+Could combine the technique with hypothesis to get concolic testing. Something like `symexec(Int("x"), None, Int("x"))` where the None are slots left for hypothesis to fill in. I think this would be neat.
 
 I could probably recapture loops by noticing we have returned to a previously seen position by inspecting the stack that called `__bool__`. It would be awkeard though. Maybe one could also do it by recording way more info in the overloads, but this is a lot more work.
 
