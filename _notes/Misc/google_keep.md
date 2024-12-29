@@ -4,6 +4,737 @@ title: Google Keep
 ---
 Export Method: Highlight, select copy to google doc.
 
+# 2024-12
+
+<https://williamjbowman.com/tmp/nbe-four-ways/>
+
+<https://news.ycombinator.com/item?id=42440767>
+
+CRIU, a project to implement checkpoint/restore functionality for Linux | Hacker News
+
+<https://news.ycombinator.com/item?id=40751468>
+
+All you need is call/cc (2013) | Hacker News
+
+<https://news.ycombinator.com/item?id=28287312>
+
+<https://www.cl.cam.ac.uk/teaching/2324/R277/handout-delimited-continuations.pdf>
+
+How would set theory research be affected by using ETCS instead of ZFC? - MathOverflow
+
+<https://mathoverflow.net/questions/116701/how-would-set-theory-research-be-affected-by-using-etcs-instead-of-zfc>
+
+Spherical Harmonics | Hacker News
+
+<https://news.ycombinator.com/item?id=42468554>
+
+<https://people.mpi-sws.org/~dreyer/papers/pedrot-exceptional/paper.pdf>
+
+Failure is not an option
+
+[1602.04530] The Independence of Markov's Principle in Type Theory
+
+<https://arxiv.org/abs/1602.04530>
+
+[2210.05346] Stateful Realizers for Nonstandard Analysis
+
+<https://arxiv.org/abs/2210.05346>
+
+<https://dspace.library.uu.nl/bitstream/handle/1874/1945/1131.pdf>
+
+History of realizability
+
+<https://www.irif.fr/~krivine/articles/Luminy04.pdf>
+
+Krivine realizability
+
+Genesis – a generative physics engine for general-purpose robotics | Hacker News
+
+<https://news.ycombinator.com/item?id=42457213>
+
+<https://arxiv.org/pdf/1810.08380>
+
+Computability in lean carneiro
+
+Modelica | Hacker News
+
+<https://news.ycombinator.com/item?id=42431186>
+
+<https://www.amazon.com/Exploring-Quantum-Physics-through-Projects/dp/1118140664/ref=asc_df_1118140664?mcid=e3027e5d128a3c83a87bdc1e6ea67cf7&tag=hyprod-20&linkCode=df0&hvadid=693406704660&hvpos=&hvnetw=g&hvrand=17059331573276652617&hvpone=&hvptwo=&hvqmt=&hvdev=m&hvdvcmdl=&hvlocint=&hvlocphy=9002000&hvtargid=pla-459484716458&psc=1&dplnkId=39287fc1-e2a4-489e-a5ec-507ef31453c8&nodl=1>
+
+Quantum hands on experiments
+
+Physics Experiments with Arduino and Smartphones | SpringerLink
+
+<https://link.springer.com/book/10.1007/978-3-030-65140-4?source=shoppingads&locale=en-us&utm_source=google&utm_campaign=21715590657&utm_medium=cpc&utm_content=sea&utm_term=&gad_source=1>
+
+<https://www.tcs.ifi.lmu.de/mitarbeiter/jasmin-blanchette/lambda_free_kbo_conf.pdf>
+
+Lambda free kbo
+
+<https://ceur-ws.org/Vol-2271/paper1.pdf>
+
+Tarau ljt
+
+TypesAndProofs/third_party/dyckhoff_orig.pro at master · ptarau/TypesAndProofs · GitHub
+
+<https://github.com/ptarau/TypesAndProofs/blob/master/third_party/dyckhoff_orig.pro>
+
+<http://www.cs.cmu.edu/~fp/courses/15317-f08/cmuonly/dyckhoff92.pdf>
+
+Ljt dyckhoff 92
+
+<https://math.stanford.edu/~ralph/fiber.pdf>
+
+[2412.03124] Explicit Weakening
+
+<https://arxiv.org/abs/2412.03124>
+
+<https://kth.diva-portal.org/smash/get/diva2:858615/FULLTEXT01.pdf>
+
+Realizability in coq thesis
+
+lo.logic - How exactly are realizability and the Curry-Howard correspondence related? - MathOverflow
+
+<https://mathoverflow.net/questions/459683/how-exactly-are-realizability-and-the-curry-howard-correspondence-related>
+
+<https://www2.mathematik.tu-darmstadt.de/~streicher/REAL/REAL.pdf>
+
+Realizability streicher
+
+<https://dl.acm.org/doi/pdf/10.1145/125826.125848>
+
+Omega test
+
+<https://www.cl.cam.ac.uk/~nk480/bidir.pdf>
+
+Complete easy bidrectional
+
+Automated reasoning techniques as proof-search in sequent calculus - Inria - Institut national de recherche en sciences et technologies du numérique
+
+<https://inria.hal.science/hal-00939124/>
+
+<https://arxiv.org/pdf/1903.00982>
+
+<https://dl.acm.org/doi/fullHtml/10.1145/3443420>
+
+<https://www.proquest.com/openview/6c67141618151b3cc2b4e5ff69b0d822/1?pq-origsite=gscholar&cbl=18750&diss=y>
+
+arash thesis
+
+sat - Ways to think formally about Satisfiability Modulo Theories - Theoretical Computer Science Stack Exchange
+
+<https://cstheory.stackexchange.com/questions/40725/ways-to-think-formally-about-satisfiability-modulo-theories>
+
+The Hoare Cube | Hacker News
+
+<https://news.ycombinator.com/item?id=42320180>
+
+<https://github.com/abarnert/levicivita>
+
+Derivative at a Discontinuity | Hacker News
+
+<https://news.ycombinator.com/item?id=42312376>
+
+[1407.2650v3] Logic and linear algebra: an introduction
+
+<https://arxiv.org/abs/1407.2650>
+
+Welcome Page | Advanced Lab
+
+<http://experimentationlab.berkeley.edu/node/2>
+
+Reading Recommendations | Annoying Precision
+
+<https://qchu.wordpress.com/reading-recommendations/>
+
+A categorical unification algorithm | SpringerLink
+
+<https://link.springer.com/chapter/10.1007/3-540-17162-2_139>
+
+Circuit Idea - Wikibooks, open books for an open world
+
+<https://en.wikibooks.org/wiki/Circuit_Idea>
+
+Circuit Idea - Wikibooks, open books for an open world
+
+<https://en.wikibooks.org/wiki/Circuit_Idea>
+
+<https://arxiv.org/pdf/1211.6463>
+
+Elecrtromotive force guide
+
+Category Theory in Programming | Hacker News
+
+<https://news.ycombinator.com/item?id=42291141>
+
+The Color of Noise
+
+<https://caseymuratori.com/blog_0010>
+
+Pernosco
+
+<https://pernos.co/>
+
+<https://news.ycombinator.com/item?id=42260030>
+
+<https://jesper.cx/files/building-a-cbc-type-checker.pdf>
+
+<https://cdn.prod.website-files.com/65c089cfdfce11a0392e5c42/67469a196f855821380fffa4_GR-2024.pdf>
+
+General relativity baumann notes
+
+You can use C-Reduce for any language | Hacker News
+
+<https://news.ycombinator.com/item?id=42258103>
+
+<https://www.danielgratzer.com/papers/type-theory-book.pdf>
+
+<https://arxiv.org/pdf/2304.01315>
+
+Empirical diesgn in reinforcment learning
+
+<https://paperswithcode.com/>
+
+satisfiiability modulo rewriting
+
+<https://github.com/NikolajBjorner/ShonanArtOfSAT/blob/main/AkihisaYamada-slides.pdf>
+
+<https://www21.in.tum.de/students/set_theory_partial_functions/index.html>
+
+<https://page.mi.fu-berlin.de/cbenzmueller/papers/C57.pdf>
+
+automating free logic in hol benzmuller scott
+
+<https://gebner.org/pdfs/2018-08-14_lktond.pdf>
+
+Lk ndconversion
+
+<https://link.springer.com/chapter/10.1007/978-3-319-23506-6_12>
+
+<https://www.tcs.ifi.lmu.de/lehre/ws-2024-25/atp/paper.pdf>
+
+<https://core.ac.uk/download/303691264.pdf>
+
+<https://people.mpi-inf.mpg.de/~mfleury/paper/Weidenback_Book_CDCL.pdf>
+
+<https://imrclab.github.io/teaching/motion-planning>
+
+sagemath references
+
+<https://doc.sagemath.org/html/en/reference/references/index.html>
+
+<https://arxiv.org/abs/2212.00831>
+
+<https://www.cs.cmu.edu/~15414/s22/lectures/13-resolution.pdf>
+
+Uwe Waldmann - Automated Reasoning - Suggested Readings
+
+<https://rg1-teaching.mpi-inf.mpg.de/autrea-ws23/readings.html>
+
+<https://arxiv.org/pdf/2411.07211>
+
+Exo 2
+
+<https://www2.mathematik.tu-darmstadt.de/%7Ekohlenbach/novikov.pdf>
+
+Proof mining kohlenbeck oliva
+
+Model Predictive Control in the Browser with WebAssembly | Hacker News
+
+<https://news.ycombinator.com/item?id=41992851>
+
+[2109.00110] MiniF2F: a cross-system benchmark for formal Olympiad-level mathematics
+
+<https://arxiv.org/abs/2109.00110>
+
+Designing a Home Radio Telescope for 21 Cm Emission | Hacker News
+
+<https://news.ycombinator.com/item?id=42044494>
+
+<https://drops.dagstuhl.de/storage/00lipics/lipics-vol228-fscd2022/LIPIcs.FSCD.2022.27/LIPIcs.FSCD.2022.27.pdf>
+
+Termination of polynomial interp
+
+Breaking CityHash64, MurmurHash2/3, wyhash, and more... | orlp.net
+
+<https://orlp.net/blog/breaking-hash-functions/>
+
+<https://www.lrde.epita.fr/wiki/Painless>
+
+PolyBoRi - Polynomials over Boolean Rings: Overview
+
+<https://polybori.sourceforge.net/>
+
+<https://www.forth.org/fd/contents.html>
+
+<https://arxiv.org/abs/2404.18249>
+
+<https://rg1-teaching.mpi-inf.mpg.de/autrea-ws21/notes-3d.pdf>
+
+Ordered resolution with selection
+
+<https://dl.acm.org/doi/pdf/10.1145/321420.321428>
+
+Slagle resolution 1967
+
+Team VLSI - Learn and grow together!
+
+<https://teamvlsi.com/>
+
+A primer on code generation in Cranelift by Benjamin Bouvier
+
+<https://bouvier.cc/cranelift-codegen-primer/>
+
+<https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-705.pdf>
+
+Vsdg
+
+<https://gcc-python-plugin.readthedocs.io/en/latest/working-with-c.html>
+
+gcc python
+
+NandGame - Build a computer from scratch.
+
+<https://www.nandgame.com/>
+
+<https://www.inf.ed.ac.uk/publications/online/0242.pdf>
+
+Geometry explorer full angle
+
+<http://www.mmrc.iss.ac.cn/~xgao/paper/jgex.pdf>
+
+Java geometry expert
+
+wsolve
+
+<http://www.mmrc.iss.ac.cn/~dwang/wsolve.html>
+
+[2312.07263] A Saturation-Based Unification Algorithm for Higher-Order Rational Patterns
+
+<https://arxiv.org/abs/2312.07263>
+
+MFEM - Finite Element Discretization Library
+
+<https://mfem.org/>
+
+Project PHYSNET 27Sep2015
+
+<https://www.physnet.org/>
+
+<https://news.ycombinator.com/item?id=41922081>
+
+<https://news.ycombinator.com/item?id=41926669>
+
+<https://automorphisms.org/>
+
+More Coupled Oscillators
+
+<https://lewinb.net/posts/09_more_coupled_oscillators/>
+
+<https://www.math.unl.edu/~jkettinger2/thurston.pdf>
+
+Geoemtry of 3 manifolds thurston
+
+Pygfx | Hacker News
+
+<https://news.ycombinator.com/item?id=41919246>
+
+Thermometer continuations, part 2 - Calvin Woo's blog
+
+<https://calwoo.github.io/posts/2020-02-15-thermometer_p2.html>
+
+Computing optimal hypertree decompositions with SAT - ScienceDirect
+
+<https://www.sciencedirect.com/science/article/pii/S0004370223001613>
+
+Juho Hirvonen and Jukka Suomela: Distributed Algorithms 2020
+
+<https://jukkasuomela.fi/da2020/>
+
+<http://cgm.cs.mcgill.ca/~breed/2015COMP362/canonicallabellingpaper.pdf>
+
+Mcclay canonical graph isomorphism
+
+[1301.1493] Practical graph isomorphism, II
+
+<https://arxiv.org/abs/1301.1493>
+
+<https://www.damtp.cam.ac.uk/user/gold/pdfs/purcell.pdf>
+
+Life at low reynolds number
+
+<https://www.ijcai.org/Proceedings/85-1/Papers/038.pdf>
+
+synthesis by completion dershowitz
+
+<https://web.mit.edu/shawest/Public/Papers/cat_gauge_theory.PDF>
+
+Gauge theory of cats
+
+Riemann Tensor Polynomial Canonicalization by Graph Algebra Extension | Proceedings of the 2017 ACM International Symposium on Symbolic and Algebraic Computation
+
+<https://dl.acm.org/doi/abs/10.1145/3087604.3087625>
+
+<https://www.cs.tau.ac.il/~nachumd/papers/CompletionApplications.pdf>
+
+dershowitz completion. AC. inductionless induction. first order theorem proving
+
+<https://news.ycombinator.com/item?id=41845884>
+
+<https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=43ae916225d34a038cf41f7b2a03c85f98fb8474>
+
+Goal driven kb
+
+<https://rigtriv.wordpress.com/ag-from-the-beginning/>
+
+algebraic geometry
+
+<https://news.ycombinator.com/item?id=41853780>
+
+The problem of reasoning from inequalities | Journal of Automated Reasoning
+
+<https://link.springer.com/article/10.1007/BF02341857>
+
+Automated Reasoning in Kleene Algebra | SpringerLink
+
+<https://link.springer.com/chapter/10.1007/978-3-540-73595-3_19>
+
+Automated Theorem Proving Practice with Null Geometric Algebra | Journal of Systems Science and Complexity
+
+<https://link.springer.com/article/10.1007/s11424-019-8354-2>
+
+Finding Proofs in Tarskian Geometry | Journal of Automated Reasoning
+
+<https://link.springer.com/article/10.1007/s10817-016-9392-2>
+
+<https://dspace.mit.edu/bitstream/handle/1721.1/149121/MIT-LCS-TM-312.pdf?sequence=1&isAllowed=y>
+
+Hierarchical inequality reasoning bounder
+
+<https://www.cs.cmu.edu/afs/cs.cmu.edu/usr/emc/www/papers/Papers%20In%20Refereed%20Journals/Analytica%20An%20Experiment%20in%20Combining%20Theorem%20Proving%20and%20Symbolic%20Computation.pdf>
+
+Analytica. Mathematica as a theorem prover
+
+Use Prolog to improve LLM's reasoning | Hacker News
+
+<https://news.ycombinator.com/item?id=41831735>
+
+<https://web.engr.oregonstate.edu/~huanlian/papers/knuth77.pdf>
+
+Knuth extraction
+
+A liveness example in TLA+ – Surfing Complexity
+
+<https://surfingcomplexity.blog/2024/10/16/a-liveness-example-in-tla/>
+
+The backchase revisited | The VLDB Journal — The International Journal on Very Large Data Bases
+
+<https://dl.acm.org/doi/10.1007/s00778-013-0333-y>
+
+The backchase revisited | The VLDB Journal — The International Journal on Very Large Data Bases
+
+<https://dl.acm.org/doi/10.1007/s00778-013-0333-y>
+
+Not your usual #science #blog – @ernestyalumni
+
+<https://ernestyalumni.wordpress.com/>
+
+<https://noamz.org/talks/logpolpro.pdf>
+
+Polarity zeilberger
+
+Combinatorics Videos (Igor Pak's collection)
+
+<https://www.math.ucla.edu/~pak/lectures/Math-Videos/comb-videos.htm>
+
+Monte Carlo Hypothesis Tests versus Traditional Parametric Tests | by MCMC Addict | Medium
+
+<https://medium.com/@snp.kriss/monte-carlo-hypothesis-tests-versus-traditional-parametric-tests-669a701a0b9c>
+
+<https://www.clear.rice.edu/comp512/Lectures/Papers/1971-allen-catalog.pdf>
+
+Frances allen optimizing compiler
+
+<https://news.ycombinator.com/item?id=41808013>
+
+<https://download.tek.com/document/LowLevelHandbook_7Ed.pdf>
+
+Low level measurmeent handbook
+
+<https://news.ycombinator.com/item?id=41808696>
+
+The Measurement, Instrumentation and Sensors Handbook (Electrical Engineering Handbook): Webster, John G.: 9780849383472: Amazon.com: Books
+
+<https://www.amazon.com/Measurement-Instrumentation-Handbook-Electrical-Engineering/dp/0849383471>
+
+Game Programming in Prolog | Hacker News
+
+<https://news.ycombinator.com/item?id=41800764>
+
+<https://api.newton.ac.uk/website/v0/seminars/44425/presentation-files/1642>
+ACL2 x86 bootloading
+
+<http://lya.fciencias.unam.mx/favio/publ/cocalculus.pdf>
+
+coinductive calculus escardo pavlovic
+
+<https://arxiv.org/abs/2410.00065>
+
+<https://dl.acm.org/doi/abs/10.1145/3589246.3595372>
+
+<https://dl.acm.org/doi/10.1145/3528416.3530249>
+
+<https://inria.hal.science/file/index/docid/77199/filename/RR-3400.pdf>
+
+Theorem proving modulo
+
+<https://arxiv.org/pdf/math/0310194>
+
+Sturmfels linear programming and grobner
+
+Patterns of data flow in words
+
+<https://okmij.org/ftp/Computation/ARPL.html>
+
+Optimizing AXPY
+
+<https://okmij.org/ftp/meta-programming/tutorial/daxpy.html#preview>
+
+pypy/rpython/jit/metainterp/ruleopt/README.md at jit-opt-dsl · pypy/pypy · GitHub
+
+<https://github.com/pypy/pypy/blob/jit-opt-dsl/rpython/jit/metainterp/ruleopt/README.md>
+
+Pypy jit rule opt dsl
+
+Futexes in TLA+ | Hacker News
+
+<https://news.ycombinator.com/item?id=41780409>
+
+<https://arxiv.org/pdf/2407.12794>
+
+Learned egraph scheduling
+
+Show HN: Compiling C in the browser using WebAssembly | Hacker News
+
+<https://news.ycombinator.com/item?id=41767644>
+
+Mathematical Writing Style Guide for Stanford EE 364B [pdf] (2014) | Hacker News
+
+<https://news.ycombinator.com/item?id=41756286>
+
+Playing with BOLT and Postgres | Hacker News
+
+<https://news.ycombinator.com/item?id=41743464>
+
+<https://link.springer.com/chapter/10.1007/978-0-387-35498-9_52>
+
+soft question - What CS blogs should everyone read? - Theoretical Computer Science Stack Exchange
+
+<https://cstheory.stackexchange.com/questions/22191/what-cs-blogs-should-everyone-read>
+
+Assemblage | A dataset (and tool for building) binary executable corpuses.
+
+<https://assemblage-dataset.net/>
+
+IRIS
+
+<https://iris-programming.github.io/>
+
+StarPU
+
+<https://starpu.gitlabpages.inria.fr/>
+
+Parsec
+
+GRANITE: A Graph Neural Network Model for Basic Block Throughput Estimation
+
+<https://research.google/pubs/granite-a-graph-neural-network-model-for-basic-block-throughput-estimation/>
+
+Rev. Mod. Phys. 96, 031002 (2024) - Colloquium: Eigenvector continuation and projection-based emulators
+
+<https://link.aps.org/doi/10.1103/RevModPhys.96.031002>
+
+Optimizing Vector Instruction Selection for Digital Signal Processing
+
+<https://dspace.mit.edu/handle/1721.1/144935?show=full>
+
+MUltseq v2.0-2-gf2ad99b
+
+<https://www.logic.at/multseq/>
+
+Is there a proof assistant for Peano Arithmetic? - Proof Assistants Stack Exchange
+
+<https://proofassistants.stackexchange.com/questions/200/is-there-a-proof-assistant-for-peano-arithmetic>
+
+FFT-based ocean-wave rendering, implemented in Godot | Hacker News
+
+<https://news.ycombinator.com/item?id=41678412>
+
+Python for Inversive and Hyperbolic Geometry | Hacker News
+
+<https://news.ycombinator.com/item?id=41675029>
+
+Cello • High Level C
+
+<https://libcello.org/>
+
+Learning to optimize halide with tree search and random programs | ACM Transactions on Graphics
+
+<https://dl.acm.org/doi/10.1145/3306346.3322967>
+
+awesome-tensor-compilers/README.md at master · merrymercy/awesome-tensor-compilers
+
+<https://github.com/merrymercy/awesome-tensor-compilers/blob/master/README.md>
+
+[2302.11405] ML-driven Hardware Cost Model for MLIR
+
+<https://arxiv.org/abs/2302.11405>
+
+<https://cnandi.com/docs/oopsla23-cr.pdf>
+
+<https://inst.eecs.berkeley.edu/~cs294-260/sp24/papers/verifying-halide-trs.pdf>
+
+[2409.11424] LlamaF: An Efficient Llama2 Architecture Accelerator on Embedded FPGAs
+
+<https://arxiv.org/abs/2409.11424>
+
+Announcing an automatic theorem proving project | Gowers's Weblog
+
+<https://gowers.wordpress.com/2022/04/28/announcing-an-automatic-theorem-proving-project/>
+
+Kernighan–Lin algorithm - Wikipedia
+
+<https://en.wikipedia.org/wiki/Kernighan%E2%80%93Lin_algorithm>
+
+<https://news.ycombinator.com/item?id=41579268>
+
+<https://www.answer.ai/posts/2024-09-12-gpupuzzles.html>
+
+<https://minitorch.github.io/>
+
+diy torch
+
+The Visualization of Differential Forms (2021) | Hacker News
+
+<https://news.ycombinator.com/item?id=41609744>
+
+<https://www.cse.chalmers.se/research/group/logic/book/book.pdf>
+
+Thompson programming in martin lof
+
+<https://rootjalex.github.io/publications/asplos2023-pitchfork.pdf>
+
+<https://arxiv.org/html/2306.13002v3>
+
+<https://www.cs.utexas.edu/~moore/acl2/manuals/latest/index.html?topic=ACL2____DEFDATA>
+
+Acl2s has dependent types?
+
+Edmonds' algorithm - Wikipedia
+
+<https://en.m.wikipedia.org/wiki/Edmonds%27_algorithm>
+
+Minimum spanning tree on directed graphs
+
+OpenGL Sphere
+
+<https://www.songho.ca/opengl/gl_sphere.html>
+
+<https://www21.in.tum.de/~nipkow/pubs/jar10.pdf>
+
+Quantifier elimination nipkow
+
+Star-Tracker Algorithm for Smartphones and Commercial Micro-Drones - PMC
+
+<https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7070887/>
+
+Guidance Navigation & Control | NESC Academy Online
+
+<https://nescacademy.nasa.gov/catalogs/gnandc>
+
+LiteRT overview  |  Google AI Edge  |  Google AI for Developers
+
+<https://ai.google.dev/edge/litert>
+
+<https://fse.studenttheses.ub.rug.nl/11323/1/Masterscriptie.pdf>
+
+Grobner and graver in mixed integer programming thesis
+
+<https://github.com/connorferster/handcalcs?tab=readme-ov-file>
+
+<https://people.cs.uchicago.edu/~laci/papers/icm18-babai.pdf>
+
+Groups graphs algorithms isomorphisms
+
+<https://arxiv.org/pdf/2401.15436>
+
+Discrete exterior calc non triangle
+
+GAP in Education
+
+<https://www.math.colostate.edu/~hulpke/CGT/education.html>
+
+Notes on computational group theory
+
+<https://github.com/awslabs/shuttle>
+
+<https://fmv.jku.at/papers/Kaufmann-IWSBP20.pdf>
+
+Integer multiplier circuits verification
+
+Them Birds Men's Perfect Tee By radiomode - Design By Humans
+
+<https://www.designbyhumans.com/shop/t-shirt/men/them-birds/165076/?a_s=3&gad_source=1&gbraid=0AAAAAD0aeLa4i-orUpBrFQlCHn7c5l2Tx&gclid=Cj0KCQjwlvW2BhDyARIsADnIe-KdoDvFauvU-md1jx4obs12PcMyCEyce2NTiHxAJ2KSMKDpj09BEOMaAkpmEALw_wcB>
+
+Computational group theory, 2 | Peter Cameron's Blog
+
+<https://cameroncounts.wordpress.com/2014/09/22/computational-group-theory-2/>
+
+<https://www.cs.cmu.edu/~emc/papers/Conference%20Papers/Model%20Checking%20for%20Security%20Protocols.pdf>
+
+Security protocol analysis tools
+
+<https://people.cispa.io/cas.cremers/tools/index.html>
+
+A Survey of Practical Formal Methods for Security | Formal Aspects of Computing
+
+<https://dl.acm.org/doi/full/10.1145/3522582?trk=public_post_comment-text>
+
+[WSRP24] Monoids, string-rewriting, confluence, and the Knuth-Bendix Algorithm - Online Technical Discussion Groups—Wolfram Community
+
+<https://community.wolfram.com/groups/-/m/t/3217387>
+
+<https://people.cs.nott.ac.uk/pszgmh/ccc.pdf>
+
+Calculate correct compilers
+
+Red Pitaya - Swiss Army Knife For Engineers
+
+<https://redpitaya.com/>
+
+torch.nn.Conv2d on FPGA through MLIR and Xilinx Vitis HLS – Максим Левентал – PhD student from somewhere
+
+<https://makslevental.github.io/torch-mlir-fpga/>
+
+Simulate Electronic Circuit using Python and the Ngspice / Xyce Simulators — PySpice 1.4.2 documentation
+
+<https://pyspice.fabrice-salvaire.fr/releases/v1.4/>
+
+William Meng
+
+<https://williammeng.com/rtl-ultrasound.html>
+
+EEVblog – No Script, No Fear, All Opinion
+
+<https://www.eevblog.com/>
+
+Understanding Analytic Signal and Hilbert Transform - GaussianWaves
+
+<https://www.gaussianwaves.com/2017/04/analytic-signal-hilbert-transform-and-fft/>
+
+<https://vimeo.com/showcase/5271198>
+
 # 2024-08
 
 What’s the right way to QuickCheck floating-point routines? | blog :: Brent -> [String]
