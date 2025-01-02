@@ -3,7 +3,7 @@ title: Translating Cody's Lean Sheffer Stroke Proof to Knuckledragger with ChatG
 date: 2024-01-01
 ---
 
-I translated my friend Cody Roux's Lean proof <https://github.com/teorth/equational_theories/pull/708> that the axioms of [Sheffer stroke](https://en.wikipedia.org/wiki/Sheffer_stroke) imply it is a boolean algebra into [knuckledragger](https://github.com/philzook58/knuckledragger), my low barrier python proof assistant. Pretty much it is a close one to one translation. I have not even really attempted to understand the proofs at all and was running quite unthinkingly.
+I translated my friend [Cody Roux](https://www.kleene.church/)'s Lean proof <https://github.com/teorth/equational_theories/pull/708> that the axioms of [Sheffer stroke](https://en.wikipedia.org/wiki/Sheffer_stroke) imply it is a boolean algebra into [knuckledragger](https://github.com/philzook58/knuckledragger), my low barrier python proof assistant. Pretty much it is a close one to one translation. I have not even really attempted to understand the proofs at all and was running quite unthinkingly.
 
 Mentally speaking, translating between the lean notation and from the names `commut1` and `commut2` to `sup_comm` and `inf_comm` (a name change I shouldn't have done) was super confusing as trivial as it sounds. All told I think it took me about 3 hours.
 
@@ -13,9 +13,9 @@ I also used ChatGPT to help me. <https://chatgpt.com/share/6776116b-c4d4-8008-b3
 
 I also have github copilot and was hoping it having the nearby proofs and access to cody's file below would work well. It again was so-so. Sometimes copilot fills out a whole line, but there's often something a bit off.
 
-I gave it a giant dump of Cody's file, and then the first bits of my translation. As with my experience translation between programming languages it was so so. It worked better going lemma by lemma. I hope as the LLMs trawl my repo, they might get better at this.
+I gave it a giant dump of Cody's file, and then the first bits of my translation. As with my experience translation between programming languages it was so so. It worked better going lemma by lemma. I hope as the LLMs trawl my repo, they might get better at this. The fancy new OpenAI interactive editing mode might help, but I don't really know how to use it.
 
-One interesting thing was that the LLM invented a small feature I didn't have. It tried to applied universally quantified proof objects to arguments to instantiate them, but I had never made that operator overloading. I added it in, both because I think it's kind of cute, but also so I didn't have to fix the LLM output when it did that. ChatGPT seemed quite confused about the different capabilities of `kd.Lemma` and `kd.Calc`. Maybe there's something there that I should unify them more. The differences exist because `Calc` is much simpler and both have organically evolved.
+One interesting thing was that the LLM invented a small feature I didn't have. It tried to applied universally quantified proof objects to arguments to instantiate them, but I had never made that particular `__call__` operator overloading. I added it in, both because I think it's kind of cute, but also so I didn't have to fix the LLM output when it did that. ChatGPT seemed quite confused about the different capabilities of `kd.Lemma` and `kd.Calc`. Maybe there's something there that I should unify them more. The differences exist because `Calc` is much simpler and both have organically evolved. There is a possibility that the mistakes or assumptions ChatGPT make might be the same as a user who is not me. Kind of interesting.
 
 ```python
 # The following knuckledragger python proof is derived from the lean proofs below
