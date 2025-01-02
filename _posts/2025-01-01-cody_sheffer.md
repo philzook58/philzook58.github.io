@@ -9,11 +9,11 @@ Mentally speaking, translating between the lean notation and from the names `com
 
 Not to toot my own (and Z3's) horn, but I was pretty impressed with Knuckledragger's performance here. A pure algebraic question like this is about as in it's wheelhouse as it comes though. A nice thing is that eventually Cody's proofs looked a little less declarative, but I could just dump the lemmas he used in `kd.lemma` and that papered over it.
 
-I also used ChatGPT to help me. <https://chatgpt.com/share/6776116b-c4d4-8008-b3d0-d73c401feb05> It sometimes was good sometimes not. Of course ChatGPT doesn't know much if anything about knuckeldragger, so I did the first bits to get it started. I am curious if another LLM would do better. I did not use the fancy new o1 model.
-
-I also have github copilot and was hoping it having the nearby proofs and access to cody's file below would work well. It again was so-so. Sometimes copilot fills out a whole line, but there's often something a bit off.
+I also used ChatGPT to help me. <https://chatgpt.com/share/6776116b-c4d4-8008-b3d0-d73c401feb05> It sometimes was good, sometimes not. Of course ChatGPT doesn't know much if anything about knuckledragger, so I did the first bits to get it started. I am curious if another LLM would do better. I did not use the fancy new o1 model.
 
 I gave it a giant dump of Cody's file, and then the first bits of my translation. As with my experience translation between programming languages it was so so. It worked better going lemma by lemma. I hope as the LLMs trawl my repo, they might get better at this. The fancy new OpenAI interactive editing mode might help, but I don't really know how to use it.
+
+I also have github copilot and was hoping it having the nearby proofs and access to cody's file below would work well. It again was so-so. Sometimes copilot fills out a whole line, but there's often something a bit off.
 
 One interesting thing was that the LLM invented a small feature I didn't have. It tried to applied universally quantified proof objects to arguments to instantiate them, but I had never made that particular `__call__` operator overloading. I added it in, both because I think it's kind of cute, but also so I didn't have to fix the LLM output when it did that. ChatGPT seemed quite confused about the different capabilities of `kd.Lemma` and `kd.Calc`. Maybe there's something there that I should unify them more. The differences exist because `Calc` is much simpler and both have organically evolved. There is a possibility that the mistakes or assumptions ChatGPT make might be the same as a user who is not me. Kind of interesting.
 
