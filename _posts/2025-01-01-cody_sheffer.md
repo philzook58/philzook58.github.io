@@ -684,6 +684,8 @@ end BooleanToSheffer
 
 # Bits and Bobbles
 
+A huge punt in knuckledragger is that I don't have a notion of typeclass or algebraic hierarchy. I've prototyped that a bunch and not liked any of it. Too verbose, too arcane, kind of fishy, non pythonic. I had a latest idea I was kind of intrigued by "declclass"
+
 using a regular list for domain specific simp is ok.
 I should probably make it so rewrite accepts failure and multiple axioms.
 
