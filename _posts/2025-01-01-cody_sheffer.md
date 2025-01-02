@@ -1,6 +1,6 @@
 ---
 title: Translating Cody's Lean Sheffer Stroke Proof to Knuckledragger with ChatGPT
-date: 2024-01-01
+date: 2025-01-01
 ---
 
 I translated my friend [Cody Roux](https://www.kleene.church/)'s Lean proof <https://github.com/teorth/equational_theories/pull/708> that the axioms of [Sheffer stroke](https://en.wikipedia.org/wiki/Sheffer_stroke) imply it is a boolean algebra into [knuckledragger](https://github.com/philzook58/knuckledragger), my low barrier python proof assistant. Pretty much it is a close one to one translation. I have not even really attempted to understand the proofs at all and was running quite unthinkingly.
@@ -683,6 +683,8 @@ end BooleanToSheffer
 ```
 
 # Bits and Bobbles
+
+I need to line profile this thing. It's zippy enough for now, but I'm curious where I'm losing time.
 
 A huge punt in knuckledragger is that I don't have a notion of typeclass or algebraic hierarchy. I've prototyped that a bunch and not liked any of it. Too verbose, too arcane, kind of fishy, non pythonic. I had a latest idea I was kind of intrigued by "declclass"
 
