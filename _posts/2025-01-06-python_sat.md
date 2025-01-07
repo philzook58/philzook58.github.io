@@ -3,6 +3,8 @@ title: SAT Solver Etudes I
 date: 2025-01-06
 ---
 
+SAT solving is kind of too big a topic for one post. Here is some discussion, programs and links
+
 The abilities of SAT solvers exploded in performance in the 1990s and have continued to make quite nice gains every year since.
 
 Here is a chart comparing the performance of the SAT competition winners from the last 25 years. Quite an increase!
@@ -357,18 +359,19 @@ trail is current literal ordering.
 pivoting between orderings. Hmm.
 
 ## DPLL
+
 <https://en.wikipedia.org/wiki/DPLL_algorithm>
 DP
 
 pure literal elim
 
-<https://github.com/safwankdb/SAT-Solver-using-DPLL/blob/master/SATSolver.py>
-<https://github.com/charliermarsh/OCaml-SAT-Solvers/blob/master/dpll.ml>
-<https://github.com/baptiste-fourmont/dpll/blob/main/dpll.ml>
-<https://simon.cedeela.fr/sat.html>  
-<https://github.com/Gbury/mSAT>
-<https://github.com/qnighy/ratsat> rust reimplemnt of minisat
-<https://github.com/imandra-ai/minisat-ml> <https://github.com/imandra-ai/minisat-ml/blob/master/docs/tech_report.md> tehch report. cost of using ocaml vs C++ for exact minisat copy
+- <https://github.com/safwankdb/SAT-Solver-using-DPLL/blob/master/SATSolver.py>
+- <https://github.com/charliermarsh/OCaml-SAT-Solvers/blob/master/dpll.ml>
+- <https://github.com/baptiste-fourmont/dpll/blob/main/dpll.ml>
+- <https://simon.cedeela.fr/sat.html>  
+- <https://github.com/Gbury/mSAT>
+- <https://github.com/qnighy/ratsat> rust reimplemnt of minisat
+- <https://github.com/imandra-ai/minisat-ml> <https://github.com/imandra-ai/minisat-ml/blob/master/docs/tech_report.md> tehch report. cost of using ocaml vs C++ for exact minisat copy
 
 Harrison treatment
 <https://matryoshka-project.github.io/pubs/splitting_paper.pdf> Unifying Splitting Framework
@@ -808,6 +811,7 @@ int main(){
 ```
 
 ## Clause Learning
+
 <https://en.wikipedia.org/wiki/Conflict-driven_clause_learning>
 
 How do you actually do it
@@ -993,10 +997,12 @@ Idea. what if we incrementally put cadical back together
 <https://www.youtube.com/watch?v=II2RhzwYszQ&t=14916s&ab_channel=SimonsInstitute>
 
 ## Satch
+
 <https://www.youtube.com/watch?v=II2RhzwYszQ&t=14916s&ab_channel=SimonsInstitute>
 <https://github.com/arminbiere/satch>
 
 ## MicroSAT
+
 <https://github.com/marijnheule/microsat>
 
 ## MiniSAT
