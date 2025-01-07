@@ -3,7 +3,7 @@ title: SAT Solver Etudes I
 date: 2025-01-06
 ---
 
-SAT solving is kind of too big a topic for one post. Here is some discussion, programs and links
+SAT solving is kind of too big a topic for one post. Here is some discussion, programs and links.
 
 The abilities of SAT solvers exploded in performance in the 1990s and have continued to make quite nice gains every year since.
 
@@ -11,7 +11,7 @@ Here is a chart comparing the performance of the SAT competition winners from th
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Kissat dominated the main track of the SAT Competition 2024. It won 3 gold medals!<br><br>Core techniques: congruence closure (SAT&#39;24) clausal equivalence sweeping (FMCAD&#39;24), bounded variable addition (BVA) and vivification.<a href="https://t.co/kCa7LAbtgE">https://t.co/kCa7LAbtgE</a> <a href="https://t.co/keagEQW2OA">pic.twitter.com/keagEQW2OA</a></p>&mdash; Armin Biere (@ArminBiere) <a href="https://twitter.com/ArminBiere/status/1833515116186546472?ref_src=twsrc%5Etfw">September 10, 2024</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-The [satisfiability problem](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem) on it's face it an extremely simple one. At a rough level, it is asking it the is some input to a circuit that can drive the output to true, running the circuit backwards if you will. A more accurate description is that it finds a satisfying assignment (every variable is `true` or `false` to a giant "AND" of "OR"s, a logical normal form called Conjunctive Normal Form. This normal form is an analog in some respects to the normal FOILed out form of a polynomial. This also makes it a nice intermediate representation of sorts for other [combinatorial problems](https://en.wikipedia.org/wiki/NP-completeness).
+The [satisfiability problem](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem) on it's face it an extremely simple one. At a rough level, it is asking it the is some input to a circuit that can drive the output to true, running the circuit backwards if you will. A more accurate description is that it finds a satisfying assignment (every variable is `true` or `false`) to a giant "AND" of "OR"s, a logical normal form called [conjunctive normal form](https://en.wikipedia.org/wiki/Conjunctive_normal_form). This normal form is an analog in some respects to the normal FOILed out form of a polynomial. This also makes it a nice intermediate representation of sorts for other [combinatorial problems](https://en.wikipedia.org/wiki/NP-completeness).
 
 Example SAT solvers come in kind of two flavors:
 
@@ -33,13 +33,23 @@ One nice way of going about it is to just use an integer as a bitvector. You can
 One annoying design choice is how to represent your problem itself. A list of clauses is a reasonable choice.
 
 ```python
+# Problem is represented as a list of list of integers.
+# Outer list represents implicit AND
+# inner lits (the clauses) represent implicit OR
+#  -1 represents `not v1`, 1 represents `v1`
+# negating the variable is the same as negating the integer, which is cute. (too cute?)
+CNF = list[list[int]]
+
 def nv(cnf):
+    """grab largest variable number"""
     return max((max(map(abs,c),default=0) for c in cnf), default=0)
 
 def bits(i,n):
+    """convert integer to list of bools"""
     return [bool(i & (1 << j)) for j in range(n)]
 
 def satisfies(model,cnf):
+    """ "model checking" of assignment. M |= C """
     return all(any(model[abs(l)] if l > 0 else not model[abs(l)] for l in c) for c in cnf)
     
 def brute(cnf):
@@ -86,7 +96,7 @@ But there are a number of things unsatisfying (ha) about this. It does not lend 
 
 # Davis Putnam
 
-A different approach is to use the [Davis Putnam](https://en.wikipedia.org/wiki/Davis%E2%80%93Putnam_algorithm) procedure. This is basically a resolution procedure, saturating the clause set.
+A different approach is to use the [Davis Putnam](https://en.wikipedia.org/wiki/Davis%E2%80%93Putnam_algorithm) procedure. This is basically a resolution procedure, saturating the clause set. Resolution finds two clauses with complementary literals and smushes them together, deleting that literal. You dignify this deduction by noting that regardless if `l` or `not l` is true, something else in the two cluases has to be made true.  In that way, you can start eliminating variables from clauses, kind of like how you solving a set of linear equations by eliminating variables.
 
 The following is based on Harrison's code from
 <https://www.cl.cam.ac.uk/~jrh13/atp/OCaml/dp.ml>
@@ -170,7 +180,7 @@ for i in range(100):
     assert brute_sat(cnf) == dp(cnf)
 ```
 
-A different style of resolution solver uses a given clause loop. This is something like semi naive from datalog.
+A different style of resolution solver uses a given clause loop. The given clause loop is the bread and butter of typical first order saturation style automated theorem provers. This is the ground version of that. This is something like semi naive evaluation from datalog in that it always smashes something new against something old.
 
 ```python
 def negate_clause(clause : frozenset[int]):
@@ -212,23 +222,21 @@ for i in range(100):
 
 ```
 
-```python
-
-```
-
 # Bits and Bobbles
 
-A queue on length of clause will give you a kind of unit propagation.
-A queue based on maximum literal maybe give you something like recursive elimination of variables.
+For given clause style, a queue for `unprocessed` based on length of clause will give you a kind of unit propagation.
+A queue for unprocessed based on maximum literal maybe give you something like recursive elimination of variables.
 
 You could reorganize (vectorize?) given clause algorithm to be more like a seminaive datalog.
 
 Storing clauses in normal form  or Subsumption is kind of necessary for satruation to be achived
 
+```
 while len(new) > 0:
     d = resolve(new, old)
     old = new + old
     new = d - old
+```
 
 ```python
 from z3 import *
@@ -274,7 +282,7 @@ for m in itertools.product([True,False], repeat=3):
 
 # SAT
 
-There is a dpll1 and dpll2 in sympy.logic.algorithms
+There is a dpll1 and dpll2 in sympy.logic.algorithms <https://github.com/sympy/sympy/blob/master/sympy/logic/algorithms/dpll2.py>
 Also lra. also interface to z3 (!)
 
 cadical 2023 - SBVA strcutured blcoked clause addition
