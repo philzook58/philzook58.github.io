@@ -779,11 +779,11 @@ VSIDS . evsids?
 luby
 restarts
 
-<https://www.msoos.org/2023/10/the-inprocessing-api-of-cryptominisat/>
-<https://fmv.jku.at/biere/talks/Biere-POS14-talk.pdf>  Ternary resolution
-Backbone simplification  <https://wenxiwang.github.io/papers/cadiback.pdf>
-distillation <https://dl.acm.org/doi/10.1145/1278480.1278628>
- Vivify clauses using the Oracle tool by Korhonen and Jarvisalo <https://arxiv.org/pdf/2308.15819.pdf>
+- <https://www.msoos.org/2023/10/the-inprocessing-api-of-cryptominisat/>
+- <https://fmv.jku.at/biere/talks/Biere-POS14-talk.pdf>  Ternary resolution
+- Backbone simplification  <https://wenxiwang.github.io/papers/cadiback.pdf>
+- distillation <https://dl.acm.org/doi/10.1145/1278480.1278628>
+- Vivify clauses using the Oracle tool by Korhonen and Jarvisalo <https://arxiv.org/pdf/2308.15819.pdf>
 
 ```python
 %%file /tmp/sat.c
@@ -998,8 +998,8 @@ Idea. what if we incrementally put cadical back together
 
 ## Satch
 
-<https://www.youtube.com/watch?v=II2RhzwYszQ&t=14916s&ab_channel=SimonsInstitute>
-<https://github.com/arminbiere/satch>
+- <https://www.youtube.com/watch?v=II2RhzwYszQ&t=14916s&ab_channel=SimonsInstitute>
+- <https://github.com/arminbiere/satch>
 
 ## MicroSAT
 
@@ -1022,8 +1022,8 @@ pseudo boolean
 
 # SAT
 
-<https://en.wikipedia.org/wiki/DPLL_algorithm>
-<https://chatgpt.com/c/66e9eb94-8984-8008-9db9-c0190f98e25c>
+- <https://en.wikipedia.org/wiki/DPLL_algorithm>
+- <https://chatgpt.com/c/66e9eb94-8984-8008-9db9-c0190f98e25c>
 
 ```python
 from typing import NamedTuple
@@ -1044,8 +1044,8 @@ Can we use z3 to do cnf transformation?
 
 def dimacs(self, include_names=True): also apparently solver has a dimacs printer...
 
-<https://stackoverflow.com/questions/13059096/z3-and-dimacs-output>
-<https://github.com/RobinDavid/pydimacs>
+- <https://stackoverflow.com/questions/13059096/z3-and-dimacs-output>
+- <https://github.com/RobinDavid/pydimacs>
 
 I put it into knuckeldragger
 
@@ -1373,6 +1373,7 @@ Abstract Davis-Putnam-Logemann-Loveland
 Procedure to DPLL(T)
 
 <https://alt-ergo.ocamlpro.com/#publications>
+
 <https://inria.hal.science/hal-01522770> three tier strategy for floating point
 
 <https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=45036ae8e05d71ea39253f863cfa270b6cdd9aa2> simplify paper
@@ -1428,10 +1429,9 @@ class Theory():
 
 ```
 
-<https://github.com/cvc5/cvc5/blob/main/src/theory/theory.h>
-<https://github.com/cvc5/cvc5/blob/main/src/theory/output_channel.h>
-
-<https://ocamlpro.github.io/alt-ergo/latest/API/alt-ergo-lib/AltErgoLib/Theory/module-type-S/index.html>
+- <https://github.com/cvc5/cvc5/blob/main/src/theory/theory.h>
+- <https://github.com/cvc5/cvc5/blob/main/src/theory/output_channel.h>
+- <https://ocamlpro.github.io/alt-ergo/latest/API/alt-ergo-lib/AltErgoLib/Theory/module-type-S/index.html>
 
 ```python
 from typing import NamedTuple
