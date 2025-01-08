@@ -15,26 +15,12 @@ tags:
 - z3
 ---
 
-
-
+Edit 2024: See my project knuckledragger for more systematic work in this vein <https://github.com/philzook58/knuckledragger>
 
 I've been fiddling with z3py, figuring out some functionality and realizing some interesting things you could do with it. I think I'm at a point where it is nice to checkpoint myself with a blog post.
 
-
-
-
-
-
-
 I'm a little surprised z3py doesn't overload the & and \| operators and some kind of implies operator for BoolRef. You can insert them later using this.
 
-
-
-
-
-
-    
-    
 ```python
 
 from z3 import *
@@ -46,62 +32,18 @@ BoolRef.__invert__ = lambda self: Not(self)
 BoolRef.__rshift__ = lambda self, rhs: Implies(self,rhs)
 ```
 
-
-
-
-
-
-
-
 #### Functional Programming
 
+Python is not the best functional programming environment imo. And by functional programming I implicitly mean roughly ML-like FP a la Haskell or OCaml. I don't venture much into lisp land.
 
-
-
-
-
-
-Python is not the best functional programming environment imo. And by functional programming I implicitly mean roughly ML-like FP a la Haskell or OCaml. I don't venture much into lisp land. 
-
-
-
-
-
-
-
-The lack of good algebraic datatypes (the class syntax is so ungainly) and a type system hurts. The lack of pattern matching hurts. The `lambda` keyword is so long it makes me sad. 
-
-
-
-
-
-
+The lack of good algebraic datatypes (the class syntax is so ungainly) and a type system hurts. The lack of pattern matching hurts. The `lambda` keyword is so long it makes me sad.
 
 But you have full access to z3 from the python bindings. Z3 does have algebraic data types, and a type system. It has built in substitution mechanisms and evaluation. And it has insane search procedures and the ability to prove things. Pretty damn cool!
 
-
-
-
-
-
-
 Unfortunately the type system is rather simplistic, being basically simply typed rather than polymorphic or something else. But using python a a schema/macro system for z3 seems a plausible way forward.
-
-
-
-
-
-
 
 To build templated types, you can have constructor functions in python for the appropriate types.
 
-
-
-
-
-
-    
-    
 ```python
 
 def Tuple(a,b):
@@ -132,22 +74,8 @@ Note in regards to List. Z3 has a built in type Seq that I think it has built in
 '''
 ```
 
-
-
-
-
-
-
-
 You can access the constructors from the returned types. Check this out. You get detector functions `is_Nothing` and `is_Just` , the extractor function `fromJust` and constructor functions `Nothing` and `Just`. I do a lot of `dir` exploration with z3py. It's hard to know what's available sometimes
 
-
-
-
-
-
-    
-    
 ```
 
 # dir(Maybe(IntSort())) returns
@@ -178,22 +106,8 @@ You can access the constructors from the returned types. Check this out. You get
  'use_pp']
 ```
 
-
-
-
-
-
-
-
 It's possible to build a general purpose match combinator on these types since you can introspect the number of constructors of the ADT using `num_constructors`, `constructor`, `recognizer`, and `accessor`. There might be a match inside z3py somewhere? I think it's part of the SMTLIB standard now.
 
-
-
-
-
-
-    
-    
 ```python
 
 def match(x, **kwargs):
@@ -212,52 +126,18 @@ def match(x, **kwargs):
     return acc
 ```
 
-
-
-
-
-
-
-
 Example usage:
 
-
-
-
-
-
-    
-    
 ```python
 
 match(Const("x", Maybe(IntSort())), Just=lambda y : y + 1, Nothing = IntVal(3), _=IntVal(10))
 # returns If(is(Nothing, x), 3, If(is(Just, x), fromJust(x) + 1, 10))
 ```
 
-
-
-
-
-
-
-
 Z3 has a substitution mechanism built in.  This is useful for instantiating `ForAll` and for evaluating `Lambda`. The `substitute_vars` function is what you want like so `substitute_vars(f.body(), x, y, z)`
-
-
-
-
-
-
 
 It is possible to reflect the syntax in a fairly straightforward way back into python via a lambdify function, mimicking the equivalent very useful [function from sympy](https://docs.sympy.org/latest/modules/utilities/lambdify.html). Lambdify is basically an `interp` function. Here is a start for such a function. I by no means have implemented interpretation of the entirety of z3. Also I feel like this implementation is very clunky. Some kind of CPS?
 
-
-
-
-
-
-    
-    
 ```python
 
 def lift1(f,x):
@@ -336,14 +216,6 @@ def interp(a, *args):
     assert(False)
 ```
 
-
-
-
-
-
-
-    
-    
 ```python
 
 #example usage
@@ -353,22 +225,8 @@ x, y = Reals('x y')
 interp(x + y + y + y * x, x ,y)(3,2)
 ```
 
-
-
-
-
-
-
-
 There is the ability to define recursive functions in z3. It is also plausible to define them via. In this way you can get a reversible functional programming language, maybe some subset of mercury / curry's power.
 
-
-
-
-
-
-    
-    
 ```python
 
 fac = RecFunction('fac', IntSort(), IntSort())
@@ -382,118 +240,32 @@ s.model()
 #  returns [n = 3, fac = [0 → 1, else → fac(-1 + ν0)·ν0]]
 ```
 
-
-
-
-
-
-
-
 ### Interactive Theorem Proving
-
-
-
-
-
-
 
 Z3 is awesome at thoerem proving. But somethings it just doesn't handle right and needs human guidance.
 
-
-
-
-
-
-
 Through searching, there are a couple interesting python interactive theorem prover projects. Cody pointed me to a project he worked on a while back, Boole [https://github.com/avigad/boole](https://github.com/avigad/boole) . It has a dependently typed lambda calculus in it with the purpose of gluing together many systems, I think. He implemented a lot of stuff from scratch. I think I want to try to get less and do less. There is also holpy [https://arxiv.org/abs/1905.05970](https://arxiv.org/abs/1905.05970) which appears to be being actively developed. It's roughly a translation of hol to python I think. It's available from a strange chinese github on the author's website if you go looking for it.
-
-
-
-
-
-
 
 This suggests an interesting approach. Most interactive theorem provers start unautomated and add it later. Instead we can iteratively build an interface to de-automate z3.
 
-
-
-
-
-
-
 Altogether, this approach is more HOL flavored than Coq/Agda flavored. z3 terms are our logic and python is our manipulation metal language. Ideally, one would want to verify that every.
-
-
-
-
-
-
 
 Python is so unprincipled that I can't imagine that you could ever build a system up to the trustworthiness of the other theorem provers. But this is freeing in many ways. Since that is off the table, we can just do the best we can.
 
-
-
-
-
-
-
 Using the z3 syntax tree and the z3 proof automation and z3 substitution mechanisms gives us a HUGE step up from implementing them from scratch. Ideally, we'd want to write as little python as possible, and especially as little python as possible that has to be trusted to be implemented correctly.
-
-
-
-
-
-
 
 One big concern is accidental mutation of the proof under our feet by python. Perhaps using hashes and checking them might be a way to at least detect this. I need to have a good think about how to factor out a trusted core from all possible tactics.
 
-
-
-
-
-
-
 I think it helps a little that z3 often will be able to verify the equivalence of small steps in proofs even if it can't do the entire proof itself.
-
-
-
-
-
-
 
 I think induction principles will need to be injected by hand. Z3 doesn't really have that built in. There are definitely situations that after you introduce the induction, z3 can slam all the cases no problem. For example, check this out.
 
-
-
-
-
-
-
 Another thing that might be nice is integration/translation to sympy. Sympy has a ton of useful functionality, at the very least differentiation.
-
-
-
-
-
-
 
 Translation and integration with cvxpy for sum of squares proofs would also be quite neat. I already did something with this using sympy. I'm not super sure how you extract exact proofs from the floating point solutions SCS returns? I think there is a thing. I've heard the LLL algorithm can be used for this somehow (finding likely algebraic number matches to floating point numbers)?
 
-
-
-
-
-
-
 So here are some sketched out ideas for tactics.
 
-
-
-
-
-
-    
-    
 ```python
 
 class Proof():
@@ -596,28 +368,12 @@ class Proof():
         return str(self)
 ```
 
-
-
-
-
-
-
-    
-    
 ```python
 
 x = Real("x")
 Proof(x**2 - 1 == 0).equiv((x+1)*(x-1) == 0).equiv((x == 1) | (x == -1))
 ```
 
-
-
-
-
-
-
-    
-    
 ```python
 
 a, b = Bools('a b')
@@ -628,38 +384,12 @@ p.intro_imp().destruct()
 .qed()
 ```
 
-
-
-
-
-
-
-
 Another question is how to implement an apply tactic gracefully. Fully deconstructing syntax trees and unifying ourselves is not utilizing z3 well. If you have a good idea how to get unification out of z3, I'd be interested to hear from you here.  [https://stackoverflow.com/questions/59398955/getting-z3-instantiations-of-quantified-variables/59400838#59400838](https://stackoverflow.com/questions/59398955/getting-z3-instantiations-of-quantified-variables/59400838#59400838)
-
-
-
-
-
-
 
 Here's an idea though. In the cold light of day, I am still not sure this reasoning makes much sense. Suppose we're trying to apply forall x. a(x) -> b(x) to a c(y). If forall x. b(x) -> c(y) we're good and by assumption that is obvious for some reason, like the syntactic instantiation of b gives c. We can ask z3 to prove that and it will hopefully easy. If we can prove forall x. a(x) in the current context, that would be sufficient, but not true typically. It is an overly difficult request. We really only need to prove a(x) for values pertinent to the proof of c(y). Here's a suspicious strategem. Any a -> b can be weakened to (q -> a) -> (q -> b). In particular we can choose to weaken forall x. a(x) -> b(x) to forall x. ((c(y) -> b(x)) -> a(x)) -> ((c(y) -> b(x)) -> b(x)). Then we can replace the goal with forall x. ((c(y) -> b(x)) -> a(x)) after we prove that (forall x. (c(y) -> b(x)) -> b(x)) -> c(y).  Maybe c(y) -> b(x) is sufficient to restrict the values of x? Not sure.
 
-
-
-
-
-
-
 Another rough sketch of induction on Nat. Not right yet.
 
-
-
-
-
-
-    
-    
 ```python
 
 def inductionNat(self):
@@ -668,22 +398,8 @@ def inductionNat(self):
     return instantiate(self, IntVal(0)) & ForAll([n],instantiate(self, n) & (n > 0) > instantiate(self, n+1))
 ```
 
-
-
-
-
-
-
-
 We could also make a simple induction for ADTs based on the similar introspection we used for `match` above. It's ugly but I think it works.
 
-
-
-
-
-
-    
-    
 ```python
 
 def induction(self):
@@ -711,34 +427,8 @@ def induction(self):
     return And(*th)
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 I haven't really though much about tacticals yet.
 
-
-
-
-
-
-
-
-
-
-
-
-    
-    
 ```
 
 # describe_tactics() gives a list of all z3 tactics
@@ -853,7 +543,3 @@ ufbv-rewriter : Applies UFBV-specific rewriting rules, mainly demodulation.
 bv : builtin strategy for solving BV problems (with quantifiers).
 ufbv : builtin strategy for solving UFBV problems (with quantifiers).
 ```
-
-
-
-
