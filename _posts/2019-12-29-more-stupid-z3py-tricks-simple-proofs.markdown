@@ -13,23 +13,11 @@ tags:
 - z3
 ---
 
-
-
+Edit 2024: See my project knuckledragger for more systematic work in this vein <https://github.com/philzook58/knuckledragger>
 
 Z3 can be used for proofs. The input language isn't anywhere near as powerful as interactive theorem provers like Coq, Isabelle, or Agda, but you can ask Z3 to prove pretty interesting things. Although the theorems that follow aren't hard in interactive theorem provers, they would take beyond complete novice level skills to state or prove.
 
-
-
-
-
-
-
 I like to think of the z3 proving process as "failing to find a counterexample". Z3py has supplies a function `prove` which is implemented like this.
-
-
-
-
-
 
 ```
 #https://z3prover.github.io/api/html/namespacez3py.html#a2f0f4611f0b706d666a8227b6347266a
@@ -61,25 +49,9 @@ def prove(claim, **keywords):
          print(s.model())
 ```
 
-
-
-
-
-
 Basically, it negates the thing you want to prove. It then tries to find a way to instantiate the variables in the expression to make the statement false. If it comes back unsat, then there is no variable assignment that does it. Another way to think about this is rewriting the $ \forall y. p(y) $ as $ \neg \exists y \neg p (y)$.  The first $ \neg$ lives at sort of a meta level, where we consider unsat as a success, but the inner $ \neg$ is the one appearing in `s.add(Not(claim))`.
 
-
-
-
-
-
-
 We can prove some simple facts. This is still quite cool, let's not get too jaded. Manually proving these things in Coq does suck (although is easy if you use the ring, psatz, and lra tactics [https://coq.inria.fr/refman/addendum/micromega.html](https://coq.inria.fr/refman/addendum/micromega.html), which you DEFINITELY should. It is a great irony of learning coq that you cut your teeth on theorems that you shouldn't do by hand).
-
-
-
-
-
 
 ```
 from z3 import *
@@ -100,18 +72,8 @@ prove(x**2 >= 0) #positivity of a square
 prove(x * (y + z) == x * y + x * z) #distributive law
 ```
 
-
-
-
-
-
 Ok, here's our first sort of interesting example. Some properties of even and odd numbers. Even and Odd are natural predicates. What are possible choices to represent predictaes in z3?  
 We can either choose python functions `IntSort -> BoolSort()` as predicates or we can make internal z3 functions `Function(IntSort(), BoolSort())`
-
-
-
-
-
 
 ```
 x = Int("x")
@@ -125,25 +87,9 @@ prove(Implies( And(Even(x), Odd(y)) , Odd(x + y)))
 prove(Implies( And(Even(x), Even(y)) , Even(x + y)))
 ```
 
-
-
-
-
-
 All well and good, but try to prove facts about the multiplicative properties of even and odd. Doesn't go through. :(
 
-
-
-
-
-
-
 Here's a simple inductive proof. Z3 can do induction, but you sort of have to do it manually, or with a combinator. Given a predicate f, inductionNat returns
-
-
-
-
-
 
 ```
 def inductionNat(f): # proves a predicate f forall nats by building s simple inductive version of f.
@@ -169,19 +115,9 @@ s.add(Not(claim))
 s.check() #comes back unsat = proven
 ```
 
-
-
-
-
-
-Here's another cute and stupid trick. Z3 doesn't have a built in sine or cosine. Perhaps you would want to look into [dreal](http://dreal.github.io/) if you think you might be heavily looking into such things. However, sine and cosine are actually defined implicitly via a couple of their formula. So we can instantiate   
+Here's another cute and stupid trick. Z3 doesn't have a built in sine or cosine. Perhaps you would want to look into [dreal](http://dreal.github.io/) if you think you might be heavily looking into such things. However, sine and cosine are actually defined implicitly via a couple of their formula. So we can instantiate
 A slightly counterintuitive thing is that we can't use this to directly compute sine and cosine values. That would require returning a model, which would include a model of sine and cosine, which z3 cannot express.  
 However, we can try to assert false facts about sine and cosine and z3 can prove they are in fact unsatisfiable. In this way we can narrow down values by bisection guessing. This is very silly.
-
-
-
-
-
 
 ```
 sin = Function("sin", RealSort(), RealSort())
@@ -201,17 +137,7 @@ s.add( RealVal(1 / np.sqrt(2) + 0.0000000000000001) <= cos(45))
 s.check()
 ```
 
-
-
-
-
-
 A trick that I like to use sometimes is embedding objects in numpy arrays. Numpy slicing is the best thing since sliced bread. A lot, but not all, of numpy operations come for free, like matrix multiply, dot, sum, indexing, slicing, reshaping. Only some are implemented in terms of overloadable operations. here we can prove the Cauchy Schwartz inequality for a particular vector and some axioms of vector spaces.
-
-
-
-
-
 
 ```
 import numpy as np
@@ -235,17 +161,7 @@ prove( vec_eq( z @ (v + w) , z @ v + z @ w )) # linearity of matrix multiply
 prove( vec_eq( z @ (v * l) , (z @ v) * l))    # linearity of matrix multiply
 ```
 
-
-
-
-
-
 Defining and proving simple properties of Min and Max functions
-
-
-
-
-
 
 ```
 from functools import reduce
@@ -268,17 +184,7 @@ prove(Min(x,y) <= x)
 prove(Min(x,y) <= y)
 ```
 
-
-
-
-
-
-Proving the[ Babylonian method](https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method) for calculating square roots is getting close to the right answer. I like the to think of the Babylonian method very roughly this way: If your current guess is low for the square root x/guess is high. If your guess is high, x/guess is low. So if you take the average of the two, it seems plausible you're closer to the real answer. We can also see that if you are precisely at the square root, (x/res + x)/2 stays the same. Part of the the trick here is that z3 can understand square roots directly as a specification. Also note because of python overloading, `babylonian` with work on regular numbers and symbolic z3 numbers. We can also prove that babylon_iter is a contractive, which is interesting in it's own right.
-
-
-
-
-
+Proving the[Babylonian method](https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method) for calculating square roots is getting close to the right answer. I like the to think of the Babylonian method very roughly this way: If your current guess is low for the square root x/guess is high. If your guess is high, x/guess is low. So if you take the average of the two, it seems plausible you're closer to the real answer. We can also see that if you are precisely at the square root, (x/res + x)/2 stays the same. Part of the the trick here is that z3 can understand square roots directly as a specification. Also note because of python overloading, `babylonian` with work on regular numbers and symbolic z3 numbers. We can also prove that babylon_iter is a contractive, which is interesting in it's own right.
 
 ```
 def babylonian(x):
@@ -291,19 +197,9 @@ x, y = Reals("x y")
 prove(Implies(And(y**2 == x, y >= 0, 0 <= x, x <= 10), babylonian(x) - y <= 0.01))
 ```
 
-
-
-
-
-
-A funny thing we can do is define [interval arithmetic ](https://en.wikipedia.org/wiki/Interval_arithmetic)using z3 variables. Interval arithmetic is very cool. Checkout [Moore's book](http://www-sbras.nsc.ru/interval/Library/InteBooks/IntroIntervAn.pdf), it's good. This might be a nice way of proving facts related to real analysis. Not sure.  
+A funny thing we can do is define [interval arithmetic](https://en.wikipedia.org/wiki/Interval_arithmetic)using z3 variables. Interval arithmetic is very cool. Checkout [Moore's book](http://www-sbras.nsc.ru/interval/Library/InteBooks/IntroIntervAn.pdf), it's good. This might be a nice way of proving facts related to real analysis. Not sure.  
 This is funny because z3 internally uses interval arithmetic. So what we're doing is either very idiotically circular  or pleasantly self-similar.  
 We could use a similar arrangement to get complex numbers, which z3 does not natively support
-
-
-
-
-
 
 ```
 class Interval():
@@ -376,5 +272,3 @@ prove( Implies( And(i1.valid(), i2.valid(), i3.valid()),  i1 * (i2 + i3) <= i1 *
 prove(Implies( And( i1 <= i2, i3 <= i4  ),  (i1 + i3) <= i2 + i4 ))
 prove(Implies( And(i1.valid(), i2.valid(), i3.valid(), i4.valid(), i1 <= i2, i3 <= i4  ),  (i1 * i3) <= i2 * i4 ))
 ```
-
-
