@@ -50,11 +50,11 @@ I think if I could stand org mode it might be a nice option.
 
 Mostly no. It has not gotten me any jobs or made me any money. But it has started a few conversations. More importantly, I derive a sense of purpose and accomplishment from it. It gives me concrete breadcrumbs and something to grind on. Waiting for inspiration or passive learning do not work well.
 
-# A Restrospective
+# A Retrospective
 
 ## 2015-2016
 
-It was originally a wordpress instance that I put on nearlyfreespeech, a cheap hosting service. It's too bad but I don't remember the initial impetus for making it. It slowly rotted over the next couple years until I migrated it to Jekyll and github pages in 2020 <https://www.philipzucker.com/i-moved-my-blog-from-wordpress/>. I actually had tried out Jekyll
+It was originally a wordpress instance that I put on nearlyfreespeech, a cheap hosting service. It's too bad but I don't remember the initial impetus for making it. Maybe [Dan Piponi](http://blog.sigfpe.com/)'s blog was an influence. I loved that thing. It slowly rotted over the next couple years until I migrated it to Jekyll and github pages in 2020 <https://www.philipzucker.com/i-moved-my-blog-from-wordpress/>. I never strictly speaking turned off the old wordpress site. It exists in a completely broken form. <https://philzucker2.nfshost.com/>
 
 I was in grad school for physics at the time, a decade younger. In the process of realizing I wasn't going to make it big there, despite the greatest efforts I knew how to give. That perhaps deserves a post on it's own. This left a wound I still struggle with. It gets better all the time though. Your twenties can be a tough time where "promising" stops being good enough and it needs to start actualizing. Many realities of life settle in. I also had a blast though, the echoes of which still reach to today. It's a mix.
 
@@ -121,7 +121,7 @@ So began my egraph and datalog era.
 
 ## 2022
 
-- 2022 started collaborating with the UW folk. I think my blogging output decreased a bit as this was a mental energy outlet and I wasn't comfortable posting things publically they might feel were derived from private conversations. No one ever indicated this to be the case and I think this was a mistake on my part. It's surprising how powerful slight, even imagined dissuading can stop things from happening.
+- 2022 started collaborating with the UW folk. I think my blogging output decreased a bit as this was a mental energy outlet and I wasn't comfortable posting things publicly they might feel were derived from private conversations. No one ever indicated this to be the case and I think this was a mistake on my part. It's surprising how powerful slight, even imagined dissuading can stop things from happening.
 - <https://www.philipzucker.com/dwarf-patching/>
 - A white whale I was chasing was increased datalog expressivity. I currently feel this road leads down to just building an ATP. Resolution.
 - <https://www.philipzucker.com/snakelog-post/> Snakelog. A good idea I think if you're a datalog proponent. Just use SQLite / duckdb. So powerful. Embed into python like the z3 bindings. Very powerful.
