@@ -125,7 +125,7 @@ So began my egraph and datalog era.
 - <https://www.philipzucker.com/dwarf-patching/>
 - A white whale I was chasing was increased datalog expressivity. I currently feel this road leads down to just building an ATP. Resolution.
 - <https://www.philipzucker.com/snakelog-post/> Snakelog. A good idea I think if you're a datalog proponent. Just use SQLite / duckdb. So powerful. Embed into python like the z3 bindings. Very powerful.
-- The fifty year beep
+- The fifty year beep <https://www.philipzucker.com/thousand-year-beep/> Choice shit 👌. Just heard it again last night actually.
 
 ## 2023
 
