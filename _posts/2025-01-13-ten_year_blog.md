@@ -3,7 +3,7 @@ title: Ten Years of Blog
 date: 2025-01-10
 ---
 
-I noticed as I was reviewing [last year](https://www.philipzucker.com/2024_year/) that today is the 10 year anniversay of my blog. WOO! 🎉
+I noticed as I was reviewing [last year](https://www.philipzucker.com/2024_year/) that today is the 10 year anniversary of my blog. WOO! 🎉
 
 My first post on Jan 10, 2015 was stunning <https://www.philipzucker.com/getting-wordpress-to-work/> to say the least.
 
@@ -56,13 +56,13 @@ Mostly no. It has not gotten me any jobs or made me any money. But it has starte
 
 It was originally a wordpress instance that I put on nearlyfreespeech, a cheap hosting service. It's too bad but I don't remember the initial impetus for making it. Maybe [Dan Piponi](http://blog.sigfpe.com/)'s blog was an influence. I loved that thing. It slowly rotted over the next couple years until I migrated it to Jekyll and github pages in 2020 <https://www.philipzucker.com/i-moved-my-blog-from-wordpress/>. I never strictly speaking turned off the old wordpress site. It exists in a completely broken form. <https://philzucker2.nfshost.com/>
 
-I was in grad school for physics at the time, a decade younger. In the process of realizing I wasn't going to make it big there, despite the greatest efforts I knew how to give. That perhaps deserves a post on it's own. This left a wound I still struggle with. It gets better all the time though. Your twenties can be a tough time where "promising" stops being good enough and it needs to start actualizing. Many realities of life settle in. I also had a blast though, the echoes of which still reach to today. It's a mix.
+I was in grad school for physics at the time, a decade younger. In the process of realizing I wasn't going to make it big there, despite the greatest efforts I knew how to give. That perhaps deserves a post on its own. This left a wound I still struggle with. It gets better all the time though. Your twenties can be a tough time where "promising" stops being good enough and it needs to start actualizing. Many realities of life settle in. I also had a blast though, the echoes of which still reach to today. It's a mix.
 
 In the olden blog times, I thought it was a useful endeavor to explain how to install software, which is often a challenge. I think at some point I got good enough at guessing how to fix broken builds that it didn't seem worth making a whole post on anymore.
 
 This also shows from the beginning that I felt that there was no scope too small to be worth a post. Keeping flow is important.
 
-I had recently heard of Haskell at this point and was Haskell curious. I can see some topics that I still want to write posts about or understand better.
+I had recently heard of Haskell at this point and was Haskell curious. I can see some topics that I still want to write posts about or understand better. I learned BASIC as a kid out of some 1$ library sale book and had fiddled a bit with Java, matlab, and arduinos in college. I learned python during grad school and was in love with using numpy for linear algebra simulations of waves and things after watching Gilbert Strang's Computational engineering lectures <https://math.mit.edu/~gs/cse/> . At 2015 though, I really hadn't been exposed to much computer science or logic in the scheme of things.
 
 I was interested in arduino robots, opencv, physics simulations, 3d printing, HAM radio / SDR, Functional programming.
 
