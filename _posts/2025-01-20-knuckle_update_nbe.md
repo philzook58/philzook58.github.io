@@ -1,6 +1,6 @@
 ---
 date: 2025-01-20
-title: "More Knuckledragger: simp, Inductive Relations, sympy NbE, Software Foundations"
+title: "More Knuckledragger: Simp, Inductive Relations, Sympy NbE, and Software Foundations"
 ---
 
 I've been hard at work plugging away at [Knuckledragger](https://github.com/philzook58/knuckledragger), my low barrier proof assistant.
