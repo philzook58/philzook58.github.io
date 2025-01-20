@@ -4,3 +4,4 @@ _site
 .jekyll-cache
 .vscode/*
 ./vivado*
+**/.hypothesis/
