@@ -1020,7 +1020,7 @@ def trans(R: smt.FuncDeclRef):
 
 # Bits and Bobbles
 
-I've also been professionaliziong the repo a bit. pyright and ruff now run. Kind of a fun whackamole. Given python is so chaotic, I really ought to be using all the tools I can get. The doctests are really nice and make for good documentation too.
+I've also been professionaliziong the repo a bit. pyright and ruff now run. Kind of a fun whackamole. Given python is so chaotic, I really ought to be using all the tools I can get. The doctests are really nice and make for good documentation too. Giving uv a spin. Seems nice so far
 
 - How to get angr semantics. What meaning could they have?
 - need lemma search. Can introspect to grab all Proof in module. Do pmatch over them
