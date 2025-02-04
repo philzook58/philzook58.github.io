@@ -20,7 +20,7 @@ Tree decompositions are one example of this treeifying graph phenomenon. But the
 - Regular expressions and DFAs. Regular expressions are trees. Automata are graphy (although with an odd notion of homomorphism or equality. Often only observable behavior is relevant). They are interconvertible, but regexes may be treatable in simple compositional ways See Tarjan paper <https://dl.acm.org/doi/10.5555/892083> Solving path problems on directed graphs.
 - [Structured](https://en.wikipedia.org/wiki/Structured_programming) languages and [CFGs](https://en.wikipedia.org/wiki/Control-flow_graph). [Relooper](https://dl.acm.org/doi/10.1145/3547621) turns cfgs into structured control flow which are syntax trees. MLIR and RVSDG try to make the control flow graph even more structured and tree like in some respects. Having `if` and `while` syntax trees makes doing weakest precondition analysis much easier for example. You can do some equational term-like rewriting on `while` loops and `if` also for loop fusion and things.
 - Algebraic Graphs. [Mokhov](https://dl.acm.org/doi/10.1145/3122955.3122956), Schrijver, Kidney. Not that dissimilar from the graph theorists notion of decomposition. A focus on the algebraic laws of the construction operators (semiring).
-- Tree Decomposition. Metis. Domain Decomposition,
+- Tree Decomposition. Metis. Domain Decomposition. Largely what I'mm talk about today
 - String diagrams and categorical combinators. This is perhaps related to [Series parallel decomposition](https://en.wikipedia.org/wiki/Series%E2%80%93parallel_graph) as monoidal categories have a horizontal (parallel) and vertical composition (series). This particular trick is kind of what brought me into egraphs <https://www.philipzucker.com/rust-category/>
 - Algebra of Programming. Backhouse.
 - Lambda term technology. De bruijn indices, named reprs. Names are the analog of vertex labels in graphs, a kludge. Lambdas muddy the water about whether they are really "terms" because the variables make them more entangled than a nice simple tree. You can embed lambdas as graphs by having variables backedge point to their binding sites and lambda normalization as graph rewriting. Optimal reduction <https://dl.acm.org/doi/10.1145/96709.96711> has some nice diagrams like this.
@@ -296,6 +296,8 @@ Algebraic graphs doesn't seem that different from the perspective of graph decom
 - <https://dl.acm.org/doi/10.1145/3473577>  Algebras for weighted search
 - <https://dl.acm.org/doi/10.1145/2500365.2500613> Fun with semirings: a functional pearl on the abuse of linear algebra
 
+I still find tree decomposition somewhat cloudy. I don't think I would have defined the concept myself. I suspect it is defined in a way unnatural to my intended usage.
+
 Trees are nice. You can often treat the leaves and then treat the parents of those leaves until you finish processing the whole graph. Many analyses or computations on trees are compositional in this sense. You can solve them by top down recursion, or single pass bottom up iteration.
 
 Trees are also nice similarly because we can sometimes semantically interpret them compositionally (as a simple recursive functional program of type `Tree -> Meaning` ). Like the syntax tree `add(one,two)` is easy top interpret as the natural number `3` via a function `eval : aexpr -> nat`.
@@ -323,17 +325,6 @@ Considering the edges as a relation `edge(v1,v2)`, the relation is [well founded
 What graph theorists or networkx mean by trees is not really quite the same thing I (or compiler / PL people) mean by trees. The trees i like the best are AST-like or algebraic datatype like. They are rooted and have an ordering of the children of each node.
 
 <https://github.com/pa-ba/calc-graph-comp>  Beyond Trees: Calculating Graph-Based Compilers. This uses HOAS lambdas to model graphs. The opposite direction from what I was pointing out.
-
-## Algebraic Graphs
-
-Algebraic graphs doesn't seem that different from the perspective of graph decompositions. They are a tree describing a way of constructing the graph out of operations. These operations may have nice algerbaic properties with respect to each other, like distributivity.
-
-- <https://www.cs.tufts.edu/comp/150FP/archive/andrey-mokhov/algebraic-graphs.pdf> Algebraic Graphs with Class (Functional Pearl).
-- <https://arxiv.org/abs/2202.09230> United Monoids: Finding Simplicial Sets and Labelled Algebraic Graphs in Trees
-- <https://arxiv.org/abs/2403.02273> Let a Thousand Flowers Bloom: An Algebraic Representation for Edge Graphs
-- <https://dl.acm.org/doi/abs/10.1145/3704892>  Formalising Graph Algorithms with Coinduction
-- <https://dl.acm.org/doi/10.1145/3473577>  Algebras for weighted search
-- <https://dl.acm.org/doi/10.1145/2500365.2500613> Fun with semirings: a functional pearl on the abuse of linear algebra
 
 ## More on tree decompositions
 
