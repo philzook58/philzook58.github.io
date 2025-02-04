@@ -285,6 +285,8 @@ pprint.pprint(ml.to_tree_decomp()) # This is a bad tree decomposition, but I thi
                                                                               edges=set(),
                                                                               children=[])])])])
 
+Questions: Kernighan lin seems like a great local jiggling method to improve a partitioning. Is there a translation of it to tree decompositions for local improvement?
+
 # Bits and Bobbles
 
 Algebraic graphs doesn't seem that different from the perspective of graph decompositions. They are a tree describing a way of constructing the graph out of operations. These operations may have nice algerbaic properties with respect to each other, like distributivity.
