@@ -328,6 +328,8 @@ What graph theorists or networkx mean by trees is not really quite the same thin
 
 ## More on tree decompositions
 
+<https://types.pl/@sandmouth/112118720614314612> "a long time ago I tried to implement a unified isel + regalloc (+ representation selection between boxed/unboxed type, but that's not a super common problem) for x86 based on a tree decomposition + dynamic programming. Worked decently well for simple loops, and let you solve directly in the domain w/o encoding to SAT/MIP. The representation selection ended up handling spills too…"
+
 Tree decomposition is useful for dynamic programming combinatorial problems on graphs. The bag of vertices in the node is sort of the open interface. You can solve the subproblems parametrized on
  the values that the problem takes on at the interface.
 
