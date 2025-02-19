@@ -662,9 +662,10 @@ Diospyros?
 
 ?
 
-# Linear Algebra
+# Linear /Tensor Algebra
 
-Tensat?
+- Tensat? <https://github.com/uwplse/tensat/blob/master/src/rewrites.rs> Some of this is more programmatic than one might hope
+- <https://mathweb.ucsd.edu/~jwavrik/web00/Moldova.pdf> Rewrite Rules and Simplification of Matrix Expressions
 
 # Relation Algebra
 
@@ -727,6 +728,8 @@ Physics
 
 <https://github.com/philzook58/awesome-egraphs> Most of these projects must have rules in some form. Hard to find an collate them. Many go outside of a purely declarative subset.
 
+Like functional programming, many kinds of "grammars" are examples of rewrite rules.
+
 Explicit substitution calculi. sigma-rho <https://en.wikipedia.org/wiki/Explicit_substitution>
 
 Algebraic graphs.
@@ -740,7 +743,7 @@ Linear algebra
 
 Caviar rules <https://github.com/caviar-trs/caviar/tree/main/src/rules> . Looks like mostly typical integer identity stuff?
 
-Does Maude have good rule sets?
+Does Maude have good rule sets? K?
 
 Where are the hardware compiler rules?
 
