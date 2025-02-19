@@ -471,7 +471,9 @@ Kleene algebra is nearly an algebraic theory of pure equations (a couple are con
 
 You can make a nearly equational theory for basic category by judicious placement of `cod` and `dom` to make sure the equations are unconditionally well sorted.
 
-<https://www.philipzucker.com/rust-category/>
+- <https://www.philipzucker.com/rust-category/>
+- <https://github.com/philzook58/Catlab.jl/blob/master/src/theories/Monoidal.jl>
+- <https://github.com/philzook58/egg-smol/tree/scratchpad2/tests/catlab>
 
 # Associating
 
@@ -499,6 +501,7 @@ assoc_left = smt.ForAll([x,y,z], (x * y) * z == x * (y * z))
 The termination competition has a couple formats for string and term rewriting systems.
 
 - <https://github.com/TermCOMP/TPDB> Termination competition database
+- <https://github.com/philzook58/TPDB> exported into the more trs readable format
 - <https://termination-portal.org/wiki/Termination_Competition>
 - <https://www.cs.tau.ac.il/~nachum/papers/printemp-print.pdf> 33 examples of Termination by Dershowitz has some examples
 
@@ -667,6 +670,8 @@ CF pointed out <https://github.com/gcc-mirror/gcc/blob/master/gcc/match.pd>
 
 - Instcombine <https://github.com/llvm/llvm-project/tree/main/llvm/lib/Transforms/InstCombine>
 - <https://mlir.llvm.org/docs/PDLL/> But where are they?
+- <https://github.com/llvm/llvm-project/blob/main/mlir/lib/Dialect/Arith/IR/ArithCanonicalization.td> Canonicalizer files. Thanks Regehr for pointers!
+- <https://github.com/EnzymeAD/Enzyme-JAX/blob/main/src/enzyme_ad/jax/Passes/EnzymeHLOOpt.cpp>
 
 # Vectorizations Rules
 
@@ -695,7 +700,7 @@ Scheduling is the mushing around of loops.
 
 # Linear / Tensor / Matrix Algebra
 
-- Tensat? <https://github.com/uwplse/tensat/blob/master/src/rewrites.rs> Some of this is more programmatic than one might hope
+- Tensat <https://github.com/uwplse/tensat/blob/master/src/rewrites.rs> Some of this is more programmatic than one might hope
 - <https://github.com/gussmith23/glenside/blob/main/src/language/rewrites.rs> glenside. Extremely programmatic. Basically all custom appliers?
 - <https://github.com/ADAPT-uiuc/TensorRight/tree/master/rules>  TensorRight: Automated Verification of Tensor Graph Rewrites
 - <https://mathweb.ucsd.edu/~jwavrik/web00/Moldova.pdf> Rewrite Rules and Simplification of Matrix Expressions
@@ -721,8 +726,15 @@ Gus Smith's stuff? Sam Cowards?
 
 # Synthesis
 
+You don't need a dataset persay of rules if you can synthesize them. But also some of these projects have stored their rule sets
+
 - <https://users.cs.utah.edu/~regehr/generalization-oopsla24.pdf#subsection.8.7> Hydra: Generalizing Peephole Optimizations with Program Synthesis
 - <https://pypy.org/posts/2024/07/finding-simple-rewrite-rules-jit-z3.html>
+- <https://dl.acm.org/doi/10.1145/3428234>  Verifying and improving Halide’s term rewriting system with program synthesis
+- <https://repositum.tuwien.at/bitstream/20.500.12708/81336/1/Daly-2022-Synthesizing%20Instruction%20Selection%20Rewrite%20Rules%20from%20RTL%20using...-vor.pdf>  Synthesizing Instruction Selection Rewrite Rules from RTL using SMT <https://arxiv.org/abs/2405.06127> Efficiently Synthesizing Lowest Cost Rewrite Rules for Instruction Selection <https://github.com/rdaly525/MetaMapper>
+- Ruler
+- Isaria
+- <https://jrmcclurg.com/papers/pact_2022_paper.pdf>  Optimizing Regular Expressions via Rewrite-Guided Synthesis
 
 # Algebraic Graphs
 
@@ -761,6 +773,7 @@ Physics
 - ZX calculus
 - <https://arxiv.org/pdf/2310.14056>
 - <https://lmcs.episciences.org/1570> Generator and relations for n-qubit clifford operators
+- <https://github.com/philzook58/egg-smol/blob/scratchpad2/tests/cliffordt.egg> <https://arxiv.org/pdf/2204.02217.pdf>
 
 # Bits and Bobbles
 
@@ -771,6 +784,10 @@ If you want a concrete interesting project (for an undergrad say), consider taki
 Like functional programming, many kinds of "grammars" are examples of rewrite rules.
 
 Lean, Isabelle, Coq, ACL2 etc must have piles of rules but it's hard to know how to separate them from not rules. How to mine?
+
+<https://gappa.gitlabpages.inria.fr/gappa/theorems.html> Gappa for floating point reasoning. not exactly equational, but a nice set of rules.
+
+Deductive databases for geometry. The equational version.
 
 <https://agraef.github.io/pure-lang/>
 
