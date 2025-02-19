@@ -124,7 +124,11 @@ diff_self = kd.prove(smt.ForAll([A], A - A == S.empty))
 
 # BitVectors
 
-Booleans and bitvectors must have a pile of good rewrite rules. I think many of these may be useful in hardware compilers. Surely the preprocessors of Boolector or Bitwuzla have some?
+Booleans and bitvectors must have a pile of good rewrite rules. I think many of these may be useful in hardware compilers.
+
+Surely the preprocessors of Boolector or Bitwuzla have some? <https://github.com/Boolector/boolector/blob/master/src/btorrewrite.c> <https://github.com/bitwuzla/bitwuzla/tree/main/src/rewrite> Very programmatic.
+
+Rewriting rules for and inverter graphs (AIG)?
 
 LLVM and ilk must have a bunch but where?
 
@@ -596,7 +600,7 @@ Cranelift has a rewrite rule language called isle that is uses to describe optim
 - <https://cs.wellesley.edu/~avh/veri-isle-preprint.pdf>
 - <https://cfallin.org/blog/2023/01/20/cranelift-isle/>
 
-# CVC5
+# SMT
 
 CVC5 has a new rewrite rule engine RARE. There are theory specific files like <https://github.com/cvc5/cvc5/blob/main/src/theory/bv/rewrites> for bitvectors or <https://github.com/cvc5/cvc5/blob/main/src/theory/arith/rewrites> for arith. There is plenty that is programmatically rewritten too though. <https://github.com/cvc5/cvc5/blob/main/src/theory/arith/arith_rewriter.cpp>
 
@@ -626,6 +630,10 @@ CVC5 has a new rewrite rule engine RARE. There are theory specific files like <h
 (define-rule arith-elim-int-lt ((t Int) (s Int)) (< t s) (>= s (+ t 1)))
 (define-rule arith-elim-leq ((t ?) (s ?)) (<= t s) (>= s t))
 ```
+
+I think Z3's rules are mostly programmatic in theory files <https://github.com/Z3Prover/z3/tree/master/src/ast/rewriter>  
+
+Other SMT solvers also have rewrite rules?
 
 # Metatheory
 
@@ -679,6 +687,12 @@ There is that Wolfram hypergraph stuff.
 <https://github.com/zxcalc/quantomatic/tree/stable/examples>
 
 <https://github.com/UoYCS-plasma/P-GP2/tree/master/programs/deterministic> GP2 example graph rewrite rules. Coloring, sorting, shortest path
+
+Knots and braiding algebra <https://en.wikipedia.org/wiki/Braid_group>
+
+# CAS
+
+Mathematica, sympy, maxima, etc. Where are they? There must be ton?
 
 # Physics
 
@@ -735,9 +749,6 @@ Ghidra decompiler has a rewrite rule file
 - glenside
 
 - cvc5 has the RARE rule files <https://github.com/cvc5/cvc5/blob/main/src/theory/bv/rewrites>
-
-- <https://github.com/Z3Prover/z3/tree/master/src/ast/rewriter>
-- <https://github.com/Z3Prover/z3/blob/master/src/as>
 
 - t/rewriter/rewriter.txt pretty interesting. Rewrite returns codes saying fail, done, rewritecdepth1 2 3 or full
 
