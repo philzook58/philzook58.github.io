@@ -647,6 +647,11 @@ I think Z3's rules are mostly programmatic in theory files <https://github.com/Z
 
 Other SMT solvers also have rewrite rules?
 
+# Lean
+
+You can search for the simp attribute on github. Is there a way to dump all the good simp rules? Will the typeclass abstractions get in the wya of this making any sense outside of lean?
+<https://github.com/search?q=repo%3Aleanprover%2Flean4%20%22%5Bsimp%5D%22&type=code>
+
 # Metatheory
 
 - <https://github.com/JuliaSymbolics/Metatheory.jl/tree/master/test/tutorials>
@@ -709,6 +714,7 @@ Scheduling is the mushing around of loops.
 - Do APL like languages have rewrite rules?
 - <https://github.com/mrocklin/matrix-algebra> matrix algerba in maude Rocklin <https://newtraell.cs.uchicago.edu/files/tr_authentic/TR-2013-07.pdf>
 - <https://github.com/sympy/sympy/blob/930b991f260ddb50c66d8094a091750d742bbecc/sympy/matrices/expressions/matmul.py#L443>
+- <https://github.com/philzook58/egg-smol/blob/scratchpad2/tests/matrix.egg> <https://github.com/philzook58/egg-smol/blob/scratchpad2/tests/matexpr.egg>
 
 # Relation Algebra
 
