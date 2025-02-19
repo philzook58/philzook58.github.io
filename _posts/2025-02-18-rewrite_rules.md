@@ -403,6 +403,13 @@ There is a set of integration rules that supposedly work really well. THey arte 
 
 <https://rulebasedintegration.org/>
 
+# "Math"
+
+- <https://fungrim.org/>
+- <https://personal.math.ubc.ca/~cbm/aands/>  Abramowitz and Stegun: Handbook of Mathematical Functions
+- Concrete Mathematics book by Knuth et al
+- Combinatorics?
+
 # Hongguang Fu Trig
 
 There is a paper and discussion in sympy about rules used for trig simplication
@@ -661,11 +668,6 @@ Diospyros?
 # Scheduling / Halide Rules
 
 ?
-
-# "Math"
-
-- <https://fungrim.org/>
-- <https://personal.math.ubc.ca/~cbm/aands/>  Abramowitz and Stegun: Handbook of Mathematical Functions
 
 # Linear / Tensor / Matrix Algebra
 
