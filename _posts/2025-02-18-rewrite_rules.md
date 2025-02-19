@@ -13,11 +13,15 @@ Maybe it'd be nice to collate these into a common format. Is this even possible 
 
 ![](https://imgs.xkcd.com/comics/standards.png)
 
+Here is a vomit of what I could think of and remember today.
+
 # Integer Properties
 
 There are some common named properties of integers.
 
-Actually very few of them are good as rewrite rules do to looping.
+Actually very few of them are good as rewrite rules do to looping (associativity and commutativity). Hence you may want something like egraphs or ordered rewriting.
+
+Fusing out constants in various ways or cancelling `n - n = 0` is a very common example of simplification rules.
 
 ```python
 from kdrag.all import *
@@ -120,6 +124,8 @@ diff_self = kd.prove(smt.ForAll([A], A - A == S.empty))
 
 # BitVectors
 
+Booleans and bitvectors must have a pile of good rewrite rules. I think many of these may be useful in hardware compilers. Surely the preprocessors of Boolector or Bitwuzla have some?
+
 ```python
 class BVTheory:
     def __init__(self, N):
@@ -219,14 +225,34 @@ class BVTheory:
 
 # Functional Programs
 
-THere are many interesting functional programs. Pure functional programs are a subset of term rerwiting systems. Functional programs are pretty natural feeling to me.
- Using general term rewriting systems to run functional programs is overkill and also inefficient.
+There are many interesting functional programs. Pure functional programs are a subset of term rerwiting systems. Functional programs are pretty natural feeling to me. Using general term rewriting systems to run functional programs is overkill and also inefficient. In any case, all pure functional programs can be seen as instances of term rewriting systems and used to asses some kind of performance.
 
-Evaluators
+- Evaluators
+- peano arithmetic
+- binary arithmetic
+- list programs
+- red black trees
 
 Functional programs can be in the form of if-then-else chains, but they can also be specified as equations on the constructors. The second form is familiar from haskell.
 
-## Ski Combinators
+# Lists
+
+List functions
+<https://ocaml.org/manual/5.3/api/List.html>
+
+- `length`
+- `rev`
+- `append`
+- `hd`
+- `tl`
+- `concat`
+- `map`
+- `fold`
+- `mem`
+- `forall`
+- `exists`
+
+## SKI Combinators
 
 <https://en.wikipedia.org/wiki/SKI_combinator_calculus>
 
@@ -265,7 +291,7 @@ Expanding out a polynomial by distributing. You may also want to sort all the te
 
 ## DNF
 
-DNF is putting a boolean expression into a giant sum  of conjductions, kind of the booolean analog of expanding out a polynomial
+DNF is putting a boolean expression into a giant sum  of conjuctions, kind of the booolean analog of expanding out a polynomial
 
 ```python
 from kdrag.all import *
@@ -292,24 +318,6 @@ dnf
             And(p, Or(q, r)) == Or(And(p, q), And(p, r))),
      |- ForAll([p, q, r],
             And(Or(p, q), r) == Or(And(p, r), And(q, r)))]
-
-# Lists
-
-List functions
-<https://ocaml.org/manual/5.3/api/List.html>
-
-- `length`
-- `rev`
-- `append`
-- `hd`
-- `tl`
-- `concat`
-- `map`
-- `fold`
-- `mem`
-- `forall`
-- `exists`
--
 
 # Eggiverse
 
@@ -387,6 +395,8 @@ There is a set of integration rules that supposedly work really well. THey arte 
 
 # Hongguang Fu Trig
 
+There is a paper and discussion in sympy about rules used for trig simplication
+
 <https://docs.sympy.org/latest/modules/simplify/fu.html>
 <https://github.com/sympy/sympy/blob/master/sympy/simplify/fu.py>
 
@@ -394,10 +404,12 @@ There is a set of integration rules that supposedly work really well. THey arte 
 
 <https://en.wikipedia.org/wiki/List_of_trigonometric_identities>
 
-# summation
+# Summation
 
-<https://en.wikipedia.org/wiki/Summation#Identities>
-<https://courses.cs.washington.edu/courses/cse373/19sp/resources/math/summation/>
+Moving summation symbols around.
+
+- <https://en.wikipedia.org/wiki/Summation#Identities>
+- <https://courses.cs.washington.edu/courses/cse373/19sp/resources/math/summation/>
 
 ```python
 from kdrag.all import *
@@ -444,7 +456,7 @@ You can make a nearly equational theory for basic category by judicious placemen
 
 # Associating
 
-Left and right associating are useful operations. It's nearly trivial
+Left and right associating are useful operations. It's nearly trivial. But still a good example.
 
 ```python
 T = smt.DeclareSort("T")
@@ -455,8 +467,6 @@ x,y,z = smt.Consts("x y z", T)
 assoc_right = smt.ForAll([x,y,z], x * (y * z) == (x * y) * z)
 
 assoc_left = smt.ForAll([x,y,z], (x * y) * z == x * (y * z))
-
-
 
 ```
 
@@ -473,11 +483,17 @@ The termination competition has a couple formats for string and term rewriting s
 - <https://termination-portal.org/wiki/Termination_Competition>
 - <https://www.cs.tau.ac.il/~nachum/papers/printemp-print.pdf> 33 examples of Termination by Dershowitz has some examples
 
+There is also a confluence competition.
+
 # TPTP UEQ
 
 There is a category of the TPTP theorem proving compeition for Unit Equality Proofs.
 
-There may be something similar in SMTLIB
+- <https://www.tptp.org/>
+- <https://www.philipzucker.com/notes/Logic/tptp/>
+- <https://github.com/bytekid/mkbtt/tree/master/input>
+
+There may be something similar in SMTLIB-Comp?
 
 # Twee
 
@@ -636,6 +652,14 @@ Relation Algebra <https://en.wikipedia.org/wiki/Relation_algebra>
 Linear algebra
 
 <https://github.com/yihozhang/szalinski-egglog>
+
+Does Maude have good rule sets?
+
+Where are the hardware compiler rules?
+
+Ghidra decompiler has a rewrite rule file
+<https://github.com/NationalSecurityAgency/ghidra/blob/2eff37f655159574593b15bc19273915fc780cf2/Ghidra/Features/Decompiler/src/decompile/cpp/rulecompile.cc>
+<https://github.com/NationalSecurityAgency/ghidra/blob/2eff37f655159574593b15bc19273915fc780cf2/Ghidra/Features/Decompiler/src/decompile/cpp/rulecompile.cc>
 
 - halide ruler
 - herbie
