@@ -730,6 +730,8 @@ Physics
 
 Like functional programming, many kinds of "grammars" are examples of rewrite rules.
 
+Lean, Isabelle, Coq, ACL2 etc must have piles of rules but it's hard to know how to separate them from not rules. How to mine?
+
 Explicit substitution calculi. sigma-rho <https://en.wikipedia.org/wiki/Explicit_substitution>
 
 Algebraic graphs.
