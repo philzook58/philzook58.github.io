@@ -672,9 +672,13 @@ Diospyros?
 # Linear / Tensor / Matrix Algebra
 
 - Tensat? <https://github.com/uwplse/tensat/blob/master/src/rewrites.rs> Some of this is more programmatic than one might hope
+- <https://github.com/gussmith23/glenside/blob/main/src/language/rewrites.rs> glenside. Extremely programmatic. Basically all custom appliers?
+- <https://github.com/ADAPT-uiuc/TensorRight/tree/master/rules>  TensorRight: Automated Verification of Tensor Graph Rewrites
 - <https://mathweb.ucsd.edu/~jwavrik/web00/Moldova.pdf> Rewrite Rules and Simplification of Matrix Expressions
 - <https://math.mit.edu/~dyatlov/54summer10/matalg.pdf> Matrix identities
 - <https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf> Matrix cookbook  <https://dustinstansbury.github.io/theclevermachine/linear-algebra-identities>
+- Do APL like languages have rewrite rules?
+- <https://github.com/mrocklin/matrix-algebra> matrix algerba in maude Rocklin <https://newtraell.cs.uchicago.edu/files/tr_authentic/TR-2013-07.pdf>
 
 # Relation Algebra
 
@@ -741,12 +745,18 @@ Like functional programming, many kinds of "grammars" are examples of rewrite ru
 
 Lean, Isabelle, Coq, ACL2 etc must have piles of rules but it's hard to know how to separate them from not rules. How to mine?
 
+dedukti is a rewrite engine. <https://github.com/Deducteam/Dedukti/tree/master/examples> There must be more somewhere?
+
+Agda has a rewriting extension thing.
+
 Explicit substitution calculi. sigma-rho <https://en.wikipedia.org/wiki/Explicit_substitution>
 
 Algebraic graphs.
 
 Relation Algebra <https://en.wikipedia.org/wiki/Relation_algebra>
 <https://en.wikipedia.org/wiki/Relational_algebra>
+
+Equational theories for parallelism? Process calculi?
 
 Linear algebra
 
