@@ -652,6 +652,8 @@ Other SMT solvers also have rewrite rules?
 You can search for the simp attribute on github. Is there a way to dump all the good simp rules? Will the typeclass abstractions get in the wya of this making any sense outside of lean?
 <https://github.com/search?q=repo%3Aleanprover%2Flean4%20%22%5Bsimp%5D%22&type=code>
 
+# ACL2
+
 # Metatheory
 
 - <https://github.com/JuliaSymbolics/Metatheory.jl/tree/master/test/tutorials>
@@ -734,7 +736,7 @@ Gus Smith's stuff? Sam Cowards?
 
 You don't need a dataset persay of rules if you can synthesize them. But also some of these projects have stored their rule sets
 
-- <https://users.cs.utah.edu/~regehr/generalization-oopsla24.pdf#subsection.8.7> Hydra: Generalizing Peephole Optimizations with Program Synthesis
+- <https://users.cs.utah.edu/~regehr/generalization-oopsla24.pdf#subsection.8.7> Hydra: Generalizing Peephole Optimizations with Program Synthesis. A collection of output from hydra <https://gist.github.com/manasij7479/2ad0f7f058503ae60de30e4bfb30c917>
 - <https://pypy.org/posts/2024/07/finding-simple-rewrite-rules-jit-z3.html>
 - <https://dl.acm.org/doi/10.1145/3428234>  Verifying and improving Halide’s term rewriting system with program synthesis
 - <https://repositum.tuwien.at/bitstream/20.500.12708/81336/1/Daly-2022-Synthesizing%20Instruction%20Selection%20Rewrite%20Rules%20from%20RTL%20using...-vor.pdf>  Synthesizing Instruction Selection Rewrite Rules from RTL using SMT <https://arxiv.org/abs/2405.06127> Efficiently Synthesizing Lowest Cost Rewrite Rules for Instruction Selection <https://github.com/rdaly525/MetaMapper>
@@ -780,6 +782,70 @@ Physics
 - <https://arxiv.org/pdf/2310.14056>
 - <https://lmcs.episciences.org/1570> Generator and relations for n-qubit clifford operators
 - <https://github.com/philzook58/egg-smol/blob/scratchpad2/tests/cliffordt.egg> <https://arxiv.org/pdf/2204.02217.pdf>
+
+# Deobfuscation
+
+Mixed boolean arithemtic. Used for obduscation and subsequent deobfuscation.
+
+- <https://github.com/plzin/mba> <https://plzin.github.io/posts/mba>
+- <https://arxiv.org/abs/2305.06763>
+- <https://github.com/open-obfuscator/o-mvll/blob/main/src/passes/arithmetic/Arithmetic.cpp>
+- <https://secret.club/2022/08/08/eqsat-oracle-synthesis.html>
+- <https://github.com/fvrmatteo/ASMSimplifier/blob/master/Deobfuscator/peephole.new> peephole optimizations
+
+- <https://github.com/fvrmatteo/oracle-synthesis-meets-equality-saturation> crazy big python file.
+
+```python
+  rules = [
+    # Commutativity
+    Rule((x*y), [(y*x)]),
+    Rule((x+y), [(y+x)]),
+    Rule((x&y), [(y&x)]),
+    Rule((x^y), [(y^x)]),
+    Rule((x|y), [(y|x)]),
+    # Associativity
+    Rule((x*(y*z)), [((x*y)*z)]),
+    Rule((x+(y+z)), [((x+y)+z)]),
+    Rule((x&(y&z)), [((x&y)&z)]),
+    Rule((x^(y^z)), [((x^y)^z)]),
+    Rule((x|(y|z)), [((x|y)|z)]),
+    # Normalisation (pushing NotW to the leaves)
+    Rule((~(x*y)), [(((~x)*y)+(y-1))]),
+    Rule((~(x+y)), [((~x)+((~y)+1))]),
+    Rule((~(x-y)), [((~x)-((~y)+1))]),
+    Rule((~(x&y)), [((~x)|(~y))]),
+    Rule((~(x^y)), [((x&y)|(~(x|y)))]),
+    Rule((~(x|y)), [((~x)&(~y))]),
+    # Normalisation (pushing NegW to the leaves)
+    Rule((-(x*y)), [((-x)*y),  (x*(-y))]),
+    # Equalities
+    Rule((~x), [((-x)-1)]),
+    Rule(((-x)-1), [(~x)]),
+    Rule((-x), [((~x)+1)]),
+    Rule(((~x)+1), [(-x)]),
+    Rule((x-y), [(x+(-y))]),
+    Rule((x+(-y)), [(x-y)]),
+    # Inverse distributivity
+    Rule(((x*y)+(x*z)), [(x*(y+z))]),
+    Rule(((x*y)-(x*z)), [(x*(y-z))]),
+    # Collapsing
+    Rule(((x*y)+y), [((x+1)*y)]),
+    Rule((x+x), [(2*x)]),
+    Rule(((x^y)|y), [(x|y)]),
+    # Swapping
+    Rule((x*(-y)), [(-(x*y))]),
+    # Distributivity
+    Rule(((x+y)*z), [((x*z)+(y*z))]),
+    Rule(((x-y)*z), [((x*z)-(y*z))]),
+    # Additional rules
+    Rule((-(x+y)), [((-x)+(-y))]),
+    Rule(((x&y)<<z), [((x<<z)&(y<<z))]),
+    Rule(((x>>z)<<z), [(x&(~((1<<z)-1)))]),
+    Rule((y-((~x)&y)), [(x&y)]),
+    Rule(((x<<z)+(y<<z)), [((x+y)<<z)]),
+    Rule(((x<<y)<<z), [((x<<z)<<y)]),
+  ]
+  ```
 
 # Bits and Bobbles
 
