@@ -661,9 +661,14 @@ end
 
 CF pointed out <https://github.com/gcc-mirror/gcc/blob/master/gcc/match.pd>
 
+# LLVM
+
+- Instcombine <https://github.com/llvm/llvm-project/tree/main/llvm/lib/Transforms/InstCombine>
+- <https://mlir.llvm.org/docs/PDLL/> But where are they?
+
 # Vectorizations Rules
 
-Diospyros?
+Diospyros? <https://github.com/cucapra/diospyros/blob/master/src/dios-egraphs/src/rules.rs> I don't really understand how these are doing the vecotorization? Seem like basic arithmetic rules.
 
 # Scheduling / Halide Rules
 
@@ -686,7 +691,7 @@ Diospyros?
 
 # Hardware Compiler Rewrite Rules
 
-Some overlap with btivector rewrite rules
+Some overlap with bitvector rewrite rules
 
 In Yosys?
 ABC?
@@ -741,9 +746,13 @@ Physics
 
 <https://github.com/philzook58/awesome-egraphs> Most of these projects must have rules in some form. Hard to find an collate them. Many go outside of a purely declarative subset.
 
+If you want a concrete interesting project (for an undergrad say), consider taking one of these programmatic rewrite systems and convert it into a declarative form of your choice.
+
 Like functional programming, many kinds of "grammars" are examples of rewrite rules.
 
 Lean, Isabelle, Coq, ACL2 etc must have piles of rules but it's hard to know how to separate them from not rules. How to mine?
+
+<https://agraef.github.io/pure-lang/>
 
 dedukti is a rewrite engine. <https://github.com/Deducteam/Dedukti/tree/master/examples> There must be more somewhere?
 
