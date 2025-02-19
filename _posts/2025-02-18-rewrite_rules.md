@@ -403,6 +403,8 @@ There is a set of integration rules that supposedly work really well. THey arte 
 
 <https://rulebasedintegration.org/>
 
+<https://github.com/sympy/sympy/blob/master/sympy/integrals/manualintegrate.py>
+
 # "Math"
 
 - <https://fungrim.org/>
@@ -698,6 +700,7 @@ Diospyros? <https://github.com/cucapra/diospyros/blob/master/src/dios-egraphs/sr
 - <https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf> Matrix cookbook  <https://dustinstansbury.github.io/theclevermachine/linear-algebra-identities>
 - Do APL like languages have rewrite rules?
 - <https://github.com/mrocklin/matrix-algebra> matrix algerba in maude Rocklin <https://newtraell.cs.uchicago.edu/files/tr_authentic/TR-2013-07.pdf>
+- <https://github.com/sympy/sympy/blob/930b991f260ddb50c66d8094a091750d742bbecc/sympy/matrices/expressions/matmul.py#L443>
 
 # Relation Algebra
 
