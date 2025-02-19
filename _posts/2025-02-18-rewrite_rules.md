@@ -672,9 +672,11 @@ CF pointed out <https://github.com/gcc-mirror/gcc/blob/master/gcc/match.pd>
 
 Diospyros? <https://github.com/cucapra/diospyros/blob/master/src/dios-egraphs/src/rules.rs> I don't really understand how these are doing the vecotorization? Seem like basic arithmetic rules.
 
-# Scheduling / Halide Rules
+# Scheduling
 
-- <https://github.com/halide/Halide/blob/2e36da4d7631464272640a2126854748da299d54/src/Simplify_Sub.cpp#L25> Halid has a number of src/Simplify_*.cpp files. I don't know if any of these do simplifcation of the schedules
+Scheduling is the mushing around of loops.
+
+- <https://github.com/halide/Halide/blob/2e36da4d7631464272640a2126854748da299d54/src/Simplify_Sub.cpp#L25> Halide has a number of src/Simplify_*.cpp files. I don't know if any of these do simplifcation of the schedules
 
 ```
              rewrite(x - x, 0) || // We want to remutate this just to get better bounds
@@ -688,7 +690,8 @@ Diospyros? <https://github.com/cucapra/diospyros/blob/master/src/dios-egraphs/sr
              rewrite((x + broadcast(y, c0)) - broadcast(z, c0), x + broadcast(y - z, c0)) ||
 ```
 
-?
+- <https://github.com/Bastacyclop/egg-sketches/blob/main/examples/bench_tiling.rs>
+- <https://github.com/rise-lang/shine/blob/main/src/main/scala/rise/eqsat/rules.scala>
 
 # Linear / Tensor / Matrix Algebra
 
