@@ -126,6 +126,12 @@ diff_self = kd.prove(smt.ForAll([A], A - A == S.empty))
 
 Booleans and bitvectors must have a pile of good rewrite rules. I think many of these may be useful in hardware compilers. Surely the preprocessors of Boolector or Bitwuzla have some?
 
+LLVM and ilk must have a bunch but where?
+
+Bit twiddling hacks is a source of some fun ones <https://graphics.stanford.edu/~seander/bithacks.html>
+
+Harald Aptroot pointed out some interesting rules he has <https://gitlab.com/haroldaptroot/haroldbot/-/blob/main/prooffinder.js?ref_type=heads>
+
 ```python
 class BVTheory:
     def __init__(self, N):
@@ -636,13 +642,60 @@ miu = @theory x y z begin
 end
 ```
 
+# GCC
+
+CF pointed out <https://github.com/gcc-mirror/gcc/blob/master/gcc/match.pd>
+
+# Vectorizations Rules
+
+Diospyros?
+
+# Scheduling / Halide Rules
+
+?
+
+# Synthesis
+
+- <https://users.cs.utah.edu/~regehr/generalization-oopsla24.pdf#subsection.8.7> Hydra: Generalizing Peephole Optimizations with Program Synthesis
+- <https://pypy.org/posts/2024/07/finding-simple-rewrite-rules-jit-z3.html>
+
+# Algebraic Graphs
+
+- <https://www.philipzucker.com/tree_decomp_etudes/>
+
+- <https://www.cs.tufts.edu/comp/150FP/archive/andrey-mokhov/algebraic-graphs.pdf> Algebraic Graphs with Class (Functional Pearl).
+- <https://arxiv.org/abs/2202.09230> United Monoids: Finding Simplicial Sets and Labelled Algebraic Graphs in Trees
+- <https://arxiv.org/abs/2403.02273> Let a Thousand Flowers Bloom: An Algebraic Representation for Edge Graphs
+- <https://dl.acm.org/doi/abs/10.1145/3704892> Formalising Graph Algorithms with Coinduction
+- <https://dl.acm.org/doi/10.1145/3473577> Algebras for weighted search
+- <https://dl.acm.org/doi/10.1145/2500365.2500613> Fun with semirings: a functional pearl on the abuse of linear algebra
+
+# Graph Rewriting
+
+Sea of nodes? Is there a declarative file somewhere?
+
+There is that Wolfram hypergraph stuff.
+
+<https://github.com/zxcalc/quantomatic/tree/stable/examples>
+
+<https://github.com/UoYCS-plasma/P-GP2/tree/master/programs/deterministic> GP2 example graph rewrite rules. Coloring, sorting, shortest path
+
+# Physics
+
+Physics
+
+- annihilation creation algebra `[adag, a] = adag a - a adag = 1`  `{cdag, c} = 1` and so on.
+- gamma matrices   <https://en.wikipedia.org/wiki/Gamma_matrices>
+- Pauli matrix commutators
+- ZX calculus
+- <https://arxiv.org/pdf/2310.14056>
+- <https://lmcs.episciences.org/1570> Generator and relations for n-qubit clifford operators
+
 # Bits and Bobbles
 
 <https://github.com/philzook58/awesome-egraphs> Most of these projects must have rules in some form. Hard to find an collate them. Many go outside of a purely declarative subset.
 
-<https://pypy.org/posts/2024/07/finding-simple-rewrite-rules-jit-z3.html>
-
-Explicit substitution calculi.
+Explicit substitution calculi. sigma-rho <https://en.wikipedia.org/wiki/Explicit_substitution>
 
 Algebraic graphs.
 
@@ -652,6 +705,8 @@ Relation Algebra <https://en.wikipedia.org/wiki/Relation_algebra>
 Linear algebra
 
 <https://github.com/yihozhang/szalinski-egglog>
+
+Caviar rules <https://github.com/caviar-trs/caviar/tree/main/src/rules> . Looks like mostly typical integer identity stuff?
 
 Does Maude have good rule sets?
 
@@ -685,11 +740,6 @@ Ghidra decompiler has a rewrite rule file
 - <https://github.com/Z3Prover/z3/blob/master/src/as>
 
 - t/rewriter/rewriter.txt pretty interesting. Rewrite returns codes saying fail, done, rewritecdepth1 2 3 or full
-
-Physics
-
-- annihilation creation algebra
-- gamma matrices  
 
 - Geometric algebra
 - div grad curl
