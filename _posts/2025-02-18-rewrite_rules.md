@@ -662,10 +662,17 @@ Diospyros?
 
 ?
 
-# Linear /Tensor Algebra
+# "Math"
+
+- <https://fungrim.org/>
+- <https://personal.math.ubc.ca/~cbm/aands/>  Abramowitz and Stegun: Handbook of Mathematical Functions
+
+# Linear / Tensor / Matrix Algebra
 
 - Tensat? <https://github.com/uwplse/tensat/blob/master/src/rewrites.rs> Some of this is more programmatic than one might hope
 - <https://mathweb.ucsd.edu/~jwavrik/web00/Moldova.pdf> Rewrite Rules and Simplification of Matrix Expressions
+- <https://math.mit.edu/~dyatlov/54summer10/matalg.pdf> Matrix identities
+- <https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf> Matrix cookbook  <https://dustinstansbury.github.io/theclevermachine/linear-algebra-identities>
 
 # Relation Algebra
 
