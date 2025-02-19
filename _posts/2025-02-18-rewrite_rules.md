@@ -672,6 +672,20 @@ Diospyros? <https://github.com/cucapra/diospyros/blob/master/src/dios-egraphs/sr
 
 # Scheduling / Halide Rules
 
+- <https://github.com/halide/Halide/blob/2e36da4d7631464272640a2126854748da299d54/src/Simplify_Sub.cpp#L25> Halid has a number of src/Simplify_*.cpp files. I don't know if any of these do simplifcation of the schedules
+
+```
+             rewrite(x - x, 0) || // We want to remutate this just to get better bounds
+             rewrite(ramp(x, y, c0) - ramp(z, w, c0), ramp(x - z, y - w, c0)) ||
+             rewrite(ramp(x, y, c0) - broadcast(z, c0), ramp(x - z, y, c0)) ||
+             rewrite(broadcast(x, c0) - ramp(z, w, c0), ramp(x - z, -w, c0)) ||
+             rewrite(broadcast(x, c0) - broadcast(y, c0), broadcast(x - y, c0)) ||
+             rewrite(broadcast(x, c0) - broadcast(y, c1), broadcast(x - broadcast(y, fold(c1/c0)), c0), c1 % c0 == 0) ||
+             rewrite(broadcast(y, c1) - broadcast(x, c0), broadcast(broadcast(y, fold(c1/c0)) - x, c0), c1 % c0 == 0) ||
+             rewrite((x - broadcast(y, c0)) - broadcast(z, c0), x - broadcast(y + z, c0)) ||
+             rewrite((x + broadcast(y, c0)) - broadcast(z, c0), x + broadcast(y - z, c0)) ||
+```
+
 ?
 
 # Linear / Tensor / Matrix Algebra
