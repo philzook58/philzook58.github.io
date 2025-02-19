@@ -662,6 +662,14 @@ Diospyros?
 
 ?
 
+# Linear Algebra
+
+Tensat?
+
+# Relation Algebra
+
+# Relational Algerba
+
 # Hardware Compiler Rewrite Rules
 
 Some overlap with btivector rewrite rules
