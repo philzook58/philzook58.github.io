@@ -527,14 +527,25 @@ It has some interesting stuff in its test directory
 
 # GHC
 
+The haskell compiler has a rules directive. Pretty cool.
+
 <https://github.com/search?q=repo%3Aghc%2Fghc+%7B-%23+RULES&type=code>
+
+These are interesting but not exactly concrete rule sets:
+
+<https://downloads.haskell.org/~ghc/7.0.1/docs/html/users_guide/rewrite-rules.html>
+<https://wiki.haskell.org/GHC/Using_rules>
+
+Stream fusion rules. <https://www.cs.tufts.edu/~nr/cs257/archive/duncan-coutts/stream-fusion.pdf>
+<https://www.isa-afp.org/browser_info/current/AFP/Stream-Fusion/document.pdf>
+
+<https://dl.acm.org/doi/10.1145/3677999.3678275> Higher Order Patterns for Rewrite Rules. GHC
 
 ## Hlint
 
 <https://github.com/ndmitchell/hlint/blob/master/data/hlint.yaml>
 
-```python
-%%file
+```yaml
     - warn: {lhs: compare x y == LT, rhs: x < y}
     - warn: {lhs: compare x y /= LT, rhs: x >= y}
     - warn: {lhs: compare x y == GT, rhs: x > y}
@@ -720,7 +731,27 @@ Scheduling is the mushing around of loops.
 
 # Relation Algebra
 
-# Relational Algerba
+# Relational Algebra
+
+<https://github.com/risinglightdb/risinglight/blob/main/src/planner/rules/plan.rs> <https://github.com/risinglightdb/risinglight/blob/main/src/planner/rules/expr.rs>
+
+```rust
+    rw!("pushdown-filter-hashagg";
+        "(filter ?cond (hashagg ?keys ?aggs ?child))" =>
+        "(hashagg ?keys ?aggs (filter ?cond ?child))"
+        if not_depend_on("?cond", "?aggs")
+    ),
+    rw!("pushdown-filter-inner-join";
+        "(filter ?cond (join inner ?on ?left ?right))" =>
+        "(join inner (and ?on ?cond) ?left ?right)"
+    ),
+    rw!("pushdown-filter-semi-join";
+        "(filter ?cond (join semi ?on ?left ?right))" =>
+        "(join semi (and ?on ?cond) ?left ?right)"
+    ),
+```
+
+Where is SPORES?
 
 # Hardware Compiler Rewrite Rules
 
@@ -944,6 +975,8 @@ Does sympy, mathematica, maxima, etc have piles of declarative rewrite rules?
 
 <https://github.com/sdiehl/pyrewrite/tree/master/examples>
 <https://dl.acm.org/doi/10.1145/3428234>  Verifying and improving Halide’s term rewriting system with program synthesis
+
+<https://arxiv.org/pdf/2404.08106> KestRel: Relational Verification Using E-Graphs for Program Alignment
 
 - Relation algebra
 - peephole
