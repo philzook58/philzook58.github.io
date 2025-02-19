@@ -662,6 +662,16 @@ Diospyros?
 
 ?
 
+# Hardware Compiler Rewrite Rules
+
+Some overlap with btivector rewrite rules
+
+In Yosys?
+ABC?
+Bluespec <https://github.com/B-Lang-org/bsc>?
+
+Gus Smith's stuff? Sam Cowards?
+
 # Synthesis
 
 - <https://users.cs.utah.edu/~regehr/generalization-oopsla24.pdf#subsection.8.7> Hydra: Generalizing Peephole Optimizations with Program Synthesis
