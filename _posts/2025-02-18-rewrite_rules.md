@@ -54,6 +54,9 @@ distrib_left = kd.prove(smt.ForAll([n, m, k], n * (m + k) == n * m + n * k))
 distrib_right = kd.prove(smt.ForAll([n, m, k], (m + k) * n == m * n + k * n))
 ```
 
+<https://github.com/folivetti/srtree/blob/1c89c842cda13716214faf8dbf917c2f9fdbfe82/src/Algorithm/EqSat/Simplify.hs#L99>
+Alcides Fonseca pointed out these rules in a haskell equality saturation fro symbolic regression library
+
 # Differentiation
 
 <https://www.philipzucker.com/z3_diff/>
@@ -757,7 +760,8 @@ Where is SPORES?
 
 Some overlap with bitvector rewrite rules
 
-In Yosys?
+In Yosys? <https://yosyshq.readthedocs.io/projects/yosys/en/0.40/using_yosys/synthesis/opt.html> <https://github.com/YosysHQ/yosys/tree/main/passes/opt>  <https://github.com/YosysHQ/yosys/blob/main/passes/opt/opt_expr.cc>
+
 ABC?
 Bluespec <https://github.com/B-Lang-org/bsc>?
 
