@@ -409,9 +409,19 @@ There is a set of integration rules that supposedly work really well. THey arte 
 
 <https://github.com/sympy/sympy/blob/master/sympy/integrals/manualintegrate.py>
 
+Fourier transform rules? Laplace? `F[af + bg] = aF[f] + bF[g]`, `F[f ** g] = F[f] * F[g]`,  etc.? <https://en.wikipedia.org/wiki/Fourier_transform#Tables_of_important_Fourier_transforms>
+
+# Vectors
+
+- <https://en.wikipedia.org/wiki/Vector_algebra_relations>
+- <https://en.wikipedia.org/wiki/Vector_calculus_identities>
+- <https://en.wikipedia.org/wiki/Exterior_calculus_identities#Properties>
+- geometric algerba
+
 # "Math"
 
 - <https://fungrim.org/>
+- <https://dlmf.nist.gov/> NIST Digital Library of Mathematical Functions
 - <https://personal.math.ubc.ca/~cbm/aands/>  Abramowitz and Stegun: Handbook of Mathematical Functions
 - Concrete Mathematics book by Knuth et al
 - Combinatorics?
@@ -922,9 +932,11 @@ RRL rewrite rule laboratory <https://github.com/GunterMueller/RRL_Rewrite-Rule-L
 
 Deductive databases for geometry. The equational version.
 
-inverses and Galois connections or pesudoinverses. f(g(X)) = X but not g(f(Y)) = Y. Or `f(g(f(X))) = f(X)`. <https://en.wikipedia.org/wiki/Galois_connection> . Examples floor/ceiling/round, convex hull / interval closure , closure / interior,   `F x <= y == x <= G y` <https://link.springer.com/chapter/10.1007/3-540-47797-7_4> Galois Connections and Fixed Point Calculus - backhouse. Backhouse generally has some sweet stuff.
+inverses <https://en.wikipedia.org/wiki/Inverse_function> and Galois connections or pesudoinverses or left/right inverses. f(g(X)) = X but not g(f(Y)) = Y. Or `f(g(f(X))) = f(X)`. <https://en.wikipedia.org/wiki/Galois_connection> . Examples floor/ceiling/round, convex hull / interval closure , closure / interior,   `F x <= y == x <= G y` <https://link.springer.com/chapter/10.1007/3-540-47797-7_4> Galois Connections and Fixed Point Calculus - backhouse. Backhouse generally has some sweet stuff.
 
-projections `p(p(X)) = p(X)`.
+`cos(acos(cos(X))) = cos(X)`.  The fact that `acos` is partial makes the "inverse" relationship finicky `acos(7) = ?`. Also the multivaluedness `acos(cos(X)) != X` generally because cos(x + 2pi) = cos(x)` and `acos` picks a branch.
+
+projections `p(p(X)) = p(X)`. idempotency
 
 <https://agraef.github.io/pure-lang/>
 
