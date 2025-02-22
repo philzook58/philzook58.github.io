@@ -245,6 +245,7 @@ There are many interesting functional programs. Pure functional programs are a s
 - binary arithmetic
 - list programs
 - red black trees
+- fibonacci, factorial, gcd, ackermann
 
 Functional programs can be in the form of if-then-else chains, but they can also be specified as equations on the constructors. The second form is familiar from haskell.
 
@@ -674,7 +675,7 @@ ACL2 is highly equational in many ways. Which files though
 
 # Maude
 
-Muade is a term rewriting engine and logic. I haven't found many good files though?
+Muade is a term rewriting engine and logic. <https://cseweb.ucsd.edu/~goguen/sys/obj.html> I haven't found many good files though?
 
 # Inductive theorem provers
 
@@ -914,6 +915,8 @@ If you want a concrete interesting project (for an undergrad say), consider taki
 Like functional programming, many kinds of "grammars" are examples of rewrite rules.
 
 Lean, Isabelle, Coq, ACL2 etc must have piles of rules but it's hard to know how to separate them from not rules. How to mine?
+
+RRL rewrite rule laboratory <https://github.com/GunterMueller/RRL_Rewrite-Rule-Laboratory> <https://github.com/GunterMueller/RRL_Rewrite-Rule-Laboratory/tree/master/Sutra/examples> <https://www.sciencedirect.com/science/article/pii/089812219400218A>
 
 <https://gappa.gitlabpages.inria.fr/gappa/theorems.html> Gappa for floating point reasoning. not exactly equational, but a nice set of rules.
 
