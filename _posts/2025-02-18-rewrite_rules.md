@@ -685,7 +685,14 @@ ACL2 is highly equational in many ways. Which files though
 
 # Maude
 
-Muade is a term rewriting engine and logic. <https://cseweb.ucsd.edu/~goguen/sys/obj.html> I haven't found many good files though?
+Maude is a term rewriting engine and logic. <https://cseweb.ucsd.edu/~goguen/sys/obj.html> I haven't found many good files though?
+
+K is a related system
+
+- <https://github.com/kframework/c-semantics/blob/master/semantics/c/language/execution/stmt/block.k> C semantics
+- x86 <https://github.com/kframework/X86-64-semantics/blob/master/semantics/registerInstructions/addq_r64_r64.k>
+- <https://github.com/kframework/llvm-semantics/blob/master/semantics/llvm-branching.k> llvm
+-
 
 # Inductive theorem provers
 
@@ -930,6 +937,8 @@ RRL rewrite rule laboratory <https://github.com/GunterMueller/RRL_Rewrite-Rule-L
 
 <https://gappa.gitlabpages.inria.fr/gappa/theorems.html> Gappa for floating point reasoning. not exactly equational, but a nice set of rules.
 
+Apache rewrite rules - <https://httpd.apache.org/docs/2.4/mod/mod_rewrite.html> Is this the same sort of thing? sed, awk, etc?
+
 Deductive databases for geometry. The equational version.
 
 inverses <https://en.wikipedia.org/wiki/Inverse_function> and Galois connections or pesudoinverses or left/right inverses. f(g(X)) = X but not g(f(Y)) = Y. Or `f(g(f(X))) = f(X)`. <https://en.wikipedia.org/wiki/Galois_connection> . Examples floor/ceiling/round, convex hull / interval closure , closure / interior,   `F x <= y == x <= G y` <https://link.springer.com/chapter/10.1007/3-540-47797-7_4> Galois Connections and Fixed Point Calculus - backhouse. Backhouse generally has some sweet stuff.
@@ -939,6 +948,8 @@ inverses <https://en.wikipedia.org/wiki/Inverse_function> and Galois connections
 projections `p(p(X)) = p(X)`. idempotency
 
 <https://agraef.github.io/pure-lang/>
+
+<https://redex.racket-lang.org/> plt redex <https://docs.racket-lang.org/redex/index.html> Mostly evaluation rewriting rules? <https://github.com/racket/redex/tree/master/redex-examples/redex/examples>
 
 <https://www.specware.org/research/specware/> category theory. Where's the meat?
 
