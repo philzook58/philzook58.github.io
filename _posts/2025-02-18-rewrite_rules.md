@@ -922,6 +922,10 @@ RRL rewrite rule laboratory <https://github.com/GunterMueller/RRL_Rewrite-Rule-L
 
 Deductive databases for geometry. The equational version.
 
+inverses and Galois connections or pesudoinverses. f(g(X)) = X but not g(f(Y)) = Y. Or `f(g(f(X))) = f(X)`. <https://en.wikipedia.org/wiki/Galois_connection> . Examples floor/ceiling/round, convex hull / interval closure , closure / interior,   `F x <= y == x <= G y` <https://link.springer.com/chapter/10.1007/3-540-47797-7_4> Galois Connections and Fixed Point Calculus - backhouse. Backhouse generally has some sweet stuff.
+
+projections `p(p(X)) = p(X)`.
+
 <https://agraef.github.io/pure-lang/>
 
 <https://www.specware.org/research/specware/> category theory. Where's the meat?
