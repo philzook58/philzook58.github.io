@@ -668,6 +668,22 @@ You can search for the simp attribute on github. Is there a way to dump all the 
 
 # ACL2
 
+Good bitvector rules?
+
+ACL2 is highly equational in many ways. Which files though
+
+# Maude
+
+Muade is a term rewriting engine and logic. I haven't found many good files though?
+
+# Inductive theorem provers
+
+<https://github.com/cole-k/cc-lemma/blob/icfp-24/examples/clam.ceg>
+
+hipspec <https://github.com/danr/hipspec/tree/master/examples>
+
+thesy
+
 # Metatheory
 
 - <https://github.com/JuliaSymbolics/Metatheory.jl/tree/master/test/tutorials>
@@ -686,6 +702,8 @@ end
 # GCC
 
 CF pointed out <https://github.com/gcc-mirror/gcc/blob/master/gcc/match.pd>
+
+"The other rewrite rules for GCC are located in fold-const.cc, simplify-rtx.cc and combine.cc (the latter 2 are the RTL ones and the combine ones are only used in the combine pass and it does some complex stuff like rewriting into and out of bit extraction format). Match and fold-const.cc are the generic (and gimple) tree level ones."  <https://hachyderm.io/@pinskia/114038839027304872>
 
 # LLVM
 
@@ -718,6 +736,7 @@ Scheduling is the mushing around of loops.
 
 - <https://github.com/Bastacyclop/egg-sketches/blob/main/examples/bench_tiling.rs>
 - <https://github.com/rise-lang/shine/blob/main/src/main/scala/rise/eqsat/rules.scala>
+- <https://github.com/exo-lang/exo/blob/main/src/exo/rewrite/LoopIR_scheduling.py>
 
 # Linear / Tensor / Matrix Algebra
 
@@ -806,6 +825,8 @@ Knots and braiding algebra <https://en.wikipedia.org/wiki/Braid_group>
 
 Mathematica, sympy, maxima, etc. Where are they? There must be ton?
 
+<https://github.com/corywalker/expreduce/tree/master/expreduce/resources>
+
 # Physics
 
 Physics
@@ -888,6 +909,8 @@ Mixed boolean arithemtic. Used for obduscation and subsequent deobfuscation.
 
 If you want a concrete interesting project (for an undergrad say), consider taking one of these programmatic rewrite systems and convert it into a declarative form of your choice.
 
+<https://news.ycombinator.com/item?id=43101449#43138696> Hacker news discussion of this post.
+
 Like functional programming, many kinds of "grammars" are examples of rewrite rules.
 
 Lean, Isabelle, Coq, ACL2 etc must have piles of rules but it's hard to know how to separate them from not rules. How to mine?
@@ -897,6 +920,8 @@ Lean, Isabelle, Coq, ACL2 etc must have piles of rules but it's hard to know how
 Deductive databases for geometry. The equational version.
 
 <https://agraef.github.io/pure-lang/>
+
+<https://www.specware.org/research/specware/> category theory. Where's the meat?
 
 dedukti is a rewrite engine. <https://github.com/Deducteam/Dedukti/tree/master/examples> There must be more somewhere?
 
