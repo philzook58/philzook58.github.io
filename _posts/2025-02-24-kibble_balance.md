@@ -33,6 +33,8 @@ The joint at the end of the balance bars is just some ad hoc wire in a groove. S
 
 We have used Arduinos in the past for basic signal recording. Super easy to get some garbage serial out of the built in DAC. When we were first measuring after having built it, the voltage barely registers at a couple mV on our multimeters. This is really pushing it for the accuracy of the arduino DAC (even if you bumpy the numbers of bits to the max 14. 5V / 2^14 = 0.3 mV). The signal was kind of in the noise floor when we tried it. Luckily, the [arduino 44 has an op amp](https://docs.arduino.cc/tutorials/uno-r4-wifi/opamp/) you can turn on. You have to put in external feedback circuitry. We used `R2 = 33kOhm` and `R1 = 3kOhm` as our feedback for a Amplification factor of `A = 1 + 33/3 = 13`.
 
+The arduino code is down below. It isn't a paragon of programming or anything. Rip and run, baby!
+
 ![](/assets/watt_balance/wiring.jpg)
 ![](/assets/watt_balance/arduino.jpg)
 
@@ -40,7 +42,7 @@ The arduino serial plotter is super useful for basic troubleshooting. We at some
 
 ![](/assets/watt_balance/arduino_serial.jpg)
 
-To drive the balance, we just jiggled the other side with our hand. Seems fine. Using the other coil to drive the balance movement would be more repeatable but would add a whole other electronic component to the project. Ultimately, we did not use the other coil for anything and is seems superfluous and counterproductive to an explanation of what the experiment is. When we filtered for only datapoints at the middle position of the balance we got this plot. Ignore the negative speed data. Because the DAC only could record positive voltages from t6he coil, those don't mean anything.
+To drive the balance, we just jiggled the other side with our hand. Seems fine. Using the other coil to drive the balance movement would be more repeatable but would add a whole other electronic component to the project. Ultimately, we did not use the other coil for anything and is seems superfluous and counterproductive to an explanation of what the experiment is. When we filtered for only datapoints at the middle position of the balance we got this plot. Ignore the negative speed data. Because the DAC only could record positive voltages from the coil, those don't mean anything.
 
 ![](/assets/watt_balance/coil_vel_volt_filter.png)
 
