@@ -90,6 +90,8 @@ I don't know if there are exact experiments that are the definition of the physi
 
 ## Notes
 
+![](/assets/watt_balance/pic_of_us.jpg)
+
 Watt Balance
 
 2025-01-06
