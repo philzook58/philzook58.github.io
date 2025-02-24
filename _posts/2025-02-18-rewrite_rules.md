@@ -945,7 +945,9 @@ inverses <https://en.wikipedia.org/wiki/Inverse_function> and Galois connections
 
 `cos(acos(cos(X))) = cos(X)`.  The fact that `acos` is partial makes the "inverse" relationship finicky `acos(7) = ?`. Also the multivaluedness `acos(cos(X)) != X` generally because cos(x + 2pi) = cos(x)` and `acos` picks a branch.
 
-projections `p(p(X)) = p(X)`. idempotency
+projections `p(p(X)) = p(X)`. idempotency. a way of defining a subset/ refinement . `prj(X) = X` means x is in the subset.
+
+quotients and canonizers. <https://en.wikipedia.org/wiki/Quotient> `canon(X + 0) = canon(X)`. `canon(canon(X)) = X` Injections and projections. `canon(X) = prj(inj(X))` if we inject into some other domain to represent the quotient. For example if we use sets of equivalence classes to represent quotient, proj picks a special one. `inj : A -> Set(A), inj(x) = {y | eq(x,y)}` , `proj : Set(A) -> A` maybe `proj(S) = min x, x in S` as an example if A has total ordering. `canon(X) = canon(Y) <-> eq(X,Y)`
 
 <https://agraef.github.io/pure-lang/>
 
@@ -967,6 +969,22 @@ Relation Algebra <https://en.wikipedia.org/wiki/Relation_algebra>
 Equational theories for parallelism? Process calculi?
 
 Linear algebra
+<https://www.cl.cam.ac.uk/~jrh13/papers/hol05.pdf> Robert Solovay decision procedure for linear algebra. Section 4.
+
+```
+% expanding out dot product
+0vec . x = 0
+x . 0vec = 0
+(cx) . y = c(x . y)
+x . (cy) = c(x . y)
+-x . y = - (x . y)
+x . -y = - (x . y)
+(x + y) . z = x . z + y . z
+x . (y + z) = x . y + x . z
+(x - y) . z = x . z - y . z
+x . (y - z) = x . y - x . z
+
+```
 
 <https://github.com/yihozhang/szalinski-egglog>
 
