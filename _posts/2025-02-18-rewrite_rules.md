@@ -729,6 +729,12 @@ CF pointed out <https://github.com/gcc-mirror/gcc/blob/master/gcc/match.pd>
 - <https://mlir.llvm.org/docs/PDLL/> But where are they?
 - <https://github.com/llvm/llvm-project/blob/main/mlir/lib/Dialect/Arith/IR/ArithCanonicalization.td> Canonicalizer files. Thanks Regehr for pointers!
 - <https://github.com/EnzymeAD/Enzyme-JAX/blob/main/src/enzyme_ad/jax/Passes/EnzymeHLOOpt.cpp>
+- xdsl ? The rules are scattered around? <https://github.com/xdslproject/xdsl/blob/main/xdsl/transforms/canonicalization_patterns/arith.py>  `RewritePattern` class
+
+# rpython
+
+- <https://github.com/pypy/pypy/blob/main/rpython/jit/metainterp/ruleopt/real.rules>
+- <https://github.com/pydrofoil/pydrofoil/blob/3df78c7c9cdf1f3a732477dec0325a8b506c9fff/pydrofoil/ir.py#L2704> optimize_* functions
 
 # Vectorizations Rules
 
@@ -856,6 +862,9 @@ Physics
 - <https://arxiv.org/pdf/2310.14056>
 - <https://lmcs.episciences.org/1570> Generator and relations for n-qubit clifford operators
 - <https://github.com/philzook58/egg-smol/blob/scratchpad2/tests/cliffordt.egg> <https://arxiv.org/pdf/2204.02217.pdf>
+
+- <https://allofphysics.com/list_all_inference_rules> Ben writes in that he has a system for inferences in physics. I'm not sure this is the same sort of thing I was getting at, but it is an interesting perspective.
+-
 
 # Deobfuscation
 
