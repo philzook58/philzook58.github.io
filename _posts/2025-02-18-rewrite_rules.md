@@ -804,6 +804,8 @@ Where is SPORES?
 Some overlap with bitvector rewrite rules
 
 In Yosys? <https://yosyshq.readthedocs.io/projects/yosys/en/0.40/using_yosys/synthesis/opt.html> <https://github.com/YosysHQ/yosys/tree/main/passes/opt>  <https://github.com/YosysHQ/yosys/blob/main/passes/opt/opt_expr.cc>
+<https://github.com/YosysHQ/yosys/tree/main/passes/pmgen> pattern match gen  <https://github.com/YosysHQ/yosys/blob/main/passes/pmgen/peepopt_muldiv.pmg>
+<https://github.com/YosysHQ/yosys/tree/main/techlibs/ice40/tests> techlibs
 
 ABC?
 Bluespec <https://github.com/B-Lang-org/bsc>?
