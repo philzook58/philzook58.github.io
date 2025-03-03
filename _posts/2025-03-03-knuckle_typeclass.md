@@ -512,6 +512,8 @@ Parametric types is the main thing separating the object logic in Z3 to being ba
 
 <https://github.com/Z3Prover/z3/discussions/7562>
 
+There is some funky behavior. When TypeVars go into datatypes, they become something like existentials.
+
 ```python
 from z3 import *
 T = DeclareTypeVar("T")
@@ -524,6 +526,8 @@ rlist = List.cons(RealVal(3), List.nil)
 assert ilist.sort() == rlist.sort() 
 assert List.car(ilist).sort() == List.car(rlist).sort() # same sort = T. Odd. But reasonable maybe.
 ```
+
+When they go into functions, they get implicitly foralled? Here is an attempt at defining a recursor on Nat.
 
 ```python
 from z3 import *
