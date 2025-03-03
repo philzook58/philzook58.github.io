@@ -15,7 +15,7 @@ One of the things I find the most interesting about building knuckledragger is p
 
 For example, I can make a python dataclass to hold z3 expressions or I can make a z3 record datatype to hold them. It is typically easy to convert from the z3 level up to the python, but not so easy to convert from the python to z3. Conversely, the python layer is usually more ergonomic and familiar. It is kind of similar to things you can do generating C code from python or the [staged metaprogramming](https://okmij.org/ftp/meta-programming/index.html) game in general. As an example, you can have a meta `Forall` quantifier that unrolls a finite domain at "compile time" or you can let z3 handle it. This is akin to loop unrolling at compile time vs letting the C compiler handle it (probably better).
 
-here are some of the other layers. I don't think this is a linear ordering, maybe there are 2 or 3 axes in here.
+Here are some of the other layers. I don't think this is a linear ordering, maybe there are 2 or 3 axes in here.
 
 - wacky python metaprogramming and metaclasses
 - python types
@@ -24,9 +24,9 @@ here are some of the other layers. I don't think this is a linear ordering, mayb
 - regular python functions
 - z3 sorts
 - z3 expressions
-- Proofs
-- shallow embedding of logics inside z3
-- deep embedding of logics inside z3
+- Proofs. A python object holding a z3 formula and recursively a subproof record of smt calls
+- shallow embedding of logics inside z3 (direct semantic `and_` `or_` z3 funcdecls)
+- deep embedding of logics inside z3 (make a z3 datatype with `And`, `Or`, etc constructors)
 
 Part of the design game and confusion is which of these layers I want to associate with features in other systems. What pieces from which layer should I use to implement X feature from Lean? Copying features from dependent type systems clouds the waters, because they have punctured the metalayers in a particular way The very idea of putting values in types is a puncturing and also the idea of first class proof objects is a puncturing imo. To some extent, the whole game of foundations since Frege and Russell has been finding fun meta puncturings that retain soundness. [Quotation](https://arxiv.org/abs/1802.00405) or [modalities](https://plato.stanford.edu/entries/logic-provability/) are intriguing different forms of puncturing.
 
@@ -42,7 +42,7 @@ These registration dictionaries has developed as a common pattern. It is also wh
 
 The first though on how to support operator overloading is to just make new clases. I don't think this works well because I don't want to associate z3 sorts with python classes.
 Python supports operator overloading through implementing certain "dunder" methods like `__add__`. The most common and natural to achieve overloading is to make new classes or subclasses. But for the purposes of knuckledragger, I want overloading based on the `z3.SortRef` of the `z3.ExprRef`. One design choice could be to try an shallowly embed the z3 sorts into the python type system. You could do this my subclassing `ExprRef`, and this is what z3py itself does. However, I'd need to rewrap all z3 functionality to find the appropriate python class to subclass into. If I had the ability to change z3py maybe this is what I'd have done.
-Another choice is to wrap z3py expressions as a data member in a another class. I think the shallow usage of z3py makes my life easier and is a valuiable feature for users, so this is not great. Another choice might be to try and add a type parameter to `ExprRef[T]` where T is the z3 sort. Also weird and overwrought imo.
+Another choice is to wrap z3py expressions as a data member in a another class. I think the shallow usage of z3py makes my life easier and is a valuable feature for users, so this is not great. Another choice might be to try and add a type parameter to `ExprRef[T]` where T is the z3 sort. Also weird and overwrought imo.
 
 ```python
 # This code lives in kdrag.notation
@@ -292,6 +292,7 @@ class GenericProof:
             raise ValueError("Proof does not match", formula, pf)
         self.data[args] = pf
 
+# Some example usage
 
 @GenericProof
 def assoc(f: smt.FuncDeclRef):
@@ -402,6 +403,8 @@ class TypeClass:
     def __repr__(self):
         return type(self).__name__ + "(" + repr(self.__dict__) + ")"
 ```
+
+Some example usage
 
 ```python
 class Semigroup(TypeClass):
