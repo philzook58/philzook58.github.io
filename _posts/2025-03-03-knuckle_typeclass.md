@@ -553,6 +553,8 @@ rec(Nat.Z, Nat.Z, p) # This is a Sort mismatch error
 
 I could probably unify GenericProof, SortDispatch, and TypeClass into a single umbrella superclass. They all maintain dictionaries. But they do it in slightly different ways.
 
+Amusingly, what I might imply by the word "typeclass" is contextual. It's almost as if the concept is overloaded to different meanings in different situations. What I have here is a very nonstandard emphasis on what a typeclass is.
+
 One design that is continually tempting, but I think is a trap is to try and collapse python types and z3 sorts. I think this is ultimately a bad idea because one needs to do quite a bit of metaprogramming of z3 sorts, which if you identify them, needs to become python type metaprogramming. This is an unergonomic and confusing environment and what is the actual gain? Python typechecking is best used as a light sanity check at the current state. It is nice, don't get me wrong.
 
 In knuckledragger, my meta system is python. My object logic is SMTLib in the form of z3py. My Proof objects live in the python layer. Unless I start reflecting them into a Z3 sort `DeclareSort("Proof")` (an intriguing endeavor, see for example <https://isabelle.in.tum.de/dist/library/FOL/FOLP/index.html> ), I cannot have proofs be members of a z3 struct for example.
