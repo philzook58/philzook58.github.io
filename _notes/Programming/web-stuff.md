@@ -30,6 +30,7 @@ title: Web Stuff
 - DNS
 
 # HTTP
+[mock rest api](https://mockae.com/)
 
 # HTML
 
