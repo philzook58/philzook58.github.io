@@ -553,7 +553,13 @@ rec(Nat.Z, Nat.Z, p) # This is a Sort mismatch error
 
 I could probably unify GenericProof, SortDispatch, and TypeClass into a single umbrella superclass. They all maintain dictionaries. But they do it in slightly different ways.
 
-Amusingly, what I might imply by the word "typeclass" is contextual. It's almost as if the concept is overloaded to different meanings in different situations :) . What I have here is a very nonstandard emphasis on what a typeclass is.
+Amusingly, what I might imply by the word "typeclass" is contextual. It's almost as if the concept is overloaded to different meanings in different situations :) . What I have here is a very nonstandard emphasis on what a typeclass is. This is just like when I talk about "datalog", almost nobody uses the word in the sense I do. I mean ground, bottom up logic programming.
+
+Just tagging the write stuff onto the sort seems fine. Should't I be knuckledragging?
+I could just have dictionaries that you can put the sort into.
+You can then lookup in those dicionaries if you need it
+And they check when you add them that they have the right stuff.
+I feel like I end up doing that anyway. Just throw things on as attributes to the sort.
 
 One design that is continually tempting, but I think is a trap is to try and collapse python types and z3 sorts. I think this is ultimately a bad idea because one needs to do quite a bit of metaprogramming of z3 sorts, which if you identify them, needs to become python type metaprogramming. This is an unergonomic and confusing environment and what is the actual gain? Python typechecking is best used as a light sanity check at the current state. It is nice, don't get me wrong.
 
