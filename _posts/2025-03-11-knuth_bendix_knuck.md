@@ -19,7 +19,7 @@ Knuth Bendix can fail when it fails to be able to orient an equation. Term order
 
 Knuth Bendix is not quite a "complete" equational theorem proving mechanism because of this (unnecessary) failure. It's close though, and I tend to think of it as one.
 
-Paramodulation is a name for brute force equational search, ordering be damned. Unfailing completion is a loosening of ordinary knuth bendix, but more restricted than brute paramodulation that nevertheless is complete for equational theorem proving. Unfailing completion and superposition are kind of synonyms (?) although superposition implies the ability to hand non unit clauses like a resolution prover.
+Paramodulation is a name for brute force equational search, ordering be damned. Unfailing completion is a loosening of ordinary knuth bendix, but more restricted than brute paramodulation that nevertheless is complete for equational theorem proving. Unfailing completion and superposition are kind of synonyms in the unit clause context (?) although superposition implies the ability to hand non unit clauses like a resolution prover.
 
 Paramodulation is kind of finding all critical pairs on all sides of equations. Knuth bendix restricts to just critical pairs of left hand sides of rules but also enables simplification by rules. Unfailing completion has a pruning mechanism for which critical pairs are necessary to consider and retains the simplification mechanism of KB.
 
