@@ -3,24 +3,25 @@ title: Knuth Bendix Solver on Z3 AST
 date : 2025-03-11
 ---
 
-Knuth bendix completion takes in a set of equational axioms and a term ordering (defining which side is "simpler"), and tries to produce a rewrite rule system that is confluent.
+Knuth bendix completion takes in a set of equational axioms and a term ordering (defining which side is "simpler"), and tries to produce a rewrite rule system that is confluent. You can read more here
 
 - Term Rewriting and All That
 - Harrison's Handbook of Practical Logic and Automated Reasoning
 - <https://www.researchgate.net/publication/220460160_An_Introduction_to_Knuth-Bendix_Completion>
+- <https://en.wikipedia.org/wiki/Knuth%E2%80%93Bendix_completion_algorithm>
 - Handbook of Automated Reasoning chapter <https://www.cs.tau.ac.il/~nachum/papers/hand-final.pdf>
 
-Confluent means the order of application of the rules ultimately doesn't matter. Greedy usage of the rules will find the "smallest" term under that theory.
+Pragmatically, confluent and terminating means the order of application of the rules ultimately doesn't matter. Greedy usage of the rules will find the "smallest" term under that theory.
 
 If your system is non confluent but terminating, you need to add some kind of backtracking or search if you want this guarantee.
 
-Knuth Bendix can fail when it fails to be able to orient an equation. Term orderings on non ground terms are necessarily partial orders. A demon can always pick a way to fill in the variables of `X * Y -> Y * X` to make any ordering fail. It's too symmetric.
+Knuth Bendix can fail when it fails to be able to orient an equation. Term orderings on non ground terms are necessarily partial orders. A demon can always pick a way to fill in the variables of `X * Y -> Y * X` to make any ordering choice fail. It's too symmetric.
 
-Knuth Bendix is not quite an "complete" equational theorem proving mechanism because of this (unnecessary) failure. It's close though, and I tend to think of it as one.
+Knuth Bendix is not quite a "complete" equational theorem proving mechanism because of this (unnecessary) failure. It's close though, and I tend to think of it as one.
 
-Paramodulation is a name for brute force equational search, ordering be damned. Unfailing completion is a loosening of ordinary knuth bendix, but more restricted than brute paramodulation that nevertheless is complete for equational theorem proving.
+Paramodulation is a name for brute force equational search, ordering be damned. Unfailing completion is a loosening of ordinary knuth bendix, but more restricted than brute paramodulation that nevertheless is complete for equational theorem proving. Unfailing completion and superposition are kind of synonyms (?) although superposition implies the ability to hand non unit clauses like a resolution prover.
 
-Paramodulation is kind of finding all critical pairs on all sides of equations. Knuth bendix restricts to just critical pairs of left hand sides of rules but also enables simplification by rules. Unfailing completion has a pruning mechanism for which critical pairs are necessary to consider and retains the simplifcation mechanism.
+Paramodulation is kind of finding all critical pairs on all sides of equations. Knuth bendix restricts to just critical pairs of left hand sides of rules but also enables simplification by rules. Unfailing completion has a pruning mechanism for which critical pairs are necessary to consider and retains the simplification mechanism of KB.
 
 I have found it useful to use Z3's ast as a centralized intercommunication way of building up a library of useful stuff. Z3 offers a nice api, a good fast hash cons, de bruijn binder manipulations and not the mention the smt solving itself.
 
