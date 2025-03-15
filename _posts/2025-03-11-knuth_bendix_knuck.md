@@ -426,6 +426,17 @@ smt.z3.z3_debug()
 
     False
 
+Some ideas for speeding up
+
+- Maybe pmatch to traverse the term t for multiple patterns
+- Cache calls to t.arg. ExprRef.cache_arg() that'll look it up in a dict.
+- Doing proper marking of rules out to prune critical pairs considered. `speed = number of time called * speed of 1 call` after all
+- Could "precompile" patterns either by currying pmatch or by codegen
+- Being lazier about arg calls in pmatch might help if pmatch fails often
+- pmatch is churning, creating and immediately deleting python nodes
+
+It is somewhat surprising that unification and the unnecessary binder opening I'm doing isnt the problem
+
 ```python
 %%prun 
 huet(E, order=rw.lpo)

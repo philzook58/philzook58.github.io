@@ -812,6 +812,16 @@ Bluespec <https://github.com/B-Lang-org/bsc>?
 
 Gus Smith's stuff? Sam Cowards?
 
+<https://github.com/XhenryZhang/loop_rerolling_egg/blob/master/src/main.rs>
+
+<https://egraphs.zulipchat.com/#narrow/channel/328978-topic.2Fapplications/topic/Where.20are.20the.20rewrite.20rules.3F/near/504935962> a list of some hardware rule egraph papers
+
+<https://github.com/Gy-Hu/E-Syn/blob/692c43a5491a72143d1d30ed320e9fcc1bfd01eb/e-rewriter/src/main.rs#L85>
+
+<https://arxiv.org/pdf/2406.12421> ROVER table 2
+
+<http://www-cad.eecs.berkeley.edu/~alanmi/publications/2006/dac06_rwr.pdf> AIG rewrite rules. You can brute enumerate also.
+
 # Synthesis
 
 You don't need a dataset persay of rules if you can synthesize them. But also some of these projects have stored their rule sets
