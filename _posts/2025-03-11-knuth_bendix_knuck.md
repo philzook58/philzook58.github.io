@@ -305,6 +305,8 @@ So it's kind of slow.
 
 Takes about 4 seconds for the group problem. A lot of time is in the simplifier, which in turn may be slow because of all the wrapping and unwrapping of going into and out of z3 for trivial-ish stuff. Worrying.
 
+Edit. I put together a single file version <https://github.com/philzook58/knuth-bendix-python/blob/main/kb.py> for CF to benchmark. Maybe useful for other reasons just to see all the pieces in one place. It does seem like ctypes may be the culprit?
+
 <https://smimram.github.io/ocaml-alg/kb/> This webpage is instantaneous for the group problem
 
 eprover is also ludicrously faster. I do believe the saturated clause set represents something like the same data as knuth bendix completion. eprover is a more complicated beast, so it's hard for me to always interpret what it is returning when I'm using it off label from refutational theorem proving.
