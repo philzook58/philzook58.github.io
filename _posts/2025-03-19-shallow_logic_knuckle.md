@@ -577,7 +577,7 @@ print("acc", {(w,u) : m.eval(I.acc(w,u)) for w in Worlds for u in Worlds})
 
 # Bits and Bobbles
 
-Logikey is doing something like the above by embedding in isabelle and using Isabelle's sledgehammer
+Logikey is doing something like the above by embedding in isabelle and using Isabelle's sledgehammer <https://arxiv.org/abs/2502.19311> Faithful Logic Embeddings in HOL -- A recipe to have it all: deep and shallow, automated and interactive, heavy and light, proofs and counterexamples, meta and object level - benzmuller. <https://arxiv.org/abs/1903.10187>
 
 I got pretty confused attempting a shallow embedding of Linear Logic.
 
