@@ -9,8 +9,8 @@ Some logics that are interesting:
 
 - Temporal logic like TLA that have a built in notion of time <https://en.wikipedia.org/wiki/Temporal_logic>  <https://plato.stanford.edu/entries/logic-temporal/>
 - Intuitionistic logic which is intrinsically more about constructions <https://en.wikipedia.org/wiki/Intuitionistic_logic>
-- Separation Logic <https://en.wikipedia.org/wiki/Separation_logic> has an implicit heap / partial monoid that you can split using separating conjunction. cvc5 gas built in support <https://cvc5.github.io/docs/cvc5-1.0.2/theories/separation-logic.html> but oh well.
-- Linear Logic - propositions represent resources
+- Separation Logic <https://en.wikipedia.org/wiki/Separation_logic> has an implicit heap / partial commutative monoid (disjoint heap join) that you can split using separating conjunction. cvc5 has built in support <https://cvc5.github.io/docs/cvc5-1.0.2/theories/separation-logic.html> but I'm still mostly focussed on z3.
+- Linear Logic - propositions represent resources. <https://en.wikipedia.org/wiki/Linear_logic> An inspiration for memory management reasoning like in Rust.
 - Fixed point logic - <https://en.wikipedia.org/wiki/Fixed-point_logic> special operators that enable defining things like transitive closure. Of relation to datalog
 - Hoare logic - a logic for reasoning about programs <https://en.wikipedia.org/wiki/Hoare_logic> <https://softwarefoundations.cis.upenn.edu/plf-current/Hoare.html>
 - Dynamic Logic - a relative of temporal logic <https://en.wikipedia.org/wiki/Dynamic_logic_(modal_logic)>
@@ -20,7 +20,9 @@ Some logics that are interesting:
 
 For all logics (or modelling of any language), you can take a shallow or deep approach. In the deep approach, you make a datatype the model the syntax of the embedded logic. Then you make a provability relation over these trees say which moves of proof are allowed. Probably you also want a semantic interpreter that evaluates these trees into the basic stuff of your outer logic.
 
-I tend to prefer shallow approaches because they use less boilerplate and can borrow more from the host system. In this case, I'd suspect the more shallow I am, the more z3's special solving capabilities might be able to handle it.
+I tend to prefer shallow approaches because they use less boilerplate and can borrow more from the host system. In this case, I'd suspect the more shallow I am, the more z3's special solving capabilities might be able to handle it without lots of manual intervention.
+
+These theories amongst others are starting to fill out the `theories` folder in knuckledragger, my low barrier z3 based proof assistant <https://github.com/philzook58/knuckledragger>
 
 This is a lot to bite off for a single post, but we make baby steps
 
