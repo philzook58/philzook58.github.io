@@ -579,6 +579,9 @@ print("acc", {(w,u) : m.eval(I.acc(w,u)) for w in Worlds for u in Worlds})
 
 Logikey is doing something like the above by embedding in isabelle and using Isabelle's sledgehammer <https://arxiv.org/abs/2502.19311> Faithful Logic Embeddings in HOL -- A recipe to have it all: deep and shallow, automated and interactive, heavy and light, proofs and counterexamples, meta and object level - benzmuller. <https://arxiv.org/abs/1903.10187>
 
+<https://x.com/SandMouth/status/1895882800064315493>
+<https://x.com/SandMouth/status/1557140546036142081>
+
 I got pretty confused attempting a shallow embedding of Linear Logic.
 
 If you start in an intuitionistic system, it is easy to model classical logic via adding an axiom. Intuitionistic (or minimal) logic has the option to be extra super shallow in this way. The double negation translation or using a model is a shallow embedding in a style that most other systems can emulate
