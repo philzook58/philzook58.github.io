@@ -6,3 +6,4 @@ _site
 ./vivado*
 **/.hypothesis/
 .aider*
+.lake
