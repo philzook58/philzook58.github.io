@@ -8,11 +8,11 @@ One nice thing about Knuckledragger <https://github.com/philzook58/knuckledragge
 The main thing that I have ready to go here is an implementation of unification.  <https://www.philipzucker.com/unify/> <https://www.philipzucker.com/ho_unify/>
 That combined with term orderings are the main annoying fiddly things you need to build little versions of many automated reasoning algorithms.
 
-Prolog is many things. It is a particular strategy on resolution. <https://en.wikipedia.org/wiki/SLD_resolution>
+Prolog is many things. It is a particular strategy on resolution. <https://en.wikipedia.org/wiki/SLD_resolution> . You can look at it as just an imperative thing that kind of makes sense. It is also basically backwards proof search. It is also basically what you get when you combine backtracking/search + unification. You can take this separately if you like an get interesting stuff too.
 
 My interpreter starts with a set of goals (implicitly conjoined) that you want to solve and a list of `vs` to consider to be unification variables. I have been using the style of explicitly maintainng which constants I consider variables. I could use z3's de bruijn Var, but this wouldn't work right in higher order situations.
 
-The state of the interpreter is a list of states. The outer list represents possible backtrackings you may need to try. The inner list is the thing closer to a normal stack and state in another language. The "stack" is a list of goals you still need to discharge in order to succeed.  This goal stack is also basically a continuation data structure <https://en.wikipedia.org/wiki/Continuation> . The "state" is the current substitution in this branch
+The big state of the interpreter is a list of branch states. The outer list represents possible backtrackings you may need to try. The inner list is the thing closer to a normal stack and state in another language. The "stack" is a list of goals you still need to discharge in order to succeed.  This goal stack is also basically a continuation data structure <https://en.wikipedia.org/wiki/Continuation> . The "state" is the current substitution and unbound variables list in this branch.
 That logic programming has these two stack structures is what makes it confusing sometimes when comparing against non logic programming interpreters. I have implemented this is a super brute force inefficient way. The goals share a lot of substructure, so we could factor together these two lists into a single structure. But then we also need to rip apart substitutions. Eh.
 
 The interpreter loop is:
@@ -76,7 +76,7 @@ def prolog(
                                 for k, v in subst.items()
                             },
                             **subst1,
-                        }
+                        } # substitution composition
                         newvs = list(set(vs1) - set(subst1.keys()))
                         todo.append((newvs, newgoals, newsubst))
 
@@ -122,16 +122,21 @@ Instead of using a todo stack, could use a todo FIFO, random pick, some kind of 
 
 Other things to do.
 
-- implement eq
+- implement smt.is_eq as unfication
 - callcc / delimitted continuations? Reflect the goal stack into the system
 - tabling could be fun. store alpha invariant forms
-- lambda prolog. see below.
-- Add constraints. Since I'm on the z3 ast, should be easy. just mark some goals/predicates as constraints and add a constraint store (list) to the state.
+- lambda prolog. see below. Need to track what fresh constants can end up in which unification variables somehow. There are different approaches. This enables exists and forall in goals and lambda terms in terms. We'd also want a local program clause context for contextual clauses brought in by goal implication.
+- nominal prolog
+- head and first symbol optimization. The rules can be indexed into a db by at least the funcdecl of the head.
+- call/n.
+- Make it less goddamn inefficient. I am copying way way to much. Also cache the various z3 ast calls. ctypes overhead is killer.
+- Add constraints. Since I'm on the z3 ast, should be easy. just mark some goals/predicates as constraints and add a constraint store (list) to the state. `(vs, goals, subst, constrs)`
+- attributed variables?
 - could add IO
 
 ```python
 a = smt.DeclareTypeVar("a")
-print = smt.Function("print", [a], smt.BoolSort())
+print = smt.Function("print", a, smt.BoolSort())
 if goal.decl().name() == "print":
     print(goal.arg(0))
 ```
@@ -294,6 +299,79 @@ def run_string(s: str):
 if __name__ == "__main__":
     with open(sys.argv[1]) as f:
         print(run_string(f.read()))
+```
+
+## The code of Rule
+
+Maybe you need to see this to follow the above interpreter
+
+```python
+
+class Rule(NamedTuple):
+    vs: list[smt.ExprRef]
+    hyp: smt.BoolRef
+    conc: smt.BoolRef
+    pf: Optional[kd.kernel.Proof] = None
+
+    def freshen(self):
+        """Freshen the rule by renaming variables.
+
+        >>> x,y= smt.Reals("x y")
+        >>> rule = Rule([x], x > 0, x < 0)
+        >>> rule.freshen()
+        Rule(vs=[x...], hyp=x... > 0, conc=x... < 0, pf=None)
+        """
+        vs1 = [
+            smt.FreshConst(v.sort(), prefix=v.decl().name().split("!")[0])
+            for v in self.vs
+        ]
+        return Rule(
+            vs1,
+            hyp=smt.substitute(self.hyp, *zip(self.vs, vs1)),
+            conc=smt.substitute(self.conc, *zip(self.vs, vs1)),
+            pf=self.pf,
+        )
+
+    def to_expr(self) -> smt.ExprRef | smt.QuantifierRef:
+        """Convert the rule to a theorem of form `forall vs, hyp => conc`.
+
+        >>> x = smt.Real("x")
+        >>> Rule([x], x > 0, x < 0).to_expr()
+        ForAll(x..., Implies(x... > 0, x... < 0))
+        """
+        if len(self.vs) == 0:
+            return smt.Implies(self.hyp, self.conc)
+        else:
+            return smt.ForAll(self.vs, smt.Implies(self.hyp, self.conc))
+
+
+def rule_of_expr(pf_or_thm: smt.ExprRef | kd.kernel.Proof) -> Rule:
+    """Unpack theorem of form `forall vs, body => head` into a Rule tuple
+
+    >>> x = smt.Real("x")
+    >>> rule_of_expr(smt.ForAll([x], smt.Implies(x**2 == x*x, x > 0)))
+    Rule(vs=[X...], hyp=X...**2 == X...*X..., conc=X... > 0, pf=None)
+    >>> rule_of_expr(x > 0)
+    Rule(vs=[], hyp=True, conc=x > 0, pf=None)
+    """
+    if isinstance(pf_or_thm, smt.ExprRef):
+        thm = pf_or_thm
+        pf = None
+    elif kd.kernel.is_proof(pf_or_thm):
+        pf = pf_or_thm
+        thm = pf.thm
+    else:
+        raise ValueError("Expected proof or theorem")
+    if isinstance(thm, smt.QuantifierRef) and thm.is_forall():
+        vs, thm = utils.open_binder(thm)
+    else:
+        vs = []
+    if smt.is_implies(thm):
+        return Rule(vs, hyp=thm.arg(0), conc=thm.arg(1), pf=pf)
+    else:
+        assert isinstance(thm, smt.BoolRef)
+        return Rule(vs, hyp=smt.BoolVal(True), conc=thm, pf=pf)
+
 ```
 
 ## Lambda prolog
