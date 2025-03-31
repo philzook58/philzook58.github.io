@@ -132,6 +132,8 @@ Other things to do.
 - Make it less goddamn inefficient. I am copying way way to much. Also cache the various z3 ast calls. ctypes overhead is killer.
 - Add constraints. Since I'm on the z3 ast, should be easy. just mark some goals/predicates as constraints and add a constraint store (list) to the state. `(vs, goals, subst, constrs)`
 - attributed variables?
+- ASP / scasp there's a challenge
+- coinductive lp <https://personal.utdallas.edu/~gupta/iclp07paper.pdf>
 - could add IO
 
 ```python
@@ -143,15 +145,17 @@ if goal.decl().name() == "print":
 
 z3 itself offers some horn clause modes. Space, a bounded model checking mode. <https://microsoft.github.io/z3guide/docs/fixedpoints/intro/>  <https://theory.stanford.edu/~nikolaj/nus.html#/sec-horn-clause-engines> You can also use define-fun-rec + proof/trace objects to embed a minikanren inside of z3 <https://www.philipzucker.com/minikanren_inside_z3/>
 
-Real prologs include SWI <https://www.swi-prolog.org/> , scryer <https://github.com/mthom/scryer-prolog> , trealla, sicstus
+Real prologs include SWI <https://www.swi-prolog.org/> , scryer <https://github.com/mthom/scryer-prolog> , trealla <https://github.com/trealla-prolog/trealla> , sicstus
 
 Of course check out minikanren <https://minikanren.org/> Minikanren sort of swaps around which branch to do next.
 
-<https://www.metalevel.at/prolog>
+More on prolog: <https://www.metalevel.at/prolog> power of prolog, Clocksin and Mellish, Ivan Bratko book.
 
 <https://www.philipzucker.com/minikanren-z3py/> The spiel here is that I avoided writing my own unification by abusing z3 instead. Non unifiable branches are certainly unsat.
 
-<https://www.cl.cam.ac.uk/~jrh13/atp/OCaml/prolog.ml>
+<https://www.cl.cam.ac.uk/~jrh13/atp/OCaml/prolog.ml> Harrison toy prolog
+
+<https://github.com/a-yiorgos/wambook> Warren Abstract Machine a tutorial introduction. More serious
 
 [a python interpreter](https://github.com/photonlines/Python-Prolog-Interpreter)
 
