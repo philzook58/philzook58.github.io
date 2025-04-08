@@ -155,14 +155,15 @@ Cprint.compile_c(Cprint.of_defn(mymax64), opts=["-O3"])
 
 I'm kind of bullish on Ghidra PCode as an underutilized source of assembly semantics. Ghidra <https://ghidra-sre.org/> is a reverse engineering tool made by the NSA with about 25 years of work in it. It probably isn't going anywhere. In the right circles it's a huge brand name, but in the compiler / PL circles not so much, which I find an interesting example of siloing. I think it is a possible pragmatic alternative to Sail <https://github.com/rems-project/sail> , ASLp <https://github.com/ailrst/aslp> , LLVM for some purposes.
 
-The underlying semantics of ghidra is written in a DSL called SLEIGH. <https://spinsel.dev/assets/2020-06-17-ghidra-brainfuck-processor-1/ghidra_docs/language_spec/html/sleigh.html> . It's interesting to note that SLEIGH does have PL pedigree "This piece of SLEIGH was originally a separate language, the Semantic Syntax Language (SSL), very loosely based on concepts and a language of the same name developed by Cristina Cifuentes, Mike Van Emmerik and Norman Ramsey, for the University of Queensland Binary Translator (UQBT) project."
-<https://github.com/rbran/sleigh-rs>
+The underlying semantics of ghidra is written in a DSL called SLEIGH. <https://spinsel.dev/assets/2020-06-17-ghidra-brainfuck-processor-1/ghidra_docs/language_spec/html/sleigh.html> . SLEIGH is compiled into a lifter which can produce Pcode from assembly.
 
-PCode is the intermediate representation. Pcode is a simple assembly like language of about 30 operations. Itt has arithmetic, stores, loads, conditions and branches mostly. The state of a pcode execution is a program counter and memory. Memory is made of different spaces, each of which is indexable bytes. Registers, actual ram, unique temporary vars, and constants are all different memory spaces which are used uniformaly. Varnodes are the combination of a space index, offsert, and size.
+PCode is the intermediate representation. Pcode is a simple assembly like intermediate language of about 30 operations. It has arithmetic, stores, loads, conditions and branches mostly. PCode comes vaguely in two varieties High and Low pcode. High pcode comes out of the decompiler. Low pcode is what we're interested in comes out of the lifters.
+
+The state of a pcode execution is memory and a program counter.
+
+Memory is made of different spaces, each of which is indexable bytes. Registers, actual ram, unique temporary vars, and constants are all different memory spaces which are used uniformaly. Varnodes are the combination of a space index, offsert, and size.
 
 The program counter is an address and a pcode index inside that address. Each real assembly instruction usually compiles to multiple pcode instructions. There can be and needs to be intra assembly instruction pcode relative jumps to model things like conditional moves.
-
-PCode comes vaguely in two varieties High and Low pcode. High pcode comes out of the decompiler. Low pcode is what we're interested in comes out of the lifters
 
 A lesson I have learned <https://www.philipzucker.com/cody_sheffer/> is that I should try to follow existing code or proofs much more closely than I a priori expect to. I should not change names unless necessary. I should not change subproofs. I should not have any respect for my short term memory or ability to perform trivial translations in my head. They pile on fast.
 
@@ -171,7 +172,7 @@ The spec of many computational systems is basically an interpreter. The word spe
 
 The c++ code for the ghidra emulator is actually pretty readable and simple. Basically I needed to purify it to explicitly carry around the memory state. I tried to follow the exact code as much as possible including names for my interpreter.
 <https://github.com/NationalSecurityAgency/ghidra/blob/master/Ghidra/Features/Decompiler/src/decompile/cpp/emulate.cc>
-<https://github.com/NationalSecurityAgency/ghidra/blob/master/Ghidra/Features/Decompiler/src/decompile/cpp/opbehavior.cc#L126>
+<https://github.com/NationalSecurityAgency/ghidra/blob/master/Ghidra/Features/Decompiler/src/decompile/cpp/opbehavior.cc#L126> I have had many false starts writing this semantics.
 
 The code of my interpreter is here
 <https://github.com/philzook58/knuckledragger/blob/9e0a90d6213d171827fc9b1a1ce85d2ab5999c1c/kdrag/contrib/pcode/__init__.py#L223>
@@ -253,6 +254,9 @@ Also tinkering on Rust and Lean printers. Rust is easier to print safe forms of 
 
 Smtlib extras in cbat <https://github.com/draperlaboratory/cbat_tools/pull/340> . Having multistore and multiselect in smtlib would be nice. It is awkward to read and write them. SMTLib readability and interpretability is really important for experimentation and debuggibng. It enablesy ou try out new encodings without building a whole thing.
 I've found it interesting that encoding tircks one might try to imporiove the encoding sometimes have physical reality. Tagged architectures can be ghost modelled.
+
+ It's interesting to note that SLEIGH does have PL pedigree "This piece of SLEIGH was originally a separate language, the Semantic Syntax Language (SSL), very loosely based on concepts and a language of the same name developed by Cristina Cifuentes, Mike Van Emmerik and Norman Ramsey, for the University of Queensland Binary Translator (UQBT) project."
+<https://github.com/rbran/sleigh-rs>
 
 ASLp <https://github.com/UQ-PAC/aslp>
 
