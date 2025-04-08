@@ -153,9 +153,9 @@ Cprint.compile_c(Cprint.of_defn(mymax64), opts=["-O3"])
 
 # Ghidra PCode
 
-I'm kind of bullish on Ghidra PCode as an underutilized source of assembly semantics. Ghidra <https://ghidra-sre.org/> is a reverse engineering tool made by the NSA with about 25 years of work in it. It probably isn't going anywhere. In the right circles it's a huge brand name, but in the compiler / PL circles not so much, which I find an interesting example of siloing. I think it is a possible pragmatic alternative to Sail, ASLp, LLVM for some purposes.
+I'm kind of bullish on Ghidra PCode as an underutilized source of assembly semantics. Ghidra <https://ghidra-sre.org/> is a reverse engineering tool made by the NSA with about 25 years of work in it. It probably isn't going anywhere. In the right circles it's a huge brand name, but in the compiler / PL circles not so much, which I find an interesting example of siloing. I think it is a possible pragmatic alternative to Sail <https://github.com/rems-project/sail> , ASLp <https://github.com/ailrst/aslp> , LLVM for some purposes.
 
-The underlying semantics of ghidra is written in a DSL called SLEIGH. <https://spinsel.dev/assets/2020-06-17-ghidra-brainfuck-processor-1/ghidra_docs/language_spec/html/sleigh.html> "This piece of SLEIGH was originally a separate language, the Semantic Syntax Language (SSL), very loosely based on concepts and a language of the same name developed by Cristina Cifuentes, Mike Van Emmerik and Norman Ramsey, for the University of Queensland Binary Translator (UQBT) project."
+The underlying semantics of ghidra is written in a DSL called SLEIGH. <https://spinsel.dev/assets/2020-06-17-ghidra-brainfuck-processor-1/ghidra_docs/language_spec/html/sleigh.html> . It's interesting to note that SLEIGH does have PL pedigree "This piece of SLEIGH was originally a separate language, the Semantic Syntax Language (SSL), very loosely based on concepts and a language of the same name developed by Cristina Cifuentes, Mike Van Emmerik and Norman Ramsey, for the University of Queensland Binary Translator (UQBT) project."
 <https://github.com/rbran/sleigh-rs>
 
 PCode is the intermediate representation. Pcode is a simple assembly like language of about 30 operations. Itt has arithmetic, stores, loads, conditions and branches mostly. The state of a pcode execution is a program counter and memory. Memory is made of different spaces, each of which is indexable bytes. Registers, actual ram, unique temporary vars, and constants are all different memory spaces which are used uniformaly. Varnodes are the combination of a space index, offsert, and size.
@@ -249,7 +249,7 @@ There is always junction between the formal and informal, because we are informa
 
 Like a weld between disparate materials, this juncture is often a weakpoint of formal modelling of the system and thus should be explicitly tested. Tests are the greatest commonality between the two worlds and are applicable in both. I also have built some facilities for using hypothesis to fuzz between z3 versions and python versions of things
 
-Also tinkering on Rust and Lean printers. Rust is easier to print safe forms of and can be discharged via Kani. Implement ADTs via `Rc`. Lean is eating the proof assitant world but is also a nice functional programming language.
+Also tinkering on Rust and Lean printers. Rust is easier to print safe forms of and can be discharged via Kani. Implement ADTs via `Rc`. Lean is eating the proof assistant world but is also a nice functional programming language.
 
 Smtlib extras in cbat <https://github.com/draperlaboratory/cbat_tools/pull/340> . Having multistore and multiselect in smtlib would be nice. It is awkward to read and write them. SMTLib readability and interpretability is really important for experimentation and debuggibng. It enablesy ou try out new encodings without building a whole thing.
 I've found it interesting that encoding tircks one might try to imporiove the encoding sometimes have physical reality. Tagged architectures can be ghost modelled.
@@ -259,6 +259,8 @@ ASLp <https://github.com/UQ-PAC/aslp>
 Direct riscv interpeter
 
 SPIKE interpreter. <https://github.com/riscv-software-src/riscv-isa-sim>
+
+I have not had much luck with SAIL.
 
 Csimple of yosys. Using CBMC as a piece of the chain is compelling. Yosys used a Csimple backend to use CBMC to compare it's verilog implementation against the spike interpreter C semantics. Clever.
 
