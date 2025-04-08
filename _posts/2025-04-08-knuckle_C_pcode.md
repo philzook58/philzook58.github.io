@@ -13,7 +13,7 @@ During a conversation with [Max Bernstein](https://bernsteinbear.com/), he parap
 
 You can take a subset of python, reflect it into z3py, manipulate it to a compilable form, print as C, compile using gcc, then lift the assembly back up using pypcode and then turn that back into z3py to compare against the original problem and spec.
 
-This gives a story that this is arguably "verified" assembly production, not perhaps in the manner that the output of [compcert](https://compcert.org/) is but not too far off from how [sel4](https://sel4.systems/)'s assembly code is verified.
+This gives a story that this is arguably "verified" assembly production, not perhaps in the manner that the output of [compcert](https://compcert.org/) is but not too far off from the rough lines of how [sel4](https://sel4.systems/)'s assembly code is verified.
 
 ![](/assets/knuckle_flow.png)
 
