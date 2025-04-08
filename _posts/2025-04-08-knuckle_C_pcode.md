@@ -172,7 +172,7 @@ The spec of many computational systems is basically an interpreter. The word spe
 
 The c++ code for the ghidra emulator is actually pretty readable and simple. Basically I needed to purify it to explicitly carry around the memory state. I tried to follow the exact code as much as possible including names for my interpreter.
 <https://github.com/NationalSecurityAgency/ghidra/blob/master/Ghidra/Features/Decompiler/src/decompile/cpp/emulate.cc>
-<https://github.com/NationalSecurityAgency/ghidra/blob/master/Ghidra/Features/Decompiler/src/decompile/cpp/opbehavior.cc#L126> I have had many false starts writing this semantics.
+<https://github.com/NationalSecurityAgency/ghidra/blob/master/Ghidra/Features/Decompiler/src/decompile/cpp/opbehavior.cc#L126> I have had many false starts writing this semantics trying to "wing it".
 
 The code of my interpreter is here
 <https://github.com/philzook58/knuckledragger/blob/9e0a90d6213d171827fc9b1a1ce85d2ab5999c1c/kdrag/contrib/pcode/__init__.py#L223>
