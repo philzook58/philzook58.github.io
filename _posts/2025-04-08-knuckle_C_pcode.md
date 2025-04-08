@@ -27,7 +27,7 @@ Dealing with full imperative constructs like array mutation or loops requires mo
 
 Another approach that I think might be too weird to be useful as anything other than a stunt was symbolically executing the python code <https://www.philipzucker.com/overload_bool/> .
 
-Anyway, you can take a simple maximum function and reflect it into a knuckeldragger definition via the `@kd.reflect` decorator. This decorator grabs the ast via `inspect`
+Anyway, you can take a simple maximum function and reflect it into a knuckledragger definition via the `@kd.reflect` decorator. This decorator grabs the ast via `inspect`
 
 ```python
 import kdrag.reflect as reflect
@@ -41,16 +41,17 @@ def mymax(x : int, y : int) -> int:
         return y
 
 mymax.defn
-
 ```
 
 &#8870;ForAll([x, y], mymax(x, y) == If(x > y, x, y))
+
+`mymax` is now a z3 `FuncDeclRef` not a python function. When we call it, we get a symbolic form back.
 
 ```python
 mymax(1,2)
 ```
 
-mymax(1, 2)
+    mymax(1, 2)
 
 The original python function is avaiable under `__wrapped__`. Can use hypothesis fuzzing to help confirm does the same thing as the model.
 
@@ -72,15 +73,11 @@ kd.prove(smt.ForAll([x,y], smt.Or(mymax(x,y) <= y, mymax(x,y) <= x)), unfold=1)
 
 &#8870;ForAll([x, y], Or(mymax(x, y) <= y, mymax(x, y) <= x))
 
-There is always junction between the formal and informal, because we are informal beings, living in an informal world with informal applications and goals. This is true even for pure mathematics. The mental picture of the mathematician and the exact syntax and rules of the formal system are not a priori in alignment.
-
-Like a weld between disparate materials, this juncture is often a weakpoint of formal modelling of the system and thus should be explicitly tested. Tests are the greatest commonality between the two worlds and are applicable in both. I also have built some facilities for using hypothesis to fuzz between z3 versions and python versions of things
-
 # SMTLib to C Extraction
 
 I have made an intentionally limited, direct printer of the z3py ast to C. The printer is coded in a direct style and to error out at print time if it hits any default cases.
 
-At the moment, I only support pure expressions over `bool`, `uint8_t`, `uint16_t`, `uint32_t`, and `uint64_t`. I could in the future support full `int` via GMP, but that is a whole bag of worms.
+At the moment, I only support pure expressions over `bool`, `uint8_t`, `uint16_t`, `uint32_t`, and `uint64_t` (pretty pathetic I know). I could in the future support full `int` via GMP, but that is a whole bag of worms. Basic structs should be doable. One of the reasons I made this is to print out specs to be discharged via CBMC.
 
 So we need to connect our currently unimplementable `mymax` function over the integers into one that works over `uint64_t`. They should match on the parts of their shared domain.
 
@@ -247,6 +244,12 @@ This reminds me a bit of the datalog disassembler <https://github.com/GrammaTech
 I think it would be fun to start to build verified abstract interpretations into knuckledragger. Disassembly, Abstract interpretation, decompilation, and symbolic execution are _proof tactics_ from this perspective. HOOOOO BOY. GOOD SHIT.
 
 I need to work on the readability of the lifting. Perhaps I shoukld change my memory model to be 64 -> 64 insterad of 64->8. I would have to translate my addresses, but I think it might be more readable in regards to the data at the addresses.
+
+There is always junction between the formal and informal, because we are informal beings, living in an informal world with informal applications and goals. This is true even for pure mathematics. The mental picture of the mathematician and the exact syntax and rules of the formal system are not a priori in alignment.
+
+Like a weld between disparate materials, this juncture is often a weakpoint of formal modelling of the system and thus should be explicitly tested. Tests are the greatest commonality between the two worlds and are applicable in both. I also have built some facilities for using hypothesis to fuzz between z3 versions and python versions of things
+
+Also tinkering on Rust and Lean printers. Rust is easier to print safe forms of and can be discharged via Kani. Implement ADTs via `Rc`. Lean is eating the proof assitant world but is also a nice functional programming language.
 
 Smtlib extras in cbat <https://github.com/draperlaboratory/cbat_tools/pull/340> . Having multistore and multiselect in smtlib would be nice. It is awkward to read and write them. SMTLib readability and interpretability is really important for experimentation and debuggibng. It enablesy ou try out new encodings without building a whole thing.
 I've found it interesting that encoding tircks one might try to imporiove the encoding sometimes have physical reality. Tagged architectures can be ghost modelled.
