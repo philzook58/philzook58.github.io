@@ -134,7 +134,7 @@ print(Cprint.of_defn(mymax64))
 
 As a cute feature, I also have the ability to dynamically link in the resulting code and run it. Vaguely, I know that in Lean, Coq etc it is known that proof by reflection is a useful technique. The fastest way to _prove_ that you get a result from running a program on concrete inputs is to just run it. Also in many respects proofs themselves are the trace objects of proof checking or proof searching / producing programs. If you're doing this, it's important to have a fast runtime and probably python level rewrite rules aren't it. I haven't decided how I should do this, but baby steps.
 
-We can also directly compile and link and then use the resulting function via cffi inside of python.
+We can also directly compile and link and then use the resulting function via [cffi](https://cffi.readthedocs.io/en/stable/) inside of python.
 
 ```python
 lib = Cprint.compile_and_link_defn(mymax64)
@@ -199,11 +199,11 @@ We can take a look at the assembly using objdump.
 
 Angr <https://angr.io/> is a prominent binary analysis platform for Python. It supports loading and symbolically executing binaries.
 
-The two main place it gets its assembly semantics from are VEX (valgrind) and PCode (ghidra). An appeal of knuckledragger is that I'm supposed to be able to reuse the insane python ecosystem to get distance for cheap. I wanted and consider it a feature to be able to use angr off the shelf, but found it confusing to modify it to my needs. I couldn't get it to work after a few weeks of on and off tinkering. In addition, the symbolic executor uses an abstraction layer claripy instead of z3 directly and doesn't even seem to support smtlib Arrays which seems like a nail in the coffin in terms of using my intended memory model. Angr was not designed for my intended use case (as complete and sound semantics of the binary as is feasible) and it instead of focussed on drilling to find buigs ands vulnerabilities.
+The two main place it gets its assembly semantics from are VEX (valgrind) and PCode (ghidra). An appeal of knuckledragger is that I'm supposed to be able to reuse the insane python ecosystem to get distance for cheap. I wanted and consider it a feature to be able to use angr off the shelf, but found it confusing to modify it to my needs. I couldn't get it to work after a few weeks of on and off tinkering. In addition, the symbolic executor uses an abstraction layer claripy instead of z3 directly and doesn't even seem to support smtlib Arrays which seems like a nail in the coffin in terms of using my intended memory model. Angr was not designed for my intended use case (as complete and sound semantics of the binary as is feasible) and it instead of focussed on drilling to find bugs ands vulnerabilities.
 
 Still the project does have some of its pieces separately installable. The existance of `pypcode` <https://github.com/angr/pypcode> and `cle` <https://github.com/angr/cle> are huge boons.
 
-`BinaryContext` is in many ways the analog of an angr `Project`. It is frustrating that I think I am replicating a lot of work that is already inside angr, but  whatyagonnado.
+`BinaryContext` is in many ways the analog of an angr `Project`. It is frustrating that I think I am replicating a lot of work that is already inside angr, but whatyagonnado.
 
 Here I load the binary, find the `mymax64` symbol, and then symbolically execute it. On each branch (the conditional move `cmovae` branches in our pcode rep) we prove that the result in `RAX` is the same value as if we ran our higher level `mymax64` function
 
