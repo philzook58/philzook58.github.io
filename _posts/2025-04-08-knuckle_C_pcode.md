@@ -3,7 +3,7 @@ title: "\"Verified\" \"Compilation\" of \"Python\" with Knuckledragger, GCC, and
 date: 2025-04-08
 ---
 
-I've been building out some interesting facilities for knuckledragger:
+I've been building out some interesting facilities for [knuckledragger](https://github.com/philzook58/knuckledragger):
 
 1. An interpreter of a functional subset of the python AST into z3.
 2. A C printer / extraction out of a memory management free subset of z3py / smtlib
