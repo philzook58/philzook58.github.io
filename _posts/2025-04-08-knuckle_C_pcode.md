@@ -9,7 +9,7 @@ I've been building out some interesting facilities for knuckledragger:
 2. A C printer / extraction out of a memory management free subset of z3py / smtlib
 3. A Ghidra Pcode semantics from assembly to z3py / smtlib
 
-During a conversation with Max Bernstein he paraphrased what I have as a python to C compiler. I hadn't really been thinking about it that way, but it does make for an interesting stunt. Maybe even a useful one. My goal today is to demonstrate a minimal viable product about how this could work together.
+During a conversation with [Max Bernstein](https://bernsteinbear.com/), he paraphrased what I have as a python to C compiler. I hadn't really been thinking about it that way, but it does make for an interesting stunt. Maybe even a useful one. My goal today is to demonstrate a minimal viable product about how this could work together.
 
 You can take a subset of python, reflect it into z3py, manipulate it to a compilable form, print as C, compile using gcc, then lift the assembly back up using pypcode and then turn that back into z3py to compare against the original problem and spec.
 
