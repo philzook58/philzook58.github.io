@@ -27,9 +27,9 @@ The wikipedia article claims this is ultimately not the positive feedback mechan
 
 I don't have a good conceptual model of how the collector points work. Once a sector stops touching the neutralizer bar, charge is probably mostly conserved on it until it gets near a sharp collector point. Then what? Some current can flow because of breakdown of the air due to concentrated electric field at the sharp tip. I suppose the leyden jar is supposed to help the tip stay near ground voltage. Once the tip reaches the same voltage as the plate passing underneath it, no charge can flow, but a spark crosses the gap before that state is reached.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Ve7efF73zHI?si=koO2DfDcHzTJs-jt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe  src="https://youtube.com/embed/YuxWcMmspXw?si=9xd2Js-zgXJ9tORc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-<https://youtube.com/shorts/YuxWcMmspXw?si=9xd2Js-zgXJ9tORc>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Ve7efF73zHI?si=koO2DfDcHzTJs-jt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ![](/assets/wimshurst/IMG_2747.jpg)
 
