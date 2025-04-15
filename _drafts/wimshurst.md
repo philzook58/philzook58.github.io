@@ -1,1 +1,48 @@
-[](https://en.wikipedia.org/wiki/Wimshurst_machine)
+---
+title: Wimshurst Machine
+date: 2025-04-15
+---
+
+Ben, Will, and I decided after our triumphant watt balance <https://www.philipzucker.com/kibble_balance/> to build a Wimshurst machine <https://en.wikipedia.org/wiki/Wimshurst_machine>. It's a simple electrostatic generator that can make sparks.
+
+It is made of two counter rototating wheels with metals sectors on them. We bought acrylic disks and used aluminum tape.
+
+The design uses hardened steels rods as shafts. The steel rod of the big wheel is fixed and the wheels are mounted on flanged bearings.
+
+We used round rubber belt which we baught off amazon. We melted the two ends together using a lighter which worked surprisingly ok. There are two belts, one of which is twisted. We thought about maybe using GT2 timing belt but couldn't seem to think of a way to get the right fixed and free spinning pieces.
+
+Our pulleys are two rough round pieces of plywood glued back to back. The circles were cut at an angle on the bandsaw to give them a bit of a lip.
+
+There are two diagonal "neuralizer bars" we made out of armature wire. It is very useful. We tried to grind down or cover unneccessary sharp points. They all seem to be leak charge and glow subtly with the lights off.
+
+Armature wire also forms the sharp collectors. The "leyden jars" consisting of waxed paper cups and aluminum tape don't seem to matter.
+
+Static electricity, despite being an older topic, is highly mysterious compared to electrical circuits.
+
+I kind of still can't grok the mechanism of the Wimshurst machine. One mental model which I think kind of helps is to consider a linear wimshurst machine. I can kind of see that when a sector passes under it's neutralizer bar, it kind of copies the charge it is across from. In this way you are copying and copying and copying some original charge Q. If you dumped those charges into buckets in the end of the linear wimshurst, the total charge in the buckets would grow.
+
+The wikipedia article claims this is ultimately not the positive feedback mechanism though?
+
+I don't have a good conceptual model of how the collector points work. Once a sector stops touching the neutralizer bar, charge is probably mostly conserved on it until it gets near a sharp collector point. Then what? Some current can flow because of breakdown of the air due to concentrated electric field at the sharp tip. I suppose the leyden jar is supposed to help the tip stay near ground voltage. Once the tip reaches the same voltage as the plate passing underneath it, no charge can flow, but a spark crosses the gap before that state is reached.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Ve7efF73zHI?si=koO2DfDcHzTJs-jt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<iframe src="https://youtube.com/shorts/YuxWcMmspXw?si=9xd2Js-zgXJ9tORc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+![](/assets/IMG_2747.jpg)
+
+![](/assets/IMG_2748.jpg)
+
+![](/assets/IMG_2755.jpg)
+
+![](/assets/IMG_2758.jpg)
+
+![](/assets/IMG_2759.jpg)
+
+![](/assets/IMG_2760.jpg)
+
+![](/assets/IMG_2761.jpg)
+
+![](/assets/IMG_2762.jpg)
+
+![](/assets/IMG_2763.jpg)
