@@ -29,22 +29,22 @@ I don't have a good conceptual model of how the collector points work. Once a se
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/Ve7efF73zHI?si=koO2DfDcHzTJs-jt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-<iframe src="https://youtube.com/shorts/YuxWcMmspXw?si=9xd2Js-zgXJ9tORc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<https://youtube.com/shorts/YuxWcMmspXw?si=9xd2Js-zgXJ9tORc>
 
-![](/assets/IMG_2747.jpg)
+![](/assets/wimshurst/IMG_2747.jpg)
 
-![](/assets/IMG_2748.jpg)
+![](/assets/wimshurst/IMG_2748.jpg)
 
-![](/assets/IMG_2755.jpg)
+![](/assets/wimshurst/IMG_2755.jpg)
 
-![](/assets/IMG_2758.jpg)
+![](/assets/wimshurst/IMG_2758.jpg)
 
-![](/assets/IMG_2759.jpg)
+![](/assets/wimshurst/IMG_2759.jpg)
 
-![](/assets/IMG_2760.jpg)
+![](/assets/wimshurst/IMG_2760.jpg)
 
-![](/assets/IMG_2761.jpg)
+![](/assets/wimshurst/IMG_2761.jpg)
 
-![](/assets/IMG_2762.jpg)
+![](/assets/wimshurst/IMG_2762.jpg)
 
-![](/assets/IMG_2763.jpg)
+![](/assets/wimshurst/IMG_2763.jpg)
