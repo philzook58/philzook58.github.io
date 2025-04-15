@@ -7,7 +7,7 @@ Ben, Will, and I decided after our triumphant watt balance <https://www.philipzu
 
 It is made of two counter rotating wheels with metals sectors on them. We bought acrylic disks and used aluminum tape.
 
-The design uses hardened steels rods as shafts. The steel rod of the big wheel is fixed and the wheels are mounted on flanged bearings.
+The design uses hardened steels rods as shafts. The steel rod of the big wheel is fixed and the wheels are mounted on flanged bearings. The drive disk is fixed to it's shaft which rotates on pillow block bearings. All nice little parts that we learned about from our 3d printer days.
 
 We used round rubber belt which we baught off amazon. We melted the two ends together using a lighter which worked surprisingly ok. There are two belts, one of which is twisted. We thought about maybe using GT2 timing belt but couldn't seem to think of a way to get the right fixed and free spinning pieces.
 
