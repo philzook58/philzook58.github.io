@@ -789,65 +789,23 @@ need() :- need(Ctx, not(A)).
 
 A little bit longer. We got up through the intuitive interpretation of lambda-mu terms that Parigot suggests, how the term for Peirce's law should work, and my attempts to make sense of multiple-conclusion sequents as typing judgements. Didn't get to the proof-normalization procedure he sketches.
 
-Graham Leach-Krouse
-  21 hours ago
-Yeesh, subformula property was already 2pm? I think I need to work on editing these things down more.
-
-Philip Zucker
-  20 hours ago
-No you had just barely hit lambda mu
-
-Philip Zucker
-  20 hours ago
 The subformula property is important to the inverse method, which is a way of pruning what formulas one may need to consider in a bottom up automated method
-
-Philip Zucker
-  20 hours ago
 I think it's related to the idea of a magic set transformation in datalog
-
-Philip Zucker
-  20 hours ago
 But I've sort of been too confused to go further (edited)
 
-Graham Leach-Krouse
-  20 hours ago
-What's a magic set transformation? (looks like the handbook of automated reasoning has a chapter on the inverse method...)
-
-Philip Zucker
-  20 hours ago
 frank pfenning also has some notes on inverse method
-
-Philip Zucker
-  20 hours ago
 I'm not strictly sure what magic set is. But I do get the idea of emulating "demand". I think the motivation is to emulate prolog (a top down / backwards system) with datalog (a bottom up / forward system). You can do this by making "demand" or "magic-set" predicates that track an overapproximation of the possible prolog queries
-
-Philip Zucker
-  20 hours ago
 Kind of it's like doing some kind of statc analyss / abstract interpretation over prolog programs using datalog
 
-Philip Zucker
-  20 hours ago
 This comes up for example if you want to compute a function
-
-Philip Zucker
-  20 hours ago
 fact(0,1). fact(n+1,n*m) :- fact(n, m).
 
-Philip Zucker
-  20 hours ago
 This is a good prolog program
-
-Philip Zucker
-  20 hours ago
 But a non terminating datalog one
 
-Philip Zucker
-  20 hours ago
 demand_fact(n-1) :- demand_fact(n), n > 0.
 fact(n+1,n*m) :- fact(n, m), demand_fact(n+1).
 
-Philip Zucker
-  20 hours ago
 This guards the rule by demand so it stops eventually.
 
 If you want to calculate fact(7,?) you seed the database with demand_fact(7).
@@ -877,5 +835,3 @@ but a cut free system its obvious?
 
 Yep, without cuts (in a sequent calculus), it's immediate from inspecting the rules. (edited)
 OK, I'm trying to understand the demand thing, without much logic programming fluency. The idea is that you can by adding demand(7), you can infer demand(n) for n<7, and by mixing demand into the rules for factorial, you prevent divergence caused by endless generation of factorial relation facts?
-
-Put them up here: <https://github.com/draperlaboratory/pl-reading-group/tree/master/talks/2024-05-28> - they're still HTML, but they should just work if you open them in a regular browser.
