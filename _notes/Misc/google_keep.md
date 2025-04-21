@@ -4,6 +4,740 @@ title: Google Keep
 ---
 Export Method: Highlight, select copy to google doc.
 
+# 2025-04
+
+[1902.08848] Algebraic Type Theory and Universe Hierarchies
+
+<https://arxiv.org/abs/1902.08848>
+
+<https://drops.dagstuhl.de/storage/00lipics/lipics-vol299-fscd2024/LIPIcs.FSCD.2024.10/LIPIcs.FSCD.2024.10.pdf>
+
+Second order gat
+
+[2211.07487] External univalence for second-order generalized algebraic theories
+
+<https://arxiv.org/abs/2211.07487>
+
+A refinement type by any other name | weaselhat
+
+<https://www.weaselhat.com/post-531.html>
+
+<https://drops.dagstuhl.de/storage/00lipics/lipics-vol228-fscd2022/LIPIcs.FSCD.2022.24/LIPIcs.FSCD.2022.24.pdf>
+
+Type universes without ac
+
+[2410.11566] Attitude Estimation via Matrix Fisher Distributions on SO(3) Using Non-Unit Vector Measurements
+
+<https://arxiv.org/abs/2410.11566>
+
+Show HN: Torque – A lightweight meta-assembler for any processor | Hacker News
+
+<https://news.ycombinator.com/item?id=43698801>
+
+Designing a low-cost high-performance 10 MHz – 15 GHz vector network analyzer | Hacker News
+
+<https://news.ycombinator.com/item?id=43696798>
+
+What the hell is a target triple? | Hacker News
+
+<https://news.ycombinator.com/item?id=43696756>
+
+Algebraic Semantics for Machine Knitting | Lobsters
+
+<https://lobste.rs/s/koauiz/algebraic_semantics_for_machine>
+
+<https://noamz.org/oplss16/refinements-notes.pdf>
+
+dg.differential geometry - Who first defined vector fields as derivations? - MathOverflow
+
+<https://mathoverflow.net/questions/491043/who-first-defined-vector-fields-as-derivations>
+
+Coalgebraically Thinking | The n-Category Café
+
+<https://golem.ph.utexas.edu/category/2008/11/coalgebraically_thinking.html>
+
+midpoint algebra in nLab
+
+<https://ncatlab.org/nlab/show/midpoint+algebra>
+
+<https://matryoshka-project.github.io/pubs/vukmirovic_msc_thesis.pdf>
+
+Differential term-orders | Proceedings of the 1993 international symposium on Symbolic and algebraic computation
+
+<https://dl.acm.org/doi/10.1145/164081.164138>
+
+<https://arxiv.org/abs/2504.05577>
+
+<https://www.carloangiuli.com/courses/b619-sp24/notes.pdf>
+
+Principles of depdent type thwory
+
+<https://martinescardo.github.io/.talks/map2011/index.html>
+
+categorical computable real talks escardo
+
+OpenRocket Simulator
+
+<https://openrocket.info/>
+
+<https://www.sciencedirect.com/science/article/abs/pii/S0001870824001919>
+
+How to not build a two stage model rocket | Hacker News
+
+<https://news.ycombinator.com/item?id=43669981>
+
+<https://homepages.math.uic.edu/~marker/Banff/AMS_Baltimore.pdf>
+
+<https://eprints.illc.uva.nl/id/eprint/1769/1/wehr.pdf>
+
+czf interpretation
+
+<https://arxiv.org/pdf/2411.07667>
+
+Formalization of physics index notation in Lean 4
+
+<https://www.sciencedirect.com/science/article/pii/S0167642322001435>
+
+Martin Escardo: "Index of selected threads on #…" - Mathstodon
+
+<https://mathstodon.xyz/@MartinEscardo/110890155815254064>
+
+Hott threads
+
+My Own Private Binary: An Idiosyncratic Introduction to Linux Kernel Modules | Hacker News
+
+<https://news.ycombinator.com/item?id=43647294>
+
+[2504.06239] Canonical for Automated Theorem Proving in Lean
+
+<https://arxiv.org/abs/2504.06239>
+
+<https://arxiv.org/pdf/2504.06239>
+
+Canonical dependent type solver
+
+<https://blog.yosyshq.com/p/risc-v-formal-verification-framework-extension-for-synopsys-vc-formal/>
+
+<https://shd.mit.edu/home/>
+
+<https://www.jjj.de/fxt/#fxtbook>
+
+<https://www.sciencedirect.com/science/article/pii/S0304397518307278>
+
+<https://littleosbook.github.io/>
+
+<https://www.imandra.ai/code-logician>
+
+<https://cgi.csc.liv.ac.uk/~frans/OldResearch/dGKBIS/tesseral.html>
+
+<https://leanprover-community.github.io/mathlib4_docs/references.html>
+
+<https://news.ycombinator.com/item?id=43593088>
+
+Dynamic Register Allocation on AMD's RDNA 4 GPU Architecture | Hacker News
+
+<https://news.ycombinator.com/item?id=43595223>
+
+<https://arxiv.org/pdf/2312.02996>
+
+Differential term rewriting
+
+Rewrite Games | SpringerLink
+
+<https://link.springer.com/chapter/10.1007/3-540-45610-4_11>
+
+<https://repository.tudelft.nl/file/File_a98b6c93-4017-42c5-bb8f-df68da0d7034>
+
+Leansolver monte carlo proof search
+
+[2504.01847] Confluence of Conditional Rewriting Modulo
+
+<https://arxiv.org/abs/2504.01847>
+
+<https://akihisayamada.github.io/ADY18.pdf>
+
+Probalistic term rewrire systems natt
+
+<https://people.eecs.berkeley.edu/~ksen/papers/pmaude.pdf>
+
+Probability maude
+
+String Diagram Rewrite Theory I: Rewriting with Frobenius Structure | Journal of the ACM
+
+<https://dl.acm.org/doi/abs/10.1145/3502719>
+
+[1209.3632] Quantum Techniques for Stochastic Mechanics
+
+<https://arxiv.org/abs/1209.3632>
+
+Probabilistic Programming
+
+<https://www.cs.cornell.edu/courses/cs4110/2016fa/lectures/lecture33.html>
+
+LazyPPL
+
+<https://lazyppl-team.github.io/>
+
+[2112.14965] A Braided Lambda Calculus
+
+<https://arxiv.org/abs/2112.14965>
+
+<http://dcernst.github.io/teaching/mat411f16/materials/>
+
+Cayley graphs and the geometry of groups | What's new
+
+<https://terrytao.wordpress.com/2010/07/10/cayley-graphs-and-the-geometry-of-groups/>
+
+Van Kampen diagram - Wikipedia
+
+<https://en.wikipedia.org/wiki/Van_Kampen_diagram>
+
+Interferometric single-shot parity measurement in InAs–Al hybrid devices | Nature
+
+<https://www.nature.com/articles/s41586-024-08445-2>
+
+Towards fearless SIMD, 7 years later | Hacker News
+
+<https://news.ycombinator.com/item?id=43519823>
+
+<https://news.ycombinator.com/item?id=43160779>
+
+<https://news.ycombinator.com/item?id=43472143>
+
+<https://ncatlab.org/nlab/show/Tietze+transformation#tietzes_theorem>
+
+Practical SDR | No Starch Press
+
+<https://nostarch.com/practical-sdr>
+
+<https://www.cse.chalmers.se/~abela/talkCHITCHAT06.pdf>
+
+Nbe. Values should be views
+
+Reflection principle - Wikipedia
+
+<https://en.m.wikipedia.org/wiki/Reflection_principle>
+
+The Prospero Challenge | Hacker News
+
+<https://news.ycombinator.com/item?id=43458780>
+
+A proof checker meant for education | Hacker News
+
+<https://news.ycombinator.com/item?id=43434503>
+
+<https://ia800501.us.archive.org/30/items/AntennaTheoryAnalysisAndDesign3rdEd/Antenna%20Theory%20Analysis%20and%20Design%203rd%20ed.pdf>
+
+Book recommendations for network programming : r/golang
+
+<https://www.reddit.com/r/golang/comments/v74ji8/book_recommendations_for_network_programming/>
+
+<https://www.cs.tau.ac.il/~nachum/papers/ProofTheoretic.pdf>
+
+Proof theoretic technqiues for term rewriting systems
+
+<https://inria.hal.science/hal-01183817/document#:~:text=An%20equational%20axiom%20or%20equality,be%20deduced%20via%20inference%20rules>.
+
+Kirchener equational. Nice inductionless induction section
+
+<https://en.wikipedia.org/wiki/Calculus_of_moving_surfaces>
+
+<https://dl.acm.org/doi/10.1145/2465506.2466576>
+
+The calculus of moving surfaces (CMS)
+
+Show HN: Torch Lens Maker – Differentiable Geometric Optics in PyTorch | Hacker News
+
+<https://news.ycombinator.com/item?id=43435438>
+
+Radio Builder – Home of the RADIO LAB
+
+<https://radiobuilder.org/>
+
+[2412.05265] Reinforcement Learning: An Overview
+
+<https://arxiv.org/abs/2412.05265>
+
+The Inverse Method for the Logic of Bunched Implications | SpringerLink
+
+<https://link.springer.com/chapter/10.1007/978-3-540-32275-7_31>
+
+Light's associativity test - Wikipedia
+
+<https://en.m.wikipedia.org/wiki/Light%27s_associativity_test>
+
+DialEgg: Dialect-Agnostic MLIR Optimizer using Equality Saturation with Egglog | Proceedings of the 23rd ACM/IEEE International Symposium on Code Generation and Optimization
+
+<https://dl.acm.org/doi/10.1145/3696443.3708957>
+
+<https://easychair.org/publications/paper/8jNL/open>
+
+Embedding i tuitionistici nto classical
+
+<http://www.sontaglab.org/FTPDIR/sontag_mathematical_control_theory_springer98.pdf>
+
+Sontag mathematical control theory
+
+Kalman Filter Explained Simply - The Kalman Filter
+
+<https://thekalmanfilter.com/kalman-filter-explained-simply/>
+
+<https://www.bc.edu/content/dam/bc1/schools/mcas/cs/pdf/honors-thesis/sample5.pdf>
+
+Solving games qbf solvers
+
+A Guide to Undefined Behavior in C and C++ (2010) | Hacker News
+
+<https://news.ycombinator.com/item?id=43352503>
+
+Stupid Smart Pointers in C | Hacker News
+
+<https://news.ycombinator.com/item?id=43387334>
+
+Home | PrintedLabs
+
+<https://printedlabs.uni-bayreuth.de/en>
+
+<https://grantjurgensen.com/posts/schroder-berstein-acl2/>
+
+Amateur Telescope Making Main Page | Hacker News
+
+<https://news.ycombinator.com/item?id=43351988>
+
+<https://iris-project.org/tutorial-pdfs/iris-lecture-notes.pdf>
+
+<https://gbaz.github.io/slides/pwl-homology-slides.pdf>
+
+Formal Verification of Zero-Downtime Database Migration in PlusCal | Hacker News
+
+<https://news.ycombinator.com/item?id=43306776>
+
+Formal Verification of Zero-Downtime Database Migration in PlusCal | Hacker News
+
+<https://news.ycombinator.com/item?id=43306776>
+
+Software-Defined Radio for Engineers (2018) [pdf] | Hacker News
+
+<https://news.ycombinator.com/item?id=43323071>
+
+Towards a Dynabook for verified VM construction - ScienceDirect
+
+<https://www.sciencedirect.com/science/article/pii/S2590118424000182>
+
+<https://ceur-ws.org/Vol-3325/regular2.pdf>
+
+Design principles for high performance smalltalk
+
+Two decades of smalltalk VM development: live VM development through simulation tools | Proceedings of the 10th ACM SIGPLAN International Workshop on Virtual Machines and Intermediate Languages
+
+<https://dl.acm.org/doi/10.1145/3281287.3281295>
+
+Flean: Floating point numbers in Lean, mostly done!
+
+<https://josephmckinsey.com/flean2.html>
+
+Axiomatic Theories of Truth (Stanford Encyclopedia of Philosophy)
+
+<https://plato.stanford.edu/entries/truth-axiomatic/>
+
+<https://wiki.bordeaux.inria.fr/Helene-Kirchner/doku.php?id=start>
+
+IMC010: Type Theory and Coq
+
+<https://www.cs.ru.nl/~freek/courses/tt-2024/>
+
+<https://www.sciencedirect.com/science/article/pii/S0888613X24001725>
+
+An implementation of nonmonotonic reasoning with c-representations using an SMT solver
+
+<https://arxiv.org/pdf/2501.00921>
+
+<https://github.com/Wilfred/difftastic/wiki/Structural-Diffs>
+
+<https://arxiv.org/abs/2304.06000>
+
+Ground Confluence Prover based on Rewriting Induction - CORE Reader
+
+<https://core.ac.uk/reader/62921510>
+
+A verified ground confluence tool for linear variable-separated rewrite systems in Isabelle/HOL | Proceedings of the 8th ACM SIGPLAN International Conference on Certified Programs and Proofs
+
+<https://dl.acm.org/doi/10.1145/3293880.3294098>
+
+<https://www.cs.cmu.edu/~fp/papers/adjoint18b.pdf>
+
+Adjoint logic
+
+Mistral OCR | Hacker News
+
+<https://news.ycombinator.com/item?id=43282905>
+
+Hands-On Mathematical Optimization with Python — Companion code for the book "Hands-On Mathematical Optimization with Python"
+
+<https://mobook.github.io/MO-book/intro.html>
+
+<https://www.chargueraud.org/research/2025/overloading/overloading.pdf>
+
+Typechecking overloading
+
+How to deepen your understanding of Mizar – Ariadne's Thread
+
+<https://thmprover.wordpress.com/2025/02/22/how-to-deepen-your-understanding-of-mizar/>
+
+An Attempt to Catch Up with JIT Compilers | Hacker News
+
+<https://news.ycombinator.com/item?id=43243109>
+
+HomePage:Finite Element Method Magnetics
+
+<https://www.femm.info/wiki/HomePage>
+
+Antenna Design Tools | AEM Antennas
+
+<https://aemantennas.com/antenna-design-tools/>
+
+Hedgehog (geometry) - Wikipedia
+
+<https://en.m.wikipedia.org/wiki/Hedgehog_(geometry)>
+
+Home
+
+<https://csadams.webspace.durham.ac.uk/>
+
+Optics f2f Code Book — Optics f2f Code Book
+
+<https://opticsf2f.github.io/Opticsf2f_CodeBook/intro.html>
+
+Optics f2f - Paperback - Charles S. Adams, Ifan G. Hughes - Oxford University Press
+
+<https://global.oup.com/academic/product/optics-f2f-9780198786795?cc=gb&lang=en&>
+
+<https://news.ycombinator.com/item?id=43204796>
+
+<https://fpga-ignite.github.io/>
+
+Game Engine Black Book DOOM
+
+<https://fabiensanglard.net/gebbdoom/>
+
+[2502.19311] Faithful Logic Embeddings in HOL -- A recipe to have it all: deep and shallow, automated and interactive, heavy and light, proofs and counterexamples, meta and object level
+
+<https://arxiv.org/abs/2502.19311>
+
+[2304.06000] Pointfree topology and constructive mathematics
+
+<https://arxiv.org/abs/2304.06000>
+
+A $100 DIY muon tomographer | Hacker News
+
+<https://news.ycombinator.com/item?id=43195525>
+
+The need for memory safety standards | Hacker News
+
+<https://news.ycombinator.com/item?id=43186614>
+
+Geometric Algebra | Hacker News
+
+<https://news.ycombinator.com/item?id=43189703>
+
+Calculus Without Derivatives | SpringerLink
+
+<https://link.springer.com/book/10.1007/978-1-4614-4538-8>
+
+History of CAD | Hacker News
+
+<https://news.ycombinator.com/item?id=43167865>
+
+Long division verified via Hoare logic | Hacker News
+
+<https://news.ycombinator.com/item?id=43185059>
+
+<https://gist.github.com/cfbolz/4ad3e137850c17f02348411eb9de2186/revisions>
+
+Low Overhead Allocation Sampling with VMProf in PyPy's GC | PyPy
+
+<https://www.pypy.org/posts/2025/02/pypy-gc-sampling.html>
+
+Introduction to Stochastic Calculus | Hacker News
+
+<https://news.ycombinator.com/item?id=43160779>
+
+Topological Superconductors | Hacker News
+
+<https://news.ycombinator.com/item?id=43105916>
+
+<https://news.ycombinator.com/item?id=43140614>
+
+Design of Experiments | JMP
+
+<https://www.jmp.com/en_us/software/capabilities/design-of-experiments.html>
+
+TinyCompiler: A compiler in a week-end | Hacker News
+
+<https://news.ycombinator.com/item?id=43120873>
+
+<https://github.com/a327ex/blog/issues/15>
+
+<https://www.vldb.org/pvldb/vol1/1453978.pdf> database rewrite rules according to max willsey
+
+<https://www.csl.cornell.edu/~zhiruz/pdfs/smoothe-asplos2025.pdf> differnetiable egraph extraction
+
+<https://arxiv.org/pdf/2404.08106> kestrel relational egraph
+
+<https://repositum.tuwien.at/bitstream/20.500.12708/81336/1/Daly-2022-Synthesizing%20Instruction%20Selection%20Rewrite%20Rules%20from%20RTL%20using...-vor.pdf>
+
+KDLP
+
+<https://kdlp.underground.software/course/index>
+
+<https://www.teachspin.com/instruments>
+
+<https://news.ycombinator.com/item?id=43048073>
+
+<https://homepage.divms.uiowa.edu/~slonnegr/plf/Book/>
+
+Homemade polarimetric synthetic aperture radar drone | Hacker News
+
+<https://news.ycombinator.com/item?id=43073808>
+
+<https://github.com/tum-pbs/PhiFlow>
+
+Flea-Scope: $18 Source Available USB Oscilloscope, Logic Analyzer and More [pdf] | Hacker News
+
+<https://news.ycombinator.com/item?id=43068585>
+
+Show HN: Letting LLMs Run a Debugger | Hacker News
+
+<https://news.ycombinator.com/item?id=43023698>
+
+<https://math.andrej.com/data/synthetic.pdf>
+
+First steps in synthetic computability theory
+
+Introduction to Applied Linear Algebra – Vectors, Matrices, and Least Squares
+
+<https://web.stanford.edu/~boyd/vmls/>
+
+Jill – a functional programming language for the Nand2Tetris platform | Hacker News
+
+<https://news.ycombinator.com/item?id=43060603>
+
+Home · Kenney
+
+<https://kenney.nl/>
+
+Fluidsim documentation — FluidSim 0.8.4 documentation
+
+<https://fluidsim.readthedocs.io/en/latest/index.html>
+
+Basis of the Kalman Filter [pdf] | Hacker News
+
+<https://news.ycombinator.com/item?id=43029314>
+
+Wokwi - World's most advanced ESP32 Simulator
+
+<https://wokwi.com/>
+
+Tiny Pointers | Hacker News
+
+<https://news.ycombinator.com/item?id=43023634>
+
+<https://www21.in.tum.de/~eberlm/pdfs/algorithms_survey.pdf>
+
+Theory Deriv
+
+<https://isabelle.in.tum.de/library/HOL/HOL/Deriv.html#Deriv.has_derivative%7Cconst>
+
+<https://abackus.github.io/research/formalizations.pdf>
+
+Formalizatiosn of analysis bishop intuitionsim
+
+<https://guillaume.melquiond.fr/doc/14-mscs.pdf>
+
+Real analysis formalization
+
+Welcome to bilby’s documentation! — bilby 2.3 documentation
+
+<https://lscsoft.docs.ligo.org/bilby/>
+
+[2502.03544] Gold-medalist Performance in Solving Olympiad Geometry with AlphaGeometry2
+
+<https://arxiv.org/abs/2502.03544>
+
+Grounded Language Design for Lightweight Diagramming for Formal Methods
+
+<https://arxiv.org/html/2412.03310v1>
+
+LTL Tutor: Login
+
+<https://www.ltl-tutor.xyz/login?next=%2F>
+
+<https://harmonic.fun/about>
+
+<https://content.iospress.com/download/journal-on-satisfiability-boolean-modeling-and-computation/sat190085?id=journal-on-satisfiability-boolean-modeling-and-computation/sat190085>
+
+successful sat encoding technique
+
+<https://news.ycombinator.com/item?id=42918846>
+
+<https://goedel-lm.github.io/>
+
+llama-vscode - Visual Studio Marketplace
+
+<https://marketplace.visualstudio.com/items?itemName=ggml-org.llama-vscode>
+
+Development of DSL Compilers for Specialized Processors
+
+<https://link.springer.com/article/10.1134/S0361768821070082>
+
+<https://colab.research.google.com/drive/1jcNgt5SWMHgHjRE8pwekRdFeaED2Ci2y#scrollTo=01PIn9pUGiN2>
+
+copilot-explorer | Hacky repo to see what the Copilot extension sends to the server
+
+<https://thakkarparth007.github.io/copilot-explorer/posts/copilot-internals.html>
+
+Power diagram - Wikipedia
+
+<https://en.m.wikipedia.org/wiki/Power_diagram>
+
+PCBs, copper pours, ground planes, and you | Hacker News
+
+<https://news.ycombinator.com/item?id=42874885>
+
+[2106.03936] Partial Optimal Transport for a Constant-Volume Lagrangian Mesh with Free Boundaries
+
+<https://arxiv.org/abs/2106.03936>
+
+<https://www.lopoukhine.com/winter-school/>
+
+<https://hvg.ece.concordia.ca/Publications/Thesis/Elif-PhD-Thesis.pdf>
+
+Hol light pde
+
+Anatomy of a Formal Proof | Hacker News
+
+<https://news.ycombinator.com/item?id=42815755>
+
+<https://www.impan.pl/~kz/truthseminar/Kripke_Outline.pdf>
+
+kripke logic towers
+
+<https://en.wikipedia.org/wiki/Genetic_programming>
+
+<https://github.com/FormalizedFormalLogic>
+
+<https://news.ycombinator.com/item?id=42708682>
+
+<https://www.inf.ed.ac.uk/teaching/courses/ar/book/book_2010.06.23.pdf>
+
+computational modelling of mathematical reasoning - alan bundy
+
+Physically Based Rendering: From Theory to Implementation | Hacker News
+
+<https://news.ycombinator.com/item?id=42683731>
+
+Homepage of Understanding MP3
+
+<https://hint.userweb.mwn.de/understanding_mp3/index.html>
+
+Lambda Calculus in 383 Bytes (2022) | Hacker News
+
+<https://news.ycombinator.com/item?id=42679191>
+
+<https://news.ycombinator.com/item?id=42672246>
+
+The Pi Calculus | The n-Category Café
+
+<https://golem.ph.utexas.edu/category/2009/08/the_pi_calculus.html>
+
+<https://arxiv.org/abs/math/0411418v2>
+
+<https://news.ycombinator.com/item?id=42656433>
+
+sief natural deduction thesis
+
+<https://www.cmu.edu/dietrich/philosophy/docs/tech-reports/74_Sieg.pdf>
+
+<https://re2c.org/>
+
+Comparing Hobby PCB Vendors | Hacker News
+
+<https://news.ycombinator.com/item?id=35285769>
+
+Choosing an op-amp for your project | Hacker News
+
+<https://news.ycombinator.com/item?id=42590337>
+
+Rohlang3: A point-free, homoiconic, and dependently typed "SK calculus" | Hacker News
+
+<https://news.ycombinator.com/item?id=42581082>
+
+Einsum in Depth | Hacker News
+
+<https://news.ycombinator.com/item?id=42587056>
+
+Musings on Tracing in PyPy | PyPy
+
+<https://pypy.org/posts/2025/01/musings-tracing.html>
+
+<https://github.com/jsiek/deduce?tab=readme-ov-file>
+
+The Dome (2005) | Hacker News
+
+<https://news.ycombinator.com/item?id=42583688>
+
+<https://people.mpi-sws.org/~mueck/downloads/paper-csl24.pdf>
+
+Forster dominik synthetic computability coq
+
+Numerical Fuzz: A Type System for Rounding Error Analysis | Proceedings of the ACM on Programming Languages
+
+<https://dl.acm.org/doi/10.1145/3656456>
+
+Accurate Polynomial Evaluation in Floating Point - Computational Science Stack Exchange
+
+<https://scicomp.stackexchange.com/questions/13023/accurate-polynomial-evaluation-in-floating-point>
+
+Emulating the FMAdd Instruction, Part 1: 32-bit Floats | Hacker News
+
+<https://news.ycombinator.com/item?id=42572770>
+
+12 Steps to a Fast Multipole Method on GPUs | Pan-American Advanced Studies Institute
+
+<https://www.bu.edu/pasi/courses/12-steps-to-having-a-fast-multipole-method-on-gpus/>
+
+algorithm - Recommendations for Fast Multipole Method implementation? - Stack Overflow
+
+<https://stackoverflow.com/questions/14709141/recommendations-for-fast-multipole-method-implementation>
+
+Building Game Prototypes with LÖVE | Hacker News
+
+<https://news.ycombinator.com/item?id=42562175>
+
+Symbolic Reference and Hardware Models in Python | Hacker News
+
+<https://news.ycombinator.com/item?id=42530424>
+
+Introduction to PyKX - KX Learning Hub
+
+<https://learninghub.kx.com/courses/introduction-to-pykx/>
+
+Physics 12c
+
+<https://www.preskill.caltech.edu/ph12c/index.html>
+
+<https://math.andrej.com/wp-content/uploads/2011/01/dialectica.v>
+
+Invariants: Computation and Applications | Hacker News
+
+<https://news.ycombinator.com/item?id=42521718>
+
+<https://news.ycombinator.com/item?id=42516697>
+
+<https://martinescardo.github.io/papers/RNC3.pdf>
+
+Pcf with reals escardo
+
 # 2024-12
 
 <https://williamjbowman.com/tmp/nbe-four-ways/>
