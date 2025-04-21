@@ -163,7 +163,7 @@ The intuitionistic sequent calculus has only one formula in the right hand side 
 
 ```
 
-This can be made into a datalog program via something like the following
+This can be made into a datalog program via something like the following. This is pseduo code. No system I know of accepts this.
 
 ```prolog
 % Inverse method datalog prover for intuitionistic propositional logic sequent calculus
@@ -201,33 +201,6 @@ proven(G1, P) <= proven(G2, P) :- G1 <= G2.
 It is not that convenient to use souffle for this because of all the set operations. I could use clingo and the python api. I could also probably use egglog, which has Set containers. There are probably other datalogs that could support this program.
 
 As is my usual strategy, I can implement this in python on the z3 ast.
-
-We can compute the needed formula including sign (how many times did we need to travel under the left part of implication)
-
-```python
-from kdrag.all import *
-def needed(p):
-    seen = set()
-    def dfs(fm, sign):
-        if (fm, sign) in seen:
-            return
-        seen.add((fm, sign))
-        if smt.is_implies(fm):
-            a,b = fm.children()
-            dfs(a, -sign)
-            dfs(b, sign)
-        else:
-            for c in fm.children():
-                dfs(c, sign)
-    dfs(p, 1)
-    return seen
-
-A,B,C =  smt.Bools("A B C")
-needed(smt.Implies(A,B))
-
-```
-
-    {(A, -1), (B, 1), (Implies(A, B), 1)}
 
 A shallow embedding of seminaive datalog can be done by maintaining a loop of new, delta, and old facts. Here for example is a transitive closure query
 
@@ -408,6 +381,33 @@ Frank Pfenning's notes are an incredible and unique resource.
 - <https://link.springer.com/chapter/10.1007/978-3-642-02959-2_19>  Efficient Intuitionistic Theorem Proving with the Polarized Inverse Method
 
 Handbook of automated reasoniing
+
+We can compute the needed formula including sign (how many times did we need to travel under the left part of implication). You can prune quite a bit using this.
+
+```python
+from kdrag.all import *
+def needed(p):
+    seen = set()
+    def dfs(fm, sign):
+        if (fm, sign) in seen:
+            return
+        seen.add((fm, sign))
+        if smt.is_implies(fm):
+            a,b = fm.children()
+            dfs(a, -sign)
+            dfs(b, sign)
+        else:
+            for c in fm.children():
+                dfs(c, sign)
+    dfs(p, 1)
+    return seen
+
+A,B,C =  smt.Bools("A B C")
+needed(smt.Implies(A,B))
+
+```
+
+    {(A, -1), (B, 1), (Implies(A, B), 1)}
 
 Removing weakening. Anything that has Gamma,A |- B, the A can come out of nowhere now for implicit wekaening.
 
