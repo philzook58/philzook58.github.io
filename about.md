@@ -19,7 +19,7 @@ An atom feed of the blog is here <https://www.philipzucker.com/feed.xml>
 Some of my friend's blogs:
 
 * [Ben’s Blog](http://blog.benwiener.com/)
-* [Declan’s Blog](https://www.declanoller.com/)
+* [Declan’s Blog](https://declanoller.github.io/)
 * [David’s Laser Writeshow](https://davidtersegno.wordpress.com/)
 * [Will’s Blog](https://willmaulbetsch.home.blog/)
 

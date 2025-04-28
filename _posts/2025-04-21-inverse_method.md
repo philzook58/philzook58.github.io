@@ -380,6 +380,8 @@ Frank Pfenning's notes are an incredible and unique resource.
 - <https://link.springer.com/chapter/10.1007/3-540-55602-8_198>  Theorem proving in non-standard logics based on the inverse method
 - <https://link.springer.com/chapter/10.1007/978-3-642-02959-2_19>  Efficient Intuitionistic Theorem Proving with the Polarized Inverse Method
 
+Like magic set is a program analysis over datalog, inverse method could be seen as static analysis over backwards theorem prover.
+
 Handbook of automated reasoniing
 
 We can compute the needed formula including sign (how many times did we need to travel under the left part of implication). You can prune quite a bit using this.
