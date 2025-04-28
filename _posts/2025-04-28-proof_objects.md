@@ -47,14 +47,14 @@ If I say that a correct automated theorem proving procedure found a proof, then 
 
 # Traces are Proof objects
 
-Many many proof objects are traces of theorem proving systems. If you believe you somehow built a theorem prover, the substeps of this theorem prover.
+Many many proof objects are traces of theorem proving systems. If you believe you somehow built a theorem prover, the substeps of this theorem prover that led to a success are proof objects. You could record every assembly instruction ran, but usually it's nicer to log just some higher level summary steps.  
 
 This is a viewpoint useful for SAT solvers, MIP solvers, datalog provenance, etc.
 
-UNSAT certificates basically traces of useful learned clauses in a SAT solver. The learned clauses are combinations of previous clauses using resolution.
+UNSAT certificates basically traces of useful learned clauses in a SAT solver. The learned clauses are combinations of previous clauses using resolution. <https://www.cs.utexas.edu/~marijn/drat-trim/>
 
 Datalog/prolog provenance basically carries an extra tracing parameter in every predicate. Traces of a prolog solve are proof objects.
-<https://www.philipzucker.com/metamath-datalog-provenenance/>
+<https://www.philipzucker.com/metamath-datalog-provenenance/> . Even just a timestamp is a useful proof object since it tells us where to look to reconstruct. <https://www.philipzucker.com/snakelog-post/#Timestamps%20and%20Provenance>
 
 MIP certificates are a tree of dual vectors (assuming branch and cut).
 
@@ -85,6 +85,8 @@ Operations like Cut-elimination, negation normal form, cnf, dnf are for serious 
 
 A lighter weight proof object is unsat cores, which at least prune for relevancy.
 
+Maybe somewhat similarly, giving me the groundings of the rewrite rules used or datalog rules used is a huge help.
+
 # Good Rewrite Rules
 
 A good rewrite rule system is a compressed proof object if you can guarantee I can run it and it will work. Each rewrite rule needs to be dignified from the axiom equations. Knuth bendix produces systems like this. But you can also produce rewrite systems specialized to a particular goal equation.
@@ -94,6 +96,8 @@ A good rewrite rule system is a compressed proof object if you can guarantee I c
 Hello from Paris!
 
 I've had this one knocking around a while. You can see notes below that I think it would be good to actually program up all these proof objects.
+
+A whole other branch down the proof tree is crypto proofs and certificates <https://en.wikipedia.org/wiki/Zero-knowledge_proof>  <https://en.wikipedia.org/wiki/Proof_of_knowledge> <https://en.wikipedia.org/wiki/Digital_signature> Not entirely unrelated. If you have a trusted proof kernel, it can crypto sign it's proof objects as validated in an LCF style.
 
 <https://en.wikipedia.org/wiki/Van_Kampen_diagram> Van Kampen Diagrams are a visual proof object for the word problem of finitely presented groups. ![](https://upload.wikimedia.org/wikipedia/commons/8/81/Abelian.jpg)
 
