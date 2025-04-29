@@ -108,19 +108,27 @@ Maybe somewhat similarly, giving me the groundings of the rewrite rules used or 
 
 A good rewrite rule system is a compressed proof object if you can guarantee I can run it and it will work. Each rewrite rule needs to be dignified from the axiom equations. Knuth bendix produces systems like this. But you can also produce rewrite systems specialized to a particular goal equation.
 
+# Numbered Lists
+
+Hilbert style number lists of statements. If you refer to previous ones by number (or name). This is a bit what knuckledragger and metamath proof objects feel like
+
 # Bits and Bobbles
 
 Hello from Paris!
 
 I've had this one knocking around a while. You can see notes below that I think it would be good to actually program up all these proof objects.
 
-A whole other branch down the proof tree is crypto proofs and certificates <https://en.wikipedia.org/wiki/Zero-knowledge_proof>  <https://en.wikipedia.org/wiki/Proof_of_knowledge> <https://en.wikipedia.org/wiki/Digital_signature> Not entirely unrelated. If you have a trusted proof kernel, it can crypto sign it's proof objects as validated in an LCF style.
+- A whole other branch down the proof tree is crypto proofs and certificates <https://en.wikipedia.org/wiki/Zero-knowledge_proof>  <https://en.wikipedia.org/wiki/Proof_of_knowledge> <https://en.wikipedia.org/wiki/Digital_signature> Not entirely unrelated. If you have a trusted proof kernel, it can crypto sign it's proof objects as validated in an LCF style.
 
-<https://en.wikipedia.org/wiki/Van_Kampen_diagram> Van Kampen Diagrams are a visual proof object for the word problem of finitely presented groups. ![](https://upload.wikimedia.org/wikipedia/commons/8/81/Abelian.jpg)
+- The program text that produces proofs (tactics) is also proof objects. Complex ones.
 
-The stuff output by provers like vampire etc are kind of like
+- <https://en.wikipedia.org/wiki/Van_Kampen_diagram> Van Kampen Diagrams are a visual proof object for the word problem of finitely presented groups. ![](https://upload.wikimedia.org/wikipedia/commons/8/81/Abelian.jpg)
 
-I've never really understand the industry of SMT proof objects, but it's out there.
+- <https://en.wikipedia.org/wiki/Method_of_analytic_tableaux> The graphs of tableau are proof objects. I could make a networkx graph or whatever and a check routine. Paths in connection matrices, although I haven't grokked this one.
+
+- The stuff output by provers like vampire etc are kind of like traces. Little clues.
+
+- I've never really understand the industry of SMT proof objects, but it's out there.
 <https://microsoft.github.io/z3guide/programming/Proof%20Logs/>
 <https://github.com/Z3Prover/z3/discussions/4881>
 <https://cvc5.github.io/docs/cvc5-1.0.0/proofs/proofs.html>
