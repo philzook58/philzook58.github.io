@@ -3,9 +3,9 @@ title: Proof Objects I Have Loved
 date: 2025-04-28
 ---
 
-That proofs are _things_ is a cool meta awareness that is one of the payoffs of studying mathematical logic.
+That proofs are _things_  (mathematical objects) is a cool meta awareness that is one of the payoffs of studying mathematical logic.
 
-The Curry Howard correspondence <https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence> has produced an awareness in the right circles of the programming or CS world  that simply typed lambda terms are proofs objects of natural deduction for propositional intuitionistic logic or that that dependently typed terms are proofs objects of a more complex logic. For example `lam x : A. x`  is a proof object of the proposition `A -> A`. These are not the only proof objects in the world, nor the simplest ones IMO and not all reasonable ways to think about proofs fit in the Curry Howard paradigm. Curry Howard does not _own_ the concept of proof even if the system is flexible enough. Turn off your dependent typed brain if you have one or you will miss the intent with which I write this.
+The Curry Howard correspondence <https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence> has produced an awareness in the right circles of the programming or CS world that simply typed lambda terms are proofs objects of natural deduction for propositional intuitionistic logic or that that dependently typed terms are proofs objects of a more complex logic. For example `lam x : A. x`  is a proof object of the proposition `A -> A`. These are not the only proof objects in the world, nor the simplest ones IMO and not all reasonable ways to think about proofs fit in the Curry Howard paradigm. Curry Howard does not _own_ the concept of proof even if the system is flexible and a nice design principle. Turn off your dependent typed brain if you have one or you will miss the intent with which I write this.
 
 Some of my favorite examples of proof objects are
 
@@ -17,15 +17,17 @@ However if you consider big big graphs, it can be impossible to completely exami
 
 A equational reasoning system can be modelled as a giant graph of terms with an edge between each term that can be rewritten by applying an equation. The vertices of this graph are all the terms. We can produce a computable edge predicate `Term -> Term -> Bool` or `Term -> [Term]` that tells us all the axiom equations that may apply to a particular node, but
 
+Proof producing union finds are a way the make a spanning tree through a graph. <https://www.cs.upc.edu/~roberto/papers/rta05.pdf> <https://en.wikipedia.org/wiki/Kruskal%27s_algorithm> <https://arxiv.org/pdf/2504.10246>
+
 # The two divisor is a witness of evenness
 
 If you give me the number that I need to multiply by 2 to get `x`, that is a bit easier in my mind than figuring out how to divide a number by two. According the the BHK interpretation <https://en.wikipedia.org/wiki/Brouwer%E2%80%93Heyting%E2%80%93Kolmogorov_interpretation> , we should associate witness information like this with existential statements like `even(x) := exists y, 2*y = x`  . The BHK interpretation is the thing that the Curry Howard correspondence bakes in so thoroughly it is hard to understand the general concept.
 
 # Proofs of linear equations
 
-We can add together linear equations like `3x + 4y = 7` to get new equations. We learn this as a form of Gaussian elimination.
+We can add together linear equations like `3x + 4y = 7` and `-x + 70y = 2` to get new equations `214y = 13`. We learn this in school as part of a method of Gaussian elimination.
 
-What this means is that a possible proof object is a vector over the basis of equation axioms. If we can combine the axioms equations %E$ to get some goal equations $G$ like $a_1 E_1 + a_2 E_2 + ... = a^T \cdot E = G$ then the vector $\vec{a}$ is a proof object. I dare you to tell me that a vector is not a valid mathematical object.
+What this means is that a possible proof object is a vector over the basis of equation axioms. If we can combine the axioms equations %E$ to get some goal equations $G$ like $a_1 E_1 + a_2 E_2 + ... = a^T \cdot E = G$ then the vector $\vec{a}$ is a proof object. I dare you to tell me that a vector is not a valid mathematical object. Some of these equations can be redundant which induces a quotient on the vector space of linear equational proofs.
 
 # Proofs of linear Inequations
 
@@ -51,14 +53,14 @@ If I say that a correct automated theorem proving procedure found a proof, then 
 
 Many many proof objects are traces of theorem proving systems. If you believe you somehow built a theorem prover, the substeps of this theorem prover that led to a success are proof objects. You could record every assembly instruction ran, but usually it's nicer to log just some higher level summary steps.  
 
-This is a viewpoint useful for SAT solvers, MIP solvers, datalog provenance, etc.
+This is a viewpoint useful for SAT solvers, MIP solvers, datalog provenance, etc. It's a really useful principle to understand what a proof object might even look like coming out of these systems. Just print / log every time you do something interesting!
 
 UNSAT certificates basically traces of useful learned clauses in a SAT solver. The learned clauses are combinations of previous clauses using resolution. <https://www.cs.utexas.edu/~marijn/drat-trim/>
 
 Datalog/prolog provenance basically carries an extra tracing parameter in every predicate. Traces of a prolog solve are proof objects.
 <https://www.philipzucker.com/metamath-datalog-provenenance/> . Even just a timestamp is a useful proof object since it tells us where to look to reconstruct. <https://www.philipzucker.com/snakelog-post/#Timestamps%20and%20Provenance>
 
-One (too) cute way to carry proof parameters is in DCGs in prolog
+One (too) cute way to carry proof parameters is in DCGs in prolog. The easiest way to trace isn't to turn on some wacky built-in, it's to just thread a log list through your computation that you append to.
 
 ```prolog
 prove(A > A)       --> [id].
@@ -85,10 +87,10 @@ VIPR certificates
 
 # Rewrite Proofs
 
-Rewrite proofs have a couple different formats. See also what egg outputs.
+Rewrite proofs have a couple different formats. See also what egg outputs <https://docs.rs/egg/latest/egg/tutorials/_03_explanations/index.html> .
 
 - A sequence of terms with position (how to get to subterm applied at) and eqaation used information tagged in between each
-- Congruence style. A `cong` node that takes in subproofs of all children equations and lifts them. Since rewrite proofs have a categorical flavor (has id and can be composed) the cong nodes have the flavor of a monoidal product functor. This gives some algebra of proofs. One can ask how to normalize proofs (See Terese). Congruence is the fancier version of grade school's "do the same thing to both sides of an equation".
+- Congruence style. A `cong` node that takes in subproofs of all children equations and lifts them. Since rewrite proofs have a categorical flavor (has id and can be composed) the cong nodes have the flavor of a monoidal product functor (you can push compose above or below cong nodes. `cong_f(p1)  . cong_f(p2) = cong_f(p1 . p2)` ). This gives some algebra of proofs. One can ask how to normalize proofs (See Terese). Congruence is the fancier version of grade school's "do the same thing to both sides of an equation". The first style is a flattening of this style.
 
 ![](/assets/congruence.png)
 
