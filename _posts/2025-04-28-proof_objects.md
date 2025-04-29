@@ -49,6 +49,8 @@ Similarly to the two above if you want to show that `p(x,y,z)` is zero under the
 
 If I say that a correct automated theorem proving procedure found a proof, then just saying that is a proof object at the extreme. All proofs require varying degrees of reconstruction. We usually erase all sorts of little things that are easily reconstructed on the other side. Once I know that the theorem is proven, I can just run the ATP again the reconstruct the proof.
 
+First order theorem provers are solving a semidecidable problem. A different slightly better proof object than a bool is the number of steps / "gas" the program has to run to find it's solution.
+
 # Traces are Proof objects
 
 Many many proof objects are traces of theorem proving systems. If you believe you somehow built a theorem prover, the substeps of this theorem prover that led to a success are proof objects. You could record every assembly instruction ran, but usually it's nicer to log just some higher level summary steps.  
