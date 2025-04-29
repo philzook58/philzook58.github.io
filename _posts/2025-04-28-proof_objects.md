@@ -130,7 +130,13 @@ I've had this one knocking around a while. You can see notes below that I think 
 
 - The stuff output by provers like vampire etc are kind of like traces. Little clues.
 
-- A SAT solution of LP feaibility are proof objects of the satisfiability of those problems.
+- A SAT solution of LP feasibility are proof objects of the satisfiability of those problems.
+
+- NP doesn't mean hard. What it means is that there is a certificate to the problem that can be checked in polynomial time. So all these problems have witnesses / proofs objects. They usually have the flavor of a constraint solution or SAT solution.
+
+- Ron Garcia pointed out this <https://cacm.acm.org/research/program-correctness-through-self-certification/> Outputting the permutation of a sorting algorithm is a good one. Verifying that is slightly easier than redoing the sort. DWARF I think is an interesting target for a bisimulation proof object <https://www.philipzucker.com/dwarf-patching/> as it already specifies a connection between high and low code for debugging purposes.
+
+- A similar thing is in parse odn't validate. <https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/> A parse tree is a proof object that a string is in a language. You can make a parse tree as a kind of trace of the parser.  A related thing I like is to intrinsically sorted list `Option (Int, [Nat])` which stores a starting point but then only differences. The Nat makes a drecreasing difference unprepresentable.
 
 - Sum of squares <https://en.wikipedia.org/wiki/Sum-of-squares_optimization> form of polynomials shows they are everywhere position. $p(x) = \sum b_n x^n = \sum a_i q_i(x)**2$$. You can parametrize this as $ p(x) = \vec{x}^T A \vec{x}$ with positive semidefinite $A$ https://en.wikipedia.org/wiki/Semidefinite_programming and go polymomoial by polynimial to linearly relate $a_i$ and $b_i$ coefficients. It is surprisingly a convex optimization problem.
 
