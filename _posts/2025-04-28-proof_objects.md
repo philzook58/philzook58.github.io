@@ -130,6 +130,10 @@ I've had this one knocking around a while. You can see notes below that I think 
 
 - The stuff output by provers like vampire etc are kind of like traces. Little clues.
 
+- A SAT solution of LP feaibility are proof objects of the satisfiability of those problems.
+
+- Sum of squares <https://en.wikipedia.org/wiki/Sum-of-squares_optimization> form of polynomials shows they are everywhere position. $p(x) = \sum b_n x^n = \sum a_i q_i(x)**2$$. You can parametrize this as $ p(x) = \vec{x}^T A \vec{x}$ with positive semidefinite $A$ https://en.wikipedia.org/wiki/Semidefinite_programming and go polymomoial by polynimial to linearly relate $a_i$ and $b_i$ coefficients. It is surprisingly a convex optimization problem.
+
 - I've never really understand the industry of SMT proof objects, but it's out there.
 <https://microsoft.github.io/z3guide/programming/Proof%20Logs/>
 <https://github.com/Z3Prover/z3/discussions/4881>
