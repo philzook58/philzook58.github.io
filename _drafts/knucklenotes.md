@@ -13,6 +13,44 @@ Can z3 do Gropu theory in one shot?
 
 Show a huge smtlib dump of some aweful problem
 
+Although even if we had some great oracle that could answer all ourt questions yes or no, it would still be valuable and enjopyablke to understand why sometimes.
+
+```markdown
+∀x:T, P(x) True      t : T
+--------------------------------- instan
+         P(t) True
+```
+
+```markdown
+t1 True  t2 True ....    Not(Implies(And(t1,t2,...), t)) unsat    
+---------------------------------------------------------------- prove
+                           t True
+```
+
+```markdown
+    t : T       P : T -> Bool    T inductive 
+----------------------------------------- datatype induct
+     (/\_{C_T} (∀y, P(y) => P(C(y)))) => P(t) True
+```
+
+As an example
+
+```
+      t : Nat      
+-------------------------------------------------- Nat induct
+  (P(Z) /\ (∀y, P(y) => P(Succ(y)))) => P(t) True
+```
+
+# System Comparison
+
+- Isabelle
+- Lean/Coq
+- ACL2
+- Why3 / Boogie
+
+import kdrag.theories.logic.intuitionistic as intuitionistic
+import kdrag.theories.logic.temporal as temporal
+
 # What is it?
 
 - Interactive theorem prover  as a library in Python
@@ -50,3 +88,75 @@ The mottivation
 4. FFI problems. Every itp basically does it's thing for various reaosns (aesthetic, dogmatic, practical). But SMTsolvers are extremely successful and people want to make tactics. Why the runaround?
 
 5. Shallow emdedded theorem proving. Strong host language with all the gizmos.
+
+# Bits and Bobbles
+
+```markdown
+          P(t) True
+--------------------------------- ∃I
+        ∃x P(x) True
+```
+
+The world is a big place. Part of how to work in it is to Jeet Kune Do on what already exists or is popular.
+
+Software and Hardware verification boils down to a bucnh of SMT queries with handwaving in between
+I found myself writing a sequence of smt calls and then knowing that I'm reusing previous proved stuff
+
+What is knuckeldragger 1 slide
+
+1. The shallowest possible layer over z3 to make it compsoablte a proof system
+The fumbest thing that could work
+
+z3 prove is
+def prove(e : smt.BoolRef) -> bool:
+    s = smt.Solver()
+    s.add(smt.Not(e))
+    smt.check()
+    if s.check() == smt.unsat:
+        return True
+    else:
+        return True
+boolean blindness
+
+a parse tree is a trace of a maethod that says is there a valid parse.
+
+Certificates of the SMT processes is hard.
+The meta chainsing of SMT calls is not that hard.
+
+Exhuastively failing to find counterexamples.
+
+LCF style theorem proving
+3/2 types formulas expressions and proof
+Anything goes on terms
+pf -> tm
+details of proof don't matter, but basically they are recording the call tree that produced them.
+inference rules ~ functions
+COmplete erasure pf ~ tm is fine
+
+The big inference rule is
+
+t1 proved  t2 proved ...     Not(t1 /\ t2/\ t3 => t)  z3unsat
+---------------------------------------------------------
+
+                      t proved
+mega modus ponens
+
+But not actually
+
+Definitions
+Quantifier Instantiation
+Induction
+
+Tactics
+
+Why python?
+What are proofs
+
+# Subsystems
+
+- Reflection
+- Quickcheck
+- Typeclasses
+- Generics
+
+# Applications
