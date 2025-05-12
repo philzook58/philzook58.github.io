@@ -196,6 +196,8 @@ E.rebuild()
 
 # Bits and Bobbles
 
+I put this into knuckledragger and I'll update it as seems useful <https://github.com/philzook58/knuckledragger/blob/main/kdrag/solvers/egraph.py> .
+
 I guess we could side car into regular egg and do a z3 compression step every once in a while.
 
 Why doesn't egg prune e-matching on models? We often have some idea of what models/examples look like. Inputs variables should be random examples, constants should be constants
