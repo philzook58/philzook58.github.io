@@ -198,6 +198,8 @@ E.rebuild()
 
 I put this into knuckledragger and I'll update it as seems useful <https://github.com/philzook58/knuckledragger/blob/main/kdrag/solvers/egraph.py> .
 
+I could put this into more of the aegraph style. One would retain a vector buffer of seen terms and scan it for semantic matches to rewrite rules.
+
 I guess we could side car into regular egg and do a z3 compression step every once in a while.
 
 Why doesn't egg prune e-matching on models? We often have some idea of what models/examples look like. Inputs variables should be random examples, constants should be constants
@@ -209,7 +211,9 @@ Further optimizations should include
 
 One question I have (had?) is that in my preprint I describe something like a Shostak procedure for e-graphs modulo theories in that it requires you to have theory specific canonizers. What would be the more Nelson-Oppen style of just informing each other / propagation of inferred equalities?
 
-This style is reminescent of Ruler, which also used models to prune for possible equalities to learn. Instead of learning rewrite rules, we're "learning" via SMT query the e-graph itself. Since the e-graph represents ground rewrite rules, this also jives.
+This style is reminescent of Ruler <https://github.com/uwplse/ruler> , which also used models to prune for possible equalities to learn. Instead of learning rewrite rules, we're "learning" via SMT query the e-graph itself. Since the e-graph represents ground rewrite rules, this also jives.
+
+This is also reminiscent of SAT-sweeping and Fraiging. SAT sweeping uses sat queries to try and compress together semantically equialvanet nodes in a circuit. It's more of a thing in hardware verification world. <https://si2.epfl.ch/demichel/publications/archive/2020/DAC_2020_testa_luca.pdf>
 
 Could also make a sympy version of bottom up + canonize.
 

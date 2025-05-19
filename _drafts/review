@@ -1,0 +1,6 @@
+
+The chase
+bottom up materialization
+skolem functions named by rule, or disjunct
+
+The discussion of modelling infinite trees is interesting and I suspect well trodden territory. Most things I could dig up is using coinductives (itrees, ltrees). Term Rewriting and All That definition 3.1.3 calls the list of integers a position in the tree. Other things call them paths. Here is a coq library talking about infinite binary trees <https://rocq-prover.org/doc/v8.14/stdlib/Coq.Logic.WKL.html> . But the fact I can't dig up a good refernece on infinite trees without using coinduction shows this section to be a valuable contribution. Perhaps these <https://inria.hal.science/hal-03689027v2/document> <https://inria.hal.science/hal-03671876>
