@@ -5,11 +5,11 @@ date: 2025-05-19
 
 TLDR. Types are basically sets. Why not python sets?
 
-I enjoy mixing the sacred and the profane. Making a python model clarifies complex topics for me and gives me something to do. The core intuition behind the topics often comes from finitary computable examples.
+I enjoy mixing the sacred and the profane. Making a python model clarifies complex topics for me and gives me something to do. The core intuition often comes from finitary computable examples.
 
 As in any sound-ish model, anything you can prove in dependent type theory (DTT) ought to be true here, but some things that are true here are not provable in DTT.
 
-I can see a theme here. Other examples of me attempting a related kind of thing.
+I can see a theme with what I have done here and in the past. Other examples of me attempting a related kind of thing.
 
 - <https://www.philipzucker.com/finiteset/> modelling some basic definitions using nested frozensets. This post is particularly modelled after that one
 - <https://www.philipzucker.com/computational-category-theory-in-python-i-dictionaries-for-finset/> making a class to model categorical formulation of finite sets
@@ -19,7 +19,7 @@ Try this notebook yourself in colab <https://colab.research.google.com/github/ph
 
 # Basic Types
 
-While one may want to map dependent types into python types, the python type system isn't that rich and this opens the door to considering objects that are too big to actually conclusively analyze and understand. A much simpler thing to attempt do is map dependent types into python sets, specifically frozensets.
+While one may want to map dependent types into python types, the python type system is awkward, isn't that rich, and most importantly opens the door to considering objects that are too big to actually conclusively analyze and understand. A much simpler thing to attempt do is map dependent types into python sets, specifically frozensets.
 
 The base sets are pretty straightforward
 
@@ -905,8 +905,7 @@ from frozendict import frozendict
 import functools
 import itertools
 from typing import Callable
-frozendict({frozendict({1: 2, 2: 3}) : 3})
-#{{1: 2, 2: 3} : 3}
+
 
 type Term = object
 type Type = frozenset
