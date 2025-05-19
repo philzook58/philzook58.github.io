@@ -32,7 +32,7 @@ Bool = frozenset({True, False})
 
 ```
 
-Note because I have made the choice of being extremely finite, I can't make a `frozenset` of all `int`. What I can do make finite sets of ranges of ints. The parameter `n` is a meta parameter. This does evoke the dependent type `Fin` <https://leanprover-community.github.io/mathlib4_docs/Init/Prelude.html#Fin> but maybe it isn't really
+Note because I have made the choice of being extremely finite, I can't make a `frozenset` of all `int`. What I can do make finite sets of ranges of ints. The parameter `n` is a meta parameter. This does evoke the dependent type `Fin` <https://leanprover-community.github.io/mathlib4_docs/Init/Prelude.html#Fin> but maybe it isn't really because I can't internalize `int`.
 
 ```python
 def Fin(n : int) -> Type:
@@ -46,15 +46,15 @@ Fin(4)
 
 A hallmark of Martin-Lof type theory is that it has a couple different judgements <https://ncatlab.org/nlab/show/judgment> .
 
-- `A type`  - `A` is a type
-- `t : A`  - `t` has the type `A`
-- `A == B` - type `A` is equal to type `B` definitionally
-- `x == y : A` -  `x` and `y` are definitionally equal terms of type `A`
+- $\vdash A \ type$  --- `A` is a type
+- $\vdash t : A$  --- `t` has the type `A`
+- $\vdash A \equiv B$ --- type `A` is equal to type `B` definitionally
+- $\vdash x \equiv y : A$ ---  `x` and `y` are definitionally equal terms of type `A`
 
-These judgements in the model can be mapped to python functions that check that they hold in the model. THe claim of soundness of my model says that if you can derive the judgements syntactically using the appropriate inference rules, my python functions ought to return `True`.
+These judgements can be mapped to python functions that check that they hold in the model. The claim of soundness of my model says that if you can derive the judgements syntactically using the appropriate inference rules, these python functions ought to return `True`.
 
 ```python
-def is_type(A: Type) -> bool:
+def is_type(A: Type) -> bool: # |- A type
     return isinstance(A, frozenset)
 assert is_type(Void)
 assert is_type(Unit)
@@ -64,8 +64,8 @@ assert not is_type(())
 ```
 
 ```python
-def has_type(x: object, A: Type) -> bool:
-    return x in A
+def has_type(t: object, A: Type) -> bool: # |- t : A
+    return t in A
 
 assert has_type((), Unit)
 assert not has_type((), Bool)
@@ -74,17 +74,19 @@ assert not has_type(True, Void)
 ```
 
 ```python
-def eq_type(A: Type, B: Type) -> bool:
+def eq_type(A: Type, B: Type) -> bool: # |- A = B type
     return A == B
-def def_eq(x : object, y: object, A : Type) -> bool:
+def def_eq(x : object, y: object, A : Type) -> bool: # |- x = y : A
     return x == y and has_type(x, A) and has_type(y, A)
 ```
 
 # Type constructors
 
-Two canonical things you want to talk about in type theory are dependent sum $\sum$ <https://en.wikipedia.org/wiki/Dependent_type#%CE%A3_type> and dependent function $\Pi$ <https://en.wikipedia.org/wiki/Dependent_type#%CE%A0_type> types.
+Two canonical things you want to talk about in type theory are [dependent sum](https://en.wikipedia.org/wiki/Dependent_type#%CE%A3_type) $\sum$  and [dependent function](https://en.wikipedia.org/wiki/Dependent_type#%CE%A0_type) $\Pi$ types.
 
-To build these things, you want the notion of a family of sets <https://en.wikipedia.org/wiki/Family_of_sets>, aka a function that returns a set. On this point I remain a little confused, but I chose to use python functions to describe my notion of `Family`.  "Type family" has a connotation to my ear of talking in type theory, but it is a perfectly valid topic in ordinary set theory as merely an indexed family of sets. You may want to union, interset, or cartesian product over this family. See Halmos Naive Set Theory Chapter 9 for example
+To build these things, you want the notion of a family of sets <https://en.wikipedia.org/wiki/Family_of_sets>, aka a function that returns a set. "Type family" has a connotation of type theory, but it is also a perfectly valid topic in ordinary set theory as merely an indexed family of sets. You may want to union, intersect, or cartesian product over this family. See Halmos Naive Set Theory Chapter 9 for example.
+
+In terms of python, I remain a little confused on what is the right thing to do, but I chose to use python functions to describe my notion of `Family`. I think maybe a family is any python expression that uses variables into context to build a `frozenset`, which is related but a little different.
 
 The dependent aspect of this dependent type can be clearly see in `B(a)`. While dependent types may sound exotic, a python function that returns a set is not exotic. It is also not exotic to have nested `for` loops where the thing you search over has a dependency on the previous `for` loop parameters. One place this shows up is as a way to implement obvious pruning in a naive loop based brute force search.
 
@@ -114,7 +116,8 @@ Pair(Bool, Fin(3))
                (True, 1),
                (True, 2)})
 
-For dependeent functions, we want to build a `frozenset` of something "functionlike". Dictionaries are basically functions with `foo(bar)` replace with `foo[bar]`. You can do this as long as the function has finite domain, which we do here.
+For dependent functions, we want to build a `frozenset` of something "functionlike". Dictionaries are basically functions with `foo(bar)` replace with `foo[bar]`. You can do this as long as the function has finite domain, which we do here.
+
 While `frozenset` is a python built in, `frozendict` is not. There is a library though <https://pypi.org/project/frozendict/> . The reason I need frozen versions I because I want to hash these things and make them keys and elements of further dicts and sets.
 
 The way `Pi` works is by selecting every possible choice for every value of the input. The fact that I use `itertools.product` makes sense because dependent functions are sometimes called dependent product and have a notation $\Pi_{x : A} B(x)$
@@ -167,9 +170,9 @@ Sum(Bool, Fin(2))
 
 # Telescoped Contexts
 
-The dependent typing context $\Gamma$ aka telescope <https://ncatlab.org/nlab/show/type+telescope> is a central piece of dependent type theory. While I could reify it as a data structure, I actually think there is a nice shallow version of it in the form of python set comprehensions.
+The dependent typing context $\Gamma$ aka telescope <https://ncatlab.org/nlab/show/type+telescope> is a central piece of dependent type theory. Just as the things that are types are runtime values, the things that are typing contexts are runtime environments. While I could reify it as a data structure, I actually think there is a nice shallow version of it in the form of python set comprehension notation.
 
-The context here is then somewhat identified with the python context. We can reify this context using `locals` <https://docs.python.org/3/library/functions.html#locals> if we so choose, which is kind of an interesting feature from a PL perspective. It's a reification of a flavor akin to call/cc but maybe not discussed as much.
+The context here is somewhat identified with the python context. We can reify this python context using `locals` <https://docs.python.org/3/library/functions.html#locals> if we so choose, which is kind of an interesting feature from a PL perspective. It's a reification that has a flavor akin to call/cc but maybe not discussed as much.
 
 ```python
 def ctx_example():
@@ -374,6 +377,7 @@ Some useful resources on dependent types are
 - <https://www.cs.uoregon.edu/research/summerschool/summer14/rwh_notes/ssdt.pdf> Syntax and Semantics of Dependent Types -Martin Hofmann
 - <https://people.cs.nott.ac.uk/psztxa/publ/ydtm.pdf> Why Dependent Types Matter
 - <https://www.kleene.church/tt-notes> Cody's notes
+- <https://www.cse.chalmers.se/~peterd/papers/DependentTypesAtWork.pdf>  Dependent Types at Work
 
 Python comprehesions are modelled after set comprehensions. I think this means that has_type is something like the axiom of collection / replacement <https://en.wikipedia.org/wiki/Axiom_schema_of_replacement> , a connection I hadn't ever really considered before. Telescopes are telescoped because it models the scoping structure of quantifiers.
 
