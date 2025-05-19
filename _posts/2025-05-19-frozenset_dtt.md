@@ -427,7 +427,13 @@ Subsets, proof irrelevance, predicativity, quotients
 
 <https://lawrencecpaulson.github.io/2022/02/23/Hereditarily_Finite.html>  <https://en.wikipedia.org/wiki/Hereditarily_finite_set> What I am doing is the analog of hereditarily finite set theory. Cody claims makes sense because DTT interpeters into set theory, and there are finite set models of the appropiate set theories. <https://eprints.illc.uva.nl/id/eprint/1769/1/wehr.pdf> <https://www.sciencedirect.com/science/article/abs/pii/S0049237X0871989X> The Type Theoretic Interpretation of Constructive Set Theory - Aczel. <https://www.lix.polytechnique.fr/~werner/publis/tacs97.pdf>  Sets in Types, Types in Sets - Benjamin Werner
 
-Classes ~ functions.
+Classes ~ functions/predciates, frozensets
+
+NBE <https://homepages.inf.ed.ac.uk/slindley/nbe/nbe-cambridge2016.pdf> normalization by evaluation. Of some relation to this. One can interpret a term into it's frozenset, and then extract a term out of the frozenset. I've been vague on the term language
+
+Interning universes might be interesting  <https://www.philipzucker.com/hashing-modulo/>
+
+Logical relations are kind of similar. A set/relation defined by induction over the type structure <https://www.cs.uoregon.edu/research/summerschool/summer16/notes/AhmedLR.pdf> . I have kind of done a finally tagless / syntax free looking intepretation style.
 
 parameters vs indices. Python functions vs ?
 
