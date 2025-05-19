@@ -7,7 +7,7 @@ TLDR. Types are basically sets. Why not python sets?
 
 I enjoy mixing the sacred and the profane. Making a python model clarifies complex topics for me and gives me something to do. The core intuition often comes from finitary computable examples.
 
-As in any sound-ish model, anything you can prove in dependent type theory (DTT) ought to be true here, but some things that are true here are not provable in weak versions of DTT.
+As in any sound-ish model, anything you can prove in dependent type theory (DTT) ought to be true here, but some things that are true here are not provable in weak versions of DTT because there are other kinds of models in which they do not hold.
 
 I can see a theme with what I have done here and in the past. Other examples of me attempting a related kind of thing.
 
