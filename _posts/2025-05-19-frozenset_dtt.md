@@ -467,6 +467,8 @@ On a third pass, types aren't not sets.
 
 ![](/assets/type_sets.jpg) Using this meme is a bit propaganda-y. It is implocitly calling you a bespectacled midwit if you think types are not sets. Maybe I'm using the wrong meme. Maybe I should use the brain exploding one? There are probably more passes beyond 3 and I think types are not sets is a perfectly valid viewpoint. Moreso than projecting this meme onto others, I mean it to explain how I currently see my own history of understanding.
 
+<https://en.wikipedia.org/wiki/Shuhari> <https://mmapped.blog/posts/38-static-types-perfectionism>. Graham says Curry-Howard-Lambek-Freud correspondence. Conversion table between childhood trauma and PL features.
+
 Static vs dynamic. Type judgements are the string of python?
 x : Fin(5), y : Fin(x) |- x + y : Fin(x)
 
