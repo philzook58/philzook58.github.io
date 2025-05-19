@@ -7,11 +7,11 @@ TLDR. Types are basically sets. Why not python sets?
 
 I enjoy mixing the sacred and the profane. Making a python model clarifies complex topics for me and gives me something to do. The core intuition often comes from finitary computable examples.
 
-As in any sound-ish model, anything you can prove in dependent type theory (DTT) ought to be true here, but some things that are true here are not provable in weak versions of DTT because there are other kinds of models in which they do not hold.
+As in any sound-ish model, anything you can prove in dependent type theory (DTT) ought to be true here, but some things that are true here are not provable in weak versions of DTT and there are other kinds of models in which they do not hold.
 
 I can see a theme with what I have done here and in the past. Other examples of me attempting a related kind of thing.
 
-- <https://www.philipzucker.com/finiteset/> modelling some basic definitions using nested frozensets. This post is particularly modelled after that one
+- <https://www.philipzucker.com/finiteset/> modelling some basic constructions of set theory using nested frozensets. This post is particularly modelled after that one
 - <https://www.philipzucker.com/computational-category-theory-in-python-i-dictionaries-for-finset/> making a class to model categorical formulation of finite sets
 - <https://www.philipzucker.com/a-short-skinny-on-relations-towards-the-algebra-of-programming/> algebra of programming / relation algebra using finite sets in haskell
 
@@ -82,13 +82,13 @@ def def_eq(x : object, y: object, A : Type) -> bool: # |- x = y : A
 
 # Type constructors
 
-Two canonical things you want to talk about in type theory are [dependent sum](https://en.wikipedia.org/wiki/Dependent_type#%CE%A3_type) $\sum$  and [dependent function](https://en.wikipedia.org/wiki/Dependent_type#%CE%A0_type) $\Pi$ types.
+Two standard things you want to talk about in type theory are [dependent sum](https://en.wikipedia.org/wiki/Dependent_type#%CE%A3_type) $\sum$  and [dependent function](https://en.wikipedia.org/wiki/Dependent_type#%CE%A0_type) $\Pi$ types.
 
 To build these things, you want the notion of a family of sets <https://en.wikipedia.org/wiki/Family_of_sets>, aka a function that returns a set. "Type family" has a connotation of type theory, but it is also a perfectly valid topic in ordinary set theory as merely an indexed family of sets. You may want to union, intersect, or cartesian product over this family. See Halmos Naive Set Theory Chapter 9 for example.
 
 In terms of python, I remain a little confused on what is the right thing to do, but I chose to use python functions to describe my notion of `Family`. I think maybe a family is any python expression that uses variables into context to build a `frozenset`, which is related but a little different.
 
-The dependent aspect of this dependent type can be clearly see in `B(a)`. While dependent types may sound exotic, a python function that returns a set is not exotic. It is also not exotic to have nested `for` loops where the thing you search over has a dependency on the previous `for` loop parameters. One place this shows up is as a way to implement obvious pruning in a naive loop based brute force search.
+The dependent aspect of this dependent type can be clearly see in teh expression `B(a)` in the following code. While dependent types may sound exotic, a python function that returns a set is not exotic. It is also not exotic to have nested `for` loops where the thing you search over has a dependency on the previous `for` loop parameters. One place this shows up is as a way to implement obvious pruning in a naive loop based brute force search.
 
 ```python
 from typing import Callable
@@ -116,7 +116,7 @@ Pair(Bool, Fin(3))
                (True, 1),
                (True, 2)})
 
-For dependent functions, we want to build a `frozenset` of something "functionlike". Dictionaries are basically functions with `foo(bar)` replace with `foo[bar]`. You can do this as long as the function has finite domain, which we do here.
+For dependent functions, we want to build a `frozenset` of something "function-like". Dictionaries are basically functions with `foo(bar)` replace with `foo[bar]`. You can do this as long as the function has finite domain, which we do here.
 
 While `frozenset` is a python built in, `frozendict` is not. There is a library though <https://pypi.org/project/frozendict/> . The reason I need frozen versions I because I want to hash these things and make them keys and elements of further dicts and sets.
 
@@ -199,7 +199,7 @@ assert all(has_type(y, Unit) for x in Bool for y in (Void if x else Unit)) # x :
 
 # Vec
 
-Vec is a common example of a dependent type.
+Vec is a common example of a dependent type. It is a list/tuple of a fixed size.
 
 ```python
 def Vec(A : Type, n : int) -> Type:
@@ -234,6 +234,8 @@ Sigma(Fin(3), lambda x: Vec(Bool, x)) # A sum over all lists of size less than 3
 Everything is too decidable and makes the distinction between propositional and definitional equality too hard to notice. Also it is quite extensional.
 
 Nevertheless, we can construct a type family akin to an Identity type. <https://ncatlab.org/nlab/show/subsingleton>
+
+This one starts to get pretty mind boggling.
 
 ```python
 def Id(A : Type, x : object, y : object) -> Type:
@@ -273,9 +275,18 @@ def BasedId(A : Type, x : object) -> Family:
 
 Universes are big. They are the things that contains Types. <https://ncatlab.org/nlab/show/type+universe> <https://en.wikipedia.org/wiki/Universe_(mathematics)> <https://en.wikipedia.org/wiki/Constructible_universe>
 
-Note that frozensets can't have a set be an element of itself without trickery. So we need a universe level for that so we can quantify over types and types of types, etc. <https://agda.readthedocs.io/en/latest/language/universe-levels.html> <https://lean-lang.org/functional_programming_in_lean/dependent-types/indices-parameters-universes.html> <https://en.wikipedia.org/wiki/Axiom_of_regularity> <https://ncatlab.org/nlab/show/axiom+of+foundation> <https://en.wikipedia.org/wiki/System_U> <https://ncatlab.org/nlab/show/Burali-Forti%27s+paradox>
+Note that frozensets can't have a set be an element of itself without trickery. So we need a universe level for that so we can quantify over types and types of types, etc.
 
-But also if we include all applications of `Arr` and `Pair` etc in our smallest universe, then it isn't a finite set. So another parameter that controls the depth of applications of the constructors also seems like a reasonable thing to do.
+Some things to look at regarding universes, levels, and type in type.
+
+- <https://agda.readthedocs.io/en/latest/language/universe-levels.html>
+- <https://lean-lang.org/functional_programming_in_lean/dependent-types/indices-parameters-universes.html>
+- <https://en.wikipedia.org/wiki/Axiom_of_regularity>
+- <https://ncatlab.org/nlab/show/axiom+of+foundation>
+- <https://en.wikipedia.org/wiki/System_U>
+- <https://ncatlab.org/nlab/show/Burali-Forti%27s+paradox>
+
+But also if we include all applications of `Arr` and `Pair` etc in our smallest universe, then it isn't a finite set. So another universe parameter controls the depth of applications of the constructors also seems like a reasonable thing to do.
 
 ```python
 def U(n : int, l : int) -> Type:
