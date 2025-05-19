@@ -367,6 +367,8 @@ all([has_type(Arr(A,B), U(2,0)) for A in U(1,0) for B in U(1,0)])
 
 # Bits and Bobbles
 
+Thanks to Cody Roux and Graham Leach-Krouse for helpful discussions
+
 Some useful resources on dependent types are
 
 - <https://arxiv.org/abs/2212.11082> Introduction to Homotopy Type Theory
