@@ -6,6 +6,16 @@ open import Relation.Binary.PropositionalEquality using (_≡_)
 open import Data.Nat
 open import Data.List
 
+-- Escardo
+
+
+-- Hottest course
+
+
+-- Jacques Carette: "What I learned from formalizing Category Theory in Agda"
+-- https://www.youtube.com/watch?v=VQiQtH47pbM&ab_channel=ToposInstitute
+
+
 --open import IO
 -- https://agda.readthedocs.io/en/latest/getting-started/a-taste-of-agda.html
 

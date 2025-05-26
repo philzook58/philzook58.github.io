@@ -290,6 +290,7 @@ But also if we include all applications of `Arr` and `Pair` etc in our smallest 
 
 ```python
 def U(n : int, l : int) -> Type:
+    # TODO: I don't like this recursion ordering. Where are my higher ranked functions?
     if l > 0:
         u = U(n, l-1)
         return u | frozenset([u]) # Cumulative
