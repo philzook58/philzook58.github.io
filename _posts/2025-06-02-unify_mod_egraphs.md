@@ -3,7 +3,9 @@ title: Unification Modulo E-Graphs
 date: 2025-06-02
 ---
 
-I think there are reasonable ways to add an e-graph to [unification](https://en.wikipedia.org/wiki/Unification_(computer_science)) algorithms. This would be e-unification <https://www.cs.bu.edu/fac/snyder/publications/UnifChapter.pdf> with the theory E of ground equalities the e-graph represents. Carrying a changing e-graph in the state would support logic programming and theorem provers with a slightly richer notion of `=`. One could call it maybe CLP(EGraph).
+I think there are reasonable ways to add an e-graph to [unification](https://en.wikipedia.org/wiki/Unification_(computer_science)) algorithms.
+
+This would correspond to e-unification <https://www.cs.bu.edu/fac/snyder/publications/UnifChapter.pdf> with the theory E being the ground equalities the e-graph represents. That's a reasonably well formed notion. Carrying a changing e-graph in the state would support logic programming and theorem provers with a slightly richer notion of `=`. One could call it maybe CLP(EGraph).
 
 I don't have how to do this exactly nailed down, but the way we make progress is by saying stuff. So here we go.
 
@@ -251,7 +253,7 @@ eunify2([x], foo(x, a), foo(b, c), E)
 
 # Bottom Up E-Unification
 
-I have been pushing bottom up e-matching. It also seems to work for unification. You can guess unification solutions because they are seeded out of the unification problem terms themselves.
+I have been pushing bottom up e-matching <https://arxiv.org/abs/2504.14340> . It also seems to work for unification. You can guess unification solutions because they are seeded out of the unification problem terms themselves.
 
 I can just use my dumb dumb bottom up ematching to perform E-unification by adding the pattern terms as possible seeds in the egraph.
 
