@@ -314,6 +314,10 @@ One place where equalities have shown up in LP is for trait resolution in Rust w
 
 I've seen some discussion of bottom up unification for higher order unification in Gilles dowek's chapter in the handbook of automated reasoning. It is introduced as merely a conceptual device though. Maybe one should implement it? But also I should implement actual Huet unification.
 
+The z3 ematching paper <https://leodemoura.github.io/files/ematching.pdf> is kind of a Warren abstract machine. <https://direct.mit.edu/books/monograph/4253/Warren-s-Abstract-MachineA-Tutorial-Reconstruction>
+
+CHR egraph <https://www.philipzucker.com/egraph-chr/> might be another way to embed egraph in prolog
+
 Unification is double sided pattern matching. It's logic talk for equation solving. You are presented a set of goals equations with variables and you want to produce a substitution (at least in the narrow sense of equation solving) to those variables to make the equations hold.
 
 Unification powers logic programming like prolog and more so than the other ingredient of backtracking/search, powers the bidirectional flavor of the subject.
