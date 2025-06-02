@@ -1,6 +1,9 @@
 {-# OPTIONS --without-K --safe #-}
 --module playin where
 
+open import Data.Empty
+open import Data.Unit
+open import Data.Sum
 open import Data.Bool
 open import Relation.Binary.PropositionalEquality using (_≡_)
 open import Data.Nat
@@ -56,5 +59,17 @@ mylength (x ∷ xs) = 1 + mylength xs
 flum = mylength (1 ∷ [])
 
 
+data MyFin : ℕ -> Set where
+  i : {n : ℕ} -> MyFin(n) -> MyFin (suc n)
+  star : {k : ℕ} -> MyFin (suc k)
 
+
+
+myfin2 : ℕ -> Set
+myfin2 zero = ⊥
+myfin2 (suc n) = (MyFin n) ⊎ ⊤
+
+to1 : {n : ℕ} -> MyFin n -> myfin2 n
+to1 (i x) = {!   !}
+to1 star = {!   !}
 
