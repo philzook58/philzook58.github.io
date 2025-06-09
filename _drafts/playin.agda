@@ -73,3 +73,6 @@ to1 : {n : ℕ} -> MyFin n -> myfin2 n
 to1 (i x) = {!   !}
 to1 star = {!   !}
 
+
+-- https://proofassistants.stackexchange.com/questions/1981/what-are-the-complex-induction-patterns-supported-by-agda
+-- https://www.cse.chalmers.se/~ulfn/papers/thesis.pdf ulf norell se/~ulfn/papers/thesis

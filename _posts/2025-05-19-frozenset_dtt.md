@@ -395,6 +395,25 @@ Some useful resources on dependent types are
 
 Python comprehesions are modelled after set comprehensions. I think this means that has_type is something like the axiom of collection / replacement <https://en.wikipedia.org/wiki/Axiom_schema_of_replacement> , a connection I hadn't ever really considered before. Telescopes are telescoped because it models the scoping structure of quantifiers.
 
+Using an empty set to represent False and a singleton set to represent True is a way to exchange `if` statements to `for` loops. There is a certain elegance to that.
+
+```python
+for x in A:
+    if x == 3:
+        #yada
+
+#vs
+
+def B(x):
+    return frozenset([()]) if x == 3 else frozenset()
+for x in A:
+    for p in B(x):
+        #yada
+
+```
+
+Telescopes should be reified as Tries.
+
 Having a notion of execution by using generators or dictionairyes that key on which time a thing enters the set might be interesting. Maybe a more faithful model of constructive principles / enables Int.
 
 Maybe using quoting of code / partial evaluation / bytecode normalization might be a way to get at definitional equality.

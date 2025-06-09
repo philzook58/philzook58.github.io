@@ -24,17 +24,40 @@ Philip Zucker (Draper Labs)
 
 ---
 
+# E-graphs
+
+E-graphs are:
+
+- term banks
+- equality checkers
+- canonizers
+- matchers pattern match fulfillers
+- Assert equalities to e-graph. equality stores
+
+<!--  
+
+Theory -> E-TermBank 
+The unionfind tikes the knot back to the theory
+Teasing apart these different roles.
+
+-->
+
+---
+
 # AC Sucks
 
-$(x_1 + (x_2 + ...(x_{N-1} + x_N)...))$
+- $(x_1 + (x_2 + ...(x_{N-1} + x_N)...))$
 
-   |  e-classes | e-nodes |
-   |------------|-----------|
-   | $2^N-1$ | $3^N - 2^{N+1} + 1$ |
+- $2^N-1$ e-classes
+- $3^N - 2^{N+1} + 1$  e-nodes
 
 <!-- picture? 
 - The eqsat paradox
 - We want stuff baked in.
+
+|  e-classes | e-nodes |
+|------------|-----------|
+|  $2^N-1$ | $3^N - 2^{N+1} + 1$ |
 
 import operator
 z3.Solver()
@@ -46,8 +69,6 @@ z3.simplify(reduce(operator.add , xs))
 
 TANSTAAFL ~ There ain't no such thing as a free lunch
 
--->
-
 ---
 
 # EMT = SMT - SAT
@@ -58,26 +79,69 @@ TANSTAAFL ~ There ain't no such thing as a free lunch
 
 ---
 
+-->
+
+---
+
+# Naive Equational Search
+<!-- Breadth first -->
+- Hash Cons a term bank
+- Rewrite over it
+- Mark discovered equalities as edges.
+- Egraphs as term banks
+  - c
+
+---
+
+# E-graphs and Term Banks
+
+- E-graphs are both term banks and equality stores
+<!-- Example -->
+- c = c
+
+---
+
+<!-- Term Banks Modulo Theories -->
+
 # Terms Modulo Theories
 
-- Convergent Smart constructors
-- Children collections
+- Smart constructors apply convergent rewrites
+
+```python
+def add(x,y):
+  return x if y == 0 else ("+", x, y)
+```
+
+- Children collections (set, multiset, polynomials, etc)
+
+```python
+def add(*args):
+  return ("+", multiset(args))
+```
 
 <!-- Show rules. x + 0 -> x -->
 <!-- show smart constructor
 
 def add(x,y):
   return x if y == 0 else ("+", x, y)
+- Hash Consing Modulo Theories
+  - Canonize
+  - Homomoprhic Hashes
+
+```ocaml
+type term = {head : str; children: children}
+and children =
+  | Ordered of term list
+  | MS of term multiset
+```
 
 -->
 
 ---
 
-# Brute Term Search
-<!-- Breadth first -->
-- Hash cons a term bank. Rewrite over it. Mark discovered equalities.
+# Patterns
 
----
+- #substititions depends on theory
 
 |  Theory  |  Flatterns   |  Theory Factor $F$  |
 |-------------|------------|--------|
@@ -97,43 +161,47 @@ flatterms
  -->
 ---
 
-# E-graphs and Term Banks
+# Bottom Up-Ematching
 
-<!-- Example -->
+- e-match on term bank, not on term
+- Bind variables by traversing term bank
+- $foo(bar(X), Y) \rightarrow biz(X)$
+
+```python
+for X in terms:
+  for Y in terms:
+    lhs = foo[bar[X], Y]
+    if lhs in terms:
+      rhs = biz(Z)
+      add_equality(lhs, rhs)
+```
 
 ---
 
-# Bottom Up E-matching
+# Bottom Up E-matching Plays Nicer with Theories
 
-- E-Graphs have Term Banks
 - Theory Factor $F = \frac{N}{E}$
 - Pattern depth $d$
 - Top down $O(T F^d )$
-- Bottom Up $O(T^V d ln(T))$
+- Bottom up $O(T^V d \ln(T))$
+
+<!--
+Give conrete data for
+((x + y) + z) pattern?
+
+Shallow many vars
 
 - Benefits of Theories & simplicity vs Flexibility and optimiality?
   - I dunno
-
+- E-Graphs have Term Banks
 - Generate terms, prune, discover equalities
+-->
+
+<!--
 
 ---
 
 ## Demo
-
-### Shallow Embedding BU Ematching
-
-```python
-for X in e c l a s s e s :
-for Y in e c l a s s e s :
-t r y :
-# p o s s i b l y f a i l i n g l o o k u p i n h a s h c o n s
-l h s = f o o [ b a r [X ] , Y ]
-# c o n s t r u c t r h s
-r h s = b i z (X)
-# s e t e q u al
-e g ra p h . u ni o n ( l h s , r h s )
-except e :
-```
 
 ```python
     def ematch(self, vs: list[smt.ExprRef], pat: smt.ExprRef) -> list[list[smt.ExprRef]]:
@@ -150,9 +218,34 @@ except e :
 
 ### Brute Force SMT E-Graph
 
+-->
 ---
 
-# What are E-graphs?
+# Tying the Knot
+
+- So far a fixed background "good" notion of equality
+- E-graphs assert pieces pulled from of "bad" notions of equality
+
+---
+
+<!-- 
+---
+---
+
+# E-Graphs are Models
+
+- Funnels from syntax to semantics
+
+## Union finds
+
+- Canonizers ground atomic equations
+- What interface really matters?
+- Shostak theories
+
+---
+
+# E-graphs are Models
+<!-- What are E-graphs? 
 
 - E-graphs are models of a partial logic
 - $\downarrow t$ and  $t_1 = t_2$
@@ -162,17 +255,7 @@ except e :
   - Essential Algebraic Theories
   - Partial Horn Logic
 
-<!-- 
----
-
-## Union finds
-
-- Canonizers ground atomic equations
-- What interface really matters?
-- Shostak theories
-
 -->
----
 
 # What is this the interface to?
 
@@ -202,6 +285,28 @@ lookup : t -> eid -> key (extract)
 
 ---
 
+```ocaml
+type t = uf
+type eid = int
+
+type t = egraph 
+type id = eid
+
+type t = uf_plus
+type term_id = Eid of int | Term of str * term_id list 
+
+type t = matrix
+type eid = int lin_expr
+
+type t = poly_constr
+type eid = int poly
+
+type t = rewrite_rules
+type eid = Var of int | Eid of int | Fun of string * eid list 
+```
+
+---
+
 # Semantic E-ids
 <!-- e-ids as values -->
 - Alternative names: Structured e-ids, Values
@@ -209,12 +314,12 @@ lookup : t -> eid -> key (extract)
 
 ---
 
-# Cheap Decidable
+# Decidable & Cheap
 
-| eids |  example                       |    Rebuild        |    Data Structure
+| eids |  example                       |    Rebuild        |    Data Structure |
 |------------------|--------------------|------------------|---------------------|
 | Atomic / Uninterp |  $e_1$             |  Compress      | Union Find
-| Value + Uninterp |   $Cons(7, e_1)$   |  Compress/Unify  | Value rooted UF + Unification
+| primitive + uninterp |   $Cons(7, e_1)$   |  Compress/Unify  | Value rooted UF + Unification
 | Group(oid) Action   |   $e_1 + 7$     |      Compress   | Group UF
 | Lin Expr         |    $2e_1 - 4e_7$     |   Gauss Elim   | Row Echelon
 | Ground Terms    |      $foo(bar(e_7))$        |  Egraph Rebuild       | Inner E-Graph   |
@@ -230,9 +335,9 @@ Undecidable
 
 ---
 
-# Expensive Decidable
+# Decidable & Expensive
 
-| eids |  example                       |    Rebuild        |    Data Structure
+| eids |  example |    Rebuild        |    Data Structure
 |------------------|--------------------|------------------|---------------------|
 |  Polynomials           |   $e_1 + 6e_4^3$      |   Buchberger   | Grobner Basis  
 | Ground Multiset        |   $[e1, e1, e2]$       |   Knuth Bendix      |   Graver / Hilbert bases / Convergent Rewrite System  |
@@ -243,10 +348,10 @@ Undecidable
 
 # More?
 
-|
-|-----------------|-----------|---|---|--|
-|  Slotted eids?  |   ?       |   ?  | ? | ? |
-| Colored eids?  |   ?         | ?  | ?  | ? |
+| eids |  Example  |    Rebuild        |    Data Structure |
+|-----------------|-----------|---|---|
+|  Slotted eids?  |   $\lambda_{i j k}e_3(j,k,i)$ ?       |   ?  | ? | ? |
+| Colored eids?  |  $\Gamma \vdash e_{17}$ ? | ?  | ?  | ? |
 
 ---
 
@@ -255,11 +360,11 @@ Undecidable
 |  eid | ex  |  rebuild   |   |
 |---|---|--|--|
 |  Strings        | $e_1 e_4 e_2$ |  String KB  | Rewrite Rules |    Program seqeuences
-| Non commutative Rings |    $\partial_x e_1$        |            |               |    Note: differentiation, quantum operators
-| Variables Term  | $foo(e_1, X)$    |                                        |   Destructive Rewrite Rules
+| Non commutative Rings |    $\partial_x e_1$        |      ?      |       ?        |
+| Terms w/ Vars  | $foo(e_1, X)$    |                                        |   Destructive Rewrite Rules
 
 <!--
-
+Note: differentiation, quantum operators
 Is there a form of differentiable that would be solvable?
 Linear differential (?)
 partial_t only? That might make a module for with smith normal form works
@@ -294,3 +399,49 @@ Show shallow top down e-match
 Show shallow bottom up e-matcher
 
 There's a chance I could cut the second half of the talk about semantic e-ids.
+
+```ocaml
+type uf
+type eid
+val create : unit −> t
+val eq : uf −> eid −> eid −> bool
+val fresh : uf −> eid
+val canon : uf −> eid −> eid
+val assert_eq : uf −> eid −> eid −> unit
+val rebuild : 
+```
+
+```ocaml
+type uf
+type eid = int
+
+type t = uf+
+type eid = 
+
+type t = egraph 
+type id = eid
+
+type t = matrix
+type eid = lin_expr
+
+type t = poly_sys
+type eid = poly
+
+type t = rewrite_rules
+type eid = term
+```
+
+```python
+class ????():
+  eid : type
+  def is_eq(self, x : eid, y : eid) -> bool:
+
+
+```
+
+# EqSAT is incomplete
+
+- All eqsat methods are incomplete
+- More research on smart, simple efficient, fruitful term enumeration.
+- x*0 = 0
+- inv(x) * x = 1
