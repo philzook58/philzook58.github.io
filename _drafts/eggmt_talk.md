@@ -475,6 +475,12 @@ partial_t only? That might make a module for with smith normal form works
 
 <https://arxiv.org/abs/2504.14340>
 
+I should really trim and make some astuff things I just say.
+
+The juncture between "things egraph does" and "what is this the signature of" is clunky. They're too similar.
+
+Summary Slides
+
 Pavel quantifier elimination
 
 I don't really have to hit every point of the paper. It's too much.
