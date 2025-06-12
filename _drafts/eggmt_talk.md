@@ -10,6 +10,9 @@ marp: true
 Philip Zucker (Draper Labs)
 
 <!--
+
+Nice picture of eggy omelet?
+
 ---
 
 # Overview
@@ -29,19 +32,32 @@ Philip Zucker (Draper Labs)
 
 # Motivation: AC Sucks
 
-- $(x_1 + (x_2 + ...(x_{N-1} + x_N)...))$
-
-- $2^N-1$ e-classes
-- $3^N - 2^{N+1} + 1$  e-nodes
 - The Eqsat Paradox
+- $(x_1 + (x_2 + ...(x_{N-1} + x_N)...))$
+- #e-classes: $2^N-1$
+- #e-nodes: $3^N - 2^{N+1} + 1$  
+
+![](./add_4.svg)
+
+<!--
+
+Associativity and commutativity are a part of many problems
+Basic algebra with 
+plus
+times
+lattices
+abelian groups
+
+-->
 
 ---
 
-# E-Graph Modulo Theories
+# E-Graphs Modulo Theories
 
-- Not Just AC: Polynomial, linear, sets
-- EMT = SMT - SAT
-- Massive sharing makes it confusing
+- EMT ~ SMT - SAT
+- Can we bake in domain specific smarts?
+<!-- - Not Just AC: Polynomial, linear, sets -->
+- E-graph sharing makes confusing 😵‍💫
 
 <!--
 Role as simplifier vs prover modes.
@@ -85,12 +101,18 @@ TANSTAAFL ~ There ain't no such thing as a free lunch
 E-graphs are:
 
 - Term banks `add_term : t -> term -> unit`
-- Term finders `match : t -> pat -> subst list`
-- Equality checkers `is_eq : t -> term -> term -> bool`
-- Canonizers `t -> term -> term`
 - Equality stores `assert_eq : t -> term -> term -> unit`
 
 <!--  
+- `E.union(t,t)`
+
+- Term finders `match : t -> pat -> subst list`
+- Equality checkers `is_eq : t -> term -> term -> bool`
+- Canonizers `t -> term -> term`
+
+The first half of the talk is the role as a term bank
+the second half is as its role as an equality store
+
 These are allow intertwicned
 A good method is to simplify a problem unitl its basically trivial and then add back in the ocmplexity.
 
@@ -123,10 +145,10 @@ Teasing apart these different roles.
 -->
 
 <!-- Term Banks Modulo Theories -->
-
+<!-- Hash consing modulo theories -->
 ---
 
-# Terms Modulo Theories
+# Term Banks Modulo Theories
 
 - Rigid baked in "nice" theories.
 - Interning by structural normalization
@@ -145,6 +167,15 @@ Teasing apart these different roles.
       def add(*args):
         return ("+", multiset(args))
       ```
+
+<!--
+Too condensed.
+An example. Show 
+
+add_term(add((x,add(0,0)))
+add_term(add(x,0))
+
+-->
 
 <!-- 
 
@@ -178,14 +209,23 @@ and children =
 |   |   |   |
 |---|---|---|
 | `add_term : t -> term -> unit` |  ✅ | `hashcons` |
-| `match : t -> pat -> subst list` | ? |   |
+| `match : t -> pat -> subst list` | ❓ |   |
 | `is_eq : t -> term -> term -> bool` | ✅ | `is` |
 | `canon : t -> term -> term` |  ✅  | `id` |
-| `assert_eq : t -> term -> term -> unit` | ❌ | |
+| `assert_eq : t -> term -> term -> unit` | 🤔❌ | |
 
 <!-- 
 Assert_eq can be dealt with via a brute force table.
 Maybe not an X so much as a so-so
+
+Is the second half of the talk necessary?
+You can kind of take terms modulo theories and toss on a union find?
+Uhhhh. Maybe (?). No.
+
+Can I add ground rules to a convergent rewrite system and always make it work?
+No. String rewriting counterexampel. Really?
+Well you can keep normalizing terminating.
+But not confluent.
 
 -->
 
@@ -196,6 +236,14 @@ Maybe not an X so much as a so-so
 - Implicit terms
   - Pattern is `?x + 0` but smart constructor absorbs `0`
 - E-matching
+  - Top Down
+  - Bottom Up
+
+```
+add_term((x + 0) + y)
+```
+
+![](./xy.svg)
 
 <!-- https://en.wikipedia.org/wiki/Bell_number This also what people mean by using AC for addition.
 AC1 is multiset matching. Both are really.
@@ -210,22 +258,25 @@ flatterms
 # Top Down E-matching
 
 - Scan termbank for term roots
-- Theory expansion at each theory node of pattern
-  - #substitutions depends on theory
+- #substitutions depends on theory
+  - Factor $F$ at each theory node of pattern
 
 |  Theory  |  Pattern   |  Theory Factor $F$  |
 |-------------|------------|--------|
-|    N/A      |    $cons(X,Y) =^? cons(1, nil)$     |   1   |  
-|  E-Graph  |   $foo(X,Y) \in^? \{foo(e_1,e_2), bar(e_2) \}$         |    $\frac{\#enodes}{\#eids}$ |
+|    ADT      |    $cons(X,Y) =^? cons(1, nil)$     |   1   |  
+|  E-Graph  |   $foo(X,Y) \in^? \{foo(e_1,e_2), bar(e_2) \}$         |   $\|eclass\|$ |
 |      MultiSet 1     |  $[X,Y,Z] =^? [1,2,3]$ | (\#Vars)!  |  
 |      MultiSet 2     |  $X + Y =^? [1,2,3]$  | #Partitions |
 |    Linear   | $X + Y =^? 42$  |  $\infty$  |
 
+<!-- `match : t -> pat -> subst list` -->
 ---
 
 # Bottom Up E-matching
 
 - E-match _over the term bank_, not on term
+  - `match : term -> pat -> subst list`
+  - `match : termbank -> pat -> subst list`
 - Bind variables by traversing term bank
   - Ex: $foo(bar(X), Y) \rightarrow biz(X)$
 
@@ -240,25 +291,32 @@ for X in terms:
 
 <!--
 Why is this not intuitive.
- We have this single term mindset. 
+We have this single term mindset. 
 You can convert pattern matching 
+
+Vectorized versions of stuff
 
 -->
 ---
 
 # Bottom Up E-matching Plays Nicer with Theories
 
-- Theory Factor $F = \frac{N}{E}$, Pattern depth $d$
-- Top down $O(T F^d )$.
-  - Deep is bad. Ex: $foo(foo(foo(foo(X))))$
-- Bottom up $O(T^V d \ln(T))$
-  - No $F$ dependence
-  - Many Var is bad. Ex: $foo(X,Y,Z,W,B,U)$
-
 - Why?
   - Grounds fast
   - Only needs canonizer, not expander
-- Pareto optimal point for simplicity / power
+<!-- - Theory Factor $F = \frac{N}{E}$, Pattern depth $d$ -->
+- Top down $O(T F^d )$.
+  - Deep is bad. Ex: $foo(foo(foo(foo(X))))$
+- Bottom up $O(T^V d \ln(T))$
+  <!-- - No $F$ dependence -->
+  - Many Var is bad. Ex: $foo(X,Y,Z,W,V,U)$
+- Pareto frontier for simplicity-power
+
+<!-- 
+
+Completness.
+
+-->
 
 <!--
 Give conrete data for
@@ -307,6 +365,8 @@ Shallow many vars
 | `assert_eq : t -> term -> term -> unit` | ❌ |
 
 <!-- 
+assert_eq in the e-graph is supplied by the union find?
+
 - So far a fixed background "good" notion of equality
 - E-graphs assert pieces pulled from of "bad" notions of equality
 
@@ -346,15 +406,18 @@ Shallow many vars
 
 ```ocaml
 type t
-type eid
+type id
 val create : unit −> t
-val eq : t −> eid −> eid −> bool
-val fresh : t −> eid
-val canon : t −> eid −> eid
-val assert_eq : t −> eid −> eid −> unit
+val eq : t −> id −> id −> bool
+val fresh : t −> id
+val canon : t −> id −> eid
+val assert_eq : t −> id −> id −> unit
 ```
 
-<!-- The union find? Yes. also the egraph itself 
+<!-- 
+val rebuild 
+
+The union find? Yes. also the egraph itself 
 
 SMT solvers and their theories present the same interface.
 If you don't use SAT, SMT is its theory.
@@ -366,39 +429,47 @@ interpret : t -> key -> eid   union find dict
 explain
 lookup : t -> eid -> key (extract)
 
--->
-
----
+# Union Find Replacements
 
 ```ocaml
+
 type t = uf
 type eid = int
 
 type t = egraph 
 type id = eid
 
-type t = uf_plus
-type term_id = Eid of int | Fn of str * term_id list 
+type t = uf_unify
+type term_id = Eid of int | Constr of str * term_id list | PrimInt int
 
-type t = matrix
+type t = row_echelon
 type eid = int lin_expr
 
-type t = poly_constr
+type t = grobner
 type eid = int poly
 
 type t = rewrite_rules
 type eid = Var of int | Eid of int | Fn of string * eid list 
 ```
 
+-->
+
 ---
 
 # Semantic E-ids
+<!--
+The internals of the union find don't matter. 
+-->
+
 <!-- e-ids as values -->
+- Replace union find with theory specific extensible canonizers
+  - Rebuild has the flavor of _ground_ Knuth Bendix completion
 - Alternative names: Structured e-ids, Values
+<!--
 - E-graphs are Models
   - $\downarrow t$ and  $t_1 = t_2$
+-->
 - Merges the concepts of containers, primitives, and e-ids
-- Many have the flavor of _ground_ Knuth Bendix completion
 
 ---
 
@@ -410,7 +481,7 @@ type eid = Var of int | Eid of int | Fn of string * eid list
 | primitive + uninterp |   $Cons(7, e_1)$   |  Compress/Unify  | Value rooted UF + Unification
 | Group(oid) Action   |   $e_1 + 7$     |      Compress   | Group UF
 | Lin Expr         |    $2e_1 - 4e_7$     |   Gauss Elim   | Row Echelon
-| Ground Terms    |      $foo(bar(e_7))$        |  Egraph Rebuild       | Inner E-Graph   |
+| Ground Terms    |      $foo(bar(e_7))$        |  E-graph Rebuild       | Inner E-Graph   |
 
 <!--  Lighter to heavier weight 
 
@@ -428,9 +499,15 @@ Undecidable
 | eids |  example |    Rebuild Algo       |    Data Structure
 |------------------|--------------------|------------------|---------------------|
 |  Polynomials           |   $e_1 + 6e_4^3$      |   Buchberger   | Grobner Basis  
-| Ground Multiset        |   $[e1, e1, e2]$       |   Knuth Bendix      |   Graver / Hilbert bases / Convergent Rewrite System  |
+| Ground Multiset (AC)     |   $[e1, e1, e2]$       |   Knuth Bendix      |   Graver / Hilbert bases / Convergent Rewrite System  |
 | SMT Terms       |                      | SMT sweeping  | SMT Solver |
 | Bool Exprs       | $e_1 \land e_2 \lor e_3$ | SAT Sweeping  / BDDs / AIGs / Ordered Resolution      |            |
+
+<!-- 
+
+Ground multiset solves AC
+
+-->
 
 ---
 
@@ -462,6 +539,16 @@ partial_t only? That might make a module for with smith normal form works
 - Black Boxes/Automation are decision procedures or linear time or constant time
 - undecidable/interactive/tweakables    poly time
 -->
+
+---
+
+# Related Work
+
+- Normalized Rewriting
+- Extract, Rewrite, and Assert
+- Brute Force SMT E-Graph
+
+---
 
 # Thank You
 
