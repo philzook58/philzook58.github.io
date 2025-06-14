@@ -32,10 +32,13 @@ Nice picture of eggy omelet?
 
 # Motivation: AC Sucks
 
+- AC
+  - Associativity `(X + Y) + Z = X + (Y + Z)`
+  - Commutativity `(X + Y = Y + Z)`
 - The Eqsat Paradox
 - $(x_1 + (x_2 + ...(x_{N-1} + x_N)...))$
 - #e-classes: $2^N-1$
-- #e-nodes: $3^N - 2^{N+1} + 1$  
+<!-- - #e-nodes: $3^N - 2^{N+1} + 1$   -->
 
 ![](./add_4.svg)
 
@@ -54,9 +57,9 @@ abelian groups
 
 # E-Graphs Modulo Theories
 
-- EMT ~ SMT - SAT
 - Can we bake in domain specific smarts?
 <!-- - Not Just AC: Polynomial, linear, sets -->
+- Spirit Guide: EMT ~ SMT - SAT
 - E-graph sharing makes confusing 😵‍💫
 
 <!--
@@ -101,7 +104,12 @@ TANSTAAFL ~ There ain't no such thing as a free lunch
 E-graphs are:
 
 - Term banks `add_term : t -> term -> unit`
+- Term finders `match : t -> pat -> subst list`
 - Equality stores `assert_eq : t -> term -> term -> unit`
+
+<!--
+Put in term bank here
+-->
 
 <!--  
 - `E.union(t,t)`
@@ -152,21 +160,31 @@ Teasing apart these different roles.
 
 - Rigid baked in "nice" theories.
 - Interning by structural normalization
-  - Smart constructors apply convergent rewrites to normal forms
+  - Smart constructors <!-- apply convergent rewrites to normal forms -->
 
     - Ex: $x + 0 \rightarrow x$
 
     ```python
     def add(x,y):
-      return x if y == 0 else ("+", x, y)
+      return x if y == 0 else hashcons(("+", x, y))
     ```
 
+<!--
   - Children collections (set, multiset, polynomials, etc)
 
       ```python
       def add(*args):
         return ("+", multiset(args))
       ```
+  ```python
+  add_term((x + 0) + y + 0)
+  add_term(y + 0)
+  add_term((x + 0) + 0)
+  ```
+
+  ![](./xy.svg)
+
+-->
 
 <!--
 Too condensed.
@@ -210,11 +228,12 @@ and children =
 |---|---|---|
 | `add_term : t -> term -> unit` |  ✅ | `hashcons` |
 | `match : t -> pat -> subst list` | ❓ |   |
-| `is_eq : t -> term -> term -> bool` | ✅ | `is` |
-| `canon : t -> term -> term` |  ✅  | `id` |
-| `assert_eq : t -> term -> term -> unit` | 🤔❌ | |
+| `assert_eq : t -> term -> term -> unit` | ❓ | |
 
 <!-- 
+| `is_eq : t -> term -> term -> bool` | ✅ | `is` |
+| `canon : t -> term -> term` |  ✅  | `id` |
+
 Assert_eq can be dealt with via a brute force table.
 Maybe not an X so much as a so-so
 
@@ -234,16 +253,19 @@ But not confluent.
 # Pattern Matching
 
 - Implicit terms
-  - Pattern is `?x + 0` but smart constructor absorbs `0`
+  - Consider pattern `?x + 0`
+
+<!-- 
 - E-matching
   - Top Down
   - Bottom Up
+-->
 
-```
-add_term((x + 0) + y)
-```
+  ```python
+  add_term((x + 0) + y)
+  ```
 
-![](./xy.svg)
+  ![](./xy.svg)
 
 <!-- https://en.wikipedia.org/wiki/Bell_number This also what people mean by using AC for addition.
 AC1 is multiset matching. Both are really.
@@ -270,9 +292,10 @@ flatterms
 |    Linear   | $X + Y =^? 42$  |  $\infty$  |
 
 <!-- `match : t -> pat -> subst list` -->
+<!-- + 0 |    X + 0 = y  |  1  -->
 ---
 
-# Bottom Up E-matching
+# KEY IDEA: Bottom Up E-matching
 
 - E-match _over the term bank_, not on term
   - `match : term -> pat -> subst list`
@@ -309,7 +332,7 @@ Vectorized versions of stuff
   - Deep is bad. Ex: $foo(foo(foo(foo(X))))$
 - Bottom up $O(T^V d \ln(T))$
   <!-- - No $F$ dependence -->
-  - Many Var is bad. Ex: $foo(X,Y,Z,W,V,U)$
+  - Many var is bad. Ex: $foo(X,Y,Z,W,V,U)$
 - Pareto frontier for simplicity-power
 
 <!-- 
@@ -360,11 +383,12 @@ Shallow many vars
 |---|---|
 | `add_term : t -> term -> unit` |  ✅ |
 | `match : t -> pat -> subst list` | ✅ |
-| `is_eq : t -> term -> term -> bool` | ✅|
-| `canon : t -> term -> term` |  ✅ |
-| `assert_eq : t -> term -> term -> unit` | ❌ |
+| `assert_eq : t -> term -> term -> unit` | ❓ |
 
 <!-- 
+| `is_eq : t -> term -> term -> bool` | ✅|
+| `canon : t -> term -> term` |  ✅ |
+
 assert_eq in the e-graph is supplied by the union find?
 
 - So far a fixed background "good" notion of equality
@@ -400,6 +424,17 @@ assert_eq in the e-graph is supplied by the union find?
   - Essential Algebraic Theories
   - Partial Horn Logic
 
+# Q: What is this the interface to?
+
+```ocaml
+type uf
+type id
+val create : unit −> 
+val eq : uf −> id −> id −> bool
+val fresh : uf −> id
+val canon : uf −> id −> eid
+val assert_eq : uf −> id −> id −> unit
+```
 -->
 
 # Q: What is this the interface to?
@@ -410,7 +445,7 @@ type id
 val create : unit −> t
 val eq : t −> id −> id −> bool
 val fresh : t −> id
-val canon : t −> id −> eid
+val canon : t −> id −> id
 val assert_eq : t −> id −> id −> unit
 ```
 
@@ -429,34 +464,41 @@ interpret : t -> key -> eid   union find dict
 explain
 lookup : t -> eid -> key (extract)
 
+-->
+
+---
+
 # Union Find Replacements
 
 ```ocaml
 
 type t = uf
-type eid = int
+type id = int
 
 type t = egraph 
 type id = eid
 
-type t = uf_unify
-type term_id = Eid of int | Constr of str * term_id list | PrimInt int
-
 type t = row_echelon
-type eid = int lin_expr
+type id = int lin_expr
+
+...
+```
+
+<!--
+type t = uf_unify
+type id = Eid of int | PrimInt int | Fn of string * id list 
 
 type t = grobner
-type eid = int poly
+type id = int poly
 
-type t = rewrite_rules
-type eid = Var of int | Eid of int | Fn of string * eid list 
-```
+type t = knuth_bendix
+type id = Eid of int | Var of int | Fn of string * eid list 
 
 -->
 
 ---
 
-# Semantic E-ids
+# KEY IDEA: Semantic E-ids
 <!--
 The internals of the union find don't matter. 
 -->
@@ -475,13 +517,13 @@ The internals of the union find don't matter.
 
 # Decidable & Cheap
 
-| eids |  example                       |    Rebuild        |    Data Structure |
-|------------------|--------------------|------------------|---------------------|
-| Atomic / Uninterp |  $e_1$             |  Compress      | Union Find
-| primitive + uninterp |   $Cons(7, e_1)$   |  Compress/Unify  | Value rooted UF + Unification
-| Group(oid) Action   |   $e_1 + 7$     |      Compress   | Group UF
-| Lin Expr         |    $2e_1 - 4e_7$     |   Gauss Elim   | Row Echelon
-| Ground Terms    |      $foo(bar(e_7))$        |  E-graph Rebuild       | Inner E-Graph   |
+| seid |  example                       |  Canonizer |
+|------------------|--------------------|--------------------|
+| Atomic / Uninterp |  $e_1$                | Union Find
+| primitive + uninterp |   $Cons(7, e_1)$     | Value rooted UF + Unification
+| Group(oid) Action   |   $e_1 + 7$      | Group UF
+| Lin Expr         |    $2e_1 - 4e_7$     | Gauss Elim. / Row Echelon
+| Ground Terms    |      $foo(bar(e_7))$      | Inner E-Graph   |
 
 <!--  Lighter to heavier weight 
 
@@ -496,11 +538,11 @@ Undecidable
 
 # Decidable & Expensive
 
-| eids |  example |    Rebuild Algo       |    Data Structure
-|------------------|--------------------|------------------|---------------------|
-|  Polynomials           |   $e_1 + 6e_4^3$      |   Buchberger   | Grobner Basis  
-| Ground Multiset (AC)     |   $[e1, e1, e2]$       |   Knuth Bendix      |   Graver / Hilbert bases / Convergent Rewrite System  |
-| SMT Terms       |                      | SMT sweeping  | SMT Solver |
+| seid |  example |    Canonizer
+|------------------|--------------------|---------------------|
+|  Polynomials           |   $e_1 + 6e_4^3$      |   Grobner Basis  |
+| Ground Multiset (AC)     |   $[e1, e1, e2]$       |  Multiset KB / Graver / Hilbert bases  |
+| SMT Terms       |                      | SMT sweeping |
 | Bool Exprs       | $e_1 \land e_2 \lor e_3$ | SAT Sweeping  / BDDs / AIGs / Ordered Resolution      |            |
 
 <!-- 
@@ -513,22 +555,20 @@ Ground multiset solves AC
 
 ## Strong (Undecidable) Theories
 
-|  eid | example  |  Rebuild Algo   |   |
+|  eid | example  |  Canonizer   |
 |---|---|--|--|
-|  Strings        | $e_1 e_4 e_2$ |  String KB  | String Rewrite Rules |    Program seqeuences |
-| Terms w/ Vars  | $foo(e_1, X)$    |             KB                           |    Rewrite Rules
+|  Strings        | $e_1 e_4 e_2$ |  String Knuth Bendix  
+| Terms w/ Vars  | $foo(e_1, X)$    |  Knuth Bendix  |
 
 ---
 
 # More?
 
-| eids |  Example  |    Rebuild        |    Data Structure |
+| eids |  Example  |   Canonizer |
 |-----------------|-----------|---|---|
-|  Slotted eids?  |   $\lambda_{i j k}e_3(j,k,i)$ ?       |   ?  | ? | ? |
+|  Slotted eids?  |   $\lambda_{i j k}e_3(j,k,i)$ ?       |   ?  | ? |
 | Colored eids?  |  $\Gamma \vdash e_{17}$ ? | ?  | ?  | ? |
-| Non commutative Rings |    $\partial_x e_1$        |      ?      |       ?        | ? |
-
----
+| Non commutative Rings |    $\partial_x e_1$        |      ?      |       ?        |
 
 <!--
 Note: differentiation, quantum operators
@@ -544,8 +584,9 @@ partial_t only? That might make a module for with smith normal form works
 
 # Related Work
 
-- Normalized Rewriting
-- Extract, Rewrite, and Assert
+- Normalized Rewriting  (Marche)
+- Extract, Rewrite, and Assert (Koehler et al)
+- Mix E-nodes and Containers
 - Brute Force SMT E-Graph
 
 ---
@@ -631,3 +672,6 @@ class ????():
 - More research on smart, simple efficient, fruitful term enumeration.
 - x*0 = 0
 - inv(x) * x = 1
+
+The interface thing kills my punchline for the tables
+eid t whatev is all messed up
