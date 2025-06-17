@@ -3,6 +3,7 @@ layout: page
 title: Talks
 permalink: /talks/
 ---
+- EGRAPHS 2025 - Omelets Need Onions: E-graphs Modulo Theories via Bottom Up E-Matching [link](https://pldi25.sigplan.org/details/egraphs-2025-papers/5/Omelets-Need-Onions-E-graphs-Modulo-Theories-via-Bottom-Up-E-Matching) <https://www.philipzucker.com/assets/eggmt_talk.pdf> [youtube](https://www.youtube.com/live/AEbvKbHPRhM?si=Ub1wYG900AWSATkc&t=30760)
 - [NEPLS 2025](https://nepls.org/Events/35/) - Knuckledragger: A Low Barrier Proof Assistant [video](https://www.youtube.com/watch?v=ENwKBC8dN4M&ab_channel=PhilipZucker)
 - EGRAPHS 2024 - E-graphs and Automated Reasoning [bad video](https://www.youtube.com/watch?v=XW8yl7OGNwk&pp=ygUfZWdyYXBocyBhbmQgYXV0b21hdGVkIHJlYXNvbmluZw%3D%3D) [better video](https://www.youtube.com/watch?v=74VP0SbNHDE&ab_channel=PhilipZucker) [abstract](https://github.com/philzook58/egraphs2024-talk/blob/main/egraphs2024.pdf) [post](https://www.philipzucker.com/egraph2024_talk_done/)
 - EGRAPHS 2022 - Logging an Egg: Datalog on E-graphs <https://www.philipzucker.com/egglog0/> [post](https://www.philipzucker.com/pldi22-notes/)

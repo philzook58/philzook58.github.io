@@ -32,13 +32,15 @@ Nice picture of eggy omelet?
 
 # Motivation: AC Sucks
 
-- AC
-  - Associativity `(X + Y) + Z = X + (Y + Z)`
-  - Commutativity `(X + Y = Y + Z)`
 - The Eqsat Paradox
 - $(x_1 + (x_2 + ...(x_{N-1} + x_N)...))$
 - #e-classes: $2^N-1$
 <!-- - #e-nodes: $3^N - 2^{N+1} + 1$   -->
+<!--
+- AC
+  - Associativity `(X + Y) + Z = X + (Y + Z)`
+  - Commutativity `X + Y = Y + X`
+-->
 
 ![](./add_4.svg)
 
@@ -51,6 +53,7 @@ times
 lattices
 abelian groups
 
+- TANSTAAFL
 -->
 
 ---
@@ -58,11 +61,13 @@ abelian groups
 # E-Graphs Modulo Theories
 
 - Can we bake in domain specific smarts?
-<!-- - Not Just AC: Polynomial, linear, sets -->
+  - Not Just AC: polynomial, linear, sets
 - Spirit Guide: EMT ~ SMT - SAT
 - E-graph sharing makes confusing 😵‍💫
 
 <!--
+- This talk isn't closing a door, it's opening one
+- 
 Role as simplifier vs prover modes.
 
 -->
@@ -176,6 +181,7 @@ Teasing apart these different roles.
       def add(*args):
         return ("+", multiset(args))
       ```
+
   ```python
   add_term((x + 0) + y + 0)
   add_term(y + 0)
@@ -224,11 +230,11 @@ and children =
 
 # Term Banks Modulo Theories
 
-|   |   |   |
-|---|---|---|
-| `add_term : t -> term -> unit` |  ✅ | `hashcons` |
-| `match : t -> pat -> subst list` | ❓ |   |
-| `assert_eq : t -> term -> term -> unit` | ❓ | |
+|   |   |
+|---|---|
+| `add_term : t -> term -> unit` |  ✅ |
+| `match : t -> pat -> subst list` | ❓ |
+| `assert_eq : t -> term -> term -> unit` | ❓ |
 
 <!-- 
 | `is_eq : t -> term -> term -> bool` | ✅ | `is` |
@@ -302,13 +308,14 @@ flatterms
   - `match : termbank -> pat -> subst list`
 - Bind variables by traversing term bank
   - Ex: $foo(bar(X), Y) \rightarrow biz(X)$
+- Optimizations
 
 ```python
 for X in terms:
   for Y in terms:
     lhs = foo[bar[X], Y]
     if lhs in terms:
-      rhs = biz(Z)
+      rhs = biz(X)
       add_equality(lhs, rhs)
 ```
 
@@ -324,17 +331,27 @@ Vectorized versions of stuff
 
 # Bottom Up E-matching Plays Nicer with Theories
 
-- Why?
-  - Grounds fast
-  - Only needs canonizer, not expander
 <!-- - Theory Factor $F = \frac{N}{E}$, Pattern depth $d$ -->
+<!--
 - Top down $O(T F^d )$.
   - Deep is bad. Ex: $foo(foo(foo(foo(X))))$
 - Bottom up $O(T^V d \ln(T))$
-  <!-- - No $F$ dependence -->
-  - Many var is bad. Ex: $foo(X,Y,Z,W,V,U)$
-- Pareto frontier for simplicity-power
 
+- Many var is bad. Ex: $foo(X,Y,Z,W,V,U)$
+-->
+  <!-- - No $F$ dependence -->
+|   |     TD  |      BU |
+|---|-----|-------------|
+| Cost  |  $O(T F^d )$  |  $O(T^V d \ln(T))$  |
+| $foo(foo(foo(foo(X))))$  | 😢   |    😀 |
+| $foo(X,Y,Z,W,V,U)$ |      😀   |  😢  |
+<!--
+- Why?
+  - Grounds fast
+-->
+- Pareto frontier for simplicity-power
+  - Grounds fast
+  - Only needs canonizer, not expander / unapply
 <!-- 
 
 Completness.
@@ -395,7 +412,6 @@ assert_eq in the e-graph is supplied by the union find?
 - E-graphs assert pieces pulled from of "bad" notions of equality
 
 -->
----
 
 <!-- 
 ---
@@ -437,19 +453,24 @@ val assert_eq : uf −> id −> id −> unit
 ```
 -->
 
-# Q: What is this the interface to?
+---
+
+# Q: What does the Union Find do?
 
 ```ocaml
 type t
 type id
-val create : unit −> t
-val eq : t −> id −> id −> bool
+val is_eq : t −> id −> id −> bool
 val fresh : t −> id
 val canon : t −> id −> id
 val assert_eq : t −> id −> id −> unit
 ```
 
+- But not only a union find presents this interface!
+
 <!-- 
+create
+
 val rebuild 
 
 The union find? Yes. also the egraph itself 
@@ -466,6 +487,7 @@ lookup : t -> eid -> key (extract)
 
 -->
 
+<!--
 ---
 
 # Union Find Replacements
@@ -483,6 +505,7 @@ type id = int lin_expr
 
 ...
 ```
+-->
 
 <!--
 type t = uf_unify
@@ -498,20 +521,20 @@ type id = Eid of int | Var of int | Fn of string * eid list
 
 ---
 
-# KEY IDEA: Semantic E-ids
+# KEY IDEA: Structured E-ids
 <!--
 The internals of the union find don't matter. 
 -->
 
 <!-- e-ids as values -->
-- Replace union find with theory specific extensible canonizers
-  - Rebuild has the flavor of _ground_ Knuth Bendix completion
-- Alternative names: Structured e-ids, Values
-<!--
-- E-graphs are Models
+- Alternative names: Semantic e-ids, _Values_
+- _E-graphs are Models_ (for a partial logic)
   - $\downarrow t$ and  $t_1 = t_2$
--->
+- Replace union find with theory specific _extensible_ canonizers
+  - Rebuild has the flavor of _ground_ Knuth Bendix completion
+  - Stock UF is uninterpreted values $e_i$ and atomic equations $e_i = e_j$
 - Merges the concepts of containers, primitives, and e-ids
+- E-nodes are interned, seids are ephemeral
 
 ---
 
@@ -543,7 +566,7 @@ Undecidable
 |  Polynomials           |   $e_1 + 6e_4^3$      |   Grobner Basis  |
 | Ground Multiset (AC)     |   $[e1, e1, e2]$       |  Multiset KB / Graver / Hilbert bases  |
 | SMT Terms       |                      | SMT sweeping |
-| Bool Exprs       | $e_1 \land e_2 \lor e_3$ | SAT Sweeping  / BDDs / AIGs / Ordered Resolution      |            |
+| Bool Exprs       | $e_1 \land e_2 \lor e_3$ | SAT Sweeping  / BDDs / AIGs / Ordered Resolution      |
 
 <!-- 
 
@@ -555,21 +578,22 @@ Ground multiset solves AC
 
 ## Strong (Undecidable) Theories
 
-|  eid | example  |  Canonizer   |
-|---|---|--|--|
-|  Strings        | $e_1 e_4 e_2$ |  String Knuth Bendix  
+|  seid | example  |  Canonizer   |
+|---|---|--|
+|  Strings  (A)       | $e_1 e_4 e_2$ |  String Knuth Bendix  |
 | Terms w/ Vars  | $foo(e_1, X)$    |  Knuth Bendix  |
 
 ---
 
-# More?
+# Wild Speculation
 
-| eids |  Example  |   Canonizer |
-|-----------------|-----------|---|---|
-|  Slotted eids?  |   $\lambda_{i j k}e_3(j,k,i)$ ?       |   ?  | ? |
-| Colored eids?  |  $\Gamma \vdash e_{17}$ ? | ?  | ?  | ? |
-| Non commutative Rings |    $\partial_x e_1$        |      ?      |       ?        |
-
+| seids |  Example  |   Canonizer |
+|-----------------|-----------|---|
+|  Slotted eids?  |   $\lambda_{i j k}e_3(j,k,i)$ ?       | ? |
+| Colored eids?  |  $\Gamma \vdash e_{17}$ ? | ?  |
+| Non commutative Rings |    $\partial_x e_1$        |      ? |
+| Towers      |  `Poly<MS<GroupAct<int>>>`          |  ?    |
+| Slotted Multisets |    $e_{ijk} e_{jk}$   | ?  |
 <!--
 Note: differentiation, quantum operators
 Is there a form of differentiable that would be solvable?
@@ -585,93 +609,22 @@ partial_t only? That might make a module for with smith normal form works
 # Related Work
 
 - Normalized Rewriting  (Marche)
+- Alt-Ergo AC matching
 - Extract, Rewrite, and Assert (Koehler et al)
 - Mix E-nodes and Containers
 - Brute Force SMT E-Graph
+- Pavel's Blog Posts
 
 ---
+<!--
+This talk isn't meant to close the door
+-->
 
 # Thank You
 
+- There is still much to do!
 - Pre-print <https://arxiv.org/abs/2504.14340>
 - Prototype: <https://www.kdrag.com>  
   - `from kdrag.solvers.egraph import EGraph`
 
 ---
-
-# Bits and Bobbles
-
-<https://arxiv.org/abs/2504.14340>
-
-I should really trim and make some astuff things I just say.
-
-The juncture between "things egraph does" and "what is this the signature of" is clunky. They're too similar.
-
-Summary Slides
-
-Pavel quantifier elimination
-
-I don't really have to hit every point of the paper. It's too much.
-A sale pitch for the paper kind of.
-
-It would be good to have a running example.
-
-Brute SMT?
-
-Is this too much stuff for 20mins? What really are my priorities?
-
-Look at reviewer suggestions.
-
-Show shallow top down e-match
-Show shallow bottom up e-matcher
-
-There's a chance I could cut the second half of the talk about semantic e-ids.
-
-```ocaml
-type uf
-type eid
-val create : unit −> t
-val eq : uf −> eid −> eid −> bool
-val fresh : uf −> eid
-val canon : uf −> eid −> eid
-val assert_eq : uf −> eid −> eid −> unit
-val rebuild : 
-```
-
-```ocaml
-type uf
-type eid = int
-
-type t = uf+
-type eid = 
-
-type t = egraph 
-type id = eid
-
-type t = matrix
-type eid = lin_expr
-
-type t = poly_sys
-type eid = poly
-
-type t = rewrite_rules
-type eid = term
-```
-
-```python
-class ????():
-  eid : type
-  def is_eq(self, x : eid, y : eid) -> bool:
-
-
-```
-
-# EqSAT is incomplete
-
-- All eqsat methods are incomplete
-- More research on smart, simple efficient, fruitful term enumeration.
-- x*0 = 0
-- inv(x) * x = 1
-
-The interface thing kills my punchline for the tables
-eid t whatev is all messed up
