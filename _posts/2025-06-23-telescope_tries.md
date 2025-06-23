@@ -9,7 +9,7 @@ A telescope is a sequence of variables and their type such that later types in t
 
 `[x : A, y : B(x), z : C(x,y)]`
 
-These are the things often written as $\Gamma$ in a typing judgement $\Gamma \vash t : A$ if you've seen such a thing. Another example might be `[A : Type, n : Nat, x : Vec n A]` for a having a list that is type constrained to be of length `n` in your current context.
+These are the things often written as $\Gamma$ in a typing judgement $\Gamma \vdash t : A$ if you've seen such a thing. Another example might be `[A : Type, n : Nat, x : Vec n A]` for a having a list that is type constrained to be of length `n` in your current context.
 
 I have continued to think about this blog post <https://www.philipzucker.com/frozenset_dtt/> which I rather like. By being vague and borrowing from the metalevel of python, I can kind of outline combinators that describe the simple finite set theoretic model of dependent type theory. This is a highly semantic approach to thinking about type theory and rarely the direction I see people go. Maybe they think it is so obvious it isn't worth mentioning or also they approach type theory as foundational and hence don't really want to appeal to some shitty half correct set-ty intuition to justify their inference rules. <https://ncatlab.org/nlab/files/MartinLofOnTheMeaning96.pdf>
 
