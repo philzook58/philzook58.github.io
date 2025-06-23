@@ -237,7 +237,7 @@ db.execute("SELECT * FROM Path").fetchall()
 
 # Bits and Bobbles
 
-It would be interesting to take Telescopes are tries deeply into the database system. I think down this road lies an interesting idea of a dependently typed egraph. Asserting definitional equality would be the analog of an egglog union. This is ultimately not that surprising. Generalized Algebraic theories was one of the original motivations of egglog. See also Bidlingmaier Eqlog.
+It would be interesting to take Telescopes are tries deeply into the database system. I think down this road lies an interesting idea of a dependently typed egraph. Asserting definitional equality would be the analog of an egglog union. This is ultimately not that surprising. Generalized Algebraic theories was one of the original motivations of egglog ( <https://www.philipzucker.com/egglog2-monic/> <https://www.philipzucker.com/notes-on-synthesis-and-equation-proving-for-catlab-jl/> and other posts in that era). See also Bidlingmaier Eqlog <https://github.com/eqlog/eqlog>.
 
 Something interesting is that the "Type" gives you a way to refer to the collection of things that all have the same first N columns. These are first class sets.
 
