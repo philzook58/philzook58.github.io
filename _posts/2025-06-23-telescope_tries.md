@@ -30,7 +30,7 @@ On a walk I realized really that there is a more straightforward and less weird 
 
 Tries are mappings that takes keys that are sequences. They are very useful data structures for string algorithms for example, because strings are sequences of characters.
 
-Tries can be implemented multiple ways, but one way is as nested dictionaries. These dictionaries can be seen as kind of lazy iterated cartesian products.
+Tries can be implemented multiple ways, but one way is as nested dictionaries. These dictionaries can be seen as kind of lazy/factored iterated cartesian products.
 
 ```python
 { x : {  y : {z : () for z in C(x,y)}  for y in B(x) }  for x in A}
@@ -94,11 +94,11 @@ It is indeed a very mild usage of dependent types. It would not be so easy to wr
 
 # Relating Relational and Telescope Style Conjunctive Queries
 
-Any telescope can be rewritten as a conjunctive query <https://en.wikipedia.org/wiki/Conjunctive_query> . Conjunctive queries look the like bodies of datalog rules.
+In the particular model we have in mind, telescopes can be rewritten as a conjunctive query <https://en.wikipedia.org/wiki/Conjunctive_query> . Conjunctive queries look the like bodies of datalog rules.
 
-If we take the convention that every n-argument "dependent type" is actually just a notation for an n+1 relation, we can turn telescopes into conjunctive queries. `[x : A, y : B(x), z : C(x,y)]` becomes $A(x) \land B(x,y) \land C(x,y,z)$. Perhaps writing `z : C(x,y)` as `elem(C(x,y),z)` and then fusing/flattening `elem` with `C` to `C'(x,y,z)` makes this more clear. We do have a notation to refer to a first class set, which is kind of interesing. Not sure how important this is.
+If we take the convention that every n-argument "dependent type" is actually just a notation for an n+1 relation, we can turn telescopes into conjunctive queries. `[x : A, y : B(x), z : C(x,y)]` becomes $A(x) \land B(x,y) \land C(x,y,z)$. As a another way of putting it, we can first write `z : C(x,y)` as `elem(C(x,y),z)` and then fuse/flatten `elem` with `C` to `C'(x,y,z)`. We do have a notation to refer to a first class set, which is kind of interesing. Not sure how important this is.
 
-This can in turn can be written as the SQL query. SQL binds rows rather than the elements in the rows like a conjunctive query / datalog body does. It is however quite mechanical to translate them.  <https://www.philipzucker.com/tiny-sqlite-datalog/>
+This can in turn can be written as the SQL query. SQL binds rows rather than the elements in the rows like a conjunctive query / datalog body does. It is however quite mechanical to translate them. i describe how to do so here in greater depth <https://www.philipzucker.com/tiny-sqlite-datalog/>
 
 ```SQL
 FROM A as a 
@@ -110,24 +110,24 @@ b.v1 = c.v1 AND
 a.v0 = c.v0
 ```
 
-Vice versa can also be achieved in various ways.
+Vice versa (from conjunctive queries to telescopes) can also be achieved in various ways.
 
 $T(x,y) \land T(y,z) \land T(z,x)$ becomes `[x : Int, y : Int, z : Int, p1 : T(x,y), p2 : T(y,z), p3 : T(z,x)]`  or we could try to move the telescope around a little, which corresponds to lifting up loop invariant code in a for loop to `[x : Int, y : Int, p1 : T(x,y), z : Int, p2 : T(y,z), p3 : T(z,x)]`
 
 It seems in general it is easier to convert a telescope to a nice conjunctive query form than vice versa. Conjunctive queries have no restrictions on there being a nice ordering to the variables. There may not be a nice ordering or finding it is a task.
 
-I've notice in knuckledragger, which is a Hilbert style system that having your theorems in a "standard form" helps you write proof combinators that correspond to dependent type or sequent calculus rules. John Harrison's book makes a similar observation.
+I've notice in knuckledragger <https://github.com/philzook58/knuckledragger> , which is a Hilbert style system that having your theorems in a "standard form" helps you write proof combinators that correspond to dependent type or sequent calculus rules. John Harrison's book makes a similar observation.
 
 Telescopes and Conjunctive queries kind of correspond to two "standard forms" you might like your logical formulas to appear as
 
 - "Sequent form" $\forall x y z ... , ( A \land B \land C ...)  \implies P$
 - Telescope form $\forall x, A(x) \implies (\forall y, B(x,y) \implies (... \implies P))$
 
-Always working in these two forms let's you form Hilbert style combinators that corresponds to sequence calculus rules or rules that look more like dependent type theory rules.
+Always working in these two forms let's you form Hilbert style combinators that corresponds to sequence calculus rules or rules that look more like dependent type theory rules. Exactly the tradeoffs between the forms isn't that clear to me.
 
 ## SQL-izing telescopes
 
-The thing that tries also triggers in my brain is database queries and worst case optimal join <https://arxiv.org/pdf/2301.10841> which also are intimately connected to `for` loops.
+The thing that tries also triggers in my brain is database queries and worst case optimal join <https://arxiv.org/pdf/2301.10841> which also are intimately connected to `for` loops who's iterators are dependent on the outer for loop's variables.
 
 There is also strong correspondence between basic SQL queries and `for` loops. <https://www.philipzucker.com/sql_graph_csp/>
 
