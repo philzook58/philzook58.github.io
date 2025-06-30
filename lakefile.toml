@@ -3,3 +3,8 @@ version = "0.1.0"
 
 [[lean_lib]]
 name = "_drafts"
+
+[[require]]
+name = "smt"
+scope = "ufmg-smite"
+rev = "main"
