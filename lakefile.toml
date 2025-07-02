@@ -3,6 +3,8 @@ version = "0.1.0"
 
 [[lean_lib]]
 name = "_drafts"
+precompileModules = true
+supportInterpreter = true
 
 [[require]]
 name = "smt"

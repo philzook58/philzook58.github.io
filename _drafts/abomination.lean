@@ -196,3 +196,71 @@ def hello := getHello ()
 def mypow n x :=
   if n == 0 then `1
   else `($x * )
+
+
+-- show drawing diagrams
+-- gnuplot
+-- bash
+
+def bash (cmd : String) (_ : Unit) : IO Unit := do
+  let output <- IO.Process.output {
+    cmd := "bash",
+    args := #["-c", cmd],
+  }
+  IO.println output.stdout
+  IO.println output.stderr
+
+#eval IO.FS.writeFile "/tmp/circle.svg" r#"
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+  <circle cx="50" cy="50" r="40" stroke="black" stroke-width="2"
+   fill="blue" />
+    </svg>"#
+
+-- I don't know how to use gnuplot
+/-
+#eval IO.Process.run {
+  cmd := "gnuplot",
+}
+-/
+
+#eval bash "code /tmp/circle.svg"
+
+
+def python (cmd : String) (_ : Unit) : IO Unit := do
+  let output <- IO.Process.output {
+    cmd := "python3",
+    args := #["-c", cmd],
+  }
+  IO.println output.stdout
+  IO.println output.stderr
+
+#eval python "print('Hello from Python!')" ()
+
+#eval python s!"
+import matplotlib.pyplot as plt
+import numpy as np
+plt.plot({[1,7,9]})
+plt.show()
+"
+
+-- packaging it up more nicely
+def plot [ToString a] (data : List a) (_ : Unit) : IO Unit := do
+  python s!"import matplotlib.pyplot as plt; plt.plot({data}); plt.show()" ()
+
+#eval plot [1, 2, 3, 4, 19]
+
+#eval List.range 20 |>.map (Float.cos ∘ Float.ofNat)
+
+-- Array.tabulate
+
+def linspace (start : Float) (stop : Float) (num : Nat) : Array Float :=
+  let step := (stop - start) / Float.ofNat num
+  (Array.range (num + 1)).map (fun k => start + step * Float.ofNat k)
+#eval linspace 0 10 100 |>.map Float.cos
+
+
+-- unsafeBaseIO
+-- dbgTrace
+-- panic!
+
+#eval (panic! "Something went wrong!" : Int)

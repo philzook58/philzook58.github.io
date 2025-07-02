@@ -4,6 +4,38 @@
 -- How to use lean like python
 
 -- https://docs.python.org/3/tutorial/controlflow.html
+-- https://learnxinyminutes.com/python/
+
+-- ooh sorry lean doesn't have operator chaining? Not a modern language like python
+#eval 1 < 2 && 2 < 3
+-- #eval 1 < 2 < 3
+-- of course you could macro it in
+
+
+-- type and isinstance. Hmm.
+-- https://leanprover-community.github.io/mathlib4_docs/Init/Dynamic.html#TypeName
+
+
+-- This is some haskelly stuff.
+-- https://hackage.haskell.org/package/base-4.21.0.0/docs/Data-Dynamic.html
+
+unsafe instance : TypeName Nat := TypeName.mk Nat `Nat
+-- #eval TypeName.mk Int `Int
+-- #eval TypeName.typeName Int
+#eval Dynamic.mk 3 |>.get? Nat
+
+structure Foo where
+deriving TypeName, Repr
+
+#eval TypeName.typeName Foo
+#eval Dynamic.mk Foo.mk |>.get? Foo
+
+-- But is this really isinstance?
+-- We'd want a hiearchy of
+-- class InstanceOf T T
+
+-- Maybe a better match is coercions
+
 
 /-
 
