@@ -313,7 +313,7 @@ Better versions:
 partial def find (uf : Array Nat) (x : Nat) : Nat := Id.run do
   let mut x := x
   while uf[x]! != x do
-    x := 0
+    x := uf![x]
   return x
 
 #eval find #[0, 0, 1, 3, 4] 2
