@@ -15,8 +15,9 @@ Harry Goldstein has a nice talk about how Lean is a great live coding environmen
 <https://www.youtube.com/watch?v=c5LOYzZx-0c&t=1s> To some degree this is the grungier version of that.
 
 I was also at PLDI a couple weeks ago where I was exposed to the onslaught of
-Leo de Moura's Lean propaganda talk (I also sat next to him at dinner, which was a trip).
-I have learned and forgotten Lean a few times at this point.
+Leo de Moura's Lean propaganda talk (I also sat next to him at dinner, which was a trip. I kept it cool 😎 ).
+It feels like Lean is eating the world.
+I have learned and forgotten Lean a few times at this point, but maybe it's time to reassess.
 
 The community (and hence the reading material) is focussed on mathematics and verification. Doing things right.
 Being strongly typed.
