@@ -545,14 +545,15 @@ Look at renormalization.
 We make discoveries and then we solidify and polish them. The polish can in turn
 lead to new discoveries. That's the method.
 
-# eval Lean.loadDynlib "/tmp/fortytwo.so"
+```lean
+#eval Lean.loadDynlib "/tmp/fortytwo.so"
 
 @[extern "myforty"]
 opaque myforty (_ : Unit) : UInt64
 
-# eval myforty () -- returns 42
+#eval myforty () -- returns 42
 
-```lean
+
 --open Bash
 
 --import _drafts.testy
@@ -802,6 +803,7 @@ def bash (cmd : String) (_ : Unit) : IO Unit := do
 ```
 
 # eval IO.Process.run {
+
   cmd := "gnuplot",
 }
 
