@@ -49,7 +49,7 @@ by the OS. The "nicer" thing to do might be to generate names using things like
 `mktemp` or python `tempfile` module, but it just gives overhead for little benefit when
 screwing around.
 
-This lets me make a single notebook that can xan contain everything needed to try a thing.
+This lets me make a single notebook that can contain everything needed to try a thing.
 I can do low level C stuff and objdump and so on in a nice self contained things with commentary.
 It is also useful for blogging, where I can `jupyter nbconvert --to markdown` and
 know it has everything you need.
@@ -156,7 +156,8 @@ to access the ecosystem for simple tasks.
 
 Lean has it's own plotting story of course https://github.com/leanprover-community/ProofWidgets4/blob/main/ProofWidgets/Demos/Plot.lean ,
 but I have found using Lean libraries to be
-a total pain in the ass (sorry). Getting a consistent set of packages takes a lot of upkeep and it doesn't
+a total pain in the ass (sorry). Or maybe I just haven't figured out the way to not fight it?
+Getting a consistent set of packages takes a lot of upkeep and it doesn't
 seem to let you YOLO it the way python does.
 
 -/
