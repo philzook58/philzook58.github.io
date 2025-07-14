@@ -482,6 +482,7 @@ Replacements for `jupyter nbconvert`
 - Lean2Md <https://github.com/arthurpaulino/lean2md>
 - mdgen <https://github.com/Seasawher/mdgen>
 - Just copy everything into a code block
+- <https://github.com/gleachkr/lean.lua> Graham has a pandoc converter
 
 I don't like that I don't automatically see the lean output in my markdown.
 Verso seems too fancy for me.

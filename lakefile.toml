@@ -6,12 +6,18 @@ name = "_drafts"
 precompileModules = true
 supportInterpreter = true
 
-#[[require]]
-#name = "smt"
-#scope = "ufmg-smite"
-#rev = "main"
+# [[require]]
+# name = "smt"
+# scope = "ufmg-smite"
+# rev = "main"
 
 [[require]]
-name = "mdgen"
-scope = "seasawher"
-rev = "main"
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.22.0-rc3"
+
+
+# [[require]]
+# name = "mdgen"
+# scope = "seasawher"
+# rev = "main"

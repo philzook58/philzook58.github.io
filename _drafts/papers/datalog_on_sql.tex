@@ -1,2 +1,78 @@
 
-datakanren
+
+\title{datakanren}
+
+
+\author{Philip Zucker}
+
+
+\abstract{
+    Top Down Embedded Relational Programming is well explored in the form of Minikanren, a relative of Prolog.
+    Bottom up programming, as exemplified by Datalog, is less explored from the Kanren lens.
+
+}
+
+\section{Introduction}
+
+Relational and Logic programming model computation as the construction of proofs.
+Proofs can be thought about from a goal oriented / backwards / top-down / verificationist or an theorem oriented / forward / bottom-up / generating / pragmatist perspective.
+In a similar way, a grammar can be thought of in terms of it's parsing problem or as a language generator.
+
+https://www.cs.uoregon.edu/research/summerschool/summer22/lectures/Pfenning1notes.pdf
+
+
+\section{Simple DataKanren}
+
+Kanren's consist of two ingredients, unification and search.
+The essential point of Kanren is to model goals as nondeterminstic state functions.
+$ State \rightarrow [State] $
+
+The state is an environment mapping variables to values or other variables. It is a substitution.
+
+Datalog is a simpler system. It uses pattern matching rather than unification.
+
+
+\cite{datafrog}
+
+
+
+\section{Datalog on SQL}
+
+We all live on a substrate of technology produced by industrial forces 
+and a basically unimaginable number of smart and hardworking people.
+
+Kanren, as an embedded approach to language design,
+leverages the hard work done on Programming language implementations for Scheme, Haskell, 
+etc. This makes it possible to get a powerful system for relatively little code compared
+to a bespoke from scratch Prolog-like implementation. 
+
+SQL is in essence the most popular largely declarative programming languages
+with easily available highly engineered implementations avaialable in all programming languages
+for free.
+
+\cite{hytradboi}
+\cite{Kiselyov}
+
+
+
+
+
+
+
+
+
+% compare speed of souffle and sqlite datalog.
+
+\section{Related Work}
+
+Push datalog is a variant closer in spririt in some respects to Kanren in that it uses the host function call mechanism
+
+
+
+% Embedded ASP
+%
+
+\cite{https://www.philipzucker.com/notes/Languages/datalog/}
+
+\cite{oatlog}
+\cite{yihong egglite}

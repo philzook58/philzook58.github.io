@@ -1,0 +1,28 @@
+
+
+inductive Formula where
+    | Impl : Formula -> Formula -> Formula
+    | A
+    | B
+deriving BEq, Repr, Inhabited
+/-
+Even simpler? | A
+
+-/
+
+
+/-
+
+Tarski style, interpreting into the metalogic.
+
+Side to side style to a different embedded logic.
+
+What does it mean for two logical systems to be "the same"
+
+Realizability models
+
+
+
+
+-/
+
