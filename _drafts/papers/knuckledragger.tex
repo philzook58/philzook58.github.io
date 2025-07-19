@@ -1,0 +1,94 @@
+\documentclass{article}% {\twocolumn}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\begin{document}
+
+
+\title{Knuckledragger: The K-Mart of Proof Assistants}
+
+
+\author{Philip Zucker}
+
+\maketitle
+\begin{abstract}
+Knuckledragger is a Python-based interactive proof assistant designed for accessibility, ease of installation, and integration with existing Python tools. It enables interactive theorem proving for software engineers, mathematicians, and scientists already using Python for modeling, computation, and verification. This talk introduces interactive theorem proving, demonstrates Knuckledragger in action, and explores the challenges and opportunities in this space.
+\end{abstract}
+
+
+\section{Introduction}
+
+Many automated verification systems boil down to a sequence of SMT
+queries with hand waving in between. Knuckledragger is an LCF-style
+interactive theorem prover designed as a minimal Python library on top
+of Z3. Knuckledragger can systematically link SMT queries in a Hilbert
+style proof system. All of the Z3 Python bindings are directly exposed
+and available because the terms, sorts, and formulas of Knuckledragger
+are literally Z3 Python objects. The Proof objects of Knuckledragger
+are a DAG of axiom instantiations and SMT queries. The basic design is
+portable between host languages but leveraging python's ecosystem gets
+a lot for free in terms of libraries, tooling, ML ecosystem, and
+interactive Jupyter notebooks. The goal of Knuckledragger is to
+support software/hardware verification, numerics, and other
+applications of interest to the hackers, scientists, and engineers
+that already are comfortable in Python. The project is available here
+https://github.com/philzook58/knuckledragger.
+
+% Take scipycon
+A goal of formal logic is to show that mathematical manipulations can be reduced to mechanical rules. A computer can both be used to find the right manipulations, but also to check given manipulations for correct usage. Systems that emphasize the first part of the spectrum are called computer algebra systems (CAS) like SymPy. Those that emphasize user-guided proof development and proof checking are called interactive theorem provers (ITPs). There are a variety of highly developed interactive theorem prover systems already available including Lean, Coq, Isabelle and others. However, these systems require users to adopt new languages, ecosystems, and workflows. These are unnecessary barriers to the uptake of the fun and useful ideas of interactive theorem proving.
+
+Knuckledragger is an interactive theorem proving system built as a Python library around the pre-existing bindings of the solver Z3. Z3 is a popular automated theorem prover that is widely used for verification and software engineering tasks (and solving puzzles!). Because of this design choice, Knuckledragger inherits powerful automation from the start. The core logic of Knuckledragger is SMT-LIBv2, a standard logic for Satisfiability Module Theories (SMT) solvers based on simply typed higher-order logic. The goal of Knuckledragger is to support applications like software/hardware verification, calculus, equational reasoning, and numerical bounds.
+
+Come on over and have a chat! I want to discuss what Knuckledragger can do for your problem domain !
+
+Knuckledragger code, documentation, and blog posts are available here https://github.com/philzook58/knuckledragger
+
+% Take readme
+% take NEPLS
+
+
+
+% submit to JOSS
+% upload to arxiv
+
+\section{A Tour of Knuckledragger}
+
+\begin{lstlisting}[language=Python, caption=Example]
+    print("Hello World")
+\end{lstlisting}
+
+\section{Knuckledragger Core}
+
+\section{Features}
+
+\end{document}
+
+
+
+

@@ -9,8 +9,10 @@ import Lean
 import Std.Data.HashMap
 import Lean.Meta.SynthInstance
 import Qq
+import Lean.Elab.Tactic
+import Lean.Meta.Tactic.Grind
 open Qq Lean
-open Lean Lean.Meta Lean.Elab
+open Lean Meta Elab Tactic
 
 #check Classical.byCases
 #check (1 + 1 : BitVec 8)
@@ -296,3 +298,156 @@ elab "#mycommand" : command => do
   return ()
 
 example : ¬ (Not True /\ forall (x y : Nat), x + y = y + x) := by grind
+
+
+
+-- https://avigad.github.io/lamr/
+-- No prolog
+-- and they aren't working over Lean
+-- Can I call cadical that is inside of lean?
+
+
+-- how to make a new goal and call a tactic on it?
+
+elab "#foo" : command => show Command.CommandElabM Unit from do
+  IO.println "hello"
+#check Command.CommandElabM
+#print Command.CommandElab
+#print Lean.Elab.Tactic.TacticM
+#foo
+
+elab "faq_main_goal" : tactic =>
+  Lean.Elab.Tactic.withMainContext do
+    let goal ← Lean.Elab.Tactic.getMainGoal
+    dbg_trace f!"goal: {goal.name}"
+
+example : 1 = 1 := by
+  faq_main_goal
+-- goal: _uniq.9298
+  rfl
+
+
+-- interesting stuff in Lean.Meta.Tactic.Name.main
+
+--elab "toy" : term =>
+#eval do
+  let goal <- mkFreshExprMVar (some q(1 + 1 = 2))
+  goal.mvarId!.refl
+  let g1 <- instantiateMVars goal
+  IO.println s!"{g1}"
+  let (e, stats) <- Lean.Meta.simp q(1 + 1 = 2) default
+  IO.println s!"{e.expr}"
+
+  --let (res, stats) <- Lean.Meta.simpGoal mvar default
+  --let (fvars,mv) := res.get!
+  --mv.
+  --IO.println s!"{ mv}"
+  --Lean.Meta.Tactic.Grind.main
+  --let gs ← Lean.Elab.Tactic.run mvar (Lean.Elab.Tactic.evalGrind `(tactic| grind))
+  --return
+  -- Lean.Elab.runTactic mvar
+
+--#print toy
+
+/-
+Ok, what am I trying to do?
+
+- Build command line tool thatr takes in fomrula and discharges?
+- Use Lean like ak nuclkedragger. All meta, no native
+- Brute SMT egraph using grind?
+- Use lean as rewrite engine? z3.simplify rules
+- Do stuff I would do in python + z3 in lean IO.monad
+- SAT models?
+
+
+
+
+I could make a prolog out of apply
+
+
+-/
+
+example : True := by
+  run_tac
+    Lean.logInfo "Hello World"
+  trivial
+
+
+def runTrivial : Lean.Elab.Tactic.TacticM Unit := do
+  let goal ← getMainGoal
+  goal.assign q(True.intro)
+  -- goal.assignIfDefEq q(True.intro) -- in batteries
+
+example : True := by
+  run_tac runTrivial
+
+example (n : Nat) (hn : n > 5) : True := by
+  run_tac
+    withMainContext do
+      let ctx ← getLCtx
+      for (decl : LocalDecl) in ctx do
+        logInfo m!"{Expr.fvar decl.fvarId} : {decl.type}  -- {repr decl.kind}"
+  trivial
+
+#check getMainTarget -- expected type of the main goal
+#check getMainGoal -- main goal as a metavariable
+#check instantiateMVars
+#check instantiateExprMVars
+
+
+def match_and (e : Expr) : MetaM Unit :=
+  have quotedtarh : Q(BitVec 1) := e
+  match quotedtarh with
+  | ~q($a &&& $b) => Lean.logInfo s!"Matched: {a} and {b}"
+  | _ => Lean.logInfo s!"Not matched: {e}"
+
+#eval match_and q(1#1 &&& 2#1)
+#eval match_and q(1#1 &&& 2#1)
+#eval whnfD q(1#1 &&& 2#1) -- D, I, AtMostI,
+-- https://proofassistants.stackexchange.com/questions/268/is-there-something-special-about-weak-head-normal-form-used-with-proof-assistant
+
+#eval q(1#1 &&& 2#1)
+
+--run_meta Lean.logInfo "Hello World"
+--run_elab Lean.logInfo "Hello World"
+#check Expr.getAppFnArgs -- unpack fun symbol and args
+#check Expr.instantiate1 -- z3.substitute_vars analog
+#check mkFreshExprSyntheticOpaqueMVar
+
+
+#check simp
+#check whnfR
+-- #check instantiateMVarsDeclMVars
+#eval Rat.ofNat 1
+
+
+
+namespace MProg2021
+/-
+
+
+https://github.com/mirefek/lean-tactic-programming-guide
+
+https://www.youtube.com/watch?v=hxQ1vvhYN_U&t=200s
+https://www.youtube.com/watch?v=vy4JWIiiXSY&t=793s
+Lean Together 2021: Metaprogramming in Lean 4 continued
+
+
+parser String -> Syntax
+macro Syntax -> MacroM syntax
+
+elab
+syntax -> termelabm
+command : syntax -> CommandElabM Unit
+universe syntax -> TermElabm level
+tactic : syntax -> tacticM Unit
+
+pretty printer
+delcaborator  Expr -> DelaboratorM Syntax
+prenthesizer Syntax -> ParenthesizerM Syntax
+fomratter Syntax ->  FormatterM< Format
+
+
+-/
+
+set_option trace.Elab.command true -- in

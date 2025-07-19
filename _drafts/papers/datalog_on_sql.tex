@@ -24,15 +24,30 @@ https://www.cs.uoregon.edu/research/summerschool/summer22/lectures/Pfenning1note
 \section{Simple DataKanren}
 
 Kanren's consist of two ingredients, unification and search.
-The essential point of Kanren is to model goals as nondeterminstic state functions.
+The essential point of Kanren is to model goals as nondeterministic state functions.
 $ State \rightarrow [State] $
 
 The state is an environment mapping variables to values or other variables. It is a substitution.
 
 Datalog is a simpler system. It uses pattern matching rather than unification.
 
+The semantic meaning of a piece of a datalog body is `env -> Reader db [env]`
 
-\cite{datafrog}
+The meaning of the rule head is `env -> db'
+
+
+\cite{datafrog} https://github.com/rust-lang/datafrog
+
+
+\lstlistingstyle{python}
+   edge = {(1,2), (2,3)}
+   path = set()
+   for i in range(10):
+       # path(x,y) :- edge(x,y).
+       path |= edge
+       # path(x,z) :- edge(x,y), path(y,z).
+       path |= {(x,z) for x,y in edge for (y1,z) in path if y == y1}
+
 
 
 
@@ -47,7 +62,7 @@ etc. This makes it possible to get a powerful system for relatively little code 
 to a bespoke from scratch Prolog-like implementation. 
 
 SQL is in essence the most popular largely declarative programming languages
-with easily available highly engineered implementations avaialable in all programming languages
+with easily available highly engineered implementations available in all programming languages
 for free.
 
 \cite{hytradboi}

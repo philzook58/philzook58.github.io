@@ -31,4 +31,5 @@ def bash (code : String) (_ : Unit) : IO Unit := do
   IO.println out.stderr
 
 
+-- open works to bring up image viewer, but it isn't great
 #eval bash "LD_LIBRARY_PATH=/lib eog /tmp/test.ppm"
