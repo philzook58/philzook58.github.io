@@ -28,3 +28,5 @@ Newton has some good stories
 electrostatics.
 
  The Oxford Handbook of the History of Physics
+
+Whittaker - history of electricty and the aether
