@@ -212,7 +212,7 @@ spec
       "cuts": {}
     }
 
-The core verification procedure runs all paths through the program. We can try to be smarter later, but this is good enough for now. By including the notion of cuts, tehre are only a finite number of paths through a cut control flow graph. We do not have the trust another CFG reconstructor since we discover the CFG as we execute.
+The core verification procedure runs all paths through the program. We can try to be smarter later, but this is good enough for now. By including the notion of cuts, there are only a finite number of paths through a loopless cut control flow graph. We do not have the trust another CFG reconstructor since we discover the CFG as we execute.
 
 We seed the execution with the entry points.
 
