@@ -12,14 +12,14 @@ An idea that I've liked is adding inline verification annotations into textual a
 Some design constraints:
 
 - I strongly prefer that the file has to remain assemblable by the regular binutils toolchain.
-- An esoteric ecosystem is kind of a non starter if I want anyone to be using it. Another painful lesson. The intersection of low level interested and Ocaml/Lean/Coq interested is non-zero, but every constraint you put on your audience cuts it down significantly. Because of this, I've been leaning into more Python as a user facing language. It _is_ the most popular language in the world.
+- An esoteric ecosystem is kind of a non starter if I want anyone to be using it. Another painful lesson. The intersection of people interested in low level things and Ocaml/Lean/Coq interested is non-zero, but every constraint you put on your audience cuts it down significantly. Because of this, I've been leaning into more Python as a user facing language. It _is_ the most popular language in the world. It _is_ pretty easy / already installed on your system.
 
 [Pypcode](https://github.com/angr/pypcode) is a well packaged version of the binary lifters for the [ghidra](https://github.com/NationalSecurityAgency/ghidra) decompiler and can supply a unified semantics for many architectures. It's stable, well-maintained and funded (NSA). This is a pretty rare combo. I think the programming language and verification community are sleeping on this resource.
 
 I've attacked the problem in various ways before. This is yet another related angle.
 
 - <https://www.philipzucker.com/knuckle_C_pcode/> here I discussed a bit writing my symbolic pcode emulator based on the [official version](https://github.com/NationalSecurityAgency/ghidra/blob/master/Ghidra/Features/Decompiler/src/decompile/cpp/emulate.cc). The actual code is here <https://github.com/philzook58/knuckledragger/blob/main/kdrag/contrib/pcode/__init__.py> I'm using this sane symbolic executor today. The main difference between this and angr is that I don't partially concretize memory, which is a bit more complete. I tried to use angr quite a bit. Couldn't see how to achieve this (claripy seemingly doesn't even support the theory of arrays). I do however leverage angr's loader ecosystem CLE <https://github.com/angr/cle> and pypcode itself is maintained by the angr team. I do also keep coming back to their design when I wonder how to make an interface to get something or other from the user. They thought it through in many ways.
-- <https://www.philipzucker.com/pcode2c-dwarf/> another apporach using pypcode to specialize an interpreter to C code so that you can compare to other C code via CBMC. Still an interesting approach for translation validation
+- <https://www.philipzucker.com/pcode2c-dwarf/> another approach using pypcode to specialize an interpreter to C code so that you can compare to other C code via CBMC. Still an interesting approach for translation validation
 
 ## Assembly Annotations
 
