@@ -1,5 +1,5 @@
 ---
-Title: Semi-Automated Assembly Verification in Python using pypcode Semantics
+Title: "Semi-Automated Assembly Verification in Python using pypcode Semantics"
 date: 2025-07-21
 ---
 
