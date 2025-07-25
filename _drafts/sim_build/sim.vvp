@@ -1,0 +1,32 @@
+#! /home/philip/Downloads/oss-cad-suite-linux-x64-20250305/oss-cad-suite/bin/vvp
+:ivl_version "13.0 (devel)" "(s20250103-25-g99580cd05)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "/home/philip/Downloads/oss-cad-suite-linux-x64-20250305/oss-cad-suite/lib/ivl/system.vpi";
+:vpi_module "/home/philip/Downloads/oss-cad-suite-linux-x64-20250305/oss-cad-suite/lib/ivl/vhdl_sys.vpi";
+:vpi_module "/home/philip/Downloads/oss-cad-suite-linux-x64-20250305/oss-cad-suite/lib/ivl/vhdl_textio.vpi";
+:vpi_module "/home/philip/Downloads/oss-cad-suite-linux-x64-20250305/oss-cad-suite/lib/ivl/v2005_math.vpi";
+:vpi_module "/home/philip/Downloads/oss-cad-suite-linux-x64-20250305/oss-cad-suite/lib/ivl/va_math.vpi";
+:vpi_module "/home/philip/Downloads/oss-cad-suite-linux-x64-20250305/oss-cad-suite/lib/ivl/v2009.vpi";
+S_0x55557db6ff00 .scope package, "$unit" "$unit" 2 1;
+ .timescale 0 0;
+S_0x55557db96590 .scope module, "halfadd" "halfadd" 3 1;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "a";
+    .port_info 1 /INPUT 1 "b";
+    .port_info 2 /OUTPUT 1 "sum";
+    .port_info 3 /OUTPUT 1 "carry";
+o0x7592f3545018 .functor BUFZ 1, c4<z>; HiZ drive
+o0x7592f3545048 .functor BUFZ 1, c4<z>; HiZ drive
+L_0x55557db810d0 .functor XOR 1, o0x7592f3545018, o0x7592f3545048, C4<0>, C4<0>;
+L_0x55557dbb7ca0 .functor AND 1, o0x7592f3545018, o0x7592f3545048, C4<1>, C4<1>;
+v0x55557db81e60_0 .net "a", 0 0, o0x7592f3545018;  0 drivers
+v0x55557dbb7980_0 .net "b", 0 0, o0x7592f3545048;  0 drivers
+v0x55557dbb7a40_0 .net "carry", 0 0, L_0x55557dbb7ca0;  1 drivers
+v0x55557dbb7ae0_0 .net "sum", 0 0, L_0x55557db810d0;  1 drivers
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "-";
+    "/tmp/halfadd.v";
