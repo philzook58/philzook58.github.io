@@ -14,6 +14,55 @@ import Lean.Meta.Tactic.Grind
 open Qq Lean
 open Lean Meta Elab Tactic
 
+-- https://www.philipzucker.com/knuck_prolog/
+-- Harrison version
+-- Bauer version
+structure PState where
+  goals : List Expr
+  clauses : List Expr
+  -- constraints
+deriving Inhabited, Repr, BEq
+
+def r_rules
+
+
+def select (goal : Expr) (clauses : List Expr) : MetaM (List Expr) :=
+  match clauses with
+  | [] => return []
+  | clause :: rest =>
+
+def pstep (s : PState) : MetaM PState :=
+  match s.goals with
+  | [] => return s
+  | goal :: goals =>
+    match goal with
+    | ~q(True) =>
+    | ~q(False) =>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #check Classical.byCases
 #check (1 + 1 : BitVec 8)
 --theorem mythm : (Classical.propDecidable (forall (x y : Nat), x + y == y + x)).decide := by grind
