@@ -42,6 +42,9 @@ Generalizing this, the data of a dependent context (a telescope) can be given as
 It is convenient to generalize this telescope to allow intermixing subsets, propositions, and no constraints.  If you use proposition style, it looks like refinement typing `[(x, x > 0, (y, y >= x))]`. If you use subset style, it looks like dependent typing. They are very similar systems. Refinement typing systems a la Liquid Haskell are dependently typed in this sense. This generalization can be normalized away by a function `normalize` which puts the more user pleasant form of the telescope into the propositional refinement form.
 
 ```python
+type SubSort = smt.QuantifierRef | smt.ArrayRef
+type Type = SubSort
+
 """
 User telescope type.
 
