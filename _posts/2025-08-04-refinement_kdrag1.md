@@ -177,6 +177,8 @@ def has_type(ctx: Telescope, t0: smt.ExprRef, T: SubSort, by=None) -> kd.Proof:
     return kd.prove(smt.Implies(smt.And(pctx), T[t0]), by=by)
 ```
 
+As written, `has_type` feels a little inelegant to me. I would like it to look more like bidirectional typing.  <https://arxiv.org/abs/2010.07763> <https://arxiv.org/abs/1908.05839> Currently it looks more like the "produce constraints and solve" style of type checking I associate with Hindley Milner systems. I could also has recursive calls to `has_type` rather than collecting a big old bag of lemmas. There is a funny incentive in Z3py metapgoramming that actually AST manipulationg through ctypes FFI is so slow you may be better off just handing a big of garbage to a Z3 solver than doing low level proof construction. I wish the z3 ffi python bindings were faster.
+
 ## Partial Definitions
 
 Another interesting thing to do is generalize `define` to take a input telescope and an output subset. This puts some guard rails on partially defined functions. It also adds the typing annotations into the registry inside the body of `prove_sig`
