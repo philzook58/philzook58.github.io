@@ -13,7 +13,7 @@ SMTLIB is also basically a functional programming language.
 
 The refinement typing approach as exemplified by [Liquid Haskell](https://ucsd-progsys.github.io/liquidhaskell/), is a paradigm that can add annotations to a preexisting language in order to add verification capabilities <https://arxiv.org/pdf/1610.04641> . Basically you can add extra tags describing the subsets of the base types you expect to allow as inputs and emit as outputs of base language functions.
 
-Since SMTLIB is a functional programming language, it makes sense to attempt to add refinement type to it. Why not? One can hope that this will actually be somewhat elegant, since Refinement typing is achieved in systems
+Since the appropriate subset of SMTLIB is a functional programming language, it makes sense to attempt to add refinement type to it. Why not? One can hope that this will actually be somewhat elegant, since Refinement typing is achieved in systems
 
 The code of the post is extracted from the development [here](https://github.com/philzook58/knuckledragger/blob/9eca63380b52731e8eec5b71551e6837d0b02ba5/kdrag/contrib/telescope.py)
 
@@ -177,7 +177,7 @@ def has_type(ctx: Telescope, t0: smt.ExprRef, T: SubSort, by=None) -> kd.Proof:
     return kd.prove(smt.Implies(smt.And(pctx), T[t0]), by=by)
 ```
 
-As written, `has_type` feels a little inelegant to me. I would like it to look more like bidirectional typing.  <https://arxiv.org/abs/2010.07763> <https://arxiv.org/abs/1908.05839> Currently it looks more like the "produce constraints and solve" style of type checking I associate with Hindley Milner systems. I could also has recursive calls to `has_type` rather than collecting a big old bag of lemmas. There is a funny incentive in Z3py metapgoramming that actually AST manipulationg through ctypes FFI is so slow you may be better off just handing a big of garbage to a Z3 solver than doing low level proof construction. I wish the z3 ffi python bindings were faster.
+As written, `has_type` feels a little inelegant to me. I would like it to look more like bidirectional typing.  <https://arxiv.org/abs/2010.07763> <https://arxiv.org/abs/1908.05839> Currently it looks more like the "produce constraints and solve" style of type checking I associate with Hindley Milner systems because I just followed my nose. I could also has recursive calls to `has_type` rather than collecting a big old bag of lemmas. There is a funny incentive in Z3py metapgoramming that actually AST manipulationg through ctypes FFI is so slow you may be better off just handing a big of garbage to a Z3 solver than doing low level proof construction. I wish the z3 ffi python bindings were faster.
 
 ## Partial Definitions
 
