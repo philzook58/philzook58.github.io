@@ -21,11 +21,11 @@ The code of the post is extracted from the development [here](https://github.com
 
 Pretty much any syntactic logical system has to demonstrate how it can actually mean something, by giving examples of a semantics aka interpretations into something we're more familiar with. If I tell you a bunch of syntactic rules about "bleep" "blorp" and "bizzle", that won't hold your attention for long.
 
-Dependent types and type systems generally are presented syntactically. They are a syntax for terms, a syntax for types, and an operational semantics / baked in notion of definitional equality. Because they want to claim themselves as a foundation, models are somewhat under emphasized.
+Dependent types and type systems are often presented syntactically. There is a syntax for terms, a syntax for types, and an operational semantics / baked in notion of definitional equality. Perhaps because they want to claim themselves as a foundation, models are somewhat under emphasized.
 
-There are a number of possibilities for [models](https://www.cs.uoregon.edu/research/summerschool/summer14/rwh_notes/ssdt.pdf) of dependent type theory. In the most basic model, types are basically interpreted sets.  The (a?) subset model interprets types as a a pair of a set and a subset of that set. For example, the type `[[Pos]] = {x : Nat | x > 0}` is the subset of integers greater than zero. .
+There are a number of possibilities for [models](https://www.cs.uoregon.edu/research/summerschool/summer14/rwh_notes/ssdt.pdf) of dependent type theory. In the most basic model, types are basically interpreted as sets <https://www.philipzucker.com/frozenset_dtt/> .  The (a?) subset model interprets types as a a pair of a set and a subset of that set. For example, the type `[[Pos]] = {x : Nat | x > 0}` is the pair of the Ints and the subset of Ints greater than zero.
 
-I want to shallowly embed this model into SMTLIB. Subsets can be represented in smtlib/HOL as characteristic functions `Pos = smt.Lambda([x], x > 0)`. This is probably closest in spirit to PVS's approach <https://www.csl.sri.com/papers/tse98/tse98.pdf> . The set you're cutting the subset out of is implicitly there are the SMTLIB sort of the variable. It is perfectly possible to have a parametrized family of subsets like the set of all numbers greater than `n` `GE(n) = {x : Int | x >= n}` or in python as
+I want to shallowly embed this model into SMTLIB. This is not an unknown thing and what I'm doing is probably closest in spirit to PVS's approach <https://www.csl.sri.com/papers/tse98/tse98.pdf> . Subsets can be represented in smtlib/HOL as characteristic functions `Pos = smt.Lambda([x], x > 0)`.  The set you're cutting the subset out of is implicitly there are the SMTLIB sort of the variable. It is perfectly possible to have a parametrized family of subsets like the set of all numbers greater than `n` `GE(n) = {x : Int | x >= n}` or in python as
 
 ```python
 x = smt.Int("x")
