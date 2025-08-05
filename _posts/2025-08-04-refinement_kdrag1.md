@@ -5,13 +5,13 @@ date: 2025-08-04
 
 It has been a question from the beginning how to emulate dependent types in Knuckledragger.
 
-[Knuckledragger](https://github.com/philzook58/knuckledragger) is an interactive proof assistant designed as a python library very shallowly around the [Z3py](https://ericpony.github.io/z3py-tutorial/guide-examples.htm) library. It can also be viewed as a minimal layer on top of [SMTLIB](https://smt-lib.org/) to make it scale as an interactive proof system. While much attention has been paid to the proof objects the justify individual smt calls, relatively little attention has been paid to the big steps linking multiple calls. The thing people do try to do is export SMT proofs to their system (coq, lean, isabelle, metamath, etc) and then do the linking in that system. It seems to me it is at least worthwhile to attempt to remove this indirection. Indirections are often a lot of effort and cost to maintain.
+[Knuckledragger](https://github.com/philzook58/knuckledragger) is an interactive proof assistant designed as a python library very shallowly around [Z3py](https://ericpony.github.io/z3py-tutorial/guide-examples.htm). It can also be viewed as a minimal layer on top of [SMTLIB](https://smt-lib.org/) to make it scale as an interactive proof system.
 
 The theory of Arrays in SMTLIB is a theory of first class functions and lambda notation was recently added to the standard although it's been available in Z3 for a while. This makes SMTLIB basically a higher order logic (HOL), although you shouldn't expect good things to happen if you get too funky with it.
 
 SMTLIB is also basically a functional programming language.
 
-The refinement typing approach as exemplified by [Liquid Haskell](https://ucsd-progsys.github.io/liquidhaskell/), is a paradigm that can add annotations to a preexisting language in order to add verification capabilities <https://arxiv.org/pdf/1610.04641> . Basically you can add extra tags describing the subsets of the base types you expect to allow as inputs and emit as outputs of base language functions.
+The refinement typing approach, as exemplified by [Liquid Haskell](https://ucsd-progsys.github.io/liquidhaskell/), is a paradigm that can add annotations to a preexisting language in order to add verification capabilities <https://arxiv.org/pdf/1610.04641> . Basically you can add extra tags describing the subsets of the base types you expect to allow as inputs and emit as outputs of base language functions.
 
 Since the appropriate subset of SMTLIB is a functional programming language, it makes sense to attempt to add refinement type to it. Why not? One can hope that this will actually be somewhat elegant, since Refinement typing is achieved in systems
 
@@ -25,7 +25,7 @@ Dependent types and type systems are often presented syntactically. There is a s
 
 There are a number of possibilities for [models](https://www.cs.uoregon.edu/research/summerschool/summer14/rwh_notes/ssdt.pdf) of dependent type theory. In the most basic model, types are basically interpreted as sets <https://www.philipzucker.com/frozenset_dtt/> .  The (a?) subset model interprets types as a a pair of a set and a subset of that set. For example, the type `[[Pos]] = {x : Nat | x > 0}` is the pair of the Ints and the subset of Ints greater than zero.
 
-I want to shallowly embed this model into SMTLIB. This is not an unknown thing and what I'm doing is probably closest in spirit to PVS's approach <https://www.csl.sri.com/papers/tse98/tse98.pdf> . Subsets can be represented in smtlib/HOL as characteristic functions `Pos = smt.Lambda([x], x > 0)`.  The set you're cutting the subset out of is implicitly there are the SMTLIB sort of the variable. It is perfectly possible to have a parametrized family of subsets like the set of all numbers greater than `n` `GE(n) = {x : Int | x >= n}` or in python as
+I want to shallowly embed this model into SMTLIB. This is not an unknown thing and what I'm doing is probably closest in spirit to PVS's approach <https://www.csl.sri.com/papers/tse98/tse98.pdf> . Subsets can be represented in smtlib/HOL as [characteristic functions](https://en.wikipedia.org/wiki/Indicator_function) like `Pos = smt.Lambda([x], x > 0)`.  The set you're cutting the subset out of is implicitly there are the SMTLIB sort of the variable. It is perfectly possible to have a parametrized family of subsets like the set of all numbers greater than `n` `GE(n) = {x : Int | x >= n}` or in python as
 
 ```python
 x = smt.Int("x")
@@ -39,7 +39,7 @@ In ordinary z3/HOL metaprogramming, it was often useful to pass around a list of
 
 Generalizing this, the data of a dependent context (a telescope) can be given as a list of tuples of variables and what subset they are expected to be in. For example `[(x, Pos), (y, GE(x))]`. These telescopes can be given meaning into the logic of z3 by a combinator `TForAll` which interleaves applying `ForAll` of the variables and `Implies` for the subset constraint.
 
-It is convenient to generalize this telescope to allow intermixing subsets, propositions, and no constraints.  If you use proposition style, it looks like refinement typing `[(x, x > 0, (y, y >= x))]`. If you use subset style, it looks like dependent typing. They are very similar systems. Refinement typing systems a la Liquid Haskell are dependently typed in this sense. This generalization can be normalized away by a function `normalize` which puts the more user pleasant form of the telescope into the propositional refinement form.
+It is convenient to generalize this telescope to allow intermixing subsets, propositions, and no constraints (implicit `Lambda([x], True)`).  If you use proposition style, it looks like refinement typing `[(x, x > 0), (y, y >= x))]`. If you use subset style, it looks like dependent typing. They are very similar systems. Refinement typing systems a la Liquid Haskell are dependently typed in this sense and do bind variables to values in the type signature. This notation convenience can be normalized away by a function `normalize` which puts the more user pleasant form of the telescope into the propositional refinement form.
 
 ```python
 type SubSort = smt.QuantifierRef | smt.ArrayRef
@@ -487,6 +487,8 @@ Telescopes are more fundamental to dependent types than the dependent types them
 I'm no longer sold on the self evident necessity or desirability of dependent types. They are fun, just like many topics in logic and programming are fun, and that is good enough reason to play with them. I wonder what the most prominent forms of logic will look like in 100 years? The calculus of constructions may be a bygone fad, but we'll still have C.
 
 I'm not 100% sure the distinction between refinement typing, liquid typing <https://goto.ucsd.edu/~rjhala/liquid/liquid_types.pdf> , and predicate subtyping <https://www.csl.sri.com/papers/tse98/tse98.pdf> . I think liquid proposes to have better inference?
+
+While much attention has been paid to the proof objects the justify individual smt calls, relatively little attention has been paid to the big steps linking multiple calls. The thing people do try to do is export SMT proofs to their system (coq, lean, isabelle, metamath, etc) and then do the linking in that system. It seems to me it is at least worthwhile to attempt to remove this indirection. Indirections are often a lot of effort and cost to maintain.
 
 Emphasizing `define-fun` and `define-fun-rec` makes SMTLIB look like a first order functional programming language <https://semantic-domain.blogspot.com/2020/02/thought-experiment-introductory.html> , a target that is not considered often enough, blowing right past to lambdas. Lambdas are the ultimate pain in the ass.
 
