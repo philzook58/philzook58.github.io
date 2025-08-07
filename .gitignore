@@ -8,3 +8,4 @@ _site
 .aider*
 .lake
 **/*.agdai
+**/sim_build

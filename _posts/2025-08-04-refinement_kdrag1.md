@@ -181,7 +181,7 @@ As written, `has_type` feels a little inelegant to me. I would like it to look m
 
 ## Partial Definitions
 
-Another interesting thing to do is generalize `define` to take a input telescope and an output subset. This puts some guard rails on partially defined functions. It also adds the typing annotations into the registry inside the body of `prove_sig`
+Another interesting thing to do is generalize `define` to take a input telescope and an output subset. This puts some guard rails on partially defined functions. It also adds the typing annotations into the registry inside the body of `prove_sig`. This feels somewhat like refinement typing, but also feels a bit like Hoare logic style pre/post conditions / contract annotations like in Dafny. These are related concepts.
 
 ```python
 def define(

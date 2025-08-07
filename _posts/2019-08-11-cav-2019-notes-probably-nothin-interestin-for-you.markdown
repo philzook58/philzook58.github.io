@@ -18,543 +18,134 @@ categories:
 
 I went to the opening workshops of CAV 2019 in New York this year (on my own dime mind you!) after getting back from joining Ben on the long trail for a bit. The tutorials on Rosette and Liquid Haskell were really fun. Very interesting technology. Also got some good ramen and mochi pudding, so it's all good. Big Gay Ice Cream was dece.
 
-
-
-
-
-
-
-
-
-
-
-
-
 ## Day 1 workshops
-
-
-
-
-
-
 
 Calin Belta [http://sites.bu.edu/hyness/calin/](http://sites.bu.edu/hyness/calin/).Has a new book. Control of Temporal logic systems. Automata. Optimized. Partition space into abstraction. Bisimulation [https://www.springer.com/gp/book/9783319507620](https://www.springer.com/gp/book/9783319507620)
 
-
-
-
-
-
-
 Control Lyapunov Function (CLF) - guarantees you are going where you want to go
-
-
-
-
-
-
 
 Control Barrier Function - Somehow controls regions you don't want to go to.
 
-
-
-
-
-
-
 Lyapunov function based trajectory optimization. You somehow have (Ames 2014) [http://ames.gatech.edu/CLF_QP_ACC_final.pdf](http://ames.gatech.edu/CLF_QP_ACC_final.pdf) Is this it?
-
-
-
-
-
-
 
 Differential flatness , input output linearization
 
-
-
-
-
-
-
 Sadradiini worked there.
 
-
-
-
-
-
-
-Temproal logic with 
-
-
-
-
-
-
+Temproal logic with
 
 #### Rise of Temporal Logic
 
-
-
-
-
-
-
 Linear Temporal Logic vs CTL
-
-
-
-
-
-
 
 Fixpoint logic,
 
-
-
-
-
-
-
 Buchi automata - visit accepting state infinite times
-
-
-
-
-
-
 
 equivalency to first order logic
 
-
-
-
-
-
-
 monadic logic, propositions only take 1 agrument. Decidable. Lowenheim. Quantifier elimination. Bounded Mondel property
-
-
-
-
-
-
 
 Languages: ForSpec, SVA, LDL, PSL, Sugar
 
-
-
-
-
-
-
 Monadic second order logic (MSO).
-
-
-
-
-
-
 
 method of tableau
 
-
-
-
-
-
-
 #### Sadraddini
-
-
-
-
-
-
 
 Polytopic regions. Can push forward the dynmaics around a trajectory and the polytope that you lie in. RRT/LQR polytopic tree. pick random poitn. Run.
 
-
-
-
-
-
-
 Evauating branching heuristics
 
-
-
-
-
-
-
-branch and prune icp. dreal. 
-
-
-
-
-
-
+branch and prune icp. dreal.
 
 branch and prune. Take set. Propagate constraints until none fire.
 
-
-
-
-
-
-
 branching heuristics on variables
-
-
-
-
-
-
 
 largest first, smearing, lookahead. Try different options see who has the most pruning. Non clear that helped that muhc
 
-
-
-
-
-
-
 QF_NRA. dreal benchmarks.  flyspeck, control, robotics, SMT-lib
-
-
-
-
-
-
 
 [http://capd.sourceforge.net/capdDynSys/docs/html/index.html](http://capd.sourceforge.net/capdDynSys/docs/html/index.html)
 
-
-
-
-
-
-
 #### Rosette
 
-
-
-
-
-
-
-commands: saolver adied programming 
-
-
-
-
-
-
+commands: saolver adied programming
 
 verify - find an input on which the assertions fail. exists x. not safe
 
-
-
-
-
-
-
 debug - Minimal unsat core if you give an unsat query. x=42/\ safe(s,P(x))$ we know thia is unsat because of previous step
-
-
-
-
-
-
 
 solve - exists v si.t safe(v)
 
-
-
-
-
-
-
 synthesis - exists e forall x safe(x,P(x))
-
-
-
-
-
-
-
-
-
-
-
-
 
 define-symbolic, assert, verify, debug, solve, sythesis
 
-
-
-
-
-
-
 Rosette. Alloy is also connected to her. Z Method. Is related to relational logic?
-
-
-
-
-
-
 
 [https://homes.cs.washington.edu/~emina/media/cav19-tutorial/index.html](https://homes.cs.washington.edu/~emina/media/cav19-tutorial/index.html)
 
-
-
-
-
-
-
 [http://emina.github.io/rosette/](http://emina.github.io/rosette/)
-
-
-
-
-
-
 
 Building solver aided programming tool.
 
-
-
-
-
-
-
 symbolic compiler. reduce program all possible paths to a constraint
-
-
-
-
-
-
 
 Cling - symbolic execution engine for llvm
 
-
-
-
-
-
-
 implement intepreter in rosette
-
-
-
-
-
-
 
 Symbolic virtual machine
 
-
-
-
-
-
-
 layering of languages. DSL. library (shallow) embedding. interpreter (deep) embedding.
 
-
-
-
-
-
-
-deep embedding for sythesis. 
-
-
-
-
-
-
+deep embedding for sythesis.
 
 I can extract coq to rosette?
 
-
-
-
-
-
-
 how does it work?
-
-
-
-
-
-
 
 reverse and filter keeping only positive queries.
 
-
-
-
-
-
-
 symbolic execution vs bounded model checking
 
+symbolic checks every possible branch of the program. Cost is expoentntial
 
-
-
-
-
-
-symbolic checks every possible branch of the program. Cost is expoentntial 
-
-
-
-
-
-
-
-CBMC. 
-
-
-
-
-
-
+CBMC.
 
 type driven state merging. Merge instances of primitiv types. (like BMC), value types structurally ()
 
-
-
-
-
-
-
 instance Merge Int, Bool, Real -- collect up SMT context
-
-
-
-
-
-
 
 vs. Traversable f => Merge (f c) - do using Traversable
 
-
-
-
-
-
-
 symbolic union a set of guarded values with diskoint guard.
-
-
-
-
-
-
 
 merging union. at most one of any shape. bounded by number of possible shapes.
 
-
-
-
-
-
-
 puts some branching in rosette and some branch (on primitives) in SMT.
-
-
-
-
-
-
 
 symbolic propfiling. Repair the encdoing.
 
-
-
-
-
-
-
 tools people have built.
-
-
-
-
-
-
 
 veify radiation
 
-
-
-
-
-
-
 strategy generation. That's interesting. builds good rewrite rules.
 
-
-
-
-
-
-
-serval. 
-
-
-
-
-
-
+serval.
 
 certikso komodo keystone. fintie programss
 
-
-
-
-
-
-
 IS rosette going to be useful for my work? coooooould be
-
-
-
-
-
-
-
-
-
-
-
-
 
 ### Liquid Haskell
 
-
-
-
-
-
-
 [https://ranjitjhala.github.io/](https://ranjitjhala.github.io/)
 
-
-
-
-
-
-    
-    
 ```
 
 {-# LANGUAGE GADTs, DataKinds, PolyKinds #-}
@@ -1047,626 +638,154 @@ Just :: a ->> b
 -- test' = ()
 ```
 
-
-
-
-
-
-
-
 Liquid Haskell - What is?
-
-
-
-
-
-
 
 another thing we could do is galois connections between refinements. Pos, Zero, Neg <-> Int
 
-
-
-
-
-
-
 Liquid Haskell uses SMT solvers to resolve it's type checking requirements.
-
-
-
-
-
-
 
 Agda et al also work very much via unification. Unification is a broad term but it's true.
 
-
-
-
-
-
-
 It also has a horn clause solver for inference. Every language needs some kind of inference or you'd go insane. Also it is piggybacking on haskell
-
-
-
-
-
-
 
 It's not as magical as I thought? Like seeing the magicians trick. It really does understand haskell code. Like it isn't interpretting it. When it knows facts about how (+) works, that is because the refined type was put in by hand in the prelude connecting it to SMT facts. What is imported by liquid haskell?
 
-
-
-
-
-
-
 The typing environment is clutch. You need to realize what variables are in scope and what their types are, because that is all the SMT can use to push through type checking requirements.
-
-
-
-
-
-
 
 Installing the stack build worked for me. It takes a while . I couldn't get cabal install to work, because I am not l33t.
 
-
-
-
-
-
-
 Uninterpeted functions. Unmatchability?
 
+It wouldn't be haskell without a bunch of compiler directives. It is somewhat difficult to find in a single cohesive place what all the syntax, and directives are from liquid haskell. Poking around it best.
 
-
-
-
-
-
-It wouldn't be haskell without a bunch of compiler directives. It is somewhat difficult to find in a single cohesive place what all the syntax, and directives are from liquid haskell. Poking around it best. 
-
-
-
-
-
-
-
-  * ple
-  * reflection
-  * no-termination
-  * higherorder - what is this?
-
-
-
-
-
-
-
-
-
-
-
+* ple
+* reflection
+* no-termination
+* higherorder - what is this?
 
 [https://github.com/ucsd-progsys/230-wi19-web](https://github.com/ucsd-progsys/230-wi19-web) course notes
 
-
-
-
-
-
-
 [https://github.com/ucsd-progsys/liquid-sf](https://github.com/ucsd-progsys/liquid-sf) some of software foundations
-
-
-
-
-
-
 
 [https://nikivazou.github.io/publications.html](https://nikivazou.github.io/publications.html) niki vazou's pubs. Check out refinement reflection
 
-
-
-
-
-
-
 [https://nikivazou.github.io/static/Haskell17/law-abiding-instances.pdf](https://nikivazou.github.io/static/Haskell17/law-abiding-instances.pdf) draft work? Shows stuff about typeclasses. This is a haskell 2017 paper though
-
-
-
-
-
-
 
 [https://arxiv.org/pdf/1701.03320](https://arxiv.org/pdf/1701.03320) intro to liquid haskell. Interesting to a see a different author's take
 
-
-
-
-
-
-
 [http://goto.ucsd.edu/~nvazou/presentations/](http://goto.ucsd.edu/~nvazou/presentations/) presentations. They are fairly similar to one another.
-
-
-
-
-
-
 
 Liquid haskell gives us the ability to put types on stuff that wasn't possible before.
 
-
-
-
-
-
-
-Linearity :: f :: {a -> b | f (s ^* a) == s ^* (f a) }
-
-
-
-
-
-
+Linearity :: f :: {a -> b | f (s ^*a) == s ^* (f a) }
 
 Pullback. {(a,b) | f a == g b}
 
-
-
-
-
-
-
 Equalizer
-
-
-
-
-
-
 
 Many things in categoruy theory rely on the exists unique. Do we have functiona extensionality in Liquid haskell?
 
-
-
-
-
-
-
 product : {(a,b) | f q = x, g q = y,  =>   }
 
-
-
-
-
-
-
-Pushing the boundaries on what liquid haskell can do sounds fun. 
-
-
-
-
-
-
+Pushing the boundaries on what liquid haskell can do sounds fun.
 
 Equalizer. The eqaulizer seems prominents in sheaves. Pre-sheaves are basically functors. Sheaves require extra conditions. Restriction maps have to work? Open covers seem important
 
-
-
-
-
-
-
 type Equalizer f g a b = {(e :: a , eq :: a -> b) | f (eq e) = g (eq e) }
-
-
-
-
-
-
 
 I think both the type a and eq are special. e is like an explcit parametrization.  
 
-
-
-
-
-
-
 type Eq f g a = {e :: a | f e = g e} I think this is more in the spirit. Use f and g both as measures.
 
+presheaf is functor. But then sheaf is functor that
 
+(a, Eq (F a) (G a)). typelevel equalizer? All types a that F and G agree on.
 
+<https://ncatlab.org/nlab/show/equalizer>
 
-
-
-
-presheaf is functor. But then sheaf is functor that 
-
-
-
-
-
-
-
-(a, Eq (F a) (G a)). typelevel equalizer? All types a that F and G agree on. 
-
-
-
-
-
-
-
-https://ncatlab.org/nlab/show/equalizer
-
-
-
-
-
-
-
-https://blog.functorial.com/posts/2012-02-19-What-If-Haskell-Had-Equalizers.html
-
-
-
-
-
-
+<https://blog.functorial.com/posts/2012-02-19-What-If-Haskell-Had-Equalizers.html>
 
 Records are sheaves - Jon Sterling. Records have subtyping. This gives you a toplogy feeling thing.
 
-
-
-
-
-
-
-https://www.slideshare.net/jonsterling/galois-tech-talk-vinyl-records-in-haskell-and-type-theory  
-
-
-
-
-
-
-
+<https://www.slideshare.net/jonsterling/galois-tech-talk-vinyl-records-in-haskell-and-type-theory>  
 
 What about purescript records?
 
-
-
-
-
-
-
 {foo | a} {bar | a} -> intersection = {foo bar | b} can inhabit either
 
-
-
-
-
-
-
-union is   
+union is
 or do you want closed records? union is union of fields. intersection is intersection of fields.
-
-
-
-
-
-
 
 In this case a cover would be a set of records with possibly overlapping fields whose combined labels cover the whle space we want to talk about. consistency condition of sheaf/equalizer is that overlapping records fields have to match. I guess { q.foo = r.foo  } ?There is a way to combine all the stuff up. This is exactly what Ghrist was getting at with tables. Tables with shared columns.
 
-
-
-
-
-
-
 data R1 = R1 {foo :: Int, bar :: Int}
-
-
-
-
-
-
 
 { (r1 :: R1, r2 :: R2) | (foo r1) = (foo r2) } -- we manitain duplicates across records.
 
-
-
-
-
-
-
 {. }
-
-
-
-
-
-
 
 if you have a "cover" {foo bar |} {bar fred} {gary larry} whose in
 
-
-
-
-
-
-
-
-
-
-
-
-
 [https://www.sciencedirect.com/science/article/pii/S1571066108005264](https://www.sciencedirect.com/science/article/pii/S1571066108005264)
-
-
-
-
-
-
 
 Sheaves. As a model of concurrency? Gaguen paper.
 
-
-
-
-
-
-
 sheaves as constraint satisfcation? sheafifcation. Constraint solving as a way of fusing the local constraints to be globally consistent.
-
-
-
-
-
-
 
 sheaves as records
 
-
-
-
-
-
-
 sheaves as data fusion
-
-
-
-
-
-
 
 [http://www.cs.bham.ac.uk/~mhe/papers/barbados.pdf](http://www.cs.bham.ac.uk/~mhe/papers/barbados.pdf)
 
-
-
-
-
-
-
 Escardo. Compact data types are those finitely searchable
-
-
-
-
-
-
 
 Continuous funcitons are ~computable? Productive?
 
-
-
-
-
-
-
 [http://www.paultaylor.eu/](http://www.paultaylor.eu/)
-
-
-
-
-
-
 
 [http://www.paultaylor.eu/ASD/foufct/](http://www.paultaylor.eu/ASD/foufct/)
 
-
-
-
-
-
-
 [http://www.paultaylor.eu/~pt/prafm/](http://www.paultaylor.eu/~pt/prafm/)
-
-
-
-
-
-
 
 typed recursion theory toplogy
 
-
-
-
-
-
-
 typed computatabiltity theory
-
-
-
-
-
-
 
 Topological notions in computation. Dictionary of terms realted decidable, searchable, semi decidablee
 
-
-
-
-
-
-
 [cs.ioc.ee/ewscs/2012/escardo/slides.pdf](http://cs.ioc.ee/ewscs/2012/escardo/slides.pdf)
-
-
-
-
-
-
 
 [https://en.wikipedia.org/wiki/Computable_topology](https://en.wikipedia.org/wiki/Computable_topology)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Through NDArray overloading, a significant fragment of numpy code is probably verifiable.
-
-
-
-
-
-
 
 Start with functional arithmetic programs.
 
-
-
-
-
-
-
 Need to inspect function annotations to know how to build input type.  
-
-
-
-
-
-
-
 
 @verify() tag
 
-
-
-
-
-
-
 Use (Writer a) style monad.  
-
-
-
-
-
-
-
 
 If statements are branching. We are again approaching inspecting functions via probing. But what if we lazily probe. At every __bool__ point, we run a z3 program to determine if there is an avaiable bool left possible (we don't need to inspect dead code regions. Also would be cool to mention it is a dead region). Curious. We're reflecting via Z3.
 
-
-
-
-
-
-
 Loops present a problem. Fixed loops are fine. but what about loops that depend on the execution? for i in range(n). I guess again we can hack it...? Maybe. range only takes an integer. we don't have overload access.
-
-
-
-
-
-
 
 Maybe we need to go into a full eval loop. utterly deconstructing the function and evaluating it statelemnt by statement.  
 
-
-
-
-
-
-
 (compare :: a -> a -> Comparison). We could select a choice based on if there is a new one avaialable. Requires access to external store. We lose the thread. How can we know a choice was made? How can we know what the choice was? Did it ask var1 or var2? We can probably do it in python via access to a global store. But in haskell?
 
+while loops take invariant annotations.
 
-
-
-
-
-
-while loops take invariant annotations. 
-
-
-
-
-
-
-
-It would be cool to have a program that takes 
-
-
-
-
-
-
+It would be cool to have a program that takes
 
 pre conditions. Post ocnditions, but then also a Parameter keyword to declare const variables as deriveable.  exists parameter. forall x precondition x => post condition.
 
-
-
-
-
-
-
 Parameter could be of a type to take a dsl of reasonable computations. Perhaps with complexity predicates. and then interpretting the parameter defines the computation.
-
-
-
-
-
-
 
 Or simpler case is parameter is an integer. a magic number.
 
-
-
-
-
-
-
-
-
-
-
-
-    
-    
 ```
 
 
@@ -1674,7 +793,7 @@ Or simpler case is parameter is an integer. a magic number.
 @pre(lambda x: None)
 @post(lambda r: r >= 0)
 def square(x):
-	return x**2
+ return x**2
 
 @verify(pre, post) # Easier. because now we can also verify the individual function. Call Z3 at function definition time.
 def pre(f,cond):
@@ -1682,16 +801,16 @@ def pre(f,cond):
    return fnew
    def fnew(x):
         if(VERIFICATION_ON):
-	   		if(x == VerificationEnv):
-	   			newenv = x.copy
-	            new.add_pre(cond(x.var))
-	            newVar = Z3.variable()
-	            newenv.add(newVar == f(x.var))
+      if(x == VerificationEnv):
+       newenv = x.copy
+             new.add_pre(cond(x.var))
+             newVar = Z3.variable()
+             newenv.add(newVar == f(x.var))
 
 
 
-	        else:
-	        	return f(x)
+         else:
+          return f(x)
 
 
 
@@ -1722,7 +841,3 @@ class VerificationEnv():
     self.pre = []
     self.post = []
 ```
-
-
-
-
