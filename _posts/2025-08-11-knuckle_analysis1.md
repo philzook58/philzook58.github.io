@@ -117,7 +117,9 @@ l.auto(by=[ball_empty(x, smt.RealVal(0))])
 ball_rad0 = l.qed()
 ```
 
-It is commonly the case, and I'm ok with, that z3 can't auto solve a goal because you need to peel it apart enough to give the existential term explicitly. I could add a metavariable facility to solve these variables via unification or `sympy.solve` (neither of these need to be in the trusted kernel for this purpose). Interesting avenue to persue
+It is commonly the case, and I'm ok with, that z3 can't auto solve a goal because you need to peel it apart enough to give the existential term explicitly. I could add a metavariable facility to solve these variables via unification or `sympy.solve` (neither of these need to be in the trusted kernel for this purpose). Interesting avenue to persue.
+
+More than once did I give the wrong thing to fill the existential and was mad at my system when in fact I was trying to prove a false goal. It would be nice to have better counterexample guardrails for this.
 
 ```python
 l = kd.Lemma(real_open(ball(0,1)))
