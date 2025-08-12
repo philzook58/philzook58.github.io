@@ -445,4 +445,20 @@ prob pl
 asm v erify 3
 quickchecking dependent types
 
-<iframe src="https://github.com/philzook58/philzook58.github.io/discussions/9" width="100%" height="600"></iframe>
+ nope < iframe src="<https://github.com/philzook58/philzook58.github.io/discussions/9>" width="100%" height="600"></iframe>
+<script src="https://giscus.app/client.js"
+        data-repo="philzook58/philzook58.github.io"
+        data-repo-id="91513884"
+        data-category="General"
+        data-category-id="[ENTER CATEGORY ID HERE]"
+        data-mapping="number"
+        data-strict="9"
+        data-term="123"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+</script>
