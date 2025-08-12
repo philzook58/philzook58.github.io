@@ -444,3 +444,5 @@ Lean as simplifier
 prob pl
 asm v erify 3
 quickchecking dependent types
+
+<iframe src="https://github.com/philzook58/philzook58.github.io/discussions/9" width="100%" height="600"></iframe>
