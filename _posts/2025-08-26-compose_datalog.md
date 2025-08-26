@@ -104,7 +104,7 @@ All color query
 color(x)(db)
 ```
 
-    [{Var(name='x'): 'red'}, {Var(name='x'): 'green'}, {Var(name='x'): 'blue'}]
+    [{Var(name='x'): 'red'}, {Var(name='x'): 'blue'}, {Var(name='x'): 'green'}]
 
 Is `"red"` in the color table?
 
@@ -479,18 +479,20 @@ class DualEnv():
 class DualDecl():
     r : RelDecl
     dr : RelDecl
+    newr : RelDecl
     def __init__(self, name, arity):
         self.r = RelDecl(name, arity)
         self.dr = RelDecl("delta_" + name, arity)
+        self. newr = RelDecl("new_" + name, arity)
     def __call__(self, *args) -> "DualHead":
-        return DualHead(self, args)
+        return DualHead(self.newr, args)
     def __getitem__(self, args) -> "DualEnv":
         return DualEnv(self.r[args], self.dr[args])
 
 @dataclass
-class DualHead():
-    rel : DualDecl
-    args : list[object]
+class DualHead(Head):
+    def __le__(self, body : DualEnv) -> SQL:
+        return super().__le__(body.denv)
 
 edge = DualDecl("edge", 2)
 path = DualDecl("path", 2)
@@ -499,7 +501,7 @@ print((edge[x,y] & path[y,z]).denv.code)
 
 ```
 
-    SELECT y, z, x
+    SELECT z, y, x
      FROM (SELECT t1.y AS y, t1.x AS x, t2.z AS z
     FROM (SELECT x0 AS x, x1 AS y
     FROM delta_edge
@@ -526,7 +528,7 @@ db.execute(edge.dr(1,2).fact())
 db.execute((edge[x,y] & path[y,z]).denv.code).fetchall()
 ```
 
-    [(2, 3, 1)]
+    [(3, 2, 1)]
 
 ```python
 (edge[1,x] & path[x,3]).denv.code
@@ -535,6 +537,67 @@ db.execute((edge[x,y] & path[y,z]).denv.code).fetchall()
     'SELECT x\n FROM (SELECT t1.x AS x\nFROM (SELECT x1 AS x\nFROM delta_edge\nWHERE x0 = 1) AS t1,\n(SELECT x0 AS x\nFROM path\nWHERE x1 = 3) AS t2\nWHERE t1.x = t2.x\nUNION SELECT t1.x AS x\nFROM (SELECT x1 AS x\nFROM edge\nWHERE x0 = 1) AS t1,\n(SELECT x0 AS x\nFROM delta_path\nWHERE x1 = 3) AS t2\nWHERE t1.x = t2.x)'
 
 The naive fixpoint can also be generalized
+
+```python
+def fix(db, rels : list[DualDecl], stmts, limit=None):
+    for rel in rels:
+        db.execute(rel.r.create())
+        db.execute(rel.dr.create())
+        db.execute(rel.newr.create())
+        db.execute(f"DELETE FROM {rel.r.name}")
+        db.execute(f"DELETE FROM {rel.dr.name}")
+        db.execute(f"DELETE FROM {rel.newr.name}")
+    # Do facts
+    for stmt in stmts:
+        if isinstance(stmt, Head):
+            db.execute(stmt.fact())
+    n = 0
+    while True:
+        n += 1
+        for stmt in stmts:
+            if isinstance(stmt, str):
+                db.execute(stmt)
+        for rel in rels:
+            # Do the old swaparooni. Delete delta, delta := new - old, old += delta, new := {}
+            db.execute(f"DELETE FROM {rel.dr.name}")
+            db.execute(f"INSERT OR IGNORE INTO {rel.dr.name} SELECT * FROM {rel.newr.name} EXCEPT SELECT * FROM {rel.r.name}")
+            db.execute(f"INSERT OR IGNORE INTO {rel.r.name} SELECT * FROM {rel.dr.name}")
+            db.execute(f"DELETE FROM {rel.newr.name}")
+            print(n, rel.dr.name, db.execute("SELECT * FROM " + rel.dr.name).fetchall())
+        if (limit is not None and n > limit) or all(db.execute(f"SELECT * FROM {rel.dr.name} LIMIT 1").fetchone() is None for rel in rels):
+            return
+
+fix(db, [edge, path], [
+    edge(1,2),
+    edge(2,3),
+    edge(3,4),
+    path(x,y) <= edge[x,y],
+    path(x,z) <= edge[x,y] & path[y,z]
+], limit=10)
+db.execute(path[x,y].env.code).fetchall()
+```
+
+    1
+    1 delta_edge [(1, 2), (2, 3), (3, 4)]
+    1 delta_path []
+    2
+    2 delta_edge []
+    2 delta_path [(1, 2), (2, 3), (3, 4)]
+    3
+    3 delta_edge []
+    3 delta_path [(1, 3), (2, 4)]
+    4
+    4 delta_edge []
+    4 delta_path [(1, 4)]
+    5
+    5 delta_edge []
+    5 delta_path []
+
+
+
+
+
+    [(1, 2), (2, 3), (3, 4), (1, 3), (2, 4), (1, 4)]
 
 # Bits and Bobbles
 
@@ -609,7 +672,7 @@ db = sqlite3.connect(":memory:")
 db.execute(RelDecl("edge", 2).create())
 ```
 
-    <sqlite3.Cursor at 0x787158d08dc0>
+    <sqlite3.Cursor at 0x7c674c9551c0>
 
 ```python
 
@@ -629,7 +692,7 @@ edge["x", "y"] & path["y", "z"]
 
     NameError                                 Traceback (most recent call last)
 
-    Cell In[30], line 1
+    Cell In[33], line 1
     ----> 1 edge = BaseRel({"x0","y0"}, "edge")
           2 path = BaseRel({"x0","y0"}, "path")
           3 db.execute(edge["y", "x"].code).fetchall()
