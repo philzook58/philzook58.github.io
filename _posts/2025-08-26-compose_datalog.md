@@ -5,31 +5,33 @@ date: 2025-08-26
 
 I spent some time before making Datalogs that translated into SQL. <https://www.philipzucker.com/tiny-sqlite-datalog/>
 
-There are advantages. SQL engines are very well engineered and commonly available. SQLite and Duckdb are a pretty great one-two punch.
+There are advantages. SQL engines are very well engineered and commonly available. [SQLite](https://sqlite.org/) and [DuckDB](https://duckdb.org/) are a pretty great one-two punch.
 
 A new twist on how to do this occurred to me that seems very clean compared to my previous methods.
 
-Basically, the relational algebra style of SQL actually meshes with the datalog body _environments_ (sets of variables bindings) better then it meshes with the datalog relations themselves.
+Basically, the relational algebra style of SQL actually meshes with manipulating the Datalog body _environments_ (sets of named variables bindings) better then it meshes with the base Datalog relations themselves (`edge`, `path`, etc).
 
-As a cheeky bonus as the end, you can do seminaive by using the dual number <https://en.wikipedia.org/wiki/Dual_number> trick from forward mode automatic differentiation over these environment relations.
+As a cheeky bonus as the end, you can do semi-naive by using the dual number <https://en.wikipedia.org/wiki/Dual_number> trick from forward mode automatic differentiation over these environment relations.
 
 # The Environment As a Relation
 
-The core bits of `SELECT-FROM_WHERE` SQL, select-project-join relational algebra expressions,  and datalog bodies are all expressing roughly the same thing: [conjunctive queries](https://en.wikipedia.org/wiki/Conjunctive_query).
+The core bits of `SELECT-FROM-WHERE` SQL, select-project-join relational algebra expressions, and datalog bodies are all expressing roughly the same thing: [conjunctive queries](https://en.wikipedia.org/wiki/Conjunctive_query).
 
-I rather like the syntax of a datalog. It is pretty close to a SQL query, but it takes a _jussst_ a little work because of incompatibilities
+I rather like the syntax of a Datalog. It presents as both operational and logical.
 
-In SQL
+It is also pretty close to a SQL query, but it takes a _jussst_ a little work because of incompatibilities
+
+In SQL:
 
 - columns names are properties of the tables like `myrow.name`
 - rows can be locally named in `FROM mytable as myrow`
 
-In datalog
+In Datalog:
 
 - The columns are referred to positionally
 - entries of rows are bound to variables `edge(1,X)`
 
-If you write a datalog interpreter, like most interpreters, you'll thread through a environment mapping variables names to values `type Env = dict[Var, Value]`. Datalog interpreters are branching in the sense that to bind a variable there are many choices. Roughly, an interpreter of a query has the signature `interp : expr -> database -> env -> [env]`.
+If you write a Datalog interpreter, like most interpreters, you'll thread through a environment mapping variables names to values `type Env = dict[Var, Value]`. Datalog interpreters are branching in the sense that to bind a variable there are many choices (which row in the table to use). Roughly, an interpreter of a query has the signature `interp : expr -> database -> env -> set[env]`.
 
 It is a basic trick that I vaguely associated with [finally tagless](https://okmij.org/ftp/tagless-final/index.html) that you can remove the middle man of the AST when you have an expression datatype and instead just use combinators which are basically partially applied versions of the interpreter to the expressions `interp myexp : database -> env -> set[env]`.
 
@@ -77,7 +79,7 @@ def reldecl(name: str) -> Callable[..., Query]:
 
 ```
 
-Some usage examples. We make a database
+Some usage examples. We make a database and get all the `edge` entries through a query
 
 ```python
 db = {"edge" : {(1,2), (2,3), (3,4), (2,1), (3,3)}, 
@@ -94,11 +96,15 @@ edge(x,y)(db)
      {Var(name='x'): 2, Var(name='y'): 1},
      {Var(name='x'): 3, Var(name='y'): 4}]
 
+All color query
+
 ```python
 color(x)(db)
 ```
 
     [{Var(name='x'): 'red'}, {Var(name='x'): 'green'}, {Var(name='x'): 'blue'}]
+
+Is `"red"` in the color table?
 
 ```python
 color("red")(db) # succeeds
@@ -106,11 +112,15 @@ color("red")(db) # succeeds
 
     [{}]
 
+Is `"black"` in the color table?
+
 ```python
 color("black")(db) # fails
 ```
 
     []
+
+All self edges
 
 ```python
 edge(x, x)(db)
@@ -118,7 +128,7 @@ edge(x, x)(db)
 
     [{Var(name='x'): 3}]
 
-Now we want to be able to conjoin queries. You can combine them by performing inner joins on these primitive pieces, joining by variable names in the environments. SQL rocks at inner joins.This is done in the most naive why via a nested loop join <https://en.wikipedia.org/wiki/Nested_loop_join>
+Now we want to be able to conjoin subqueries. You can conjoin them by performing inner joins on these primitive pieces, joining by variable names in the environments. SQL rocks at inner joins, which is what we'll get to next. Here, this is done in the most naive why via a nested loop join <https://en.wikipedia.org/wiki/Nested_loop_join>
 
 ```python
 def conj(*queries: Query) -> Query:
@@ -142,7 +152,7 @@ conj(edge(x, y), edge(y, x))(db)
      {Var(name='y'): 3, Var(name='x'): 3},
      {Var(name='y'): 2, Var(name='x'): 1}]
 
-Heads of rules are a semantically distinct thing from the relation expressions that appear in the body of the expression. The Head actually mutates the database given an environment. The environment in particular ought to be derived from a query  `type Head = Query -> DB -> DB`. You could of course also just mutate the db rather than return a new version purely functionally.
+Heads of rules are a semantically distinct thing from the relation expressions that appear in the body of the expression. The head actually mutates the database given an environment. The environment in particular ought to be derived from a query giving a semantic signature  `type Action = Query -> DB -> DB`. You could of course also just mutate the db rather than return a new version purely functionally.
 
 ```python
 type Action = Callable[[DB, Query], DB]
@@ -168,11 +178,11 @@ edgeh(x, y)(conj(edge(y, x), edge(x,x)), db)
 
 # SQLizing
 
-We can push this thing around in sort of a staged metaprogramming style <https://okmij.org/ftp/ML/MetaOCaml.html> to instead produce `code (db -> set env)`, the code in particular being SQL.
+We can push this thing around in sort of a staged metaprogramming style <https://okmij.org/ftp/ML/MetaOCaml.html> to instead produce `code (db -> set[env])`, the code in particular being strings of SQL.
 
-In the following, the simplicity of what is happening is largely being obscured by the nastiness of constructing SQL strings but it is basically the same as the above.
+In the following, the simplicity of what is happening is largely being obscured by the nastiness of constructing SQL strings but it is basically the same as the above. I typically construct my `froms`, `wheres`, and `selects` in python lists and then join them together into fstrings.
 
-I chose to wrap things in classes in order to get nice operator overloading.
+I chose to wrap things in classes in order to get nice operator overloading `path(x,z) <= edge(x,y) & path(y,z)`. It was too cute to not do. This does bulk out the implementation compared to the combinator style I did above.
 
 `EnvRel` is spiritually a `code (db -> set env)`
 
@@ -212,7 +222,7 @@ class EnvRel():
 x,y,z,w = Var("x"), Var("y"), Var("z"), Var("w")
 ```
 
-Like before, a lot of the action actually happens in converting from the actual applied base relation to an environment containing the results of the query.
+Like before, a lot of the action actually happens in converting from the actual applied base relation decl to an environment containing the results of the query.
 
 A nice syntactic trick is to use `myrel(x)` for actions and `myrel[x]` for queries. I believe I first saw this in SLOG <https://arxiv.org/abs/2411.14330> <https://arxiv.org/abs/2211.11573> or maybe Relational AI's thing?
 
@@ -327,7 +337,7 @@ db.execute(edge[x,3].code).fetchall()
 
     [(2,)]
 
-I made an auxiliary class for applied `RelDecl` so that I can have nice `<=` notation. `<=` is lower precedence than `&`.
+I made an auxiliary class for applied `RelDecl` so that I can have nice `<=` notation. `<=` is lower precedence than `&`, which is the precedence I want for datalog rules.
 
 ```python
 @dataclass
@@ -561,6 +571,21 @@ But a twist that I don't know how to think about exactly is that the variable na
 
 SQL makes it easy to state relational algebra operations <https://en.wikipedia.org/wiki/Relational_algebra> like projection, selection, and renaming.
 
+There might be a fun version of this post that works off of a relational algebra interface
+
+```python
+from typing import Protocol
+class RelAlg(Protocol):
+    cols: list[str]  # column names
+    def rename(self, src: str, dst: str) -> 'RelAlg': ...  # subst : list[tuple[str, str]]
+    def proj(self, cols: list[str]) -> 'RelAlg': ...
+    def join(self, other: 'RelAlg') -> 'RelAlg': ...
+    def union(self, other: 'RelAlg') -> 'RelAlg': ...
+    def intersect(self, other: 'RelAlg') -> 'RelAlg': ...
+    def diff(self, other: 'RelAlg') -> 'RelAlg': ...
+    def select(self, cond: str) -> 'RelAlg': ... # not str
+```
+
 ```python
 class DualEnv():
     env : Env
@@ -613,7 +638,7 @@ edge["x", "y"] & path["y", "z"]
 # Bits and Bobbles
 
 ```python
-
+class EnvRel():
     def project(self, cols: set[Var]) -> "EnvRel":
         assert cols <= self.cols
         select_clause = ", ".join(f"{c} AS {c}" for c in cols)
