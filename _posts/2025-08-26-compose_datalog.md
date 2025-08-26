@@ -3,17 +3,17 @@ title: "Compositional Datalog on SQL: Relational Algebra of the Environment"
 date: 2025-08-26
 ---
 
-I spent sone time making Datalogs that translated into SQL. <https://www.philipzucker.com/tiny-sqlite-datalog/>
+I spent some time before making Datalogs that translated into SQL. <https://www.philipzucker.com/tiny-sqlite-datalog/>
 
-There are advantages. SQL engines are very well engineered and commonly available.
+There are advantages. SQL engines are very well engineered and commonly available. SQLite and Duckdb are a pretty great one-two punch.
 
 A new twist on how to do this occurred to me that seems very clean compared to my previous methods.
 
-Basically, the relational algebra of SQL actually meshes with the datalog body _environments_ better then it meshes with the datalog relations themselves.
+Basically, the relational algebra style of SQL actually meshes with the datalog body _environments_ (sets of variables bindings) better then it meshes with the datalog relations themselves.
 
 As a cheeky bonus as the end, you can do seminaive by using the dual number <https://en.wikipedia.org/wiki/Dual_number> trick from forward mode automatic differentiation over these environment relations.
 
-# The environment as a relation
+# The Environment As a Relation
 
 The core bits of `SELECT-FROM_WHERE` SQL, select-project-join relational algebra expressions,  and datalog bodies are all expressing roughly the same thing: [conjunctive queries](https://en.wikipedia.org/wiki/Conjunctive_query).
 
@@ -29,11 +29,17 @@ In datalog
 - The columns are referred to positionally
 - entries of rows are bound to variables `edge(1,X)`
 
-If you write a datalog interpreter, like most interpreters, you'll thread through a environment mapping variables names to values `type env = dict[VarName, Value]`. Datalog interpreters are branching in that to bind a variable, there are many choices. Roughly, an interpreter has a signature `interp : expr -> database -> env -> [env]`.
+If you write a datalog interpreter, like most interpreters, you'll thread through a environment mapping variables names to values `type Env = dict[Var, Value]`. Datalog interpreters are branching in the sense that to bind a variable there are many choices. Roughly, an interpreter of a query has the signature `interp : expr -> database -> env -> [env]`.
 
-It is a basic trick that I vaguely associated with finally tagless that you can remove the middle man when you have an expression datatype and just use combinators which are basically partially applied versions of the interpreter to the expressions `interp myexp : database -> env -> set[env]` instead of building up an AST.
+It is a basic trick that I vaguely associated with [finally tagless](https://okmij.org/ftp/tagless-final/index.html) that you can remove the middle man of the AST when you have an expression datatype and instead just use combinators which are basically partially applied versions of the interpreter to the expressions `interp myexp : database -> env -> set[env]`.
 
-You don't actually have to thread that `env` through though actually.  Really the semantics of a base expressions like `path(X,Y) : db -> set[env]` are a function from the database to a set of environments. You can combine them by performing inner joins on these primitive pieces, joining by variable names in the environments. SQL rocks at inner joins.
+You don't actually have to thread that `env` through though.
+
+Really the semantics of a base expressions like `path(X,Y) : db -> set[env]` are a function from the database to a set of environments. You can combine them by performing inner joins on these primitive pieces, joining by variable names in the environments. SQL rocks at inner joins.
+
+As a toy model of these ideas, this is a naive combinator based implementation in Python.
+
+Here I make a combinator `reldecl` that pulls a named table out of the database and filters on the args. This step converts from a base relation to an environment.
 
 ```python
 from typing import Callable
@@ -92,7 +98,7 @@ edge(x,y)(db)
 color(x)(db)
 ```
 
-    [{Var(name='x'): 'red'}, {Var(name='x'): 'blue'}, {Var(name='x'): 'green'}]
+    [{Var(name='x'): 'red'}, {Var(name='x'): 'green'}, {Var(name='x'): 'blue'}]
 
 ```python
 color("red")(db) # succeeds
@@ -112,7 +118,7 @@ edge(x, x)(db)
 
     [{Var(name='x'): 3}]
 
-Now we want to be able to conjoin queries. This is done in the most naive why via a nested loop join <https://en.wikipedia.org/wiki/Nested_loop_join>
+Now we want to be able to conjoin queries. You can combine them by performing inner joins on these primitive pieces, joining by variable names in the environments. SQL rocks at inner joins.This is done in the most naive why via a nested loop join <https://en.wikipedia.org/wiki/Nested_loop_join>
 
 ```python
 def conj(*queries: Query) -> Query:
@@ -129,10 +135,36 @@ def conj(*queries: Query) -> Query:
         return envs
     return res
 
-conj(edge("X", "Y"), edge("Y", "X"))(db)
+conj(edge(x, y), edge(y, x))(db)
 ```
 
-    []
+    [{Var(name='y'): 1, Var(name='x'): 2},
+     {Var(name='y'): 3, Var(name='x'): 3},
+     {Var(name='y'): 2, Var(name='x'): 1}]
+
+Heads of rules are a semantically distinct thing from the relation expressions that appear in the body of the expression. The Head actually mutates the database given an environment. The environment in particular ought to be derived from a query  `type Head = Query -> DB -> DB`. You could of course also just mutate the db rather than return a new version purely functionally.
+
+```python
+type Action = Callable[[DB, Query], DB]
+
+def headdecl(name : str):
+    def rel(*args) -> Action:
+        def res(query : Query, db : DB) -> DB:
+            envs = query(db)
+            Rold = db.get(name, set())
+            Rnew = {tuple(env[arg] if isinstance(arg,Var) else arg for arg in args) for env in envs}
+            return {**db, **{name : Rnew | Rold}}
+        return res
+    return rel
+
+edgeh = headdecl("edge")
+# edge(x,y) :- edge(y,x), edge(x,x)
+edgeh(x, y)(conj(edge(y, x), edge(x,x)), db)
+
+```
+
+    {'edge': {(1, 2), (2, 1), (2, 3), (3, 2), (3, 3), (3, 4)},
+     'color': {('blue',), ('green',), ('red',)}}
 
 # SQLizing
 
@@ -181,6 +213,8 @@ x,y,z,w = Var("x"), Var("y"), Var("z"), Var("w")
 ```
 
 Like before, a lot of the action actually happens in converting from the actual applied base relation to an environment containing the results of the query.
+
+A nice syntactic trick is to use `myrel(x)` for actions and `myrel[x]` for queries. I believe I first saw this in SLOG <https://arxiv.org/abs/2411.14330> <https://arxiv.org/abs/2211.11573> or maybe Relational AI's thing?
 
 ```python
 from dataclasses import dataclass
