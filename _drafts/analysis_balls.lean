@@ -5,8 +5,76 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+import Mathlib.Analysis.Calculus.FDeriv.Basic
+import Mathlib.Analysis.Calculus.FDeriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 open Lean Meta Elab Command
 
+
+
+-- Basic integral example: ∫ x² dx from 0 to 1 = 1/3
+open MeasureTheory intervalIntegral
+
+#search "integral_pow."
+#check integral_pow
+
+example : ∫ x in (0:ℝ)..(1:ℝ), x^2 = 1/3 := by
+  simp
+  norm_num
+
+example : ∫ x in (0:ℝ)..(1:ℝ), x^3 = 1/4 := by
+  simp
+  norm_num
+
+example : ∫ x in (0:ℝ)..(1:ℝ), x * Real.sin x = Real.sin 1 - Real.cos 1 := by
+  -- Define antiderivative F(x) = sin(x) - x*cos(x)
+  let F := (fun x => Real.sin x) - (fun x => x * Real.cos x)
+  -- Show F'(x) = x*sin(x)
+  let hF : forall z, deriv F z = (fun x => x * Real.sin x) z := by
+    intros z
+    unfold F
+    simp
+
+  have h_deriv : ∀ x ∈ Set.uIcc 0 1, HasDerivAt F (Real.cos x - (Real.cos x + x * Real.sin x)) x := by
+    intro x _
+    unfold F
+    apply HasDerivAt.sub
+    · exact Real.hasDerivAt_sin x --exact (Real.hasDerivAt_sin x).comp x (hasDerivAt_id x)
+    · apply HasDerivAt.mul
+      · exact hasDerivAt_id x
+      · exact (Real.hasDerivAt_cos x).comp x (hasDerivAt_id x)
+  -- Apply fundamental theorem of calculus
+  rw [integral_eq_sub_of_hasDerivAt h_deriv]
+  -- Evaluate F(1) - F(0)
+  simp [F]
+
+--example : ∫ x in (0:ℝ)..(1:ℝ), x * Real.sin x = 42 := by
+
+
+
+set_option trace.Meta.Tactic.simp true in
+example : ∫ x in (0:ℝ)..(1:ℝ), Real.cos x = Real.sin 1 - Real.sin 0 := by
+  simp
+
+#search "integral_deriv_eq."
+#search "fundamental theorem of calculus."
+-- a strange name for this theorem.
+-- I see. intergal of deriv = sub of something
+#check intervalIntegral.integral_deriv_eq_sub
+-- https://leansearch.net/
+#loogle "integral"
+#moogle "fundamental theorem of claculus."
+#help cat
+/-
+https://lawrencecpaulson.github.io/2025/08/21/Integrals_II.html
+https://lawrencecpaulson.github.io/2025/08/14/Integrals_I.html
+-/
+
+-- https://leanprover-community.github.io/contribute/naming.html
 
 /-
 Interesting.

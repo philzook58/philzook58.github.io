@@ -6,10 +6,10 @@ name = "_drafts"
 precompileModules = true
 supportInterpreter = true
 
-# [[require]]
-# name = "smt"
-# scope = "ufmg-smite"
-# rev = "main"
+[[require]]
+name = "smt"
+scope = "ufmg-smite"
+rev = "main"
 
 [[require]]
 name = "mathlib"
