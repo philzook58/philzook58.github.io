@@ -13,6 +13,8 @@ Basically, the relational algebra style of SQL actually meshes with manipulating
 
 As a cheeky bonus as the end, you can do semi-naive by using the dual number <https://en.wikipedia.org/wiki/Dual_number> trick from forward mode automatic differentiation over these environment relations.
 
+You can tinker on this post yourself on colab here <https://colab.research.google.com/github/philzook58/philzook58.github.io/blob/master/pynb/2025-08-26-compose_datalog.ipynb>
+
 # The Environment As a Relation
 
 The core bits of `SELECT-FROM-WHERE` SQL, select-project-join relational algebra expressions, and datalog bodies are all expressing roughly the same thing: [conjunctive queries](https://en.wikipedia.org/wiki/Conjunctive_query).
