@@ -531,10 +531,28 @@ db.execute((edge[x,y] & path[y,z]).denv.code).fetchall()
     [(3, 2, 1)]
 
 ```python
-(edge[1,x] & path[x,3]).denv.code
+print((edge[1,x] & path[x,3]).denv.code)
 ```
 
-    'SELECT x\n FROM (SELECT t1.x AS x\nFROM (SELECT x1 AS x\nFROM delta_edge\nWHERE x0 = 1) AS t1,\n(SELECT x0 AS x\nFROM path\nWHERE x1 = 3) AS t2\nWHERE t1.x = t2.x\nUNION SELECT t1.x AS x\nFROM (SELECT x1 AS x\nFROM edge\nWHERE x0 = 1) AS t1,\n(SELECT x0 AS x\nFROM delta_path\nWHERE x1 = 3) AS t2\nWHERE t1.x = t2.x)'
+    SELECT x
+     FROM (SELECT t1.x AS x
+    FROM (SELECT x1 AS x
+    FROM delta_edge
+    WHERE x0 = 1) AS t1,
+    (SELECT x0 AS x
+    FROM path
+    WHERE x1 = 3) AS t2
+    WHERE t1.x = t2.x
+    UNION SELECT t1.x AS x
+    FROM (SELECT x1 AS x
+    FROM edge
+    WHERE x0 = 1) AS t1,
+    (SELECT x0 AS x
+    FROM delta_path
+    WHERE x1 = 3) AS t2
+    WHERE t1.x = t2.x)
+
+### Seminaive Fixpoint
 
 The naive fixpoint can also be generalized
 
@@ -577,19 +595,14 @@ fix(db, [edge, path], [
 db.execute(path[x,y].env.code).fetchall()
 ```
 
-    1
     1 delta_edge [(1, 2), (2, 3), (3, 4)]
     1 delta_path []
-    2
     2 delta_edge []
     2 delta_path [(1, 2), (2, 3), (3, 4)]
-    3
     3 delta_edge []
     3 delta_path [(1, 3), (2, 4)]
-    4
     4 delta_edge []
     4 delta_path [(1, 4)]
-    5
     5 delta_edge []
     5 delta_path []
 
