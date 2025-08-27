@@ -104,7 +104,7 @@ All color query
 color(x)(db)
 ```
 
-    [{Var(name='x'): 'red'}, {Var(name='x'): 'blue'}, {Var(name='x'): 'green'}]
+    [{Var(name='x'): 'blue'}, {Var(name='x'): 'red'}, {Var(name='x'): 'green'}]
 
 Is `"red"` in the color table?
 
@@ -501,7 +501,7 @@ print((edge[x,y] & path[y,z]).denv.code)
 
 ```
 
-    SELECT z, y, x
+    SELECT y, z, x
      FROM (SELECT t1.y AS y, t1.x AS x, t2.z AS z
     FROM (SELECT x0 AS x, x1 AS y
     FROM delta_edge
@@ -528,7 +528,7 @@ db.execute(edge.dr(1,2).fact())
 db.execute((edge[x,y] & path[y,z]).denv.code).fetchall()
 ```
 
-    [(3, 2, 1)]
+    [(2, 3, 1)]
 
 ```python
 print((edge[1,x] & path[x,3]).denv.code)
@@ -566,22 +566,25 @@ def fix(db, rels : list[DualDecl], stmts, limit=None):
         db.execute(f"DELETE FROM {rel.dr.name}")
         db.execute(f"DELETE FROM {rel.newr.name}")
     # Do facts
-    for stmt in stmts:
-        if isinstance(stmt, Head):
-            db.execute(stmt.fact())
+    facts = [stmt for stmt in stmts if isinstance(stmt, Head)]
+    rules = [stmt for stmt in stmts if isinstance(stmt, str)]
+    for stmt in facts:
+        db.execute(stmt.fact())
     n = 0
     while True:
         n += 1
-        for stmt in stmts:
-            if isinstance(stmt, str):
-                db.execute(stmt)
+        for stmt in rules:
+            db.execute(stmt)
         for rel in rels:
             # Do the old swaparooni. Delete delta, delta := new - old, old += delta, new := {}
             db.execute(f"DELETE FROM {rel.dr.name}")
-            db.execute(f"INSERT OR IGNORE INTO {rel.dr.name} SELECT * FROM {rel.newr.name} EXCEPT SELECT * FROM {rel.r.name}")
+            wheres = " AND ".join([f"t1.x{i} = t2.x{i}" for i in range(rel.r.arity)])
+            if wheres != "":
+                wheres = "WHERE " + wheres
+            db.execute(f"INSERT OR IGNORE INTO {rel.dr.name} SELECT * FROM {rel.newr.name} as t1 WHERE NOT EXISTS (SELECT 1 FROM {rel.r.name} as t2 {wheres})")
             db.execute(f"INSERT OR IGNORE INTO {rel.r.name} SELECT * FROM {rel.dr.name}")
             db.execute(f"DELETE FROM {rel.newr.name}")
-            print(n, rel.dr.name, db.execute("SELECT * FROM " + rel.dr.name).fetchall())
+            #print(n, rel.dr.name, db.execute("SELECT * FROM " + rel.dr.name).fetchall())
         if (limit is not None and n > limit) or all(db.execute(f"SELECT * FROM {rel.dr.name} LIMIT 1").fetchone() is None for rel in rels):
             return
 
@@ -595,22 +598,68 @@ fix(db, [edge, path], [
 db.execute(path[x,y].env.code).fetchall()
 ```
 
-    1 delta_edge [(1, 2), (2, 3), (3, 4)]
-    1 delta_path []
-    2 delta_edge []
-    2 delta_path [(1, 2), (2, 3), (3, 4)]
-    3 delta_edge []
-    3 delta_path [(1, 3), (2, 4)]
-    4 delta_edge []
-    4 delta_path [(1, 4)]
-    5 delta_edge []
-    5 delta_path []
-
-
-
-
-
     [(1, 2), (2, 3), (3, 4), (1, 3), (2, 4), (1, 4)]
+
+## Unscientific Benchmarking
+
+Ok, with the caveat that this is a single artificial benchmark
+
+```
+.decl edge(x: number, y: number)
+.decl path(x: number, y: number)
+//.input edge
+.output path
+
+edge(n, n+1) :- n = range(0, 1000).
+path(x,y) :- edge(x,y).
+path(x,z) :- edge(x,y), path(y,z).
+```
+
+`souffle /tmp/test.dl` Takes ~0.2s in interpreted mode, ~0.1s in compiled mode. `-j` parallelization doesn't seem to help much (too small?)
+
+```python
+import time
+import sqlite3 
+db = sqlite3.connect(":memory:")
+t = time.time()
+fix(db, [edge, path],
+[edge(n, n+1) for n in range(1, 1000)] + \
+[path(x,y) <= edge[x,y],
+path(x,z) <= edge[x,y] & path[y,z]
+])
+time.time() - t
+```
+
+This takes about 0.7s
+
+A seminaive python loop takes about 20s
+
+```python
+edge1 = {(n,n+1) for n in range(1, 1000)}
+path1 = edge1.copy()
+dpath = edge1.copy()
+newpath = set()
+for i in range(1010):
+    for (x,y) in edge1:
+        for (y2,z) in dpath:
+            if y == y2:
+                newpath.add((x,z))
+    dpath = newpath - path1
+    path1 |= newpath
+    newpath = set()
+    if not dpath:
+        break
+```
+
+Seminaive duckdb takes about 6s. Maybe this is because duckdb is not tuned for set semantics? Somewhat surprising since duckdb has the higher performance reputation.
+
+The non seminaive loop is much slower.
+
+I'm satisfied by this. I never expected to beat souffle. I think this is a much simpler, more flexible system at maybe 3-5x overhead on this particular benchmark.
+
+Strangely, the swaparooni is the bottleneck.
+
+An original version of this used `EXCEPT` for the delta differencing rather than `EXISTS NOT` which was radically slower (17s).
 
 # Bits and Bobbles
 
@@ -685,7 +734,7 @@ db = sqlite3.connect(":memory:")
 db.execute(RelDecl("edge", 2).create())
 ```
 
-    <sqlite3.Cursor at 0x7c674c9551c0>
+    <sqlite3.Cursor at 0x7b82445140c0>
 
 ```python
 
@@ -712,6 +761,661 @@ edge["x", "y"] & path["y", "z"]
 
 
     NameError: name 'BaseRel' is not defined
+
+```python
+path(x,y) <= edge[x,y]
+path(x,z) <= edge[x,y] & path[y,z]
+
+```
+
+    'INSERT OR IGNORE INTO new_path\nSELECT x,z\nFROM (SELECT y, z, x\n FROM (SELECT t1.y AS y, t1.x AS x, t2.z AS z\nFROM (SELECT x0 AS x, x1 AS y\nFROM delta_edge\n) AS t1,\n(SELECT x0 AS y, x1 AS z\nFROM path\n) AS t2\nWHERE t1.y = t2.y\nUNION SELECT t1.y AS y, t1.x AS x, t2.z AS z\nFROM (SELECT x0 AS x, x1 AS y\nFROM edge\n) AS t1,\n(SELECT x0 AS y, x1 AS z\nFROM delta_path\n) AS t2\nWHERE t1.y = t2.y))'
+
+## Benchmarking
+
+This is pretty bad.
+Maybe sqlite is actually better than duckdb for this use case (set semantics?)
+Parse overhead is too high?
+
+Getting some scaling charts would be nice.
+
+But this python loop is only
+20/0.18 ~ 100x slowdown
+
+40x slowdown with respect to soufflein duckdb. Is that bad?
+
+```python
+def fix(db, rels : list[DualDecl], stmts, limit=None):
+    for rel in rels:
+        db.execute(rel.r.create())
+        db.execute(rel.dr.create())
+        db.execute(rel.newr.create())
+        db.execute(f"DELETE FROM {rel.r.name}")
+        db.execute(f"DELETE FROM {rel.dr.name}")
+        db.execute(f"DELETE FROM {rel.newr.name}")
+    # Do facts
+    facts = [stmt for stmt in stmts if isinstance(stmt, Head)]
+    rules = [stmt for stmt in stmts if isinstance(stmt, str)]
+    for stmt in facts:
+        db.execute(stmt.fact())
+    n = 0
+    while True:
+        n += 1
+        t = time.time()
+        for stmt in rules:
+            db.execute(stmt)
+        print("rule time", time.time() - t)
+        t= time.time()
+        for rel in rels:
+            # Do the old swaparooni. Delete delta, delta := new - old, old += delta, new := {}
+            t1 = time.time()
+            db.execute(f"DELETE FROM {rel.dr.name}")
+            t2 = time.time()
+            wheres = " AND ".join([f"t1.x{i} = t2.x{i}" for i in range(rel.r.arity)])
+            db.execute(f"INSERT OR IGNORE INTO {rel.dr.name} SELECT * FROM {rel.newr.name} as t1 WHERE NOT EXISTS (SELECT 1 FROM {rel.r.name} as t2 WHERE {wheres})")
+            #db.execute(f"INSERT OR IGNORE INTO {rel.dr.name} SELECT * FROM {rel.newr.name}")
+            t3 = time.time()
+            db.execute(f"INSERT OR IGNORE INTO {rel.r.name} SELECT * FROM {rel.dr.name}")
+            t4 = time.time()
+            db.execute(f"DELETE FROM {rel.newr.name}")
+            t5 = time.time()
+            #print(n, rel.dr.name, db.execute("SELECT COUNT(*) FROM " + rel.dr.name).fetchall())
+            #print("  delete time", t2 - t1, "insert delta time", t3 - t2, "insert old time", t4 - t3, " delete new time", t5 - t4)
+        print("delta time", time.time() - t)
+        if (limit is not None and n > limit) or all(db.execute(f"SELECT 1 FROM {rel.dr.name} LIMIT 1").fetchone() is None for rel in rels):
+            return
+
+fix(db, [edge, path], [
+    edge(1,2),
+    edge(2,3),
+    edge(3,4),
+    path(x,y) <= edge[x,y],
+    path(x,z) <= edge[x,y] & path[y,z]
+], limit=10)
+db.execute(path[x,y].env.code).fetchall()
+```
+
+    rule time 2.6702880859375e-05
+    delta time 0.00026798248291015625
+    rule time 8.106231689453125e-06
+    delta time 1.4543533325195312e-05
+    rule time 6.4373016357421875e-06
+    delta time 2.384185791015625e-05
+    rule time 4.0531158447265625e-06
+    delta time 9.775161743164062e-06
+    rule time 3.5762786865234375e-06
+    delta time 7.867813110351562e-06
+
+
+
+
+
+    [(1, 2), (2, 3), (3, 4), (1, 3), (2, 4), (1, 4)]
+
+```python
+import time
+import sqlite3 
+db = sqlite3.connect(":memory:")
+t = time.time()
+fix(db, [edge, path],
+[edge(n, n+1) for n in range(1, 1000)] + [path(x,y) <= edge[x,y],
+path(x,z) <= edge[x,y] & path[y,z]
+]
+)
+
+time.time() - t
+```
+
+```python
+%%file /tmp/test.dl
+
+.decl edge(x: number, y: number)
+.decl path(x: number, y: number)
+//.input edge
+.output path
+
+edge(n, n+1) :- n = range(0, 1000).
+path(x,y) :- edge(x,y).
+path(x,z) :- edge(x,y), path(y,z).
+
+```
+
+    Overwriting /tmp/test.dl
+
+```python
+! time souffle /tmp/test.dl
+```
+
+    real 0m0.667s
+    user 0m8.948s
+    sys 0m0.023s
+
+```python
+! souffle -o /tmp/test /tmp/test.dl && time /tmp/test -j4
+```
+
+    real 0m0.125s
+    user 0m0.119s
+    sys 0m0.006s
+
+```python
+db.execute("CREATE TABLE t1 (id INTEGER, j VARCHAR, PRIMARY KEY (id, j));")
+```
+
+    <duckdb.duckdb.DuckDBPyConnection at 0x73d0852b5270>
+
+```python
+
+print(path(x,z) <= edge[x,y] & path[y,z])
+```
+
+    INSERT OR IGNORE INTO new_path
+    SELECT x,z
+    FROM (SELECT y, z, x
+     FROM (SELECT t1.y AS y, t1.x AS x, t2.z AS z
+    FROM (SELECT x0 AS x, x1 AS y
+    FROM delta_edge
+    ) AS t1,
+    (SELECT x0 AS y, x1 AS z
+    FROM path
+    ) AS t2
+    WHERE t1.y = t2.y
+    UNION SELECT t1.y AS y, t1.x AS x, t2.z AS z
+    FROM (SELECT x0 AS x, x1 AS y
+    FROM edge
+    ) AS t1,
+    (SELECT x0 AS y, x1 AS z
+    FROM delta_path
+    ) AS t2
+    WHERE t1.y = t2.y))
+
+```python
+def fix(db, rels : list[DualDecl], stmts, limit=None):
+    for rel in rels:
+        db.execute(f"DELETE FROM {rel.r.name}")
+        db.execute(f"DELETE FROM {rel.dr.name}")
+        db.execute(f"DELETE FROM {rel.newr.name}")
+    # Do facts
+    facts = [stmt for stmt in stmts if isinstance(stmt, Head)]
+    rules = [stmt for stmt in stmts if isinstance(stmt, str)]
+    for stmt in facts:
+        db.execute(stmt.fact())
+    n = 0
+    #bigstmt = rules
+    #for rel in rels:
+    #    bigstmt.append(f"DELETE FROM {rel.dr.name}")
+    #    bigstmt.append(f"INSERT INTO {rel.dr.name} SELECT DISTINCT * FROM {rel.newr.name} as t1")
+    #    bigstmt.append(f"INSERT INTO {rel.r.name} SELECT * FROM {rel.newr.name}")
+    #    bigstmt.append(f"DELETE FROM {rel.newr.name}")
+    #bigstmt = ";".join(bigstmt)
+
+    while True:
+        n += 1
+        #for stmt in rules:
+        t = time.time()
+        db.execute("BEGIN TRANSACTION;")
+        for i in range(4):
+            db.execute(";".join(rules))
+            #db.execute(bigstmt)
+            #print(n, time.time() - t)
+            #t = time.time()
+            #print(db.execute("SELECT COUNT(*) FROM new_path").fetchone(), db.execute("SELECT COUNT(*) FROM path").fetchone())
+            #print(db.execute("SELECT COUNT(*) FROM new_edge").fetchone(), db.execute("SELECT COUNT(*) FROM edge").fetchone())
+            for rel in rels:
+                # Do the old swaparooni. Delete delta, delta := new - old, old += delta, new := {}
+                #t = time.time()
+                #db.execute(f"DELETE FROM {rel.dr.name}")
+                #    t1 = time.time()
+                #db.execute(f"INSERT OR IGedge eedWe're WeDucjksd6NORE INTO {rel.dr.name} SELECT DISTINCT * FROM {rel.newr.name} as t1 WHERE NOT EXISTS (SELECT 1 FROM {rel.r.name} as t2 WHERE t1.x0 = t2.x0 AND t1.x1 = t2.x1)")
+                db.execute(f"""DELETE FROM {rel.dr.name}; 
+                INSERT INTO {rel.dr.name} SELECT DISTINCT * FROM {rel.newr.name} as t1;
+                INSERT INTO {rel.r.name} SELECT * FROM {rel.newr.name};
+                DELETE FROM {rel.newr.name}
+                """)
+                
+                #t2 = time.time()
+                #db.execute(f"INSERT OR IGNORE INTO {rel.r.name} SELECT * FROM {rel.dr.name}")
+                #t3 = time.time()
+                #db.execute(f"DELETE FROM {rel.newr.name}")
+                #t4 = time.time()
+                #print(f"  delete: {t1 - t:.6f}, insert delta: {t2 - t1:.6f}, insert r: {t3 - t2:.6f}, delete new: {t4 - t3:.6f}")
+                #print(n, rel.dr.name, db.execute("SELECT * FROM " + rel.dr.name).fetchall())
+        #print(n, "swap", time.time() - t)
+            #if n > 1000:
+            #    return
+        db.execute("COMMIT;")
+        print(n, time.time() - t)
+        if (limit is not None and n > limit) or all(db.execute(f"SELECT * FROM {rel.dr.name} LIMIT 1").fetchone() is None for rel in rels):
+            return
+
+fix(db, [edge, path], [
+    edge(1,2),
+    edge(2,3),
+    edge(3,4),
+    path(x,y) <= edge[x,y],
+    path(x,z) <= edge[x,y] & path[y,z]
+], limit=10)
+db.execute(path[x,y].env.code).fetchall()
+```
+
+    1 0.019887447357177734
+    2 0.013635635375976562
+
+
+
+
+
+    [(1, 2), (2, 3), (3, 4), (1, 3), (2, 4), (1, 4)]
+
+```python
+0.008 * 1000
+```
+
+    8.0
+
+```python
+path(x,y) <= edge[x,y]
+```
+
+    'INSERT OR IGNORE INTO new_path\nSELECT x,y\nFROM (SELECT x0 AS x, x1 AS y\nFROM delta_edge\n)'
+
+```python
+def naive_fix(db, rels, stmts, limit=4):
+    #for rel in rels:
+    #    db.execute(rel.create())
+    print(stmts)
+    t=time.time()
+    for stmt in stmts:
+        if isinstance(stmt, Head):
+            db.execute(stmt.fact())
+    print(time.time() - t)
+    n = 0
+    rules = [stmt for stmt in stmts if isinstance(stmt, str)]
+
+    while True:
+        n += 1
+        t=time.time()
+        for stmt in rules:
+            if isinstance(stmt, str):
+                db.execute(stmt)
+        print(n, time.time() - t)
+        if n > limit:
+            return
+db.execute("DELETE FROM edge")
+db.execute("DELETE FROM path")
+naive_fix(db, [edge, path], 
+ [edge.r(n, n+1) for n in range(1, 1000)] + 
+ [path.r(x,y) <= edge.r[x,y],
+ path.r(x,z) <= edge.r[x,y] & path.r[y,z]
+ ], limit=1000)
+db.execute("SELECT COUNT(*) FROM edge").fetchone()
+```
+
+```python
+db.execute("SELECT COUNT(*) FROM path").fetchone()
+```
+
+    (157122,)
+
+```python
+res= db.execute("""
+PRAGMA explain_output = 'all';
+EXPLAIN ANALYZE
+INSERT OR IGNORE INTO new_path
+SELECT x as x0, z as x1
+FROM (SELECT y, z, x
+ FROM (SELECT t1.y AS y, t1.x AS x, t2.z AS z
+FROM (SELECT x0 AS x, x1 AS y
+FROM delta_edge
+) AS t1,
+(SELECT x0 AS y, x1 AS z
+FROM path
+) AS t2
+WHERE t1.y = t2.y
+
+UNION 
+
+SELECT t1.y AS y, t1.x AS x, t2.z AS z
+FROM (SELECT x0 AS x, x1 AS y
+FROM edge
+) AS t1,
+(SELECT x0 AS y, x1 AS z
+FROM delta_path
+) AS t2
+WHERE t1.y = t2.y))
+""").fetchall()
+print(res[0][1])
+```
+
+    ┌─────────────────────────────────────┐
+    │┌───────────────────────────────────┐│
+    ││    Query Profiling Information    ││
+    │└───────────────────────────────────┘│
+    └─────────────────────────────────────┘
+     PRAGMA explain_output = 'all'; EXPLAIN ANALYZE INSERT OR IGNORE INTO new_path SELECT x as x0, z as x1 FROM (SELECT y, z, x  FROM (SELECT t1.y AS y, t1.x AS x, t2.z AS z FROM (SELECT x0 AS x, x1 AS y FROM delta_edge ) AS t1, (SELECT x0 AS y, x1 AS z FROM path ) AS t2 WHERE t1.y = t2.y  UNION   SELECT t1.y AS y, t1.x AS x, t2.z AS z FROM (SELECT x0 AS x, x1 AS y FROM edge ) AS t1, (SELECT x0 AS y, x1 AS z FROM delta_path ) AS t2 WHERE t1.y = t2.y)) 
+    ┌────────────────────────────────────────────────┐
+    │┌──────────────────────────────────────────────┐│
+    ││              Total Time: 0.0022s             ││
+    │└──────────────────────────────────────────────┘│
+    └────────────────────────────────────────────────┘
+    ┌───────────────────────────┐
+    │           QUERY           │
+    └─────────────┬─────────────┘
+    ┌─────────────┴─────────────┐
+    │      EXPLAIN_ANALYZE      │
+    │    ────────────────────   │
+    │           0 Rows          │
+    │          (0.00s)          │
+    └─────────────┬─────────────┘
+    ┌─────────────┴─────────────┐
+    │           INSERT          │
+    │    ────────────────────   │
+    │           1 Rows          │
+    │          (0.00s)          │
+    └─────────────┬─────────────┘
+    ┌─────────────┴─────────────┐
+    │         PROJECTION        │
+    │    ────────────────────   │
+    │             x0            │
+    │             x1            │
+    │                           │
+    │           0 Rows          │
+    │          (0.00s)          │
+    └─────────────┬─────────────┘
+    ┌─────────────┴─────────────┐
+    │         PROJECTION        │
+    │    ────────────────────   │
+    │             z             │
+    │             x             │
+    │                           │
+    │           0 Rows          │
+    │          (0.00s)          │
+    └─────────────┬─────────────┘
+    ┌─────────────┴─────────────┐
+    │       HASH_GROUP_BY       │
+    │    ────────────────────   │
+    │          Groups:          │
+    │             #0            │
+    │             #1            │
+    │             #2            │
+    │                           │
+    │           0 Rows          │
+    │          (0.00s)          │
+    └─────────────┬─────────────┘
+    ┌─────────────┴─────────────┐
+    │           UNION           │
+    │    ────────────────────   │
+    │           0 Rows          ├───────────────────────────────────────────┐
+    │          (0.00s)          │                                           │
+    └─────────────┬─────────────┘                                           │
+    ┌─────────────┴─────────────┐                             ┌─────────────┴─────────────┐
+    │         PROJECTION        │                             │         PROJECTION        │
+    │    ────────────────────   │                             │    ────────────────────   │
+    │             y             │                             │             y             │
+    │             x             │                             │             x             │
+    │             z             │                             │             z             │
+    │                           │                             │                           │
+    │           0 Rows          │                             │           0 Rows          │
+    │          (0.00s)          │                             │          (0.00s)          │
+    └─────────────┬─────────────┘                             └─────────────┬─────────────┘
+    ┌─────────────┴─────────────┐                             ┌─────────────┴─────────────┐
+    │         HASH_JOIN         │                             │         HASH_JOIN         │
+    │    ────────────────────   │                             │    ────────────────────   │
+    │      Join Type: INNER     │                             │      Join Type: INNER     │
+    │     Conditions: y = y     ├──────────────┐              │     Conditions: y = y     ├──────────────┐
+    │                           │              │              │                           │              │
+    │           0 Rows          │              │              │           0 Rows          │              │
+    │          (0.00s)          │              │              │          (0.00s)          │              │
+    └─────────────┬─────────────┘              │              └─────────────┬─────────────┘              │
+    ┌─────────────┴─────────────┐┌─────────────┴─────────────┐┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+    │         TABLE_SCAN        ││         TABLE_SCAN        ││         TABLE_SCAN        ││         TABLE_SCAN        │
+    │    ────────────────────   ││    ────────────────────   ││    ────────────────────   ││    ────────────────────   │
+    │        Table: path        ││     Table: delta_edge     ││     Table: delta_path     ││        Table: edge        │
+    │   Type: Sequential Scan   ││   Type: Sequential Scan   ││   Type: Sequential Scan   ││   Type: Sequential Scan   │
+    │                           ││                           ││                           ││                           │
+    │        Projections:       ││        Projections:       ││        Projections:       ││        Projections:       │
+    │             x0            ││             x0            ││             x0            ││             x0            │
+    │             x1            ││             x1            ││             x1            ││             x1            │
+    │                           ││                           ││                           ││                           │
+    │       Filters: x0>=2      ││      Filters: x1<=999     ││       Filters: x0>=2      ││      Filters: x1<=999     │
+    │                           ││                           ││                           ││                           │
+    │           3 Rows          ││           0 Rows          ││           0 Rows          ││           3 Rows          │
+    │          (0.00s)          ││          (0.00s)          ││          (0.00s)          ││          (0.00s)          │
+    └───────────────────────────┘└───────────────────────────┘└───────────────────────────┘└───────────────────────────┘
+    
+
+```python
+import time
+import duckdb 
+db = duckdb.connect()
+t = time.time()
+for rel in [edge, path]:
+    print("CREATE TABLE " + rel.r.name + " (x0 INTEGER, x1 INTEGER, PRIMARY KEY (x0, x1))")
+    db.execute("CREATE TABLE " + rel.r.name + " (x0 INTEGER, x1 INTEGER, PRIMARY KEY (x0, x1))")
+    db.execute("CREATE TABLE " + rel.dr.name + " (x0 INTEGER, x1 INTEGER, PRIMARY KEY (x0, x1))")
+    db.execute("CREATE TABLE " + rel.newr.name + " (x0 INTEGER, x1 INTEGER, PRIMARY KEY (x0, x1))")
+    #db.execute("CREATE TABLE " + rel.r.name + " (x0 INTEGER, x1 INTEGER)")
+    #db.execute("CREATE TABLE " + rel.dr.name + " (x0 INTEGER, x1 INTEGER)")
+    #db.execute("CREATE TABLE " + rel.newr.name + " (x0 INTEGER, x1 INTEGER)")
+print(time.time() - t)
+fix(db, [edge, path],
+[edge(n, n+1) for n in range(1, 1000)] + 
+["INSERT INTO new_path\nSELECT x,y\nFROM (SELECT x0 AS x, x1 AS y\nFROM delta_edge\n)",
+"""INSERT INTO new_path
+SELECT x as x0, z as x1
+FROM (SELECT y, z, x
+ FROM (SELECT t1.y AS y, t1.x AS x, t2.z AS z
+FROM (SELECT x0 AS x, x1 AS y
+FROM delta_edge
+) AS t1,
+(SELECT x0 AS y, x1 AS z
+FROM path
+) AS t2
+WHERE t1.y = t2.y
+
+UNION 
+
+SELECT t1.y AS y, t1.x AS x, t2.z AS z
+FROM (SELECT x0 AS x, x1 AS y
+FROM edge
+) AS t1,
+(SELECT x0 AS y, x1 AS z
+FROM delta_path
+) AS t2
+WHERE t1.y = t2.y))
+"""
+])
+time.time() - t
+```
+
+```python
+%%file /tmp/test.dl
+
+.decl edge(x: number, y: number)
+.decl path(x: number, y: number)
+//.input edge
+.output path
+
+edge(n, n+1) :- n = range(0, 1000).
+path(x,y) :- edge(x,y).
+path(x,z) :- edge(x,y), path(y,z).
+
+```
+
+    Overwriting /tmp/test.dl
+
+```python
+! time souffle /tmp/test.dl 
+```
+
+    real 0m0.180s
+    user 0m0.164s
+    sys 0m0.015s
+
+7
+
+```python
+7/0.18
+```
+
+    38.88888888888889
+
+20/.18
+
+```python
+%%file /tmp/path.cpp
+
+#include <iostream>
+#include <set> // should be using unordered_set
+int main() {
+    std::set<std::pair<int,int>> edge, path, new_path, delta_edge, delta_path;
+    for (int n = 0; n < 1000; n++) {
+        edge.insert({n, n+1});
+    }
+    path = delta_path = edge;
+    int n = 0;
+    while (!delta_path.empty() || !delta_edge.empty()) {
+        n++;
+        new_path.clear();
+        for (auto [x,y] : delta_edge) {
+            for (auto [y2,z] : path) {
+                if (y == y2) {
+                    new_path.insert({x,z});
+                }
+            }
+        }
+        for (auto [x,y] : edge) {
+            for (auto [y2,z] : delta_path) {
+                if (y == y2) {
+                    new_path.insert({x,z});
+                }
+            }
+        }
+        delta_path.clear();
+        for (auto p : new_path) {
+            if (path.insert(p).second) {
+                delta_path.insert(p);
+            }
+        }
+        delta_edge.clear();
+        //std::cout << n << " " << delta_path.size() << " " << path.size() << "\n";
+    }
+    std::cout << n << " " << path.size() << "\n";
+    return 0;   
+}
+```
+
+    Overwriting /tmp/path.cpp
+
+```python
+! g++ -O3 -march=native -o /tmp/path /tmp/path.cpp && time /tmp/path
+```
+
+    1000 500500
+    
+    real 0m1.991s
+    user 0m1.979s
+    sys 0m0.008s
+
+```python
+%%file /tmp/test.rs
+use std::collections::HashSet;
+fn main() {
+    let mut edge: HashSet<(i32,i32)> = HashSet::new();
+    let mut path: HashSet<(i32,i32)> = HashSet::new();
+    let mut new_path: HashSet<(i32,i32)> = HashSet::new();
+    let mut delta_edge: HashSet<(i32,i32)> = HashSet::new();
+    let mut delta_path: HashSet<(i32,i32)> = HashSet::new();
+    for n in 0..1000 {
+        edge.insert((n, n+1));
+    }
+    path = edge.clone();
+    delta_path = edge.clone();
+    let mut n = 0;
+    while !delta_path.is_empty() || !delta_edge.is_empty() {
+        n += 1;
+        new_path.clear();
+        for (x,y) in &delta_edge {
+            for (y2,z) in &path {
+                if y == y2 {
+                    new_path.insert((*x,*z));
+                }
+            }
+        }
+        for (x,y) in &edge {
+            for (y2,z) in &delta_path {
+                if y == y2 {
+                    new_path.insert((*x,*z));
+                }
+            }
+        }
+        delta_path.clear();
+        for p in &new_path {
+            if path.insert(*p) {
+                delta_path.insert(*p);
+            }
+        }
+        delta_edge.clear();
+        //println!("{} {} {}", n, delta_path.len(), path.len());
+    }
+    println!("{} {}", n, path.len());
+}
+```
+
+    Overwriting /tmp/test.rs
+
+```python
+! time cargo +nightly -Zscript /tmp/test.rs # It's a dev build
+```
+
+    [1m[33mwarning[0m[1m:[0m `package.edition` is unspecified, defaulting to `2024`
+    [1m[32m   Compiling[0m test- v0.0.0 (/tmp/test.rs)
+    [K[0m[1m[33mwarning[0m[0m[1m: value assigned to `path` is never read[0m            
+    [0m [0m[0m[1m[38;5;12m--> [0m[0mtest.rs:4:13[0m
+    [0m  [0m[0m[1m[38;5;12m|[0m
+    [0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let mut path: HashSet<(i32,i32)> = HashSet::new();[0m
+    [0m  [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[33m^^^^[0m
+    [0m  [0m[0m[1m[38;5;12m|[0m
+    [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: maybe it is overwritten before being read?[0m
+    [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_assignments)]` on by default[0m
+    
+    [K[0m[1m[33mwarning[0m[0m[1m: value assigned to `delta_path` is never read[0m      
+    [0m [0m[0m[1m[38;5;12m--> [0m[0mtest.rs:7:13[0m
+    [0m  [0m[0m[1m[38;5;12m|[0m
+    [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let mut delta_path: HashSet<(i32,i32)> = HashSet::new();[0m
+    [0m  [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[33m^^^^^^^^^^[0m
+    [0m  [0m[0m[1m[38;5;12m|[0m
+    [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: maybe it is overwritten before being read?[0m
+    
+    [K[1m[33mwarning[0m[1m:[0m `test-` (bin "test-") generated 2 warnings                
+    [1m[32m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 0.10s
+    [1m[32m     Running[0m `/home/philip/.cargo/target/e8/a8b1c02d8deab1/debug/test-`
+    1000 500500
+    
+    real 0m8.901s
+    user 0m8.813s
+    sys 0m0.109s
+
+```python
+t = time.time()
+edge1 = {(n,n+1) for n in range(1, 1000)}
+path1 = edge1.copy()
+dpath = edge1.copy()
+newpath = set()
+for i in range(1010):
+    #print(i, len(dpath), len(path1))
+    for (x,y) in edge1:
+        for (y2,z) in dpath:
+            if y == y2:
+                newpath.add((x,z))
+    dpath = newpath - path1
+    path1 |= newpath
+    newpath = set()
+    if not dpath:
+        break
+print(time.time() - t)
+```
+
+    20.915092945098877
 
 # Bits and Bobbles
 
