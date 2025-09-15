@@ -1,6 +1,6 @@
 #lang racket
-(module ch1 racket
-  (provide (all-defined-out))
+;(module ch1 racket
+;  (provide (all-defined-out))
 (require rackunit)
 (struct Int (value))
 (struct Prim (op args))
@@ -53,10 +53,10 @@
         [else (error "unknown expression" e)]
     )
 )
-)
 
-(module ch2 racket
-(require ch1)
-  (is_exp (Int 7))
- )
-  
+
+;(module ch2 racket
+;(require ch1)
+;  (is_exp (Int 7))
+; )
+

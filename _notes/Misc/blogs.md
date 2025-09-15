@@ -1,3 +1,7 @@
+---
+title: Blog Roll
+layout: post
+---
 
 <https://golem.ph.utexas.edu/category/> n category cafe
 hillel wayne
