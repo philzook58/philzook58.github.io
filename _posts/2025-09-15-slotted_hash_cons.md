@@ -11,41 +11,41 @@ There is a useful concept pump going in the different ways between [union finds,
 - E-Graph - Compound Terms ---> Union Find
 - E-Graph - Equality Assertion ---> Hash Cons
 
-There are sometimes existing versions of fancy e-graphs, fancy union find, and fancy hash conses for which the other counterparts is not discussed or kept implicit. For the slotted e-graph, there was surely be a slotted union find and a slotted hash cons simplification should you choose to not use those capabilities.
+There are sometimes existing versions of fancy e-graphs, fancy union find, and fancy hash conses for which the other counterparts is not discussed or kept implicit. For the slotted e-graph, there must surely be a slotted union find and a slotted hash cons simplification should you choose to not use those capabilities.
 
 I do think I somewhat understand a story about how one might arrive at a Slotted Hash Cons as a solution to a variant of the hashing modulo alpha problem.
 
 - <https://arxiv.org/abs/2105.02856> Hashing Modulo Alpha-Equivalence
 - <https://arxiv.org/abs/2401.02948> Hashing Modulo Context-Sensitive α-Equivalence
 
-Basically, it is easy to normalize terms with variables in them by labelling them by a traversal. This is non compositional and requires resweeping, which sucks for hash consing. By lazily retaining the permutations required when something becomes a subterm (the variables order in the traversal changes), you can get something compositional that does not require sweeping the term.
+Basically, it is easy to normalize terms with alpha variables in them by labelling them by a traversal. This is non compositional and requires resweeping when you build new terms out of old ones, which sucks for hash consing. By lazily retaining the permutations required when something becomes a subterm (the variables order in the traversal changes), you can get something compositional that does not require resweeping the subterms.
 
 # Beta vs Alpha
 
 Alpha invariance is noting that the actual names of variables don't matter in some (usually subtle) sense.
 
-People have a tendency to go right for lambda and beta normalization (beta is substituting into the body of a lambda), but this is a curse. Lambda is the Ultimate Pain in the Ass (LUPITA). There is a design philosophy that suggests that baking in full beta reduction into some automated reasoning systems is too much to ask. The canonical thing I have in mind is [higher order unification](https://en.wikipedia.org/wiki/Unification_(computer_science)#Higher-order_unification), for which the full beta normalizing higher order unification is undecidable (although not that bad in practice so I dunno).
+People have a tendency to go right for lambda and [beta normalization](https://en.wikipedia.org/wiki/Lambda_calculus#%CE%B2-reduction) (beta is substituting into the body of a lambda), but this is a curse. Lambda is the Ultimate Pain in the Ass (LUPITA). There is a design philosophy that suggests that baking in full beta reduction into some automated reasoning systems is too much to ask. The canonical thing I have in mind is [higher order unification](https://en.wikipedia.org/wiki/Unification_(computer_science)#Higher-order_unification), for which the full beta normalizing higher order unification is undecidable (although not that bad in practice so I dunno).
 
 Two restricted variations of higher order unification that are decidable and in fact fast are:
 
-- Miller Beta0 Unification
+- Miller/Beta0/"higher order pattern" Unification
 - Nominal Unification
 
 These restrictions more or less deal with a notion of unification modulo alpha equivalence.
 
 There is also something to note that a distinction can be made between "scoped" alpha invariance (like lambda terms mod alpha) and "unscoped" alpha invariance (like resolution clauses or einstein notation).
 
-If you introduce an ordered binder for your alpha invariant variables canonizing these terms is easy by just examining the binding site. Just label the variables according to the order they show up in the binder. `canon(a [x,y,z]. f(x,y,z)) =  a [v0,v1,v2]. f(v0,v1,v2) = canon(a [p,q,r]. f(p,q,r))`
+If you introduce an ordered binder for your alpha invariant variables, canonizing these terms is easy by examining the binding site. Just label the variables according to the order they show up in the binder. `canon(a [x,y,z]. f(x,y,z)) =  a [v0,v1,v2]. f(v0,v1,v2) = canon(a [p,q,r]. f(p,q,r))`
 
 Another way perhaps of distinguishing these two concepts is to consider ordered multi-arity binders  `a [x,y,z]. f(x,y,z)` vs a set-like multi-arity binder. `a {x,y,z}. f(x,y,z)`. The set-like character makes it a priori hard to figure out how to number your variables and you need to traverse into the term to tie break them, since the variables can have no structure in and of themselves without breaking alpha invariance. A "binderless" alpha invariant term could be seen as a implicit set-like binding at the top of the term. `f(x,y,z) ~> a {x,y,z}. f(x,y,z)`  
 
-I would claim that free variables as they show up in the locally nameless technique are binderless / set-bound because you kind of want a set like implicit variable environment.
+I would claim that free variables as they show up in the locally nameless technique are binderless / set-bound because you kind of want a set like implicit variable environment. Likewise as they show up in einstein notation, resolution clauses, and prolog terms.
 
 # Normalizing Alpha Terms
 
 <https://www.philipzucker.com/hashing-modulo/> One method to hash something modulo a theory is to have a method for building a structurally canonical form and then hash that using regular structural hashing. For example, hashing a set of integers as represented by non canonical AVL trees or red-black trees (many AVL trees represent can represent the same underlying set) can be achieved by turning the set into a deduplicated sorted list or a trie. This is not the only possible method.
 
-In prolog and automated reasoning, there are mechanisms for storing terms with variables such that "variants" <https://www.swi-prolog.org/pldoc/man?section=tabling-subsumptive> <https://www.swi-prolog.org/pldoc/man?predicate=%3D@%3D/2>
+In prolog and automated reasoning, there are mechanisms for storing terms with variables such that "variants" are deduplicated or seen as equal <https://www.swi-prolog.org/pldoc/man?section=tabling-subsumptive> <https://www.swi-prolog.org/pldoc/man?predicate=%3D@%3D/2>
 
 It is actually easy to find an alpha canonical form. Just pick any deterministic method to traverse the tree and number variables as you find them. A preorder traversal works. `f(v0, g(v1, v0))`. This is what the prolog predicate `numbervars` does <https://www.swi-prolog.org/pldoc/man?predicate=numbervars/3>
 
@@ -58,6 +58,8 @@ It is actually easy to find an alpha canonical form. Just pick any deterministic
 We can do it ourselves on a simple tuple based ast. It's not so complicated.
 
 User facing names (a string like `"X"` let's say) and the canonical variables ids (an int) are completely different types and should be represented by different constructors.
+
+Canonization converts a term with user names to an alpha equivalent shape term and a mapping from user names to canon ids.
 
 Here `term` is a non normalized thing that contains user names, but `shape` is a similar thing that only contains int ids. `alpha_canon` converts between the two and also returns a `rename` dictionary of evidence as to how the substitution was done. We can completely reconstruct any alpha non invariant `term` from the `cterm` which is a tuple of the renaming and the shape. The two types are isomorphic to each other.
 
@@ -139,11 +141,9 @@ We can fix this problem in the slotted style by adding an [indirection](https://
 ). In between every parent and it's subterms we can retain a permutation of ids that you'll need to recollect when you traverse down into a canonized term.
 Instead of eagerly permuting the ids, we keep a note at the term to lazily do this permutation.
 
-Canonization converts a term with user names to an alpha equivalent shape term and a mapping from user names to canon ids.
-
 You don't _really_ need to traverse into the term. You already know the order you will find the variables. It's been done. It's in the renaming map.
 
-So instead of traversing the subterms, we can just traverse the renaming maps in order. We'll find some permutation of canonical ids that would need to be applied to each argument. This is a canonical permutation applied to a canonical shape. We don't actually need to do it.
+So instead of traversing the subterms, we can just traverse the renaming maps in order. We'll find some permutation of canonical ids that would need to be applied to each argument. This is a canonical permutation applied to a canonical shape. We don't actually need to eagerly do it either. We can just note the permutation at that node of the shape to lazily apply later. In this manner, variables still have a cost, but it is proportional to the number of variables in play rather than the size of the subterms.
 
 It may be desirable to also compress this permutation representation and only store the things that need to be changed. A more memory efficient version would not note `v0 -> v0` for example
 
@@ -266,7 +266,7 @@ symmettry nodes
 
 A new kind of indrection?
 
-Bottom up ematching is also nondet if we have symmettries? If the structured eids are themselves sets is that a problem? So seid isn't renamed eid maybe it's more like renamed *symmettry group set*
+Bottom up ematching is also nondet if we have symmettries? If the structured eids are themselves sets is that a problem? So seid isn't renamed eid maybe it's more like renamed _symmettry group set_
 
 invariance of e-nodes to symmettries
 
