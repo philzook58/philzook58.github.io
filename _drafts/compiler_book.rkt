@@ -1,4 +1,8 @@
 #lang racket
+
+; https://kmicinski.com//cis531-f25/
+
+
 ;(module ch1 racket
 ;  (provide (all-defined-out))
 (require rackunit)

@@ -35,6 +35,8 @@ See Harrison <https://www.cl.cam.ac.uk/~jrh13/atp/> <https://www.cl.cam.ac.uk/~j
 
 # Core Proof Rules
 
+These are also in the documentation <https://www.philipzucker.com/knuckledragger/_autosummary/kdrag.kernel.html>
+
 ## Mega Modus
 
 SMT solvers have a model like character, answering satisfisability (model existence) or unsatisfiability (mode non existence) questions. For this reason the main judgement of knuckeldragger is written using a `|=` instead of a `|-`.
@@ -260,7 +262,7 @@ kd.kernel.induct_inductive(n, P)
 
 On the principle that Z3 exposed functionality should be rewrapped into Proof manipulating functions, there is a function `subst` <https://github.com/philzook58/knuckledragger/blob/4ecf328b8e0b31c7330ef53102d2812b96522469/src/kdrag/kernel.py#L330> which takes in equality proofs and uses `z3.substitute` in order to replace them everywhere.
 
-A fuller compliment of equational rules involving congruence, transitivity, and reflexivity are kept in a side file. They have not proven themselves to be useful enough to be promoted to the kernel.
+A fuller compliment of equational rules involving congruence, transitivity, and reflexivity are kept in a side file <https://github.com/philzook58/knuckledragger/blob/4ecf328b8e0b31c7330ef53102d2812b96522469/src/kdrag/theories/logic/axioms.py#L25> . They have not proven themselves to be useful enough to be promoted to the kernel.
 
 ```
   |= ta1 = ta2   |= tb1 = tb2    ...
