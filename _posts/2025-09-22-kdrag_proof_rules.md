@@ -5,19 +5,19 @@ date: 2025-09-22
 
 Knuckledragger <https://github.com/philzook58/knuckledragger> is my system for interactive theorem proving in python. The core system is not python specific and has some interesting theoretical aspects.
 
-It is designed to be as minimal a layer on top of the existing successful SMT systems.
+It is designed to be a minimal layer on top of the existing successful SMT systems to be metaprogrammed in your programming language of choice.
 
-A sequence of related SMT solves is the core of many automated software verification tools. There is a hand waving of sorts how these (mangled) calls combine into the larger property of interest. It is a natural approach if one wants a more rigorous solution to this problem to work within the language of SMT if possible rather than require
+A sequence of related SMT solves is the core of many automated software verification tools. There is a hand waving of sorts how these (mangled) calls combine into the larger property of interest. It is a natural if one wants a more rigorous approach to work within the language of SMT if possible rather than required a radical switch to a whole new system like Lean or Isabelle.
 
-SMT solvers themselves are interested in producing proof certificates for their internal reasoning, both for self checking and for translation into systems like Lean and Isabelle. <https://cs.stanford.edu/~preiner/publications/2023/BarbosaBCDKLNNOPRTZ-CACM23.pdf> <https://github.com/Z3Prover/z3/discussions/5981> I consider this area well attacked by the people most qualified to attack it, the SMT authors themselves. However, it is outside the solver's purview to check the reasoning _linking_ user calls.
+SMT solvers themselves are interested in producing proof certificates for their internal reasoning, both for self checking and for translation into systems like Lean and Isabelle. <https://cs.stanford.edu/~preiner/publications/2023/BarbosaBCDKLNNOPRTZ-CACM23.pdf> <https://github.com/Z3Prover/z3/discussions/5981> I consider this area well attacked by the people most qualified to attack it, the SMT authors themselves. However, it is outside the solver's purview to check the reasoning _linking_ user calls. This is where the proof rules of knuckledragger come in.
 
-There are other proof systems like F* and Dafny that deeply integrate with SMT solvers from the get go, but the design here is take the logic the SMT solver gives and work with it.
+There are other proof systems like F* and Dafny that deeply integrate with SMT solvers from the get go, but the design here is take the logic the SMT solver gives and work with it, warts,  and all. A lot of inexpressivity can be papered over by rich metaprogramming in a host language (python here, but others work). This is the opposite approach to systems that try to internalize as much as possible <https://www.reddit.com/r/ProgrammingLanguages/comments/1aigns2/discussing_isabellehol_a_proof_assistant_for/kova7l5/> . There is a lot to be said to having these richer systems, but I feel the weak logic macro approach is underexplored these days.
 
 SMT solvers can only scale so far at which point a large query may need to be broken up into multiple pieces. An SMT solver will never prove Fermat's Last Theorem given the axioms of set theory in one shot.
 
 In this respect, the proof system of Knuckledragger is a MetaSMT proof system.
 
-I'll note that basically the formulas of SMTLIB is monomorphic higher order logic, so the logic is quite well trodden.
+I'll note that basically the formulas of SMTLIB is monomorphic higher order logic, so the logic itself is quite well trodden.
 
 # LCF Architecture
 
