@@ -1,5 +1,5 @@
 ---
-title: Proving Infinitude of Primes in Knuckledragger
+title: Proving the Infinitude of Primes in Knuckledragger
 date: 2025-09-28
 ---
 
@@ -170,7 +170,7 @@ fact_ge_1
 
 &#x22A8;ForAll(n!24, fact(n!24) >= 1)
 
-I'm a little worried about this one. It went through suspiciously easily. I probably did not need strong induction.
+I'm a little worried about this one. It went through suspiciously easily.
 
 ```python
 l = kd.Lemma(smt.Implies(n > 1, kd.QExists([p], prime(p), dvd(p, n))))
