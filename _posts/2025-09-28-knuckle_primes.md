@@ -5,7 +5,7 @@ date: 2025-09-28
 
 Cody challenged me to prove that there are an infinitely many primes in Knuckledragger, saying it's the minimum thing to do to demonstrate you have a proof assistant. <https://en.wikipedia.org/wiki/Euclid%27s_theorem> It's one of the older proofs out there, appearing famously in Euclid's elements. This is number 11 in the formalizing 100 theorems list <https://www.cs.ru.nl/~freek/100/> . Maybe it'd be fun to start chasing down the other easy ones and copy them out of Isabelle or whatever
 
-By staying very close to the isabelle proof <https://isabelle.in.tum.de/dist/library/HOL/HOL-Computational_Algebra/Primes.html#Primes.bigger_prime|fact> , it took me about 3-4 hours to do this, some of which was at a groggy 11pm. I went top down through this proof to see the basic definitions and lemmas I needed on demand.
+By staying very close to the isabelle proof <https://isabelle.in.tum.de/dist/library/HOL/HOL-Computational_Algebra/Primes.html> , it took me about 3-4 hours to do this, some of which was at a groggy 11pm. I went top down through this proof to see the basic definitions and lemmas I needed on demand.
 
 # Prime
 
