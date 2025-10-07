@@ -402,6 +402,8 @@ feature improvements that occurred to me
 - Lemma is so gnarly. Needs refacotring badly
 - cases to open up If?
 - I guess I could skolemize by allowing parameters into the fresh constants?
+- left and right should keep the other case negated into context since we're classical
+- apply of a Not should do likewise
 
 ```python
 # remove skolem from kernel

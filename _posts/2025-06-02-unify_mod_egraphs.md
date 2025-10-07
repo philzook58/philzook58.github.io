@@ -1416,6 +1416,8 @@ narrow
 
 ## Functional Logic Programming
 
+<https://www.michaelhanus.de/publications/papers/PPDP25.pdf> Determinism Types for Functional Logic Programming
+
 <https://www.curry-language.org/docs/tutorial/tutorial.pdf> curry a ttutorial introduction
 
 <https://www.michaelhanus.de/papers/GanzingerFestschrift.pdf> from narrowing to curry

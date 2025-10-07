@@ -595,6 +595,8 @@ Stream fusion rules. <https://www.cs.tufts.edu/~nr/cs257/archive/duncan-coutts/s
     - hint: {lhs: x <&> pure y, rhs: x Data.Functor.$> y}
 ```
 
+<https://docs.racket-lang.org/resyntax/index.html> resyntax fort racket. There is a pile of rewrite rules somewhere. hlint like? <https://github.com/jackfirth/resyntax/tree/master/default-recommendations>
+
 # Go Compiler Rules
 
 The Go compiler has some declarative lowering rules.
