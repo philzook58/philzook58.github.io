@@ -6,15 +6,15 @@ name = "_drafts"
 precompileModules = true
 supportInterpreter = true
 
-[[require]]
-name = "smt"
-scope = "ufmg-smite"
-rev = "main"
+#[[require]]
+#name = "smt"
+#scope = "ufmg-smite"
+#rev = "main"
 
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-rev = "v4.23.0"
+rev = "v4.24.0"
 
 #[[require]]
 #name = "SSA"
