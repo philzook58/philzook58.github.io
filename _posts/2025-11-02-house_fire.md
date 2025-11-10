@@ -7,7 +7,7 @@ TLDR: I'm fine. Donate to the Red Cross <https://www.redcross.org/donate/donatio
 
 What a strange couple of weeks!
 
-Coming back from a short walk (I work from home usually) on Thursday 10/23/25 I saw a ton of fire vehicles down the road. I thought maybe it was the construction site next door but as I got closer, the depth became clearer and I sprinted ahead. The top floor of the triple decker from which I leased the first floor had a fire. The pictures look almost peaceful and idyllic but just behind me there were 3-5 fire trucks. It was loud and chaotic.
+Coming back from a short walk (I work from home usually) on Thursday 10/16/25 I saw a ton of fire vehicles down the road. I thought maybe it was the construction site next door but as I got closer, the depth became clearer and I sprinted ahead. The top floor of the triple decker from which I leased the first floor had a fire. The pictures look almost peaceful and idyllic but just behind me there were 3-5 fire trucks. It was loud and chaotic.
 
 ![](/assets/fire_2025/fire1.jpg)
 
