@@ -1,6 +1,6 @@
 ---
 title: "SAT Etudes 2: Toy DPLL"
-date: 12-01-2025
+date: 2025-12-01
 ---
 
 Another post about SAT solvers, probably heading towards SMT solvers.
@@ -212,6 +212,7 @@ idea. Try using knownbit <https://pypy.org/posts/2024/08/toy-knownbits.html> dom
 - <https://www.youtube.com/watch?v=II2RhzwYszQ&t=14916s&ab_channel=SimonsInstitute>
 - <https://github.com/arminbiere/satch>
 -
+
 <https://kmicinski.com/algorithms/sat/2012/09/22/efficient-sat-solving/>
 
 Monoid Floyd Warshall. Semiring. Category (groupoid. Partial semring).
