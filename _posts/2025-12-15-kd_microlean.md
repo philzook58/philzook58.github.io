@@ -7,14 +7,20 @@ I have wired in the capability to use lean-like expression strings in places tha
 
 Cody gave me feedback for how unreadable the python syntax (z3py syntax) for formulas is from his perspective. It's a fair point. It is a pretty laborious concrete syntax that probably has a 2x factor or more of junk python commas, etc in it. I have felt this pain, and now maybe it is time to make it a bit better.
 
-Operator overloading is one of the main sugaring mechanisms in Python. This isn't quite good enough because there isn't a natural operator for `forall`. A bigger issue is that there isn't a good operator for implies `->`. One might consider `>=` or `>>` but if you look up the precedence and associativity, it is all wrong and really the semantics of these operators does not line up correctly with the meaning of implies either. Also there is no good notation available for `forall` `lambda` and `exists`.
+Operator overloading is one of the main sugaring mechanisms in Python. It isn't quite good enough. A big basic issue IMO is that there isn't a good operator for implies `->`. One might consider `>=` or `>>` but if you look up the precedence and associativity, it is all wrong and really the semantics of these operators does not line up correctly with the meaning of implies either. Also there is no good notation available for `forall` `lambda` and `exists`. Python just isn't designed as a logic and doesn't have perfect syntax for natural logic stuff.
 
-One thing I've had in mind from the beginning of the project was to lean into using Lark <https://github.com/lark-parser/lark> parser grammars. Lark is a python LALR or earley parsing library. If you're in python, it's a reasonable choice I think for making DSLs. It is really nice to not need an extra build step to use them compared to yacc, menhir, lalrpop, or antlr. It is a regular python library. It also now supports pattern matching over the `lark.Tree` datatype, which makes for reasonably pleasant interpretation out of the parse tree (this is perhaps not the most machine efficient way to consume them though). It also support some degree of mixing together different grammars, making them extensible.
+One thing I've had in mind from the beginning of the project was use Lark <https://github.com/lark-parser/lark> parser grammars. Lark is a python LALR or earley parsing library. If you're in python, it's a reasonable choice I think for making DSLs. It is really nice to not need an extra build step to use them compared to yacc, menhir, lalrpop, or antlr. It is a regular python library. It also now supports pattern matching over the `lark.Tree` datatype, which makes for reasonably pleasant interpretation out of the parse tree (this is perhaps not the most machine efficient way to consume them though). It also support some degree of mixing together different grammars, making them extensible.
+
+Here are some examples showing the python form of an expression and using the "lean" parser. For these small examples, they aren't _that_ different, but separate declaration of variables and `smt.ForAll` is much larger than `forall`. On the other hand, now there is a whole other thing to learn and that can go wrong. If you already know lean syntax and like it, this might be nice though.
 
 ```python
 from kdrag.all import *
 
-@kd.Theorem("forall x : Real, x + 0 = x")
+x = smt.Real("x")
+# python expression
+smt.ForAll([x], x + 0 == x)
+
+@kd.Theorem("forall x : Real, x + 0 = x") # using "lean" syntax
 def real_add_zero(pf):
     # auto solves these completely. I'm just showing fix/intros for fun.
     x = pf.fix()
@@ -27,6 +33,11 @@ print(real_add_zero)
     |= ForAll(x, x + 0 == x)
 
 ```python
+
+x,y = smt.Ints("x y")
+# python analog expression
+smt.ForAll([x,y], x != 0, (y * x) / x == y)
+
 @kd.Theorem("forall (x y : Int), x != 0 -> y * x / x = y")
 def int_mul_div_cancel(pf):
     x,y = pf.fixes()
@@ -39,7 +50,7 @@ int_mul_div_cancel
 
 &#x22A8;ForAll([x, y], Implies(x != 0, (y*x)/x == y))
 
-Through filthy dirty trickery lookup up the stack, the expression is interpreted in the current python environment. When it hits a constant it doesn't know. The relevant function that implements this is in `kdrag.utils`
+Through filthy dirty trickery lookup up the stack, the expression is interpreted in the current python environment. When the lean syntax interpreter hits a constant it doesn't know, it looks it up. The relevant function that implements this is in `kdrag.utils`
 
 ```python
 def calling_globals_locals():
@@ -59,6 +70,7 @@ I've also added in support for a couple set operation unicode symbols like ⊂ �
 goto the `File > Preferences > Settings` of the plugin and add `python` to the enabled extensions.
 Reloading your window will enable access via backslash autocomplete commands.
 Then, for example \\alpha will tab autocomplete to α.
+Julia also supports this natively and I believe this plugin derives it's rules from Julia.
 
 ```python
 x,y = smt.Ints("x y")
