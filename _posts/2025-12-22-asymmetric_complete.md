@@ -24,19 +24,19 @@ Whether this battleplan is actually complete or terminating requires mathematica
 
 # How does it work
 
-The trick is you need two rewrite relations R,S rather than the single rewrite relation for equational theories.
+The trick is you need two rewrite relations `R`, `S` rather than the single rewrite relation for equational theories.
 
-Rather than orient an equation `a = b` to turn it into a rule `a -> b` or `b -> a`, you orient an inequality `a <= b` by by placing it into either `R` or `S`.
+Rather than orient an equation `a = b` to turn it into a rule `a -> b` or `b -> a`, you orient an inequality `a <= b` by by placing it into either `R` or `S` depending on whether it is increasing or decreasing.
 
 In completion, no matter how we orient, it remains true that `E = (R U R^-1)*`. In asymettric completion `LE = (R U S)*`  since facts from `LE` just get placed in `R` or `S`.
 
 For example `e17 <= e15` goes into `R` because it is reducing the identifier, whereas `e15 <= e17` would go into `S` since it is increasing the identifier.
 
-In order to prove a query `a <=? b` we do a searching reduction of `a` by `R*` and `b` by `S*`. This correspond to an intuition that you should search up from `a` at the same time you search down from `b`, but the separation of R and S removes redundancies in that search.
+In order to prove a query `a <=? b` we do a searching reduction of `a` by `R*` and `b` by `S*`. This correspond to an intuition that you should search up from `a` at the same time you search down from `b` <https://en.wikipedia.org/wiki/Bidirectional_search> , but the separation of R and S removes redundancies in that search.
 
-This does not have as good of properties as a completed rewrite system, which has normal forms. We can't greedily destructively rewrite and have to retain all the things we can reach and see if the two cones emanating from `a` and `b` intersect.
+This does not have as good of properties as a completed rewrite system, which has normal forms. We can't greedily destructively rewrite and have to retain all the things we can reach and see if the two cones emanating from `a` via `R` and `b` via `S^-1` intersect.
 
-Nevertheless, `R` and `S` because they are oriented by eid produce eids in a monotonic orderly fashion, possibly enabling fast techniques involving min-heaps, sorted lists, and sorted merges.
+Because `R` and `S` are oriented producing eids in a monotonic orderly fashion, possibly enabling fast techniques involving min-heaps, sorted lists, and sorted merges.
 
 # Code
 
@@ -129,7 +129,7 @@ uf
 
     LEUF(R={(2, 0)}, S={(0, 1)}, fresh=3)
 
-You can also do a version of this that has an explicit union find and puts things in there is you ever assert `a <= b` and `a >= b`.
+You can also do a version of this that has an explicit union find and puts things in there is you ever assert `a <= b` and `a >= b`. The union find should also be a variant that tie breaks unions by `min`. eids can be canonized as you go along.
 
 # Ground Term Asymmetric Completion
 
