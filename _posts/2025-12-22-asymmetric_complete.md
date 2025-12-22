@@ -148,6 +148,8 @@ A bunch of propositional clauses has many models. If they are horn clauses (each
 
 The Struth article takes another road to model propositional reasoning as inequality reasoning module the axioms of a lattice. I'm not sure if this is a more or less radical perspective. <https://link.springer.com/chapter/10.1007/10721975_15> An Algebra of Resolution - Georg Struth. It's very interesting that a finitely presented lattice specialization of completion gives you something like resolution akin to how specializing to finitely presented rings gives you grobner bases and Buchberger's algorithm. This really caught my eye because I've been thinking more about e-graphs modulo theories lately rather than refinement egraphs, but this shows a connection between the two topics.
 
+Ordered resolution can be seen as _set rewriting_ where matching on the left hand side does not consume it. This is in comparison to multiset rewriting, where you do consume resources. Ordered resolution completes to a datalog rule system that converts any given extensional database into the minimal model according to your chosen term ordering.
+
 - Handbook of automated reasoning chapter 2 resolution <https://lawrencecpaulson.github.io/papers/bachmair-hbar-resolution.pdf>
 - <https://rg1-teaching.mpi-inf.mpg.de/autrea-ws21/notes-3d.pdf>
 - <https://www.tcs.ifi.lmu.de/teaching/courses-ws-2024-25/automated-theorem-proving/slides07-more-resolution.pdf>
@@ -172,6 +174,8 @@ Resources on asymmetric completion:
 - <https://people.mpi-inf.mpg.de/alumni/ag2/2011/hg/index/index7.html> Look at part 2
 
 nelson Oppen for inequalities. if we have an inequality union find, can we glue theories together with a common `<=` in addition to a a common `<`? Maybe.
+
+I should write about dynamic strata for datalog, which is related to the above discussion about picking a term ordering to resolve negation problems.
 
 For refinement e-matching, you probably need to enumerate everything above or below an eid, so the faster find_le maybe isn't as useful?
 
