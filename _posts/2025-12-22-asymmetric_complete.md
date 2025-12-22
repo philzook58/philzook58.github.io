@@ -153,6 +153,11 @@ The Struth article takes another road to model propositional reasoning as inequa
 - <https://www.tcs.ifi.lmu.de/teaching/courses-ws-2024-25/automated-theorem-proving/slides07-more-resolution.pdf>
 - <https://www.philipzucker.com/superpose_datalog/> Superposition as a Super Datalog
 
+Also relatedly, roughly speaking the Prolog Technology Theorem Prover  <https://link.springer.com/article/10.1007/BF00297245> and the MESON procedure (see Harrison Handbook of practical logic and automated reasoning 3.15 model elimination) are roughly:
+
+1. Turn clauses into all horn rule orientations
+2. Run a prolog which pays attention to if it is in a loop by looking at it's stack.
+
 # Bits and Bobbbles
 
 This post is a relative of this one <https://www.philipzucker.com/le_find/>
