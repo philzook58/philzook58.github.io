@@ -158,6 +158,8 @@ Also relatedly, roughly speaking the Prolog Technology Theorem Prover  <https://
 1. Turn clauses into all horn rule orientations
 2. Run a prolog which pays attention to if it is in a loop by looking at it's stack.
 
+This is also a reasonable search procedure for equational stuff.
+
 # Bits and Bobbbles
 
 This post is a relative of this one <https://www.philipzucker.com/le_find/>
