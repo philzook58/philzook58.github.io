@@ -99,6 +99,7 @@ class LEUF():
     def rebuild(self):
         # form all SR critical pairs and reduce them
         # Or do the rebuilding immiediately in assert
+        # Repeatedly rebuild until you learn nothing new
         pairs = {(x,z) for (x,y) in self.S for (y1,z) in self.R if y == y1}
         for (x,z) in pairs:
             if not self.find_le(x,z):
@@ -127,6 +128,8 @@ uf
 ```
 
     LEUF(R={(2, 0)}, S={(0, 1)}, fresh=3)
+
+You can also do a version of this that has an explicit union find and puts things in there is you ever assert `a <= b` and `a >= b`.
 
 # Ground Term Asymmetric Completion
 
@@ -162,6 +165,8 @@ Resources on asymmetric completion:
 - <https://people.mpi-inf.mpg.de/alumni/ag2/2011/hg/index/index7.html> Look at part 2
 
 nelson Oppen for inequalities. if we have an inequality union find, can we glue theories together with a common `<=` in addition to a a common `<`? Maybe.
+
+For refinement e-matching, you probably need to enumerate everything above or below an eid, so the faster find_le maybe isn't as useful?
 
 Assymmetric completion looks to me like a good engine for subtyping.
 
@@ -225,7 +230,10 @@ Nick Benton and Nicolas Tabareau. Compiling Functional Types to Relational Speci
 
 <https://maude.cs.illinois.edu/w/images/0/0f/BMgrt_2003.pdf>  Generalized Rewrite Theories -Roberto Bruni12 and Jos´e Mesegue . Maude. Kind of hartd to read. This might be getting at some of the same stuff. Yes.  E and R.
 
-<https://www.youtube.com/watch?v=3Dh-EG6JfyU> Generalized Rewriting | Jovan Gerbscheid  gcongr tactic 2023 heather macbeth Lean  <https://icetcs.github.io/frocos-itp-tableaux25/slides/itp/lean4-gerbscheid.pdf>
+<https://www.youtube.com/watch?v=3Dh-EG6JfyU> Generalized Rewriting
+Jovan Gerbscheid  gcongr tactic 2023 heather macbeth Lean  <https://icetcs.github.io/frocos-itp-tableaux25/slides/itp/lean4-gerbscheid.pdf>
+
+Some suggested relations to do generalized rewriting over:
 
 ```
 ≤ <
