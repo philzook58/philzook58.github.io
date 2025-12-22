@@ -368,6 +368,51 @@ Y -> X    . Kind of expressing containment in quoitent set. It is possible to re
 
 <https://en.wikipedia.org/wiki/Refinement_calculus>
 
+# Lattice word problems
+
+<https://link.springer.com/chapter/10.1007/10721975_15> An Algebra of Resolution .
+<https://opus.bibliothek.uni-augsburg.de/opus4/frontdoor/deliver/index/docId/224/file/TB_2003_12.pdf> Deriving tableau-based solutions to lattice word problems Georg Struth
+
+Horn clauses ~ lattice equational
+
+uniform word problem
+
+<https://www.cs.upc.edu/~erodri/webpage/papers/lpar08max.pdf> The Max-Atom Problem and its Relevance . difference logic extended with a max operation
+max(x,y) + k <= z
+
+<https://sozeau.gitlabpages.inria.fr/www/research/publications/Bounded_Cumulative_Universe_Polymorphism_with_Algebraic_Universes-AIMXIX-241125.pdf> - subtyping at the universe level.
+
+<https://www.sciencedirect.com/science/article/pii/S0304397522000317?via%3Dihub> Loop-checking and the uniform word problem for join-semilattices with an inflationary endomorphism. "successor" and join function. All terms of of the form join(x + k, ...) if you normalize by flattening all joins and pushing all succ as deep as possible. succ(join(x,y)) = join(succ(x), succ(y))
+
+s = t becomes kind of
+
+"univform word problem for semilattice"
+<https://doc.sagemath.org/html/en/reference/combinat/sage/combinat/posets/lattices.html>
+alan day ddoubling construction
+
+baked in lattices. That is kind of compelling yea? Like symbolic lattice values you learn about. merge = join.
+
+<https://arxiv.org/abs/1311.2973> Locality and applications to subsumption testing and interpolation in EL and some of its extensions. Viorica Sofronie-Stokkermans Description logics
+
+<https://groups.csail.mit.edu/tds/papers/Kanellakis/RTA85.pdf>  Two applications of equational theories to database theory
+  Functional depedency problems are equal to uniform word problem for lattices
+
+Lorenzen is often quoted
+
+R.S. Freese, Finitely presented lattices: canonical forms and the covering relation.  
+<https://math.hawaii.edu/~ralph/>
+<https://math.hawaii.edu/~ralph/books.html> Free lattices book
+<https://math.hawaii.edu/~ralph/Classes/649M/FreeLatChap.pdf>
+<https://www.uacalc.org/algorithms.html> universal algerba calculator
+<https://github.com/jipsen/Algebras-and-Logics/blob/main/files/index.html.md>
+<https://math.chapman.edu/~jipsen/mathstructures/lattices/> whitman's algorithm
+
+<https://spot.colorado.edu/~kearnes/conf.html> general algerba conferences
+
+<https://www.math.uwaterloo.ca/~snburris/htdocs/MYWORKS/PAPERS/uwp.pdf> Polynomial Time Uniform Word Problems - STANLEY BURRIS
+
+<https://www.cs.ox.ac.uk/people/daniel.james/lattice.html> A reflection-based proof tactic for lattices in Coq
+
 # Algebra of Resolution
 
 An algebra of resolution by struth 2000. That this seems only available in the proceedings compendium stinks.
@@ -626,6 +671,7 @@ I don't know
 Dustin suggests
  link-cut tree <https://en.wikipedia.org/wiki/Link/cut_tree>
  euler tour
+as useful to refinement egraphs, but I don't know how
 
 What about floyd warshall? but floyd wasrahjll is for graphs.
 x - y <= 5 is proof relevant inequality sure.
