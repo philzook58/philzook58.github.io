@@ -34,14 +34,27 @@ x,y,z = z3.Ints("x y z")
 # Uses
 
 - Theorem proving
-- CF blog post
-- <https://pypy.org/posts/2024/07/finding-simple-rewrite-rules-jit-z3.html>
+- Symbolic Execution - show asmc
+- Alive translation validation
+- Synthesis
+  - Ruler
+  - CF blog post <https://pypy.org/posts/2024/07/finding-simple-rewrite-rules-jit-z3.html>
+- Package Management
+- Denis yurichev <https://smt.st/>
 
 ---
 
 # Syntax and Semantics
 
 ---
+
+# What do they give you
+
+- SAT
+  - Models - CounterExamples, Holes, Parameters, Solutions
+- UNSAT
+  - Unsat cores
+  - Proofs
 
 # Minimal Models
 
