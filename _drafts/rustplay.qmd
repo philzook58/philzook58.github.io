@@ -1,0 +1,18 @@
+---
+jupyter: rust
+---
+
+
+```{rust}
+println!("hello world")
+```
+
+```{python}
+%%file /tmp/foo
+Hello world
+```
+
+
+```{python}
+! cat /tmp/foo
+```
