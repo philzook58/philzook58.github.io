@@ -452,7 +452,7 @@ def find_subterms(t : ClosedTerm, s : ClosedTerm) -> list[Pos]:
 
 This is a pretty weak notion of subterm. There is a more expressive thing we can do
 
-## Miller / Nominal / Slotted / AC Binder
+## Miller / Nominal / Slotted / AC Alpha
 
 Another thing we can do though instead of requiring terms be closed is to see if there is some permutative renaming of the free variables that could make the terms equal.
 
