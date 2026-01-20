@@ -603,7 +603,7 @@ def free_vars(t : OpenTerm) -> set[FVar]:
                 res.add(t)
             case BVar(_):
                 continue
-            case App(f, args):
+            case App(f, args): 
                 todo.extend(args)
             case Bind(body):
                 todo.append(body)
@@ -630,6 +630,11 @@ I want to do generalized ground completion. I don't feel like I have nailed what
 I also need notions of term ordering.
 <https://courses.grainger.illinois.edu/cs576/sp2017/readings/18-mar-9/rubio-ac-rpo-long.pdf> AC-RPO
 <https://arxiv.org/abs/1403.0406> AC-KBO
+
+<https://homepages.inf.ed.ac.uk/jcheney/publications/cheney05unif.pdf> Relating Nominal and Higher-Order Pattern
+Unification
+
+<https://www.philipzucker.com/slotted_hash_cons/>
 
 Some things can't be ordered. Need unfailing ground completion (A contradictory concept until you start considering term generalizations). These might correspond to self symetries in slotted (?).
 
