@@ -47,18 +47,21 @@
   {% assign bib_type = page.bibtex_type | default: "online" %}
   <script>
     (function () {
-      const bibMeta = {{ {
-        type: bib_type,
-        key: bib_key,
-        title: page.title,
-        author: "Philip Zucker",
-        year: bib_year,
-        month: bib_month,
-        day: bib_day,
-        url: page.url | absolute_url,
-          note: bib_note
-    } | jsonify }  //
-  };
+      const bibMeta = { //
+        {//
+        {
+          type: bib_type,
+            key: bib_key,
+              title: page.title,
+                author: "Philip Zucker",
+                  year: bib_year,
+                    month: bib_month,
+                      day: bib_day,
+                        url: page.url | absolute_url,
+                          note: bib_note
+        } | jsonify
+      }  //
+    };
 
     const normalize = function (value) {
       if (value === null || value === undefined) return "";
