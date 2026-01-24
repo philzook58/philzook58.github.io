@@ -57,7 +57,8 @@
         day: bib_day,
         url: page.url | absolute_url,
           note: bib_note
-    } | jsonify }};
+    } | jsonify }  //
+  };
 
     const normalize = function (value) {
       if (value === null || value === undefined) return "";
