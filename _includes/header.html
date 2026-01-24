@@ -5,7 +5,7 @@
     {%- assign page_paths = site.header_pages | default: default_paths -%}
     {%- assign titles_size = site.pages | map: 'title' | join: '' | size -%}
 
-    <a class="site-title" style="color:#ffffff;" rel="author" href="{{ "/" | relative_url }}">{{ site.title | escape
+    <a class="site-title" style="color:#ffffff;" rel="author" href="{{ " /" | relative_url }}">{{ site.title | escape
       }}</a>
 
     {%- if titles_size > 0 -%}
@@ -36,117 +36,118 @@
     {%- endif -%}
   </div>
   {% if page.layout == "post" %}
-    {% assign fallback_author = page.author | default: site.author.name | default: site.author | default: site.github_username | default: site.twitter_username | default: site.title %}
-    {% assign bib_key_source = page.bibtex_key | default: page.slug | default: page.url %}
-    {% assign bib_key = bib_key_source | slugify %}
-    {% assign bib_year = page.date | date: "%Y" %}
-    {% assign bib_month = page.date | date: "%m" %}
-    {% assign bib_day = page.date | date: "%d" %}
-    {% assign bib_note = page.bibtex_note | default: page.description | default: site.tagline | default: site.title %}
-    {% assign bib_type = page.bibtex_type | default: "online" %}
-    <script>
-      (function() {
-        const bibMeta = {{ {
-          type: bib_type,
-          key: bib_key,
-          title: page.title,
-          author: "#{fallback_author}",
-          year: bib_year,
-          month: bib_month,
-          day: bib_day,
-          url: page.url | absolute_url,
+  {% assign fallback_author = page.author | default: site.author.name | default: site.author | default:
+  site.github_username | default: site.twitter_username | default: site.title %}
+  {% assign bib_key_source = page.bibtex_key | default: page.slug | default: page.url %}
+  {% assign bib_key = bib_key_source | slugify %}
+  {% assign bib_year = page.date | date: "%Y" %}
+  {% assign bib_month = page.date | date: "%m" %}
+  {% assign bib_day = page.date | date: "%d" %}
+  {% assign bib_note = page.bibtex_note | default: page.description | default: site.tagline | default: site.title %}
+  {% assign bib_type = page.bibtex_type | default: "online" %}
+  <script>
+    (function () {
+      const bibMeta = {{ {
+        type: bib_type,
+        key: bib_key,
+        title: page.title,
+        author: "Philip Zucker",
+        year: bib_year,
+        month: bib_month,
+        day: bib_day,
+        url: page.url | absolute_url,
           note: bib_note
-        } | jsonify }};
+    } | jsonify }};
 
-        const normalize = function(value) {
-          if (value === null || value === undefined) return "";
-          return String(value).replace(/\s+/g, " ").replace(/([{}\\])/g, "\\$1").trim();
-        };
-        const buildBibtex = function() {
-          const type = bibMeta.type || "online";
-          const key = bibMeta.key || "post";
-          const fields = [];
-          const addField = function(name, value) {
-            const normalized = normalize(value);
-            if (!normalized) return;
-            fields.push("  " + name + " = {" + normalized + "}");
-          };
-          addField("title", bibMeta.title);
-          addField("author", bibMeta.author);
-          addField("year", bibMeta.year);
-          if (bibMeta.month && bibMeta.month !== "00") addField("month", bibMeta.month);
-          if (bibMeta.day && bibMeta.day !== "00") addField("day", bibMeta.day);
-          addField("url", bibMeta.url);
-          addField("note", bibMeta.note);
-          if (!fields.length) return "";
-          return "@" + type + "{" + key + ",\n" + fields.join(",\n") + "\n}";
-        };
-        const copyText = function(text) {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            return navigator.clipboard.writeText(text);
-          }
-          return new Promise(function(resolve, reject) {
-            const textarea = document.createElement("textarea");
-            textarea.value = text;
-            textarea.setAttribute("readonly", "");
-            textarea.style.position = "absolute";
-            textarea.style.left = "-9999px";
-            document.body.appendChild(textarea);
-            textarea.select();
-            textarea.setSelectionRange(0, text.length);
-            const success = document.execCommand("copy");
-            document.body.removeChild(textarea);
-            success ? resolve() : reject();
-          });
-        };
-        const setStatus = (function() {
-          let timer;
-          return function(message, isError) {
-            const statusEl = document.querySelector(".cite-status");
-            const button = document.querySelector(".cite-button");
-            if (!statusEl || !button) return;
-            if (timer) clearTimeout(timer);
-            statusEl.textContent = message || "";
-            statusEl.dataset.error = isError ? "true" : "false";
-            button.classList.toggle("copied", !!message && !isError);
-            if (message) {
-              timer = setTimeout(function() {
-                statusEl.textContent = "";
-                statusEl.dataset.error = "false";
-                button.classList.remove("copied");
-              }, 2200);
-            }
-          };
-        })();
+    const normalize = function (value) {
+      if (value === null || value === undefined) return "";
+      return String(value).replace(/\s+/g, " ").replace(/([{}\\])/g, "\\$1").trim();
+    };
+    const buildBibtex = function () {
+      const type = bibMeta.type || "online";
+      const key = bibMeta.key || "post";
+      const fields = [];
+      const addField = function (name, value) {
+        const normalized = normalize(value);
+        if (!normalized) return;
+        fields.push("  " + name + " = {" + normalized + "}");
+      };
+      addField("title", bibMeta.title);
+      addField("author", bibMeta.author);
+      addField("year", bibMeta.year);
+      if (bibMeta.month && bibMeta.month !== "00") addField("month", bibMeta.month);
+      if (bibMeta.day && bibMeta.day !== "00") addField("day", bibMeta.day);
+      addField("url", bibMeta.url);
+      addField("note", bibMeta.note);
+      if (!fields.length) return "";
+      return "@" + type + "{" + key + ",\n" + fields.join(",\n") + "\n}";
+    };
+    const copyText = function (text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+      return new Promise(function (resolve, reject) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "absolute";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        textarea.setSelectionRange(0, text.length);
+        const success = document.execCommand("copy");
+        document.body.removeChild(textarea);
+        success ? resolve() : reject();
+      });
+    };
+    const setStatus = (function () {
+      let timer;
+      return function (message, isError) {
+        const statusEl = document.querySelector(".cite-status");
+        const button = document.querySelector(".cite-button");
+        if (!statusEl || !button) return;
+        if (timer) clearTimeout(timer);
+        statusEl.textContent = message || "";
+        statusEl.dataset.error = isError ? "true" : "false";
+        button.classList.toggle("copied", !!message && !isError);
+        if (message) {
+          timer = setTimeout(function () {
+            statusEl.textContent = "";
+            statusEl.dataset.error = "false";
+            button.classList.remove("copied");
+          }, 2200);
+        }
+      };
+    })();
 
-        document.addEventListener("DOMContentLoaded", function() {
-          const meta = document.querySelector(".post-header .post-meta");
-          if (!meta) return;
-          const button = document.createElement("button");
-          button.setAttribute("type", "button");
-          button.className = "cite-button";
-          button.textContent = "cite";
-          const status = document.createElement("span");
-          status.className = "cite-status";
-          status.setAttribute("aria-live", "polite");
-          status.dataset.error = "false";
-          meta.appendChild(button);
-          meta.appendChild(status);
+    document.addEventListener("DOMContentLoaded", function () {
+      const meta = document.querySelector(".post-header .post-meta");
+      if (!meta) return;
+      const button = document.createElement("button");
+      button.setAttribute("type", "button");
+      button.className = "cite-button";
+      button.textContent = "cite";
+      const status = document.createElement("span");
+      status.className = "cite-status";
+      status.setAttribute("aria-live", "polite");
+      status.dataset.error = "false";
+      meta.appendChild(button);
+      meta.appendChild(status);
 
-          button.addEventListener("click", function() {
-            const bibtex = buildBibtex();
-            if (!bibtex) {
-              setStatus("missing metadata", true);
-              return;
-            }
-            copyText(bibtex).then(function() {
-              setStatus("BibTeX copied");
-            }, function() {
-              setStatus("copy failed", true);
-            });
-          });
+      button.addEventListener("click", function () {
+        const bibtex = buildBibtex();
+        if (!bibtex) {
+          setStatus("missing metadata", true);
+          return;
+        }
+        copyText(bibtex).then(function () {
+          setStatus("BibTeX copied");
+        }, function () {
+          setStatus("copy failed", true);
         });
-      })();
-    </script>
+      });
+    });
+      }) ();
+  </script>
   {% endif %}
 </header>
