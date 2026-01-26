@@ -3,7 +3,7 @@ title: "Term Ordering Etudes: Ground Lexicographic Path Ordering"
 date: 2026-01-26
 ---
 
-Term orderings are a concept that is both obvious and bizarre.
+[Term orderings](https://en.wikipedia.org/wiki/Rewrite_order) are a concept that is both obvious and bizarre.
 
 On the one hand, of course when we are rewriting terms to make better expressions, we are trying to make "simpler" or "better" ones. Or we are seeking normal forms by a process that has to stop because there is a lower bound on how simple a term can get. When we tease this concept out, yea, there is some kind of [well founded](https://en.wikipedia.org/wiki/Well-founded_relation) ordering on terms, an objective function perhaps, we are trying to maximize or minimize. Well founded is roughly (exactly?) a mathematical definition of what it means to be terminating.
 
@@ -528,6 +528,8 @@ test_cong()
 ```
 
 # Bits and Bobbles
+
+I wrote about LPO previously here <https://www.philipzucker.com/term_ordering/>
 
 Look at the chapter 4.5 in harrison's automated reasoning for lexicographic path ordering.
 
