@@ -52,6 +52,7 @@ class App():
         elif cond2:
             return True
         else:
+            # note we do not need chkargs because cond2 already takes care of it
             if (t.f, len(t.args)) > (s.f, len(s.args)): # different arity f are different symbols really. f/2 != f/3
                 return False
             elif (t.f, len(t.args)) < (s.f, len(s.args)):
@@ -98,6 +99,7 @@ def ground_lpo(t : App, s : App):
     elif cond2:
         return Order.LT
     else:
+    # note we do not need chkargs because cond2 already takes care of it
         if (t.f, len(t.args)) > (s.f, len(s.args)):
             return Order.GT
         elif (t.f, len(t.args)) < (s.f, len(s.args)):
