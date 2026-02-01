@@ -16,7 +16,7 @@ I think my blog is representative of my interests in functional programming, com
 
 An atom feed of the blog is here <https://www.philipzucker.com/feed.xml>
 
-I added a bibtex cite link to my posts. If you read it and it gave you new ideas or helped you understand something, why not cite it? Also someday I may need a better publication record for something I want, so you're doing me a solid.
+I added a bibtex cite link to my posts. If you read it and it gave you new ideas or helped you understand something, why not cite it? It gives me warm fuzzies. Also, someday I may need a better citation record for something I want, so you're doing me a solid.
 
 Some of my friend's blogs:
 
