@@ -26,5 +26,43 @@ MathJax.Hub.Config({
 };
 </script>
 
+<script>
+  (function () {
+  function cleanTitle(t) {
+  return t.split(" | ")[0];
+  }
+  function accessedNote() {
+  const d = new Date();
+  return `[Online; accessed ${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}]`;
+}
+  const h1 = document.querySelector("time"); // put cite after date
+  if (!h1 || document.getElementById("cite-link")) return;
+
+  const a = document.createElement("a");
+  a.id = "cite-link";
+  a.href = "#";
+  a.textContent = "cite";
+  a.style.fontSize = "0.85em";
+
+  const key = "zucker" + new Date().getFullYear() +
+            document.title.toLowerCase().replace(/[^a-z]+/g,"").slice(0,12);
+  const bibtex = `@misc{${key},
+  title = "${cleanTitle(document.title)}",
+  author = "Philip Zucker",
+  url   = "${location.href}"
+  note = "${accessedNote()}"
+}`;
+
+  a.onclick = e => {
+    e.preventDefault();
+    navigator.clipboard.writeText(bibtex);
+    a.textContent = "copied!";
+    setTimeout(() => a.textContent = "cite", 1000);
+  };
+
+  h1.after(a);
+})();
+</script>
+
 {% seo %}
 </head>
