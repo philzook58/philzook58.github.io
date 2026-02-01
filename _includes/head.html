@@ -47,9 +47,9 @@ MathJax.Hub.Config({
   const key = "zucker" + new Date().getFullYear() +
             document.title.toLowerCase().replace(/[^a-z]+/g,"").slice(0,12);
   const bibtex = `@misc{${key},
-  title = "${cleanTitle(document.title)}",
   author = "Philip Zucker",
-  url   = "${location.href}"
+  title = "${cleanTitle(document.title)}",
+  howpublished = "\\url{${location.href}}",
   note = "${accessedNote()}"
 }`;
 
