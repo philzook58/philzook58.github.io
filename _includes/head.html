@@ -27,7 +27,7 @@ MathJax.Hub.Config({
 </script>
 
 <script defer>
-  (function () {
+  setTimeout(function () {
   function cleanTitle(t) {
   return t.split(" | ")[0];
   }
@@ -61,7 +61,7 @@ MathJax.Hub.Config({
   };
 
   h1.after(a);
-})();
+}, 50);
 </script>
 
 {% seo %}
