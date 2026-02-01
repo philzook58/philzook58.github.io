@@ -16,11 +16,19 @@ I think my blog is representative of my interests in functional programming, com
 
 An atom feed of the blog is here <https://www.philipzucker.com/feed.xml>
 
+I added a bibtex cite link to my posts. If you read it and it gave you new ideas or helped you understand something, why not cite it? Also someday I may need a better publication record for something I want, so you're doing me a solid.
+
 Some of my friend's blogs:
 
 * [Ben’s Blog](http://blog.benwiener.com/)
 * [Declan’s Blog](https://declanoller.github.io/)
-* [David’s Laser Writeshow](https://davidtersegno.wordpress.com/)
+* [David’s Laser Writeshow](https://davidtersegno.wordpress.com/) (down? )
+* [Cody](https://www.kleene.church/)
 * [Will’s Blog](https://willmaulbetsch.home.blog/)
+* [Max B](https://bernsteinbear.com/)
+* [Max W](https://www.mwillsey.com/blog/)
+* [CF](https://cfbolz.de/)
+* [Caleb](https://helbl.ing/)
+* [Graham](https://grahamlk.me/)
 
 Also: Not a Bird
