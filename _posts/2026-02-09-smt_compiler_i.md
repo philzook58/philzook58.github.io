@@ -3,7 +3,7 @@ title: SMTLIB as a Compiler IR I
 date : 2026-02-09
 ---
 
-I like SMT solvers. Compilers are cool. What kind of babies can they make?
+I like [SMT](https://en.wikipedia.org/wiki/Satisfiability_modulo_theories) solvers. Compilers are cool. What kind of babies can they make?
 
 A design trick that has lead me to interesting places is to abuse the z3py AST more thoroughly than any sane person would do. Z3 already has very reasonable AST for describiing logic, bitvector operations, functions, reals, and integers. But, if you do it right, in addition to just an AST, you also get semantics and a magic solver.
 
@@ -732,7 +732,7 @@ class Function:
         return phis
 
     def __repr__(self) -> str:
-        res = [f"fn {self.entry} {{"]
+        res = [f"fn {self.entry}" + "{"]
         for label, blk in self.blocks.items():
             res.append(f"@{label}:")
             res.append(str(blk))
