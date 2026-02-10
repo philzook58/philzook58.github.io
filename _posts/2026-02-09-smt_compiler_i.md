@@ -5,7 +5,7 @@ date : 2026-02-09
 
 I like [SMT](https://en.wikipedia.org/wiki/Satisfiability_modulo_theories) solvers. Compilers are cool. What kind of babies can they make?
 
-A design trick that has lead me to interesting places is to abuse the z3py AST more thoroughly than any sane person would do. Z3 already has very reasonable AST for describiing logic, bitvector operations, functions, reals, and integers. But, if you do it right, in addition to just an AST, you also get semantics and a magic solver.
+A design trick that has lead me to interesting places is to abuse the z3py AST more thoroughly than any sane person would do. Z3 already has very reasonable AST for describing logic, bitvector operations, functions, reals, and integers. But, if you do it right, in addition to just an AST, you also get semantics and a magic solver.
 
 Compilers are nice because they are a pretty well specified problem that is actually useful. Reasoning principles and technology can be applied to make code faster. Bad reasoning can make output code buggy even when the input wasn't.
 
@@ -91,7 +91,7 @@ myfun()
 
 # Turning it Into SMT
 
-One of the important features of my system [knuckledragger](https://www.kdrag.com) is that it supports [definitions](https://github.com/philzook58/knuckledragger/blob/6e4f4e6a7a563f0c3f809278a650a78b784c5250/src/kdrag/kernel.py#L264). These definitions are registered and unfolded via the z3 function `substitute_funs`
+One of the important features of my system [knuckledragger](https://www.kdrag.com) is that it supports [definitions](https://github.com/philzook58/knuckledragger/blob/6e4f4e6a7a563f0c3f809278a650a78b784c5250/src/kdrag/kernel.py#L264). These definitions are registered in the kernel and unfolded via the z3 function `substitute_funs`
 
 We can replicate exactly this structure above and now we have a CFG-like thing in our logic thing. Neat!
 
@@ -146,6 +146,13 @@ Well, this is to some degree of matter of printing. If you use the right sigils 
 Compiler IRs typically have a sequence of simple operations. Operations are simple flat things things like  `add %x, %y`  but not compound things like `(add (add (add x y) z) (add x y))`.
 
 SMTLIB is a pure logic. There isn't really a notion of sequencing or assignment as one might have in an imperative language or compiler IR. However, we can expand our expressions into such a sequence basically by [traversing them in order and storing the subexpressions in a list](https://github.com/philzook58/knuckledragger/blob/91cceb88a5cbbc9937fa7f0d28e33a93a42e1e6e/src/kdrag/contrib/ir/__init__.py#L54).
+
+```python
+@dataclass
+class Block:
+    sig: list[smt.SortRef] # block arguments sorts
+    insns: list[smt.ExprRef] # body expression splayed out into a list of the body subexpressions
+```
 
 It is common (to my understanding) that the "names" in the textual form of SSA rarely actually appear in the data structure of SSA. The variable is represented often by a pointer to the operation that produced it. They are basically the same thing or can be conflated/coerced to be the same thing.
 
