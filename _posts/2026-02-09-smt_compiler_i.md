@@ -225,7 +225,7 @@ Max has some great posts on IRs and SSA
 
 Michel was pointing out to me that in the SSA is FP paper it mentions that the dominator structure can be reflected in nested let bindings. That's pretty cool. I don't really have let is knuckledragger sadly / z3py doesn't offer it. I kind of wish it did.
 
-Modelling a CFG as a constrained horn clause is an alternative. It is the logic programming version of SSA is functional programming. It's more predicaty than equational.
+Modelling a CFG as a constrained horn clause is an alternative. It is the logic programming version of SSA is functional programming. It's more predicaty than equational. I somewhat suspect it is a more flexible approach
 <https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/nbjorner-yurifest.pdf>
 <https://www.philipzucker.com/bap-chc/>
 
