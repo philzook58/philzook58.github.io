@@ -160,11 +160,7 @@ In my [printer](https://github.com/philzook58/knuckledragger/blob/91cceb88a5cbbc
 
 ```python
 import kdrag.contrib.ir as ir
-
-blk = ir.Block([Z,Z,Z], kd.kernel.defns[loop]._subst_fun_body)
 ir.Block.of_defined_fun(loop)
-
-
 ```
 
     ^(Int,Int,Int):
