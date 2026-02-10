@@ -206,7 +206,7 @@ fn myfun {
 
 Next time, maybe I'll talk about taking textual QBE and converting it to SMT by
 
-1. Turning phi nodes into block args
+1. Turning phi nodes into block args. Kind of push them up to the blocks they came from.
 2. explicitizing memory
 3. CSE
 
@@ -222,9 +222,9 @@ Modelling a CFG as a constrained horn clause is an alternative. It is the logic 
 
 SMTLIb dialect of MLIR <https://mlir.llvm.org/docs/Dialects/SMT/> <https://github.com/opencompl/xdsl-smt>
 
-MimIR <https://www.arxiv.org/pdf/2411.07443>
+MimIR <https://www.arxiv.org/pdf/2411.07443> . Really neat. Trying to make a new MLIR like thing based around the SSA is functional programming style
 
-Whitequark and wand projunnamed
+Whitequark and wanda projunnamed <https://mastodon.social/@whitequark/113970437064821618> <https://github.com/prjunnamed/prjunnamed>
 
 One curious thing that I'm not sure what to do with is that in a more typical IR, the tail calls would be part of the `if` operation at the end. Instead I have them early which looks weird from an imperative perspective. But I tried changing my `Block` structure to look more like this and I didn't like it.
 
