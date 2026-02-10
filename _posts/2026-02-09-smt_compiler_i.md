@@ -567,31 +567,6 @@ def done(i,j,k): # green block
     return j
 ```
 
-    ---------------------------------------------------------------------------
-
-    AttributeError                            Traceback (most recent call last)
-
-    Cell In[2], line 14
-         11 else_ = smt.Function("else_", Z,Z,Z, Z)
-         12 done = smt.Function("done", Z,Z,Z, Z)
-    ---> 14 @reflect
-         15 def myfun() -> int:
-         16     return loop(1,1,0)
-         18 def loop(i : int,j : int,k : int) -> int: # orange block
-
-
-    File ~/vibe_coding/knuck_anal/knuckledragger/src/kdrag/reflect.py:691, in reflect(f, globals)
-        689 z3fun1 = kd.define(fun.name, args, body)
-        690 # Check that types work out.
-    --> 691 if z3fun.range() != z3fun1.range():
-        692     raise ValueError(
-        693         f"Function {fun.name} has return type {_sort_of_annotation(fun.returns, globals=globals, locals=locals)} but body evaluates to {body.sort()}"
-        694     )
-        695 # This should never fail.
-
-
-    AttributeError: 'ArithRef' object has no attribute 'range'
-
 ```python
 """
 SSA is Functional Programming by Andrew Appel
