@@ -91,7 +91,7 @@ myfun()
 
 # Turning it Into SMT
 
-One of the important features of my system [knuckledragger](www.kdrag.com) is that it supports [definitions](https://github.com/philzook58/knuckledragger/blob/6e4f4e6a7a563f0c3f809278a650a78b784c5250/src/kdrag/kernel.py#L264). These definitions are registered and unfolded via the z3 function `substitute_funs`
+One of the important features of my system [knuckledragger](https://www.kdrag.com) is that it supports [definitions](https://github.com/philzook58/knuckledragger/blob/6e4f4e6a7a563f0c3f809278a650a78b784c5250/src/kdrag/kernel.py#L264). These definitions are registered and unfolded via the z3 function `substitute_funs`
 
 We can replicate exactly this structure above and now we have a CFG-like thing in our logic thing. Neat!
 
