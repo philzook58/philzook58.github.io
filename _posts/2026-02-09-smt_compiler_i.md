@@ -204,11 +204,13 @@ fn myfun {
 
 # Bits and Bobbles
 
-Next time, maybe I'll talk about taking textual QBE and converting it to SMT by
+Next time, maybe I'll talk about taking textual [QBE](https://c9x.me/compile/doc/il.html) and converting it to SMT by
 
 1. Turning phi nodes into block args. Kind of push them up to the blocks they came from.
-2. explicitizing memory
+2. explicitizing memory (use the smt theory of arrays)
 3. CSE
+
+I think I like QBE.
 
 Max has some great posts on IRs and SSA
 <https://bernsteinbear.com/blog/ssa/>
