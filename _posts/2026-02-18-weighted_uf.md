@@ -60,7 +60,7 @@ The reason I think this is interesting is we can then lift this to use on an egr
 
 In hash consing it often makes sense to memoize other properties of your terms immediately at construction. This can include precomputing the hash of the node and also the size, which is merely the sum of the memoized size of the children + 1. You can also do depth or any other variation you like.
 
-Extraction becomes trivial as it is just turning the hash consed tree with `Id` indirection back into a regular tree. The ordering makes
+Extraction becomes trivial as it is just turning the hash consed tree with `Id` indirection back into a regular tree. The ordering makes the smallest size term extracted. Extraction is online, which may be useful.
 
 Because nodes is in construction ordering, sweeping feels kind of nice.
 
