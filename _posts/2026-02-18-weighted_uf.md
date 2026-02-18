@@ -64,7 +64,7 @@ In hash consing it often makes sense to memoize other properties of your terms i
 
 Extraction becomes trivial as it is just turning the hash consed tree with `Id` indirection back into a regular tree. The ordering makes the smallest size term extracted. Extraction is online, which may be useful.
 
-Because `self.nodes` is in construction ordering, sweeping from front to back feels kind of nice and should hit children before parents.
+Because `self.nodes` is in construction ordering, sweeping from front to back feels kind of nice and should often hit children before parents.
 
 Pointing to the best new terms is more like what compiler writers use Union finds for <https://pypy.org/posts/2022/07/toy-optimizer.html>
 
