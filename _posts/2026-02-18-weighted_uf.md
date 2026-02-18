@@ -54,7 +54,9 @@ assert uf.find(z) == x
 
 ```
 
-The reason I think this is interesting is we can then lift this to use on an egraph that more closely matches ground knuth bendix completion using a knuth bendix ordering <https://www.philipzucker.com/ground_kbo/> . Ground knuth bendix ordering is basically comparing terms by size with tie breaking. The memo table is _for serious_ a hash cons. Each "id" describes exactly one term, not an eclass.
+# Egraph / Ground Knuth Bendix
+
+The reason I think this is interesting is we can then lift this to use on an egraph that more closely matches ground knuth bendix completion <https://www.philipzucker.com/egraph2024_talk_done/> using a knuth bendix ordering <https://www.philipzucker.com/ground_kbo/> . Ground knuth bendix ordering is basically comparing terms by size with tie breaking. The memo table is _for serious_ a hash cons. Each "id" describes exactly one term, not an eclass.
 
 In hash consing it often makes sense to memoize other properties of your terms immediately at construction. This can include precomputing the hash of the node and also the size, which is merely the sum of the memoized size of the children + 1. You can also do depth or any other variation you like.
 
