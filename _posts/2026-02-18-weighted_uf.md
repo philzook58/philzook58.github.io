@@ -3,7 +3,7 @@ title: "Weighted Union Find and Ground Knuth Bendix Completion"
 date: 2026-02-18
 ---
 
-A union find variant I think is simple and interesting is the "weighted" union find. This is distinguished from "size" or "rank" in that weight is considered a property of the id given by the user, not a internal property of the data structure <https://en.wikipedia.org/wiki/Disjoint-set_data_structure#Union_by_size> . Deciding who becomes parent of whom is decided by comparing weights.
+A union find variant I think is simple and interesting is the "weighted" union find. This is distinguished from "size" or "rank" in that weight is considered a property of the id given by the user, not a internal property of the data structure <https://en.wikipedia.org/wiki/Disjoint-set_data_structure#Union_by_size> . Deciding who becomes parent of whom in a call to `union` is decided by comparing weights.
 
 ```python
 from dataclasses import dataclass,field
@@ -56,13 +56,15 @@ assert uf.find(z) == x
 
 # Egraph / Ground Knuth Bendix
 
-The reason I think this is interesting is we can then lift this to use on an egraph that more closely matches ground knuth bendix completion <https://www.philipzucker.com/egraph2024_talk_done/> using a knuth bendix ordering <https://www.philipzucker.com/ground_kbo/> . Ground knuth bendix ordering is basically comparing terms by size with tie breaking. The memo table is _for serious_ a hash cons. Each "id" describes exactly one term, not an eclass.
+The reason I think this is interesting is we can then lift this to use on an egraph that more closely matches ground knuth bendix completion <https://www.philipzucker.com/egraph2024_talk_done/> using a knuth bendix ordering <https://www.philipzucker.com/ground_kbo/> . Ground knuth bendix ordering is basically comparing terms by size with tie breaking.
+
+The memo table is _for serious_ a hash cons. Each "id" describes exactly one term, not an eclass.
 
 In hash consing it often makes sense to memoize other properties of your terms immediately at construction. This can include precomputing the hash of the node and also the size, which is merely the sum of the memoized size of the children + 1. You can also do depth or any other variation you like.
 
 Extraction becomes trivial as it is just turning the hash consed tree with `Id` indirection back into a regular tree. The ordering makes the smallest size term extracted. Extraction is online, which may be useful.
 
-Because nodes is in construction ordering, sweeping feels kind of nice.
+Because `self.nodes` is in construction ordering, sweeping from front to back feels kind of nice and should hit children before parents.
 
 Pointing to the best new terms is more like what compiler writers use Union finds for <https://pypy.org/posts/2022/07/toy-optimizer.html>
 
