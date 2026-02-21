@@ -3,7 +3,7 @@ title: "Weighted Union Find and Ground Knuth Bendix Completion"
 date: 2026-02-18
 ---
 
-A union find variant I think is simple and interesting is the "weighted" union find. This is distinguished from "size" or "rank" in that weight is considered a property of the id given by the user, not a internal property of the data structure <https://en.wikipedia.org/wiki/Disjoint-set_data_structure#Union_by_size> . Deciding who becomes parent of whom in a call to `union` is decided by comparing weights.
+A union find variant I think is simple and interesting is the "weighted" union find. Deciding who becomes parent of whom in a call to `union` is decided by comparing weights. "Weight" is distinguished from "[size](https://en.wikipedia.org/wiki/Disjoint-set_data_structure#Union_by_size)" or "rank" in that weight is considered a property of the id given by the user, not a internal property of the data structure. It is also distinguished from a semigroup or lattice element because it is associated with the _id_, _not_ the equivalence class the id belongs to.
 
 ```python
 from dataclasses import dataclass,field
@@ -13,7 +13,7 @@ class WUF():
     parents : list[int] = field(default_factory=list)
     weights : list[int] = field(default_factory=list)
 
-    def makeset(self, weight):
+    def makeset(self, weight): # weight given at creation time. Associated with id forever
         id = len(self.parents)
         self.parents.append(id)
         self.weights.append(weight)
@@ -58,9 +58,9 @@ assert uf.find(z) == x
 
 The reason I think this is interesting is we can then lift this to use on an egraph that more closely matches ground knuth bendix completion <https://www.philipzucker.com/egraph2024_talk_done/> using a knuth bendix ordering <https://www.philipzucker.com/ground_kbo/> . Ground knuth bendix ordering is basically comparing terms by size with tie breaking.
 
-The memo table is _for serious_ a hash cons. Each "id" describes exactly one term, not an eclass.
+The memo table is _for serious_ a hash cons. Each `Id` refers to exactly one term, not an eclass.
 
-In hash consing it often makes sense to memoize other properties of your terms immediately at construction. This can include precomputing the hash of the node and also the size, which is merely the sum of the memoized size of the children + 1. You can also do depth or any other variation you like.
+In hash consing it often makes sense to memoize other properties of your terms immediately at construction. This can include precomputing the hash of the node and also the size, which is merely the sum of the memoized size of the children + 1. You can also do depth or any other summaries you like or need.
 
 Extraction becomes trivial as it is just turning the hash consed tree with `Id` indirection back into a regular tree. The ordering makes the smallest size term extracted. Extraction is online, which may be useful.
 
@@ -141,6 +141,7 @@ class GKB():
 
 
     def extract(self, id : Id):
+        # could memoize recursive calls here
         app = self.nodes[self.find(id)]
         return (app.f, tuple(self.extract(arg) for arg in app.args))
 
@@ -184,6 +185,8 @@ This is another in a sequence of union find variation posts
 Max has a nice small egraph implementation <https://github.com/mwillsey/microegg>
 I was tinkering on some variations here <https://github.com/philzook58/microegg>
 
+One can associate a weight with function symbols also in knuth bendix ordering. Maybe `*` is 10x as costly as `+`, that sort of thing. This is not a problem to add to the above, just makes it a touch more complex. A even more complex but powerful thing is to make the weights ordinals <https://www.philipzucker.com/ordinals/>  transfinite knuth bendix orderings <http://cl-informatik.uibk.ac.at/workspace/publications/11cade3.pdf>  <http://cl-informatik.uibk.ac.at/users/swinkler/bolzano/papers/WZM12.pdf> . A simple version of ordinals is considering appropriately lexicographically compared integers `(3,1,2) ~ 3w^2 + w + 2`. There are curious rules for adding and multiplying these (addition is non commutative).
+
 We've also been rambling up a storm on how you combine group and lattice union finds. Probably a post to come!
 
 I liked his top down pattern matcher so I copied it into python. It's cute!
@@ -225,3 +228,9 @@ I should show a the "linked list" version of the eclass maintenance. basically m
                             raise ValueError(f"Unexpected object in e-graph: {obj}")
                 return results
 ```
+
+Edit:
+Max B pointed out a similarity to another paper.  <https://www.usenix.org/legacy/events/vee05/full_papers/p111-kotzmann.pdf> . Maybe the scoped union find is the same thing as this since both have a number associated wuth the id that control diectionality of parents. The way this is factored is different though, since scope had it's uf arranged into regions such that the high scopes can be ditched. There was no such organization here, but if you never ditch, it's the same thing.
+
+They upgrade the set to the biggest
+Dunno that one. Escaping sounds a bit more like the "leveled/scoped" union find here <https://www.philipzucker.com/prim_level_uf/> . In that each id is instrinsically attached to a scope. Hmm. Maybe it's kind of the same thing as weighted. Interesting. that had not occurred to me?
