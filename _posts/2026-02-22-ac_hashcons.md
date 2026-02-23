@@ -303,6 +303,8 @@ There is also ACKBO
 The +{x} singleton kind of has an idempotence thing to it.
 Pattern matching on that would branch on stripping it or not.
 
+You can also do bottom up AC matching.
+
 It'd be better to return the first bin and a generator of the remaining bins for early pruning. Whatever
 
 1. Unique pointers
