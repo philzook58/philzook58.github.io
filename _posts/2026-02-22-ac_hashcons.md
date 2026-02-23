@@ -1,5 +1,5 @@
 ---
-title: An AC Hash Cons with AC matching
+title: An Associative-Commutative (AC) Hash Cons with AC matching
 date: 2026-02-22
 ---
 
@@ -9,7 +9,7 @@ People want an egraph that supports associativity and commutativty without blowi
 
 A step in that direction is to look at what an AC hash cons looks like
 
-These are other steps towards the goal:
+These are other steps towards that goal:
 
 - <https://www.philipzucker.com/weighted_uf/>. Weighted union find + hash cons = ground knuth bendix
 - <https://www.philipzucker.com/subterm_mod_miller/> What is subterms modulo AC?
@@ -192,7 +192,7 @@ def acmatch_rec(hc : ACHashCons, p : Pattern, id : SId, subst) -> list[dict[str,
         case Var(x), _:
             # If variable check if binding is consistent
             if x in subst:
-                if subst[x] == id:
+                if subst[x] == id: # something smarter for ACId?
                     return [subst]
                 else:
                     return []
