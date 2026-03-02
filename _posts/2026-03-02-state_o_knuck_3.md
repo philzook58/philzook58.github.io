@@ -33,6 +33,7 @@ Top of the mind next steps:
 - Just doing fun knuth bendix / superposition stuff
 - Proof by saturation / consistency / confluence
 - Embedding Scryer Prolog <https://pypi.org/project/kdrag-scryer/> and Steel Scheme as helper libraries / DSLs. LeanTAP like provers, typeclass like search, minikanren. Or janus-swi
+- Embedded TLA-like proof system for streams `Int -> T`
 
 # Kernel Changes
 
@@ -82,15 +83,15 @@ Another issue is that as it blasts out mountains of code, I can't keep up. And t
 
 I have tried giving AI
 
-- Software foundations
-- Real Analysis Game - I got around 12 chapters in. It's really nice for me how monomorphic they approached analysis to just work on R.
-- Isabelle's Concrete Semantics
+- Software foundations <https://softwarefoundations.cis.upenn.edu/>
+- Real Analysis Game <https://alexkontorovich.github.io/2025F311H/> - I got around 12 chapters in. It's really nice for me how monomorphic they approached analysis to just work on R.
+- Isabelle's Concrete Semantics <http://concrete-semantics.org/>
 
-And tried to get it o translate these to knuckledragger by making a folder that has the git clone of these repos, git clone of knuckledragger, and a venv set up. It's been interesting and useful. Mostly it can slam through them, but as I watch I realize that this or that tactic isn't working right.
+And tried to get it to translate these to knuckledragger by making a folder that has the git clone of these repos, git clone of knuckledragger, and a venv set up. It's been interesting and useful. Mostly it can slam through them, but as I watch I realize that this or that tactic isn't working right.
 
 In terms of developing knuckledragger itself, AI has not been that useful. I need or want to keep a handle on the codebase and I don't want it filled with verbose junk.
 
-I have been using it to develop lark grammars for TPTP, SMTLIB, and TLA syntax with mixed results. At first I am blown away.
+I have been using AI to develop lark grammars for TPTP, SMTLIB, and TLA syntax with mixed results. At first I am blown away.
 I could get data sets of these formats and hopefully round trip them and hypothesis check them. These are quite concrete tasks. I was inspired by <https://simonwillison.net/2025/Dec/15/porting-justhtml/> where ai can do incredible things porting or developing parsers. Parsers are a lot of bulk, mostly mundane work.
 
 Having said that, I don't know after the absolute shock of the initial product if it is good enough to be useful.
