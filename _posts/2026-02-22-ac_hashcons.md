@@ -35,7 +35,7 @@ class ACApp:
 type Node = App | ACApp
 ```
 
-This is very similar to the notion of "containers". It can also be thought of as an adt
+This is very similar to the notion of ["containers"](https://docs.rs/egglog/latest/egglog/trait.ContainerValue.html). It can also be thought of as an adt
 
 ```ocaml
 type term =
