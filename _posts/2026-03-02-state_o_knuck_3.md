@@ -21,6 +21,7 @@ Some highlights from the last six months:
 - Analysis Experiments  <https://github.com/philzook58/knuckledragger/tree/main/src/kdrag/theories/real>
 - Moved more commonly used functionality up to top level `kdrag`
 - Switched to ty typechecking. So fast, so good.
+- EMT tactic
 
 Top of the mind next steps:
 
@@ -32,8 +33,11 @@ Top of the mind next steps:
 - Inductive relations. Define least fixed point, derive the appropriate lemmas. The honest way of doing it like explained <https://isabelle.in.tum.de/website-Isabelle2011-1/dist/Isabelle2011-1/doc/ind-defs.pdf>
 - Just doing fun knuth bendix / superposition stuff
 - Proof by saturation / consistency / confluence
-- Embedding Scryer Prolog <https://pypi.org/project/kdrag-scryer/> and Steel Scheme as helper libraries / DSLs. LeanTAP like provers, typeclass like search, minikanren. Or janus-swi
+- Embedding Scryer Prolog <https://pypi.org/project/kdrag-scryer/> and Steel Scheme as helper libraries / DSLs. LeanTAP like provers, typeclass like search, minikanren. Or janus-swi. Use scheme as an smtlib executor for its executable fragment.
 - Embedded TLA-like proof system for streams `Int -> T`
+- Nominal Isabelle like stuff?
+- I should really publish some kind of basic tool description paper
+- Push more stuff into faster languages (C/C++/Rust). Or is this the wrong impulse?
 
 # Kernel Changes
 
