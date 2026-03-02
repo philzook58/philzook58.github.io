@@ -22,7 +22,7 @@ Some highlights from the last six months:
 - Moved more commonly used functionality up to top level `kdrag`
 - Switched to ty typechecking. So fast, so good.
 
-Top of the mind:
+Top of the mind next steps:
 
 - External proof objects and external checkers
 - Extracting smtlib benchmarks. I can scan python memory and emit smt scripts of all proof steps
@@ -44,21 +44,27 @@ The core of knuckledragger is that in principle you state some axioms and you ha
        |= P
 ```
 
+<https://github.com/philzook58/knuckledragger/blob/53e4628dd8ee7c72ef0258e2746d8e8b19c38fad/src/kdrag/kernel.py#L114>
+
 I always knew that z3 was not a complete semi decision procedure for first order logic, but when it comes to quantifiers, sometimes I couldn't get what I considered a single step of quantifier manipulation to go through.
 
 It is fantastic how fast z3 is per query. If we're running many many queries, it is not desirble for even 0.1s of start up time for a solver. Z3 often can dicharge even quite gnarly goals, you just can't count on it and need a fallback.
 
-Two built in kernel rules are for herbrandization and skolemization. Skolemization lets you give a name the the thing an existential guarantees exsists. Herbrandization makes a generic fresh constant you know nothing about. If you can prove something about it, it is true for all things. Both of these currently have the character of gensyms, which is fine but a bit ugly especially when it comes to proof certificates. Their order of generation can matter.
+Two built in kernel rules are for herbrandization <https://en.wikipedia.org/wiki/Herbrandization> <https://github.com/philzook58/knuckledragger/blob/53e4628dd8ee7c72ef0258e2746d8e8b19c38fad/src/kdrag/kernel.py#L624>  and skolemization <https://en.wikipedia.org/wiki/Skolem_normal_form> <https://github.com/philzook58/knuckledragger/blob/53e4628dd8ee7c72ef0258e2746d8e8b19c38fad/src/kdrag/kernel.py#L561> . Skolemization lets you give a name the the thing an existential guarantees exists. Herbrandization makes a generic fresh constant you know nothing about. If you can prove something about it, it is true for all things. Both of these currently have the character of gensyms, which is fine but a bit ugly especially when it comes to proof certificates. Their order of generation can matter.
 
 But really this isn't enough. You do need to assert axioms, and some seem so fundamental that they are basically part of the kernel as well. It is a judgement call what moves in and out of the kernel.
 
 I have moved the induction principle generator for algebraic datatypes into the kernel. I could also possibly move the induction principle for Int into the kernel.
 
-A new mechanism is that of declaring constants, reserving the name for you explicit use.
+A new mechanism is that of declaring constants, reserving the name for you explicit use. <https://github.com/philzook58/knuckledragger/blob/53e4628dd8ee7c72ef0258e2746d8e8b19c38fad/src/kdrag/kernel.py#L191>
 
 A problem I've had is that the programmatic z3 api allows sort based overloading of names, but serializing these out into smtlib or tptp does not. So a somewhat harsh but familiar condition from module-less systems like C is to just require all names be distinct and make any clash an error. This simplifies many things and is basically doable.
 
+I've also opened up the notion of `Defn` judgement to merely be any axiom of unfoldable shape. I think this enables getting the nice features of definitional unfolding without requiring the definition to come in as an axiom. You get to choose the shape of your definitional unfolding instead of being forced to use some ugly form that was needed by a construction.
+
 Currently definitions have the force of axioms. The onus of their consistency is on you. I like this because sometimes I want to be nannyied but sometimes I don't. But I have felt I would like a little more
+
+I've grown much colder on the `FreeVars` judgement idea and may remove it. I haven't been using it, and it is a little weird.
 
 # Experiments in AI
 
