@@ -754,6 +754,16 @@ The thing that is tough is that the existing stuff in Lean, Isabelle, Rocq etc i
 
 There are successful languages that aren't very generic (C, go). Some people abhor it, some love it. Seems like a missing corner of proof assistant design to me. Knuckledragger, the proof assistant for non abstracted neanderthals.
 
+I think it was around here <https://www.philipzucker.com/knuckle_primes/> when I realized how relatively usable the system already was if I specialized to integers.
+
+The scams for generics:
+
+1. Make records of functions (like Group) and a well formedness predicate about this record
+2. Use functools.cache for generators of anything keyed on sort
+3. Make booleans predicates `Int.Group : Bool` which you can predicate contingent theorems on.
+
+The old things I was suggesting were just too much boilerplate for little gain. <https://www.philipzucker.com/knuckle_typeclass/>
+
 # What I want, What Others Want
 
 No one uses Knuckledragger but me. I am somewhat committed to keep it easy to install, but I think I should shift to more of what I want and think is interesting rather than focus on stability for non existent users.
@@ -769,3 +779,123 @@ Currently I have a symbolic executor of ghidra pcode which I can connect via bis
 I was tearing my hair out trying to directly work with the output of the executor. This has been a much smoother experience so far. Z3 can basically automatically discharge the connection between the symbolic execution traces and the higher model (since really it's just the assembly with details about registers and flags and memory cleaned out. The analog of compiler IR)
 
 <https://www.philipzucker.com/asm_verify4/>
+
+# External Proofs Objects
+
+I have added some functions to dump out the smtlib scripts corresponding to `prove` calls. These are partial proof objects. If your colver objects to the unsat-ness of these scripts, you also object to the veracity of my proofs.
+
+The direction I've been going which is maybe overwrought, is to use an embedded smtlib format using combinators. In this way, you can reuse your existing smtlib parsers to parse the proofs. This is kind of like what z3 internal proofs are like too. <https://github.com/philzook58/knuckledragger/blob/main/src/kdrag/contrib/cert/__init__.py>
+
+I also like the idea of reflecting proof objects back into the system. The smtlib theory of strings can have a subset which is valid parseable smtlib formula and proof objects.
+
+This is highly incomplete, but is the start of the basic idea
+
+```python
+import kdrag.kernel as kernel
+import kdrag.smt as smt
+import kdrag as kd
+
+"""
+We aren't using bool sort as proof objects because that is semantically meaningful.
+We're doing it because SMTLIB has nice support for multi-arity boolean functions.
+
+Hmm. Should we have just been storing proofs in z3 ast all along?
+Well, that costs extra z3 calls for every proof and you may not need to be serializing.
+Better to hold that off for a long exporting event.
+"""
+
+export = smt.Function("kd_export", smt.BoolSort(), smt.BoolSort())
+
+# argument 1 is thm, argument 2 is `and` or further proof objects in by
+prove = smt.Function("kd_prove", smt.BoolSort(), smt.BoolSort(), smt.BoolSort())
+axiom = smt.Function("kd_axiom", smt.BoolSort(), smt.BoolSort())
+define = smt.Function("kd_define", smt.BoolSort(), smt.BoolSort())
+
+
+def serialize_proof(proof: kernel.Proof) -> str:
+    """
+
+    >>> x = smt.Int("x")
+    >>> assert "(assert (kd_export (kd_prove (= (+ x 1) (+ 1 x)) true)))" in serialize_proof(kernel.prove(x + 1 == 1 + x))
+    >>> z = kernel.define("z", [], smt.IntVal(42))
+    >>> _ = serialize_proof(kernel.prove(z > 0, by=[z.defn]))
+    """
+    assert isinstance(proof, kernel.Proof)
+    mapping = {}
+
+    def worker(p):
+        id = p.thm.get_id()
+        if id in mapping:  # memoization
+            return mapping[id]
+        else:
+            match p.reason:
+                case ["prove", *by]:
+                    if len(by) == 0:
+                        pf = prove(p.thm, smt.BoolVal(True))
+                    else:
+                        pf = prove(p.thm, smt.And([worker(b) for b in by]))
+                case ["axiom", *_data]:
+                    pf = axiom(p.thm)
+                case "definition":  # TODO: should probably wrap this
+                    pf = define(p.thm)
+                case _:
+                    raise ValueError(f"Unknown proof reason: {p.reason}")
+            mapping[id] = pf
+            return pf
+
+    s = smt.Solver()
+    s.add(export(worker(proof)))
+    return s.sexpr()
+    # return worker(proof).serialize()
+
+
+def deserialize_proof(st: str) -> kernel.Proof:
+    """ """
+    s = smt.Solver()
+    s.from_string(st)
+    if len(s.assertions()) != 1:
+        raise Exception("single assertion expected")
+    fml = s.assertions()[0]
+    if fml.decl() != export:
+        raise Exception("export expected")
+    pf = fml.arg(0)
+    # pf = smt.deserialize(s)
+    mapping = {}
+
+    def worker(pf):
+        id = pf.get_id()
+        if id in mapping:
+            return mapping[id]
+        else:
+            decl = pf.decl()
+            if decl == prove:
+                thm, by = pf.children()
+                if smt.is_true(by):
+                    by = []
+                elif smt.is_and(by):
+                    by = [worker(w) for w in by.children()]
+                else:
+                    raise ValueError(f"Unexpected proof object in by: {by.decl()}")
+                pf = kernel.prove(thm, by=by)
+            elif decl == axiom:
+                thm = pf.arg(0)
+                pf = kernel.axiom(thm)
+            elif decl == define:
+                thm = pf.arg(0)
+                assert isinstance(thm, smt.QuantifierRef) and thm.is_forall()
+                vs, body = kd.utils.open_binder_unhygienic(thm)
+                vids = {v.get_id() for v in vs}
+                assert smt.is_eq(body)
+                lhs, rhs = body.children()
+                assert smt.is_app(lhs) and all(
+                    v.get_id() in vids for v in lhs.children()
+                )
+                f = kd.define(lhs.decl().name(), vs, rhs)
+                pf = f.defn
+            else:
+                raise ValueError(f"Unknown proof object decl: {decl}")
+        mapping[id] = pf
+        return pf
+
+    return worker(pf)
+```
