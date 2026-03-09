@@ -92,6 +92,7 @@ VIPR certificates
 Rewrite proofs have a couple different formats. See also what egg outputs <https://docs.rs/egg/latest/egg/tutorials/_03_explanations/index.html> .
 
 - A sequence of terms with position (how to get to subterm applied at) and eqaation used information tagged in between each
+- Just a sequence of terms `list[Term]` is fine if position can be inferred and it often can. Is the sequence a valley of term sizes (greedy rewriting can work) or is it bumpy? Proof orderings. Leveling the bumps as a transformation.
 - Congruence style. A `cong` node that takes in subproofs of all children equations and lifts them. Since rewrite proofs have a categorical flavor (has id and can be composed) the cong nodes have the flavor of a monoidal product functor (you can push compose above or below cong nodes. `cong_f(p1)  . cong_f(p2) = cong_f(p1 . p2)` ). This gives some algebra of proofs. One can ask how to normalize proofs (See Terese). Congruence is the fancier version of grade school's "do the same thing to both sides of an equation". The first style is a flattening of this style.
 
 ![](/assets/congruence.png)
@@ -137,6 +138,8 @@ I've had this one knocking around a while. You can see notes below that I think 
 - NP doesn't mean hard. What it means is that there is a certificate to the problem that can be checked in polynomial time. So all these problems have witnesses / proofs objects. They usually have the flavor of a constraint solution or SAT solution.
 
 - Ron Garcia pointed out this <https://cacm.acm.org/research/program-correctness-through-self-certification/> Outputting the permutation of a sorting algorithm is a good one. Verifying that is slightly easier than redoing the sort. DWARF I think is an interesting target for a bisimulation proof object <https://www.philipzucker.com/dwarf-patching/> as it already specifies a connection between high and low code for debugging purposes.
+
+- Edit 3/4/2026 - <https://types.pl/@pigworker/116167451478188453> Thinnings (order preserving mappings between lists) as provenance producing subset queries is similar to the above permutation thing
 
 - A similar thing is in parse don't validate. <https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/> A parse tree is a proof object that a string is in a language. You can make a parse tree as a kind of trace of the parser.  A related thing I like is to intrinsically sorted list `Option (Int, [Nat])` which stores a starting point but then only differences. The Nat makes a drecreasing difference unrepresentable.
 
