@@ -320,7 +320,6 @@ def mycpy_inv(l):
     
     l.simp()
     l.auto()
-    # ok. not true because of wraparound. Ugh
 
     l.fix()
     l.intros()
@@ -376,6 +375,13 @@ mycpy_len_inv
 This is admittedly more work and more conceptually complicated. A lot of value can be delivered by fuzzing and bounded model checking and these should usually be done first.
 
 # Bits and Bobbles
+
+Previous posts:
+
+- <https://www.philipzucker.com/asm_verify4/>
+- <https://www.philipzucker.com/asm_verify3/>
+- <https://www.philipzucker.com/asm_verify2/>
+- <https://www.philipzucker.com/assembly_verify/>
 
 BMC
 Example showing failure of off by one error
