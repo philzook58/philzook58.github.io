@@ -336,6 +336,8 @@ The thinning union find is more of a category action rather than a group or grou
 
 Mcbride mentioned an analogy to thinning manipulations as euclids algorithm. <https://types.pl/@pigworker/116166766060828508> I think this is similar to the above analogy between the factor union find and thinning union find, but asking a slightly different problem.
 
+Reed Mullanix also made some interesting observations and connections to strings and monus here <https://types.pl/@totbwf/116167359953764857>
+
 More union find variations:
 
 - <https://www.philipzucker.com/prim_level_uf/> scoped union finds so you can blow away chunks
