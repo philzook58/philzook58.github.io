@@ -342,12 +342,14 @@ Reed Mullanix also made some interesting observations and connections to strings
 
 More union find variations:
 
+- <https://www.philipzucker.com/weighted_uf/> The weigted union find has information associated with nodes, not roots, in a manner which controls the union direction.
 - <https://www.philipzucker.com/prim_level_uf/> scoped union finds so you can blow away chunks
 - <https://www.philipzucker.com/context_uf2/> a notion of contextual union find, union under hypotheses
 - Other examples in my EMT arxiv preprint <https://arxiv.org/abs/2504.14340>
 - Poset / inequality union finds for refinement <https://www.philipzucker.com/le_find>
 - Knuth Bendix / grobner / gaussian elimination as a union find <https://www.philipzucker.com/linear_grobner_egraph> <https://www.philipzucker.com/multiset_rw> It is desirable to look for stuff that is cheaper and less complicated that knuth bendix stuff. The gaussian ones are an edge case
 - group / groupoid union finds <www.philipzucker.com/union-find-groupoid> , lemerre paper, Kmett talks
+- One can also have lattice annotations associative with roots like egg analyses. Probably something more general than lattice is possible, because "count" is a perfectly reasonable annotation that is not a lattice.
 
 It feels to me like there is a difference in considering the union find annotations to be "rigid" / injective / constructors vs, not. Rigid annotations feel like E-unificiation, flexible annotations feel like ground E-completion. This post was all about rigid annotations. The linear, grobner, and multiset completion feel like E-completion.
 
