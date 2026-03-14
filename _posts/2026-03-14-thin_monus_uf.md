@@ -7,7 +7,7 @@ I have kind of a recipe book I follow to thinking about generalized e-graphs or 
 
 [Last time](https://www.philipzucker.com/thin1/) I discussed what a thinning is.
 
-- A thinning is a recipe on how to get one list from another
+- A thinning is a recipe on how to extract a sublist from another
 - A thinning is useful as a compact representation of many de Bruijn Index shifts
 
 I believe baking thinnings into a union find bakes in some de bruijn index manipulation, helping to support an alpha invariant e-graph. I think this is quite similar to a slotted e-graph, but ignoring the permutation aspect and focusing on the redundancy aspect.
