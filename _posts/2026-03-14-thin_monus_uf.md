@@ -175,6 +175,8 @@ Positive offsets form a [monus](https://en.wikipedia.org/wiki/Monus). <https://d
 
 A slight twist on the above is to consider multiplication by integer constants `6*x = 4*y`. Because again we don't insist on turning this into a group, it isn't clear we can derive a solution in the form `x = ?a * y` or `y = ?b * x` without constraining more than is implied by the assertion. Nevertheless there is a "best" solution if we create a new identifier `x = 2*z`, `y = 3*z`. These number come out of considerations of the prime factorization / least common multiple. The right had side says there must be at least 2 factors of 2, but `6` only has 1 factor, so we must pull another 2 out of `x`. Likewise we must pull a factor of `3` out of y.
 
+In short, union not only controls the directionality of parent, it also must sometimes generate a fresh id.
+
 ```python
 from dataclasses import dataclass, field
 import math
