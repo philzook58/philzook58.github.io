@@ -334,6 +334,8 @@ Rudi has a pitch about semigroups with involution as being the generalization. I
 
 The thinning union find is more of a category action rather than a group or groupoid action. <https://ncatlab.org/nlab/show/action+of+a+category+on+a+set> for a category with pullbacks?
 
+Mcbride mentioned an analogy to thinning manipulations as euclids algorithm. <https://types.pl/@pigworker/116166766060828508> I think this is similar to the above analogy between the factor union find and thinning union find, but asking a slightly different problem.
+
 More union find variations:
 
 - <https://www.philipzucker.com/prim_level_uf/> scoped union finds so you can blow away chunks
