@@ -12,7 +12,7 @@ I previously discussed
 
 Here I show a kind of alpha invariant hash cons that uses thinnings. This is a "co de bruijn" style hash cons using similar ideas to McBride's <https://arxiv.org/pdf/1807.04085> Everybody’s Got To Be Somewhere (indeed this line of thought was kicked off by some stuff McBride said on Mastodon).
 
-Every child of a node in the hash cons has a thinning (which is a bitvector) attached to describe how to remove (thin) any variable from context that won't be used. Once you get all the way down to a variable, there is only one thing in context. Because of this, there is only 1 variable node in the hash cons. By composing the thinnings and tracking its strands as you traverse down the term, you can know which variable you are referring two.
+Every child of a node in the hash cons has a thinning (which is a bitvector) attached to describe how to remove (thin) any variable from context that won't be used.  By composing the thinnings and tracking its strands as you traverse down the term, you can know which variable you are referring two. Once you get all the way down to a variable, there is only one thing in context. Because of this, there is only 1 variable node in the hash cons.
 
 ![](/assets/thinning/thinning_hashcons.jpg)
 The dots here are where the strands die. They die when no subterm is going to use that variable. `lam` nodes generate a new strand at the front. Strands are kept in order. I don't know if this image is going to help or hurt understanding.
@@ -118,8 +118,11 @@ Other related structured identifiers one can have are
 2. multisets of identifiers representing AC operatoins
 3. polynomials of identifiers
 
+I've done similar looking things here:
+
 - <https://www.philipzucker.com/ac_hashcons/>
 - <https://www.philipzucker.com/slotted_hash_cons/>
+- <https://arxiv.org/abs/2504.14340> Omelets Need Onions: E-graphs Modulo Theories via Bottom-up E-matching
 
 ```python
 from dataclasses import dataclass, field
