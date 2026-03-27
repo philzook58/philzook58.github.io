@@ -8,7 +8,7 @@ Another step on a journey to a thinning egraph.
 I previously discussed
 
 - <https://www.philipzucker.com/thin1/> Thinnings are descriptions of how to prune a list down. Concretely, they are a bitvector of which pieces you take and which you leave. This pruning is related to weakening of list-like contexts/environments.
-- <https://www.philipzucker.com/thin_monus_uf/> How you can have a union find with thinning annotations on the edges. This can be seen as a union find describing sublist relationships for opaque identifiers in addition to equality relationships.
+- <https://www.philipzucker.com/thin_monus_uf/> How you can have a union find with thinning annotations on the edges. This can be seen as a union find describing sublist relationships for opaque identifiers in addition to equality relationships. This might be useful for mundane compiler analysis purposes if you have vector or list datatypes
 
 Here I show a kind of alpha invariant hash cons that uses thinnings. This is a "co de bruijn" style hash cons using similar ideas to McBride's <https://arxiv.org/pdf/1807.04085> Everybody’s Got To Be Somewhere (indeed this line of thought was kicked off by some stuff McBride said on Mastodon).
 
@@ -188,7 +188,7 @@ A naive hash cons _perfectly destroys_ notions of context for a term.
 
 That we should expect `x + 7` to be the _same_ in `let x = 42 in x + 7` and `let x = 43 in x + 7` seems completely backwards. What use is that definition? Context kind of matters a lot. Our naive contextless definition of term is bad.
 
-While we may be used to a basic term type that does not have context as a field, this is not a law of the universe. Parse trees often have fields of line and column number. We cannot hash cons similar looking things in one sense without destroying that info. Racket syntax objects contain this source provenance data but also scope data. It is actually very natural for all subterms to be considered unequal since they come from different parts of the input string, or have different full contexts. We may choose to thing some aspects of this context is unimportant, but saying _all_ of it is unimportant is a step too far when bound variables are at play.
+While we may be used to a basic term type that does not have context as a field, this is not a law of the universe. Parse trees often have fields of line and column number. We cannot hash cons similar looking things in one sense without destroying that info. Racket syntax objects contain this source provenance data but also scope data. It is actually very natural for all subterms to be considered unequal since they come from different parts of the input string, or have different full contexts. We may choose to think some aspects of this context is unimportant, but saying _all_ of it is unimportant is a step too far when bound variables are at play.
 
 ```python
 from dataclasses import dataclass, field
@@ -216,7 +216,7 @@ TermInContext([], "lam", [TermInContext(["x"], "var", ["x"])])
 
     TermInContext(ctx=[], f='lam', args=[TermInContext(ctx=['x'], f='var', args=['x'])])
 
-But like the offset hash cons, perhaps it is sensible to factor the ctx as being part of the _id_ rather than the interned parts, since we will often weaken the ctx to lift it into some other place. This achieves more sharing than interning the context inside node.
+But like the offset hash cons, perhaps it is sensible to factor the ctx as being part of the _id_ rather than the interned parts, since we will often weaken the ctx to lift it into some other place. This achieves more sharing than always eagerly interning the context inside node.
 
 ```python
 from dataclasses import dataclass, field
@@ -505,7 +505,7 @@ The thinning hash cons is more "local" in some sense than using de bruijn indice
 
 The thinning hash cons is kind of a slotted hash cons where you have ordered binders / don't play the permutation game. <https://www.philipzucker.com/slotted_hash_cons/> . I think the thinning hash cons is (as crazy as this sounds) a simpler thing.
 
-<https://pavpanchekha.com/blog/egg-bindings.html> Thinning hash cons do have a flavor of "letting the succ float", unmooring the de bruijn indices from inside the Var constructor and letting them appear anywhere in the term .
+<https://pavpanchekha.com/blog/egg-bindings.html> Thinning hash cons do have a flavor of "letting the succ float", unmooring the de bruijn indices from inside the Var constructor and letting them appear anywhere in the term . <https://okmij.org/ftp/tagless-final/ski.pdf>
 
 ```ocaml
 type nat = Succ of nat | Zero
@@ -528,7 +528,9 @@ Hashing modulo alpha equivalence is an interesting topic
 <https://arxiv.org/abs/2105.02856> Hashing Modulo Alpha-Equivalence
 <https://arxiv.org/abs/2401.02948> Hashing Modulo Context-Sensitive α-Equivalence
 
-I think what I've described above is pretty differetn from the variable mapping tree idea. The mapping tree idea is compelling, but when you start doing egraph stuff, the manipulations of subterms and the maps need to be correlated and the whole thing falls apart.
+I think what I've described above is pretty differetn from the variable mapping tree idea. The mapping tree idea is compelling, but when you start doing egraph stuff, the manipulations of subterms and the maps need to be correlated and the whole thing falls apart. The mapping tree is kind of the strand associated with the lambda binder being factored out from the other strands and really attached / associated with the lambda node. This factoring is fine for a term, but the "bus" (to make a digital circuit analogy) of the context needs to be in a single clump to share it amognest different subterms in an egraph.
+
+The strands being a "thickening" of the usual child parent edge reminds me visually of something similar in Feynman diagrams. I think there was some version of feynman diagrams for SU(N) where you thickened   <https://ncatlab.org/nlab/show/%27t+Hooft+double+line+notation> . There was also
 
 You can visualize the thinning hash cons as little threads (the thinning diagrams) running down the term. The edge between parent and child is "fattened" to thinning threads.
 
