@@ -12,7 +12,7 @@ I previously discussed
 
 Here I show a kind of alpha invariant hash cons that uses thinnings. This is a "co de bruijn" style hash cons using similar ideas to McBride's <https://arxiv.org/pdf/1807.04085> Everybody’s Got To Be Somewhere (indeed this line of thought was kicked off by some stuff McBride said on Mastodon).
 
-Every child of a node in the hash cons has a thinning (which is a bitvector) attached to describe how to remove (thin) any variable from context that won't be used.  By composing the thinnings and tracking its strands as you traverse down the term, you can know which variable you are referring two. Once you get all the way down to a variable, there is only one thing in context. Because of this, there is only 1 variable node in the hash cons.
+Every child of a node in the hash cons has a thinning (which is a bitvector) attached to describe how to remove (thin) any variable from context that won't be used.  By composing the thinnings and tracking its strands as you traverse down the term, you can know which variable you are referring to. Once you get all the way down to a variable, there is only one thing in context. Because of this, there is only 1 variable node in the hash cons.
 
  I don't know if this image is going to help or hurt understanding, but it is worth a shot. The dots here are where the strands die. They die when no subterm is going to use that variable. `lam` nodes generate a new strand at the front. Strands are kept in order.
 ![](/assets/thinning/thinning_hashcons.jpg)
