@@ -119,6 +119,7 @@ I first heard of this concept from talks by Ed Kmett, but it floats around:
 - <https://dl.acm.org/doi/10.1145/3729298> Relational Abstractions Based on Labeled Union-Find
 - <https://exia.informatik.uni-ulm.de/fruehwirth/constraint-handling-rules-book.html> Chapter 10
 - <https://leodemoura.github.io/files/oregon08.pdf> Slide 167
+- Sofia B pointed out <https://link.springer.com/chapter/10.1007/978-3-540-39813-4_5> Congruence Closure with Integer Offsets
 
 # Positive Offset / Monus Union Find
 
