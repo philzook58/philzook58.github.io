@@ -8,14 +8,14 @@ Another step on a journey to a thinning egraph.
 I previously discussed
 
 - <https://www.philipzucker.com/thin1/> Thinnings are descriptions of how to prune a list down. Concretely, they are a bitvector of which pieces you take and which you leave. This pruning is related to weakening of list-like contexts/environments.
-- <https://www.philipzucker.com/thin_monus_uf/> How you can have a union find with thinning annotations on the edges. This can be seen as a union find describing sublist relationships for opaque list identifiers in addition to equality relationships.
+- <https://www.philipzucker.com/thin_monus_uf/> How you can have a union find with thinning annotations on the edges. This can be seen as a union find describing sublist relationships for opaque identifiers in addition to equality relationships.
 
 Here I show a kind of alpha invariant hash cons that uses thinnings. This is a "co de bruijn" style hash cons using similar ideas to McBride's <https://arxiv.org/pdf/1807.04085> Everybody’s Got To Be Somewhere (indeed this line of thought was kicked off by some stuff McBride said on Mastodon).
 
 Every child of a node in the hash cons has a thinning (which is a bitvector) attached to describe how to remove (thin) any variable from context that won't be used.  By composing the thinnings and tracking its strands as you traverse down the term, you can know which variable you are referring two. Once you get all the way down to a variable, there is only one thing in context. Because of this, there is only 1 variable node in the hash cons.
 
+ I don't know if this image is going to help or hurt understanding, but it is worth a shot. The dots here are where the strands die. They die when no subterm is going to use that variable. `lam` nodes generate a new strand at the front. Strands are kept in order.
 ![](/assets/thinning/thinning_hashcons.jpg)
-The dots here are where the strands die. They die when no subterm is going to use that variable. `lam` nodes generate a new strand at the front. Strands are kept in order. I don't know if this image is going to help or hurt understanding.
 
 Because the thinnings keep things as thin as possible (everybody's got to be somewhere), they also look a bit like a free variable analysis on the hash cons.
 
