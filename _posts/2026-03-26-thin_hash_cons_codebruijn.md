@@ -343,7 +343,9 @@ class Node:
 
 ```
 
-The thinning hash cons largely follows similar lines as those explained above. The app combinator require you weaken the arguments to reconcile their contexts before you apply `f`. This is pretty unpleasant to use.
+The thinning hash cons largely follows similar lines as those explained above. The app combinator require you weaken the arguments to reconcile their contexts to a common one before you apply `f`. Having the assert check this is pretty crucial, since it's easy to screw up.
+
+In its raw form, this is pretty unpleasant to use, even more so than de bruijn indices
 
 ```python
 @dataclass
@@ -385,27 +387,27 @@ class ThinHashCons:
 hc = ThinHashCons()
 v = hc.var
 v0_1 = v # variable 0 in context size 1
-a = hc.app("a", ())
-a1 = widen([False], a)
-f = lambda x, y: hc.app("f", (x, y))
+a = hc.app("a", ()) # a constant
+a1 = widen([False], a) # widening the constant into context size 1
+f = lambda x, y: hc.app("f", (x, y)) 
 
 assert v == ((True,), 0)
 assert a == ((), 1)
 assert a1 == ((False,), 1)
-assert f(a, a) == ((), 2)
-assert f(v,v) == ((True,), 3)
-assert f(v,a1) == ((True,), 4)
-assert f(a1,v) == ((True,), 5)
+assert f(a, a) == ((), 2)  # no context needed for a term with no variables
+assert f(v,v) == ((True,), 3)  # does need context
+assert f(v,a1) == ((True,), 4) # needs to use the widened constant a1, not a
+assert f(a1,v) == ((True,), 5) 
 assert f(v,v) == ((True,), 3)
 assert hc.lam(f(v,v)) == ((), 6)
 
 v0_2 = widen([True, False], v) # variable 0 in context size 2, 
 v1_2 = widen([False, True], v) # variable 1 in context size 2
-assert hc.lam(v1_2) == ((True,), 7)
-assert hc.lam(v0_1) == ((), 8)
+assert hc.lam(v1_2) == ((True,), 7) # y |- lam x. y
+assert hc.lam(v0_1) == ((), 8) # lam x. x in an empty context
 #assert hc.lam(f(v0,v0)) == ((False,), 9) error. Not thinned enough
-assert hc.lam(widen([False, True], f(v0_1,v0_1))) == ((True,), 9)
-assert hc.lam(f(v0_2,v1_2)) == ((True,), 11)
+assert hc.lam(widen([False, True], f(v0_1,v0_1))) == ((True,), 9) # y |- lam x, f(y,y)
+assert hc.lam(f(v0_2,v1_2)) == ((True,), 11) # x, y |- f(x,y)
 
 # f(v0_2, v0_2) # error slot 1 is not used
 # f(v1_2, v1_2) # error slot 0 is not used
@@ -414,7 +416,7 @@ assert hc.lam(f(v0_2,v1_2)) == ((True,), 11)
 
 ```
 
-A little bit better is to reconcile automatically. Here I use a global ordering of names to do so. This is also a bit odd. Perhaps an api that uses de bruijn levels or indices would be more natural. I'm not happy with what I have here, but it is actually a challenging problem perhaps worthy of it's own blog post to figure out something better.
+A little bit better is to reconcile app arguments into a common context automatically. Here I use a global ordering of names to do so. This is also a bit odd. Perhaps an api that uses de bruijn levels or indices would be more natural. I'm not happy with what I have here, but it is actually a challenging problem perhaps worthy of it's own blog post to figure out something better.
 
 These `NamedId` are kind of `UserIds`. The data structure does not really care, but the raw stuff is a terrible api.
 
