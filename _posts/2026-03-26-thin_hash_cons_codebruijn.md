@@ -327,7 +327,8 @@ assert dom([True, False, True]) == 3
 assert cod([True, False, True]) == 2
 assert comp([True, False, True], [False, True]) == (False, False, True)
 
-def widen(thin, x : Id) -> Id:
+def widen(thin : Thin, x : Id) -> Id:
+    # widening is the action of a thinning on a term. It weakens the context the term is in.
     return (comp(thin,x[0]), x[1])
 ```
 

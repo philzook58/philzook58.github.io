@@ -1,0 +1,82 @@
+@article{slotted,
+  author     = {Schneider, Rudi and Rossel, Marcus and Shaikhha, Amir and Goens, Andr\'{e}s and Kundefinedhler, Thomas and Steuwer, Michel},
+  title      = {Slotted E-Graphs: First-Class Support for (Bound) Variables in E-Graphs},
+  year       = {2025},
+  issue_date = {June 2025},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {9},
+  number     = {PLDI},
+  url        = {https://doi.org/10.1145/3729326},
+  doi        = {10.1145/3729326},
+  abstract   = {Equality saturation has gained significant interest as a powerful optimization and reasoning technique. At its heart is the e-graph data structure, that space-efficiently represents equal sub-terms uniquely.   An important open problem in this context is extending this efficient representation to languages featuring (bound) variables.   Independent of how we represent variables in e-graphs, either as names or nameless (using de Bruijn indices), sharing is broken as sub-terms that differ only in the names of their variables are represented separately.   This results in aggressive e-graph growth, bad performance, as well as reduced expressiveness.   In this paper, we present a novel approach to representing bound variables in e-graphs by making them a first-class built-in feature of the data structure.   Our slotted e-graph represents terms that differ only by (bound or free) variable names uniquely.   To do so, e-classes that represent equivalent terms via e-nodes are parameterized by slots, abstracting over free variables of the represented terms.   Referring to an e-class from an e-node now requires relating the variables from its context to the slots of the e-class.    Our evaluation of slotted e-graph uses two case studies from compiler optimization and theorem proving to show that performing equality saturation for languages with bound variables is greatly simplified and that we can solve practically relevant problems that cannot be solved with e-graphs using de Bruijn indices.},
+  journal    = {Proc. ACM Program. Lang.},
+  month      = jun,
+  articleno  = {223},
+  numpages   = {23},
+  keywords   = {binders, e-graphs, equality saturation, rewrite systems}
+}
+
+@article{McBride_2018,
+  title     = {Everybody’s Got To Be Somewhere},
+  volume    = {275},
+  issn      = {2075-2180},
+  url       = {http://dx.doi.org/10.4204/EPTCS.275.6},
+  doi       = {10.4204/eptcs.275.6},
+  journal   = {Electronic Proceedings in Theoretical Computer Science},
+  publisher = {Open Publishing Association},
+  author    = {McBride, Conor},
+  year      = {2018},
+  month     = jul,
+  pages     = {53–69}
+}
+
+@misc{zucker2026alphaequival,
+  author       = {Philip Zucker},
+  title        = {Alpha Equivalent Hash Consing with Thinnings},
+  howpublished = {\url{https://www.philipzucker.com/thin_hash_cons_codebruijn/}},
+  note         = {[Online; accessed 12-4-2026]}
+}
+
+@misc{zucker2026monusfactora,
+  author       = {Philip Zucker},
+  title        = {Monus, Factor, and Thinning Union Finds},
+  howpublished = {\url{https://www.philipzucker.com/thin_monus_uf/}},
+  note         = {[Online; accessed 12-4-2026]}
+}
+
+@misc{zucker2026thinningssub,
+  author       = {Philip Zucker},
+  title        = {Thinnings: Sublist Witnesses and de Bruijn Index Shift Clumping},
+  howpublished = {\url{https://www.philipzucker.com/thin1/}},
+  note         = {[Online; accessed 12-4-2026]}
+}
+
+@misc{zucker2025omeletsneedonionsegraphs,
+  title         = {Omelets Need Onions: E-graphs Modulo Theories via Bottom-up E-matching},
+  author        = {Philip Zucker},
+  year          = {2025},
+  eprint        = {2504.14340},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.PL},
+  url           = {https://arxiv.org/abs/2504.14340}
+}
+
+@article{groupuf,
+  author     = {Lesbre, Dorian and Lemerre, Matthieu and Ait-El-Hara, Hichem Rami and Bobot, Fran\c{c}ois},
+  title      = {Relational Abstractions Based on Labeled Union-Find},
+  year       = {2025},
+  issue_date = {June 2025},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {9},
+  number     = {PLDI},
+  url        = {https://doi.org/10.1145/3729298},
+  doi        = {10.1145/3729298},
+  abstract   = {We introduce a new family of abstractions based on a data structure that we call labeled union-find, an extension of the classic efficient union-find data structure where edges carry labels. These labels have a composition operation that obey the group axioms. Like union-find, the labeled version can efficiently compute the transitive closure of a relation, but it is not limited to equivalence relations; it can represent any injective transformation between equivalence classes, which includes two-variables per equality (TVPE) constraints of the form y = a\texttimes{} x + b. Using abstract interpretation theory, we study the properties deriving from the use of abstract relations as labels, and the combination of labeled union-find with other representations of constraints, allowing both improvements in precision and simplification of existing constraints. Due to its efficiency, the labeled union-find abstractions could find many uses; we use it in two use cases, program analysis based on abstract interpretation and constraint solving for SMT, with encouraging preliminary results.},
+  journal    = {Proc. ACM Program. Lang.},
+  month      = jun,
+  articleno  = {195},
+  numpages   = {26},
+  keywords   = {Abstract interpretation, Labeled union-find, Relational abstract domain}
+}

@@ -1,0 +1,263 @@
+\documentclass{article}% {\twocolumn}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\newcommand{\bR}{\mathbb{R}}
+\newcommand{\lift}{\text{lift}}
+\newcommand{\true}{\ensuremath{\mathtt{true}}}
+\newcommand{\false}{\ensuremath{\mathtt{false}}}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    language=Python,
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\begin{document}
+
+
+\title{Thinning E-Graphs for Alpha Equivalence / Lifting Functions in E-graphs }
+
+% lift off, face lift, get thin, ozempic, alpha chad stacy thinning egraphs
+% Get a lift
+% What even is sin(x)
+% Lifting Egraphs: Baking in Const Combinators
+
+
+\author{Philip Zucker}
+
+\maketitle
+\begin{abstract}
+
+
+\end{abstract}
+
+
+\section{Introduction}
+"Variables" (terminology that can refer to many distinct but related things) are quite subtle and easy to get wrong.
+
+It is a common feature of the syntax of mathematical syntax to have variables which may be renamed while retaining the meaning of an expression. This is called alpha equivalence, dummy variables, or bound variables. 
+
+\begin{itemize}
+\item $\lambda x. x$
+\item $\int dx f(x)$
+\item $\max_x f(x)$
+\item $\lim_{x \to 0} f(x)$
+\item $\sum_{x=1}^n f(x)$
+\item $\exists x. f(x)$
+\item $R_{ij} T_{kl}$
+\end{itemize}
+
+E-graphs are a data structure for storing equivalences between ground terms in a highly shared way. The standard E-graph does not share memory between alpha renamed terms.
+
+One common technique for handling alpha equivalence is to use de Bruijn indices. In this approach, variables are referred to by the number of binding sites that must be crossed to reach their binding site.
+
+This is not a sufficient solution because this is a nonlocal way of referring to a variable. In the egraph, there may be multiple pathways to get to a binding site. In addition, manipulations of the binding sites have a nonlocal effect of the entire tree below them.
+% examples
+This is not the only possible way of assigning a structurally canonical variable name or index to a variable.
+
+\section{Lifting Functions}
+
+Consider the function $\sin : \mathbb{R} \rightarrow \mathbb{R}$. In the common vague way we might write the expression "$\sin(x)$" to refer to this function. 
+
+A slightly different and more careful way of writing the same thing might be $\lambda x. \sin(x)$ or $\{ x \mapsto \sin(x) \}$. The variables in context is an essential part of knowing which semantics entity we are actually referring.
+
+We can consider many ways of converting $\sin$ to take in a higher dimensional argument, for example from $\mathbb{R}^2$.  $\{ x,y \mapsto \sin(x) \}$ or $\{ x,y \mapsto \sin(y) \}$ are two natural and distinct ways to lift $\{ x \mapsto \sin(x) \}$. The naive notation "$\sin(x)$" does not make this distinction very clear and has implicit non-systematic casting between these different options.
+
+In point-free form $\sin \circ const$ using $lift_{[\false, \true]} = _ \circ \text{const}$ as $\text{lift}_{[\false, \true]}(\sin)$. This family of lifting combinators give ways of converting functions that accept low dimensional arguments to ones that accept higher dimensional arguments. They are parametrized by a bitvector thinning, a recipe for which pieces to keep and which to throw away.
+
+The identity function $\text{id} : \bR \rightarrow \bR$ is very similar to referring to to unique variable in a single variable context $\{ x \mapsto x \}$. Lifted identity functions are a way of talking about multiple variables in larger input domains  $\{ x,y,z \mapsto y \}$.
+
+Instead of using names, we may refer to variables by their position. $\{ x,y \mapsto \sin(x) \}$ becomes $\{ 2 \mapsto \sin(v_1) \}$. Despite the loss of names, the $2 \mapsto$ is still an essential part of what semantic thing we are referring to is and suppressing the annotation allows for the temptation to write incoherent statements between objects that do no even type check. $\{3 \mapsto \sin(v_1) \}$ is a related but very distinct thing to $\{ 2 \mapsto \sin(v_1) \}$.
+
+For each dimensionality these combinators have an identity $\text{lift}_{[\true, \true, \true]}$ and when the dimensions match a composition operator $\text{lift}_k \circ \text{lift}_l = lift_{k \circ l}$.
+Expressions involving lifting operators can be put into a normal form by pulling the lifting operators as far out as they can go and compressing them by composition.
+
+A simple pythagorean identity which one might naively write as $sin^2(x) + cos^2(x) = 1$ can in the combinator language be written as $\lift([\false], 1) = sin^2 + cos^2$. This in turn implies all liftings of the equations $\lift_{k}(\lift([\false], 1)) = \lift_k(sin^2 + cos^2)$
+
+The calculus of these $\lift$ operators is basically first order and could be encoded into a regular e-graph. There will be many administrative manipulations filling the e-graph with junk. Given that the annotation is encodable as a small bitvector with associated fast subroutines for composition and other operations, it is natural to consider baking in this notion into the very notion of term, akin to how types can be considered an intrinsic part of the terms.
+
+\section{Thinnings}
+Thinnings are a proof object describing how to extract one subsequence from another. They have many possible representations but a simple one is as a bitvector with a \true for taken elements and \false for removed elements
+
+% cite https://msp.cis.strath.ac.uk/types2025/abstracts/TYPES2025_paper37.pdf
+% cite mastodon
+
+For examples $[\true, \false, \true, \true] \cdot [a,b,c,d] = [a,c,d]$.
+% act([true, false, true], (a, b , c, d))
+
+Thinnings have a notion of composition and identity, inherited from the properties of the subsequence relation. This makes them a category
+
+$[\true, \false, \true] \cdot ([\true, \false, \true, \true] \cdot [a,b,c,d]) = [\true, \false, \true] \cdot [a,c,d] = [a,d]$
+
+$[\true, \false, \true] \cdot ([\true, \false, \true, \true] \cdot [a,b,c,d]) = ([\true, \false, \true] \cdot ([\true, \false, \true, \true]) \cdot [a,b,c,d]) = [\true, \false, \false, \true] \cdot [a,b,c,d] = [a,d]$
+
+
+Conversely to thinning a list, thinnings can also be seen as weakening an ordered environment into a larger one with unused components.
+
+$ [x,y,z] \cdot [\true, \false, \true, \true] = [x, _, y, z]$
+
+Thinnings can be interpreted semantically as taking lower dimensional functions and lifting them in the obvious way to work in higher dimensions.
+
+
+$ \lbrack [\true, \false, \false, \true] \rbrack \{x,y \mapsto \sin(x) * \cos(y) \} : \mathbb{R}^2 \rightarrow \bR= \{x,\_,\_,y \mapsto \sin(x) * \cos(y) \} : \mathbb{R}^4 \rightarrow \mathbb{R} $
+
+From a programming perspctive, this interpretation of thinnings operates on the frame of a function considered as an ordered list of arguments, lifting the function to take more (redundant) arguments.
+
+\begin{lstlisting}
+def interp(thin : Thin):
+    def lift(f):
+        def res(*args):
+            assert len(args) == dom(thin)
+            return f(*act(thin, args))
+\end{lstlisting}
+
+\section{Thinning Union Finds}
+A union find is an online data structure for storing equivalence relations. It determines a canonical element of the partition determined by the equivalence relation by seeking it up a maintained tree. This tree is stored with children pointing to their parents. When a new equivalence is found, it is stored by pasting the canonical root under the canonical root of the other. This can be done without updating all the members of the partition, since they find their root by seeking up the tree dynamically.
+
+Richer relations than equivalence relations are also storeable in generalizations of the union find \cite{groupuf}.
+
+It is at least sensible to store extra annotations associated with ids, roots, and/or edges. By storing group elements such as an integer offset on the edges, it is possible to describe an online discovered "G-relation  between elements.
+
+While requiring the annotations form a group is sufficient, it is not at clear they are a necessary requirement of a generalized union find. Via control of the ordering during the union operation and by generation of fresh identifiers, more general annotations can be made to work. In particular, thinnings not form a category, not a group, but can nevertheless be made to work
+
+\begin{lstlisting}
+type Thin = list[bool]
+def dom(f : Thin) -> int:
+    return len(f)
+def cod(f : Thin) -> int:
+    return sum(f)
+def id(n : int) -> Thin:
+    return [True]*n
+def comp(f : Thin, g : Thin) -> Thin:
+    assert cod(f) == dom(g)
+    i = 0 
+    result = []
+    for a in f:
+        if a:
+            result.append(g[i])
+            i += 1
+        else:
+            result.append(False)
+    assert i == len(g)
+    return result
+\end{lstlisting}
+
+% pushback of thinnings?
+% lcm?
+% div? retract
+
+Two thinnings represent two subsequences from a common seqeunce. We can consider the operation of taking the intersection of these two sequences as a binary operation on the thinning, the Widest Common Thinning (WCT). This operation is a pushout from the perspective of thinnings and and pullback from the perspective of weakenings. Operationally, the WCT is merely the bitwise \& of the two bool lists.
+
+\begin{lstlisting}
+def wct(f : Thin, g : Thin) -> Thin:
+    assert dom(f) == dom(g)
+    return [a and b for a,b in zip(f,g)]
+
+def widest_common_thinning(x : Thin, y : Thin) -> tuple[int, Thin, Thin]:
+    assert dom(x) == dom(y)
+    size = sum([a and b for a,b in zip(x,y)])
+    proj_x = [b for a,b in zip(x,y) if a] # has dom(proj_x) == cod(x)
+    proj_y = [a for a,b in zip(x,y) if b] # has dom(proj_y) == cod(y)
+    return size, proj_x, proj_y
+\end{lstlisting}
+
+% division. Maybe the divisors should just come from the wct
+
+
+\section{Hash Consing}
+
+Hash consing is the technique of maintaining a mapping of structurally identical trees to unique identifiers. It achieves perfect sharing and deduplication of tree nodes, making the tree into a maximally compact DAG.
+
+Hash consing could also be described less charitably as perfect context destruction. All naively identical subterms are deduplicated by identifying their contexts.
+
+The goal of a naive hash cons is to minimize storage, have fast equality checks and indexing. One way of achieving this is to identify structurally identical terms, but we would be satisfied by any other equally effective method.
+
+As a design choice, one can choose to see the context that a term exists in as just an intrinsic part of the term as the term's symbol or arguments.
+
+From this perspective $[x,y] \vdash \sin(x)\cos(y)$ is an entirely different term than $ [x,a,b,y] \vdash \sin(x)\cos(y) $. In fact, we should never expect to equate two terms that live in different sized contexts. The question of equality of $[x,y] \vdash \sin(x)\cos(y)$ and $ [x,a,b,y] \vdash \sin(x)\cos(y) $ does not even type check as they represent entities of differing dimensionality. If in laziness or conceptual confusion one ever removes the context from the notation, this can become a very confusing statement. In this design choice, "Context-less" terms like $1 + 2$ are seen as uninterpretable meaningless syntax or implicitly coerced as terms in an empty context $[] \vdash 1 + 2$, which is not the same thing.
+
+% Hmm. maybe mapsto mostly but note turnstile as another notation.
+
+While terms in different contexts \textit{are not} equal, they can obviously possess a great deal of similarity. We would like our data structure to not create distinct storage in some sense for these highly similar but different objects.
+
+
+It is useful for hash consing modulo a built in theory to make some operational distinctions between built in theory nodes and opaque alien nodes. Built in theory terms will more often be deeply inspected and are less likely to be long lived. Intermediate theory nodes may also often be fruitfully  garbage collected or destroyed if they are not children of an opaque node of interest. The theory is usually so well a priori understood that not as much should be materialized into data about it.
+
+For this reason it can be useful to have different storage mechanisms available in the hash cons, some longer lived than others. This may take the form of multiple scoped hash cons arenas, or in the form of structured identifiers which always maintain information about the theory specific pieces. The latter design is what we use today, although the former would also work.
+
+
+\section{Thinning E-Graphs}
+
+Ordinary terms implemented by pointers from parent to child can already share children with multiple parents. For nondestructive rewriting occurring near the root of a term, this achieves a great deal of sharing. For rewriting nearer the leaves of deep terms, this achieves very little sharing. What is needed in this case is a way for a multiple children to share a parent context.
+
+The egraph works via an indirection inserted between parent and child, the "e-class". Because of this indirection, one may choose any of the equivalent children from the e-class or conversely any equivalent parent context from a child. In this manner, the children can share a single parent.
+
+This only works because there is a single link between parent and child, the very property that makes the obects under considerations tree-like. In the case of bound variables, despite in one sense remaining a tree-like structure, the variable is in essence an extra link connecting the children subgraph from its parent. If one attempts to design an eclass indirection, the choices going through these different links are often not independent.
+
+What one can instead do is bundle up the multiple links into a single fat "bus" link. Another viewpoint is one selects an appropriate and useful notion of graph decomposition, an inductive method or description of graphs. More data is in this bus and it has more implementation complexity, but one has reduced oneself back to the single combination link connecting the child to its parent. An indirection that forks the incoming signal to all the choices works again since the correlated choices are bundled.
+
+Thinning E-Graphs in essence combine the thinning union find and thinning hash cons.
+
+% structured eids
+
+% Redundancies
+
+A shocking and disturbing choice that nevertheless seems to work is what to do when two terms with different minimal needed contexts are unioned. Two natural choices are to take the union of the needed contexts or the intersection. The union makes sense in the interpretation that accessing a variable in a context that does not have it is an error. The intersection can make sense by the reasoning that the very asserted union demonstrates that non shared pieces of needed context must actually not matter and can be replaced by arbitrary junk.
+
+It is desirable to have terms go into the smallest context possible, the strongest context, to achieve more sharing. This is the choice that slotted e-graphs take.
+
+The choice of union of needed contexts remains unexplored and perhaps does not work.
+% the lambda examples.
+
+
+Union nodes (unodes) \cite{aegraphs} are a technique for maintaining the ability to enumerate the members of an equivalence class in a cheap way. They store essentially the same tree that the union find stores, but in the opposite direction, with parents holding pointers to children. While this tree does not support the find operation, you can instead traverse it and it remains easy to paste two trees under a new common unode upon a union event.
+
+Another approach for maintaining enumeration is to maintain a linked list of elements in the equivalence class and splice these lists into each other upon a union event. This does not obviously work with the thinning annotations because some control over the union find tree was necessary to store thinning relationships correctly. Annotated union finds are not necessarily as free wheeling as a simple union find.
+
+% picture
+
+\section{E-matching}
+
+\section{Related Work}
+
+Slotted e-graphs \cite{slotted} are a mechanism for efficient handling of $\alpha$ equivalence in e-graphs. The e-graph described in this work can be seen as taking the slotted notion of redundancy as primary and removing the notion of permutative renaming. This is to some degree how the idea was developed. Both this work and slotted are related to the concept of Hashing modulo alpha equivalence \cite{hashalpha}, but it is not always clear how to take the ideas there an make them work in the highly shared situation of e-graphs.
+
+Co de-Bruijn notation \cite{McBride_2018} is also a direct inspiration for the Thinning e-graph. Essentially the thinning e-graph is just an application of the Co de-Bruijn ideas in the e-graph setting.
+
+% mcbride
+% slotted
+\begin{thebibliography}{1}
+
+%\bibitem{key} John Doe {\em Title and stuff}  2013.
+
+\end{thebibliography}
+
+\section{Acknowledgements}
+Rudi, Max Willsey, Conor McBride, Cody Roux
+
+
+\end{document}
