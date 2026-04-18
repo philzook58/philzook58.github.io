@@ -581,7 +581,10 @@ Max has pushed back on the concept of structured / fat eids. EIds shouldn't be f
 
 One story I kind of like about this is comparing it to garbage collection. The enode arena is basically a bump allocator. If you manually delete enodes, you're kind of doing maually memory management with `free` and all the perils thereof. Copying an entire egraph into a new one with junk compacted away is like a copying garbage collector. One could note certain enodes as keep or not keep with a boolean field. The keep enodes are the ones that are being used as a termbank whereas the non-keep enodes (ephemeral enodes) are only there because a keep enode needs them. In this scheme, you could have
 
+I was talking to Rudi and he agreed that maybe "Thinning" is a terrible name that evokes nothing. It's bad since very often we are really injecting or lifting the things of interest rather than thinning them. We thin contexts and lists, but that is one step removed from the main application of lifting functions to work on higher d arguments.
+
 I submitted a talk proposal to EGRAPHS 2026 on it. We'll see.
+The draft is here <https://github.com/philzook58/philzook58.github.io/blob/master/_drafts/papers/thinning_egraph.tex>
 I think as a member of the program committee, it makes sense to give a proposal from me less weight. People in this community have heard me talk anyway. Also the work as it stans is pretty unfinished. I like that the EGRAPHS call for proposals says "ongoing work". I feel like that takes the pressure off.
 I am uncomfortable that the work isn't quite at the spot I'd like right now, but I feel like I can have it in the right spot by the time egraphs actually rolls around. I would like to share it and I think if I wait til next year, I'll have something else I'm running hot on by then.
 I also like that it is open author and not double blind or whatever. Sometimes I feel like worrying about that in inhibiting to talking about work while it's hot and interesting to you. Saying things multiple times is _good_ and saying it while you're working on it is _good_.
