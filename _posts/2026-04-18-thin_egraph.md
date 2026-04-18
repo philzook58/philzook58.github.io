@@ -587,8 +587,13 @@ I submitted a talk proposal to EGRAPHS 2026 on it. We'll see.
 The draft is here <https://github.com/philzook58/philzook58.github.io/blob/master/_drafts/papers/thinning_egraph.tex>
 I think as a member of the program committee, it makes sense to give a proposal from me less weight. People in this community have heard me talk anyway. Also the work as it stans is pretty unfinished. I like that the EGRAPHS call for proposals says "ongoing work". I feel like that takes the pressure off.
 I am uncomfortable that the work isn't quite at the spot I'd like right now, but I feel like I can have it in the right spot by the time egraphs actually rolls around. I would like to share it and I think if I wait til next year, I'll have something else I'm running hot on by then.
+
 I also like that it is open author and not double blind or whatever. Sometimes I feel like worrying about that in inhibiting to talking about work while it's hot and interesting to you. Saying things multiple times is _good_ and saying it while you're working on it is _good_.
+
 I'm been on a micro lull in posting because I visited California to see my new niece Romy. Also trying to get thinning egraphs working. I've also been trying to use more rust, which is less familiar to me, more verbose, and also despite evxcr_jupyter not that amenable to my fast and loose scratchpad workflow. Still, it's a skill I want and it feels good to be building a base of technology in a way that isn't kneecapped at the outset performance ceiling and shippability wise.
+
+Thank you CF for reminding me I'm behind on posting. It feels good to just let her rip. That is my style. Perfection is the enemy of the good. Keep it flowing. Sit down, edit a tiny bit, post.
+
 I wish ocaml had a better way to make libraries for other languages.
 
 This version I still think is redundant. I don't think returning the UserId in the minimal context is necessary. I should just return the context asked for. And in that case, maybe don't return UserId at all? I'm still pretty shaky on how ematching is going to pass something sensible between the left hand and right hand side.
