@@ -1,5 +1,5 @@
 @article{slotted,
-  author     = {Schneider, Rudi and Rossel, Marcus and Shaikhha, Amir and Goens, Andr\'{e}s and Kundefinedhler, Thomas and Steuwer, Michel},
+  author     = {Schneider, Rudi and Rossel, Marcus and Shaikhha, Amir and Goens, Andr\'{e}s and K{\"o}hler, Thomas and Steuwer, Michel},
   title      = {Slotted E-Graphs: First-Class Support for (Bound) Variables in E-Graphs},
   year       = {2025},
   issue_date = {June 2025},
@@ -38,6 +38,13 @@
   note         = {[Online; accessed 12-4-2026]}
 }
 
+@article{gonccalves2025thinning,
+  title   = {Thinning Thinnings: Safe and Efficient Binders},
+  author  = {Gon{\c{c}}alves, April and Kokke, Wen},
+  journal = {TYPES 2025},
+  year    = {2025}
+}
+
 @misc{zucker2026monusfactora,
   author       = {Philip Zucker},
   title        = {Monus, Factor, and Thinning Union Finds},
@@ -50,6 +57,13 @@
   title        = {Thinnings: Sublist Witnesses and de Bruijn Index Shift Clumping},
   howpublished = {\url{https://www.philipzucker.com/thin1/}},
   note         = {[Online; accessed 12-4-2026]}
+}
+
+@misc{zucker2026microeggpythin,
+  author       = {Philip Zucker},
+  title        = {microeggpy thinning implementation},
+  howpublished = {\url{https://github.com/philzook58/microeggpy/blob/main/src/thin.rs}},
+  note         = {Ongoing work}
 }
 
 @misc{zucker2025omeletsneedonionsegraphs,
@@ -79,4 +93,36 @@
   articleno  = {195},
   numpages   = {26},
   keywords   = {Abstract interpretation, Labeled union-find, Relational abstract domain}
+}
+
+@inproceedings{Kiselyov,
+  author    = {Kiselyov, Oleg},
+  editor    = {Gallagher, John P.
+               and Sulzmann, Martin},
+  title     = {Lambda to SKI, Semantically},
+  booktitle = {Functional and Logic Programming},
+  year      = {2018},
+  publisher = {Springer International Publishing},
+  address   = {Cham},
+  pages     = {33--50},
+  abstract  = {We present a technique for compiling lambda-calculus expressions into SKI combinators. Unlike the well-known bracket abstraction based on (syntactic) term re-writing, our algorithm relies on a specially chosen, compositional semantic model of generally open lambda terms. The meaning of a closed lambda term is the corresponding SKI combination. For simply-typed as well as unityped terms, the meaning derivation mirrors the typing derivation. One may also view the algorithm as an algebra, or a non-standard evaluator for lambda-terms (i.e., denotational semantics).},
+  isbn      = {978-3-319-90686-7}
+}
+
+@inproceedings{hashalpha,
+  author    = {Maziarz, Krzysztof and Ellis, Tom and Lawrence, Alan and Fitzgibbon, Andrew and Peyton Jones, Simon},
+  title     = {Hashing modulo alpha-equivalence},
+  year      = {2021},
+  isbn      = {9781450383912},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/3453483.3454088},
+  doi       = {10.1145/3453483.3454088},
+  abstract  = {In many applications one wants to identify identical subtrees of a program syntax tree. This identification should ideally be robust to alpha-renaming of the program, but no existing technique has been shown to achieve this with good efficiency (better than O(n2) in expression size). We present a new, asymptotically efficient way to hash modulo alpha-equivalence. A key insight of our method is to use a weak (commutative) hash combiner at exactly one point in the construction, which admits an algorithm with O(n (logn)2) time complexity. We prove that the use of the commutative combiner nevertheless yields a strong hash with low collision probability. Numerical benchmarks attest to the asymptotic behaviour of the method.},
+  booktitle = {Proceedings of the 42nd ACM SIGPLAN International Conference on Programming Language Design and Implementation},
+  pages     = {960–973},
+  numpages  = {14},
+  keywords  = {abstract syntax tree, equivalence, hashing},
+  location  = {Virtual, Canada},
+  series    = {PLDI 2021}
 }
