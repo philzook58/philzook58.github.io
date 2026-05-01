@@ -12,7 +12,7 @@ TLDR:
 - Liftings add redundant arguments to functions
 - Dumps partially apply functions to junk
 - They are in a one-sided inverse relationship
-- Co-de Bruijn is a normal form for lifting expressions by pulling them up maximally.
+- Co-de Bruijn is a normal form for lifting expressions by pulling lifts up maximally.
 
 # Lifting
 
