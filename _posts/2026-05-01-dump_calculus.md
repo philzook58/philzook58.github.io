@@ -453,7 +453,7 @@ cod(t) |-> dump(t, e1) = dump(t, e2)
 
 All of this shows up in the horrible problem `1 |-> x*lift(0) = lift(0)`. This is where the slotted e-graph has "redundancies" and something like the above congruence rules are what enables a normalizing union find to work. The number of "public slots" goes down, which here is noted by a field/analysis saying what `dumps` are allowed on an eid.
 
-I sometimes like `|->` notation and sometimes `|-`. They trigger different parts of my brain. Much of my discussion of context and ideas are ulitmately sourced from the semantics of type theory. Kind of I'm just ignoring / de-emphasizing the type part.
+I sometimes like `|->` notation and sometimes `|-`. They trigger different parts of my brain. Much of my discussion of context and ideas are ultimately sourced from the semantics of type theory. Kind of I'm just ignoring / de-emphasizing the type part. In type theory, I've recently kind of realized that the "semantic" thing that goes in the semantic brackets is the _entire_ judgement, including the context `[[Gamma |- t : A]]` has the meaning of a function from Gamma variables to the set `A`, where `t` is the expression.  `[[t]]` doesn't even make any sense, not does `[[t : A]]`. You always need at least an empty context.
 
 # Bits and Bobbles
 
