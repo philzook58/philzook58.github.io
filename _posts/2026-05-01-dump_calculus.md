@@ -39,7 +39,7 @@ lift([True, False, True], lambda x,y: x + y)("A", "B", "C")
 
     'AC'
 
-I find Python friendly and concrete, but this operation can also be considered as a mathematical operation that takes one function into another, for example $ \{x,y,z \mapsto \sin(x)\} = lift_{100}(sin)$ where $lift_{10} : (\mathbb{R} \rightarrow \mathbb{R}) \rightarrow (\mathbb{R}^3 \rightarrow \mathbb{R})$
+I find Python friendly and concrete, but this operation can also be considered as a mathematical operation that takes one function into another, for example $ \{x,y,z \mapsto \sin(x)\} = lift_{100}(sin)$ where $lift_{100} : (\mathbb{R} \rightarrow \mathbb{R}) \rightarrow (\mathbb{R}^3 \rightarrow \mathbb{R})$
 
 Note that two lifts can always be compressed into a single lift. $lift_k \cdot lift_l = lift_{k \cdot l}$. This is the composition of thinnings.
 
