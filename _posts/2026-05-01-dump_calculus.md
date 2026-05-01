@@ -395,7 +395,7 @@ eprover rulez. I love the new `--print-oriented-eqlits-as-rule` flag. I think I 
 
 # Congruence Rules For Lifting and Dumping
 
-Rudi has a nice way of presenting slotted egraphs as the regular congruence rules + a special renaming rule
+Rudi has a nice way of presenting [slotted egraphs](https://dl.acm.org/doi/10.1145/3729326) as the regular congruence rules + a special renaming rule
 
 ```
 t = s
@@ -453,10 +453,12 @@ I sometimes like `|->` notation and sometimes `|-`. They trigger different parts
 
 # Bits and Bobbles
 
-- <https://www.philipzucker.com/thin_egraph/>
-- <https://www.philipzucker.com/thin_hash_cons_codebruijn/>
-- <https://www.philipzucker.com/thin_monus_uf/>
-- <https://www.philipzucker.com/thin1/>
+This is the latest in this series of blog posts:
+
+- <https://www.philipzucker.com/thin_egraph/> Putting it all together as an egraph
+- <https://www.philipzucker.com/thin_hash_cons_codebruijn/> making a co de bruijn hash cons based on thinnings
+- <https://www.philipzucker.com/thin_monus_uf/> thinning union finds
+- <https://www.philipzucker.com/thin1/> Discussing thinnings at all
 
 Lift and dump combinators also work on dicts. Boolean dicts are kind of interesting. Relationship of lift/dump normal forms to bdds? An unused variable should get lifted away.
 
