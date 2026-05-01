@@ -88,7 +88,7 @@ Lifting is an injective operation. If takes different inputs functions to differ
 
 # Lifted Identity is Variables
 
-A nameless/semantic way to refer to variables is to use lifted identity functions.
+A nameless/semantic way to refer to variables is to use lifted identity functions. I did something similar here <https://www.philipzucker.com/z3_diff/> and the trick seems to show up again and again. It is also reminiscent of the perspective that on a manifold "x" "y" and "z" are just scalar functions from the manifold $M \rightarrow \mathbb{R}$.
 
 ```python
 X = lift([True, False, False], lambda x: x)
