@@ -7,6 +7,13 @@ I've been trying to think about how to make a nameless de bruijn-y e-graph and t
 
 These are an interesting set of combinators to kind of "first orderize" nearly trivial functional manipulations. By baking in the lifting with special support, I hope to get a nice, simple, efficient egraph that supports binders and alpha equivalence.
 
+TLDR:
+
+- Liftings add redundant arguments to functions
+- Dumps partially apply functions to junk
+- They are in a one-sided inverse relationship
+- Co-de Bruijn is a normal form for lifting expressions by pulling them up maximally.
+
 # Lifting
 
 You can lift functions so that they can take more arguments. The thinning describes which arguments to drop. More on thinnings here <https://www.philipzucker.com/thin1/> . You can `thin` a tuple and use that combinator to contravariantly `lift` functions by thinning their arguments tuple.
@@ -268,7 +275,7 @@ There might be an egraph that bakes in this kind of subst node or bakes in a fas
 
 In a very peculiar way, lambda is also a kind of dump. It binds a variable and "gets rid of it" in some sense from the context. But it does so in a non destructive way by radically changing the type of the object under consideration and does not form a one-sided inverse with `lift`.
 
-Making an adjunction is very tempting because lifting is basically weakening and weakening is a member of one of the most famous adjunctions $\exists \dashv weak \dashv \forall$. Predicates are functions into some truth value and you can lift and dump them. <https://ncatlab.org/nlab/show/quantification#LawvereQuantifier> <https://ncatlab.org/nlab/show/hyperdoctrine> . I have not found such complex ideas useful to the task at hand and they are a distraction.
+Making an adjunction is very tempting because lifting is basically [weakening](https://ncatlab.org/nlab/show/weakening+rule) and weakening is a member of one of the most famous adjunctions $\exists \dashv weak \dashv \forall$. Predicates are functions into some truth value and you can lift and dump them. <https://ncatlab.org/nlab/show/quantification#LawvereQuantifier> <https://ncatlab.org/nlab/show/hyperdoctrine> . I have not found such complex ideas useful to the task at hand and they are a distraction.
 
 # Simple Generators for Lift and Dump
 
@@ -453,7 +460,7 @@ cod(t) |-> dump(t, e1) = dump(t, e2)
 
 All of this shows up in the horrible problem `1 |-> x*lift(0) = lift(0)`. This is where the slotted e-graph has "redundancies" and something like the above congruence rules are what enables a normalizing union find to work. The number of "public slots" goes down, which here is noted by a field/analysis saying what `dumps` are allowed on an eid.
 
-I sometimes like `|->` notation and sometimes `|-`. They trigger different parts of my brain. Much of my discussion of context and ideas are ultimately sourced from the semantics of type theory. Kind of I'm just ignoring / de-emphasizing the type part. In type theory, I've recently kind of realized that the "semantic" thing that goes in the semantic brackets is the _entire_ judgement, including the context `[[Gamma |- t : A]]` has the meaning of a function from Gamma variables to the set `A`, where `t` is the expression.  `[[t]]` doesn't even make any sense, not does `[[t : A]]`. You always need at least an empty context.
+I sometimes like `|->` notation and sometimes `|-`. They trigger different parts of my brain. Much of my discussion of context and ideas are ultimately sourced from the semantics of type theory. Kind of I'm just ignoring / de-emphasizing the type part. In type theory, I've recently kind of realized that the "semantic" thing that goes in the semantic brackets is the _entire_ judgement, including the context `[[Gamma |- t : A]]` has the meaning of a function from Gamma variables to the set `A`, where `t` is the expression.  `[[t]]` doesn't even make any sense, nor does `[[t : A]]`. You always need at least an empty context.
 
 # Bits and Bobbles
 
