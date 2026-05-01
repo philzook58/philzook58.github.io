@@ -194,6 +194,8 @@ $ \{x,y \mapsto \sin(\cos(x)) \} = \{x,y \mapsto \sin(\{ a,b \mapsto \cos(\{ l,k
 
 # Co-de Bruijn is Maximally Pulled Up Lifting
 
+There a many redundant ways of writing the same function with liftings put in different spots. Can we pick a canonical place to put liftings? Yes.
+
 Co-de Bruijn <https://arxiv.org/abs/1807.04085> is described as a method to deal with lambda binders, but my expression language does not contain lambdas at this point. In fact, Co-de Bruijn normalization makes sense in the absence of the lambda binders. If it basically noting that there is a normal form that pulls up any lifts as high as they will go. The entries of the `lift` kind of look like a free variable analysis.
 
 The function `e1` below can be described in combinators
