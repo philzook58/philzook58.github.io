@@ -4,6 +4,21 @@
 
 $sin(x)$
 
+$sin(y)$
+$1 + 2$
+$sin(fred)$
+
+$sin(fred) : \bR$ ? But aren't we trying to talk about functions?
+
+partial derivative in thermo example
+
+${x,y,z |-> sin(x)}$
+
+Another approach/perpspective is to turtle this all the way down
+${x,y,z |-> sin({x,y,z |-> x})}$
+
+The context is part of the term.
+
 ## Plot
 
 $x |-> sin(x)$
@@ -21,6 +36,16 @@ The context is a _part_ of the term. It isn't "where" the term is.
 - Lift factoring. Normal form ~ co-de Bruijn
 
 Going nameless
+
+```
+def lift_fun
+def lift_dict
+def thin_list
+```
+
+def dump_fun()
+def wide_list()
+def papply(): # subst
 
 # Ground Congruence with Rigid Variables
 
