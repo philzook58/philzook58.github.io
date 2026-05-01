@@ -192,7 +192,7 @@ The following manipulation is kind of interesting as a way to think about conver
 
 $ \{x,y \mapsto \sin(\cos(x)) \} = \{x,y \mapsto \sin(\{ a,b \mapsto \cos(\{ l,k \mapsto l \}(a,b)) \}(x,y)) \} = \sin '( \cos'(lift_{10}(id)))$
 
-# Co-de Bruijn is Maximally Pushed Down Lifting
+# Co-de Bruijn is Maximally Pulled Up Lifting
 
 Co-de Bruijn <https://arxiv.org/abs/1807.04085> is described as a method to deal with lambda binders, but my expression language does not contain lambdas at this point. In fact, Co-de Bruijn normalization makes sense in the absence of the lambda binders. If it basically noting that there is a normal form that pulls up any lifts as high as they will go. The entries of the `lift` kind of look like a free variable analysis.
 
@@ -232,12 +232,12 @@ The core equality that makes this possible is "lift pushing" `lift(T, f(X,Y)) = 
 
 # Other Dump Operators
 
-Rather than throwing in some default value (which I guess is working in pointed sets?) there are some other interpretations of dump. The other interpretations are kind of nice because they form a galois connection / adjunction to `lift`, but I dunno if that is useful.
+Rather than throwing in some default value (which I guess is working in pointed sets?) there are some other interpretations of dump. The other interpretations are kind of nice because they form a [galois connection](https://en.wikipedia.org/wiki/Galois_connection) / adjunction to `lift`, but I dunno if that is useful.
 
 Dump operations are often associated with binding forms
 
-- `min_x` / `max_x`   `min_x {x,y |-> f(x,y)} <= g <-> f <= lift g`
-- Expectation value `E_X`
+- `min_x` / `max_x` These form an adjoint pair with lifting using pointwise comparison of functions as the ordering on functions  `min_x {x,y |-> f(x,y)} <= g <-> f <= lift g`
+- Expectation value `E_X`, integral, sum
 - Partial functions have an ordering. We can define `dump` for partial functions such that either `dump_x(f)(y)` is undefined if the values of f do not agree for all values of x. This also forms a galois connection.
 
 Substitution defines basically a family of `dump` operators, one per value you'd dump /partially apply into that argument. This gives you an algebra of partial application that is more flexible than just always partially applying the first argument. The `papply` operator has equational laws that interact with `lift` because if you are just throwing away an argument you don't have to continue partially applying it.
@@ -261,6 +261,8 @@ papply([None, 3], lambda x,y: x**y)(2)
 ```
 
     8
+
+There might be an egraph that bakes in this kind of subst node or bakes in a fast subst eid. Substitution seems like it needs more juice to be pushed down than just rebuilding.
 
 In a very peculiar way, lambda is also a kind of dump. It binds a variable and "gets rid of it" in some sense from the context. But it does so in a non destructive way by radically changing the type of the object under consideration and does not form a one-sided inverse with `lift`.
 
