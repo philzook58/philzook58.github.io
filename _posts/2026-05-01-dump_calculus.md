@@ -232,7 +232,7 @@ The core equality that makes this possible is "lift pushing" `lift(T, f(X,Y)) = 
 
 # Other Dump Operators
 
-Rather than throwing in some default value (which I guess is working in pointed sets?) there are some other interpretations of dump. The other interpretations are kind of nice because they form a [galois connection](https://en.wikipedia.org/wiki/Galois_connection) / adjunction to `lift`, but I dunno if that is useful.
+Rather than throwing in some default value (which I guess is working in pointed sets?) there are some other interpretations of dump. The other interpretations are kind of nice because they form a [galois connection](https://en.wikipedia.org/wiki/Galois_connection) / [adjunction](https://en.wikipedia.org/wiki/Adjoint_functors) to `lift`, but I dunno if that is useful.
 
 Dump operations are often associated with binding forms
 
@@ -265,6 +265,8 @@ papply([None, 3], lambda x,y: x**y)(2)
 There might be an egraph that bakes in this kind of subst node or bakes in a fast subst eid. Substitution seems like it needs more juice to be pushed down than just rebuilding.
 
 In a very peculiar way, lambda is also a kind of dump. It binds a variable and "gets rid of it" in some sense from the context. But it does so in a non destructive way by radically changing the type of the object under consideration and does not form a one-sided inverse with `lift`.
+
+Making an adjunction is very tempting because lifting is basically weakening and weakening is a member of one of the most famous adjunctions $\exists \dashv weak \dashv \forall$. Predicates are functions into some truth value and you can lift and dump them. <https://ncatlab.org/nlab/show/quantification#LawvereQuantifier> <https://ncatlab.org/nlab/show/hyperdoctrine> . I have not found such complex ideas useful to the task at hand and they are a distraction.
 
 # Simple Generators for Lift and Dump
 
@@ -461,6 +463,8 @@ This is the latest in this series of blog posts:
 - <https://www.philipzucker.com/thin1/> Discussing thinnings at all
 
 Lift and dump combinators also work on dicts. Boolean dicts are kind of interesting. Relationship of lift/dump normal forms to bdds? An unused variable should get lifted away.
+
+Thinnings are basically a semi-simplicial category. <https://en.wikipedia.org/wiki/Simplex_category> . It's interesting to consider actually representing the data of the category of cubes as some kind of bitvector mish mosh. <https://ncatlab.org/nlab/show/category+of+cubes> <https://amelia.how/posts/cubical-sets.html> These are probably also combinators for manipulating functions with distnguished endpoints (paths, proofs). Perhaps a cool way of internalizing proofs into egraphs?
 
 Dumping is related to the slotted e-graph's notion of redundancy. The normal form of every expression is to be as thin as possible. This is nice because it achieves more sharing between different contexts.
 
