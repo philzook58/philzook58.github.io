@@ -91,7 +91,7 @@ dump([True, False], lambda x,y: x + y)("A")
     'AJUNK'
 
 dumping forms a one-sided inverse to lifting. <https://en.wikipedia.org/wiki/Inverse_element#Left_and_right_inverses>  `dump(t, lift(t, f)) == f` but not necessarily `lift(t, dump(t, f)) ?= f`.  
-Lifting is an injective operation. If takes different inputs functions to different output functions. In one-sided inverses, on of the pair is injective and the other isn't, so it isn't a bijection.
+Lifting is an injective operation. If takes different inputs functions to different output functions. In one-sided inverses, one of the pair is injective and the other isn't, so it isn't a bijection.
 
 # Lifted Identity is Variables
 
