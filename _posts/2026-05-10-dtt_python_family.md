@@ -21,7 +21,7 @@ In my previous blog post on dependent type theory as frozensets, I think this wa
 
 What this corresponds to is a choice is to only work with 0-arity stuff rather than have a separate notion of "bare value"
 
-More mundnely, you can see that these 3 things are all kind of the same thing:
+More mundanely, you can see that these 3 things are all kind of the same thing:
 
 ```python
 e1 = 42
@@ -29,7 +29,7 @@ e2 = lambda: 42
 e3 = {() : 42}
 ```
 
-They aren't perfectly interchangeable, you need to add extra `lambda` and `f()` when you use things that are thunked like `e2`. But they are getting at the same stuff in some sense.
+They aren't perfectly interchangeable, sometimes you need to add extra `lambda`, `f()`, and `f[()]` to expressions. But they are getting at the same stuff in some sense.
 
 But if we are going to be making a bunch of combinators to manipulate n-ary functions, we can use those same combinators on `e2` but not on `e1`. Our combinators will need less special cases and work uniformly
 
