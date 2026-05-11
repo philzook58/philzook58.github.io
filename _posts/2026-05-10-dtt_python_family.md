@@ -284,7 +284,6 @@ import itertools
 from frozendict import frozendict
 def Pi(A : Family, B : Family) -> Family:
     assert proj_ctx(A) == {ctx[1:] for ctx in proj_ctx(B)}
-    # assert A == {{c[-1] for c in fullctx}  for ctx, fullctx itertools.groupby(proj_ctx(B), key=lambda ctx: ctx[:-1])}
     A = {k : list(v) for k,v in A.items()}
     return { ctx : {frozendict({a : b for a,b in zip(As, bvs)}) for bvs in itertools.product(*[B[ctx + (a,)] for a in As])}  for ctx, As in A.items() }
 Pi(Bool, ifUnitBool)
@@ -446,6 +445,8 @@ def Pi(T : Family) -> Family:
         key=lambda kv: kv[0][:-1],
     )}
 Pi(UnitBool)
+
+    # assert A == { {c[-1] for c in fullctx}  for ctx, fullctx itertools.groupby(proj_ctx(B), key=lambda ctx: ctx[:-1])}
 
 ```
 
