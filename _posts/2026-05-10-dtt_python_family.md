@@ -55,7 +55,7 @@ This is kind of an "LCF" style of correspondence between inference rules and som
 
 Ok so we're going to try to build naive frozenset combinators that have the flavor of dependent type theory judgements. Many of them will corresponds to some inference rule of dependent type theory and dignify them in that way.
 
-In another blog post <https://www.philipzucker.com/telescope_tries/> I state that telescopes (the dependent notion of contexts) are tries. Tries are a useful way of keying on sequences. I think this is still an interesting and perhaps useful point, but it is a bit simpler to just use dicts on tuples as my notion of `Yada` in context rather than actually implement tries.
+In another blog post <https://www.philipzucker.com/telescope_tries/> I state that [telescopes](https://ncatlab.org/nlab/show/type+telescope) (the dependent notion of contexts) are tries. Tries are a useful way of keying on sequences. I think this is still an interesting and perhaps useful point, but it is a bit simpler to just use dicts on tuples as my notion of `Yada` in context rather than actually implement tries.
 
 ```python
 type Env = tuple[object,...]
@@ -102,6 +102,8 @@ def proj_ctx[T](x : InCtx[T]) -> Ctx:
        G |-
 
     Not usually a rule. But ought to be admissible.
+    That the context is a proectable piece out of the judgement is a central point in fiber bundle stuff
+    Jacobs book
     """
     return frozenset(x.keys())
 

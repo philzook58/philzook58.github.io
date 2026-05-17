@@ -19,6 +19,13 @@ ${x,y,z |-> sin({x,y,z |-> x})}$
 
 The context is part of the term.
 
+# Problems
+
+1. sinsinsins(x) sares not data with sinsinsins(y)
+2. vairable gnerating rules
+3. free variable analysis soundness
+4. Names make me quesy
+
 ## Plot
 
 $x |-> sin(x)$
