@@ -1,13 +1,13 @@
 ---
-title: Reading Proof Objects and Completed Rewrites from eprover into Knuckledragger
+title: Reading Proof Objects and Completed Rewrite Systems from eprover into Knuckledragger
 date : 2026-05-17
 ---
 
 Automated reasoning is fun.
 
-E-prover <https://github.com/eprover/eprover> is a pure C superposition theorem prover. It's quite nice. Superposition provers has strengths and weaknesses that complement those of SMT solvers.
+E-prover <https://github.com/eprover/eprover> is a pure C [superposition](https://en.wikipedia.org/wiki/Superposition_calculus) theorem prover. It's quite nice. [Superposition](https://www.tcs.ifi.lmu.de/teaching/courses-ws-2024-25/automated-theorem-proving/slides12-superposition.pdf) provers has strengths and weaknesses that complement those of SMT solvers.
 
-I was poking around at exporting problems from z3py by printing cnf formulas and reading back in the results using scryerpy, some light bindings I've made for scryer prolog, a embeddable rust prolog available at `pip install kdrag-scryer` <https://github.com/philzook58/scryerpy> . This paper pointed out that post processing TPTP stuff via prolog is nice <https://arxiv.org/abs/2602.18844> . It is kind of overkill, but it works.
+I was poking around at exporting problems from z3py by printing cnf formulas and reading back in the results using scryerpy, some light bindings I've made for [scryer prolog](https://github.com/mthom/scryer-prolog), a embeddable rust prolog I've made available at `pip install kdrag-scryer` <https://github.com/philzook58/scryerpy> . This paper pointed out that post processing TPTP stuff via prolog is nice <https://arxiv.org/abs/2602.18844> . It is kind of overkill, but it works.
 
 # Completion via Eprover
 
@@ -290,7 +290,7 @@ prove(x * inv(x) == e, by=eqs)
 
 Vampire and eprover are two top tier automated theorem provers.
 
-Isabelle's sledgehammer is crazy good. I should try to understand it better. A funny thing is basically you need a native automated theorem prover in order to digest proofs from others systems. They'll only ever really give you breadcrumbs.
+Isabelle's sledgehammer is crazy good. I should try to understand it better. A funny thing is basically you need a native automated theorem prover in order to digest proofs from others systems. They'll only ever really give you breadcrumbs. I may want to use scryer to make some leantap or leancop variants to assist proof reconstruction <https://formal.kastel.kit.edu/beckert/leantap/> <https://jens-otten.de/tutorial_tableaux19/>
 
 I also think it's interesting to explore proof by saturation / inductionless induction in eprover. The mere fact of saturation proves consistency of a statement and therefore it is true in the initial term model or something like that. I dunno how I'd even replay those proofs. I think eprover could be used for unbounded bitvector proofs in the manner.
 
