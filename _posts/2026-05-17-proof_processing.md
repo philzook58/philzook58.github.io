@@ -141,6 +141,8 @@ complete([eq.thm for eq in eqs])
      ([_A, _B], mul(_A, mul(inv(_A), _B)) == _B),
      ([_A, _B], inv(mul(_A, _B)) == mul(inv(_B), inv(_A)))]
 
+Note this is outrageuosly faster than my homegrown KB in python <https://www.philipzucker.com/knuth_bendix_knuck/> . This problem is baby shit, but even for this my solver took about 1s after I tuned quite a bit. eprover eats it instantaneously. Probably all the time is in making a subprocess etc.
+
 # Replaying Proof Objects
 
 In Knuckederagger, I maintain the right to just trust eprover as an oracle.
