@@ -292,6 +292,12 @@ Vampire and eprover are two top tier automated theorem provers.
 
 Isabelle's sledgehammer is crazy good. I should try to understand it better. A funny thing is basically you need a native automated theorem prover in order to digest proofs from others systems. They'll only ever really give you breadcrumbs.
 
+I also think it's interesting to explore proof by saturation / inductionless induction in eprover. The mere fact of saturation proves consistency of a statement and therefore it is true in the initial term model or something like that. I dunno how I'd even replay those proofs. I think eprover could be used for unbounded bitvector proofs in the manner.
+
+sick <https://vprover.github.io/vampireGuide/> vampire's getting good docs. Getting out vampire proof objects should be quite similar. Vampire seems less straightforward to understand it's saturated objects.
+
+Someone is making rust bindings to vampire <https://docs.rs/vampire-sys/latest/vampire_sys/> ? Hellllllo nurse.
+
 I've been playing with eprover again recently because of my increased understanding of the concepts behind it's command line knobs and the new `--print-eqlists-as-oriented-rules` flag.
 
 Knuth bendix and e-graphs are intimately related.
