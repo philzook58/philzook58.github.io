@@ -292,6 +292,8 @@ prove(x * inv(x) == e, by=eqs)
 
 Vampire and eprover are two top tier automated theorem provers.
 
+Should I being called eprover "The Equational Theorem Prover E"? I think it's name is E, but I call it eprover.
+
 Isabelle's sledgehammer is crazy good. I should try to understand it better. A funny thing is basically you need a native automated theorem prover in order to digest proofs from others systems. They'll only ever really give you breadcrumbs. I may want to use scryer to make some leantap or leancop variants to assist proof reconstruction <https://formal.kastel.kit.edu/beckert/leantap/> <https://jens-otten.de/tutorial_tableaux19/> knuth bendix in prolog <https://www.metalevel.at/trs/> . I tried getting saturate running <https://resources.mpi-inf.mpg.de/SATURATE/Saturate.html> . It's hopeless. Too fancy, too bit rotted.
 
 I also think it's interesting to explore proof by saturation / inductionless induction in eprover. The mere fact of saturation proves consistency of a statement and therefore it is true in the initial term model or something like that. I dunno how I'd even replay those proofs. I think eprover could be used for unbounded bitvector proofs in the manner.
