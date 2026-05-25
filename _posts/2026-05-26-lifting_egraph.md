@@ -59,7 +59,11 @@ What to do about that?
 
 # Lifting
 
-Well, let's discuss the semantic sense in which `f1(g1(h1(x10))) : R -> R` and `f2(g2(h2(x20))) : R^2 -> R` are related. The latter is a lifted version of the former. If you gave me an object `f1(g1(h1(x10))) : R -> R` I could produce the object `f2(g2(h2(x20))) : R^2 -> R` by merely throwing away the second argument and propagating the first argument. As a python function, this lifting combinator would be written as  `lambda f: lambda x,y: f(x)`. This is a lifting operation, and lifting operations have a tractable algebra associated with them.
+Well, let's discuss the semantic sense in which `f1(g1(h1(x10))) : R -> R` and `f2(g2(h2(x20))) : R^2 -> R` are related.
+
+The latter is a lifted version of the former.
+
+If you gave me an object `f1(g1(h1(x10))) : R -> R` I could produce the object `f2(g2(h2(x20))) : R^2 -> R` by merely throwing away the second argument and propagating the first argument. As a python function, this lifting combinator would be written as  `lambda f: lambda x,y: f(x)`. This is a lifting operation, and lifting operations have a tractable algebra associated with them.
 
 Instead of ever storing `f2(g2(h2(x20))) : R^2 -> R`, I could instead store `lift_10(f1(g1(h1(x10)))) : R^2 -> R`. The subscript on `lift` is a bitvector with a 1 if I should keep the argument, or a 0 if throw it away. Again, this all perfectly first order syntactic and simply typed. I could do so as an encoding in a regular egraph. Sharing of substructure is achieved because the two semantically distinct things now share big subterms.
 
@@ -78,13 +82,15 @@ It is not necessary to encode these properties as rules (although perhaps one st
 
 The properties are so simple, ubiquitous and structural that it may make sense to bake them into the very fabric of what a term or and egraph _is_. This is sweetened by the fact that liftings/thinnings can be represented as compact bitvectors.
 
-Lift is quite simple to represent as a bitvector (a thinning) with a 1 for variables to keep and 0 for variables to drop. This is pretty compact data, and it isn't totally crazy I think to steal some bits to pack it alongside the typical eid term/eclass identifier. eids are often 32 or 64 bits, and typical egraphs do not grow to that size, leaving some headspace for at least of byte of metadata in there, maybe more. You could also perhaps play some run length encoding tricks, etc, depending on the nature of the thinnings you expect. If you need more than 8 variables in scope at once, you could reify the lifting to an enode like the encoding above or start allocating bit vectors kind of like a bigint implementation.
+Lift is quite simple to represent as a bitvector (a thinning) with a 1 for variables to keep and 0 for variables to drop.
+
+This is pretty compact data, and it isn't totally crazy I think to steal some bits to pack it alongside the typical eid term/eclass identifier. eids are often 32 or 64 bits, and typical egraphs do not grow to that size, leaving some headspace for at least of byte of metadata in there, maybe more. You could also perhaps play some run length encoding tricks, etc, depending on the nature of the thinnings you expect. If you need more than 8 variables in scope at once, you could reify the lifting to an enode like the encoding above or start allocating bit vectors kind of like a bigint implementation.
 
 ## Smart Constructor For Lifting
 
 The homomorphism rules can be oriented to float the liftings as high a possible  `f(lift_i(X), lift_i(Y)) -> lift_i(f(X,Y))`. This is a natural rewrite ordering in that the right hand side is the smaller term. A Knuth Bendix Order will achieve this. You should also set the precedence of `lift` to be low to fix the marginal unary `f(lift(X)) -> lift(f(X))` case.
 
-Whenever you build a new enode, the smart constructor should examine the common lifting of the fat eids of it's arguments, peel off this lifting, intern the enode, and the put the common lifting back on before returning the new fat eid to the user. This is a mechanical way of achieve the lift pull up rule inside the egraph. The smart constructor operation will ensure that whenever you build a node with arguments eids that are lifted more than necessary, you get back a handle to the same interned data, enabling reduced memory usage and faster lifting relationship comparison.
+Whenever you build a new enode, the smart constructor should examine the common lifting of the fat eids of it's arguments, peel off this lifting, intern the enode, and the put the common lifting back on before returning the fat eid to the user. This is a mechanical way of achieve the lift pull up rule inside the egraph. The smart constructor operation will ensure that whenever you build a node with arguments eids that are lifted more than necessary, you get back a handle to the same interned data, enabling reduced memory usage and faster lifting relationship comparison.
 
 As described, this mechanism and the rewrite rule behind it seems pretty elementary and non mysterious to me. It has taken some time and explanation shifting to feel that way.
 
@@ -93,6 +99,8 @@ In the absence of a union find, this lifting pulling smart constructor + fat id 
 It corresponds in an interesting way to the co-De Bruijn style of normalizing and representing lambda terms as described in McBride's Everybody's Got to Be Somewhere <https://arxiv.org/abs/1807.04085> . I have not discussed lambdas at all thus far. I think the considerations of this post are more elementary and that lambdas/binding forms are a layer to add to this more elementary layer.
 
 ## Lifting Union Find
+
+How do we implement a union find that accepts lifted fat eids?
 
 Because liftings are semantically injective functions, when you union two lifted eids `lift_i(a) = lift_i(b)`, you can peel off the common parts of their liftings and learn `a = b`.
 
