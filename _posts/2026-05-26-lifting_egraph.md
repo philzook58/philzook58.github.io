@@ -5,7 +5,7 @@ date: 2026-05-25
 
 I submitted a talk to the EGRAPHS workshop and it was accepted!  <https://pldi26.sigplan.org/details/egraphs-2026-papers/13/Lifting-E-Graphs-A-Function-Isn-t-a-Constant>
 
-Between the time when I submitted my abstract and now, while the meat of "there is something here" has not changed, my understanding and best explanation of the thing has.
+Between the time when I submitted my abstract and now, while the meat of "there is something here" has not changed, my understanding and best explanation of the thing has been refined.
 
 The whole design is powered by the intuitive conception of a semantic model manipulating `R^n -> R` functions in a systematic way. I'm now calling what I previously called a Thinning e-graph <https://www.philipzucker.com/thin_egraph/> a Lifting E-Graph, as the word `lift` is more evocative of what this operation does on `R^n -> R` functions.
 
@@ -29,7 +29,7 @@ From another perspective it is horribly vague and possibly collapsing distinct e
 
 or to `x,y |-> sin(x) : R^2 -> R`?
 
-![](https://www.philipzucker.com/assets/2026-04-18-thin_egraph_files/2026-04-18-thin_egraph_6_0.png)
+![](https://www.philipzucker.com/assets/2026-04-18-thin_egraph_files/2026-04-18-thin_egraph_6_crop.png)
 
  According to a simply typed perspective of the world, these are different things, and in fact can't even be compared for equality due to type mismatch. The graphs are completely different images. Yet, the notation that suppresses the context `x,y |->` or leaves it implicit conflates these two things. It is at least worrying that perhaps in some subtle way this conflation is in essence asserting `R^2 = R^1` and from thence chaos ensues.
 
