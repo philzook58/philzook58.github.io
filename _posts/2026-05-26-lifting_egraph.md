@@ -193,6 +193,28 @@ Encoding is inelegant and each tiny inelegance chokes you the further you try an
 
 The too little and too much sharing story is reminiscent of the Hash Cons Modulo alpha paper.
 
+## The Picture
+
+Some of the e-graph's success it due to this picture
+
+![](https://egraphs-good.github.io/assets/egraphs.svg)
+
+Like in my picture here <https://www.philipzucker.com/egraph2024_talk_done/>
+
+![](https://www.philipzucker.com/assets/egraph2024/egraph2.svg)
+
+we do not want to represent eclasses as a dotted boundary, but instead as dotted lines representing the union find parents relation. Then the thinnings that appear inside the union find can be represented visually.
+
+The thinning egraph can be visualized by thickening all the edges (both  solid child edges and dashed union find edges) into "buses" like a digital circuit. These buses have N lines in them for the N variables in context. Thinnings appear as lines that end in an `x` in between nodes. Inside the bus, lines never cross each other because thinnings are about strictly monotonic ordered mappings.
+
+Here is an example lifting egraph resulting from `x,y |-> x * y = y * x` aka `lift_10(var) * lift_01(var) = lift_01(var) * lift_10(var)`. The thinning on the union find edge is an identity thinning, so it has no lines endings inside it.
+
+![](/assets/thinegraphxyyx.jpg)
+
+Today I also saw <https://www.csl.sri.com/papers/bachmairtiwari00/cade00-CC.pdf> abstract congurence closure by Bachmair and Tiwari which has the same kind of diagram as figure 1.
+
+![](/assets/tiwari_egraph.png)
+
 ## Knuth Bendix Model
 
 ```
@@ -237,25 +259,6 @@ McBride did have some mysterious comment about a ordered universe of constants a
 Lambda or binder is another smart constructor, but one that needs to peel off the variables bound from the eid of the child while it is pulling the lifting annotation up. Lambda does not pure commute with liftings, it changes the lifting as it comes up through.
 
 In a curious way, lambdas are like a projection. They _remove_ a variable, the same way filling it in with 0 might do. They do some by also changing the type of the object to be a functional type, so this "projection" is not lossy.
-
-## The Picture
-
-Some of e-graphs success it due to the evocativeness of this picture
-
-![](https://egraphs-good.github.io/assets/egraphs.svg)
-
-Like in my picture here
-![](https://www.philipzucker.com/assets/egraph2024/egraph2.svg) we do not want to represet eclasses as a dotted boundary, but instead as dotted lines representing the union find parents relation. Then the thinnings that appear inside the union find can be represented visually.
-
-Today I saw <https://www.csl.sri.com/papers/bachmairtiwari00/cade00-CC.pdf> abstract congurence closure by Bachmair and Tiwari which has the same kind of diagram as figure 1.
-
-![](/assets/tiwari_egraph.png)
-
-The thinning egraph can be visualized by thickening all the edges (both  solid child edges and dashed union find edges) into "buses" like a digital circuit. These buses have n lines in them for the n variables in context. Thinnings appear as lines that end in an `x` in between nodes. Inside the bus, lines never cross each other because thinnings are about strictly monotonic ordered mappings.
-
-Here is an example lifting egraph resulting from `x,y |-> x * y = y * x` aka `lift_10(var) * lift_01(var) = lift_01(var) * lift_10(var)`. The thinning on the union find edge is an identity thinning, so it has no lines endings inside it.
-
-![](/assets/thinegraphxyyx.jpg)
 
 ## Connections
 
