@@ -209,13 +209,13 @@ Like in my picture here <https://www.philipzucker.com/egraph2024_talk_done/>
 
 we do not want to represent eclasses as a dotted boundary, but instead as dotted arrows representing the union find parents relation. Then the thinnings that appear inside the union find can be represented visually.
 
-The thinning egraph can be visualized by thickening all the edges (both  solid child edges and dashed union find edges) into "buses" like a digital circuit. These buses have N lines in them for the N variables in context. Thinnings appear as lines that end in an `x` in between nodes. Inside the bus, lines never cross each other because thinnings are about strictly monotonic ordered mappings.
+The thinning egraph can be visualized by thickening all the edges (both  solid child edges and dashed union find edges) into "buses" like a digital circuit. These buses have N lines in them for the N variables in context. The 0 in a thinning appears as lines that end in an cross out `x` in between nodes. Inside the bus, lines never cross each other because thinnings are about strictly monotonic ordered mappings.
 
 Here is an example lifting egraph resulting from `x,y |-> x * y = y * x` aka `lift_10(var) * lift_01(var) = lift_01(var) * lift_10(var)`. The thinning on the union find edge is an identity thinning, so it has no lines endings inside it.
 
 ![](/assets/thinegraphxyyx.jpg)
 
-Today I also saw <https://www.csl.sri.com/papers/bachmairtiwari00/cade00-CC.pdf> abstract congurence closure by Bachmair and Tiwari which has the same kind of diagram as figure 1.
+Today I also saw <https://www.csl.sri.com/papers/bachmairtiwari00/cade00-CC.pdf> abstract congruence closure by Bachmair and Tiwari which has a similar kind of diagram
 
 ![](/assets/tiwari_egraph.png)
 
@@ -250,13 +250,15 @@ Thinnings have at least two representations. the bitvector representation `10001
 
 The reason they are not isomorphic is that we have lost the total length of the bitvector. We do not know if `[0,4]` orresponds to `10001` or `100010` or `10001000000000000...`. I am inclined to interpret the slotted notion of thinning `[0,4]` as mediating from a common countably infinite domain of variables (the thinning with infinite trailing zeros).  Everything is in ultimately considered in the same mega context and you have global names (number labels) for stuff. Something something (co)slice category. Rudi seems inclined to consider it to represent the shortest length bitvector `10001`
 
-Rudi's intepretation of `[0,4]` is that the eid has been _applied_ to slot arguments `[0,4]` which I have a hard to seeing in my model.
+Rudi's interpretation of `[0,4]` is that the eid has been _applied_ to slot arguments `[0,4]` which is hard to see in my model.
 
 Before interning, slotted egraphs perform a canonical  shape computation argument by argument to pull out permutations. An ordering is figured out for the slots by using the structure of the node.
 
 If slots are considered to be ordered and permutations no longer baked in, shape computation becomes much easier (at the same time the egraph is not doing permutation stuff for you, so you are perhaps losing something. This is a tradeoff, not a free lunch). You instead take all the slots `[4,7,100]` and just keep them in order but now label them 1 through n `[0,1,2]` with a thinning that says 0 maps to 4, 1 maps to 7 and 2 maps to 100.
 
 McBride did have some mysterious comment about a ordered universe of constants as being nice.
+
+The names vs nameless isn't perhaps exactly the axis on which the difference lies. One can also have ordered slots, and one can have named thinnings as evidence for the subrecord relation rather than the subsequence relation.
 
 ## Binders
 
