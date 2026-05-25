@@ -299,6 +299,8 @@ uf
 
 # Bits and Bobbles
 
+Edit 2026: <https://cstheory.stackexchange.com/questions/57126/modern-presentation-of-first-order-unification-under-a-mixed-prefix/57132#57132>
+
 This post is part of a series of "generalized union finds"
 
 - Poset / inequality union finds for refinement <https://www.philipzucker.com/le_find>

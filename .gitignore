@@ -10,3 +10,5 @@ _site
 **/*.agdai
 **/sim_build
 _drafts/result
+
+**/z3_problems

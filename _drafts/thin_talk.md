@@ -81,3 +81,72 @@ Maybe there isn't enough time to break it up like this
 ## Union Find
 
 ## Hash Cons
+
+Ultimately I am motivated by an internal and subjective notion of aesthetics
+
+# original sin
+
+sin(x)
+
+1 = I
+1 + 1 = II
+
+# Problems With Variables
+
+1. Runaway generation
+    - "Skolemization" tricks / free vars analses
+    - P = forall x, P, x fresh
+2. Not enough sharing `sin(x) =? sin(y)`
+3. Too much sharing
+
+# What is "sin(x)", Too much sharing
+
+x \mapsto sin(x)
+
+x,y \mapsto sin(x)
+
+# What is "x"
+
+x \mapsto x
+
+x,y \mapsto y
+
+# Verbose Context Terms
+
+1. 1 \mapsto sin_1 cos_1 (v0)
+
+# Liftings
+
+sin_1(x)
+
+# THE MOST IMPORTANT SLIDE. Liftings
+
+Diagram of wires 1010
+
+you can take away whatever you want
+
+# E-matching
+
+# Comparison With Slotted
+
+# Connections
+
+- Semisimplicial categories
+  - cubical
+- slotted
+- nominal
+
+# Time
+
+compress original sin and plots to a single slide.
+
+Discomfort:
+
+- what is all this really for?
+- Can you do the manipulations you actually need to do?
+- Substitution
+- Lambda and binders.
+- sum_i sum_j = sum_j sum_i sucks.
+
+I was literally crying tears of blood to compress this talk into 15 mins. I think there are so many fascinating things I left out.
+I recorded a longer version here.
