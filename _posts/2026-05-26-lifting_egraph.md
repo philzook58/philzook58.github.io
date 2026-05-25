@@ -35,7 +35,7 @@ or to `x,y |-> sin(x) : R^2 -> R`?
 
 From this observation come a slogan for today's design philosophy:
 
-**"Context is not _where_ a term is, it is part of _what_ a term is"**
+**Context is not _where_ a term is, it is part of _what_ a term is**
 
 This is not the case for every conception of the word "context", but it is what I want to do today.
 
@@ -47,9 +47,11 @@ There is a naive way to achieve this design philosophy using an ordinary egraph 
 
 We can make a different copy of every function symbol for every dimension/context we might be working in and we can refer to variables by (dimension,index) pairs $x_{di}$ rather than by names. For example $x_{10}$ (the zeroth variables in context of size 1) is what previously I would have called `x |-> x`,  $x_{21}$ (the first variable in context of size 2) is what previously I would have called `x,y |-> y`.
 
-Likewise, we could also disambiguate all the `sin` into different versions $\sin_n$ depending on the type of it's argument. If $x_{21} : R^2 \rightarrow R$ then if `sin` is going to accept it, it needs to take in arguments of that type. We have $sin_0 : (R^0 \rightarrow R) \rightarrow (R^0 \rightarrow R)$, $sin_1 : (R \rightarrow R) \rightarrow (R \rightarrow R)$,  $sin_2 : (R^2 \rightarrow R) \rightarrow (R^2 \rightarrow R)$ and so on. Really all of these come from the pointwise application of the regular `sin` function, and this is a parametric polymorphic construction, so this disambiguation is not really that necessary (the index `n` is derivable from the dimension of `sin`'s arguments). Still, if we wanted to stay conceptually in a simply typed framework, this is what we've go to do.
+Likewise, we could also disambiguate all the `sin` into different versions $\sin_n$ depending on the type of it's argument. If $x_{21}$ has type $R^2 \rightarrow R$ then if `sin` is going to accept it, it needs to take in arguments of that type. We have $sin_0 : (R^0 \rightarrow R) \rightarrow (R^0 \rightarrow R)$, $sin_1 : (R \rightarrow R) \rightarrow (R \rightarrow R)$,  $sin_2 : (R^2 \rightarrow R) \rightarrow (R^2 \rightarrow R)$ and so on.
 
-Ok, great. This carefulness does solve issue 3 of too much sharing. At the same time, we've made point 2 of too little sharing both better and worse.
+Really all of these come from the pointwise application of the regular `sin` function, and this is a parametric polymorphic construction, so this disambiguation is not really that necessary (the index `n` is derivable from the dimension of `sin`'s arguments). Still, if we wanted to stay conceptually in a simply typed framework, this is what we've go to do.
+
+Ok, great. This carefulness does solve issue #3 of too much sharing. At the same time, we've made point #2 of too little sharing both better and worse.
 
 Because we are being nameless by referring to variables by integers, `x |-> f(g(h(x)))` becomes syntactically the same as `y |-> f(g(h(y)))` since both become `f1(g1(h1(x10)))`. On the other hand, now `f1(g1(h1(x10))) : R -> R` and `f2(g2(h2(x20))) : R^2 -> R` share absolutely no storage, despite being very similar (again, not _equal_, because they don't even have the same type).
 
@@ -61,7 +63,7 @@ Well, let's discuss the semantic sense in which `f1(g1(h1(x10))) : R -> R` and `
 
 Instead of ever storing `f2(g2(h2(x20))) : R^2 -> R`, I could instead store `lift_10(f1(g1(h1(x10)))) : R^2 -> R`. The subscript on `lift` is a bitvector with a 1 if I should keep the argument, or a 0 if throw it away. Again, this all perfectly first order syntactic and simply typed. I could do so as an encoding in a regular egraph. Sharing of substructure is achieved because the two semantically distinct things now share big subterms.
 
-Lifting has some useful properties that one would then encode as rules. The "parametric polymophism" of typical pointwise derived combinators like `sin` manfests as a rewrite rule `sin(lift_i(X)) = lift_i(sin(X))` . This is stating that `lift` is a homomorphism with respect to typical function symbols / it kind of sort of commutes through them.
+Lifting has some useful properties that one would then encode as rules. The "parametric polymophism" of typical pointwise derived combinators like `sin` manifests as a rewrite rule `sin(lift_i(X)) = lift_i(sin(X))` . This is stating that `lift` is a homomorphism with respect to typical function symbols / it kind of sort of commutes through them.
 
 In addition, there is sort of a constant propagation rule for liftings `lift_i(lift_j(X)) = lift_k(X)  where k = i . j`
 
