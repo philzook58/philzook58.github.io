@@ -207,7 +207,7 @@ Like in my picture here <https://www.philipzucker.com/egraph2024_talk_done/>
 
 ![](https://www.philipzucker.com/assets/egraph2024/egraph2.svg)
 
-we do not want to represent eclasses as a dotted boundary, but instead as dotted lines representing the union find parents relation. Then the thinnings that appear inside the union find can be represented visually.
+we do not want to represent eclasses as a dotted boundary, but instead as dotted arrows representing the union find parents relation. Then the thinnings that appear inside the union find can be represented visually.
 
 The thinning egraph can be visualized by thickening all the edges (both  solid child edges and dashed union find edges) into "buses" like a digital circuit. These buses have N lines in them for the N variables in context. Thinnings appear as lines that end in an `x` in between nodes. Inside the bus, lines never cross each other because thinnings are about strictly monotonic ordered mappings.
 
