@@ -7,7 +7,7 @@ I submitted a talk to the EGRAPHS workshop and it was accepted!  <https://pldi26
 
 Between the time when I submitted my abstract and now, while the meat of "there is something here" has not changed, my understanding and best explanation of the thing has been refined.
 
-The whole design is powered by the intuitive conception of a semantic model manipulating `R^n -> R` functions in a systematic way. I'm now calling what I previously called a Thinning e-graph <https://www.philipzucker.com/thin_egraph/> a Lifting E-Graph, as the word `lift` is more evocative of what this operation does on `R^n -> R` functions.
+The whole design is powered by intuition coming from a semantic model manipulating `R^n -> R` functions in a systematic way. I'm now calling what I previously called a Thinning e-graph <https://www.philipzucker.com/thin_egraph/> a Lifting E-Graph, as the word `lift` is more evocative of what the main operation of interest does on `R^n -> R` functions.
 
 # What's Wrong with Explicit Names?
 
@@ -15,7 +15,7 @@ There are 3 issues with explicit names
 
 1. Generative processes can run off the rails (eqsat). We need fresh names sometimes. As an example `P --> forall x, P   | where x fresh` is basically a valid rewrite for propositions. Sometimes rewrites like this can be useful. We might derive the same thing many many times redundantly with different names if we just gensym them. We can play skolem games and free variable analysis games to try and derive names we know are fresh and repeatable, but this is (subjectively) inelegant.
 2. Missed sharing. `f(g(h(x)))` shares no storage with `f(g(h(y)))`. The amount of missed storage opportunity gets worse the deeper and bigger the term. These two things _aren't equal_, so I'm not exactly complaining about missed _equality_. I'm complaining about a missed _relationship_ that can be used for reasoning and compaction.
-3. Too much sharing. This is the surprising one. I think explicit names conflates actually disequal objects.  The notation `sin(x)` actually can refer to distinct mathematical objects that one should at least be aware of the possibility to disambiguate.
+3. Too much sharing. This is the surprising one. I think non careful use of explicit names conflates actually disequal objects.  The notation `sin(x)` actually can refer to distinct mathematical objects that one should at least be aware of the possibility to disambiguate.
 
 The more surprising issue I think is #3. Let's expand upon that.
 
@@ -53,7 +53,9 @@ Really all of these come from the pointwise application of the regular `sin` fun
 
 Ok, great. This carefulness does solve issue #3 of too much sharing. At the same time, we've made point #2 of too little sharing both better and worse.
 
-Because we are being nameless by referring to variables by integers, `x |-> f(g(h(x)))` becomes syntactically the same as `y |-> f(g(h(y)))` since both become `f1(g1(h1(x10)))`. On the other hand, now `f1(g1(h1(x10))) : R -> R` and `f2(g2(h2(x20))) : R^2 -> R` share absolutely no storage, despite being very similar (again, not _equal_, because they don't even have the same type).
+Because we are being nameless by referring to variables by integers, `x |-> f(g(h(x)))` becomes syntactically the same as `y |-> f(g(h(y)))` since both become `f1(g1(h1(x10)))`. So sharing has become better in that sense.
+
+On the other hand, now `f1(g1(h1(x10))) : R -> R` and `f2(g2(h2(x20))) : R^2 -> R` share absolutely no storage, despite being very similar (again, not _equal_, because they don't even have the same type). Perhaps before we could have referred to both as `f(g(h(x)))`, so out ability to share storage for these two cases has gotten worse.
 
 What to do about that?
 
@@ -76,9 +78,11 @@ In short, the system we are discussing can be encoded as explicit first order `l
 1. `lift_i(lift_j(X)) = lift_k(X)` lift compaction rules
 2. `f(lift_i(X), lift_i(Y)) = lift_i(f(X,Y))` lift pulling rules
 
+![](/assets/thin_sin_sin.png)
+
 # Baking Lift In
 
-These properties of lifting are so simple, ubiquitous and structural that it may make sense to bake them into the very fabric of what a term or and egraph _is_. This is sweetened by the fact that liftings/thinnings can be represented as compact bitvectors.
+These properties of lifting are so simple, ubiquitous and structural that it may make sense to bake them into the very fabric of what a term or an egraph _is_. This is sweetened by the fact that liftings/thinnings can be represented as compact bitvectors.
 
 Lift is quite simple to represent as a bitvector (a thinning) with a 1 for variables to keep and 0 for variables to drop.
 
