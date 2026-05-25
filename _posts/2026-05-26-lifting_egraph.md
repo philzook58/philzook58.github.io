@@ -35,7 +35,7 @@ or to `x,y |-> sin(x) : R^2 -> R`?
 
 From this observation come a slogan for today's design philosophy:
 
-"Context is not _where_ a term is, it is part of _what_ a term is"
+**"Context is not _where_ a term is, it is part of _what_ a term is"**
 
 This is not the case for every conception of the word "context", but it is what I want to do today.
 
@@ -45,9 +45,9 @@ We will choose to _not_ leave out the information of `x,y |->` _ever_. It is a p
 
 There is a naive way to achieve this design philosophy using an ordinary egraph / ordinary first order terms.
 
-We can make a different copy of every function symbol for every dimension/context we might be working in and we can refer to variables by (dimension,index) pairs $x_{di}$ rather than by names. For example $x_{10}$ (the zeroth variables in context of size 1) is what previously I would have called `x |-> x`,  $x_{21}$ (the first variable in context of size 2) is what previously I would have called $x,y |-> y`.
+We can make a different copy of every function symbol for every dimension/context we might be working in and we can refer to variables by (dimension,index) pairs $x_{di}$ rather than by names. For example $x_{10}$ (the zeroth variables in context of size 1) is what previously I would have called `x |-> x`,  $x_{21}$ (the first variable in context of size 2) is what previously I would have called `x,y |-> y`.
 
-Likewise, we could also disambiguate all the `sin` into different versions $\sin_n$ depending on the type of it's argument. If `x_{21} : R^2 -> R` then if `sin`is going to accept it, it needs to take in arguments of that type. We have $sin_0 : (R^0 -> R) -> (R^0 -> R)$, $sin_1 : (R -> R) -> (R -> R)$,  $sin_2 : (R^2 -> R) -> (R^2 -> R)$ and so on. Really all of these come from the pointwise application of the regular `sin` function, and this is a parametric polymorphic construction, so this disambiguation is not really that necessary (the index `n` is derivable from the dimension of `sin`'s arguments). Still, if we wanted to stay conceptually in a simply typed framework, this is what we've go to do.
+Likewise, we could also disambiguate all the `sin` into different versions $\sin_n$ depending on the type of it's argument. If $x_{21} : R^2 \rightarrow R$ then if `sin` is going to accept it, it needs to take in arguments of that type. We have $sin_0 : (R^0 \rightarrow R) \rightarrow (R^0 \rightarrow R)$, $sin_1 : (R \rightarrow R) \rightarrow (R \rightarrow R)$,  $sin_2 : (R^2 \rightarrow R) \rightarrow (R^2 \rightarrow R)$ and so on. Really all of these come from the pointwise application of the regular `sin` function, and this is a parametric polymorphic construction, so this disambiguation is not really that necessary (the index `n` is derivable from the dimension of `sin`'s arguments). Still, if we wanted to stay conceptually in a simply typed framework, this is what we've go to do.
 
 Ok, great. This carefulness does solve issue 3 of too much sharing. At the same time, we've made point 2 of too little sharing both better and worse.
 
