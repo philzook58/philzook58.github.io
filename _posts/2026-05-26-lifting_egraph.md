@@ -78,27 +78,31 @@ In short, the system we are discussing can be encoded as explicit first order `l
 
 # Baking Lift In
 
-It is not necessary to encode these properties as rules (although perhaps one still should if you want to retrofit this into a preexisting e-graph system as an encoding).
-
-The properties are so simple, ubiquitous and structural that it may make sense to bake them into the very fabric of what a term or and egraph _is_. This is sweetened by the fact that liftings/thinnings can be represented as compact bitvectors.
+These properties of lifting are so simple, ubiquitous and structural that it may make sense to bake them into the very fabric of what a term or and egraph _is_. This is sweetened by the fact that liftings/thinnings can be represented as compact bitvectors.
 
 Lift is quite simple to represent as a bitvector (a thinning) with a 1 for variables to keep and 0 for variables to drop.
 
-This is pretty compact data, and it isn't totally crazy I think to steal some bits to pack it alongside the typical eid term/eclass identifier. eids are often 32 or 64 bits, and typical egraphs do not grow to that size, leaving some headspace for at least of byte of metadata in there, maybe more. You could also perhaps play some run length encoding tricks, etc, depending on the nature of the thinnings you expect. If you need more than 8 variables in scope at once, you could reify the lifting to an enode like the encoding above or start allocating bit vectors kind of like a bigint implementation.
+This is pretty compact data, and it isn't totally crazy I think to steal some bits to pack it alongside the typical eid term/eclass identifier.
 
 ## Smart Constructor For Lifting
 
 The homomorphism rules can be oriented to float the liftings as high a possible  `f(lift_i(X), lift_i(Y)) -> lift_i(f(X,Y))`. This is a natural rewrite ordering in that the right hand side is the smaller term. A Knuth Bendix Order will achieve this. You should also set the precedence of `lift` to be low to fix the marginal unary `f(lift(X)) -> lift(f(X))` case.
 
-Whenever you build a new enode, the smart constructor should examine the common lifting of the fat eids of it's arguments, peel off this lifting, intern the enode, and the put the common lifting back on before returning the fat eid to the user. This is a mechanical way of achieve the lift pull up rule inside the egraph. The smart constructor operation will ensure that whenever you build a node with arguments eids that are lifted more than necessary, you get back a handle to the same interned data, enabling reduced memory usage and faster lifting relationship comparison.
+The smart constructor operation will ensure that whenever you build a node with arguments eids that are lifted more than necessary, you get back a fat handle to the same interned data, enabling reduced memory usage and faster lifting relationship comparison.
+
+Whenever you build a new enode, the smart constructor should examine the common lifting of the fat eids of it's arguments, peel off this lifting, intern the enode, and the put the common lifting back on before returning the fat eid to the user. This is a mechanical way of achieve the lift pull up rule inside the egraph.
 
 As described, this mechanism and the rewrite rule behind it seems pretty elementary and non mysterious to me. It has taken some time and explanation shifting to feel that way.
 
 In the absence of a union find, this lifting pulling smart constructor + fat id makes for an interesting "alpha aware" hash cons. <https://www.philipzucker.com/thin_hash_cons_codebruijn/>
 
-It corresponds in an interesting way to the co-De Bruijn style of normalizing and representing lambda terms as described in McBride's Everybody's Got to Be Somewhere <https://arxiv.org/abs/1807.04085> . I have not discussed lambdas at all thus far. I think the considerations of this post are more elementary and that lambdas/binding forms are a layer to add to this more elementary layer.
+Pulling lift up corresponds in an interesting way to the co-De Bruijn style of normalizing and representing lambda terms as described in McBride's Everybody's Got to Be Somewhere <https://arxiv.org/abs/1807.04085> . I have not discussed lambdas at all thus far. I think the considerations of this post are more elementary and that lambdas/binding forms are a layer to add to this more elementary layer.
+
+Note also that by being as thin as possible, the dimensionality can play kind of a "nameless" free variable analysis. By being part of the fabric of what the term even _is_, it is less of a problem to make sure that the free variable analysis is up to date before you make some dicey variable rewrite.
 
 ## Lifting Union Find
+
+But we want an egraph. We need to add a union find to that hash cons.
 
 How do we implement a union find that accepts lifted fat eids?
 
@@ -277,6 +281,10 @@ The assymetric union find as a way of storing proof relevant tree (forest) like 
 In this sense, perhaps the asymmetric union find is a nice version of a inequality union find that does not require search. <https://www.philipzucker.com/asymmetric_complete/>
 
 ## Bits and Bobbles
+
+eids are often 32 or 64 bits, and typical egraphs do not grow to that size, leaving some headspace for at least of byte of metadata in there, maybe more. You could also perhaps play some run length encoding tricks, etc, depending on the nature of the thinnings you expect. If you need more than 8 variables in scope at once, you could reify the lifting to an enode like the encoding above or start allocating bit vectors kind of like a bigint implementation.
+
+It is not necessary to encode these properties as rules (although perhaps one still should if you want to retrofit this into a preexisting e-graph system as an encoding).
 
 This is not exactly the same as how I developed the ideas though. The ideas developed from just the implementation mechanism of thinnings as bitvectors seeming so clean and useful.
 
