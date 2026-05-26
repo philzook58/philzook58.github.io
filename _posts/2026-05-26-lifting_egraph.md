@@ -47,7 +47,7 @@ There is a naive way to achieve this design philosophy using an ordinary egraph 
 
 We can make a different copy of every function symbol for every dimension/context we might be working in and we can refer to variables by (dimension,index) pairs $x_{di}$ rather than by names. For example $x_{10}$ (the zeroth variables in context of size 1) is what previously I would have called `x |-> x`,  $x_{21}$ (the first variable in context of size 2) is what previously I would have called `x,y |-> y`.
 
-Likewise, we could also disambiguate all the `sin` into different versions $\sin_n$ depending on the type of it's argument. If $x_{21}$ has type $R^2 \rightarrow R$ then if `sin` is going to accept it, it needs to take in arguments of that type. We have $sin_0 : (R^0 \rightarrow R) \rightarrow (R^0 \rightarrow R)$, $sin_1 : (R \rightarrow R) \rightarrow (R \rightarrow R)$,  $sin_2 : (R^2 \rightarrow R) \rightarrow (R^2 \rightarrow R)$ and so on.
+Likewise, we could also disambiguate all the `sin` into different versions $\sin_d$ depending on the type of it's argument. If $x_{21}$ has type $R^2 \rightarrow R$ then if `sin` is going to accept it, it needs to take in arguments of that type. We have $sin_0 : (R^0 \rightarrow R) \rightarrow (R^0 \rightarrow R)$, $sin_1 : (R \rightarrow R) \rightarrow (R \rightarrow R)$,  $sin_2 : (R^2 \rightarrow R) \rightarrow (R^2 \rightarrow R)$ and so on.
 
 Really all of these come from the pointwise application of the regular `sin` function, and this is a parametric polymorphic construction, so this disambiguation is not really that necessary (the index `n` is derivable from the dimension of `sin`'s arguments). Still, if we wanted to stay conceptually in a simply typed framework, this is what we've go to do.
 
@@ -92,7 +92,7 @@ This is pretty compact data, and it isn't totally crazy I think to steal some bi
 
 The homomorphism rules can be oriented to float the liftings as high a possible  `f(lift_i(X), lift_i(Y)) -> lift_i(f(X,Y))`. This is a natural rewrite ordering in that the right hand side is the smaller term. A Knuth Bendix Order will achieve this. You should also set the precedence of `lift` to be low to fix the marginal unary `f(lift(X)) -> lift(f(X))` case.
 
-The smart constructor operation will ensure that whenever you build a node with arguments eids that are lifted more than necessary, you get back a fat handle to the same interned data, enabling reduced memory usage and faster lifting relationship comparison.
+The smart constructor operation will ensure that whenever you build a node with arguments eids that are lifted more than necessary, you get back a fat eid handle to the same interned data regardless of the extra lifting, enabling reduced memory usage and faster lifting relationship comparison.
 
 Whenever you build a new enode, the smart constructor should examine the common lifting of the fat eids of it's arguments, peel off this lifting, intern the enode, and the put the common lifting back on before returning the fat eid to the user. This is a mechanical way of achieve the lift pull up rule inside the egraph.
 
@@ -102,7 +102,7 @@ In the absence of a union find, this lifting pulling smart constructor + fat id 
 
 Pulling lift up corresponds in an interesting way to the co-De Bruijn style of normalizing and representing lambda terms as described in McBride's Everybody's Got to Be Somewhere <https://arxiv.org/abs/1807.04085> . I have not discussed lambdas at all thus far. I think the considerations of this post are more elementary and that lambdas/binding forms are a layer to add to this more elementary layer.
 
-Note also that by being as thin as possible, the dimensionality can play kind of a "nameless" free variable analysis. By being part of the fabric of what the term even _is_, it is less of a problem to make sure that the free variable analysis is up to date before you make some dicey variable rewrite.
+Note also that by being as thin as possible, the dimensionality can play kind of a nameless free variable analysis. By being part of the fabric of what the term even _is_, it is less of a problem to make sure that the free variable analysis is up to date before you make some dicey variable rewrite.
 
 ## Lifting Union Find
 
@@ -145,13 +145,15 @@ From the careful scoping/lifting perspective, the actual equation in question is
 Both `x_10 * lift_0(0)` and `0` are actually interned as eids, let's say `x_10 * lift_0(0) -> e47` and `0 -> e6`, so the union occurring is `union(e47. lift_0(e6))`. We do indeed have differing lifts on the left and right side.
 
 The union find can resolve this by picking the orientation / parent to be `e6`. This results in the rule  `e47 -> lift_0(e6)` which is representable in a lifting annotated `parents` table, akin to how `e48 -> e14 + 7` can be stored in an integer offset annotated parents table in a group union find.
-Picking this directionality is required because it "solves" for `e47`. There is no lifting that will solve for `e6` in terms of `e47`,  `e6 -> lift_?(e47)`. Being in solved form is what enables to simple action of `find` accumulating an annotation as it traverses the parents table.
+Picking this directionality is required because it "solves" for `e47`. There is no lifting that will solve for `e6` in terms of `e47`,  `e6 -> lift_?(e47) DOESN'T WORK`. Being in solved form is what enables the simple action of `find` accumulating an annotation as it traverses the parents table.
 
 It is also possible to be in a situation which neither left or right side is solvable in terns of the other. This situation is luckily still solvable by generating a common fresh constant that both left and right are solvable to `left -> annot1(fresh)` and `right -> annot2(fresh)`.
 
 The same kind of consideration come in a more elementary was from baking in integer constant multiplications into a union find like `3 * e47 = 2 * e3`. More discussion on this lightly asymmetric annotated union find here <https://www.philipzucker.com/thin_monus_uf/>
 
-As an example, consider `x,y |-> x*0 = 0*y`  which combinatorizes to `lift_10(x10 * lift_0(0)) = lift_01(lift_0(0) * x10)`. This ought to be a rarer occurrence and I am almost inclined to not implement it. Neither can be solved in terms of the other, but by generating a fresh eid, there is semantically something that both ought to be solvable to.  Let's say the right hand side has eid `e14`, `lift_0(0) * x10 -> e14`. Then we infer there exists a fresh `e112` such that `e14 -> lift_0(e112)` and `e47 -> lift_0(e112)`. Indeed, `e112` is semantically the same as `0` and if we assert the `x |-> x * 0 = 0` and `x |-> 0 * x = 0` first (which is probably the more natural thing to do), this equation would considered redundant. This example is somewhat constructed just to show how inreconcilable liftings can occur in a semantically valid way. I am not convinced it is natural to write rules in such a way that a situation like this would show up very often
+As an example that requires this fresh constant generation, consider `x,y |-> x*0 = 0*y`  which combinatorizes to `lift_10(x10 * lift_0(0)) = lift_01(lift_0(0) * x10)`. This ought to be a rarer occurrence and I am almost inclined to not implement it. Neither can be solved in terms of the other, but by generating a fresh eid, there is semantically something that both ought to be solvable to.  Let's say the right hand side has eid `e14`, `lift_0(0) * x10 -> e14`. Then we infer there exists a fresh `e112` such that `e14 -> lift_0(e112)` and `e47 -> lift_0(e112)`. Indeed, `e112` is semantically the same as `0` and if we assert the `x |-> x * 0 = 0` and `x |-> 0 * x = 0` first (which is probably the more natural thing to do), the initial example equation   `x,y |-> x*0 = 0*y` would be considered redundant.
+
+This example is somewhat constructed just to show how irreconcilable liftings can occur in a semantically valid way. I am not convinced it is natural to write rules in such a way that a situation like this would show up very often
 
 # E-Matching
 
@@ -171,7 +173,7 @@ By far the simplest thing to do, and I think it kind of makes pragmatic sense, i
 
 Ok, but let us say we want to do it.
 
-The pattern `lift_00(0) = ?x * ?y` with `x10 * lift_0(0) = lift_0(0)` in the egraph should have 2 solutions, `{?x -> x20, ?y -> 0}` and `{?x -> x21, ?y -> 0}`. This corresponds to matching `x,y |-> 0` and getting the two solutions `x,y |-> x * 0` and `x,y |-> y * 0`. If we pattern match over an higher lifting of 0 like `lift_0000(0)`, we'd expect 4 solutions, and so on. These are enumerating all the variables you can place in that spot that get annihilated by 0. In terms of the liftings, they are all the ways of solving the equation `lift_00 = lift_? . lift_0` which has two solutions `lift_10` and `lift_01`. In words, to throw away both arguments `lift_00`, you can either throw away the second argument and the one left `lift_10 . lift_0`, or you can throw away the first argument and then throw away the one left `lift_01 . lift_0`.
+The pattern `lift_00(0) = ?x * ?y` with `x10 * lift_0(0) = lift_0(0)` in the egraph should have 2 solutions, `{?x -> x20, ?y -> 0}` and `{?x -> x21, ?y -> 0}`. This corresponds to matching against the target `x,y |-> 0` and getting the two solutions `x,y |-> x * 0` and `x,y |-> y * 0`. If we pattern match over an higher lifting of 0 like `lift_0000(0)`, we'd expect 4 solutions, and so on. These are enumerating all the variables you can place in that spot that get annihilated by 0. In terms of the liftings, they are all the ways of solving the equation `lift_00 = lift_? . lift_0` which has two solutions `lift_10` and `lift_01`. In words, to throw away both arguments `lift_00`, you can either throw away the second argument and the one left `lift_10 . lift_0`, or you can throw away the first argument and then throw away the one left `lift_01 . lift_0`.
 
 `lift_0 = lift_? . lift_00` problems of this shape have no solutions in liftings. Liftings monotonically increase the number of arguments, and `lift_00` has already lifted to taking in 2 redundant arguments whereas the left hand side  `lift_0` only takes in 1 redundant argument.
 
@@ -196,10 +198,6 @@ lift_10(x10) * lift_10(lift0(0)) =? ?x * ?y by  mul-homomorphism   lift(mul(X,Y)
 ```
 
 # Bits and Bobbles
-
-Encoding is inelegant and each tiny inelegance chokes you the further you try and go with it. Ultimately, inelegance is a limitation on scale. This limitation is soft and therefore even more insidious. I can't argue against people who don't feel the fear of soft limitations. There will never be an inarguable point at which you say "I can go no further", but the bog always wins. You lie down, the mud and reeds enters your mouth and you die. Encodings are the complexity demon opening it's jaws and grinning.
-
-The too little and too much sharing story is reminiscent of the Hash Cons Modulo alpha paper.
 
 ## The Picture
 
@@ -287,6 +285,12 @@ The assymetric union find as a way of storing proof relevant tree (forest) like 
 In this sense, perhaps the asymmetric union find is a nice version of a inequality union find that does not require search. <https://www.philipzucker.com/asymmetric_complete/>
 
 ## Bits and Bobbles
+
+It isn't persay terrible to assume that `sin(x)` uniquely corresponds to always talking about $R^\infty \rightarrow R$ or similarly `(Name -> R) -> R`, an environment passing semantics. It's a different style. It does seem off to bring names into the discussion or bring infinity into the discussion in order to discuss `R^2 -> R`. It is reminiscent of the age old synthetic vs analysis approach. Intrinsic vs extrinsic. Is a sphere best described by cutting it out of R^3 or by piecing together 2d coordinate patches? What is "best"? What is most beautiful? What fits the clunky notation or framework you've got? The lifting approach is a bit more "well typed". "Well typed" often kind of sucks though. It is brittle and you can end up in type level programming hell if you don't use taste. You've pushed the pain from the ordinary stuff to the type level stuff, which is automatic. But when it stops being automatic, now you're just working in a worse environment.
+
+Encoding is inelegant and each tiny inelegance chokes you the further you try and go with it. Ultimately, inelegance is a limitation on scale. This limitation is soft and therefore even more insidious. I can't argue against people who don't feel the fear of soft limitations. There will never be an inarguable point at which you say "I can go no further", but the bog always wins. You lie down, the mud and reeds enters your mouth and you die. Encodings are the complexity demon opening it's jaws and grinning.
+
+The too little and too much sharing story is reminiscent of the Hash Cons Modulo alpha paper.
 
 eids are often 32 or 64 bits, and typical egraphs do not grow to that size, leaving some headspace for at least of byte of metadata in there, maybe more. You could also perhaps play some run length encoding tricks, etc, depending on the nature of the thinnings you expect. If you need more than 8 variables in scope at once, you could reify the lifting to an enode like the encoding above or start allocating bit vectors kind of like a bigint implementation.
 
