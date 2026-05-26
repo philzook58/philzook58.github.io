@@ -65,9 +65,13 @@ Well, let's discuss the semantic sense in which `f1(g1(h1(x10))) : R -> R` and `
 
 The latter is a lifted version of the former.
 
-If you gave me an object `f1(g1(h1(x10))) : R -> R` I could produce the object `f2(g2(h2(x20))) : R^2 -> R` by merely throwing away the second argument and propagating the first argument. As a python function, this lifting combinator would be written as  `lambda f: lambda x,y: f(x)`. This is a lifting operation, and lifting operations have a tractable algebra associated with them.
+If you gave me an object `f1(g1(h1(x10))) : R -> R` I could produce the object `f2(g2(h2(x20))) : R^2 -> R` by merely throwing away the second argument and propagating the first argument. As a python function, this lifting combinator would be written as  `lambda f: lambda x,y: f(x)`. This is a lifting operation, and lifting operations have a tractable algebra associated with them. <https://www.philipzucker.com/thin1/>
+
+![](https://www.philipzucker.com/assets/thinning/compose.png)
 
 Instead of ever storing `f2(g2(h2(x20))) : R^2 -> R`, I could instead store `lift_10(f1(g1(h1(x10)))) : R^2 -> R`. The subscript on `lift` is a bitvector with a 1 if I should keep the argument, or a 0 if throw it away. Again, this all perfectly first order syntactic and simply typed. I could do so as an encoding in a regular egraph. Sharing of substructure is achieved because the two semantically distinct things now share big subterms.
+
+![](/assets/thin_sin_sin.png)
 
 Lifting has some useful properties that one would then encode as rules. The "parametric polymophism" of typical pointwise derived combinators like `sin` manifests as a rewrite rule `sin(lift_i(X)) = lift_i(sin(X))` . This is stating that `lift` is a homomorphism with respect to typical function symbols / it kind of sort of commutes through them.
 
@@ -77,8 +81,6 @@ In short, the system we are discussing can be encoded as explicit first order `l
 
 1. `lift_i(lift_j(X)) = lift_k(X)` lift compaction rules
 2. `f(lift_i(X), lift_i(Y)) = lift_i(f(X,Y))` lift pulling rules
-
-![](/assets/thin_sin_sin.png)
 
 # Baking Lift In
 
@@ -272,11 +274,18 @@ In a curious way, lambdas are like a projection. They _remove_ a variable, the s
 
 Liftings are indeed exactly thinnings and weakenings and `|->` is the same as `|-`. I just think the change of terminology and notation helps make the description easier to digest. To my ear, thinning and weakening seem to connote the exact opposite of the operation I think is happening, taking a low dimensional function and turning it into a high dimensional one.
 
+Deeper waters:
+
 - Semi simplicial categories
 - Cubical categories
 - Families
 - Presheaf models
 - Explicit Weakening calculi.  <https://arxiv.org/abs/2412.03124> <https://hal.science/hal-00384683/document>
+- partially applied composition `sin .`  and Yoneda stuff
+
+There are connections here. What I have done is tried to distill away as much complexity as possible. I think lifting egraphs stand alone without these things, but the connections may enrich your understanding. Everyone has different stuff that works for them. I am not a math or theory maximalist. I have aspects I like, aspects I understand, aspects I don't like, aspects I don't understand, aspects I wish I understood.
+
+I don't think I actually am good at abstraction. What I can do is have 3 concrete examples in superposition in my head, which is a little different than having a black box conception. This superposition may explain why I punctuate and use notation so inconsistently. Rapid oscillation between python, pseudo-haskell, term rewriting, pictures, and latex is how I am.
 
 Nominal vs Nameless
 
