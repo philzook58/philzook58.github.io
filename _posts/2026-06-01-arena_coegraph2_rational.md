@@ -113,7 +113,7 @@ t
 
     [[...]]
 
-This requires something kind of like mutation. Logic variables, like in prolog, also enable you to do this, because logic variables are kind of "assign once" variables <https://web.archive.org/web/20221003021352/https://www3.cs.stonybrook.edu/~warren/xsbbook/node5.html> , which is a bit more principled than write as many times as you like variables.
+This requires something kind of like mutation. Logic variables, like in prolog, also enable you to do this, because logic variables are kind of "assign once" variables <https://web.archive.org/web/20221003021352/https://www3.cs.stonybrook.edu/~warren/xsbbook/node5.html> , which is a bit more principled than write as many times as you like variables. A similar "write once" thing that occurs in ordinary languages are futures/promises <https://en.wikipedia.org/wiki/Futures_and_promises> , an empty box that you can fill at a future date.
 
 By giving the arena an interface to `makevar` and `define`, we can make this less spooky.
 
@@ -425,7 +425,7 @@ Rereading through my notes, they make not that much sense. And I'm not sure what
 - To some degree, the e-graph with fixed point is trying to remove the restriction on RecExpr that they need to be well founded. Insertion and extraction neither should require it. But also `1*x = x` is not the same kind of loop as `zeros := cons(0, zeros)`.
 - Homomorphisms of arenas into the egraph is non mutating lookup of the arena in the egraph. Again, insertion of a term is an asy recursive function, but we can't guarantee that so easily
 - <https://gist.github.com/cfbolz/ffd49e7a654c5ba224f73c1fc39673d0> CF rational tree unification
--
+- Check out Vicious Circles. I got a feeling from that book that coniductive stremy stuff can be thought of as saying solved equation systems have a solution by fiat. Rationals are an example.
 
 There is some goofiness with these "equalities". It is not obvious that you will even have reflexivity for pessimistic equality.  Maybe that's ok. Maybe it's a kleene equality. <https://en.wikipedia.org/wiki/Kleene_equality>
 
