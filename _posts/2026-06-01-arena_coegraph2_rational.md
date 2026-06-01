@@ -192,9 +192,11 @@ pprint(A)
 The arena can be viewed in a more logical looking light by considering it to represent a formal equation system. The index 47 in the arena represents a variables $x_{47}$ and the entry represents something like the equation $x_{47} := foo(x_{32}, x_{45})$. In other words, the arena represents a `Var -> Node<Var>` mapping.
 
 ```
+The arena 
+
 [Term("a", []), Term("f", [0])]
 
-is kind of the same as
+is kind of the same as the flat equation system
 
 x0 := a
 x1 := f(x0) 
@@ -238,19 +240,34 @@ This means that the natural thing to interpret it into is a `Env -> Env` functio
 ```python
 type Env = list[int] # Var -> T
 def interp(A : Arena, cur : Env) -> Env:
-    new = []
+    next = []
     for node in A.data:
         match node:
             case Node("+", [a,b]):
-                new.append(cur[a] + cur[b])
+                next.append(cur[a] + cur[b])
             case Node("lit", [n]):
-                new.append(n)
+                next.append(n)
             case _:
                 raise ValueError("unexpected Node")
-    return new
+    return next
 ```
 
-While the basic interpretation is `Env -> Env`, whenever there is ever a function whose domain is the same as it's codomain, it is also possible to talk about it's set of fixed points, and possibly it's minimal, maximal, or unique fixed point. <https://en.wikipedia.org/wiki/Fixed_point_(mathematics)>
+Note the similarities and differences to the following standard recursive semantics of simple terms with variables. If our expressions contain variables a typical semantics would be one that is environment dependent `Env -> int`. However, it would not also return an environment
+
+```python
+def interp(e, env : dict[str, int]) -> int:
+    match e:
+        case ("+", a, b):
+            return interp(a, env) + interp(b, env)
+        case ("lit", a):
+            return a
+        case ("var", x):
+            return env[x]
+```
+
+# Fixed Point Interpretations
+
+While the basic interpretation of arena terms is `Env -> Env`, whenever there is ever a function whose domain is the same as it's codomain, it is also possible to talk about it's set of fixed points, and possibly it's minimal, maximal, or unique fixed point. <https://en.wikipedia.org/wiki/Fixed_point_(mathematics)>
 
 ```python
 def interp(A : Arena) -> list[int]:
