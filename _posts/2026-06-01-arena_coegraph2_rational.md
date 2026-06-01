@@ -5,6 +5,8 @@ date: 2026-06-01
 
 I was invited a few months ago into discussions with Cheng Zhang, Sam Coward and Alexandra Silva on some work they had started on integrating loopy infinite streamy things into e-graphs. A few years back, I was barking up a similar but distinct tree to the one they were working on <https://www.philipzucker.com/coegraph/>
 
+Cheng will presenting at EGRAPHS 2026 <https://pldi26.sigplan.org/details/egraphs-2026-papers/12/From-Rewriting-to-Fixpoints-Solving-Recursive-Equations-with-E-Graphs> Come check it out!
+
 One interesting aspect of the discussion has been my confusion of where they are even coming from. There is some formalistic perspective on what a co-term / cyclic term / rational term is that I'm still trying to unpack.
 
 To me, it is somewhat natural that you can talk about loopy terms like `zeros := Cons(0, zeros)` as a little picture
@@ -358,6 +360,8 @@ Well, I wrote something.
 I am having a hard time making a nice cohesive story with well backed code snippets. I think I'm feeling generally a little burnt out these days, so that probably ain't helping.
 
 Maybe a good starting point to juicier topics? I don't know how to attack all this. That is why bit sized posts are good.
+
+Rereading through my notes, they make not that much sense. And I'm not sure what I wrote above makes that much sense either.
 
 - Rewriting of arena terms
 - Hash consing
