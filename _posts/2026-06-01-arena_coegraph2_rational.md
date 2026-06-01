@@ -1,24 +1,31 @@
 ---
 title: Arenas, Cyclic Terms, and Flat Equational Systems
-
-date: 2026-05-26
+date: 2026-06-01
 ---
 
-title: Term and Co-Terms, Egraphs and Co-Egraphs
+I was invited a few months ago into discussions with Cheng Zhang, Sam Coward and Alexandra Silva on some work they had started on integrating loopy infinite streamy things into e-graphs. A few years back, I was barking up a similar but distinct tree to the one they were working on <https://www.philipzucker.com/coegraph/>
 
+One interesting aspect of the discussion has been my confusion of where they are even coming from. There is some formalistic perspective on what a co-term / cyclic term / rational term is that I'm still trying to unpack.
 
-I was invited a few months ago into discussions with Cheng Zhang, Sam Coward and Alexandra Silva on some work they had started on integrating loopy infinite streamy things into e-graphs. A few years back, I was barking up a similar but distinct tree to the one they were working on https://www.philipzucker.com/coegraph/
+To me, it is somewhat natural that you can talk about loopy terms like `zeros := Cons(0, zeros)` as a little picture
 
-Cheng will be giving a talk next month https://pldi26.sigplan.org/details/egraphs-2026-papers/12/From-Rewriting-to-Fixpoints-Solving-Recursive-Equations-with-E-Graphs on the topic, so it's no big secret. He has a much more mathematical perspective on things, so I'd like to lay down my doofus perspective both for myself and others.
+<https://softwarepreservation.computerhistory.org/prolog/marseille/doc/Colmerauer-InfTree-1982.pdf> PROLOG AND INFINITE TREES - Alain Colmerauer
 
+![](/assets/rational_tree.png)
 
+But a picture does not quite code nor rigorous math make (? Diagrammatic reasoning can be as legit as any other form of reasoning or syntax. And yet I'm uncomfortable until we've reduced what we're talking about to tree-like formula). You kind of need a story about how to represent this in a system you can actually work with, say ZFC or python or lean or what have you.
 
+I think there is a somewhat natural journey starting from a basic term datatypes, turning to an arena datatype, and then removing the condition of acyclicity of nodes in the arena. The is a implementation flavored explanation of what a co-term / cyclic / rational term even is. Then we can talk about some of the things we like to do with terms and how to generalize that to rational terms:  
 
-# Terms, Flat Terms, and Co-Terms
+- interpret them
+- rewrite them
+- store sets of them
+- insert them into e-graphs
+- extract them from e-graphs.
+
+# Basic Terms
 
 A basic term data type (a finite well founded tree with ordered children) might look like this
-
-
 
 ```python
 from dataclasses import dataclass, field
@@ -29,20 +36,12 @@ class Term:
     args : list["Term"]
 
 Term("f", [Term("a", [])]) # f(a)
-("f", ("a", )) # Basically the same thing
-
+("f", ("a", )) # Basically the same thing using tuples. It can be lighter weight to do it this way.
 ```
 
-
-
-
-    ('f', ('a',))
-
-
+# Arena Terms
 
 There is a different style which is sometimes pleasant to use. Here we used python references to refer to our children. Instead we could keep all the data of the term in a list and have our own index system. These are kind of our own special pointers
-
-
 
 ```python
 from dataclasses import dataclass, field
@@ -65,6 +64,8 @@ class Arena():
 
 @dataclass
 class TermRef:
+    # Bundling an id with it's arena store makes it easier to use.
+    # You can do operator overloading for example.
     id : Id
     arena : Arena
 
@@ -79,28 +80,32 @@ pprint(one + two)
 
 ```
 
-    TermRef(id=2,
-            arena=Arena(data=[Node(f='lit', args=[1]),
-                              Node(f='lit', args=[2]),
-                              Node(f='+', args=[0, 1])]))
-
-
-This corresponds to egg's RecExpr https://docs.rs/egg/latest/egg/struct.RecExpr.html
-
 Many systems do this. Using the regular allocator (malloc) has a cost. Fine grained memory management has a cost. An arena (bump allocation) is one of the fastest and simplest forms of memory allocation. Having it all there in a single block is also good for caches.
 
-See also https://www.cs.cornell.edu/~asampson/blog/flattening.html Flattening ASTs (and Other Compiler Data Structures)
-Twee's description of it's flat terms https://smallbone.se/papers/twee.pdf section 4.1
+See also
 
+- This corresponds to egg's RecExpr <https://docs.rs/egg/latest/egg/struct.RecExpr.html>
+- <https://www.cs.cornell.edu/~asampson/blog/flattening.html> Flattening ASTs (and Other Compiler Data Structures)
+- Twee's description of it's flat terms <https://smallbone.se/papers/twee.pdf> section 4.1
+- Handbook of automated reasoning  <https://dl.acm.org/doi/10.5555/778522.778535>
 
+# Cyclic Arena Terms
 
+It is not necessary to use Arena style to build cyclic terms, but it does make it feel less weird somehow to me.
 
-# Cyclic Terms
+To make cyclic terms, you often need a way to "tie the knot" (Landin's knot specifically refers to achieving recursion, not this?).
 
-We can also represent terms that have loops in them like 
+```python
+t = [None]
+t[0] = t
+t
+```
 
+    [[...]]
 
+This requires something kind of like mutation. Logic variables, like in prolog, also enable you to do this, because logic variables are kind of "assign once" variables <https://web.archive.org/web/20221003021352/https://www3.cs.stonybrook.edu/~warren/xsbbook/node5.html> , which is a bit more principled than write as many times as you like variables.
 
+By giving the arena an interface to `makevar` and `define`, we can make this less spooky.
 
 ```python
 from dataclasses import dataclass, field
@@ -148,7 +153,7 @@ pprint(one + two)
                               Node(f='lit', args=[2]),
                               Node(f='+', args=[0, 1])]))
 
-
+We can make a cyclic term
 
 ```python
 A = Arena()
@@ -161,10 +166,7 @@ pprint(A)
 
     Arena(data=[Node(f='0', args=[]), Node(f='cons', args=[0, 1])])
 
-
-The `define` and `makevar` api is more general than the `app` api. 
-Even if you are describing well founded trees, it is no longer guaranteed that the children need to appear earlier than parents
-
+But we can also make non cyclic terms in such a way that they are no longer topologically sorted in the arena.
 
 ```python
 A = Arena()
@@ -175,51 +177,125 @@ A.define(a, Node("a", [])) # a
 pprint(A)
 ```
 
-    Arena(data=[Node(f='f', args=[1]), Node(f='a', args=[])])
+# Flat Equation Systems
 
+The arena can be viewed in a more logical looking light by considering it to represent a formal equation system. The index 47 in the arena represents a variables $x_{47}$ and the entry represents something like the equation $x_{47} := foo(x_{32}, x_{45})$. In other words, the arena represents a `Var -> Node<Var>` mapping.
 
-# Interpreting Equational Systems
+```
+[Term("a", []), Term("f", [0])]
 
-For ordinary expressions with variables, a basic semantics is  an environment receiving one `(var -> T) -> T`
+is kind of the same as
 
+x0 := a
+x1 := f(x0) 
+```
+
+- <https://www8.cs.fau.de/ext/milius/phd/AMV1.pdf> Free iterative theories: a coalgebraic view. Section: What is a rational tree?
+- <https://jeannin.github.io/papers/capsules-journal.pdf>
+- <https://jeannin.github.io/papers/nwf.pdf> Language Constructs for Non-well-Founded Computation
+- <https://mcrl2.org/web/user_manual/language_reference/bes.html> Boolean equation systems. Related?
+
+In a funny way, the arena form has exposed a very light and limited form of variable. We have not discussed any notion of alpha invariance for this notion of variable, but any arena with the indices shuffled ought to be basically the same thing. In a sense, this notion of variable which is sufficient to described cyclic terms is the thing the e-graph with fixed points is trying to support. These variables are also pretty much that same thing as an eid, but some distinctions have to be made and careful understanding of the semantics to stay sound.
+
+# Interpreting
+
+The is nothing so far inductive or coinductive about what we've discussed. It is just some data. A formal structure. That comes in when we start discussing what we want the thing to mean and how different arenas may relate to each other.
+
+For ordinary terms, we can define an interpretion by writing a recursive function
 
 ```python
-def interp(e, env):
+def interp(e) -> int:
     match e:
         case ("+", a, b):
-            return interp(a,env) + interp(b,env)
-        case ("var", a):
-            return env[a]
+            return interp(a) + interp(b)
+        case ("lit", a):
+            return a
+interp(("+", ("lit", 1), ("lit", 2)))
 ```
 
-The arena can be seen as a mapping `Var -> Node<Var>` where the arena index is a way of referring to a "variable"
+    3
 
-The entries of the arena is basically something like an expression with variables in it.
+We could do the same top down recursive thing for well founded arena terms, but now the opportunity to instead perform interpretation bottom up presents itself.
 
-The basic interpretation of the entire arena is as an operator that you can iterate.
+If the arena is in a topologically sorted order, we could interpret using a single bottom up sweep.
 
-The arena can be seen as representing an operator `(var -> T) -> (var -> T)`.
+But the new api doesn't persay guarantee that. Instead we have to iterate to a fixed point. The reason we're thinking about it this way is because the same methodology works for cyclic arena terms as well.
 
-`x_{t+1} = Ax_{t}`
+For equation systems, it is pretty natural to interpret the system as representing a single step of some iteration. The equational system is kind of in the form $x_{t+1} := A x_{t}$
 
-Each entry of the arena is defining an expressions per variable `x_i`. These expressions may themselves refer ot variables.
+This means that the natural thing to interpret it into is a `Env -> Env` function where `Env` is a mapping of semantics values to variable names `type Env = Var -> T`
 
-it may often be the case that we'd like to talk about a fixed point of this intepretation, perhaps the greatest, least, or set of fixed points. One can talk about fixed points for any operator `A -> A`
-
+While the basic interpretation is `Env -> Env`, if there is ever a function who's domain is the same as it's codomain, it is also possible to talk about it's set of fixed points, and possibly it's minimal, maximal, or unique fixed point. <https://en.wikipedia.org/wiki/Fixed_point_(mathematics)>
 
 ```python
-
+def interp(A : Arena) -> list[int]:
+    res = [None] * len(A.data)
+    while True:
+        done = True
+        for i, node in enumerate(A.data):
+            if res[i] is not None:
+                continue
+            match node:
+                case Node("+", [a,b]):
+                    if res[a] is not None and res[b] is not None:
+                        res[i] = res[a] + res[b]
+                        done = False
+                case Node("lit", [a]):
+                    res[i] = a
+                    done = False
+        if done:
+            return res
+    
+A = Arena()
+plusonetwo = A.makevar()
+one = A.app("lit", 1)
+two = A.app("lit", 2)
+A.define(plusonetwo, Node("+", [one.id, two.id]))
+interp(A)
 ```
 
-# Equality and Subterms
+    [3, 1, 2]
 
-https://www.philipzucker.com/subterm_mod_miller/
+```python
+def extract(a : Arena) -> tuple: # Interpreting into ordinary tuple terms is a non lossy interpretation
+    terms = [None]*len(a.data)
+    while True:
+        done = True
+        for i, n in enumerate(a.data):
+            if n is None:
+                continue
+            if terms[i] is None and all(terms[j] is not None for j in n.args):
+                terms[i] = (n.f, *[terms[j] for j in n.args])
+                done = False
+        if done:
+            return terms
 
-It is kind of nice to take two entire arenas and see what makes sense to consider as equal.
+A = Arena()
+fa = A.makevar()
+a = A.makevar()
+A.define(fa, Node("f", [a])) # f(A)
+A.define(a, Node("a", [])) # a
+extract(A)
+```
 
-Which of these two notions of equality to use (or some other notion), may depend on what domain of interpretation we intend.
+    [('f', ('a',)), ('a',)]
 
+# Equality of Terms
 
+Determining which entries are equal to the other entries in a syntactic sense is also not necessarily straightforward. For ordinary terms we'd do something like this:
+
+```python
+def eq(e,e2) -> int:
+    match e,e2:
+        case ("+", a, b), ("+", a2, b2):
+            return eq(a,a2) and eq(b,b2)
+        case ("lit", a), ("lit", a2):
+            return a == a2
+```
+
+If we have a cyclic term, this program would not terminate.
+
+We can define pessimistic and optimistic equality. Disequal until proven equal vs equal until proven disequal. Both are legit definitions. The first is
 
 ```python
 def pess_eq(a : Arena, b : Arena):
@@ -246,13 +322,7 @@ A.define(a, Node("a", [])) # a
 pess_eq(A,A)
 ```
 
-
-
-
     [[True, False], [False, True]]
-
-
-
 
 ```python
 def opt_eq(a : Arena, b : Arena):
@@ -279,13 +349,169 @@ opt_eq(A,A)
         
 ```
 
+    [[True, False], [False, True]]
 
+# Bits and Bobbles
 
+Well, I wrote something.
+
+I am having a hard time making a nice cohesive story with well backed code snippets. I think I'm feeling generally a little burnt out these days, so that probably ain't helping.
+
+Maybe a good starting point to juicier topics? I don't know how to attack all this. That is why bit sized posts are good.
+
+- Rewriting of arena terms
+- Hash consing
+- Bisimulation
+- Sets of arena terms. Factoring into VSA / Multiterms. <https://www.philipzucker.com/smart_constructor_aegraph/>  Aegraphs
+- Productivity. What is the different between constructors and non constructors? Causality. <https://www.cl.cam.ac.uk/~nk480/frp-lics11.pdf>
+- What are loops in an e-graph
+- Egraphs as equational systems `eclasses : Var -> Set<Node<Var>>>` Multi-equations? Quite similar notion to Grechanik's polyprograms <https://www.mathnet.ru/links/bf0adfca50e9ba6e89a63640700a21d1/mais647.pdf>
+- Sergei A Grechanik. 2015. Proving properties of functional programs by equality saturation. <https://persons.iis.nsk.su/files/persons/pages/step05_12may23sergeygrechanik.pdf>
+- Top Down Extraction
+- `:=` and `=` judgements as distinct
+- Congruence closure with loopy proof trees
+- named eclasses as a seperate namespace from enode constants. Like a lisp-2 kind of. egglog's let should be `define`. `define-rec`?
+- <https://arxiv.org/abs/2306.10009> extracting systems of equations
+- To some degree, the e-graph with fixed point is trying to remove the restriction on RecExpr that they need to be well founded. Insertion and extraction neither should require it. But also `1*x = x` is not the same kind of loop as `zeros := cons(0, zeros)`.
+- Homomorphisms of arenas into the egraph is non mutating lookup of the arena in the egraph. Again, insertion of a term is an asy recursive function, but we can't guarantee that so easily
+
+```python
+@dataclass(frozen=True)
+class MultiNode():
+    f : str
+    args : tuple[frozenset[Id], ...]
+
+type MultiEnv = dict[Id, frozenset[Node]]
+```
+
+Kind of looks like a non well founded set.
+
+```
+fix(T) -> fixsubst(T,fix(T))
+fixsubst(Hole, t) -> t
+fixsubst(Cons(a, tail), t) -> Cons(a, fixsubst(tai,t))
+```
+
+```
+struct Obs<T> { constructor : Option<Node<T>>, enodes : HashSet<Node<T>>}
+struct CoEgraph {comemo : HashMap<Id, Obs<Id>> } // eclasses basically.
+
+// vs
+struct Enode {
+    f : str,
+    args : Vec<Id>
+    is_constr : bool
+}
+struct Egraph {eclasses : HashMap<Id, Vec<ENodes>>}
+```
+
+title: Term and Co-Terms, Egraphs and Co-Egraphs
+
+I was invited a few months ago into discussions with Cheng Zhang, Sam Coward and Alexandra Silva on some work they had started on integrating loopy infinite streamy things into e-graphs. A few years back, I was barking up a similar but distinct tree to the one they were working on <https://www.philipzucker.com/coegraph/>
+
+Cheng will be giving a talk next month <https://pldi26.sigplan.org/details/egraphs-2026-papers/12/From-Rewriting-to-Fixpoints-Solving-Recursive-Equations-with-E-Graphs> on the topic, so it's no big secret. He has a much more mathematical perspective on things, so I'd like to lay down my doofus perspective both for myself and others.
+
+# Terms, Flat Terms, and Co-Terms
+
+# Cyclic Terms
+
+We can also represent terms that have loops in them like
+
+The `define` and `makevar` api is more general than the `app` api.
+Even if you are describing well founded trees, it is no longer guaranteed that the children need to appear earlier than parents
+
+# Interpreting Equational Systems
+
+For ordinary expressions with variables, a basic semantics is  an environment receiving one `(var -> T) -> T`
+
+```python
+def interp(e, env):
+    match e:
+        case ("+", a, b):
+            return interp(a,env) + interp(b,env)
+        case ("var", a):
+            return env[a]
+```
+
+The arena can be seen as a mapping `Var -> Node<Var>` where the arena index is a way of referring to a "variable"
+
+The entries of the arena is basically something like an expression with variables in it.
+
+The basic interpretation of the entire arena is as an operator that you can iterate.
+
+The arena can be seen as representing an operator `(var -> T) -> (var -> T)`.
+
+`x_{t+1} = Ax_{t}`
+
+Each entry of the arena is defining an expressions per variable `x_i`. These expressions may themselves refer ot variables.
+
+it may often be the case that we'd like to talk about a fixed point of this intepretation, perhaps the greatest, least, or set of fixed points. One can talk about fixed points for any operator `A -> A`
+
+```python
+
+```
+
+# Equality and Subterms
+
+<https://www.philipzucker.com/subterm_mod_miller/>
+
+It is kind of nice to take two entire arenas and see what makes sense to consider as equal.
+
+Which of these two notions of equality to use (or some other notion), may depend on what domain of interpretation we intend.
+
+```python
+def pess_eq(a : Arena, b : Arena):
+    eq = [[False]*len(b.data) for i in range(len(a.data))]
+    while True:
+        done = True
+        for i in range(len(a.data)):
+            for j in range(len(b.data)):
+                if eq[i][j]: continue
+                match a.data[i], b.data[j]:
+                    case Node(fa, argsa), Node(fb, argsb) if fa == fb and len(argsa) == len(argsb):
+                        if all(eq[ai][bi] for ai, bi in zip(argsa, argsb)):
+                            eq[i][j] = True
+                            done = False
+        if done:
+            return eq
+
+A = Arena()
+fa = A.makevar()
+a = A.makevar()
+A.define(fa, Node("f", [a])) # f(A)
+A.define(a, Node("a", [])) # a
+
+pess_eq(A,A)
+```
 
     [[True, False], [False, True]]
 
+```python
+def opt_eq(a : Arena, b : Arena):
+    eq = [[True]*len(b.data) for i in range(len(a.data))]
+    while True:
+        done = True
+        for i in range(len(a.data)):
+            for j in range(len(b.data)):
+                if not eq[i][j]: continue
+                match a.data[i], b.data[j]:
+                    case Node(fa, argsa), Node(fb, argsb) if fa != fb or len(argsa) != len(argsb) or any(not eq[ai][bi] for ai, bi in zip(argsa, argsb)):
+                            eq[i][j] = False
+                            done = False
+        if done:
+            return eq
 
+A = Arena()
+fa = A.makevar()
+a = A.makevar()
+A.define(fa, Node("f", [a])) # f(A)
+A.define(a, Node("a", [])) # a
 
+opt_eq(A,A)
+        
+```
+
+    [[True, False], [False, True]]
 
 ```python
 A = Arena()
@@ -296,25 +522,13 @@ opt_eq(A,A)
 
 ```
 
-
-
-
     [[True, False], [False, True]]
-
-
-
 
 ```python
 pess_eq(A,A)
 ```
 
-
-
-
     [[True, False], [False, False]]
-
-
-
 
 Is there an example we might want to mix pessimism and optimism?
 Well we might want to reject loops in arithmetic expressions as nonsensical, but have loops in stream expressions.
@@ -322,13 +536,9 @@ Well we might want to reject loops in arithmetic expressions as nonsensical, but
 We are defining a single step operator. This single step may not be exactly _time_.
 We know that if we define the next time step in terms of the previous, we're good.
 
-
-
 Rational Trees are a thing. They are loopy data structures. You can build them by knot tying like this.
 Note that egg has the restriction "RecExprs must satisfy the invariant that enodes’ children must refer to
 elements that come before it in the list." Basically, there are ways to remove that restriction.
-
-
 
 ```python
 t = [None]
@@ -336,13 +546,7 @@ t[0] = t
 t
 ```
 
-
-
-
     [[...]]
-
-
-
 
 ```python
 f = Term("f", [None])
@@ -350,31 +554,22 @@ f.args[0] = f
 f # fffffffffffffff...
 ```
 
-
-
-
     Term(f='f', args=[...])
-
-
-
 
 ```python
 arena = [Node("f", [0])]
 ```
 
-
-
-
-
 This is a notch too cute. You have to reach for annoying shallow stuff like python's `id` function to deal with this.
 
-It is better to use the RecExpr style. 
+It is better to use the RecExpr style.
 
 # Flattening Exposes Nice Structure For Some Reason
 
 Compound terms are kind of goofy. We can expand them into flat form and this often exposes new ways of thinking or clarifies confusion.
 
 One way to talk about this is as let expansion
+
 ```
 f(g(a),b)
 
@@ -390,18 +585,14 @@ Flattening may or may not require you to pick a linearization/sequencing of your
 
 In an impreative language, expressions can actually be subservient to statements/commands. An expression should be thought of as a command with implicit destination storage `type Expr = Dst -> Stmt`. I think this is a shocking inversion of priority of concepts to those raised in functional programming / Imp, but IMO it's legit. This concept also appears also in the destination passing style compiler. This is why the walrus operator in python is an expression, or that assignement `=` can be used as an expression in C. It's acually kind of natural.  The fact that you _don't_ order the subexpressions when considered as statements is bizarre and a source of nondeterminism, unspecified beahvior or undefined behavior.
 
-
-
 In order to flatten, you may need to invent new names. This is kind of like ids in a hash cons, arena, or egraph.
 
-
 From a flattened form, it is not that far off to consider mututal recursion in those bindings.
+
 ```
 let rec e1 = cons(0, e2)
 and e2 = cons(1, e1) in
 ```
-
-
 
 - egglog
 - slog
@@ -411,15 +602,9 @@ and e2 = cons(1, e1) in
 - Expressions are implicit destination statements
 - Relational vs Functional style. Prolog vs Haskell/Curry. Resolution vs Superposition.
 
-
-
 # Interpreting Terms and Co-Terms
 
 If I want to interpret / give a semantics to a term, I can make an interpreter.
-
-
-
-
 
 ```python
 def interp(e) -> int:
@@ -433,19 +618,13 @@ def interp(e) -> int:
 interp(("+", ("lit", 1), ("lit", 2))) # 3
 ```
 
-
-
-
     3
-
-
 
 It is less clear how one is going to construct an interpretation over a non-well founded term.
 
 What we can do is make an operator turning a current valuation of the entire arena into a next valuation
 
 This also works for a well founded term. It will finitely stabilize. The above simple intepreter can be seen as a nice topologically sorted ordering of the same kind of thing.
-
 
 ```python
 def interp(a : Arena, cur : list[float]) -> list[float]:
@@ -480,7 +659,6 @@ def interp_set(a : Arena, cur : list[float]) -> list[float]:
 
 There is a free interpretation of a kind that just builds increasing large finite approximations of the coterm. This also stabilizes. You can start this thing of wit `[None, None, None, ...]`
 
-
 ```python
 def free_interp(a : Arena, cur : list[float]) -> list[float]:
     new = []
@@ -497,40 +675,28 @@ def free_interp(a : Arena, cur : list[float]) -> list[float]:
 
 For some kinds of interpretations, we may have a method to build the solution in one go.
 Linear equations
-Probablistic transition diagrams. Corresponds to multiplying the transition matrix over and over, which should fixed point into the stationary distribution https://en.wikipedia.org/wiki/Markov_chain#Stationary_distribution_relation_to_eigenvectors_and_simplices
+Probablistic transition diagrams. Corresponds to multiplying the transition matrix over and over, which should fixed point into the stationary distribution <https://en.wikipedia.org/wiki/Markov_chain#Stationary_distribution_relation_to_eigenvectors_and_simplices>
 For other interpretations, they will finitely stabilize.
 
-
 Sometimes there will be a unique fixed point solution, other times there might be multiple. A least or a greatest.
-
 
 Optimistic questions / Predicates. Greatest fixed point on a false <= true.
 Pessimistic questions / predicates. Least fixed point
 
 Binary Questions / Relations [[]]
 
-
-
 # Sets of Terms and Co-Terms
 
 For a finite set of terms, we can just put them into a set data structure.
-
-
-
 
 ```python
 { ("+", ("lit", 1), ("lit", 2)), 
   ("lit", 7) }
 ```
 
-
-
-
     {('+', ('lit', 1), ('lit', 2)), ('lit', 7)}
 
-
-
-There is some oppotunity for compaction here. Sometimes we created a set of terms because we are applying `f` to two sets of children `{a,b}` `{c,d}` . Sometimes a set lifted version of `f` is denoted by using brackets `[f](A,B) = {f(a,b) | a in A, b in B}`. By allowing the set data structure and 
+There is some oppotunity for compaction here. Sometimes we created a set of terms because we are applying `f` to two sets of children `{a,b}` `{c,d}` . Sometimes a set lifted version of `f` is denoted by using brackets `[f](A,B) = {f(a,b) | a in A, b in B}`. By allowing the set data structure and
 
 Upon the union of two term sets, it could notice that there is a possibility to push the union down to the children. This is kind of a factoring move. The factored form of a polynomial might be much smaller than the fully FOILed out form. It also reminds me a bit of a BDD in some ways.
 `{f(a,c), f(b,d)} | {f(a,d), f(b,c)} = f({a,b}, {c,d})`
@@ -540,9 +706,6 @@ I call this sort of thing "multiterms". It is also related or the same thing as 
 Infinite sets of well founded terms are not finitely representable in this framework.
 
 This is in distinction to an e-graph, which can represent the infinite set of `{x, 1*x, 1*1*x, ...}` via a loop.
-
-
-
 
 ```python
 @dataclass
@@ -560,9 +723,6 @@ class TermSetRef:
 
 # Productivity
 
-
-
-
 # Rewriting on Arenas
 
 We can rewrite on terms.
@@ -570,12 +730,6 @@ We can rewrite on terms.
 We can also do rewriting on terms held in arenas.
 
 We can also do rewriting on cyclic terms held in arenas. It doesn't change anything _too_ much.
-
-
-
-```python
-
-```
 
 # Optimistic and Pessimistic Memoization
 
@@ -587,12 +741,9 @@ This can be thought of as memoization where you separately make an entry into th
 
 Checking equality in RecExpr can be made faster by memoizing. RecExpr is capable of expressing DAGs
 
-
 This some how or other corresponds to least and greatest fixed points. I'm not sure how
 
 Sergei A Grechanik. 2015. Proving properties of functional programs by equality saturation.
-
-
 
 ```python
 def memo(f):
@@ -661,48 +812,28 @@ def wf_eq(t : TermRef, s : TermRef):
 
 We've talked about loops in terms. Is a loop in an egraph the same thing? It's subtle.
 
-If I put the equation `zero = cons(0, zero)` into an egraph, I'm inclined to say that the contents of the eclass are an infinite set of finite terms `{zero, cons(0,zero), cons(0,cons(0,zero)), ...}` and not a singleton set of a single infinite term `{cons(0, cons(0, cons(0,...)))}`. These things _are_ kind of similar though. 
-
-
+If I put the equation `zero = cons(0, zero)` into an egraph, I'm inclined to say that the contents of the eclass are an infinite set of finite terms `{zero, cons(0,zero), cons(0,cons(0,zero)), ...}` and not a singleton set of a single infinite term `{cons(0, cons(0, cons(0,...)))}`. These things _are_ kind of similar though.
 
 # Egraphs as Eclasses
 
-I would have thought the union find or `memo` is the most important field, but perhaps the most important field of an egraph is `eclasses : Id -> Set<Enode>`
+I would have thought the union find or `memo` is the most important field, but perhaps the most important field of an egraph is `eclasses : Id -> Set<Enode>`. This seems to fit best into the equational system persepctive
 
 `eclasses` on it's own _is_ kind of a like arena. It is kind of like a multiterm arena
 
 Indeed eclasses represents all the choices you may make during ematching or during extraction.
-
-
-
 
 ```python
 @dataclass
 class EGraph:
     eclasses : list[list[Node]] 
 
-
-
-
 ```
 
 We may want ot distinguish between constructors and non constructors. Constructor are canonical. We might have more than one constructor in the list, but they should have the same symbol and resolve their children
 
-
-
-
-```python
-
-```
-
 # Inserting Co-Terms into an EGraph
 
 As we insert a RecExpr, we record what eid we got for each index. If there is a backedge in the RecExpr (which is a child that points forward), we need to make a raw eid placeholder for that.
-
-
-
-
-
 
 ```python
 from dataclasses import dataclass, field
@@ -930,8 +1061,6 @@ E
 
     KeyboardInterrupt: 
 
-
-
 ```python
     """
     def add_term(self, t : TermRef) -> Id:
@@ -948,7 +1077,6 @@ E
 
     """
 ```
-
 
 ```python
     def is_eq_slow(self, x : Id, y : Id):
@@ -974,17 +1102,9 @@ E
 
 # Top Down Rebuilding
 
-
-
 # Enumerative Extraction as a Process
 
-
-
-
 Guardedness as an offset eid?
-
-
-
 
 ```python
 # Based on https://github.com/mwillsey/microegg
@@ -1104,25 +1224,22 @@ class EGraph:
 
 # Bits and Bobbles
 
-https://jeannin.github.io/papers/cocaml.pdf
-https://jeannin.github.io/papers/nwf.pdf
+<https://jeannin.github.io/papers/cocaml.pdf>
+<https://jeannin.github.io/papers/nwf.pdf>
 
 Productivity tracking using the offset or positive offset union find. If there is a self loop with positive offset attached to it, where offset is interpreted as number of guards or timesteps in the future, then this is a definitional edge. A loop with 0 offset is not a definition.
 
 EGraphs with Fixed Points. Consider having an explicit `fix` enode. This requires some notion of variable, which perhaps a slotted or lifting egraph can provide. But then you also need rewrites to push the fixes around. Something needs to discover
+
 ```
 fix(a, cons(0, a)) = fix(a, cons(0, cons(0, a)))
 ```
 
-
 Term Homeomorphism and kruskal's theorem
-Coterm homemorphism? Does this get closer to https://en.wikipedia.org/wiki/Robertson%E2%80%93Seymour_theorem ?
-
+Coterm homemorphism? Does this get closer to <https://en.wikipedia.org/wiki/Robertson%E2%80%93Seymour_theorem> ?
 
 I'm not really sure inductive vs coninductive whatever that means is the right axis.
 Cyclic vs acyclic trees seems less mysterious.
-
-
 
 `var := expr` vs `expr = expr`congreunce rule system
 
@@ -1133,19 +1250,13 @@ x := e
 
 ```
 
-
-
-
 Rational terms via recexpr
 add_term
 Well, I don't have to use recexpr in python, but I might need to watch for seen stuff.
 
 Same for automata hash cons. If I give the entire rational term, I could do automata minimization as it is coming in.
 
-
 CFG GKat seemed interesting. jumps
-
-
 
 sol : E -> set of solution
 canon : set of sol -> sol
@@ -1167,16 +1278,11 @@ embedding vs homomorphism
 bisimulation odes not coniciden with behavioral equivalence
 span
 projection of a bisimulation?
-https://en.wikipedia.org/wiki/Bisimulation#Coalgebraic_definition
-
-
-
-
+<https://en.wikipedia.org/wiki/Bisimulation#Coalgebraic_definition>
 
 ```python
 class RecExpr
 ```
-
 
 ```python
 from dataclasses import dataclass, field
@@ -1199,13 +1305,11 @@ class EGraph:
 
 ```
 
-
 Chang says a special symbol could wrap the body. elem.
-Eveything is set lifted? But singleton sets only. And fixedpoints are kind of 
+Eveything is set lifted? But singleton sets only. And fixedpoints are kind of
 With an implicit coercion between elements and sets.
 
 How important are implicit coercions
-
 
 Definitional equal and equal as different things does smack of type theory.
 
@@ -1218,22 +1322,17 @@ corecursive definitions we are in the ballpark of agda guardedness about which o
 
 But getting bisimilar stuff to be definitionally equal is tough right? bisimilar is more of a extensional idea
 
-https://ncatlab.org/nlab/show/definition :=  is a separate judgement. I do have some ploy about GATs as a syntax for multipatterns.
+<https://ncatlab.org/nlab/show/definition> :=  is a separate judgement. I do have some ploy about GATs as a syntax for multipatterns.
  We could have gats with a separate := judgement
 
 Cycle cutting? Some kind of induction thing? Cyclic proofs something something.
 
 I was trying to make finite models with timestamps
 
-
 The eclass "is" equations? I guess each eclass could be not just the set of terms, but the set of pairs of equal terms. Doesn't seem to be much point there.
 But if it was the set of proofs of equalities of terms, that's interesting.
 
-
 Yes, it's interesting that the memo and defn occur at opposiute times. a Defn / Fix / FixVar node
-
-
-
 
 ```python
 from dataclasses import dataclass, field
@@ -1290,11 +1389,7 @@ class BiSimHashCons:
 
 ```
 
-
-
-
 named eclasses as distinct from eids
-
 
 observations  = set of partial extractions until you reach a constructor.
 But that might be an infinite set because of egraph loops.
@@ -1303,44 +1398,36 @@ Rudi pointed out the graph coloring heursitic thing for hashing kind of leads to
 
 extraction gym. priority queue, and dag extraction
 
-te detour cost thing makes a lot of sense. Kind of a*, kind of feels like monte carlo tree search to me or something. I dunno if I know how to think of a* as 
+te detour cost thing makes a lot of sense. Kind of a*, kind of feels like monte carlo tree search to me or something. I dunno if I know how to think of a* as
 
 Given root, what is cost of best tree that contains eclass x.  cost(root | x).  
 
 A* as trying to find a minimum vs trying to find a known goal. Hmm.
 
-
-
-
-
 # Definitions an EMT
 
 Are definitions more like:
+
 - rules
 - associativity
 - egraph equations (ground equations)
 
-
 Definitions keep some things out of the egraph like baked in assocaitivty. But the concept of definition is more extensible than assocaitity.
 egraph equations are also extensible. definitions are very similar, but sublte problems occur when we collapse the concepts.
 
-Are multiple definitions allowed? `(S n) + m := S (n + m)` vs `n + (S m) := S (n + m)` Can such a thing happen the absence of variables? 
-
+Are multiple definitions allowed? `(S n) + m := S (n + m)` vs `n + (S m) := S (n + m)` Can such a thing happen the absence of variables?
 
 Rules are conceptually run to a fixed point. We can't actually
 Loops in egraphs are infinite sets of terms. We learn infinite congruence via finite means
 
 Ematching modulo delta conversion, ematching modulo definitions
 
-
-
 Extraction is nonlocal. Can we do bottom up extraction dyanmic programming style? We _have_ to be sharing cost
 
 What is the normal form of definitions? Unfolding or refolding?
 
-
 Rewriting the definitional equations and only rewrites that maintain the well formedness of definitions.
-But what is the _definition_ as a object semantically. It is the 
+But what is the _definition_ as a object semantically. It is the
 Definitions as stated feel syntactic. If I wanted a semantic object like to associated with the definitions, I think it would have to be the function that is being fixed that is defined by the definition.
 
 we may write `def fact(n) := n * fact(n-1)` but this can be seen as `def fact := fix(fun f x => n * f (n - 1))
@@ -1353,8 +1440,6 @@ If you can extract two definitions out the egraph,
 You can extract two rational terms out of two eclasses. If these two rational terms are definitional (????) yo ucan combine them. Yeah it doesn't even sense check. Is a term "definitional"?
 A pair of terms is definitional
 
-
-
 fix(Cons(0, Hole)) = Cons(0, fix(Cons(0, Hole)))
 
 zero = fix(Cons(0, Hole))
@@ -1364,13 +1449,11 @@ fix(T) -> fixsubst(T,fix(T))
 fixsubst(Hole, v) = v
 fixsubst(Cons(a, tail), t) -> Cons(a, fixsubst(tai,t))
 
-
 #
-
 
 positive offset union fiund for causaality
 
-Nat -> Option T is the more obvious model. 
+Nat -> Option T is the more obvious model.
 
 tail s = fun t -> s (t + 1)
 head s = s 0
@@ -1382,7 +1465,6 @@ x0 = uknonwn
 x1 = cons(0, unknown)
 x2 = cons(0,cons(0, unknown))
 
-
 "look into" unions are unsound if entry is unknown?
 x is being "vague" about which xn it is. similar to the way x+1 is "bvague" about which integer x is.
 
@@ -1393,33 +1475,29 @@ fix x := Cons(0, x)
 let x := fix (\y -> Cons(0, y))
 cofix?
 
-
 fix equations can't go in the egraph.
 
 let rec x = Cons(0, x) in
     union(foo, bar)
     union(biz, baz)
 
-In quasi egglog 
+In quasi egglog
 let rec x = Cons(0, x)
 let y = foo(3)
-
-
 
 Atkey and Mcbride
 utlrametric modls.
 interpret delay modality as a contractiion. Then fix (T -> T) -> T is guanreted; Interpreted as sets.
 
-later modality https://iris-project.org/tutorial-pdfs/lecture7-later.pdf
-guarded recursion in type theory https://www.pls-lab.org/Guarded_recursion_(type_theory)
+later modality <https://iris-project.org/tutorial-pdfs/lecture7-later.pdf>
+guarded recursion in type theory <https://www.pls-lab.org/Guarded_recursion_(type_theory)>
 
 causality is too strong. just want productivity. But what is a semantic model
 What is definition of guarded vs productive?
 
-
 a time of availability model.
 causality is a non interference property. The future is secret
-https://en.wikipedia.org/wiki/Causal_system
+<https://en.wikipedia.org/wiki/Causal_system>
 (availabletime, value)
 (t, stream) but pieces of the stream are only avialble at t + 1. Or maybe they are only avialable at some time > t in an ordere way
 availability signals in a circuit. Buffering, processring. Bluespec. Multicycle
@@ -1444,14 +1522,13 @@ tail(precons(x,b)) != b either. But closer. time isn't shifted. Irrelevant time 
 offset + scale. t0 +
 
 is_causal(f) = forall t < k, a[at + t] =  b[at + t] => f[a] = f[b]
-f 
+f
 causal as generalized congruence?
 
-Any "cuasal equation" x = f(x) defines x 
+Any "cuasal equation" x = f(x) defines x
 or system of equations.
 
-https://www.cl.cam.ac.uk/~nk480/frp-lics11.pdf krishnawswami and benton
-
+<https://www.cl.cam.ac.uk/~nk480/frp-lics11.pdf> krishnawswami and benton
 
 Causal = A^k -> B forall k
 mealy machines as causal functions
@@ -1464,17 +1541,16 @@ To be intensionally equals the times need  to be the saem too.
 extensional vs intensional as non caonincal set data strcturues.
 hott = isomorphic types are equal. sure.
 
-https://research.vu.nl/ws/portalfiles/portal/2409636/219599.pdf coniductive clculus of streams
+<https://research.vu.nl/ws/portalfiles/portal/2409636/219599.pdf> coniductive clculus of streams
 
-
-Maybe tail should count as a ` -1` to the guard condition is the problem? Most enodes are intuitively 0 or positive "guardedness"
-https://www.philipzucker.com/thin_monus_uf/ I've been thinking about generalized union finds lately. One of the let's you talk about offsets
+Maybe tail should count as a `-1` to the guard condition is the problem? Most enodes are intuitively 0 or positive "guardedness"
+<https://www.philipzucker.com/thin_monus_uf/> I've been thinking about generalized union finds lately. One of the let's you talk about offsets
 You could kind of maintain a union find that says b =(-1)= tail(b)
 They are indeed mostly equal, but you lose a guard if you use it
 Or gain a guard if you go the other way
 Or from the temporal stream perspective where everything`Int -> T`, you could perhaps use +-n to track shifted versions of signals.
 
-Likewise for "guardedness" of inductives? Recursion? kind of a measure tracking analysis. But we don't want to say that 
+Likewise for "guardedness" of inductives? Recursion? kind of a measure tracking analysis. But we don't want to say that
 t = size 42. We want to say that s is a subterm of t because  t =n s or something
 
 A replacement or generalization of the "constructor union find". Use monus uf, associated +1 height to Cons, and no change in height to functional stuff.
@@ -1489,10 +1565,6 @@ A way to unify bisimulation collection and inductive collection?
 
 A monus of observation chains? Monoid?
 b = tail(b)  feels like the +1 should be associated with tail. So it's a property of _enodes_ perhaps in addition to part of the relation between edis.
-
-
-
-
 
 ```
                       -------------------------  
@@ -1521,13 +1593,11 @@ D,E |- x :=: y
 
 _Definitionally equal_ vs just eqaul. But its kind of the opposite flavor of DTT.
 
-
 What are the models of `x + 0 = x`
+
 1. Term model
 2. `{x:3} |= x + 0 = x` and `{x:4} |= x + 0 = x`
 3. x is interpreted as `fun i => i` and all operators and constants are interpreted as pointwise lifted
-
-
 
 It isn't this part that goes wrong, it's E infecting D
 
@@ -1553,15 +1623,11 @@ It isn't this part that goes wrong, it's E infecting D
 
 ```
 
-
 What about the mu calculus for definitions?
 
-
-
-
-https://persons.iis.nsk.su/files/persons/pages/step05_12may23sergeygrechanik.pdf 
-https://github.com/sergei-grechanik/supercompilation-hypergraph/tree/master/samples
-https://link.springer.com/article/10.1134/S0361768815030056
+<https://persons.iis.nsk.su/files/persons/pages/step05_12may23sergeygrechanik.pdf>
+<https://github.com/sergei-grechanik/supercompilation-hypergraph/tree/master/samples>
+<https://link.springer.com/article/10.1134/S0361768815030056>
 
 Unique fixed point. Terminationg helps guarnatee that.
 And that is a good persepctive. Given our intended semantics, are two things equal in all models. Unique in the given model?
@@ -1571,13 +1637,10 @@ Actually a collection of rules transforming
 Normal form.
 Nice table in the talk of correspondances. So yes, supercompilation
 
-https://github.com/sergei-grechanik/peqsen?tab=readme-ov-file
-https://github.com/sergei-grechanik/agda-graphsc agda egraph
-
-
+<https://github.com/sergei-grechanik/peqsen?tab=readme-ov-file>
+<https://github.com/sergei-grechanik/agda-graphsc> agda egraph
 
 Hmm. So maybe the other inductive provers would be good for inspiration.
-
 
 If there is a way to extract two equal things from an egraph, those eclasses should be equal.
 
@@ -1589,12 +1652,8 @@ Could there be no notion of minimal? Yeah, negation can screw you.
 clauses.
 Optimistic fixed points?
 
-https://scispace.com/pdf/bisimilarity-in-term-graph-rewriting-21f4rcsr85.pdf rewriting modulo bismiilairty. Term graphs. ariola
+<https://scispace.com/pdf/bisimilarity-in-term-graph-rewriting-21f4rcsr85.pdf> rewriting modulo bismiilairty. Term graphs. ariola
 Hmm. acyclic term graphs though
-
-
-
-
 
 A codata union find.
 a -> Cons(a,b) as the _union find_
@@ -1608,22 +1667,17 @@ a = Cons(xs, foo)
 b = Cons(xs, foo)
 Constructors should also be collecting congruence. So they _are_ enodes
 
-
 What are the current examples that flummox us
-
 
 Solvers
 What abut doing my coegraphs in the
 But being _guarded_ instead of sealed?
 
-
-
-
-
 Backedges are special. "definition events" make a temporary thing avaiable for know tying. It is not an enode.
 
 Infinite number of rules
 If there exists a loop in there?
+
 ```
 y = cons(cons(cons(y))), z = cons(cons(cons(z)))
 -------------------
@@ -1631,112 +1685,104 @@ y = cons(cons(cons(y))), z = cons(cons(cons(z)))
 
 ```
 
-
 rational trees CF
 
 Do more automata algorithms from book
-Tabling, Rational Terms, and Coinduction Finally Together! https://arxiv.org/abs/1405.2794
+Tabling, Rational Terms, and Coinduction Finally Together! <https://arxiv.org/abs/1405.2794>
 
-https://arxiv.org/abs/cs/0403028 An Application of Rational Trees in a Logic Programming Interpreter for a Procedural Language
+<https://arxiv.org/abs/cs/0403028> An Application of Rational Trees in a Logic Programming Interpreter for a Procedural Language
 
-https://cfbolz.de/posts/dfa-minimization-using-rational-trees-in-prolog/
+<https://cfbolz.de/posts/dfa-minimization-using-rational-trees-in-prolog/>
 
-https://www.philipzucker.com/coegraph/
+<https://www.philipzucker.com/coegraph/>
 
-https://joerg.endrullis.de/publications/infinitary%20rewriting/
+<https://joerg.endrullis.de/publications/infinitary%20rewriting/>
 
-https://softwarepreservation.computerhistory.org/prolog/marseille/doc/Colmerauer-InfTree-1982.pdf prolog and infinte trees
+<https://softwarepreservation.computerhistory.org/prolog/marseille/doc/Colmerauer-InfTree-1982.pdf> prolog and infinte trees
 
-https://dl.acm.org/doi/10.1145/2480359.2429075 Copatterns: programming infinite structures by observations
+<https://dl.acm.org/doi/10.1145/2480359.2429075> Copatterns: programming infinite structures by observations
 
-Adriano Corbelino https://nepls.org/Events/35/abstracts.html#08c03fd7 CoPy
+Adriano Corbelino <https://nepls.org/Events/35/abstracts.html#08c03fd7> CoPy
 
-https://github.com/pdownen/CoScheme
-
+<https://github.com/pdownen/CoScheme>
 
 I'd assume that you have a rational term, there is some notion of finding a rational term inside another, cutting that out, and then replacing by a right hand side
 To perform a rewrite step
 And then it feels like a coherent question to ask if a rules set is confluent and to attempt to repair confluence via some procedure (some version of knuth bendix)
-Such a confluent system of rules would "solve" ground equations between rational terms (?) 
-My current spiel is "generalized ground knuth bendix". That one can do knuth bendix over other special structures with notions of matching and overlap and rewriting (polynomials, multisets, ground terms, alpha invariant terms, and now rational terms (terms with loops)). And all these completed rewrite systems correspond to generalized egraphs with some good stuff baked in 
-
+Such a confluent system of rules would "solve" ground equations between rational terms (?)
+My current spiel is "generalized ground knuth bendix". That one can do knuth bendix over other special structures with notions of matching and overlap and rewriting (polynomials, multisets, ground terms, alpha invariant terms, and now rational terms (terms with loops)). And all these completed rewrite systems correspond to generalized egraphs with some good stuff baked in
 
 f
 
 Go ground first. Isn't that always the advice?
 
 Rational Rewriting
-https://link.springer.com/chapter/10.1007/3-540-58338-6_90
-https://dl.acm.org/doi/10.1007/978-3-030-68195-1_15 commutative rational rewriting
-https://link.springer.com/chapter/10.1007/978-3-642-33654-6_12  Rational Term Rewriting Revisited: Decidability and Confluence
+<https://link.springer.com/chapter/10.1007/3-540-58338-6_90>
+<https://dl.acm.org/doi/10.1007/978-3-030-68195-1_15> commutative rational rewriting
+<https://link.springer.com/chapter/10.1007/978-3-642-33654-6_12>  Rational Term Rewriting Revisited: Decidability and Confluence
 
 finite number of subterms. So a DAG aware term ordering (?). Count of number of subterms
 
 Term graph rewriting
-https://www.cs.uoregon.edu/Reports/TR-1995-016.pdf ariola and klop. equational term graph rewriting
+<https://www.cs.uoregon.edu/Reports/TR-1995-016.pdf> ariola and klop. equational term graph rewriting
 
 drags?
 
 mu-terms. mu-expressions
 
-
-
 What about having an x after an infinite number of f? Ordinal completion style. Ord -> f | x.
 
-https://arxiv.org/abs/2601.09986 Outrunning Big KATs: Efficient Decision Procedures for Variants of GKAT
+<https://arxiv.org/abs/2601.09986> Outrunning Big KATs: Efficient Decision Procedures for Variants of GKAT
 
 cut egraph loops before minimization
 
+<https://homepage.divms.uiowa.edu/~ajreynol/cade15.pdf> Codatatypes in smt
+<https://www.cs.cornell.edu/~kozen/Papers/CoCaml.pdf> cocaml
 
-https://homepage.divms.uiowa.edu/~ajreynol/cade15.pdf Codatatypes in smt
-https://www.cs.cornell.edu/~kozen/Papers/CoCaml.pdf cocaml
+<https://www.kestrel.edu/people/pavlovic/papers/lapl-LICS98.pdf> calculus in coinductive form
+<https://www.cs.cornell.edu/~kozen/Papers/MetricCoind.pdf> metric condinduction <https://mathoverflow.net/questions/26177/uses-of-bisimulation-outside-of-computer-science>
 
-https://www.kestrel.edu/people/pavlovic/papers/lapl-LICS98.pdf calculus in coinductive form
-https://www.cs.cornell.edu/~kozen/Papers/MetricCoind.pdf metric condinduction https://mathoverflow.net/questions/26177/uses-of-bisimulation-outside-of-computer-science
+<https://www.cs.cornell.edu/~kozen/Papers/Capsules.pdf> computing with capsules
+<https://cacm.acm.org/research/hacking-nondeterminism-with-induction-and-coinduction/>  Hacking Nondeterminism with Induction and Coinduction
 
-https://www.cs.cornell.edu/~kozen/Papers/Capsules.pdf computing with capsules
-https://cacm.acm.org/research/hacking-nondeterminism-with-induction-and-coinduction/  Hacking Nondeterminism with Induction and Coinduction
+<https://decomposition.al/blog/2025/11/20/where-simulation-came-from/>
 
-https://decomposition.al/blog/2025/11/20/where-simulation-came-from/
+<https://homes.cs.washington.edu/~djg/msr_russia2012/sangiorgi.pdf> introduction to simulation and
 
-https://homes.cs.washington.edu/~djg/msr_russia2012/sangiorgi.pdf introduction to simulation and 
-
-"The Russel example" https://arxiv.org/abs/2511.20782
+"The Russel example" <https://arxiv.org/abs/2511.20782>
 Optimism as a middle fixed point and stable set semantics?
 
 tuples of ints as state vs the ADT/ makes a difference if you want heterogenous state.
 Even if heterogenous, the fields ap priori have nothing to do with eac htoerh
 
-https://isabelle.in.tum.de/website-Isabelle2011-1/dist/Isabelle2011-1/doc/ind-defs.pdf
+<https://isabelle.in.tum.de/website-Isabelle2011-1/dist/Isabelle2011-1/doc/ind-defs.pdf>
 A Fixedpoint Approach to (Co)Inductive and (Co)Datatype Definitions∗
 
-https://arxiv.org/abs/cs/9711105 Mechanizing Coinduction and Corecursion in Higher-order Logic
+<https://arxiv.org/abs/cs/9711105> Mechanizing Coinduction and Corecursion in Higher-order Logic
 
 defintions specify a unify object and bring reasoning principles
 
-https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-458.pdf Final Coalgebras as Greatest Fixed Points
+<https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-458.pdf> Final Coalgebras as Greatest Fixed Points
 in ZF Set Theory
 
+<https://www.andreipopescu.uk/POPL_2023_tutorial/Part1_Introduction.pdf>
+<https://www.andreipopescu.uk/VeTSS/Part2_Inductive_Predicates.pdf>
+<https://www.andreipopescu.uk/VeTSS/Part3_Coinductive_Predicates.pdf>
 
-https://www.andreipopescu.uk/POPL_2023_tutorial/Part1_Introduction.pdf 
-https://www.andreipopescu.uk/VeTSS/Part2_Inductive_Predicates.pdf
-https://www.andreipopescu.uk/VeTSS/Part3_Coinductive_Predicates.pdf
-
-https://www.cl.cam.ac.uk/archive/mjcg/Blog/WhatToDo/Coinduction.pdf Corecursion and coinduction: what they are and
+<https://www.cl.cam.ac.uk/archive/mjcg/Blog/WhatToDo/Coinduction.pdf> Corecursion and coinduction: what they are and
 how they relate to recursion and induction
-Mike Gordon https://www.cl.cam.ac.uk/archive/mjcg/plans/Coinduction.html
+Mike Gordon <https://www.cl.cam.ac.uk/archive/mjcg/plans/Coinduction.html>
 
 homotoyp type theory gets equality of streams. hmm.
 
-https://ncatlab.org/nlab/files/GimenezCasteran-InductiveTypes.pdf
-http://adam.chlipala.net/cpdt/html/Coinductive.html
+<https://ncatlab.org/nlab/files/GimenezCasteran-InductiveTypes.pdf>
+<http://adam.chlipala.net/cpdt/html/Coinductive.html>
 
+<https://www.youtube.com/watch?v=wU2G-ODoabE> ulrich berger Coinduction in Computable Analysis
+<https://arxiv.org/abs/1101.2162> From coinductive proofs to exact real arithmetic: theory and applications
 
+<https://golem.ph.utexas.edu/category/2009/05/metric_coinduction.html> ? <https://www.cs.cornell.edu/kozen/Papers/MetricCoind.pdf>
 
-https://www.youtube.com/watch?v=wU2G-ODoabE ulrich berger Coinduction in Computable Analysis
-https://arxiv.org/abs/1101.2162 From coinductive proofs to exact real arithmetic: theory and applications
-
-https://golem.ph.utexas.edu/category/2009/05/metric_coinduction.html ? https://www.cs.cornell.edu/kozen/Papers/MetricCoind.pdf
 ```
 I = [-1,1]
 signed digit = {-1,0,1}
@@ -1761,9 +1807,8 @@ def tail(s):
 ```
 
 rutten and turi
-https://ir.cwi.nl/pub/28550/rutten.pdf
-aczel 1977 inductive 
-
+<https://ir.cwi.nl/pub/28550/rutten.pdf>
+aczel 1977 inductive
 
 finite algebra = finite set with operations (dicts)
 finite homomorphism
@@ -1776,12 +1821,10 @@ Category theory is besides the point and anti-helpful.
 initial algebra - probably infinite. Terms. EPR style restrictions? constants, sort stratification, predicates only
 Unless you allow for partial functions. Then the egraph is an initial algebra
 
-
 final coalgebra - probably infintie
 
-
-
 closed vs open
+
 - open datatypes in haskell papers
 - open dataypes in ocaml
 - open recursion and object oreitned programming
@@ -1793,11 +1836,12 @@ closed vs open
 - My new thing is open_definition in knuckledragger, which I kind ofwanted for a coinductive enocding
 
 Things to do:
+
 - Reimplement coegraphs. Definitional version
 - Reimplement automata minimzation
 - microegg
 - cocaml
-- 
+-
 
 guardedness
 productivity
@@ -1808,23 +1852,21 @@ coterm rewriting
 
 Hmm cocaml, user defined solvers. Shostak like?
 
-
-
 Sets are a particularly important and well formed complete lattice.
 
 Might be interesting to implement Paulson's construction using Quine tuples
 
 Inductive sets over finite universes. "Silly" but perhaps useful. Induction over bitvectors.
 
-
 The infinite set blog post never got written really.
 
-https://personal.cis.strath.ac.uk/conor.mcbride/pub/JUnfold/junfold.pdf onor McBride’s "Let’s see how things unfold":
-https://mathoverflow.net/questions/407964/coinduction-for-all
+<https://personal.cis.strath.ac.uk/conor.mcbride/pub/JUnfold/junfold.pdf> onor McBride’s "Let’s see how things unfold":
+<https://mathoverflow.net/questions/407964/coinduction-for-all>
 
-https://cs.stackexchange.com/questions/114776/proving-with-co-induction-principles  Hmm. inductive are easy to produce, annoying to destruct out of, coniductive are easy to destruct annoying to construct. So corecursor makes a stream, while recursor makes thing of our choosing.
+<https://cs.stackexchange.com/questions/114776/proving-with-co-induction-principles>  Hmm. inductive are easy to produce, annoying to destruct out of, coniductive are easy to destruct annoying to construct. So corecursor makes a stream, while recursor makes thing of our choosing.
 Hmm.
 So given init_S, and observation function (S -> (R, S)), I can make a Stream. Sure
+
 ```
 def corec(init, trans):
     smt.Lambda([n], If(n < 0, 0, iterate(trans)[init]))
@@ -1842,21 +1884,15 @@ Maybe we should just be working with Nat.
 
 ```
 
-
 stream equality and bisimulation and extensionality
 
-https://www.cs.ru.nl/B.Jacobs/PAPERS/JR.pdf A tutorail on coinduction and coalgerba jacobs and rutten
+<https://www.cs.ru.nl/B.Jacobs/PAPERS/JR.pdf> A tutorail on coinduction and coalgerba jacobs and rutten
 
-
-https://isabelle.in.tum.de/dist/Isabelle/doc/functions.pdf
-
-
-
+<https://isabelle.in.tum.de/dist/Isabelle/doc/functions.pdf>
 
 ```python
 
 ```
-
 
 ```python
 from kdrag.all import *
@@ -1866,7 +1902,6 @@ class Stream:
     data : smt.ArraySort(smt.IntSort(), smt.IntSort())
     valid : smt.IntSort()
 ```
-
 
 ```python
 x,t = smt.Ints("x t")
@@ -1882,7 +1917,6 @@ delay = kd.define("delay", [xs], Stream(data=smt.Lambda([t], xs.data[t-1]), vali
 
 
 ```
-
 
 ```python
 kd.prove(tail(cons(x, xs)) == xs, by=[stream_eq.defn, tail.defn, cons.defn])
@@ -1900,7 +1934,6 @@ kd.prove(smt.ForAll([xs, ys], xs == ys, tail(xs) == tail(ys)), by=[stream_eq.def
 
 
 ```
-
 
     ---------------------------------------------------------------------------
 
@@ -1960,12 +1993,9 @@ kd.prove(smt.ForAll([xs, ys], xs == ys, tail(xs) == tail(ys)), by=[stream_eq.def
 
     LemmaError: ('prove', Implies(stream_eq(xs, ys), stream_eq(tail(xs), tail(ys))), unknown, '/tmp/tmp974g0_rf.smt2')
 
-
-
 ```python
 /tmp/tmp974g0_rf.smt2
 ```
-
 
 ```python
 def Bool(t0, N):
@@ -1973,15 +2003,9 @@ def Bool(t0, N):
 Bool(1, 3)
 ```
 
-
-
-
     {(1, False), (1, True), (2, False), (2, True), (3, False), (3, True)}
 
-
-
 Clocked types. Guarded? A time of availability + a deadline bound just to keep tings finite?
-
 
 Positive vs negative/lazy tuples?
 Really laziness is from demand, not computing the innards after the wrapper
@@ -1989,9 +2013,6 @@ Really laziness is from demand, not computing the innards after the wrapper
 1. Bool(N)
 2. Bool(t0,N)
 3. Bool(ti, tf)
-
-
-
 
 ```python
 
@@ -2023,10 +2044,7 @@ my version only finds loops through n =0
 
 cycle cutting via history. If you need to cross at least one constructor for sucess even if revisting
 
-
-
 egraphs were always loopy, this loopiness was the extraciton process
-
 
 extraction via the bisimulation search
 cycle cutting as a pruning on history
@@ -2034,19 +2052,15 @@ depth limitting the node search
 
 N-parition refinement
 
-https://github.com/sergei-grechanik/supercompilation-hypergraph/blob/master/samples/shifted-cycle
+<https://github.com/sergei-grechanik/supercompilation-hypergraph/blob/master/samples/shifted-cycle>
 prove: cycle (C A (C B N)) = C A (cycle (C B (C A N)));
 
-https://github.com/sergei-grechanik/supercompilation-hypergraph/blob/master/samples/shuffled-let
+<https://github.com/sergei-grechanik/supercompilation-hypergraph/blob/master/samples/shuffled-let>
 left x y =  C x y (left x (S y));
 right y x = C x y (right (S y) x);
 prove: left x y = right y x;
 -- f ~ g means "f is equal to g up to some renaming"
 --prove: left ~ right;
-
-
-
-
 
 My bismiulation could did partition refinement to discover all one hops.
 One could pump this to two hop, N hop?
@@ -2065,8 +2079,6 @@ or Cons(Block(v,v2,v3), nextblock)
 Then "extracting" the block is extraction nextblock
 The block are the body aren't equal. That's nice. Kind of
 We need to extract like a cover still.
-
-
 
 ```python
 # PROVING PROPERTIES OF FUNCTIONAL PROGRAMS Fig 5
@@ -2090,7 +2102,6 @@ def bisim(E, x, y, guard, history):
                 return True
     return False
 ```
-
 
 ```python
 from kdrag.all import *
@@ -2123,18 +2134,16 @@ ultrametric convergence. 1/2^n where n is least n where differs
 
 George had something special to say about this?
 d(x,z) <= min(d(x,y), d(y,z)) . Makes sense. Can use an analysis / shortest path
-Fixed point of an ultrametric 
-One way to describe when a fixed point of an operator defines something is in the Nat -> T model where the distance between two streams is defined as 2^-n where n is the first place they differ (edited) 
+Fixed point of an ultrametric
+One way to describe when a fixed point of an operator defines something is in the Nat -> T model where the distance between two streams is defined as 2^-n where n is the first place they differ (edited)
 [9:33 AM]Productive definitions make contractive stream maps according to this metric which have fixed points by Banach fixed point
-[9:35 AM]George was discussing ultremetrics at the egraphs dahgstuhl,  but i wasn't part of those sessions. https://en.wikipedia.org/wiki/Ultrametric_space I think some aspect of his point was that the ultrametric property gives you the ability to do something more like shortest path than what a more general notion of approximate distance requires. So ultrametrics are somewhat amenable to egraph analysis/lattice type stuff requiring less computation and memory
+[9:35 AM]George was discussing ultremetrics at the egraphs dahgstuhl,  but i wasn't part of those sessions. <https://en.wikipedia.org/wiki/Ultrametric_space> I think some aspect of his point was that the ultrametric property gives you the ability to do something more like shortest path than what a more general notion of approximate distance requires. So ultrametrics are somewhat amenable to egraph analysis/lattice type stuff requiring less computation and memory
 
-  
-    
 I think he wanted it to use it for bitvectors or floats somehow?
 This is interesting as a place where two things I've heard of seem to get close to each other. But I don't have a concrete suggestion beyond that
-https://www.cl.cam.ac.uk/~nk480/frp-lics11.pdf Ultrametric Semantics of Reactive Programs - Krishnaswami and Benton
+<https://www.cl.cam.ac.uk/~nk480/frp-lics11.pdf> Ultrametric Semantics of Reactive Programs - Krishnaswami and Benton
 
-"Definitions" are kind of defining stream transformers moreso (?) than they are defining streams. There is a fixed point operator than converts them into 
+"Definitions" are kind of defining stream transformers moreso (?) than they are defining streams. There is a fixed point operator than converts them into
 
 Transformers would be a bit more like a rule.
 f(x0) --> body_f(x0)
@@ -2145,17 +2154,12 @@ Definitions don't go in the egraph but why not.
 transformers : Term -> Term
 memo
 
-
-
-
-
 # knuckle termination
+
 Foetus
 Abel and Alternkirch
 
 Just do a pile a of equations
-
-
 
 ```python
 # axioms scheme to just accept equations without compiling them.
@@ -2171,7 +2175,6 @@ def equations(E):
     
 
 ```
-
 
 ```python
 @dataclass(frozen=True)
@@ -2212,7 +2215,6 @@ def define_rec(name, args, return_sort, rec, measure=None, termination_by=[]):
 
 
 ```
-
 
 ```python
 def definegas_primrec(name, args, body):
@@ -2282,13 +2284,9 @@ def define_gas(name, body)
 
 ```
 
-
-
-
 ```python
 from kdrag.all import *
 ```
-
 
 ```python
 # banach
@@ -2302,7 +2300,6 @@ VSeq = smt.ArraySort(smt.IntSort(), V)
 
 
 ```
-
 
 ```python
 from kdrag.all import *
@@ -2341,8 +2338,6 @@ def even_induct(l):
                    P!5388[m!5391])),
      (n!5392 == 0) == False]
     ?|= P!5388[n!5392]
-
-
 
 ```python
 from kdrag.all import *
@@ -2384,7 +2379,6 @@ smt.ForAll([P, xs], Stream(xs), smt.ForAll([y,ys], Stream(ys), P[cons(y,ys)], P[
 # Hmm the relational 
 
 ```
-
 
     ---------------------------------------------------------------------------
 
@@ -2446,8 +2440,6 @@ smt.ForAll([P, xs], Stream(xs), smt.ForAll([y,ys], Stream(ys), P[cons(y,ys)], P[
 
     AttributeError: 'ArraySortRef' object has no attribute 'is_int'
 
-
-
 ```python
 def powerset(iterable):
     "Subsequences of the iterable from shortest to longest."
@@ -2483,7 +2475,6 @@ def antimonotonize(U, F):
 
 ```
 
-
 ```python
 def PreFix(A, F):
     BigUnion(smt.Lambda([S], F(S) <= S))
@@ -2497,7 +2488,6 @@ def Monotone(A, F):
 
 ```
 
-
 ```python
 def is_sim(T1, T2, R):
     for p1,q1 in R:
@@ -2509,8 +2499,6 @@ def is_sim(T1, T2, R):
 ```
 
 # microegg
-
-
 
 ```python
 # Based on https://github.com/mwillsey/microegg
@@ -2609,7 +2597,6 @@ assert len(E.ematch(PApp("f", (Var("x"),)), E.find(fa))) == 2
 ```
 
 sam style
-
 
 ```python
 @dataclass
@@ -2710,16 +2697,13 @@ enum StreamLanguage {
     Symbol(Symbol),
 }
 
-
 states are eclasses
 transitions labelled by function symbol
 point to vectors of eclasses
 
-
 exists a coterm in eclass that are equal
 
 observation tyable vs not
-
 
 simpel egraph = finite number of terms is meaning of each eclass
 loopy egraph - some eclasses can represent infintie number of finite terms
@@ -2734,20 +2718,13 @@ witness _is_ coterm
 
 coterm is bisimulation?
 
-
 What abouty multiterm
 
 eclass = set of terms
 eclass = set of coterms
 
-
-
-
 top down rebuilding - take two eclasses, extract a common term / coterm. union if you can
-bottom up rebuilding - 
-
-
-
+bottom up rebuilding -
 
 ```python
 from dataclasses import dataclass
@@ -2763,14 +2740,8 @@ fb = App("f", (b,))
 {fa, fb}
 ```
 
-
-
-
     {App(f='f', args=(App(f='a', args=()),)),
      App(f='f', args=(App(f='b', args=()),))}
-
-
-
 
 ```python
 import itertools
@@ -2791,9 +2762,6 @@ fa.expand()
 
 ```
 
-
-
-
     frozenset({App(f='f', args=(frozenset({App(f='a', args=())}), frozenset({App(f='a', args=())}), frozenset({App(f='a', args=())}))),
                App(f='f', args=(frozenset({App(f='a', args=())}), frozenset({App(f='a', args=())}), frozenset({App(f='b', args=())}))),
                App(f='f', args=(frozenset({App(f='a', args=())}), frozenset({App(f='b', args=())}), frozenset({App(f='a', args=())}))),
@@ -2803,28 +2771,22 @@ fa.expand()
                App(f='f', args=(frozenset({App(f='b', args=())}), frozenset({App(f='b', args=())}), frozenset({App(f='a', args=())}))),
                App(f='f', args=(frozenset({App(f='b', args=())}), frozenset({App(f='b', args=())}), frozenset({App(f='b', args=())})))})
 
-
-
 multiterm with id
 multiterm of coterms
-
 
 extraction of coterms?
 coinductive logic programming for extraction or for searching for bisimulation?
 
 But that is rational unification? No but we have a choice?
 
-bisim(t,s) :- 
+bisim(t,s) :-
 
-
-https://maude.lcc.uma.es/maude-manual/maude-manualch5.html#x40-640005 Yeah, I guess we could define two vending machines and show they get merged. That'd be traditional
+<https://maude.lcc.uma.es/maude-manual/maude-manualch5.html#x40-640005> Yeah, I guess we could define two vending machines and show they get merged. That'd be traditional
 [11:43 AM]Or like a euro and dollar vending machine with currency exchange functions or something?
 
-https://mcrl2.org/web/user_manual/language_reference/data.html#structured-sorts
+<https://mcrl2.org/web/user_manual/language_reference/data.html#structured-sorts>
 
 how to extract coterm from coegraph?
-
-
 
 ```python
 from dataclasses import dataclass
@@ -2851,13 +2813,7 @@ term_to_app((f, env))
 
 ```
 
-
-
-
     App(f='f', args=(App(f='a', args=()), App(f='b', args=())))
-
-
-
 
 ```python
 
@@ -2866,7 +2822,6 @@ env = {0 : f}
 # inifnite term
 #term_to_app((f, env))
 ```
-
 
     ---------------------------------------------------------------------------
 
@@ -2919,8 +2874,6 @@ env = {0 : f}
 
     RecursionError: maximum recursion depth exceeded
 
-
-
 ```python
 @dataclass(frozen=True)
 class MultiNode():
@@ -2931,7 +2884,6 @@ type MultiEnv = dict[Id, frozenset[Node]]
 # Can now also represent a set of coterms
 
 ```
-
 
 ```python
 
@@ -2946,14 +2898,10 @@ f = MultiTerm("f", (ab, ab)) #
 
 ```
 
-
       Cell In[23], line 12
         return App( itertools.product(*self.args)
                   ^
     SyntaxError: '(' was never closed
-
-
-
 
 ```python
     def ematch(self, pattern: Pattern, id: Id) -> list[Subst]:
@@ -2993,43 +2941,42 @@ f = MultiTerm("f", (ab, ab)) #
 A cool thing about the egraph is that the memo table is literally the algebra function f a -> a  with the underlying set being the set of Ids
 That really helps the algebra thing feel more real to me
 So would a maximally inefficient coegraph be
+
 ```rust
 Node { f : str, args : Vec<Id> }
 CoEgraph { comemo : HashMap<Id, HashSet<Node>>}(edited)
 ```
+
 I guess even uf in the ordinary egraph is redundant kind of. It let's you do lazy rebuilding but you don't necessarily need it
 Maybe if you containerize it one could literally use jules' library?
 
 Node<T> { f : str, args : Vec<T> }
 CoEgraph { comemo : HashMap<Id, HashSet<Node<Id>>>}(edited)
 No maybe
+
 ```rust
 struct Node<T> { constructor : bool, f : str, args : Vec<T> }
 struct CoEgraph { comemo : HashMap<Id, HashSet<Node<Id>>>}(edited)
 struct Egraph {memo : HashMap<Node<Id>, Id>}
 ```
+
 This is very similar to Max's IndexMap single table egraph. But IndexMap is kind of sort of two tables pakced in one. If I wanted to do this I'd need to eagerly replace id1 with id2 everywhere
 
 Really hammers home the duality
 The appearance of the hashset is odd and interesting though
 
+<https://www.swi-prolog.org/pldoc/man?section=cyclic>
+<https://softwarepreservation.computerhistory.org/prolog/marseille/doc/Colmerauer-InfTree-1982.pdf>
 
-https://www.swi-prolog.org/pldoc/man?section=cyclic
-https://softwarepreservation.computerhistory.org/prolog/marseille/doc/Colmerauer-InfTree-1982.pdf
-
-The observation persepctive of rational trees is that they have two observations 
+The observation persepctive of rational trees is that they have two observations
 
 Hmm. Prolog acutally does this
 
-functor(t) = 
+functor(t) =
 children(t) = [a,b,c]
 
-functor(t) 
+functor(t)
 child(t, n)
-
-
-
-
 
 ```python
 # brtually inefficient/eager egraph
@@ -3075,7 +3022,6 @@ class EGraph:
         
 ```
 
-
 ```python
 class CoEgraph:
     comemo : dict[Id, set[Node]]
@@ -3107,7 +3053,6 @@ It is a lot like a partial evaluator. Hmm.
 
 So do even arith expr change?
 
-
 ```python
 def interp(e,env):
     match e:
@@ -3126,7 +3071,6 @@ def interp(e,env):
 
 ```
 
-
     ---------------------------------------------------------------------------
 
     TypeError                                 Traceback (most recent call last)
@@ -3139,9 +3083,7 @@ def interp(e,env):
 
     TypeError: interp() missing 1 required positional argument: 'env'
 
-
 <> = None?
-
 
 ```python
 from kdrag.all import *
@@ -3168,7 +3110,6 @@ def set_(c, x, v):
 
 ```
 
-
 ```python
 type Capsule = tuple[str, dict]
 
@@ -3188,9 +3129,6 @@ step(step(step(("x", {"x" : "step((y, locals()))", "y" : 3, "step" : step}))))
 
 
 ```
-
-
-
 
     ((3,
       {'x': 'step((y, locals()))',
@@ -3542,15 +3480,13 @@ step(step(step(("x", {"x" : "step((y, locals()))", "y" : 3, "step" : step}))))
        'display': <function IPython.core.display_functions.display(*objs, include=None, exclude=None, metadata=None, transient=None, display_id=None, raw=False, clear=False, **kwargs)>,
        'get_ipython': <bound method InteractiveShell.get_ipython of <ipykernel.zmqshell.ZMQInteractiveShell object at 0x73b4c8173710>>}})
 
-
-
 # minimization
-I want to try the 
-https://www.philipzucker.com/naive_automata/
+
+I want to try the
+<https://www.philipzucker.com/naive_automata/>
 
 Rational lists / trees.
 Solvers like cocaml?
-
 
 ```python
 from dataclasses import dataclass
@@ -3596,7 +3532,6 @@ def is_bisim(R, a, a1): ...
 
 ```
 
-
 ```python
 from collections import namedtuple
 Obs = namedtuple('Obs', ['accept', 'a_trans', 'b_trans'])
@@ -3612,7 +3547,6 @@ ex1 : Automaton = {
 }
 
 ```
-
 
 ```python
 import itertools
@@ -3639,7 +3573,9 @@ for i in range(6): # iterate to stabilization
 ```
 
 # Sam's example
+
 Sam says:
+
 ```
 i := cons(1, i)
 j := cons(1, if (j<20) then i else k)
@@ -3657,7 +3593,6 @@ cons(true, ite(start_term, i, k) < const(20))       by refold start_term
 
 ite(cons(true, cs), cons(e,es), cons(t,ts)) = cons(e, ite(true, es, ts)) 
 ```
-
 
 ```
 # copattern style?
@@ -3678,6 +3613,7 @@ else_block(I,J,K) := cons(None, loop(I, K, K+2))
 ... and so on
 done(I,J,K) := cons(Some J, done(I,J,K))
 ```
+
 The state is the loop(i,j,k)  stuff. I guess I was kind of thinking that I was going to consider state to be observable at each jump so instead that would be `loop(I,J,K) := cons(loop_obs(i,j,k), if K < 100 then if_head(i,j,k) else done(I,J,K)` .
 I'm missing  to match the example
 That's the initialization
@@ -3697,9 +3633,6 @@ and let if_head : int -> int -> int -> BlockStream
 
 Wait, so does HOL have induction baked in?
 
-
-
-
 ```python
 sdg = kd.define("sdg", [d], smt.Or(d == -1, d == 0, d == 1))
 phi = kd.define("phi", [S], smt.Lambda([S], smt.Exists([x, d], sdg(d), S[x], smt.Lambda([y], smt.And(x + d / 2 == y )))))
@@ -3715,13 +3648,10 @@ LFP(phi)
 
 Ok, so how can I define add inductively over the ints?
 
-
-
 ```python
 def factF(S):
     return smt.Lambda([x,y], smt.Or(smt.And(x == 0, y == 1), smt.And(x > 0, S[x-1, ] * x == y)))
 ```
-
 
 ```python
 from kdrag.all import *
@@ -3740,7 +3670,6 @@ exists_add = smt.ForAll([x,y], smt.Exists([z], add(x,y,z)))
 unique_add = smt.ForAll([x,y,z,z1], add(x,y,z), add(x,y,z1), z == z1)
 
 ```
-
 
     ---------------------------------------------------------------------------
 
@@ -3777,17 +3706,12 @@ unique_add = smt.ForAll([x,y,z,z1], add(x,y,z), add(x,y,z1), z == z1)
 
     ValueError: sort must be provided for non-function F
 
-
 Also natR
 
 cut out stream
 cut out lists from Int -> Option
 
 Finite Sets of Ints
-
-
-
-
 
 ```python
 #even
@@ -3846,7 +3770,6 @@ def nat_induct2(l):
 
 ```
 
-
 ```python
 import kdrag.theories.set as set_
 from kdrag.all import *
@@ -3864,13 +3787,11 @@ int_pred = kd.prove(smt.ForAll([n], int_[n], int_[n-1]), by=[int_.defn])
 int_induct = kd.prove(smt.ForAll([P], smt.Implies(intF(P) <= P, int_ <= P)), by=int_.defn)
 ```
 
-
 ```python
 int_prefix = kd.prove(kd.PreFix(intF, int_), by=[int_.defn]) # introduction rules
 int_postfix = kd.prove(kd.PostFix(intF, int_), by=[int_.defn]) # case rules
 int_fix = kd.prove(intF(int_) == int_, by=[int_.defn])
 ```
-
 
 ```python
 def define_indrel(name, F):
@@ -3882,7 +3803,6 @@ def define_indrel(name, F):
 
 ```
 
-
 IntVec(n) - cut it out of Seq
 
 Parameters?
@@ -3892,15 +3812,12 @@ well founded
 
 Defining function by first defining their graph, showing uniqueness
 
-
-
 ```python
 def FinF(S):
     return smt.Lambda([A], smt.Or(A == smt.EmptySet(smt.IntSort()),
                                   smt.Exists[[B, n], S[B], A == smt.SetAdd(B, n)]))
 
 ```
-
 
 ```python
 # a sufficient universe to cut some wild stuff out of?
@@ -3917,13 +3834,11 @@ def Univ(*A):
 
 ```
 
-
 ```python
 def VecF(S):
     # hmm. I need to recruse into Vec(n-1)?
     return smt.Lambda([l], )
 ```
-
 
 ```python
 @kd.PTheorem(int_[n])
@@ -3935,8 +3850,6 @@ def int_all(l):
     Next Goal:
      [subset(Lambda(n, Or(n == 0, int[n - 1], int[n + 1])), int), subset(int, int)]
     ?|= int[n]
-
-
 
 ```python
 @kd.Theorem(smt.ForAll([P], smt.ForAll([n], P[n], P[n-1]), P[0], smt.ForAll([n], P[n], P[n+1]),
@@ -3950,7 +3863,6 @@ def int_induct2(l):
     l.qed()
 
 ```
-
 
     ---------------------------------------------------------------------------
 
@@ -4049,14 +3961,12 @@ def int_induct2(l):
      subset(int, P!336)]
     ?|= ForAll(n, P!336[n]))
 
-
-
 ```python
 @kd.Theorem(smt.ForAll([P], smt.ForAll([n], P[n], P[n-1]), P[0], smt.ForAll([n], P[n], P[n+1]),
                         smt.ForAll([n], int_[n], P[n])))
 ```
 
-Hmm. So these sets are indcutive by defintion. 
+Hmm. So these sets are indcutive by defintion.
 We can prove nat[n] => n >= 0, but then other dirction seems hard without primitive induction?
 
 Video says  is more useful greatest fixed point characterization?
@@ -4064,9 +3974,6 @@ Video says  is more useful greatest fixed point characterization?
 def natG(P):
     return natF(nat & P)
 LFP(natG)
-
-
-
 
 ```python
 @kd.Theorem(smt.ForAll([n], int_[n]))
@@ -4084,7 +3991,6 @@ def nat_all(l):
     l.qed()
 ```
 
-
 ```python
 def natRF(S):
     x = smt.Real("x")
@@ -4101,7 +4007,6 @@ natR = kd.define("natR", )
 #kd.prove(LFP(evenF)(1))
 ```
 
-
 ```python
 from kdrag.modal
 def Signal(A):
@@ -4114,7 +4019,6 @@ cons = kd.define("cons", [x, s], smt.IF)
 
 ```
 
-
 ```python
 from kdrag.all import *
 
@@ -4122,7 +4026,6 @@ Stream = smt.DeclareSort("Stream")
 Cons = smt.Function("Cons", )
 
 ```
-
 
 ```python
 class EGraph():
@@ -4136,11 +4039,9 @@ class EGraph():
 
 ```
 
-
 ```python
 
 ```
-
 
 ```python
 cell = []
@@ -4180,13 +4081,7 @@ assert is_eq(finf2, finf3)
 finf3
 ```
 
-
-
-
     App(f='f', args=[App(f='f', args=[App(f='f', args=[...])])])
-
-
-
 
 ```python
 def is_subterm(t, s, table=frozenset()):
@@ -4208,7 +4103,6 @@ assert is_subterm(f(finf), finf)
 
 ```
 
-
 ```python
 @dataclass
 class Var():
@@ -4224,16 +4118,12 @@ pmatch and replace
 
 drags?
 
-
-
 ```python
 class Zipper():
     ...
 ```
 
 Contexts are never infinite?
-
-
 
 ```python
 

@@ -1,0 +1,20 @@
+digraph cons_0101_loop {
+  rankdir=LR;
+  graph [pad="0.2", nodesep="0.5", ranksep="0.7"];
+  node [fontname="Helvetica"];
+  edge [fontname="Helvetica"];
+
+  start [shape=point, label=""];
+
+  c0 [shape=record, label="<car> car | <cdr> cdr"];
+  c1 [shape=record, label="<car> car | <cdr> cdr"];
+
+  v0 [shape=box, label="0"];
+  v1 [shape=box, label="1"];
+
+  start -> c0;
+  c0:car -> v0;
+  c0:cdr -> c1;
+  c1:car -> v1;
+  c1:cdr -> c0;
+}
