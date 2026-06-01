@@ -3,7 +3,7 @@ title: Arenas, Cyclic Terms, and Flat Equational Systems
 date: 2026-06-01
 ---
 
-I was invited a few months ago into discussions with Cheng Zhang, Sam Coward and Alexandra Silva on some work they had started on integrating loopy infinite streamy things into e-graphs. A few years back, I was barking up a similar but distinct tree to the one they were working on <https://www.philipzucker.com/coegraph/>
+I was invited a few months ago into discussions with Cheng Zhang, Sam Coward and Alexandra Silva on some work integrating loopy infinite streamy things into e-graphs. A few years back, I was barking up a similar but distinct tree <https://www.philipzucker.com/coegraph/>
 
 Cheng will presenting at EGRAPHS 2026 <https://pldi26.sigplan.org/details/egraphs-2026-papers/12/From-Rewriting-to-Fixpoints-Solving-Recursive-Equations-with-E-Graphs> Come check it out!
 
@@ -15,7 +15,7 @@ To me, it is somewhat natural that you can talk about loopy terms like `zeros :=
 
 ![](/assets/rational_tree.png)
 
-But a picture does not quite code nor rigorous math make (? Diagrammatic reasoning can be as legit as any other form of reasoning or syntax. And yet I'm uncomfortable until we've reduced what we're talking about to tree-like formula). You kind of need a story about how to represent this in a system you can actually work with, say ZFC or python or lean or what have you.
+But a picture does not quite code nor rigorous math make (Welllllll... Diagrammatic reasoning can be as legit as any other form of reasoning or syntax. But I still feel like I need to know how to translate the diagrams to something more formula and code-like). You kind of need a story about how to represent this in a system you can actually work with, say ZFC or python or lean or what have you.
 
 I think there is a somewhat natural journey starting from a basic term datatypes, turning to an arena datatype, and then removing the condition of acyclicity of nodes in the arena. The is a implementation flavored explanation of what a co-term / cyclic / rational term even is. Then we can talk about some of the things we like to do with terms and how to generalize that to rational terms:  
 
