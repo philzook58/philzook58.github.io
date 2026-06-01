@@ -17,13 +17,19 @@ To me, it is somewhat natural that you can talk about loopy terms like `zeros :=
 
 But a picture does not quite code nor rigorous math make (Welllllll... Diagrammatic reasoning can be as legit as any other form of reasoning or syntax. But I still feel like I need to know how to translate the diagrams to something more formula and code-like). You kind of need a story about how to represent this in a system you can actually work with, say ZFC or python or lean or what have you.
 
-I think there is a somewhat natural journey starting from a basic term datatypes, turning to an arena datatype, and then removing the condition of acyclicity of nodes in the arena. The is a implementation flavored explanation of what a co-term / cyclic / rational term even is. Then we can talk about some of the things we like to do with terms and how to generalize that to rational terms:  
+I think there is a somewhat natural journey starting from a basic term datatypes, turning that into an arena datatype, and then removing the condition of acyclicity of nodes in the arena. <https://docs.rs/egg/latest/egg/struct.RecExpr.html> "RecExprs must satisfy the invariant that enodes’ children must refer to elements that come before it in the list. "
+
+That is a implementation flavored explanation of what a co-term / cyclic / rational term / equation system even is.
+
+Then we can talk about some of the things we like to do with terms and how to generalize that to rational terms:  
 
 - interpret them
 - rewrite them
 - store sets of them
 - insert them into e-graphs
-- extract them from e-graphs.
+- extract them from e-graphs
+
+I don't get all the way there on this post by any means, but it's a start!
 
 # Basic Terms
 
