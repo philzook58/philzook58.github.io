@@ -96,6 +96,8 @@ See also
 - <https://www.cs.cornell.edu/~asampson/blog/flattening.html> Flattening ASTs (and Other Compiler Data Structures)
 - Twee's description of it's flat terms <https://smallbone.se/papers/twee.pdf> section 4.1
 - Handbook of automated reasoning  <https://dl.acm.org/doi/10.5555/778522.778535>
+- <https://link.springer.com/article/10.1007/BF00881866> Flatterms, Discrimination Nets, and
+Fast Term Rewriting
 
 # Cyclic Arena Terms
 
@@ -207,7 +209,7 @@ In a funny way, the arena form has exposed a very light and limited form of vari
 
 # Interpreting
 
-The is nothing so far inductive or coinductive about what we've discussed. It is just some data. A formal structure. That comes in when we start discussing what we want the thing to mean and how different arenas may relate to each other.
+The is nothing so far inductive or coinductive about what we've discussed. It is just some data. A formal structure. I think that comes in when we start discussing what we want the thing to mean and how different arenas may relate to each other.
 
 For ordinary terms, we can define an interpretion by writing a recursive function
 
@@ -384,6 +386,8 @@ Rereading through my notes, they make not that much sense. And I'm not sure what
 - <https://arxiv.org/abs/2306.10009> extracting systems of equations
 - To some degree, the e-graph with fixed point is trying to remove the restriction on RecExpr that they need to be well founded. Insertion and extraction neither should require it. But also `1*x = x` is not the same kind of loop as `zeros := cons(0, zeros)`.
 - Homomorphisms of arenas into the egraph is non mutating lookup of the arena in the egraph. Again, insertion of a term is an asy recursive function, but we can't guarantee that so easily
+
+There is some goofiness with these "equalities". It is not obvious that you will even have reflexivity for pessimistic equality.  Maybe that's ok. Maybe it's a kleene equality. <https://en.wikipedia.org/wiki/Kleene_equality>
 
 ```python
 @dataclass(frozen=True)
