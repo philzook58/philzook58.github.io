@@ -49,7 +49,7 @@ Term("f", [Term("a", [])]) # f(a)
 
 # Arena Terms
 
-There is a different style which is sometimes pleasant to use. Here we used python references to refer to our children. Instead we could keep all the data of the term in a list and have our own index system. These are kind of our own special pointers
+There is a different style which is sometimes pleasant to use. In the above, we used python references to refer to our children. Instead, we could keep all the data of the term in a list and have our own index system. These are kind of our own special pointers.
 
 ```python
 from dataclasses import dataclass, field
@@ -88,7 +88,7 @@ pprint(one + two)
 
 ```
 
-Many systems do this. Using the regular allocator (malloc) has a cost. Fine grained memory management has a cost. An arena (bump allocation) is one of the fastest and simplest forms of memory allocation. Having it all there in a single block is also good for caches.
+Many systems do this. Using the regular allocator (malloc) has a cost. Fine grained memory management has a cost. An arena (bump allocation) is one of the fastest and simplest forms of memory allocation. Having it all there in a single block is also good for caches. Also, the arena is easier to serialize, deserialize and clone, evidence I think of it's more semantic nature than the approach using built in system pointers / references.
 
 See also
 
