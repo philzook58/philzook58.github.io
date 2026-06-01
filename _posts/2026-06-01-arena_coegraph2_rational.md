@@ -370,7 +370,7 @@ pess_eq(A,A)
 
     [[True, False], [False, True]]
 
-Optimistic equality is saying the two trees are bisimilar. They are equal until proven unequal. Partition refinement would perhaps given a faster algorithm.
+Optimistic equality is saying the two trees are bisimilar. They are equal until proven unequal. Partition refinement would perhaps given a faster algorithm. This is similar to the notion of equality of automata <https://www.philipzucker.com/naive_automata/>
 
 ```python
 def opt_eq(a : Arena, b : Arena):
@@ -405,7 +405,7 @@ Well, I wrote something.
 
 I am having a hard time making a nice cohesive story with well backed code snippets. I think I'm feeling generally a little burnt out these days, so that probably ain't helping.
 
-Maybe a good starting point to juicier topics? I don't know how to attack all this. That is why bit sized posts are good.
+Maybe a good starting point to juicier topics? I don't know how to attack all this. That is why bite sized posts are good.
 
 Rereading through my notes, they make not that much sense. And I'm not sure what I wrote above makes that much sense either.
 
@@ -424,6 +424,8 @@ Rereading through my notes, they make not that much sense. And I'm not sure what
 - <https://arxiv.org/abs/2306.10009> extracting systems of equations
 - To some degree, the e-graph with fixed point is trying to remove the restriction on RecExpr that they need to be well founded. Insertion and extraction neither should require it. But also `1*x = x` is not the same kind of loop as `zeros := cons(0, zeros)`.
 - Homomorphisms of arenas into the egraph is non mutating lookup of the arena in the egraph. Again, insertion of a term is an asy recursive function, but we can't guarantee that so easily
+- <https://gist.github.com/cfbolz/ffd49e7a654c5ba224f73c1fc39673d0> CF rational tree unification
+-
 
 There is some goofiness with these "equalities". It is not obvious that you will even have reflexivity for pessimistic equality.  Maybe that's ok. Maybe it's a kleene equality. <https://en.wikipedia.org/wiki/Kleene_equality>
 
