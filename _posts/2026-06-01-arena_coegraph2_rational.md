@@ -235,7 +235,22 @@ For equation systems, it is pretty natural to interpret the system as representi
 
 This means that the natural thing to interpret it into is a `Env -> Env` function where `Env` is a mapping of semantics values to variable names `type Env = Var -> T`
 
-While the basic interpretation is `Env -> Env`, if there is ever a function who's domain is the same as it's codomain, it is also possible to talk about it's set of fixed points, and possibly it's minimal, maximal, or unique fixed point. <https://en.wikipedia.org/wiki/Fixed_point_(mathematics)>
+```python
+type Env = list[int] # Var -> T
+def interp(A : Arena, cur : Env) -> Env:
+    new = []
+    for node in A.data:
+        match node:
+            case Node("+", [a,b]):
+                new.append(cur[a] + cur[b])
+            case Node("lit", [n]):
+                new.append(n)
+            case _:
+                raise ValueError("unexpected Node")
+    return new
+```
+
+While the basic interpretation is `Env -> Env`, whenever there is ever a function whose domain is the same as it's codomain, it is also possible to talk about it's set of fixed points, and possibly it's minimal, maximal, or unique fixed point. <https://en.wikipedia.org/wiki/Fixed_point_(mathematics)>
 
 ```python
 def interp(A : Arena) -> list[int]:
@@ -266,6 +281,8 @@ interp(A)
 
     [3, 1, 2]
 
+A particularly interesting interpretation is one that builds tuple trees out of the arena trees.
+
 ```python
 def extract(a : Arena) -> tuple: # Interpreting into ordinary tuple terms is a non lossy interpretation
     terms = [None]*len(a.data)
@@ -290,7 +307,7 @@ extract(A)
 
     [('f', ('a',)), ('a',)]
 
-# Equality of Terms
+# Equality of Arena Terms
 
 Determining which entries are equal to the other entries in a syntactic sense is also not necessarily straightforward. For ordinary terms we'd do something like this:
 
@@ -303,9 +320,11 @@ def eq(e,e2) -> int:
             return a == a2
 ```
 
-If we have a cyclic term, this program would not terminate.
+Note that if we have a cyclic term, this program would not terminate. We could fix that by remember a trail of what ids we've seen before or looking up into our stack. The arena has to confront this problem head on, but because of that does it more naturally IMO.
 
-We can define pessimistic and optimistic equality. Disequal until proven equal vs equal until proven disequal. Both are legit definitions. The first is
+We can define pessimistic and optimistic equality. Disequal until proven equal vs equal until proven disequal. Both are legit definitions. In some sense pessimistic requires a well founded congruence proof that the two ids are equal. It is inductive-y least fixed pointy somehow. I can't say that I see it very crisply. A Union find would give some speedup perhaps.
+
+If you have a loop in your arena, pessimistic equality won't even find that it is equal to itself. That's kind of odd.
 
 ```python
 def pess_eq(a : Arena, b : Arena):
@@ -333,6 +352,8 @@ pess_eq(A,A)
 ```
 
     [[True, False], [False, True]]
+
+Optimistic equality is saying the two trees are bisimilar. They are equal until proven unequal. Partition refinement would perhaps given a faster algorithm.
 
 ```python
 def opt_eq(a : Arena, b : Arena):
