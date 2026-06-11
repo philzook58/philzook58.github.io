@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="360" viewBox="-140 0 960 360" role="img" aria-label="Composition of thinnings equals the direct composite thinning">
+  <defs>
+    <style>
+      .wire { fill: none; stroke: #222; stroke-width: 4; stroke-linecap: round; }
+      .drop { fill: none; stroke: #d62728; stroke-width: 4; stroke-linecap: round; }
+      .dot { fill: #fff; stroke: #222; stroke-width: 4; }
+      .kept { fill: #edf7ff; }
+      .label { fill: #222; font-family: serif; font-size: 30px; font-style: italic; }
+      .bits { font-size: 22px; font-style: normal; baseline-shift: sub; }
+    </style>
+  </defs>
+
+  <text class="label" x="-118" y="118">lift<tspan class="bits">10101</tspan></text>
+  <text class="label" x="-102" y="258">lift<tspan class="bits">101</tspan></text>
+
+  <!-- left: dropped by the first thinning: 10101 -->
+  <path class="wire" d="M55 50 V108" />
+  <path class="drop" d="M43 108 L67 132 M67 108 L43 132" />
+  <path class="wire" d="M165 50 V108" />
+  <path class="drop" d="M153 108 L177 132 M177 108 L153 132" />
+
+  <!-- left: kept by the first thinning -->
+  <path class="wire" d="M0 50 V170" />
+  <path class="wire" d="M110 50 V170" />
+  <path class="wire" d="M220 50 V170" />
+
+  <!-- left: dropped by the second thinning: 101 -->
+  <path class="wire" d="M110 170 V228" />
+  <path class="drop" d="M98 228 L122 252 M122 228 L98 252" />
+
+  <!-- left: kept by the second thinning -->
+  <path class="wire" d="M0 170 V310" />
+  <path class="wire" d="M220 170 V310" />
+
+  <!-- left top row: five dots -->
+  <circle class="dot kept" cx="0" cy="50" r="12" />
+  <circle class="dot" cx="55" cy="50" r="12" />
+  <circle class="dot kept" cx="110" cy="50" r="12" />
+  <circle class="dot" cx="165" cy="50" r="12" />
+  <circle class="dot kept" cx="220" cy="50" r="12" />
+
+  <!-- left middle row: three dots, aligned under selected top dots -->
+  <circle class="dot kept" cx="0" cy="170" r="12" />
+  <circle class="dot" cx="110" cy="170" r="12" />
+  <circle class="dot kept" cx="220" cy="170" r="12" />
+
+  <!-- left bottom row: two dots, aligned under selected middle dots -->
+  <circle class="dot kept" cx="0" cy="310" r="12" />
+  <circle class="dot kept" cx="220" cy="310" r="12" />
+
+  <!-- equality -->
+  <text x="330" y="190" text-anchor="middle" font-family="serif" font-size="72" fill="#222">=</text>
+
+  <!-- right: direct composite thinning 10001 -->
+  <path class="wire" d="M440 50 V310" />
+  <path class="wire" d="M660 50 V310" />
+
+  <path class="wire" d="M495 50 V138" />
+  <path class="drop" d="M483 138 L507 162 M507 138 L483 162" />
+  <path class="wire" d="M550 50 V138" />
+  <path class="drop" d="M538 138 L562 162 M562 138 L538 162" />
+  <path class="wire" d="M605 50 V138" />
+  <path class="drop" d="M593 138 L617 162 M617 138 L593 162" />
+
+  <!-- right top row: five dots -->
+  <circle class="dot kept" cx="440" cy="50" r="12" />
+  <circle class="dot" cx="495" cy="50" r="12" />
+  <circle class="dot" cx="550" cy="50" r="12" />
+  <circle class="dot" cx="605" cy="50" r="12" />
+  <circle class="dot kept" cx="660" cy="50" r="12" />
+
+  <!-- right bottom row: two dots -->
+  <circle class="dot kept" cx="440" cy="310" r="12" />
+  <circle class="dot kept" cx="660" cy="310" r="12" />
+
+  <text class="label" x="690" y="190">lift<tspan class="bits">10001</tspan></text>
+</svg>

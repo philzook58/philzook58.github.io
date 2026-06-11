@@ -12,3 +12,4 @@ _site
 _drafts/result
 
 **/z3_problems
+**/obj_dir/

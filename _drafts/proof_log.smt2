@@ -1,0 +1,7 @@
+(declare-fun a () Bool)
+(declare-fun b () Bool)
+(assume (not a) b)
+(assume a)
+(assume (not b))
+(declare-fun rup () Proof)
+(infer rup)
