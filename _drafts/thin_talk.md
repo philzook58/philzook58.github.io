@@ -11,15 +11,11 @@ EGRAPHS 2026
 
 # The Plan
 
-1. Problems with Named Variables
-2. A Semantics for Variables I Like
-3. Naive Nameless
-4. Lifting & Thinning
-5. Lifting E-Graphs
-   1. Smart Constructors
-   2. Union Find
-   3. E-matching
-6. Related Work
+1. A Semantics for Variables I Like
+2. Lifting & Thinning
+3. Lifting E-Graphs
+   1. Lift Pulling Smart Constructors
+   2. Thinning Union Find
 
 ---
 
@@ -27,7 +23,7 @@ EGRAPHS 2026
 
 ---
 
-# $\sin(x)$
+# $\sin( \color{red}x\color{black})$
 
 <!--
 It isn't the sine part that makes me uncomfortable it's the x.
@@ -49,13 +45,13 @@ We've had this from the get go. We want to manipulate / optimize programs and pr
 <!-- Scope? -->
 
   <!-- 
-  Free varaible anaylsis ? Skolemize the name?
+  Free varaible analysis ? Skolemize the name?
 
 Too much sharing, some things we call sin(x)
 
   -->
 
-  <!-- There is asemantics where this makes sense. Maybe fix at extraction time? -->
+  <!-- There is a semantics where this makes sense. Maybe fix at extraction time? -->
   <!-- And we are missing relationships -->
 
 ---
@@ -99,7 +95,7 @@ p { text-align: center; }
 
 # Breaking the Ambiguity
 
-## Today's Motto
+## Design Principle
 
 **The Context $x,y \mapsto \_$ is
   not _where_ a term is,
@@ -111,14 +107,13 @@ p { text-align: center; }
 
 - Naive Well-Dimensioned Nameless Representation
 - Index everything on dimension/context $d$
-
+  - $42_d$, $\sin_d$, $+_d$
+- Refer to variable by index
   - $\text{var}_{di}$ - variable $i$ in dimension/context $d$
-  - $\sin_0$, $\sin_1$, $\sin_2$
   <!-- - semantics: partial composition $\sin \cdot \_ : (\mathbb{R}^d \rightarrow \mathbb{R}) \rightarrow (\mathbb{R}^d \rightarrow \mathbb{R})$ -->
   <!-- - Semantics: Partial composition $\sin \cdot \_$ -->
 <!--  - $[[\sin_d(t)]] = v_0, v_1, ... v_{d-1} \mapsto \sin([[t]](v_0, v_1, ..., v_{d-1}))$   -->
 - Usable in ordinary e-graph
-- Let's look at our examples:
 <!--
 I have made this confusing too early in the talk.
 --
@@ -176,25 +171,34 @@ $\sin_2(\text{var}_{20})$
 
 ---
 
-# Combinator Semantics
+# A Compositional Pointwise Semantics
 
-- A sleight of hand
+- $[[42_d]] = v_0, v_1, ... v_{d-1} \mapsto 42$
+  - The _function_ $[[42_d]] : \mathbb{R}^d \rightarrow \mathbb{R}$ is _not_ the _constant_ $42$.
 - $[[\text{var}_{di}]]= v_0, v_1, ... v_{d-1} \mapsto v_i$
-  - $var_{di}$ is a _projection_ of type $\mathbb{R}^d \rightarrow \mathbb{R}$
+  - $\text{var}_{di}$ is a _projection_ of type $\mathbb{R}^d \rightarrow \mathbb{R}$
 - $[[\sin_d(t)]] = v_0, v_1, ... v_{d-1} \mapsto \sin([[t]](v_0, v_1, ..., v_{d-1}))$
-  - $\sin_d$ is a _higher order function_ of type $(\mathbb{R}^d \rightarrow \mathbb{R}) \rightarrow (\mathbb{R}^d \rightarrow \mathbb{R})$
+  - $[[\sin_d]]$ is a _higher order function_ of type $(\mathbb{R}^d \rightarrow \mathbb{R}) \rightarrow (\mathbb{R}^d \rightarrow \mathbb{R})$
   - $\sin_d \sim \sin \cdot \_$
 - $[[t +_d s]] = v_0, v_1, ... v_{d-1} \mapsto [[t]](v_0, v_1, ..., v_{d-1}) + [[s]](v_0, v_1, ..., v_{d-1})$
 - and so on...
-<!-- - A relative of the Yoneda Embedding -->
+
+<!-- 
+A compositional semantics is what allows an egraph to share equal terms without having spooky action at a distance problems
+
+Mainfolds M -> x a scalar function on the manifold is sometimes what x means
+
+- A sleight of hand
+- A relative of the Yoneda Embedding 
+- -->
 
 ---
 
 # Is This Good?
 
 - 😃 $\sin(x)$ semantic ambiguity gone
-- 🙁 Even _more_ very similar data that shares no memory
-  - $\sin_1(\text{var}_{10})$ and $\sin_2(\text{var}_{20})$ are not _equal_ but are clearly _related_
+- 🙁 Even _more_ very similar entities that share no memory
+  - $\sin_1(\text{var}_{10}) : \mathbb{R}^1 \rightarrow \mathbb{R}$ and $\sin_2(\text{var}_{20}) : \mathbb{R}^2 \rightarrow \mathbb{R}$ are not _equal_ but are clearly _related_
     - In what sense?
 
 ---
@@ -209,25 +213,12 @@ def lift(thin : list[bool], f):
 ```
 
 - $\text{lift}_t : (\mathbb{R}^{\text{popcnt}(t)} \rightarrow \mathbb{R})\rightarrow (\mathbb{R}^{\text{len(t)}} \rightarrow \mathbb{R})$
-- $t$ is a thinning bitvector (1=keep, 0=drop)
-- Other "argument games" possible, but this is a useful one.
+- $t$ is a **thinning** bitvector (1=keep, 0=drop)
+  - Ex: $\text{lift}_{101}$ = keep arg0, drop arg1, keep arg2
 
-<!-- - Thinnings encode this data as bitvectors -->
-
-<!-- lift([True, False], sin) # sin2(x20)
-
-- Turn $\mathbb{R}^k \rightarrow \mathbb{R}$ into $\mathbb{R}^{k+t} \rightarrow \mathbb{R}$
-
-There are both more general and less general systems for lifting functions.
-I could allow swapping
-I could only allow dumping from the front
-
-This is kind of a sweet spot. Simple but also maybe not the first thing you think of
-
- -->
 ---
 
-# Lifting
+# Lifting $x \mapsto \sin(x)$
 
 <style scoped>
 p { text-align: center; }
@@ -240,25 +231,68 @@ $\sin_2(\text{var}_{20}) := \text{lift}_{10}(\sin(\text{var}))$
 
 ---
 
+# Thinnings: Simple and Underappreciated
+
+- One _lifts_ functions by _thinning_ its arglist
+- Thinnings are
+  - strictly monotonic maps between totally ordered finite sets
+  - recipe to extract subsequences
+- ~ compaction of multiple de Bruijn shifts
+- more minimalist than permutations
+
+---
+
+# Thinning Composition
+
+<style scoped>
+p { text-align: center; }
+</style>
+
+![width:700px](/home/philip/philzook58.github.io/assets/thinning/simple-thinning.svg)
+
+<!-- 
+
+- ~compaction of many de Bruijn shifts
+- Thinnings encode this data as bitvectors
+
+-->
+
+<!-- lift([True, False], sin) # sin2(x20)
+
+- Turn $\mathbb{R}^k \rightarrow \mathbb{R}$ into $\mathbb{R}^{k+t} \rightarrow \mathbb{R}$
+
+There are both more general and less general systems for lifting functions.
+I could allow swapping
+I could only allow dumping from the front
+
+This is kind of a sweet spot. Simple but also maybe not the first thing you think of
+
+ -->
+
+---
+
 # Lifting Rules
 <!-- Laws of Lifting -->
 
 |           |   |
 |-----------|---|
-|  Compaction / Constant Fold. |$\forall x, \text{lift}_i(\text{lift}_j(x)) = \text{lift}_{i \cdot k}(x)$ |
-|  Pulling / Homomorphism   | $\forall x y, f(\text{lift}_i(x), lift_i(y)) = \text{lift}_i(f(x,y))$  |
+|  Compose / Constant Fold. |$\forall x, \text{lift}_i(\text{lift}_j(x)) = \text{lift}_{i \cdot j}(x)$ |
+|  Pulling / Homomorphism   | $\forall x y, f(\text{lift}_t(x), \text{lift}_t(y)) = \text{lift}_t(f(x,y))$  |
 
 <!--
+![width:700px](/home/philip/philzook58.github.io/assets/thinning/simple-thinning.svg)
+
 1. `lift_i(lift_j(X)) = lift_k(X)` lift compaction rules
 2. `f(lift_i(X), lift_i(Y)) = lift_i(f(X,Y))` lift pulling rules
 -->
 
 ---
 
-# Baking Lift In
+# Lifting E-Graphs
 
-- An example of an e-graph modulo theories (EMT)
-- Thinned Eids
+- Bake Lift In
+- E-Graph Modulo Theories (EMT)
+  - Recipe: replace `Id` with `FatId` everywhere
 
 ```python
 type FatId = (list[bool], int)
@@ -278,9 +312,10 @@ class ENode:
 
 - $f(\text{lift}_i(X), \text{lift}_i(Y)) \rightarrow \text{lift}_i(f(X,Y))$
 - Factor out needed vars
-  - needed = bitwise or of argument thinnings
-  - ~ free variables analysis
+  - bitwise or `|`
+  - min context ~ free variable analysis
 
+<!--  of arg thinnings -->
 ---
 
 # Examples
@@ -289,8 +324,8 @@ class ENode:
 |----|---|--|
 | $x,y,z,w \mapsto 42$ |$\text{lift}_{0000}(42)$  |  $\text{lift}_{0000}(42)$ |
 |$x,y,z,w \mapsto 42 + 42$ |$\text{lift}_{0000}(42) + \text{lift}_{0000}(42)$ | $\text{lift}_{0000}(42 + 42)$ |
+|$x,y \mapsto 42 + 42$ |$\text{lift}_{00}(42) + \text{lift}_{00}(42)$ | $\text{lift}_{00}(42 + 42)$ |
 | $x,y,z,w \mapsto z + 42$   | $\text{lift}_{0010}(\text{var}) + \text{lift}_{0000}(42)$  |   $\text{lift}_{0010}(\text{var} + \text{lift}_0(42))$  |
-| $x,y,z,w \mapsto x + z$  | $\text{lift}_{1000}(\text{var}) + \text{lift}_{0010}(\text{var})$ |  $\displaylines{\text{lift}_{1010}(  \text{lift}_{10}(\text{var}) + \\ \text{lift}_{01}(\text{var}))}$ |
 
 ---
 
@@ -300,20 +335,22 @@ class ENode:
 
 -->
 - `type UnionFind = list[FatId]`
-- Like Offset (Group) Union Find $e_{8} \rightarrow e_{3} + 14$
+- Like Offset (Group) Union Find
+  - $e_8 -3 = e_3 + 11 \implies e_{8} \rightarrow e_{3} + 14$
   - `uf[8] == (14,3)`
 - Find
   - Compose $e_{child} \rightarrow \text{lift}_t(e_{parent})$
 - Union
   - Peel off common lift (lift is injective)
-  - $\text{lift}_t$ is _not_ invertible
-    - Parent is sometimes forced / requires makeset
+  - Parent is sometimes forced / requires make-set
+    - $\text{lift}_t$ is _not_ invertible
+    - Semantics: Learn directions are constant
 <!--   - $e_{0} \rightarrow e_{1} + 14$
   - `[(14,1),(0,1)]` -->
 
 ---
 
-# Ordinary Union Example
+# Typical Example
 
 |   |   |
 |---|---|
@@ -325,18 +362,7 @@ class ENode:
 
 ---
 
-# Ordinary Union
-
-- Example: $(x,y \mapsto y*1) =  (x,y \mapsto y)$
-- Pulled: $\text{lift}_{01}(\text{var} * \text{lift}_0(1)) = \text{lift}_{01}(\text{var})$
-- Union Call $\text{lift}_{01}(e_{17}) = \text{lift}_{01}(e_{42})$
-- Peel off common lift to $e_{17} = e_{42}$
-  - Semantics: $\text{lift}_t$ is injective
-- Pick parent $e_{17} \rightarrow e_{42}$
-
----
-
-# Redundancy Example 1: One Way Lift
+# Redundancy Example: Parent Forced
 
 |  |  |
 |--|--|
@@ -347,53 +373,90 @@ class ENode:
 
 ---
 
-# Redundancy Example 1: One Way Lift
+# E-matching
 
-- Example: $(x \mapsto x*0) = (x \mapsto 0)$
-- Pulled: $\text{var}*\text{lift}_0(0) = \text{lift}_0(0)$
-- Union: $e_{92} = \text{lift}_{0}(e_{8})$
-- $e_{92} \rightarrow \text{lift}_{0}(e_{8})$
-  - Parent choice is forced
+<!-- - Mostly Nothing Changes. 
+- $lift_i(e_1) =? f(?a, ?b)$
+- $e_1 = f(e_2, e_3)$
+- $lift_i(f(e_2,e_3)) =? f(?a, ?b)$
+- $lift_i(f(e_2,e_3)) = f(lift_i(e_2), lift_i(e_3))$
+- $f(lift_i(e_2), lift_i(e_3)) =? f(?a, ?b)$
 
----
+$$
+\begin{aligned}
+\mathrm{lift}_i(e_1)
+  &=_? f(?a, ?b) \\
+\mathrm{lift}_i(f(e_2,e_3))
+  &=_? f(?a, ?b) \\
+f(\mathrm{lift}_i(e_2), \mathrm{lift}_i(e_3)) &=_? f(?a, ?b)
+\end{aligned}
+$$
+-->
 
-# Redundancy Example 2: Incompatible liftings
+- Typical case is simple
+  - Accumulate thinnings as you traverse into terms
+  - _push_ lifts $\text{lift}_t(f(e_1, e_2)) \rightarrow f(\text{lift}_t(e_1),\text{lift}_t(e_2) )$
+- Redundancies in union find $e_{\text{child}} \rightarrow \text{lift}_k(e_{\text{parent}})$ are trickier
+  - Choice 1: Don't Match Through Them
+  - Choice 2: Factor $\text{lift}_i(e_\text{parent}) = \text{lift}_{?j}(\text{lift}_k(e_\text{parent}))$
+    - Multiple solutions
+      - Ex: $(x,y \mapsto 0) =_? (x,y \mapsto ?a * 0)$
+      - solutions $?a = x$ and $?a = y$
 
-|  |  |
-|--|--|
-| Named Form | $(x,y \mapsto x*0) = (x,y \mapsto 0*y)$   |
-| Pulled Form |  $\text{lift}_{10}(\text{var}*\text{lift}_0(0)) = \text{lift}_{01}(\text{lift}_0(0) * \text{var})$  |
-| Interned Form | $\text{lift}_{10}(e_{92}) = \text{lift}_{01}(e_{13})$  |
-| Fresh Makeset  | $e_{99}$
-| Orient |  $e_{92} \rightarrow \text{lift}_0(e_{99})$ ,  $e_{13} \rightarrow \text{lift}_0(e_{99})$    |
-
----
-
-# Redundancy Example 2: Incompatible liftings
-
-- Example: $(x,y \mapsto x*0) = (x,y \mapsto 0*y)$
-- Pulled: $\text{lift}_{10}(\text{var}*\text{lift}_0(0)) = \text{lift}_{01}(\text{lift}_0(0) * \text{var})$  
-- Interned: $\text{lift}_{10}(e_{92}) = \text{lift}_{01}(e_{13})$
-- Makeset fresh parent $e_{99}$
-       - Only relevant variables in intersection (bitwise and)
-       - Semantics: Learned some directions are constant
-- $e_{92} \rightarrow \text{lift}_0(e_{99})$ ,  $e_{13} \rightarrow \text{lift}_0(e_{99})$
-
-<!--  = fresh(d = popcnt(01 \& 10) = 0) -->
+<!-- $?a = lift_i(e_2), ?b = lift_i(e_3)$ -->
 
 ---
 
-# Redundancy Example 2: Incompatible liftings
+# Related Work
 
-- Example: $(x,y \mapsto x*0) = (x,y \mapsto 0*y)$
-- Pulled: $\text{lift}_{10}(\text{var}*\text{lift}_0(0)) = \text{lift}_{01}(\text{lift}_0(0) * \text{var})$  
-- Interned: $\text{lift}_{10}(e_{92}) = \text{lift}_{01}(e_{13})$
-- Makeset fresh parent $e_{99}$
-       - Only relevant variables in intersection (bitwise and)
-       - Semantics: Learned some directions are constant
-- $e_{92} \rightarrow \text{lift}_0(e_{99})$ ,  $e_{13} \rightarrow \text{lift}_0(e_{99})$
+- Slotted E-Graphs (Thanks Rudi Schneider!)
+- McBride's Everybody's Got to Be Somewhere (Co de Bruijn)
+- Semantics of type judgements $[[x : \mathbb{R},y : \mathbb{R} \vdash \sin(x) : \mathbb{R}]] \in \mathbb{R}^2 \rightarrow \mathbb{R}$
+- Explicit Weakening Calculi
+- de Bruijn Succ Floating
 
-<!--  = fresh(d = popcnt(01 \& 10) = 0) -->
+---
+
+# Questions?
+
+<style scoped>
+p { text-align: center; }
+</style>
+ Blog Posts <https://www.philipzucker.com/lifting_egraph/>
+
+ ![width:350px](https://www.philipzucker.com/assets/thinegraphxyyx.jpg)  
+ $\text{lift}_{10}(\text{var}) * \text{lift}_{01}(\text{var}) \rightarrow \text{lift}_{01}(\text{var}) * \text{lift}_{10}(\text{var})$
+
+---
+
+# Questions?
+
+ Blog Posts <https://www.philipzucker.com/lifting_egraph/>
+
+1. Problems with Named Variables
+2. A Semantics for Variables I like
+3. Naive Nameless
+4. Lifting & Thinning
+5. Lifting E-Graphs
+   1. Smart Constructors
+   2. Thinning Union Find
+   3. E-matching
+6. Related Work
+
+---
+
+# Questions?
+
+---
+
+# Visualizing
+
+- Thicken all e-graph edges to be thinnings
+
+|  Regular E-Graph |  Lifting E-Graph |
+|---|---|
+| ![width:350px](https://www.philipzucker.com/assets/egraph2024/egraph2.svg) | ![width:350px](https://www.philipzucker.com/assets/thinegraphxyyx.jpg)  |
+|  |  $\text{lift}_{10}(\text{var}) * \text{lift}_{01}(\text{var}) \rightarrow \text{lift}_{01}(\text{var}) * \text{lift}_{10}(\text{var})$ |
 
 ---
 
@@ -448,33 +511,15 @@ $$
 
 ---
 
-# Related Work
+# Redundancy Example 2: Incompatible liftings
 
-- Slotted E-Graphs
-- McBride's Everybody's Got to Be Somewhere (Co de Bruijn)
-- Semantics of MLTT judgements $[[x : \mathbb{R},y : \mathbb{R} \vdash \sin(x) : \mathbb{R}]]$
-- Explicit Weakening Calculi
-- de Bruijn Succ Floating
-
----
-
-# Questions?
-
- Blog Posts <https://www.philipzucker.com/lifting_egraph/>
-
-1. Problems with Named Variables
-2. A Semantics for Variables I like
-3. Naive Nameless
-4. Lifting & Thinning
-5. Lifting E-Graphs
-   1. Smart Constructors
-   2. Thinning Union Find
-   3. E-matching
-6. Related Work
-
----
-
-# Questions?
+|  |  |
+|--|--|
+| Named Form | $(x,y \mapsto x*0) = (x,y \mapsto 0*y)$   |
+| Pulled Form |  $\text{lift}_{10}(\text{var}*\text{lift}_0(0)) = \text{lift}_{01}(\text{lift}_0(0) * \text{var})$  |
+| Interned Form | $\text{lift}_{10}(e_{92}) = \text{lift}_{01}(e_{13})$  |
+| Fresh Makeset  | $e_{99}$ (which we know is $\cdot \mapsto 0$)
+| Orient |  $e_{92} \rightarrow \text{lift}_0(e_{99})$ ,  $e_{13} \rightarrow \text{lift}_0(e_{99})$    |
 
 ---
 
@@ -514,12 +559,6 @@ p { text-align: center; }
 ![width:300](https://www.philipzucker.com/assets/thinning/compose.png)
 
  -->
-
----
-
-# THE MOST IMPORTANT SLIDE
-
-![](/assets/thinning/simple-thinning.svg)
 
 ---
 
@@ -662,6 +701,39 @@ It is semantically meaningful. Unlike a free variable analysis, it can't be stal
 
 ---
 
+# Ordinary Union
+
+- Example: $(x,y \mapsto y*1) =  (x,y \mapsto y)$
+- Pulled: $\text{lift}_{01}(\text{var} * \text{lift}_0(1)) = \text{lift}_{01}(\text{var})$
+- Union Call $\text{lift}_{01}(e_{17}) = \text{lift}_{01}(e_{42})$
+- Peel off common lift to $e_{17} = e_{42}$
+  - Semantics: $\text{lift}_t$ is injective
+- Pick parent $e_{17} \rightarrow e_{42}$
+
+---
+
+# Redundancy Example 1: One Way Lift
+
+- Example: $(x \mapsto x*0) = (x \mapsto 0)$
+- Pulled: $\text{var}*\text{lift}_0(0) = \text{lift}_0(0)$
+- Union: $e_{92} = \text{lift}_{0}(e_{8})$
+- $e_{92} \rightarrow \text{lift}_{0}(e_{8})$
+  - Parent choice is forced
+
+---
+
+# Redundancy Example 2: Incompatible liftings
+
+- Example: $(x,y \mapsto x*0) = (x,y \mapsto 0*y)$
+- Pulled: $\text{lift}_{10}(\text{var}*\text{lift}_0(0)) = \text{lift}_{01}(\text{lift}_0(0) * \text{var})$  
+- Interned: $\text{lift}_{10}(e_{92}) = \text{lift}_{01}(e_{13})$
+- Makeset fresh parent $e_{99}$
+       - Only relevant variables in intersection (bitwise and)
+       - Semantics: Learned some directions are constant
+- $e_{92} \rightarrow \text{lift}_0(e_{99})$ ,  $e_{13} \rightarrow \text{lift}_0(e_{99})$
+
+<!--  = fresh(d = popcnt(01 \& 10) = 0) -->
+
 ---
 
 # More
@@ -690,6 +762,10 @@ $lift_i(e_1) = lift_j(e_2)$
 use makeset to make common parent.
 $e_1 = lift_i(e_2)$ becomes $e_1 \rightarrow lift_i(e_2)$ `x*0 = 0`
  -->
+---
+
+| $x,y,z,w \mapsto x + z$  | $\text{lift}_{1000}(\text{var}) + \text{lift}_{0010}(\text{var})$ |  $\displaylines{\text{lift}_{1010}(  \text{lift}_{10}(\text{var}) + \\ \text{lift}_{01}(\text{var}))}$ |
+
 ---
 
 # `x*0 = 0` and Redundancies
