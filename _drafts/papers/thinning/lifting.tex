@@ -48,19 +48,21 @@
 
 \maketitle
 \begin{abstract}
-Variables are quite subtle and easy to get wrong. An approach to support a notion of rigid $\alpha$ canonical variables in e-graphs is described using a baked in functional lifting combinators inspired by slotted e-graphs \cite{slotted} and Co-de Bruijn syntax \cite{McBride_2018}.
+Variables are quite subtle and easy to get wrong. An approach to support a notion of rigid $\alpha$ canonical variables in e-graphs inspired by slotted e-graphs \cite{slotted} and Co-de Bruijn syntax \cite{McBride_2018} is described. The e-graph can be seen as having a baked-in notion of functional lifting combinator implemented by fattening integer identifiers with thinning bitvectors, lift pulling smart constructors, and a special thinning aware union find variation.
 \end{abstract}
 
 \section{Introduction}
- E-graphs are supposed to be useful for program optimization, and program expressions usually have unknowns such as  $x * 2 / 2$. From the outset, E-Graphs\cite{egg} have had variables in them.
+E-graphs \cite{egg} are a data structure that compactly store ground terms and equalities between them.
 
-There are a number of issues with explicit names like $x$
+ E-graphs are supposed to be useful for program optimization, and program expressions usually have unknowns such as  $x * 2 / 2$. From the outset, E-graphs have had variables in them.
+
+There are a number of issues with explicit names like $x$ in the e-graph setting
 
 \begin{enumerate}
 \item Generative processes like equality saturation can run off the rails if fresh names are created via a gensym for example in the rewrite rule $P \rightarrow \forall x, P$ or $e \rightarrow \frac{1}{N} \sum_{i=0}^{N-1} e$
-\item The bidirectional natural of equality in an e-graph can cause scope hygiene concerns. The equality $x * 0 = 0$ can cause $x$ to appear in context which does not have $x$ bound if named variables are treated naively, for example $\text{lam}(y, 0) = \text{lam}(y,x * 0)$
+\item The bidirectional nature of equality in an e-graph can cause scope hygiene concerns. The equality $x * 0 = 0$ can cause $x$ to appear in a context which does not have $x$ bound if named variables are treated naively, for example $\text{lam}(y, 0) = \text{lam}(y,x * 0)$
 \item Named variables cause missed sharing. $\texttt{f(g(h(x)))}$ shares no storage with $\texttt{f(g(h(y)))}$. The amount of missed storage opportunity gets worse the deeper and bigger the term. Note that these two terms \emph{aren't equal}, but there is a missed \emph{relationship} that can be used for reasoning and compaction.
-\item There is too much sharing. Depending on your intended semantics, expressions like $\sin(x)$ may be ambiguously refer to multiple semantic entities.
+\item Depending on your intended semantics, expressions like $\sin(x)$ may ambiguously refer to multiple semantic entities. In other words, there may be \emph{too much} sharing. 
 \end{enumerate}
 
 \subsection{Which $\sin$ is $\sin(x)$?}
@@ -84,7 +86,7 @@ From another perspective it is horribly vague and possibly collapsing distinct e
 \label{fig:sin-r2-to-r}
 \end{figure}
 
-According to a simply typed perspective of the world, these are different things. In fact, they can't even be compared for equality due to type mismatch. The two plots are completely different images. Yet, the notation that suppresses the context $x,y \mapsto \_$ or leaves it implicit conflates these two distinct things. It is at least worrying that perhaps in some subtle way this conflation is asserting $\bR^2 = \bR^1$ and from thence unsoundness ensues.
+These are different things. In fact, they can't even be compared for equality due to type mismatch. The two plots are completely different images. Yet, the notation that suppresses the context $x,y \mapsto \_$ or leaves it implicit conflates these two distinct things. It is at least worrying that perhaps in some subtle way this conflation is asserting $\bR^2 = \bR^1$ and from thence unsoundness ensues.
 
 While it is not the case for every conception of the word "context" or the word "term", from this observation comes a design philosophy:
 
@@ -92,31 +94,36 @@ While it is not the case for every conception of the word "context" or the word 
 
 \section{Naive Well-Dimensioned Nameless Representation}
 
-It is helpful to find a way to talk about this $x,y \mapsto \_$  in the more standard framework of first order terms.
+It is helpful to find a way to talk about this less familiar $x,y \mapsto \_$  notation in the more standard framework of first order terms.
 
-If there is an ambiguity about dimension, an intuitive approach to break this ambiguity is to add a $d$ dimension subscript everywhere. Then there can be no ambiguity.
+If there is an ambiguity about dimension, an simple approach to break this ambiguity is to add a $d$ dimension subscript everywhere.
 
-We can make a different copy of every function symbol for every dimension/context we might be working in and we can refer to variables by (dimension,index) pairs $x_{di}$ rather than by names. For example $\text{var}_{10}$ (the zeroth variables in context of size 1) is what previously I would have called $x \mapsto x$,  $x\text{var}_{21}$ (the first variable in context of size 2) is what previously I would have called $x,y \mapsto y$.
+We can make a different copy of every function symbol for every dimension/context we might be working in and we can refer to variables by (dimension,index) pairs $x_{di}$ rather than by names. For example $x \mapsto x$ becomes $\text{var}_{10}$ (the zeroth variable in context of size 1) and $x,y \mapsto y$ becomes $\text{var}_{21}$ (the first variable in context of size 2).
 
-Likewise, we could also disambiguate all the $\sin$ into different versions $\sin_d$ depending on the type of it's argument. If $\text{var}_{21}$ has type $R^2 \rightarrow \bR$ then if $\sin$ is going to accept it, it needs to take in arguments of that type. We have $\sin_0 : (\bR^0 \rightarrow \bR) \rightarrow (R^0 \rightarrow \bR)$, $\sin_1 : (\bR^1 \rightarrow \bR) \rightarrow (\bR^1 \rightarrow R)$,  $\sin_2 : (\bR^2 \rightarrow \bR) \rightarrow (\bR^2 \rightarrow \bR)$ and so on.
+Likewise, we could also disambiguate all the $\sin$ into different versions $\sin_d$ depending on the type of its argument. If $\text{var}_{21}$ has type $\bR^2 \rightarrow \bR$ then if $\sin$ is going to accept it, it needs to take in arguments of that type. We have $\sin_0 : (\bR^0 \rightarrow \bR) \rightarrow (\bR^0 \rightarrow \bR)$, $\sin_1 : (\bR^1 \rightarrow \bR) \rightarrow (\bR^1 \rightarrow \bR)$,  $\sin_2 : (\bR^2 \rightarrow \bR) \rightarrow (\bR^2 \rightarrow \bR)$ and so on.
 
 There is a pointwise compositional semantics of these combinators. 
 
-$$[[42_d]] = v_0, v_1, ... v_{d-1} \mapsto 42$$
-$$\llbracket \operatorname{var}_{di} \rrbracket = v_0, v_1, \ldots, v_{d-1} \mapsto v_i$$
-$$\llbracket \sin_d(t) \rrbracket = v_0, v_1, \ldots, v_{d-1} \mapsto \sin(\llbracket t \rrbracket(v_0, v_1, \ldots, v_{d-1}))$$
-$$\llbracket t +_d s \rrbracket = v_0, v_1, \ldots, v_{d-1} \mapsto \llbracket t \rrbracket(v_0, v_1, \ldots, v_{d-1}) + \llbracket s \rrbracket(v_0, v_1, \ldots, v_{d-1})$$
+\[
+\begin{aligned}
+\llbracket 42_d \rrbracket &= v_0, v_1, \ldots, v_{d-1} \mapsto 42 \\
+\llbracket \operatorname{var}_{di} \rrbracket &= v_0, v_1, \ldots, v_{d-1} \mapsto v_i \\
+\llbracket \sin_d(t) \rrbracket &= v_0, v_1, \ldots, v_{d-1} \mapsto \sin(\llbracket t \rrbracket(v_0, v_1, \ldots, v_{d-1})) \\
+\llbracket t +_d s \rrbracket &= v_0, v_1, \ldots, v_{d-1} \mapsto \llbracket t \rrbracket(v_0, v_1, \ldots, v_{d-1}) + \llbracket s \rrbracket(v_0, v_1, \ldots, v_{d-1}) \\
+&\text{and so on...}
+\end{aligned}
+\]
 
-$\operatorname{var}_{di}$ is a \emph{projection} of type $\mathbb{R}^d \rightarrow \mathbb{R}$. $\sin_d$ is a \emph{higher order function} of type $(\mathbb{R}^d \rightarrow \mathbb{R}) \rightarrow (\mathbb{R}^d \rightarrow \mathbb{R})$. It can also be viewed as the partial application of the composition function $\sin_d \sim \sin \circ (-)$.
+Semantically, $\operatorname{var}_{di}$ is a \emph{projection} of type $\mathbb{R}^d \rightarrow \mathbb{R}$. $\sin_d$ is a \emph{higher order function} of type $(\mathbb{R}^d \rightarrow \mathbb{R}) \rightarrow (\mathbb{R}^d \rightarrow \mathbb{R})$. It can also be viewed as the partial application of the composition function $\sin_d \sim \sin \circ (-)$.
 
-Because we are being nameless by referring to variables by integers, $x \mapsto f(g(h(x)))$ becomes syntactically the same as $y \mapsto f(g(h(y)))$ since both become $f_1(g_1(h_1(\text{var}_{10})))$. So sharing has become better in that sense.
+Because we are being nameless by referring to variables by integers, $x \mapsto f(g(h(x)))$ becomes syntactically the same as $y \mapsto f(g(h(y)))$ since both become $f_1(g_1(h_1(\text{var}_{10})))$. So sharing in the e-graph using this representation has become better in that sense.
 
-One the other hand, $\sin_1(\text{var}_{10}) : \mathbb{R}^1 \rightarrow \mathbb{R}$ and $\sin_2(\text{var}_{20}) : \mathbb{R}^2 \rightarrow \mathbb{R}$ now share no storage. Indeed the are are not \emph{equal} (such a question does not even type check) but they are clearly \emph{related}.
+On the other hand, $\sin_1(\text{var}_{10}) : \mathbb{R}^1 \rightarrow \mathbb{R}$ and $\sin_2(\text{var}_{20}) : \mathbb{R}^2 \rightarrow \mathbb{R}$ now share no storage. This is fine from the perspective that they are not \emph{equal} (such a question does not even type check), but is disappointing from the perspective they are clearly \emph{related}.
 
-\section{Lifting Functions}
+\section{Lifting Functions for Increased Sharing}
 Lifting is a functional combinator that drops some arguments and passes others along while maintaining their ordering. 
 
-One way that $\sin_1(\text{var}_{10}) : \mathbb{R}^1 \rightarrow \mathbb{R}$ and $\sin_2(\text{var}_{20}) : \mathbb{R}^2 \rightarrow \mathbb{R}$ are related is by this operation of $\text{lift}_t : (\mathbb{R}^{\text{popcnt}(t)} \rightarrow \mathbb{R})\rightarrow (\mathbb{R}^{\text{len(t)}} \rightarrow \mathbb{R})$.
+One way that $\sin_1(\text{var}_{10}) : \mathbb{R}^1 \rightarrow \mathbb{R}$ and $\sin_2(\text{var}_{20}) : \mathbb{R}^2 \rightarrow \mathbb{R}$ are related is by this operation of $\text{lift}_t : (\mathbb{R}^{\text{popcnt}(t)} \rightarrow \mathbb{R})\rightarrow (\mathbb{R}^{\text{len(t)}} \rightarrow \mathbb{R})$. For example $\text{lift}_{110} : (\mathbb{R}^{2} \rightarrow \mathbb{R})\rightarrow (\mathbb{R}^3 \rightarrow \mathbb{R})$  keeps arg 0, keeps arg 1, and drops arg 2.
 
 It can be written as a simple Python combinator 
 
@@ -144,18 +151,16 @@ The lifting is parametrized by a thinning\cite{McBride_2018}\cite{zucker2026thin
 
 Thinnings can be thought of in a number of ways. They are strictly monotonic maps between totally ordered finite sets. They can also be seen as a recipe to extract subsequences.
 
-They are similar mathematical objects to permutations, albeit more minimalist in data requirements and implementations. They can can seen as a compaction of multiple de Bruijn shifts in a manner similar to how a permutation dictionary is a compaction of many swaps. When a de Bruijn shift occurs while pushing a expression inside of new binders, a gap is created between the indices referring to variables inside the expression and the indices referring to variables at the expression's original context. When one creates these gaps multiple times, one has created something akin to a thinning.
+They are similar mathematical objects to permutations, albeit more minimalist in data requirements and implementations. They can be seen as a compaction of multiple de Bruijn shifts in a manner similar to how a permutation dictionary is a compaction of many swaps \cite{zucker2026thinningssub}. When a de Bruijn shift occurs while pushing an expression inside of new binders, a gap is created between the indices referring to variables inside the expression and the indices referring to variables at the expression's original context. When one creates these gaps multiple times, one has created something akin to a thinning.
 
-Thinnings have a notion of composition and identity. This makes them a category. They are are relative of the simplex category.
+Thinnings have a notion of composition and identity. This makes them a category. They are relatives of the simplex category.
 
 
 % If you gave me an object $\texttt{f1(g1(h1(x10)))} : R \to R$ I could produce the object $\texttt{f2(g2(h2(x20)))} : R^2 \to R$ by merely throwing away the second argument and propagating the first argument. As a python function, this lifting combinator would be written as  $\texttt{lambda f: lambda x,y: f(x)}$. This is a lifting operation, and lifting operations have a tractable algebra associated with them. \url{https://www.philipzucker.com/thin1/}
 
-% TODO: replace with
-%thinning/simple-thinning.svg
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{thinning/compose.png}
+\includegraphics[width=0.5\linewidth]{thinning/simple-thinning.pdf}
 \caption{Composition of thinnings}
 \label{fig:compose-thinnings}
 \end{figure}
@@ -193,8 +198,8 @@ Lifting has some useful equational properties. The "parametric polymorphism" of 
 Thinning composition manifests as a constant propagation rule for liftings $\lift_i(\lift_j(X)) = \lift_k(X)$ where $k = i \cdot j$.
 
 \begin{enumerate}
-\item $\lift_i(\lift_j(X)) = \lift_{i \cdot j}(X)$ lift compaction rules
-\item $f(\lift_i(X), \lift_i(Y)) = \lift_i(f(X,Y))$ lift pulling rules
+\item $\forall X, \lift_i(\lift_j(X)) = \lift_{i \cdot j}(X)$ lift compaction rules
+\item $\forall X Y, f(\lift_i(X), \lift_i(Y)) = \lift_i(f(X,Y))$ lift pulling rules
 \end{enumerate}
 
 %\section{Thinnings}
@@ -239,9 +244,9 @@ Thinning composition manifests as a constant propagation rule for liftings $\lif
 
 \section{Baking Lift In}
 
-These properties of lifting are so simple, ubiquitous and structural that it may make sense to bake them into the very fabric of what a term or an egraph \emph{is}. This is sweetened by the fact that liftings/thinnings can be represented as compact bitvectors.
+These properties of lifting are so simple, ubiquitous and structural that it may make sense to bake them into the very fabric of what a term or an egraph \emph{is}. This is sweetened by the fact that liftings/thinnings can be represented as compact bitvectors \cite{gonccalves2025thinning}.
 
-The approach taken for this example of an E-Graph Modulo Theories (EMT) \cite{zucker2025omeletsneedonionsegraphs} is to use fat identifiers everywhere that contain thinnings. By making the lifting a part of the identifier, it becomes ephemeral instead of interned and immediately availanble for inspection.
+An approach to create an E-Graph Modulo Theories (EMT) \cite{zucker2025omeletsneedonionsegraphs} is to use fat identifiers that contain thinnings. By making the lifting a part of the identifier, it becomes ephemeral instead of interned and immediately available for inspection when needed.
 
 \begin{lstlisting}
 type FatId = (list[bool], int)
@@ -257,11 +262,11 @@ class ENode:
   args : list[FatId]
 \end{lstlisting}
 
-The homomorphism rules can be oriented to pull the liftings as high a possible  $f(\lift_i(X), \lift_i(Y)) \to \lift_i(f(X,Y))$, leaving behind only the minimal thinnings needed to reconcile the contexts of the arguments of an function symbol.
+The homomorphism rules can be oriented to pull the liftings as high as possible  $f(\lift_i(X), \lift_i(Y)) \to \lift_i(f(X,Y))$, leaving behind only the minimal thinnings needed to reconcile the contexts of the arguments of a function symbol.
 
 %This is a natural rewrite ordering in that the right hand side is the smaller term. A Knuth Bendix Order will achieve this. You should also set the precedence of $\lift$ to be low to fix the marginal unary $f(\lift(X)) \to \lift(f(X))$ case.
 
-Whenever you build a new e-node, the smart constructor should examine the common lifting of the fat eids of it's arguments, peel off this lifting, intern the e-node, and the put the common lifting back on before returning the fat eid to the user. This is a mechanical way of achieve the lift pull up rule inside the e-graph.
+Whenever you build a new e-node, the smart constructor should examine the common lifting of the fat eids of its arguments, peel off this lifting, intern the e-node, and then put the common lifting back on before returning the fat eid to the user. This is a operational way of achieving the lift pull up rule inside the e-graph.
 
 The smart constructor operation will ensure that whenever you build a node with arguments e-ids that are lifted more than necessary, you get back a fat e-id handle to the same interned data regardless of the extra lifting, enabling reduced memory usage and faster lifting relationship comparison. Overly lifted e-ids may appear for the convenience of a user to work in a large context but may also appear during the rebuilding phase of an e-graph.
 
@@ -269,9 +274,9 @@ The smart constructor operation will ensure that whenever you build a node with 
 
 Even in the absence of a union find, this lifting pulling smart constructor with fat ids makes for an $\alpha$ aware hash cons. \cite{zucker2026alphaequival} 
 
-Pulling lift up corresponds in an interesting way to the co-De Bruijn style of normalizing and representing lambda terms as described in McBride's Everybody's Got to Be Somewhere \cite{McBride_2018} . 
+Pulling lift up corresponds in an interesting way to the co-de Bruijn style of normalizing and representing lambda terms as described in McBride's Everybody's Got to Be Somewhere \cite{McBride_2018} . 
 
-Note also that by being as thin as possible, the dimensionality can play kind of a nameless free variable analysis. Semantically speaking, the ability to be written in lifted form is stating the the entity in question is known to be constant in the directions that have been dropped. As equality satruation progresses, one may leans that the function in question depends on fewer directions than previously thought. By being part of the fabric of what the term's semantics, it is less of a problem to make sure that the more syntactically flavored notion of free variable analysis is up to date.
+Note also that by being as thin as possible, the dimensionality can play the role of a kind of a nameless free variable analysis. Semantically speaking, the ability to be written in lifted form is stating that the entity in question is known to be constant in the directions that have been dropped. As equality saturation progresses, one may learn that the function in question depends on fewer directions than previously thought. By being part of the fabric of the term's semantics, it is less of a problem to make sure that the more syntactically flavored notion of free variable analysis is up to date.
 
 \begin{table}[htbp]
 \centering
@@ -314,21 +319,21 @@ $\begin{aligned}
 \label{tab:named-forms}
 \end{table}
 
-\subsection{Lifting Union Find}
+\subsection{Thinning Union Find}
 
-But we want an egraph. We need to add a union find to that hash cons.
+But we want an e-graph. We need to add a union find to that hash cons.
 
 \begin{lstlisting}
 type UnionFind = list[FatId]
 \end{lstlisting}
 
-How do we implement a union find that accepts lifted fat eids?
+How do we implement a union find that accepts lifted fat eids? It is easiest to explain the needed extra capabilities (annotation force parent picking and make-set) but examining some simpler asymmetric annotated union finds first.
 
-\subsubsection{Offset Union Finds}
+\subsubsection{Offset (Group) Union Finds}
 
 One may want to add extra information in the union find, either on the edges, on the nodes, or on the roots / classes.
 
-One thing you can do at little cost is express offset relationships like $e_4 + 3 = e_8- 4$.  We can do this by adding an offset annotation to the parents table and collecting up the offsets as we traverse up the tree. \cite{groupuf} \cite{offset_egraph}
+One thing you can do at little cost is express offset relationships like $e_4 + 3 = e_8 - 4$.  We can do this by adding an offset annotation to the parents table and collecting up the offsets as we traverse up the tree. \cite{groupuf} \cite{offset_congruence}
 
 \begin{lstlisting}
 from dataclasses import dataclass, field
@@ -382,9 +387,9 @@ A slight but interesting twist is to require the offset annotations be only posi
 
 \subsubsection{Factor Union Find}
 
-Another slight twist on the above is to consider multiplication by integer constants 6*x = 4*y. Because we don’t insist on turning this into a group, it isn’t clear we can derive a solution in the form x = ?a * y or y = ?b * x without constraining more than is implied by the assertion. Nevertheless there is a “best” solution if we create a new identifier x = 2*z, y = 3*z. These number come out of considerations of the prime factorization / least common multiple. The right had side says there must be at least 2 factors of 2, but 6 only has 1 factor, so we must pull another 2 out of x. Likewise we must pull a factor of 3 out of y.
+Another slight twist on the above is to consider multiplication by integer constants 6*x = 4*y. Because we don’t insist on turning multiplication of $\mathbb{Z}$ into a group, it isn’t clear we can derive a solution in the form $x = ?a * y$ or $y = ?b * x$ without constraining more than is implied by the assertion. Nevertheless there is a “best” solution if we create a new identifier $x = 2*z$, $y = 3*z$. These numbers come out of considerations of the prime factorization / least common multiple. The right hand side says there must be at least 2 factors of 2, but 6 only has 1 factor, so we must pull another 2 out of x. Likewise we must pull a factor of 3 out of $y$.
 
-In short, union not only controls the directionality of parent, it also must sometimes generate a fresh id.
+In short, union not only controls the directionality of the parent, it also must sometimes generate a fresh id.
 
 \begin{lstlisting}
     def union(self, x : Id, y : Id) -> Id | None:
@@ -411,99 +416,142 @@ In short, union not only controls the directionality of parent, it also must som
 
 \end{lstlisting}
 
-\subsubsection{Thinnings}
+\subsubsection{Thinning Union Find}
 Because liftings are semantically injective functions, when you union two lifted eids $\lift_i(a) = \lift_i(b)$, you can peel off the common parts of their liftings and learn $a = b$. This is similar to the move you can make in syntactic unification or from an equality between algebraic datatypes, which are also injective functions. $\texttt{cons}(a, c) = \texttt{cons}(b, c)$ implies $a = b$.
 
-If what is left is bare eids $\texttt{e6} = \texttt{e47}$ because the two liftings were identical, then it is the ordinary union find action at that point.
+If what is left is bare eids $e_6 = e_47$ because the two liftings were identical, then it is the ordinary union find action at that point.
 
-It does not even type check to union two objects with different numbers of variables, if a lifting mismatch is due to this, it is a user error.
+It does not even type check to union two objects with different numbers of variables. If a lifting mismatch is due to this, it is a user error.
 
 
 \subsubsection{Ordinary Union}
 
-\begin{itemize}
-\item Example: $(x,y \mapsto y * 1) = (x,y \mapsto y)$.
-\item Pulled: $\lift_{01}(\operatorname{var} * \lift_0(1)) = \lift_{01}(\operatorname{var})$.
-\item Union call: $\lift_{01}(e_{17}) = \lift_{01}(e_{42})$.
-\item Peel off common lift to $e_{17} = e_{42}$.
-  \begin{itemize}
-  \item Semantics: $\lift_t$ is injective.
-  \end{itemize}
-\item Pick parent $e_{17} \rightarrow e_{42}$.
-\end{itemize}
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{p{0.25\linewidth}p{0.68\linewidth}}
+\hline
+Step & Form \\
+\hline
+Named Form
+&
+$(x,y \mapsto y * 1) = (x,y \mapsto y)$
+\\
+Pulled Form
+&
+$\lift_{01}(\operatorname{var} * \lift_0(1)) = \lift_{01}(\operatorname{var})$
+\\
+Interned Form
+&
+$\lift_{01}(e_{17}) = \lift_{01}(e_{42})$
+\\
+Peel
+&
+$e_{17} = e_{42}$
+\\
+Orient
+&
+$e_{17} \rightarrow e_{42}$ (or $e_{42} \rightarrow e_{17}$)
+\\
+\hline
+\end{tabular}
+\caption{Ordinary union by peeling off a common lift}
+\label{tab:ordinary-union}
+\end{table}
 
 
-% TODO: Turn this into a table like before
-%|   |   |
-%|---|---|
-%|Named Form| $(x,y \mapsto y*1) =  (x,y \mapsto y)$ |
-%|Pulled Form| $\text{lift}_{01}(\text{var} * \text{lift}_0(1)) = \text{lift}_{01}(\text{var})$ |
-%| Interned Form | $\text{lift}_{01}(e_{17}) = \text{lift}_{01}(e_{42})$ |
-%| Peel | $e_{17} = e_{42}$ |
-%| Orient | $e_{17} \rightarrow e_{42}$ (or $e_{42} \rightarrow e_{17}$) |
 
-
-
-However, there still remains legitimate cases of unequal thinnings being unioned.
+However, there still remain legitimate cases of unequal thinnings being unioned.
 
 \subsubsection{$x * 0 = 0$ and Redundancies}
 
 A concerning counterexample to any discussion of variables in e-graphs is $x * 0 = 0$. If this is a truly bidirectional equality, it allows $x$ to slip into any location where $0$ is used. 
 
-From the careful scoping/lifting perspective, the actual equation in question is $x \mapsto x * 0 = 0$ which is combinatorized into $x_{10} * \lift_0(0) = \lift_0(0)$. Note that since $0$ is a constant (a 0-arity function $[] \mapsto 0$), it must be lifted into current 1-context $x \mapsto$.
+From the careful scoping/lifting perspective, the actual equation in question is $x \mapsto x * 0 = 0$ which is combinatorized into $x_{10} * \lift_0(0) = \lift_0(0)$. Note that since $0$ is a constant (a 0-arity function $[] \mapsto 0$), it must be lifted into the current 1-context $x \mapsto$.
 
 
 %While I have toyed with the idea of allowing junking / dumping moves \url{https://www.philipzucker.com/dump_calculus/} that are pseudoinverses to lifting, my current understanding is that it is not necessary to do so, and I think a bit more elegant to avoid it.
 
 
-Both $x_{10} * \lift_0(0)$ and $0$ are actually interned as eids, let's say $x_{10} * \lift_0(0) \to \texttt{e47}$ and $0 \to \texttt{e6}$, so the union occurring is $\texttt{union(e47. lift\_0(e6))}$. We do indeed have differing lifts on the left and right side.
+% Both $x_{10} * \lift_0(0)$ and $0$ are actually interned as eids, let's say $x_{10} * \lift_0(0) \to \texttt{e47}$ and $0 \to \texttt{e6}$, so the union occurring is $\texttt{union(e47, lift\_0(e6))}$. We do indeed have differing lifts on the left and right side.
 
-The union find can resolve this by picking the orientation / parent to be $\texttt{e6}$. This results in the rule  $\texttt{e47} \to \lift_0(\texttt{e6})$ which is representable in a lifting annotated $\texttt{parents}$ table, akin to how $\texttt{e48} \to \texttt{e14} + 7$ can be stored in an integer offset annotated parents table in a group union find.
-Picking this directionality is required because it "solves" for $\texttt{e47}$. There is no lifting that will solve for $\texttt{e6}$ in terms of $\texttt{e47}$,  $\texttt{e6 -> lift\_?(e47) DOESN'T WORK}$. Being in solved form is what enables the simple action of $\texttt{find}$ accumulating an annotation as it traverses the parents table.
+% The union find can resolve this by picking the orientation / parent to be $\texttt{e6}$. This results in the rule  $\texttt{e47} \to \lift_0(\texttt{e6})$ which is representable in a lifting annotated $\texttt{parents}$ table, akin to how $\texttt{e48} \to \texttt{e14} + 7$ can be stored in an integer offset annotated parents table in a group union find.
+% Picking this directionality is required because it "solves" for $\texttt{e47}$. There is no lifting that will solve for $\texttt{e6}$ in terms of $\texttt{e47}$,  $\texttt{e6 -> lift\_?(e47) DOESN'T WORK}$. Being in solved form is what enables the simple action of $\texttt{find}$ accumulating an annotation as it traverses the parents table.
 
 
-%TODO turn this into table
-%|  |  |
-%|--|--|
-%| Named Form | $(x \mapsto x*0) = (x \mapsto 0)$ |
-%| Pulled Form | $\text{var}*\text{lift}_0(0) = \text{lift}_0(0)$ |
-%| Interned Form |  $e_{92} = \text{lift}_{0}(e_{8})$ |
-%| Orient (forced) | $e_{92} \rightarrow \text{lift}_{0}(e_{8})$  |
-
-\begin{itemize}
-\item Example: $(x \mapsto x * 0) = (x \mapsto 0)$.
-\item Pulled: $\operatorname{var} * \lift_0(0) = \lift_0(0)$.
-\item Union: $e_{92} = \lift_0(e_8)$.
-\item $e_{92} \rightarrow \lift_0(e_8)$.
-  \begin{itemize}
-  \item Parent choice is forced.
-  \end{itemize}
-\end{itemize}
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{p{0.25\linewidth}p{0.68\linewidth}}
+\hline
+Step & Form \\
+\hline
+Named Form
+&
+$(x \mapsto x * 0) = (x \mapsto 0)$
+\\
+Pulled Form
+&
+$\operatorname{var} * \lift_0(0) = \lift_0(0)$
+\\
+Interned Form
+&
+$e_{92} = \lift_0(e_8)$
+\\
+Orient
+&
+$e_{92} \rightarrow \lift_0(e_8)$ (forced)
+\\
+\hline
+\end{tabular}
+\caption{Forced orientation for a redundant variable}
+\label{tab:forced-orientation}
+\end{table}
 
 \subsubsection{Make-set Parent}
 
-It is also possible to be in a situation which neither left or right side is solvable in terns of the other. This situation is luckily still solvable by generating a common fresh constant that both left and right are solvable to $\texttt{left -> annot1(fresh)}$ and $\texttt{right -> annot2(fresh)}$.
+It is also possible to be in a situation in which neither left nor right side is solvable in terms of the other. This situation is luckily still solvable by generating a common fresh constant that both left and right are solvable to $\texttt{left -> annot1(fresh)}$ and $\texttt{right -> annot2(fresh)}$.
 
-The same kind of consideration come in a more elementary was from baking in integer constant multiplications into a union find like $3 * \texttt{e47} = 2 * \texttt{e3}$. More discussion on this lightly asymmetric annotated union find here \url{https://www.philipzucker.com/thin_monus_uf/}
+% The same kind of consideration comes in a more elementary way from baking integer constant multiplications into a union find like $3 * \texttt{e47} = 2 * \texttt{e3}$. More discussion on this lightly asymmetric annotated union find here \url{https://www.philipzucker.com/thin_monus_uf/}
 
-As an example that requires this fresh constant generation, consider $x,y \mapsto x*0 = 0*y$  which combinatorizes to $\lift_{10}(x_{10} * \lift_0(0)) = \lift_{01}(\lift_0(0) * x_{10})$. This ought to be a rarer occurrence and I am almost inclined to not implement it. Neither can be solved in terms of the other, but by generating a fresh eid, there is semantically something that both ought to be solvable to.  Let's say the right hand side has eid $\texttt{e14}$, $\lift_0(0) * x_{10} \to \texttt{e14}$. Then we infer there exists a fresh $\texttt{e112}$ such that $\texttt{e14} \to \lift_0(\texttt{e112})$ and $\texttt{e47} \to \lift_0(\texttt{e112})$. Indeed, $\texttt{e112}$ is semantically the same as $0$ and if we assert the $x \mapsto x * 0 = 0$ and $x \mapsto 0 * x = 0$ first (which is probably the more natural thing to do), the initial example equation   $x,y \mapsto x*0 = 0*y$ would be considered redundant.
+% As an example that requires this fresh constant generation, consider $x,y \mapsto x*0 = 0*y$  which combinatorizes to $\lift_{10}(x_{10} * \lift_0(0)) = \lift_{01}(\lift_0(0) * x_{10})$. This ought to be a rarer occurrence and I am almost inclined to not implement it. Neither can be solved in terms of the other, but by generating a fresh eid, there is semantically something that both ought to be solvable to.  Let's say the right hand side has eid $\texttt{e14}$, $\lift_0(0) * x_{10} \to \texttt{e14}$. Then we infer there exists a fresh $\texttt{e112}$ such that $\texttt{e14} \to \lift_0(\texttt{e112})$ and $\texttt{e47} \to \lift_0(\texttt{e112})$. Indeed, $\texttt{e112}$ is semantically the same as $0$ and if we assert the $x \mapsto x * 0 = 0$ and $x \mapsto 0 * x = 0$ first (which is probably the more natural thing to do), the initial example equation   $x,y \mapsto x*0 = 0*y$ would be considered redundant.
 
-This example is somewhat constructed just to show how irreconcilable liftings can occur in a semantically valid way. I am not convinced it is natural to write rules in such a way that a situation like this would show up very often
-
-
+% This example is somewhat constructed just to show how irreconcilable liftings can occur in a semantically valid way. I am not convinced it is natural to write rules in such a way that a situation like this would show up very often.
 
 
-\begin{itemize}
-\item Example: $(x,y \mapsto x * 0) = (x,y \mapsto 0 * y)$.
-\item Pulled: $\lift_{10}(\operatorname{var} * \lift_0(0)) = \lift_{01}(\lift_0(0) * \operatorname{var})$.
-\item Interned: $\lift_{10}(e_{92}) = \lift_{01}(e_{13})$.
-\item Makeset fresh parent $e_{99}$.
-  \begin{itemize}
-  \item Only relevant variables in intersection (bitwise and).
-  \item Semantics: learned some directions are constant.
-  \end{itemize}
-\item $e_{92} \rightarrow \lift_0(e_{99})$ and $e_{13} \rightarrow \lift_0(e_{99})$.
-\end{itemize}
+
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{p{0.25\linewidth}p{0.68\linewidth}}
+\hline
+Step & Form \\
+\hline
+Named Form
+&
+$(x,y \mapsto x * 0) = (x,y \mapsto 0 * y)$
+\\
+Pulled Form
+&
+$\lift_{10}(\operatorname{var} * \lift_0(0)) = \lift_{01}(\lift_0(0) * \operatorname{var})$
+\\
+Interned Form
+&
+$\lift_{10}(e_{92}) = \lift_{01}(e_{13})$
+\\
+Orient
+&
+$e_{92} \rightarrow \lift_0(e_{99})$ and $e_{13} \rightarrow \lift_0(e_{99})$ ($e_{99}$ fresh)
+\\
+\hline
+\end{tabular}
+\caption{Make-set parent for irreconcilable liftings}
+\label{tab:makeset-parent}
+\end{table}
 
 
 
@@ -606,7 +654,7 @@ There is more complexity coming from redundancies in union find $e_{\text{child}
 
 The simplest choice of dealing with these is to have the match fail when it encounters these. E-matching into these expressions will be rewriting in expressions that are using variables in a redundant way. This is not likely to be a useful place to be spending computation.
 
-However, if one does want to match into these, it is possible. It corresponds to solving for thinnings in the equation $\text{lift}_i(e_\text{parent}) = \text{lift}_{?j}(\text{lift}_k(e_\text{parent}))$, which may have multilple solutions. This corresponds to in the named representation $(x,y \mapsto 0) =_? (x,y \mapsto ?a * 0)$ having both $?a = x$ and $?a = y$ as solutions.
+However, if one does want to match into these, it is possible. It corresponds to solving for thinnings in the equation $\text{lift}_i(e_\text{parent}) = \text{lift}_{?j}(\text{lift}_k(e_\text{parent}))$, which may have multiple solutions. This corresponds in the named representation to $(x,y \mapsto 0) =_? (x,y \mapsto ?a * 0)$ having both $?a = x$ and $?a = y$ as solutions.
 
 % All of the implementation of a lifting egraph was pretty mechanical without thinking too deeply until I hit e-matching. That is what sent me back to the drawing board to clarify the semantics and first order term model of what I was doing.
 
@@ -675,7 +723,7 @@ Slotted e-graphs \cite{slotted} are a mechanism for efficient handling of $\alph
 
 Co de-Bruijn notation \cite{McBride_2018} is also a direct inspiration for the Thinning e-graph. Essentially the thinning e-graph is just an application of the Co de-Bruijn ideas in the e-graph setting.
 
-The pointwise functional semantics is inspired by the semantics of jdugements in type theory $\llbracket x : \mathbb{R}, y : \mathbb{R} \vdash \sin(x) : \mathbb{R} \rrbracket$. Indeed, the notation $\mapsto$ could be replaced throughout by $\vdash$, but this brings in new connotations. 
+The pointwise functional semantics is inspired by the semantics of judgements in type theory $\llbracket x : \mathbb{R}, y : \mathbb{R} \vdash \sin(x) : \mathbb{R} \rrbracket$. Indeed, the notation $\mapsto$ could be replaced throughout by $\vdash$, but this brings in new connotations. 
 
 Weakening, Lifting, and Thinning are very similar concepts. There exists prior work on explicit Weakening calculi.
 

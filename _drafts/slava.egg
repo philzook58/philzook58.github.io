@@ -1,0 +1,46 @@
+; b^13 = b in the monoid <a, b | aaa=1, bbabbb=aba>
+(datatype T)
+
+(constructor m (T T) T)
+(constructor a () T)
+(constructor b () T)
+(constructor e () T)
+
+(let $a (a))
+(let $b (b))
+(let $e (e))
+
+;(relation term (T))
+;(term $a)
+;(term $b)
+;(term $e)
+;(rule ((term x) (term y)) ((term (m x y))))
+
+(birewrite (m (m x y) z) (m x (m y z)))
+(rewrite (m $e x) x)
+(rewrite (m x $e) x)
+(union (m (m $a $a) $a) $e)
+(union
+  (m (m $b $b) (m $a (m $b (m $b $b))))
+  (m $a (m $b $a)))
+
+; critical pair
+;(rule  ((= e1 (m x y)) (= e2 (m y z))) ((let foo (m x (m y z))))
+(rule  ((= e1 (m x y)) (= e2 (m y z))) ((let foo (m x (m y z))))
+
+(let $b2 (m $b $b))
+(let $b3 (m $b2 $b))
+(let $b4 (m $b3 $b))
+(let $b5 (m $b4 $b))
+(let $b6 (m $b5 $b))
+(let $b7 (m $b6 $b))
+(let $b8 (m $b7 $b))
+(let $b9 (m $b8 $b))
+(let $b10 (m $b9 $b))
+(let $b11 (m $b10 $b))
+(let $b12 (m $b11 $b))
+(let $b13 (m $b12 $b))
+
+(run 1000)
+;(check (= $b13 $b))
+;(print-function m)

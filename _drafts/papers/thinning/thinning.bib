@@ -17,6 +17,25 @@
   keywords   = {binders, e-graphs, equality saturation, rewrite systems}
 }
 
+@article{egg,
+  author     = {Willsey, Max and Nandi, Chandrakana and Wang, Yisu Remy and Flatt, Oliver and Tatlock, Zachary and Panchekha, Pavel},
+  title      = {egg: Fast and extensible equality saturation},
+  year       = {2021},
+  issue_date = {January 2021},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {5},
+  number     = {POPL},
+  url        = {https://doi.org/10.1145/3434304},
+  doi        = {10.1145/3434304},
+  abstract   = {An e-graph efficiently represents a congruence relation over many expressions. Although they were originally developed in the late 1970s for use in automated theorem provers, a more recent technique known as equality saturation repurposes e-graphs to implement state-of-the-art, rewrite-driven compiler optimizations and program synthesizers. However, e-graphs remain unspecialized for this newer use case. Equality saturation workloads exhibit distinct characteristics and often require ad-hoc e-graph extensions to incorporate transformations beyond purely syntactic rewrites.  This work contributes two techniques that make e-graphs fast and extensible, specializing them to equality saturation. A new amortized invariant restoration technique called rebuilding takes advantage of equality saturation's distinct workload, providing asymptotic speedups over current techniques in practice. A general mechanism called e-class analyses integrates domain-specific analyses into the e-graph, reducing the need for ad hoc manipulation. We implemented these techniques in a new open-source library called egg. Our case studies on three previously published applications of equality saturation highlight how egg's performance and flexibility enable state-of-the-art results across diverse domains.},
+  journal    = {Proc. ACM Program. Lang.},
+  month      = jan,
+  articleno  = {23},
+  numpages   = {29},
+  keywords   = {e-graphs, equality saturation}
+}
+
 @article{McBride_2018,
   title     = {Everybody’s Got To Be Somewhere},
   volume    = {275},
@@ -37,6 +56,15 @@
   howpublished = {\url{https://www.philipzucker.com/thin_hash_cons_codebruijn/}},
   note         = {[Online; accessed 12-4-2026]}
 }
+
+@misc{pavel,
+  author       = {Pavel Panchekha},
+  title        = {Binding in E-graphs},
+  howpublished = {\url{https://pavpanchekha.com/blog/egg-bindings.html}},
+  note         = {[Online; accessed 12-4-2026]}
+}
+
+
 
 @article{gonccalves2025thinning,
   title   = {Thinning Thinnings: Safe and Efficient Binders},
@@ -125,4 +153,20 @@
   keywords  = {abstract syntax tree, equivalence, hashing},
   location  = {Virtual, Canada},
   series    = {PLDI 2021}
+}
+
+
+@inproceedings{offset_congruence,
+  author    = {Nieuwenhuis, Robert
+               and Oliveras, Albert},
+  editor    = {Vardi, Moshe Y.
+               and Voronkov, Andrei},
+  title     = {Congruence Closure with Integer Offsets},
+  booktitle = {Logic for Programming, Artificial Intelligence, and Reasoning},
+  year      = {2003},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {78--90},
+  abstract  = {Congruence closure algorithms for deduction in ground equational theories are ubiquitous in many (semi-)decision procedures used for verification and automated deduction. They are also frequently used in practical contexts where some interpreted function symbols are present. In particular, for the verification of pipelined microprocessors, in many cases it suffices to be able to deal with integer offsets, that is, instead of only having ground terms t built over free symbols, all (sub)terms can be of the form t+k for arbitrary integer values k.},
+  isbn      = {978-3-540-39813-4}
 }

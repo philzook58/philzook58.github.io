@@ -3,7 +3,7 @@ layout: page
 title: Talks
 permalink: /talks/
 ---
-- [EGRAPHS 2026 - Lifting E-Graphs: A Function Isn’t a Constant](https://pldi26.sigplan.org/home/egraphs-2026#program) [summary post](https://www.philipzucker.com/lifting_egraph/)
+- [EGRAPHS 2026 - Lifting E-Graphs: A Function Isn’t a Constant](https://pldi26.sigplan.org/home/egraphs-2026#program) [summary post](https://www.philipzucker.com/lifting_egraph/) [video](https://www.youtube.com/live/hOtS_-7VAuQ?si=bmBlg7AiVe7Veqs5&t=3600) ![](/assets/thin_talk.pdf)
 - [Dagstuhl Seminar 26022 Program Optimization with E-Graphs](https://www.dagstuhl.de/seminars/seminar-calendar/seminar-details/26022) Satisfiability Modulo Theories tutorial [colab](https://colab.research.google.com/github/philzook58/philzook58.github.io/blob/master/pynb/2026_smt_talk_dahgstuhl_egraphs.ipynb) [video](https://www.youtube.com/watch?v=cI2sja6byew)
 - EGRAPHS 2025 - Omelets Need Onions: E-graphs Modulo Theories via Bottom Up E-Matching [link](https://pldi25.sigplan.org/details/egraphs-2025-papers/5/Omelets-Need-Onions-E-graphs-Modulo-Theories-via-Bottom-Up-E-Matching) [slides](https://www.philipzucker.com/assets/eggmt_talk.pdf) [youtube](https://www.youtube.com/live/AEbvKbHPRhM?si=Ub1wYG900AWSATkc&t=30760) [preprint](https://arxiv.org/abs/2504.14340)
 - [NEPLS 2025](https://nepls.org/Events/35/) - Knuckledragger: A Low Barrier Proof Assistant [video](https://www.youtube.com/watch?v=ENwKBC8dN4M&ab_channel=PhilipZucker)
