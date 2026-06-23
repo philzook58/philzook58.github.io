@@ -7,7 +7,6 @@
 \usepackage{url}
 
 \usepackage{graphicx}
-\graphicspath{ {../../../assets/} }
 
 \newcommand{\bR}{\mathbb{R}}
 \newcommand{\lift}{\text{lift}}
@@ -48,20 +47,20 @@
 
 \maketitle
 \begin{abstract}
-Variables are quite subtle and easy to get wrong. An approach to support a notion of rigid $\alpha$ canonical variables in e-graphs inspired by slotted e-graphs \cite{slotted} and Co-de Bruijn syntax \cite{McBride_2018} is described. The e-graph can be seen as having a baked-in notion of functional lifting combinator implemented by fattening integer identifiers with thinning bitvectors, lift pulling smart constructors, and a special thinning aware union find variation.
+Variables are quite subtle and easy to get wrong. An approach is described to support rigid $\alpha$ canonical variables in an e-graph. The lifting e-graph has a baked-in notion of functional lifting combinator. It is implemented by fattening the usual integer identifiers with thinning bitvectors, lift-pulling smart constructors, and a special thinning-aware union find variation. The approach is inspired by slotted e-graphs \cite{slotted} and Co-de Bruijn syntax \cite{McBride_2018}.
 \end{abstract}
 
 \section{Introduction}
-E-graphs \cite{egg} are a data structure that compactly store ground terms and equalities between them.
+An E-graph \cite{egg} is a data structure that compactly store ground terms and equalities between them.
 
- E-graphs are supposed to be useful for program optimization, and program expressions usually have unknowns such as  $x * 2 / 2$. From the outset, E-graphs have had variables in them.
+E-graphs are proposed to be useful for program optimization \cite{PEG}. Program expressions such as  $x * 2 / 2$ usually have unknown variables in them.
 
-There are a number of issues with explicit names like $x$ in the e-graph setting
+As a first approach, these unknowns are usually referred to by named variables. However, there are a number of issues with explicit names like $x$ in the e-graph setting
 
 \begin{enumerate}
-\item Generative processes like equality saturation can run off the rails if fresh names are created via a gensym for example in the rewrite rule $P \rightarrow \forall x, P$ or $e \rightarrow \frac{1}{N} \sum_{i=0}^{N-1} e$
-\item The bidirectional nature of equality in an e-graph can cause scope hygiene concerns. The equality $x * 0 = 0$ can cause $x$ to appear in a context which does not have $x$ bound if named variables are treated naively, for example $\text{lam}(y, 0) = \text{lam}(y,x * 0)$
-\item Named variables cause missed sharing. $\texttt{f(g(h(x)))}$ shares no storage with $\texttt{f(g(h(y)))}$. The amount of missed storage opportunity gets worse the deeper and bigger the term. Note that these two terms \emph{aren't equal}, but there is a missed \emph{relationship} that can be used for reasoning and compaction.
+\item Generative processes like equality saturation can bloat the e-graph with many redundant, essentially equivalent expressions if fresh names are created via a gensym, for example in the rewrite rule $P \rightarrow \forall x, P$ or $e \rightarrow \frac{1}{N} \sum_{i=0}^{N-1} e$
+\item The equality in an e-graph has an unclear relationship with scope hygiene. For example, the equality $x * 0 = 0$ can rewrite $0$ to cause $x$ to appear in $\text{lam}(y, 0) = \text{lam}(y,x * 0)$ which does not have $x$ bound.
+\item Named variables have missed memory sharing opportunities. $\texttt{f(g(h(x)))}$ shares no storage with $\texttt{f(g(h(y)))}$. The amount of missed storage opportunity gets worse the deeper and bigger the term. Note that these two terms \emph{aren't equal}, but there is a missed \emph{relationship} that can be used for reasoning and compaction.
 \item Depending on your intended semantics, expressions like $\sin(x)$ may ambiguously refer to multiple semantic entities. In other words, there may be \emph{too much} sharing. 
 \end{enumerate}
 
@@ -69,11 +68,11 @@ There are a number of issues with explicit names like $x$ in the e-graph setting
 
 $\sin(x)$ from an ordinary perspective is fine. We've lived with the notation for hundreds of years. It works. We know what it means when we see it.
 
-From another perspective it is horribly vague and possibly collapsing distinct entities. We are somehow referring vaguely to the function $\sin$, but are we specifically referring to $x \mapsto \sin(x) : R^1 \to R$ or to $x,y \mapsto \sin(x) : R^2 \to R$?
+From another perspective it is horribly vague and possibly collapsing distinct entities. We are somehow referring to the function $\sin$, but are we specifically referring to $x \mapsto \sin(x) : R^1 \to R$ or to $x,y \mapsto \sin(x) : R^2 \to R$?
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{2026-04-18-thin_egraph_files/2026-04-18-thin_egraph_2_1.png}
+\includegraphics[width=0.5\linewidth]{2026-04-18-thin_egraph_2_1.png}
 \caption{$x \mapsto \sin(x) : R \to R$}
 \label{fig:sin-r-to-r}
 \end{figure}
@@ -81,7 +80,7 @@ From another perspective it is horribly vague and possibly collapsing distinct e
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{2026-04-18-thin_egraph_files/2026-04-18-thin_egraph_6_crop.png}
+\includegraphics[width=0.5\linewidth]{2026-04-18-thin_egraph_6_crop.png}
 \caption{$x,y \mapsto \sin(x) : R^2 \to R$}
 \label{fig:sin-r2-to-r}
 \end{figure}
@@ -94,11 +93,11 @@ While it is not the case for every conception of the word "context" or the word 
 
 \section{Naive Well-Dimensioned Nameless Representation}
 
-It is helpful to find a way to talk about this less familiar $x,y \mapsto \_$  notation in the more standard framework of first order terms.
+It is helpful to find a way to talk about this less familiar $x,y \mapsto \_$  notation in the more standard framework of first-order terms.
 
-If there is an ambiguity about dimension, an simple approach to break this ambiguity is to add a $d$ dimension subscript everywhere.
+If there is an ambiguity about dimension, a simple approach to break this ambiguity is to add a $d$ dimension subscript on all function symbols.
 
-We can make a different copy of every function symbol for every dimension/context we might be working in and we can refer to variables by (dimension,index) pairs $x_{di}$ rather than by names. For example $x \mapsto x$ becomes $\text{var}_{10}$ (the zeroth variable in context of size 1) and $x,y \mapsto y$ becomes $\text{var}_{21}$ (the first variable in context of size 2).
+We can make a different copy of every function symbol for every dimension/context we might be working in and we can refer to variables by (dimension,index) pairs $\text{var}_{di}$ rather than by names. For example, $x \mapsto x$ becomes $\text{var}_{10}$ (the zeroth variable in context of size 1) and $x,y \mapsto y$ becomes $\text{var}_{21}$ (the first variable in context of size 2).
 
 Likewise, we could also disambiguate all the $\sin$ into different versions $\sin_d$ depending on the type of its argument. If $\text{var}_{21}$ has type $\bR^2 \rightarrow \bR$ then if $\sin$ is going to accept it, it needs to take in arguments of that type. We have $\sin_0 : (\bR^0 \rightarrow \bR) \rightarrow (\bR^0 \rightarrow \bR)$, $\sin_1 : (\bR^1 \rightarrow \bR) \rightarrow (\bR^1 \rightarrow \bR)$,  $\sin_2 : (\bR^2 \rightarrow \bR) \rightarrow (\bR^2 \rightarrow \bR)$ and so on.
 
@@ -114,18 +113,18 @@ There is a pointwise compositional semantics of these combinators.
 \end{aligned}
 \]
 
-Semantically, $\operatorname{var}_{di}$ is a \emph{projection} of type $\mathbb{R}^d \rightarrow \mathbb{R}$. $\sin_d$ is a \emph{higher order function} of type $(\mathbb{R}^d \rightarrow \mathbb{R}) \rightarrow (\mathbb{R}^d \rightarrow \mathbb{R})$. It can also be viewed as the partial application of the composition function $\sin_d \sim \sin \circ (-)$.
+Semantically, $\operatorname{var}_{di}$ is a \emph{projection} of type $\mathbb{R}^d \rightarrow \mathbb{R}$. $\sin_d$ is a \emph{higher order function} of type $(\mathbb{R}^d \rightarrow \mathbb{R}) \rightarrow (\mathbb{R}^d \rightarrow \mathbb{R})$. It can also be viewed as the partial application of the composition function $\sin_d \sim \sin \circ \_$.
 
 Because we are being nameless by referring to variables by integers, $x \mapsto f(g(h(x)))$ becomes syntactically the same as $y \mapsto f(g(h(y)))$ since both become $f_1(g_1(h_1(\text{var}_{10})))$. So sharing in the e-graph using this representation has become better in that sense.
 
-On the other hand, $\sin_1(\text{var}_{10}) : \mathbb{R}^1 \rightarrow \mathbb{R}$ and $\sin_2(\text{var}_{20}) : \mathbb{R}^2 \rightarrow \mathbb{R}$ now share no storage. This is fine from the perspective that they are not \emph{equal} (such a question does not even type check), but is disappointing from the perspective they are clearly \emph{related}.
+On the other hand, $\sin_1(\text{var}_{10}) : \mathbb{R}^1 \rightarrow \mathbb{R}$ and $\sin_2(\text{var}_{20}) : \mathbb{R}^2 \rightarrow \mathbb{R}$ now share no storage. This is fine from the perspective that they are not \emph{equal} (such a question does not even type check), but is disappointing from the perspective that they are clearly \emph{related}.
 
 \section{Lifting Functions for Increased Sharing}
 Lifting is a functional combinator that drops some arguments and passes others along while maintaining their ordering. 
 
 One way that $\sin_1(\text{var}_{10}) : \mathbb{R}^1 \rightarrow \mathbb{R}$ and $\sin_2(\text{var}_{20}) : \mathbb{R}^2 \rightarrow \mathbb{R}$ are related is by this operation of $\text{lift}_t : (\mathbb{R}^{\text{popcnt}(t)} \rightarrow \mathbb{R})\rightarrow (\mathbb{R}^{\text{len(t)}} \rightarrow \mathbb{R})$. For example $\text{lift}_{110} : (\mathbb{R}^{2} \rightarrow \mathbb{R})\rightarrow (\mathbb{R}^3 \rightarrow \mathbb{R})$  keeps arg 0, keeps arg 1, and drops arg 2.
 
-It can be written as a simple Python combinator 
+It can be written as a simple Python combinator:
 
 \begin{lstlisting}
 def lift(thin : Thin):
@@ -145,9 +144,9 @@ $$\sin_2(\text{var}_{20}) := \text{lift}_{10}(\sin(\text{var}))$$
 \label{fig:thin-sin-sin}
 \end{figure}
 
-%![width:600](https://www.philipzucker.com/assets/thin_sin_sin.png)
+% ![width:600](https://www.philipzucker.com/assets/thin_sin_sin.png)
 
-The lifting is parametrized by a thinning\cite{McBride_2018}\cite{zucker2026thinningssub} bitvector $t$ with a $1$ for arguments to keep and $0$ for arguments to drop. One \emph{lifts} a function by \emph{thinning} its arguments list.
+The lifting is parametrized by a thinning \cite{McBride_2018}\cite{zucker2026thinningssub} bitvector $t$ with a $1$ for arguments to keep and $0$ for arguments to drop. One \emph{lifts} a function by \emph{thinning} its arguments list.
 
 Thinnings can be thought of in a number of ways. They are strictly monotonic maps between totally ordered finite sets. They can also be seen as a recipe to extract subsequences.
 
@@ -160,7 +159,7 @@ Thinnings have a notion of composition and identity. This makes them a category.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{thinning/simple-thinning.pdf}
+\includegraphics[width=0.5\linewidth]{simple-thinning.pdf}
 \caption{Composition of thinnings}
 \label{fig:compose-thinnings}
 \end{figure}
@@ -190,7 +189,7 @@ def comp(f : Thin, g : Thin) -> Thin:
 %Instead of ever storing $\texttt{f2(g2(h2(x20)))} : R^2 \to R$, I could instead store $\texttt{lift\_10(f1(g1(h1(x10))))} : R^2 \to R$. The subscript on $\lift$ is a bitvector with a 1 if I should keep the argument, or a 0 if throw it away. Again, this all perfectly first order syntactic and simply typed. I could do so as an encoding in a regular egraph. Sharing of substructure is achieved because the two semantically distinct things now share big subterms.
 
 
-Lifting has some useful equational properties. The "parametric polymorphism" of typical pointwise derived combinators like $\sin$ manifests as a rewrite rule $\sin(\lift_i(X)) = \lift_i(\sin(X))$ . This is stating that $\lift$ is a homomorphism with respect to typical function symbols. Syntactically, it allows for pushing and pulling common $\lift$ expressions through function symbols.
+Lifting has some useful equational properties. The "parametric polymorphism" of typical pointwise derived combinators like $\sin$ manifests as a rewrite rule $\sin(\lift_i(X)) = \lift_i(\sin(X))$ . This is stating that $\lift$ is a homomorphism with respect to typical function symbols. The operations of adding redundant arguments and applying a function like $\sin$ pointwise commute. Syntactically, it allows for pushing and pulling common $\lift$ expressions through function symbols.
 
 %|  Compose / Constant Fold. |$\forall x, \text{lift}_i(\text{lift}_j(x)) = \text{lift}_{i \cdot j}(x)$ |
 %|  Pulling / Homomorphism   | $\forall x y, f(\text{lift}_t(x), \text{lift}_t(y)) = \text{lift}_t(f(x,y))$  |
@@ -266,15 +265,15 @@ The homomorphism rules can be oriented to pull the liftings as high as possible 
 
 %This is a natural rewrite ordering in that the right hand side is the smaller term. A Knuth Bendix Order will achieve this. You should also set the precedence of $\lift$ to be low to fix the marginal unary $f(\lift(X)) \to \lift(f(X))$ case.
 
-Whenever you build a new e-node, the smart constructor should examine the common lifting of the fat eids of its arguments, peel off this lifting, intern the e-node, and then put the common lifting back on before returning the fat eid to the user. This is a operational way of achieving the lift pull up rule inside the e-graph.
+Whenever you build a new e-node, the smart constructor should examine the common lifting of the fat eids of its arguments, peel off this lifting, intern the e-node, and then put the common lifting back on before returning the fat eid to the user. This is a operational way of achieving the lift pull-up rule inside the e-graph.
 
 The smart constructor operation will ensure that whenever you build a node with arguments e-ids that are lifted more than necessary, you get back a fat e-id handle to the same interned data regardless of the extra lifting, enabling reduced memory usage and faster lifting relationship comparison. Overly lifted e-ids may appear for the convenience of a user to work in a large context but may also appear during the rebuilding phase of an e-graph.
 
 %As described, this mechanism and the rewrite rule behind it seems pretty elementary and non mysterious to me. It has taken some time and explanation shifting to feel that way.
 
-Even in the absence of a union find, this lifting pulling smart constructor with fat ids makes for an $\alpha$ aware hash cons. \cite{zucker2026alphaequival} 
+Even in the absence of a union find, this lifting pulling smart constructor with fat ids makes for an $\alpha$ aware hash cons. \cite{zucker2026alphaequival} \cite{hashalpha}
 
-Pulling lift up corresponds in an interesting way to the co-de Bruijn style of normalizing and representing lambda terms as described in McBride's Everybody's Got to Be Somewhere \cite{McBride_2018} . 
+Pulling lifts up corresponds in an interesting way to the co-de Bruijn style of normalizing and representing lambda terms as described in McBride's Everybody's Got to Be Somewhere \cite{McBride_2018} . 
 
 Note also that by being as thin as possible, the dimensionality can play the role of a kind of a nameless free variable analysis. Semantically speaking, the ability to be written in lifted form is stating that the entity in question is known to be constant in the directions that have been dropped. As equality saturation progresses, one may learn that the function in question depends on fewer directions than previously thought. By being part of the fabric of the term's semantics, it is less of a problem to make sure that the more syntactically flavored notion of free variable analysis is up to date.
 
@@ -367,7 +366,7 @@ class OffsetUF:
 
 \subsubsection{Monus Union Find}
 
-A slight but interesting twist is to require the offset annotations be only positive. To achieve this, the annotations now need control of the direction union adds to the parents table.
+A slight but interesting twist is to require the offset annotations only be positive. To achieve this, the annotations now need control of the direction union adds to the parents table.
 
 \begin{lstlisting}
     def union(self, x : Id, y : Id) -> Id | None:
@@ -401,12 +400,12 @@ In short, union not only controls the directionality of the parent, it also must
                 z = (mx // my, x)
                 self.parents[yid] = z
                 return z
-            elif mz == mx:
+            elif mz == my:
                 z = (my // mx, y)
                 self.parents[xid] = z
                 return z
             else:
-                (_, zid) = uf.makeset()
+                (_, zid) = self.makeset()
                 self.parents[xid] = (mz // mx, zid) 
                 self.parents[yid] = (mz // my, zid)
                 return (mz, zid)
@@ -419,7 +418,7 @@ In short, union not only controls the directionality of the parent, it also must
 \subsubsection{Thinning Union Find}
 Because liftings are semantically injective functions, when you union two lifted eids $\lift_i(a) = \lift_i(b)$, you can peel off the common parts of their liftings and learn $a = b$. This is similar to the move you can make in syntactic unification or from an equality between algebraic datatypes, which are also injective functions. $\texttt{cons}(a, c) = \texttt{cons}(b, c)$ implies $a = b$.
 
-If what is left is bare eids $e_6 = e_47$ because the two liftings were identical, then it is the ordinary union find action at that point.
+If what is left is bare eids $e_6 = e_{47}$ because the two liftings were identical, then it is the ordinary union find action at that point.
 
 It does not even type check to union two objects with different numbers of variables. If a lifting mismatch is due to this, it is a user error.
 
@@ -460,15 +459,13 @@ $e_{17} \rightarrow e_{42}$ (or $e_{42} \rightarrow e_{17}$)
 \label{tab:ordinary-union}
 \end{table}
 
-
-
-However, there still remain legitimate cases of unequal thinnings being unioned.
-
 \subsubsection{$x * 0 = 0$ and Redundancies}
+
+There remain legitimate cases of unequal thinnings being unioned.
 
 A concerning counterexample to any discussion of variables in e-graphs is $x * 0 = 0$. If this is a truly bidirectional equality, it allows $x$ to slip into any location where $0$ is used. 
 
-From the careful scoping/lifting perspective, the actual equation in question is $x \mapsto x * 0 = 0$ which is combinatorized into $x_{10} * \lift_0(0) = \lift_0(0)$. Note that since $0$ is a constant (a 0-arity function $[] \mapsto 0$), it must be lifted into the current 1-context $x \mapsto$.
+From the careful scoping/lifting perspective, the actual equation in question is $(x \mapsto x * 0) = (x \mapsto 0)$ which is combinatorized into $\text{var} * \lift_0(0) = \lift_0(0)$. Note that since $0$ is a constant (a 0-arity function $[] \mapsto 0$), it must be lifted into the current 1-context $x \mapsto$.
 
 
 %While I have toyed with the idea of allowing junking / dumping moves \url{https://www.philipzucker.com/dump_calculus/} that are pseudoinverses to lifting, my current understanding is that it is not necessary to do so, and I think a bit more elegant to avoid it.
@@ -719,15 +716,25 @@ However, if one does want to match into these, it is possible. It corresponds to
 
 \section{Related Work}
 
-Slotted e-graphs \cite{slotted} are a mechanism for efficient handling of $\alpha$ equivalence in e-graphs. The e-graph described in this work can be seen as an approach to taking the slotted notion of redundancy as primary and removing the notion of permutative renaming. This is to some degree how the idea was developed. Both this work and slotted are related to the concept of Hashing modulo alpha equivalence \cite{hashalpha}, but it is not always clear how to take the ideas there and make them work in the highly shared situation of e-graphs.
+Slotted e-graphs \cite{slotted} are a mechanism for efficient handling of $\alpha$ equivalence in e-graphs. The e-graph described in this work can be seen as an approach to taking the slotted notion of redundancy as primary and removing the notion of permutative renaming. This is to some degree how the idea was developed. By making slots totally ordered and using a sparse representation of thinnings that lists the index of kept vars rather than the bitvector representation bring the two types of e-graph in closer alignment.
+
+Both this work and slotted are related to the concept of Hashing modulo alpha equivalence \cite{hashalpha}, but it is not always clear how to take the ideas there and make them work in the highly shared situation of e-graphs.
 
 Co de-Bruijn notation \cite{McBride_2018} is also a direct inspiration for the Thinning e-graph. Essentially the thinning e-graph is just an application of the Co de-Bruijn ideas in the e-graph setting.
 
-The pointwise functional semantics is inspired by the semantics of judgements in type theory $\llbracket x : \mathbb{R}, y : \mathbb{R} \vdash \sin(x) : \mathbb{R} \rrbracket$. Indeed, the notation $\mapsto$ could be replaced throughout by $\vdash$, but this brings in new connotations. 
+The pointwise functional semantics is inspired by the semantics of judgements in type theory $\llbracket x : \mathbb{R}, y : \mathbb{R} \vdash \sin(x) : \mathbb{R} \rrbracket$ \cite{Hofmann_1997}. Indeed, the notation $\mapsto$ could be replaced throughout by $\vdash$, but this brings in new connotations. 
 
-Weakening, Lifting, and Thinning are very similar concepts. There exists prior work on explicit Weakening calculi.
+Weakening, Lifting, and Thinning are very similar concepts. There exists prior work on Explicit Weakening calculi \cite{Wadler_2024}\cite{DAVID_GUILLAUME_2001}.
 
-There are de Bruijn methodologies that allow the $succ$ constructor of the variables float inside of expressions rather than being tied to the variable \cite{kiselyov}\cite{pavel}. Every variable is associated with the $zero$ constructor then.
+There are de Bruijn methodologies that allow the $succ$ constructor of the variables to float inside of expressions rather than being tied to the variable \cite{kiselyov}\cite{pavel}. Every variable is associated with the $zero$ constructor then.
+
+\section{Further Work}
+
+The original intent of this work was to deal with bound variables. It has come as somewhat a surprise that there is an interesting system of variables to discuss before one talks about bindings. Bindings are an inessential feature. Binders like \lstinline|lam|, \lstinline|forall|, \lstinline|exists|, \lstinline|integrate|, and \lstinline|subst| are semantically higher-order "projection functions", in the sense that they remove a variable from the context $(\bR^n \rightarrow T) \rightarrow (\bR^{n-1} \rightarrow S)$. They have a different lift pulling rule / transfer function than pointwise application combinators, but the machinery required seems to be not that different.
+
+The thinning union find is interesting in that it refutes a misunderstanding that group axioms are necessary for union find edge annotations. A better framework for generalizations is ongoing work.
+
+The connection of type theory semantics to e-graphs is compelling as an avenue to both explicate them in terms of ordinary data structures, make e-graphs more usable for type theory applications, and as an exemplar of elegant handling of internalizable proof structures.
 
 \section{Acknowledgements}
 Many discussions with Rudi Schneider about slotted e-graphs have heavily informed this work. Commentary by Conor McBride on Mastodon about thinnings kicked off this particular branch of ideas. I'd also like to thank Max Willsey and Cody Roux for many interesting and relevant discussions.
