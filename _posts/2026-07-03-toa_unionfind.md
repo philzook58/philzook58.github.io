@@ -385,6 +385,8 @@ I haven't posted in a while (June 1. A month. No sin. There is no such thing as 
 
 It does seem like versioned egraphs can be thought of as EMT'ed `assume` nodes like Rusell said. It is a bit different I think, because the union find needs to represent rules of the form `assume(p, e_1) -> assume(p, e_2)` where usually in the group union find it represents rules that are bare on the left hand side `e_1 -> act_g(e_2)$
 
+The notion of a "first class union find" isn't something I've chased in a while, but this internalized theory of arrays might be the right thing for it.
+
 Semi-persistence is also very interesting in it's relation to proof terms. If one did destructive rewriting semi persistently, the "diff" trail is surely (exactly?) some kind of proof term which is neato.
 
 One could not have `FatId`  that are full update dictionaries, but this is the form that allows path compression. It's a tradeoff and it felt simpler to just do it the way I did it.
