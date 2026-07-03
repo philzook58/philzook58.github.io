@@ -164,6 +164,8 @@ This is a union find that has `store` held on the edges and a currently known ma
 
 Similar to how the group union find needs the group elements to be concrete constants (like `+42`), the keys we update or assert at need to be concrete. This is a less powerful thing than the full SMT theory of arrays <https://microsoft.github.io/z3guide/docs/theories/Arrays/> , since it makes determining aliasing (disequality) of keys trivial. But trivial is good. We are looking for very efficiently implementable and controllable subsets of capabilities.
 
+Note that the smt theory of "arrays" is really a theory of functions / maps that so happens to be useful for modeling arrays. This nomenclature comes from the McCarthy theory of arrays.
+
 ### Not Just A Semi-Persistent Array Union Find
 
 There is a confusion of layers here I want to warn against. In the persistent union find paper  <https://usr.lmf.cnrs.fr/~jcf/publis/puf-wml07.pdf> they are using this technique to make a _regular_ union find that is persistent.
@@ -378,6 +380,8 @@ uf.lattice
 The presentation here might have been nicer if I had made a semi-persistent hashmap in the second section rather than array.
 
 It was so hot today. 97F. Not perhaps the best day to debug a confusing piece of code. I was really thrashing until all the asserts stoped failing and I said fuck it. Ship it.
+
+I haven't posted in a while (June 1. A month. No sin. There is no such thing as sin if you're not hurtin no one.). A lot of my attention went to getting my talk together for EGRAPHS 2026. And then I found myself super burnt out afterwards. But things picked up this week a little. Computers are no longer entirely loathesome to me. I think blogging is good. Gets my name out there. Gets conversations started. Gives me notes to refer back to. I debate whether I should blog more of less. It gets to be kind of stressful to stick to a deadline every week. On the other hand, there is no dearth of little ideas I haven't written about. On the other hand, maybe everything I do is too incremental / non canonical? Dunno.
 
 It does seem like versioned egraphs can be thought of as EMT'ed `assume` nodes like Rusell said. It is a bit different I think, because the union find needs to represent rules of the form `assume(p, e_1) -> assume(p, e_2)` where usually in the group union find it represents rules that are bare on the left hand side `e_1 -> act_g(e_2)$
 
