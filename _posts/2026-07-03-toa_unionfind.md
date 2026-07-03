@@ -162,7 +162,7 @@ a
 
 This is a union find that has `store` held on the edges and a currently known mappings held at the root position. By using a rerooting technique very similar to the semi-persistent one, I believe we can support these non invertible edge annotations.
 
-Similar to how the group union find needs the group elements to be concrete constants (like `+42`), the keys we update or assert at need to be concrete. This is a less powerful thing than the full SMT theory of arrays, since it makes determining aliasing (disequality) of keys trivial. But trivial is good. We are looking for very efficiently implementable and controllable subsets of capabilities.
+Similar to how the group union find needs the group elements to be concrete constants (like `+42`), the keys we update or assert at need to be concrete. This is a less powerful thing than the full SMT theory of arrays <https://microsoft.github.io/z3guide/docs/theories/Arrays/> , since it makes determining aliasing (disequality) of keys trivial. But trivial is good. We are looking for very efficiently implementable and controllable subsets of capabilities.
 
 ### Not Just A Semi-Persistent Array Union Find
 
@@ -316,8 +316,6 @@ assert uf.is_eq(uf.select(x, 0), x)
 
 # Bonus: Offset Union Find for Extended Reals
 
-The presentation here might have been nicer if I had made a semi-persistent hashmap in the second section rather than array.
-
 The extended reals <https://en.wikipedia.org/wiki/Extended_real_number_line> are a legitimate extension to the real numbers that is useful sometimes for making definitions of limits, supremum etc nicer.
 
 Taking this as our intended semantic domain shows a nice example of the phenomenon of "self symmettries" in a group union find, where `x = g + x` for non trivial `g`. This occurs in the slotted union find and in the multiplication union find (`0*x = x` implies `x = 0`) but it's a nice example of the phenomenon in the offset union find where it doesn't imply an inconsistency.
@@ -376,6 +374,10 @@ uf.lattice
 ```
 
 # Bits and Bobbles
+
+The presentation here might have been nicer if I had made a semi-persistent hashmap in the second section rather than array.
+
+It was so hot today. 97F. Not perhaps the best day to debug a confusing piece of code. I was really thrashing until all the asserts stoped failing and I said fuck it. Ship it.
 
 It does seem like versioned egraphs can be thought of as EMT'ed `assume` nodes like Rusell said. It is a bit different I think, because the union find needs to represent rules of the form `assume(p, e_1) -> assume(p, e_2)` where usually in the group union find it represents rules that are bare on the left hand side `e_1 -> act_g(e_2)$
 
