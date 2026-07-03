@@ -343,6 +343,8 @@ We can define pessimistic and optimistic equality. Disequal until proven equal v
 
 If you have a loop in your arena, pessimistic equality won't even find that it is equal to itself. That's kind of odd.
 
+Edit: Graham pointed out that possibly I want to use the `bool | None` 3-valued lattice with unknown and start with everything `None`. That would be more normal looking. <https://en.wikipedia.org/wiki/Well-founded_semantics>
+
 ```python
 def pess_eq(a : Arena, b : Arena):
     eq = [[False]*len(b.data) for i in range(len(a.data))]

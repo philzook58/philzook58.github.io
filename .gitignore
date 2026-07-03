@@ -13,3 +13,4 @@ _drafts/result
 
 **/z3_problems
 **/obj_dir/
+.tmp/

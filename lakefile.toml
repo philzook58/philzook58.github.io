@@ -6,20 +6,42 @@ name = "_drafts"
 precompileModules = true
 supportInterpreter = true
 
+[[lean_lib]]
+name = "Philib"
+
+
 #[[require]]
 #name = "smt"
 #scope = "ufmg-smite"
 #rev = "main"
 
 [[require]]
-name = "mathlib"
+name = "plausible"
 scope = "leanprover-community"
-rev = "v4.29.1"
+rev = "v4.31.0"
+
+[[require]]
+name = "veil"
+git = "https://github.com/verse-lab/veil.git"
+rev = "main"
 
 [[require]]
 name = "LeanPy"
 git = "https://github.com/BasisResearch/lean.py"
 rev = "main"
+
+
+[[require]]
+name = "Lentil"
+git = "https://github.com/verse-lab/Lentil.git"
+rev = "main"
+
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.31.0"
+
 
 #[[require]]
 #name = "SSA"
