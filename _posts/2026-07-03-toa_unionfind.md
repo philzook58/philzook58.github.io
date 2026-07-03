@@ -60,7 +60,7 @@ uf
 
     OffsetUF(parents=[(1, 1), (0, 1)])
 
-The edge and root annotations can interact. If you have an offset and an `even/odd/unknown` analysis, of course `x = y (+1)` and `even(x)` implies `odd(y)`. If you want to pull the annotation pack to a child from the root, or reroot, you need to know the group action on the annotation.
+The edge and root annotations can interact. If you have an offset and an `even/odd/unknown` analysis, of course `x = y (+1)` and `even(x)` implies `odd(y)`. If you want to pull the annotation pack to a child from the root, or reroot, you need to know the group action on the annotation. Sometimes an edge annotation might transfer info into the lattice. Rudi is the one who taught me this. See the extended real offset union find below the fold for an example.
 
 Looking back at Ed Kmett's Guanxi talks <https://youtu.be/ISNYPKiE0YU?si=Naz0It2sQwljIY_M> <https://github.com/ekmett/guanxi/blob/master/src/Relative/Internal.hs> , he does talk about transporting his lattice like analysis via the group union find annotations. He also in his monoidal parsing talks refers to using group annotations as a way to lazily shift an entire structure of offsets. I think this is less in the tradition of the group union find and more in the tradition of semi-persistent data structures.
 
