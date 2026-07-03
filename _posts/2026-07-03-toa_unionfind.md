@@ -9,9 +9,11 @@ I think I have another one that supports a notion of destructive store / substit
 
 # Annotating Union Finds
 
-One can annotate the root with data. When you merge two classes, you need some method to merge this data. This binary operation probably should be commutative and perhaps idempotent, which puts it in the ball park of a semigroup / semilattice.
+There are some places in the union find it is possible to put little extra bits of data.
 
-Edges can also be annotated. If the annotations form a group, that helps because you need to sometimes invert the annotations / have a null annotation.
+One can annotate the root with data. When you merge two classes, you need some method to merge this data. This binary operation probably should be commutative and perhaps idempotent, which puts it in the ball park of a semigroup / semilattice. In egg, this mechanism is used to store program analyses. Sometimes people use them to store counts in the sets, which are not a semilattice. I kind of liked the "union find dict" way of phrasing it <https://www.philipzucker.com/union-find-dict/>
+
+Edges can also be annotated. If the annotations form a group, that helps because you need to sometimes invert the annotations / have a null annotation. <https://www.philipzucker.com/union-find-groupoid/>
 
 I'm neither convinced nor unconvinced requiring edge annotations be groups is the sweet spot.
 
@@ -58,7 +60,7 @@ uf
 
     OffsetUF(parents=[(1, 1), (0, 1)])
 
-The edge and root annotations can interact. If you have an offset and an `even/odd/unknown` analysis, of course `x = y (+1)` and `even(x)` implies `odd(y)`.
+The edge and root annotations can interact. If you have an offset and an `even/odd/unknown` analysis, of course `x = y (+1)` and `even(x)` implies `odd(y)`. If you want to pull the annotation pack to a child from the root, or reroot, you need to know the group action on the annotation.
 
 Looking back at Ed Kmett's Guanxi talks <https://youtu.be/ISNYPKiE0YU?si=Naz0It2sQwljIY_M> <https://github.com/ekmett/guanxi/blob/master/src/Relative/Internal.hs> , he does talk about transporting his lattice like analysis via the group union find annotations. He also in his monoidal parsing talks refers to using group annotations as a way to lazily shift an entire structure of offsets. I think this is less in the tradition of the group union find and more in the tradition of semi-persistent data structures.
 
