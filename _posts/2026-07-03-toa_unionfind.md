@@ -399,6 +399,8 @@ Terms with arity 1000000000000000. Use compressed tries (bdd ish) for children
 
 Is thi heridtary
 
+<https://github.com/yjs/yjs> and automerge also had some stuff that kinda reminds me of Kmett's monoidal diffs. They store diffs and communicate them and algerbaically combine them. Relationship to semi-persistence? CRDTs are like latticy though?
+
 - <https://www.philipzucker.com/union-find-groupoid/>
 - <https://byorgey.github.io/blog/posts/2024/11/02/UnionFind.html> <https://byorgey.github.io/blog/posts/2024/11/18/UnionFind-sols.html>
 - <https://dl.acm.org/doi/10.1145/3729298> Relational Abstractions Based on Labeled Union-Find
