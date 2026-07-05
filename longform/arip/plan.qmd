@@ -1,0 +1,36 @@
+
+Set Theory (finite sets python?)
+Types
+Resolution
+Knuth Bendix
+Term Rewriting
+Metatheory?
+Metamath?
+LCF? Proofs
+Logic Programming, kanren, 
+SAT
+SMT
+Tableau
+Intro to Logic
+
+Search
+Symmetry
+
+Programming Language Semantics
+
+Temporal Logic
+Intuitionistic and Modal and Linear Logics?
+
+Harrison book?
+Traat
+avigad book
+
+Enderton book? Fitting? 
+
+
+
+20 mins a day?
+
+Get it serving
+donate button?
+I could stream writing it

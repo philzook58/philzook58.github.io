@@ -1,0 +1,20 @@
+---
+title: Terms
+---
+
+
+```{python}
+from dataclasses import dataclass
+
+@dataclass
+class Term:
+    f : str
+    args : list["Term"]
+```
+
+
+`dataclass` is a nice standard python module to get better printing, etc for python classes by default.
+
+
+
+

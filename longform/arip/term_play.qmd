@@ -1,0 +1,39 @@
+---
+
+---
+`QUARTO_PYTHON=/home/philip/philzook58.github.io/.venv/bin/python quarto render /home/philip/philzook58.github.io/longform/arip/term.qmd --to pdf -M pdf-engine=pdflatex`
+
+Bonus stuff and notes to try and keep the real file clean
+
+I have no problem with bits and bobbles but I do tend to like to write most recent stuff first
+
+QUARTO_PYTHON= needs to be forced.
+
+I think using built in attern matching
+
+match t:
+    App("sin", ):
+
+
+Appendix for function programming in python? map fold defaultdict, comprehensions
+
+```python
+class Term
+    f : Decl
+    args : list[Term]
+
+class Term:
+    f : object
+    args
+
+type Sexp = list | object
+
+```
+
+Mniminal minimal parsing. I'm a little out on lark.
+
+
+Exercises:
+1. Redo everything using Binary App Terms
+2. Build a differentiator
+3. 

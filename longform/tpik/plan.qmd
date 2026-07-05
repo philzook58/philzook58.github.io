@@ -1,0 +1,7 @@
+
+
+Theorem Proving in Knuckledragger. Is that name kind of lame? It's theorem proving in lean.
+
+What angle can I have that is distinct from software foundations / concrete semantics / tpil?
+
+
