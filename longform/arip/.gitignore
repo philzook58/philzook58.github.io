@@ -1,5 +1,6 @@
-*.quarto_ipynb
-*.quarto_ipynb_1
-term_files/
+/.quarto/
+**/*.quarto_ipynb
+site_libs
+_book
+term_files
 *.html
-*.pdf

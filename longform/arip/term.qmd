@@ -1,7 +1,4 @@
----
-title: Terms
----
-
+# Terms
 
 ```{python}
 from dataclasses import dataclass
@@ -14,7 +11,5 @@ class Term:
 
 
 `dataclass` is a nice standard python module to get better printing, etc for python classes by default.
-
-
 
 
