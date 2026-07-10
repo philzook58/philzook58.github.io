@@ -74,6 +74,7 @@ In order to backtrack any data structure or state, you need to somehow keep a re
 - <https://xavierleroy.org/CdF/2022-2023/> Leroy knocks it out of the park again
 - <https://github.com/yaspar-org/semi-persistent> Interesting talk at EGRAPHS 2026 about semi persistent tecniques in this egraph and other things
 - Interestingly, the rerooting technique seems like it goes back to at least a technique for shallow binding in lisp 1.5 <https://web.archive.org/web/20191008134617/http://home.pipeline.com/~hbaker1/ShallowArrays.html>  <https://web.archive.org/web/20200212080133/http://home.pipeline.com/~hbaker1/>
+- Edit: Gabriel Scherer pointed me to some very interesting recent papers Snapshottable Stores <https://inria.hal.science/hal-04887939v1/document>  and <https://inria.hal.science/hal-04859464v1/document>  Snapshottable types: free, absorbing, custom    which are particularly interesting to me as having suggestions for a generic picture of semipersistent references as a library
 
 As always, there is both an arena style and pointer style presentation. For some reason, I find arenas clearer.
 

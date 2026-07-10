@@ -1,0 +1,117 @@
+# Proofs
+
+"Proof" is a general word. They are things or actions that convince. This chapter will address the concept in a manner more narrow than full generality.
+
+This book has a programming focus. A nice "thing" we might want is a proof data structure. Actions that are familiar to us are function calls or API requests.
+
+This book also has a mathematical focus. Proofs are also mathematical objects, like vectors are.
+
+
+
+
+
+
+
+
+```{python}
+from dataclasses import dataclass, field
+
+class Term:
+    pass
+
+@dataclass(frozen=True)
+class App(Term):
+    f : str
+    args : tuple[Term,...]
+
+    def __post_init__(self):
+        assert isinstance(self.args, tuple)
+        assert all(isinstance(a, Term) for a in self.args)
+
+
+@dataclass(frozen=True)
+class Var():
+    name : str
+
+def substitute(t : Term, v : str, s : Term) -> Term:
+    match t:
+        case App(f, args):
+            return App(f, tuple(substitute(a, v, s) for a in args))
+        case Var(x):
+            if x == v:
+                return s
+            else:
+                return t
+        case _:
+            raise ValueError("Unexpected term in substitute", t)
+
+
+
+```
+
+```{python}
+
+"""
+There is a variety of choices here.
+Do we have a constructor per proof rule or a generic one
+@dataclasse(frozen=True)
+class Eq:
+    lhs : Term
+    rhs : Term
+"""
+
+
+@dataclass(frozen=True)
+class Proof:
+    lhs: Term
+    rhs: Term
+    data: object
+
+
+def refl(t: Term) -> Proof:
+    return Proof(t, t, ("refl", t))
+
+
+def subst(pf: Proof, v: str, t: Term) -> Proof:
+    assert isinstance(pf, Proof)
+    return Proof(
+        substitute(pf.lhs, v, t), substitute(lf.rhs, v, t), ("subst", pf, v, t)
+    )
+
+
+def cong(f: str, pfs: list[Proof]):
+    assert all(isinstance(pf, Proof) for pf in pfs)
+    return Proof(
+        App("f", tuple(pf.lhs for ph in pfs), App("f", tuple(pf.rhs for pf in pfs))),
+        ("cong", f, pfs),
+    )
+
+
+def symm(pf: Proof) -> Proof:
+    assert isinstance(pf, Proof)
+    return Proof(pf.rhs, pf.lhs, ("symm", pf))
+
+
+def trans(pf_ab: Proof, pf_bc: Proof) -> Proof:
+    assert isinstance(pf_ab, Proof) and isinstance(pf_bc, Proof)
+    assert pf_ab.rhs == pf_bc.lhs
+    return Proof(pf_ab.lhs, pf_bc.rhs, ("trans", pf_ab, pf_bc))
+
+
+def check(pf: Proof) -> Proof:
+    match pf.data:
+        case ("refl", t):
+            pf1 = refl(t)
+        case ("symm", p):
+            pf1 = symm(p)
+        case ("cong", f, pfs):
+            pf1 = cong(f, pfs)
+        case _:
+            raise ValueError("Unrecognized proof tree", pf)
+
+    assert pf.lhs == pf1.lhs and pf.rhs == pf1.rhs
+    return pf1
+
+
+# Noramlize / optimize proof
+```

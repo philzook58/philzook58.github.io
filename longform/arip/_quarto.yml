@@ -3,24 +3,27 @@ project:
 
 book:
   title: "Automated Reasoning in Python"
-  author: "Norah Jones"
+  author: "Philip Zucker"
   date: "7/5/2026"
   chapters:
     - index.qmd
     - intro.qmd
     - summary.qmd
     - term.qmd
+    - lcf.qmd
+    - kb.qmd
     - references.qmd
 
 bibliography: references.bib
 
 format:
   html:
-    theme:
+
+    theme:       
       - cosmo
       - brand
   pdf:
     documentclass: scrreprt
 
 
-
+#    minimal: true

@@ -3,8 +3,11 @@
 ```{python}
 from dataclasses import dataclass
 
-@dataclass
 class Term:
+    pass
+
+@dataclass
+class App(Term):
     f : str
     args : list["Term"]
 ```
@@ -13,3 +16,74 @@ class Term:
 `dataclass` is a nice standard python module to get better printing, etc for python classes by default.
 
 
+## Simplification
+
+
+
+
+## Substitution
+
+Substitution of terms vs substitution of variables
+
+```{python}
+@dataclass(frozen=True)
+class Var(Term):
+    name: str
+
+
+type Subst = dict[str, Term]
+
+
+def subst(term: Term, subst: Subst) -> Term:
+    match term:
+        case Var(name):
+            return subst.get(name, term)
+        case App(f, args):
+            return App(f, tuple(subst(arg, subst) for arg in args))
+
+
+def pmatch(pattern: Term, term: Term) -> Subst:
+    todo = [(pattern, term)]
+    subst: Subst = {}
+    while todo:
+        p, t = todo.pop()
+        match p:
+            case Var(name):
+                if name in subst:
+                    if subst[name] != t:
+                        return {}
+                else:
+                    subst[name] = t
+            case App(f, args):
+                if isinstance(t, App) and f == t.f and len(args) == len(t.args):
+                    todo.extend(zip(args, t.args))
+                else:
+                    return {}
+```
+
+## Pattern Matching
+
+I tend to like iterative forms if I don't need to rebuild something of the same shape as the original term. It matches better the good performance for most languages, and offers greater flexibility for delaying subproblems or examining the todo stack. It also matches the inference rule form of unification nicely.
+
+## Unification
+
+
+## Binders
+
+Advanced: Skip on first read. Or I should put into a separate file.
+
+```{python}
+@dataclass(frozen=True)
+class BVar(Term):
+    idx: int
+
+
+@dataclass(frozen=True)
+class FVar(Term):
+    name: str
+
+
+@dataclass(frozen=True)
+class Binder(Term):
+    body: Term
+```
