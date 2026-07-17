@@ -3,7 +3,7 @@ title: Making TLA+ and x86 Kiss Via Z3Py
 date: 2026-07-17
 ---
 
-I've been trying my hand at translating a reasonable subset of TLA+ into z3py for the purposes of connecting specs to Verus, CBMC, and my assembly checker and also for maybe a little interactive theorem proving as a treat.
+I've been trying my hand at translating a reasonable subset of TLA+ into z3py for the purposes of connecting specs to [Verus](https://github.com/verus-lang/verus), [CBMC](https://www.cprover.org/cbmc/), and my assembly checker and also for maybe a little interactive theorem proving as a treat.
 
 I do have a sense that TLA+ has made good inroads into acceptance by a more general software engineering. It is relatively low barrier while delivering useful value.
 
@@ -110,7 +110,7 @@ print(rust.of_expr(smt.simplify(mod.action("HCini"))))
 
 ## Assembly
 
-I've been tinkering on an assembly verifier for a while <https://www.philipzucker.com/refine_assembly/> . I think it makes sense to use that to plug into a TAL spec
+I've been tinkering on an assembly verifier for a while <https://www.philipzucker.com/refine_assembly/> . I think it makes sense to use that to plug into a TLA spec
 
 Here's an x86_64 program that ticks a clock in `%rdi`
 
