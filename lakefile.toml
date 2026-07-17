@@ -18,7 +18,7 @@ name = "Philib"
 [[require]]
 name = "plausible"
 scope = "leanprover-community"
-rev = "v4.31.0"
+rev = "v4.32.0"
 
 [[require]]
 name = "veil"
@@ -36,11 +36,16 @@ name = "Lentil"
 git = "https://github.com/verse-lab/Lentil.git"
 rev = "main"
 
+[[require]]
+name = "Microlegg"
+git = "https://github.com/michel-steuwer/microlegg"
+rev = "main"
+
 
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-rev = "v4.31.0"
+rev = "v4.32.0"
 
 
 #[[require]]
