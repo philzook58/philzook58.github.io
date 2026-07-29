@@ -89,7 +89,7 @@ I recently discussed other modifications of the definition of Term here https://
 
 # Meaning
 
-The following is so trivial that it is confusing.
+The following is so trivial that it is confusing. Funny how that works.
 
 If I wanted to directly explain in a shallowly embedded way the meaning of arithmetic expressions, I could write the following combinators.
 
