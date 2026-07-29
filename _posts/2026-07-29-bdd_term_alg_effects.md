@@ -9,7 +9,7 @@ I think the main point of such endeavors to me is
 
 1. it's neat
 2. it kind of turns processes (an annoyingly abstract concept) into data (bits and shit) we can manipulate and reason about (dicts in this case)
-3. It bridges the surprisingly painful gap between math class and programs. Math class had some great ways of manipulating expressions (polynomials, fractions, integrals and so on) which could be nice if we have a language of useful programming as succinct and as easily reasoned about. For some reason, it is hard I think to _really_ systematically reason about imperative code although we do it pretty well all the time. And the only method of attack that makes sense to me (and I'd love to have an alternative that more closely matches our intrinsic ability to reason about imperativeness without the crtutch) is to convert (compile?) imperative code into math (transition systems, syntax, set theory, type theory etc).
+3. It bridges the surprisingly painful gap between math class and programs. Math class had some great ways of manipulating expressions (polynomials, fractions, integrals and so on) which could be nice if we have a language of useful programming as succinct and as easily reasoned about. For some reason, it is hard I think to _really_ systematically reason about imperative code although we do it pretty well all the time. And the only method of attack that makes sense to me (and I'd love to have an alternative that more closely matches our intrinsic ability to reason about imperativeness without the crutch) is to convert (compile?) imperative code into math (transition systems, syntax, set theory, type theory etc).
 4. For me, I'm intrigued because this is an interesting way to add effects to e-graphs / SMT solvers as a baked in theory / regular rules.
 
 The trick of algebraic effects is actually very simple, but very surprising abuse of the notion of arity (number of arguments). I guess that's why it was hard to discover. And it's still a little mind boggling.
@@ -45,7 +45,7 @@ But this type is unnecessarily constrained. This isn't persay a bad thing. Abstr
 
 We don't need function symbols to be strings. Basically we need them to have some way to compare them for equality, sometimes hashable, sometimes `<=` etc, parseable and printable. We rarely would care they are made of a sequence of characters. So we can generalize that part.
 
-The ordered list of arguments isn't really that important either. A `list` is basically a mapping from integers to an element. A `dict` let's use map from other stuff. I believe Lua for example doesn't even have lists/arrays as a separate thing from dict/table. This is a little crazy, but also beautiful in a way. We do want to sometimes compare two terms, and we do so by zipping together arguments under common ketys. The old case of arguments that are listlike can be encoded by using integers 0,1,2... as keys.
+The ordered list of arguments isn't really that important either. A `list` is basically a mapping from integers to an element. A `dict` let's use map from other stuff. I believe Lua for example doesn't even have lists/arrays as a separate thing from dict/table. This is a little crazy, but also beautiful in a way. We do want to sometimes compare two terms, and we do so by zipping together arguments under common keys. The old case of arguments that are listlike can be encoded by using integers 0,1,2... as keys.
 
 Many programming languages have positional and keyword arguments. Why shouldn't terms also have this?
 
@@ -376,6 +376,8 @@ One place this is actually possibly kind of useful is for algebraic effects. Whi
 
 https://www.cs.cmu.edu/~emc/papers/Contributions%20to%20Edited%20Volumes/Multi-Terminal%20Binary%20Decision%20Diagrams%20and%20Hybrid%20Decision%20Diagrams.pdf MTBDD multi terminal binary decision diagrams
 
+
+It's intriguing the idea that let bound variables at all are an effect. I've seen that in kiselyov's stuff. Sharing is a subtle thing. The subtlest thing maybe.
 
 https://users.ece.cmu.edu/~gnb/Related%20Work_files/bryant92.pdf Restriction substitution cofactoring
 
