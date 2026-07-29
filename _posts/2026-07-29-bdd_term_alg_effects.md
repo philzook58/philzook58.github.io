@@ -85,7 +85,7 @@ App("add", {0 : App("x", {}), 1 : App(42, {})})
 
 These two modifications make our terms into terms with parameters and generalized arity.
 
-I recently discussed other modifications of the definition of Term here https://www.philipzucker.com/thin_term/
+I recently discussed other modifications of the definition of Term here <https://www.philipzucker.com/thin_term/>
 
 # Meaning
 
@@ -345,10 +345,10 @@ interp(get({b : ret(3) if b else ret(4) for b in BOOL}))
 # Bits and Bobbles
 
 See
-- Andrej Bauer - What's algebraic about algebraic effects  https://arxiv.org/abs/1807.05923 https://www.youtube.com/watch?v=atYp386EGo8
-- Sam Lindley SPLV 2024 https://spli.scot/splv/2024-strathclyde/assets/slides/sam-1.pdf https://www.youtube.com/watch?v=giSaeD8R_E8&
-- https://math.andrej.com/wp-content/uploads/2012/03/eff.pdf Eff 
-- Pretnar https://www.eff-lang.org/handlers-tutorial.pdf an Introduction
+- Andrej Bauer - What's algebraic about algebraic effects  <https://arxiv.org/abs/1807.05923> <https://www.youtube.com/watch?v=atYp386EGo8>
+- Sam Lindley SPLV 2024 <https://spli.scot/splv/2024-strathclyde/assets/slides/sam-1.pdf> <https://www.youtube.com/watch?v=giSaeD8R_E8&>
+- <https://math.andrej.com/wp-content/uploads/2012/03/eff.pdf> Eff 
+- Pretnar <https://www.eff-lang.org/handlers-tutorial.pdf> an Introduction
 - 
 Monads are a similar endeavor. Algebraic effects kind of mush around some of the same combinators.
 
@@ -374,18 +374,18 @@ Binary Decision Diagrams (BDD) are a compressed extensional representation of fu
 
 One place this is actually possibly kind of useful is for algebraic effects. While one typically thinks of them as having lambda terms or continuations as children, it is perhaps feasible sometimes to instead extensionally expand / reify these lambdas into something more data structure like. The operators like `get`, `set`, `throw` etc which had one higher order lambda argument can be seen as actually an operator with a very very large number of first order arguments.
 
-https://www.cs.cmu.edu/~emc/papers/Contributions%20to%20Edited%20Volumes/Multi-Terminal%20Binary%20Decision%20Diagrams%20and%20Hybrid%20Decision%20Diagrams.pdf MTBDD multi terminal binary decision diagrams
+<https://www.cs.cmu.edu/~emc/papers/Contributions%20to%20Edited%20Volumes/Multi-Terminal%20Binary%20Decision%20Diagrams%20and%20Hybrid%20Decision%20Diagrams.pdf> MTBDD multi terminal binary decision diagrams
 
 
 It's intriguing the idea that let bound variables at all are an effect. I've seen that in kiselyov's stuff. Sharing is a subtle thing. The subtlest thing maybe.
 
-https://users.ece.cmu.edu/~gnb/Related%20Work_files/bryant92.pdf Restriction substitution cofactoring
+<https://users.ece.cmu.edu/~gnb/Related%20Work_files/bryant92.pdf> Restriction substitution cofactoring
 
 Restrict = dump1/dump2. 
 
 Lifting BDDs. BDDs are a little bit named. Named sucks
 
-Wow, my old (last year) bdd sucks https://www.philipzucker.com/toy_bdd/ . This new one is way better.
+Wow, my old (last year) bdd sucks <https://www.philipzucker.com/toy_bdd/> . This new one is way better.
 
 
 

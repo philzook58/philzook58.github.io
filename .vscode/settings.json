@@ -21,5 +21,6 @@
         "**/*_adt.pvs": false,
         "**/*.log": true,
         "**/.vscode": true
-    }
+    },
+    "markdown.validate.enabled": true
 }
