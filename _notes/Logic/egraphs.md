@@ -3,6 +3,9 @@ layout: post
 title: E-graphs
 ---
 
+- [MicroEgg](#microegg)
+- [Old](#old)
+  - [egraphs meeting mathc 2023](#egraphs-meeting-mathc-2023)
 - [E-Graph](#e-graph)
 - [My E-Graph Blog Posts](#my-e-graph-blog-posts)
 - [Union Finds](#union-finds)
@@ -27,6 +30,246 @@ title: E-graphs
 - [Theories AC](#theories-ac)
 - [CHR egraphs](#chr-egraphs)
 - [Misc](#misc)
+
+# MicroEgg
+
+<https://pavpanchekha.com/blog/microegg.html>
+
+```python
+# Based on https://github.com/mwillsey/microegg
+from dataclasses import dataclass, field
+from typing import Callable
+
+type Id = int
+
+
+class Term:
+    "Terms are useful for pattern matching, applying substitutions to and insertion, and as result of extraction"
+
+    def __sub__(self, other):
+        assert isinstance(other, Term)
+        return App("-", (self, other))
+
+    def size(self):
+        match self:
+            case App(_f, args):
+                return 1 + sum(arg.size() for arg in args)
+            case Var(_name):
+                return 1
+            case _:
+                raise ValueError(f"Unexpected term: {self}")
+
+
+@dataclass(frozen=True)
+class App(Term):
+    f: object
+    args: tuple[Term, ...]
+    # params: object = None  # extra non-subterm data. strings, integers, tuples, etc
+
+
+@dataclass(frozen=True)
+class Var(Term):
+    "Pattern variable"
+
+    name: str
+
+
+type Subst = dict[str, Id]
+
+
+@dataclass(frozen=True)
+class Node:
+    "Internal Enode Structure"
+
+    f: object
+    args: tuple[Id, ...]
+
+
+@dataclass
+class EGraph:
+    memo: dict[Node, Id] = field(default_factory=dict)
+    uf: list[Id] = field(default_factory=list)
+
+    def _add_node(self, node: Node) -> Id:
+        id = self.memo.get(node)
+        if id is not None:
+            return self.find(id)
+        else:
+            id = len(self.uf)
+            self.uf.append(id)
+            self.memo[node] = id
+            return id
+
+    def add_term(self, term: Term, subst={}) -> Id:
+        match term:
+            case Var(name):
+                return subst[name]
+            case App(f, args):
+                arg_ids = tuple(self.add_term(arg, subst) for arg in args)
+                node = Node(f, arg_ids)
+                return self._add_node(node)
+            case _:
+                raise ValueError(f"Unexpected term: {term}")
+
+    def find(self, id: Id) -> Id:
+        while self.uf[id] != id:
+            id = self.uf[id]
+        return id
+
+    def _union(self, id1: Id, id2: Id):
+        a, b = self.find(id1), self.find(id2)
+        if a != b:
+            self.uf[a] = b
+
+    def union(self, t: Term, u: Term):
+        self._union(self.add_term(t), self.add_term(u))
+
+    def nodes_in_class(self, id: Id) -> list[Node]:
+        id = self.find(id)
+        return [obj for obj, obj_id in self.memo.items() if self.find(obj_id) == id]
+
+    def _is_eq(self, a: Id, b: Id) -> bool:
+        return self.find(a) == self.find(b)
+
+    def is_eq(self, a: Term, b: Term) -> bool:
+        return self._is_eq(self.add_term(a), self.add_term(b))
+
+    def canonize_node(self, node: Node) -> Node:
+        return Node(f=node.f, args=tuple(self.find(arg) for arg in node.args))
+
+    def rebuild(self):
+        while True:
+            l = len(self.memo)
+            copy_memo = self.memo.copy()
+            self.memo = {}
+            for node, id in copy_memo.items():
+                id = self.find(id)
+                new_node = self.canonize_node(node)
+                new_id = self.memo.get(new_node)
+                if new_id is not None:
+                    self._union(new_id, id)
+                else:
+                    self.memo[new_node] = id
+            if l == len(self.memo):
+                return
+
+    def ematch(self, pattern: Term, id: Id) -> list[Subst]:
+        return self.ematch_rec(pattern, id, {})
+
+    def ematch_rec(self, pattern: Term, id: Id, subst: Subst) -> list[Subst]:
+        id = self.find(id)
+        match pattern:
+            case Var(name):
+                if name in subst:
+                    if self._is_eq(subst[name], id):
+                        return [subst]
+                    else:
+                        return []
+                else:
+                    return [{**subst, name: id}]
+            case App(f, args):
+                results = []
+                for node in self.nodes_in_class(id):
+                    if node.f == f and len(node.args) == len(args):
+                        todo = [subst]
+                        for arg_pattern, arg_id in zip(args, node.args):
+                            todo = [
+                                subst1
+                                for subst0 in todo
+                                for subst1 in self.ematch_rec(
+                                    arg_pattern, arg_id, subst0
+                                )
+                            ]
+                        results.extend(todo)
+                return results
+            case _:
+                raise ValueError(f"Unexpected pattern: {pattern}")
+
+    def rw(self, lhs: Term, rhs: Term):
+        substs = []
+        for id in range(len(self.uf)):
+            substs.extend(self.ematch(lhs, id))
+        # It is surprisingly important to do ematching in two stages of search and apply. Avoids blowup during ematching.
+        for subst in substs:
+            lhs_id = self.add_term(lhs, subst)
+            rhs_id = self.add_term(rhs, subst)
+            self._union(lhs_id, rhs_id)
+        self.rebuild()
+
+    def _extract_rec(
+        self, id: Id, memo: dict[Id, Term | None], cost_fun: Callable[[Term], float]
+    ) -> Term | None:
+        """Top down memoized extraction. Like a Graph DFS, memoized to avoid loops"""
+        id = self.find(id)  # probably redundant
+        if id in memo:
+            return memo[id]
+        else:
+            memo[id] = None  # mark as in progress to avoid infinite loops
+            best_cost, best_term = float("inf"), None
+            for node in self.nodes_in_class(id):
+                args = tuple(
+                    self._extract_rec(arg_id, memo, cost_fun) for arg_id in node.args
+                )
+                if any(arg is None for arg in args):
+                    continue  # subterm hit recursion, skip this node
+                term = App(node.f, args)  # type: ignore
+                cost = cost_fun(term)
+                if cost < best_cost:
+                    best_cost, best_term = cost, term
+            memo[id] = best_term
+            return best_term
+
+    def extract(self, t: Term, cost_fun=lambda t: t.size()) -> Term:
+        """
+        Extract term equivalent to t with minimal cost.
+        Because of the way it is used, cost_fun needs to be monotone or something?
+        """
+        id = self.add_term(t)
+        self.rebuild()
+        t1 = self._extract_rec(id, {}, cost_fun)
+        assert t1 is not None
+        return t1
+
+
+def Consts(names: str) -> list[App]:
+    return [App(name, ()) for name in names.split()]
+
+
+def Function(name: str):
+    return lambda *args: App(name, args)
+
+
+def Vars(names: str) -> list[Var]:
+    return [Var(name) for name in names.split()]
+
+
+def test_egraph():
+    E = EGraph()
+    a, b, c, d = Consts("a b c d")
+    x, y, z = Vars("x y z")
+    E.add_term(a - b)
+    assert len(E.uf) == 3
+    E.add_term(a - b)
+    assert len(E.uf) == 3
+    E.union(a - b, c)
+    assert E.is_eq(a - b, c)
+    assert not E.is_eq(c, b)
+    assert not E.is_eq(a - b, b - a)
+    E.rw(x - y, y - x)
+    assert E.is_eq(a - b, b - a)
+
+    E = EGraph()
+    E.union(a, a - b)
+    assert E.extract(a - b) == a
+
+
+if __name__ == "__main__":
+    test_egraph()
+
+```
+
+
+# Old
 
 ## egraphs meeting mathc 2023
 

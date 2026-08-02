@@ -1,0 +1,9 @@
+---
+title: term
+layout: post
+---
+
+```{python}
+
+print("test")
+```
