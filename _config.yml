@@ -53,6 +53,12 @@ social:
 markdown: kramdown
 markdown_ext: "markdown,mkdown,mkdn,mkd,md,qmd"
 theme: minima
+header_pages:
+  - about.md
+  - knuckledragger.md
+  - notes.md
+  - longform.md
+  - talks.md
 plugins:
   - jekyll-feed
   - jekyll-sitemap
