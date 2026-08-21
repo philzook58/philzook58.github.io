@@ -1,0 +1,544 @@
+
+Order Sorting
+Work through more examples from Bell, fuck the infrastrcture
+
+micro have
+
+```{python}
+
+from dataclasses import dataclass
+from typing import Optional, Callable
+import pprint
+
+
+@dataclass(frozen=True, slots=True)
+class Decl:
+    name: str
+    arity: int
+    bound: Optional["Decl"] = None
+    # binds: int
+    is_var: bool = False
+    # is_prop ?  kind of special. Forall p, p should not be allowed
+
+    def __post_init__(self):
+        if self.is_var and not self.name[0].isupper():
+            raise ValueError("Variable not capitalized", self)
+        elif not self.is_var and self.name[0].isupper():
+            raise ValueError("Constant cannot be capitalized")
+
+    def __call__(self, *args: "Term") -> "Term":
+        assert (
+            len(args) == self.arity
+        ), f"Expected {self.arity} arguments, got {len(args)}"
+        return Term(self, args)
+
+    @property
+    def defn(self) -> "Proof":
+        return defns[self]
+
+    @property
+    def contract(self) -> "Proof":
+        return contracts[self]
+
+    @property
+    def is_quantifier(self) -> bool:
+        return self is ForAll0 or self is Exists0
+
+
+defns: dict[Decl, "Proof"] = {}
+contracts: dict[Decl, "Proof"] = {}
+
+Set = Decl("set", 1)
+Real = Decl("real", 1)
+
+And0 = Decl("and", 2)
+Or = Decl("or", 2)
+Implies = Decl("imp", 2)
+Not = Decl("not", 1)
+Iff = Decl("iff", 2)
+Eq = Decl("eq", 2)
+NEq = Decl("neq", 2)
+Add = Decl("add", 2)
+Sub = Decl("sub", 2)
+Mul = Decl("mul", 2)
+Neg = Decl("neg", 1)
+LT = Decl("lt", 2)
+LE = Decl("le", 2)
+ForAll0 = Decl("forall", 2)
+Exists0 = Decl("exists", 2)
+apply = Decl("app", 2)
+
+
+@dataclass(frozen=True, slots=True)
+class Term:
+    decl: Decl
+    args: tuple["Term", ...]
+
+    def __post_init__(self):
+        assert self.decl.is_quantifier or all(isinstance(a, Term) for a in self.args)
+
+    def eq(self, other: "Term") -> bool:
+        assert self.decl.name not in ["exists", "forall"]  # Todo
+        return self.decl == other.decl and all(
+            s.eq(o) for s, o in zip(self.args, other.args)
+        )
+
+    def __add__(self, other: "Term") -> "Term":
+        return Add(self, other)
+
+    def __sub__(self, other: "Term") -> "Term":
+        return Sub(self, other)
+
+    def __mul__(self, other: "Term") -> "Term":
+        return Mul(self, other)
+
+    def __eq__(self, other: "Term") -> "Term":
+        return Eq(self, other)
+
+    def __ne__(self, other: "Term") -> "Term":
+        return NEq(self, other)
+
+    def __lt__(self, other: "Term") -> "Term":
+        return LT(self, other)
+
+    def __neg__(self) -> "Term":
+        return Neg(self)
+
+    def __call__(self, *args):
+        assert len(args) > 0
+        if len(args) == 1:
+            return apply(self, args[0])
+        else:
+            return apply(self, args[0])(*args[1:])
+
+    def __str__(self) -> str:
+        match self.decl.name:
+            case "and":
+                return f"({self.args[0]} & {self.args[1]})"
+            case "or":
+                return f"({self.args[0]} | {self.args[1]})"
+            case "imp":
+                return f"({self.args[0]} => {self.args[1]})"
+            case "not":
+                return f"~{self.args[0]}"
+            case "iff":
+                return f"({self.args[0]} <=> {self.args[1]})"
+            case "eq":
+                return f"({self.args[0]} = {self.args[1]})"
+            case "neq":
+                return f"({self.args[0]} != {self.args[1]})"
+            case "forall":
+                return (
+                    f"![{', '.join(str(arg) for arg in self.args[0])}]: {self.args[1]}"
+                )
+            case "exists":
+                return (
+                    f"?[{', '.join(str(arg) for arg in self.args[0])}]: {self.args[1]}"
+                )
+        if self.decl.arity == 0:
+            return self.decl.name
+        else:
+            return f"{self.decl.name}({', '.join(str(arg) for arg in self.args)})"
+
+    def fvs(self) -> set["Term"]:
+        # free variables in the expression
+        if self.decl.is_quantifier:
+            return self.args[1].fvs() - set(self.args[0])
+        elif self.decl.is_var:
+            return {self}
+        else:
+            return set().union(*(arg.fvs() for arg in self.args))
+
+    def decls(self) -> set[Decl]:
+        decls = set()
+        todo = [self]
+        while todo:
+            t = todo.pop()
+            decl = t.decl
+            if decl.is_quantifier:
+                todo.append(t.args[1])
+            else:
+                decls.add(decl)
+                todo.extend(t.args)
+        return decls
+
+
+@dataclass(frozen=True, slots=True)
+class Proof:
+    thm: Term
+    reasons: list[object]
+
+    def __repr__(self) -> str:
+        return "|- " + str(self.thm)
+
+    def __call__(self, *args: "Term") -> "Proof":
+        # instantiate a universally quantified theorem with specific terms
+        assert (
+            self.thm.decl.name == "forall"
+        ), f"Expected forall, got {self.thm.decl.name}"
+        assert len(args) == len(
+            self.thm.args[0]
+        ), f"Expected {len(self.thm.args[0])} arguments, got {len(args)}"
+        subst = dict(zip(self.thm.args[0], args))
+        new_thm = substitute(self.thm.args[1], subst)
+        return Proof(new_thm, self.reasons + [args])
+
+
+def axiom(p: Term) -> Proof:
+    # Ya need axioms. What can I say
+    assert (
+        len(p.fvs()) == 0
+    ), f"Expected closed term, got {p}, free variables: {p.fvs()}"
+    return Proof(p, reasons=["axiom"])
+
+
+import subprocess
+
+
+def prove0(p: Term, by=[]) -> Proof:
+    assert isinstance(p, Term), f"Expected Term, got {p}"
+    assert (
+        len(p.fvs()) == 0
+    ), f"Expected closed term, got {p}, free variables: {[str(v) for v in p.fvs()]}"
+    with open("/tmp/prob.p", "w") as f:
+        for i, b in enumerate(by):
+            assert isinstance(b, Proof), f"Expected Proof, got {b}"
+            f.write(f"fof(ax{i}, axiom, {b.thm}).\n")
+        f.write(f"fof(goal, conjecture, {p}).\n")
+    # replace the path with wherever you put nanocopi
+    # If you aren't doing intuitionistic logic, use vampire.
+    res = subprocess.run(
+        [
+            "swipl",
+            "-O",
+            "-g",
+            "assert(prolog(swi)),assert(proof(none)), asserta(logic(intu)), ['/home/philip/Downloads/nanoCoP-i-HT/nanocopi_main.pl'], call_with_time_limit(1,nanocopi_main('/tmp/prob.p',[cut,comp(6)],_)), halt",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=2,
+    )  # without timeout memory was leaking badly?
+    if "is a intu Theorem" in res.stdout:
+        return Proof(p, by)
+    else:
+        raise ValueError(
+            f"Failed to prove {p} with {pprint.pformat(by)}, result: {res.stdout}"
+        )
+
+
+def And(*args) -> "Term":
+    if len(args) == 0:
+        return true
+    elif len(args) == 1:
+        return args[0]
+    else:
+        return Term(And0, (args[0], And(*args[1:])))
+
+
+def ForAll(vars: list["Term"], *hyp_conc) -> "Term":
+    assert len(hyp_conc) >= 1
+    hyp_conc = list(hyp_conc)
+    for v in vars:
+        assert v.decl.is_var
+        if v.decl.bound is not None:
+            hyp_conc = [v.decl.bound(v)] + hyp_conc
+    if len(hyp_conc) == 1:
+        return Term(ForAll0, (tuple(vars), hyp_conc[0]))
+    elif len(hyp_conc) == 2:
+        return Term(ForAll0, (tuple(vars), Implies(hyp_conc[0], hyp_conc[1])))
+    else:
+        return Term(ForAll0, (tuple(vars), Implies(And(*hyp_conc[:-1]), hyp_conc[-1])))
+
+
+def Exists(vars: list["Term"], *hyp_conc) -> "Term":
+    assert len(hyp_conc) >= 1
+    hyp_conc = list(hyp_conc)
+    for v in vars:
+        assert v.decl.is_var
+        if v.decl.bound is not None:
+            hyp_conc = [v.decl.bound(v)] + hyp_conc
+    return Term(Exists0, (tuple(vars), And(*hyp_conc)))
+
+
+def Const(name: str, sort: Decl) -> Term:
+    decl = Decl(name, 0)
+    t = decl()
+    contracts[decl] = axiom(sort(t))
+    return t
+
+
+def Consts(names: str, sort: Decl) -> list[Term]:
+    return [Const(name, sort) for name in names.split()]
+
+
+def Function(name: str, arity: int) -> Decl:
+    return Decl(name, arity)
+
+
+true = Decl("$true", 0)()
+false = Decl("$false", 0)()
+
+
+def Vars(names: str, bound=None) -> list[Term]:
+    return [Term(Decl(name, 0, is_var=True, bound=bound), ()) for name in names.split()]
+
+
+def define(name: str, args: list[Term], body, sort=None):
+    f = Function(name, len(args))
+    defn = Proof(ForAll(args, f(*args) == body), reasons=["define"])
+    global defns
+    defns[f] = defn
+    return f
+
+
+from functools import singledispatch
+
+
+@singledispatch
+def lit(x) -> Term:
+    raise ValueError("Cannot support x", x)
+
+
+@lit.register
+def _(x: bool) -> Term:
+    return true if x else false
+
+
+# Would it be nice to use binary / decimal lists?
+@lit.register
+def _(x: int):
+    return Const("d" + str(x))
+
+
+# set?
+@lit.register
+def _(x: list) -> Term:
+    if len(x) == 0:
+        return Const("nil")
+    else:
+        Function("cons", 2)(lit(x[0]), lit(x[1:]))
+
+
+def prove(thm, by=[]):
+    cs = [contracts[decl] for decl in thm.decls() if decl in contracts]
+    print(cs)
+    return prove0(thm, by=by + cs)
+
+
+from dataclasses import field
+
+
+@dataclass
+class Theorem:
+    topgoal: Term
+    lemmas: list[Term] = field(default_factory=list)
+
+    def qed(self):
+        return prove(self.topgoal, by=self.lemmas)
+
+    def have(self, thm, by=[]):
+        self.lemmas.append(prove(thm, by=by + self.lemmas))
+        return self
+```
+
+a cast constructor?
+`has_type(t, A) => cast(t, A) = t`
+
+
+
+```{python}
+x, y, z = Vars("X Y Z", Real)
+A, B, C = Vars("A B C", Set)
+
+zero, one = Consts("d0 d1", Real)
+
+a, b, c = Vars("A B C", Real)
+add_zero = axiom(ForAll([a], zero + a == a))
+add_neg = axiom(ForAll([a], a + (Neg(a)) == zero))
+add_comm = axiom(ForAll([a, b], a + b == b + a))
+add_assoc = axiom(ForAll([a, b, c], (a + b) + c == a + (b + c)))
+
+add_real = axiom(ForAll([a, b], Real(a + b)))
+contracts[Add] = add_real
+
+inv = Function("inv", 1)
+
+mul_zero = axiom(ForAll([a], zero * a == zero))
+mul_one = axiom(ForAll([a], one * a == a))
+mul_comm = axiom(ForAll([a, b], a * b == b * a))
+mul_assoc = axiom(ForAll([a, b, c], (a * b) * c == a * (b * c)))
+mul_add = axiom(ForAll([a, b, c], a * (b + c) == (a * b) + (a * c)))
+mul_inv = axiom(ForAll([a], a != zero, a * inv(a) == one))
+mul_inv
+
+
+# pg 19
+lt_trans = axiom(ForAll([a, b, c], a < b, b < c, a < c))
+lt_irrefl = axiom(ForAll([a], Not(a < a)))
+add_lt_mono = axiom(ForAll([a, b, c], a < b, a + c < b + c))
+mul_lt_mono = axiom(ForAll([a, b, c], a < b, zero < c, a * c < b * c))
+lt_dich = axiom(
+    ForAll([a], Or(zero < a, a < one))
+)  # yea I dunno what to call this principle.
+distinct_lt = axiom(ForAll([a, b], a != b, Or(a < b, b < a)))
+
+
+le_defn = axiom(ForAll([a, b], Iff(LE(a, b), Not(b < a))))
+sub_defn = axiom(ForAll([a, b], a - b == a + Neg(b)))
+
+
+counter = 0
+
+
+def FreshConst():
+    global counter
+    counter += 1
+    return Const("fresh" + counter)
+
+
+def FreshVar():
+    global counter
+    counter += 1
+    return Vars("Fresh" + counter)[0]
+
+
+def comp(x: Term, P: Term, params=[]):
+    s = FreshConst()
+    return s, axiom(ForAll([x], Real(x), s(x) == P)), axiom(Set(s))
+
+
+def oint(a, b):
+    return lambda x: And(a < x, x < b)
+
+
+# oint = Function("oint", 1)
+# oint_set = axiom(ForAll([a,b], Set(oint(a,b)))
+
+delta = Function("delta", 1)
+delta_sub = axiom(ForAll([x], delta(x), Real(x)))  # subset of reals
+delta_defn = axiom(ForAll([x], delta(x) == (x * x == zero)))
+
+eps, d = Vars("Eps D", delta)
+
+
+def microaff(g: Decl):
+    b = Vars("b", Real)[0]
+    return Exists([b], ForAll([eps], g(eps) == g(zero) + b * eps))
+
+
+a, b, c = Vars("A B C", Real)
+add_lt_mono_left = prove(
+    ForAll([a, b, c], a < b, c + a < c + b), by=[add_lt_mono, add_comm]
+)
+add_zero_right = prove(ForAll([a], a + zero == a), by=[add_zero, add_comm])
+
+# lt_zero_one = prove(ForAll([a], zero < one), by=[l])
+neq_zero_one = prove(zero != one, by=[lt_dich, lt_irrefl])
+lt_zero_one = prove(
+    zero < one,
+    by=[
+        lt_dich,
+        lt_irrefl,
+        zero.decl.contract,
+    ],
+)
+lt_one_two = prove(
+    one < one + one, by=[lt_zero_one, add_lt_mono, zero.decl.contract, add_zero]
+)
+
+lt_one_two = (
+    Theorem(one < one + one)
+    .have(zero < one, by=[lt_zero_one])
+    .have(zero + one < one + one, by=[add_lt_mono])
+    .have(one < one + one, by=[add_zero])
+    .qed()
+)
+
+lt_zero_two = prove(zero < one + one, by=[lt_zero_one, lt_one_two, lt_trans])
+
+
+def oint(a, b):
+    return lambda x: And(a < x, x < b)
+
+
+# Theorem(ForAll([a,b,x], oint(a,b)(x) == Not(a < )))
+
+
+# Show that, for all ε in delta, (i) not (ε < 0 or 0 < ε), (ii) 0 ≤ ε #and ε ≤ 0,
+# (iii) for any a in R, εa is in delta, (iv) if a > 0, then a + ε > 0.
+
+
+def inf(x):
+    return x * x == zero
+
+z1 = Vars("Z")
+inf = define("inf", [z1], And(Real(z1), z1 * z1 == zero))
+contracts[inf] = inf.defn  # immediate unfolding
+
+lt_ne = prove(ForAll([a, b], a < b, a != b), by=[lt_irrefl])
+
+eps = Vars("Eps", inf)[0]
+inf_lt = (
+    Theorem(ForAll([eps], Not(zero < eps)))
+    .have(ForAll([eps], zero < eps, eps*eps < zero*eps), by=[mul_lt_mono])
+    #.have(ForAll([eps], eps < zero, eps != zero), by=[lt_ne])
+    #.have(ForAll([x], x == zero, x * x == zero), by=[mul_zero])
+    #.have(ForAll([eps], eps < zero, eps * eps != zero))
+)
+
+# Theorem(ForAll([eps], Not(Or(eps < zero, 0 < eps))))\
+#    .have()
+```
+
+
+Second Order logic. Analogies to system F. Bounded F< ?
+Order sorted polymorphism
+Typeclasses
+
+
+```{python}
+contracts[zero.decl]
+```
+
+```{python}
+def comp(x, P):
+    p = FreshConst("P", Set)
+    return axiom(ForAll([x], p[x] == P)) 
+```
+
+Use prolog as a trusted or untrusted 
+Use maude as a trusted or untrusted source
+
+```{python}
+import maude
+```
+
+
+Hmm. Exactly geometric/horn/regular/coherent I can use Vampire and still intutionistically valid?
+
+
+
+```{python}
+import scryer
+m = scryer.Machine()
+
+
+
+```
+
+
+```{python}
+from dataclass import dataclass
+
+
+class Theorem:
+    topgoal: Term
+    lemmas: list[Term]
+
+    def qed(self):
+        return prove(self.topgoal, by=self.lemmas)
+
+    def have(self, thm, by=[]):
+        self.lemmas.append(prove(thm, by=by + self.lemmas))
+        return self
+```

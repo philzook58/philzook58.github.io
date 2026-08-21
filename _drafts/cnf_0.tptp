@@ -1,0 +1,48 @@
+% CNF clauses for /tmp/prob.p
+
+
+cnf(0, axiom,
+    (~ call(real, A) | ~ call(real, B) | ~ lt(A, B) |
+     lt(add(A, neg(A)), add(B, neg(A))))).
+
+cnf(1, axiom,
+    (~ call(real, A) | ~ call(real, B) | ~ lt(A, B) |
+     ~ lt(add(A, neg(A)), add(B, neg(A))) | lt(d0, add(B, neg(A))))).
+
+cnf(2, axiom,
+    (~ call(real, A) | ~ call(real, B) | ~ lt(A, B) |
+     ~ lt(add(A, neg(A)), add(B, neg(A))) | ~ lt(d0, add(B, neg(A))) |
+     lt(add(d0, neg(B)), add(add(B, neg(A)), neg(B))))).
+
+cnf(3, axiom,
+    (~ call(real, A) | ~ call(real, B) | ~ lt(A, B) |
+     ~ lt(add(A, neg(A)), add(B, neg(A))) |
+     ~ lt(add(d0, neg(B)), add(add(B, neg(A)), neg(B))) |
+     ~ lt(d0, add(B, neg(A))) | lt(neg(B), add(add(B, neg(A)), neg(B))))).
+
+cnf(4, axiom,
+    (~ call(real, A) | ~ call(real, B) | ~ lt(A, B) |
+     ~ lt(add(A, neg(A)), add(B, neg(A))) |
+     ~ lt(add(d0, neg(B)), add(add(B, neg(A)), neg(B))) |
+     ~ lt(d0, add(B, neg(A))) | ~ lt(neg(B), add(add(B, neg(A)), neg(B))) |
+     lt(neg(B), add(d0, neg(A))))).
+
+cnf(5, axiom,
+    (~ call(real, A) | ~ call(real, B) | ~ lt(A, B) |
+     ~ lt(add(A, neg(A)), add(B, neg(A))) |
+     ~ lt(add(d0, neg(B)), add(add(B, neg(A)), neg(B))) |
+     ~ lt(d0, add(B, neg(A))) | ~ lt(neg(B), add(add(B, neg(A)), neg(B))) |
+     ~ lt(neg(B), add(d0, neg(A))) | lt(neg(B), neg(A)))).
+
+cnf(6, axiom, (~ call(real, A) | call(real, neg(A)))).
+
+cnf(7, axiom, (call(type, real))).
+
+cnf(8, negated_conjecture,
+    (~ lt(neg(skolemFOFtoCNF_B), neg(skolemFOFtoCNF_A)))).
+
+cnf(9, negated_conjecture, (call(real, skolemFOFtoCNF_A))).
+
+cnf(10, negated_conjecture, (call(real, skolemFOFtoCNF_B))).
+
+cnf(11, negated_conjecture, (lt(skolemFOFtoCNF_A, skolemFOFtoCNF_B))).

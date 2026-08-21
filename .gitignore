@@ -14,3 +14,8 @@ _drafts/result
 **/z3_problems
 **/obj_dir/
 .tmp/
+**/__pycache__/
+**/__mojocache__/
+.hol-vscode/
+dist-newstyle/
+*/.ipynb_checkpoints/

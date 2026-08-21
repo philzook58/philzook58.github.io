@@ -1,0 +1,110 @@
+
+```{python}
+%load_ext nbpolyglot
+```
+
+```{python}
+%%scala
+
+def hello(): Unit =
+  println("Hello, World!")
+
+hello()
+//> using scala 3.8.4
+// comment
+/*
+def countFiles(): Unit =
+  val paths = os.list(os.pwd)
+  println(paths.length)
+  */
+import scala.collection.mutable.ListBuffer
+
+def double(ints: List[Int]): List[Int] =
+  val buffer = new ListBuffer[Int]()
+  for i <- ints do
+    buffer += i * 2
+  buffer.toList
+
+val oldNumbers = List(1, 2, 3)
+val newNumbers = double(oldNumbers)
+
+```
+
+```{python}
+%%mhs
+sum [12,2,32]
+:help
+:defs
+:delete Expr Interactive.Add Interactive.Val Interactive.interp
+data Expr = Add Expr Expr | Val Int
+interp :: Expr -> Int
+interp (Add a b) = (interp a) + (interp b)
+interp (Val i) = i
+
+interp (Val 42)
+
+```
+
+
+```{python}
+%%ghci
+
+foo x = x + 1
+--foo 4
+
+--map square [1..5]
+1 + 1
+
+```
+
+```{python}
+%%ghci
+foo 4
+```
+
+ctrl shift I makes new code cell
+
+```{python}
+%%agda 
+data Bool : Set where
+  true false : Bool
+
+not : Bool -> Bool
+not true = false
+not false = true
+
+
+myid : Bool -> Bool
+myid x = x
+
+```
+
+```{python}
+%%agda
+foo : Bool -> Bool
+foo = myid
+```
+
+```{python}
+%%cling
+
+int foo(int x) {
+    return x + 1;
+}
+```
+
+```{python}
+%%cling
+foo(3)
+```
+
+
+```{python}
+%%racket
+
+(+ 1 1)
+
+(define (foo x) (+ x 2))
+(foo 10)
+
+```
