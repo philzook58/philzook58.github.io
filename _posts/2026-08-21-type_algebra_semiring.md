@@ -71,15 +71,15 @@ One thing you can do though is opaquify some things to the solver and inject ext
 
 # Buchberger and Knuth Bendix
 
-Buchberger's algorithm <https://en.wikipedia.org/wiki/Buchberger%27s_algorithm> <https://mattpap.github.io/masters-thesis/html/src/groebner.html> is a methodology for "solving" a system of multinomial equations. It is in some respects a generalization of guassian elimination.
+Buchberger's algorithm <https://en.wikipedia.org/wiki/Buchberger%27s_algorithm> <https://mattpap.github.io/masters-thesis/html/src/groebner.html> is a methodology for "solving" a system of multinomial equations. It is in some respects a generalization of gaussian elimination.
 
 Knuth Bendix completion <https://en.wikipedia.org/wiki/Knuth%E2%80%93Bendix_completion_algorithm> most typically means a method for "solving" a system of term equations (abstracts syntax trees with variables in them) by turning them into normalizing rewrite rules.
 
 The two are basically the same thing in that they are more or less both instances of "abstract completion" (See Term Rewriting and All That (TRAAT) chapter 7).
 
-You are working over some kind of "thing" (terms, polynomials, strings, other) that you have equations form  That "thing" has a way of defining an ordering on it, maybe some notion of context that you can plug things into, some notion of pattern or subterm finding. I'd like to say I know exactly what python / rust / whatever interface I want "thing" to have, but I don't. It probably contains some or all or more of these operations.
+You are working over some kind of "thing" (terms, polynomials, strings, other) that you have equations for. That "thing" has a way of defining an ordering on it, maybe some notion of context that you can plug things into, some notion of pattern or subterm finding. I'd like to say I know exactly what python / rust / whatever interface I want "thing" to have, but I don't. It probably contains some or all or more of these operations.
 
-Anyway there is a dumb loop you can write which tries to convert thing equations into oriented well founded thing rewrites. Reduce the equations with respect to the current rewrites. Pick an equation and orient it. Generate all overlaps of left hand sides of rewrites as new equations. repeat.
+Anyway there is a dumb loop you can write which tries to convert "thing" equations into oriented well founded "thing" rewrites. Reduce the equations with respect to the current rewrites. Pick an equation and orient it. Generate all overlaps of left hand sides of rewrites as new equations. repeat.
 
 All of this is kind of agnostic to the details of the "thing" you're equations are over.
 
@@ -87,7 +87,8 @@ All of this is kind of agnostic to the details of the "thing" you're equations a
 
 Semirings are rings without negation. Subtraction is partial
 
-It's not an outraegous amount of work to just make a bespoke KB /bucheerger thing for semirings. I have an attention span of about 15 minutes though and there is just step after step of slunky subproblems to solve. This blog post sat on the shelf for 6 months - year. Today, I centaured it with an AI and man it just became so easy. What is the world?
+It's not an outrageous amount of work to just make a bespoke KB /bucheerger thing for semirings. I have an attention span of about 15 minutes though and there is just step after step of slunky subproblems to solve. This blog post sat on the shelf for 6 months - year. Today, I centaured it with an AI and man it just became so easy. What is the world?
+
 I am a little uncomfortable with out definition of overlap, but otherwise it seems reasonable.
 
 One representation of multisets is sorted lists/tuples. It's a convenient one.
