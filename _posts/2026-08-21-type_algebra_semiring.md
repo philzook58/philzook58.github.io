@@ -109,7 +109,7 @@ class MS(tuple):
 
 Monomials like `a^2 * b` can be represented as a multiset `{a, a, b}`
 
-A basic semiring datatype is a multiset of monomials. We can overload addition and multiplication on them, which have delightfully succinct implementations. zero can be represented as `{}` and one is `{{}}`, two is `{{}, {}}`, etc. There is no way to represent a negative number.
+A basic semiring datatype is a multiset of monomials. We can overload addition and multiplication on them, which have delightfully succinct implementations. zero can be represented as `{ }` and one is `{ { } }`, two is `{ { } , { } }`, etc. There is no way to represent a negative number.
 
 A lot of this is other convenient overloads. `__sub__` is partial.
 
