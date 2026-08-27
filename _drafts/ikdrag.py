@@ -141,6 +141,16 @@ class Term:
     def __str__(self) -> str:
         return self.tptp()
 
+    def egglog(self) -> str:
+        if self.decl.name in ["&", "|", "=>", "<=>", "=", "!=", "forall", "exists"]:
+            raise NotImplementedError(
+                "egglog representation not implemented for logical connectives and quantifiers"
+            )
+        elif self.decl.is_var:
+            return self.decl.name
+        else:
+            return f"({self.decl.name} {' '.join(arg.egglog() for arg in self.args)})"
+
     def tptp(self) -> str:
         if self.decl.name in ["&", "|", "=>", "<=>", "=", "!="]:
             assert len(self.args) == 2

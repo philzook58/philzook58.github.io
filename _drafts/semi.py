@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field
-from collections import Counter
+from dataclasses import dataclass
+from collections import Counter, deque
 from typing import ClassVar, Optional
 
 
@@ -12,13 +12,57 @@ class MS(tuple):
         return (len(self), tuple(self)) < (len(other), tuple(other))
 
 
-@dataclass
+@dataclass(frozen=True, slots=True, init=False)
 class Semi:
     outer_order: ClassVar[str] = "multilex"
-    monoms: MS[MS[str]] = field(default_factory=MS)
+    # Store coefficients instead of repeating monomials.  The old representation
+    # made 16*x a tuple containing sixteen copies of ("x",).
+    terms: tuple[tuple[MS[str], int], ...]
 
-    def __post_init__(self):
-        self.monoms = MS(MS(m) for m in self.monoms)
+    def __init__(self, monoms=()):
+        counts = Counter(MS(m) for m in monoms)
+        object.__setattr__(self, "terms", tuple(sorted(counts.items())))
+
+    @classmethod
+    def from_counter(cls, counts: Counter) -> "Semi":
+        obj = object.__new__(cls)
+        object.__setattr__(
+            obj,
+            "terms",
+            tuple(sorted((MS(m), n) for m, n in counts.items() if n > 0)),
+        )
+        return obj
+
+    @property
+    def monoms(self) -> MS[MS[str]]:
+        # Compatibility for notebook exploration.  Core operations use `terms`
+        # and never expand coefficients this way.
+        return MS(m for m, n in self.terms for _ in range(n))
+
+    @staticmethod
+    def _lex_runs(a, b, reverse=False) -> bool:
+        """Compare expanded monomial sequences without expanding coefficients."""
+        aa = tuple(reversed(a)) if reverse else a
+        bb = tuple(reversed(b)) if reverse else b
+        i = j = 0
+        ca = cb = 0
+        while i < len(aa) and j < len(bb):
+            ma, na = aa[i]
+            mb, nb = bb[j]
+            if ma != mb:
+                return ma < mb
+            if ca == 0:
+                ca = na
+            if cb == 0:
+                cb = nb
+            used = min(ca, cb)
+            ca -= used
+            cb -= used
+            if ca == 0:
+                i += 1
+            if cb == 0:
+                j += 1
+        return i == len(aa) and j != len(bb)
 
     @staticmethod
     def lit(name) -> "Semi":
@@ -27,17 +71,14 @@ class Semi:
     @staticmethod
     def of_int(n: int) -> "Semi":
         assert n >= 0
-        if n == 0:
-            return Semi([])
-        elif n == 1:
-            return Semi([[]])
-        else:
-            return Semi([[]]) + Semi.of_int(n - 1)
+        return Semi.from_counter(Counter({MS(): n}))
 
     def __add__(self, other: "Semi") -> "Semi":
         if isinstance(other, int):
             other = Semi.of_int(other)
-        return Semi(MS((MS(self.monoms + other.monoms))))
+        counts = Counter(dict(self.terms))
+        counts.update(dict(other.terms))
+        return Semi.from_counter(counts)
 
     def __radd__(self, other: int) -> "Semi":
         return Semi.of_int(other) + self
@@ -52,62 +93,79 @@ class Semi:
         return result
 
     def __mul__(self, other: "Semi") -> "Semi":
-        return Semi(MS(MS(m1 + m2) for m1 in self.monoms for m2 in other.monoms))
+        counts = Counter()
+        for m1, n1 in self.terms:
+            for m2, n2 in other.terms:
+                counts[MS(m1 + m2)] += n1 * n2
+        return Semi.from_counter(counts)
 
     def __rmul__(self, other: int) -> "Semi":
         return Semi.of_int(other) * self
 
     def __repr__(self) -> str:
-        return " + ".join([" ".join(m) if m else "1" for m in self.monoms])
+        pieces = []
+        for m, n in self.terms:
+            term = " ".join(m) if m else "1"
+            pieces.extend([term] * n)
+        return " + ".join(pieces)
 
     def __lt__(self, other: "Semi") -> bool:
         if Semi.outer_order == "multilex":
-            return tuple(reversed(self.monoms)) < tuple(reversed(other.monoms))
-        return self.monoms < other.monoms
+            return self._lex_runs(self.terms, other.terms, reverse=True)
+        return self._lex_runs(self.terms, other.terms)
 
     def __sub__(self, other: "Semi") -> Optional["Semi"]:
-        res = list(self.monoms)
-        for m in other.monoms:
-            if m in res:
-                res.remove(m)
-            else:
+        counts = Counter(dict(self.terms))
+        for m, n in other.terms:
+            if counts[m] < n:
                 return None
-        return Semi(MS(res))
+            counts[m] -= n
+        return Semi.from_counter(counts)
 
     def divrem(self, other: "Semi") -> tuple["Semi", "Semi"]:
         # returns largest q such that self = q*other + r
         assert isinstance(other, Semi)
-        if len(other.monoms) == 0:
+        if not other.terms:
             raise ValueError("division by zero")
-        q = []
-        r = self
-        lm = other.monoms[-1]
-        i = len(r.monoms) - 1
+        q = Counter()
+        r = Counter(dict(self.terms))
+        lm = other.terms[-1][0]
+        i = len(r) - 1
         while i >= 0:
-            qm = list(r.monoms[i])
+            rms = sorted(m for m, n in r.items() if n > 0)
+            if i >= len(rms):
+                i = len(rms) - 1
+            if i < 0:
+                break
+            rm = rms[i]
+            qm = list(rm)
             for x in lm:
                 if x not in qm:
                     break
                 qm.remove(x)
             else:
-                term = Semi([qm])
-                r1 = r - term * other
-                if r1 is not None:
-                    q.append(MS(qm))
-                    r = r1
-                    i = len(r.monoms) - 1
+                qm = MS(qm)
+                shifted = [(MS(qm + m), n) for m, n in other.terms]
+                copies = min(r[m] // n for m, n in shifted)
+                if copies:
+                    q[qm] += copies
+                    for m, n in shifted:
+                        r[m] -= copies * n
+                    i = len(r)
                     continue
             i -= 1
-        return Semi(q), r
+        return Semi.from_counter(q), Semi.from_counter(r)
 
     def overlaps(self, other) -> list["Semi"]:
         # return all nontrivial overlaps of self and other
         # such that ov = q1 * self + r1 and ov = q2 * other + r2
         # ov is less that lm(self) * lm(other) ?
         res = []
+        seen = set()
         for (q, r), _ in self.overlaps_qr(other):
             ov = q * self + r
-            if ov not in res:
+            if ov not in seen:
+                seen.add(ov)
                 res.append(ov)
         return res
 
@@ -116,14 +174,15 @@ class Semi:
     ) -> list[tuple[tuple["Semi", "Semi"], tuple["Semi", "Semi"]]]:
         # Polynomial contexts split additively, so align one monomial occurrence.
         res = []
-        for m1 in Counter(self.monoms):
-            for m2 in Counter(other.monoms):
+        for m1, _ in self.terms:
+            for m2, _ in other.terms:
                 cm = Counter(m1) | Counter(m2)
                 qm1 = MS((cm - Counter(m1)).elements())
                 qm2 = MS((cm - Counter(m2)).elements())
                 q1, q2 = Semi([qm1]), Semi([qm2])
                 t1, t2 = q1 * self, q2 * other
-                ov = Semi((Counter(t1.monoms) | Counter(t2.monoms)).elements())
+                c1, c2 = Counter(dict(t1.terms)), Counter(dict(t2.terms))
+                ov = Semi.from_counter(c1 | c2)
                 qr = ((q1, ov - t1), (q2, ov - t2))
                 if qr not in res:
                     res.append(qr)
@@ -234,7 +293,7 @@ def huet_complete(eqs: list[Eq]) -> list[Rewrite]:
             return R
 
 
-def huet_marked(eqs: list[Eq]) -> list[Rewrite]:
+def huet_marked(eqs: list[Eq], goal: Optional[Eq] = None) -> list[Rewrite]:
     # the same as the above, but keep a bool in rewrite indicating if it is marked
     # the critical pair generation process picks one unwarked rules and generates critical pairs with all other rules, marking the rule after generating its critical pairs
     # if there are no unmarked rules, the algorithm terminates
@@ -258,6 +317,12 @@ def huet_marked(eqs: list[Eq]) -> list[Rewrite]:
                     E.append(Eq(lhs1, rw1.rhs))
             R = R1
 
+            # Completion can be infinite even when the particular word problem
+            # is already solved.  Equality after reduction by the current rules
+            # is sound, so a goal-directed run may stop here.
+            if goal is not None and reduce(goal.lhs, R) == reduce(goal.rhs, R):
+                return R
+
         for rw in R:
             if not rw.mark:
                 break
@@ -272,3 +337,94 @@ def huet_marked(eqs: list[Eq]) -> list[Rewrite]:
                 eq = Eq(lhs, rhs)
                 if lhs != rhs and eq not in E:
                     E.append(eq)
+
+
+def _monom_quotient(big: MS, small: MS) -> Optional[MS]:
+    """Return q when big = q*small, or None when small does not divide big."""
+    q = list(big)
+    for x in small:
+        if x not in q:
+            return None
+        q.remove(x)
+    return MS(q)
+
+
+def rewrite_once(semi: Semi, eqs: list[Eq]):
+    """Apply one equation in one monomial context, in either direction."""
+    seen = set()
+    for eq_index, eq in enumerate(eqs):
+        for reverse, (old, new) in enumerate(((eq.lhs, eq.rhs), (eq.rhs, eq.lhs))):
+            # Equations with an empty side need a separate bounded insertion rule.
+            if not old.terms:
+                continue
+            for pm, _ in semi.terms:
+                for om, _ in old.terms:
+                    qm = _monom_quotient(pm, om)
+                    if qm is None:
+                        continue
+                    context = Semi([qm])
+                    rest = semi - context * old
+                    if rest is None:
+                        continue
+                    result = rest + context * new
+                    if result not in seen:
+                        seen.add(result)
+                        yield result, (eq_index, bool(reverse), qm)
+
+
+def congruence_path(
+    start: Semi,
+    goal: Semi,
+    eqs: list[Eq],
+    *,
+    max_degree: int,
+    max_terms: int,
+) -> Optional[list[Semi]]:
+    """Bounded bidirectional search for a ground semiring-equational proof.
+
+    `None` means no path was found within the bounds, not that the equation is
+    false.  Each adjacent pair in a returned path differs by one use of an input
+    equation in an additive and monomial multiplicative context.
+    """
+
+    def in_bounds(p: Semi) -> bool:
+        return (
+            all(len(m) <= max_degree for m, _ in p.terms)
+            and sum(n for _, n in p.terms) <= max_terms
+        )
+
+    if start == goal:
+        return [start]
+    front = {start: None}
+    back = {goal: None}
+    front_queue, back_queue = deque([start]), deque([goal])
+
+    while front_queue and back_queue:
+        if len(front_queue) <= len(back_queue):
+            here, there, queue = front, back, front_queue
+        else:
+            here, there, queue = back, front, back_queue
+
+        for _ in range(len(queue)):
+            semi = queue.popleft()
+            for result, step in rewrite_once(semi, eqs):
+                if not in_bounds(result) or result in here:
+                    continue
+                here[result] = (semi, step)
+                if result in there:
+                    left = []
+                    p = result
+                    while p is not None:
+                        left.append(p)
+                        parent = front[p]
+                        p = None if parent is None else parent[0]
+                    left.reverse()
+
+                    right = []
+                    p = result
+                    while back[p] is not None:
+                        p = back[p][0]
+                        right.append(p)
+                    return left + right
+                queue.append(result)
+    return None
