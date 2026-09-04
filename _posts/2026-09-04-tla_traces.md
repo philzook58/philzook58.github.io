@@ -25,7 +25,7 @@ I still think this is something interesting and ambitious to persue, but doing y
 
 # TLA JSON Traces
 
-TLC has an interesting option `-loadtrace` it gained somewhat recently. This allows for easy ingestion of traces by other systems in a json format. This is the easy road, but there is also a JSON TLA+ module that enables you to do more flexible things (Merz et al <https://arxiv.org/abs/2404.16075> do it this way).
+TLC has an interesting option `-loadtrace` it gained somewhat recently. This allows for easy ingestion of traces by other systems in a json format. This is the easy road, but there is also a JSON TLA+ module that enables you to do more flexible things ("Validating Traces of Distributed Programs Against TLA+ Specifications"  <https://arxiv.org/abs/2404.16075> does it this way).
 
 ```python
 ! curl https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar -L -o /tmp/tla2tools.jar
