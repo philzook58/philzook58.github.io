@@ -2176,7 +2176,7 @@ fn main(){
         clock.tick();
         'mylabel: for _ in 0..0 {}
         // MYLABEL
-        println!("CLOCK {} {{ hr : {} }}", i, clock.hr);
+        println!("CLOCK {} { { hr : {} } }", i, clock.hr);
     }
 }
 
