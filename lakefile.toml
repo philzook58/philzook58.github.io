@@ -10,10 +10,15 @@ supportInterpreter = true
 name = "Philib"
 
 
-#[[require]]
-#name = "smt"
-#scope = "ufmg-smite"
-#rev = "main"
+[[require]]
+name = "smt"
+scope = "ufmg-smite"
+rev = "main"
+
+[[require]]
+name = "veir"
+git = "https://github.com/opencompl/veir"
+rev = "main"
 
 [[require]]
 name = "plausible"
@@ -23,7 +28,33 @@ rev = "v4.33.0"
 [[require]]
 name = "verso"
 git = "https://github.com/leanprover/verso.git"
-rev = "latest"
+rev = "v4.33.0"
+
+[[require]]
+name = "verso-slides"
+git = "https://github.com/leanprover/verso-slides.git"
+rev = "v4.33.0"
+
+[[require]]
+name = "iris"
+git.url = "https://github.com/leanprover-community/iris-lean.git"
+git.subDir = "Iris"
+rev = "master"
+
+#[[require]]
+##name = "iris"
+#git.url = "https://github.com/leanprover-community/iris-lean.git" 
+#git.subDir = "IrisMath" 
+#rev = "master"
+
+[[lean_lib]]
+name = "verso_play"
+srcDir = "verso_play"
+
+[[lean_exe]]
+name = "verso-play"
+root = "VersoPlayMain"
+srcDir = "verso_play"
 
 [[require]]
 name = "veil"

@@ -65,7 +65,9 @@ library
     import:           ghc-options
 
     -- Modules exported by the library.
-    exposed-modules:  MyLib
+    exposed-modules:  
+        MyLib
+        , SBVPlay
 
     -- Modules included in this library but not exported.
     -- other-modules:
@@ -78,9 +80,12 @@ library
         base ^>=4.20.2.0
         , ihaskell
         , megaparsec
+        , sbv
 
     -- Directories containing source files.
-    hs-source-dirs:   haskellsrc
+    hs-source-dirs:
+        haskellsrc
+        , _drafts
 
     -- Base language which the package is written in.
     default-language: GHC2024

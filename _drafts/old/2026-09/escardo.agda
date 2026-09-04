@@ -18,6 +18,7 @@ _̇   : (𝓤 : Universe) → Type (𝓤 ⁺)
 
 𝓤 ̇  = Type 𝓤
 
+
 𝓤₁ = 𝓤₀ ⁺
 𝓤₂ = 𝓤₁ ⁺
 𝓤₃ = 𝓤₂ ⁺
@@ -36,3 +37,12 @@ infix  1 _̇
 Shulam kind of summarized type theory as set theory where all the sets are disjoint.
 That is kind of part of the flavor.
 -}
+variable
+ 𝓤 𝓥 𝓦 𝓣 : Universe
+
+data 𝟙 : 𝓤₀ ̇  where
+ ⋆ : 𝟙
+
+-- \ MCU 𝓤 and McU 𝒰
+-- \ b1 𝟙
+

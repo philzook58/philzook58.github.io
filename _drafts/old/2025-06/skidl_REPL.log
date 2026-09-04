@@ -1,0 +1,7 @@
+WARNING: fp-lib-table file was not found. Component footprints are not available.
+WARNING: fp-lib-table file was not found. Component footprints are not available.
+WARNING: fp-lib-table file was not found. Component footprints are not available.
+ERROR: No pins found using Battery:BT1[(0,)] @ [/home/philip/philzook58.github.io/.venv/lib/python3.14/site-packages/IPython/core/interactiveshell.py:3823=>/tmp/ipykernel_30034/206255691.py:16]
+INFO: 3 warnings found while generating SVG.
+INFO: 0 errors found while generating SVG.
+
