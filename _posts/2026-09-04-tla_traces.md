@@ -1,5 +1,5 @@
 ---
-title: Validating GDB Interrupt traces Against a TLA+ Spec
+title: Validating GDB Interrupt Traces Against a TLA+ Spec
 date: 2026-09-04
 ---
 
