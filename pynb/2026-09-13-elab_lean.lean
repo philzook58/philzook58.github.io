@@ -1,0 +1,836 @@
+/-
+---
+title: Lean Metaprogramming Etudes: Execution is Elaboration
+date: 2026-09-13
+---
+
+I think I've kind of been hitting a watershed of understand of
+ lean metaprogramming.
+
+A complaint I've made is that I felt like I don't understand how to
+ use Lean like I can use python + z3. I want to feel like I'm using
+  an ordinary programming language and constructing logical expressions
+  as data.
+
+- https://www.philipzucker.com/lean_smt/ Using Lean like an external smt solver
+
+In short, the solution is that I want to always be working in `TermElabM` or `CommandElabM` which are "more powerful" than `IO`
+`main` is a trap. The work I want to do is in the elaborator, when you have the full power to query and manipulate `Syntax`, `Expr`, unification and tactics.
+
+
+-/
+import Lean
+import Mathlib.Tactic.Find
+open Lean Meta Elab Term
+
+#eval do
+  IO.FS.writeFile "/tmp/foo" "hello world"
+  IO.println (<- IO.FS.readFile "/tmp/foo")
+
+
+
+/-
+# Be In Bigger Monads than IO
+
+The Lean metaprogramming book seems to be under the impression that I am interested in macros and tactics. This is basically not the case for me.
+
+I fucking HATE (other people's) macros (but I love my own) but that is perhaps a post for another day (the hypocrisy of that is why no one should have them). It is perhaps this distaste which has hindered my exploration.
+
+Another misconception I had was that I was "doing Lean dirty" by doing everything in IO + unsafe + partial whenever I felt like. Yes, but actually IO is not the maximally powerful monad, TermElabM / CommandElabM basically are and they in fact are a monad stack _on top_ of IO.
+
+Yes, yes, use the minimal amount of power, the most contrained types, make everything terminating / handle all the cases. Whatever. I'm screwing around and I want to hackiest biggest blunderbus I can get.
+
+Another thing that has been a problem is the draw of the `main` function. You can make standalone lean executables that have a `main`, but the runtime of the code inside this main will not have access to the metaprogramming you are using while writing / compiling / elaborating the code (unless you set it up, which is possible).
+
+The lighter weight thing I actually want is to perform the kinds of operations I'd ordinarily perform at runtime in python not in _main_ but actually at _elaboration time_ which is where I'll be able to manipulate formulas like ordinary data.
+
+https://github.com/leanprover-community/mathlib4/wiki/Monad-map
+-/
+
+
+/-
+`run_elab` and `run_cmd` are basically wrappers around #eval according to their tooltips. #eval also supports TermElabM and CommandElabM in other words
+
+Both of them support IO actions.
+
+In a strange way CommandElabM is like a reshuffling of all the contexts of TermElabM, but they aren't based on each other. One thing CommandElabM carries is an Environment
+
+-/
+
+run_elab
+  IO.FS.writeFile "/tmp/foo.txt" "hello world"
+
+run_cmd
+  IO.FS.writeFile "/tmp/foo.txt" "hello world"
+
+#check Environment
+
+/-
+`by_elab` kind of more interestingly let's you actually construct an TermElabM Expr and place it in place inside of an expression. This is mostly the capability I want to do hacky Expr construction from external files.
+
+-/
+def myhello : String := by_elab (toExpr <$> IO.FS.readFile "/tmp/foo.txt" )
+
+#eval myhello
+def myhello2 := include_str "/tmp/foo.txt" -- basically the same thing
+
+/-
+run_cmd can actually do all the crazy junk we're used to like insert new `def` into the environment and such.
+
+I find the outher programming language, ordinary formula datatype design of a proof assistant to be kind of more friendly. This is how HOL looks and Knuckledragger. Rocq, Lean, and Isabelle heavily emphasize their vernacular language (the thing that has keywords like `theorem` etc) as the main thing an ordinary user is going to interface with. I don't like that. It feels like power has been taken from me.
+
+A way you could use lean to to make your entire file a single run_cmd. I find the idea kind of charming.
+-/
+
+run_cmd
+  let barId := Lean.mkIdent `bar -- need to break this out so hygiene works?
+  Lean.Elab.Command.elabCommand (<- `(def $barId : Nat := 42))
+
+#eval bar
+
+
+/-
+A way one could use lean as a toolkit for commandline tools is not to compile into a `main`, but instead re-elaborate to execute. You could read in from stdin using IO to take in data.
+
+-/
+
+/-
+Ok, but then what do the other bits of the metaprogramming monads get you?
+
+-/
+
+/-
+# Making Terms
+
+- `elabTermAndSynthesize` is a good default way from getting Syntax -> Expr
+- `mkAppM` is probably what you want to apply arguments, since it fills in implicits. `getAppFn` is kind of an inverse in a sense.
+- `toExpr` is a pretty handy function for boring data like strings. This is for stuff you could traverse to build an Expr. toExpr feels to me like some kind of cross stage persistence thing, reflecting data into the code that would produce that data.
+- I've grown from thinking the quote4 library was the way to build Expr to being a bit skeptical of it. Why isn't this a part of Std or Lean if this is right? Maybe it's an overwrought layer that adds more confusion than utility. I'm not sure.
+
+Note that the built in quotation backtick  in lean makes `Syntax` objects inside `TermElabM`
+This is a little annoying. `Syntax` is a for serious simple tree datatype that also holds scoping into and line numbers and stuff.
+You do need to convert it to `Expr`, using some `elabTerm` function.
+Or you can manually pattern match out of it to construct `Expr` manually.
+
+
+-/
+
+
+run_elab
+  let t <- elabTermAndSynthesize (<- `([1,2] ++ [2,3])) none
+  logInfo t
+  let t1 <- mkAppM ``HAdd.hAdd #[toExpr 1, toExpr 2]
+  logInfo t1
+  assert! (t1.getAppFn.constName! == ``HAdd.hAdd)
+  logInfo (<- inferType t1)
+  return ()
+
+#check toTypeExpr -- create expression representing a Type
+#eval toTypeExpr String
+#eval toTypeExpr Bool
+/-
+# Useful Term Functions
+
+Stuff you might want to do to terms
+- `inferType` it does need to pull this information from somewhere. It is not tagged explicitly on Expr, so an environment or cache is held
+- `check` type check
+- `reduce`
+- `whnf` - weak head normal form. When you are trying to match out of an Expr, you'll tend to weak head normal form it and match on that bit recursively. I guess you could also match via isDefEq?
+- `match_expr` is a neat macro for matching on Expr with patterns than look like normal lean syntax rather than a bunch of .app junk
+
+https://lean-lang.org/doc/api/Lean/Meta/Basic.html
+
+-/
+
+#check inferType
+#check check
+
+#check whnf -- I think you want whnf more often than you want other evaluators
+
+#check evalExpr -- Expr -> MetaM a. Kind of unquoting, but maybe not a good idea.
+run_elab
+  let three : Nat <- evalExpr' Nat ``Nat (toExpr 3)
+  logInfo (repr three)
+
+
+#check reduce -- Expr -> Expr
+
+#check forallTelescopeReducing
+
+/-
+
+# Metavariables
+Metavariables / unification variables have more structure than you might expect from prolog or resolution theorem proving. I think that unification variables are so bare is an artifact of cheating basically. In the standard methodology, one skolemizes ahead of time into a normal form. This is a pretty brutal and careless transformation. It is frankly one of the impediments of using proof objects coming out of resolution/superposition theorem provers.
+
+If you _don't_ do this though, instead you can get do something similar by tracking what constants are in scope for the metavariable to use, it's context kind of. New constants exist only because the metavariable is in scope of some binders (forall, exists, lambda).
+
+- https://cstheory.stackexchange.com/questions/57126/modern-presentation-of-first-order-unification-under-a-mixed-prefix
+- https://www.lix.polytechnique.fr/~dale/papers/jsc92.pdf
+- https://www.cs.cmu.edu/~fp/courses/atp/lectures/11-unifparam.html "unification with parameters"
+
+In addition, metavariables are _typed_ and those types themselves may contain or be a metavariable. Metaveriables are somehow associated with axiom forall and goal exists binders, and if those are intrinsically typed, so should metavariables be typed. If a metavariable is unified, it ought to immiedately propagate a unification of it's type to it's target's type. It's kind of slick.
+
+When metavariables are made, they take a type expression as an argument. They also need to record what the context they are working in is. This context is kept implicit as part of the MetaM state (ReaderT part of MetaM actually I guess)
+
+`Gamma |- ?m : A` might be a summary of this situation
+- https://lean-lang.org/doc/api/Lean/MetavarContext.html
+- https://arxiv.org/html/1505.04324v2 elabotration in dependent type theory 2015
+
+Metavariable depth is a simpler mechanism for tie breaking who points to who? It may have something more to do with typeclass resolution according to the above comments?
+
+
+- `isDefEq` is a "unify" function that performs unification modulo beta conversion
+
+
+`MetaM` stores a current substitution in a State that can be modified. Metavariables are keys into this substitution. That's why you need to call instantiate in order to actually substitute in any solution information.
+
+
+-/
+
+#check MetaM
+
+run_meta
+  let m1 <- mkFreshExprMVar none
+  let m2 <- mkFreshExprMVar none
+  let _ <- isDefEq m1 m2
+  let m1' <- instantiateExprMVars m1
+  let m2' <- instantiateExprMVars m2
+  assert! (m1' == m2')
+  logInfo s!"{m1} {m2} {m1'} {m2'}"
+
+
+
+#check MonadBacktrack -- general typeclass for backtrackableness
+#check withoutModifyingState -- rollback after done
+#check observing? -- if it doesn't throw
+#check saveState -- saveState
+
+/-
+# Parsers
+You can actually call lean parsers on a `String`. I don't know that it is well advised to use this capability to parse external data files, but it is tempting. It does seem like other projects do this.
+
+- https://github.com/leanprover-community/duper/blob/main/Duper/TPTPParser/SyntaxDecl.lean
+- https://github.com/ufmg-smite/lean-smt/blob/main/Smt/Dsl/Sexp.lean
+
+-/
+#check Parser.runParserCategory
+
+-- But I also could be getting the string from file / stdio. The string could be SMT or TPTP or JSON or anything.
+run_cmd
+  let env <- getEnv
+  let t := (Parser.runParserCategory env `term "1 + 2 + 3").toOption.get!
+  logInfo t
+
+/-
+
+# JSON
+This may seem strange to talk about in a metaprogramming post, but json is a nice way to talk back and forth between most languages (I guess I'm thinking of python in particular).
+
+- `json%` is a useful thing for inline json
+
+-/
+
+structure MyStruct where
+  field1 : Nat
+  field2 : String
+deriving FromJson, ToJson, BEq, Inhabited
+
+#eval json% {"larry" : "hello", "fred" : [3,4,5]}
+#guard toJson ({field1 := 3, field2 := "hello"} : MyStruct) == json% {"field1" : 3, "field2" : "hello"}
+#guard ({field1 := 3, field2 := "hello"} : MyStruct) == ((fromJson? <| json% {"field1" : 3, "field2" : "hello"}).toOption.get!)
+
+
+
+/-
+
+# Bits and Bobbles
+
+
+I'm actually quite impressed by this tutorial https://github.com/mirefek/lean-tactic-programming-guide
+
+
+
+I really like Lean's vs code extension. It's a fantastic repl, maybe almost as good as a jupyter notebook https://www.philipzucker.com/dirty_lean/ .
+This is helped a lot by realizing that #eval allows you to perform IO actions.
+
+Unfortunately, it is completely necessary to load this up into a lean file and click through and hover over these functions. That's why I have so man `#check` in this file.
+
+Ok. Summary.
+CoreM is an IO wrapper (and has Env)
+MetaM has a metavariable Map
+TermElabM has ...
+TacticM is very minimal on top of termelabm. Has a mutable goal list
+
+CommandElabM is a completely separate thing
+but has lots of components very similar to TermElabM
+
+I think Metaprogramming in Lean has a strange emphasis on macros
+Macros are irrelevant for my purposes
+
+Quotation works inside monads. I can't do it "bare".
+
+Parser.runParserCategory let's me turn strings into
+Syntax
+TSyntax is a light wrapper you can type tag with a syntax kind
+
+run_elab runs TermElabM
+run_cmd runs CommandElabM
+
+lake env lean
+Env variables vs stdin
+Mocking up an actual main isn't that bad.
+
+"Elaboration is Evaluation"
+
+
+
+-/
+
+run_elab
+  let e ← elabTerm
+    (← `(term| (37 : Nat) + 5))
+    (some (mkConst ``Nat))
+
+  let (e, type) ← Lean.Meta.Sym.SymM.run do
+    let e ← Lean.Meta.Sym.shareCommon e -- hareCommon is hash consing
+    let type ← Lean.Meta.Sym.inferType e
+    pure (e, type)
+
+  logInfo m!"expression: {← ppExpr e}"
+  logInfo m!"type:       {← ppExpr type}"
+
+#check Sym.abstractFVars
+#check Sym.isSameExpr
+#check Sym.isDefEqS
+#check Sym.Pattern.unify?
+#check Sym.Pattern.match?
+#check Sym.mkBackwardRuleFromDecl
+#check Sym.mkEqPatternFromDecl
+#check Sym.BackwardRule.apply -- seems ideal for leanlog?
+#check Sym.inferType
+
+#check registerEnvExtension
+
+#check forall x y , x <= y
+run_elab
+  let stx <- `(forall x y : Nat, x <= y)
+  let t <- elabTermAndSynthesize stx none
+  let t2 <- elabTermAndSynthesize (<- `(1 <= 2)) none
+  let (vs, binfo, body) <- forallMetaTelescopeReducing t
+  let ok <- isDefEq t2 body
+  assert! ok
+  let t1 <- forallTelescopeReducing t fun vs body => mkForallFVars vs body
+  logInfo (<- instantiateMVars body)
+
+run_elab
+  let t ← elabTermAndSynthesize (← `(fun x y : Nat => x + y)) none
+
+  lambdaTelescope t fun xs body => do
+    logInfo m!"variables: {xs}"
+    logInfo m!"body: {body}"
+
+#check withLocalDeclD -- work with a fresh fvar?
+
+run_elab
+  let t ← elabTermAndSynthesize (← `(∃ x y : Nat, x ≤ y)) none
+  let t ← whnf t
+
+  match_expr t with
+  | Exists α p =>
+      withLocalDeclD p.bindingName! α fun x => do
+        let body ← whnf (mkApp p x)
+        logInfo m!"variable: {x}"
+        logInfo m!"body: {body}"
+  | _ =>
+      throwError "expected an existential"
+
+#check Expr
+#check mkForallFVars
+#check forallTelescope -- open up with fvars
+#check mkLambdaFVars
+
+run_elab
+  logInfo (<- whnf (<- elabTermAndSynthesize (<- `(List.append [1])) none))
+
+#check Lean.Meta.Grind.Arith.CommRing.reifyCore?
+-- #check Mathlib.Tactic.Ring.Common.evalAdd
+-- Based on <http://www.cs.ru.nl/~freek/courses/tt-2014/read/10.1.1.61.3041.pdf> .
+
+namespace Mono
+
+inductive MonoE (a : Type) where
+  | atom : a -> MonoE a
+  | add : MonoE a -> MonoE a -> MonoE a
+  -- | eps : MonoE a
+deriving Repr, BEq, Inhabited
+
+def isPlus (e : Expr) : Option (MonoE Expr) :=
+  match_expr e with
+  | HAdd.hAdd _ _ _ _inst a b => some <| .add (.atom a) (.atom b)
+  | _ => none
+
+partial def toMono (e : Expr) : MonoE Expr :=
+  match_expr e with
+  | HAdd.hAdd _ _ _ _inst a b => .add (toMono a) (toMono b)
+  | _ => .atom e
+
+partial def reassoc {a : Type} : MonoE a -> MonoE a
+| .atom x => .atom x
+| .add (.add a b) c => reassoc (.add a (.add b c))
+| .add (.atom a) b => .add (.atom a) (reassoc b)
+#check Std.Associative
+def monoToExpr (e : MonoE Expr) : Elab.TermElabM Expr :=
+  match e with
+  | .add a b => do
+                let a <- monoToExpr a
+                let b <- monoToExpr b
+                mkAdd a b
+                --mkAppM ``HAdd.hAdd #[a, b]
+  | .atom a => return a
+
+--#eval isPlus q(1 + 2)
+--#check by_elab monoToExpr (reassoc (toMono q(1 + 2 + 3 + 4)))
+#check 1 + 2 + 3 + 4
+
+/-
+Reflection of addition expressions.
+A la grind, a la mathlib?
+
+match_expr
+let_expr
+Q?
+
+getFn that unwraps all funs?
+
+Is monoid simplest version?
+Patterns for proof carrying?
+Make combinators you want in surface lean.
+So personal little proof dsl. Interesting.
+
+-/
+
+-- #check match_expr
+
+
+end Mono
+
+
+#find (MonadEnv _) -- find is Mathlib stuff
+#synth MonadEnv TermElabM
+
+-- not haelper
+--example : exists a, MonadEnv a := by constructor; apply?
+
+#check Lean.Meta.acLt -- an LPO like (ground?) ordering
+
+
+
+
+#check elabTermAndSynthesize
+#check Meta.synthInstance
+#check Meta.isDefEq
+
+-- run_tactic does inline TacticM actions
+#check Elab.runTactic
+#check Tactic.run
+#check Tactic.evalTactic
+#check Tactic.getMainGoal
+
+/-
+A regular unification problem is exists x y z, x = y /\ z = y
+In classical logic, we can skolemize brutally, to take any
+"Unification with parameters"
+Generalized unification problem
+forall exists forall exists ... t= s /\ u = v /\ ...
+Scoping constraints.
+
+But I've been assuming untyped.
+In typed it doesn't change much
+
+forall x : Nat, exists y : Bool, ...
+Via naive bounded quantifier, we actually introduce some implies
+forall x, type(x, Nat) => exists y, type(y, Bool) /\ ...
+
+Dependntly typed unification problem
+forall x : A, exists y : B(x), forall z : C(x,y), t = s /\ ...
+
+Dependent lambda prolog?
+Types are "attributed variable" like things
+-/
+
+run_elab
+  let n1 <- Term.mkConst ``Nat
+  let n <- elabTermAndSynthesize (<- `(term| Nat)) none
+  let g <- Meta.mkFreshExprMVar (some n)
+  let t <- g.mvarId!.getType
+  let d <- g.mvarId!.getDecl
+  g.mvarId!.isAssigned
+  logInfo m!"mvarid {g.mvarId!} {t}"
+-- lake env lean
+
+run_elab
+  -- α β : Type
+  let α ← mkFreshExprMVar (mkSort (.succ .zero))
+  let β ← mkFreshExprMVar (mkSort (.succ .zero))
+
+  let αId := α.mvarId!
+  let βId := β.mvarId!
+
+  -- xs : List α
+  -- ys : List β
+  let listα := mkApp (mkConst ``List [.zero]) α
+  let listβ := mkApp (mkConst ``List [.zero]) β
+
+  let xs ← mkFreshExprMVar listα
+  let ys ← mkFreshExprMVar listβ
+
+  let xsId := xs.mvarId!
+  let ysId := ys.mvarId!
+
+  logInfo m!"before:
+    {xs} : {← inferType xs}
+    {ys} : {← inferType ys}"
+
+  let ok ← isDefEq xs ys
+
+  logInfo m!"isDefEq returned {ok}"
+  logInfo m!"α assignment:  {← getExprMVarAssignment? αId}"
+  logInfo m!"β assignment:  {← getExprMVarAssignment? βId}"
+  logInfo m!"xs assignment: {← getExprMVarAssignment? xsId}"
+  logInfo m!"ys assignment: {← getExprMVarAssignment? ysId}"
+
+run_elab
+  let t <- elabTermAndSynthesize (<- `(term| Eq.refl)) none
+  logInfo (repr t)
+  let ty <- inferType t
+  logInfo ty
+
+
+structure Clause where
+  head : Expr
+  body : Array Expr
+deriving Repr, BEq
+
+run_elab
+  let clause : Clause := {head := toExpr 4, body := #[]}
+  let goal <- mkFreshExprMVar none
+  let b <- isDefEq goal clause.head
+  let g1 <- instantiateMVars goal
+  logInfo m!"{b} {g1}"
+
+
+
+#check toExpr
+#check Meta.check
+#check Meta.whnf
+#check Meta.reduceEval
+#check Meta.evalExpr
+#check evalTerm -- eval syntax with given type
+#check Tactic.evalTactic -- run syntax of a tactic
+#check Tactic.run -- turn TacticM -> TermElabM
+
+#check withLCtx
+#check getLCtx
+#check Tactic.withMainContext
+#check MVarId.refl
+
+#check Meta.evalExpr'
+#check Lean.Elab.ConfigEval.EvalExpr.evalExpr
+#check Meta.inferType
+#check Meta.mkAppM
+#check mkAppM' -- monadic so it fills in implicits
+#check Lean.Elab.Term.elabType
+
+-- #check Command.runTermElabM I don't think I want this one
+#check Command.liftTermElabM -- this is the one I want probably
+#check Command.liftCoreM -- possilby some of these may hhappen automatically?
+
+#check Command.elabCommand
+
+#check Json.parse
+#check instantiateMVars
+
+#check Expr.isAppOf
+#check Meta.ppExpr
+
+#check Meta.dsimp
+#check Meta.simp
+
+#check Macro.expandMacro?
+
+#check `(1 + 1) -- quoting happens in a monad.
+#check `foo -- Name
+#check ``Nat  -- also a name, but one that exsists in current scope?
+
+run_cmd
+  let name := Lean.mkIdent `foo6
+  let cmd <- `(def $name : Nat := 3)
+  Command.elabCommand cmd
+
+#check Lean.Elab.Tactic.grind -- tacticM wrapper?
+#check Grind.main
+
+/-
+Delayed assignment. What is that for?
+
+A model of the different monads.
+Mvar's have decls. They have a type, and a context
+Context is hyps and vars in scope?
+depth is cheaper version?
+
+-/
+
+open Tactic
+example : 1 + 1 = 2 := by
+  run_tac do
+    let goal ← Tactic.getMainGoal
+    logInfo m!"current goal: {← goal.getType}"
+    Tactic.evalTactic (← `(tactic| grind))
+/-
+TacticM <- TermElabM <- MetaM <- CoreM
+pure inclusion. tactic has list of goals as state
+
+
+
+If I show you my datatypes,
+you don't need to see the functions
+
+
+dependent unification problems
+simple typed unification
+ problems
+
+-/
+#print Syntax
+-- syntax also has source info and junk. Names vs strings.
+inductive MySyntax where
+  | node : Array MySyntax -> MySyntax
+  | atom : String -> MySyntax
+deriving Repr, BEq, Hashable
+
+-- Can I get Mvar to clash scope?
+
+#print Environment
+-- Environment mostly doesn't seem that usefl
+structure MyEnvironment where
+
+#print CoreM -- freshness counters and environment
+abbrev MyCoreM a := IO a
+
+#print MetaM
+-- The state of MetaM is mostly metvarcontext
+#print MetavarContext
+-- There is an installed "default" local context in the Reader
+#print LocalContext
+
+
+-- Do python version of micro-lean meta stack?
+
+#print foo6
+
+
+run_meta do
+  let xs : Expr := toExpr ([1, 2, 3] : List Nat)
+  let ys : Expr := toExpr ([10, 20] : List Nat)
+
+  -- mkAppM supplies List.append's implicit element type.
+  let appendExpr ← mkAppM ``List.append #[xs, ys]
+  let appendType ← inferType appendExpr
+  let normal ← reduce appendExpr
+
+  logInfo m!"expression: {appendExpr}"
+  logInfo m!"type:       {appendType}"
+  logInfo m!"normal:     {normal}"
+
+run_elab do
+  let env ← getEnv
+  let source := "20 + 2 * 11"
+
+  let stx ←
+    match Parser.runParserCategory env `term source with
+    | .ok stx   => pure stx
+    | .error e  => throwError "parse error: {e}"
+
+  let natType := toTypeExpr Nat
+  let expr ← elabTermEnsuringType stx (some natType)
+  synthesizeSyntheticMVarsNoPostponing
+  let expr ← instantiateMVars expr
+
+  let ty ← inferType expr
+  let normal ← reduce expr
+  logInfo m!"parsed syntax: {stx}"
+  logInfo m!"elaborated:    {expr}"
+  logInfo m!"type:          {ty}"
+  logInfo m!"normal form:   {normal}"
+
+#check logInfo
+
+run_meta do
+  let e ← mkAppM ``Nat.add #[toExpr 0, toExpr 42]
+  let simpTheorems ← getSimpTheorems
+  let ctx ← Simp.mkContext (simpTheorems := #[simpTheorems])
+  --let ctx ← Simp.mkContext
+  let (result, _stats) ← Meta.simp e ctx
+  logInfo m!"before: {e}"
+  logInfo m!"after:  {result.expr}"
+  let proof ← result.getProof
+  logInfo m!"proof:  {proof}"
+
+
+run_meta do
+  let e ← mkAppM ``Eq #[toExpr 42, toExpr 42]
+  logInfo m!"before: {e}"
+  let m <- mkFreshExprMVar e
+  let (_rem_goals, _termstate) <- runTactic m.mvarId! (<- `(tactic| grind))
+  let e <- instantiateMVars m
+  logInfo m!"before: {e}"
+  return ()
+
+example (a b c : Nat) (h : a = c) : a = b := by
+  grind =>
+    show_eqcs
+    show_state
+    sorry
+
+#check Grind.getEqcs
+#check Grind.getENode?
+#check Grind.getRoot?
+#check Grind.isCongrRoot -- is root
+-- #check Grind.isCongruentCheck
+#check Grind.ENode -- self next root pointers
+#check Grind.ENodeMap
+
+#check Grind.GrindM -- built on SymM. egraph is not in GrindM?
+#check Grind.Goal
+#check Grind.GoalM  -- ah ok. Egraph is in Goal
+
+#check Grind.EMatchTheorem
+#check Grind.ematch' -- ' only. Returns instance map if tracing enabled
+
+
+-- SymM.
+-- Lot's of hash consing facilities?
+#check Meta.Sym.ExprPtr
+/-
+
+Prolog like behavior.
+Aesop might be better or worse
+It can unwrap some constructors, but not that many
+
+-/
+
+inductive Edge : Nat -> Nat -> Type where
+  | edge12 : Edge 1 2
+  | edge23: Edge 2 3
+  | trans : Edge a b -> Edge b c -> Edge a c
+deriving Repr,BEq
+
+example : Edge 1 2 := by
+  solve_by_elim
+--#check Trans
+def foo : Edge 1 3 := by solve_by_elim [Edge.trans]
+#print foo
+#print Sigma
+def foo' : Σ a, Edge 1 a := by
+  --constructor
+  solve_by_elim [Edge.trans, Sigma.mk]
+#print foo'
+--example : Trans Edge 1 3 := by
+--  solve_by_elim [Edge.trans]
+
+
+
+run_elab
+  let env ← getEnv
+  let binder := mkIdent `n
+  let binderType : TSyntax `term :=
+    ⟨← ofExcept <| Parser.runParserCategory env `term "Nat" "experiment.txt"⟩
+  let body : TSyntax `term :=
+    ⟨← ofExcept <| Parser.runParserCategory env `term "n + 0 = n" "experiment.txt"⟩
+  let tactic : TSyntax `tactic :=
+    ⟨← ofExcept <| Parser.runParserCategory env `tactic "simp" "experiment.txt"⟩
+
+  let formulaStx ← `(∀ $binder : $binderType, $body)
+  let tacticSeq ← `(tacticSeq| $tactic:tactic)
+  let proofStx ← `(by $tacticSeq)
+  logInfo m!"formula syntax: {formulaStx}"
+  logInfo m!"proof syntax: {proofStx}"
+
+  let formula ← elabTermAndSynthesize formulaStx (some <| mkSort .zero)
+  let proof ← elabTermAndSynthesize proofStx (some formula)
+  logInfo m!"formula: {formula}"
+  logInfo m!"proof: {proof}"
+
+  addDecl <| .defnDecl {
+    name := `generatedFormula
+    levelParams := []
+    type := mkSort .zero
+    value := formula
+    hints := .abbrev
+    safety := .safe
+  }
+
+  addDecl <| .thmDecl {
+    name := `generatedProof
+    levelParams := []
+    type := Lean.mkConst `generatedFormula
+    value := proof
+  }
+
+#check generatedFormula
+#check generatedProof
+
+
+
+-- interesting modules
+#check Lean.Environment
+#check Lean.Declaration
+#check Lean.Language.Lean.process -- top level provessing loops?
+
+-- Try making a sexp syntax extensions and parse it
+
+-- https://leanprover-community.github.io/lean4-metaprogramming-book/main/05_syntax.html
+declare_syntax_cat arith
+
+syntax num : arith
+syntax arith "-" arith : arith
+syntax arith "+" arith : arith
+syntax "(" arith ")" : arith
+partial def denoteArith : TSyntax `arith → Nat
+  | `(arith| $x:num) => x.getNat
+  | `(arith| $x:arith + $y:arith) => denoteArith x + denoteArith y
+  | `(arith| $x:arith - $y:arith) => denoteArith x - denoteArith y
+  | `(arith| ($x:arith)) => denoteArith x
+  | _ => 0
+
+#check Syntax.isNatLit?
+#check TSyntax.getNat
+run_elab
+  let env ← getEnv
+  let res ← ofExcept <| Parser.runParserCategory env `arith "1 + 1" "experiment.txt"
+  logInfo m!"{res.isNatLit?}"
+
+-- https://github.com/ufmg-smite/lean-smt/blob/main/Smt/Dsl/Sexp.lean
+-- https://github.com/ufmg-smite/lean-smt/blob/main/Smt/Data/Sexp.lean
+declare_syntax_cat sexp
+syntax "(" sexp* ")" : sexp
+syntax ident : sexp
+
+#eval `(sexp| (x y (z w)))
+
+inductive Sexp where
+  | atom : String -> Sexp
+  | list : List Sexp -> Sexp
+deriving Repr, Hashable, BEq
+
+partial def denotesexp : Syntax -> Sexp
+| `(sexp| $i:ident) => Sexp.atom i.getId.getString!
+| _ => Sexp.atom "whatever"
+
+run_elab
+  let e <- `(sexp| (x y z))
+  return denotesexp e
+
+#check Syntax.mkNumLit "3"
+
+#check Lean.Parser.identFn.run

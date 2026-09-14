@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+
+<head>
+    <script src="https://cdn.jsdelivr.net/pyodide/v314.0.6/full/pyodide.js"></script>
+</head>
+
+<body>
+    Pyodide test page <br>
+    Open your browser console to see Pyodide output
+    <div id="mydiv">mydiv</div>
+    <canvas id="mycanvas" width="600" height="400"></canvas>
+
+    <script type="text/javascript">
+        async function main() {
+
+
+
+
+
+
+
+
+            let pyodide = await loadPyodide();
+            await pyodide.loadPackage("micropip")
+            const micropip = pyodide.pyimport("micropip");
+            console.log("done micropip")
+            await micropip.install("sympy");
+            console.log(pyodide.runPython(`
+            print(13)
+            import sys
+            sys.version
+            import js
+            mydiv = js.document.getElementById("mydiv")
+            print(mydiv)
+            mydiv.innerHTML = "fart"
+            canvas = js.document.getElementById("mycanvas")
+            print(mydiv)
+            mydiv.innerHTML = "fart"
+            sys.version
+            import sympy
+        `));
+            pyodide.runPython("print(1 + 2)");
+        }
+        main();
+    </script>
+</body>
+
+</html>

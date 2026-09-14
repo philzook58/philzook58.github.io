@@ -21,16 +21,84 @@ def python (code : String) (_ : Unit) : IO String := do
 
 
 syntax "#sh" str term : command
-syntax "#py" str term : command
+syntax "#py" str : command
 macro_rules
   | `(#sh $cmd:str $go:term) => `(#eval bash $cmd $go)
-  | `(#py $cmd:str $go:term) => `(#eval python $cmd $go)
+  | `(#py $cmd:str) => `(#eval python $cmd ())
 
 
 #py r#"
 for i in range(3):
   print(i)
-"# ()
+"#
+
+/-
+VS Code coloring:
+
+`.vscode/lean-python-injection/package.json` registers an injection grammar:
+
+
+
+
+```json
+{
+  "contributes": {
+    "grammars": [{
+      "scopeName": "lean.python.injection",
+      "path": "./syntaxes/lean-python.json",
+      "injectTo": ["source.lean4"],
+      "embeddedLanguages": {
+        "meta.embedded.block.python": "python",
+        "meta.embedded.inline.python": "python"
+      },
+      "tokenTypes": {
+        "meta.embedded.block.python": "other",
+        "meta.embedded.inline.python": "other"
+      }
+    }]
+  }
+}
+```
+
+`.vscode/lean-python-injection/syntaxes/lean-python.json` recognizes raw and ordinary `#py`
+strings and delegates their contents to VS Code's Python grammar:
+
+```json
+{
+  "scopeName": "lean.python.injection",
+  "injectionSelector": "L:source.lean4",
+  "patterns": [
+    {
+      "begin": "(#py)(\\s+)(r#\")",
+      "end": "\"#",
+      "contentName": "meta.embedded.block.python",
+      "patterns": [{ "include": "source.python" }]
+    },
+    {
+      "begin": "(#py)(\\s+)(\")",
+      "end": "(?<!\\\\)\"",
+      "contentName": "meta.embedded.inline.python",
+      "patterns": [{ "include": "source.python" }]
+    }
+  ]
+}
+```
+
+Lean otherwise puts one semantic token over a raw string, so `.vscode/settings.json` contains:
+
+```json
+"[lean4]": {
+  "editor.semanticHighlighting.enabled": false
+}
+```
+
+The extension directory is symlinked to
+`~/.vscode/extensions/local.lean-python-injection-0.0.1`. Run
+"Developer: Reload Window" after changing it.
+
+-/
+
+
 
 #eval getFileName
 #eval getRef

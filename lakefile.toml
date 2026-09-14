@@ -77,6 +77,10 @@ name = "Microlegg"
 git = "https://github.com/michel-steuwer/microlegg"
 rev = "main"
 
+[[require]]
+name = "hex"
+git = "https://github.com/leanprover/hex.git"
+rev = "main"
 
 [[require]]
 name = "mathlib"

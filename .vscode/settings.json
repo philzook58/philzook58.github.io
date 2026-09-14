@@ -23,5 +23,8 @@
         "**/.vscode": true
     },
     "markdown.validate.enabled": true,
-    "vsrocq.path": "/home/philip/.opam/autosubstplay/bin/vsrocqtop"
+    "vsrocq.path": "/home/philip/.opam/autosubstplay/bin/vsrocqtop",
+    "[lean4]": {
+        "editor.semanticHighlighting.enabled": false
+    }
 }

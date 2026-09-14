@@ -2,6 +2,20 @@ import Philib
 import Lean
 import Lake.DSL.Meta
 import Lake.DSL.Syntax
+import Lean
+
+open Lean Meta Elab Term
+
+
+/-
+#eval (by_elab
+  let x ← liftM <| (pure 3 : IO Nat)
+  return toExpr x)
+
+open Lake.DSL
+
+-- #eval run_io (pure 3)
+
 
 -- Not working?
 --def bizzy := run_io (python "print(3)" ())
@@ -177,3 +191,5 @@ deriving ToJson, FromJson, Repr
 #eval Foo.biz |> toJson
 #check fromJson?
 #eval ((Json.str "biz" |> fromJson?) : Except String Foo)
+
+-/
