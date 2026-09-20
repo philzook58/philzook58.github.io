@@ -20,20 +20,25 @@ name = "veir"
 git = "https://github.com/opencompl/veir"
 rev = "main"
 
+#[[require]]
+#name = "SSA"
+#git = "https://github.com/opencompl/lean-mlir"
+#rev = "main"
+
 [[require]]
 name = "plausible"
 scope = "leanprover-community"
-rev = "v4.33.0"
+rev = "v4.34.0"
 
-[[require]]
-name = "verso"
-git = "https://github.com/leanprover/verso.git"
-rev = "v4.33.0"
+#[[require]]
+#name = "verso"
+#git = "https://github.com/leanprover/verso.git"
+#rev = "v4.34.0"
 
-[[require]]
-name = "verso-slides"
-git = "https://github.com/leanprover/verso-slides.git"
-rev = "v4.33.0"
+#[[require]]
+#name = "verso-slides"
+#git = "https://github.com/leanprover/verso-slides.git"
+#rev = "v4.34.0"
 
 [[require]]
 name = "iris"
@@ -47,14 +52,14 @@ rev = "master"
 #git.subDir = "IrisMath" 
 #rev = "master"
 
-[[lean_lib]]
-name = "verso_play"
-srcDir = "verso_play"
+#[[lean_lib]]
+#name = "verso_play"
+#srcDir = "verso_play"
 
-[[lean_exe]]
-name = "verso-play"
-root = "VersoPlayMain"
-srcDir = "verso_play"
+#[[lean_exe]]
+#name = "verso-play"
+#root = "VersoPlayMain"
+#srcDir = "verso_play"
 
 [[require]]
 name = "veil"
@@ -66,6 +71,10 @@ name = "LeanPy"
 git = "https://github.com/BasisResearch/lean.py"
 rev = "main"
 
+[[require]]
+name = "Duper"
+git = "https://github.com/leanprover-community/duper.git"
+rev = "main"
 
 [[require]]
 name = "Lentil"
@@ -85,12 +94,8 @@ rev = "main"
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-rev = "v4.33.1"
+rev = "v4.34.0"
 
-#[[require]]
-#name = "SSA"
-#git = "https://github.com/opencompl/lean-mlir"
-#rev = "main"
 
 # [[require]]
 # name = "mdgen"

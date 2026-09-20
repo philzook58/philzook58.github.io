@@ -4,8 +4,29 @@ import Mathlib
 -- import Lean.Meta.Grind
 open Lean Qq Meta
 
-example [CommSemiring α] (x : α) : x^2 + 1 = x -> x^7 = x := by
-  grind
+--example [CommSemiring α] (x : α) : x^2 + 1 = x -> x^7 = x := by
+--  grind
+
+
+#check List.Assoc
+
+namespace LA
+
+structure Counter (a : Type) where
+  data : List (a × Nat)
+deriving Repr, BEq, Inhabited
+
+def bump (l : Counter a) (x : a) (n : Nat) :=
+  List.AssocList.set x (List.AssocList.getD l.data 0 + n)
+
+
+def combine (x y : Counter a) :=
+  x.data.foldl (fun acc (z,n) => bump acc z n) y.data
+
+
+
+end LA
+
 
 #check  Lean.Meta.Grind.Arith.CommRing.superposeWith
 -- cancellative semirings injectively embed?
@@ -86,6 +107,36 @@ monoidal category otimes and comp for strings
 string diagrams indeed
 
 https://arxiv.org/pdf/math/0612088 petri nets and polygraogs
+
+
+The parallel "or" of a proof object  becomes + for semirings.
+
+Completely non overlapping rewrites work via cong. But it is possible to have overlapping rewrites if a rule
+matches on but leaves a structure alone. Which is a little weird, but does show up in guarded rules.
+C[a,l] -> C[a,r]
+C[l1,b] -> C[r1, b]
+
+aaa -> aa    its a bit ocnfusing whether the a on the left are the same as the a on the right. Which one?
+
+concat(r1, id(a), r2) string proofs can be horizontally and vertically composed. Monoidal category.
+Monoidal groupoid?
+Strings of operators. Noncommutative polynomials. Put coefficients on the strings. Yeah. It doesn't look quantumy then
+
+egraph string rewriting. Don't bake in assoc.
+anyons. associators
+
+
+Because the structure of a semiring term is a bit mushy, it isn't clear?
+
+deepcong( C[.,-] : rule1, C[-,.] rule2 )
+promise(C[.,-], rule1)  - works in l->r position but promises we're in C context
+par(promosie(C1,r1), promoise(C2, r2)) if C1 C2 are
+
+some kind of continuation inversion thing?
+
+subst(C, rule) its basically this? ... nooo.
+
+
 -/
 #check Lean.Grind.Ring.OfSemiring.Q
 
