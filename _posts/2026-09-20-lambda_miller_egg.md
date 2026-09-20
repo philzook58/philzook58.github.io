@@ -210,6 +210,8 @@ However in this very similar example, the context the substitution is in is cont
     ; inserted e4
     ; match 1: {?a = 3, ?b = ctx1 |-> $0}
 
+I debated to myself about whether to suppress `ctx0 |->` annotations. I ended up doing so because they are noisy, but it was an important conceptual realization to me that `ctx0 |->` is conceptually prior to "context-less" terms / "context-less" terms are not a thing, merely a shorthand for `ctx0`. Constants are "merely" 0-arity functions. I'm used to this idea that the term `a` is actually shorthand for `a()`. This really is the same observation but instead applied to the semantics of judgements `[[t]]` is _actually_ `[[{} |- t]]`.
+
 Also check it out. Alpha equivalent terms hash cons to the same thing. The `l_10` annotations are the lifting annotations, which are held in a byte stolen from the u32 Id.
 
 ```python
