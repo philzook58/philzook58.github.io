@@ -3,7 +3,7 @@ title: Lambda MicroEgg
 date: 2026-09-20
 ---
 
-It's an egraph that supports well-scoped alpha aware binders.
+It's an [egraph](https://egraphs.org/) that supports well-scoped alpha aware binders.
 
 Everything [old](https://www.philipzucker.com/egglog0/) is new again.
 
