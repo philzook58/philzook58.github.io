@@ -272,7 +272,7 @@ Kind of more interesting (in it's unusualness) is there is memory sharing betwee
     ; e7 = ctx0 |-> (@lam x0 (@lam x1 (@lam x2 (@lam x3 (@lam x4 x1)))))
     ;   e7 <- (@lam l_0(e6))
 
-A curious nuance is that I can only support "ordered Miller patterns". This only really exposes itself in nonlinear patterns, where the variable is used twice. I could support this by allowing term creation in patterns or extending thinnings to also support exchange, which would bring us closer to, but subtly I think not quite the same as slotted, since scoping would be dealt with differently and variables are ordered. This means I wouldn't have to implement the group symmetry breaking stuff I think?
+A curious nuance is that I can only support "ordered Miller patterns". This only really exposes itself in nonlinear patterns, where the variable is used twice. I could support this by allowing term creation in patterns or extending thinnings to also support exchange, which would bring us closer to, but subtly I think not quite the same as [slotted](https://dl.acm.org/doi/10.1145/3729326), since scoping would be dealt with differently and variables are ordered. This means I wouldn't have to implement the group symmetry breaking stuff I think? Depending on a subjective choice of what you consider "the same thing", slotted and liftings are the same thing. Slotting appears to me to emphasize names & alpha permutations/renamings, whereas thinnings emphasize scope/weakening. Maybe I have a vested interest in seeing a difference though.
 
 ```python
 %%file /tmp/nogood.sexp
