@@ -124,7 +124,7 @@ If I switch out in an AC saturation example the first order `()` for the higher 
     ; ran 9 rounds, 262143 unions: 2046 classes, 58035 e-nodes
     ; match 685.163722ms, apply 1.287551403s, rebuild 150.952363ms
 
-Superposition provers like e-prover and zipperposition have received special smarts for this lambda free higher order fragment <https://inria.hal.science/hal-03485227/document>. It's a useful but simple thing.
+Superposition provers like e-prover and zipperposition have received special smarts for this lambda free higher order fragment <https://inria.hal.science/hal-03485227/document>. It's a useful but simple thing. Or a simple but useful thing?
 
 # Miller Patterns
 
@@ -289,6 +289,8 @@ A curious nuance is that I can only support "ordered Miller patterns". This only
     /tmp/nogood.sexp:2:41: error: Miller metavariable '?a' arguments are out of order; write {?a x y} on the match left-hand side, then permute its arguments on the rewrite right-hand side if needed
 
 # Bits and Bobbles
+
+I'm pretty excited to see this come together. https://www.philipzucker.com/egraph-ground-rewrite/ I've been poking towards getting lambda in there for a while.
 
 I could support fancier patterns if we just pull the band aid off term creation in patterns. Once a pattern var is grounded, we can use it to ground it's other uses, which may have more complex beta subsitution in them.
 
