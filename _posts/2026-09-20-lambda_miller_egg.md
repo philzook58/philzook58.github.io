@@ -68,7 +68,7 @@ Since liftings are stored as a byte stolen from the u32 Id, there hopefully isn'
     ; ran 9 rounds, 262291 unions: 1023 classes, 57012 e-nodes
     ; match 350.089112ms, apply 999.980826ms, rebuild 152.433662ms
 
-# Lambda Free High Order Application
+# Lambda Free Higher Order Application
 
 There is a tension between the typical first order notion of application `FOApp(Symbol, Vec<Id>)` and the higher order binary version `HOApp(Id,Id)`. The latter can be encoded into the former using a ubiquitout "app" symbol `(app (app f x) y)`. This is burdensome to write though, so I added a different constructor and notation `[]` which automatically curries and uses `HOApp`.
 
@@ -124,7 +124,11 @@ If I switch out in an AC saturation example the first order `()` for the higher 
     ; ran 9 rounds, 262143 unions: 2046 classes, 58035 e-nodes
     ; match 685.163722ms, apply 1.287551403s, rebuild 150.952363ms
 
+Superposition provers like e-prover and zipperposition have received special smarts for this lambda free higher order fragment <https://inria.hal.science/hal-03485227/document>. It's a useful but simple thing.
+
 # Miller Patterns
+
+But in addition to this, it is really nice to support actual binders.
 
 The variation of higher order patterns supported is Miller patterns.
 
