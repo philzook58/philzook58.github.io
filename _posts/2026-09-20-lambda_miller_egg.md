@@ -212,7 +212,7 @@ However in this very similar example, the context the substitution is in is cont
 
 I debated to myself about whether to suppress `ctx0 |->` annotations. I ended up doing so because they are noisy, but it was an important conceptual realization to me that `ctx0 |->` is conceptually prior to "context-less" terms / "context-less" terms are not a thing, merely a shorthand for `ctx0`. Constants are "merely" 0-arity functions. I'm used to this idea that the term `a` is actually shorthand for `a()`. This really is the same observation but instead applied to the semantics of judgements `[[t]]` is _actually_ `[[{} |- t]]`.
 
-Also check it out. Alpha equivalent terms hash cons to the same thing. The `l_10` annotations are the lifting annotations, which are held in a byte stolen from the u32 Id. The `<-` lines are listing the enodes in the eclass. Liftings in the union find appear as liftings on the eid `l_01(e4) <- enode` somewhat counterintuitively. That is the place they must appear to be conceptually correct. The enode always points to an eclass lifted from a smaller context.
+Also check it out. Alpha equivalent terms hash cons to the same thing. The `l_10` annotations are the lifting annotations, which are held in a byte stolen from the u32 Id. The `<-` lines are listing the enodes in the eclass. Liftings in the union find appear as liftings on the eid `l_01(eclass) <- enode` somewhat counterintuitively. That is the place they must appear to be conceptually/semantically correct. The enode always points to an eclass lifted from an equal or smaller context.
 
 ```python
 %%file /tmp/alpha.egg
