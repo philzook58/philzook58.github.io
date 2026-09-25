@@ -3,6 +3,53 @@ import Mathlib.Data.Fin.VecNotation
 import Mathlib.Tactic.NormNum
 import Mathlib.Algebra.BigOperators.Group.List.Basic
 import Mathlib.Data.Finsupp.Basic
+/-
+
+What is the somewhat rigorous version of griffiths
+
+Separation of variables.
+Must a wavefunction be fourier transformable?
+psi^2 must be normalizaable (square integrable)
+
+Scattering to t=-inf and t=inf
+
+distributions vs functions
+operators as algebraic entitites
+
+Laplace and Fourier picture
+psi = F[psik] is an ansatz as much a seperatin of vairables is
+
+Or apply F to both sides of equation
+
+1/r potentials
+1. diverge
+2. are slow decaying.
+
+
+Taylor scattering book chapter 1
+isometric operators
+operator limits
+operators and inverses
+
+
+Mixed continuous and discrete spectrums
+
+https://pubs.ams.org/ebooks/gsm/099/
+
+lectures on quantum for mathematical - fadeev
+https://pubs.ams.org/ebooks/stml/047/
+
+https://link.springer.com/book/10.1007/978-1-4614-7116-5?page=2#toc
+qunatum theory for mathematicicans
+
+
+
+
+
+-/
+
+
+
 
 open scoped BigOperators
 /-
