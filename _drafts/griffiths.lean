@@ -3,6 +3,60 @@ import Mathlib.Data.Fin.VecNotation
 import Mathlib.Tactic.NormNum
 import Mathlib.Algebra.BigOperators.Group.List.Basic
 import Mathlib.Data.Finsupp.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+open MeasureTheory intervalIntegral
+open MeasureTheory
+open MeasureTheory intervalIntegral
+
+
+namespace section1_4
+
+/-
+variable a b : Real
+def psi A x :=
+  if 0 <= x <= a then A * x / a
+  else if a <= x <= b then A * (b - x) / ( b - a)
+  else 0
+-/
+
+-- https://leanprover-community.github.io/mathlib4_docs/Mathlib/Analysis/SpecialFunctions/Integrals/Basic.html
+-- https://leanprover-community.github.io/mathlib4_docs/Mathlib/MeasureTheory/Integral/IntervalIntegral/Basic.html
+open MeasureTheory intervalIntegral
+
+noncomputable def psi (a b A x : ℝ) : ℝ :=
+  if 0 ≤ x ∧ x ≤ a then A * x / a
+  else if a ≤ x ∧ x ≤ b then A * (b - x) / (b - a)
+  else 0
+
+noncomputable def psiIntegral (a b A : ℝ) : ℝ :=
+  ∫ x : ℝ, psi a b A x
+
+example (a : ℝ) : (∫ x in (0 : ℝ)..a, x) = a ^ 2 / 2 := by
+  simp
+-- integral of psi wrt. x
+
+-- maximum location?
+-- expectation value of x
+-- probability of left of a ?
+
+/-
+vs sympy?
+
+
+Seperatio of variables, lookup in my other books Weber
+
+spectral theorem
+stone's theorem
+distributions
+
+
+-/
+
+end section1_4
+
+
+
 /-
 
 What is the somewhat rigorous version of griffiths
