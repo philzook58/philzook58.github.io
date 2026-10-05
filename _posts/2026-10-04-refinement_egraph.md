@@ -55,7 +55,7 @@ I think semantics is really important and don't like meaningless syntax manipula
 
 Note that this inequality assertion is distinct from _equating_ `dontcare = true = false`. This of course is problematic. But it is also distinct from equating to either of them `dontcare = true` or `dontcare = false`. If we did one of these, then all `dontcare` _everywhere_ would be forced to be `true` or `false`, whereas we want the ability to be able to make independent choices at all usages.
 One could perhaps make `dontcare1` `dontcare2` `dontcare3` etc as fresh constants and then independently equate them. This freshness game always feels like some goofy shell game to me though.
-There is some intuitive sense that equating an eclass destroys it as a resource, but stating an inequality does not destroy it as a resource.
+There is some intuitive sense that equating an eclass destroys it as a resource, but stating an inequality does not destroy it as a resource. This is good and bad. "Destroying" is a similar thing to compaction and canonization. The inequality isn't operationally as nice as the "destroying" equality.
 
 # Inequality Union Finds
 
