@@ -106,7 +106,7 @@ Refinement closure isn't as nice as congruence closure. We can use it both in th
 
 ## Refinement E-matching
 
-Pattern matching can be modelled as a processing a constraint set `{?p = t}` (see for example section 2.2.3 of https://www.cs.bu.edu/fac/snyder/publications/UnifChapter.pdf or section 4.6 of Term Rewriting and All That ). What makes it pattern matching vs unification is having variable only on one side, which is sometimes easier/more efficient to implement.
+Pattern matching can be modelled as a processing a constraint set `{?p = t}` (see for example section 2.2.3 of <https://www.cs.bu.edu/fac/snyder/publications/UnifChapter.pdf> or section 4.6 of Term Rewriting and All That ). What makes it pattern matching vs unification is having variable only on one side, which is sometimes easier/more efficient to implement.
 
 ![unification rules](https://www.philipzucker.com/assets/traat/unify_rules.png)
 
@@ -415,8 +415,12 @@ Other applications:
 - Relation algebra
 - Algebra of Programming <https://www.philipzucker.com/a-short-skinny-on-relations-towards-the-algebra-of-programming/> bird and de Moor, Oliveira, Backhouse, Dijkstra <http://www.mathmeth.com/read.shtml>
 - Subtyping
+- Set expressions. Union and Intersection are AC. Can you use <= instead?
 - Query containment
 - First class lattice analyses
+- Numerical inequality  `3 <= 7`? I'd think a more semantically specialized system would work better than generic `<=`, but maybe not.
+
+Many of the applications just kind of seem like the same thing in different clothing.
 
 Extraction may want a frontier of <= eclasses from the union find if it wants to get the most refined term. That could be another function in the interface
 
