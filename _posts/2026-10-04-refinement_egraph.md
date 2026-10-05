@@ -34,7 +34,11 @@ A nice example is "Don't Care" in digital circuits <https://en.wikipedia.org/wik
 
     x
 
-There are also refinement rewrite rules available in the implementation, `rewrite-le` and `rewrite-ge`. Spiritually, `(rewrite-le lhs rhs)` represents the formula `forall ?a, lhs(?a) <= rhs(?a)`. Because of the form of this formula, we don't have to match `lhs` on the equality nose. We can find a substitution for any starting `?t <= subst(lhs[?a])` to chain to a discovered inequality assertion `?t <= subst(lhs[?a]) <= subst(rhs[?a])`.
+There are also refinement rewrite rules available in the implementation, `rewrite-le` and `rewrite-ge`. 
+
+Spiritually, `(rewrite-le lhs rhs)` represents the formula `forall ?a, lhs(?a) <= rhs(?a)`. Because of the form of this formula, we don't have to match `lhs` on the equality nose. We can find a substitution for any starting `?t <= subst(lhs[?a])` to chain to a discovered inequality assertion `?t <= subst(lhs[?a]) <= subst(rhs[?a])`.
+
+## Don't Care Semantics
 
 I think semantics is really important and don't like meaningless syntax manipulation. The intended semantics of this "Don't Care" example is `Bool -> Set Bool` with `<=` representing pointwise set containment.
 
