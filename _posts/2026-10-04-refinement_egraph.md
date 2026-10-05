@@ -145,8 +145,9 @@ class Node:
 
 class Mode(Enum): # Expand all below, all above, or equal only. Ematch, extract, and rebuild can all be keyed on this kind of
     LE = -1
-    EQ = 0
+    EQ = 0 # Only Eq
     GE = 1
+    # Both = 2. I guess since equalitt rewrites can chain with either <= or >=, we could have a BOTH mode
 
 class Variance(Enum): # Slash Monotonicity
     MONO = 1    # covariant
@@ -416,6 +417,8 @@ Other applications:
 - Subtyping
 - Query containment
 - First class lattice analyses
+
+Extraction may want a frontier of <= eclasses from the union find if it wants to get the most refined term. That could be another function in the interface
 
 I have debated rather than the mode + variance abstraction to allow specifying what expansion (EQ,GE,LE) you want in the language of the pattern. For example i could use `(foo ?a)`, `[foo ?a]`, `{foo ?a}` if I want to allow EQ, GE, LE respectively. This would allow fine grained ad hoc control of refinement e-matching in the pattern.
 
