@@ -5,7 +5,7 @@ date: 2026-10-04
 
 The idea of a refinement e-graph is to add a baked in a `<=` relation that is about as privileged as the e-graph's native `=`
 
-There is a story that compiler rewrites are often not bidirectional equalities, but instead are unidirectional refinement rewrites, moving from an abstract program to a more completely determined one that can run on a concrete machine. It is quite common for the source language to be cagey about the exact order the children of an expression are evaluated, or what is the result of an integer overflow or division by zero. Being cagey may enable more optimization opportunities or ease translation to disparate machines. It is also just a fact of life for these languages.
+There is a story that compiler rewrites are often not bidirectional equalities, but instead are unidirectional refinement rewrites, moving from an abstract or floppy program / spec to a more completely determined one that can run on a concrete machine. It is quite common for the source language to be cagey about the exact order the children of an expression are evaluated, or what is the result of an integer overflow or division by zero. Being cagey may enable more optimization opportunities or ease translation to disparate machines. It is also just a fact of life for these languages.
 
 Here is a prototype <https://github.com/philzook58/refinement-microegg> of a refinement egraph based on Max Willsey's microegg <https://github.com/mwillsey/microegg>. A WASM demo is here <https://www.philipzucker.com/refinement-microegg>. Third verse same as the [second](https://www.philipzucker.com/lambda_miller_egg/)
 
@@ -34,9 +34,9 @@ A nice example is "Don't Care" in digital circuits <https://en.wikipedia.org/wik
 
     x
 
-There are also refinement rewrite rules available in the implementation, `rewrite-le` and `rewrite-ge`. Spiritually, `(rewrite-le lhs rhs)` represents the formula `forall ?a, lhs(?a) <= rhs(?a)`. Because of the form of this, we don't have to match `lhs` on the equality nose. We can find a substitution for any starting `?t <= subst(lhs[?a])` to chain to a discovered inequality assertion `?t <= subst(lhs[?a]) <= subst(rhs[?a])`.
+There are also refinement rewrite rules available in the implementation, `rewrite-le` and `rewrite-ge`. Spiritually, `(rewrite-le lhs rhs)` represents the formula `forall ?a, lhs(?a) <= rhs(?a)`. Because of the form of this formula, we don't have to match `lhs` on the equality nose. We can find a substitution for any starting `?t <= subst(lhs[?a])` to chain to a discovered inequality assertion `?t <= subst(lhs[?a]) <= subst(rhs[?a])`.
 
-The intended semantics of this "Don't Care" example is `Bool -> Set Bool` with `<=` representing pointwise set containment.
+I think semantics is really important and don't like meaningless syntax manipulation. The intended semantics of this "Don't Care" example is `Bool -> Set Bool` with `<=` representing pointwise set containment.
 
 | Term         | Semantics                                                                       |
 | ------------ | ------------------------------------------------------------------------------- |
@@ -55,9 +55,9 @@ There is some intuitive sense that equating an eclass destroys it as a resource,
 
 # Inequality Union Finds
 
-Roughly E-Graph = Union Find + Hash Cons
+Roughly E-Graph = Union Find + Hash Cons. So a Refinement E-graph = inequality union find + hash cons.
 
-The inequality union find is more of an interface than anything. An aspect of what makes a refinement e-graph is to swap out a union find for an inequality union find
+The interface of the inequality union find is more important than the details of the implementation.
 
 ```python
 from typing import Protocol
@@ -83,26 +83,28 @@ Previous discussions of mine on inequality union finds towards refinement e-grap
 
 # What Does A Refinement E-Graph Need on Top of This?
 
-An (inequality) union find deals in atomic symbols `e4` and atomic equations `e5 = e87`.
+An (inequality) union find deals in atomic symbols `e4` and atomic equations `e5 = e87` (or inequations `e4 <= e65`).
 
-An e-graph adds function symbols `f(e4,e4)` instead. These symbols appear in the following processes, which union finds don't need:
+An e-graph adds function symbols `f(e4,e4)` to this. These symbols appear in the following processes:
 
 - Refinement-closure
 - Refinement E-matching
 - Refinement extraction
 
-We need to be told how the function symbols play with the inequality `<=`. Functions _always_ respect equality `=`, but they may be monotone, anti-monotone or neither/unknown in their individual arguments. I like set difference `diff(A,B)` as an example. It is monotone in the first argument but anti-monotone/contravariant in the second argument `diff(+,-)`.
+The e-graph implementation need to be told how the function symbols play with the inequality `<=` by the user. Functions _always_ respect equality `=`, but they may be monotone, anti-monotone or neither/unknown in their individual arguments. I like set difference `diff(A,B)` as an example of this. It is monotone in the first argument but anti-monotone/contravariant in the second argument `diff(+,-)`.
 
 ## Refinement Closure
 
 Instead of congruence closure, we can perform refinement closure. This basically is applying a theorems like `forall a b c d, a <= b /\ c >= d -> diff(a,c) <= diff(b,d)` instead of `a = b /\ c = d -> diff(a,c) = diff(b, d)` which is what congruence closure applies.
 
-Refinement closure isn't as nice as congruence closure. We can use it both in the form that makes new enodes or the form that only notes relations between pre-existing enodes. In a datalog sense, this is the difference bwteen
+Refinement closure isn't as nice as congruence closure. We can use it both in the form that makes new enodes or the form that only notes relations between pre-existing enodes. In a datalog sense, this is the difference between
 `diff(a,c) <= diff(b,d) :- a <= b, c >= d, diff(a,c)` and the guarded version `diff(a,c) <= diff(b,d) :- a <= b, c >= d, diff(a,c), diff(b,d)`. The first can be useful, but it can also be explosive.
 
 ## Refinement E-matching
 
-Pattern matching can be modelled as a processing a constraint set `{?p = t}`. What makes it pattern matching vs unification is having variable only on one side, which is sometimes easier/more efficient to implement.
+Pattern matching can be modelled as a processing a constraint set `{?p = t}` (see for example section 2.2.3 of https://www.cs.bu.edu/fac/snyder/publications/UnifChapter.pdf or section 4.6 of Term Rewriting and All That ). What makes it pattern matching vs unification is having variable only on one side, which is sometimes easier/more efficient to implement.
+
+![unification rules](https://www.philipzucker.com/assets/traat/unify_rules.png)
 
 For refinement e-matching, We can be working with a constraint `{?p <= t}` or `{t <= ?p}`. But otherwise really the algorithm doesn't change that much. You just need to track which "mode" you're currently in, and change the mode according to the variance of the function symbols.
 
