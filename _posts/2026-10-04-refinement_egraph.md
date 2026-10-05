@@ -3,7 +3,7 @@ title: Refinement E-Graphs
 date: 2026-10-04
 ---
 
-The idea of a refinement e-graph is to add a baked in a `<=` relation that is about as privileged as the e-graph's native `=`
+The idea of a refinement [e-graph](https://egraphs.org/) is to add a baked in a `<=` relation that is about as privileged as the e-graph's native `=`
 
 There is a story that compiler rewrites are often not bidirectional equalities, but instead are unidirectional refinement rewrites, moving from an abstract or floppy program / spec to a more completely determined one that can run on a concrete machine. It is quite common for the source language to be cagey about the exact order the children of an expression are evaluated, or what is the result of an integer overflow or division by zero. Being cagey may enable more optimization opportunities or ease translation to disparate machines. It is also just a fact of life for these languages.
 
@@ -399,6 +399,8 @@ E.ematch_rec(diff_ab, App("diff", (Var("x"), Var("y"))), Mode.GE, {})
 All told, I find refinement a shockingly simple extension of the usual egraph concepts and implementation. But it has felt mysterious before so maybe that means I've just become incredibly wise?
 
 I think really the thing that makes it shockingly simple is just not believing there is any incredibly clever or nuanced way of doing it. I think the only way to do it is basically the obvious way.
+
+I think that maybe the generalization of all this is an egraph rewriting system that supports multiple relations and annotations of how they push through function symbols, akin to <https://rocq-prover.org/doc/V9.2.0/refman/addendum/generalized-rewriting.html>
 
 I remember being at a table at PLDI 2022 and Zach trying to convince / ask John Regehr what he wanted for e-graph to be compelling to him. He said refinement and as a treatment of arbitrary bitwidth bitvectors. These two have stuck with me as things to look for and this is the source of the refinement e-graph line of questioning.
 
