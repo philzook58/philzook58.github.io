@@ -102,13 +102,21 @@ Refinement closure isn't as nice as congruence closure. We can use it both in th
 
 ## Refinement E-matching
 
-Pattern matching can modelled as a process of processing constraints `?p = t`. What makes it pattern matching vs unification is having variable only on one side, which is sometimes easier/more efficient to implement. We can be working with a constraint `?p <= t` or `t <= ?p`. But otherwise really the algorithm doesn't change that much. You just need to track which "mode" you'r currently in, and change the mode according to the variance of the function symbols
+Pattern matching can be modelled as a processing a constraint set `{?p = t}`. What makes it pattern matching vs unification is having variable only on one side, which is sometimes easier/more efficient to implement.
 
-For example this diff pattern processes by flipping one of the modes.`{diff(?a, ?b) <= diff(x,y)}  ===>  {?a <= x, ?b >= y}`
+For refinement e-matching, We can be working with a constraint `{?p <= t}` or `{t <= ?p}`. But otherwise really the algorithm doesn't change that much. You just need to track which "mode" you're currently in, and change the mode according to the variance of the function symbols.
+
+For example, this `diff` pattern processes by flipping one of the modes.`{diff(?a, ?b) <= diff(x,y)}  ===>  {?a <= x, ?b >= y}`
+
+In the implementation, there is one extra degree of nondeterminism on top of the usual e-matching eclass->enode nondeterminsm, where in the `GE` or `LE` mode, you may traverse an eclass -> eclass `<=` edge. 
+
+From the flattened relational e-matching perspective, this is the insertion of implicit `(le ?a ?b)` all throughout the pattern. For example  the pattern`foo(bar(?x))` becomes flattened to `?e1 = foo(?e2), ?e2 <= ?e3, ?e3 = bar(?e4), ?e4 <= ?x`. `<=` kind of "mediates" between every function symbol relation.
 
 ## Refinement Extraction
 
-Extraction is actually pretty similar to e-matching in many ways. We are seeking a `?extract = t` but we want the "best" `?extract`. We have a tendency to implement extraction bottom up instead of top down.  We can instead be asking for `?extract <= t` or `?extract >= t`. We might also want to use `<=` in our definition of "best". Perhaps we want the most refined and then tie break with smallest size term or vice versa.
+Regular extraction is actually pretty similar to e-matching in many ways. We are seeking a `?extract = t` but we want the "best" `?extract`. We have a tendency to implement extraction bottom up instead of top down.  
+
+In refinement extraction, we can instead be asking for `?extract <= t` or `?extract >= t`. We might also want to use `<=` in our definition of "best". Perhaps we want the most refined (which semantically might mean the most concretely implemented or most deterministic entity) and then tie break with smallest size term or vice versa.
 
 # A Toy Python Implementation of a Refinement E-Graph
 
@@ -398,7 +406,7 @@ Other applications:
 - Relation algebra
 - Algebra of Programming <https://www.philipzucker.com/a-short-skinny-on-relations-towards-the-algebra-of-programming/> bird and de Moor, Oliveira, Backhouse, Dijkstra <http://www.mathmeth.com/read.shtml>
 - Subtyping
-- Query containement
+- Query containment
 - First class lattice analyses
 
 I have debated rather than the mode + variance abstraction to allow specifying what expansion (EQ,GE,LE) you want in the language of the pattern. For example i could use `(foo ?a)`, `[foo ?a]`, `{foo ?a}` if I want to allow EQ, GE, LE respectively. This would allow fine grained ad hoc control of refinement e-matching in the pattern.
