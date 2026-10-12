@@ -3,7 +3,7 @@ title: Category Theory of Terms Emphasizes the Argument List
 date: 2026-10-12 
 ---
 
-Category theory. I dunno man.
+One can't see the forest for the trees.
 
 I think I have a cute story about data structure refactoring that brings a standard Term data structure more in sync with the categorical presentation. The trick is to emphasis the argument list / forest (which in turn can be seen a substitution, which is a more standard thing to say).
 
@@ -112,7 +112,7 @@ App(27, "f", [Var(27,3)]) # f(V0)
 
 # Arguments as a Category
 
-Combining these two ideas we can get something like this. I could also spray `ctx : int` into the other two, but I don't think it's necessary.
+Combining these two ideas we can get something like this.
 
 ```python
 from dataclasses import dataclass, field
@@ -122,6 +122,8 @@ class Term: ...
 class TermSeq:
     ctx : int
     terms : list[Term]
+
+# I could also spray `ctx : int` into the other two, but I don't think it's necessary.
 
 @dataclass
 class App(Term):
