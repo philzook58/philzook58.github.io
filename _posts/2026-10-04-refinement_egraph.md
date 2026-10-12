@@ -23,7 +23,7 @@ A nice example is "Don't Care" in digital circuits <https://en.wikipedia.org/wik
 (insert (ite x true dontcare)) ; insert starting term
 (run 5 :expand-le)
 
-(extract-le (ite x true dontcare))  ; can extract x because refining this dontcare to true enables a nice term
+(extract-le (ite x true dontcare))  ; can extract x because refining this dontcare to false enables a nice term
 ```
 
     Writing /tmp/circuit.sexp
@@ -423,6 +423,8 @@ Other applications:
 Many of the applications just kind of seem like the same thing in different clothing.
 
 Extraction may want a frontier of <= eclasses from the union find if it wants to get the most refined term. That could be another function in the interface
+
+`ite` is monadic bind lifted for nondet. This is a bit juicier than just "pointwise". Hmm.
 
 I have debated rather than the mode + variance abstraction to allow specifying what expansion (EQ,GE,LE) you want in the language of the pattern. For example i could use `(foo ?a)`, `[foo ?a]`, `{foo ?a}` if I want to allow EQ, GE, LE respectively. This would allow fine grained ad hoc control of refinement e-matching in the pattern.
 
