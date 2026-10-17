@@ -15,10 +15,10 @@ name = "smt"
 scope = "ufmg-smite"
 rev = "main"
 
-[[require]]
-name = "veir"
-git = "https://github.com/opencompl/veir"
-rev = "main"
+#[[require]]
+#name = "veir"
+#git = "https://github.com/opencompl/veir"
+#rev = "main"
 
 #[[require]]
 #name = "SSA"
@@ -28,7 +28,7 @@ rev = "main"
 [[require]]
 name = "plausible"
 scope = "leanprover-community"
-rev = "v4.34.0"
+rev = "v4.35.0"
 
 #[[require]]
 #name = "verso"
@@ -94,7 +94,7 @@ rev = "main"
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-rev = "v4.34.0"
+rev = "v4.35.0"
 
 
 # [[require]]

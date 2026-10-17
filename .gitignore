@@ -20,3 +20,4 @@ _drafts/result
 .hol-vscode/
 dist-newstyle/
 */.ipynb_checkpoints/
+*/asmc-out/

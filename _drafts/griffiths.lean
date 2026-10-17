@@ -96,7 +96,31 @@ https://pubs.ams.org/ebooks/stml/047/
 https://link.springer.com/book/10.1007/978-1-4614-7116-5?page=2#toc
 qunatum theory for mathematicicans
 
+https://www.astrosen.unam.mx/~aceves/Metodos/ebooks/reed_simon1.pdf
+Reed and Simon
 
+
+Bounded operators  |Ax| <= C |X|  kind of means there's a bound on eigenvalue. Spectral norm
+Unbounded operators
+
+What properties are stable under sequences
+spectral theorem - decomposition into projection operators. Projection operators are kind of like measures. int d P
+ https://en.wikipedia.org/wiki/Spectral_theorem
+
+Linear relations and partial linear operators {(x, Ax)}
+The partial resultant   {(x,y) | }
+
+operator theory https://en.wikipedia.org/wiki/Operator_theory
+
+L2 is not the subset of functions with L2 integral. It's the equivalence class of those (anything that differs only by ||2 = 0).
+The quotient space.
+Finitary version of that? Maybe cut off high frequency half?
+
+Von Neumann
+
+
+Smoke test examples:
+shift operator on l2
 
 
 
