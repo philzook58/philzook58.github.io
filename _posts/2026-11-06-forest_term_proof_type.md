@@ -49,7 +49,7 @@ assert t.subst(0, App("a", ())) == App("f", (App("a", ()), App("a", ())))
 
 ```
 
-We can encode the equality judgement as a protected datatype that is only constructed through smart constructors that correspond to each of the inference rules. The data that comes into these constructors is the stuff above the horizontal line in inference rules and it produces a thing that represents the thing under the inference line.
+We can encode the equality judgement as a protected datatype that is only constructed through smart constructors that correspond to each of the inference rules. The data that comes into these constructors is the stuff above the horizontal line in inference rules and it produces a thing that represents the thing under the inference line. This is the "LCF" style.
 
 ```
 arg1     arg2     arg3
@@ -331,6 +331,15 @@ print(pf)  # |- inv(e) = e
 It kind of sucks that I print var(n) as projn when really it should be proj_d_n. Maybe App and Var should have a ctx field also to make them semantically meaningful
 
 Extend and shift could be perhaps be generalized by a framing vector `list[bool]` that is the analog of a thinning. This tells you how many identity morphisms to slap on the side of the interesting thing.
+
+Thinnings would also be an interesting TermSeq constructor
+```python
+@staticmethod
+def thin(t : list[bool]):
+    return TermSeq(len(t), [Var(i) for i,take in enumerate(t) if take])
+```
+
+I should've drawn some pictures. Obviously I'm visualizing string diagrams when I talk about some of these things. `f * g` is a fork of inputs. `f.kron(g)` is setting them side by side.
 
 <https://awodey.github.io/typetheory/notes/catlog2024.pdf> bauer awodey introduction to categorical logic chapter 1
 
