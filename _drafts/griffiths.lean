@@ -118,6 +118,8 @@ Finitary version of that? Maybe cut off high frequency half?
 
 Von Neumann
 
+https://physics.bme.hu/sites/physics.bme.hu/files/users/BMETE15AF53_kov/Kreyszig%20-%20Introductory%20Functional%20Analysis%20with%20Applications%20(1).pdf
+functional analysis with applications
 
 Smoke test examples:
 shift operator on l2
