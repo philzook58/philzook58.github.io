@@ -63,7 +63,7 @@ print(sys.getsizeof(fresh), sys.getsizeof(used))  # 64 36952 here
 
 # Thinning Dicts
 
-The thinning dict is a dictionary wrapper that has even more redundancy in its representation. The main motivation was to model a shadow of type theory's notion of stuckness (as we'll get to next), but I think the thinning dict is self motivating as a nice data structure for representing total maps from a tuple where you expect some of the elements of the tuple to never matter. You should keep those parts of the key factored out.
+The [thinning](https://www.philipzucker.com/thin1/) dict is a dictionary wrapper that has even more redundancy in its representation. The main motivation was to model a shadow of type theory's notion of stuckness (as we'll get to next), but I think the thinning dict is self motivating as a nice data structure for representing total maps from a tuple where you expect some of the elements of the tuple to never matter. You should keep those parts of the key factored out.
 
 It's a conceivable optimization to just record which elements of the tuple matter and only store an inner private dict on those pieces. In the best case, this can lead to exponential savings (in the length of the tuple) compared to a dense dict. In the worst case, you are just storing a dense dict with a couple more steps.
 
